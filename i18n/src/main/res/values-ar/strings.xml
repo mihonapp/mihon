@@ -189,9 +189,6 @@
     <string name="sort_by_source">حسب المصدر</string>
     <string name="sort_by_number">حسب رقم الفصل</string>
     <string name="manga_download">تنزيل</string>
-    <string name="download_1">الفصل التالي</string>
-    <string name="download_5">الفصول الخمسة التالية</string>
-    <string name="download_10">الفصول العشرة التالية</string>
     <string name="download_all">الكل</string>
     <string name="download_unread">غير مقروء</string>
     <string name="confirm_delete_chapters">هل أنت متأكد من أنك تريد حذف الفصول المحددة؟</string>
@@ -270,8 +267,6 @@
     <string name="copied_to_clipboard">نُسخ إلى الحافظة:
 \n%1$s</string>
     <string name="source_not_installed">المصدر غير مثبت: %1$s</string>
-    <string name="custom_download">تنزيل مقدار مخصص</string>
-    <string name="download_custom">مخصص</string>
     <string name="repeating">إعادة القراءة</string>
     <string name="track_status">الحالة</string>
     <string name="track_type">النوع</string>
@@ -320,7 +315,7 @@
     <string name="lock_always">دائماً</string>
     <string name="lock_when_idle">اقفل في حالة السكون</string>
     <string name="lock_with_biometrics">اطلب فكَّ القفل</string>
-    <string name="pref_category_security">إعدادات الأمان</string>
+    <string name="pref_category_security">الأمان و الخصوصية</string>
     <string name="pref_manage_notifications">إدارة الإشعارات</string>
     <string name="pref_date_format">صيغة التاريخ</string>
     <string name="theme_system">اتبع مظهر النظام</string>
@@ -334,7 +329,6 @@
     <string name="pref_always_show_chapter_transition">اظهار فواصل الانتقال بين الفصول</string>
     <string name="pref_skip_filtered_chapters">تخطي الفصول المُرشحة</string>
     <string name="pref_cutout_short">اظهار محتوى المناطق المقطوعة</string>
-    <string name="pref_enable_automatic_extension_updates">تحقق من وجود تحديثات للإضافات</string>
     <string name="obsolete_extension_message">هذه الإضافة لم تعد متوفرة. قد لا تعمل بشكل صحيح ويمكن أن تسبب بمشاكل في التطبيق. يوصى بإلغائه.</string>
     <string name="ext_obsolete">قديم جدًا</string>
     <string name="ext_updates_pending">التحديثات معلقة</string>
@@ -431,7 +425,7 @@
         <item quantity="other">%1$s عناصر متبقية</item>
     </plurals>
     <string name="downloaded_only_summary">تصفية جميع الإدخالات في مكتبتك</string>
-    <string name="pref_search_pinned_sources_only">تضمين المصادر المثبتة فقط</string>
+    <string name="pref_search_pinned_sources_only">البحث فقط عن مصادر مثبتة في البحث العالمي</string>
     <string name="pref_webtoon_side_padding">المساحة الجانبية</string>
     <string name="vertical_plus_viewer">عمودي مستمر</string>
     <string name="gray_background">رمادي</string>
@@ -849,4 +843,5 @@
     <string name="pref_worker_info">معلومات العمل</string>
     <string name="track_error">%1$s خطأ: %2$s</string>
     <string name="information_required_plain">*مطلوب</string>
+    <string name="action_copy_to_clipboard">نسخ إلى الحافظة</string>
 </resources>

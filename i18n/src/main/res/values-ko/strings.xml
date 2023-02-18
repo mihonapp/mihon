@@ -168,7 +168,7 @@
     <string name="unknown_error">알 수 없는 오류</string>
     <string name="updating_category">카테고리 업데이트중</string>
     <string name="no_more_results">더이상 결과 없음</string>
-    <string name="action_global_search_hint">전역 검색…</string>
+    <string name="action_global_search_hint">전체 검색…</string>
     <string name="latest">최신</string>
     <string name="ongoing">연재중</string>
     <string name="unknown">알 수 없음</string>
@@ -185,9 +185,6 @@
     <string name="sort_by_source">소스 기준</string>
     <string name="sort_by_number">회차 번호 기준</string>
     <string name="manga_download">다운로드</string>
-    <string name="download_1">다음 화</string>
-    <string name="download_5">다음 5화</string>
-    <string name="download_10">다음 10화</string>
     <string name="download_all">전부</string>
     <string name="download_unread">읽지 않은 회차</string>
     <string name="confirm_delete_chapters">선택된 회차를 삭제하시겠습니까\?</string>
@@ -267,8 +264,6 @@
     <string name="copied_to_clipboard">클립보드에 복사됨:
 \n%1$s</string>
     <string name="show_title">소스 제목</string>
-    <string name="custom_download">다운로드 할 회차 직접 입력</string>
-    <string name="download_custom">사용자 정의</string>
     <string name="reading">읽는 중</string>
     <string name="completed">완결</string>
     <string name="dropped">포기함</string>
@@ -308,10 +303,10 @@
     <string name="channel_complete">완료</string>
     <string name="confirm_set_chapter_settings">현재 설정을 기본값으로 설정하시겠습니까\?</string>
     <string name="chapter_settings">회차 설정</string>
-    <string name="error_sharing_cover">표지 이미지 공유 오류</string>
-    <string name="error_saving_cover">표지 이미지 저장 오류</string>
-    <string name="cover_saved">표지 이미지 저장</string>
-    <string name="manga_cover">표지 이미지</string>
+    <string name="error_sharing_cover">표지 공유 오류</string>
+    <string name="error_saving_cover">표지 저장 오류</string>
+    <string name="cover_saved">표지 저장</string>
+    <string name="manga_cover">표지</string>
     <string name="sort_by_upload_date">업로드 날짜 기준</string>
     <string name="logout_success">로그아웃 되었습니다</string>
     <string name="logout">로그아웃</string>
@@ -339,7 +334,6 @@
     <string name="creating_backup_error">백업 실패</string>
     <string name="restore_duration">%02d분 %02d초</string>
     <string name="invalid_backup_file">잘못된 백업 파일</string>
-    <string name="pref_enable_automatic_extension_updates">확장 프로그램 업데이트 확인</string>
     <string name="pref_category_auto_download">자동 다운로드</string>
     <string name="pref_remove_bookmarked_chapters">북마크 표시된 회차 삭제 허용</string>
     <string name="pref_category_delete_chapters">회차 지우기</string>
@@ -421,7 +415,7 @@
     </plurals>
     <string name="notification_updating">서재 업데이트 중… (%1$d/%2$d)</string>
     <string name="pref_library_update_manga_restriction">항목 업데이트 건너뛰기</string>
-    <string name="secure_screen_summary">화면 보안을 켜면 앱에서 스크린샷을 찍을 수 없으며 앱을 전환할 때 내용이 숨겨집니다</string>
+    <string name="secure_screen_summary">화면 보안을 켜면 앱을 전환할 때 내용이 숨겨지며 스크린샷을 찍을 수 없습니다</string>
     <string name="in_library">서재에 추가됨</string>
     <string name="action_migrate">데이터 이전</string>
     <string name="recent_manga_time">%1$s화 - %2$s</string>
@@ -433,7 +427,7 @@
     <string name="pref_category_timestamps">시간 표시 형식</string>
     <string name="pref_relative_time_short">짧게 (오늘, 어제)</string>
     <string name="pref_category_library_update">전역 업데이트</string>
-    <string name="pref_category_security">보안</string>
+    <string name="pref_category_security">보안 및 개인정보 보호</string>
     <plurals name="lock_after_mins">
         <item quantity="other">%1$s분 후</item>
     </plurals>
@@ -500,7 +494,7 @@
     <string name="tabs_header">탭</string>
     <string name="http_error_hint">WebView에서 사이트 열기</string>
     <string name="pinned_sources">핀 설정됨</string>
-    <string name="action_global_search_query">\"%1$s\"를 전역 검색합니다</string>
+    <string name="action_global_search_query">\"%1$s\"를 전체 검색합니다</string>
     <string name="local_source_help_guide">로컬 저장소 사용법</string>
     <string name="no_pinned_sources">핀 설정된 소스가 없습니다</string>
     <string name="local_invalid_format">잘못된 회차 포맷</string>
@@ -532,7 +526,7 @@
     <string name="library_errors_help">서재 업데이트 오류를 해결하려면 %1$s를 참조하세요</string>
     <string name="skipped_reason_completed">완결된 만화를 건너 뛰었습니다</string>
     <string name="skipped_reason_not_started">읽지 않은 만화를 건너 뛰었습니다</string>
-    <string name="update_check_eol">이 안드로이드 버젼은 더이상 지원되지 않습니다</string>
+    <string name="update_check_eol">이 안드로이드 버전은 더이상 지원되지 않습니다</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d개의 확장기능 업데이트가 있습니다</item>
     </plurals>
@@ -603,7 +597,7 @@
     <string name="webtoon_side_padding_15">15%</string>
     <string name="pref_download_new_categories_details">카테고리가 다운로드에서 제외된 경우 다른 카테고리에 포함되어 있어도 다운로드 되지 않습니다.</string>
     <string name="enhanced_tracking_info">특정 소스에 향상된 서비스를 제공합니다. 서재에 항목이 추가될 시 자동으로 트래킹 됩니다.</string>
-    <string name="pref_search_pinned_sources_only">핀 설정된 소스만 포함</string>
+    <string name="pref_search_pinned_sources_only">전체 검색 시 핀 설정된 소스만 검색</string>
     <string name="backup_restore_content_full">백업 파일에서 데이터가 복구됩니다.
 \n
 \n복구 완료 후 없어진 소스를 다시 설치하고 트래킹 서비스에 로그인 해야 합니다.</string>
@@ -653,14 +647,14 @@
     <string name="pref_library_update_categories_details">카테고리가 업데이트에서 제외된 경우 다른 카테고리에 포함되어 있어도 업데이트 되지 않습니다.</string>
     <string name="ext_updates_pending">업데이트 대기 중</string>
     <string name="pref_library_update_refresh_metadata_summary">서재 업데이트 시 새로운 표지와 설명 확인</string>
-    <string name="notification_chapters_single_and_more">%1$s화와 그 이후 %2$d화</string>
+    <string name="notification_chapters_single_and_more">%1$s화와 그 외 %2$d화</string>
     <string name="notification_chapters_multiple">%1$s화</string>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="other">%1$s화와 그 이후 %2$d화</item>
+        <item quantity="other">%1$s화와 그 외 %2$d화</item>
     </plurals>
     <string name="file_picker_error">파일 선택 어플리케이션이 없습니다</string>
     <string name="empty_backup_error">백업할 서재 항목이 없습니다</string>
-    <string name="update_check_fdroid_migration_info">새로운 공식 업데이트가 있습니다. F-Droid의 비공식 버젼에서 이전을 원하시면 터치해서 방법을 확인하세요.</string>
+    <string name="update_check_fdroid_migration_info">새로운 공식 업데이트가 있습니다. F-Droid의 비공식 버전에서 이전을 원하시면 터치해서 방법을 확인하세요.</string>
     <string name="update_check_open">GitHub에서 열기</string>
     <string name="error_saving_picture">이미지 저장 오류</string>
     <string name="source_empty_screen">출처를 찾을 수 없습니다</string>
@@ -784,4 +778,9 @@
 \n
 \n그래도 계속하시겠습니까\?</string>
     <string name="information_required_plain">*필수</string>
+    <string name="action_copy_to_clipboard">클립보드에 복사</string>
+    <string name="pref_hide_in_library_items">이미 서재에 있는 항목 숨기기</string>
+    <plurals name="download_amount">
+        <item quantity="other">다음 %d화</item>
+    </plurals>
 </resources>

@@ -69,9 +69,6 @@
     <string name="dialog_with_checkbox_reset">Сбросить все главы для этой серии</string>
     <string name="disabled">Отключено</string>
     <string name="display_mode_chapter">Глава %1$s</string>
-    <string name="download_1">Следующая глава</string>
-    <string name="download_10">Следующие 10 глав</string>
-    <string name="download_5">Следующие 5 глав</string>
     <string name="download_all">Все главы</string>
     <string name="download_notifier_downloader_title">Загрузчик</string>
     <string name="download_notifier_no_network">Нет соединения с сетью</string>
@@ -268,8 +265,6 @@
     <string name="manga_removed_library">Удалено из библиотеки</string>
     <string name="copied_to_clipboard">Скопировано в буфер обмена:
 \n%1$s</string>
-    <string name="custom_download">Загрузить определённое количество</string>
-    <string name="download_custom">Другое количество</string>
     <string name="migration_dialog_what_to_include">Какие данные перенести</string>
     <string name="migrate">Перенести</string>
     <string name="copy">Копировать</string>
@@ -321,7 +316,7 @@
     <string name="theme_dark">Включён</string>
     <string name="theme_system">Система</string>
     <string name="pref_manage_notifications">Управление уведомлениями</string>
-    <string name="pref_category_security">Безопасность</string>
+    <string name="pref_category_security">Безопасность и конфиденциальность</string>
     <string name="lock_with_biometrics">Блокировка биометрией</string>
     <string name="lock_when_idle">Блокировать при бездействии</string>
     <string name="lock_always">Всегда</string>
@@ -374,7 +369,6 @@
     </plurals>
     <string name="email">Адрес электронной почты</string>
     <string name="pref_always_show_chapter_transition">Переход между главами</string>
-    <string name="pref_enable_automatic_extension_updates">Проверять обновления для расширений</string>
     <string name="hide_notification_content">Скрыть содержимое уведомлений</string>
     <string name="secure_screen_summary">Защита экрана скрывает содержимое при переключении между приложениями, а также блокирует создание скриншотов</string>
     <string name="action_oldest">Старейший</string>
@@ -421,7 +415,7 @@
     <string name="creating_backup_error">Не удалось создать резервную копию</string>
     <string name="backup_in_progress">Резервная копия уже выполняется</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
-    <string name="pref_search_pinned_sources_only">Только закреплённые источники</string>
+    <string name="pref_search_pinned_sources_only">Искать только закреплённые источники при глобальном поиске</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Осталась %1$s глава</item>
         <item quantity="few">Осталось %1$s главы</item>
@@ -823,4 +817,12 @@
 \nВы всё ещё хотите продолжить\?</string>
     <string name="track_error">%1$s ошибка: %2$s</string>
     <string name="information_required_plain">*необходимо</string>
+    <plurals name="download_amount">
+        <item quantity="one">Следующая глава</item>
+        <item quantity="few">Следующие %d главы</item>
+        <item quantity="many">Следующие %d глав</item>
+        <item quantity="other">Следующие %d глав</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
+    <string name="action_copy_to_clipboard">Копировать в буфер обмена</string>
 </resources>

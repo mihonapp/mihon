@@ -33,7 +33,7 @@
     <string name="label_sources">Tinubdan</string>
     <string name="label_default">Default</string>
     <string name="label_download_queue">Pag-download sa Pila</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Mga entri sa basahonan</string>
     <string name="track">Pagsubay</string>
     <string name="label_library">Librarya</string>
     <string name="categories">Mga Kategoriya</string>
@@ -76,7 +76,7 @@
     <string name="action_next_chapter">Sunod nga kapitulo</string>
     <string name="action_retry">Sulayi pag-usab</string>
     <string name="action_resume">Ipadayon</string>
-    <string name="action_show_manga">Ipakita ang manga</string>
+    <string name="action_show_manga">Ipakita ang pagsulod</string>
     <string name="action_migrate">Paglalin</string>
     <string name="action_display">Pagpakita</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
@@ -93,7 +93,7 @@
     <string name="action_move_category">Ibutang ang mga kategorya</string>
     <string name="action_pause">Paghunong</string>
     <string name="action_open_in_browser">Ablihi sa browser</string>
-    <string name="action_display_local_badge">Lokal nga manga</string>
+    <string name="action_display_local_badge">Lokal nga tinubdan</string>
     <string name="action_open_in_web_view">Ablihi sa WebView</string>
     <string name="action_display_comfortable_grid">Komportable nga grid</string>
     <string name="action_display_mode">Display mode</string>
@@ -340,7 +340,6 @@
     <string name="pref_download_new_categories_details">Ang manga sa wala iapil nga mga kategorya dili ma-download bisan kung naa usab sila sa mga gilakip nga kategorya.</string>
     <string name="save_chapter_as_cbz">I-save ingon CBZ archive</string>
     <string name="tracking_guide">Giya sa pagsubay</string>
-    <string name="pref_enable_automatic_extension_updates">Susiha ang mga update sa extension</string>
     <string name="network_not_metered">Lamang sa ummetered network</string>
     <string name="ext_info_language">Pinulongan sa Extension</string>
     <string name="ext_info_version">Extension nga Bersyon</string>
@@ -491,5 +490,12 @@
     <string name="username">Username</string>
     <string name="action_display_show_continue_reading_button">Ipakita ang buton sa pagpadayon sa pagbasa</string>
     <string name="action_search_hint">Pangitaa…</string>
-    <string name="action_open_random_manga">Bukas nga random entry</string>
+    <string name="action_open_random_manga">Abli nga random ang pagsulod</string>
+    <string name="label_stats">Istatistika</string>
+    <string name="label_started">Nagsugod</string>
+    <string name="label_downloaded">Gi-download</string>
+    <string name="label_local">Lokal</string>
+    <string name="pref_appearance_summary">Tema, format sa petsa ug panahon</string>
+    <string name="pref_general_summary">Pinulongan sa app, pagpahibawo</string>
+    <string name="action_not_now">Dili karon</string>
 </resources>

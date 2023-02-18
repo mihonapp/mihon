@@ -182,9 +182,6 @@
     <string name="sort_by_source">Sumber</string>
     <string name="sort_by_number">Nomor bab</string>
     <string name="manga_download">Unduh</string>
-    <string name="download_1">Bab berikutnya</string>
-    <string name="download_5">5 bab berikutnya</string>
-    <string name="download_10">10 bab berikutnya</string>
     <string name="download_all">Semua</string>
     <string name="download_unread">Belum dibaca</string>
     <string name="confirm_delete_chapters">Yakin ingin menghapus bab yang dipilih\?</string>
@@ -267,8 +264,6 @@
     <string name="manga_removed_library">Dihapus dari pustaka</string>
     <string name="copied_to_clipboard">Tersalin ke papan klip:
 \n%1$s</string>
-    <string name="custom_download">Unduh sejumlah tertentu</string>
-    <string name="download_custom">Kustom</string>
     <string name="migration_dialog_what_to_include">Pilih data yang ikut dipindah</string>
     <string name="migrate">Pindah</string>
     <string name="copy">Salin</string>
@@ -313,7 +308,7 @@
     <string name="theme_dark">Nyala</string>
     <string name="theme_system">Ikuti sistem</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
-    <string name="pref_category_security">Keamanan</string>
+    <string name="pref_category_security">Keamanan dan privasi</string>
     <string name="unlock_app">Buka Tachiyomi</string>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Susun ulang</string>
@@ -363,7 +358,6 @@
     </plurals>
     <string name="label_sources">Sumber</string>
     <string name="channel_ext_updates">Pembaruan ekstensi</string>
-    <string name="pref_enable_automatic_extension_updates">Periksa pembaruan ekstensi</string>
     <string name="pref_category_reading">Membaca</string>
     <string name="information_webview_required">WebView dibutuhkan untuk Tachiyomi</string>
     <plurals name="update_check_notification_ext_updates">
@@ -407,7 +401,7 @@
     <string name="restore_in_progress">Pemulihan masih dalam proses</string>
     <string name="backup_in_progress">Pencadangan masih dalam proses</string>
     <string name="restore_duration">%02d menit, %02d detik</string>
-    <string name="pref_search_pinned_sources_only">Hanya sertakan sumber yang ditandai</string>
+    <string name="pref_search_pinned_sources_only">Hanya mencari sumber yang dicari dalam pencarian global</string>
     <string name="viewer">Mode membaca</string>
     <string name="pref_true_color_summary">Mengurangi banding, namun berdampak pada performa</string>
     <plurals name="num_categories">
@@ -577,7 +571,7 @@
     <string name="enhanced_tracking_info">Layanan yang menyediakan fitur yang ditingkatan untuk sumber tertentu. Entri dilacak secara otomatis ketika ditambahkan ke pustaka Anda.</string>
     <string name="enhanced_services">Layanan yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">yotsuba</string>
     <string name="theme_yinyang">Yin dan Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Stroberi Daiquiri</string>
@@ -694,7 +688,7 @@
     <string name="custom_cover">Sampul kustom</string>
     <string name="not_installed">Tidak terinstall</string>
     <string name="pref_app_language">Bahasa aplikasi</string>
-    <string name="theme_lavender">Lavender</string>
+    <string name="theme_lavender">lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
     <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"\?</string>
     <string name="internal_error">InternalError: Periksa log kerusakan untuk informasi lebih lanjut</string>
@@ -716,7 +710,7 @@
     <string name="download_ahead_info">Hanya berfungsi pada entri di perpustakaan dan jika bab saat ini ditambah yang berikutnya sudah diunduh</string>
     <string name="remove_manga">Kamu akan menghapus \"%s\" dari pustaka</string>
     <string name="updates_last_update_info">Pustaka terakhir diperbarui: %s</string>
-    <string name="multi_lang">Multi</string>
+    <string name="multi_lang">banyak</string>
     <string name="pref_long_strip_split">Potong gambar panjang (BETA)</string>
     <string name="are_you_sure">Apa kamu yakin\?</string>
     <string name="popular">Populer</string>
@@ -784,4 +778,9 @@
 \nApakah kamu ingin melanjutkan\?</string>
     <string name="track_error">%1$seror%2$s</string>
     <string name="information_required_plain">*dibutuhkan</string>
+    <string name="pref_hide_in_library_items">Semua catatan tersembunyi sudah ada di perpustakaan</string>
+    <plurals name="download_amount">
+        <item quantity="other">berikutnya %d chapter</item>
+    </plurals>
+    <string name="action_copy_to_clipboard">Salin ke papan klip</string>
 </resources>

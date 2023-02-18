@@ -194,7 +194,6 @@
     <string name="pref_download_new">გადმოწერე ახალი თავები</string>
     <string name="services">სერვისები</string>
     <string name="pref_auto_update_manga_sync">განაახლე თავის პროგრესი წაკითხვის შემდეგ</string>
-    <string name="pref_enable_automatic_extension_updates">მოძებნე გავრცობის განახლებები</string>
     <string name="pref_create_backup">რეზერვის შექმნა</string>
     <string name="pref_create_backup_summ">შესაძლებელია გამოყენებულ იქნას ახლანდელი ბიბლიოთეკის ასადგენად</string>
     <string name="pref_restore_backup">რეზერვის აღდგენა</string>
@@ -286,12 +285,7 @@
     <string name="sort_by_number">თავის ნომრის მიხედვით</string>
     <string name="sort_by_upload_date">თარიღის მიხედვით</string>
     <string name="manga_download">გადმოწერა</string>
-    <string name="custom_download">განსაზღვრული რაოდენობის გადმოწერა</string>
-    <string name="download_1">შემდეგი თავი</string>
-    <string name="download_5">შემდეგი 5 თავი</string>
-    <string name="download_10">შემდეგი 10 თავი</string>
     <string name="download_all">ყველა</string>
-    <string name="download_custom">მანუალური</string>
     <string name="download_unread">წაუკითხავი</string>
     <string name="confirm_delete_chapters">დარწმუნებული ხართ რომ გსურთ არჩეული თავების წაშლა?</string>
     <string name="manga_tracking_tab">თვალტყურის დევნება</string>

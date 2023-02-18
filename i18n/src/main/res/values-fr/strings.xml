@@ -160,8 +160,6 @@
     <string name="show_chapter_number">Numéro de chapitre</string>
     <string name="sort_by_number">Par numéro de chapitre</string>
     <string name="manga_download">Télécharger</string>
-    <string name="download_1">Chapitre suivant</string>
-    <string name="download_5">5 prochains chapitres</string>
     <string name="download_all">Tout télécharger</string>
     <string name="download_unread">Non lus</string>
     <!-- MyAnimeList fragment -->
@@ -226,7 +224,6 @@
     <string name="clear_database_confirmation">Êtes-vous sûr(e) \? Les chapitres lus et la progression des entrées non présentes dans la bibliothèque seront perdues</string>
     <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés \?</string>
     <string name="custom_dir">Répertoire personnalisé</string>
-    <string name="download_10">10 prochains chapitres</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
@@ -300,8 +297,6 @@
     <string name="copied_to_clipboard">%1$s
 \na été copié dans le presse papier</string>
     <string name="source_not_installed">Sources non installées : %1$s</string>
-    <string name="custom_download">Télécharger une quantité personnalisée</string>
-    <string name="download_custom">Personnalisé</string>
     <string name="track_status">Statut</string>
     <string name="track_type">Type</string>
     <string name="migration_dialog_what_to_include">Sélectionner les données à inclure</string>
@@ -355,7 +350,7 @@
     <string name="theme_dark">Activé</string>
     <string name="theme_system">Par défaut du système</string>
     <string name="pref_manage_notifications">Notifications</string>
-    <string name="pref_category_security">Sécurité</string>
+    <string name="pref_category_security">Sécurité et confidentialité</string>
     <string name="lock_with_biometrics">Imposer un déverrouillage à l\'ouverture</string>
     <string name="lock_when_idle">Verrouiller en cas d\'inactivité</string>
     <string name="lock_always">Toujours</string>
@@ -412,7 +407,6 @@
         <item quantity="other">%d mises à jour d\'extensions disponibles</item>
     </plurals>
     <string name="http_error_hint">Consultez le site Web de WebView</string>
-    <string name="pref_enable_automatic_extension_updates">Vérifier les mises à jour d’extensions</string>
     <string name="updating_library">Mise à jour de la bibliothèque</string>
     <string name="label_sources">Sources</string>
     <string name="webtoon_side_padding_25">25 %</string>
@@ -455,7 +449,7 @@
         <item quantity="other">%1$s restants</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>
-    <string name="pref_search_pinned_sources_only">N\'inclure que les sources épinglées</string>
+    <string name="pref_search_pinned_sources_only">Rechercher uniquement les sources épinglées dans la recherche globale</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
     <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
@@ -836,12 +830,18 @@
     <string name="label_mean_score">Note moyenne</string>
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
     <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
-    <string name="pref_skip_dupe_chapters">Passer les chapitres en double</string>
-    <string name="confirm_add_duplicate_manga">Il existe un enregistrement dans la bibliothèque avec le même nom.
+    <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
+    <string name="confirm_add_duplicate_manga">Vous avez une entrée dans votre bibliothèque avec le même nom.
 \n
-\nVoulez-vous continuer \?</string>
+\nVoulez-vous toujours continuer \?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
     <string name="pref_worker_info">Infos sur les processus</string>
+    <string name="pref_hide_in_library_items">Masquer les entrées déjà présentes dans la bibliothèque</string>
+    <plurals name="download_amount">
+        <item quantity="one">Chapitre suivant</item>
+        <item quantity="many">%d chapitres suivants</item>
+        <item quantity="other">%d chapitres suivants</item>
+    </plurals>
 </resources>

@@ -218,11 +218,6 @@
     <string name="sort_by_source">Με βάση την πηγή</string>
     <string name="sort_by_number">Ανά αριθμό κεφαλαίου</string>
     <string name="manga_download">Λήψη</string>
-    <string name="custom_download">Λήψη προσαρμοσμένου ποσού</string>
-    <string name="download_1">Επόμενου κεφαλαίου</string>
-    <string name="download_5">Επόμενων 5 κεφαλαίων</string>
-    <string name="download_10">Επόμενων 10 κεφαλαίων</string>
-    <string name="download_custom">Προσαρμοσμένο</string>
     <string name="download_all">Όλα</string>
     <string name="download_unread">Αδιάβαστα</string>
     <string name="confirm_delete_chapters">Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα κεφάλαια;</string>
@@ -369,7 +364,6 @@
     <string name="vertical_plus_viewer">Συνεχής κατακόρυφος</string>
     <string name="pref_skip_filtered_chapters">Παράλειψη φιλτραρισμένων κεφαλαίων</string>
     <string name="pref_cutout_short">Εμφάνιση περιεχομένου στην περιοχή αποκοπής</string>
-    <string name="pref_enable_automatic_extension_updates">Έλεγχος για ενημερώσεις επεκτάσεων</string>
     <string name="ext_updates_pending">Εκκρεμούν ενημερώσεις</string>
     <string name="pref_category_library_update">Καθολική ενημέρωση</string>
     <string name="pref_category_display">Προβολή</string>
@@ -384,7 +378,7 @@
     <string name="lock_always">Πάντα</string>
     <string name="lock_when_idle">Κλείδωμα όταν είναι αδρανής</string>
     <string name="lock_with_biometrics">Απαιτείται ξεκλείδωμα</string>
-    <string name="pref_category_security">Ασφάλεια</string>
+    <string name="pref_category_security">Ασφάλεια και ιδιωτικότητα</string>
     <string name="pref_manage_notifications">Διαχείριση ειδοποιήσεων</string>
     <string name="pref_confirm_exit">Επιβεβαίωση εξόδου</string>
     <string name="pref_date_format">Μορφή ημερομηνίας</string>
@@ -411,7 +405,7 @@
         <item quantity="other">Κεφάλαια %1$s και %2$d ακόμη</item>
     </plurals>
     <string name="downloaded_only_summary">Φιλτράρει όλες τις καταχωρήσεις στη βιβλιοθήκη σας</string>
-    <string name="pref_search_pinned_sources_only">Να περιέχονται μόνο καρφιτσωμένες πηγές</string>
+    <string name="pref_search_pinned_sources_only">Αναζήτηση μόνο καρφιτσωμένων πηγών στην καθολική αναζήτηση</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s που απομένει</item>
         <item quantity="other">%1$s που απομένουν</item>
@@ -797,4 +791,10 @@
     <string name="enhanced_services_not_installed">Διαθέσιμο αλλά η πηγή δεν έχει εγκατασταθεί: %s</string>
     <string name="track_error">%1$s σφάλμα: %2$s</string>
     <string name="information_required_plain">*απαιτούμενο</string>
+    <plurals name="download_amount">
+        <item quantity="one">Επόμενο κεφάλαιο</item>
+        <item quantity="other">Επόμενα %d κεφάλαια</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Απόκρυψη καταχωρήσεων που βρίσκονται ήδη στη βιβλιοθήκη</string>
+    <string name="action_copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
 </resources>

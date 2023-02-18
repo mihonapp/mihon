@@ -165,9 +165,6 @@
     <string name="sort_by_source">Per fonte</string>
     <string name="sort_by_number">Per numero di capitolo</string>
     <string name="manga_download">Scarica</string>
-    <string name="download_1">Prossimo capitolo</string>
-    <string name="download_5">Prossimi 5 capitoli</string>
-    <string name="download_10">Prossimi 10 capitoli</string>
     <string name="download_all">Tutti</string>
     <string name="download_unread">Non letti</string>
     <string name="confirm_delete_chapters">Sei sicuro di voler eliminare i capitoli selezionati\?</string>
@@ -301,8 +298,6 @@
     <string name="copied_to_clipboard">Copiato negli appunti:
 \n%1$s</string>
     <string name="source_not_installed">Fonte non installata: %1$s</string>
-    <string name="custom_download">Scarica quantità personalizzata</string>
-    <string name="download_custom">Personalizzato</string>
     <string name="repeating">Rileggendo</string>
     <string name="track_status">Stato</string>
     <string name="track_type">Tipo</string>
@@ -354,7 +349,7 @@
     <string name="theme_dark">Attivo</string>
     <string name="theme_system">Segui l\'impostazione di sistema</string>
     <string name="pref_manage_notifications">Gestisci le notifiche</string>
-    <string name="pref_category_security">Sicurezza</string>
+    <string name="pref_category_security">Sicurezza e privacy</string>
     <string name="lock_with_biometrics">Richiede sblocco</string>
     <string name="lock_when_idle">Blocca quando inattivo</string>
     <string name="lock_always">Sempre</string>
@@ -405,7 +400,6 @@
     <string name="pref_disable_battery_optimization_summary">Facilita gli aggiornamenti e i backup in secondo piano</string>
     <string name="pref_disable_battery_optimization">Disattiva ottimizzazione batteria</string>
     <string name="pref_always_show_chapter_transition">Mostra sempre la transizione tra capitoli</string>
-    <string name="pref_enable_automatic_extension_updates">Controlla aggiornamenti per le estensioni</string>
     <string name="hide_notification_content">Nascondi contenuto notifiche</string>
     <string name="action_move_to_bottom">Sposta in fondo</string>
     <string name="action_move_to_top">Sposta in cima</string>
@@ -463,7 +457,7 @@
         <item quantity="other">Completato in %1$s con %2$s errori</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
-    <string name="pref_search_pinned_sources_only">Includi solo le fonti fissate</string>
+    <string name="pref_search_pinned_sources_only">Usa solo le fonti fissate per la ricerca globale</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
@@ -843,4 +837,11 @@
 \nVuoi comunque continuare\?</string>
     <string name="track_error">%1$s errore: %2$s</string>
     <string name="information_required_plain">*obbligatorio</string>
+    <plurals name="download_amount">
+        <item quantity="one">Prossimo capitolo</item>
+        <item quantity="many">Prossimo %d capitoli</item>
+        <item quantity="other">Prossimo %d capitoli</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Nascondi le voci già in libreria</string>
+    <string name="action_copy_to_clipboard">Copia negli appunti</string>
 </resources>

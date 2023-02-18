@@ -105,7 +105,7 @@
     <string name="lock_when_idle">Isara kung nakatambay</string>
     <string name="lock_with_biometrics">I-lock gamit ang biometrics</string>
     <string name="pref_manage_notifications">Pamahalaan ang mga abiso</string>
-    <string name="pref_category_security">Seguridad</string>
+    <string name="pref_category_security">Seguridad at privacy</string>
     <string name="pref_confirm_exit">Kumpirmahing aalis</string>
     <string name="pref_date_format">Ayos ng petsa</string>
     <string name="theme_dark">Nakabukas</string>
@@ -256,7 +256,6 @@
     <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang Aklatan</string>
     <string name="pref_create_backup">Mag-backup</string>
     <string name="pref_search_pinned_sources_only">Isama lang ang mga naka-pin</string>
-    <string name="pref_enable_automatic_extension_updates">Tumingin ng mga update sa extension</string>
     <string name="tracking_info">Isahang pagsabay (sync) para mai-update ang progress sa mga kabanata sa mga tracking service. Ayusin ang pagta-track para sa mga indibidwal na entry gamit ang button na Pagta-track.</string>
     <string name="services">Mga Serbisyo</string>
     <string name="pref_auto_update_manga_sync">I-update ang progress pagkabasa</string>
@@ -364,11 +363,6 @@
     <string name="confirm_delete_chapters">Sigurado ka bang gusto mong burahin ang (mga) piniling kabanata\?</string>
     <string name="download_unread">Babasahin</string>
     <string name="download_all">Lahat</string>
-    <string name="download_custom">Pinili ko</string>
-    <string name="download_10">Susunod na 10 kabanata</string>
-    <string name="download_5">Susunod na 5 kabanata</string>
-    <string name="download_1">Susunod</string>
-    <string name="custom_download">Mag-download ng pinili kong bilang</string>
     <string name="manga_download">I-download</string>
     <string name="sort_by_upload_date">Base sa petsa ng pag-upload</string>
     <string name="sort_by_number">Base sa bilang</string>
@@ -442,7 +436,7 @@
     <string name="battery_optimization_setting_activity_not_found">Di mabuksan ang pagsasaayos ng iyong device</string>
     <string name="battery_optimization_disabled">Nakapatay na ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization">Patayin ang pag-o-optimisa sa baterya</string>
-    <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update at pag-backup sa likuran</string>
+    <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
     <string name="pref_refresh_library_tracking_summary">Inia-update ang estado, iskor, at huling nabasang kabanata mula sa mga tracker</string>
     <string name="pref_refresh_library_tracking">Sariwain ang pagta-track</string>
     <string name="pref_refresh_library_covers">Sariwain ang mga cover sa Aklatan</string>
@@ -488,8 +482,8 @@
     <string name="ext_nsfw_warning">Posibleng may NSFW (18+) content ang mga source mula sa extension na ito</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Nilaktawan ang %d na chapter, maaaring wala ang pinagmulan nito o na-filter na ito</item>
-        <item quantity="other">Lalaktawan ang %d na mga chapter, maaaring wala ang pinagmulan nila o na-filter ang mga ito</item>
+        <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa pinagmula o na-filter ang mga ito</item>
+        <item quantity="other">Nilaktawan ang %d na mga chapter, maaaring wala ang pinagmulan nila o na-filter ang mga ito</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -610,7 +604,7 @@
     <string name="pref_relative_format">Pagpepetsa</string>
     <plurals name="relative_time">
         <item quantity="one">Kahapon</item>
-        <item quantity="other">%1$d na (mga) araw ang lumipas</item>
+        <item quantity="other">%1$d araw na nakalipas</item>
     </plurals>
     <string name="recently">Kamakailan</string>
     <string name="relative_time_today">Ngayon</string>
@@ -746,14 +740,14 @@
     <string name="pref_library_summary">Mga kategorya, panlahatang update</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
     <string name="crash_screen_description">Nakaranas ang %s ng isang di inaasahang error. Minumungkahi namin na i-screenshot itong mensahe, itambak ang mga crash log, at saka ibahagi ito sa aming support channel sa Discord.</string>
-    <string name="crash_screen_title">May nangyaring di inaasahang error</string>
+    <string name="crash_screen_title">Ay!</string>
     <string name="pref_general_summary">Wika ng app, mga abiso</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
     <string name="invalid_location">Invalid na lugar: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
     <string name="error_user_agent_string_invalid">Invalid na string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
-    <string name="download_notifier_cache_renewal">Pag-index ng mga pag-download</string>
+    <string name="download_notifier_cache_renewal">Tinitignan ang mga download</string>
     <string name="information_no_entries_found">Walang mga entry ang nahanap sa kategoryang ito</string>
     <string name="action_open_random_manga">Buksan ang random na entry</string>
     <string name="fdroid_warning">Ang mga build ng F-Droid ay hindi opisyal na sinusuportahan.
@@ -784,4 +778,17 @@
     <string name="action_not_now">Hindi muna ngayon</string>
     <string name="not_applicable">N/A</string>
     <string name="label_stats">Istatistika</string>
+    <string name="pref_skip_dupe_chapters">Laktawan ang mga magkakarehas na kabanata</string>
+    <string name="copied_to_clipboard_plain">Kinopya sa clipboard</string>
+    <string name="pref_worker_info">Impormasyon tungkol sa manggagawa</string>
+    <string name="information_required_plain">*kailangan</string>
+    <string name="enhanced_services_not_installed">Mayroon ngunit hindi naka-install ang source: %s</string>
+    <string name="confirm_add_duplicate_manga">Mayroon kang entry sa iyong aklatan na magkapareho ng pangalan.
+\n
+\nGusto mo pa bang magpatuloy\?</string>
+    <string name="track_error">%1$s Kamalian: %2$s</string>
+    <string name="day_short">%dd</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
 </resources>

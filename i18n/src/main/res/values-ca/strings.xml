@@ -218,11 +218,6 @@
     <string name="sort_by_source">Per font</string>
     <string name="sort_by_number">Per número de capítol</string>
     <string name="manga_download">Baixa</string>
-    <string name="custom_download">Baixa\'n una quantitat personalitzada</string>
-    <string name="download_1">El capítol següent</string>
-    <string name="download_5">Els 5 capítols següents</string>
-    <string name="download_10">Els 10 capítols següents</string>
-    <string name="download_custom">Personalitza</string>
     <string name="download_all">Tot</string>
     <string name="download_unread">Els no llegits</string>
     <string name="confirm_delete_chapters">Esteu segur que voleu suprimir els capítols seleccionats\?</string>
@@ -321,7 +316,7 @@
     <string name="theme_dark">Activat</string>
     <string name="theme_system">Per defecte del sistema</string>
     <string name="pref_manage_notifications">Gestiona les notificacions</string>
-    <string name="pref_category_security">Seguretat</string>
+    <string name="pref_category_security">Seguretat i privadesa</string>
     <string name="lock_with_biometrics">Requereix desblocatge</string>
     <string name="lock_when_idle">Bloca per inactivitat</string>
     <string name="lock_always">Sempre</string>
@@ -367,7 +362,6 @@
     <string name="action_oldest">Els més antics</string>
     <string name="action_move_to_top">Mou a dalt de tot</string>
     <string name="action_move_to_bottom">Mou a sota de tot</string>
-    <string name="pref_enable_automatic_extension_updates">Comprova si hi ha actualitzacions de les extensions</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Hi ha una actualització d\'una extensió</item>
         <item quantity="other">Hi ha actualitzacions de %d extensions</item>
@@ -415,7 +409,7 @@
         <item quantity="one">En resta %1$s</item>
         <item quantity="other">En resten %1$s</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Inclou només les fonts fixades</string>
+    <string name="pref_search_pinned_sources_only">Cerca només a les fonts fixades a la cerca global</string>
     <string name="gray_background">Gris</string>
     <string name="viewer">Mode de lectura</string>
     <string name="pref_category_for_this_series">Per a aquesta sèrie</string>
@@ -784,4 +778,23 @@
     <string name="track_error">Error %1$s: %2$s</string>
     <string name="action_not_now">Ara no</string>
     <string name="label_titles_in_global_update">A l\'actualització global</string>
+    <string name="label_overview_section">Resum</string>
+    <string name="label_tracker_section">Seguidors</string>
+    <string name="label_tracked_titles">Elements seguits</string>
+    <string name="label_mean_score">Puntuació mitjana</string>
+    <string name="information_required_plain">*obligatori</string>
+    <plurals name="download_amount">
+        <item quantity="one">El següent capítol</item>
+        <item quantity="other">Els següents %d capítols</item>
+    </plurals>
+    <string name="information_no_manga_category">La categoria és buida</string>
+    <string name="label_used">En ús</string>
+    <string name="not_applicable">N/A</string>
+    <string name="day_short">%dd</string>
+    <string name="pref_worker_info">Informació dels fils d\'execució</string>
+    <string name="hour_short">%dh</string>
+    <string name="minute_short">%dm</string>
+    <string name="seconds_short">%ds</string>
+    <string name="pref_hide_in_library_items">Amaga els elements que ja són a la biblioteca</string>
+    <string name="action_copy_to_clipboard">Copia al porta-retalls</string>
 </resources>

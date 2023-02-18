@@ -218,11 +218,6 @@
     <string name="sort_by_source">按图源</string>
     <string name="sort_by_number">按章节编号</string>
     <string name="manga_download">下载章节</string>
-    <string name="custom_download">下载自定义章节数</string>
-    <string name="download_1">后一章</string>
-    <string name="download_5">后五章</string>
-    <string name="download_10">后十章</string>
-    <string name="download_custom">自定义</string>
     <string name="download_all">全部</string>
     <string name="download_unread">下载未读</string>
     <string name="confirm_delete_chapters">你确定删除所选章节吗？</string>
@@ -361,9 +356,8 @@
     <string name="action_reorganize_by">重新排序</string>
     <string name="action_newest">最新</string>
     <string name="action_oldest">最旧</string>
-    <string name="action_move_to_top">移至顶部</string>
-    <string name="action_move_to_bottom">移至底部</string>
-    <string name="pref_enable_automatic_extension_updates">自动检查插件更新</string>
+    <string name="action_move_to_top">移到顶部</string>
+    <string name="action_move_to_bottom">移到底部</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d 个插件可更新</item>
     </plurals>
@@ -409,7 +403,7 @@
     <string name="downloaded_only_summary">筛选书架里的全部作品</string>
     <string name="check_for_updates">检查更新</string>
     <string name="restore_duration">%02d 分，%02d 秒</string>
-    <string name="pref_search_pinned_sources_only">仅在置顶图源中搜索</string>
+    <string name="pref_search_pinned_sources_only">全局搜索仅限置顶图源</string>
     <string name="gray_background">灰色</string>
     <string name="pref_category_for_this_series">本作品</string>
     <string name="viewer">阅读模式</string>
@@ -467,7 +461,7 @@
         <item quantity="other">%d 个记录平台</item>
     </plurals>
     <string name="pref_read_with_tapping_inverted">反转点按区域</string>
-    <string name="no_pinned_sources">你尚未置顶任意图源</string>
+    <string name="no_pinned_sources">没有置顶图源</string>
     <string name="channel_complete">完成</string>
     <string name="channel_progress">进度</string>
     <string name="channel_errors">错误</string>
@@ -527,8 +521,8 @@
 \n随后请重新安装所有缺失的插件并重新登录进度记录平台。</string>
     <string name="nav_zone_right">右</string>
     <string name="nav_zone_left">左</string>
-    <string name="nav_zone_next">下页</string>
-    <string name="nav_zone_prev">上页</string>
+    <string name="nav_zone_next">下一页</string>
+    <string name="nav_zone_prev">上一页</string>
     <string name="pref_show_navigation_mode_summary">开始阅读时，短暂显示点按区域</string>
     <string name="pref_show_navigation_mode">点按区域提示</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
@@ -657,7 +651,7 @@
     <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
     <string name="channel_skipped">已跳过</string>
     <string name="rotation_reverse_portrait">反向竖屏</string>
-    <string name="action_move_to_top_all_for_series">将连载置顶</string>
+    <string name="action_move_to_top_all_for_series">将作品移到顶部</string>
     <string name="disabled_nav">关闭</string>
     <string name="error_saving_picture">保存图片出错</string>
     <string name="update_check_fdroid_migration_info">新版本可从官方版本中获得。 轻按以了解如何从非官方 F-Droid 版本迁移。</string>
@@ -711,7 +705,7 @@
     <string name="download_ahead">预先下载</string>
     <string name="auto_download_while_reading">阅读时自动下载</string>
     <plurals name="next_unread_chapters">
-        <item quantity="other">接下来 %d 个未读章节</item>
+        <item quantity="other">后续 %d 个未读章节</item>
     </plurals>
     <string name="download_ahead_info">仅对书架中的作品有效，并且要求当前章节和下一章节都已下载</string>
     <string name="are_you_sure">你确定吗？</string>
@@ -784,4 +778,9 @@
 \n要继续添加吗？</string>
     <string name="track_error">%1$s 发生错误：%2$s</string>
     <string name="information_required_plain">*必填</string>
+    <plurals name="download_amount">
+        <item quantity="other">后续 %d 章</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">隐藏已添加到书架的作品</string>
+    <string name="action_copy_to_clipboard">复制到剪贴板</string>
 </resources>

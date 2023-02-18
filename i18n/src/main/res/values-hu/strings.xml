@@ -215,7 +215,7 @@
     <string name="ext_nsfw_warning">Tartalmazhat felnőtt (18+) tartalmat</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="unofficial_extension_message">Ez a bővítmény nem a hivatalos Tachiyomi bővítménylistából származik.</string>
-    <string name="obsolete_extension_message">Ez a bővítmény nem elérhető többé.</string>
+    <string name="obsolete_extension_message">Ez a bővítmény nem elérhető többé. Előfordulhat, hogy nem működik megfelelően, és problémákat okozhat az alkalmazásban. Az eltávolítása javasolt.</string>
     <string name="add_to_library">Könyvtárhoz adás</string>
     <string name="unknown_status">Ismeretlen állapot</string>
     <string name="unknown_author">Ismeretlen szerző</string>
@@ -283,10 +283,6 @@
     <string name="confirm_delete_chapters">Biztosan törölni akarja a kijelölt fejezeteket\?</string>
     <string name="download_unread">Olvasatlan</string>
     <string name="download_all">Összes</string>
-    <string name="download_custom">Egyéni</string>
-    <string name="download_10">Következő 10 fejezet</string>
-    <string name="download_5">Következő 5 fejezet</string>
-    <string name="download_1">Következő fejezet</string>
     <string name="chapter_paused">Szünetel</string>
     <string name="snack_add_to_library">Manga könyvtárhoz adása\?</string>
     <string name="source_not_installed">Forrás nincs telepítve: %1$s</string>
@@ -480,7 +476,6 @@
     <string name="set_chapter_settings_as_default">Beállítás alapértelmezettként</string>
     <string name="pref_tablet_ui_mode">Tablet mód</string>
     <string name="action_move_to_top_all_for_series">Lista elejére</string>
-    <string name="pref_enable_automatic_extension_updates">Bővítmény frissítések keresése</string>
     <string name="http_error_hint">Nézze meg a web oldalt WebView-ban</string>
     <string name="action_global_search_query">Globális keresés \"%1$s\"-ra/re</string>
     <string name="no_more_results">Nincs több találat</string>
@@ -609,7 +604,6 @@
         <item quantity="other">%1$s van hátra</item>
     </plurals>
     <string name="manga_download">Letöltés</string>
-    <string name="custom_download">Megadott mennyiség letöltése</string>
     <string name="publishing_finished">Befejezett</string>
     <string name="description_placeholder">Nincs leírás</string>
     <string name="chapter_downloading_progress">Letöltés (%1$d/%2$d)</string>
@@ -755,4 +749,5 @@
         <item quantity="other">Következő %d olvasatlan fejezet</item>
     </plurals>
     <string name="pref_browse_summary">Források, bővítmények, globális keresés</string>
+    <string name="action_copy_to_clipboard">Másolás a vágólapra</string>
 </resources>

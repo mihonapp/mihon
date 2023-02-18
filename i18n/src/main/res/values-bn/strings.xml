@@ -190,9 +190,6 @@
     <string name="sort_by_source">উৎস অনুযায়ী</string>
     <string name="sort_by_number">অধ্যায়ের নাম্বার অনুযায়ী</string>
     <string name="manga_download">ডাউনলোড</string>
-    <string name="download_1">পরবর্তী অধ্যায়</string>
-    <string name="download_5">পরবর্তী ৫ অধ্যায়</string>
-    <string name="download_10">পরবর্তী ১০ অধ্যায়</string>
     <string name="download_all">সব</string>
     <string name="download_unread">অপঠিত</string>
     <string name="confirm_delete_chapters">আপনি কি নিশ্চিত যে আপনি নির্বাচিত অধ্যায়গুলো মুছে ফেলতে চান?</string>
@@ -269,8 +266,6 @@
     <string name="manga_removed_library">সংগ্রহশালা থেকে অপসারণ করা হয়েছে</string>
     <string name="copied_to_clipboard">ক্লিপবোর্ডে কপি হয়েছে:
 \n%1$s</string>
-    <string name="custom_download">স্বনির্ধারিত পরিমাণ ডাউনলোড করুন</string>
-    <string name="download_custom">স্বনির্ধারিত</string>
     <string name="migration_dialog_what_to_include">যোগ করার জন্য উপাত্ত নির্বাচন করুন</string>
     <string name="migrate">স্থানান্তর</string>
     <string name="copy">অনুলিপি</string>
@@ -372,7 +367,6 @@
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
     <string name="invalid_backup_file">ব্যাকআপ ফাইল গ্রহণযোগ্য নয়</string>
     <string name="pref_search_pinned_sources_only">শুধু আটকানো উৎস যোগ করুন</string>
-    <string name="pref_enable_automatic_extension_updates">এক্সটেনশনের হালনাগাদ সমূহ</string>
     <string name="pref_remove_bookmarked_chapters">বুকমার্ক করা অধ্যায়গুলি মুছে ফেলার অনুমতি দিন</string>
     <string name="pref_category_delete_chapters">অধ্যায় মুছুন</string>
     <string name="webtoon_side_padding_25">২৫%</string>
@@ -694,4 +688,5 @@
     <string name="pref_security_summary">অ্যাপ লক,নিরাপদ পর্দা</string>
     <string name="loader_rar5_error">RARv5 ধরন সমর্থিত নয়</string>
     <string name="skipped_reason_not_caught_up">অপঠিত অধ্যায় থাকায় এড়িয়ে যাওয়া হয়েছে</string>
+    <string name="label_local">স্থানীয়</string>
 </resources>

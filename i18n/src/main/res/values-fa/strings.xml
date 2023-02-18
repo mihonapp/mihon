@@ -68,10 +68,6 @@
     <string name="confirm_delete_chapters">آیا مطمئنید که می خواهید قسمت های انتخاب شده را حذف کنید؟</string>
     <string name="download_unread">خوانده نشده</string>
     <string name="download_all">همه</string>
-    <string name="download_10">۱۰ قسمت بعدی</string>
-    <string name="download_5">۵ قسمت بعدی</string>
-    <string name="download_1">قسمت بعدی</string>
-    <string name="custom_download">تعداد خاصی دانلود شوند</string>
     <string name="manga_download">دانلود شود</string>
     <string name="sort_by_upload_date">بر اساس تاریخ آپلود</string>
     <string name="pref_cutout_short">نمایش محتوا در منطقه برش خورده</string>
@@ -97,7 +93,7 @@
     <string name="in_library">در کتابخانه</string>
     <string name="pref_refresh_library_tracking_summary">وضعیت خواندن، امتیاز و آخرین قسمت خوانده شده را از سایت خدمات ردیابی آپدیت می‌کند</string>
     <string name="pref_refresh_library_tracking">تازه کردن ردیابی</string>
-    <string name="tracking_info">برای به روز رسانی وضعیت پیشرفت قسمت ها، در سایت های خدمات ردیابی، همگام سازی یک طرفه انجام دهید. برای ردیابی هر مانگا از تب ردیابی اقدام کنید.</string>
+    <string name="tracking_info">برای به روز رسانی وضعیت پیشرفت قسمت ها، در سایت های خدمات ردیابی، همگام سازی یک طرفه انجام دهید. برای ردیابی هر داده از تب ردیابی اقدام کنید.</string>
     <string name="webtoon_viewer">وب تون(Webtoon)</string>
     <string name="filter_mode_darken">Burn / Darken</string>
     <string name="filter_mode_lighten">Dodge / Lighten</string>
@@ -148,7 +144,6 @@
     <string name="pref_create_backup_summ">می تواند برای بازگرداندن کتابخانه فعلی استفاده شود</string>
     <string name="pref_create_backup">تهیه نسخه پشتیبان</string>
     <string name="pref_search_pinned_sources_only">فقط افزونه‌های پین شده شامل شوند</string>
-    <string name="pref_enable_automatic_extension_updates">بررسی برای به افزونه‌های آپدیت‌شده</string>
     <string name="services">خدمات</string>
     <string name="pref_auto_update_manga_sync">بعد از خوانده‌شدن، وضعیت قسمت بروزرسانی شود</string>
     <string name="pref_download_new">دانلود قسمت‌های جدید</string>
@@ -179,7 +174,6 @@
     <string name="pref_category_for_this_series">برای این مجموعه</string>
     <string name="decode_image_error">بازکردن عکس با خطا مواجه شد</string>
     <string name="plan_to_read">قصد خواندن دارم(Plan to read)</string>
-    <string name="download_custom">سفارشی</string>
     <string name="custom_dir">مکان سفارشی</string>
     <string name="pref_download_directory">مکان دانلود</string>
     <string name="scale_type_smart_fit">هم اندازه حالت هوشمند</string>
@@ -679,4 +673,12 @@
     <string name="backup_restore_content_full">داده ها از فایل پشتیبان برگردانده میشوند.
 \n
 \nلازم است که افزونه های جا مانده را دستی نصب کنید و وارد یک سرویس دنبال کننده شوید تا بتوانید پیشرفت هر کار را ذخیره کنید.</string>
+    <string name="tracking_guide">راهنمای ردیابی</string>
+    <string name="pref_skip_dupe_chapters">چپتر های تکراری را رد کن</string>
+    <string name="enhanced_tracking_info">فعالسازی سرویس پیشرفته برای منابعی که پشتیبانی کنند. کار های افزوده شده به کتابخانه به صورت خودکار ردگیری میشوند.</string>
+    <string name="action_track">ردگیری</string>
+    <string name="empty_backup_error">هیچ داده کتابخانه ای نیست که پشتیبانی شود</string>
+    <string name="restore_miui_warning">پشتیبانی/بازگردانی ممکن است کار نکند اگر بهینه‌سازی MIUI غیر فعال باشد</string>
+    <string name="enhanced_services_not_installed">در دسترس است اما افزونه منبع نصب نشده است: %s</string>
+    <string name="backup_info">شما باید از پشتیبانی ها در جا های دیگر هم کپی داشته باشید.</string>
 </resources>

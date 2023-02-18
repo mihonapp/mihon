@@ -319,7 +319,6 @@
     <string name="pref_skip_dupe_chapters">Saltar os capítulos duplicados</string>
     <string name="auto_download_while_reading">Baixar automaticamente durante a lectura</string>
     <string name="download_ahead_info">Só funciona con elementos da biblioteca e se o capítulo actual e o seguinte xa están baixados</string>
-    <string name="pref_enable_automatic_extension_updates">Procurar actualizacións das extensións</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="restore_duration">%02d min y %02d seg</string>
     <string name="backup_choice">De que queres facer unha copia de seguridade\?</string>
@@ -339,7 +338,6 @@
     <string name="last_used_source">Usado recentemente</string>
     <string name="latest">Máis recente</string>
     <string name="add_to_library">Engadir á biblioteca</string>
-    <string name="download_1">Seguinte capítulo</string>
     <string name="custom_cover">Portada personalizada</string>
     <string name="confirm_delete_chapters">Estás seguro de querer eliminar os capítulos seleccionados\?</string>
     <string name="chapter_settings">Axustes de capítulo</string>
@@ -616,9 +614,6 @@
     <string name="copied_to_clipboard_plain">Copiado ao portapapeis</string>
     <string name="display_mode_chapter">Capítulo %1$s</string>
     <string name="chapter_error">Erro</string>
-    <string name="custom_download">Baixar unha cantidade personalizada</string>
-    <string name="download_5">5 capítulos seguintes</string>
-    <string name="download_10">10 capítulos seguintes</string>
     <string name="download_all">Todo</string>
     <string name="wish_list">Para ler máis adiante</string>
     <string name="track_remove_finish_date_conf_text">Isto eliminará a data de finalización de %s</string>
@@ -676,7 +671,6 @@
     <string name="update_check_notification_download_error">Erro na descarga</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="delete_downloads_for_manga">Eliminar os capítulos descargados\?</string>
-    <string name="download_custom">Personalizado</string>
     <string name="on_hold">En espera</string>
     <string name="transition_previous">Anterior:</string>
     <string name="transition_no_next">Non hai ningún capítulo máis</string>

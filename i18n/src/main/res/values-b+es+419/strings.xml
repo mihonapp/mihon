@@ -86,8 +86,7 @@
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_create_backup_summ">Se puede utilizar para restaurar la biblioteca actual</string>
     <string name="pref_create_backup">Crear copia de seguridad</string>
-    <string name="pref_search_pinned_sources_only">Solamente incluir fuentes fijados</string>
-    <string name="pref_enable_automatic_extension_updates">Buscar actualizaciones de extensiones</string>
+    <string name="pref_search_pinned_sources_only">Solamente buscar fuentes fijados en búsqueda global</string>
     <string name="tracking_info">Sincronización unidireccional para actualizar el progreso del capítulo en los servicios de sincronización. Configure el seguimiento de las entradas de manga individuales desde su botón de seguimiento.</string>
     <string name="services">Servicios</string>
     <string name="pref_auto_update_manga_sync">Actualizar el progreso después de leer</string>
@@ -192,6 +191,7 @@
     <string name="all">Todos</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoría</item>
+        <item quantity="many">%d categorías</item>
         <item quantity="other">%d categorías</item>
     </plurals>
     <string name="default_category_summary">Preguntar siempre</string>
@@ -228,6 +228,7 @@
     <string name="information_cloudflare_bypass_failure">Fallo al evitar Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Actualización de extensión disponible</item>
+        <item quantity="many">%d actualizaciones de extensiones disponibles</item>
         <item quantity="other">%d actualizaciones de extensiones disponibles</item>
     </plurals>
     <string name="update_check_notification_download_error">Error al descargar</string>
@@ -242,13 +243,14 @@
     <string name="secure_screen">Pantalla segura</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Después de %1$s minuto</item>
+        <item quantity="many">Después de %1$s minutos</item>
         <item quantity="other">Después de %1$s minutos</item>
     </plurals>
     <string name="lock_never">Nunca</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_when_idle">Bloquear cuando está inactivo</string>
     <string name="lock_with_biometrics">Desbloqueo requerido</string>
-    <string name="pref_category_security">Seguridad</string>
+    <string name="pref_category_security">Seguridad y privacidad</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_confirm_exit">Confirmar salir</string>
     <string name="pref_date_format">Formato de fecha</string>
@@ -291,8 +293,9 @@
     <string name="backup_choice">¿De qué quieres hacer copia de seguridad\?</string>
     <string name="backup_in_progress">La copia de seguridad ya está en curso</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">Hecho %1$s con %2$s error</item>
-        <item quantity="other">Hecho %1$s con %2$s errores</item>
+        <item quantity="one">Hecho en %1$s con %2$s error</item>
+        <item quantity="many">Hecho en %1$s con %2$s errores</item>
+        <item quantity="other">Hecho en %1$s con %2$s errores</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d seg</string>
     <string name="restore_completed">Restauración completada</string>
@@ -345,6 +348,7 @@
     <string name="login_title">Iniciar sesión en %1$s</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Queda %1$s</item>
+        <item quantity="many">Quedan %1$s</item>
         <item quantity="other">Quedan %1$s</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrar todos los manga en tu libreria</string>
@@ -362,7 +366,6 @@
     <string name="latest">Recientes</string>
     <string name="action_global_search_hint">Búsqueda global…</string>
     <string name="sort_by_number">Por número de capítulo</string>
-    <string name="download_1">Siguiente capítulo</string>
     <string name="plan_to_read">Leer después</string>
     <string name="paused">Pausado</string>
     <string name="on_hold">En espera</string>
@@ -374,10 +377,6 @@
     <string name="confirm_delete_chapters">¿Estás seguro de que deseas eliminar los capítulos seleccionados\?</string>
     <string name="download_unread">No leídos</string>
     <string name="download_all">Todo</string>
-    <string name="download_custom">Personalizado</string>
-    <string name="download_10">Siguientes 10 capítulos</string>
-    <string name="download_5">Siguientes 5 capítulos</string>
-    <string name="custom_download">Descargar cantidad personalizada</string>
     <string name="manga_download">Descargar</string>
     <string name="sort_by_upload_date">Por fecha de subida</string>
     <string name="sort_by_source">Por fuente</string>
@@ -394,6 +393,7 @@
     <string name="delete_downloads_for_manga">¿Eliminar capítulos descargados\?</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítulo</item>
+        <item quantity="many">%1$s capítulos</item>
         <item quantity="other">%1$s capítulos</item>
     </plurals>
     <string name="manga_info_collapse">Menos</string>
@@ -416,6 +416,7 @@
     <string name="notification_cover_update_failed">Error al actualizar la portada</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Capítulos %1$s y 1 más</item>
+        <item quantity="many">Capítulos %1$s y %2$d más</item>
         <item quantity="other">Capítulos %1$s y %2$d más</item>
     </plurals>
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
@@ -423,6 +424,7 @@
     <string name="notification_chapters_single">Capítulo %1$s</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d nuevo capítulo</item>
+        <item quantity="many">%1$d nuevos capítulos</item>
         <item quantity="other">%1$d nuevos capítulos</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
@@ -476,6 +478,7 @@
     <string name="pref_category_theme">Tema</string>
     <plurals name="num_trackers">
         <item quantity="one">%d rastreador</item>
+        <item quantity="many">%d rastreadores</item>
         <item quantity="other">%d rastreadores</item>
     </plurals>
     <string name="channel_errors">Errores</string>
@@ -489,8 +492,9 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Esto no evita que las extensiones no oficiales o potencialmente marcadas incorrectamente muestren contenido para mayores de 18 años dentro de la aplicación.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Omitiendo %d capítulo, o la fuente no lo encuentra o se ha filtrado</item>
-        <item quantity="other">Omitiendo %d capítulos, o la fuente no los encuentra o se han filtrado</item>
+        <item quantity="one">Omitiendo %d capítulo, fuente no encontrada o ha sido filtrado</item>
+        <item quantity="many">Omitiendo %d capítulos, fuente no encontrada o han sido filtrados</item>
+        <item quantity="other">Omitiendo %d capítulos, fuente no encontrada o han sido filtrados</item>
     </plurals>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
     <string name="chapter_settings_updated">Las configuraciones predeterminadas del capítulo han sido actualizadas</string>
@@ -607,6 +611,7 @@
     <string name="pref_relative_time_long">Largo (Corto +, Hace x días)</string>
     <plurals name="relative_time">
         <item quantity="one">Ayer</item>
+        <item quantity="many">Hace %1$d dias</item>
         <item quantity="other">Hace %1$d dias</item>
     </plurals>
     <string name="relative_time_today">Hoy</string>
@@ -743,7 +748,7 @@
     <string name="pref_tracking_summary">Sincronización de progreso unidireccional, sincronización mejorada</string>
     <string name="multi_lang">Varios idiomas</string>
     <string name="missing_storage_permission">Permiso de almacenamiento no garantizado</string>
-    <string name="crash_screen_title">Ocurrió un error inesperado</string>
+    <string name="crash_screen_title">¡Ups!</string>
     <string name="theme_tidalwave">Marea</string>
     <string name="label_total_chapters">Total</string>
     <string name="label_completed_titles">Manga completado</string>
@@ -775,7 +780,7 @@
 \nPresionar para más información.</string>
     <string name="updates_last_update_info_just_now">Justo ahora</string>
     <string name="unknown_title">Título desconocido</string>
-    <string name="download_notifier_cache_renewal">Indexación de descargas</string>
+    <string name="download_notifier_cache_renewal">Comprobando descargas</string>
     <string name="invalid_location">Ubicación incorrecta: %s</string>
     <string name="pref_reset_user_agent_string">Reestablecer el nombre del navegador</string>
     <string name="update_already_running">Una actualización está actualmente en curso</string>
@@ -790,4 +795,20 @@
     <string name="loader_rar5_error">El formato RARv5 no es soportado</string>
     <string name="information_no_manga_category">Categoría vacía</string>
     <string name="pref_library_update_show_tab_badge">Mostrar conteo de no leídos en icono de actualizaciónes</string>
+    <string name="copied_to_clipboard_plain">Copiado al portapapeles</string>
+    <string name="pref_skip_dupe_chapters">Saltar capítulos duplicados</string>
+    <plurals name="download_amount">
+        <item quantity="one">Siguiente capítulo</item>
+        <item quantity="many">Siguiente %d capítulos</item>
+        <item quantity="other">Siguiente %d capítulos</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Ocultar entradas que ya están en la biblioteca</string>
+    <string name="track_error">%1$s error: %2$s</string>
+    <string name="pref_worker_info">Información del trabajador</string>
+    <string name="confirm_add_duplicate_manga">Tienes una entrada en tu librería con el mismo nombre.
+\n
+\n¿Deseas continuar\?</string>
+    <string name="information_required_plain">*requerido</string>
+    <string name="enhanced_services_not_installed">Disponible, pero la fuente no está instalada: %s</string>
+    <string name="action_copy_to_clipboard">Copiado al portapapeles</string>
 </resources>

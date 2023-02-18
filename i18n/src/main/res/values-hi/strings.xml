@@ -2,15 +2,15 @@
 <resources>
     <string name="name">नाम</string>
     <string name="categories">श्रेणियाँ</string>
-    <string name="manga">मांगा</string>
+    <string name="manga">लाइब्रेरी के आइटम</string>
     <string name="chapters">अध्याय</string>
     <string name="track">पदचिह्न</string>
     <string name="history">इतिहास</string>
     <string name="label_settings">सेटिंग्स</string>
     <string name="label_download_queue">डाउनलोड कतार</string>
-    <string name="label_library">पुस्तकालय</string>
+    <string name="label_library">संग्रह</string>
     <string name="label_recent_manga">इतिहास</string>
-    <string name="label_recent_updates">अपडेट</string>
+    <string name="label_recent_updates">नए अपडेट्स</string>
     <string name="label_backup">बैकअप और पुनर्स्थापना</string>
     <string name="action_settings">सेटिंग</string>
     <string name="action_filter">फिल्टर</string>
@@ -190,9 +190,6 @@
     <string name="sort_by_source">स्रोत से</string>
     <string name="sort_by_number">अध्याय संख्या से</string>
     <string name="manga_download">डाउनलोड</string>
-    <string name="download_1">अगला अध्याय</string>
-    <string name="download_5">अगले 5 अध्याय</string>
-    <string name="download_10">अगले 10 अध्याय</string>
     <string name="download_all">सभी</string>
     <string name="download_unread">अपठित</string>
     <string name="confirm_delete_chapters">क्या आप वाकई चयनित अध्यायों को हटाना चाहते हैं?</string>
@@ -269,8 +266,6 @@
     <string name="manga_removed_library">लाइब्रेरी से निकाला गया</string>
     <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल:
 \n%1$s</string>
-    <string name="custom_download">कस्टम राशि डाउनलोड करें</string>
-    <string name="download_custom">कस्टम</string>
     <string name="migration_dialog_what_to_include">शामिल करने के लिए डेटा का चयन करें</string>
     <string name="migrate">प्रवास</string>
     <string name="copy">नकल</string>
@@ -305,14 +300,14 @@
     <string name="action_webview_refresh">रीफ़्रेश करें</string>
     <string name="pref_category_library">पुस्तकालय</string>
     <string name="ext_obsolete">अप्रचलित</string>
-    <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है।</string>
+    <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है। यह अब शायद ठीक से काम न करे और मसला खड़ा करे। इसे अनइंस्टॉल करने की सलाह दी गई है।</string>
     <string name="pref_date_format">दिनांक स्वरूप</string>
     <string name="pref_category_library_update">अद्यतन</string>
     <string name="logout_title">%1$s से लॉगआउट करें\?</string>
     <string name="logout">लॉग आउट</string>
     <string name="logout_success">अब आप लॉग आउट है</string>
     <string name="paused">रोका हुआ</string>
-    <string name="label_more">अधिक</string>
+    <string name="label_more">अन्य</string>
     <string name="action_sort_latest_chapter">नवीनतम अध्याय</string>
     <string name="action_view_chapters">अध्याय देखें</string>
     <string name="action_cancel_all">सब रद्द करो</string>
@@ -367,7 +362,6 @@
     <string name="action_oldest">सबसे पुराना</string>
     <string name="action_move_to_top">शीर्ष पर ले जाएँ</string>
     <string name="action_move_to_bottom">नीचे की ओर ले जाएं</string>
-    <string name="pref_enable_automatic_extension_updates">एक्सटेंशन अपडेट की जांच करें</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">एक्सटेंशन अपडेट उपलब्ध</item>
         <item quantity="other">%d एक्सटेंशन अपडेट उपलब्ध</item>
@@ -535,11 +529,11 @@
 \nआपको किसी भी लापता एक्सटेंशन को इंस्टॉल करना होगा और बाद में सेवाओं को ट्रैक करने के लिए लॉग इन करना होगा ताकि उनका उपयोग किया जा सके।</string>
     <string name="pref_dual_page_invert_summary">यदि दोहरे पृष्ठ विभाजन की नियुक्ति पढ़ने की दिशा से मेल नहीं खाती है</string>
     <string name="pref_dual_page_invert">दोहरे पृष्ठ विभाजन प्लेसमेंट को पलटना</string>
-    <string name="pref_dual_page_split">दोहरी पृष्ठ विभाजन</string>
+    <string name="pref_dual_page_split">चौड़े पृष्ठ को दो भागों में बांट दे</string>
     <string name="action_start_downloading_now">अभी डाउनलोड करना शुरू करें</string>
     <string name="action_show_errors">विवरण देखने के लिए टैप करें</string>
     <string name="cancel_all_for_series">इस श्रृंखला के लिए सभी रद्द करें</string>
-    <string name="action_display_local_badge">स्थानीय पुस्तक</string>
+    <string name="action_display_local_badge">स्थानीय स्रोत</string>
     <string name="pref_dark_theme_pure_black">पूरा काला मोड़</string>
     <string name="theme_tako">टाको</string>
     <string name="theme_strawberrydaiquiri">स्ट्रॉबेरी</string>
@@ -580,7 +574,7 @@
     <string name="rotation_type">रोटेशन प्रकार</string>
     <string name="rotation_portrait">सीधा</string>
     <string name="rotation_landscape">परिदृश्य</string>
-    <string name="action_sort_count">कुल किताबें</string>
+    <string name="action_sort_count">कुल आइटम</string>
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
     <string name="pref_relative_time_short">लघु (आज, कल)</string>
     <string name="pref_relative_time_long">लंबा (लघु+, n दिन पहले)</string>
@@ -662,7 +656,7 @@
     <string name="skipped_reason_not_caught_up">छोड़ दिया गया क्योंकि वहाँ अपठित अध्याय हैं</string>
     <string name="skipped_reason_not_started">छोड़ दिया गया क्योंकि कोई अध्याय पढ़ा नहीं गया</string>
     <string name="pref_update_only_started">जो शुरू नहीं हुए हैं</string>
-    <string name="action_show_manga">मंगा दिखाएँ</string>
+    <string name="action_show_manga">आइटम दिखाएँ</string>
     <string name="action_display_cover_only_grid">केवल कवर ग्रिड</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
@@ -673,7 +667,7 @@
     <string name="action_move_to_top_all_for_series">श्रृंखला को शीर्ष पर ले जाएं</string>
     <string name="source_empty_screen">कोई स्रोत नहीं मिला</string>
     <string name="source_filter_empty_screen">कोई स्थापित स्रोत नहीं मिला</string>
-    <string name="action_sort_last_manga_update">आखिरी किताब अद्यतन</string>
+    <string name="action_sort_last_manga_update">आखिरी आइटम अद्यतन</string>
     <string name="action_sort_unread_count">अपठित गिनती</string>
     <string name="battery_not_low">जब बैटरी कम नहीं</string>
     <string name="webview_data_deleted">वेब्यु डेटा साफ हो गया</string>
@@ -733,4 +727,12 @@
     <string name="cant_open_last_read_chapter">अंतिम पढ़ा गया अध्याय खोलने में असमर्थ</string>
     <string name="pref_reset_user_agent_string">यूजर एजेंट स्ट्रिंग(User agent string) डिफॉल्ट रिसेट करें</string>
     <string name="on_hold_list">होल्ड लिस्ट में</string>
+    <string name="label_stats">आंकड़े</string>
+    <string name="label_started">शुरू किए गए आइटम</string>
+    <string name="label_downloaded">डाउनलोड किए गए</string>
+    <string name="action_copy_to_clipboard">क्लिपबोर्ड पर कॉपी करें</string>
+    <string name="action_search_hint">खोजें…</string>
+    <string name="action_display_show_continue_reading_button">पढ़ना जारी रखने वाला बटन दिखाए</string>
+    <string name="label_local">स्थानीय</string>
+    <string name="action_open_random_manga">कोई भी आइटम खोल दे</string>
 </resources>

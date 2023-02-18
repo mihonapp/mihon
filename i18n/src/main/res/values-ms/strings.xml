@@ -93,7 +93,7 @@
     <string name="pref_keep_screen_on">Tetap nyalakan skrin</string>
     <string name="pref_reader_navigation">Navigasi</string>
     <string name="pref_read_with_volume_keys">Butang volum</string>
-    <string name="pref_read_with_volume_keys_inverted">Songsangkan butang volum</string>
+    <string name="pref_read_with_volume_keys_inverted">Songsangkan butang kelantangan</string>
     <string name="pref_reader_theme">Warna latar</string>
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
@@ -189,9 +189,6 @@
     <string name="sort_by_source">Mengikut sumber</string>
     <string name="sort_by_number">Mengikut nombor bab</string>
     <string name="manga_download">Muat turun</string>
-    <string name="download_1">Bab seterusnya</string>
-    <string name="download_5">5 bab seterusnya</string>
-    <string name="download_10">10 bab seterusnya</string>
     <string name="download_all">Semua</string>
     <string name="download_unread">Belum dibaca</string>
     <string name="confirm_delete_chapters">Adakah anda pasti ingin memadamkan bab yang dipilih\?</string>
@@ -274,8 +271,6 @@
     <string name="copied_to_clipboard">Disalin ke papan keratan:
 \n%1$s</string>
     <string name="source_not_installed">Sumber tidak dipasang: %1$s</string>
-    <string name="custom_download">Muat turun jumlah tersuai</string>
-    <string name="download_custom">Tersuai</string>
     <string name="repeating">Membaca semula</string>
     <string name="track_status">Status</string>
     <string name="track_type">Jenis</string>
@@ -321,7 +316,7 @@
     <string name="theme_dark">Hidup</string>
     <string name="theme_system">Ikut sistem</string>
     <string name="pref_manage_notifications">Uruskan pemberitahuan</string>
-    <string name="pref_category_security">Keselamatan</string>
+    <string name="pref_category_security">Keselamatan dan privasi</string>
     <string name="lock_with_biometrics">Memerlukan buka kunci</string>
     <string name="lock_when_idle">Kunci apabila terbiar</string>
     <string name="lock_always">Selalu</string>
@@ -363,7 +358,6 @@
     <string name="action_oldest">Terlama</string>
     <string name="action_move_to_top">Naik ke atas</string>
     <string name="action_move_to_bottom">Turun ke bawah</string>
-    <string name="pref_enable_automatic_extension_updates">Menyemak kemas kini sambungan</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d kemas kini sambungan tersedia</item>
     </plurals>
@@ -409,7 +403,7 @@
     <plurals name="download_queue_summary">
         <item quantity="other">%1$s baki</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Hanya termasuk sumber yang disematkan</string>
+    <string name="pref_search_pinned_sources_only">Hanya cari sumber yang disematkan di dalam carian keseluruhan</string>
     <string name="gray_background">Kelabu</string>
     <string name="viewer">Mod membaca</string>
     <string name="pref_category_for_this_series">Untuk siri ini</string>
@@ -717,7 +711,7 @@
     <string name="are_you_sure">Adakah anda pasti\?</string>
     <string name="multi_lang">Pelbagai</string>
     <string name="updates_last_update_info">Terakhir pustaka dikemas kini: %s</string>
-    <string name="remove_manga">Anda akan membuang \"%s\" ini dariapda pustaka anda</string>
+    <string name="remove_manga">Anda akan membuang \"%s\" ini daripada pustaka anda</string>
     <string name="pref_long_strip_split">Pisah imej panjang (BETA)</string>
     <string name="popular">Popular</string>
     <string name="missing_storage_permission">Kebenaran storan tidak diberikan</string>
@@ -784,4 +778,9 @@
 \n
 \nAdakah anda ingin meneruskan\?</string>
     <string name="information_required_plain">*diperlukan</string>
+    <plurals name="download_amount">
+        <item quantity="other">%d bab seterusnya</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Sembunyikan entri yang sudah ada di dalam pustaka</string>
+    <string name="action_copy_to_clipboard">Salin ke papan keratan</string>
 </resources>

@@ -219,11 +219,6 @@
     <string name="sort_by_source">Pro fonte</string>
     <string name="sort_by_number">Pro nùmeru de capìtulu</string>
     <string name="manga_download">Iscàrriga</string>
-    <string name="custom_download">Iscàrriga una cantidade personalizada</string>
-    <string name="download_1">Capìtulu imbeniente</string>
-    <string name="download_5">Sos 5 capìtulos imbenientes</string>
-    <string name="download_10">Sos 10 capìtulos imbenientes</string>
-    <string name="download_custom">Personalizadu</string>
     <string name="download_all">Totu</string>
     <string name="download_unread">Non lèghidos</string>
     <string name="confirm_delete_chapters">Ses seguru de chèrrere iscantzellare sos capìtulos ischertados\?</string>
@@ -321,7 +316,7 @@
     <string name="theme_dark">Allutu</string>
     <string name="theme_system">Sighi su sistema</string>
     <string name="pref_manage_notifications">Amministra sas notìficas</string>
-    <string name="pref_category_security">Seguresa</string>
+    <string name="pref_category_security">Seguresa e riservadesa</string>
     <string name="lock_with_biometrics">Tocat a l\'isblocare</string>
     <string name="lock_when_idle">Bloca cando no est ativu</string>
     <string name="lock_always">Semper</string>
@@ -367,7 +362,6 @@
     <string name="action_oldest">Prus betzos</string>
     <string name="action_move_to_top">Manda a pitzus</string>
     <string name="action_move_to_bottom">Manda a fundu</string>
-    <string name="pref_enable_automatic_extension_updates">Chirca agiornamentos de sas estensiones</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">B\'at un\'agiornamentu disponìbile pro un\'estensione</item>
         <item quantity="other">B\'ant agiornamentos disponìbiles pro %d estensiones</item>
@@ -411,7 +405,7 @@
     <string name="restore_duration">%02d min e %02d seg</string>
     <string name="local_source_help_guide">Ghia a sas fontes locales</string>
     <string name="downloaded_only_summary">Filtrat totu sos elementos in sa biblioteca tua</string>
-    <string name="pref_search_pinned_sources_only">Inclue petzi sas fontes apicadas</string>
+    <string name="pref_search_pinned_sources_only">Chirca petzi in sas fontes apicadas in sa chirca globale</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Nd\'abarrat %1$s</item>
         <item quantity="other">Nd\'abarrant %1$s</item>
@@ -797,4 +791,10 @@
     <string name="enhanced_services_not_installed">A disponimentu ma sa fonte no est installada: %s</string>
     <string name="track_error">Errore %1$s: %2$s</string>
     <string name="information_required_plain">*netzessàriu</string>
+    <plurals name="download_amount">
+        <item quantity="one">Su capìtulu imbeniente</item>
+        <item quantity="other">Sos %d capìtulos imbenientes</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">Cua sos elementos giai in sa biblioteca</string>
+    <string name="action_copy_to_clipboard">Còpia in punta de billete</string>
 </resources>

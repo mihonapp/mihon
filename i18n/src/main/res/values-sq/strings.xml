@@ -439,7 +439,6 @@
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="enhanced_tracking_info">Shërbime që ofrojnë veçori të përmirësuara për burime specifike. Regjistrimet gjurmohen automatikisht kur shtohen në bibliotekën tuaj.</string>
     <string name="action_track">Pista</string>
-    <string name="pref_enable_automatic_extension_updates">Kontrolloni për përditësime shtesë</string>
     <string name="pref_backup_service_category">Rezervime automatike</string>
     <string name="pref_backup_interval">Frekuenca rezervë</string>
     <string name="pref_backup_slots">Rezervimet maksimale</string>
@@ -460,7 +459,6 @@
     <string name="source_not_installed">Burimi nuk është i instaluar: %1$s</string>
     <string name="sort_by_upload_date">Sipas datës së ngarkimit</string>
     <string name="manga_download">Shkarko</string>
-    <string name="download_5">5 kapitujt e ardhshëm</string>
     <string name="unread">Të palexuara</string>
     <string name="manga_tracking_tab">Ndjekja</string>
     <string name="unfinished_list">Lista e papërfunduar</string>
@@ -639,9 +637,6 @@
     <string name="show_title">Titulli i burimit</string>
     <string name="sort_by_source">Sipas burimit</string>
     <string name="sort_by_number">Sipas numrit të kapitullit</string>
-    <string name="download_1">Kapitulli tjetër</string>
-    <string name="download_10">10 kapitujt e ardhshëm</string>
-    <string name="download_custom">Me porosi</string>
     <string name="download_all">Të gjitha</string>
     <string name="download_unread">Të palexuara</string>
     <string name="custom_cover">Kopertine e personalizuar</string>
@@ -747,7 +742,6 @@
     <string name="last_used_source">Përdorur për herë të fundit</string>
     <string name="remove_from_library">Hiqe nga biblioteka</string>
     <string name="error_saving_cover">Gabim gjatë ruajtjes së kopertinës</string>
-    <string name="custom_download">Shkarkoni shumën e personalizuar</string>
     <string name="notification_first_add_to_library">Ju lutemi shtoni hyrjen në bibliotekën tuaj përpara se ta bëni këtë</string>
     <string name="confirm_set_chapter_settings">Jeni i sigurt që dëshironi t\'i ruani këto cilësime si parazgjedhje\?</string>
     <string name="dialog_with_checkbox_remove_description">Kjo do të heqë datën e leximit të këtij kapitulli. A je i sigurt\?</string>

@@ -164,9 +164,6 @@
 \n%1$s</string>
     <string name="chapter_paused">Gelditurik</string>
     <string name="show_chapter_number">Kapituluaren zenbakia</string>
-    <string name="custom_download">Deskargatu kopuru pertsonalizatua</string>
-    <string name="download_1">Hurrengo kapitulua</string>
-    <string name="download_5">Hurrengo 5 kapituluak</string>
     <string name="download_unread">Irakurri gabea</string>
     <string name="manga_cover">Azala</string>
     <string name="set_chapter_settings_as_default">Ezarri lehenetsia bezala</string>
@@ -302,7 +299,6 @@
     <string name="zoom_start_right">Eskuina</string>
     <string name="double_tap_anim_speed_0">Animaziorik ez</string>
     <string name="pref_category_reading_mode">Irakurketa modua</string>
-    <string name="pref_enable_automatic_extension_updates">Egiaztatu luzapenen eguneraketak</string>
     <string name="label_network">Sarea</string>
     <string name="pref_remove_exclude_categories">Baztertutako kategoriak</string>
     <string name="second_to_last">Azkenaurreko irakurritako kapitulua</string>
@@ -332,12 +328,10 @@
     <string name="manga_from_library">Liburutegiko manga</string>
     <string name="clipboard_copy_error">Ezin izan da arbelean kopiatu</string>
     <string name="manga_download">Deskargatu</string>
-    <string name="download_custom">Pertsonalizatua</string>
     <string name="add_to_library">Gehitu liburutegira</string>
     <string name="myanimelist_relogin">Mesedez, hasi saioa berriro MAL-en</string>
     <string name="show_title">Iturriaren izenburua</string>
     <string name="sort_by_source">Iturriaren arabera</string>
-    <string name="download_10">Hurrengo 10 kapituluak</string>
     <string name="download_all">Denak</string>
     <string name="confirm_set_chapter_settings">Ziur ezarpen hauek lehenetsi gisa gorde nahi dituzula\?</string>
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>

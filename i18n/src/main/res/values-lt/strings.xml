@@ -335,7 +335,6 @@
     <string name="pref_backup_interval">Atsarginių kopijų kūrimo dažnis</string>
     <string name="third_to_last">Trečias nuo paskutinio skaityto</string>
     <string name="disabled">Išjungtas</string>
-    <string name="pref_enable_automatic_extension_updates">Patikrinkite plėtinių atnaujinimus</string>
     <string name="pref_hide_threshold">Jautrumas, skirtas paslėpti meniu slinkant</string>
     <string name="pref_low">Žemas</string>
     <string name="pref_download_new">Atsisiųsti naujus skyrius</string>
@@ -620,8 +619,6 @@
     <string name="sort_by_source">Pagal šaltinį</string>
     <string name="sort_by_upload_date">Pagal įkėlimo datą</string>
     <string name="manga_download">Atsisiųsti</string>
-    <string name="custom_download">Pasirinktinis skyrių atsisiuntimas</string>
-    <string name="download_1">Sekantis skyrius</string>
     <string name="date">Data</string>
     <string name="updating_category">Kategorijos atnaujinimas</string>
     <string name="updated_version">Atnaujinta į v%1$s</string>
@@ -681,9 +678,6 @@
     <string name="add_to_library">Pridėti į biblioteką</string>
     <string name="manga_removed_library">Pašalinti iš bibliotekos</string>
     <string name="manga_info_collapse">Mažiau</string>
-    <string name="download_5">Sekantis 5 skyriai</string>
-    <string name="download_10">Sekančius 10 skyrių</string>
-    <string name="download_custom">Pasirinkti skyrius</string>
     <string name="download_unread">Dar neskaitytus</string>
     <string name="custom_cover">Individualus viršelis</string>
     <string name="error_sharing_cover">Įvyko klaida bendrinant viršelį</string>

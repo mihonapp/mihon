@@ -108,10 +108,6 @@
     <string name="chapter_paused">Pozastaveno</string>
     <string name="sort_by_source">Podle zdroje</string>
     <string name="manga_download">Stáhnout</string>
-    <string name="download_1">Stáhnout další kapitolu</string>
-    <string name="download_5">Stáhnout dalších 5 kapitol</string>
-    <string name="download_10">Stáhnout dalších 10 kapitol</string>
-    <string name="download_custom">Stáhnout vlastní</string>
     <string name="download_all">Stáhnout vše</string>
     <string name="download_unread">Stáhnout nepřečtené</string>
     <string name="confirm_delete_chapters">Opravdu chcete smazat vybrané kapitoly\?</string>
@@ -247,7 +243,6 @@
     <string name="copied_to_clipboard">Zkopírováno do schránky:
 \n%1$s</string>
     <string name="sort_by_number">Podle čísla kapitoly</string>
-    <string name="custom_download">Stažení vlastního počtu</string>
     <string name="manga_tracking_tab">Sledování</string>
     <string name="dropped">Již nečtu</string>
     <string name="on_hold">Pozastaveno</string>
@@ -326,7 +321,7 @@
     <string name="lock_never">Nikdy</string>
     <string name="lock_always">Vždy</string>
     <string name="lock_when_idle">Uzamknout při nečinnosti</string>
-    <string name="pref_category_security">Bezpečnost</string>
+    <string name="pref_category_security">Bezpečnost a soukromí</string>
     <string name="pref_manage_notifications">Spravovat oznámení</string>
     <string name="action_oldest">Nejstarší</string>
     <string name="action_newest">Nejnovější</string>
@@ -403,7 +398,6 @@
     <string name="backup_restore_missing_sources">Chybějící zdroje:</string>
     <string name="invalid_backup_file_missing_manga">Záloha neobsahuje žádné položky knihovny.</string>
     <string name="invalid_backup_file">Neplatný soubor se zálohou</string>
-    <string name="pref_enable_automatic_extension_updates">Kontrolovat dostupnost aktualizací rozšíření</string>
     <string name="tracking_info">Jednosměrná synchronizace pro aktualizaci počtu přečtených kapitol ve sledovacích službách. Nastavení sledování pro každou položku je možné z jejich tlačítka sledování.</string>
     <string name="pref_remove_bookmarked_chapters">Povolení mazání kapitol se záložkami</string>
     <string name="pref_category_delete_chapters">Smazat kapitoly</string>
@@ -528,7 +522,7 @@
         <item quantity="other">%d sledovačů</item>
     </plurals>
     <string name="also_set_chapter_settings_for_library">Také nastavit pro všechny položky v mé knihovně</string>
-    <string name="pref_search_pinned_sources_only">Zahrnout pouze připnuté zdroje</string>
+    <string name="pref_search_pinned_sources_only">V globálním vyhledávání prohledávejte pouze připnuté zdroje</string>
     <string name="pref_category_reading">Čtení</string>
     <string name="pref_show_reading_mode_summary">Při otevření čtečky krátce zobrazí aktuální režim</string>
     <string name="ext_updates_pending">Čekajících aktualizací</string>
@@ -810,4 +804,11 @@
 \nStále si přejete pokračovat\?</string>
     <string name="track_error">%1$s chyba: %2$s</string>
     <string name="information_required_plain">*vyžadováno</string>
+    <string name="pref_hide_in_library_items">Skrýt položky, které jsou již v knihovně</string>
+    <plurals name="download_amount">
+        <item quantity="one">Další kapitola</item>
+        <item quantity="few">Další %d kapitoly</item>
+        <item quantity="other">Dalších %d kapitol</item>
+    </plurals>
+    <string name="action_copy_to_clipboard">Zkopírovat do schránky</string>
 </resources>

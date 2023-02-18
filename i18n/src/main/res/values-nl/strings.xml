@@ -146,9 +146,6 @@
     <string name="sort_by_source">Op bron</string>
     <string name="sort_by_number">Op hoofdstuknummer</string>
     <string name="manga_download">Downloaden</string>
-    <string name="download_1">Volgende hoofdstuk</string>
-    <string name="download_5">Volgende 5 hoofdstukken</string>
-    <string name="download_10">Volgende 10 hoofdstukken</string>
     <string name="download_all">Alles</string>
     <string name="download_unread">Ongelezen</string>
     <string name="confirm_delete_chapters">Weet je zeker dat je de geselecteerde hoofdstukken wilt verwijderen\?</string>
@@ -272,8 +269,6 @@
     <string name="copied_to_clipboard">Gekopieerd naar het klembord:
 \n%1$s</string>
     <string name="source_not_installed">Bron niet geïnstalleerd: %1$s</string>
-    <string name="custom_download">Download aangepaste hoeveelheid</string>
-    <string name="download_custom">Aangepast</string>
     <string name="repeating">Opnieuw aan het lezen</string>
     <string name="track_status">Status</string>
     <string name="track_type">Soort</string>
@@ -321,7 +316,7 @@
     <string name="theme_dark">Aan</string>
     <string name="theme_system">Volg systeeminstelling</string>
     <string name="pref_manage_notifications">Meldingen beheren</string>
-    <string name="pref_category_security">Beveiliging</string>
+    <string name="pref_category_security">Beveiliging en privacy</string>
     <string name="lock_with_biometrics">Ontgrendeling vereisen</string>
     <string name="lock_when_idle">Vergrendelen indien niet in gebruik</string>
     <string name="lock_always">Altijd</string>
@@ -409,7 +404,6 @@
     <string name="vertical_plus_viewer">Doorlopend verticaal</string>
     <string name="pref_skip_filtered_chapters">Gefilterde hoofdstukken overslaan</string>
     <string name="pref_cutout_short">Inhoud in uitgesneden gebied laten zien</string>
-    <string name="pref_enable_automatic_extension_updates">Zoeken naar updates voor extensies</string>
     <string name="hide_notification_content">Meldingsinhoud verbergen</string>
     <string name="pref_confirm_exit">Bevestig sluiten</string>
     <string name="action_move_to_top">Verplaats naar top</string>
@@ -648,7 +642,7 @@
     <string name="clear_database_source_item_count">%1$d items niet in de bibliotheek in database</string>
     <string name="save_chapter_as_cbz">Opslaan als CBZ archief</string>
     <string name="pref_auto_clear_chapter_cache">Hoofdstuk cache leegmaken na het sluiten van de app</string>
-    <string name="pref_library_update_manga_restriction">Updaten overslaan</string>
+    <string name="pref_library_update_manga_restriction">Bijwerken overslaan</string>
     <string name="pref_update_only_completely_read">Heeft ongelezen hoofdstukken</string>
     <string name="extension_api_error">Lijst met extensies ophalen mislukt</string>
     <string name="publishing_finished">Uitgave voltooid</string>
@@ -663,7 +657,7 @@
     <string name="skipped_reason_not_started">Overgeslagen want er zijn geen gelezen hoofdstukken</string>
     <string name="channel_skipped">Overgeslagen</string>
     <string name="pref_landscape_zoom">Zoom liggende afbeelding</string>
-    <string name="pref_navigate_pan">Navigeer binnen de afbeelding</string>
+    <string name="pref_navigate_pan">Tik om door brede afbeeldingen te scrollen</string>
     <string name="action_show_manga">Laat item zien</string>
     <string name="action_display_cover_only_grid">Alleen-cover rooster</string>
     <string name="rotation_reverse_portrait">Omgedraaid portret-modus</string>
@@ -682,7 +676,7 @@
     <string name="download_notifier_split_page_not_found">Pagina %d niet gevonden tijdens het splitsen</string>
     <string name="internal_error">InternalError: Bekijk de crash logs voor meer informatie</string>
     <string name="theme_lavender">Lavendel</string>
-    <string name="action_sort_last_manga_update">Laatst bijgewerkte manga</string>
+    <string name="action_sort_last_manga_update">Laatst gecontroleerd op updates</string>
     <string name="action_remove_everything">Alles verwijderen</string>
     <string name="delete_category_confirmation">Wenst u categorie \"%s\" te verwijderen\?</string>
     <string name="delete_category">Categorie verwijderen</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="manga">Манкӑ</string>
+    <string name="manga">Вулавӑшӑн серилӗхӗсем</string>
     <string name="used_cache">Усӑ курнӑ: %1$s</string>
     <string name="cookies_cleared">Куккисем катертнӗ</string>
     <string name="pref_clear_cookies">Кукки тасат</string>
@@ -56,7 +56,7 @@
         <item quantity="one">1 минут хыҫҫӑн</item>
         <item quantity="other">%1$s минут хыҫҫӑн</item>
     </plurals>
-    <string name="pref_category_security">Сыхлав</string>
+    <string name="pref_category_security">Сыхлав тата вӑрттӑнлӑх</string>
     <string name="pref_manage_notifications">Систерӳсене ӗнерле</string>
     <string name="pref_confirm_exit">Тухнине ҫирӗплет</string>
     <string name="pref_date_format">Вӑхӑт формачӗ</string>
@@ -198,7 +198,6 @@
     <string name="ext_pending">Кӗтет</string>
     <string name="backup_restore_missing_sources">Ҫук ҫӑл куҫсем:</string>
     <string name="pref_search_pinned_sources_only">Ҫакнӑ ҫӑл куҫсене ҫеҫ кӗрт</string>
-    <string name="pref_enable_automatic_extension_updates">Хушмасем валли ҫӗнетӳ пуррине тӗрӗслемелле</string>
     <string name="tracking_info">Сӑнану сервиссенче сыпӑкӑн ӳсӗмне ҫӗнетме пӗр енлӗ пӗрлӗхлени. Манкӑн уйрӑм ҫыравӗсемпе вӗсен сӑнану пускӑчсем валли сӑнану ӗнерле.</string>
     <string name="pref_auto_update_manga_sync">Вуланӑ хыҫҫӑн сыпӑксен ӳсӗме ҫӗнет</string>
     <string name="fifth_to_last">Вуланӑ сыпӑкран пиллӗкмӗшӗ</string>
@@ -363,11 +362,6 @@
     <string name="confirm_delete_chapters">Эсӗ суйланӑ сыпӑксене катертесшӗнех-и\?</string>
     <string name="download_unread">Вуламанине</string>
     <string name="download_all">Веҫех</string>
-    <string name="download_custom">Урӑх шут йышӗ</string>
-    <string name="download_10">Малалли 10 сыпӑк</string>
-    <string name="download_5">Малалли 5 сыпӑка</string>
-    <string name="download_1">Малалли сыпӑка</string>
-    <string name="custom_download">Палӑртнӑ шутне тиесе ил</string>
     <string name="manga_download">Тиесе ил</string>
     <string name="sort_by_upload_date">Тиенӗ вӑхӑчӗпе</string>
     <string name="sort_by_number">Сыпӑк шучӗпе</string>
@@ -582,4 +576,42 @@
     <string name="pref_general_summary">Хушӑм чӗлхи, систерӳсем</string>
     <string name="label_default">Пӳрӳлле</string>
     <string name="action_open_random_manga">Ӑнсӑрт ҫырав уҫ</string>
+    <string name="theme_strawberrydaiquiri">Ҫӗр ҫырли тайккирийӗ</string>
+    <string name="theme_midnightdusk">Ҫур ҫӗр ӗнтрӗкӗ</string>
+    <string name="pref_tracking_summary">Пӗр йенлӗ ӳсӗм килӗштерӗвӗ, анлӑлатнӑ килӗштерӳ</string>
+    <string name="connected_to_wifi">Wi-Fi урлӑ ҫеҫ</string>
+    <string name="action_display_show_continue_reading_button">«Малалла вула» пускӑч</string>
+    <string name="pref_security_summary">Хушӑма ҫаклатни, ыкран хӳтӗлевӗ</string>
+    <string name="battery_not_low">Петтерей тулли чухне</string>
+    <string name="restrictions">Чарусем: %s</string>
+    <string name="pref_update_only_completely_read">Вуламан сыпӑк(сем) пур</string>
+    <string name="label_started">Пуҫланӑ</string>
+    <string name="label_local">Вырӑнти</string>
+    <string name="label_downloaded">Тийесе илнӗ</string>
+    <string name="theme_tidalwave">Шыв хӑпарнин хумӗ</string>
+    <string name="pref_category_timestamps">Вӑхӑт паллисем</string>
+    <string name="pref_relative_format">Чухлавлӑ вӑхӑт палли</string>
+    <string name="pref_relative_time_long">Вӑрӑм (кӗске+, n кун кайалла)</string>
+    <string name="pref_app_theme">Хушӑм темми</string>
+    <string name="recently">Анчахрах</string>
+    <string name="relative_time_today">Пайан</string>
+    <string name="theme_lavender">Лавантӑ</string>
+    <string name="theme_yinyang">Ин тата Йан</string>
+    <string name="pref_browse_summary">Ҫӑл куҫсем, хушмасем, пӗтӗмӗшле шырав</string>
+    <string name="theme_greenapple">Симӗс пан улми</string>
+    <string name="theme_yotsuba">Йутсупа</string>
+    <string name="pref_library_update_manga_restriction">Серилӗхсене ҫӗнетнине сиктер</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ӗнер</item>
+        <item quantity="other">%1$d кун кайалла</item>
+    </plurals>
+    <string name="network_not_metered">Чаравсӑр тетелте ҫеҫ</string>
+    <string name="pref_update_only_started">Серилӗхе пуҫламан</string>
+    <string name="theme_tako">Таккӑ</string>
+    <string name="pref_dark_theme_pure_black">Хуп-хура темӑ</string>
+    <string name="pref_app_language">Хушӑм чӗлхи</string>
+    <string name="action_not_now">Халь мар</string>
+    <string name="pref_relative_time_short">Кӗске (пайан, ӗнер)</string>
+    <string name="update_72hour">Кашни 3 кун</string>
+    <string name="theme_tealturquoise">Симӗс кӑвак</string>
 </resources>

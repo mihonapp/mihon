@@ -276,11 +276,6 @@
     <string name="remove_from_library">Poista kirjastosta</string>
     <string name="manga_added_library">Lisätty kirjastoon</string>
     <string name="manga_removed_library">Poistettu kirjastosta</string>
-    <string name="custom_download">Lataa muokautettu määrä</string>
-    <string name="download_1">Seuraava luku</string>
-    <string name="download_5">Seuraavat 5 lukua</string>
-    <string name="download_10">Seuraavat 10 lukua</string>
-    <string name="download_custom">Mukautettu</string>
     <string name="download_all">Kaikki</string>
     <string name="download_unread">Lukemattomat</string>
     <string name="dropped">Tiputettu</string>
@@ -367,7 +362,6 @@
     <string name="action_oldest">Vanhin</string>
     <string name="action_move_to_top">Siirrä alkuun</string>
     <string name="action_move_to_bottom">Siirrä loppuun</string>
-    <string name="pref_enable_automatic_extension_updates">Tarkista laajennuspäivitykset</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Laajennuspäivitys saatavilla</item>
         <item quantity="other">%d laajennuspäivitystä saatavilla</item>

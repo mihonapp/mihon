@@ -178,7 +178,7 @@
     <string name="update_24hour">រាល់ថ្ងៃ</string>
     <string name="pref_category_library_update">ការធ្វើបច្ចុប្បន្នភាពសកល</string>
     <string name="title">ចំណងជើង</string>
-    <string name="completed">Concluído</string>
+    <string name="completed">បានបញ្ចប់ការចេញផ្សាយ</string>
     <string name="ongoing">កំពុងតែចេញផ្សាយ</string>
     <string name="default_category">ថ្នាក់ធម្មតា</string>
     <string name="on_hiatus">ត្រូវបានផ្អាកការចេញផ្សាយ</string>
@@ -191,4 +191,10 @@
     <string name="updating_library">កំពុងតែធ្វើបច្ចុប្បន្នភាពបណ្ណាល័យ</string>
     <string name="licensed">មានឡាយសិន</string>
     <string name="loader_rar5_error">ទម្រង់RARv5មិនត្រូវបានទទួលយកទេ</string>
+    <string name="getting_started_guide">ម​គ្គុ​ទេស​ក៍​</string>
+    <string name="browse">ស្វែងរក</string>
+    <string name="all">ទាំងអស់</string>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d ភាគបន្ទាប់ដែលមិនទាន់អាន</item>
+    </plurals>
 </resources>
