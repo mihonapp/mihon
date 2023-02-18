@@ -24,3 +24,9 @@ updates:
 SELECT *
 FROM updatesView
 WHERE dateUpload > :after;
+
+getUpdatesByReadStatus:
+SELECT *
+FROM updatesView
+WHERE read = :read
+AND dateUpload > :after;
