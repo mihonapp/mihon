@@ -1,4 +1,4 @@
-package eu.kanade.domain.chapter.interactor
+package tachiyomi.domain.chapter.interactor
 
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat

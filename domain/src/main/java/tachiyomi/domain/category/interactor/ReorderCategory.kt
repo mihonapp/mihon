@@ -1,4 +1,4 @@
-package eu.kanade.domain.category.interactor
+package tachiyomi.domain.category.interactor
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

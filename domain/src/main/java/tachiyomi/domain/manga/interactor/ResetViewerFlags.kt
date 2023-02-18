@@ -1,4 +1,4 @@
-package eu.kanade.domain.manga.interactor
+package tachiyomi.domain.manga.interactor
 
 import tachiyomi.domain.manga.repository.MangaRepository
 

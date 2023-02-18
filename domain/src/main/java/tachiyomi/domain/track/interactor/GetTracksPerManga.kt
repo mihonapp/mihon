@@ -1,4 +1,4 @@
-package eu.kanade.domain.track.interactor
+package tachiyomi.domain.track.interactor
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

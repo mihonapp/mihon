@@ -1,4 +1,4 @@
-package eu.kanade.domain.manga.interactor
+package tachiyomi.domain.manga.interactor
 
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
