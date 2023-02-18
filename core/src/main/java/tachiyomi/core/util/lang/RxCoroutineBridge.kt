@@ -1,15 +1,8 @@
 package tachiyomi.core.util.lang
 
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import rx.Emitter
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -61,31 +54,5 @@ private suspend fun <T> Observable<T>.awaitOne(): T = suspendCancellableCoroutin
     )
 }
 
-internal fun <T> CancellableContinuation<T>.unsubscribeOnCancellation(sub: Subscription) =
+private fun <T> CancellableContinuation<T>.unsubscribeOnCancellation(sub: Subscription) =
     invokeOnCancellation { sub.unsubscribe() }
-
-@OptIn(ExperimentalCoroutinesApi::class)
-fun <T> runAsObservable(
-    backpressureMode: Emitter.BackpressureMode = Emitter.BackpressureMode.NONE,
-    block: suspend () -> T,
-): Observable<T> {
-    return Observable.create(
-        { emitter ->
-            val job = GlobalScope.launch(Dispatchers.Unconfined, start = CoroutineStart.ATOMIC) {
-                try {
-                    emitter.onNext(block())
-                    emitter.onCompleted()
-                } catch (e: Throwable) {
-                    // Ignore `CancellationException` as error, since it indicates "normal cancellation"
-                    if (e !is CancellationException) {
-                        emitter.onError(e)
-                    } else {
-                        emitter.onCompleted()
-                    }
-                }
-            }
-            emitter.setCancellation { job.cancel() }
-        },
-        backpressureMode,
-    )
-}

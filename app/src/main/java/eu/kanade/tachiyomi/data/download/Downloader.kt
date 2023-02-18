@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.source.online.fetchAllImageUrlsFromPageList
 import eu.kanade.tachiyomi.util.lang.RetryWithDelay
-import eu.kanade.tachiyomi.util.lang.plusAssign
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.DiskUtil.NOMEDIA_FILE
 import eu.kanade.tachiyomi.util.storage.saveTo
@@ -30,6 +29,7 @@ import logcat.LogPriority
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import rx.Observable
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
@@ -636,6 +636,8 @@ class Downloader(
     private fun areAllDownloadsFinished(): Boolean {
         return queue.none { it.status.value <= Download.State.DOWNLOADING.value }
     }
+
+    private operator fun CompositeSubscription.plusAssign(subscription: Subscription) = add(subscription)
 
     companion object {
         const val TMP_DIR_SUFFIX = "_tmp"
