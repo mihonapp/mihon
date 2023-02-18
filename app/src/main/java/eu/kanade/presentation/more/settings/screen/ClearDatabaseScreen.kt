@@ -40,7 +40,6 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.EmptyScreen
 import eu.kanade.presentation.components.FastScrollLazyColumn
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.toast
@@ -52,6 +51,7 @@ import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.data.Database
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
+import tachiyomi.presentation.core.components.LoadingScreen
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
 import uy.kohesive.injekt.Injekt

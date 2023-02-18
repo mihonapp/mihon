@@ -8,9 +8,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import eu.kanade.presentation.util.padding
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.asMangaCover
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun GlobalSearchCardRow(

@@ -77,12 +77,12 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.TextButton
 import eu.kanade.presentation.util.clickableNoIndication
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.material.padding
 import kotlin.math.roundToInt
 
 private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))

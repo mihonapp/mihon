@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import eu.kanade.presentation.util.padding
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun StatsSection(

@@ -51,7 +51,6 @@ import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.LazyColumn
 import eu.kanade.presentation.components.MangaBottomActionMenu
-import eu.kanade.presentation.components.TwoPanelBox
 import eu.kanade.presentation.components.VerticalFastScroller
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
@@ -72,6 +71,7 @@ import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold

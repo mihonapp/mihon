@@ -38,13 +38,13 @@ import eu.kanade.presentation.components.ChapterDownloadIndicator
 import eu.kanade.presentation.components.ListGroupHeader
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.manga.components.DotSeparatorText
-import eu.kanade.presentation.util.ReadItemAlpha
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import tachiyomi.domain.updates.model.UpdatesWithRelations
+import tachiyomi.presentation.core.components.material.ReadItemAlpha
+import tachiyomi.presentation.core.components.material.padding
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 

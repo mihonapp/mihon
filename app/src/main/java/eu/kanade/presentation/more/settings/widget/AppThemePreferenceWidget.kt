@@ -42,12 +42,12 @@ import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.ThemePreviews
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import tachiyomi.presentation.core.components.material.DIVIDER_ALPHA
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 internal fun AppThemePreferenceWidget(

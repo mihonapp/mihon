@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.DpSize
+import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 import kotlin.math.roundToInt
 
 fun Modifier.selectedBackground(isSelected: Boolean): Modifier = composed {

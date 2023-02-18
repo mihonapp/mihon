@@ -57,17 +57,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.EmptyScreen
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.MangaCover
 import eu.kanade.presentation.components.ScrollbarLazyColumn
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.plus
 import eu.kanade.presentation.util.runOnEnterKeyPressed
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import tachiyomi.presentation.core.components.LoadingScreen
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun TrackServiceSearch(

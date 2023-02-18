@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.ThemePreviews
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.secondaryItemAlpha
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun InfoScaffold(

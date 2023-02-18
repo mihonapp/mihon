@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.ThemePreviews
-import eu.kanade.presentation.util.padding
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 internal fun InfoWidget(text: String) {

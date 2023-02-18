@@ -43,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -57,6 +56,7 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withUIContext
+import tachiyomi.presentation.core.components.material.padding
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

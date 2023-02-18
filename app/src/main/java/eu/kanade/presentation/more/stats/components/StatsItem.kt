@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import eu.kanade.presentation.util.SecondaryItemAlpha
-import eu.kanade.presentation.util.padding
+import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun RowScope.StatsOverviewItem(

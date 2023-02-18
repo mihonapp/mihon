@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.components.material
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.padding
 
 /**
  * Center-aligned M3 Navigation rail

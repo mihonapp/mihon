@@ -52,7 +52,6 @@ import eu.kanade.presentation.components.ScrollbarLazyColumn
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TrailingWidgetBuffer
-import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
@@ -61,6 +60,7 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.presentation.core.components.material.DIVIDER_ALPHA
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun ExtensionDetailsScreen(

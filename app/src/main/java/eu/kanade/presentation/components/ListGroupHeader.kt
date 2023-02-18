@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import eu.kanade.presentation.util.padding
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun ListGroupHeader(

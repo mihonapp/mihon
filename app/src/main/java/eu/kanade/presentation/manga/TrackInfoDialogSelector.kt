@@ -35,10 +35,10 @@ import eu.kanade.presentation.components.WheelTextPicker
 import eu.kanade.presentation.util.isScrolledToEnd
 import eu.kanade.presentation.util.isScrolledToStart
 import eu.kanade.presentation.util.minimumTouchTargetSize
-import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.components.material.padding
 import java.time.LocalDate
 import java.time.format.TextStyle
 

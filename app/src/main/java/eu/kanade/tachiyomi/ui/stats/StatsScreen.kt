@@ -10,10 +10,10 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.more.stats.StatsScreenContent
 import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.LoadingScreen
 import tachiyomi.presentation.core.components.material.Scaffold
 
 class StatsScreen : Screen {

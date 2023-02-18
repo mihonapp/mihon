@@ -22,8 +22,8 @@ import com.halilibo.richtext.ui.string.RichTextStringStyle
 import eu.kanade.presentation.components.InfoScaffold
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.util.ThemePreviews
-import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun NewUpdateScreen(

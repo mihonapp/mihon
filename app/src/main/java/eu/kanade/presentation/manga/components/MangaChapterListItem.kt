@@ -29,11 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.ChapterDownloadAction
 import eu.kanade.presentation.components.ChapterDownloadIndicator
-import eu.kanade.presentation.util.ReadItemAlpha
-import eu.kanade.presentation.util.SecondaryItemAlpha
 import eu.kanade.presentation.util.selectedBackground
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import tachiyomi.presentation.core.components.material.ReadItemAlpha
+import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 
 @Composable
 fun MangaChapterListItem(

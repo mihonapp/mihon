@@ -1,4 +1,4 @@
-package eu.kanade.presentation.util
+package tachiyomi.presentation.core.components.material
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme

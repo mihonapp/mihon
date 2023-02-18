@@ -27,10 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.padding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import tachiyomi.presentation.core.components.material.padding
 import java.text.DateFormatSymbols
 import java.time.LocalDate
 import kotlin.math.absoluteValue

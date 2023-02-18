@@ -26,7 +26,6 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.presentation.components.ChangeCategoryDialog
 import eu.kanade.presentation.components.DuplicateMangaDialog
-import eu.kanade.presentation.components.LoadingScreen
 import eu.kanade.presentation.components.NavigatorAdaptiveSheet
 import eu.kanade.presentation.manga.ChapterSettingsDialog
 import eu.kanade.presentation.manga.EditCoverAction
@@ -56,6 +55,7 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.LoadingScreen
 
 class MangaScreen(
     private val mangaId: Long,

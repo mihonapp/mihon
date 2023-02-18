@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.util.padding
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun GlobalSearchResultItem(

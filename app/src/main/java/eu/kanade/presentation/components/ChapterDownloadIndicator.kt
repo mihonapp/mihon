@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.util.secondaryItemAlpha
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import tachiyomi.presentation.core.components.material.IconButtonTokens
 
 enum class ChapterDownloadAction {
     START,
