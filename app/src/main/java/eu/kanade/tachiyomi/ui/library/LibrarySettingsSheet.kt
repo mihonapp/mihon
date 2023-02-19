@@ -96,7 +96,7 @@ class LibrarySettingsSheet(
          * Returns true if there's at least one filter from [FilterGroup] active.
          */
         fun hasActiveFilters(): Boolean {
-            return filterGroup.items.filterIsInstance<Item.TriStateGroup>().any { it.state != State.IGNORE.value }
+            return filterGroup.items.filterIsInstance<Item.TriStateGroup>().any { it.state != State.DISABLED.value }
         }
 
         inner class FilterGroup : Group {
@@ -132,7 +132,7 @@ class LibrarySettingsSheet(
 
             override fun initModels() {
                 if (preferences.downloadedOnly().get()) {
-                    downloaded.state = State.INCLUDE.value
+                    downloaded.state = State.ENABLED_IS.value
                     downloaded.enabled = false
                 } else {
                     downloaded.state = libraryPreferences.filterDownloaded().get()
@@ -151,9 +151,9 @@ class LibrarySettingsSheet(
             override fun onItemClicked(item: Item) {
                 item as Item.TriStateGroup
                 val newState = when (item.state) {
-                    State.IGNORE.value -> State.INCLUDE.value
-                    State.INCLUDE.value -> State.EXCLUDE.value
-                    State.EXCLUDE.value -> State.IGNORE.value
+                    State.DISABLED.value -> State.ENABLED_IS.value
+                    State.ENABLED_IS.value -> State.ENABLED_NOT.value
+                    State.ENABLED_NOT.value -> State.DISABLED.value
                     else -> throw Exception("Unknown State")
                 }
                 item.state = newState
@@ -212,7 +212,7 @@ class LibrarySettingsSheet(
             override val footer = null
 
             override fun initModels() {
-                val sort = currentCategory?.sort ?: LibrarySort.default
+                val sort = currentCategory.sort
                 val order = if (sort.isAscending) Item.MultiSort.SORT_ASC else Item.MultiSort.SORT_DESC
 
                 alphabetically.state =
@@ -306,7 +306,7 @@ class LibrarySettingsSheet(
 
         // Gets user preference of currently selected display mode at current category
         private fun getDisplayModePreference(): LibraryDisplayMode {
-            return currentCategory?.display ?: LibraryDisplayMode.default
+            return currentCategory.display
         }
 
         inner class DisplayGroup : Group {

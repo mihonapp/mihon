@@ -114,9 +114,9 @@ object Migrations {
                 fun convertBooleanPrefToTriState(key: String): Int {
                     val oldPrefValue = prefs.getBoolean(key, false)
                     return if (oldPrefValue) {
-                        ExtendedNavigationView.Item.TriStateGroup.State.INCLUDE.value
+                        ExtendedNavigationView.Item.TriStateGroup.State.ENABLED_IS.value
                     } else {
-                        ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value
+                        ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value
                     }
                 }
                 prefs.edit {

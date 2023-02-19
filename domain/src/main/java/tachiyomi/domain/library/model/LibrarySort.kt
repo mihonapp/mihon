@@ -69,7 +69,8 @@ data class LibrarySort(
         val directions = setOf(Direction.Ascending, Direction.Descending)
         val default = LibrarySort(Type.Alphabetical, Direction.Ascending)
 
-        fun valueOf(flag: Long): LibrarySort {
+        fun valueOf(flag: Long?): LibrarySort {
+            if (flag == null) return default
             return LibrarySort(
                 Type.valueOf(flag),
                 Direction.valueOf(flag),
@@ -115,5 +116,5 @@ data class LibrarySort(
     }
 }
 
-val Category.sort: LibrarySort
-    get() = LibrarySort.valueOf(flags)
+val Category?.sort: LibrarySort
+    get() = LibrarySort.valueOf(this?.flags)

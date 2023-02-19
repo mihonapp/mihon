@@ -55,5 +55,5 @@ sealed class LibraryDisplayMode(
     }
 }
 
-val Category.display: LibraryDisplayMode
-    get() = LibraryDisplayMode.valueOf(flags)
+val Category?.display: LibraryDisplayMode
+    get() = LibraryDisplayMode.valueOf(this?.flags)

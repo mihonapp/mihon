@@ -115,16 +115,16 @@ open class ExtendedNavigationView @JvmOverloads constructor(
         class TriStateGroup(resId: Int, group: Group) : MultiStateGroup(resId, group) {
 
             enum class State(val value: Int) {
-                IGNORE(0),
-                INCLUDE(1),
-                EXCLUDE(2),
+                DISABLED(0),
+                ENABLED_IS(1),
+                ENABLED_NOT(2),
             }
 
             override fun getStateDrawable(context: Context): Drawable? {
                 return when (state) {
-                    State.IGNORE.value -> tintVector(context, R.drawable.ic_check_box_outline_blank_24dp, R.attr.colorControlNormal)
-                    State.INCLUDE.value -> tintVector(context, R.drawable.ic_check_box_24dp)
-                    State.EXCLUDE.value -> tintVector(context, R.drawable.ic_check_box_x_24dp)
+                    State.DISABLED.value -> tintVector(context, R.drawable.ic_check_box_outline_blank_24dp, R.attr.colorControlNormal)
+                    State.ENABLED_IS.value -> tintVector(context, R.drawable.ic_check_box_24dp)
+                    State.ENABLED_NOT.value -> tintVector(context, R.drawable.ic_check_box_x_24dp)
                     else -> throw Exception("Unknown state")
                 }
             }

@@ -36,17 +36,17 @@ class LibraryPreferences(
 
     // region Filter
 
-    fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
-    fun filterUnread() = preferenceStore.getInt("pref_filter_library_unread", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterUnread() = preferenceStore.getInt("pref_filter_library_unread", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
-    fun filterStarted() = preferenceStore.getInt("pref_filter_library_started", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterStarted() = preferenceStore.getInt("pref_filter_library_started", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
-    fun filterBookmarked() = preferenceStore.getInt("pref_filter_library_bookmarked", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterBookmarked() = preferenceStore.getInt("pref_filter_library_bookmarked", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
-    fun filterCompleted() = preferenceStore.getInt("pref_filter_library_completed", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterCompleted() = preferenceStore.getInt("pref_filter_library_completed", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
-    fun filterTracking(name: Int) = preferenceStore.getInt("pref_filter_library_tracked_$name", ExtendedNavigationView.Item.TriStateGroup.State.IGNORE.value)
+    fun filterTracking(name: Int) = preferenceStore.getInt("pref_filter_library_tracked_$name", ExtendedNavigationView.Item.TriStateGroup.State.DISABLED.value)
 
     // endregion
 
