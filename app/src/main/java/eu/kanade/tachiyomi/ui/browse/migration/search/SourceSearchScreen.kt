@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.core.navigation.Screen
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
@@ -41,7 +41,7 @@ data class SourceSearchScreen(
     private val oldManga: Manga,
     private val sourceId: Long,
     private val query: String?,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {

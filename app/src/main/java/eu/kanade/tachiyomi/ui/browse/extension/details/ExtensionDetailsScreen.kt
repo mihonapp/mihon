@@ -7,16 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.core.navigation.Screen
 import eu.kanade.presentation.browse.ExtensionDetailsScreen
 import kotlinx.coroutines.flow.collectLatest
 import tachiyomi.presentation.core.components.LoadingScreen
 
 data class ExtensionDetailsScreen(
     private val pkgName: String,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {

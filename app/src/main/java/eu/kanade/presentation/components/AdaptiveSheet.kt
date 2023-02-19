@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.lifecycle.DisposableEffectIgnoringConfiguration
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScreenTransition
+import eu.kanade.core.navigation.Screen
 import eu.kanade.presentation.util.isTabletUi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
