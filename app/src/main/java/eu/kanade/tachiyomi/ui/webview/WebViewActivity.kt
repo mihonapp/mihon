@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
+import logcat.LogPriority
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.injectLazy
@@ -47,7 +48,11 @@ class WebViewActivity : BaseActivity() {
 
         var headers = emptyMap<String, String>()
         (sourceManager.get(intent.extras!!.getLong(SOURCE_KEY)) as? HttpSource)?.let { source ->
-            headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+            try {
+                headers = source.headers.toMultimap().mapValues { it.value.getOrNull(0) ?: "" }
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR, e) { "Failed to build headers" }
+            }
         }
 
         setComposeContent {
