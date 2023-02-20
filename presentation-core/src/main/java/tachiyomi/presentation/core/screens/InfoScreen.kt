@@ -1,4 +1,4 @@
-package eu.kanade.presentation.components
+package tachiyomi.presentation.core.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,14 +26,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
-fun InfoScaffold(
+fun InfoScreen(
     icon: ImageVector,
     headingText: String,
     subtitleText: String,
@@ -125,17 +124,15 @@ fun InfoScaffold(
 @ThemePreviews
 @Composable
 private fun InfoScaffoldPreview() {
-    TachiyomiTheme {
-        InfoScaffold(
-            icon = Icons.Outlined.Newspaper,
-            headingText = "Heading",
-            subtitleText = "Subtitle",
-            acceptText = "Accept",
-            onAcceptClick = {},
-            rejectText = "Reject",
-            onRejectClick = {},
-        ) {
-            Text("Hello world")
-        }
+    InfoScreen(
+        icon = Icons.Outlined.Newspaper,
+        headingText = "Heading",
+        subtitleText = "Subtitle",
+        acceptText = "Accept",
+        onAcceptClick = {},
+        rejectText = "Reject",
+        onRejectClick = {},
+    ) {
+        Text("Hello world")
     }
 }

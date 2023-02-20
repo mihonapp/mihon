@@ -1,4 +1,4 @@
-package tachiyomi.presentation.core.components
+package tachiyomi.presentation.core.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

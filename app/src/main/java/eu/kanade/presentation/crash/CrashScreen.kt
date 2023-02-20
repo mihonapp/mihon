@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import eu.kanade.presentation.components.InfoScaffold
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.screens.InfoScreen
 import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
@@ -30,7 +30,7 @@ fun CrashScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    InfoScaffold(
+    InfoScreen(
         icon = Icons.Outlined.BugReport,
         headingText = stringResource(R.string.crash_screen_title),
         subtitleText = stringResource(R.string.crash_screen_description, stringResource(R.string.app_name)),
