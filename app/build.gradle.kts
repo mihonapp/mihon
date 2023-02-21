@@ -158,7 +158,6 @@ dependencies {
     implementation(compose.ui.tooling)
     implementation(compose.ui.util)
     implementation(compose.accompanist.webview)
-    implementation(compose.accompanist.flowlayout)
     implementation(compose.accompanist.permissions)
     implementation(compose.accompanist.themeadapter)
     implementation(compose.accompanist.systemuicontroller)

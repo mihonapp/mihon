@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -72,7 +73,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.accompanist.flowlayout.FlowRow
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.SManga
@@ -266,11 +266,11 @@ fun ExpandableMangaDescription(
                 if (expanded) {
                     FlowRow(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        mainAxisSpacing = 4.dp,
-                        crossAxisSpacing = 8.dp,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         tags.forEach {
                             TagsChip(
+                                modifier = Modifier.padding(vertical = 4.dp),
                                 text = it,
                                 onClick = {
                                     tagSelected = it
@@ -286,6 +286,7 @@ fun ExpandableMangaDescription(
                     ) {
                         items(items = tags) {
                             TagsChip(
+                                modifier = Modifier.padding(vertical = 4.dp),
                                 text = it,
                                 onClick = {
                                     tagSelected = it
@@ -640,10 +641,12 @@ private fun MangaSummary(
 @Composable
 private fun TagsChip(
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
         SuggestionChip(
+            modifier = modifier,
             onClick = onClick,
             label = { Text(text = text, style = MaterialTheme.typography.bodySmall) },
             border = null,
