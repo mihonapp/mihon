@@ -339,7 +339,6 @@ class Downloader(
                     ?.filter { it.name!!.endsWith(".tmp") }
                     ?.forEach { it.delete() }
 
-                download.downloadedImages = 0
                 download.status = Download.State.DOWNLOADING
             }
             // Get all the URLs to the source images, fetch pages if necessary
@@ -403,7 +402,6 @@ class Downloader(
                 }
                 page.uri = file.uri
                 page.progress = 100
-                download.downloadedImages++
                 page.status = Page.State.READY
             }
             .map { page }
