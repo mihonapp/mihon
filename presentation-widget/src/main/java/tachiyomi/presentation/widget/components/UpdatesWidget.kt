@@ -20,8 +20,8 @@ import androidx.glance.text.Text
 import tachiyomi.core.Constants
 import tachiyomi.presentation.widget.ContainerModifier
 import tachiyomi.presentation.widget.R
-import tachiyomi.presentation.widget.calculateRowAndColumnCount
-import tachiyomi.presentation.widget.stringResource
+import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
+import tachiyomi.presentation.widget.util.stringResource
 
 @Composable
 fun UpdatesWidget(data: List<Pair<Long, Bitmap?>>?) {

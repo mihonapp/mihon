@@ -32,6 +32,8 @@ import tachiyomi.presentation.widget.components.CoverHeight
 import tachiyomi.presentation.widget.components.CoverWidth
 import tachiyomi.presentation.widget.components.LockedWidget
 import tachiyomi.presentation.widget.components.UpdatesWidget
+import tachiyomi.presentation.widget.util.appWidgetBackgroundRadius
+import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy

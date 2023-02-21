@@ -11,7 +11,7 @@ import androidx.glance.layout.ContentScale
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.size
 import tachiyomi.presentation.widget.R
-import tachiyomi.presentation.widget.appWidgetInnerRadius
+import tachiyomi.presentation.widget.util.appWidgetInnerRadius
 
 val CoverWidth = 58.dp
 val CoverHeight = 87.dp

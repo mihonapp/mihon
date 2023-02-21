@@ -18,7 +18,7 @@ import androidx.glance.unit.ColorProvider
 import tachiyomi.core.Constants
 import tachiyomi.presentation.widget.ContainerModifier
 import tachiyomi.presentation.widget.R
-import tachiyomi.presentation.widget.stringResource
+import tachiyomi.presentation.widget.util.stringResource
 
 @Composable
 fun LockedWidget() {
