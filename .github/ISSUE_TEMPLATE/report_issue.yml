@@ -96,7 +96,7 @@ body:
           required: true
         - label: If this is an issue with an extension, I should be opening an issue in the [extensions repository](https://github.com/tachiyomiorg/tachiyomi-extensions/issues/new/choose).
           required: true
-        - label: I have tried the [troubleshooting guide](https://tachiyomi.org/help/guides/troubleshooting/).
+        - label: I have gone through the [FAQ](https://tachiyomi.org/help/faq/) and [troubleshooting guide](https://tachiyomi.org/help/guides/troubleshooting/).
           required: true
         - label: I have updated the app to version **[0.14.5](https://github.com/tachiyomiorg/tachiyomi/releases/latest)**.
           required: true
