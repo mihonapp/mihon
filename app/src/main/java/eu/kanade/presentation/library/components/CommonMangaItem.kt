@@ -144,6 +144,7 @@ private fun BoxScope.CoverTextOverlay(
                     blurRadius = 4f,
                 ),
             ),
+            minLines = 1,
         )
         if (onClickContinueReading != null) {
             ContinueReadingButton(
@@ -204,6 +205,7 @@ fun MangaComfortableGridItem(
                 modifier = Modifier.padding(4.dp),
                 title = title,
                 style = MaterialTheme.typography.titleSmall,
+                minLines = 2,
             )
         }
     }
@@ -252,12 +254,14 @@ private fun GridItemTitle(
     modifier: Modifier,
     title: String,
     style: TextStyle,
+    minLines: Int,
 ) {
     Text(
         modifier = modifier,
         text = title,
         fontSize = 12.sp,
         lineHeight = 18.sp,
+        minLines = minLines,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         style = style,
