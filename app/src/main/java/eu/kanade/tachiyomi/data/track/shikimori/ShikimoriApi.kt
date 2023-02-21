@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.jsonMime
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -24,8 +25,11 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.util.lang.withIOContext
+import uy.kohesive.injekt.injectLazy
 
 class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInterceptor) {
+
+    private val json: Json by injectLazy()
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
@@ -60,14 +64,16 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
                 .appendQueryParameter("search", search)
                 .appendQueryParameter("limit", "20")
                 .build()
-            authClient.newCall(GET(url.toString()))
-                .awaitSuccess()
-                .parseAs<JsonArray>()
-                .let { response ->
-                    response.map {
-                        jsonToSearch(it.jsonObject)
+            with(json) {
+                authClient.newCall(GET(url.toString()))
+                    .awaitSuccess()
+                    .parseAs<JsonArray>()
+                    .let { response ->
+                        response.map {
+                            jsonToSearch(it.jsonObject)
+                        }
                     }
-                }
+            }
         }
     }
 
@@ -81,7 +87,7 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
             tracking_url = baseUrl + obj["url"]!!.jsonPrimitive.content
             publishing_status = obj["status"]!!.jsonPrimitive.content
             publishing_type = obj["kind"]!!.jsonPrimitive.content
-            start_date = obj.get("aired_on")!!.jsonPrimitive.contentOrNull ?: ""
+            start_date = obj["aired_on"]!!.jsonPrimitive.contentOrNull ?: ""
         }
     }
 
@@ -102,44 +108,52 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
             val urlMangas = "$apiUrl/mangas".toUri().buildUpon()
                 .appendPath(track.media_id.toString())
                 .build()
-            val mangas = authClient.newCall(GET(urlMangas.toString()))
-                .awaitSuccess()
-                .parseAs<JsonObject>()
+            val mangas = with(json) {
+                authClient.newCall(GET(urlMangas.toString()))
+                    .awaitSuccess()
+                    .parseAs<JsonObject>()
+            }
 
             val url = "$apiUrl/v2/user_rates".toUri().buildUpon()
                 .appendQueryParameter("user_id", user_id)
                 .appendQueryParameter("target_id", track.media_id.toString())
                 .appendQueryParameter("target_type", "Manga")
                 .build()
-            authClient.newCall(GET(url.toString()))
-                .awaitSuccess()
-                .parseAs<JsonArray>()
-                .let { response ->
-                    if (response.size > 1) {
-                        throw Exception("Too much mangas in response")
+            with(json) {
+                authClient.newCall(GET(url.toString()))
+                    .awaitSuccess()
+                    .parseAs<JsonArray>()
+                    .let { response ->
+                        if (response.size > 1) {
+                            throw Exception("Too much mangas in response")
+                        }
+                        val entry = response.map {
+                            jsonToTrack(it.jsonObject, mangas)
+                        }
+                        entry.firstOrNull()
                     }
-                    val entry = response.map {
-                        jsonToTrack(it.jsonObject, mangas)
-                    }
-                    entry.firstOrNull()
-                }
+            }
         }
     }
 
     suspend fun getCurrentUser(): Int {
-        return authClient.newCall(GET("$apiUrl/users/whoami"))
-            .awaitSuccess()
-            .parseAs<JsonObject>()
-            .let {
-                it["id"]!!.jsonPrimitive.int
-            }
+        return with(json) {
+            authClient.newCall(GET("$apiUrl/users/whoami"))
+                .awaitSuccess()
+                .parseAs<JsonObject>()
+                .let {
+                    it["id"]!!.jsonPrimitive.int
+                }
+        }
     }
 
     suspend fun accessToken(code: String): OAuth {
         return withIOContext {
-            client.newCall(accessTokenRequest(code))
-                .awaitSuccess()
-                .parseAs()
+            with(json) {
+                client.newCall(accessTokenRequest(code))
+                    .awaitSuccess()
+                    .parseAs()
+            }
         }
     }
 
@@ -164,18 +178,12 @@ class ShikimoriApi(private val client: OkHttpClient, interceptor: ShikimoriInter
         private const val loginUrl = "$baseUrl/oauth/authorize"
 
         private const val redirectUrl = "tachiyomi://shikimori-auth"
-        private const val baseMangaUrl = "$apiUrl/mangas"
 
-        fun mangaUrl(remoteId: Int): String {
-            return "$baseMangaUrl/$remoteId"
-        }
-
-        fun authUrl() =
-            loginUrl.toUri().buildUpon()
-                .appendQueryParameter("client_id", clientId)
-                .appendQueryParameter("redirect_uri", redirectUrl)
-                .appendQueryParameter("response_type", "code")
-                .build()
+        fun authUrl() = loginUrl.toUri().buildUpon()
+            .appendQueryParameter("client_id", clientId)
+            .appendQueryParameter("redirect_uri", redirectUrl)
+            .appendQueryParameter("response_type", "code")
+            .build()
 
         fun refreshTokenRequest(token: String) = POST(
             oauthUrl,

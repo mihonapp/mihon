@@ -118,10 +118,12 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
 
     suspend fun findLibManga(track: Track): Track? {
         return withIOContext {
-            authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
-                .awaitSuccess()
-                .parseAs<JsonObject>()
-                .let { jsonToSearch(it) }
+            with(json) {
+                authClient.newCall(GET("$apiUrl/subject/${track.media_id}"))
+                    .awaitSuccess()
+                    .parseAs<JsonObject>()
+                    .let { jsonToSearch(it) }
+            }
         }
     }
 
@@ -155,9 +157,11 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
 
     suspend fun accessToken(code: String): OAuth {
         return withIOContext {
-            client.newCall(accessTokenRequest(code))
-                .awaitSuccess()
-                .parseAs()
+            with(json) {
+                client.newCall(accessTokenRequest(code))
+                    .awaitSuccess()
+                    .parseAs()
+            }
         }
     }
 
@@ -181,7 +185,6 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
         private const val loginUrl = "https://bgm.tv/oauth/authorize"
 
         private const val redirectUrl = "tachiyomi://bangumi-auth"
-        private const val baseMangaUrl = "$apiUrl/mangas"
 
         fun authUrl(): Uri =
             loginUrl.toUri().buildUpon()

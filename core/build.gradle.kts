@@ -6,6 +6,13 @@ plugins {
 
 android {
     namespace = "eu.kanade.tachiyomi.core"
+
+    kotlinOptions {
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+        )
+    }
 }
 
 dependencies {
@@ -24,11 +31,7 @@ dependencies {
     api(kotlinx.serialization.json)
     api(kotlinx.serialization.json.okio)
 
-    api(libs.injekt.core)
-
     api(libs.preferencektx)
-
-    implementation(androidx.corektx)
 
     // JavaScript engine
     implementation(libs.bundles.js.engine)

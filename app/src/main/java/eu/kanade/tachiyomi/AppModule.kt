@@ -118,7 +118,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { ChapterCache(app) }
         addSingletonFactory { CoverCache(app) }
 
-        addSingletonFactory { NetworkHelper(app) }
+        addSingletonFactory { NetworkHelper(app, get()) }
         addSingletonFactory { JavaScriptEngine(app) }
 
         addSingletonFactory { SourceManager(app, get(), get()) }

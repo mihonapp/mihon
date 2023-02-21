@@ -7,21 +7,17 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import tachiyomi.data.DatabaseHandler
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
+import tachiyomi.domain.updates.interactor.GetUpdates
 
 class TachiyomiWidgetManager(
-    private val database: DatabaseHandler = Injekt.get(),
+    private val getUpdates: GetUpdates,
 ) {
 
     fun Context.init(scope: LifecycleCoroutineScope) {
-        database.subscribeToList {
-            updatesViewQueries.getUpdatesByReadStatus(
-                read = false,
-                after = UpdatesGridGlanceWidget.DateLimit.timeInMillis,
-            )
-        }
+        getUpdates.subscribe(
+            read = false,
+            after = UpdatesGridGlanceWidget.DateLimit.timeInMillis,
+        )
             .drop(1)
             .distinctUntilChanged()
             .onEach {

@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.network
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.okio.decodeFromBufferedSource
 import kotlinx.serialization.serializer
@@ -16,8 +15,6 @@ import okhttp3.Response
 import rx.Observable
 import rx.Producer
 import rx.Subscription
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resumeWithException
@@ -131,14 +128,18 @@ fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: Progre
     return progressClient.newCall(request)
 }
 
+context(Json)
 inline fun <reified T> Response.parseAs(): T {
     return decodeFromJsonResponse(serializer(), this)
 }
 
-@OptIn(ExperimentalSerializationApi::class)
-fun <T> decodeFromJsonResponse(deserializer: DeserializationStrategy<T>, response: Response): T {
+context(Json)
+fun <T> decodeFromJsonResponse(
+    deserializer: DeserializationStrategy<T>,
+    response: Response,
+): T {
     return response.body.source().use {
-        Injekt.get<Json>().decodeFromBufferedSource(deserializer, it)
+        decodeFromBufferedSource(deserializer, it)
     }
 }
 

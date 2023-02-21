@@ -6,7 +6,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.core.R
-import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.network.AndroidCookieJar
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
@@ -15,15 +15,16 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 
-class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(context) {
+class CloudflareInterceptor(
+    private val context: Context,
+    private val cookieManager: AndroidCookieJar,
+    defaultUserAgentProvider: () -> String,
+) : WebViewInterceptor(context, defaultUserAgentProvider) {
 
     private val executor = ContextCompat.getMainExecutor(context)
-
-    private val networkHelper: NetworkHelper by injectLazy()
 
     override fun shouldIntercept(response: Response): Boolean {
         // Check if Cloudflare anti-bot is on
@@ -33,8 +34,8 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
     override fun intercept(chain: Interceptor.Chain, request: Request, response: Response): Response {
         try {
             response.close()
-            networkHelper.cookieManager.remove(request.url, COOKIE_NAMES, 0)
-            val oldCookie = networkHelper.cookieManager.get(request.url)
+            cookieManager.remove(request.url, COOKIE_NAMES, 0)
+            val oldCookie = cookieManager.get(request.url)
                 .firstOrNull { it.name == "cf_clearance" }
             resolveWithWebView(request, oldCookie)
 
@@ -70,7 +71,7 @@ class CloudflareInterceptor(private val context: Context) : WebViewInterceptor(c
             webview?.webViewClient = object : WebViewClientCompat() {
                 override fun onPageFinished(view: WebView, url: String) {
                     fun isCloudFlareBypassed(): Boolean {
-                        return networkHelper.cookieManager.get(origRequestUrl.toHttpUrl())
+                        return cookieManager.get(origRequestUrl.toHttpUrl())
                             .firstOrNull { it.name == "cf_clearance" }
                             .let { it != null && it != oldCookie }
                     }

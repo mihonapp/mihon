@@ -26,25 +26,29 @@ class KomgaApi(private val client: OkHttpClient) {
     suspend fun getTrackSearch(url: String): TrackSearch =
         withIOContext {
             try {
-                val track = if (url.contains(READLIST_API)) {
-                    client.newCall(GET(url))
-                        .awaitSuccess()
-                        .parseAs<ReadListDto>()
-                        .toTrack()
-                } else {
-                    client.newCall(GET(url))
-                        .awaitSuccess()
-                        .parseAs<SeriesDto>()
-                        .toTrack()
+                val track = with(json) {
+                    if (url.contains(READLIST_API)) {
+                        client.newCall(GET(url))
+                            .awaitSuccess()
+                            .parseAs<ReadListDto>()
+                            .toTrack()
+                    } else {
+                        client.newCall(GET(url))
+                            .awaitSuccess()
+                            .parseAs<SeriesDto>()
+                            .toTrack()
+                    }
                 }
 
                 val progress = client
                     .newCall(GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi"))
                     .awaitSuccess().let {
-                        if (url.contains("/api/v1/series/")) {
-                            it.parseAs<ReadProgressV2Dto>()
-                        } else {
-                            it.parseAs<ReadProgressDto>().toV2()
+                        with(json) {
+                            if (url.contains("/api/v1/series/")) {
+                                it.parseAs<ReadProgressV2Dto>()
+                            } else {
+                                it.parseAs<ReadProgressDto>().toV2()
+                            }
                         }
                     }
 

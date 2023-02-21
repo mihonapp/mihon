@@ -25,13 +25,13 @@ import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.dpToPx
 import kotlinx.coroutines.MainScope
 import tachiyomi.core.util.lang.launchIO
-import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.domain.updates.interactor.GetUpdates
+import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.presentation.widget.components.CoverHeight
 import tachiyomi.presentation.widget.components.CoverWidth
 import tachiyomi.presentation.widget.components.LockedWidget
 import tachiyomi.presentation.widget.components.UpdatesWidget
-import tachiyomi.view.UpdatesView
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -39,6 +39,7 @@ import java.util.Calendar
 import java.util.Date
 
 class UpdatesGridGlanceWidget : GlanceAppWidget() {
+
     private val app: Application by injectLazy()
     private val preferences: SecurityPreferences by injectLazy()
 
@@ -58,7 +59,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
         UpdatesWidget(data)
     }
 
-    fun loadData(list: List<UpdatesView>? = null) {
+    fun loadData(list: List<UpdatesWithRelations>? = null) {
         coroutineScope.launchIO {
             // Don't show anything when lock is active
             if (preferences.useAuthenticator().get()) {
@@ -71,13 +72,10 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
             if (ids.isEmpty()) return@launchIO
 
             val processList = list
-                ?: Injekt.get<DatabaseHandler>()
-                    .awaitList {
-                        updatesViewQueries.getUpdatesByReadStatus(
-                            read = false,
-                            after = DateLimit.timeInMillis,
-                        )
-                    }
+                ?: Injekt.get<GetUpdates>().await(
+                    read = false,
+                    after = DateLimit.timeInMillis,
+                )
             val (rowCount, columnCount) = ids
                 .flatMap { manager.getAppWidgetSizes(it) }
                 .maxBy { it.height.value * it.width.value }
@@ -88,7 +86,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
         }
     }
 
-    private fun prepareList(processList: List<UpdatesView>, take: Int): List<Pair<Long, Bitmap?>> {
+    private fun prepareList(processList: List<UpdatesWithRelations>, take: Int): List<Pair<Long, Bitmap?>> {
         // Resize to cover size
         val widthPx = CoverWidth.value.toInt().dpToPx
         val heightPx = CoverHeight.value.toInt().dpToPx
@@ -101,10 +99,10 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
                     .data(
                         MangaCover(
                             mangaId = updatesView.mangaId,
-                            sourceId = updatesView.source,
-                            isMangaFavorite = updatesView.favorite,
-                            url = updatesView.thumbnailUrl,
-                            lastModified = updatesView.coverLastModified,
+                            sourceId = updatesView.sourceId,
+                            isMangaFavorite = true,
+                            url = updatesView.coverData.url,
+                            lastModified = updatesView.coverData.lastModified,
                         ),
                     )
                     .memoryCachePolicy(CachePolicy.DISABLED)

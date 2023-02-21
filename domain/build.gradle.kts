@@ -13,11 +13,11 @@ android {
 }
 
 dependencies {
-    implementation(platform(kotlinx.coroutines.bom))
-    implementation(kotlinx.bundles.coroutines)
-
     implementation(project(":source-api"))
     implementation(project(":core"))
+
+    implementation(platform(kotlinx.coroutines.bom))
+    implementation(kotlinx.bundles.coroutines)
 
     testImplementation(libs.junit)
 }

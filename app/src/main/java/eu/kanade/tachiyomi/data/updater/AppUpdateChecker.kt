@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import eu.kanade.tachiyomi.util.system.isInstalledFromFDroid
+import kotlinx.serialization.json.Json
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.util.lang.withIOContext
@@ -18,6 +19,8 @@ class AppUpdateChecker {
 
     private val networkService: NetworkHelper by injectLazy()
     private val preferenceStore: PreferenceStore by injectLazy()
+    private val json: Json by injectLazy()
+
     private val lastAppCheck: Preference<Long> by lazy {
         preferenceStore.getLong("last_app_check", 0)
     }
@@ -29,24 +32,26 @@ class AppUpdateChecker {
         }
 
         return withIOContext {
-            val result = networkService.client
-                .newCall(GET("https://api.github.com/repos/$GITHUB_REPO/releases/latest"))
-                .awaitSuccess()
-                .parseAs<GithubRelease>()
-                .let {
-                    lastAppCheck.set(Date().time)
+            val result = with(json) {
+                networkService.client
+                    .newCall(GET("https://api.github.com/repos/$GITHUB_REPO/releases/latest"))
+                    .awaitSuccess()
+                    .parseAs<GithubRelease>()
+                    .let {
+                        lastAppCheck.set(Date().time)
 
-                    // Check if latest version is different from current version
-                    if (isNewVersion(it.version)) {
-                        if (context.isInstalledFromFDroid()) {
-                            AppUpdateResult.NewUpdateFdroidInstallation
+                        // Check if latest version is different from current version
+                        if (isNewVersion(it.version)) {
+                            if (context.isInstalledFromFDroid()) {
+                                AppUpdateResult.NewUpdateFdroidInstallation
+                            } else {
+                                AppUpdateResult.NewUpdate(it)
+                            }
                         } else {
-                            AppUpdateResult.NewUpdate(it)
+                            AppUpdateResult.NoNewUpdate
                         }
-                    } else {
-                        AppUpdateResult.NoNewUpdate
                     }
-                }
+            }
 
             when (result) {
                 is AppUpdateResult.NewUpdate -> AppUpdateNotifier(context).promptUpdate(result.release)

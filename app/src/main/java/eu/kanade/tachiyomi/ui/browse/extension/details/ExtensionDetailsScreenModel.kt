@@ -120,7 +120,7 @@ class ExtensionDetailsScreenModel(
 
         val cleared = urls.sumOf {
             try {
-                network.cookieManager.remove(it.toHttpUrl())
+                network.cookieJar.remove(it.toHttpUrl())
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Failed to clear cookies for $it" }
                 0

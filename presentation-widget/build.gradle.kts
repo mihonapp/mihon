@@ -22,11 +22,11 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation-core"))
 
     implementation(androidx.glance)
 
     implementation(libs.coil.core)
+    api(libs.injekt.core)
 }
