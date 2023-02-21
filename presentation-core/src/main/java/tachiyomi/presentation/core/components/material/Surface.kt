@@ -12,6 +12,7 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.NonRestartableComposable
@@ -27,7 +28,6 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import tachiyomi.presentation.core.util.minimumTouchTargetSize
 import kotlin.math.ln
 
 /**
@@ -58,7 +58,7 @@ fun Surface(
     ) {
         Box(
             modifier = modifier
-                .minimumTouchTargetSize()
+                .minimumInteractiveComponentSize()
                 .surface(
                     shape = shape,
                     backgroundColor = surfaceColorAtElevation(

@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +28,6 @@ import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
-import tachiyomi.presentation.core.util.minimumTouchTargetSize
 
 @Composable
 fun <T> ListPreferenceWidget(
@@ -97,7 +97,7 @@ private fun DialogRow(
                 onClick = { if (!isSelected) onSelected() },
             )
             .fillMaxWidth()
-            .minimumTouchTargetSize(),
+            .minimumInteractiveComponentSize(),
     ) {
         RadioButton(
             selected = isSelected,
