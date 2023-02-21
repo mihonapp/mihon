@@ -1,4 +1,4 @@
-package eu.kanade.core.util
+package eu.kanade.presentation.util
 
 import android.content.Context
 import eu.kanade.tachiyomi.R

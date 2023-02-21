@@ -21,8 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import eu.kanade.core.prefs.CheckboxState
+import eu.kanade.core.prefs.asState
 import eu.kanade.tachiyomi.R
+import tachiyomi.core.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.components.material.padding
