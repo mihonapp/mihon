@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.widget
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,9 +79,6 @@ private fun AppThemesList(
             .filterNot { it.titleResId == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
     }
     LazyRow(
-        modifier = Modifier
-            .animateContentSize()
-            .padding(vertical = MaterialTheme.padding.small),
         contentPadding = PaddingValues(horizontal = PrefsHorizontalPadding),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
@@ -104,14 +101,16 @@ private fun AppThemesList(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = stringResource(appTheme.titleResId!!),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
                         .secondaryItemAlpha(),
                     textAlign = TextAlign.Center,
                     maxLines = 2,
+                    minLines = 2,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
