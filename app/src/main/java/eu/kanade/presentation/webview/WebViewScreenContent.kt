@@ -49,7 +49,7 @@ fun WebViewScreenContent(
             Box {
                 AppBar(
                     title = state.pageTitle ?: initialTitle,
-                    subtitle = state.content.getCurrentUrl(),
+                    subtitle = state.lastLoadedUrl,
                     navigateUp = onNavigateUp,
                     navigationIcon = Icons.Outlined.Close,
                     actions = {
@@ -81,15 +81,15 @@ fun WebViewScreenContent(
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_share),
-                                    onClick = { onShare(state.content.getCurrentUrl()!!) },
+                                    onClick = { onShare(state.lastLoadedUrl!!) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_open_in_browser),
-                                    onClick = { onOpenInBrowser(state.content.getCurrentUrl()!!) },
+                                    onClick = { onOpenInBrowser(state.lastLoadedUrl!!) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.pref_clear_cookies),
-                                    onClick = { onClearCookies(state.content.getCurrentUrl()!!) },
+                                    onClick = { onClearCookies(state.lastLoadedUrl!!) },
                                 ),
                             ),
                         )
