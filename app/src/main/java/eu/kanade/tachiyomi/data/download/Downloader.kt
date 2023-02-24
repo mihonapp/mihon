@@ -185,18 +185,10 @@ class Downloader(
 
     /**
      * Removes everything from the queue.
-     *
-     * @param isNotification value that determines if status is set (needed for view updates)
      */
-    fun clearQueue(isNotification: Boolean = false) {
+    fun clearQueue() {
         destroySubscriptions()
 
-        // Needed to update the chapter view
-        if (isNotification) {
-            queue
-                .filter { it.status == Download.State.QUEUE }
-                .forEach { it.status = Download.State.NOT_DOWNLOADED }
-        }
         queue.clear()
         notifier.dismissProgress()
     }

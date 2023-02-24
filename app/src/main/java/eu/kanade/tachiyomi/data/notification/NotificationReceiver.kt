@@ -63,7 +63,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 downloadManager.pauseDownloads()
             }
             // Clear the download queue
-            ACTION_CLEAR_DOWNLOADS -> downloadManager.clearQueue(true)
+            ACTION_CLEAR_DOWNLOADS -> downloadManager.clearQueue()
             // Launch share activity and dismiss notification
             ACTION_SHARE_IMAGE ->
                 shareImage(
