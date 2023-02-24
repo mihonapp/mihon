@@ -23,8 +23,9 @@ import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
-import eu.kanade.tachiyomi.widget.TriState
 import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.preference.getEnum
+import tachiyomi.domain.manga.model.TriStateFilter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -47,6 +48,7 @@ object Migrations {
         libraryPreferences: LibraryPreferences,
         readerPreferences: ReaderPreferences,
         backupPreferences: BackupPreferences,
+        trackManager: TrackManager,
     ): Boolean {
         val lastVersionCode = preferenceStore.getInt("last_version_code", 0)
         val oldVersion = lastVersionCode.get()
@@ -114,9 +116,9 @@ object Migrations {
                 fun convertBooleanPrefToTriState(key: String): Int {
                     val oldPrefValue = prefs.getBoolean(key, false)
                     return if (oldPrefValue) {
-                        TriState.ENABLED_IS.value
+                        1
                     } else {
-                        TriState.DISABLED.value
+                        0
                     }
                 }
                 prefs.edit {
@@ -333,6 +335,30 @@ object Migrations {
                 WorkManager.getInstance(context).cancelAllWorkByTag("ExtensionUpdate")
                 prefs.edit {
                     remove("automatic_ext_updates")
+                }
+            }
+            if (oldVersion < 99) {
+                val prefKeys = listOf(
+                    "pref_filter_library_downloaded",
+                    "pref_filter_library_unread",
+                    "pref_filter_library_started",
+                    "pref_filter_library_bookmarked",
+                    "pref_filter_library_completed",
+                ) + trackManager.services.map { "pref_filter_library_tracked_${it.id}" }
+
+                prefKeys.forEach { key ->
+                    val pref = preferenceStore.getInt(key, 0)
+                    prefs.edit {
+                        remove(key)
+
+                        val newValue = when (pref.get()) {
+                            1 -> TriStateFilter.ENABLED_IS
+                            2 -> TriStateFilter.ENABLED_NOT
+                            else -> TriStateFilter.DISABLED
+                        }
+
+                        preferenceStore.getEnum("${key}_v2", TriStateFilter.DISABLED).set(newValue)
+                    }
                 }
             }
             return true

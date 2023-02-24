@@ -20,8 +20,7 @@ import eu.kanade.presentation.components.TriStateItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
-import eu.kanade.tachiyomi.widget.TriState
-import eu.kanade.tachiyomi.widget.toTriStateFilter
+import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.CollapsibleBox
 import tachiyomi.presentation.core.components.HeadingItem
@@ -101,7 +100,7 @@ private fun FilterItem(filter: Filter<*>, onUpdate: () -> Unit) {
                 label = filter.name,
                 state = filter.state.toTriStateFilter(),
             ) {
-                filter.state = TriState.valueOf(filter.state).next().value
+                filter.state = filter.state.toTriStateFilter().next().toTriStateInt()
                 onUpdate()
             }
         }
@@ -161,5 +160,23 @@ private fun FilterItem(filter: Filter<*>, onUpdate: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+private fun Int.toTriStateFilter(): TriStateFilter {
+    return when (this) {
+        Filter.TriState.STATE_IGNORE -> TriStateFilter.DISABLED
+        Filter.TriState.STATE_INCLUDE -> TriStateFilter.ENABLED_IS
+        Filter.TriState.STATE_EXCLUDE -> TriStateFilter.ENABLED_NOT
+        else -> throw IllegalStateException("Unknown TriState state: $this")
+    }
+}
+
+private fun TriStateFilter.toTriStateInt(): Int {
+    return when (this) {
+        TriStateFilter.DISABLED -> Filter.TriState.STATE_IGNORE
+        TriStateFilter.ENABLED_IS -> Filter.TriState.STATE_INCLUDE
+        TriStateFilter.ENABLED_NOT -> Filter.TriState.STATE_EXCLUDE
+        else -> throw IllegalStateException("Unknown TriStateFilter state: $this")
     }
 }

@@ -32,7 +32,6 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
-import eu.kanade.tachiyomi.widget.TriState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -59,6 +58,7 @@ import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
+import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -143,15 +143,15 @@ class LibraryScreenModel(
             getLibraryItemPreferencesFlow(),
             getTrackingFilterFlow(),
         ) { prefs, trackFilter ->
-            val a = (
-                prefs.filterDownloaded or
-                    prefs.filterUnread or
-                    prefs.filterStarted or
-                    prefs.filterBookmarked or
-                    prefs.filterCompleted
-                ) != TriState.DISABLED.value
-            val b = trackFilter.values.any { it != TriState.DISABLED.value }
-            a || b
+            (
+                listOf(
+                    prefs.filterDownloaded,
+                    prefs.filterUnread,
+                    prefs.filterStarted,
+                    prefs.filterBookmarked,
+                    prefs.filterCompleted,
+                ) + trackFilter.values
+                ).any { it != TriStateFilter.DISABLED }
         }
             .distinctUntilChanged()
             .onEach {
@@ -167,7 +167,7 @@ class LibraryScreenModel(
      */
     private suspend fun LibraryMap.applyFilters(
         trackMap: Map<Long, List<Long>>,
-        loggedInTrackServices: Map<Long, Int>,
+        loggedInTrackServices: Map<Long, TriStateFilter>,
     ): LibraryMap {
         val prefs = getLibraryItemPreferencesFlow().first()
         val downloadedOnly = prefs.globalFilterDownloaded
@@ -179,17 +179,17 @@ class LibraryScreenModel(
 
         val isNotLoggedInAnyTrack = loggedInTrackServices.isEmpty()
 
-        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_NOT.value) it.key else null }
-        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_IS.value) it.key else null }
+        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateFilter.ENABLED_NOT) it.key else null }
+        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateFilter.ENABLED_IS) it.key else null }
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{
-            if (!downloadedOnly && filterDownloaded == TriState.DISABLED.value) return@downloaded true
+            if (!downloadedOnly && filterDownloaded == TriStateFilter.DISABLED) return@downloaded true
 
             val isDownloaded = it.libraryManga.manga.isLocal() ||
                 it.downloadCount > 0 ||
                 downloadManager.getDownloadCount(it.libraryManga.manga) > 0
-            return@downloaded if (downloadedOnly || filterDownloaded == TriState.ENABLED_IS.value) {
+            return@downloaded if (downloadedOnly || filterDownloaded == TriStateFilter.ENABLED_IS) {
                 isDownloaded
             } else {
                 !isDownloaded
@@ -197,10 +197,10 @@ class LibraryScreenModel(
         }
 
         val filterFnUnread: (LibraryItem) -> Boolean = unread@{
-            if (filterUnread == TriState.DISABLED.value) return@unread true
+            if (filterUnread == TriStateFilter.DISABLED) return@unread true
 
             val isUnread = it.libraryManga.unreadCount > 0
-            return@unread if (filterUnread == TriState.ENABLED_IS.value) {
+            return@unread if (filterUnread == TriStateFilter.ENABLED_IS) {
                 isUnread
             } else {
                 !isUnread
@@ -208,10 +208,10 @@ class LibraryScreenModel(
         }
 
         val filterFnStarted: (LibraryItem) -> Boolean = started@{
-            if (filterStarted == TriState.DISABLED.value) return@started true
+            if (filterStarted == TriStateFilter.DISABLED) return@started true
 
             val hasStarted = it.libraryManga.hasStarted
-            return@started if (filterStarted == TriState.ENABLED_IS.value) {
+            return@started if (filterStarted == TriStateFilter.ENABLED_IS) {
                 hasStarted
             } else {
                 !hasStarted
@@ -219,10 +219,10 @@ class LibraryScreenModel(
         }
 
         val filterFnBookmarked: (LibraryItem) -> Boolean = bookmarked@{
-            if (filterBookmarked == TriState.DISABLED.value) return@bookmarked true
+            if (filterBookmarked == TriStateFilter.DISABLED) return@bookmarked true
 
             val hasBookmarks = it.libraryManga.hasBookmarks
-            return@bookmarked if (filterBookmarked == TriState.ENABLED_IS.value) {
+            return@bookmarked if (filterBookmarked == TriStateFilter.ENABLED_IS) {
                 hasBookmarks
             } else {
                 !hasBookmarks
@@ -230,10 +230,10 @@ class LibraryScreenModel(
         }
 
         val filterFnCompleted: (LibraryItem) -> Boolean = completed@{
-            if (filterCompleted == TriState.DISABLED.value) return@completed true
+            if (filterCompleted == TriStateFilter.DISABLED) return@completed true
 
             val isCompleted = it.libraryManga.manga.status.toInt() == SManga.COMPLETED
-            return@completed if (filterCompleted == TriState.ENABLED_IS.value) {
+            return@completed if (filterCompleted == TriStateFilter.ENABLED_IS) {
                 isCompleted
             } else {
                 !isCompleted
@@ -349,11 +349,11 @@ class LibraryScreenModel(
                     localBadge = it[1] as Boolean,
                     languageBadge = it[2] as Boolean,
                     globalFilterDownloaded = it[3] as Boolean,
-                    filterDownloaded = it[4] as Int,
-                    filterUnread = it[5] as Int,
-                    filterStarted = it[6] as Int,
-                    filterBookmarked = it[7] as Int,
-                    filterCompleted = it[8] as Int,
+                    filterDownloaded = it[4] as TriStateFilter,
+                    filterUnread = it[5] as TriStateFilter,
+                    filterStarted = it[6] as TriStateFilter,
+                    filterBookmarked = it[7] as TriStateFilter,
+                    filterCompleted = it[8] as TriStateFilter,
                 )
             },
         )
@@ -406,7 +406,7 @@ class LibraryScreenModel(
      *
      * @return map of track id with the filter value
      */
-    private fun getTrackingFilterFlow(): Flow<Map<Long, Int>> {
+    private fun getTrackingFilterFlow(): Flow<Map<Long, TriStateFilter>> {
         val loggedServices = trackManager.services.filter { it.isLogged }
         return if (loggedServices.isNotEmpty()) {
             val prefFlows = loggedServices
@@ -706,11 +706,11 @@ class LibraryScreenModel(
         val languageBadge: Boolean,
 
         val globalFilterDownloaded: Boolean,
-        val filterDownloaded: Int,
-        val filterUnread: Int,
-        val filterStarted: Int,
-        val filterBookmarked: Int,
-        val filterCompleted: Int,
+        val filterDownloaded: TriStateFilter,
+        val filterUnread: TriStateFilter,
+        val filterStarted: TriStateFilter,
+        val filterBookmarked: TriStateFilter,
+        val filterCompleted: TriStateFilter,
     )
 
     @Immutable

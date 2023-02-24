@@ -4,11 +4,12 @@ import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
 import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
 import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
-import eu.kanade.tachiyomi.widget.TriState
 import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.preference.getEnum
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.TriStateFilter
 
 class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
@@ -36,17 +37,17 @@ class LibraryPreferences(
 
     // region Filter
 
-    fun filterDownloaded() = preferenceStore.getInt("pref_filter_library_downloaded", TriState.DISABLED.value)
+    fun filterDownloaded() = preferenceStore.getEnum("pref_filter_library_downloaded_v2", TriStateFilter.DISABLED)
 
-    fun filterUnread() = preferenceStore.getInt("pref_filter_library_unread", TriState.DISABLED.value)
+    fun filterUnread() = preferenceStore.getEnum("pref_filter_library_unread_v2", TriStateFilter.DISABLED)
 
-    fun filterStarted() = preferenceStore.getInt("pref_filter_library_started", TriState.DISABLED.value)
+    fun filterStarted() = preferenceStore.getEnum("pref_filter_library_started_v2", TriStateFilter.DISABLED)
 
-    fun filterBookmarked() = preferenceStore.getInt("pref_filter_library_bookmarked", TriState.DISABLED.value)
+    fun filterBookmarked() = preferenceStore.getEnum("pref_filter_library_bookmarked_v2", TriStateFilter.DISABLED)
 
-    fun filterCompleted() = preferenceStore.getInt("pref_filter_library_completed", TriState.DISABLED.value)
+    fun filterCompleted() = preferenceStore.getEnum("pref_filter_library_completed_v2", TriStateFilter.DISABLED)
 
-    fun filterTracking(name: Int) = preferenceStore.getInt("pref_filter_library_tracked_$name", TriState.DISABLED.value)
+    fun filterTracking(id: Int) = preferenceStore.getEnum("pref_filter_library_tracked_${id}_v2", TriStateFilter.DISABLED)
 
     // endregion
 
