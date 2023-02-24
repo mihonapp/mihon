@@ -10,10 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.library.service.LibraryPreferences
-import eu.kanade.presentation.components.CheckboxItem
-import eu.kanade.presentation.components.HeadingItem
-import eu.kanade.presentation.components.RadioItem
-import eu.kanade.presentation.components.SortItem
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.presentation.components.TriStateItem
@@ -27,6 +23,10 @@ import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.display
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.manga.model.TriStateFilter
+import tachiyomi.presentation.core.components.CheckboxItem
+import tachiyomi.presentation.core.components.HeadingItem
+import tachiyomi.presentation.core.components.RadioItem
+import tachiyomi.presentation.core.components.SortItem
 
 @Composable
 fun LibrarySettingsDialog(

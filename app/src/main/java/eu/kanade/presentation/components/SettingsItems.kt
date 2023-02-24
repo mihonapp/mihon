@@ -1,52 +1,32 @@
 package eu.kanade.presentation.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import tachiyomi.domain.manga.model.TriStateFilter
-import tachiyomi.presentation.core.theme.header
-
-@Composable
-fun HeadingItem(
-    @StringRes labelRes: Int,
-) {
-    HeadingItem(stringResource(labelRes))
-}
-
-@Composable
-fun HeadingItem(
-    text: String,
-) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.header,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
-    )
-}
+import tachiyomi.presentation.core.components.SettingsItemsPaddings
 
 @Composable
 fun TriStateItem(
@@ -68,7 +48,7 @@ fun TriStateItem(
                 },
             )
             .fillMaxWidth()
-            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
+            .padding(horizontal = SettingsItemsPaddings.Horizontal, vertical = SettingsItemsPaddings.Vertical),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
@@ -99,87 +79,50 @@ fun TriStateItem(
 }
 
 @Composable
-fun SortItem(
+fun SelectItem(
     label: String,
-    sortDescending: Boolean?,
-    onClick: () -> Unit,
+    options: Array<out Any?>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
 ) {
-    val arrowIcon = when (sortDescending) {
-        true -> Icons.Default.ArrowDownward
-        false -> Icons.Default.ArrowUpward
-        null -> null
-    }
+    var expanded by remember { mutableStateOf(false) }
 
-    Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .fillMaxWidth()
-            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        if (arrowIcon != null) {
-            Icon(
-                imageVector = arrowIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        } else {
-            Spacer(modifier = Modifier.size(24.dp))
+        OutlinedTextField(
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+                .padding(horizontal = SettingsItemsPaddings.Horizontal, vertical = SettingsItemsPaddings.Vertical),
+            label = { Text(text = label) },
+            value = options[selectedIndex].toString(),
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded,
+                )
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+        )
+
+        ExposedDropdownMenu(
+            modifier = Modifier.exposedDropdownSize(matchTextFieldWidth = true),
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+        ) {
+            options.forEachIndexed { index, text ->
+                DropdownMenuItem(
+                    text = { Text(text.toString()) },
+                    onClick = {
+                        onSelect(index)
+                        expanded = false
+                    },
+                )
+            }
         }
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Composable
-fun CheckboxItem(
-    label: String,
-    checked: Boolean,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .fillMaxWidth()
-            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = null,
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-}
-
-@Composable
-fun RadioItem(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .fillMaxWidth()
-            .padding(horizontal = TabbedDialogPaddings.Horizontal, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
-    ) {
-        RadioButton(
-            selected = selected,
-            onClick = null,
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }

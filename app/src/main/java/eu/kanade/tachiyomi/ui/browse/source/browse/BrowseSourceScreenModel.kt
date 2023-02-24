@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
-import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.runtime.Immutable
@@ -14,7 +13,6 @@ import androidx.paging.filter
 import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import eu.davidea.flexibleadapter.items.IFlexible
 import eu.kanade.core.prefs.asState
 import eu.kanade.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
@@ -33,19 +31,6 @@ import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.FilterList
-import eu.kanade.tachiyomi.ui.browse.source.filter.CheckboxItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.CheckboxSectionItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.GroupItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.HeaderItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.SelectItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.SelectSectionItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.SeparatorItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.SortGroup
-import eu.kanade.tachiyomi.ui.browse.source.filter.SortItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.TextItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.TextSectionItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateItem
-import eu.kanade.tachiyomi.ui.browse.source.filter.TriStateSectionItem
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -126,11 +111,6 @@ class BrowseSourceScreenModel(
     }
 
     /**
-     * Sheet containing filter items.
-     */
-    private var filterSheet: SourceFilterSheet? = null
-
-    /**
      * Flow of Pager flow tied to [State.listing]
      */
     val mangaPagerFlowFlow = state.map { it.listing }
@@ -173,6 +153,16 @@ class BrowseSourceScreenModel(
 
     fun setListing(listing: Listing) {
         mutableState.update { it.copy(listing = listing) }
+    }
+
+    fun setFilters(filters: FilterList) {
+        if (source !is CatalogueSource) return
+
+        mutableState.update {
+            it.copy(
+                filters = filters,
+            )
+        }
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
@@ -350,7 +340,7 @@ class BrowseSourceScreenModel(
         return getDuplicateLibraryManga.await(manga.title)
     }
 
-    fun moveMangaToCategories(manga: Manga, vararg categories: Category) {
+    private fun moveMangaToCategories(manga: Manga, vararg categories: Category) {
         moveMangaToCategories(manga, categories.filter { it.id != 0L }.map { it.id })
     }
 
@@ -364,7 +354,7 @@ class BrowseSourceScreenModel(
     }
 
     fun openFilterSheet() {
-        filterSheet?.show()
+        setDialog(Dialog.Filter)
     }
 
     fun setDialog(dialog: Dialog?) {
@@ -373,23 +363,6 @@ class BrowseSourceScreenModel(
 
     fun setToolbarQuery(query: String?) {
         mutableState.update { it.copy(toolbarQuery = query) }
-    }
-
-    fun initFilterSheet(context: Context) {
-        if (state.value.filters.isEmpty()) {
-            return
-        }
-
-        filterSheet = SourceFilterSheet(
-            context = context,
-            onFilterClicked = { search(filters = state.value.filters) },
-            onResetClicked = {
-                resetFilters()
-                filterSheet?.setFilters(state.value.filterItems)
-            },
-        )
-
-        filterSheet?.setFilters(state.value.filterItems)
     }
 
     sealed class Listing(open val query: String?, open val filters: FilterList) {
@@ -409,6 +382,7 @@ class BrowseSourceScreenModel(
     }
 
     sealed class Dialog {
+        object Filter : Dialog()
         data class RemoveManga(val manga: Manga) : Dialog()
         data class AddDuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog()
         data class ChangeMangaCategory(
@@ -425,43 +399,6 @@ class BrowseSourceScreenModel(
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
     ) {
-        val filterItems get() = filters.toItems()
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
-    }
-}
-
-private fun FilterList.toItems(): List<IFlexible<*>> {
-    return mapNotNull { filter ->
-        when (filter) {
-            is SourceModelFilter.Header -> HeaderItem(filter)
-            is SourceModelFilter.Separator -> SeparatorItem(filter)
-            is SourceModelFilter.CheckBox -> CheckboxItem(filter)
-            is SourceModelFilter.TriState -> TriStateItem(filter)
-            is SourceModelFilter.Text -> TextItem(filter)
-            is SourceModelFilter.Select<*> -> SelectItem(filter)
-            is SourceModelFilter.Group<*> -> {
-                val group = GroupItem(filter)
-                val subItems = filter.state.mapNotNull {
-                    when (it) {
-                        is SourceModelFilter.CheckBox -> CheckboxSectionItem(it)
-                        is SourceModelFilter.TriState -> TriStateSectionItem(it)
-                        is SourceModelFilter.Text -> TextSectionItem(it)
-                        is SourceModelFilter.Select<*> -> SelectSectionItem(it)
-                        else -> null
-                    }
-                }
-                subItems.forEach { it.header = group }
-                group.subItems = subItems
-                group
-            }
-            is SourceModelFilter.Sort -> {
-                val group = SortGroup(filter)
-                val subItems = filter.values.map {
-                    SortItem(it, group)
-                }
-                group.subItems = subItems
-                group
-            }
-        }
     }
 }
