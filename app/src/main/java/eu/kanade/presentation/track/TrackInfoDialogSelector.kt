@@ -3,6 +3,7 @@ package eu.kanade.presentation.track
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -14,34 +15,27 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
-import tachiyomi.presentation.core.components.WheelDatePicker
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 @Composable
 fun TrackStatusSelector(
@@ -140,53 +134,47 @@ fun TrackScoreSelector(
 @Composable
 fun TrackDateSelector(
     title: String,
-    minDate: LocalDate?,
-    maxDate: LocalDate?,
-    selection: LocalDate,
-    onSelectionChange: (LocalDate) -> Unit,
-    onConfirm: () -> Unit,
+    initialSelectedDateMillis: Long,
+    dateValidator: (Long) -> Boolean,
+    onConfirm: (Long) -> Unit,
     onRemove: (() -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
-    BaseSelector(
-        title = title,
+    val pickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialSelectedDateMillis,
+    )
+    AlertDialogContent(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
         content = {
-            Row(
-                modifier = Modifier.align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                var internalSelection by remember { mutableStateOf(selection) }
-                Text(
+            Column {
+                DatePicker(
+                    state = pickerState,
+                    title = { Text(text = title) },
+                    dateValidator = dateValidator,
+                    showModeToggle = false,
+                )
+
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 16.dp),
-                    text = internalSelection.dayOfWeek
-                        .getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                WheelDatePicker(
-                    startDate = selection,
-                    minDate = minDate,
-                    maxDate = maxDate,
-                    onSelectionChanged = {
-                        internalSelection = it
-                        onSelectionChange(it)
-                    },
-                )
-            }
-        },
-        thirdButton = if (onRemove != null) {
-            {
-                TextButton(onClick = onRemove) {
-                    Text(text = stringResource(R.string.action_remove))
+                        .fillMaxWidth()
+                        .padding(start = 12.dp, top = 8.dp, end = 12.dp, bottom = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
+                ) {
+                    if (onRemove != null) {
+                        TextButton(onClick = onRemove) {
+                            Text(text = stringResource(R.string.action_remove))
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                    TextButton(onClick = onDismissRequest) {
+                        Text(text = stringResource(android.R.string.cancel))
+                    }
+                    TextButton(onClick = { onConfirm(pickerState.selectedDateMillis!!) }) {
+                        Text(text = stringResource(android.R.string.ok))
+                    }
                 }
             }
-        } else {
-            null
         },
-        onConfirm = onConfirm,
-        onDismissRequest = onDismissRequest,
     )
 }
 
