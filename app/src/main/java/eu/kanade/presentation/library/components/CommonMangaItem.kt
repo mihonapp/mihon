@@ -29,12 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
-import androidx.compose.ui.node.DrawModifierNode
-import androidx.compose.ui.node.modifierElementOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -306,28 +304,7 @@ private fun GridItemSelectable(
 private fun Modifier.selectedOutline(
     isSelected: Boolean,
     color: Color,
-): Modifier {
-    class SelectedOutlineNode(var selected: Boolean, var color: Color) : DrawModifierNode, Modifier.Node() {
-        override fun ContentDrawScope.draw() {
-            if (selected) drawRect(color)
-            drawContent()
-        }
-    }
-
-    return this then modifierElementOf(
-        key = isSelected.hashCode() + color.hashCode(),
-        create = { SelectedOutlineNode(isSelected, color) },
-        update = {
-            it.selected = isSelected
-            it.color = color
-        },
-        definitions = {
-            name = "selectionOutline"
-            properties["isSelected"] = isSelected
-            properties["color"] = color
-        },
-    )
-}
+) = this then drawBehind { if (isSelected) drawRect(color = color) }
 
 /**
  * Layout of list item.
