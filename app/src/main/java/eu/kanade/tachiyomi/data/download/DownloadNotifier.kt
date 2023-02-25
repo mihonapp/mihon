@@ -45,16 +45,6 @@ internal class DownloadNotifier(private val context: Context) {
     private var isDownloading = false
 
     /**
-     * Updated when error is thrown
-     */
-    private var errorThrown = false
-
-    /**
-     * Updated when paused
-     */
-    var paused = false
-
-    /**
      * Shows a notification from this builder.
      *
      * @param id the id of the notification.
@@ -156,7 +146,6 @@ internal class DownloadNotifier(private val context: Context) {
         dismissProgress()
 
         // Reset states to default
-        errorThrown = false
         isDownloading = false
     }
 
@@ -209,7 +198,6 @@ internal class DownloadNotifier(private val context: Context) {
         }
 
         // Reset download information
-        errorThrown = true
         isDownloading = false
     }
 }

@@ -97,7 +97,7 @@ class DownloadManager(
         download?.let { queue.remove(it) }
         queue.add(0, toAdd)
         reorderQueue(queue)
-        if (downloader.isPaused()) {
+        if (!downloader.isRunning) {
             if (DownloadService.isRunning(context)) {
                 downloader.start()
             } else {
