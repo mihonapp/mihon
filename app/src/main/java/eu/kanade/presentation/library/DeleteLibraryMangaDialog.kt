@@ -64,9 +64,11 @@ fun DeleteLibraryMangaDialog(
                 list.forEach { state ->
                     val onCheck = {
                         val index = list.indexOf(state)
-                        val mutableList = list.toMutableList()
-                        mutableList[index] = state.next() as CheckboxState.State<Int>
-                        list = mutableList.toList()
+                        if (index != -1) {
+                            val mutableList = list.toMutableList()
+                            mutableList[index] = state.next() as CheckboxState.State<Int>
+                            list = mutableList.toList()
+                        }
                     }
 
                     Row(
