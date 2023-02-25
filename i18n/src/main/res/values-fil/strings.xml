@@ -258,7 +258,7 @@
     <string name="pref_search_pinned_sources_only">Isama lang ang mga naka-pin</string>
     <string name="tracking_info">Isahang pagsabay (sync) para mai-update ang progress sa mga kabanata sa mga tracking service. Ayusin ang pagta-track para sa mga indibidwal na entry gamit ang button na Pagta-track.</string>
     <string name="services">Mga Serbisyo</string>
-    <string name="pref_auto_update_manga_sync">I-update ang progress pagkabasa</string>
+    <string name="pref_auto_update_manga_sync">I-update ang progress pagkatapos basahin</string>
     <string name="pref_download_new">I-download ang mga bago</string>
     <string name="fifth_to_last">Panlima sa huling nabasa</string>
     <string name="fourth_to_last">Pang-apat sa huling nabasa</string>
@@ -791,4 +791,10 @@
     <string name="hour_short">%dh</string>
     <string name="minute_short">%dm</string>
     <string name="seconds_short">%ds</string>
+    <string name="action_copy_to_clipboard">Kopyahin sa clipboard</string>
+    <string name="pref_hide_in_library_items">Itago ang mga entry na nasa aklatan na</string>
+    <plurals name="download_amount">
+        <item quantity="one">Susunod na kabanata</item>
+        <item quantity="other">Susunod na %d (mga) kabanata</item>
+    </plurals>
 </resources>

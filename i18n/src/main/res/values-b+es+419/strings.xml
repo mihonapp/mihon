@@ -4,7 +4,7 @@
     <string name="action_select_inverse">Invertir selección</string>
     <string name="action_sort_latest_chapter">Capítulo más reciente</string>
     <string name="action_sort_total">Total de capítulos</string>
-    <string name="label_extension_info">información de la extensión</string>
+    <string name="label_extension_info">Información de la extensión</string>
     <string name="confirm_exit">Pulse Atrás de nuevo para salir</string>
     <string name="label_backup">Copia de seguridad y restauración</string>
     <string name="label_recent_manga">Historial</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">이름</string>
-    <string name="categories">카테고리</string>
+    <string name="categories">범주</string>
     <string name="manga">서재 항목</string>
     <string name="chapters">회차</string>
     <string name="track">동기화</string>
@@ -66,7 +66,7 @@
     <string name="pref_category_advanced">고급</string>
     <string name="pref_category_about">정보</string>
     <string name="pref_library_columns">서재 정렬</string>
-    <string name="label_migration">소스 이동</string>
+    <string name="label_migration">데이터 이전</string>
     <string name="label_extensions">확장기능</string>
     <string name="label_extension_info">확장기능 정보</string>
     <string name="action_global_search">전체 검색</string>
@@ -83,7 +83,7 @@
     <string name="all">전부</string>
     <string name="pref_library_update_restriction">자동 업데이트 조건</string>
     <string name="charging">충전 중일 때만</string>
-    <string name="default_category">기본 카테고리</string>
+    <string name="default_category">기본 범주</string>
     <string name="ext_update">업데이트</string>
     <string name="ext_install">설치</string>
     <string name="ext_pending">대기 중</string>
@@ -161,7 +161,7 @@
     <string name="pref_enable_acra">오류 보고서 전송</string>
     <string name="pref_acra_summary">버그를 수정하는데 도움이 됩니다. 개인 정보는 전송되지 않습니다</string>
     <string name="login_title">%1$s 으로 로그인</string>
-    <string name="username">유저네임</string>
+    <string name="username">사용자명</string>
     <string name="password">비밀번호</string>
     <string name="login">로그인</string>
     <string name="login_success">로그인 성공</string>
@@ -170,7 +170,7 @@
     <string name="no_more_results">더이상 결과 없음</string>
     <string name="action_global_search_hint">전체 검색…</string>
     <string name="latest">최신</string>
-    <string name="ongoing">연재중</string>
+    <string name="ongoing">연재</string>
     <string name="unknown">알 수 없음</string>
     <string name="remove_from_library">서재에서 제거</string>
     <string name="manga_added_library">서재에 추가되었습니다</string>
@@ -273,7 +273,7 @@
     <string name="track_type">종류</string>
     <string name="error_category_exists">같은 이름을 가진 카테고리가 이미 존재합니다!</string>
     <string name="migration_dialog_what_to_include">포함할 데이터를 선택하세요</string>
-    <string name="migrate">이동</string>
+    <string name="migrate">데이터 이전</string>
     <string name="copy">복사</string>
     <string name="download_queue_error">다운로드 실패. 다운로드 메뉴에서 다시 시도할 수 있습니다</string>
     <string name="notification_first_add_to_library">이 행동을 하기 전 서재에 항목을 추가해주세요</string>
@@ -319,7 +319,7 @@
     <string name="pref_incognito_mode">시크릿 모드</string>
     <string name="updated_version">v%1$s 으로 업데이트 됨</string>
     <string name="check_for_updates">업데이트 확인</string>
-    <string name="licenses">오픈 소스 라이센스</string>
+    <string name="licenses">오픈 소스 라이선스</string>
     <string name="battery_optimization_setting_activity_not_found">디바이스 설정을 열 수 없습니다</string>
     <string name="pref_disable_battery_optimization">배터리 최적화 끄기</string>
     <string name="restore_miui_warning">MIUI 최적화가 꺼져 있을 경우 백업/복원 기능이 정상 작동하지 않을 수 있습니다.</string>
@@ -497,9 +497,9 @@
     <string name="action_global_search_query">\"%1$s\"를 전체 검색합니다</string>
     <string name="local_source_help_guide">로컬 저장소 사용법</string>
     <string name="no_pinned_sources">핀 설정된 소스가 없습니다</string>
-    <string name="local_invalid_format">잘못된 회차 포맷</string>
+    <string name="local_invalid_format">잘못된 챕터형식</string>
     <string name="unknown_status">알 수 없는 상태</string>
-    <string name="on_hiatus">휴재중</string>
+    <string name="on_hiatus">휴재</string>
     <string name="manga_info_expand">상세정보 표시</string>
     <string name="manga_info_collapse">상세정보 숨김</string>
     <string name="clipboard_copy_error">클립보드로 복사에 실패하였습니다</string>

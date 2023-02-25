@@ -346,7 +346,7 @@
     <string name="theme_dark">Ligado</string>
     <string name="theme_system">Seguir o do sistema</string>
     <string name="pref_manage_notifications">Gerir notificações</string>
-    <string name="pref_category_security">Segurança</string>
+    <string name="pref_category_security">Segurança e privacidade.</string>
     <string name="lock_with_biometrics">Requerer desbloqueio</string>
     <string name="lock_when_idle">Bloquear quando inativo</string>
     <string name="lock_always">Sempre</string>
@@ -440,7 +440,7 @@
     <string name="licenses">Licenças de código aberto</string>
     <string name="downloaded_only_summary">Filtra todos os itens nasua biblioteca</string>
     <string name="restore_duration">%02d min, %02d seg</string>
-    <string name="pref_search_pinned_sources_only">Apenas incluir fontes fixadas</string>
+    <string name="pref_search_pinned_sources_only">Pesquise apenas fontes fixadas na pesquisa global</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restante</item>
         <item quantity="many">%1$s restantes</item>
@@ -834,4 +834,11 @@
     <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
 \nToque para saber mais.</string>
     <string name="information_no_entries_found">Nenhum item encontrado nesta categoria</string>
+    <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
+    <string name="pref_hide_in_library_items">Ocultar entradas existentes na biblioteca</string>
+    <plurals name="download_amount">
+        <item quantity="one">Próximo capítulo</item>
+        <item quantity="many">Próximos %d capítulos</item>
+        <item quantity="other">Próximos %d capítulos</item>
+    </plurals>
 </resources>

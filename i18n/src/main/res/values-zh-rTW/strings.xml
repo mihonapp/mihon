@@ -291,7 +291,7 @@
     <string name="third_to_last">倒數第三閱畢的章節</string>
     <string name="fourth_to_last">倒數第四閱畢的章節</string>
     <string name="fifth_to_last">倒數第五閱畢的章節</string>
-    <string name="dropped">不看了</string>
+    <string name="dropped">已拋棄</string>
     <string name="on_hold">擱置中</string>
     <string name="no_results_found">找不到結果</string>
     <string name="migration_selection_prompt">請選擇檔案來源</string>
@@ -532,7 +532,7 @@
     <string name="none">無</string>
     <string name="action_show_errors">輕觸以檢視詳細資訊</string>
     <string name="update_check_eol">不再支援此 Android 版本</string>
-    <string name="clipboard_copy_error">無法複製至剪貼簿</string>
+    <string name="clipboard_copy_error">無法複製到剪貼簿</string>
     <string name="backup_restore_content_full">即將還原備份中的資料。
 \n
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
@@ -778,4 +778,9 @@
 \n仍要新增嗎？</string>
     <string name="track_error">%1$s 發生錯誤：%2$s</string>
     <string name="information_required_plain">*必填</string>
+    <string name="pref_hide_in_library_items">隱藏已在書櫃的作品</string>
+    <string name="action_copy_to_clipboard">複製到剪貼簿</string>
+    <plurals name="download_amount">
+        <item quantity="other">後續 %d 章</item>
+    </plurals>
 </resources>

@@ -65,7 +65,7 @@
     <string name="loading">正在加载…</string>
     <string name="action_display_download_badge">已下载章节</string>
     <string name="app_not_available">应用不可用</string>
-    <string name="pref_category_general">通用</string>
+    <string name="pref_category_general">常规</string>
     <string name="pref_category_reader">阅读</string>
     <string name="pref_category_downloads">下载</string>
     <string name="pref_category_tracking">进度记录</string>

@@ -783,7 +783,7 @@
     <string name="action_search_hint">بحث…</string>
     <string name="skipped_reason_not_always_update">تم التخطي لأن السلسلة لا تتطلب تحديثات</string>
     <string name="crash_screen_description">%s واجه خطأ غير متوقع. نقترح عليك أخد لقطة شاشة لهذه الرسالة، وتفريغ سجلات التعطل ، ثم مشاركتها في قناة الدعم الخاصة بنا على Discord.</string>
-    <string name="crash_screen_title">أخ!</string>
+    <string name="crash_screen_title">عفوًا!</string>
     <string name="crash_screen_restart_application">أعد تشغيل التطبيق</string>
     <string name="pref_general_summary">لغة التطبيق، الإشعارات</string>
     <string name="pref_appearance_summary">مظهر، التاريخ والوقت</string>
@@ -844,4 +844,13 @@
     <string name="track_error">%1$s خطأ: %2$s</string>
     <string name="information_required_plain">*مطلوب</string>
     <string name="action_copy_to_clipboard">نسخ إلى الحافظة</string>
+    <plurals name="download_amount">
+        <item quantity="zero">الفصل التالي</item>
+        <item quantity="one">الفصل التالي</item>
+        <item quantity="two">%d فصول تالية</item>
+        <item quantity="few">%d فصول تالية</item>
+        <item quantity="many">%d فصل تالي</item>
+        <item quantity="other">%d فصل تالي</item>
+    </plurals>
+    <string name="pref_hide_in_library_items">إخفاء الإدخالات الموجودة بالفعل في المكتبة</string>
 </resources>

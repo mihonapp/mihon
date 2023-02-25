@@ -349,7 +349,7 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad y privacidad</string>
-    <string name="lock_with_biometrics">Requiere utilizar desbloqueo por biometría</string>
+    <string name="lock_with_biometrics">Requiere el uso de desbloqueo por biometría</string>
     <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>

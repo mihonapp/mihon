@@ -127,7 +127,7 @@
     <string name="pref_library_update_restriction">स्वचालित अपडेटहरु उपकरण प्रतिबन्धहरू</string>
     <string name="update_weekly">साप्ताहिक</string>
     <string name="update_48hour">प्रत्येक २ दिन</string>
-    <string name="update_24hour">सँधै</string>
+    <string name="update_24hour">दैनिक</string>
     <string name="update_12hour">प्रत्येक १२ घण्टा</string>
     <string name="update_6hour">प्रत्येक ६ घण्टा</string>
     <string name="update_never">अफ</string>
@@ -148,8 +148,8 @@
     <string name="secure_screen_summary">एपहरू स्विच गर्दा \"सुरक्षित स्क्रिनले\" एप सामग्रीहरू लुकाउँछ र स्क्रिनसटहरू रोक्छ</string>
     <string name="secure_screen">स्क्रिन सुरक्षित गर्नुहोस्</string>
     <plurals name="lock_after_mins">
-        <item quantity="one">%1$s मिनट पछि</item>
-        <item quantity="other">%1$s मिनट पछि</item>
+        <item quantity="one">%1$s मिनेट पछि</item>
+        <item quantity="other">%1$s मिनेट पछि</item>
     </plurals>
     <string name="lock_never">कहिल्यै हैन</string>
     <string name="lock_always">सधैं</string>
@@ -186,13 +186,13 @@
     <string name="pref_tablet_ui_mode">ट्याब्लेट UI</string>
     <string name="battery_optimization_setting_activity_not_found">यन्त्रको सेटिङहरू खोल्न सकिएन</string>
     <string name="pref_incognito_mode_summary">पढिएको इतिहास रोक्नु</string>
-    <string name="pref_incognito_mode">इन्कोग्निटो मोड</string>
+    <string name="pref_incognito_mode">गुप्त मोड</string>
     <string name="label_downloaded_only">डाउनलोड गरिएको मात्र</string>
     <string name="pref_acra_summary">कुनै पनि बगहरू ठीक गर्न मद्दत गर्दछ। कुनै संवेदनशील डाटा पठाइने छैन</string>
     <string name="pref_enable_acra">क्रेश रिपोर्टहरू पठाउनुहोस्</string>
     <string name="updated_version">v%1$s मा अपडेट गरियो</string>
     <string name="check_for_updates">अपडेटका लागि चेक गर्नुहोस्</string>
-    <string name="decode_image_error">चित्र लोड गर्न सकिएन</string>
+    <string name="decode_image_error">छवि लोड गर्न सकिएन</string>
     <string name="download_queue_error">अध्यायहरू डाउनलोड गर्न सकिएन। तपाईं डाउनलोड कतारमा फेरि प्रयास गर्न सक्नुहुन्छ</string>
     <string name="ext_uninstall">स्थापना रद्द गर्नुहोस्</string>
     <string name="third_to_last">तेस्रो अन्तिम अध्याय</string>
@@ -474,8 +474,8 @@
     <string name="local_filter_order_by">द्वारा अर्डर गर्नुहोस्</string>
     <string name="date">मिति</string>
     <string name="login_title">%1$s मा लग इन गर्नुहोस्</string>
-    <string name="pref_refresh_library_covers">पुस्तकालय का माङ्गा कभरहरू ताजा गर्नुहोस्</string>
-    <string name="notification_incognito_text">इन्कोग्निटो मोड असक्षम गर्नुहोस्</string>
+    <string name="pref_refresh_library_covers">पुस्तकालय का कभरहरू ताजा गर्नुहोस्</string>
+    <string name="notification_incognito_text">गुप्त मोड असक्षम गर्नुहोस्</string>
     <string name="unknown_error">अज्ञात एरर</string>
     <string name="downloaded_chapters">डाउनलोड गरिएका अध्यायहरू</string>
     <string name="chapter_not_found">अध्याय फेला परेन</string>
@@ -564,7 +564,7 @@
     <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ\?</string>
     <string name="chapter_settings">अध्याय सेटिङ</string>
     <string name="set_chapter_settings_as_default">पूर्वनिर्धारित रूपमा सेट गर्नुहोस्</string>
-    <string name="confirm_set_image_as_cover">यो चित्र कभरको रूपमा राख्न चाहनुहुन्छ\?</string>
+    <string name="confirm_set_image_as_cover">यो छवि कभरको रूपमा राख्न चाहनुहुन्छ\?</string>
     <string name="dialog_with_checkbox_reset">यो इन्ट्रीको सबै अध्यायहरू रिसेट गर्नुहोस्</string>
     <string name="download_all">सबै</string>
     <string name="download_unread">नपढिएको</string>

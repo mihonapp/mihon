@@ -332,7 +332,7 @@
     <string name="lock_never">Nigdy</string>
     <string name="lock_always">Zawsze</string>
     <string name="lock_with_biometrics">Zablokuj za pomocą biometrii</string>
-    <string name="pref_category_security">Bezpieczeństwo</string>
+    <string name="pref_category_security">Bezpieczeństwo i prywatność</string>
     <string name="pref_manage_notifications">Zarządzaj powiadomieniami</string>
     <string name="theme_system">Systemowy</string>
     <string name="theme_dark">Włącz</string>
@@ -368,7 +368,7 @@
     <string name="restore_in_progress">Kopia zapasowa jest w trakcie przywracania</string>
     <string name="backup_in_progress">Kopia zapasowa jest już w trakcie tworzenia</string>
     <string name="restore_duration">%02d min, %02d s</string>
-    <string name="pref_search_pinned_sources_only">Pokazuj tylko przypięte źródła</string>
+    <string name="pref_search_pinned_sources_only">Wyszukaj tylko w przypiętych źródłach</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
     <string name="pref_true_color_summary">Ogranicza banding, ale może mieć wpływ na wydajność</string>
@@ -817,4 +817,12 @@
     <string name="pref_worker_info">Informacje o procesach</string>
     <string name="track_error">Błąd %1$s: %2$s</string>
     <string name="information_required_plain">*wymagane</string>
+    <string name="pref_hide_in_library_items">Ukryj pozycje znajdujące się już w bibliotece</string>
+    <string name="action_copy_to_clipboard">Kopiuj do schowka</string>
+    <plurals name="download_amount">
+        <item quantity="one">Następny rozdział</item>
+        <item quantity="few">Następne %d rozdziały</item>
+        <item quantity="many">Następne %d rozdziałów</item>
+        <item quantity="other">Następne %d rozdziałów</item>
+    </plurals>
 </resources>
