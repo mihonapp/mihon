@@ -61,7 +61,7 @@ class SourcePreferencesScreen(val sourceId: Long) : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = Injekt.get<SourceManager>().get(sourceId)!!.toString()) },
+                    title = { Text(text = Injekt.get<SourceManager>().getOrStub(sourceId).toString()) },
                     navigationIcon = {
                         IconButton(onClick = navigator::pop) {
                             Icon(
