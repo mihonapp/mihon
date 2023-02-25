@@ -63,7 +63,10 @@ fun SourceFilterDialog(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    Button(onClick = onFilter) {
+                    Button(onClick = {
+                        onFilter()
+                        onDismissRequest()
+                    },) {
                         Text(stringResource(R.string.action_filter))
                     }
                 }
