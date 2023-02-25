@@ -167,6 +167,11 @@ class Downloader(
         }
 
         isPaused = false
+
+        // Prevent recursion when DownloadService.onDestroy() calls downloader.stop()
+        if (DownloadService.isRunning.value) {
+            DownloadService.stop(context)
+        }
     }
 
     /**
@@ -217,9 +222,9 @@ class Downloader(
                     completeDownload(it)
                 },
                 { error ->
-                    DownloadService.stop(context)
                     logcat(LogPriority.ERROR, error)
                     notifier.onError(error.message)
+                    stop()
                 },
             )
     }
@@ -634,7 +639,7 @@ class Downloader(
             queue.remove(download)
         }
         if (areAllDownloadsFinished()) {
-            DownloadService.stop(context)
+            stop()
         }
     }
 

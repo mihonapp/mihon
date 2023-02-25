@@ -67,7 +67,7 @@ class DownloadManager(
      */
     fun pauseDownloads() {
         downloader.pause()
-        DownloadService.stop(context)
+        downloader.stop()
     }
 
     /**
@@ -75,7 +75,7 @@ class DownloadManager(
      */
     fun clearQueue() {
         downloader.clearQueue()
-        DownloadService.stop(context)
+        downloader.stop()
     }
 
     /**
@@ -115,8 +115,8 @@ class DownloadManager(
         val wasRunning = downloader.isRunning
 
         if (downloads.isEmpty()) {
-            DownloadService.stop(context)
-            queue.clear()
+            downloader.clearQueue()
+            downloader.stop()
             return
         }
 
@@ -275,7 +275,6 @@ class DownloadManager(
 
         if (wasRunning) {
             if (queue.isEmpty()) {
-                DownloadService.stop(context)
                 downloader.stop()
             } else if (queue.isNotEmpty()) {
                 downloader.start()
