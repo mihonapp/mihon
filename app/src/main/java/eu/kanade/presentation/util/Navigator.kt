@@ -3,6 +3,7 @@ package eu.kanade.presentation.util
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -33,7 +34,7 @@ interface AssistContentScreen {
 }
 
 @Composable
-fun DefaultNavigatorScreenTransition(navigator: Navigator) {
+fun DefaultNavigatorScreenTransition(navigator: Navigator, modifier: Modifier = Modifier) {
     val slideDistance = rememberSlideDistance()
     ScreenTransition(
         navigator = navigator,
@@ -43,5 +44,6 @@ fun DefaultNavigatorScreenTransition(navigator: Navigator) {
                 slideDistance = slideDistance,
             )
         },
+        modifier = modifier,
     )
 }
