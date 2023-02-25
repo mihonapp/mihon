@@ -14,3 +14,9 @@ enum class TriStateFilter {
         }
     }
 }
+
+inline fun applyFilter(filter: TriStateFilter, predicate: () -> Boolean): Boolean = when (filter) {
+    TriStateFilter.DISABLED -> true
+    TriStateFilter.ENABLED_IS -> predicate()
+    TriStateFilter.ENABLED_NOT -> !predicate()
+}

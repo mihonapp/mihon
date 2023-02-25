@@ -59,6 +59,7 @@ import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.TriStateFilter
+import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -171,7 +172,8 @@ class LibraryScreenModel(
     ): LibraryMap {
         val prefs = getLibraryItemPreferencesFlow().first()
         val downloadedOnly = prefs.globalFilterDownloaded
-        val filterDownloaded = prefs.filterDownloaded
+        val filterDownloaded =
+            if (downloadedOnly) TriStateFilter.ENABLED_IS else prefs.filterDownloaded
         val filterUnread = prefs.filterUnread
         val filterStarted = prefs.filterStarted
         val filterBookmarked = prefs.filterBookmarked
@@ -183,61 +185,28 @@ class LibraryScreenModel(
         val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateFilter.ENABLED_IS) it.key else null }
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
-        val filterFnDownloaded: (LibraryItem) -> Boolean = downloaded@{
-            if (!downloadedOnly && filterDownloaded == TriStateFilter.DISABLED) return@downloaded true
-
-            val isDownloaded = it.libraryManga.manga.isLocal() ||
-                it.downloadCount > 0 ||
-                downloadManager.getDownloadCount(it.libraryManga.manga) > 0
-            return@downloaded if (downloadedOnly || filterDownloaded == TriStateFilter.ENABLED_IS) {
-                isDownloaded
-            } else {
-                !isDownloaded
+        val filterFnDownloaded: (LibraryItem) -> Boolean = {
+            applyFilter(filterDownloaded) {
+                it.libraryManga.manga.isLocal() ||
+                    it.downloadCount > 0 ||
+                    downloadManager.getDownloadCount(it.libraryManga.manga) > 0
             }
         }
 
-        val filterFnUnread: (LibraryItem) -> Boolean = unread@{
-            if (filterUnread == TriStateFilter.DISABLED) return@unread true
-
-            val isUnread = it.libraryManga.unreadCount > 0
-            return@unread if (filterUnread == TriStateFilter.ENABLED_IS) {
-                isUnread
-            } else {
-                !isUnread
-            }
+        val filterFnUnread: (LibraryItem) -> Boolean = {
+            applyFilter(filterUnread) { it.libraryManga.unreadCount > 0 }
         }
 
-        val filterFnStarted: (LibraryItem) -> Boolean = started@{
-            if (filterStarted == TriStateFilter.DISABLED) return@started true
-
-            val hasStarted = it.libraryManga.hasStarted
-            return@started if (filterStarted == TriStateFilter.ENABLED_IS) {
-                hasStarted
-            } else {
-                !hasStarted
-            }
+        val filterFnStarted: (LibraryItem) -> Boolean = {
+            applyFilter(filterStarted) { it.libraryManga.hasStarted }
         }
 
-        val filterFnBookmarked: (LibraryItem) -> Boolean = bookmarked@{
-            if (filterBookmarked == TriStateFilter.DISABLED) return@bookmarked true
-
-            val hasBookmarks = it.libraryManga.hasBookmarks
-            return@bookmarked if (filterBookmarked == TriStateFilter.ENABLED_IS) {
-                hasBookmarks
-            } else {
-                !hasBookmarks
-            }
+        val filterFnBookmarked: (LibraryItem) -> Boolean = {
+            applyFilter(filterBookmarked) { it.libraryManga.hasBookmarks }
         }
 
-        val filterFnCompleted: (LibraryItem) -> Boolean = completed@{
-            if (filterCompleted == TriStateFilter.DISABLED) return@completed true
-
-            val isCompleted = it.libraryManga.manga.status.toInt() == SManga.COMPLETED
-            return@completed if (filterCompleted == TriStateFilter.ENABLED_IS) {
-                isCompleted
-            } else {
-                !isCompleted
-            }
+        val filterFnCompleted: (LibraryItem) -> Boolean = {
+            applyFilter(filterCompleted) { it.libraryManga.manga.status.toInt() == SManga.COMPLETED }
         }
 
         val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->
@@ -245,30 +214,19 @@ class LibraryScreenModel(
 
             val mangaTracks = trackMap[item.libraryManga.id].orEmpty()
 
-            val exclude = mangaTracks.fastFilter { it in excludedTracks }
-            val include = mangaTracks.fastFilter { it in includedTracks }
+            val isExcluded = excludedTracks.isNotEmpty() && mangaTracks.fastAny { it in excludedTracks }
+            val isIncluded = includedTracks.isEmpty() || mangaTracks.fastAny { it in includedTracks }
 
-            // TODO: Simplify the filter logic
-            if (includedTracks.isNotEmpty() && excludedTracks.isNotEmpty()) {
-                return@tracking if (exclude.isNotEmpty()) false else include.isNotEmpty()
-            }
-
-            if (excludedTracks.isNotEmpty()) return@tracking exclude.isEmpty()
-
-            if (includedTracks.isNotEmpty()) return@tracking include.isNotEmpty()
-
-            return@tracking false
+            return@tracking !isExcluded && isIncluded
         }
 
-        val filterFn: (LibraryItem) -> Boolean = filter@{
-            return@filter !(
-                !filterFnDownloaded(it) ||
-                    !filterFnUnread(it) ||
-                    !filterFnStarted(it) ||
-                    !filterFnBookmarked(it) ||
-                    !filterFnCompleted(it) ||
-                    !filterFnTracking(it)
-                )
+        val filterFn: (LibraryItem) -> Boolean = {
+            filterFnDownloaded(it) &&
+                filterFnUnread(it) &&
+                filterFnStarted(it) &&
+                filterFnBookmarked(it) &&
+                filterFnCompleted(it) &&
+                filterFnTracking(it)
         }
 
         return this.mapValues { entry -> entry.value.fastFilter(filterFn) }

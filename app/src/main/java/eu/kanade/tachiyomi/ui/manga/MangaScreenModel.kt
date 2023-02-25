@@ -70,6 +70,7 @@ import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.TriStateFilter
+import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.track.interactor.GetTracks
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -999,27 +1000,9 @@ sealed class MangaScreenState {
             val downloadedFilter = manga.downloadedFilter
             val bookmarkedFilter = manga.bookmarkedFilter
             return asSequence()
-                .filter { (chapter) ->
-                    when (unreadFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> !chapter.read
-                        TriStateFilter.ENABLED_NOT -> chapter.read
-                    }
-                }
-                .filter { (chapter) ->
-                    when (bookmarkedFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> chapter.bookmark
-                        TriStateFilter.ENABLED_NOT -> !chapter.bookmark
-                    }
-                }
-                .filter {
-                    when (downloadedFilter) {
-                        TriStateFilter.DISABLED -> true
-                        TriStateFilter.ENABLED_IS -> it.isDownloaded || isLocalManga
-                        TriStateFilter.ENABLED_NOT -> !it.isDownloaded && !isLocalManga
-                    }
-                }
+                .filter { (chapter) -> applyFilter(unreadFilter) { !chapter.read } }
+                .filter { (chapter) -> applyFilter(bookmarkedFilter) { chapter.bookmark } }
+                .filter { applyFilter(downloadedFilter) { it.isDownloaded || isLocalManga } }
                 .sortedWith { (chapter1), (chapter2) -> getChapterSort(manga).invoke(chapter1, chapter2) }
         }
     }

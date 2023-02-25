@@ -177,6 +177,5 @@ private fun TriStateFilter.toTriStateInt(): Int {
         TriStateFilter.DISABLED -> Filter.TriState.STATE_IGNORE
         TriStateFilter.ENABLED_IS -> Filter.TriState.STATE_INCLUDE
         TriStateFilter.ENABLED_NOT -> Filter.TriState.STATE_EXCLUDE
-        else -> throw IllegalStateException("Unknown TriStateFilter state: $this")
     }
 }
