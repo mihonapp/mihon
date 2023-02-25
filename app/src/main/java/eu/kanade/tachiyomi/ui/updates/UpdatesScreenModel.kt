@@ -18,7 +18,6 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.source.SourceManager
@@ -168,7 +167,7 @@ class UpdatesScreenModel(
                 ChapterDownloadAction.START -> {
                     downloadChapters(items)
                     if (items.any { it.downloadStateProvider() == Download.State.ERROR }) {
-                        DownloadService.start(Injekt.get<Application>())
+                        downloadManager.startDownloads()
                     }
                 }
                 ChapterDownloadAction.START_NOW -> {

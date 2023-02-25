@@ -31,7 +31,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -51,7 +50,6 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import tachiyomi.core.util.lang.launchUI
 import tachiyomi.presentation.core.components.Pill
@@ -64,7 +62,6 @@ object DownloadQueueScreen : Screen() {
 
     @Composable
     override fun Content() {
-        val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val screenModel = rememberScreenModel { DownloadQueueScreenModel() }
@@ -182,7 +179,7 @@ object DownloadQueueScreen : Screen() {
                                 androidx.compose.material3.DropdownMenuItem(
                                     text = { Text(text = stringResource(R.string.action_cancel_all)) },
                                     onClick = {
-                                        screenModel.clearQueue(context)
+                                        screenModel.clearQueue()
                                         closeMenu()
                                     },
                                 )
@@ -198,7 +195,7 @@ object DownloadQueueScreen : Screen() {
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
-                    val isRunning by DownloadService.isRunning.collectAsState()
+                    val isRunning by screenModel.isDownloaderRunning.collectAsState()
                     ExtendedFloatingActionButton(
                         text = {
                             val id = if (isRunning) {
@@ -218,10 +215,9 @@ object DownloadQueueScreen : Screen() {
                         },
                         onClick = {
                             if (isRunning) {
-                                DownloadService.stop(context)
                                 screenModel.pauseDownloads()
                             } else {
-                                DownloadService.start(context)
+                                screenModel.startDownloads()
                             }
                         },
                         expanded = fabExpanded,

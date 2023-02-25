@@ -1,12 +1,10 @@
 package eu.kanade.tachiyomi.ui.download
 
-import android.content.Context
 import android.view.MenuItem
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
 import eu.kanade.tachiyomi.source.model.Page
@@ -135,15 +133,21 @@ class DownloadQueueScreenModel(
         adapter = null
     }
 
+    val isDownloaderRunning
+        get() = downloadManager.isDownloaderRunning
+
     fun getDownloadStatusFlow() = downloadManager.queue.statusFlow()
     fun getDownloadProgressFlow() = downloadManager.queue.progressFlow()
+
+    fun startDownloads() {
+        downloadManager.startDownloads()
+    }
 
     fun pauseDownloads() {
         downloadManager.pauseDownloads()
     }
 
-    fun clearQueue(context: Context) {
-        DownloadService.stop(context)
+    fun clearQueue() {
         downloadManager.clearQueue()
     }
 

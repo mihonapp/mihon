@@ -27,7 +27,6 @@ import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.data.download.DownloadService
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
 import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
@@ -309,7 +308,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         if (newUpdates.isNotEmpty()) {
             notifier.showUpdateNotifications(newUpdates)
             if (hasDownloads.get()) {
-                DownloadService.start(context)
+                downloadManager.startDownloads()
             }
         }
 
