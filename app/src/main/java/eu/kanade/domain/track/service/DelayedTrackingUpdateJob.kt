@@ -31,30 +31,33 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
         val trackManager = Injekt.get<TrackManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
-        withIOContext {
-            val tracks = delayedTrackingStore.getItems().mapNotNull {
-                val track = getTracks.awaitOne(it.trackId)
-                if (track == null) {
-                    delayedTrackingStore.remove(it.trackId)
-                }
-                track
-            }
-
-            tracks.forEach { track ->
-                try {
-                    val service = trackManager.getService(track.syncId)
-                    if (service != null && service.isLogged) {
-                        service.update(track.toDbTrack(), true)
-                        insertTrack.await(track)
+        val results = withIOContext {
+            delayedTrackingStore.getItems()
+                .mapNotNull {
+                    val track = getTracks.awaitOne(it.trackId)
+                    if (track == null) {
+                        delayedTrackingStore.remove(it.trackId)
                     }
-                    delayedTrackingStore.remove(track.id)
-                } catch (e: Exception) {
-                    logcat(LogPriority.ERROR, e)
+                    track?.copy(lastChapterRead = it.lastChapterRead.toDouble())
                 }
-            }
+                .mapNotNull { track ->
+                    try {
+                        val service = trackManager.getService(track.syncId)
+                        if (service != null && service.isLogged) {
+                            logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.id}, last chapter read: ${track.lastChapterRead}" }
+                            service.update(track.toDbTrack(), true)
+                            insertTrack.await(track)
+                        }
+                        delayedTrackingStore.remove(track.id)
+                        null
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR, e)
+                        false
+                    }
+                }
         }
 
-        return Result.success()
+        return if (results.isNotEmpty()) Result.failure() else Result.success()
     }
 
     companion object {
