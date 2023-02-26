@@ -27,11 +27,20 @@ dependencies {
     api(libs.okhttp.dnsoverhttps)
     api(libs.okio)
 
+    implementation(libs.image.decoder)
+
+    implementation(libs.unifile)
+
     api(kotlinx.coroutines.core)
     api(kotlinx.serialization.json)
     api(kotlinx.serialization.json.okio)
 
     api(libs.preferencektx)
+
+    implementation(libs.jsoup)
+
+    // Sort
+    implementation(libs.natural.comparator)
 
     // JavaScript engine
     implementation(libs.bundles.js.engine)

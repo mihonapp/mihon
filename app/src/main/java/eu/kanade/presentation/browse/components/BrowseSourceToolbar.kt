@@ -19,9 +19,9 @@ import eu.kanade.presentation.components.RadioMenuItem
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.library.model.LibraryDisplayMode
+import tachiyomi.source.local.LocalSource
 
 @Composable
 fun BrowseSourceToolbar(

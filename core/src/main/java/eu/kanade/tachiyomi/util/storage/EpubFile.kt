@@ -1,15 +1,10 @@
 package eu.kanade.tachiyomi.util.storage
 
-import eu.kanade.tachiyomi.source.model.SChapter
-import eu.kanade.tachiyomi.source.model.SManga
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
@@ -50,58 +45,6 @@ class EpubFile(file: File) : Closeable {
     }
 
     /**
-     * Fills manga metadata using this epub file's metadata.
-     */
-    fun fillMangaMetadata(manga: SManga) {
-        val ref = getPackageHref()
-        val doc = getPackageDocument(ref)
-
-        val creator = doc.getElementsByTag("dc:creator").first()
-        val description = doc.getElementsByTag("dc:description").first()
-
-        manga.author = creator?.text()
-        manga.description = description?.text()
-    }
-
-    /**
-     * Fills chapter metadata using this epub file's metadata.
-     */
-    fun fillChapterMetadata(chapter: SChapter) {
-        val ref = getPackageHref()
-        val doc = getPackageDocument(ref)
-
-        val title = doc.getElementsByTag("dc:title").first()
-        val publisher = doc.getElementsByTag("dc:publisher").first()
-        val creator = doc.getElementsByTag("dc:creator").first()
-        var date = doc.getElementsByTag("dc:date").first()
-        if (date == null) {
-            date = doc.select("meta[property=dcterms:modified]").first()
-        }
-
-        if (title != null) {
-            chapter.name = title.text()
-        }
-
-        if (publisher != null) {
-            chapter.scanlator = publisher.text()
-        } else if (creator != null) {
-            chapter.scanlator = creator.text()
-        }
-
-        if (date != null) {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
-            try {
-                val parsedDate = dateFormat.parse(date.text())
-                if (parsedDate != null) {
-                    chapter.date_upload = parsedDate.time
-                }
-            } catch (e: ParseException) {
-                // Empty
-            }
-        }
-    }
-
-    /**
      * Returns the path of all the images found in the epub file.
      */
     fun getImagesFromPages(): List<String> {
@@ -114,7 +57,7 @@ class EpubFile(file: File) : Closeable {
     /**
      * Returns the path to the package document.
      */
-    private fun getPackageHref(): String {
+    fun getPackageHref(): String {
         val meta = zip.getEntry(resolveZipPath("META-INF", "container.xml"))
         if (meta != null) {
             val metaDoc = zip.getInputStream(meta).use { Jsoup.parse(it, null, "") }
@@ -129,7 +72,7 @@ class EpubFile(file: File) : Closeable {
     /**
      * Returns the package document where all the files are listed.
      */
-    private fun getPackageDocument(ref: String): Document {
+    fun getPackageDocument(ref: String): Document {
         val entry = zip.getEntry(ref)
         return zip.getInputStream(entry).use { Jsoup.parse(it, null, "") }
     }
@@ -137,7 +80,7 @@ class EpubFile(file: File) : Closeable {
     /**
      * Returns all the pages from the epub.
      */
-    private fun getPagesFromDocument(document: Document): List<String> {
+    fun getPagesFromDocument(document: Document): List<String> {
         val pages = document.select("manifest > item")
             .filter { node -> "application/xhtml+xml" == node.attr("media-type") }
             .associateBy { it.attr("id") }

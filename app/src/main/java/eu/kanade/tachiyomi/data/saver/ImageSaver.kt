@@ -15,9 +15,9 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.storage.getUriCompat
-import eu.kanade.tachiyomi.util.system.ImageUtil
 import logcat.LogPriority
 import okio.IOException
+import tachiyomi.core.util.system.ImageUtil
 import tachiyomi.core.util.system.logcat
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

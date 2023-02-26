@@ -20,6 +20,9 @@ import kotlinx.coroutines.runBlocking
 import rx.Observable
 import tachiyomi.domain.source.model.SourceData
 import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.source.local.LocalSource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.ConcurrentHashMap
 
@@ -43,7 +46,15 @@ class SourceManager(
         scope.launch {
             extensionManager.installedExtensionsFlow
                 .collectLatest { extensions ->
-                    val mutableMap = ConcurrentHashMap<Long, Source>(mapOf(LocalSource.ID to LocalSource(context)))
+                    val mutableMap = ConcurrentHashMap<Long, Source>(
+                        mapOf(
+                            LocalSource.ID to LocalSource(
+                                context,
+                                Injekt.get(),
+                                Injekt.get(),
+                            ),
+                        ),
+                    )
                     extensions.forEach { extension ->
                         extension.sources.forEach {
                             mutableMap[it.id] = it

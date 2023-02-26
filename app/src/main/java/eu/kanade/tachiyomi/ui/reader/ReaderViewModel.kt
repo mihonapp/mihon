@@ -774,7 +774,7 @@ class ReaderViewModel(
 
         viewModelScope.launchNonCancellable {
             val result = try {
-                manga.editCover(context, stream())
+                manga.editCover(Injekt.get(), stream())
                 if (manga.isLocal() || manga.favorite) {
                     SetAsCoverResult.Success
                 } else {

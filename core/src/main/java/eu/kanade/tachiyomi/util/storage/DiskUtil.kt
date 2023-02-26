@@ -1,15 +1,11 @@
 package eu.kanade.tachiyomi.util.storage
 
-import android.Manifest
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
 import android.os.StatFs
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.core.content.ContextCompat
-import com.google.accompanist.permissions.rememberPermissionState
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
@@ -114,17 +110,6 @@ object DiskUtil {
         return when (c) {
             '"', '*', '/', ':', '<', '>', '?', '\\', '|', 0x7f.toChar() -> false
             else -> true
-        }
-    }
-
-    /**
-     * Launches request for [Manifest.permission.WRITE_EXTERNAL_STORAGE] permission
-     */
-    @Composable
-    fun RequestStoragePermission() {
-        val permissionState = rememberPermissionState(permission = Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        LaunchedEffect(Unit) {
-            permissionState.launchPermissionRequest()
         }
     }
 

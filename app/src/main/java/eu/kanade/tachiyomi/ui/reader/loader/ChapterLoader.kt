@@ -5,7 +5,6 @@ import com.github.junrar.exception.UnsupportedRarV5Exception
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
-import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -13,6 +12,8 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.source.local.LocalSource
+import tachiyomi.source.local.io.Format
 
 /**
  * Loader used to retrieve the [PageLoader] for a given chapter.
@@ -80,14 +81,14 @@ class ChapterLoader(
             source is HttpSource -> HttpPageLoader(chapter, source)
             source is LocalSource -> source.getFormat(chapter.chapter).let { format ->
                 when (format) {
-                    is LocalSource.Format.Directory -> DirectoryPageLoader(format.file)
-                    is LocalSource.Format.Zip -> ZipPageLoader(format.file)
-                    is LocalSource.Format.Rar -> try {
+                    is Format.Directory -> DirectoryPageLoader(format.file)
+                    is Format.Zip -> ZipPageLoader(format.file)
+                    is Format.Rar -> try {
                         RarPageLoader(format.file)
                     } catch (e: UnsupportedRarV5Exception) {
                         error(context.getString(R.string.loader_rar5_error))
                     }
-                    is LocalSource.Format.Epub -> EpubPageLoader(format.file)
+                    is Format.Epub -> EpubPageLoader(format.file)
                 }
             }
             source is SourceManager.StubSource -> throw source.getSourceNotInstalledException()

@@ -46,7 +46,6 @@ import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 /**
@@ -112,9 +111,6 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
         0
     }
 }
-
-val getDisplayMaxHeightInPx: Int
-    get() = Resources.getSystem().displayMetrics.let { max(it.heightPixels, it.widthPixels) }
 
 /**
  * Converts to px and takes into account LTR/RTL layout.
