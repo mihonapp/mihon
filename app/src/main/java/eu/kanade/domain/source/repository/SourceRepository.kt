@@ -1,8 +1,8 @@
 package eu.kanade.domain.source.repository
 
-import eu.kanade.domain.source.model.SourcePagingSourceType
 import eu.kanade.tachiyomi.source.model.FilterList
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.data.source.SourcePagingSourceType
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 

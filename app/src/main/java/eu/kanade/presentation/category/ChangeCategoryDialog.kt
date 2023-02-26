@@ -21,7 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import eu.kanade.core.prefs.asState
+import eu.kanade.core.preference.asToggleableState
 import eu.kanade.tachiyomi.R
 import tachiyomi.core.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
@@ -110,7 +110,7 @@ fun ChangeCategoryDialog(
                         when (checkbox) {
                             is CheckboxState.TriState -> {
                                 TriStateCheckbox(
-                                    state = checkbox.asState(),
+                                    state = checkbox.asToggleableState(),
                                     onClick = { onChange(checkbox) },
                                 )
                             }

@@ -1,4 +1,4 @@
-package eu.kanade.core.prefs
+package eu.kanade.core.preference
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

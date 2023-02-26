@@ -1,6 +1,5 @@
 package eu.kanade.data.source
 
-import eu.kanade.domain.source.model.SourcePagingSourceType
 import eu.kanade.domain.source.repository.SourceRepository
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.SourceManager
@@ -8,6 +7,10 @@ import eu.kanade.tachiyomi.source.model.FilterList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.source.SourceLatestPagingSource
+import tachiyomi.data.source.SourcePagingSourceType
+import tachiyomi.data.source.SourcePopularPagingSource
+import tachiyomi.data.source.SourceSearchPagingSource
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.source.local.LocalSource
@@ -35,9 +38,7 @@ class SourceRepositoryImpl(
             sourceIdsWithCount
                 .filterNot { it.source == LocalSource.ID }
                 .map { (sourceId, count) ->
-                    val source = sourceManager.getOrStub(sourceId).run {
-                        sourceMapper(this)
-                    }
+                    val source = sourceMapper(sourceManager.getOrStub(sourceId))
                     source to count
                 }
         }
