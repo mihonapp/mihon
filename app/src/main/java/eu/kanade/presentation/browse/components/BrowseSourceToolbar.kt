@@ -3,8 +3,6 @@ package eu.kanade.presentation.browse.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material.icons.filled.ViewModule
-import androidx.compose.material.icons.outlined.Help
-import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.RadioMenuItem
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.LocalSource
 import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.library.model.LibraryDisplayMode
@@ -34,12 +33,16 @@ fun BrowseSourceToolbar(
     navigateUp: () -> Unit,
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     onSearch: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     // Avoid capturing unstable source in actions lambda
     val title = source?.name
     val isLocalSource = source is LocalSource
+    val isConfigurableSource = source is ConfigurableSource
+
+    var selectingDisplayMode by remember { mutableStateOf(false) }
 
     SearchToolbar(
         navigateUp = navigateUp,
@@ -49,29 +52,31 @@ fun BrowseSourceToolbar(
         onSearch = onSearch,
         onClickCloseSearch = navigateUp,
         actions = {
-            var selectingDisplayMode by remember { mutableStateOf(false) }
             AppBarActions(
-                actions = listOf(
+                actions = listOfNotNull(
                     AppBar.Action(
                         title = stringResource(R.string.action_display_mode),
                         icon = if (displayMode == LibraryDisplayMode.List) Icons.Filled.ViewList else Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
                     if (isLocalSource) {
-                        AppBar.Action(
+                        AppBar.OverflowAction(
                             title = stringResource(R.string.label_help),
-                            icon = Icons.Outlined.Help,
                             onClick = onHelpClick,
                         )
                     } else {
-                        AppBar.Action(
-                            title = stringResource(R.string.action_web_view),
-                            icon = Icons.Outlined.Public,
+                        AppBar.OverflowAction(
+                            title = stringResource(R.string.action_open_in_web_view),
                             onClick = onWebViewClick,
                         )
                     },
+                    AppBar.OverflowAction(
+                        title = stringResource(R.string.action_settings),
+                        onClick = onSettingsClick,
+                    ).takeIf { isConfigurableSource },
                 ),
             )
+
             DropdownMenu(
                 expanded = selectingDisplayMode,
                 onDismissRequest = { selectingDisplayMode = false },
