@@ -4,10 +4,17 @@ import android.content.Context
 import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.download.model.DownloadQueue
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.Page
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.util.lang.launchIO
@@ -42,11 +49,8 @@ class DownloadManager(
      */
     private val pendingDeleter = DownloadPendingDeleter(context)
 
-    /**
-     * Downloads queue, where the pending chapters are stored.
-     */
-    val queue: DownloadQueue
-        get() = downloader.queue
+    val queueState
+        get() = downloader.queueState
 
     // For use by DownloadService only
     fun downloaderStart() = downloader.start()
@@ -85,7 +89,7 @@ class DownloadManager(
      * @param chapterId the chapter to check.
      */
     fun getQueuedDownloadOrNull(chapterId: Long): Download? {
-        return queue.find { it.chapter.id == chapterId }
+        return queueState.value.find { it: Download -> it.chapter.id == chapterId }
     }
 
     fun startDownloadNow(chapterId: Long?) {
@@ -93,7 +97,7 @@ class DownloadManager(
         val download = getQueuedDownloadOrNull(chapterId)
         // If not in queue try to start a new download
         val toAdd = download ?: runBlocking { Download.fromChapterId(chapterId) } ?: return
-        val queue = queue.toMutableList()
+        val queue = queueState.value.toMutableList()
         download?.let { queue.remove(it) }
         queue.add(0, toAdd)
         reorderQueue(queue)
@@ -112,21 +116,7 @@ class DownloadManager(
      * @param downloads value to set the download queue to
      */
     fun reorderQueue(downloads: List<Download>) {
-        val wasRunning = downloader.isRunning
-
-        if (downloads.isEmpty()) {
-            downloader.clearQueue()
-            downloader.stop()
-            return
-        }
-
-        downloader.pause()
-        queue.clear()
-        queue.addAll(downloads)
-
-        if (wasRunning) {
-            downloader.start()
-        }
+        downloader.updateQueue(downloads)
     }
 
     /**
@@ -147,7 +137,7 @@ class DownloadManager(
      */
     fun addDownloadsToStartOfQueue(downloads: List<Download>) {
         if (downloads.isEmpty()) return
-        queue.toMutableList().apply {
+        queueState.value.toMutableList().apply {
             addAll(0, downloads)
             reorderQueue(this)
         }
@@ -251,7 +241,7 @@ class DownloadManager(
     fun deleteManga(manga: Manga, source: Source, removeQueued: Boolean = true) {
         launchIO {
             if (removeQueued) {
-                queue.remove(manga)
+                downloader.removeFromQueue(manga)
             }
             provider.findMangaDir(manga.title, source)?.delete()
             cache.removeManga(manga)
@@ -271,12 +261,12 @@ class DownloadManager(
             downloader.pause()
         }
 
-        queue.remove(chapters)
+        downloader.removeFromQueue(chapters)
 
         if (wasRunning) {
-            if (queue.isEmpty()) {
+            if (queueState.value.isEmpty()) {
                 downloader.stop()
-            } else if (queue.isNotEmpty()) {
+            } else if (queueState.value.isNotEmpty()) {
                 downloader.start()
             }
         }
@@ -374,4 +364,33 @@ class DownloadManager(
             chapters
         }
     }
+
+    fun statusFlow(): Flow<Download> = queueState
+        .flatMapLatest { downloads ->
+            downloads
+                .map { download ->
+                    download.statusFlow.drop(1).map { download }
+                }
+                .merge()
+        }
+        .onStart {
+            emitAll(
+                queueState.value.filter { download -> download.status == Download.State.DOWNLOADING }.asFlow(),
+            )
+        }
+
+    fun progressFlow(): Flow<Download> = queueState
+        .flatMapLatest { downloads ->
+            downloads
+                .map { download ->
+                    download.progressFlow.drop(1).map { download }
+                }
+                .merge()
+        }
+        .onStart {
+            emitAll(
+                queueState.value.filter { download -> download.status == Download.State.DOWNLOADING }
+                    .asFlow(),
+            )
+        }
 }

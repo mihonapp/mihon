@@ -99,7 +99,7 @@ class UpdatesScreenModel(
         }
 
         coroutineScope.launchIO {
-            merge(downloadManager.queue.statusFlow(), downloadManager.queue.progressFlow())
+            merge(downloadManager.statusFlow(), downloadManager.progressFlow())
                 .catch { logcat(LogPriority.ERROR, it) }
                 .collect(this@UpdatesScreenModel::updateDownloadState)
         }
