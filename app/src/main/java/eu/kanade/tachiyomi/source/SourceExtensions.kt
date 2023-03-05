@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import tachiyomi.domain.source.model.SourceData
+import tachiyomi.domain.source.model.StubSource
 import tachiyomi.source.local.LocalSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -31,4 +32,4 @@ fun Source.getNameForMangaInfo(): String {
 
 fun Source.isLocal(): Boolean = id == LocalSource.ID
 
-fun Source.isLocalOrStub(): Boolean = isLocal() || this is SourceManager.StubSource
+fun Source.isLocalOrStub(): Boolean = isLocal() || this is StubSource

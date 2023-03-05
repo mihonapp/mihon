@@ -14,7 +14,6 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher.Companion.USE_CUSTOM_COVER
 import eu.kanade.tachiyomi.data.database.models.Manga
 import eu.kanade.tachiyomi.network.await
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import logcat.LogPriority
 import okhttp3.CacheControl
@@ -28,6 +27,7 @@ import okio.buffer
 import okio.sink
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.MangaCover
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import tachiyomi.domain.manga.model.Manga as DomainManga

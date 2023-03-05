@@ -24,8 +24,8 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
+import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.manga.model.TriStateFilter
-import tachiyomi.domain.service.BackupPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File

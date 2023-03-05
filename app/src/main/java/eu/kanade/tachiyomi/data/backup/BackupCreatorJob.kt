@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationManager
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.service.BackupPreferences
+import tachiyomi.domain.backup.service.BackupPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit

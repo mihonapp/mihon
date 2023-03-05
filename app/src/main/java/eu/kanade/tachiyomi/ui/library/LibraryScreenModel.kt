@@ -27,7 +27,6 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -60,6 +59,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.domain.manga.model.applyFilter
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

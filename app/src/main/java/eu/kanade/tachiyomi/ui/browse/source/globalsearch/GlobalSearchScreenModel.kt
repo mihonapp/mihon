@@ -4,8 +4,8 @@ import androidx.compose.runtime.Immutable
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.source.SourceManager
 import kotlinx.coroutines.flow.update
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

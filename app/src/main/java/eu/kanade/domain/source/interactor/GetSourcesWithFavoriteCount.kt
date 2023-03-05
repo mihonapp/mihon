@@ -5,6 +5,7 @@ import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import tachiyomi.domain.source.model.Source
+import tachiyomi.source.local.LocalSource
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale
@@ -20,7 +21,9 @@ class GetSourcesWithFavoriteCount(
             preferences.migrationSortingMode().changes(),
             repository.getSourcesWithFavoriteCount(),
         ) { direction, mode, list ->
-            list.sortedWith(sortFn(direction, mode))
+            list
+                .filterNot { it.first.id == LocalSource.ID }
+                .sortedWith(sortFn(direction, mode))
         }
     }
 

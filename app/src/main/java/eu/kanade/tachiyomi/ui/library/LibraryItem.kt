@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.ui.library
 
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

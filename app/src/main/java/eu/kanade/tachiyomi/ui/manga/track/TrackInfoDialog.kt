@@ -52,7 +52,6 @@ import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.catch
@@ -68,6 +67,7 @@ import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack

@@ -58,7 +58,6 @@ import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.MangaScreenState
@@ -67,6 +66,7 @@ import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.model.StubSource
 import tachiyomi.presentation.core.components.LazyColumn
 import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.VerticalFastScroller
@@ -350,7 +350,7 @@ private fun MangaScreenSmallImpl(
                             author = state.manga.author,
                             artist = state.manga.artist,
                             sourceName = remember { state.source.getNameForMangaInfo() },
-                            isStubSource = remember { state.source is SourceManager.StubSource },
+                            isStubSource = remember { state.source is StubSource },
                             coverDataProvider = { state.manga },
                             status = state.manga.status,
                             onCoverClick = onCoverClicked,
@@ -560,7 +560,7 @@ fun MangaScreenLargeImpl(
                             author = state.manga.author,
                             artist = state.manga.artist,
                             sourceName = remember { state.source.getNameForMangaInfo() },
-                            isStubSource = remember { state.source is SourceManager.StubSource },
+                            isStubSource = remember { state.source is StubSource },
                             coverDataProvider = { state.manga },
                             status = state.manga.status,
                             onCoverClick = onCoverClicked,

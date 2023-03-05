@@ -6,7 +6,6 @@ import com.hippo.unifile.UniFile
 import eu.kanade.core.util.mapNotNullKeys
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.SourceManager
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +31,7 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.ConcurrentHashMap

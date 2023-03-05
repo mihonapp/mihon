@@ -31,7 +31,6 @@ import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
@@ -71,6 +70,7 @@ import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.domain.manga.model.applyFilter
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

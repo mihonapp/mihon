@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import kotlinx.coroutines.channels.Channel
@@ -41,6 +40,7 @@ import tachiyomi.domain.chapter.interactor.GetChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.ChapterUpdate
 import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import uy.kohesive.injekt.Injekt

@@ -12,7 +12,6 @@ import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateNotifier
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -50,6 +49,7 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.BufferedOutputStream

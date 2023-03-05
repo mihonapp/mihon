@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreService
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.AppUpdateService
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -32,6 +31,7 @@ import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy

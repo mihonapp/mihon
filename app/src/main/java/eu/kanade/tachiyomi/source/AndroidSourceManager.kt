@@ -1,12 +1,8 @@
 package eu.kanade.tachiyomi.source
 
 import android.content.Context
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.extension.ExtensionManager
-import eu.kanade.tachiyomi.source.model.Page
-import eu.kanade.tachiyomi.source.model.SChapter
-import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,20 +13,21 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import rx.Observable
 import tachiyomi.domain.source.model.SourceData
+import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.LocalSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.util.concurrent.ConcurrentHashMap
 
-class SourceManager(
+class AndroidSourceManager(
     private val context: Context,
     private val extensionManager: ExtensionManager,
     private val sourceRepository: SourceDataRepository,
-) {
+) : SourceManager {
     private val downloadManager: DownloadManager by injectLazy()
 
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
@@ -39,7 +36,7 @@ class SourceManager(
 
     private val stubSourcesMap = ConcurrentHashMap<Long, StubSource>()
 
-    val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map { it.values.filterIsInstance<CatalogueSource>() }
+    override val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map { it.values.filterIsInstance<CatalogueSource>() }
 
     init {
         scope.launch {
@@ -75,21 +72,21 @@ class SourceManager(
         }
     }
 
-    fun get(sourceKey: Long): Source? {
+    override fun get(sourceKey: Long): Source? {
         return sourcesMapFlow.value[sourceKey]
     }
 
-    fun getOrStub(sourceKey: Long): Source {
+    override fun getOrStub(sourceKey: Long): Source {
         return sourcesMapFlow.value[sourceKey] ?: stubSourcesMap.getOrPut(sourceKey) {
             runBlocking { createStubSource(sourceKey) }
         }
     }
 
-    fun getOnlineSources() = sourcesMapFlow.value.values.filterIsInstance<HttpSource>()
+    override fun getOnlineSources() = sourcesMapFlow.value.values.filterIsInstance<HttpSource>()
 
-    fun getCatalogueSources() = sourcesMapFlow.value.values.filterIsInstance<CatalogueSource>()
+    override fun getCatalogueSources() = sourcesMapFlow.value.values.filterIsInstance<CatalogueSource>()
 
-    fun getStubSources(): List<StubSource> {
+    override fun getStubSources(): List<StubSource> {
         val onlineSourceIds = getOnlineSources().map { it.id }
         return stubSourcesMap.values.filterNot { it.id in onlineSourceIds }
     }
@@ -116,52 +113,4 @@ class SourceManager(
         }
         return StubSource(SourceData(id, "", ""))
     }
-
-    @Suppress("OverridingDeprecatedMember")
-    inner class StubSource(private val sourceData: SourceData) : Source {
-
-        override val id: Long = sourceData.id
-
-        override val name: String = sourceData.name.ifBlank { id.toString() }
-
-        override val lang: String = sourceData.lang
-
-        override suspend fun getMangaDetails(manga: SManga): SManga {
-            throw getSourceNotInstalledException()
-        }
-
-        @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getMangaDetails"))
-        override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
-            return Observable.error(getSourceNotInstalledException())
-        }
-
-        override suspend fun getChapterList(manga: SManga): List<SChapter> {
-            throw getSourceNotInstalledException()
-        }
-
-        @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getChapterList"))
-        override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-            return Observable.error(getSourceNotInstalledException())
-        }
-
-        override suspend fun getPageList(chapter: SChapter): List<Page> {
-            throw getSourceNotInstalledException()
-        }
-
-        @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getPageList"))
-        override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
-            return Observable.error(getSourceNotInstalledException())
-        }
-
-        override fun toString(): String {
-            return if (sourceData.isMissingInfo.not()) "$name (${lang.uppercase()})" else id.toString()
-        }
-
-        fun getSourceNotInstalledException(): SourceNotInstalledException {
-            return SourceNotInstalledException(toString())
-        }
-    }
-
-    inner class SourceNotInstalledException(sourceString: String) :
-        Exception(context.getString(R.string.source_not_installed, sourceString))
 }

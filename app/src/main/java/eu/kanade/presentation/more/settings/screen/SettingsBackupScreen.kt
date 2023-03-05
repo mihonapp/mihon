@@ -50,7 +50,7 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
-import tachiyomi.domain.service.BackupPreferences
+import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.util.isScrolledToEnd

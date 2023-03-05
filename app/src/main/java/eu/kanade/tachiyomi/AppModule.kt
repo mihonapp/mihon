@@ -25,7 +25,7 @@ import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.network.JavaScriptEngine
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
-import eu.kanade.tachiyomi.source.SourceManager
+import eu.kanade.tachiyomi.source.AndroidSourceManager
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
@@ -46,8 +46,9 @@ import tachiyomi.data.Mangas
 import tachiyomi.data.dateAdapter
 import tachiyomi.data.listOfStringsAdapter
 import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
-import tachiyomi.domain.service.BackupPreferences
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import uy.kohesive.injekt.api.InjektModule
@@ -123,7 +124,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { NetworkHelper(app, get()) }
         addSingletonFactory { JavaScriptEngine(app) }
 
-        addSingletonFactory { SourceManager(app, get(), get()) }
+        addSingletonFactory<SourceManager> { AndroidSourceManager(app, get(), get()) }
         addSingletonFactory { ExtensionManager(app) }
 
         addSingletonFactory { DownloadProvider(app) }

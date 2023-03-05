@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import eu.kanade.presentation.webview.WebViewScreenContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.network.NetworkHelper
-import eu.kanade.tachiyomi.source.SourceManager
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.base.activity.BaseActivity
 import eu.kanade.tachiyomi.util.system.WebViewUtil
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.util.view.setComposeContent
 import logcat.LogPriority
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.injectLazy
 
 class WebViewActivity : BaseActivity() {
