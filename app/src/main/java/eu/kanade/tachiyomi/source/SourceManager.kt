@@ -40,7 +40,6 @@ class SourceManager(
     private val stubSourcesMap = ConcurrentHashMap<Long, StubSource>()
 
     val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map { it.values.filterIsInstance<CatalogueSource>() }
-    val onlineSources: Flow<List<HttpSource>> = catalogueSources.map { it.filterIsInstance<HttpSource>() }
 
     init {
         scope.launch {
