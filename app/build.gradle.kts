@@ -191,16 +191,14 @@ dependencies {
     // Job scheduling
     implementation(androidx.bundles.workmanager)
 
-    // RX
+    // RxJava
     implementation(libs.bundles.reactivex)
     implementation(libs.flowreactivenetwork)
 
-    // Network client
+    // Networking
     implementation(libs.bundles.okhttp)
     implementation(libs.okio)
-
-    // TLS 1.3 support for Android < 10
-    implementation(libs.conscrypt.android)
+    implementation(libs.conscrypt.android) // TLS 1.3 support for Android < 10
 
     // Data serialization (JSON, protobuf, xml)
     implementation(kotlinx.bundles.serialization)
@@ -237,9 +235,10 @@ dependencies {
     implementation(libs.insetter)
     implementation(libs.bundles.richtext)
     implementation(libs.aboutLibraries.compose)
-    implementation(libs.cascade)
     implementation(libs.bundles.voyager)
-    implementation(libs.materialmotion.core)
+    implementation(libs.compose.cascade)
+    implementation(libs.compose.materialmotion)
+    implementation(libs.compose.simpleicons)
 
     // Logging
     implementation(libs.logcat)

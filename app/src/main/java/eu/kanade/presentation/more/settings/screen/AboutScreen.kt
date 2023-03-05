@@ -10,14 +10,18 @@ import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import compose.icons.SimpleIcons
+import compose.icons.simpleicons.Discord
+import compose.icons.simpleicons.Facebook
+import compose.icons.simpleicons.Github
+import compose.icons.simpleicons.Reddit
+import compose.icons.simpleicons.Twitter
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.LogoHeader
@@ -145,32 +149,32 @@ object AboutScreen : Screen() {
                     ) {
                         LinkIcon(
                             label = stringResource(R.string.website),
-                            painter = rememberVectorPainter(Icons.Outlined.Public),
+                            icon = Icons.Outlined.Public,
                             url = "https://tachiyomi.org",
                         )
                         LinkIcon(
                             label = "Discord",
-                            painter = painterResource(R.drawable.ic_discord_24dp),
+                            icon = SimpleIcons.Discord,
                             url = "https://discord.gg/tachiyomi",
                         )
                         LinkIcon(
                             label = "Twitter",
-                            painter = painterResource(R.drawable.ic_twitter_24dp),
+                            icon = SimpleIcons.Twitter,
                             url = "https://twitter.com/tachiyomiorg",
                         )
                         LinkIcon(
                             label = "Facebook",
-                            painter = painterResource(R.drawable.ic_facebook_24dp),
+                            icon = SimpleIcons.Facebook,
                             url = "https://facebook.com/tachiyomiorg",
                         )
                         LinkIcon(
                             label = "Reddit",
-                            painter = painterResource(R.drawable.ic_reddit_24dp),
+                            icon = SimpleIcons.Reddit,
                             url = "https://www.reddit.com/r/Tachiyomi",
                         )
                         LinkIcon(
                             label = "GitHub",
-                            painter = painterResource(R.drawable.ic_github_24dp),
+                            icon = SimpleIcons.Github,
                             url = "https://github.com/tachiyomiorg",
                         )
                     }

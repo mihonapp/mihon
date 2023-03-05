@@ -60,8 +60,9 @@ flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c801
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-cascade = "me.saket.cascade:cascade-compose:2.0.0-rc02"
-materialmotion-core = "io.github.fornewid:material-motion-compose-core:0.10.4"
+compose-cascade = "me.saket.cascade:cascade-compose:2.0.0-rc02"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:0.10.4"
+compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
