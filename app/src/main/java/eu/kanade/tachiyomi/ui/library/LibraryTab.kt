@@ -89,10 +89,14 @@ object LibraryTab : Tab {
 
         val snackbarHostState = remember { SnackbarHostState() }
 
-        val onClickRefresh: (Category?) -> Boolean = {
-            val started = LibraryUpdateJob.startNow(context, it)
+        val onClickRefresh: (Category?) -> Boolean = { category ->
+            val started = LibraryUpdateJob.startNow(context, category)
             scope.launch {
-                val msgRes = if (started) R.string.updating_category else R.string.update_already_running
+                val msgRes = when {
+                    !started -> R.string.update_already_running
+                    category != null -> R.string.updating_category
+                    else -> R.string.updating_library
+                }
                 snackbarHostState.showSnackbar(context.getString(msgRes))
             }
             started
