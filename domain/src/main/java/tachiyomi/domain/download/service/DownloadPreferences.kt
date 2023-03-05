@@ -1,4 +1,4 @@
-package eu.kanade.domain.download.service
+package tachiyomi.domain.download.service
 
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.provider.FolderProvider

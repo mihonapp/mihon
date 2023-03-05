@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import eu.kanade.domain.download.service.DownloadPreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.acquireWakeLock
@@ -30,6 +29,7 @@ import logcat.LogPriority
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.download.service.DownloadPreferences
 import uy.kohesive.injekt.injectLazy
 
 /**
