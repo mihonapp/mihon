@@ -11,12 +11,12 @@ import java.io.InputStream
 
 private const val DEFAULT_COVER_NAME = "cover.jpg"
 
-class AndroidLocalCoverManager(
+actual class LocalCoverManager(
     private val context: Context,
     private val fileSystem: LocalSourceFileSystem,
-) : LocalCoverManager {
+) {
 
-    override fun find(mangaUrl: String): File? {
+    actual fun find(mangaUrl: String): File? {
         return fileSystem.getFilesInMangaDirectory(mangaUrl)
             // Get all file whose names start with 'cover'
             .filter { it.isFile && it.nameWithoutExtension.equals("cover", ignoreCase = true) }
@@ -26,7 +26,10 @@ class AndroidLocalCoverManager(
             }
     }
 
-    override fun update(manga: SManga, inputStream: InputStream): File? {
+    actual fun update(
+        manga: SManga,
+        inputStream: InputStream,
+    ): File? {
         val directory = fileSystem.getMangaDirectory(manga.url)
         if (directory == null) {
             inputStream.close()

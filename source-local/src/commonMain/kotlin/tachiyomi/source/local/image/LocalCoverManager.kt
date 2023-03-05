@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import java.io.File
 import java.io.InputStream
 
-interface LocalCoverManager {
+expect class LocalCoverManager {
 
     fun find(mangaUrl: String): File?
 

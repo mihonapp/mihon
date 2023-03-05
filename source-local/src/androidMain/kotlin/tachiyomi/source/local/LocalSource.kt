@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 import com.github.junrar.Archive as JunrarArchive
 
-class LocalSource(
+actual class LocalSource(
     private val context: Context,
     private val fileSystem: LocalSourceFileSystem,
     private val coverManager: LocalCoverManager,

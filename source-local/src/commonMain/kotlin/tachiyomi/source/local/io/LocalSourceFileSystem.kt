@@ -2,7 +2,7 @@ package tachiyomi.source.local.io
 
 import java.io.File
 
-interface LocalSourceFileSystem {
+expect class LocalSourceFileSystem {
 
     fun getBaseDirectories(): Sequence<File>
 
