@@ -12,7 +12,7 @@ import tachiyomi.core.util.system.logcat
 object WebViewUtil {
     const val SPOOF_PACKAGE_NAME = "org.chromium.chrome"
 
-    const val MINIMUM_WEBVIEW_VERSION = 105
+    const val MINIMUM_WEBVIEW_VERSION = 108
 
     fun supportsWebView(context: Context): Boolean {
         try {
