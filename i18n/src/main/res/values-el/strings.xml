@@ -797,4 +797,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Απόκρυψη καταχωρήσεων που βρίσκονται ήδη στη βιβλιοθήκη</string>
     <string name="action_copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
+    <string name="action_update_category">Ενημέρωση κατηγορίας</string>
 </resources>

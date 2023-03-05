@@ -783,4 +783,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">隐藏已添加到书架的作品</string>
     <string name="action_copy_to_clipboard">复制到剪贴板</string>
+    <string name="action_update_category">更新分类</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">이름</string>
-    <string name="categories">범주</string>
+    <string name="categories">카테고리</string>
     <string name="manga">서재 항목</string>
     <string name="chapters">회차</string>
     <string name="track">동기화</string>
@@ -83,7 +83,7 @@
     <string name="all">전부</string>
     <string name="pref_library_update_restriction">자동 업데이트 조건</string>
     <string name="charging">충전 중일 때만</string>
-    <string name="default_category">기본 범주</string>
+    <string name="default_category">기본 카테고리</string>
     <string name="ext_update">업데이트</string>
     <string name="ext_install">설치</string>
     <string name="ext_pending">대기 중</string>
@@ -783,4 +783,5 @@
     <plurals name="download_amount">
         <item quantity="other">다음 %d화</item>
     </plurals>
+    <string name="action_update_category">카테고리 업데이트</string>
 </resources>

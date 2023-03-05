@@ -825,4 +825,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
     <string name="action_copy_to_clipboard">Копировать в буфер обмена</string>
+    <string name="action_update_category">Обновить категорию</string>
 </resources>

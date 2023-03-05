@@ -347,7 +347,7 @@
     <string name="pref_theme_mode">Tema scuro</string>
     <string name="theme_light">Disattivo</string>
     <string name="theme_dark">Attivo</string>
-    <string name="theme_system">Segui l\'impostazione di sistema</string>
+    <string name="theme_system">Usa il tema di sistema</string>
     <string name="pref_manage_notifications">Gestisci le notifiche</string>
     <string name="pref_category_security">Sicurezza e privacy</string>
     <string name="lock_with_biometrics">Richiede sblocco</string>
@@ -564,7 +564,7 @@
     <string name="action_desc">Decrescente</string>
     <string name="action_asc">Crescente</string>
     <string name="action_order_by_chapter_number">Per numero di capitolo</string>
-    <string name="action_order_by_upload_date">Per data di aggiunta</string>
+    <string name="action_order_by_upload_date">Per data di caricamento</string>
     <string name="action_filter_tracked">Tracciati</string>
     <string name="action_display_show_number_of_items">Mostra numero elementi</string>
     <string name="right_and_left_nav">Destra e Sinistra</string>
@@ -844,4 +844,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Nascondi le voci già in libreria</string>
     <string name="action_copy_to_clipboard">Copia negli appunti</string>
+    <string name="action_update_category">Aggiorna categoria</string>
 </resources>

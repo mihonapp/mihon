@@ -853,4 +853,5 @@
         <item quantity="other">%d فصل تالي</item>
     </plurals>
     <string name="pref_hide_in_library_items">إخفاء الإدخالات الموجودة بالفعل في المكتبة</string>
+    <string name="action_update_category">تحديث الفئة</string>
 </resources>

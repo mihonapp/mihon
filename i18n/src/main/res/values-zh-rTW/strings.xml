@@ -783,4 +783,5 @@
     <plurals name="download_amount">
         <item quantity="other">後續 %d 章</item>
     </plurals>
+    <string name="action_update_category">更新類別</string>
 </resources>

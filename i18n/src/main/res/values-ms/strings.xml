@@ -783,4 +783,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Sembunyikan entri yang sudah ada di dalam pustaka</string>
     <string name="action_copy_to_clipboard">Salin ke papan keratan</string>
+    <string name="action_update_category">Kemas kini kategori</string>
 </resources>

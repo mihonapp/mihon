@@ -797,4 +797,5 @@
         <item quantity="other">Nächste %d Kapitel</item>
     </plurals>
     <string name="action_copy_to_clipboard">In die Zwischenablage kopieren</string>
+    <string name="action_update_category">Kategorie aktualisieren</string>
 </resources>

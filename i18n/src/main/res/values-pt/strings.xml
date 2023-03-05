@@ -841,4 +841,5 @@
         <item quantity="many">Próximos %d capítulos</item>
         <item quantity="other">Próximos %d capítulos</item>
     </plurals>
+    <string name="action_update_category">Atualizar categoria</string>
 </resources>

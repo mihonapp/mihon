@@ -783,4 +783,5 @@
         <item quantity="other">berikutnya %d chapter</item>
     </plurals>
     <string name="action_copy_to_clipboard">Salin ke papan klip</string>
+    <string name="action_update_category">Perbarui kategori</string>
 </resources>

@@ -249,7 +249,7 @@
     <string name="transition_pages_loading">Laster inn sider…</string>
     <string name="transition_pages_error">Klarte ikke å laste inn sider: %1$s</string>
     <string name="migration_dialog_what_to_include">Velg data å inkludere</string>
-    <string name="migrate">Migrer</string>
+    <string name="migrate">Flytt</string>
     <string name="copy">Kopier</string>
     <string name="notification_new_chapters">Nye kapitler funnet</string>
     <string name="notification_cover_update_failed">Klarte ikke å oppdatere omslag</string>
@@ -294,7 +294,7 @@
     <string name="filter_mode_lighten">Unngå / lysne</string>
     <string name="filter_mode_darken">Brenn / mørkere</string>
     <string name="no_results_found">Resultatløst</string>
-    <string name="migration_selection_prompt">Velg en kilde å migrere fra</string>
+    <string name="migration_selection_prompt">Velg en kilde å flytte fra</string>
     <string name="action_webview_back">Tilbake</string>
     <string name="action_webview_forward">Fram</string>
     <string name="action_webview_refresh">Gjenoppfrisk</string>
@@ -380,7 +380,7 @@
     </plurals>
     <string name="action_display_show_tabs">Vis kategorifaner</string>
     <string name="action_display_comfortable_grid">Komfortabelt rutenett</string>
-    <string name="action_migrate">Migrer</string>
+    <string name="action_migrate">Flytt</string>
     <string name="action_start">Start</string>
     <string name="tapping_inverted_both">Begge</string>
     <string name="tapping_inverted_vertical">loddrett</string>
@@ -497,7 +497,7 @@
     <string name="spen_previous_page">Forrige side</string>
     <string name="channel_crash_logs">Feillogg</string>
     <string name="file_picker_error">Ingen app for filvelging funnet</string>
-    <string name="migration_help_guide">Veiledning for kildemigrering</string>
+    <string name="migration_help_guide">Veiledning for kilde-flytting</string>
     <string name="clear_history_confirmation">Er du sikker\? All historikk vil gå tapt.</string>
     <string name="clear_history_completed">Historikken er slettet</string>
     <string name="pref_clear_history">Slett historikk</string>
@@ -666,7 +666,7 @@
     <string name="channel_skipped">Hoppet over</string>
     <string name="disabled_nav">Deaktivert</string>
     <string name="empty_backup_error">Ingen bibliotekoppføringer å sikkerhetskopiere</string>
-    <string name="update_check_fdroid_migration_info">En ny versjon er tilgjengelig gjennom offisielle kanaler. Trykk for å lære hvordan du kan migrere fra den uoffisielle F-Droid varianten.</string>
+    <string name="update_check_fdroid_migration_info">En ny versjon er tilgjengelig gjennom offisielle kanaler. Trykk for å lære hvordan du kan flytte over fra den uoffisielle F-Droid varianten.</string>
     <string name="error_saving_picture">Feil ved lagring av bilde</string>
     <string name="update_check_open">Åpne på GitHub</string>
     <string name="action_close">Lukk</string>
@@ -797,4 +797,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Skjul oppføringer som allerede er i biblioteket</string>
     <string name="action_copy_to_clipboard">Kopier til utklippstavle</string>
+    <string name="action_update_category">Oppdater kategori</string>
 </resources>

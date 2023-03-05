@@ -811,4 +811,5 @@
         <item quantity="other">Dalších %d kapitol</item>
     </plurals>
     <string name="action_copy_to_clipboard">Zkopírovat do schránky</string>
+    <string name="action_update_category">Aktualizovat kategorii</string>
 </resources>

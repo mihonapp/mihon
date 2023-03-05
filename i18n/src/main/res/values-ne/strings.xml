@@ -69,8 +69,8 @@
     <string name="action_remove_bookmark">अध्याय अनबुकमार्क गर्नुहोस्</string>
     <string name="action_bookmark">अध्याय बुकमार्क गर्नुहोस्</string>
     <string name="action_download">डाउनलोड</string>
-    <string name="action_mark_previous_as_read">पढिसकेको भनेर अंकित गर्नुहोस्</string>
-    <string name="action_mark_as_unread">नपढिएको चिन्ह लगाउनुहोस्</string>
+    <string name="action_mark_previous_as_read">पढिएको भनी अघिल्लोलाई चिनो लगाउनुहोस्</string>
+    <string name="action_mark_as_unread">नपढिएको चिनो लगाउनुहोस्</string>
     <string name="action_mark_as_read">पढिसकेको अंकित गर्नुहोस्</string>
     <string name="action_select_all">सबै चयन गर्नु</string>
     <string name="action_global_search">ग्लोबल खोजी</string>
@@ -80,7 +80,7 @@
     <string name="action_sort_total">कुल अध्यायहरू</string>
     <string name="action_sort_alpha">वर्णानुक्रम अनुसार</string>
     <string name="action_filter_empty">फिल्टर हटाउनुहोस्</string>
-    <string name="action_filter_unread">अपठित</string>
+    <string name="action_filter_unread">नपढिएको</string>
     <string name="action_filter_tracked">ट्र्याक गरिएको</string>
     <string name="action_filter_bookmarked">बुकमार्क गरिएको</string>
     <string name="action_filter">फिल्टर</string>
@@ -124,7 +124,7 @@
     <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको</string>
     <string name="restrictions">प्रतिबन्धहरु: %s</string>
     <string name="charging">चार्ज हुँदा</string>
-    <string name="pref_library_update_restriction">स्वचालित अपडेटहरु उपकरण प्रतिबन्धहरू</string>
+    <string name="pref_library_update_restriction">स्वचालित अपडेटहरु यन्त्र प्रतिबन्धहरू</string>
     <string name="update_weekly">साप्ताहिक</string>
     <string name="update_48hour">प्रत्येक २ दिन</string>
     <string name="update_24hour">दैनिक</string>
@@ -225,7 +225,7 @@
     <string name="pref_true_color_summary">ब्यान्डिङ घटाउँछ, तर प्रदर्शनलाई असर गर्छ</string>
     <string name="on">अन</string>
     <string name="pref_custom_brightness">कस्टम चमक</string>
-    <string name="pref_skip_read_chapters">पढिसकेको चिन्ह लगाइएका अध्यायहरू छोड्नुहोस्</string>
+    <string name="pref_skip_read_chapters">पढिएको चिनो लगाइएका अध्यायहरू छोड्नुहोस्</string>
     <string name="pref_reader_navigation">नेभिगेसन</string>
     <string name="pref_read_with_volume_keys">भोल्युम कुञ्जीहरू</string>
     <string name="tapping_inverted_vertical">ठाडो</string>
@@ -388,7 +388,7 @@
     <string name="pref_lowest">सबैभन्दा कम</string>
     <string name="pref_category_delete_chapters">अध्यायहरू हटाउनुहोस्</string>
     <string name="custom_dir">कस्टम स्थान</string>
-    <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिन्ह लगाइएपछि</string>
+    <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिनो लगाइएपछि</string>
     <string name="pref_remove_after_read">पढिसकेपछि स्वचालित रूपमा हटाउनुहोस्</string>
     <string name="save_chapter_as_cbz">CBZ अभिलेख को रूपमा बचत गर्नुहोस्</string>
     <string name="fourth_to_last">चौथो अन्तिम अध्याय</string>
@@ -606,7 +606,7 @@
     </plurals>
     <string name="repeating">फेरी पढ्दै</string>
     <string name="transition_current">वर्तमान:</string>
-    <string name="error_no_match">कुनै मेल भेटिएन</string>
+    <string name="error_no_match">कुनै मेल फेला परेन</string>
     <string name="myanimelist_relogin">कृपया MAL मा फेरि लगइन गर्नुहोस्</string>
     <string name="source_unsupported">स्रोत समर्थित छैन</string>
     <string name="error_category_exists">सो नाम गरिएको वर्ग पहिले नै अवस्थित छ!</string>
@@ -665,7 +665,7 @@
     <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
     <string name="disabled_nav">अक्षम</string>
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
-    <string name="action_sort_unread_count">अपठित संख्या</string>
+    <string name="action_sort_unread_count">नपढिएको संख्या</string>
     <string name="action_close">बन्द</string>
     <string name="pref_library_summary">वर्गहरु, ग्लोबल अपडेट</string>
     <string name="action_sort_last_manga_update">पछिल्लो अपडेट चेक</string>
@@ -686,7 +686,7 @@
     <string name="multi_lang">थुप्रै</string>
     <string name="pref_library_update_show_tab_badge">अपडेटहरु आइकनमा नपढिएको गणना देखाउनुहोस्</string>
     <string name="pref_skip_dupe_chapters">डुप्लिकेट अध्यायहरू छोड्नुहोस्</string>
-    <string name="action_display_show_continue_reading_button">\'पढाइ जारी राख्नुहोस्\' बटन देखाउनुहोस्</string>
+    <string name="action_display_show_continue_reading_button">\'पढ्न जारी राख्नुहोस्\' बटन देखाउनुहोस्</string>
     <string name="label_stats">तथ्याङ्क</string>
     <string name="label_started">सुरु गरेको</string>
     <string name="label_local">लोकल</string>
@@ -797,4 +797,5 @@
     <string name="error_user_agent_string_invalid">अवैध युजर एजेन्ट स्ट्रिङ</string>
     <string name="day_short">%dदि</string>
     <string name="hour_short">%dघ</string>
+    <string name="action_update_category">वर्ग अपडेट गर्नुहोस्</string>
 </resources>

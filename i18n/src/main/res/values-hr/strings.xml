@@ -811,4 +811,5 @@
         <item quantity="few">Sljedeća %d poglavlja</item>
         <item quantity="other">Sljedećih %d poglavlja</item>
     </plurals>
+    <string name="action_update_category">Aktualiziraj katogoriju</string>
 </resources>

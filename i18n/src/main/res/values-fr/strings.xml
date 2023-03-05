@@ -844,4 +844,6 @@
         <item quantity="many">%d chapitres suivants</item>
         <item quantity="other">%d chapitres suivants</item>
     </plurals>
+    <string name="action_copy_to_clipboard">Copier dans le presse-papier</string>
+    <string name="action_update_category">Mettre à jour la catégorie</string>
 </resources>

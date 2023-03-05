@@ -349,7 +349,7 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad y privacidad</string>
-    <string name="lock_with_biometrics">Requiere el uso de desbloqueo por biometría</string>
+    <string name="lock_with_biometrics">Requiere desbloqueo</string>
     <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>
@@ -523,9 +523,9 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Esto no evita que las extensiones extraoficiales o que estén mal clasificadas muestren contenido para mayores de 18 años en la aplicación.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Saltándose %d capítulo, falta la fuente o ha sido filtrado</item>
-        <item quantity="many">Saltándose %d capítulos, faltan las fuentes o se han filtrado</item>
-        <item quantity="other">Saltándose %d capítulos, faltan las fuentes o se han filtrado</item>
+        <item quantity="one">Se salta el capítulo %d, o bien falta en la fuente o se ha filtrado</item>
+        <item quantity="many">Saltándose %d capítulos, o las fuentes que faltan o se han filtrado</item>
+        <item quantity="other">Saltándose %d capítulos, o las fuentes que faltan o se han filtrado</item>
     </plurals>
     <string name="no_chapters_error">No hay capítulos</string>
     <string name="chapter_settings_updated">Se han actualizado los ajustes predeterminados de capítulo</string>
@@ -842,4 +842,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Saltar elementos que ya estén en la biblioteca</string>
     <string name="action_copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="action_update_category">Actualizar categoría</string>
 </resources>

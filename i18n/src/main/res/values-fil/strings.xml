@@ -797,4 +797,5 @@
         <item quantity="one">Susunod na kabanata</item>
         <item quantity="other">Susunod na %d (mga) kabanata</item>
     </plurals>
+    <string name="action_update_category">I-update ang kategorya</string>
 </resources>

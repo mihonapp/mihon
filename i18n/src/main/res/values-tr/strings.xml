@@ -797,4 +797,5 @@
         <item quantity="other">Sonraki %d bölüm</item>
     </plurals>
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
+    <string name="action_update_category">Kategoriyi güncelle</string>
 </resources>

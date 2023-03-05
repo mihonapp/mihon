@@ -811,4 +811,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Ocultar títulos que já estão na biblioteca</string>
     <string name="action_copy_to_clipboard">Copiar para a área de transferência</string>
+    <string name="action_update_category">Atualizar categoria</string>
 </resources>
