@@ -10,7 +10,7 @@ import tachiyomi.presentation.core.components.Badge
 import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
-fun DownloadsBadge(count: Long) {
+internal fun DownloadsBadge(count: Long) {
     if (count > 0) {
         Badge(
             text = "$count",
@@ -21,14 +21,14 @@ fun DownloadsBadge(count: Long) {
 }
 
 @Composable
-fun UnreadBadge(count: Long) {
+internal fun UnreadBadge(count: Long) {
     if (count > 0) {
         Badge(text = "$count")
     }
 }
 
 @Composable
-fun LanguageBadge(
+internal fun LanguageBadge(
     isLocal: Boolean,
     sourceLanguage: String,
 ) {

@@ -59,7 +59,7 @@ fun GlobalSearchScreen(
 }
 
 @Composable
-fun GlobalSearchContent(
+private fun GlobalSearchContent(
     items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,
     getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,

@@ -63,7 +63,7 @@ fun LibraryToolbar(
 }
 
 @Composable
-fun LibraryRegularToolbar(
+private fun LibraryRegularToolbar(
     title: LibraryToolbarTitle,
     hasFilters: Boolean,
     searchQuery: String?,
@@ -130,7 +130,7 @@ fun LibraryRegularToolbar(
 }
 
 @Composable
-fun LibrarySelectionToolbar(
+private fun LibrarySelectionToolbar(
     selectedCount: Int,
     onClickUnselectAll: () -> Unit,
     onClickSelectAll: () -> Unit,

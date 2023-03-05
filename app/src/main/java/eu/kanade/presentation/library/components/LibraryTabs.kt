@@ -13,7 +13,7 @@ import tachiyomi.presentation.core.components.material.TabIndicator
 import tachiyomi.presentation.core.components.material.TabText
 
 @Composable
-fun LibraryTabs(
+internal fun LibraryTabs(
     categories: List<Category>,
     currentPageIndex: Int,
     getNumberOfMangaForCategory: (Category) -> Int?,

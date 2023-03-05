@@ -1,6 +1,8 @@
 package eu.kanade.presentation.history
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material3.Icon
@@ -8,18 +10,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBarTitle
+import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.presentation.history.components.HistoryContent
+import eu.kanade.presentation.history.components.HistoryItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
 import eu.kanade.tachiyomi.ui.history.HistoryState
 import tachiyomi.domain.history.model.HistoryWithRelations
+import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.text.DateFormat
 import java.util.Date
 
 @Composable
@@ -64,13 +73,62 @@ fun HistoryScreen(
                     modifier = Modifier.padding(contentPadding),
                 )
             } else {
-                HistoryContent(
+                HistoryScreenContent(
                     history = it,
                     contentPadding = contentPadding,
                     onClickCover = { history -> onClickCover(history.mangaId) },
                     onClickResume = { history -> onClickResume(history.mangaId, history.chapterId) },
                     onClickDelete = { item -> onDialogChange(HistoryScreenModel.Dialog.Delete(item)) },
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HistoryScreenContent(
+    history: List<HistoryUiModel>,
+    contentPadding: PaddingValues,
+    onClickCover: (HistoryWithRelations) -> Unit,
+    onClickResume: (HistoryWithRelations) -> Unit,
+    onClickDelete: (HistoryWithRelations) -> Unit,
+    preferences: UiPreferences = Injekt.get(),
+) {
+    val relativeTime: Int = remember { preferences.relativeTime().get() }
+    val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
+
+    FastScrollLazyColumn(
+        contentPadding = contentPadding,
+    ) {
+        items(
+            items = history,
+            key = { "history-${it.hashCode()}" },
+            contentType = {
+                when (it) {
+                    is HistoryUiModel.Header -> "header"
+                    is HistoryUiModel.Item -> "item"
+                }
+            },
+        ) { item ->
+            when (item) {
+                is HistoryUiModel.Header -> {
+                    RelativeDateHeader(
+                        modifier = Modifier.animateItemPlacement(),
+                        date = item.date,
+                        relativeTime = relativeTime,
+                        dateFormat = dateFormat,
+                    )
+                }
+                is HistoryUiModel.Item -> {
+                    val value = item.item
+                    HistoryItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        history = value,
+                        onClickCover = { onClickCover(value) },
+                        onClickResume = { onClickResume(value) },
+                        onClickDelete = { onClickDelete(value) },
+                    )
+                }
             }
         }
     }

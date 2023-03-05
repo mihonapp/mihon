@@ -9,7 +9,7 @@ import androidx.compose.ui.zIndex
 import eu.kanade.tachiyomi.R
 
 @Composable
-fun GlobalSearchItem(
+internal fun GlobalSearchItem(
     searchQuery: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

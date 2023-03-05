@@ -11,7 +11,7 @@ import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.MangaCover
 
 @Composable
-fun LibraryCompactGrid(
+internal fun LibraryCompactGrid(
     items: List<LibraryItem>,
     showTitle: Boolean,
     columns: Int,

@@ -54,7 +54,7 @@ fun MigrateSearchScreen(
 }
 
 @Composable
-fun MigrateSearchContent(
+private fun MigrateSearchContent(
     sourceId: Long,
     items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,

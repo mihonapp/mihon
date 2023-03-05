@@ -15,7 +15,7 @@ import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.util.plus
 
 @Composable
-fun LibraryList(
+internal fun LibraryList(
     items: List<LibraryItem>,
     contentPadding: PaddingValues,
     selection: List<LibraryManga>,

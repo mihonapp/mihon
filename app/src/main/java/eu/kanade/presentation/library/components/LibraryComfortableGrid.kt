@@ -11,7 +11,7 @@ import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.MangaCover
 
 @Composable
-fun LibraryComfortableGrid(
+internal fun LibraryComfortableGrid(
     items: List<LibraryItem>,
     columns: Int,
     contentPadding: PaddingValues,

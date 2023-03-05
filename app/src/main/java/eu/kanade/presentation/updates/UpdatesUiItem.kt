@@ -50,7 +50,7 @@ import tachiyomi.presentation.core.util.selectedBackground
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
-fun LazyListScope.updatesLastUpdatedItem(
+internal fun LazyListScope.updatesLastUpdatedItem(
     lastUpdated: Long,
 ) {
     item(key = "updates-lastUpdated") {
@@ -80,7 +80,7 @@ fun LazyListScope.updatesLastUpdatedItem(
     }
 }
 
-fun LazyListScope.updatesUiItems(
+internal fun LazyListScope.updatesUiItems(
     uiModels: List<UpdatesUiModel>,
     selectionMode: Boolean,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
@@ -146,7 +146,7 @@ fun LazyListScope.updatesUiItems(
 }
 
 @Composable
-fun UpdatesUiItem(
+private fun UpdatesUiItem(
     modifier: Modifier,
     update: UpdatesWithRelations,
     selected: Boolean,

@@ -1,4 +1,4 @@
-package eu.kanade.presentation.browse
+package eu.kanade.presentation.browse.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CollectionsBookmark
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import tachiyomi.presentation.core.components.Badge
 
 @Composable
-fun InLibraryBadge(enabled: Boolean) {
+internal fun InLibraryBadge(enabled: Boolean) {
     if (enabled) {
         Badge(
             imageVector = Icons.Outlined.CollectionsBookmark,

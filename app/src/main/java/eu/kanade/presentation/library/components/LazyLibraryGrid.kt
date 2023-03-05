@@ -12,7 +12,7 @@ import tachiyomi.presentation.core.components.FastScrollLazyVerticalGrid
 import tachiyomi.presentation.core.util.plus
 
 @Composable
-fun LazyLibraryGrid(
+internal fun LazyLibraryGrid(
     modifier: Modifier = Modifier,
     columns: Int,
     contentPadding: PaddingValues,
@@ -28,7 +28,7 @@ fun LazyLibraryGrid(
     )
 }
 
-fun LazyGridScope.globalSearchItem(
+internal fun LazyGridScope.globalSearchItem(
     searchQuery: String?,
     onGlobalSearchClicked: () -> Unit,
 ) {
