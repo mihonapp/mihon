@@ -32,7 +32,6 @@ import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.domain.source.interactor.GetSourcesWithNonLibraryManga
 import eu.kanade.presentation.browse.components.SourceIcon
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -45,6 +44,7 @@ import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchUI
 import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.data.Database
+import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.presentation.core.components.FastScrollLazyColumn

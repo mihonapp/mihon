@@ -1,7 +1,7 @@
-package eu.kanade.domain.chapter.interactor
+package tachiyomi.domain.chapter.interactor
 
-import eu.kanade.domain.library.service.LibraryPreferences
 import tachiyomi.core.util.lang.withNonCancellableContext
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga

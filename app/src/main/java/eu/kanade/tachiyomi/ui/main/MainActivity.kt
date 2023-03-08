@@ -53,7 +53,6 @@ import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppStateBanners
@@ -96,6 +95,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.presentation.core.components.material.Scaffold
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

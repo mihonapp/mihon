@@ -1,8 +1,8 @@
-package eu.kanade.domain.category.interactor
+package tachiyomi.domain.category.interactor
 
-import eu.kanade.domain.library.service.LibraryPreferences
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.library.model.plus
+import tachiyomi.domain.library.service.LibraryPreferences
 
 class ResetCategoryFlags(
     private val preferences: LibraryPreferences,

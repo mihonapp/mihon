@@ -25,7 +25,6 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
@@ -61,6 +60,7 @@ import okhttp3.Headers
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.repository.MangaRepository
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

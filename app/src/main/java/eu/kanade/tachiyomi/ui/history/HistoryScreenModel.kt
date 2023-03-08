@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.util.insertSeparators
-import eu.kanade.domain.history.interactor.GetNextChapters
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.util.lang.toDateKey
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +23,7 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.interactor.GetHistory
+import tachiyomi.domain.history.interactor.GetNextChapters
 import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.model.HistoryWithRelations
 import uy.kohesive.injekt.Injekt

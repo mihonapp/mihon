@@ -17,11 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import org.xmlpull.v1.XmlPullParser
+import tachiyomi.domain.library.service.LibraryPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

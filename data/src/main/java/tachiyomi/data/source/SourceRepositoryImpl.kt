@@ -1,20 +1,16 @@
-package eu.kanade.data.source
+package tachiyomi.data.source
 
-import eu.kanade.domain.source.repository.SourceRepository
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.data.source.SourceLatestPagingSource
-import tachiyomi.data.source.SourcePagingSourceType
-import tachiyomi.data.source.SourcePopularPagingSource
-import tachiyomi.data.source.SourceSearchPagingSource
-import tachiyomi.data.source.sourceMapper
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.domain.source.model.StubSource
+import tachiyomi.domain.source.repository.SourcePagingSourceType
+import tachiyomi.domain.source.repository.SourceRepository
 import tachiyomi.domain.source.service.SourceManager
 
 class SourceRepositoryImpl(

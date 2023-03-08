@@ -17,7 +17,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
-import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.copyFrom
 import eu.kanade.domain.manga.model.toSManga
@@ -27,13 +26,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.DEVICE_BATTERY_NOT_LOW
-import eu.kanade.tachiyomi.data.preference.DEVICE_CHARGING
-import eu.kanade.tachiyomi.data.preference.DEVICE_NETWORK_NOT_METERED
-import eu.kanade.tachiyomi.data.preference.DEVICE_ONLY_ON_WIFI
-import eu.kanade.tachiyomi.data.preference.MANGA_HAS_UNREAD
-import eu.kanade.tachiyomi.data.preference.MANGA_NON_COMPLETED
-import eu.kanade.tachiyomi.data.preference.MANGA_NON_READ
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -67,6 +59,14 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.model.LibraryManga
+import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_BATTERY_NOT_LOW
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_NETWORK_NOT_METERED
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_ONLY_ON_WIFI
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_HAS_UNREAD
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
+import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
