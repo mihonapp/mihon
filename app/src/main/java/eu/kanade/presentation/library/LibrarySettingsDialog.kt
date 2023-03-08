@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.library.service.LibraryPreferences
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.presentation.components.TriStateItem
@@ -21,6 +20,7 @@ import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.display
 import tachiyomi.domain.library.model.sort
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem

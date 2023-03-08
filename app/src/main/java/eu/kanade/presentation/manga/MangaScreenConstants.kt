@@ -6,7 +6,6 @@ enum class DownloadAction {
     NEXT_10_CHAPTERS,
     NEXT_25_CHAPTERS,
     UNREAD_CHAPTERS,
-    ALL_CHAPTERS,
 }
 
 enum class EditCoverAction {

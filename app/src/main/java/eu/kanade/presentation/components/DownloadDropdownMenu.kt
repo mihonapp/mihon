@@ -13,7 +13,6 @@ fun DownloadDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     onDownloadClicked: (DownloadAction) -> Unit,
-    includeDownloadAllOption: Boolean = true,
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -25,7 +24,6 @@ fun DownloadDropdownMenu(
             DownloadAction.NEXT_10_CHAPTERS to pluralStringResource(R.plurals.download_amount, 10, 10),
             DownloadAction.NEXT_25_CHAPTERS to pluralStringResource(R.plurals.download_amount, 25, 25),
             DownloadAction.UNREAD_CHAPTERS to stringResource(R.string.download_unread),
-            (DownloadAction.ALL_CHAPTERS to stringResource(R.string.download_all)).takeIf { includeDownloadAllOption },
         ).map { (downloadAction, string) ->
             DropdownMenuItem(
                 text = { Text(text = string) },

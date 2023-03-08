@@ -525,13 +525,6 @@ class MangaInfoScreenModel(
     }
 
     /**
-     * Returns the list of filtered or all chapter items if [skipFiltered] is false.
-     */
-    private fun getChapterItems(): List<ChapterItem> {
-        return if (skipFiltered) filteredChapters.orEmpty().toList() else allChapters.orEmpty()
-    }
-
-    /**
      * Returns the next unread chapter or null if everything is read.
      */
     fun getNextUnreadChapter(): Chapter? {
@@ -540,7 +533,8 @@ class MangaInfoScreenModel(
     }
 
     private fun getUnreadChapters(): List<Chapter> {
-        return getChapterItems()
+        val chapterItems = if (skipFiltered) filteredChapters.orEmpty().toList() else allChapters.orEmpty()
+        return chapterItems
             .filter { (chapter, dlStatus) -> !chapter.read && dlStatus == Download.State.NOT_DOWNLOADED }
             .map { it.chapter }
     }
@@ -613,7 +607,6 @@ class MangaInfoScreenModel(
             DownloadAction.NEXT_10_CHAPTERS -> getUnreadChaptersSorted().take(10)
             DownloadAction.NEXT_25_CHAPTERS -> getUnreadChaptersSorted().take(25)
             DownloadAction.UNREAD_CHAPTERS -> getUnreadChapters()
-            DownloadAction.ALL_CHAPTERS -> getChapterItems().map { it.chapter }
         }
         if (chaptersToDownload.isNotEmpty()) {
             startDownload(chaptersToDownload, false)
