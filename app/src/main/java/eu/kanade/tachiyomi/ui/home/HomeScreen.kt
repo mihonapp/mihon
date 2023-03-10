@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.with
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -112,21 +113,24 @@ object HomeScreen : Screen() {
                     },
                     contentWindowInsets = WindowInsets(0),
                 ) { contentPadding ->
-                    AnimatedContent(
+                    Box(
                         modifier = Modifier
                             .padding(contentPadding)
                             .consumeWindowInsets(contentPadding),
-                        targetState = tabNavigator.current,
-                        transitionSpec = {
-                            materialFadeThroughIn(initialScale = 1f, durationMillis = TabFadeDuration) with
-                                materialFadeThroughOut(durationMillis = TabFadeDuration)
-                        },
-                        content = {
-                            tabNavigator.saveableState(key = "currentTab", it) {
-                                it.Content()
-                            }
-                        },
-                    )
+                    ) {
+                        AnimatedContent(
+                            targetState = tabNavigator.current,
+                            transitionSpec = {
+                                materialFadeThroughIn(initialScale = 1f, durationMillis = TabFadeDuration) with
+                                    materialFadeThroughOut(durationMillis = TabFadeDuration)
+                            },
+                            content = {
+                                tabNavigator.saveableState(key = "currentTab", it) {
+                                    it.Content()
+                                }
+                            },
+                        )
+                    }
                 }
             }
 

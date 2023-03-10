@@ -69,8 +69,7 @@ fun AppStateBanners(
     val mainInsets = WindowInsets.statusBars
     val mainInsetsTop = mainInsets.getTop(density)
     SubcomposeLayout(modifier = modifier) { constraints ->
-        val indexingId = if (indexing) 0 else -1
-        val indexingPlaceable = subcompose(indexingId) {
+        val indexingPlaceable = subcompose(0) {
             AnimatedVisibility(
                 visible = indexing,
                 enter = expandVertically(),
@@ -83,8 +82,7 @@ fun AppStateBanners(
         }.fastMap { it.measure(constraints) }
         val indexingHeight = indexingPlaceable.fastMaxBy { it.height }?.height ?: 0
 
-        val downloadedId = if (indexing) 1 else 0
-        val downloadedOnlyPlaceable = subcompose(downloadedId) {
+        val downloadedOnlyPlaceable = subcompose(1) {
             AnimatedVisibility(
                 visible = downloadedOnlyMode,
                 enter = expandVertically(),
@@ -98,12 +96,7 @@ fun AppStateBanners(
         }.fastMap { it.measure(constraints) }
         val downloadedOnlyHeight = downloadedOnlyPlaceable.fastMaxBy { it.height }?.height ?: 0
 
-        val incognitoId = when {
-            indexing && downloadedOnlyMode -> 3
-            indexing || downloadedOnlyMode -> 2
-            else -> 1
-        }
-        val incognitoPlaceable = subcompose(incognitoId) {
+        val incognitoPlaceable = subcompose(2) {
             AnimatedVisibility(
                 visible = incognitoMode,
                 enter = expandVertically(),
