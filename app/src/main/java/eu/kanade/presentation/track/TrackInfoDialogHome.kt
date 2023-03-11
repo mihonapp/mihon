@@ -1,5 +1,6 @@
 package eu.kanade.presentation.track
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -125,7 +126,7 @@ fun TrackInfoDialogHome(
 private fun TrackInfoItem(
     title: String,
     service: TrackService,
-    status: String,
+    @StringRes status: Int?,
     onStatusClick: () -> Unit,
     chapters: String,
     onChaptersClick: () -> Unit,
@@ -187,7 +188,7 @@ private fun TrackInfoItem(
                 Row(modifier = Modifier.height(IntrinsicSize.Min)) {
                     TrackDetailsItem(
                         modifier = Modifier.weight(1f),
-                        text = status,
+                        text = status?.let { stringResource(it) } ?: "",
                         onClick = onStatusClick,
                     )
                     VerticalDivider()

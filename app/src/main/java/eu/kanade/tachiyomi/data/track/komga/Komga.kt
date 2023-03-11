@@ -38,13 +38,12 @@ class Komga(private val context: Context, id: Long) : TrackService(id), Enhanced
 
     override fun getStatusList() = listOf(UNREAD, READING, COMPLETED)
 
-    override fun getStatus(status: Int): String = with(context) {
-        when (status) {
-            UNREAD -> getString(R.string.unread)
-            READING -> getString(R.string.reading)
-            COMPLETED -> getString(R.string.completed)
-            else -> ""
-        }
+    @StringRes
+    override fun getStatus(status: Int): Int? = when (status) {
+        UNREAD -> R.string.unread
+        READING -> R.string.reading
+        COMPLETED -> R.string.completed
+        else -> null
     }
 
     override fun getReadingStatus(): Int = READING

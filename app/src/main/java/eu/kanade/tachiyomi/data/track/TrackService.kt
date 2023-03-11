@@ -50,7 +50,8 @@ abstract class TrackService(val id: Long) {
 
     abstract fun getStatusList(): List<Int>
 
-    abstract fun getStatus(status: Int): String
+    @StringRes
+    abstract fun getStatus(status: Int): Int?
 
     abstract fun getReadingStatus(): Int
 

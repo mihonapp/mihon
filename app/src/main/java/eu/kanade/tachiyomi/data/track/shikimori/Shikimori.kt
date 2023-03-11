@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.shikimori
 
-import android.content.Context
 import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
@@ -12,7 +11,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Shikimori(private val context: Context, id: Long) : TrackService(id) {
+class Shikimori(id: Long) : TrackService(id) {
 
     companion object {
         const val READING = 1
@@ -98,16 +97,15 @@ class Shikimori(private val context: Context, id: Long) : TrackService(id) {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)
     }
 
-    override fun getStatus(status: Int): String = with(context) {
-        when (status) {
-            READING -> getString(R.string.reading)
-            PLAN_TO_READ -> getString(R.string.plan_to_read)
-            COMPLETED -> getString(R.string.completed)
-            ON_HOLD -> getString(R.string.on_hold)
-            DROPPED -> getString(R.string.dropped)
-            REREADING -> getString(R.string.repeating)
-            else -> ""
-        }
+    @StringRes
+    override fun getStatus(status: Int): Int? = when (status) {
+        READING -> R.string.reading
+        PLAN_TO_READ -> R.string.plan_to_read
+        COMPLETED -> R.string.completed
+        ON_HOLD -> R.string.on_hold
+        DROPPED -> R.string.dropped
+        REREADING -> R.string.repeating
+        else -> null
     }
 
     override fun getReadingStatus(): Int = READING
