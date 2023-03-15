@@ -1,6 +1,6 @@
 [versions]
 agp_version = "7.4.2"
-lifecycle_version = "2.6.0-rc01"
+lifecycle_version = "2.6.0"
 
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }

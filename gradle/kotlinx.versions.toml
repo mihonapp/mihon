@@ -1,8 +1,7 @@
 [versions]
 kotlin_version = "1.8.10"
-# TODO: 1.4.1 introduces an issue with cached serializers; see https://github.com/Kotlin/kotlinx.serialization/issues/2065
-serialization_version = "1.4.0"
-xml_serialization_version = "0.84.3"
+serialization_version = "1.5.0"
+xml_serialization_version = "0.85.0"
 
 [libraries]
 reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin_version" }
