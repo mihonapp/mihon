@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMaxBy
 import androidx.compose.ui.util.fastSumBy
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlin.math.abs
 
 @Composable
 fun HorizontalPager(
@@ -143,7 +145,16 @@ class PagerState(
 
     val lazyListState = LazyListState(firstVisibleItemIndex = currentPage)
 
+    private val pageSize: Int
+        get() = visiblePages.firstOrNull()?.size ?: 0
+
     private var _currentPage by mutableStateOf(currentPage)
+
+    private val layoutInfo: LazyListLayoutInfo
+        get() = lazyListState.layoutInfo
+
+    private val visiblePages: List<LazyListItemInfo>
+        get() = layoutInfo.visibleItemsInfo
 
     var currentPage: Int
         get() = _currentPage
@@ -165,6 +176,31 @@ class PagerState(
                 end - start
             }
         }
+
+    private val closestPageToSnappedPosition: LazyListItemInfo?
+        get() = visiblePages.fastMaxBy {
+            -abs(
+                calculateDistanceToDesiredSnapPosition(
+                    layoutInfo,
+                    it,
+                    SnapAlignmentStartToStart,
+                ),
+            )
+        }
+
+    val currentPageOffsetFraction: Float by derivedStateOf {
+        val currentPagePositionOffset = closestPageToSnappedPosition?.offset ?: 0
+        val pageUsedSpace = pageSize.toFloat()
+        if (pageUsedSpace == 0f) {
+            // Default to 0 when there's no info about the page size yet.
+            0f
+        } else {
+            ((-currentPagePositionOffset) / (pageUsedSpace)).coerceIn(
+                MinPageOffset,
+                MaxPageOffset,
+            )
+        }
+    }
 
     fun updateCurrentPageBasedOnLazyListState() {
         mostVisiblePageLayoutInfo?.let {
@@ -188,6 +224,11 @@ class PagerState(
         )
     }
 }
+
+private const val MinPageOffset = -0.5f
+private const val MaxPageOffset = 0.5f
+internal val SnapAlignmentStartToStart: (layoutSize: Float, itemSize: Float) -> Float =
+    { _, _ -> 0f }
 
 // https://android.googlesource.com/platform/frameworks/support/+/refs/changes/78/2160778/35/compose/foundation/foundation/src/commonMain/kotlin/androidx/compose/foundation/gestures/snapping/LazyListSnapLayoutInfoProvider.kt
 private fun lazyListSnapLayoutInfoProvider(

@@ -69,7 +69,7 @@ fun TabbedScreen(
         ) {
             TabRow(
                 selectedTabIndex = state.currentPage,
-                indicator = { TabIndicator(it[state.currentPage]) },
+                indicator = { TabIndicator(it[state.currentPage], state.currentPageOffsetFraction) },
             ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
