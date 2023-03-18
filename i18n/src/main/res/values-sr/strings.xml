@@ -219,7 +219,6 @@
     <string name="sort_by_source">Према извору</string>
     <string name="sort_by_number">Према броју поглавља</string>
     <string name="manga_download">Преузми</string>
-    <string name="download_all">Све</string>
     <string name="download_unread">Непрочитано</string>
     <string name="confirm_delete_chapters">Да ли сте сигурни да желите да обришете следећа поглавља\?</string>
     <string name="action_open_in_web_view">Отвори у WebView</string>

@@ -190,7 +190,6 @@
     <string name="sort_by_source">स्रोत से</string>
     <string name="sort_by_number">अध्याय संख्या से</string>
     <string name="manga_download">डाउनलोड</string>
-    <string name="download_all">सभी</string>
     <string name="download_unread">अपठित</string>
     <string name="confirm_delete_chapters">क्या आप वाकई चयनित अध्यायों को हटाना चाहते हैं?</string>
     <string name="manga_tracking_tab">पदचिह्न</string>
@@ -223,9 +222,9 @@
     <string name="file_select_backup">बैकअप फ़ाइल का चयन करें</string>
     <string name="update_check_confirm">डाउनलोड</string>
     <string name="update_check_no_new_updates">कोई नया अद्यतन उपलब्ध नहीं है</string>
-    <string name="update_check_look_for_updates">अपडेट के लिए खोज…</string>
-    <string name="update_check_notification_download_in_progress">डाउनलोड…</string>
-    <string name="update_check_notification_download_complete">इंस्टॉल करने के लिए यह टेप करें</string>
+    <string name="update_check_look_for_updates">अपडेट्स ढूंढ रहे हैं…</string>
+    <string name="update_check_notification_download_in_progress">डाउनलोडिंग…</string>
+    <string name="update_check_notification_download_complete">अपडेट इंस्टॉल करने के लिए यहा टेप करें</string>
     <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="update_check_notification_update_available">नया संस्करण उपलब्ध है!</string>
     <string name="information_no_downloads">कोई डाउनलोड नहीं है</string>

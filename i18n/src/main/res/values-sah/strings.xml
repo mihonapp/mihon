@@ -358,7 +358,6 @@
     <string name="manga_tracking_tab">Кэтээһин</string>
     <string name="confirm_delete_chapters">Талыллыбыт түһүмэхтэри сотторорго эрэллээххин дуу\?</string>
     <string name="download_unread">Ааҕыллыбата</string>
-    <string name="download_all">Барыта</string>
     <string name="manga_download">Хачайдаа</string>
     <string name="sort_by_upload_date">Хачайдааһын кэминэн</string>
     <string name="sort_by_number">Түһүмэх нүөмэринэн</string>

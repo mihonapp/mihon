@@ -219,7 +219,6 @@
     <string name="sort_by_source">Pro fonte</string>
     <string name="sort_by_number">Pro nùmeru de capìtulu</string>
     <string name="manga_download">Iscàrriga</string>
-    <string name="download_all">Totu</string>
     <string name="download_unread">Non lèghidos</string>
     <string name="confirm_delete_chapters">Ses seguru de chèrrere iscantzellare sos capìtulos ischertados\?</string>
     <string name="manga_tracking_tab">Arrastamentu</string>
@@ -797,4 +796,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">Cua sos elementos giai in sa biblioteca</string>
     <string name="action_copy_to_clipboard">Còpia in punta de billete</string>
+    <string name="action_update_category">Agiorna sa categoria</string>
 </resources>

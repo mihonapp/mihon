@@ -170,7 +170,6 @@
     <string name="sort_by_source">По източник</string>
     <string name="sort_by_number">По ред на главите</string>
     <string name="manga_download">Изтегли</string>
-    <string name="download_all">Всички</string>
     <string name="download_unread">Непрочетени</string>
     <string name="confirm_delete_chapters">Сигурни ли сте, че искате да изтриете избраните глави?</string>
     <!-- MyAnimeList fragment -->

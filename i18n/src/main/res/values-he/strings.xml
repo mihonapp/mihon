@@ -92,7 +92,6 @@
     <string name="completed">הושלם</string>
     <string name="confirm_delete_chapters">האם אתה בטוח שברצונך למחוק את הפרקים שנבחרו\?</string>
     <string name="download_unread">לא נקרא</string>
-    <string name="download_all">הכל</string>
     <string name="sort_by_number">לפי מספר פרק</string>
     <string name="sort_by_source">לפי מקור</string>
     <string name="show_chapter_number">מספר פרק</string>

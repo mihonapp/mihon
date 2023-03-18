@@ -285,7 +285,6 @@
     <string name="sort_by_number">თავის ნომრის მიხედვით</string>
     <string name="sort_by_upload_date">თარიღის მიხედვით</string>
     <string name="manga_download">გადმოწერა</string>
-    <string name="download_all">ყველა</string>
     <string name="download_unread">წაუკითხავი</string>
     <string name="confirm_delete_chapters">დარწმუნებული ხართ რომ გსურთ არჩეული თავების წაშლა?</string>
     <string name="manga_tracking_tab">თვალტყურის დევნება</string>

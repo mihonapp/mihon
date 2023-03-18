@@ -184,7 +184,6 @@
     <string name="sort_by_source">Pela fonte</string>
     <string name="sort_by_number">Pelo número do capítulo</string>
     <string name="manga_download">Fazer download</string>
-    <string name="download_all">Todos</string>
     <string name="download_unread">Não lidos</string>
     <string name="confirm_delete_chapters">Você tem certeza que quer excluir os capítulos selecionados\?</string>
     <string name="manga_tracking_tab">Monitoramento</string>

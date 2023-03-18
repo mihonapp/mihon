@@ -332,7 +332,6 @@
     <string name="myanimelist_relogin">Mesedez, hasi saioa berriro MAL-en</string>
     <string name="show_title">Iturriaren izenburua</string>
     <string name="sort_by_source">Iturriaren arabera</string>
-    <string name="download_all">Denak</string>
     <string name="confirm_set_chapter_settings">Ziur ezarpen hauek lehenetsi gisa gorde nahi dituzula\?</string>
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>
     <string name="channel_complete">Bukatua</string>

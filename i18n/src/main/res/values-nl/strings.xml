@@ -146,7 +146,6 @@
     <string name="sort_by_source">Op bron</string>
     <string name="sort_by_number">Op hoofdstuknummer</string>
     <string name="manga_download">Downloaden</string>
-    <string name="download_all">Alles</string>
     <string name="download_unread">Ongelezen</string>
     <string name="confirm_delete_chapters">Weet je zeker dat je de geselecteerde hoofdstukken wilt verwijderen\?</string>
     <string name="manga_tracking_tab">Tracking</string>
@@ -156,7 +155,7 @@
     <string name="status">Status</string>
     <string name="error_category_exists">Er bestaat al een categorie met deze naam!</string>
     <string name="snack_categories_deleted">Categorieën verwijderd</string>
-    <string name="dialog_with_checkbox_reset">Stel alle hoofdstukken voor deze manga opnieuw in</string>
+    <string name="dialog_with_checkbox_reset">Stel alle hoofdstukken voor dit item opnieuw in</string>
     <string name="snack_add_to_library">Toevoegen aan bibliotheek\?</string>
     <string name="picture_saved">Afbeelding opgeslagen</string>
     <string name="custom_filter">Aangepast filter</string>
@@ -415,7 +414,7 @@
         <item quantity="one">Voltooid in %1$s met %2$s foutmelding</item>
         <item quantity="other">Voltooid in %1$s met %2$s foutmeldingen</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Neem alleen vastgepinde bronnen mee</string>
+    <string name="pref_search_pinned_sources_only">Zoek alleen in vastgepinde bronnen bij globaal zoeken</string>
     <string name="pref_webtoon_side_padding">Opvulling zijkant</string>
     <string name="gray_background">Grijs</string>
     <string name="pref_true_color_summary">Vermindert kleurstrepen, maar beïnvloedt de prestaties</string>
@@ -686,7 +685,7 @@
     <string name="network_not_metered">Alleen op ongelimiteerd netwerk</string>
     <string name="auto_download_while_reading">Automatisch downloaden tijdens het lezen</string>
     <string name="ext_info_language">Taal</string>
-    <string name="multi_lang">Meedere</string>
+    <string name="multi_lang">Meerdere</string>
     <string name="ext_info_age_rating">Classificatie per leeftijd</string>
     <string name="pref_long_strip_split">Grote afbeeldingen splitsen (BETA)</string>
     <string name="ext_info_version">Versie</string>
@@ -694,7 +693,7 @@
     <string name="pref_app_language">Taal van de applicatie</string>
     <string name="empty_backup_error">Geen bibliotheek inzendingen om te backuppen</string>
     <string name="action_sort_unread_count">Ongelezen aantal</string>
-    <string name="download_ahead_info">Werkt alleen bij vermeldingen in de bibliotheek en als het huidige hoofdstuk en het volgende al gedownload zijn</string>
+    <string name="download_ahead_info">Werkt alleen bij vermeldingen in de bibliotheek en als het huidige hoofdstuk en het volgende alreeds gedownload zijn</string>
     <string name="pref_user_agent_string">Standaard \'user-agent-string\'</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Volgende ongelezen hoofdstuk</item>
@@ -750,4 +749,24 @@
     <string name="custom_cover">Aangepaste omslag</string>
     <string name="invalid_location">Ongeldige locatie: %s</string>
     <string name="pref_advanced_summary">Crashlogboeken opslaan, batterijoptimalisaties</string>
+    <string name="action_update_category">Categorie bijwerken</string>
+    <string name="updates_last_update_info">Laatste update bibliotheek: %s</string>
+    <string name="pref_library_update_show_tab_badge">Toon aantal ongelezen op updates icon</string>
+    <string name="source_filter_empty_screen">Geen geïnstalleerde bron gevonden</string>
+    <string name="not_installed">Niet geïnstalleerd</string>
+    <string name="pref_hide_in_library_items">Verberg manga die al in de bibliotheek staat</string>
+    <string name="update_already_running">Er is al een update bezig</string>
+    <string name="action_copy_to_clipboard">Kopiëren naar klembord</string>
+    <string name="updates_last_update_info_just_now">Net nu</string>
+    <string name="error_saving_picture">Fout bij opslaan afbeelding</string>
+    <string name="empty_screen">Nou, dit is ongemakkelijk</string>
+    <string name="cant_open_last_read_chapter">Niet mogelijk om het laatst gelezen hoofdstuk te openen</string>
+    <string name="source_empty_screen">Geen bron gevonden</string>
+    <string name="crash_screen_title">Oops!</string>
+    <string name="pref_tracking_summary">1-directie voortgang sync</string>
+    <plurals name="download_amount">
+        <item quantity="one">Volgend hoofdstuk</item>
+        <item quantity="other">Volgende %d hoofdstukken</item>
+    </plurals>
+    <string name="track_remove_start_date_conf_text">Dit gaat je eerder geselcteerde startdatum %s verwijderen</string>
 </resources>

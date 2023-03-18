@@ -38,7 +38,7 @@
     <string name="pref_confirm_exit">Konfirmo daljen</string>
     <string name="pref_manage_notifications">Menaxho njoftimet</string>
     <string name="pref_app_language">Gjuha e aplikacionit</string>
-    <string name="pref_category_security">Siguria</string>
+    <string name="pref_category_security">Siguria dhe privatësia</string>
     <string name="lock_with_biometrics">Kërkohet shkyçja</string>
     <string name="lock_when_idle">Kyç kur është i papunë</string>
     <string name="lock_always">Gjithmonë</string>
@@ -506,7 +506,7 @@
     <string name="latest">Të fundit</string>
     <string name="manga_info_expand">Më shumë</string>
     <string name="chapter_settings">Cilësimet e kapitullit</string>
-    <string name="crash_screen_title">Nje gabim i papritur ndodhi</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="update_check_notification_download_error">Gabim shkarkimi</string>
     <string name="pref_invalidate_download_cache">Anuloni indeksin e shkarkimeve</string>
     <string name="pref_auto_clear_chapter_cache">Pastro memorjen e kapitullit në mbylljen e aplikacionit</string>
@@ -552,7 +552,7 @@
         <item quantity="one">Ofrohet përditësim i shtesës</item>
         <item quantity="other">Ofrohen %d përditësime shtesë</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Përfshi vetëm burime të fiksuara</string>
+    <string name="pref_search_pinned_sources_only">Kërko vetëm burime të fiksuara në kërkimin global</string>
     <string name="pref_create_backup">Krijo kopje rezervë</string>
     <string name="pref_create_backup_summ">Mund të përdoret për të rivendosur bibliotekën aktuale</string>
     <string name="pref_restore_backup">Rivendos kopjen rezervë</string>
@@ -637,7 +637,6 @@
     <string name="show_title">Titulli i burimit</string>
     <string name="sort_by_source">Sipas burimit</string>
     <string name="sort_by_number">Sipas numrit të kapitullit</string>
-    <string name="download_all">Të gjitha</string>
     <string name="download_unread">Të palexuara</string>
     <string name="custom_cover">Kopertine e personalizuar</string>
     <string name="manga_cover">Kopertina</string>
@@ -786,4 +785,15 @@
     <string name="pref_skip_dupe_chapters">Kapërceni kapitujt e kopjuar</string>
     <string name="pref_hide_in_library_items">Fshih hyrjet tashmë në bibliotekë</string>
     <string name="action_copy_to_clipboard">Kopjo në kujtesën e fragmenteve</string>
+    <string name="confirm_add_duplicate_manga">Ju keni një hyrje në librarni me të njëjtin emër.
+\n
+\nDëshironi të vazhdoni\?</string>
+    <plurals name="download_amount">
+        <item quantity="one">Kapitulli i rradhës</item>
+        <item quantity="other">%d kapituj të rradhës</item>
+    </plurals>
+    <string name="action_update_category">Përditëso kategorinë</string>
+    <string name="track_error">%1$s gabim: %2$s</string>
+    <string name="information_required_plain">*kërkohet</string>
+    <string name="copied_to_clipboard_plain">U kopjua në clipboard</string>
 </resources>

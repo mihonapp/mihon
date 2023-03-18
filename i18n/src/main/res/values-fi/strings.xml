@@ -276,7 +276,6 @@
     <string name="remove_from_library">Poista kirjastosta</string>
     <string name="manga_added_library">Lisätty kirjastoon</string>
     <string name="manga_removed_library">Poistettu kirjastosta</string>
-    <string name="download_all">Kaikki</string>
     <string name="download_unread">Lukemattomat</string>
     <string name="dropped">Tiputettu</string>
     <string name="on_hold">Pidossa</string>

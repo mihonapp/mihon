@@ -218,7 +218,6 @@
     <string name="sort_by_source">După sursă</string>
     <string name="sort_by_number">După numărul capitolului</string>
     <string name="manga_download">Descarcă</string>
-    <string name="download_all">Tot</string>
     <string name="download_unread">Necitit</string>
     <string name="confirm_delete_chapters">Sigur doriți să ștergeți capitolele selectate\?</string>
     <string name="manga_tracking_tab">Urmărite</string>

@@ -642,7 +642,6 @@
     <string name="help_translate">Padėkite išversti programa</string>
     <string name="paused">Pristabdytas</string>
     <string name="remove_from_library">Pašalinti iš bibliotekos</string>
-    <string name="download_all">Visus</string>
     <string name="local_source">Vietinis šaltinis</string>
     <string name="action_global_search_query">Ieškokite \"%1$s\" visame pasaulyje</string>
     <string name="no_pinned_sources">Neturite prisegtų šaltinių</string>

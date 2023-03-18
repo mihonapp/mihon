@@ -218,7 +218,6 @@
     <string name="sort_by_source">Per font</string>
     <string name="sort_by_number">Per número de capítol</string>
     <string name="manga_download">Baixa</string>
-    <string name="download_all">Tot</string>
     <string name="download_unread">Els no llegits</string>
     <string name="confirm_delete_chapters">Esteu segur que voleu suprimir els capítols seleccionats\?</string>
     <string name="manga_tracking_tab">En seguiment</string>

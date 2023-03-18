@@ -67,7 +67,6 @@
     <string name="manga_tracking_tab">ردیابی</string>
     <string name="confirm_delete_chapters">آیا مطمئنید که می خواهید قسمت های انتخاب شده را حذف کنید؟</string>
     <string name="download_unread">خوانده نشده</string>
-    <string name="download_all">همه</string>
     <string name="manga_download">دانلود شود</string>
     <string name="sort_by_upload_date">بر اساس تاریخ آپلود</string>
     <string name="pref_cutout_short">نمایش محتوا در منطقه برش خورده</string>

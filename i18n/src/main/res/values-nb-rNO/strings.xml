@@ -213,7 +213,6 @@
     <string name="sort_by_source">Etter kilde</string>
     <string name="sort_by_number">Etter kapittelnummer</string>
     <string name="manga_download">Last ned</string>
-    <string name="download_all">Alle</string>
     <string name="download_unread">Ulest</string>
     <string name="confirm_delete_chapters">Er du sikker på at du vil slette de valgte kapitlene\?</string>
     <string name="manga_tracking_tab">Sporing</string>

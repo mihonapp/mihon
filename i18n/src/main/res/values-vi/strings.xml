@@ -171,7 +171,6 @@
     <string name="sort_by_source">Theo nguồn truyện</string>
     <string name="sort_by_number">Theo số chương</string>
     <string name="manga_download">Tải xuống</string>
-    <string name="download_all">Tất cả</string>
     <string name="download_unread">Chưa đọc</string>
     <string name="confirm_delete_chapters">Bạn có chắc muốn xóa các chương đã chọn?</string>
     <!-- MyAnimeList fragment -->

@@ -19,7 +19,7 @@
     <string name="action_filter_bookmarked">已新增書籤</string>
     <string name="action_filter_unread">未讀</string>
     <string name="action_filter_empty">清除篩選器</string>
-    <string name="action_sort_alpha">題名</string>
+    <string name="action_sort_alpha">名稱</string>
     <string name="action_sort_total">章節總數</string>
     <string name="action_sort_last_read">最近閱讀</string>
     <string name="action_search">搜尋</string>
@@ -235,7 +235,6 @@
     <string name="file_select_backup">選擇備份檔案</string>
     <string name="information_empty_category">尚無任何類別，輕觸新增按鈕即可建立類別以組織你的書櫃。</string>
     <string name="download_notifier_downloader_title">下載管理員</string>
-    <string name="download_all">全部</string>
     <string name="download_unread">未讀</string>
     <string name="confirm_set_image_as_cover">要將該圖片設為封面嗎？</string>
     <string name="transition_pages_loading">正在載入頁面…</string>
@@ -538,7 +537,7 @@
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
-    <string name="pref_create_folder_per_manga_summary">根據題名建立資料夾</string>
+    <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>
@@ -576,7 +575,7 @@
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
     <string name="theme_yinyang">陰陽</string>
-    <string name="theme_tako">鱆</string>
+    <string name="theme_tako">章魚</string>
     <string name="theme_strawberrydaiquiri">草莓黛綺莉</string>
     <string name="theme_midnightdusk">黃昏</string>
     <string name="theme_greenapple">青蘋果</string>

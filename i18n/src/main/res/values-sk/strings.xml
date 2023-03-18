@@ -235,7 +235,6 @@
     <string name="sort_by_source">Podľa zdroja</string>
     <string name="sort_by_number">Podľa čísla kapitoly</string>
     <string name="manga_download">Stiahnuť</string>
-    <string name="download_all">Stiahnuť všetko</string>
     <string name="download_unread">Neprečítané</string>
     <string name="confirm_delete_chapters">Naozaj chcete odstrániť vybrané kapitoly\?</string>
     <string name="manga_tracking_tab">Sledovanie</string>

@@ -165,7 +165,6 @@
     <string name="sort_by_source">Per fonte</string>
     <string name="sort_by_number">Per numero di capitolo</string>
     <string name="manga_download">Scarica</string>
-    <string name="download_all">Tutti</string>
     <string name="download_unread">Non letti</string>
     <string name="confirm_delete_chapters">Sei sicuro di voler eliminare i capitoli selezionati\?</string>
     <!-- MyAnimeList fragment -->

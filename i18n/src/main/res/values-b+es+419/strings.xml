@@ -376,7 +376,6 @@
     <string name="manga_tracking_tab">Seguimiento</string>
     <string name="confirm_delete_chapters">¿Estás seguro de que deseas eliminar los capítulos seleccionados\?</string>
     <string name="download_unread">No leídos</string>
-    <string name="download_all">Todo</string>
     <string name="manga_download">Descargar</string>
     <string name="sort_by_upload_date">Por fecha de subida</string>
     <string name="sort_by_source">Por fuente</string>

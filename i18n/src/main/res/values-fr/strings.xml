@@ -160,7 +160,6 @@
     <string name="show_chapter_number">Numéro de chapitre</string>
     <string name="sort_by_number">Par numéro de chapitre</string>
     <string name="manga_download">Télécharger</string>
-    <string name="download_all">Tout télécharger</string>
     <string name="download_unread">Non lus</string>
     <!-- MyAnimeList fragment -->
     <string name="manga_tracking_tab">Suivi</string>

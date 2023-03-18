@@ -144,7 +144,6 @@
     <string name="sort_by_number">Por número de capítulos</string>
     <string name="sort_by_upload_date">Por fecha de subida</string>
     <string name="manga_download">Descargar</string>
-    <string name="download_all">Todos</string>
     <string name="download_unread">Sin leer</string>
     <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados\?</string>
     <!-- MyAnimeList fragment -->
@@ -349,7 +348,7 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad y privacidad</string>
-    <string name="lock_with_biometrics">Requiere desbloqueo</string>
+    <string name="lock_with_biometrics">Desbloqueo obligatorio</string>
     <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>

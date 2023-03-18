@@ -219,7 +219,6 @@
     <string name="sort_by_source">ตามแหล่งที่มา</string>
     <string name="sort_by_number">ตามหมายเลขตอน</string>
     <string name="manga_download">ดาวน์โหลด</string>
-    <string name="download_all">ทั้งหมด</string>
     <string name="download_unread">ที่ยังไม่ได้อ่าน</string>
     <string name="confirm_delete_chapters">แน่ใจหรือไม่ว่าต้องการลบตอนที่เลือก\?</string>
     <string name="manga_tracking_tab">การติดตาม</string>
@@ -783,4 +782,5 @@
     </plurals>
     <string name="pref_hide_in_library_items">ซ่อนรายการที่มีอยู่ในคลังอยู่แล้ว</string>
     <string name="action_copy_to_clipboard">คัดลอกไปยังคลิปบอร์ด</string>
+    <string name="action_update_category">อัปเดตหมวดหมู่</string>
 </resources>

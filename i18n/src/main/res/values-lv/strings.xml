@@ -526,7 +526,6 @@
     <string name="information_cloudflare_bypass_failure">Neizdevās apiet Cloudflare</string>
     <string name="chapter_error">Kļūda</string>
     <string name="chapter_paused">Pārtraukts</string>
-    <string name="download_all">Visu</string>
     <string name="library_errors_help">Lai uzzinātu, kā novērst bibliotēkas atjaunināšanas kļūdas, skatiet %1$s</string>
     <string name="transition_current">Pašreizējais:</string>
     <string name="page_list_empty_error">Lapas nav atrastas</string>

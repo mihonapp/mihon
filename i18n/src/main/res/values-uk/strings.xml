@@ -218,7 +218,6 @@
     <string name="sort_by_source">За каталогом</string>
     <string name="sort_by_number">За номером розділу</string>
     <string name="manga_download">Завантажити</string>
-    <string name="download_all">Завантажити все</string>
     <string name="download_unread">Непрочитані</string>
     <string name="confirm_delete_chapters">Ви впевнені, що бажаєте видалити вибрані розділи\?</string>
     <string name="manga_tracking_tab">Відслідковувати</string>

@@ -190,7 +190,6 @@
     <string name="sort_by_source">উৎস অনুযায়ী</string>
     <string name="sort_by_number">অধ্যায়ের নাম্বার অনুযায়ী</string>
     <string name="manga_download">ডাউনলোড</string>
-    <string name="download_all">সব</string>
     <string name="download_unread">অপঠিত</string>
     <string name="confirm_delete_chapters">আপনি কি নিশ্চিত যে আপনি নির্বাচিত অধ্যায়গুলো মুছে ফেলতে চান?</string>
     <string name="manga_tracking_tab">অনুসরিত</string>

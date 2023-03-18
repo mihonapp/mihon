@@ -148,7 +148,6 @@
     <string name="sort_by_source">Por fonte</string>
     <string name="sort_by_number">Por número de capítulo</string>
     <string name="manga_download">Transferir</string>
-    <string name="download_all">Tudo</string>
     <string name="download_unread">Não lidos</string>
     <string name="confirm_delete_chapters">Tem certeza de que deseja eliminar os capítulos selecionados\?</string>
     <!-- MyAnimeList fragment -->
@@ -282,7 +281,7 @@
     <string name="browse">Navegar</string>
     <string name="manga_added_library">Adicionado à biblioteca</string>
     <string name="manga_removed_library">Removido da biblioteca</string>
-    <string name="delete_downloads_for_manga">Eliminar capítulos transferidos\?</string>
+    <string name="delete_downloads_for_manga">Eliminar capítulos descarregados\?</string>
     <string name="copied_to_clipboard">Copiado para área de transferência:
 \n%1$s</string>
     <string name="source_not_installed">Fonte não instalada: %1$s</string>
@@ -312,9 +311,9 @@
     <string name="copy">Copiar</string>
     <string name="notification_cover_update_failed">Falha ao atualizar a capa</string>
     <string name="information_empty_category">Não tem nenhuma categoria. Toque no botão (+) para criar uma e organizar a sua biblioteca.</string>
-    <string name="download_notifier_downloader_title">Gestor de transferências</string>
+    <string name="download_notifier_downloader_title">Descarregador</string>
     <string name="download_notifier_no_network">Conexão à rede indisponível</string>
-    <string name="download_notifier_download_paused">Downloads pausados</string>
+    <string name="download_notifier_download_paused">Descargas pausados</string>
     <string name="channel_common">Comum</string>
     <string name="filter_mode_overlay">Sobrepor</string>
     <string name="filter_mode_multiply">Multiplicação</string>
@@ -660,7 +659,7 @@
     <string name="save_chapter_as_cbz">Guardar como ficheiro CBZ</string>
     <string name="clear_database_source_item_count">%1$d itens que não estão na biblioteca no banco de dados</string>
     <string name="database_clean">Nada para limpar</string>
-    <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
+    <string name="download_queue_size_warning">Aviso: descargas grandes em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
     <string name="notification_size_warning">Grandes atualizações prejudicam as fontes e podem levar a atualizações lentas e ainda ao aumento do uso da bateria. Toque para saber mais.</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="pref_auto_clear_chapter_cache">Limpar a cache de capítulos ao fechar a app</string>
@@ -793,7 +792,7 @@
     <string name="crash_screen_restart_application">Reinicie o aplicativo</string>
     <string name="crash_screen_title">Ops!</string>
     <string name="crash_screen_description">%s encontrou um erro inesperado. Sugerimos que você capture esta mensagem, despeje os logs de falha e compartilhe-a em nosso canal de suporte no Discord.</string>
-    <string name="pref_downloads_summary">Download automático, download a frente</string>
+    <string name="pref_downloads_summary">Descarga automática, descarga a frente</string>
     <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
     <string name="pref_browse_summary">Fontes, extensões, pesquisa global</string>
     <string name="pref_backup_summary">Backups manuais e automáticos</string>
@@ -815,7 +814,7 @@
     <string name="label_read_duration">Duração de leitura</string>
     <string name="pref_security_summary">Bloqueio da app, ecrã seguro</string>
     <string name="pref_advanced_summary">Exportar registos de travamento, otimizações de bateria</string>
-    <string name="pref_invalidate_download_cache">Invalidar o índice de downloads</string>
+    <string name="pref_invalidate_download_cache">Invalidar o índice de descargas</string>
     <string name="track_remove_finish_date_conf_text">Isto irá remover a sua data de término selecionada anteriormente no %s</string>
     <string name="pref_worker_info">Informações do worker</string>
     <string name="minute_short">%dm</string>
@@ -824,7 +823,7 @@
     <string name="label_mean_score">Avaliação média</string>
     <string name="label_used">Usados</string>
     <string name="seconds_short">%ds</string>
-    <string name="download_notifier_cache_renewal">Verificando os downloads</string>
+    <string name="download_notifier_cache_renewal">A verificar as descargas</string>
     <string name="track_remove_date_conf_title">Remover data\?</string>
     <string name="label_overview_section">Visão geral</string>
     <string name="label_completed_titles">Itens completos</string>

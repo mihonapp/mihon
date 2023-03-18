@@ -182,7 +182,7 @@
     <string name="pref_date_format">Күн пішімі</string>
     <string name="pref_confirm_exit">Шығуды растау</string>
     <string name="pref_manage_notifications">Хабарландыруларды басқару</string>
-    <string name="pref_category_security">Қауіпсіздік</string>
+    <string name="pref_category_security">Қауіпсіздік пен құпиялық</string>
     <string name="lock_with_biometrics">Биометриямен бұғаттау</string>
     <string name="lock_when_idle">Әрекетсіз болғанда бұғаттау</string>
     <string name="lock_always">Әрдайым</string>
@@ -522,7 +522,7 @@
     <string name="on_hiatus">Үзілісте</string>
     <string name="enhanced_tracking_info">Белгілі бір дереккөздер үшін жақсартылған мүмкіндіктерді қамтамасыз ететін қызметтер. Кітапханаға қосылған кезде жазбалар автоматты түрде бақыланады.</string>
     <string name="pref_restore_backup">Сақтық көшірмеден қайтару</string>
-    <string name="pref_search_pinned_sources_only">Тек бекітілген дереккөздер</string>
+    <string name="pref_search_pinned_sources_only">Ауқымды іздеуде тек бекітілген дереккөздерді табу</string>
     <string name="pref_create_backup_summ">Қазіргі кітапхананы қалпына келтіру үшін қолдануға болады</string>
     <string name="pref_backup_interval">Сақтық көшірме жиілігі</string>
     <string name="pref_restore_backup_summ">Сақтық көшірмеден кітапхананы қайтару</string>
@@ -606,7 +606,6 @@
     <string name="manga_download">Жүктеп алу</string>
     <string name="manga_cover">Мұқаба</string>
     <string name="error_saving_cover">Мұқаба сақталмады</string>
-    <string name="download_all">Түгел</string>
     <string name="download_unread">Оқылмаған</string>
     <string name="error_sharing_cover">Мұқаба жіберілмеді</string>
     <string name="cover_saved">Мұқаба сақталды</string>
@@ -791,4 +790,11 @@
 \nБәрібір жалғастыра бересіз бе\?</string>
     <string name="track_error">%1$s қателік: %2$s</string>
     <string name="information_required_plain">*қажетті</string>
+    <string name="action_update_category">Санатты жаңарту</string>
+    <plurals name="download_amount">
+        <item quantity="one">Келесі тарау</item>
+        <item quantity="other">Келесі %d тарау</item>
+    </plurals>
+    <string name="action_copy_to_clipboard">Айырбастау буферіне көшіріп алу</string>
+    <string name="pref_hide_in_library_items">Кітапханада бар туындыларды жасыру</string>
 </resources>

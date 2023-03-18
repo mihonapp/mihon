@@ -218,7 +218,6 @@
     <string name="sort_by_source">Με βάση την πηγή</string>
     <string name="sort_by_number">Ανά αριθμό κεφαλαίου</string>
     <string name="manga_download">Λήψη</string>
-    <string name="download_all">Όλα</string>
     <string name="download_unread">Αδιάβαστα</string>
     <string name="confirm_delete_chapters">Είστε βέβαιοι ότι θέλετε να διαγράψετε τα επιλεγμένα κεφάλαια;</string>
     <string name="manga_tracking_tab">Παρακολούθηση</string>
@@ -647,7 +646,7 @@
     <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
     <string name="cancelled">Ακυρώθηκε</string>
     <string name="on_hiatus">Σε αναστολή</string>
-    <string name="publishing_finished">Η έκδοσή ολοκληρώθηκε</string>
+    <string name="publishing_finished">Η έκδοση ολοκληρώθηκε</string>
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Εμφάνιση καταχώρισης</string>

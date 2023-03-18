@@ -341,7 +341,6 @@
     <string name="manga_tracking_tab">ಟ್ರ್ಯಾಕಿಂಗ್</string>
     <string name="confirm_delete_chapters">ಆಯ್ದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ\?</string>
     <string name="download_unread">ಓದದ</string>
-    <string name="download_all">ಎಲ್ಲಾ</string>
     <string name="manga_download">ಡೌನ್‌ಲೋಡ್</string>
     <string name="sort_by_number">ಅಧ್ಯಾಯದ ಸಂಖ್ಯೆಯ ಪ್ರಕಾರ</string>
     <string name="sort_by_source">ಮೂಲದ ಪ್ರಕಾರ</string>

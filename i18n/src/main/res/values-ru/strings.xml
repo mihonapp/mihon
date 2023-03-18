@@ -69,7 +69,6 @@
     <string name="dialog_with_checkbox_reset">Сбросить все главы для этой серии</string>
     <string name="disabled">Отключено</string>
     <string name="display_mode_chapter">Глава %1$s</string>
-    <string name="download_all">Все главы</string>
     <string name="download_notifier_downloader_title">Загрузчик</string>
     <string name="download_notifier_no_network">Нет соединения с сетью</string>
     <string name="download_notifier_text_only_wifi">Нет соединения Wi-Fi</string>

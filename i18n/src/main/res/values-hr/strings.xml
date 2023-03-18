@@ -320,7 +320,6 @@
     <string name="manga_tracking_tab">Praćenje</string>
     <string name="confirm_delete_chapters">Stvarno želiš izbrisati odabrana poglavlja\?</string>
     <string name="download_unread">Nepročitano</string>
-    <string name="download_all">Sve</string>
     <string name="manga_download">Preuzmi</string>
     <string name="sort_by_number">Po broju poglavlja</string>
     <string name="sort_by_source">Po izvoru</string>
@@ -743,7 +742,7 @@
     <string name="pref_invalidate_download_cache">Poništi indeks preuzimanja</string>
     <string name="pref_reset_viewer_flags">Resetiraj postavke čitača po nizu</string>
     <string name="cant_open_last_read_chapter">Nije moguće otvoriti posljednje čitanje poglavlja</string>
-    <string name="custom_cover">Prilagođeni cover</string>
+    <string name="custom_cover">Prilagođena naslovnica</string>
     <string name="description_placeholder">Nema opisa</string>
     <string name="label_titles_section">Unosi</string>
     <string name="label_titles_in_global_update">Globalno aktualiziranje</string>

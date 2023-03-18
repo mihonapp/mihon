@@ -614,7 +614,6 @@
     <string name="copied_to_clipboard_plain">Copiado ao portapapeis</string>
     <string name="display_mode_chapter">Capítulo %1$s</string>
     <string name="chapter_error">Erro</string>
-    <string name="download_all">Todo</string>
     <string name="wish_list">Para ler máis adiante</string>
     <string name="track_remove_finish_date_conf_text">Isto eliminará a data de finalización de %s</string>
     <string name="custom_filter">Filtro personalizado</string>
