@@ -184,7 +184,7 @@ private fun ColumnScope.DisplayPage(
         )
     }
 
-    HeadingItem(R.string.badges_header)
+    HeadingItem(R.string.complications_header)
     val downloadBadge by screenModel.libraryPreferences.downloadBadge().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.action_display_download_badge),
@@ -209,6 +209,14 @@ private fun ColumnScope.DisplayPage(
             screenModel.togglePreference(LibraryPreferences::languageBadge)
         },
     )
+    val showContinueReadingButton by screenModel.libraryPreferences.showContinueReadingButton().collectAsState()
+    CheckboxItem(
+        label = stringResource(R.string.action_display_show_continue_reading_button),
+        checked = showContinueReadingButton,
+        onClick = {
+            screenModel.togglePreference(LibraryPreferences::showContinueReadingButton)
+        },
+    )
 
     HeadingItem(R.string.tabs_header)
     val categoryTabs by screenModel.libraryPreferences.categoryTabs().collectAsState()
@@ -225,16 +233,6 @@ private fun ColumnScope.DisplayPage(
         checked = categoryNumberOfItems,
         onClick = {
             screenModel.togglePreference(LibraryPreferences::categoryNumberOfItems)
-        },
-    )
-
-    HeadingItem(R.string.other_header)
-    val showContinueReadingButton by screenModel.libraryPreferences.showContinueReadingButton().collectAsState()
-    CheckboxItem(
-        label = stringResource(R.string.action_display_show_continue_reading_button),
-        checked = showContinueReadingButton,
-        onClick = {
-            screenModel.togglePreference(LibraryPreferences::showContinueReadingButton)
         },
     )
 }

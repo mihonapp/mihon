@@ -14,7 +14,7 @@
     <string name="track">Tracking</string>
     <string name="history">History</string>
 
-    <!-- Activities and fragments labels (toolbar title) -->
+    <!-- Screen titles -->
     <string name="label_more">More</string>
     <string name="label_settings">Settings</string>
     <string name="label_download_queue">Download queue</string>
@@ -113,7 +113,7 @@
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
     <string name="action_display_show_number_of_items">Show number of items</string>
-    <string name="action_display_show_continue_reading_button">Show continue reading button</string>
+    <string name="action_display_show_continue_reading_button">Continue reading button</string>
     <string name="action_disable">Disable</string>
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
@@ -582,15 +582,15 @@
     <string name="logout_success">You are now logged out</string>
     <string name="unknown_error">Unknown error</string>
 
-    <!-- Library fragment -->
+    <!-- Library -->
     <string name="updating_category">Updating category</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
-    <string name="badges_header">Badges</string>
+    <!-- Like watchface complications. For badges/buttons on library covers. -->
+    <string name="complications_header">Complications</string>
     <string name="tabs_header">Tabs</string>
-    <string name="other_header">Other</string>
 
-    <!-- Catalogue fragment -->
+    <!-- Browse source -->
     <!-- missing prompt after Compose rewrite #7901 -->
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
@@ -612,7 +612,7 @@
     <string name="local_filter_order_by">Order by</string>
     <string name="date">Date</string>
 
-    <!-- Manga info fragment -->
+    <!-- Manga info -->
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_author">Unknown author</string>
@@ -644,7 +644,7 @@
     <string name="snack_add_to_library">Add to library?</string>
     <string name="description_placeholder">No description</string>
 
-    <!-- Manga chapters fragment -->
+    <!-- Manga chapters -->
     <string name="display_mode_chapter">Chapter %1$s</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>
@@ -757,14 +757,14 @@
         <item quantity="other">Skipping %d chapters, either the source is missing them or they have been filtered out</item>
     </plurals>
 
-    <!-- Updates fragment -->
+    <!-- Updates -->
     <string name="updating_library">Updating library</string>
     <string name="update_already_running">An update is already running</string>
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
     <string name="updates_last_update_info">Library last updated: %s</string>
     <string name="updates_last_update_info_just_now">Just now</string>
 
-    <!-- History fragment -->
+    <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
     <string name="pref_clear_history">Clear history</string>
     <string name="clear_history_completed">History deleted</string>
