@@ -55,11 +55,6 @@ object SettingsDownloadScreen : SearchableSettings {
                 pref = downloadPreferences.saveChaptersAsCBZ(),
                 title = stringResource(R.string.save_chapter_as_cbz),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = downloadPreferences.splitTallImages(),
-                title = stringResource(R.string.split_tall_images),
-                subtitle = stringResource(R.string.split_tall_images_summary),
-            ),
             getDeleteChaptersGroup(
                 downloadPreferences = downloadPreferences,
                 categories = allCategories,

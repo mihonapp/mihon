@@ -410,10 +410,8 @@ class Downloader(
             }
 
             // When the page is ready, set page path, progress (just in case) and status
-            val success = splitTallImageIfNeeded(page, tmpDir)
-            if (!success) {
-                notifier.onError(context.getString(R.string.download_notifier_split_failed), download.chapter.name, download.manga.title)
-            }
+            splitTallImageIfNeeded(page, tmpDir)
+
             page.uri = file.uri
             page.progress = 100
             page.status = Page.State.READY
@@ -501,21 +499,18 @@ class Downloader(
         return ImageUtil.getExtensionFromMimeType(mime)
     }
 
-    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile): Boolean {
-        if (!downloadPreferences.splitTallImages().get()) return true
+    private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
+        try {
+            val filenamePrefix = String.format("%03d", page.number)
+            val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
+                ?: error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
 
-        val filenamePrefix = String.format("%03d", page.number)
-        val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
-            ?: throw Error(context.getString(R.string.download_notifier_split_page_not_found, page.number))
+            // If the original page was previously split, then skip
+            if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return
 
-        // If the original page was previously split, then skip
-        if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return true
-
-        return try {
             ImageUtil.splitTallImage(tmpDir, imageFile, filenamePrefix)
         } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e)
-            false
+            logcat(LogPriority.ERROR, e) { "Failed to split downloaded image" }
         }
     }
 
