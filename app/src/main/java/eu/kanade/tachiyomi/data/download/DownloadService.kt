@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.util.system.acquireWakeLock
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.isServiceRunning
-import eu.kanade.tachiyomi.util.system.notification
+import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -143,8 +143,8 @@ class DownloadService : Service() {
     }
 
     private fun getPlaceholderNotification(): Notification {
-        return notification(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
+        return notificationBuilder(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
             setContentTitle(getString(R.string.download_notifier_downloader_title))
-        }
+        }.build()
     }
 }

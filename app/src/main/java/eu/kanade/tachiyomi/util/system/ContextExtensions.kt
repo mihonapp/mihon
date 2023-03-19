@@ -25,7 +25,7 @@ import android.view.WindowManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.core.content.getSystemService
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
@@ -78,7 +78,7 @@ fun Context.copyToClipboard(label: String, content: String) {
  * @param permission the permission to check.
  * @return true if it has permissions.
  */
-fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+fun Context.hasPermission(permission: String) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
 
 /**
  * Returns the color for the given attribute.

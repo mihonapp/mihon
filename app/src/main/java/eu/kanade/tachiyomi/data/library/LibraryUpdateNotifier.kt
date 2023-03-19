@@ -20,9 +20,9 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.lang.chop
-import eu.kanade.tachiyomi.util.system.notification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
+import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.Constants
 import tachiyomi.core.util.lang.launchUI
 import tachiyomi.domain.chapter.model.Chapter
@@ -91,18 +91,16 @@ class LibraryUpdateNotifier(private val context: Context) {
     }
 
     fun showQueueSizeWarningNotification() {
-        val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_LIBRARY_PROGRESS) {
+        context.notify(
+            Notifications.ID_LIBRARY_SIZE_WARNING,
+            Notifications.CHANNEL_LIBRARY_PROGRESS,
+        ) {
             setContentTitle(context.getString(R.string.label_warning))
             setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notification_size_warning)))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             setTimeoutAfter(Downloader.WARNING_NOTIF_TIMEOUT_MS)
             setContentIntent(NotificationHandler.openUrl(context, HELP_WARNING_URL))
         }
-
-        context.notificationManager.notify(
-            Notifications.ID_LIBRARY_SIZE_WARNING,
-            notificationBuilder.build(),
-        )
     }
 
     /**
@@ -116,17 +114,16 @@ class LibraryUpdateNotifier(private val context: Context) {
             return
         }
 
-        context.notificationManager.notify(
+        context.notify(
             Notifications.ID_LIBRARY_ERROR,
-            context.notificationBuilder(Notifications.CHANNEL_LIBRARY_ERROR) {
-                setContentTitle(context.resources.getString(R.string.notification_update_error, failed))
-                setContentText(context.getString(R.string.action_show_errors))
-                setSmallIcon(R.drawable.ic_tachi)
+            Notifications.CHANNEL_LIBRARY_ERROR,
+        ) {
+            setContentTitle(context.resources.getString(R.string.notification_update_error, failed))
+            setContentText(context.getString(R.string.action_show_errors))
+            setSmallIcon(R.drawable.ic_tachi)
 
-                setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
-            }
-                .build(),
-        )
+            setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
+        }
     }
 
     /**
@@ -139,16 +136,15 @@ class LibraryUpdateNotifier(private val context: Context) {
             return
         }
 
-        context.notificationManager.notify(
+        context.notify(
             Notifications.ID_LIBRARY_SKIPPED,
-            context.notificationBuilder(Notifications.CHANNEL_LIBRARY_SKIPPED) {
-                setContentTitle(context.resources.getString(R.string.notification_update_skipped, skipped))
-                setContentText(context.getString(R.string.learn_more))
-                setSmallIcon(R.drawable.ic_tachi)
-                setContentIntent(NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
-            }
-                .build(),
-        )
+            Notifications.CHANNEL_LIBRARY_SKIPPED,
+        ) {
+            setContentTitle(context.resources.getString(R.string.notification_update_skipped, skipped))
+            setContentText(context.getString(R.string.learn_more))
+            setSmallIcon(R.drawable.ic_tachi)
+            setContentIntent(NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
+        }
     }
 
     /**
@@ -158,38 +154,38 @@ class LibraryUpdateNotifier(private val context: Context) {
      */
     fun showUpdateNotifications(updates: List<Pair<Manga, Array<Chapter>>>) {
         // Parent group notification
-        context.notificationManager.notify(
+        context.notify(
             Notifications.ID_NEW_CHAPTERS,
-            context.notification(Notifications.CHANNEL_NEW_CHAPTERS) {
-                setContentTitle(context.getString(R.string.notification_new_chapters))
-                if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
-                    setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
-                } else {
-                    setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
+            Notifications.CHANNEL_NEW_CHAPTERS,
+        ) {
+            setContentTitle(context.getString(R.string.notification_new_chapters))
+            if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
+                setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
+            } else {
+                setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
 
-                    if (!preferences.hideNotificationContent().get()) {
-                        setStyle(
-                            NotificationCompat.BigTextStyle().bigText(
-                                updates.joinToString("\n") {
-                                    it.first.title.chop(NOTIF_TITLE_MAX_LEN)
-                                },
-                            ),
-                        )
-                    }
+                if (!preferences.hideNotificationContent().get()) {
+                    setStyle(
+                        NotificationCompat.BigTextStyle().bigText(
+                            updates.joinToString("\n") {
+                                it.first.title.chop(NOTIF_TITLE_MAX_LEN)
+                            },
+                        ),
+                    )
                 }
+            }
 
-                setSmallIcon(R.drawable.ic_tachi)
-                setLargeIcon(notificationBitmap)
+            setSmallIcon(R.drawable.ic_tachi)
+            setLargeIcon(notificationBitmap)
 
-                setGroup(Notifications.GROUP_NEW_CHAPTERS)
-                setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                setGroupSummary(true)
-                priority = NotificationCompat.PRIORITY_HIGH
+            setGroup(Notifications.GROUP_NEW_CHAPTERS)
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+            setGroupSummary(true)
+            priority = NotificationCompat.PRIORITY_HIGH
 
-                setContentIntent(getNotificationIntent())
-                setAutoCancel(true)
-            },
-        )
+            setContentIntent(getNotificationIntent())
+            setAutoCancel(true)
+        }
 
         // Per-manga notification
         if (!preferences.hideNotificationContent().get()) {
@@ -203,7 +199,7 @@ class LibraryUpdateNotifier(private val context: Context) {
 
     private suspend fun createNewChaptersNotification(manga: Manga, chapters: Array<Chapter>): Notification {
         val icon = getMangaIcon(manga)
-        return context.notification(Notifications.CHANNEL_NEW_CHAPTERS) {
+        return context.notificationBuilder(Notifications.CHANNEL_NEW_CHAPTERS) {
             setContentTitle(manga.title)
 
             val description = getNewChaptersDescription(chapters)
@@ -259,7 +255,7 @@ class LibraryUpdateNotifier(private val context: Context) {
                     ),
                 )
             }
-        }
+        }.build()
     }
 
     /**

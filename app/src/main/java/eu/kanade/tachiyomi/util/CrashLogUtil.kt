@@ -9,17 +9,13 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
-import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
+import eu.kanade.tachiyomi.util.system.notify
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.core.util.lang.withUIContext
 
 class CrashLogUtil(private val context: Context) {
-
-    private val notificationBuilder = context.notificationBuilder(Notifications.CHANNEL_CRASH_LOGS) {
-        setSmallIcon(R.drawable.ic_tachi)
-    }
 
     suspend fun dumpLogs() = withNonCancellableContext {
         try {
@@ -49,8 +45,12 @@ class CrashLogUtil(private val context: Context) {
     private fun showNotification(uri: Uri) {
         context.notificationManager.cancel(Notifications.ID_CRASH_LOGS)
 
-        with(notificationBuilder) {
+        context.notify(
+            Notifications.ID_CRASH_LOGS,
+            Notifications.CHANNEL_CRASH_LOGS,
+        ) {
             setContentTitle(context.getString(R.string.crash_log_saved))
+            setSmallIcon(R.drawable.ic_tachi)
 
             clearActions()
             addAction(
@@ -63,8 +63,6 @@ class CrashLogUtil(private val context: Context) {
                 context.getString(R.string.action_share),
                 NotificationReceiver.shareCrashLogPendingBroadcast(context, uri, Notifications.ID_CRASH_LOGS),
             )
-
-            context.notificationManager.notify(Notifications.ID_CRASH_LOGS, build())
         }
     }
 }
