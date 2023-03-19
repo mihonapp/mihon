@@ -8,7 +8,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
-import eu.kanade.tachiyomi.data.backup.BackupCreatorJob
+import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -57,7 +57,7 @@ object Migrations {
 
             // Always set up background tasks to ensure they're running
             LibraryUpdateJob.setupTask(context)
-            BackupCreatorJob.setupTask(context)
+            BackupCreateJob.setupTask(context)
 
             // Fresh install
             if (oldVersion == 0) {
@@ -99,7 +99,7 @@ object Migrations {
             if (oldVersion < 43) {
                 // Restore jobs after migrating from Evernote's job scheduler to WorkManager.
                 LibraryUpdateJob.setupTask(context)
-                BackupCreatorJob.setupTask(context)
+                BackupCreateJob.setupTask(context)
             }
             if (oldVersion < 44) {
                 // Reset sorting preference if using removed sort by source
@@ -249,7 +249,7 @@ object Migrations {
                 }
             }
             if (oldVersion < 76) {
-                BackupCreatorJob.setupTask(context)
+                BackupCreateJob.setupTask(context)
             }
             if (oldVersion < 77) {
                 val oldReaderTap = prefs.getBoolean("reader_tap", false)
@@ -284,7 +284,7 @@ object Migrations {
                 }
                 if (backupPreferences.backupInterval().get() == 0) {
                     backupPreferences.backupInterval().set(12)
-                    BackupCreatorJob.setupTask(context)
+                    BackupCreateJob.setupTask(context)
                 }
             }
             if (oldVersion < 85) {

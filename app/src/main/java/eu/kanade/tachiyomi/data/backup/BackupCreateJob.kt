@@ -23,7 +23,7 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
 
-class BackupCreatorJob(private val context: Context, workerParams: WorkerParameters) :
+class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     private val notifier = BackupNotifier(context)
@@ -41,7 +41,6 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
             logcat(LogPriority.ERROR, e) { "Not allowed to run on foreground service" }
         }
 
-        context.notificationManager.notify(Notifications.ID_BACKUP_PROGRESS, notifier.showBackupProgress().build())
         return try {
             val location = BackupManager(context).createBackup(uri, flags, isAutoBackup)
             if (!isAutoBackup) notifier.showBackupComplete(UniFile.fromUri(context, location.toUri()))
@@ -70,7 +69,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
             val interval = prefInterval ?: backupPreferences.backupInterval().get()
             val workManager = WorkManager.getInstance(context)
             if (interval > 0) {
-                val request = PeriodicWorkRequestBuilder<BackupCreatorJob>(
+                val request = PeriodicWorkRequestBuilder<BackupCreateJob>(
                     interval.toLong(),
                     TimeUnit.HOURS,
                     10,
@@ -92,7 +91,7 @@ class BackupCreatorJob(private val context: Context, workerParams: WorkerParamet
                 LOCATION_URI_KEY to uri.toString(),
                 BACKUP_FLAGS_KEY to flags,
             )
-            val request = OneTimeWorkRequestBuilder<BackupCreatorJob>()
+            val request = OneTimeWorkRequestBuilder<BackupCreateJob>()
                 .addTag(TAG_MANUAL)
                 .setInputData(inputData)
                 .build()

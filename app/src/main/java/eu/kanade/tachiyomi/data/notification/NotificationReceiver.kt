@@ -6,10 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.backup.BackupRestoreService
+import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.updater.AppUpdateService
@@ -82,10 +81,7 @@ class NotificationReceiver : BroadcastReceiver() {
                     "application/x-protobuf+gzip",
                     intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1),
                 )
-            ACTION_CANCEL_RESTORE -> cancelRestore(
-                context,
-                intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1),
-            )
+            ACTION_CANCEL_RESTORE -> cancelRestore(context)
             // Cancel library update and dismiss notification
             ACTION_CANCEL_LIBRARY_UPDATE -> cancelLibraryUpdate(context)
             // Cancel downloading app update
@@ -206,11 +202,9 @@ class NotificationReceiver : BroadcastReceiver() {
      * Method called when user wants to stop a backup restore job.
      *
      * @param context context of application
-     * @param notificationId id of notification
      */
-    private fun cancelRestore(context: Context, notificationId: Int) {
-        BackupRestoreService.stop(context)
-        ContextCompat.getMainExecutor(context).execute { dismissNotification(context, notificationId) }
+    private fun cancelRestore(context: Context) {
+        BackupRestoreJob.stop(context)
     }
 
     /**

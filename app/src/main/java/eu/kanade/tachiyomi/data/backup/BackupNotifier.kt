@@ -67,9 +67,7 @@ class BackupNotifier(private val context: Context) {
             setContentTitle(context.getString(R.string.backup_created))
             setContentText(unifile.filePath ?: unifile.name)
 
-            // Clear old actions if they exist
             clearActions()
-
             addAction(
                 R.drawable.ic_share_24dp,
                 context.getString(R.string.action_share),
@@ -91,12 +89,10 @@ class BackupNotifier(private val context: Context) {
             setProgress(maxAmount, progress, false)
             setOnlyAlertOnce(true)
 
-            // Clear old actions if they exist
             clearActions()
-
             addAction(
                 R.drawable.ic_close_24dp,
-                context.getString(R.string.action_stop),
+                context.getString(R.string.action_cancel),
                 NotificationReceiver.cancelRestorePendingBroadcast(context, Notifications.ID_RESTORE_PROGRESS),
             )
         }
@@ -132,9 +128,7 @@ class BackupNotifier(private val context: Context) {
             setContentTitle(context.getString(R.string.restore_completed))
             setContentText(context.resources.getQuantityString(R.plurals.restore_completed_message, errorCount, timeString, errorCount))
 
-            // Clear old actions if they exist
             clearActions()
-
             if (errorCount > 0 && !path.isNullOrEmpty() && !file.isNullOrEmpty()) {
                 val destFile = File(path, file)
                 val uri = destFile.getUriCompat(context)
