@@ -11,7 +11,6 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -37,8 +36,9 @@ import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
+import eu.kanade.tachiyomi.util.system.isRunning
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -47,7 +47,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.withContext
 import logcat.LogPriority
 import tachiyomi.core.preference.getAndSet
 import tachiyomi.core.util.lang.withIOContext
@@ -116,13 +115,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             }
 
             // Find a running manual worker. If exists, try again later
-            val otherRunningWorker = withContext(Dispatchers.IO) {
-                WorkManager.getInstance(context)
-                    .getWorkInfosByTag(WORK_NAME_MANUAL)
-                    .get()
-                    .find { it.state == WorkInfo.State.RUNNING }
-            }
-            if (otherRunningWorker != null) {
+            if (context.workManager.isRunning(WORK_NAME_MANUAL)) {
                 return Result.retry()
             }
         }
@@ -167,7 +160,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
         val notifier = LibraryUpdateNotifier(context)
-        return ForegroundInfo(Notifications.ID_LIBRARY_PROGRESS, notifier.progressNotificationBuilder.build())
+        return ForegroundInfo(
+            Notifications.ID_LIBRARY_PROGRESS,
+            notifier.progressNotificationBuilder.build(),
+        )
     }
 
     /**
@@ -539,7 +535,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         private const val KEY_TARGET = "target"
 
         fun cancelAllWorks(context: Context) {
-            WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
+            context.workManager.cancelAllWorkByTag(TAG)
         }
 
         fun setupTask(
@@ -568,9 +564,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
                     .build()
 
-                WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_NAME_AUTO, ExistingPeriodicWorkPolicy.UPDATE, request)
+                context.workManager.enqueueUniquePeriodicWork(WORK_NAME_AUTO, ExistingPeriodicWorkPolicy.UPDATE, request)
             } else {
-                WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME_AUTO)
+                context.workManager.cancelUniqueWork(WORK_NAME_AUTO)
             }
         }
 
@@ -579,9 +575,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             category: Category? = null,
             target: Target = Target.CHAPTERS,
         ): Boolean {
-            val wm = WorkManager.getInstance(context)
-            val infos = wm.getWorkInfosByTag(TAG).get()
-            if (infos.find { it.state == WorkInfo.State.RUNNING } != null) {
+            val wm = context.workManager
+            if (wm.isRunning(TAG)) {
                 // Already running either as a scheduled or manual job
                 return false
             }
@@ -601,7 +596,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         }
 
         fun stop(context: Context) {
-            val wm = WorkManager.getInstance(context)
+            val wm = context.workManager
             val workQuery = WorkQuery.Builder.fromTags(listOf(TAG))
                 .addStates(listOf(WorkInfo.State.RUNNING))
                 .build()

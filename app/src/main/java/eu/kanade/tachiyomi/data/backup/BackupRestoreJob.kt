@@ -7,13 +7,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.notificationManager
+import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
@@ -60,8 +60,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
     companion object {
         fun isRunning(context: Context): Boolean {
-            val list = WorkManager.getInstance(context).getWorkInfosByTag(TAG).get()
-            return list.find { it.state == WorkInfo.State.RUNNING } != null
+            return context.workManager.isRunning(TAG)
         }
 
         fun start(context: Context, uri: Uri) {
@@ -72,12 +71,11 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
                 .addTag(TAG)
                 .setInputData(inputData)
                 .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, request)
+            context.workManager.enqueueUniqueWork(TAG, ExistingWorkPolicy.KEEP, request)
         }
 
         fun stop(context: Context) {
-            WorkManager.getInstance(context).cancelUniqueWork(TAG)
+            context.workManager.cancelUniqueWork(TAG)
         }
     }
 }

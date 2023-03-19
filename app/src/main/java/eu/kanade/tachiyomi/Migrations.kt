@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import androidx.work.WorkManager
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.workManager
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
 import tachiyomi.domain.backup.service.BackupPreferences
@@ -331,8 +331,8 @@ object Migrations {
             }
             if (oldVersion < 97) {
                 // Removed background jobs
-                WorkManager.getInstance(context).cancelAllWorkByTag("UpdateChecker")
-                WorkManager.getInstance(context).cancelAllWorkByTag("ExtensionUpdate")
+                context.workManager.cancelAllWorkByTag("UpdateChecker")
+                context.workManager.cancelAllWorkByTag("ExtensionUpdate")
                 prefs.edit {
                     remove("automatic_ext_updates")
                 }
