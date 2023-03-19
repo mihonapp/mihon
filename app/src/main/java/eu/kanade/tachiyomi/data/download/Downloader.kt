@@ -545,14 +545,12 @@ class Downloader(
         }
 
         download.status = if (downloadedImagesCount == downloadPageCount) {
-            // TODO: Uncomment when #8537 is resolved
-//            val chapterUrl = download.source.getChapterUrl(download.chapter)
-//            createComicInfoFile(
-//                tmpDir,
-//                download.manga,
-//                download.chapter.toDomainChapter()!!,
-//                chapterUrl,
-//            )
+            createComicInfoFile(
+                tmpDir,
+                download.manga,
+                download.chapter,
+                download.source,
+            )
 
             // Only rename the directory if it's downloaded
             if (downloadPreferences.saveChaptersAsCBZ().get()) {
@@ -606,23 +604,19 @@ class Downloader(
 
     /**
      * Creates a ComicInfo.xml file inside the given directory.
-     *
-     * @param dir the directory in which the ComicInfo file will be generated.
-     * @param manga the manga.
-     * @param chapter the chapter.
-     * @param chapterUrl the resolved URL for the chapter.
      */
     private fun createComicInfoFile(
         dir: UniFile,
         manga: Manga,
         chapter: Chapter,
-        chapterUrl: String,
+        source: HttpSource,
     ) {
+        val chapterUrl = source.getChapterUrl(chapter.toSChapter())
         val comicInfo = getComicInfo(manga, chapter, chapterUrl)
-        val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
         // Remove the old file
         dir.findFile(COMIC_INFO_FILE)?.delete()
         dir.createFile(COMIC_INFO_FILE).openOutputStream().use {
+            val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
             it.write(comicInfoString.toByteArray())
         }
     }
