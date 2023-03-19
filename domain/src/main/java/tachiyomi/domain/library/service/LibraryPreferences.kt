@@ -19,7 +19,7 @@ class LibraryPreferences(
 
     fun landscapeColumns() = preferenceStore.getInt("pref_library_columns_landscape_key", 0)
 
-    fun libraryUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 24)
+    fun libraryUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
     fun libraryUpdateLastTimestamp() = preferenceStore.getLong("library_update_last_timestamp", 0L)
 
     fun libraryUpdateDeviceRestriction() = preferenceStore.getStringSet(
