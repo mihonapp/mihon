@@ -1,8 +1,8 @@
 package eu.kanade.tachiyomi.data.backup.models
 
-import eu.kanade.tachiyomi.data.database.models.TrackImpl
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
+import tachiyomi.domain.track.model.Track
 
 @Serializable
 data class BackupTracking(
@@ -29,25 +29,26 @@ data class BackupTracking(
     @ProtoNumber(100) var mediaId: Long = 0,
 ) {
 
-    fun getTrackingImpl(): TrackImpl {
-        return TrackImpl().apply {
-            sync_id = this@BackupTracking.syncId
-            @Suppress("DEPRECATION")
-            media_id = if (this@BackupTracking.mediaIdInt != 0) {
+    fun getTrackingImpl(): Track {
+        return Track(
+            id = -1,
+            mangaId = -1,
+            syncId = this@BackupTracking.syncId.toLong(),
+            remoteId = if (this@BackupTracking.mediaIdInt != 0) {
                 this@BackupTracking.mediaIdInt.toLong()
             } else {
                 this@BackupTracking.mediaId
-            }
-            library_id = this@BackupTracking.libraryId
-            title = this@BackupTracking.title
-            last_chapter_read = this@BackupTracking.lastChapterRead
-            total_chapters = this@BackupTracking.totalChapters
-            score = this@BackupTracking.score
-            status = this@BackupTracking.status
-            started_reading_date = this@BackupTracking.startedReadingDate
-            finished_reading_date = this@BackupTracking.finishedReadingDate
-            tracking_url = this@BackupTracking.trackingUrl
-        }
+            },
+            libraryId = this@BackupTracking.libraryId,
+            title = this@BackupTracking.title,
+            lastChapterRead = this@BackupTracking.lastChapterRead.toDouble(),
+            totalChapters = this@BackupTracking.totalChapters.toLong(),
+            score = this@BackupTracking.score,
+            status = this@BackupTracking.status.toLong(),
+            startDate = this@BackupTracking.startedReadingDate,
+            finishDate = this@BackupTracking.finishedReadingDate,
+            remoteUrl = this@BackupTracking.trackingUrl,
+        )
     }
 }
 

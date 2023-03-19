@@ -7,13 +7,13 @@ import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
-import eu.kanade.tachiyomi.data.database.models.Chapter
-import eu.kanade.tachiyomi.data.database.models.Manga
-import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.Job
 import okio.source
+import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.track.model.Track
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -127,7 +127,7 @@ class BackupRestorer(
             } else {
                 // Manga in database
                 // Copy information from manga already in database
-                backupManager.restoreExistingManga(manga, dbManga)
+                val manga = backupManager.restoreExistingManga(manga, dbManga)
                 // Fetch rest of manga information
                 restoreNewManga(manga, chapters, categories, history, tracks, backupCategories)
             }
@@ -156,8 +156,6 @@ class BackupRestorer(
         backupCategories: List<BackupCategory>,
     ) {
         val fetchedManga = backupManager.restoreNewManga(manga)
-        fetchedManga.id ?: return
-
         backupManager.restoreChapters(fetchedManga, chapters)
         restoreExtras(fetchedManga, categories, history, tracks, backupCategories)
     }
