@@ -1,13 +1,18 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.Manifest
+import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationChannelGroupCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.PermissionChecker
+import androidx.core.content.getSystemService
 import eu.kanade.tachiyomi.R
+
+val Context.notificationManager: NotificationManager
+    get() = getSystemService()!!
 
 fun Context.notify(id: Int, channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null) {
     if (PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {

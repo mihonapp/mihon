@@ -1,9 +1,17 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.content.Context
+import android.provider.Settings
 import android.view.ViewPropertyAnimator
 import android.view.animation.Animation
 import androidx.constraintlayout.motion.widget.MotionScene.Transition
+
+/**
+ * Gets the duration multiplier for general animations on the device
+ * @see Settings.Global.ANIMATOR_DURATION_SCALE
+ */
+val Context.animatorDurationScale: Float
+    get() = Settings.Global.getFloat(this.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
 
 /** Scale the duration of this [Animation] by [Context.animatorDurationScale] */
 fun Animation.applySystemAnimatorScale(context: Context) {
