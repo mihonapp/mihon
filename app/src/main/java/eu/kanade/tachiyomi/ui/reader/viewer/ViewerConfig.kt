@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
-import eu.kanade.tachiyomi.data.preference.PreferenceValues.TappingInvertMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -17,7 +16,7 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
     var navigationModeChangedListener: (() -> Unit)? = null
 
-    var tappingInverted = TappingInvertMode.NONE
+    var tappingInverted = ReaderPreferences.TappingInvertMode.NONE
     var longTapEnabled = true
     var usePageTransitions = false
     var doubleTapAnimDuration = 500

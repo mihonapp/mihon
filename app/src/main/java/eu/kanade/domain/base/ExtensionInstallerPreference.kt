@@ -1,7 +1,7 @@
 package eu.kanade.domain.base
 
 import android.content.Context
-import eu.kanade.tachiyomi.data.preference.PreferenceValues.ExtensionInstaller
+import eu.kanade.domain.base.BasePreferences.ExtensionInstaller
 import eu.kanade.tachiyomi.util.system.hasMiuiPackageInstaller
 import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import kotlinx.coroutines.CoroutineScope

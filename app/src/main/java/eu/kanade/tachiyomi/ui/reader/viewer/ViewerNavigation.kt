@@ -4,7 +4,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.lang.invert
 
 abstract class ViewerNavigation {
@@ -21,8 +21,8 @@ abstract class ViewerNavigation {
         val rectF: RectF,
         val type: NavigationRegion,
     ) {
-        fun invert(invertMode: PreferenceValues.TappingInvertMode): Region {
-            if (invertMode == PreferenceValues.TappingInvertMode.NONE) return this
+        fun invert(invertMode: ReaderPreferences.TappingInvertMode): Region {
+            if (invertMode == ReaderPreferences.TappingInvertMode.NONE) return this
             return this.copy(
                 rectF = this.rectF.invert(invertMode),
             )
@@ -33,7 +33,7 @@ abstract class ViewerNavigation {
 
     abstract var regions: List<Region>
 
-    var invertMode: PreferenceValues.TappingInvertMode = PreferenceValues.TappingInvertMode.NONE
+    var invertMode: ReaderPreferences.TappingInvertMode = ReaderPreferences.TappingInvertMode.NONE
 
     fun getAction(pos: PointF): NavigationRegion {
         val x = pos.x

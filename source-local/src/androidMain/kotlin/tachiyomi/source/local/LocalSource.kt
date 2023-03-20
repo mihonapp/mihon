@@ -1,10 +1,8 @@
 package tachiyomi.source.local
 
 import android.content.Context
-import eu.kanade.domain.manga.model.COMIC_INFO_FILE
-import eu.kanade.domain.manga.model.ComicInfo
-import eu.kanade.domain.manga.model.copyFromComicInfo
 import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
@@ -19,11 +17,15 @@ import logcat.LogPriority
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
 import rx.Observable
+import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
+import tachiyomi.core.metadata.comicinfo.ComicInfo
+import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
 import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.ImageUtil
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.service.ChapterRecognition
+import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.filter.OrderBy
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.Archive
@@ -349,3 +351,7 @@ actual class LocalSource(
         private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
     }
 }
+
+fun Manga.isLocal(): Boolean = source == LocalSource.ID
+
+fun Source.isLocal(): Boolean = id == LocalSource.ID

@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.installer.PackageInstallerInstaller
 import eu.kanade.tachiyomi.extension.installer.ShizukuInstaller
@@ -36,7 +36,7 @@ class ExtensionInstallService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val uri = intent?.data
         val id = intent?.getLongExtra(EXTRA_DOWNLOAD_ID, -1)?.takeIf { it != -1L }
-        val installerUsed = intent?.getSerializableExtraCompat<PreferenceValues.ExtensionInstaller>(EXTRA_INSTALLER)
+        val installerUsed = intent?.getSerializableExtraCompat<BasePreferences.ExtensionInstaller>(EXTRA_INSTALLER)
         if (uri == null || id == null || installerUsed == null) {
             stopSelf()
             return START_NOT_STICKY
@@ -44,8 +44,8 @@ class ExtensionInstallService : Service() {
 
         if (installer == null) {
             installer = when (installerUsed) {
-                PreferenceValues.ExtensionInstaller.PACKAGEINSTALLER -> PackageInstallerInstaller(this)
-                PreferenceValues.ExtensionInstaller.SHIZUKU -> ShizukuInstaller(this)
+                BasePreferences.ExtensionInstaller.PACKAGEINSTALLER -> PackageInstallerInstaller(this)
+                BasePreferences.ExtensionInstaller.SHIZUKU -> ShizukuInstaller(this)
                 else -> {
                     logcat(LogPriority.ERROR) { "Not implemented for installer $installerUsed" }
                     stopSelf()
@@ -71,7 +71,7 @@ class ExtensionInstallService : Service() {
             context: Context,
             downloadId: Long,
             uri: Uri,
-            installer: PreferenceValues.ExtensionInstaller,
+            installer: BasePreferences.ExtensionInstaller,
         ): Intent {
             return Intent(context, ExtensionInstallService::class.java)
                 .setDataAndType(uri, ExtensionInstaller.APK_MIME)

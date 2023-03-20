@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import eu.kanade.domain.manga.model.orientationType
 import eu.kanade.domain.manga.model.readingModeType
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.preference.PreferenceValues
 import eu.kanade.tachiyomi.databinding.ReaderReadingModeSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
@@ -71,7 +70,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.webtoonPrefsGroup.root.isVisible = false
         binding.pagerPrefsGroup.root.isVisible = true
 
-        binding.pagerPrefsGroup.tappingInverted.bindToPreference(readerPreferences.pagerNavInverted(), PreferenceValues.TappingInvertMode::class.java)
+        binding.pagerPrefsGroup.tappingInverted.bindToPreference(readerPreferences.pagerNavInverted(), ReaderPreferences.TappingInvertMode::class.java)
         binding.pagerPrefsGroup.navigatePan.bindToPreference(readerPreferences.navigateToPan())
 
         binding.pagerPrefsGroup.pagerNav.bindToPreference(readerPreferences.navigationModePager())
@@ -107,7 +106,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.pagerPrefsGroup.root.isVisible = false
         binding.webtoonPrefsGroup.root.isVisible = true
 
-        binding.webtoonPrefsGroup.tappingInverted.bindToPreference(readerPreferences.webtoonNavInverted(), PreferenceValues.TappingInvertMode::class.java)
+        binding.webtoonPrefsGroup.tappingInverted.bindToPreference(readerPreferences.webtoonNavInverted(), ReaderPreferences.TappingInvertMode::class.java)
 
         binding.webtoonPrefsGroup.webtoonNav.bindToPreference(readerPreferences.navigationModeWebtoon())
         readerPreferences.navigationModeWebtoon()

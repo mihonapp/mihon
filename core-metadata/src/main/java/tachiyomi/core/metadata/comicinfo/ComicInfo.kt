@@ -1,4 +1,4 @@
-package eu.kanade.domain.manga.model
+package tachiyomi.core.metadata.comicinfo
 
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.serialization.Serializable

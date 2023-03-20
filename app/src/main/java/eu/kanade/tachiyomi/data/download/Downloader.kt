@@ -4,8 +4,6 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.chapter.model.toSChapter
-import eu.kanade.domain.manga.model.COMIC_INFO_FILE
-import eu.kanade.domain.manga.model.ComicInfo
 import eu.kanade.domain.manga.model.getComicInfo
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
@@ -39,6 +37,8 @@ import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
+import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.util.lang.awaitSingle
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNow
@@ -66,11 +66,6 @@ import java.util.zip.ZipOutputStream
  *
  * The queue manipulation must be done in one thread (currently the main thread) to avoid unexpected
  * behavior, but it's safe to read it from multiple threads.
- *
- * @param context the application context.
- * @param provider the downloads directory provider.
- * @param cache the downloads cache, used to add the downloads to the cache after their completion.
- * @param sourceManager the source manager.
  */
 class Downloader(
     private val context: Context,
@@ -90,7 +85,7 @@ class Downloader(
     /**
      * Queue where active downloads are kept.
      */
-    val _queueState = MutableStateFlow<List<Download>>(emptyList())
+    private val _queueState = MutableStateFlow<List<Download>>(emptyList())
     val queueState = _queueState.asStateFlow()
 
     /**
@@ -140,7 +135,7 @@ class Downloader(
 
         initializeSubscription()
 
-        val pending = queueState.value.filter { it: Download -> it.status != Download.State.DOWNLOADED }
+        val pending = queueState.value.filter { it.status != Download.State.DOWNLOADED }
         pending.forEach { if (it.status != Download.State.QUEUE) it.status = Download.State.QUEUE }
 
         isPaused = false
@@ -266,7 +261,7 @@ class Downloader(
         // Runs in main thread (synchronization needed).
         val chaptersToQueue = chaptersWithoutDir.await()
             // Filter out those already enqueued.
-            .filter { chapter -> queueState.value.none { it: Download -> it.chapter.id == chapter.id } }
+            .filter { chapter -> queueState.value.none { it.chapter.id == chapter.id } }
             // Create a download for each one.
             .map { Download(source, manga, it) }
 
@@ -280,7 +275,7 @@ class Downloader(
 
             // Start downloader if needed
             if (autoStart && wasEmpty) {
-                val queuedDownloads = queueState.value.count { it: Download -> it.source !is UnmeteredSource }
+                val queuedDownloads = queueState.value.count { it.source !is UnmeteredSource }
                 val maxDownloadsFromSource = queueState.value
                     .groupBy { it.source }
                     .filterKeys { it !is UnmeteredSource }
@@ -639,10 +634,10 @@ class Downloader(
      * Returns true if all the queued downloads are in DOWNLOADED or ERROR state.
      */
     private fun areAllDownloadsFinished(): Boolean {
-        return queueState.value.none { it: Download -> it.status.value <= Download.State.DOWNLOADING.value }
+        return queueState.value.none { it.status.value <= Download.State.DOWNLOADING.value }
     }
 
-    fun addAllToQueue(downloads: List<Download>) {
+    private fun addAllToQueue(downloads: List<Download>) {
         _queueState.update {
             downloads.forEach { download ->
                 download.status = Download.State.QUEUE
@@ -652,7 +647,7 @@ class Downloader(
         }
     }
 
-    fun removeFromQueue(download: Download) {
+    private fun removeFromQueue(download: Download) {
         _queueState.update {
             store.remove(download)
             if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
@@ -672,7 +667,7 @@ class Downloader(
         queueState.value.filter { it.manga.id == manga.id }.forEach { removeFromQueue(it) }
     }
 
-    fun _clearQueue() {
+    private fun _clearQueue() {
         _queueState.update {
             it.forEach { download ->
                 if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
