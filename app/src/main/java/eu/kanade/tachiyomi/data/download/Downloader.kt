@@ -495,6 +495,8 @@ class Downloader(
     }
 
     private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
+        if (!downloadPreferences.splitTallImages().get()) return
+
         try {
             val filenamePrefix = String.format("%03d", page.number)
             val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }

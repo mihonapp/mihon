@@ -443,6 +443,7 @@
     </plurals>
     <string name="download_ahead_info">Only works on entries in library and if the current chapter plus the next one are already downloaded</string>
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
+    <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
 
     <!-- Tracking section -->
