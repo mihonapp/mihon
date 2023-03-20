@@ -28,6 +28,7 @@ class AndroidSourceManager(
     private val extensionManager: ExtensionManager,
     private val sourceRepository: SourceDataRepository,
 ) : SourceManager {
+
     private val downloadManager: DownloadManager by injectLazy()
 
     private val scope = CoroutineScope(Job() + Dispatchers.IO)

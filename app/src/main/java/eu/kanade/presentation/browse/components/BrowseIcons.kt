@@ -33,7 +33,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.domain.source.model.Source
-import tachiyomi.source.local.LocalSource
+import tachiyomi.source.local.isLocal
 
 private val defaultModifier = Modifier
     .height(40.dp)
@@ -62,7 +62,7 @@ fun SourceIcon(
                 modifier = modifier.then(defaultModifier),
             )
         }
-        source.id == LocalSource.ID -> {
+        source.isLocal() -> {
             Image(
                 painter = painterResource(R.mipmap.ic_local_source),
                 contentDescription = null,

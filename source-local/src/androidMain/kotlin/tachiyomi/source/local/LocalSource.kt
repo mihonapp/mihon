@@ -38,9 +38,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
+import kotlin.time.Duration.Companion.days
 import com.github.junrar.Archive as JunrarArchive
+import tachiyomi.domain.source.model.Source as DomainSource
 
 actual class LocalSource(
     private val context: Context,
@@ -348,10 +349,12 @@ actual class LocalSource(
         const val ID = 0L
         const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
 
-        private val LATEST_THRESHOLD = TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)
+        private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }
 }
 
 fun Manga.isLocal(): Boolean = source == LocalSource.ID
 
 fun Source.isLocal(): Boolean = id == LocalSource.ID
+
+fun DomainSource.isLocal(): Boolean = id == LocalSource.ID

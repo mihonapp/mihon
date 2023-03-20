@@ -35,7 +35,7 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.plus
-import tachiyomi.source.local.LocalSource
+import tachiyomi.source.local.isLocal
 
 @Composable
 fun SourcesScreen(
@@ -175,7 +175,7 @@ fun SourceOptionsDialog(
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
                 )
-                if (source.id != LocalSource.ID) {
+                if (source.isLocal()) {
                     Text(
                         text = stringResource(R.string.action_disable),
                         modifier = Modifier

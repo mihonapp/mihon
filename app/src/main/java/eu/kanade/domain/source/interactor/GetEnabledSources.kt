@@ -8,7 +8,7 @@ import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Pins
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.repository.SourceRepository
-import tachiyomi.source.local.LocalSource
+import tachiyomi.source.local.isLocal
 
 class GetEnabledSources(
     private val repository: SourceRepository,
@@ -24,7 +24,7 @@ class GetEnabledSources(
             repository.getSources(),
         ) { pinnedSourceIds, enabledLanguages, disabledSources, lastUsedSource, sources ->
             sources
-                .filter { it.lang in enabledLanguages || it.id == LocalSource.ID }
+                .filter { it.lang in enabledLanguages || it.isLocal() }
                 .filterNot { it.id.toString() in disabledSources }
                 .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
                 .flatMap {
