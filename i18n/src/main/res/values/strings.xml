@@ -585,8 +585,8 @@
     <string name="updating_category">Updating category</string>
     <string name="manga_from_library">From library</string>
     <string name="downloaded_chapters">Downloaded chapters</string>
-    <!-- Like watchface complications. For badges/buttons on library covers. -->
-    <string name="complications_header">Complications</string>
+    <!-- For badges/buttons on library covers. -->
+    <string name="overlay_header">Overlay</string>
     <string name="tabs_header">Tabs</string>
 
     <!-- Browse source -->

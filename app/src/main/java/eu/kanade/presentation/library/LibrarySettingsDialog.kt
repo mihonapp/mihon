@@ -184,7 +184,7 @@ private fun ColumnScope.DisplayPage(
         )
     }
 
-    HeadingItem(R.string.complications_header)
+    HeadingItem(R.string.overlay_header)
     val downloadBadge by screenModel.libraryPreferences.downloadBadge().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.action_display_download_badge),
