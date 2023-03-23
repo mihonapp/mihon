@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notificationManager
+import eu.kanade.tachiyomi.util.system.notify
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -34,7 +35,7 @@ class BackupNotifier(private val context: Context) {
     }
 
     private fun NotificationCompat.Builder.show(id: Int) {
-        context.notificationManager.notify(id, build())
+        context.notify(id, build())
     }
 
     fun showBackupProgress(): NotificationCompat.Builder {

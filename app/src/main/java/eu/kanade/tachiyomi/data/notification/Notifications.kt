@@ -99,12 +99,12 @@ object Notifications {
      * @param context The application context.
      */
     fun createChannels(context: Context) {
-        val notificationService = NotificationManagerCompat.from(context)
+        val notificationManager = NotificationManagerCompat.from(context)
 
         // Delete old notification channels
-        deprecatedChannels.forEach(notificationService::deleteNotificationChannel)
+        deprecatedChannels.forEach(notificationManager::deleteNotificationChannel)
 
-        notificationService.createNotificationChannelGroupsCompat(
+        notificationManager.createNotificationChannelGroupsCompat(
             listOf(
                 buildNotificationChannelGroup(GROUP_BACKUP_RESTORE) {
                     setName(context.getString(R.string.label_backup))
@@ -121,7 +121,7 @@ object Notifications {
             ),
         )
 
-        notificationService.createNotificationChannelsCompat(
+        notificationManager.createNotificationChannelsCompat(
             listOf(
                 buildNotificationChannel(CHANNEL_COMMON, IMPORTANCE_LOW) {
                     setName(context.getString(R.string.channel_common))

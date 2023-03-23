@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationBuilder
-import eu.kanade.tachiyomi.util.system.notificationManager
+import eu.kanade.tachiyomi.util.system.notify
 
 internal class AppUpdateNotifier(private val context: Context) {
 
@@ -24,7 +24,7 @@ internal class AppUpdateNotifier(private val context: Context) {
      * @param id id of the notification channel.
      */
     private fun NotificationCompat.Builder.show(id: Int = Notifications.ID_APP_UPDATER) {
-        context.notificationManager.notify(id, build())
+        context.notify(id, build())
     }
 
     @SuppressLint("LaunchActivityFromNotification")
