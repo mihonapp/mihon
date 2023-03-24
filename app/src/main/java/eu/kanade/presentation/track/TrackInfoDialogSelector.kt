@@ -145,12 +145,14 @@ fun TrackDateSelector(
     )
     AlertDialogContent(
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+        title = { Text(text = title) },
         content = {
             Column {
                 DatePicker(
                     state = pickerState,
-                    title = { Text(text = title) },
                     dateValidator = dateValidator,
+                    title = null,
+                    headline = null,
                     showModeToggle = false,
                 )
 
