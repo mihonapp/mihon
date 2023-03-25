@@ -150,10 +150,12 @@ object SettingsReaderScreen : SearchableSettings {
         val navModePref = readerPreferences.navigationModePager()
         val imageScaleTypePref = readerPreferences.imageScaleType()
         val dualPageSplitPref = readerPreferences.dualPageSplitPaged()
+        val rotateToFitPref = readerPreferences.dualPageRotateToFit()
 
         val navMode by navModePref.collectAsState()
         val imageScaleType by imageScaleTypePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
+        val rotateToFit by rotateToFitPref.collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.pager_viewer),
@@ -216,12 +218,29 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = dualPageSplitPref,
                     title = stringResource(R.string.pref_dual_page_split),
+                    onValueChanged = {
+                        rotateToFitPref.set(false)
+                        true
+                    },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.dualPageInvertPaged(),
                     title = stringResource(R.string.pref_dual_page_invert),
                     subtitle = stringResource(R.string.pref_dual_page_invert_summary),
                     enabled = dualPageSplit,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = rotateToFitPref,
+                    title = stringResource(R.string.pref_page_rotate),
+                    onValueChanged = {
+                        dualPageSplitPref.set(false)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.dualPageRotateToFitInvert(),
+                    title = stringResource(R.string.pref_page_rotate_invert),
+                    enabled = rotateToFit,
                 ),
             ),
         )

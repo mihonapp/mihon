@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -149,6 +150,23 @@ object ImageUtil {
         half.compress(Bitmap.CompressFormat.JPEG, 100, output)
 
         return ByteArrayInputStream(output.toByteArray())
+    }
+
+    fun rotateImage(imageStream: InputStream, degrees: Float): InputStream {
+        val imageBytes = imageStream.readBytes()
+
+        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        val rotated = rotateBitMap(imageBitmap, degrees)
+
+        val output = ByteArrayOutputStream()
+        rotated.compress(Bitmap.CompressFormat.JPEG, 100, output)
+
+        return ByteArrayInputStream(output.toByteArray())
+    }
+
+    private fun rotateBitMap(bitmap: Bitmap, degrees: Float): Bitmap {
+        val matrix = Matrix().apply { postRotate(degrees) }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     /**

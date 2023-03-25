@@ -92,11 +92,26 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
         binding.pagerPrefsGroup.cropBorders.bindToPreference(readerPreferences.cropBorders())
 
         binding.pagerPrefsGroup.dualPageSplit.bindToPreference(readerPreferences.dualPageSplitPaged())
-        // Makes it so that dual page invert gets hidden away when dual page split is turned off
         readerPreferences.dualPageSplitPaged()
-            .asHotFlow { binding.pagerPrefsGroup.dualPageInvert.isVisible = it }
+            .asHotFlow {
+                binding.pagerPrefsGroup.dualPageInvert.isVisible = it
+                if (it) {
+                    binding.pagerPrefsGroup.dualPageRotateToFit.isChecked = false
+                }
+            }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.pagerPrefsGroup.dualPageInvert.bindToPreference(readerPreferences.dualPageInvertPaged())
+
+        binding.pagerPrefsGroup.dualPageRotateToFit.bindToPreference(readerPreferences.dualPageRotateToFit())
+        readerPreferences.dualPageRotateToFit()
+            .asHotFlow {
+                binding.pagerPrefsGroup.dualPageRotateToFitInvert.isVisible = it
+                if (it) {
+                    binding.pagerPrefsGroup.dualPageSplit.isChecked = false
+                }
+            }
+            .launchIn((context as ReaderActivity).lifecycleScope)
+        binding.pagerPrefsGroup.dualPageRotateToFitInvert.bindToPreference(readerPreferences.dualPageRotateToFitInvert())
     }
 
     /**

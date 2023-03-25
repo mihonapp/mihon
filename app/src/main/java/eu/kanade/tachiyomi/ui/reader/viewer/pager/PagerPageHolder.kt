@@ -180,6 +180,10 @@ class PagerPageHolder(
     }
 
     private fun process(page: ReaderPage, imageStream: BufferedInputStream): InputStream {
+        if (viewer.config.dualPageRotateToFit) {
+            return rotateDualPage(imageStream)
+        }
+
         if (!viewer.config.dualPageSplit) {
             return imageStream
         }
@@ -196,6 +200,16 @@ class PagerPageHolder(
         onPageSplit(page)
 
         return splitInHalf(imageStream)
+    }
+
+    private fun rotateDualPage(imageStream: BufferedInputStream): InputStream {
+        val isDoublePage = ImageUtil.isWideImage(imageStream)
+        return if (isDoublePage) {
+            val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
+            ImageUtil.rotateImage(imageStream, rotation)
+        } else {
+            imageStream
+        }
     }
 
     private fun splitInHalf(imageStream: InputStream): InputStream {
