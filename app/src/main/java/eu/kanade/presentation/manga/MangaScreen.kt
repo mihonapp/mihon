@@ -65,6 +65,7 @@ import eu.kanade.tachiyomi.ui.manga.chapterDecimalFormat
 import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.service.countMissingChapters
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.presentation.core.components.LazyColumn
@@ -393,6 +394,7 @@ private fun MangaScreenSmallImpl(
                         ChapterHeader(
                             enabled = chapters.fastAll { !it.selected },
                             chapterCount = chapters.size,
+                            missingChapters = countMissingChapters(chapters.map { it.chapter.chapterNumber }),
                             onClick = onFilterClicked,
                         )
                     }
@@ -604,6 +606,7 @@ fun MangaScreenLargeImpl(
                                 ChapterHeader(
                                     enabled = chapters.fastAll { !it.selected },
                                     chapterCount = chapters.size,
+                                    missingChapters = countMissingChapters(chapters.map { it.chapter.chapterNumber }),
                                     onClick = onFilterButtonClicked,
                                 )
                             }
