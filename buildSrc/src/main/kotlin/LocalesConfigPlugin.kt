@@ -3,25 +3,22 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.TaskContainerScope
 
+private val emptyResourcesElement = "<resources>\\s*</resources>|<resources/>".toRegex()
+private val valuesPrefix = "values(-(b\\+)?)?".toRegex()
+
 fun TaskContainerScope.registerLocalesConfigTask(project: Project): TaskProvider<Task> {
     return with(project) {
         register("generateLocalesConfig") {
-            val emptyResourcesElement = "<resources>\\s*</resources>|<resources/>".toRegex()
-            val valuesPrefix = "values-?".toRegex()
-
             val languages = fileTree("$projectDir/src/main/res/")
-                .matching {
-                    include("**/strings.xml")
-                }
-                .filterNot {
-                    it.readText().contains(emptyResourcesElement)
-                }
+                .matching { include("**/strings.xml") }
+                .filterNot { it.readText().contains(emptyResourcesElement) }
                 .map { it.parentFile.name }
                 .sorted()
                 .joinToString(separator = "\n") {
                     val language = it
                         .replace(valuesPrefix, "")
                         .replace("-r", "-")
+                        .replace("+", "-")
                         .takeIf(String::isNotBlank) ?: "en"
                     "   <locale android:name=\"$language\"/>"
                 }
