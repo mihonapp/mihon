@@ -33,12 +33,7 @@ class GlobalSearchScreen(
             navigateUp = navigator::pop,
             onChangeSearchQuery = screenModel::updateSearchQuery,
             onSearch = screenModel::search,
-            getManga = { source, manga ->
-                screenModel.getManga(
-                    source = source,
-                    initialManga = manga,
-                )
-            },
+            getManga = { screenModel.getManga(it) },
             onClickSource = {
                 if (!screenModel.incognitoMode.get()) {
                     screenModel.lastUsedSourceId.set(it.id)

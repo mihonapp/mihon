@@ -21,7 +21,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 fun MigrateSearchScreen(
     navigateUp: () -> Unit,
     state: MigrateSearchState,
-    getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
+    getManga: @Composable (Manga) -> State<Manga>,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
     onClickSource: (CatalogueSource) -> Unit,
@@ -58,7 +58,7 @@ private fun MigrateSearchContent(
     sourceId: Long,
     items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,
-    getManga: @Composable (CatalogueSource, Manga) -> State<Manga>,
+    getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
@@ -85,7 +85,7 @@ private fun MigrateSearchContent(
 
                             GlobalSearchCardRow(
                                 titles = result.result,
-                                getManga = { getManga(source, it) },
+                                getManga = { getManga(it) },
                                 onClick = onClickItem,
                                 onLongClick = onLongClickItem,
                             )
