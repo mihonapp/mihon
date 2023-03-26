@@ -9,9 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.ReaderGeneralSettingsBinding
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.preference.asHotFlow
 import eu.kanade.tachiyomi.util.preference.bindToPreference
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
 
 /**
@@ -37,8 +37,8 @@ class ReaderGeneralSettings @JvmOverloads constructor(context: Context, attrs: A
         binding.backgroundColor.bindToIntPreference(readerPreferences.readerTheme(), R.array.reader_themes_values)
         binding.showPageNumber.bindToPreference(readerPreferences.showPageNumber())
         binding.fullscreen.bindToPreference(readerPreferences.fullscreen())
-        readerPreferences.fullscreen()
-            .asHotFlow {
+        readerPreferences.fullscreen().changes()
+            .onEach {
                 // If the preference is explicitly disabled, that means the setting was configured since there is a cutout
                 binding.cutoutShort.isVisible = it && ((context as ReaderActivity).hasCutout || !readerPreferences.cutoutShort().get())
                 binding.cutoutShort.bindToPreference(readerPreferences.cutoutShort())
