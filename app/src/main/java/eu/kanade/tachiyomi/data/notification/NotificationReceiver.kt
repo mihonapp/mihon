@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -135,7 +136,7 @@ class NotificationReceiver : BroadcastReceiver() {
      * @param notificationId the id of the notification
      */
     private fun dismissNotification(context: Context, notificationId: Int) {
-        context.notificationManager.cancel(notificationId)
+        context.cancelNotification(notificationId)
     }
 
     /**
@@ -380,13 +381,13 @@ class NotificationReceiver : BroadcastReceiver() {
                     }
 
                     if (notifications.size == 2) {
-                        context.notificationManager.cancel(groupId)
+                        context.cancelNotification(groupId)
                         return
                     }
                 }
             }
 
-            context.notificationManager.cancel(notificationId)
+            context.cancelNotification(notificationId)
         }
 
         /**

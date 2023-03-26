@@ -11,8 +11,8 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
-import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
@@ -47,7 +47,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
                 Result.failure()
             }
         } finally {
-            context.notificationManager.cancel(Notifications.ID_RESTORE_PROGRESS)
+            context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
         }
     }
 

@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.util.system
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
@@ -9,7 +9,6 @@ import androidx.core.app.NotificationChannelGroupCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationManagerCompat.NotificationWithIdAndTag
-import androidx.core.content.PermissionChecker
 import androidx.core.content.getSystemService
 import eu.kanade.tachiyomi.R
 
@@ -21,20 +20,28 @@ fun Context.notify(id: Int, channelId: String, block: (NotificationCompat.Builde
     this.notify(id, notification)
 }
 
+@SuppressLint("MissingPermission")
 fun Context.notify(id: Int, notification: Notification) {
-    if (PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
-        return
-    }
+    // TODO: check for permission once targeting SDK 33+
+//    if (PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
+//        return
+//    }
 
     NotificationManagerCompat.from(this).notify(id, notification)
 }
 
+@SuppressLint("MissingPermission")
 fun Context.notify(notificationWithIdAndTags: List<NotificationWithIdAndTag>) {
-    if (PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
-        return
-    }
+    // TODO: check for permission once targeting SDK 33+
+//    if (PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
+//        return
+//    }
 
     NotificationManagerCompat.from(this).notify(notificationWithIdAndTags)
+}
+
+fun Context.cancelNotification(id: Int) {
+    NotificationManagerCompat.from(this).cancel(id)
 }
 
 /**

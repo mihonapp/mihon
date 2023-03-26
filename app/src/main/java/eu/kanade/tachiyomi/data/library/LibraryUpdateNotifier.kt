@@ -21,8 +21,8 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.lang.chop
+import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
-import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.Constants
 import tachiyomi.core.util.lang.launchUI
@@ -265,7 +265,7 @@ class LibraryUpdateNotifier(private val context: Context) {
      * Cancels the progress notification.
      */
     fun cancelProgressNotification() {
-        context.notificationManager.cancel(Notifications.ID_LIBRARY_PROGRESS)
+        context.cancelNotification(Notifications.ID_LIBRARY_PROGRESS)
     }
 
     private suspend fun getMangaIcon(manga: Manga): Bitmap? {

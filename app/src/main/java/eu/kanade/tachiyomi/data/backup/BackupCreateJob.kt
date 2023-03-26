@@ -13,8 +13,8 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
-import eu.kanade.tachiyomi.util.system.notificationManager
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
@@ -50,7 +50,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             if (!isAutoBackup) notifier.showBackupError(e.message)
             Result.failure()
         } finally {
-            context.notificationManager.cancel(Notifications.ID_BACKUP_PROGRESS)
+            context.cancelNotification(Notifications.ID_BACKUP_PROGRESS)
         }
     }
 
