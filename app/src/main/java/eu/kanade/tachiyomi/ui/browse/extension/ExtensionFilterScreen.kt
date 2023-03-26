@@ -34,7 +34,7 @@ class ExtensionFilterScreen : Screen() {
         ExtensionFilterScreen(
             navigateUp = navigator::pop,
             state = successState,
-            onClickToggle = { screenModel.toggle(it) },
+            onClickToggle = screenModel::toggle,
         )
 
         LaunchedEffect(Unit) {

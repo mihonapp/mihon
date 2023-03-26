@@ -62,6 +62,6 @@ class ThemingDelegateImpl : ThemingDelegate {
     override fun applyAppTheme(activity: Activity) {
         val uiPreferences = Injekt.get<UiPreferences>()
         ThemingDelegate.getThemeResIds(uiPreferences.appTheme().get(), uiPreferences.themeDarkAmoled().get())
-            .forEach { activity.setTheme(it) }
+            .forEach(activity::setTheme)
     }
 }

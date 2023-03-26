@@ -141,7 +141,7 @@ class BackupManager(
             .map(Manga::source)
             .distinct()
             .map(sourceManager::getOrStub)
-            .map { BackupSource.copyFrom(it) }
+            .map(BackupSource::copyFrom)
             .toList()
     }
 

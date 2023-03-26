@@ -141,7 +141,7 @@ class ExtensionsScreenModel(
                             else -> it.extension
                         }
                     }
-                    .forEach { updateExtension(it) }
+                    .forEach(::updateExtension)
             }
         }
     }

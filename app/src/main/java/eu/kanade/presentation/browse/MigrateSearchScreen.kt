@@ -85,7 +85,7 @@ private fun MigrateSearchContent(
 
                             GlobalSearchCardRow(
                                 titles = result.result,
-                                getManga = { getManga(it) },
+                                getManga = getManga,
                                 onClick = onClickItem,
                                 onLongClick = onLongClickItem,
                             )

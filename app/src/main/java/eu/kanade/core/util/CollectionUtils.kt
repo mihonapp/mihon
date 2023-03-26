@@ -12,10 +12,10 @@ fun <T : R, R : Any> List<T>.insertSeparators(
     val newList = mutableListOf<R>()
     for (i in -1..lastIndex) {
         val before = getOrNull(i)
-        before?.let { newList.add(it) }
+        before?.let(newList::add)
         val after = getOrNull(i + 1)
         val separator = generator.invoke(before, after)
-        separator?.let { newList.add(it) }
+        separator?.let(newList::add)
     }
     return newList
 }
@@ -80,7 +80,7 @@ inline fun <T, R> List<T>.fastMapNotNull(transform: (T) -> R?): List<R> {
     contract { callsInPlace(transform) }
     val destination = ArrayList<R>()
     fastForEach { element ->
-        transform(element)?.let { destination.add(it) }
+        transform(element)?.let(destination::add)
     }
     return destination
 }

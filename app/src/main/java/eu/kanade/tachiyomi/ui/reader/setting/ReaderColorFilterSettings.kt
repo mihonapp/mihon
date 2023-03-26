@@ -33,7 +33,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         addView(binding.root)
 
         readerPreferences.colorFilter().changes()
-            .onEach { setColorFilter(it) }
+            .onEach(::setColorFilter)
             .launchIn((context as ReaderActivity).lifecycleScope)
 
         readerPreferences.colorFilterMode().changes()
@@ -41,7 +41,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
             .launchIn(context.lifecycleScope)
 
         readerPreferences.customBrightness().changes()
-            .onEach { setCustomBrightness(it) }
+            .onEach(::setCustomBrightness)
             .launchIn(context.lifecycleScope)
 
         // Get color and update values
@@ -141,7 +141,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         if (enabled) {
             readerPreferences.customBrightnessValue().changes()
                 .sample(100)
-                .onEach { setCustomBrightnessValue(it) }
+                .onEach(::setCustomBrightnessValue)
                 .launchIn((context as ReaderActivity).lifecycleScope)
         } else {
             setCustomBrightnessValue(0, true)
@@ -169,7 +169,7 @@ class ReaderColorFilterSettings @JvmOverloads constructor(context: Context, attr
         if (enabled) {
             readerPreferences.colorFilterValue().changes()
                 .sample(100)
-                .onEach { setColorFilterValue(it) }
+                .onEach(::setColorFilterValue)
                 .launchIn((context as ReaderActivity).lifecycleScope)
         }
         setColorFilterSeekBar(enabled)

@@ -63,7 +63,7 @@ class PagerTransitionHolder(
 
         transitionView.bind(transition, viewer.downloadManager, viewer.activity.viewModel.manga)
 
-        transition.to?.let { observeStatus(it) }
+        transition.to?.let(::observeStatus)
     }
 
     /**

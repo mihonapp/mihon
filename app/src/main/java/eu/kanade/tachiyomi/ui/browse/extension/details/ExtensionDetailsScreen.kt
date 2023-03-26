@@ -40,9 +40,9 @@ data class ExtensionDetailsScreen(
             onClickReadme = { uriHandler.openUri(screenModel.getReadmeUrl()) },
             onClickEnableAll = { screenModel.toggleSources(true) },
             onClickDisableAll = { screenModel.toggleSources(false) },
-            onClickClearCookies = { screenModel.clearCookies() },
-            onClickUninstall = { screenModel.uninstallExtension() },
-            onClickSource = { screenModel.toggleSource(it) },
+            onClickClearCookies = screenModel::clearCookies,
+            onClickUninstall = screenModel::uninstallExtension,
+            onClickSource = screenModel::toggleSource,
         )
 
         LaunchedEffect(Unit) {

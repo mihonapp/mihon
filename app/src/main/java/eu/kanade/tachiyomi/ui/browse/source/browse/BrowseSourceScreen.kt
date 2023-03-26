@@ -126,7 +126,7 @@ data class BrowseSourceScreen(
                         onWebViewClick = onWebViewClick,
                         onHelpClick = onHelpClick,
                         onSettingsClick = { navigator.push(SourcePreferencesScreen(sourceId)) },
-                        onSearch = { screenModel.search(it) },
+                        onSearch = screenModel::search,
                     )
 
                     Row(
@@ -235,15 +235,9 @@ data class BrowseSourceScreen(
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
                     filters = state.filters,
-                    onReset = {
-                        screenModel.resetFilters()
-                    },
-                    onFilter = {
-                        screenModel.search(filters = state.filters)
-                    },
-                    onUpdate = {
-                        screenModel.setFilters(it)
-                    },
+                    onReset = screenModel::resetFilters,
+                    onFilter = { screenModel.search(filters = state.filters) },
+                    onUpdate = screenModel::setFilters,
                 )
             }
             is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {

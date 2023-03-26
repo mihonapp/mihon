@@ -1039,29 +1039,29 @@ class ReaderActivity : BaseActivity() {
                 .launchIn(lifecycleScope)
 
             readerPreferences.showPageNumber().changes()
-                .onEach { setPageNumberVisibility(it) }
+                .onEach(::setPageNumberVisibility)
                 .launchIn(lifecycleScope)
 
             readerPreferences.trueColor().changes()
-                .onEach { setTrueColor(it) }
+                .onEach(::setTrueColor)
                 .launchIn(lifecycleScope)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 readerPreferences.cutoutShort().changes()
-                    .onEach { setCutoutShort(it) }
+                    .onEach(::setCutoutShort)
                     .launchIn(lifecycleScope)
             }
 
             readerPreferences.keepScreenOn().changes()
-                .onEach { setKeepScreenOn(it) }
+                .onEach(::setKeepScreenOn)
                 .launchIn(lifecycleScope)
 
             readerPreferences.customBrightness().changes()
-                .onEach { setCustomBrightness(it) }
+                .onEach(::setCustomBrightness)
                 .launchIn(lifecycleScope)
 
             readerPreferences.colorFilter().changes()
-                .onEach { setColorFilter(it) }
+                .onEach(::setColorFilter)
                 .launchIn(lifecycleScope)
 
             readerPreferences.colorFilterMode().changes()
@@ -1138,7 +1138,7 @@ class ReaderActivity : BaseActivity() {
             if (enabled) {
                 readerPreferences.customBrightnessValue().changes()
                     .sample(100)
-                    .onEach { setCustomBrightnessValue(it) }
+                    .onEach(::setCustomBrightnessValue)
                     .launchIn(lifecycleScope)
             } else {
                 setCustomBrightnessValue(0)
@@ -1152,7 +1152,7 @@ class ReaderActivity : BaseActivity() {
             if (enabled) {
                 readerPreferences.colorFilterValue().changes()
                     .sample(100)
-                    .onEach { setColorFilterValue(it) }
+                    .onEach(::setColorFilterValue)
                     .launchIn(lifecycleScope)
             } else {
                 binding.colorOverlay.isVisible = false

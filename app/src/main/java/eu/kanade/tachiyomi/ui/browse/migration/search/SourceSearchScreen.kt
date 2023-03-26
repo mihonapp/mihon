@@ -58,7 +58,7 @@ data class SourceSearchScreen(
                     searchQuery = state.toolbarQuery ?: "",
                     onChangeSearchQuery = screenModel::setToolbarQuery,
                     onClickCloseSearch = navigator::pop,
-                    onSearch = { screenModel.search(it) },
+                    onSearch = screenModel::search,
                     scrollBehavior = scrollBehavior,
                 )
             },
