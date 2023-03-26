@@ -14,7 +14,7 @@ fun countMissingChapters(chaptersInput: List<Float>): Int? {
         .map { floor(it.toDouble()).toInt() }
         // Only keep unique chapters so that -1 or 16 are not counted multiple times
         .distinct()
-        .sortedBy { it }
+        .sorted()
 
     if (chapters.isEmpty()) {
         return null
