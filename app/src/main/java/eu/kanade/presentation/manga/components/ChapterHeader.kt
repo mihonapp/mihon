@@ -52,17 +52,15 @@ private fun MissingChaptersWarning(count: Int?) {
     val text = when {
         count == null -> stringResource(R.string.missing_chapters_unknown)
         count > 0 -> pluralStringResource(id = R.plurals.missing_chapters, count = count, count)
-        else -> null
+        else -> return
     }
 
-    if (text != null) {
-        Text(
-            modifier = Modifier.secondaryItemAlpha(),
-            text = text,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.error,
-        )
-    }
+    Text(
+        modifier = Modifier.secondaryItemAlpha(),
+        text = text,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.error,
+    )
 }
