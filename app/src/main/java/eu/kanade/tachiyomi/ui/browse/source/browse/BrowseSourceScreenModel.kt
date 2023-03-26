@@ -54,6 +54,7 @@ import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
+import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.toMangaUpdate
@@ -78,6 +79,7 @@ class BrowseSourceScreenModel(
     private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
+    private val getManga: GetManga = Injekt.get(),
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
@@ -121,19 +123,20 @@ class BrowseSourceScreenModel(
             ) {
                 getRemoteManga.subscribe(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
-                pagingData
-                    .map {
-                        flow {
-                            val localManga = withIOContext { networkToLocalManga.await(it.toDomainManga(sourceId)) }
-                            emit(localManga)
-                        }
+                pagingData.map {
+                    withIOContext {
+                        networkToLocalManga.await(it.toDomainManga(sourceId))
+                            .let { localManga ->
+                                getManga.subscribe(localManga.url, localManga.source)
+                            }
                             .filterNotNull()
-                            .filter {
-                                !sourcePreferences.hideInLibraryItems().get() || !it.favorite
+                            .filter { localManga ->
+                                !sourcePreferences.hideInLibraryItems().get() || !localManga.favorite
                             }
                             .onEach(::initializeManga)
                             .stateIn(coroutineScope)
                     }
+                }
             }
                 .cachedIn(coroutineScope)
         }
