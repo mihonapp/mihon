@@ -18,7 +18,11 @@ class UncaughtExceptionInterceptor : Interceptor {
         return try {
             chain.proceed(chain.request())
         } catch (e: Exception) {
-            throw IOException(e)
+            if (e is IOException) {
+                throw e
+            } else {
+                throw IOException(e)
+            }
         }
     }
 }
