@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Source
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
+import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -143,7 +144,7 @@ private fun SourcePinButton(
     onClick: () -> Unit,
 ) {
     val icon = if (isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin
-    val tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    val tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(alpha = SecondaryItemAlpha)
     val description = if (isPinned) R.string.action_unpin else R.string.action_pin
     IconButton(onClick = onClick) {
         Icon(
