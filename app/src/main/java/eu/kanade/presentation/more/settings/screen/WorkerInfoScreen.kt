@@ -31,11 +31,11 @@ import androidx.lifecycle.asFlow
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.SharingStarted
@@ -128,19 +128,19 @@ object WorkerInfoScreen : Screen() {
             .getWorkInfosLiveData(WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED))
             .asFlow()
             .map(::constructString)
-            .stateIn(coroutineScope, SharingStarted.WhileSubscribed(), "")
+            .stateIn(ioCoroutineScope, SharingStarted.WhileSubscribed(), "")
 
         val running = workManager
             .getWorkInfosLiveData(WorkQuery.fromStates(WorkInfo.State.RUNNING))
             .asFlow()
             .map(::constructString)
-            .stateIn(coroutineScope, SharingStarted.WhileSubscribed(), "")
+            .stateIn(ioCoroutineScope, SharingStarted.WhileSubscribed(), "")
 
         val enqueued = workManager
             .getWorkInfosLiveData(WorkQuery.fromStates(WorkInfo.State.ENQUEUED))
             .asFlow()
             .map(::constructString)
-            .stateIn(coroutineScope, SharingStarted.WhileSubscribed(), "")
+            .stateIn(ioCoroutineScope, SharingStarted.WhileSubscribed(), "")
 
         private fun constructString(list: List<WorkInfo>) = buildString {
             if (list.isEmpty()) {
