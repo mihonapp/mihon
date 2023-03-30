@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,6 +56,7 @@ fun EmptyScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -66,7 +69,9 @@ fun EmptyScreen(
 
         Text(
             text = message,
-            modifier = Modifier.paddingFromBaseline(top = 24.dp).secondaryItemAlpha(),
+            modifier = Modifier
+                .paddingFromBaseline(top = 24.dp)
+                .secondaryItemAlpha(),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
