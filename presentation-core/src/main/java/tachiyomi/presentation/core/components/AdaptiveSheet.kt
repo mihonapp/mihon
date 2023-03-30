@@ -3,15 +3,12 @@ package tachiyomi.presentation.core.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
@@ -21,7 +18,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
@@ -46,18 +42,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.milliseconds
 
-private const val SheetAnimationDuration = 500
+private const val SheetAnimationDuration = 350
 private val SheetAnimationSpec = tween<Float>(durationMillis = SheetAnimationDuration)
-private const val ScrimAnimationDuration = 350
-private val ScrimAnimationSpec = tween<Float>(durationMillis = ScrimAnimationDuration)
 
 @Composable
 fun AdaptiveSheet(
@@ -72,12 +64,11 @@ fun AdaptiveSheet(
         var targetAlpha by remember { mutableStateOf(0f) }
         val alpha by animateFloatAsState(
             targetValue = targetAlpha,
-            animationSpec = ScrimAnimationSpec,
+            animationSpec = SheetAnimationSpec,
         )
         val internalOnDismissRequest: () -> Unit = {
             scope.launch {
                 targetAlpha = 0f
-                delay(ScrimAnimationSpec.durationMillis.milliseconds)
                 onDismissRequest()
             }
         }
@@ -93,11 +84,6 @@ fun AdaptiveSheet(
                 .alpha(alpha),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
-            )
             Surface(
                 modifier = Modifier
                     .requiredWidthIn(max = 460.dp)
@@ -138,16 +124,6 @@ fun AdaptiveSheet(
         ) {
             val fullHeight = constraints.maxHeight.toFloat()
             val anchors = mapOf(0f to 0, fullHeight to 1)
-            val scrimAlpha by animateFloatAsState(
-                targetValue = if (swipeState.targetValue == 1) 0f else 1f,
-                animationSpec = ScrimAnimationSpec,
-            )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .alpha(scrimAlpha)
-                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.32f)),
-            )
             Surface(
                 modifier = Modifier
                     .widthIn(max = 460.dp)
@@ -180,12 +156,8 @@ fun AdaptiveSheet(
                     .windowInsetsPadding(
                         WindowInsets.systemBars
                             .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-                    )
-                    .consumeWindowInsets(
-                        WindowInsets.systemBars
-                            .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
                     ),
-                shape = MaterialTheme.shapes.extraLarge.copy(bottomStart = ZeroCornerSize, bottomEnd = ZeroCornerSize),
+                shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = tonalElevation,
                 content = {
                     BackHandler(enabled = swipeState.targetValue == 0, onBack = internalOnDismissRequest)
@@ -199,7 +171,6 @@ fun AdaptiveSheet(
                     .drop(1)
                     .filter { it == 1 }
                     .collectLatest {
-                        delay(ScrimAnimationSpec.durationMillis.milliseconds)
                         onDismissRequest()
                     }
             }

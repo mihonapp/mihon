@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.lifecycle.DisposableEffectIgnoringConfiguration
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
@@ -78,17 +80,24 @@ fun AdaptiveSheet(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val isTabletUi = isTabletUi()
-    AdaptiveSheetImpl(
-        isTabletUi = isTabletUi,
-        tonalElevation = tonalElevation,
-        enableSwipeDismiss = enableSwipeDismiss,
+    Dialog(
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+        ),
     ) {
-        val contentPadding = if (isTabletUi) {
-            PaddingValues()
-        } else {
-            WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+        AdaptiveSheetImpl(
+            isTabletUi = isTabletUi,
+            tonalElevation = tonalElevation,
+            enableSwipeDismiss = enableSwipeDismiss,
+            onDismissRequest = onDismissRequest,
+        ) {
+            val contentPadding = if (isTabletUi) {
+                PaddingValues()
+            } else {
+                WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+            }
+            content(contentPadding)
         }
-        content(contentPadding)
     }
 }
