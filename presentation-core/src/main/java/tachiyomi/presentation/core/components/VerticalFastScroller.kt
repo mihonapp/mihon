@@ -48,6 +48,7 @@ import androidx.compose.ui.util.fastMaxBy
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.sample
 import tachiyomi.presentation.core.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import kotlin.math.abs
 import kotlin.math.max
@@ -124,14 +125,16 @@ fun VerticalFastScroller(
             val alpha = remember { Animatable(0f) }
             val isThumbVisible = alpha.value > 0f
             LaunchedEffect(scrolled, alpha) {
-                scrolled.collectLatest {
-                    if (thumbAllowed()) {
-                        alpha.snapTo(1f)
-                        alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
-                    } else {
-                        alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
+                scrolled
+                    .sample(100)
+                    .collectLatest {
+                        if (thumbAllowed()) {
+                            alpha.snapTo(1f)
+                            alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                        } else {
+                            alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
+                        }
                     }
-                }
             }
 
             Box(
@@ -304,14 +307,16 @@ fun VerticalGridFastScroller(
             val alpha = remember { Animatable(0f) }
             val isThumbVisible = alpha.value > 0f
             LaunchedEffect(scrolled, alpha) {
-                scrolled.collectLatest {
-                    if (thumbAllowed()) {
-                        alpha.snapTo(1f)
-                        alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
-                    } else {
-                        alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
+                scrolled
+                    .sample(100)
+                    .collectLatest {
+                        if (thumbAllowed()) {
+                            alpha.snapTo(1f)
+                            alpha.animateTo(0f, animationSpec = FadeOutAnimationSpec)
+                        } else {
+                            alpha.animateTo(0f, animationSpec = ImmediateFadeOutAnimationSpec)
+                        }
                     }
-                }
             }
 
             Box(
