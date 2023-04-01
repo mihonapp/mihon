@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Ad</string>
-    <string name="categories">Ulamlar</string>
+    <string name="categories">Kategoriler</string>
     <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
@@ -41,7 +41,6 @@
     <string name="action_rename_category">Ulamı yeniden adlandır</string>
     <string name="action_move_category">Ulamları ayarla</string>
     <string name="action_edit_cover">Kapağı düzenle</string>
-    <string name="action_stop">Durdur</string>
     <string name="action_pause">Duraklat</string>
     <string name="action_previous_chapter">Önceki bölüm</string>
     <string name="action_next_chapter">Sonraki bölüm</string>
@@ -436,7 +435,6 @@
     <string name="action_migrate">Taşın</string>
     <string name="action_display_comfortable_grid">Rahat ızgara</string>
     <string name="tabs_header">Sekmeler</string>
-    <string name="badges_header">Rozetler</string>
     <string name="action_display_show_tabs">Ulam sekmelerini göster</string>
     <string name="page_list_empty_error">Sayfa bulunamadı</string>
     <string name="action_disable_all">Tümünü devre dışı bırak</string>
@@ -676,7 +674,6 @@
     <string name="source_empty_screen">Kaynak bulunamadı</string>
     <string name="action_sort_last_manga_update">Son güncelleme denetimi</string>
     <string name="action_sort_unread_count">Okunmayan sayısı</string>
-    <string name="split_tall_images">Uzun görselleri böl</string>
     <string name="split_tall_images_summary">Okuyucu başarımını iyileştirir</string>
     <string name="download_notifier_split_page_not_found">Bölünürken sayfa %d bulunamadı</string>
     <string name="download_notifier_split_page_path_not_found">Sayfa %d dosya yolu bulunamadı</string>
@@ -684,7 +681,6 @@
     <string name="pref_reset_viewer_flags_summary">Tüm serilerin okuma kipini ve yönünü sıfırlar</string>
     <string name="pref_reset_viewer_flags_success">Tüm okuyucu ayarları sıfırlandı</string>
     <string name="pref_reset_viewer_flags_error">Okuyucu ayarları sıfırlanamadı</string>
-    <string name="download_notifier_split_failed">İndirilen görsel bölünemedi</string>
     <string name="empty_screen">Peki, bu garip</string>
     <string name="ext_info_version">Sürüm</string>
     <string name="ext_info_language">Dil</string>
@@ -751,8 +747,7 @@
     <string name="information_no_entries_found">Bu ulamda girdi bulunamadı</string>
     <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
 \nDaha fazla bilgi edinmek için dokunun.</string>
-    <string name="action_display_show_continue_reading_button">Okumayı sürdür düğmesini göster</string>
-    <string name="other_header">Diğer</string>
+    <string name="action_display_show_continue_reading_button">Okumaya devam et düğmesi</string>
     <string name="track_remove_date_conf_title">Tarih kaldırılsın mı\?</string>
     <string name="track_remove_start_date_conf_text">Bu, daha önce seçtiğiniz %s başlangıç tarihini kaldıracak</string>
     <string name="track_remove_finish_date_conf_text">Bu, daha önce seçtiğiniz %s bitiş tarihini kaldıracak</string>
@@ -797,4 +792,13 @@
     </plurals>
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
     <string name="action_update_category">Kategoriyi güncelle</string>
+    <string name="split_tall_images">Uzun görselleri otomatik böl</string>
+    <string name="overlay_header">Kaplama</string>
+    <string name="missing_chapters_unknown">Eksik bölümler olabilir</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s bölüm eksik</item>
+        <item quantity="other">%1$s bölüm eksik</item>
+    </plurals>
+    <string name="pref_page_rotate">Geniş sayfaları sığdırmak için döndür</string>
+    <string name="pref_page_rotate_invert">Döndürülen geniş sayfaların yönünü çevir</string>
 </resources>

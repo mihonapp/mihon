@@ -41,7 +41,6 @@
     <string name="action_rename_category">Byt namn på kategori</string>
     <string name="action_move_category">Välj kategorier</string>
     <string name="action_edit_cover">Redigera omslaget</string>
-    <string name="action_stop">Stop</string>
     <string name="action_pause">Paus</string>
     <string name="action_previous_chapter">Föregående kapitel</string>
     <string name="action_next_chapter">Nästa kapitel</string>
@@ -437,7 +436,6 @@
     <string name="action_disable_all">Inaktivera alla</string>
     <string name="page_list_empty_error">Hittade inga sidor</string>
     <string name="tabs_header">Flikar</string>
-    <string name="badges_header">Emblem</string>
     <string name="pref_show_reading_mode_summary">Visa nuvarande läge när läsaren öppnas</string>
     <string name="pref_show_reading_mode">Visa läsläge</string>
     <string name="action_display_show_tabs">Visa kategoriflikar</string>
@@ -675,7 +673,6 @@
     <string name="source_filter_empty_screen">Ingen installerad källa hittades</string>
     <string name="action_sort_last_manga_update">Sista manga-uppdateringen</string>
     <string name="action_sort_unread_count">Antal olästa</string>
-    <string name="split_tall_images">Dela upp höga bilder</string>
     <string name="split_tall_images_summary">Förbättrar läsarens prestanda</string>
     <string name="download_notifier_split_page_not_found">Sida %d hittades inte under delning</string>
     <string name="source_empty_screen">Ingen källa hittad</string>
@@ -692,7 +689,6 @@
     <string name="wish_list">Önskelista</string>
     <string name="complete_list">Klart lista</string>
     <string name="ext_info_age_rating">Åldersklassificering</string>
-    <string name="download_notifier_split_failed">Kunde inte dela den nedladdade bilden</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Språk</string>
     <string name="cant_open_last_read_chapter">Det går inte att öppna det senast lästa kapitlet</string>

@@ -41,7 +41,6 @@
     <string name="action_rename_category">Cambia su nùmene de sa categoria</string>
     <string name="action_move_category">Imposta sas categorias</string>
     <string name="action_edit_cover">Muda sa cobertedda</string>
-    <string name="action_stop">Firma</string>
     <string name="action_pause">Pone in pàusa</string>
     <string name="action_previous_chapter">Capìtulu antepostu</string>
     <string name="action_next_chapter">Capìtulu imbeniente</string>
@@ -437,7 +436,6 @@
     <string name="action_display_comfortable_grid">Grìllia discansosa</string>
     <string name="page_list_empty_error">Peruna pàgina agatada</string>
     <string name="tabs_header">Ischedas</string>
-    <string name="badges_header">Distintivos</string>
     <string name="action_display_show_tabs">Ammustra sas ischedas de sas categorias</string>
     <string name="action_disable_all">Disabìlita totu</string>
     <string name="action_enable_all">Abìlita totu</string>
@@ -676,7 +674,6 @@
     <string name="action_sort_unread_count">Contu de non lèghidos</string>
     <string name="source_empty_screen">Peruna fonte agatada</string>
     <string name="source_filter_empty_screen">Peruna fonte installada agatada</string>
-    <string name="split_tall_images">Partzi sas immàgines artas</string>
     <string name="split_tall_images_summary">Megiorat su rendimentu de su leghidore</string>
     <string name="download_notifier_split_page_not_found">Pàgina %d no agatada partzende</string>
     <string name="empty_screen">Oja, custu est impitzosu</string>
@@ -685,7 +682,6 @@
     <string name="pref_reset_viewer_flags_summary">Resetat sa modalidade de leghidura e s\'orientamentu de totu sas sèries</string>
     <string name="pref_reset_viewer_flags_success">Totu sas impostatziones de su leghidore resetadas</string>
     <string name="pref_reset_viewer_flags_error">No at fatu a resetare sas impostatziones de su leghidore</string>
-    <string name="download_notifier_split_failed">No at fatu a partzire s\'immàgine iscarrigada</string>
     <string name="ext_info_age_rating">Classificatzione pro edade</string>
     <string name="ext_info_language">Limba</string>
     <string name="ext_info_version">Versione</string>
@@ -751,8 +747,7 @@
     <string name="information_no_entries_found">Perunu elementu atzapadu in custa categoria</string>
     <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
 \nToca pro nde ischire de prus.</string>
-    <string name="action_display_show_continue_reading_button">Ammustra su butone pro sighire a lèghere</string>
-    <string name="other_header">Àteru</string>
+    <string name="action_display_show_continue_reading_button">Butone pro sighire a lèghere</string>
     <string name="track_remove_date_conf_title">Bogare sa data\?</string>
     <string name="pref_invalidate_download_cache">Invàlida s\'ìnditze de sos iscarrigamentos</string>
     <string name="track_remove_start_date_conf_text">Custu at a bogare sa data de incumintzu seletzionada in antis dae %s</string>
@@ -797,4 +792,13 @@
     <string name="pref_hide_in_library_items">Cua sos elementos giai in sa biblioteca</string>
     <string name="action_copy_to_clipboard">Còpia in punta de billete</string>
     <string name="action_update_category">Agiorna sa categoria</string>
+    <string name="split_tall_images">Partzi sas immàgines artas</string>
+    <string name="overlay_header">Istratu superiore</string>
+    <string name="missing_chapters_unknown">Diant pòdere mancare capìtulos</string>
+    <string name="pref_page_rotate">Gira sas pàginas largas pro las adatare</string>
+    <string name="pref_page_rotate_invert">Fùrria s\'orientamentu de sas pàginas largas giradas</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Mancat %1$s capìtulu</item>
+        <item quantity="other">Mancant %1$s capìtulos</item>
+    </plurals>
 </resources>

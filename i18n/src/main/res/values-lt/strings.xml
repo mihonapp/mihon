@@ -152,7 +152,6 @@
     <string name="action_next_chapter">Sekantis skyrius</string>
     <string name="action_previous_chapter">Ankstesnis skyrius</string>
     <string name="action_pause">Pristabdyti</string>
-    <string name="action_stop">Stop</string>
     <string name="action_view_chapters">Rodyti skyrius</string>
     <string name="action_edit_cover">Keisti viršelį</string>
     <string name="action_move_category">Perkelti kategorijas</string>
@@ -488,7 +487,6 @@
     <string name="pref_navigate_pan">Bakstelėdami slinkti plačius vaizdus</string>
     <string name="pref_landscape_zoom">Priartinti horizontalų vaizdą</string>
     <string name="ext_info_version">Versija</string>
-    <string name="split_tall_images">Automatiškai padalinti aukšti vaizdai</string>
     <string name="tracking_info">Vienpusė sinchronizacija, skirta skaitymo progresui stebėjimo paslaugose atnaujinti. Nustatykite atskirą įrašų sekimą iš jų sekimo mygtuko.</string>
     <string name="pref_create_backup_summ">Galima naudoti dabartinei bibliotekai atkurti</string>
     <string name="pref_webtoon_side_padding">Šoninis spaudinėjimas</string>
@@ -551,7 +549,6 @@
         <item quantity="few">%d plėtinių atnaujinimai pasiekiami</item>
         <item quantity="other">%d plėtinių atnaujinimai pasiekiami</item>
     </plurals>
-    <string name="download_notifier_split_failed">Nepavyko padalyti atsisiųsto vaizdo</string>
     <string name="chapter_settings_updated">Atnaujinti numatytus skyrių nustatymus</string>
     <string name="download_notifier_downloader_title">Parsisiuntėjas</string>
     <string name="download_notifier_title_error">Klaida</string>
@@ -629,7 +626,6 @@
     <string name="manga_cover">Viršelis</string>
     <string name="pinned_sources">Prisegtas</string>
     <string name="email">El. pašto adresas</string>
-    <string name="badges_header">Žymės</string>
     <string name="http_error_hint">Patikrinkite svetainę \"WebView\" aplinkoje</string>
     <string name="action_global_search_hint">Pasaulinė paieška…</string>
     <string name="latest">Naujausia</string>
@@ -764,7 +760,6 @@
 \nBakstelėkite, kad sužinotumėte daugiau.</string>
     <string name="information_no_entries_found">Šioje kategorijoje įrašų nerasta</string>
     <string name="action_open_random_manga">Atverti atsitiktinį įrašą</string>
-    <string name="other_header">Kita</string>
     <string name="action_display_show_continue_reading_button">Rodyti mygtuką „Tęsti” skaitymą</string>
     <string name="track_remove_finish_date_conf_text">Tai pašalins jūsų anksčiau pasirinktą pabaigos datą iš %s</string>
     <string name="track_remove_date_conf_title">Pašalinti datą\?</string>

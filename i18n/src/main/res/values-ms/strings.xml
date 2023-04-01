@@ -38,7 +38,6 @@
     <string name="action_rename_category">Ubah nama kategori</string>
     <string name="action_move_category">Tetapkan kategori</string>
     <string name="action_edit_cover">Ubah muka hadapan</string>
-    <string name="action_stop">Henti</string>
     <string name="action_pause">Henti sebentar</string>
     <string name="action_previous_chapter">Bab sebelumnya</string>
     <string name="action_next_chapter">Bab seterusnya</string>
@@ -427,7 +426,6 @@
     <string name="pref_library_update_refresh_metadata">Segar semula metadata secara automatik</string>
     <string name="action_migrate">Pindah sumber</string>
     <string name="action_display_comfortable_grid">Grid selesa</string>
-    <string name="badges_header">Penanda</string>
     <string name="tabs_header">Tab</string>
     <string name="action_display_show_tabs">Tunjuk tab kategori</string>
     <string name="page_list_empty_error">Tiada muka surat ditemui</string>
@@ -664,14 +662,12 @@
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Bilangan belum dibaca</string>
     <string name="action_sort_last_manga_update">Semakan kemas kini terakhir</string>
-    <string name="split_tall_images">Memisah imej yang tinggi</string>
     <string name="split_tall_images_summary">Meningkatkan prestasi pembaca</string>
     <string name="download_notifier_split_page_not_found">Muka surat %d tidak dijumpai ketika memisah</string>
     <string name="download_notifier_split_page_path_not_found">Lokasi fail muka surat %d tidak ditemui</string>
     <string name="pref_reset_viewer_flags_summary">Menetapkan semula mod bacaan dan orientasi semua siri</string>
     <string name="pref_reset_viewer_flags_success">Tetapan pembaca diset semula</string>
     <string name="pref_reset_viewer_flags">Set semula tetapan pembaca setiap siri</string>
-    <string name="download_notifier_split_failed">Tidak dapat memisahkan imej yang dimuat turun</string>
     <string name="empty_screen">Hmm, ini agak menjanggalkan</string>
     <string name="pref_reset_viewer_flags_error">Tidak dapat set semula tetapan pembaca</string>
     <string name="ext_info_version">Versi</string>
@@ -738,8 +734,7 @@
     <string name="download_notifier_cache_renewal">Menyemak muat turun</string>
     <string name="fdroid_warning">Binaan F-Droid tidak disokong secara rasmi.
 \nKetik untuk mengetahui lebih lanjut.</string>
-    <string name="action_display_show_continue_reading_button">Tunjuk butang sambung membaca</string>
-    <string name="other_header">Lain-lain</string>
+    <string name="action_display_show_continue_reading_button">Butang sambung membaca</string>
     <string name="pref_invalidate_download_cache">Membatalkan indeks muat turun</string>
     <string name="track_remove_date_conf_title">Buang tarikh\?</string>
     <string name="track_remove_start_date_conf_text">Ini akan membuang tarikh mula yang dipilih oleh anda sebelum ini dari %s</string>
@@ -783,4 +778,12 @@
     <string name="pref_hide_in_library_items">Sembunyikan entri yang sudah ada di dalam pustaka</string>
     <string name="action_copy_to_clipboard">Salin ke papan keratan</string>
     <string name="action_update_category">Kemas kini kategori</string>
+    <string name="split_tall_images">Memisah imej yang tinggi</string>
+    <string name="overlay_header">Tindanan</string>
+    <plurals name="missing_chapters">
+        <item quantity="other">Hilang %1$s bab</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Berkemungkinan ada bab yang hilang</string>
+    <string name="pref_page_rotate_invert">Terbalikkan orientasi muka surat lebar yang diputarkan</string>
+    <string name="pref_page_rotate">Putar muka surat lebar agar muat</string>
 </resources>

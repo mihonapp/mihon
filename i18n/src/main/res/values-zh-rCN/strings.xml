@@ -38,7 +38,6 @@
     <string name="action_rename_category">重命名分类</string>
     <string name="action_move_category">设置分类</string>
     <string name="action_edit_cover">编辑封面</string>
-    <string name="action_stop">停止</string>
     <string name="action_pause">暂停</string>
     <string name="action_previous_chapter">上一章</string>
     <string name="action_next_chapter">下一章</string>
@@ -428,7 +427,6 @@
     <string name="action_migrate">迁移</string>
     <string name="action_display_comfortable_grid">松散网格</string>
     <string name="tabs_header">标签</string>
-    <string name="badges_header">标记</string>
     <string name="action_display_show_tabs">显示分类标签</string>
     <string name="page_list_empty_error">没有找到页面</string>
     <string name="action_disable_all">全部关闭</string>
@@ -664,15 +662,13 @@
     <string name="source_empty_screen">未找到图源</string>
     <string name="action_sort_last_manga_update">检查更新时间</string>
     <string name="action_sort_unread_count">未读章数</string>
-    <string name="split_tall_images">分割长图</string>
     <string name="split_tall_images_summary">可以改善阅读器的性能</string>
     <string name="download_notifier_split_page_not_found">拆分时未找到页 %d</string>
     <string name="download_notifier_split_page_path_not_found">找不到页面 %d 的文件路径</string>
-    <string name="pref_reset_viewer_flags">重置每一连载阅读器设置</string>
-    <string name="pref_reset_viewer_flags_summary">重置所有连载的阅读模式和方向</string>
+    <string name="pref_reset_viewer_flags">重置各作品阅读器独立设置</string>
+    <string name="pref_reset_viewer_flags_summary">重置所有作品的阅读模式和屏幕方向</string>
     <string name="pref_reset_viewer_flags_success">已重置所有阅读器设置</string>
-    <string name="pref_reset_viewer_flags_error">无法重置阅读器设置</string>
-    <string name="download_notifier_split_failed">无法拆分下载的图像</string>
+    <string name="pref_reset_viewer_flags_error">重置阅读器设置失败</string>
     <string name="empty_screen">额，尴尬了</string>
     <string name="ext_info_age_rating">年龄分级</string>
     <string name="ext_info_version">版本</string>
@@ -738,8 +734,7 @@
     <string name="information_no_entries_found">此分类没有作品</string>
     <string name="fdroid_warning">F-Droid 渠道不受官方支持。
 \n点按了解更多。</string>
-    <string name="action_display_show_continue_reading_button">显示继续阅读按钮</string>
-    <string name="other_header">其他</string>
+    <string name="action_display_show_continue_reading_button">继续阅读按钮</string>
     <string name="pref_invalidate_download_cache">清除下载索引</string>
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
     <string name="track_remove_start_date_conf_text">将会删除之前在 %s 中标记的开始日期</string>
@@ -783,4 +778,12 @@
     <string name="pref_hide_in_library_items">隐藏已添加到书架的作品</string>
     <string name="action_copy_to_clipboard">复制到剪贴板</string>
     <string name="action_update_category">更新分类</string>
+    <string name="split_tall_images">分割长图</string>
+    <string name="overlay_header">标记和按钮</string>
+    <string name="pref_page_rotate">旋转横向图片</string>
+    <plurals name="missing_chapters">
+        <item quantity="other">缺少 %1$s 章</item>
+    </plurals>
+    <string name="missing_chapters_unknown">可能缺少章节</string>
+    <string name="pref_page_rotate_invert">旋转横向图片时反转方向</string>
 </resources>

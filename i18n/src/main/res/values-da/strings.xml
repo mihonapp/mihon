@@ -81,7 +81,6 @@
     <string name="action_display_grid">Kompakt grid</string>
     <string name="action_display_list">Liste</string>
     <string name="action_display_download_badge">Downloaded kapitler</string>
-    <string name="action_stop">Stop</string>
     <string name="action_display_local_badge">Lokale manga</string>
     <string name="action_filter_tracked">Sporet</string>
     <string name="action_move_category">Vælg kategorier</string>

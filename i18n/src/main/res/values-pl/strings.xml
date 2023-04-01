@@ -34,7 +34,6 @@
     <string name="action_move_category">Zmień kategorie</string>
     <string name="action_edit_cover">Edytuj okładkę</string>
     <string name="action_sort_total">Ilość rozdziałów</string>
-    <string name="action_stop">Zatrzymaj</string>
     <string name="action_pause">Wstrzymaj</string>
     <string name="action_previous_chapter">Poprzedni rozdział</string>
     <string name="action_next_chapter">Następny rozdział</string>
@@ -453,7 +452,6 @@
     <string name="action_migrate">Migracja</string>
     <string name="page_list_empty_error">Nie znaleziono żadnych stron</string>
     <string name="tabs_header">Karty</string>
-    <string name="badges_header">Plakietki</string>
     <string name="action_display_show_tabs">Pokaż karty kategorii</string>
     <string name="action_disable_all">Wyłącz wszystkie</string>
     <string name="action_enable_all">Włącz wszystkie</string>
@@ -687,7 +685,6 @@
     <string name="action_close">Zamknij</string>
     <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
     <string name="action_sort_unread_count">Ilość nieprzeczytanych</string>
-    <string name="split_tall_images">Rozdzielaj wysokie obrazy</string>
     <string name="learn_more">Kliknij, by dowiedzieć się więcej</string>
     <string name="update_check_open">Otwórz na GitHubie</string>
     <string name="pref_reset_viewer_flags_success">Reset wszystkich ustawień czytnika</string>
@@ -702,7 +699,6 @@
     <string name="error_saving_picture">Błąd podczas zapisywania obrazka</string>
     <string name="pref_clear_webview_data">Wyczyść dane WebView</string>
     <string name="webview_data_deleted">Dane WebView wyczyszczone</string>
-    <string name="download_notifier_split_failed">Nie można rozdzielić pobranego obrazka</string>
     <string name="action_sort_last_manga_update">Ostatnia aktualizacja</string>
     <string name="split_tall_images_summary">Poprawia wydajność czytnika</string>
     <string name="description_placeholder">Brak opisu</string>
@@ -769,7 +765,6 @@
     <string name="pref_advanced_summary">Zrzuć logi, optymalizacje baterii</string>
     <string name="missing_storage_permission">Nie przyznano uprawnień do przechowywania</string>
     <string name="pref_backup_summary">Manualna &amp; automatyczna kopia</string>
-    <string name="other_header">Inne</string>
     <string name="label_read_duration">Czas odczytu</string>
     <string name="label_titles_section">Wpisy</string>
     <string name="label_titles_in_global_update">W globalnej aktualizacji</string>

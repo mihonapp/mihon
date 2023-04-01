@@ -124,7 +124,6 @@
     <string name="action_next_chapter">Sljedeće poglavlje</string>
     <string name="action_previous_chapter">Prethodno poglavlje</string>
     <string name="action_pause">Zaustavi</string>
-    <string name="action_stop">Prekini</string>
     <string name="action_view_chapters">Pogledaj poglavlja</string>
     <string name="action_edit_cover">Uredi naslovnicu</string>
     <string name="action_move_category">Postavi kategorije</string>
@@ -445,7 +444,6 @@
     <string name="action_disable_all">Deaktiviraj sve</string>
     <string name="action_enable_all">Aktiviraj sve</string>
     <string name="page_list_empty_error">Nema stranica</string>
-    <string name="badges_header">Značke</string>
     <string name="tabs_header">Kartice</string>
     <string name="pref_show_reading_mode_summary">Nakratko prikaži trenutačni modus kad se čitač otvori</string>
     <string name="pref_show_reading_mode">Prikaži modus čitanja</string>
@@ -537,9 +535,9 @@
     <string name="backup_restore_content_full">Podaci datoteke sigurnosne kopije će se obnoviti.
 \n
 \nZa upotrebu podataka, morat ćeš instalirati nedostajuća proširenja i nakon toga se prijaviti na usluge praćenja.</string>
-    <string name="pref_dual_page_invert_summary">Ako se položaj podijeljenih širokih stranica ne podudara s smjerom čitanja</string>
-    <string name="pref_dual_page_invert">Obrnuti položaj podijeljene stranice</string>
-    <string name="pref_dual_page_split">Podijeli široke stranice na pola</string>
+    <string name="pref_dual_page_invert_summary">Ako se položaj rastavljenih širokih stranica ne podudara sa smjerom čitanja</string>
+    <string name="pref_dual_page_invert">Obrni položaj rastavljene stranice</string>
+    <string name="pref_dual_page_split">Rastavi široke stranice</string>
     <string name="pref_show_navigation_mode_summary">Kratko prikaži kada je čitač otvoren</string>
     <string name="nav_zone_right">Desno</string>
     <string name="nav_zone_left">Lijevo</string>
@@ -679,15 +677,13 @@
     <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
     <string name="split_tall_images_summary">Poboljšava performanse čitača</string>
     <string name="complete_list">Potpun popis</string>
-    <string name="download_notifier_split_failed">Nije bilo moguće podijeliti preuzetu sliku</string>
-    <string name="split_tall_images">Rastavi visoke slike</string>
     <string name="webview_data_deleted">WebView podaci su izbrisani</string>
     <string name="pref_clear_webview_data">Izbriši WebView podatke</string>
     <string name="reading_list">Popis čitanja</string>
     <string name="wish_list">Popis želja</string>
     <string name="on_hold_list">Na popisu čekanja</string>
     <string name="unfinished_list">Popis nedovršenih</string>
-    <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom razdvajanja</string>
+    <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom rastavljanja</string>
     <string name="loader_rar5_error">RARv5 format nije podržan</string>
     <string name="download_ahead_info">Radi samo na unosima u biblioteci i ako je trenutačno poglavlje plus sljedeće već preuzeto</string>
     <plurals name="next_unread_chapters">
@@ -725,7 +721,7 @@
     <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije</string>
     <string name="label_stats">Statistike</string>
     <string name="label_downloaded">Preuzeto</string>
-    <string name="action_display_show_continue_reading_button">Prikaži gumb za nastavak čitanja</string>
+    <string name="action_display_show_continue_reading_button">Gumb za nastavljanje čitanja</string>
     <string name="pref_appearance_summary">Format teme, datuma i vremena</string>
     <string name="pref_browse_summary">Izvori, ekstenzije, globalno pretraživanje</string>
     <string name="pref_general_summary">Jezik aplikacije, obavijesti</string>
@@ -769,7 +765,6 @@
     <string name="update_already_running">Ažuriranje je već pokrenuto</string>
     <string name="pref_reset_viewer_flags_error">Nije moguće vratiti izvorne postavke čitača</string>
     <string name="pref_reset_viewer_flags_success">Sve postavke čitača ponovno su postavljene na izvorno</string>
-    <string name="other_header">Druge</string>
     <string name="track_remove_date_conf_title">Ukloniti datum\?</string>
     <string name="track_remove_start_date_conf_text">Time ćete ukloniti prethodno odabrani datum početka iz %s</string>
     <string name="track_remove_finish_date_conf_text">Time ćete ukloniti prethodno odabrani datum završetka iz %s</string>
@@ -811,4 +806,14 @@
         <item quantity="other">Sljedećih %d poglavlja</item>
     </plurals>
     <string name="action_update_category">Aktualiziraj katogoriju</string>
+    <string name="split_tall_images">Rastavi visoke slike</string>
+    <string name="overlay_header">Oznake</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Nedostaje %1$s poglavlje</item>
+        <item quantity="few">Nedostaju %1$s poglavlja</item>
+        <item quantity="other">Nedostaje %1$s poglavlja</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Možda nedostaje poglavlje</string>
+    <string name="pref_page_rotate">Prilagodi prikaz širokih stranica okretanjem</string>
+    <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
 </resources>

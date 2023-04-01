@@ -38,7 +38,6 @@
     <string name="action_next_chapter">Susunod na kabanata</string>
     <string name="action_previous_chapter">Nakaraang kabanata</string>
     <string name="action_pause">Ihinto</string>
-    <string name="action_stop">Itigil</string>
     <string name="action_view_chapters">Tingnan ang mga kabanata</string>
     <string name="action_edit_cover">Palitan ang cover</string>
     <string name="action_move_category">I-set ang kategorya</string>
@@ -406,7 +405,6 @@
     <string name="no_results_found">Walang nakitang resulta</string>
     <string name="no_more_results">Wala na\'ng resulta</string>
     <string name="tabs_header">Mga Tab</string>
-    <string name="badges_header">Mga Panukoy</string>
     <string name="updating_category">Ina-update ang kategorya</string>
     <string name="unknown_error">Di matukoy na error</string>
     <string name="logout_success">Naka-logout ka na</string>
@@ -676,11 +674,9 @@
     <string name="source_empty_screen">Walang nakitang source</string>
     <string name="action_sort_last_manga_update">Huling pag-update</string>
     <string name="action_sort_unread_count">Dami ng di pa nabasa</string>
-    <string name="split_tall_images">Hatiin ang mga matatangkad na larawan</string>
     <string name="split_tall_images_summary">Pinapahusay ang performance ng reader</string>
     <string name="download_notifier_split_page_not_found">Hindi nakita ang pahina %d habang naghahati</string>
     <string name="download_notifier_split_page_path_not_found">Di makita ang file path ng pahina %d</string>
-    <string name="download_notifier_split_failed">Di mahati ang na-download na larawan</string>
     <string name="empty_screen">Paano ba \'to</string>
     <string name="pref_reset_viewer_flags_error">Di ma-reset ang pagsasaayos sa reader</string>
     <string name="pref_reset_viewer_flags_success">Na-reset na ang lahat ng pagsasaayos sa reader</string>
@@ -756,7 +752,6 @@
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng kayarian magmula sa %s</string>
     <string name="pref_invalidate_download_cache">Ipawalang-bisa ang indise ng downloads</string>
-    <string name="other_header">Iba</string>
     <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download</string>
     <string name="label_completed_titles">Mga natapos na entry</string>
     <string name="label_started">Nasimulan</string>
@@ -797,4 +792,13 @@
         <item quantity="other">Susunod na %d (mga) kabanata</item>
     </plurals>
     <string name="action_update_category">I-update ang kategorya</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Nawawalang %1$s na kabanata</item>
+        <item quantity="other">Nawawalang %1$s mga kabanata</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Baka nawawala ang ilang kabanata</string>
+    <string name="pref_page_rotate">I-rotate ang malalawak na (mga) pahina para magkasya</string>
+    <string name="pref_page_rotate_invert">I-flip ang oryentasyon ng mga pinaikot na malalawak na (mga) pahina</string>
+    <string name="overlay_header">Nakapatong (Overlay)</string>
+    <string name="split_tall_images">Hatiin ang mga matatanngkad na (mga) larawan</string>
 </resources>

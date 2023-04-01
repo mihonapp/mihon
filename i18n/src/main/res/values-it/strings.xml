@@ -32,7 +32,6 @@
     <string name="action_rename_category">Rinomina categoria</string>
     <string name="action_move_category">Assegna categorie</string>
     <string name="action_edit_cover">Modifica copertina</string>
-    <string name="action_stop">Ferma</string>
     <string name="action_pause">Pausa</string>
     <string name="action_previous_chapter">Capitolo precedente</string>
     <string name="action_next_chapter">Capitolo successivo</string>
@@ -468,7 +467,6 @@
     <string name="page_list_empty_error">Nessuna pagina trovata</string>
     <string name="sort_by_upload_date">Per data di aggiunta</string>
     <string name="tabs_header">Schede</string>
-    <string name="badges_header">Etichette</string>
     <string name="label_data">Dati</string>
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene alcuna voce di libreria.</string>
@@ -722,14 +720,12 @@
     <string name="action_sort_unread_count">Conteggio non letti</string>
     <string name="action_sort_last_manga_update">Ultimo aggiornamento</string>
     <string name="split_tall_images_summary">Migliora le prestazioni del lettore</string>
-    <string name="split_tall_images">Dividi le immagini troppo alte</string>
     <string name="download_notifier_split_page_not_found">Pagina %d non trovata durante la divisione</string>
     <string name="download_notifier_split_page_path_not_found">Impossibile trovare il percorso della pagina %d</string>
     <string name="pref_reset_viewer_flags_summary">Reimposta la modalità di lettura e l\'orientamento per tutte le serie</string>
     <string name="pref_reset_viewer_flags">Reimposta le opzioni del lettore per ogni serie</string>
     <string name="pref_reset_viewer_flags_success">Ripristinate tutte le opzioni del lettore</string>
     <string name="pref_reset_viewer_flags_error">Impossibile ripristinare le opzioni del lettore</string>
-    <string name="download_notifier_split_failed">Impossibile separare le immagini scaricate</string>
     <string name="empty_screen">Beh, questo è imbarazzante</string>
     <string name="ext_info_age_rating">Classificazione per età</string>
     <string name="ext_info_version">Versione</string>
@@ -797,8 +793,7 @@
     <string name="information_no_entries_found">Nessuna voce trovata in questa categoria</string>
     <string name="fdroid_warning">Le versioni F-Droid non sono ufficialmente supportate.
 \nToccare per saperne di più.</string>
-    <string name="action_display_show_continue_reading_button">Mostra il pulsante per continuare la lettura</string>
-    <string name="other_header">Altro</string>
+    <string name="action_display_show_continue_reading_button">Pulsante \"continua a leggere\"</string>
     <string name="track_remove_date_conf_title">Rimuovere la data\?</string>
     <string name="track_remove_finish_date_conf_text">Verrà rimossa la data di fine precedentemente selezionata da %s</string>
     <string name="track_remove_start_date_conf_text">Verrà rimossa la data di inizio precedentemente selezionata da %s</string>
@@ -844,4 +839,14 @@
     <string name="pref_hide_in_library_items">Nascondi le voci già in libreria</string>
     <string name="action_copy_to_clipboard">Copia negli appunti</string>
     <string name="action_update_category">Aggiorna categoria</string>
+    <string name="split_tall_images">Dividi immagini alte</string>
+    <string name="overlay_header">Sovrimpressione</string>
+    <string name="pref_page_rotate">Ruota le pagine larghe per adattareaallo schermo</string>
+    <string name="pref_page_rotate_invert">Capovolgi l\'orientamento delle pagine larghe ruotate</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Manca %1$s capitolo</item>
+        <item quantity="many">Mancano %1$s capitoli</item>
+        <item quantity="other">Mancano %1$s capitoli</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Potrebbero mancare alcuni capitoli</string>
 </resources>

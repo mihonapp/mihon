@@ -129,7 +129,6 @@
     <string name="action_move_category">Санаттарды орнату</string>
     <string name="action_edit_cover">Мұқабасын өзгерту</string>
     <string name="action_view_chapters">Тарауларды қарау</string>
-    <string name="action_stop">Доғару</string>
     <string name="action_pause">Тоқтату</string>
     <string name="action_previous_chapter">Алдыңғы тарау</string>
     <string name="action_next_chapter">Келесі тарау</string>
@@ -346,7 +345,6 @@
         <item quantity="one">%1$s дегеннен кейін %2$s қателікпен орындалды</item>
         <item quantity="other">%1$s дегеннен кейін %2$s қателікпен орындалды</item>
     </plurals>
-    <string name="split_tall_images">Ұзын суреттерді авто бөлу</string>
     <string name="pref_always_show_chapter_transition">Тараулардың ауысуын әрдайым көрсету</string>
     <string name="rotation_force_portrait">Құлыпталған портрет</string>
     <string name="pref_high">Жоғары</string>
@@ -511,7 +509,6 @@
     <string name="logout_success">Сіз шығып кеттіңіз</string>
     <string name="updating_category">Санатты жаңартып жатырмыз</string>
     <string name="manga_from_library">Кітапханадан</string>
-    <string name="badges_header">Белгілер</string>
     <string name="no_results_found">Нәтиже жоқ</string>
     <string name="local_source">Локал дереккөз</string>
     <string name="last_used_source">Ақырғы қолданылған</string>
@@ -687,7 +684,6 @@
     <string name="update_check_notification_download_error">Жүктеу қателігі</string>
     <string name="update_check_notification_download_complete">Жаңартуды орнату үшін басыңыз</string>
     <string name="channel_errors">Қателіктер</string>
-    <string name="download_notifier_split_failed">Жүктелген бет бөлінбеді</string>
     <string name="unfinished_list">Аяқталмағандар Тізімі</string>
     <string name="score">Бағалау</string>
     <string name="title">Атауы</string>
@@ -752,7 +748,6 @@
 \nТолығырақ білу үшін басыңыз.</string>
     <string name="download_notifier_cache_renewal">Жүктеулерді тексеру</string>
     <string name="action_display_show_continue_reading_button">«Оқуды жалғастыру» батырмасы</string>
-    <string name="other_header">Басқа</string>
     <string name="track_remove_finish_date_conf_text">Бұл %s ішінен бұрын таңдалған аяқталу күнін жояды</string>
     <string name="track_remove_start_date_conf_text">Бұл бұрын таңдалған басталу күнін %s ішінен жояды</string>
     <string name="track_remove_date_conf_title">Күнің жоямыз ба\?</string>

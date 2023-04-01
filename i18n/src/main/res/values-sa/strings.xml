@@ -45,7 +45,6 @@
     <string name="action_rename_category">वर्गस्य नाम परिणमतु</string>
     <string name="action_move_category">वर्गानि स्थापयतु</string>
     <string name="action_edit_cover">आवरणं सम्पादयतु</string>
-    <string name="action_stop">निरामयतु</string>
     <string name="action_pause">विरामयतु</string>
     <string name="action_previous_chapter">पूर्वः अध्यायः</string>
     <string name="action_retry">पुनः यतताम्</string>
@@ -409,7 +408,6 @@
     <string name="pref_download_new_categories_details">यद्यपि अन्तर्भूतवर्गेषु स्थिताः सन्ति तथापि वर्जितवर्गेषु स्थिताः माङ्गाः अवारोपिताः न भविष्यन्ति।</string>
     <string name="tracking_info">अनुप्रज्ञानसेवासु अध्यायप्रगतिं नवीकर्तुं एकमार्गसमाकलनम्। तदीयात् अनुप्रज्ञानगण्डात् व्यक्तिगतेभ्यः माङ्गानिवेशेभ्यः अनुप्रज्ञानं स्थापयतु॥</string>
     <string name="label_data">दत्तांशः</string>
-    <string name="badges_header">पदकानि</string>
     <string name="tabs_header">प्लवनखण्डाः</string>
     <string name="other_source">अन्यम्</string>
     <string name="date">तिथिः</string>

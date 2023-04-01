@@ -65,7 +65,6 @@
     <string name="action_next_chapter">ಮುಂದಿನ ಅಧ್ಯಾಯ</string>
     <string name="action_previous_chapter">ಹಿಂದಿನ ಅಧ್ಯಾಯ</string>
     <string name="action_pause">ವಿರಾಮ</string>
-    <string name="action_stop">ನಿಲ್ಲಿಸಿ</string>
     <string name="action_view_chapters">ಅಧ್ಯಾಯಗಳನ್ನು ವೀಕ್ಷಿಸಿ</string>
     <string name="action_edit_cover">ಕವರ್ ತಿದ್ದಿ</string>
     <string name="action_move_category">ವರ್ಗಗಳನ್ನು ಹೊಂದಿಸಿ</string>
@@ -436,7 +435,6 @@
     <string name="action_migrate">ಮೂಲ ಸ್ಥಳಾಂತರ</string>
     <string name="page_list_empty_error">ಯಾವುದೇ ಪುಟಗಳು ಸಿಕ್ಕಿಲ್ಲ</string>
     <string name="tabs_header">ಟ್ಯಾಬ್‌ಗಳು</string>
-    <string name="badges_header">ಬ್ಯಾಡ್ಜ್‌ಗಳು</string>
     <string name="pref_show_reading_mode_summary">ರೀಡರ್ ತೆರೆದಾಗ ಪ್ರಸ್ತುತ ಮೋಡ್ ಅನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ತೋರಿಸಿ</string>
     <string name="pref_show_reading_mode">ಓದುವ ರೀತಿ ತೋರಿಸಿ</string>
     <string name="action_display_show_tabs">ವರ್ಗ ಟ್ಯಾಬ್‌ಗಳನ್ನು ತೋರಿಸಿ</string>

@@ -208,7 +208,6 @@
     <string name="ext_uninstall">Desinstalatu</string>
     <string name="pref_show_page_number">Erakutsi orrialdearen zenbakia</string>
     <string name="pref_refresh_library_tracking">Freskatu jarraipena</string>
-    <string name="badges_header">Bereizgarriak</string>
     <string name="in_library">Liburutegian</string>
     <string name="manga_info_expand">Gehiago</string>
     <string name="display_mode_chapter">%1$s Kapitulua</string>
@@ -411,7 +410,6 @@
     <string name="action_move_category">Kategoriak ezarri</string>
     <string name="action_edit_cover">Editatu azala</string>
     <string name="action_view_chapters">Ikusi kapituluak</string>
-    <string name="action_stop">Gelditu</string>
     <string name="action_pause">Pausatu</string>
     <string name="action_previous_chapter">Aurreko kapitulua</string>
     <string name="action_next_chapter">Hurrengo kapitulua</string>

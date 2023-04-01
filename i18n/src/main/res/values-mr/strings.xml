@@ -74,7 +74,6 @@
     <string name="action_next_chapter">पुढील अध्याय</string>
     <string name="action_previous_chapter">मागील अध्याय</string>
     <string name="action_pause">विराम द्या</string>
-    <string name="action_stop">थांबवा</string>
     <string name="action_view_chapters">अध्याय बघा</string>
     <string name="action_edit_cover">कव्हर बदलवा</string>
     <string name="action_move_category">श्रेणी सेट करा</string>

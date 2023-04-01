@@ -19,7 +19,6 @@
     <string name="username">Uzantnomo</string>
     <string name="password">Pasvorto</string>
     <string name="email">Retpoŝta adreso</string>
-    <string name="action_stop">Halti</string>
     <string name="action_view_chapters">Vidi ĉapitrojn</string>
     <string name="action_rename_category">Alinomi kategorion</string>
     <string name="action_edit_categories">Redakti kategoriojn</string>
@@ -337,7 +336,6 @@
     <string name="no_results_found">Neniu rezulto trovita</string>
     <string name="no_more_results">Ne pli rezultoj</string>
     <string name="tabs_header">Langetoj</string>
-    <string name="badges_header">Ŝildoj</string>
     <string name="manga_from_library">Mangao de biblioteko</string>
     <string name="unknown_error">Nekonata eraro</string>
     <string name="logout_success">Vi nun estas elsalutita</string>

@@ -61,7 +61,6 @@
     <string name="action_next_chapter">తదుపరి అధ్యాయము</string>
     <string name="action_previous_chapter">మునుపటి అధ్యాయము</string>
     <string name="action_pause">తాత్కాలికముగా నిలిపి వేయుము</string>
-    <string name="action_stop">ఆపుము</string>
     <string name="action_view_chapters">అధ్యాయాములను చూడుము</string>
     <string name="action_edit_cover">ముఖచిత్రమును సవరించుము</string>
     <string name="action_move_category">విభాగములను క్రమీకరించుము</string>

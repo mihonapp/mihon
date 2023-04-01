@@ -38,7 +38,6 @@
     <string name="action_edit_categories">კატეგორიის რედაქტირება</string>
     <string name="action_rename_category">კატეგორიის სახელის ვცლილება</string>
     <string name="action_view_chapters">თავების ხილვა</string>
-    <string name="action_stop">გაჩერება</string>
     <string name="action_pause">პაუზა</string>
     <string name="action_previous_chapter">წინა თავი</string>
     <string name="action_next_chapter">შემდეგი თავი</string>
@@ -249,7 +248,6 @@
     <string name="logout_success">გამოსვლა წარმატებით მოხერხდა</string>
     <string name="unknown_error">დაფიქსირდა უცნობი შეცდომა</string>
     <string name="updating_category">კატეგორია ახლდება</string>
-    <string name="badges_header">ნიშნაკები</string>
     <string name="tabs_header">ჩანართები</string>
     <string name="no_more_results">შედეგების სიის დასასრული</string>
     <string name="no_results_found">შედეგი ვერ მოიძებნა</string>

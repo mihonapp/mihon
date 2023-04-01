@@ -41,7 +41,6 @@
     <string name="action_rename_category">Redenumește categoria</string>
     <string name="action_move_category">Setați categoriile</string>
     <string name="action_edit_cover">Modifică coperta</string>
-    <string name="action_stop">Stop</string>
     <string name="action_pause">Pauză</string>
     <string name="action_previous_chapter">Capitolul anterior</string>
     <string name="action_next_chapter">Capitolul următor</string>
@@ -445,7 +444,6 @@
     <string name="ext_unofficial">Neoficial</string>
     <string name="page_list_empty_error">Nu s-au găsit pagini</string>
     <string name="tabs_header">Tab-uri</string>
-    <string name="badges_header">Insigne</string>
     <string name="action_display_show_tabs">Afișează filele categoriei</string>
     <string name="action_disable_all">Dezactivați toate</string>
     <string name="action_enable_all">Activează toate</string>
@@ -616,7 +614,6 @@
     <string name="pref_dark_theme_pure_black">Mod întunecat negru pur</string>
     <string name="enhanced_tracking_info">Servicii care oferă caracteristici îmbunătățite pentru anumite surse. Înregistrările sunt urmărite automat atunci când sunt adăugate la biblioteca dumneavoastră.</string>
     <string name="backup_info">Ar trebui să păstrați copii ale backupurilor și în alte locuri.</string>
-    <string name="split_tall_images">Împărțiți imagini înalte</string>
     <string name="split_tall_images_summary">Îmbunătățește performanța cititorului</string>
     <string name="action_close">Închide</string>
     <string name="battery_not_low">Când bateria nu este scăzută</string>
@@ -640,7 +637,6 @@
     <string name="pref_low">Scăzut</string>
     <string name="pref_clear_webview_data">Ștergeți datele WebView</string>
     <string name="on_hold_list">Lista în așteptare</string>
-    <string name="download_notifier_split_failed">Nu s-a putut diviza imaginea descărcată</string>
     <string name="pref_update_only_completely_read">Cu capitol(e) necitit(e)</string>
     <string name="pref_lowest">Cel mai scăzut</string>
     <string name="unfinished_list">Lista neterminată</string>
@@ -764,7 +760,6 @@
     <string name="track_remove_finish_date_conf_text">Acest lucru va elimina data de finalizare selectată anterior din %s</string>
     <string name="pref_invalidate_download_cache">Indexul descărcărilor invalid</string>
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
-    <string name="other_header">Altele</string>
     <string name="track_remove_date_conf_title">Eliminați data\?</string>
     <string name="track_remove_start_date_conf_text">Acest lucru va elimina data de început selectată anterior din %s</string>
     <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial.

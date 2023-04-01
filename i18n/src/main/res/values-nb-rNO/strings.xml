@@ -39,7 +39,6 @@
     <string name="action_rename_category">Gi kategori nytt navn</string>
     <string name="action_move_category">Sett kategorier</string>
     <string name="action_edit_cover">Rediger omslag</string>
-    <string name="action_stop">Stopp</string>
     <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Forrige kapittel</string>
     <string name="action_next_chapter">Neste kapittel</string>
@@ -117,7 +116,7 @@
     <string name="left_to_right_viewer">Venstre til høyre</string>
     <string name="right_to_left_viewer">Høyre til venstre</string>
     <string name="vertical_viewer">Loddrett</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="webtoon_viewer">Nett-tegneserie</string>
     <string name="pref_image_scale_type">Skalatype</string>
     <string name="scale_type_fit_screen">Tilpass skjerm</string>
     <string name="scale_type_stretch">Strekk</string>
@@ -404,7 +403,6 @@
     <string name="unknown_author">Ukjent forfatter</string>
     <string name="local_source_help_guide">Lokal kildeguide</string>
     <string name="http_error_hint">Sjekk nettsted i WebView</string>
-    <string name="badges_header">Merker</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s gjenstående</item>
         <item quantity="other">%1$s gjenstående</item>
@@ -722,9 +720,7 @@
     <string name="internal_error">InternalError: Sjekk krasjlogger for mer informasjon</string>
     <string name="crash_screen_title">Oops!</string>
     <string name="crash_screen_description">%s fikk en uventet feil. Vi foreslår at du tar et skjermbilde av denne meldingen, dumper krasjloggene og derette deler dette i vår støttekanal på Discord.</string>
-    <string name="download_notifier_split_failed">Kunne ikke dele det nedlastede bildet</string>
     <string name="pref_app_language">Appspråk</string>
-    <string name="split_tall_images">Del høye bilder</string>
     <string name="description_placeholder">Ingen beskrivelse</string>
     <string name="action_search_hint">Søk…</string>
     <string name="action_remove_everything">Fjern alt</string>
@@ -751,8 +747,7 @@
 \nTrykk for å finne ut mer.</string>
     <string name="information_no_entries_found">Fant ingen oppføringer i denne kategorien</string>
     <string name="action_open_random_manga">Åpne tilfeldig oppføring</string>
-    <string name="action_display_show_continue_reading_button">Vis fortsett å lese-knappen</string>
-    <string name="other_header">Annet</string>
+    <string name="action_display_show_continue_reading_button">Fortsett å lese-knapp</string>
     <string name="track_remove_date_conf_title">Fjerne dato\?</string>
     <string name="track_remove_start_date_conf_text">Dette vil fjerne den tidligere valgte startdatoen fra %s</string>
     <string name="track_remove_finish_date_conf_text">Dette vil fjerne den tidligere valgte sluttdatoen fra %s</string>
@@ -797,4 +792,13 @@
     <string name="pref_hide_in_library_items">Skjul oppføringer som allerede er i biblioteket</string>
     <string name="action_copy_to_clipboard">Kopier til utklippstavle</string>
     <string name="action_update_category">Oppdater kategori</string>
+    <string name="split_tall_images">Del opp høye bilder</string>
+    <string name="overlay_header">Elementer</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Mangler %1$s kapittel</item>
+        <item quantity="other">Mangler %1$s kapitler</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Kan mangle kapitler</string>
+    <string name="pref_page_rotate_invert">Vend sideretning for roterte brede sider</string>
+    <string name="pref_page_rotate">Roter brede sider slik at de passer</string>
 </resources>

@@ -32,7 +32,6 @@
     <string name="action_rename_category">Categorie hernoemen</string>
     <string name="action_move_category">Zet categorieën</string>
     <string name="action_edit_cover">Omslag wijzigen</string>
-    <string name="action_stop">Stop</string>
     <string name="action_pause">Pauzeren</string>
     <string name="action_previous_chapter">Vorige hoofdstuk</string>
     <string name="action_next_chapter">Volgende hoofdstuk</string>
@@ -431,7 +430,6 @@
     <string name="page_list_empty_error">Geen pagina\'s gevonden</string>
     <string name="sort_by_upload_date">Op uploaddatum</string>
     <string name="tabs_header">Tabbladen</string>
-    <string name="badges_header">Badges</string>
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Missende bronnen:</string>
     <string name="invalid_backup_file_missing_manga">Back-up bevat geen items.</string>
@@ -663,14 +661,12 @@
     <string name="action_move_to_top_all_for_series">Breng serie naar boven</string>
     <string name="pref_update_only_started">Geen gelezen hoofdstukken</string>
     <string name="skipped_reason_completed">Overgeslagen want de serie is af</string>
-    <string name="split_tall_images">Split tall afbeeldingen</string>
     <string name="split_tall_images_summary">Verbetert de prestaties van de lezer</string>
     <string name="complete_list">Volledige lijst</string>
     <string name="unfinished_list">Onvoltooide lijst</string>
     <string name="download_ahead">Download vooruit</string>
     <string name="webview_data_deleted">WebView-gegevens gewist</string>
     <string name="pref_clear_webview_data">WebView-gegevens wissen</string>
-    <string name="download_notifier_split_failed">Kan gedownloade afbeelding niet splitsen</string>
     <string name="loader_rar5_error">RARv5-indeling wordt niet ondersteund</string>
     <string name="download_notifier_split_page_not_found">Pagina %d niet gevonden tijdens het splitsen</string>
     <string name="internal_error">InternalError: Bekijk de crash logs voor meer informatie</string>
@@ -743,7 +739,6 @@
     <string name="track_error">%1$s-fout: %2$s</string>
     <string name="pref_reset_user_agent_string">User agent terugzetten naar standaardwaarde</string>
     <string name="track_remove_date_conf_title">Datum verwijderen\?</string>
-    <string name="other_header">Anders</string>
     <string name="wish_list">Verlanglijst</string>
     <string name="pref_worker_info">Worker-informatie</string>
     <string name="custom_cover">Aangepaste omslag</string>

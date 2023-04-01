@@ -27,7 +27,6 @@
     <string name="action_rename_category">Renombrar categoría</string>
     <string name="action_move_category">Establecer categorías</string>
     <string name="action_edit_cover">Editar la portada</string>
-    <string name="action_stop">Detener</string>
     <string name="action_pause">Pausar</string>
     <string name="action_previous_chapter">Capítulo anterior</string>
     <string name="action_next_chapter">Capítulo siguiente</string>
@@ -348,7 +347,7 @@
     <string name="theme_system">Según ajustes del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad y privacidad</string>
-    <string name="lock_with_biometrics">Desbloqueo obligatorio</string>
+    <string name="lock_with_biometrics">Requiere desbloqueo</string>
     <string name="lock_when_idle">Bloquear por inactividad</string>
     <string name="lock_always">Siempre</string>
     <string name="lock_never">Nunca</string>
@@ -475,7 +474,6 @@
     <string name="action_display_comfortable_grid">Cuadrícula amplia</string>
     <string name="action_migrate">Migrar</string>
     <string name="tabs_header">Pestañas</string>
-    <string name="badges_header">Insignias</string>
     <string name="action_display_show_tabs">Mostrar pestañas de categorías</string>
     <string name="page_list_empty_error">No parece haber ninguna página</string>
     <string name="action_disable_all">Deshabilitar todo</string>
@@ -522,9 +520,9 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Esto no evita que las extensiones extraoficiales o que estén mal clasificadas muestren contenido para mayores de 18 años en la aplicación.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Se salta el capítulo %d, o bien falta en la fuente o se ha filtrado</item>
-        <item quantity="many">Saltándose %d capítulos, o las fuentes que faltan o se han filtrado</item>
-        <item quantity="other">Saltándose %d capítulos, o las fuentes que faltan o se han filtrado</item>
+        <item quantity="one">Se omite %d capítulo, o bien falta en la fuente o ha sido filtrado</item>
+        <item quantity="many">Se omiten %d capítulos, o bien faltan en la fuente o han sido filtrados</item>
+        <item quantity="other">Se omiten %d capítulos, o bien faltan en la fuente o han sido filtrados</item>
     </plurals>
     <string name="no_chapters_error">No hay capítulos</string>
     <string name="chapter_settings_updated">Se han actualizado los ajustes predeterminados de capítulo</string>
@@ -719,7 +717,6 @@
     <string name="source_empty_screen">No se ha encontrado ninguna fuente</string>
     <string name="action_sort_last_manga_update">Última comprobación de actualizaciones</string>
     <string name="action_sort_unread_count">Capítulos restantes</string>
-    <string name="split_tall_images">Dividir imágenes demasiado altas</string>
     <string name="split_tall_images_summary">Mejora el rendimiento del lector dividiendo páginas descargadas mucho más altas que anchas</string>
     <string name="download_notifier_split_page_not_found">No se ha encontrado la página %d al dividir</string>
     <string name="download_notifier_split_page_path_not_found">La ruta al archivo de la página %d no se encuentra</string>
@@ -727,7 +724,6 @@
     <string name="pref_reset_viewer_flags_success">Se han restablecido los ajustes del visor</string>
     <string name="pref_reset_viewer_flags">Restablecer los ajustes del lector en cada serie</string>
     <string name="pref_reset_viewer_flags_error">No se pudieron restablecer los ajustes del visor</string>
-    <string name="download_notifier_split_failed">No se pudo dividir la imagen descargada</string>
     <string name="empty_screen">Houston, tenemos un problema</string>
     <string name="ext_info_version">Versión</string>
     <string name="ext_info_language">Idioma</string>
@@ -796,7 +792,6 @@
     <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid. 
 \nToca para más información.</string>
     <string name="action_display_show_continue_reading_button">Mostrar el botón de seguir leyendo</string>
-    <string name="other_header">Más cosas</string>
     <string name="track_remove_start_date_conf_text">Al hacer esto %s ya no aparecerá como empezado ese día</string>
     <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha\?</string>
     <string name="track_remove_finish_date_conf_text">Al hacer esto %s ya no aparecerá como terminado ese día</string>
@@ -842,4 +837,14 @@
     <string name="pref_hide_in_library_items">Saltar elementos que ya estén en la biblioteca</string>
     <string name="action_copy_to_clipboard">Copiar al portapapeles</string>
     <string name="action_update_category">Actualizar categoría</string>
+    <string name="split_tall_images">Dividir las imágenes altas</string>
+    <string name="overlay_header">Superposición</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Falta %1$s capítulo</item>
+        <item quantity="many">"Faltan %1$s  capítulos"</item>
+        <item quantity="other">Faltan %1$s capítulos</item>
+    </plurals>
+    <string name="pref_page_rotate">Girar las páginas anchas para adaptarlas a la pantalla</string>
+    <string name="missing_chapters_unknown">Puede que le falte algún capítulo</string>
+    <string name="pref_page_rotate_invert">Girar las páginas anchas en la dirección opuesta</string>
 </resources>

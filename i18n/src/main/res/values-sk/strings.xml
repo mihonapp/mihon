@@ -42,7 +42,6 @@
     <string name="action_rename_category">Premenovať kategóriu</string>
     <string name="action_move_category">Určiť kategórie</string>
     <string name="action_edit_cover">Upraviť obal</string>
-    <string name="action_stop">Zastaviť</string>
     <string name="action_pause">Pauza</string>
     <string name="action_previous_chapter">Predošlá kapitola</string>
     <string name="action_next_chapter">Nasledujúca kapitola</string>
@@ -435,7 +434,6 @@
     <string name="nav_zone_next">Ďalší</string>
     <string name="restoring_backup_error">Obnovenie zálohy zlyhalo</string>
     <string name="restoring_backup_canceled">Obnovenie bolo zrušené</string>
-    <string name="badges_header">Odznaky</string>
     <string name="tabs_header">Karty</string>
     <string name="error_user_agent_string_blank">Reťazec User-Agent nemôže byť prázdny</string>
     <string name="pref_reset_viewer_flags">Obnovenie nastavení čítačky pre jednotlivé série</string>
@@ -548,7 +546,6 @@
     <string name="pref_webtoon_side_padding">Bočné odsadenie</string>
     <string name="pref_category_auto_download">Automatické sťahovanie</string>
     <string name="source_empty_screen">Nenašiel sa žiadny zdroj</string>
-    <string name="download_notifier_split_failed">Stiahnutý obrázok sa nepodarilo rozdeliť</string>
     <string name="channel_progress">Priebeh</string>
     <string name="pref_clear_history">Vymazať históriu</string>
     <string name="error_saving_cover">Chyba pri ukladaní obalu</string>
@@ -698,7 +695,6 @@
     <string name="theme_lavender">Levanduľa</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="pref_download_new_categories_details">Mangy vo vylúčených kategóriách nebudú stiahnuté, aj keď sú tiež v zahrnutých kategóriách.</string>
-    <string name="split_tall_images">Rozdelenie vysokých obrázkov</string>
     <string name="database_clean">Čistenie databázy</string>
     <string name="pref_clear_webview_data">Vymazanie údajov WebView</string>
     <string name="webview_data_deleted">Údaje WebView boli vymazané</string>

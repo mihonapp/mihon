@@ -41,7 +41,6 @@
     <string name="action_rename_category">Μετονομασία κατηγορίας</string>
     <string name="action_move_category">Ορισμός κατηγοριών</string>
     <string name="action_edit_cover">Επεξεργασία εξώφυλλου</string>
-    <string name="action_stop">Σταμάτημα</string>
     <string name="action_pause">Παύση</string>
     <string name="action_previous_chapter">Προηγούμενο κεφάλαιο</string>
     <string name="action_next_chapter">Επόμενο κεφάλαιο</string>
@@ -436,7 +435,6 @@
     <string name="action_migrate">Μεταφορά</string>
     <string name="action_display_comfortable_grid">Άνετο πλέγμα</string>
     <string name="tabs_header">Καρτέλες</string>
-    <string name="badges_header">Σήματα</string>
     <string name="action_display_show_tabs">Εμφάνιση καρτελών κατηγοριών</string>
     <string name="page_list_empty_error">Δεν βρέθηκαν σελίδες</string>
     <string name="action_disable_all">Απενεργοποίηση όλων</string>
@@ -676,7 +674,6 @@
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
     <string name="action_sort_last_manga_update">Τελευταίος έλεγχος ενημέρωσης</string>
     <string name="source_empty_screen">Δε βρέθηκε πηγή</string>
-    <string name="split_tall_images">Διαχωρισμός ψηλών εικόνων</string>
     <string name="split_tall_images_summary">Βελτιώνει την απόδοση του αναγνώστη</string>
     <string name="download_notifier_split_page_not_found">Η σελίδα %d δε βρέθηκε κατά τη διάσπαση</string>
     <string name="download_notifier_split_page_path_not_found">Δεν ήταν δυνατή η εύρεση της διαδρομής αρχείου της σελίδας %d</string>
@@ -684,7 +681,6 @@
     <string name="pref_reset_viewer_flags">Επαναφορά ρυθμίσεων προγράμματος ανάγνωσης ανά σειρά</string>
     <string name="pref_reset_viewer_flags_error">Δεν ήταν δυνατή η επαναφορά των ρυθμίσεων του προγράμματος ανάγνωσης</string>
     <string name="pref_reset_viewer_flags_success">Επαναφορά όλων των ρυθμίσεων προγράμματος ανάγνωσης</string>
-    <string name="download_notifier_split_failed">Δεν ήταν δυνατή η διαίρεση της εικόνας που έχει ληφθεί</string>
     <string name="empty_screen">Λοιπόν, αυτό είναι άβολο</string>
     <string name="ext_info_version">Έκδοση</string>
     <string name="ext_info_language">Γλώσσα</string>
@@ -751,8 +747,7 @@
 \nΠατήστε για να μάθετε περισσότερα.</string>
     <string name="action_open_random_manga">Άνοιγμα τυχαίας καταχώρησης</string>
     <string name="information_no_entries_found">Δε βρέθηκαν καταχωρήσεις σε αυτή την κατηγορία</string>
-    <string name="other_header">Άλλο</string>
-    <string name="action_display_show_continue_reading_button">Εμφάνιση κουμπιού συνέχισης ανάγνωσης</string>
+    <string name="action_display_show_continue_reading_button">Κουμπί συνέχειας ανάγνωσης</string>
     <string name="track_remove_date_conf_title">Κατάργηση ημερομηνίας;</string>
     <string name="track_remove_finish_date_conf_text">Αυτό θα καταργήσει την ημερομηνία λήξης που επιλέξατε προηγουμένως από το %s</string>
     <string name="track_remove_start_date_conf_text">Αυτό θα καταργήσει την ημερομηνία έναρξης που επιλέξατε προηγουμένως από το %s</string>
@@ -797,4 +792,13 @@
     <string name="pref_hide_in_library_items">Απόκρυψη καταχωρήσεων που βρίσκονται ήδη στη βιβλιοθήκη</string>
     <string name="action_copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
     <string name="action_update_category">Ενημέρωση κατηγορίας</string>
+    <string name="split_tall_images">Διαχωρισμός ψηλών εικόνων</string>
+    <string name="overlay_header">Επικάλυψη</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Λείπει %1$s κεφάλαιο</item>
+        <item quantity="other">Λείπουν %1$s κεφάλαια</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Μπορεί να λείπουν κεφάλαια</string>
+    <string name="pref_page_rotate">Περιστροφή πλατιών σελίδων για να χωρέσουν</string>
+    <string name="pref_page_rotate_invert">Αναστροφή του προσανατολισμού των πλατιών σελίδων που έχουν περιστραφεί</string>
 </resources>

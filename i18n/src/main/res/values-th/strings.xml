@@ -75,7 +75,6 @@
     <string name="action_bookmark">บุ๊คมาร์คตอน</string>
     <string name="action_remove_bookmark">ยกเลิกบุ๊คมาร์คตอน</string>
     <string name="action_move_category">ตั้งหมวดหมู่</string>
-    <string name="action_stop">หยุด</string>
     <string name="action_pause">หยุดชั่วคราว</string>
     <string name="action_remove">นำออก</string>
     <string name="action_resume">ดำเนินการต่อ</string>
@@ -462,7 +461,6 @@
     <string name="last_used_source">ใช้ล่าสุด</string>
     <string name="http_error_hint">ตรวจสอบเว็บไซต์ใน WebView</string>
     <string name="tabs_header">แท็บ</string>
-    <string name="badges_header">เครื่องหมาย</string>
     <string name="downloaded_chapters">ตอนที่ดาวน์โหลดแล้ว</string>
     <string name="manga_from_library">จากคลัง</string>
     <string name="logout_success">ออกจากระบบแล้ว</string>
@@ -664,7 +662,6 @@
     <string name="source_empty_screen">ไม่พบแหล่งที่มาใด ๆ</string>
     <string name="action_sort_unread_count">จำนวนตอนที่ยังไม่ได้อ่าน</string>
     <string name="action_sort_last_manga_update">เช็กอัปเดตล่าสุด</string>
-    <string name="split_tall_images">แยกรูปภาพสูงยาว</string>
     <string name="download_notifier_split_page_not_found">ไม่พบหน้า %d ขณะกำลังแยกหน้า</string>
     <string name="split_tall_images_summary">เพิ่มประสิทธิภาพตัวอ่าน</string>
     <string name="download_notifier_split_page_path_not_found">ไม่พบตำแหน่งไฟล์ของหน้า %d</string>
@@ -672,7 +669,6 @@
     <string name="pref_reset_viewer_flags_summary">รีเซ็ตโหมดการอ่านและการจัดวางของทุกเรื่อง</string>
     <string name="pref_reset_viewer_flags_success">รีเซ็ตค่ากำหนดตัวอ่านทั้งหมดแล้ว</string>
     <string name="pref_reset_viewer_flags_error">ไม่สามารถรีเซ็ตค่ากำหนดตัวอ่าน</string>
-    <string name="download_notifier_split_failed">ไม่สามารถแยกภาพที่ดาวน์โหลดไว้ได้</string>
     <string name="empty_screen">เอ่อ นี้มันงี่เง่าชะมัด</string>
     <string name="ext_info_version">เวอร์ชัน</string>
     <string name="ext_info_language">ภาษา</string>
@@ -738,8 +734,7 @@
 \nแตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="information_no_entries_found">ไม่พบรายการใด ๆ ในหมวดหมู่นี้</string>
     <string name="download_notifier_cache_renewal">กำลังตรวจสอบการดาวน์โหลด</string>
-    <string name="action_display_show_continue_reading_button">แสดงปุ่มอ่านต่อ</string>
-    <string name="other_header">อื่น ๆ</string>
+    <string name="action_display_show_continue_reading_button">ปุ่มอ่านต่อ</string>
     <string name="pref_invalidate_download_cache">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
     <string name="track_remove_start_date_conf_text">การกระทำนี้จะเป็นการนำวันที่เริ่มอ่านของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>

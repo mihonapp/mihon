@@ -111,7 +111,6 @@
     <string name="action_retry">እንደገና ሞክር</string>
     <string name="action_next_chapter">ቀጣይ ምዕራፍ</string>
     <string name="action_previous_chapter">ቀዳሚ ምዕራፍ</string>
-    <string name="action_stop">ተው</string>
     <string name="action_pause">ለአፍታ አቁም</string>
     <string name="action_view_chapters">ምዕራፎችን ይመልከቱ</string>
     <string name="action_edit_cover">ሽፋን አርትዕ</string>

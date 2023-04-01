@@ -33,7 +33,6 @@
     <string name="action_rename_category">Đổi tên danh mục</string>
     <string name="action_move_category">Đặt danh mục</string>
     <string name="action_edit_cover">Sửa ảnh bìa</string>
-    <string name="action_stop">Dừng lại</string>
     <string name="action_pause">Tạm dừng</string>
     <string name="action_previous_chapter">Chương trước</string>
     <string name="action_next_chapter">Chương kế</string>
@@ -459,7 +458,6 @@
     <string name="spen_previous_page">Trang trước</string>
     <string name="channel_crash_logs">Logs lỗi</string>
     <string name="spen_next_page">Trang tiếp theo</string>
-    <string name="badges_header">Huy hiệu</string>
     <string name="channel_new_chapters">Cập nhật chương</string>
     <string name="chapter_settings_updated">Đã cập nhật tuỳ chỉnh mặc định cho chương</string>
     <string name="channel_errors">Lỗi</string>
@@ -699,7 +697,6 @@
     <string name="network_not_metered">Chỉ trên mạng lưới không hạn định</string>
     <string name="action_sort_last_manga_update">Truyện cập nhật gần đây</string>
     <string name="action_sort_unread_count">Số lượng chưa đọc</string>
-    <string name="split_tall_images">Tự động chia cắt những ảnh quá dài</string>
     <string name="split_tall_images_summary">Cải thiện khả năng đọc bằng việc cắt nhỏ các ảnh quá dài</string>
     <string name="pref_reset_viewer_flags_success">Tất cả cài đặt đọc đã được cài lại</string>
     <string name="pref_reset_viewer_flags_error">Không thể cài lại cài đặt đọc</string>
@@ -720,7 +717,6 @@
     <string name="complete_list">Danh sách hoàn thành</string>
     <string name="on_hold_list">Danh sách đang chờ</string>
     <string name="wish_list">Danh sách muốn đọc</string>
-    <string name="download_notifier_split_failed">Không thể chia cắt ảnh đã tải xuống</string>
     <string name="download_notifier_split_page_not_found">Trang %d không thể được tìm thấy khi chia cắt</string>
     <string name="ext_info_age_rating">Phân loại độ tuổi</string>
     <string name="download_notifier_split_page_path_not_found">Không thể tìm thấy đường dẫn của trang %d</string>
@@ -777,7 +773,6 @@
     <string name="label_mean_score">Điểm trung bình</string>
     <string name="updates_last_update_info_just_now">Ngay bây giờ</string>
     <string name="pref_invalidate_download_cache_summary">Buộc ứng dụng kiểm tra lại các chương đã tải xuống</string>
-    <string name="other_header">Khác</string>
     <string name="label_titles_in_global_update">Tổng cập nhật</string>
     <string name="label_used">Đã theo dõi</string>
     <string name="label_tracker_section">Theo dõi</string>

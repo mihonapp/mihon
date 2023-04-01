@@ -36,7 +36,6 @@
     <string name="action_rename_category">Ubah nama kategori</string>
     <string name="action_move_category">Masukkan ke kategori</string>
     <string name="action_edit_cover">Ubah gambar sampul</string>
-    <string name="action_stop">Berhenti</string>
     <string name="action_pause">Hentikan sementara</string>
     <string name="action_previous_chapter">Bab sebelumnya</string>
     <string name="action_next_chapter">Bab selanjutnya</string>
@@ -317,7 +316,7 @@
     <string name="action_move_to_bottom">Pindahkan ke bawah</string>
     <string name="label_more">Lainnya</string>
     <string name="pref_category_library_update">Pembaruan</string>
-    <string name="lock_with_biometrics">Kunci dengan biometrik</string>
+    <string name="lock_with_biometrics">Memerlukan buka kunci</string>
     <string name="lock_when_idle">Kunci saat diam</string>
     <string name="lock_always">Selalu</string>
     <string name="lock_never">Tidak pernah</string>
@@ -426,7 +425,6 @@
     <string name="sort_by_upload_date">Menurut tanggal pengunggahan</string>
     <string name="action_display_comfortable_grid">Grid nyaman</string>
     <string name="tabs_header">Tab</string>
-    <string name="badges_header">Penanda</string>
     <string name="action_display_show_tabs">Tampilkan tab kategori</string>
     <string name="page_list_empty_error">Halaman tidak ditemukan</string>
     <string name="action_disable_all">Nonaktifkan semua</string>
@@ -469,7 +467,7 @@
     <string name="pref_category_delete_chapters">Hapus bab</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau berpotensi salah ditandai untuk menampilkan konten NSFW (18+) di dalam aplikasi.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">Melewati %d bab, entah mungkin sumber kehilangan bab tersebut atau karena sudah difilter</item>
+        <item quantity="other">Melewati %d bab, entah sumbernya hilang atau telah difilter</item>
     </plurals>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
@@ -664,14 +662,12 @@
     <string name="source_empty_screen">Tidak ada sumber yang ditemukan</string>
     <string name="action_sort_last_manga_update">Pembaruan terakhir</string>
     <string name="action_sort_unread_count">Jumlah belum dibaca</string>
-    <string name="split_tall_images">Membagi gambar panjang</string>
     <string name="split_tall_images_summary">Meningkatkan kinerja pembaca</string>
     <string name="download_notifier_split_page_not_found">Halaman %d tidak ditemukan saat dipisah</string>
     <string name="download_notifier_split_page_path_not_found">Tidak dapat menemukan jalur file halaman %d</string>
     <string name="pref_reset_viewer_flags_success">Atur ulang semua pengaturan pengguna</string>
     <string name="pref_reset_viewer_flags">Muat ulang pengaturan per-pengguna</string>
     <string name="pref_reset_viewer_flags_summary">Atur ulang mode dan orientasi dari semua seri</string>
-    <string name="download_notifier_split_failed">Tidak bisa memisah gambar yang telah diunduh</string>
     <string name="empty_screen">Yah, ini aneh</string>
     <string name="pref_reset_viewer_flags_error">Tidak bisa mengatur ulang setelan pembaca</string>
     <string name="ext_info_version">Versi</string>
@@ -738,8 +734,7 @@
     <string name="information_no_entries_found">Tidak ada entri yang ditemukan dalam kategori ini</string>
     <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
 \n Ketuk untuk mempelajari lebih lanjut.</string>
-    <string name="other_header">Lainnya</string>
-    <string name="action_display_show_continue_reading_button">Tampilkan tombol lanjutkan membaca</string>
+    <string name="action_display_show_continue_reading_button">Tombol lanjutkan membaca</string>
     <string name="track_remove_date_conf_title">Hapus tanggal\?</string>
     <string name="pref_invalidate_download_cache">Membatalkan indeks unduhan</string>
     <string name="pref_invalidate_download_cache_summary">Paksa aplikasi untuk mengecek ulang bab ter-unduh</string>
@@ -783,4 +778,12 @@
     </plurals>
     <string name="action_copy_to_clipboard">Salin ke papan klip</string>
     <string name="action_update_category">Perbarui kategori</string>
+    <string name="split_tall_images">Potong gambar tinggi</string>
+    <string name="overlay_header">Lapisan awal</string>
+    <string name="pref_page_rotate">Memutar halaman lebar agar pas</string>
+    <string name="pref_page_rotate_invert">Orientasi balik halaman lebar yang diputar</string>
+    <plurals name="missing_chapters">
+        <item quantity="other">Bab %1$s yang hilang</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Mungkin ada bab yang terlewat</string>
 </resources>

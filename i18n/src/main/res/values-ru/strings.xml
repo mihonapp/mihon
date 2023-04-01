@@ -40,7 +40,6 @@
     <string name="action_sort">Сортировка</string>
     <string name="action_sort_alpha">Алфавит</string>
     <string name="action_sort_last_read">Последнее прочитанное</string>
-    <string name="action_stop">Остановить</string>
     <string name="action_update_library">Обновить библиотеку</string>
     <string name="all">Все</string>
     <string name="black_background">Чёрный</string>
@@ -452,7 +451,6 @@
     <string name="action_display_comfortable_grid">Удобная сетка</string>
     <string name="action_migrate">Перенести</string>
     <string name="tabs_header">Вкладки</string>
-    <string name="badges_header">Значки</string>
     <string name="action_display_show_tabs">Показать вкладки категорий</string>
     <string name="page_list_empty_error">Страницы не найдены</string>
     <string name="action_enable_all">Включить всё</string>
@@ -700,7 +698,6 @@
     <string name="source_empty_screen">Не найдено источников</string>
     <string name="action_sort_last_manga_update">Последняя проверка обновления</string>
     <string name="action_sort_unread_count">Оставшиеся главы</string>
-    <string name="split_tall_images">Разделять длинные изображения</string>
     <string name="download_notifier_split_page_not_found">Страница %d не найдена, при разделении</string>
     <string name="split_tall_images_summary">Улучшает производительность читалки</string>
     <string name="download_notifier_split_page_path_not_found">Путь к файлам страницы %d не найден</string>
@@ -708,7 +705,6 @@
     <string name="pref_reset_viewer_flags_summary">Сбрасывает режим чтения и ориентацию для всех серий</string>
     <string name="pref_reset_viewer_flags_success">Все настройки читалки сброшены</string>
     <string name="pref_reset_viewer_flags_error">Не удалось сбросить настройки читалки</string>
-    <string name="download_notifier_split_failed">Не удалось разделить загруженное изображение</string>
     <string name="empty_screen">Упс, ошибочка вышла</string>
     <string name="ext_info_age_rating">Возрастное ограничение</string>
     <string name="ext_info_version">Версия</string>
@@ -777,7 +773,6 @@
     <string name="action_open_random_manga">Открыть случайную серию</string>
     <string name="fdroid_warning">Сборки F-Droid официально не поддерживаются.
 \nНажмите, чтобы узнать больше.</string>
-    <string name="other_header">Другое</string>
     <string name="action_display_show_continue_reading_button">Кнопка «Продолжить чтение»</string>
     <string name="track_remove_finish_date_conf_text">Это удалит ранее выбранную дату окончания из %s</string>
     <string name="track_remove_date_conf_title">Удалить дату\?</string>
@@ -825,4 +820,15 @@
     <string name="pref_hide_in_library_items">Скрывать серии, уже находящиеся в библиотеке</string>
     <string name="action_copy_to_clipboard">Копировать в буфер обмена</string>
     <string name="action_update_category">Обновить категорию</string>
+    <string name="split_tall_images">Разделять длинные изображения</string>
+    <string name="overlay_header">Наложение</string>
+    <string name="pref_page_rotate">Развернуть широкие страницы под размер экрана</string>
+    <string name="missing_chapters_unknown">Могут отсутствовать главы</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Отсутствует %1$s глава</item>
+        <item quantity="few">Отсутствуют %1$s главы</item>
+        <item quantity="many">Отсутствуют %1$s глав</item>
+        <item quantity="other">Отсутствуют %1$s глав</item>
+    </plurals>
+    <string name="pref_page_rotate_invert">Отразить ориентацию развёрнутых широких страниц</string>
 </resources>

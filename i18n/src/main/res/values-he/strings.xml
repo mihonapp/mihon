@@ -214,7 +214,6 @@
     <string name="action_next_chapter">פרק הבא</string>
     <string name="action_previous_chapter">פרק קודם</string>
     <string name="action_pause">הפסק</string>
-    <string name="action_stop">עצור</string>
     <string name="action_view_chapters">הצג פרקים</string>
     <string name="action_edit_cover">ערוך את הכריכה</string>
     <string name="action_move_category">סדר קטגוריות</string>
@@ -508,7 +507,6 @@
     <string name="action_track">מעקב</string>
     <string name="pref_auto_clear_chapter_cache">נקה את זיכרון המטמון של הפרקים כשהאפליקציה נסגרת</string>
     <string name="clear_database_source_item_count">יש %1$d מנגה שנמצאות במסד הנתונים אבל לא בספרייה</string>
-    <string name="badges_header">תגים</string>
     <string name="tabs_header">לשוניות</string>
     <string name="action_global_search_query">חפש את \"%1$s\" גלובלית</string>
     <string name="unknown_status">מצב לא ידוע</string>
@@ -655,7 +653,6 @@
     <string name="kindlish_nav">כמו ספר אלקטרוני</string>
     <string name="ext_info_version">גרסה</string>
     <string name="filter_mode_overlay">כיסוי</string>
-    <string name="split_tall_images">פיצול תמונות ארוכות אוטומטי</string>
     <string name="ext_info_age_rating">הגבלת גיל</string>
     <string name="ext_info_language">שפה</string>
     <string name="pref_color_filter_mode">פילטר צבע משתלב</string>

@@ -41,7 +41,6 @@
     <string name="action_rename_category">Canvia el nom de la categoria</string>
     <string name="action_move_category">Defineix les categories</string>
     <string name="action_edit_cover">Edita la portada</string>
-    <string name="action_stop">Atura</string>
     <string name="action_pause">Pausa</string>
     <string name="action_previous_chapter">Capítol anterior</string>
     <string name="action_next_chapter">Capítol següent</string>
@@ -436,7 +435,6 @@
     <string name="action_display_comfortable_grid">Graella confortable</string>
     <string name="action_migrate">Migra</string>
     <string name="tabs_header">Pestanyes</string>
-    <string name="badges_header">Icones</string>
     <string name="action_display_show_tabs">Mostra les pestanyes de les categories</string>
     <string name="page_list_empty_error">No s\'ha trobat cap pàgina</string>
     <string name="action_disable_all">Desactiva-ho tot</string>
@@ -676,7 +674,6 @@
     <string name="source_empty_screen">No s\'ha trobat cap font</string>
     <string name="action_sort_unread_count">Nombre de no llegits</string>
     <string name="action_sort_last_manga_update">Darrera comprovació d\'actualitzacions</string>
-    <string name="split_tall_images">Divideix les imatges altes</string>
     <string name="split_tall_images_summary">Millora el rendiment del lector</string>
     <string name="download_notifier_split_page_not_found">No s\'ha trobat la pàgina %d en dividir</string>
     <string name="download_notifier_split_page_path_not_found">No s\'ha trobat el camí del fitxer de la pàgina %d</string>
@@ -684,7 +681,6 @@
     <string name="pref_reset_viewer_flags_summary">Restableix el mode de lectura i l\'orientació de totes les sèries</string>
     <string name="pref_reset_viewer_flags_success">S\'han restablert tota la configuració del lector</string>
     <string name="pref_reset_viewer_flags_error">No s\'ha pogut restablir la configuració del lector</string>
-    <string name="download_notifier_split_failed">No s\'ha pogut dividir la imatge baixada</string>
     <string name="empty_screen">Ostres, que estrany...</string>
     <string name="ext_info_language">Llengua</string>
     <string name="ext_info_version">Versió</string>
@@ -751,8 +747,7 @@
     <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.
 \nPremeu per a obtenir-ne més informació.</string>
     <string name="information_no_entries_found">No s\'ha trobat cap element en aquesta categoria</string>
-    <string name="action_display_show_continue_reading_button">Mostra el botó per a continuar llegint</string>
-    <string name="other_header">Altres</string>
+    <string name="action_display_show_continue_reading_button">Botó per a continuar llegint</string>
     <string name="pref_invalidate_download_cache">Invalida l\'índex de baixades</string>
     <string name="track_remove_finish_date_conf_text">S\'eliminarà la data de finalització seleccionada de %s</string>
     <string name="track_remove_date_conf_title">Voleu eliminar-ne la data\?</string>
@@ -797,4 +792,5 @@
     <string name="pref_hide_in_library_items">Amaga els elements que ja són a la biblioteca</string>
     <string name="action_copy_to_clipboard">Copia al porta-retalls</string>
     <string name="action_update_category">Actualitza la categoria</string>
+    <string name="split_tall_images">Divideix les imatges altes</string>
 </resources>

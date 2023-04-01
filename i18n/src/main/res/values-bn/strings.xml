@@ -38,7 +38,6 @@
     <string name="action_rename_category">বিভাগের নতুন নামকরণ করুন</string>
     <string name="action_move_category">বিভাগ নির্বাচন করুন</string>
     <string name="action_edit_cover">মোড়ক সম্পাদনা করুন</string>
-    <string name="action_stop">থামুন</string>
     <string name="action_pause">বিরতি দিন</string>
     <string name="action_previous_chapter">পূর্ববর্তী অধ্যায়</string>
     <string name="action_next_chapter">পরবর্তী আধ্যায়</string>
@@ -472,7 +471,6 @@
     <string name="last_used_source">সর্বশেষ ব্যবহৃত</string>
     <string name="http_error_hint">ওয়েবসাইটটি ওয়েবভিউতে পরীক্ষা করুন</string>
     <string name="tabs_header">ট্যাব গুলি</string>
-    <string name="badges_header">প্রতীক গুলি</string>
     <string name="downloaded_chapters">ডাউনলোড করা অধ্যায়</string>
     <string name="manga_from_library">লাইব্রেরীর মাঙ্গা</string>
     <string name="logout_success">আপনি এখন প্রস্থান করেছেন</string>
@@ -669,11 +667,9 @@
     <string name="auto_download_while_reading">পড়ার সময় সয়ংক্রিয়ভাবে ডাউনলোড</string>
     <string name="pref_update_only_completely_read">অপঠিত অধ্যায়সহ</string>
     <string name="pref_library_update_manga_restriction">শিরোনামসমুহ হালনাগাদ এড়িয়ে যান</string>
-    <string name="download_notifier_split_failed">ডাউনলোড করা চিত্র বিভক্ত করা যায়নি</string>
     <string name="channel_skipped">এড়িয়ে যাওয়া</string>
     <string name="pref_update_only_started">যেগুলো শুরু করা হয়নি</string>
     <string name="webview_data_deleted">ওয়েবভিউ ডাটা মুছা হয়েছে</string>
-    <string name="split_tall_images">লম্বা চিত্র বিভক্ত</string>
     <string name="split_tall_images_summary">পঠন কর্মক্ষমতা উন্নত করে</string>
     <string name="pref_clear_webview_data">ওয়েবভিইউ ডাটা মুছুন</string>
     <string name="multi_lang">বহু</string>

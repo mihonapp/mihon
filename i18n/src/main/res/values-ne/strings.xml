@@ -20,7 +20,7 @@
     <string name="action_open_log">लग खोल्नुहोस्</string>
     <string name="action_undo">पूर्ववत गर्नुहोस्</string>
     <string name="action_reset">रिसेट गर्नुहोस्</string>
-    <string name="action_save">सेभ गर्नुहोस्</string>
+    <string name="action_save">बचत गर्नुहोस्</string>
     <string name="action_share">साझा गर्नुहोस्</string>
     <string name="action_install">स्थापना गर्नुहोस्</string>
     <string name="action_move_to_bottom">तल सार्नुहोस्</string>
@@ -53,7 +53,6 @@
     <string name="action_next_chapter">अर्को अध्याय</string>
     <string name="action_previous_chapter">अघिल्लो अध्याय</string>
     <string name="action_pause">रोक्नुहोस्</string>
-    <string name="action_stop">रोक्नुहोस्</string>
     <string name="action_view_chapters">अध्यायहरू हेर्नुहोस्</string>
     <string name="action_edit_cover">आवरण सम्पादन गर्नुहोस्</string>
     <string name="action_move_category">वर्गहरू सेट गर्नुहोस्</string>
@@ -97,11 +96,11 @@
     <string name="information_no_recent">कुनै नयाँ अपडेटहरू छैन</string>
     <string name="label_download_queue">डाउनलोड लाम</string>
     <string name="confirm_exit">बाहिर निस्किन फेरि फिर्ता थिच्नुहोस्</string>
-    <string name="unlock_app">अनलक ताचियोमी</string>
+    <string name="unlock_app">ताचियोमी अनलक गर्नुहोस्</string>
     <string name="information_no_downloads">कुनै डाउनलोडहरू छैन</string>
     <string name="label_help">मद्दत</string>
     <string name="label_extension_info">एक्सटेनशनको जानकारी</string>
-    <string name="label_extensions">एक्सटेनशनहरु</string>
+    <string name="label_extensions">एक्सटेनशन</string>
     <string name="label_migration">स्थानान्तरण</string>
     <string name="label_backup">ब्याकअप र पुनर्स्थापना</string>
     <string name="label_sources">स्रोतहरू</string>
@@ -334,15 +333,14 @@
     <string name="pref_search_pinned_sources_only">ग्लोबल खोजमा पिन गरिएका स्रोतहरू मात्र खोज्नुहोस्</string>
     <string name="restore_completed">पुनर्स्थापना सम्पन्न भयो</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">%2$s एररको साथ %1$s मा सम्पन्न भयो</item>
-        <item quantity="other">%2$s एररहरूसँग %1$s मा सम्पन्न भयो</item>
+        <item quantity="one">%2$s त्रुटिको साथ %1$s मा सम्पन्न भयो</item>
+        <item quantity="other">%2$s त्रुटिहरूसँग %1$s मा सम्पन्न भयो</item>
     </plurals>
     <string name="pref_clear_cookies">कुकीहरू खाली गर्नुहोस्</string>
     <string name="backup_choice">तपाई के ब्याकअप गर्न चाहनुहुन्छ\?</string>
     <string name="creating_backup_error">ब्याकअप असफल भयो</string>
     <string name="pref_dns_over_https">HTTPS (DoH) माथि DNS</string>
     <string name="requires_app_restart">प्रभाव पार्न एप पुन: सुरु गर्न आवश्यक छ</string>
-    <string name="badges_header">ब्याजहरू</string>
     <string name="notification_cover_update_failed">आवरण अपडेट गर्न असफल भयो</string>
     <string name="notification_first_add_to_library">यो गर्नु अघि कृपया आफ्नो पुस्तकालयमा यस इन्ट्रीलाई राख्नुहोस्</string>
     <string name="download_notifier_downloader_title">डाउनलोडर</string>
@@ -364,7 +362,7 @@
     <string name="label_network">नेटवर्क</string>
     <string name="restoring_backup_error">ब्याकअप पुनर्स्थापना असफल भयो</string>
     <string name="backup_info">तपाईंले ब्याकअपको प्रतिलिपिहरू अन्य ठाउँहरूमा पनि राख्नु पर्छ।</string>
-    <string name="notification_new_chapters">नयाँ अध्यायहरु पायो</string>
+    <string name="notification_new_chapters">नयाँ अध्यायहरु फेला पर्यो</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d नयाँ अध्याय</item>
         <item quantity="other">%1$d नयाँ अध्यायहरू</item>
@@ -373,7 +371,7 @@
     <string name="disabled">असक्षम</string>
     <string name="enhanced_services">परिष्कृत सेवाहरू</string>
     <string name="restoring_backup_canceled">पुनर्स्थापना रद्द गरियो</string>
-    <string name="download_notifier_title_error">एरर</string>
+    <string name="download_notifier_title_error">त्रुटि</string>
     <string name="scale_type_stretch">तन्काउनुहोस्</string>
     <string name="scale_type_smart_fit">स्मार्ट फिट</string>
     <string name="zoom_start_automatic">स्वचालित</string>
@@ -403,7 +401,7 @@
     <string name="download_notifier_no_network">कुनै नेटवर्क जडान उपलब्ध छैन</string>
     <string name="tracking_info">ट्र्याकिङ सेवाहरूमा अध्याय प्रगति अपडेट गर्न एकतर्फी सिङ्क। तिनीहरूको ट्र्याकिङ बटनबाट व्यक्तिगत इन्ट्रीहरूको लागि ट्र्याकिङ सेट अप गर्नुहोस्।</string>
     <string name="backup_restore_missing_trackers">ट्र्याकरहरूमा लगइन छैनन्:</string>
-    <string name="backup_restore_missing_sources">हराएको स्रोतहरु:</string>
+    <string name="backup_restore_missing_sources">छुटेको स्रोतहरु:</string>
     <string name="pref_clear_chapter_cache">अध्याय क्यास खाली गर्नुहोस्</string>
     <string name="pref_remove_exclude_categories">बहिष्कृत वर्गहरू</string>
     <string name="fifth_to_last">पाँचौं अन्तिम अध्याय</string>
@@ -416,12 +414,12 @@
     <string name="pref_create_backup_summ">हालको पुस्तकालय पुनर्स्थापना गर्न प्रयोग गर्न सकिन्छ</string>
     <string name="cookies_cleared">कुकीहरू खाली गरियो</string>
     <string name="label_data">डाटा</string>
-    <string name="cache_delete_error">क्यास खाली गर्दा एरर भयो</string>
+    <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
     <string name="status">स्थिति</string>
     <string name="notification_check_updates">नयाँ अध्यायहरूको लागि जाँच गर्दै</string>
     <string name="update_check_notification_download_in_progress">डाउनलोड गर्दै…</string>
     <string name="update_check_notification_download_complete">अपडेट स्थापना गर्न ट्याप गर्नुहोस्</string>
-    <string name="download_notifier_unknown_error">अप्रत्याशित एररका कारण अध्याय डाउनलोड गर्न सकिएन</string>
+    <string name="download_notifier_unknown_error">अप्रत्याशित त्रुटिका कारण अध्याय डाउनलोड गर्न सकिएन</string>
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
     <string name="pref_zoom_start">जुम सुरु स्थिति</string>
@@ -441,7 +439,7 @@
     <string name="pref_restore_backup">ब्याकअप रिस्टोर गर्नुहोस्</string>
     <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय पुनर्स्थापना गर्नुहोस्</string>
     <string name="pref_backup_service_category">स्वचालित ब्याकअपहरू</string>
-    <string name="invalid_backup_file_missing_manga">ब्याकअपले कुनै पनि पुस्तकालयका इन्ट्री समावेश गर्दैन।</string>
+    <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
     <string name="pref_backup_directory">ब्याकअप स्थान</string>
     <string name="pref_backup_interval">ब्याकअप फ्रिक्वेन्सी</string>
     <string name="pref_backup_slots">अधिकतम ब्याकअपहरु</string>
@@ -452,9 +450,9 @@
     </plurals>
     <string name="cache_deleted">क्यास खाली गरियो। %1$d फाइलहरू हटाएका छन्</string>
     <string name="notification_chapters_single_and_more">अध्याय %1$s र %2$d अरु</string>
-    <string name="update_check_notification_download_error">डाउनलोड एरर</string>
+    <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="channel_ext_updates">एक्सटेनशन अपडेटहरु</string>
-    <string name="pref_dump_crash_logs_summary">विकासकर्ताहरूसँग साझेदारी गर्नको लागि फाइलमा एरर लगहरू बचत गर्दछ</string>
+    <string name="pref_dump_crash_logs_summary">विकासकर्ताहरूसँग साझेदारी गर्नको लागि फाइलमा त्रुटि लगहरू बचत गर्दछ</string>
     <string name="label_background_activity">ब्याकग्राउण्ड गतिविधि</string>
     <string name="whats_new">नयाँ के छ</string>
     <string name="clear_database_source_item_count">डेटाबेसमा %1$d गैर-पुस्तकालय इन्ट्रीहरु</string>
@@ -476,14 +474,14 @@
     <string name="login_title">%1$s मा लग इन गर्नुहोस्</string>
     <string name="pref_refresh_library_covers">पुस्तकालयका आवरणहरु ताजा गर्नुहोस्</string>
     <string name="notification_incognito_text">गुप्त मोड असक्षम गर्नुहोस्</string>
-    <string name="unknown_error">अज्ञात एरर</string>
+    <string name="unknown_error">अज्ञात त्रुटि</string>
     <string name="downloaded_chapters">डाउनलोड गरिएका अध्यायहरू</string>
     <string name="chapter_not_found">अध्याय फेला परेन</string>
     <string name="no_pinned_sources">तपाईंसँग पिन गरिएको स्रोतहरू छैनन्</string>
     <string name="local_invalid_format">अवैध अध्याय ढाँचा</string>
     <string name="downloaded_only_summary">तपाईंको पुस्तकालयमा सबै इन्ट्री फिल्टर गर्नेछ</string>
     <string name="pref_dump_crash_logs">क्र्यास लगहरू डम्प गर्नुहोस्</string>
-    <string name="crash_log_saved">क्र्यास लगहरू सुरक्षित गरियो</string>
+    <string name="crash_log_saved">क्र्यास लगहरू बचत गरियो</string>
     <string name="pref_disable_battery_optimization">ब्याट्री अप्टिमाइजेसन असक्षम पार्नुहोस्</string>
     <string name="unknown">अज्ञात</string>
     <string name="no_results_found">कुनै परिणाम फेला परेन</string>
@@ -524,7 +522,7 @@
     <string name="publishing_finished">प्रकाशन सकियो</string>
     <string name="cancelled">रद्द गरेको</string>
     <string name="on_hiatus">अन्तरालमा छ</string>
-    <string name="add_to_library">पुस्तकालयमा राख्नुहोस</string>
+    <string name="add_to_library">पुस्तकालयमा राख्नुहोस्</string>
     <string name="manga_added_library">पुस्तकालयमा राखियो</string>
     <string name="in_library">पुस्तकालयमा छ</string>
     <string name="completed">समाप्त</string>
@@ -564,7 +562,7 @@
     <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ\?</string>
     <string name="chapter_settings">अध्याय सेटिङ</string>
     <string name="set_chapter_settings_as_default">पूर्वनिर्धारित रूपमा सेट गर्नुहोस्</string>
-    <string name="confirm_set_image_as_cover">यो छवि आवरण कलाको रूपमा राख्न चाहनुहुन्छ\?</string>
+    <string name="confirm_set_image_as_cover">यो छवि आवरण को रूपमा राख्न चाहनुहुन्छ\?</string>
     <string name="dialog_with_checkbox_reset">यो इन्ट्रीको सबै अध्यायहरू रिसेट गर्नुहोस्</string>
     <string name="download_unread">नपढिएको</string>
     <string name="cover_saved">आवरण बचत भयो</string>
@@ -685,9 +683,9 @@
     <string name="multi_lang">थुप्रै</string>
     <string name="pref_library_update_show_tab_badge">अपडेटहरु आइकनमा नपढिएको गणना देखाउनुहोस्</string>
     <string name="pref_skip_dupe_chapters">डुप्लिकेट अध्यायहरू छोड्नुहोस्</string>
-    <string name="action_display_show_continue_reading_button">\"जारी राख्नुहोस्\" बटन देखाउनुहोस्</string>
+    <string name="action_display_show_continue_reading_button">जारी राख्नुहोस् बटन</string>
     <string name="label_stats">तथ्याङ्क</string>
-    <string name="label_started">सुरु गरेको</string>
+    <string name="label_started">सुरु भएको</string>
     <string name="label_local">लोकल</string>
     <string name="label_downloaded">डाउनलोड गरेको</string>
     <string name="network_not_metered">मापन नगरिएको नेटवर्कमा मात्र</string>
@@ -698,7 +696,6 @@
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
     <string name="ext_info_age_rating">उमेर मूल्याङ्कन</string>
-    <string name="split_tall_images">अग्लो छविहरू विभाजित गर्नुहोस्</string>
     <string name="action_not_now">अहिले हैन</string>
     <string name="action_open_random_manga">अनियमित इन्ट्री खोल्नुहोस्</string>
     <string name="confirm_add_duplicate_manga">तपाईको पुस्तकालयमा एउटै नामको इन्ट्री छ।
@@ -723,7 +720,6 @@
     <string name="label_mean_score">औसत स्कोर</string>
     <string name="appwidget_updates_description">तपाईंको भर्खरै अपडेट गरिएको पुस्तकालय इन्ट्रीहरू हेर्नुहोस्</string>
     <string name="enhanced_services_not_installed">उपलब्ध छ तर स्रोत स्थापना गरिएको छैन: %s</string>
-    <string name="other_header">अन्य</string>
     <string name="copied_to_clipboard_plain">क्लिपबोर्डमा प्रतिलिपि गरियो</string>
     <string name="information_no_entries_found">यस वर्गमा कुनै इन्ट्रीहरु फेला परेनन्</string>
     <string name="unknown_title">अज्ञात शीर्षक</string>
@@ -745,7 +741,6 @@
     <string name="unfinished_list">अधूरो सूची</string>
     <string name="source_filter_empty_screen">कुनै स्थापित स्रोत फेला परेन</string>
     <string name="download_notifier_split_page_path_not_found">पृष्ठ %d को फाइल मार्ग फेला पार्न सकेन</string>
-    <string name="download_notifier_split_failed">डाउनलोड गरिएको छवि विभाजित गर्न सकिएन</string>
     <string name="custom_cover">कस्टम आवरण</string>
     <string name="wish_list">इच्छा सूची</string>
     <string name="popular">लोकप्रिय</string>
@@ -755,7 +750,7 @@
     <string name="track_remove_start_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको सुरु मिति हटाउनेछ</string>
     <string name="track_remove_finish_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको समाप्त मिति हटाउनेछ</string>
     <string name="pref_general_summary">एप को भाषा, सूचनाहरू</string>
-    <string name="update_already_running">एउटा अपडेट पहिले नै चलिरहेको छ</string>
+    <string name="update_already_running">एउटा अपडेट पहिले नै जारी छ</string>
     <string name="empty_screen">ल, यो के भयो</string>
     <string name="not_installed">स्थापना गरिएको छैन</string>
     <string name="pref_reset_viewer_flags_summary">पढ्ने मोड र सबै शृङ्खलाहरूको अभिमुखीकरण रिसेट गर्दछ</string>
@@ -797,4 +792,13 @@
     <string name="day_short">%dदि</string>
     <string name="hour_short">%dघ</string>
     <string name="action_update_category">वर्ग अपडेट गर्नुहोस्</string>
+    <string name="split_tall_images">अग्लो छविहरू विभाजित गर्नुहोस्</string>
+    <string name="overlay_header">आवरण ओभरले</string>
+    <string name="pref_page_rotate">फिट गर्न चौडा पृष्ठहरू घुमाउनुहोस्</string>
+    <string name="pref_page_rotate_invert">घुमाइएका चौडा पृष्ठहरूको अभिमुखीकरण फ्लिप गर्नुहोस्</string>
+    <string name="missing_chapters_unknown">अध्यायहरू छुटेको हुन सक्छ</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s अध्याय छुटेको छ</item>
+        <item quantity="other">%1$s अध्यायहरू छुटेका छन्</item>
+    </plurals>
 </resources>

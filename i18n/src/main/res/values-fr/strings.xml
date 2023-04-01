@@ -33,7 +33,6 @@
     <string name="action_rename_category">Renommer la catégorie</string>
     <string name="action_move_category">Déplacer vers une catégorie</string>
     <string name="action_edit_cover">Changer l\'image de couverture</string>
-    <string name="action_stop">Arrêter</string>
     <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Chapitre précédent</string>
     <string name="action_next_chapter">Chapitre suivant</string>
@@ -115,11 +114,11 @@
     <string name="color_filter_a_value">O</string>
     <!-- Downloads section -->
     <string name="pref_download_directory">Répertoire de téléchargement</string>
-    <string name="pref_remove_after_read">Après la lecture, supprimer automatiquement</string>
+    <string name="pref_remove_after_read">Suppression automatique après lecture</string>
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
     <string name="second_to_last">Avant-dernier chapitre lu</string>
-    <string name="third_to_last">Troisième chapitre avant le denier lu</string>
+    <string name="third_to_last">Troisième chapitre avant le dernier lu</string>
     <string name="fourth_to_last">Quatrième chapitre avant le dernier lu</string>
     <string name="pref_download_new">Télécharger les nouveaux chapitres</string>
     <!-- Sync section -->
@@ -137,7 +136,7 @@
     <string name="version">Version</string>
     <!-- ACRA -->
     <string name="pref_enable_acra">Envoyer des rapports de plantage</string>
-    <string name="pref_acra_summary">Aide à corriger les erreurs. Aucune donnée sensible ne sera envoyée</string>
+    <string name="pref_acra_summary">Aident à corriger les bugs. Aucune donnée sensible ne sera envoyée</string>
     <!-- Login dialog -->
     <string name="login_title">Connexion à %1$s</string>
     <string name="username">Nom d\'utilisateur</string>
@@ -176,7 +175,7 @@
     <string name="error_category_exists">Une catégorie avec ce nom existe déjà !</string>
     <!-- Dialog option with checkbox view -->
     <string name="dialog_with_checkbox_remove_description">Ceci enlèvera la date de lecture de ce chapitre. Êtes-vous sûr(e) \?</string>
-    <string name="dialog_with_checkbox_reset">Réinitialiser tous les chapitres de cette entrée</string>
+    <string name="dialog_with_checkbox_reset">Réinitialiser tous les chapitres de ce titre</string>
     <!-- SnackBar -->
     <string name="snack_add_to_library">Ajouter à la bibliothèque \?</string>
     <!-- Image notifier -->
@@ -196,7 +195,7 @@
     <!-- Library update service notifications -->
     <string name="notification_new_chapters">Des nouveaux chapitres ont été trouvés</string>
     <string name="notification_cover_update_failed">La mise à jour de la couverture a échoué</string>
-    <string name="notification_first_add_to_library">Veuillez ajouter l\'entrée à votre bibliothèque avant de faire ceci</string>
+    <string name="notification_first_add_to_library">Veuillez ajouter ce titre à votre bibliothèque avant de faire cela</string>
     <!-- File Picker Titles -->
     <string name="file_select_cover">Sélectionner l\'image de couverture</string>
     <string name="file_select_backup">Sélectionner fichier de sauvegarde</string>
@@ -227,7 +226,7 @@
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
     <string name="pref_clear_chapter_cache">Effacer le cache des chapitres</string>
-    <string name="pref_remove_after_marked_as_read">Après avoir été marqué manuellement comme lu</string>
+    <string name="pref_remove_after_marked_as_read">Après avoir été marqué comme lu</string>
     <string name="sort_by_source">Par source</string>
     <string name="updating_category">Mise à jour de la catégorie</string>
     <string name="no_more_results">Pas d\'autres résultats</string>
@@ -389,9 +388,9 @@
     <string name="email">Adresse courriel</string>
     <string name="pref_always_show_chapter_transition">Toujours afficher la transition entre les chapitres</string>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Pour %d entrée</item>
-        <item quantity="many">Pour %d entrées</item>
-        <item quantity="other">Pour %d entrées</item>
+        <item quantity="one">Pour %d titre</item>
+        <item quantity="many">Pour %d titres</item>
+        <item quantity="other">Pour %d titres</item>
     </plurals>
     <string name="action_menu">Menu</string>
     <string name="action_reorganize_by">Réorganiser</string>
@@ -478,7 +477,6 @@
     <string name="action_migrate">Migrer</string>
     <string name="action_display_comfortable_grid">Grille espacée</string>
     <string name="tabs_header">Onglets</string>
-    <string name="badges_header">Badges</string>
     <string name="action_display_show_tabs">Afficher les onglets des catégories</string>
     <string name="page_list_empty_error">Aucune page trouvée</string>
     <string name="action_disable_all">Tout désactiver</string>
@@ -520,7 +518,7 @@
     <string name="channel_errors">Erreurs</string>
     <string name="backup_restore_missing_trackers">Traceurs non connectés :</string>
     <string name="pref_remove_bookmarked_chapters">Permettre la suppression des chapitres marqués d\'un marque-page</string>
-    <string name="pref_category_delete_chapters">Supprimer des chapitres</string>
+    <string name="pref_category_delete_chapters">Suppression des chapitres</string>
     <string name="ext_nsfw_warning">Les sources de cette extension peuvent contenir du contenu NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ceci n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
@@ -551,13 +549,13 @@
     <string name="myanimelist_relogin">Veuillez vous reconnecter à MAL</string>
     <string name="file_picker_error">L’application de sélection de fichier est introuvable</string>
     <string name="pref_show_nsfw_source">Afficher dans les listes de sources et d\'extensions</string>
-    <string name="channel_crash_logs">Registres d\'incident</string>
+    <string name="channel_crash_logs">Rapports de plantage</string>
     <string name="track_finished_reading_date">Date de fin</string>
     <string name="track_started_reading_date">Date de début</string>
     <string name="kindlish_nav">Style Kindle</string>
-    <string name="crash_log_saved">Registre d\'incident sauvegardé</string>
-    <string name="pref_dump_crash_logs">Archivage des registres d\'incident</string>
-    <string name="pref_dump_crash_logs_summary">Enregistre les traces d\'incident dans un fichier pour les partager avec les développeurs</string>
+    <string name="crash_log_saved">Rapports de plantage sauvegardés</string>
+    <string name="pref_dump_crash_logs">Archivage des rapports de plantage</string>
+    <string name="pref_dump_crash_logs_summary">Enregistre les rapports de plantage dans un fichier pour les partager avec les développeurs</string>
     <string name="pref_viewer_nav">Zones tactiles</string>
     <string name="edge_nav">Bord</string>
     <string name="l_nav">En forme de L</string>
@@ -583,7 +581,7 @@
     <string name="pref_show_navigation_mode">Afficher les zones tactiles (superposition)</string>
     <string name="exclude">Exclure : %s</string>
     <string name="include">Inclure : %s</string>
-    <string name="none">Aucun</string>
+    <string name="none">Aucun(e)</string>
     <string name="action_sort_chapter_fetch_date">Date de récupération du chapitre</string>
     <string name="pref_library_update_categories_details">Les entrées dans les catégories exclues ne seront pas mises à jour même si elles sont aussi dans les catégories inclues.</string>
     <string name="pref_download_new_categories_details">Les entrées des catégories exclues ne seront pas mis à jour même si elles appartiennent aussi à des catégories incluses.</string>
@@ -617,7 +615,7 @@
     <string name="cover_saved">Couverture enregistrée</string>
     <string name="manga_cover">Couverture</string>
     <string name="tracking_guide">Manuel de suivi</string>
-    <string name="off">Désactivé</string>
+    <string name="off">Désactivé(e)</string>
     <string name="on">Activé</string>
     <string name="categorized_display_settings">Rendre les réglages de tri et d\'affichage propres à chaque catégorie</string>
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
@@ -637,10 +635,10 @@
     <string name="pref_app_theme">Thème de l\'appli</string>
     <string name="about_dont_kill_my_app">Certains fabricants ont mis en place des restrictions supplémentaires sur les applications qui tuent les services d\'arrière-plan. Ce site Web contient plus d\'informations sur la manière de résoudre ce problème.</string>
     <string name="label_background_activity">Activité en arrière-plan</string>
-    <string name="pref_lowest">La plus basse</string>
+    <string name="pref_lowest">Minimale</string>
     <string name="pref_low">Basse</string>
     <string name="pref_high">Élevée</string>
-    <string name="pref_highest">La plus élevée</string>
+    <string name="pref_highest">Maximale</string>
     <string name="pref_hide_threshold">Sensibilité pour masquer le menu lors du défilement</string>
     <string name="pref_inverted_colors">Inversé</string>
     <string name="pref_relative_time_long">Long (Court+, il y a n jours)</string>
@@ -670,8 +668,8 @@
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Total des entrées</string>
-    <string name="pref_verbose_logging">Journalisation détaillée</string>
-    <string name="pref_verbose_logging_summary">Imprimer les journaux détaillés dans le journal du système (réduit les performances de l\'application)</string>
+    <string name="pref_verbose_logging">Rapports détaillés</string>
+    <string name="pref_verbose_logging_summary">Inclut des rapports détaillés dans les traces systèmes (réduit les performances de l\'application)</string>
     <string name="action_display_language_badge">Langue</string>
     <string name="label_warning">Attention</string>
     <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie. Appuyez pour en savoir plus.</string>
@@ -695,7 +693,7 @@
     <string name="cancelled">Annulé</string>
     <string name="action_faq_and_guides">FAQ et guides</string>
     <string name="webtoon_side_padding_5">5 %</string>
-    <string name="action_show_manga">Afficher l\'entrée</string>
+    <string name="action_show_manga">Afficher le titre</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
     <string name="pref_navigate_pan">Panoramique des images larges en appuyant</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
@@ -722,7 +720,6 @@
     <string name="action_sort_last_manga_update">Dernière mise à jour</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>
     <string name="source_empty_screen">Aucune source trouvée</string>
-    <string name="split_tall_images">Fractionner les images trop grandes</string>
     <string name="split_tall_images_summary">Améliore les performances du lecteur</string>
     <string name="download_notifier_split_page_not_found">Page %d introuvable lors du fractionnement</string>
     <string name="download_notifier_split_page_path_not_found">Impossible de trouver le chemin du fichier de la page %d</string>
@@ -730,7 +727,6 @@
     <string name="pref_reset_viewer_flags_summary">Réinitialise le mode de lecture et l\'orientation de toutes les séries</string>
     <string name="pref_reset_viewer_flags_success">Paramètres du lecteur réinitialisés</string>
     <string name="pref_reset_viewer_flags_error">Impossible de réinitialiser les paramètres du lecteur</string>
-    <string name="download_notifier_split_failed">Impossible de diviser l\'image téléchargée</string>
     <string name="empty_screen">Eh bien, c\'est gênant</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Langue</string>
@@ -749,7 +745,7 @@
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
     <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » \?</string>
-    <string name="internal_error">ErreurInterne : Vérifiez votre journal de plante pour plus d\'information</string>
+    <string name="internal_error">ErreurInterne : Consultez vos rapports de plantage pour plus d\'informations</string>
     <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
     <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
     <string name="action_remove_everything">Tout retirer</string>
@@ -759,8 +755,8 @@
     <string name="error_user_agent_string_blank">La liste d\'agents utilisateurs ne peut être vide</string>
     <string name="update_already_running">Une mise à jour est déjà en cours</string>
     <string name="theme_tidalwave">Raz-de-marée</string>
-    <string name="download_ahead">Télécharger à l\'avance</string>
-    <string name="auto_download_while_reading">Téléchargement automatique pendant la lecture</string>
+    <string name="download_ahead">Téléchargement anticipé</string>
+    <string name="auto_download_while_reading">Téléchargement anticipé pendant la lecture</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Chapitre suivant non lu</item>
         <item quantity="many">Les %d suivants non lus</item>
@@ -781,26 +777,25 @@
     <string name="pref_downloads_summary">Téléchargement automatique, téléchargement anticipé</string>
     <string name="pref_tracking_summary">Synchronisation unidirectionnelle de la progression, synchronisation améliorée</string>
     <string name="pref_backup_summary">Sauvegardes manuelles et automatiques</string>
-    <string name="pref_advanced_summary">Dump crash logs, optimisations de la batterie</string>
+    <string name="pref_advanced_summary">Rapports de plantage, optimisations de la batterie</string>
     <string name="crash_screen_restart_application">Redémarrer l\'application</string>
     <string name="pref_general_summary">Langage d\'application, notifications</string>
     <string name="pref_browse_summary">Sources, extensions, recherche globale</string>
     <string name="pref_library_summary">Catégories, mise à jour globale</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>
     <string name="pref_security_summary">Verrouillage des applications, écran sécurisé</string>
-    <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de faire une capture d\'écran de ce message, d\'extraire les dumb crash logs et de les partager dans notre canal d\'assistance sur Discord.</string>
+    <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de faire une capture d\'écran de ce message, d\'extraire les rapports de plantage et de les partager dans notre salon d\'assistance sur Discord.</string>
     <string name="invalid_location">Emplacement invalide : %s</string>
     <string name="error_user_agent_string_invalid">Chaîne d\'agent utilisateur invalide</string>
     <string name="unknown_title">Titre inconnu</string>
     <string name="updates_last_update_info_just_now">À l\'instant</string>
-    <string name="action_open_random_manga">Ouvrir une entrée au hasard</string>
+    <string name="action_open_random_manga">Ouvrir un titre au hasard</string>
     <string name="fdroid_warning">Les versions de F-Droid ne sont pas officiellement prises en charge.
 \nAppuyez pour en savoir plus.</string>
     <string name="information_no_entries_found">Aucune entrée trouvée dans cette catégorie</string>
     <string name="download_notifier_cache_renewal">Vérification des téléchargements</string>
-    <string name="action_display_show_continue_reading_button">Afficher le bouton Continuer la lecture</string>
+    <string name="action_display_show_continue_reading_button">Bouton \"Reprendre\"</string>
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
-    <string name="other_header">Autre</string>
     <string name="track_remove_date_conf_title">Retirer la date \?</string>
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
     <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
@@ -830,9 +825,9 @@
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
     <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
     <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
-    <string name="confirm_add_duplicate_manga">Vous avez une entrée dans votre bibliothèque avec le même nom.
+    <string name="confirm_add_duplicate_manga">Un titre de votre bibliothèque porte le même nom.
 \n
-\nVoulez-vous toujours continuer \?</string>
+\nVoulez-vous vraiment continuer \?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
@@ -845,4 +840,14 @@
     </plurals>
     <string name="action_copy_to_clipboard">Copier dans le presse-papier</string>
     <string name="action_update_category">Mettre à jour la catégorie</string>
+    <string name="split_tall_images">Diviser les grandes images</string>
+    <string name="overlay_header">Superposition</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Manque %1$s chapitre</item>
+        <item quantity="many">Manque %1$s chapitres</item>
+        <item quantity="other">Manque %1$s chapitres</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Il pourrait manquer des chapitres</string>
+    <string name="pref_page_rotate_invert">Inverser l\'orientation des pages larges retournées</string>
+    <string name="pref_page_rotate">Tourner les pages larges pour qu\'elles rentrent</string>
 </resources>

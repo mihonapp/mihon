@@ -38,7 +38,6 @@
     <string name="action_edit_categories">Rediger kategoriar</string>
     <string name="action_edit_cover">Rediger omslag</string>
     <string name="action_view_chapters">Vis kapittel</string>
-    <string name="action_stop">Stopp</string>
     <string name="action_pause">Pause</string>
     <string name="action_next_chapter">Neste kapittel</string>
     <string name="action_retry">Prøv igjen</string>

@@ -40,7 +40,6 @@
     <string name="action_rename_category">重新命名類別</string>
     <string name="action_move_category">設定類別</string>
     <string name="action_edit_cover">編輯封面</string>
-    <string name="action_stop">停止</string>
     <string name="action_pause">暫停</string>
     <string name="action_previous_chapter">上一章</string>
     <string name="action_next_chapter">下一章</string>
@@ -404,7 +403,6 @@
     <string name="restoring_backup_error">還原失敗</string>
     <string name="creating_backup_error">備份失敗</string>
     <string name="logout_title">登出 %1$s？</string>
-    <string name="badges_header">標記</string>
     <plurals name="download_queue_summary">
         <item quantity="other">剩餘 %1$s 本</item>
     </plurals>
@@ -514,7 +512,7 @@
     <string name="downloaded_chapters">已下載的章節</string>
     <string name="pref_dual_page_split">分割寬頁</string>
     <string name="pref_dual_page_invert_summary">若分割後的排版方向與翻閱順序不符</string>
-    <string name="pref_dual_page_invert">反轉分割頁面排版</string>
+    <string name="pref_dual_page_invert">調換分割寬頁排版</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_category_auto_download">自動下載</string>
     <string name="rotation_portrait">直向</string>
@@ -537,7 +535,7 @@
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
-    <string name="pref_create_folder_per_manga_summary">根據漫畫標題建立資料夾</string>
+    <string name="pref_create_folder_per_manga_summary">根據作品標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>
@@ -639,7 +637,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">顯示作品</string>
     <string name="pref_landscape_zoom">縮放橫向圖片</string>
-    <string name="pref_navigate_pan">輕觸時移動圖片</string>
+    <string name="pref_navigate_pan">輕觸大圖時先平移後翻頁</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
     <string name="pref_update_only_started">無已讀的章節</string>
     <string name="skipped_reason_completed">由於叢書連載已完結，因此略過</string>
@@ -665,14 +663,12 @@
     <string name="action_sort_last_manga_update">上次檢查更新日期</string>
     <string name="action_sort_unread_count">未讀章數</string>
     <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
-    <string name="split_tall_images">分割過高的圖片</string>
     <string name="split_tall_images_summary">用以改善閱讀器效能</string>
     <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
     <string name="pref_reset_viewer_flags">重設個別閱讀器設定</string>
     <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向恢復為預設值</string>
     <string name="pref_reset_viewer_flags_success">已重設所有閱讀器設定</string>
     <string name="pref_reset_viewer_flags_error">無法重設閱讀器設定</string>
-    <string name="download_notifier_split_failed">無法分割下載的圖片</string>
     <string name="empty_screen">呃…尷尬了</string>
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">語言</string>
@@ -738,8 +734,7 @@
     <string name="information_no_entries_found">類別沒有作品</string>
     <string name="fdroid_warning">F-Droid 的組建未被正式支援。
 \n輕觸以瞭解詳情。</string>
-    <string name="action_display_show_continue_reading_button">顯示繼續閱讀按鈕</string>
-    <string name="other_header">其他</string>
+    <string name="action_display_show_continue_reading_button">繼續閱讀按鈕</string>
     <string name="track_remove_date_conf_title">移除日期？</string>
     <string name="track_remove_finish_date_conf_text">從「%s」移除你先前輸入的閱讀完畢日期</string>
     <string name="track_remove_start_date_conf_text">從「%s」移除你先前輸入的開始閱讀日期</string>
@@ -783,4 +778,12 @@
         <item quantity="other">後續 %d 章</item>
     </plurals>
     <string name="action_update_category">更新類別</string>
+    <string name="split_tall_images">分割過高的圖片</string>
+    <string name="overlay_header">封面附加元素</string>
+    <string name="missing_chapters_unknown">部分章節可能缺漏</string>
+    <plurals name="missing_chapters">
+        <item quantity="other">缺漏 %1$s 章</item>
+    </plurals>
+    <string name="pref_page_rotate">旋轉寬頁以符合螢幕</string>
+    <string name="pref_page_rotate_invert">調換旋轉寬頁方向</string>
 </resources>

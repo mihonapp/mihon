@@ -41,7 +41,6 @@
     <string name="action_rename_category">Перейменувати категорію</string>
     <string name="action_move_category">Помістити в категорію</string>
     <string name="action_edit_cover">Змінити обкладинку</string>
-    <string name="action_stop">Стоп</string>
     <string name="action_pause">Пауза</string>
     <string name="action_previous_chapter">Попередній розділ</string>
     <string name="action_next_chapter">Наступний розділ</string>
@@ -419,7 +418,6 @@
     <string name="local_source_help_guide">Посібник місцевого джерела</string>
     <string name="last_used_source">Останній використаний</string>
     <string name="tabs_header">Вкладки</string>
-    <string name="badges_header">Значки</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s залишилось</item>
         <item quantity="few">%1$s залишилось</item>
@@ -685,8 +683,6 @@
     <string name="skipped_reason_not_started">Пропущено, оскільки серія не почата</string>
     <string name="empty_backup_error">Немає елементів у бібліотеці для резервування</string>
     <string name="download_notifier_split_page_not_found">Сторінку %d не знайдено, при розділенні</string>
-    <string name="download_notifier_split_failed">Неможливо розділити завантажене зображення</string>
-    <string name="split_tall_images">Розділяти довгі зображення</string>
     <string name="split_tall_images_summary">Покращує продуктивність читалки</string>
     <string name="webview_data_deleted">Дані WebView очищені</string>
     <string name="pref_clear_webview_data">Очистити дані WebView</string>
@@ -777,11 +773,10 @@
     <string name="fdroid_warning">Збірки F-Droid офіційно не підтримуються.
 \nТицьніть для того, щоб дізнатись більше.</string>
     <string name="pref_invalidate_download_cache_summary">Змусити застосунок повторно перевірити завантажені розділи</string>
-    <string name="action_display_show_continue_reading_button">Показати кнопку продовження читання</string>
+    <string name="action_display_show_continue_reading_button">Кнопка \"Продовжити читання\"</string>
     <string name="track_remove_date_conf_title">Видалити дату\?</string>
     <string name="track_remove_start_date_conf_text">Це призведе до видалення вибраної раніше дати початку з %s</string>
     <string name="track_remove_finish_date_conf_text">Це призведе до видалення раніше вибраної дати завершення з %s</string>
-    <string name="other_header">Інше</string>
     <string name="pref_invalidate_download_cache">Недійсний індекс завантажень</string>
     <string name="label_read_duration">Тривалість читання</string>
     <string name="label_titles_section">Записи</string>
@@ -824,4 +819,15 @@
         <item quantity="other">Наступних %d розділів</item>
     </plurals>
     <string name="action_update_category">Оновити категорію</string>
+    <string name="split_tall_images">Розділяти довгі зображення</string>
+    <string name="overlay_header">Оверлей</string>
+    <string name="missing_chapters_unknown">Можливо, відсутні розділи</string>
+    <string name="pref_page_rotate">Повернути широкі сторінки за розміром</string>
+    <string name="pref_page_rotate_invert">Перевернути орієнтацію обернутих широких сторінок</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Відсутній %1$s розділ</item>
+        <item quantity="few">Відсутні %1$s розділи</item>
+        <item quantity="many">Відсутні %1$s розділів</item>
+        <item quantity="other">Відсутні %1$s розділів</item>
+    </plurals>
 </resources>

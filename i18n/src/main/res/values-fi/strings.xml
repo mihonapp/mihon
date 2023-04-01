@@ -87,7 +87,6 @@
     <string name="action_edit_categories">Muokkaa kategorioita</string>
     <string name="action_rename_category">Nimeä kategoria uudelleen</string>
     <string name="action_retry">Yritä uudelleen</string>
-    <string name="action_stop">Lopeta</string>
     <string name="action_pause">Pysäytä</string>
     <string name="action_previous_chapter">Aiempi luku</string>
     <string name="action_next_chapter">Seuraava luku</string>
@@ -436,7 +435,6 @@
     <string name="action_migrate">Siirrä</string>
     <string name="action_display_comfortable_grid">Mukava ruudukko</string>
     <string name="tabs_header">Välilehdet</string>
-    <string name="badges_header">Merkit</string>
     <string name="action_display_show_tabs">Näytä kategorioiden välilehdet</string>
     <string name="page_list_empty_error">Sivuja ei löytynyt</string>
     <string name="action_disable_all">Poista kaikki käytöstä</string>
@@ -649,7 +647,6 @@
     <string name="pref_high">Korkea</string>
     <string name="download_ahead">Etukäteen lataus</string>
     <string name="auto_download_while_reading">Automaattinen lataus luetessa</string>
-    <string name="split_tall_images">Jaa korkeat kuvat</string>
     <string name="split_tall_images_summary">Parantaa lukijan suorituskykyä</string>
     <string name="delete_category_confirmation">Haluatko poistaa kategorian \"%s\"\?</string>
     <string name="download_ahead_info">Toimii vain kirjastossa oleville sarjoille joissa nykyinen ja seuraava luku on jo ladattu</string>
@@ -705,7 +702,6 @@
     <string name="skipped_reason_not_always_update">Ohitettu, koska sarja ei vaadi päivityksiä</string>
     <string name="remove_manga">Olet poistamassa \"%s\" kirjastostasi</string>
     <string name="update_check_fdroid_migration_info">Uusi versio on saatavilla viralliselta alustalta. Napauta saadaksesi tietää, miten siirtyä pois epävirallisesta F-Droid versiosta.</string>
-    <string name="download_notifier_split_failed">Ladattua kuvaa ei voitu jakaa</string>
     <string name="pref_verbose_logging_summary">Kirjoittaa yksityiskohtaiset lokit järjestelmälokiin (heikentää sovelluksen suorituskykyä)</string>
     <string name="channel_skipped">Ohitettu</string>
     <string name="backup_info">Varmuuskopioita kannattaa säilyttää myös muissa paikoissa.</string>

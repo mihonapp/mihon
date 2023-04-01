@@ -40,7 +40,6 @@
     <string name="action_move_category">ទទួលយកថ្នាក់</string>
     <string name="action_edit_cover">ផ្លាស់ប្ដូរក្របម៊េងហ្គា</string>
     <string name="action_view_chapters">មើលភាគ</string>
-    <string name="action_stop">ឈប់</string>
     <string name="action_pause">ឈប់បណ្ណោះអាសន្ន</string>
     <string name="action_retry">ម្ដងទៀត</string>
     <string name="action_remove">លុប</string>

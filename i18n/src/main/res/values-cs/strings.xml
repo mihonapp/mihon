@@ -160,7 +160,6 @@
     <string name="action_update_library">Aktualizovat knihovnu</string>
     <string name="action_rename_category">Přejmenovat kategorii</string>
     <string name="action_move_category">Vybrat kategorie</string>
-    <string name="action_stop">Stop</string>
     <string name="action_pause">Pauza</string>
     <string name="action_retry">Opakovat</string>
     <string name="action_resume">Pokračovat</string>
@@ -490,9 +489,9 @@
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="updating_library">Aktualizuji knihovnu</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Přeskakuji %d kapitolu, buď chybí ve zdroji nebo byla vyfiltrována</item>
-        <item quantity="few">Přeskakuji %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány</item>
-        <item quantity="other">Přeskakuji %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány</item>
+        <item quantity="one">Přeskočena %d kapitola, buď chybí ve zdroji nebo byla vyfiltrována</item>
+        <item quantity="few">Přeskočeny %d kapitoly, buď chybí ve zdroji nebo byly vyfiltrovány</item>
+        <item quantity="other">Přeskočeno %d kapitol, buď chybí ve zdroji nebo byly vyfiltrovány</item>
     </plurals>
     <string name="loader_not_implemented_error">Zdroj nenalezen</string>
     <string name="page_list_empty_error">Žádné stránky nenalezeny</string>
@@ -526,7 +525,6 @@
     <string name="pref_show_reading_mode_summary">Při otevření čtečky krátce zobrazí aktuální režim</string>
     <string name="ext_updates_pending">Čekajících aktualizací</string>
     <string name="file_picker_error">Nebyla nalezena žádná aplikace pro výběr souborů</string>
-    <string name="badges_header">Odznaky</string>
     <string name="downloaded_only_summary">Filtruje všechnu položky ve vaší knihovně</string>
     <string name="pref_download_new_categories_details">Položky ve vynechaných kategoriích nebudou staženy, i kdyby byly také v zahrnutých kategoriích.</string>
     <string name="pref_category_auto_download">Automatické stahování</string>
@@ -696,13 +694,11 @@
     <string name="ext_info_language">Jazyk</string>
     <string name="ext_info_age_rating">Věkové hodnocení</string>
     <string name="ext_info_version">Verze</string>
-    <string name="split_tall_images">Rozdělit vysoké obrázky</string>
     <string name="split_tall_images_summary">Zlepšuje výkon čtečky</string>
     <string name="pref_reset_viewer_flags_error">Nastavení čtečky se nepodařilo resetovat</string>
     <string name="empty_screen">No, tohle je trapné</string>
     <string name="download_notifier_split_page_not_found">Stránka %d nebyla při rozdělení nalezena</string>
     <string name="download_notifier_split_page_path_not_found">Nepodařilo se najít cestu k souboru stránky %d</string>
-    <string name="download_notifier_split_failed">Stažený obrázek se nepodařilo rozdělit</string>
     <string name="pref_navigate_pan">Posunutí širokých snímků při klepnutí</string>
     <string name="action_sort_unread_count">Počet nepřečtených</string>
     <string name="action_sort_last_manga_update">Poslední kontrola aktualizace</string>
@@ -764,8 +760,7 @@
     <string name="action_open_random_manga">Otevřít náhodnou položku</string>
     <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
 \nKlepnutím zobrazíte další informace.</string>
-    <string name="other_header">Ostatní</string>
-    <string name="action_display_show_continue_reading_button">Zobrazit tlačítko pokračovat ve čtení</string>
+    <string name="action_display_show_continue_reading_button">Tlačítko Pokračovat ve čtení</string>
     <string name="track_remove_date_conf_title">Odstranit datum\?</string>
     <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
     <string name="track_remove_start_date_conf_text">Tím se odstraní dříve vybrané datum zahájení z %s</string>
@@ -811,4 +806,14 @@
     </plurals>
     <string name="action_copy_to_clipboard">Zkopírovat do schránky</string>
     <string name="action_update_category">Aktualizovat kategorii</string>
+    <string name="split_tall_images">Rozdělit vysoké obrázky</string>
+    <string name="overlay_header">Překrytí</string>
+    <string name="pref_page_rotate_invert">Překlopení orientace otočených širokých stránek</string>
+    <string name="pref_page_rotate">Otočení širokých stránek tak, aby se vešly</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Chybí %1$s kapitola</item>
+        <item quantity="few">Chybí %1$s kapitoly</item>
+        <item quantity="other">Chybí %1$s kapitol</item>
+    </plurals>
+    <string name="missing_chapters_unknown">Mohou chybět kapitoly</string>
 </resources>

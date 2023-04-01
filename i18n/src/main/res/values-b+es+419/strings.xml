@@ -281,7 +281,6 @@
     <string name="action_display_grid">Cuadrícula compacta</string>
     <string name="action_start">Iniciar</string>
     <string name="action_retry">Reintentar</string>
-    <string name="action_stop">Detener</string>
     <string name="pref_clear_cookies">Borrar cookies</string>
     <string name="label_network">Red</string>
     <string name="restoring_backup_canceled">Se canceló la restauración</string>
@@ -334,7 +333,6 @@
     <string name="no_results_found">No se han encontrado resultados</string>
     <string name="no_more_results">No hay más resultados</string>
     <string name="tabs_header">Pestañas</string>
-    <string name="badges_header">Insignias</string>
     <string name="updating_category">Actualizando categoría</string>
     <string name="unknown_error">Error desconocido</string>
     <string name="logout_success">Has cerrado sesión</string>
@@ -688,13 +686,11 @@
     <string name="source_filter_empty_screen">No se encontró ninguna fuente instalada</string>
     <string name="action_sort_unread_count">Recuento no leído</string>
     <string name="action_sort_last_manga_update">Última actualización de manga</string>
-    <string name="download_notifier_split_failed">No se pudo dividir la imagen descargada</string>
     <string name="empty_screen">Bueno, esto es incomodo</string>
     <string name="pref_reset_viewer_flags_success">Todas las configuraciones del lector se restablecen</string>
     <string name="pref_reset_viewer_flags_error">No se pudo restablecer la configuración del lector</string>
     <string name="pref_reset_viewer_flags">Restablecer la configuración del lector por serie</string>
     <string name="split_tall_images_summary">Mejora rendimiento del lector al ajustar imágenes altas descargadas</string>
-    <string name="split_tall_images">Ajustar automáticamente el alto de las imagenes</string>
     <string name="download_notifier_split_page_not_found">Página %d no encontrada durante la división</string>
     <string name="download_notifier_split_page_path_not_found">No se encontró la ruta del archivo de la página %d</string>
     <string name="pref_reset_viewer_flags_summary">Reinicie el modo de lectura y la orientación de toda serie</string>
@@ -768,7 +764,6 @@
     <string name="track_remove_date_conf_title">¿Quitar fecha\?</string>
     <string name="track_remove_start_date_conf_text">Esto eliminará la fecha de inicio previamente seleccionada de %s</string>
     <string name="track_remove_finish_date_conf_text">Esto eliminará la fecha de finalización previamente seleccionada de %s</string>
-    <string name="other_header">Otro</string>
     <string name="error_user_agent_string_blank">La cadena con el agente de usuario no puede estar vacía</string>
     <string name="download_ahead_info">Solo funciona con manga que esten en tu biblioteca y si el capítulo actual y el siguiente ya están descargados</string>
     <string name="error_user_agent_string_invalid">El nombre de agente de usuario es inválido</string>
