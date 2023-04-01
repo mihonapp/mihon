@@ -115,7 +115,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 val point = when (config!!.zoomStartPosition) {
                     ZoomStartPosition.LEFT -> if (forward) PointF(0F, 0F) else PointF(sWidth.toFloat(), 0F)
                     ZoomStartPosition.RIGHT -> if (forward) PointF(sWidth.toFloat(), 0F) else PointF(0F, 0F)
-                    ZoomStartPosition.CENTER -> center.also { it?.y = 0F }
+                    ZoomStartPosition.CENTER -> center
                 }
 
                 val targetScale = height.toFloat() / sHeight.toFloat()
@@ -249,7 +249,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         when (config?.zoomStartPosition) {
             ZoomStartPosition.LEFT -> setScaleAndCenter(scale, PointF(0F, 0F))
             ZoomStartPosition.RIGHT -> setScaleAndCenter(scale, PointF(sWidth.toFloat(), 0F))
-            ZoomStartPosition.CENTER -> setScaleAndCenter(scale, center.also { it?.y = 0F })
+            ZoomStartPosition.CENTER -> setScaleAndCenter(scale, center)
             null -> {}
         }
     }
