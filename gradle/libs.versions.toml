@@ -10,7 +10,7 @@ voyager = "1.0.0-rc07"
 richtext = "0.16.0"
 
 [libraries]
-desugar = "com.android.tools:desugar_jdk_libs:2.0.2"
+desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
 google-services-gradle = "com.google.gms:google-services:4.3.15"
 
