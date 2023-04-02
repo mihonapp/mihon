@@ -11,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Moderate issues
-        uses: tachiyomiorg/issue-moderator-action@v1
+        uses: tachiyomiorg/issue-moderator-action@v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          duplicate-label: Duplicate
+
           auto-close-rules: |
             [
               {
@@ -33,3 +35,4 @@ jobs:
                 "message": "Tachiyomi does not support anime, and has no plans to support anime. In addition Tachiyomi is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
               }
             ]
+          auto-close-ignore-label: do-not-autoclose
