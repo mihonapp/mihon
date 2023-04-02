@@ -1,16 +1,11 @@
 package eu.kanade.tachiyomi.util
 
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.notification.NotificationReceiver
-import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.storage.getUriCompat
-import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
-import eu.kanade.tachiyomi.util.system.notify
+import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.util.lang.withNonCancellableContext
 import tachiyomi.core.util.lang.withUIContext
@@ -23,7 +18,8 @@ class CrashLogUtil(private val context: Context) {
             Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
             file.appendText(getDebugInfo())
 
-            showNotification(file.getUriCompat(context))
+            val uri = file.getUriCompat(context)
+            context.startActivity(uri.toShareIntent(context, "text/plain"))
         } catch (e: Throwable) {
             withUIContext { context.toast("Failed to get logs") }
         }
@@ -40,29 +36,5 @@ class CrashLogUtil(private val context: Context) {
             Device model: ${Build.MODEL}
             Device product name: ${Build.PRODUCT}
         """.trimIndent()
-    }
-
-    private fun showNotification(uri: Uri) {
-        context.cancelNotification(Notifications.ID_CRASH_LOGS)
-
-        context.notify(
-            Notifications.ID_CRASH_LOGS,
-            Notifications.CHANNEL_CRASH_LOGS,
-        ) {
-            setContentTitle(context.getString(R.string.crash_log_saved))
-            setSmallIcon(R.drawable.ic_tachi)
-
-            clearActions()
-            addAction(
-                R.drawable.ic_folder_24dp,
-                context.getString(R.string.action_open_log),
-                NotificationReceiver.openErrorLogPendingActivity(context, uri),
-            )
-            addAction(
-                R.drawable.ic_share_24dp,
-                context.getString(R.string.action_share),
-                NotificationReceiver.shareCrashLogPendingBroadcast(context, uri, Notifications.ID_CRASH_LOGS),
-            )
-        }
     }
 }
