@@ -1,7 +1,7 @@
 [versions]
 compiler = "1.4.4"
 compose-bom = "2023.03.00"
-accompanist = "0.30.0"
+accompanist = "0.30.1"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.7.0"
