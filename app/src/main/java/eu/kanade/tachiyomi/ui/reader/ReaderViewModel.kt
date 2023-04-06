@@ -200,17 +200,6 @@ class ReaderViewModel(
 
     private val incognitoMode = preferences.incognitoMode().get()
 
-    override fun onCleared() {
-        val currentChapters = state.value.viewerChapters
-        if (currentChapters != null) {
-            currentChapters.unref()
-            saveReadingProgress(currentChapters.currChapter)
-            chapterToDownload?.let {
-                downloadManager.addDownloadsToStartOfQueue(listOf(it))
-            }
-        }
-    }
-
     init {
         // To save state
         state.map { it.viewerChapters?.currChapter }
@@ -223,6 +212,17 @@ class ReaderViewModel(
                 chapterId = currentChapter.chapter.id!!
             }
             .launchIn(viewModelScope)
+    }
+
+    override fun onCleared() {
+        val currentChapters = state.value.viewerChapters
+        if (currentChapters != null) {
+            currentChapters.unref()
+            saveReadingProgress(currentChapters.currChapter)
+            chapterToDownload?.let {
+                downloadManager.addDownloadsToStartOfQueue(listOf(it))
+            }
+        }
     }
 
     /**
@@ -337,10 +337,11 @@ class ReaderViewModel(
     }
 
     /**
-     * Called when the user is going to load the prev/next chapter through the menu button.
+     * Called when the user is going to load the prev/next chapter through the toolbar buttons.
      */
     private suspend fun loadAdjacent(chapter: ReaderChapter) {
         val loader = loader ?: return
+        saveCurrentChapterReadingProgress()
 
         logcat { "Loading adjacent ${chapter.chapter.url}" }
 
