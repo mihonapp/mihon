@@ -360,6 +360,9 @@ object Migrations {
                     }
                 }
             }
+            if (oldVersion < 100) {
+                BackupCreateJob.setupTask(context)
+            }
             return true
         }
 
