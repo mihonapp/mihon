@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "10.6.1"
+aboutlib_version = "10.6.2"
 okhttp_version = "5.0.0-alpha.11"
 coil_version = "2.3.0"
 shizuku_version = "12.2.0"
