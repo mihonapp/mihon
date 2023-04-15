@@ -35,6 +35,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.util.chapter.removeDuplicates
 import eu.kanade.tachiyomi.util.editCover
 import eu.kanade.tachiyomi.util.lang.byteSize
 import eu.kanade.tachiyomi.util.lang.takeBytes
@@ -175,12 +176,7 @@ class ReaderViewModel(
             else -> chapters
         }.run {
             if (readerPreferences.skipDupe().get()) {
-                groupBy { it.chapterNumber }
-                    .map { (_, chapters) ->
-                        chapters.find { it.id == selectedChapter.id }
-                            ?: chapters.find { it.scanlator == selectedChapter.scanlator }
-                            ?: chapters.first()
-                    }
+                removeDuplicates(selectedChapter)
             } else {
                 this
             }
@@ -456,8 +452,14 @@ class ReaderViewModel(
             )
             if (!isNextChapterDownloaded) return@launchIO
 
-            val chaptersToDownload = getNextChapters.await(manga.id, nextChapter.id!!)
-                .take(amount)
+            val chaptersToDownload = getNextChapters.await(manga.id, nextChapter.id!!).run {
+                if (readerPreferences.skipDupe().get()) {
+                    removeDuplicates(nextChapter.toDomainChapter()!!)
+                } else {
+                    this
+                }
+            }.take(amount)
+
             downloadManager.downloadChapters(
                 manga,
                 chaptersToDownload,
