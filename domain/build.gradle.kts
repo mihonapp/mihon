@@ -21,5 +21,5 @@ dependencies {
 
     api(libs.sqldelight.android.paging)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.test)
 }

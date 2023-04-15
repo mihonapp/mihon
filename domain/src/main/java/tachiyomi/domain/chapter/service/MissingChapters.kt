@@ -1,23 +1,21 @@
 package tachiyomi.domain.chapter.service
 
-import kotlin.math.floor
-
-fun countMissingChapters(chaptersInput: List<Float>): Int? {
-    if (chaptersInput.isEmpty()) {
+fun List<Float>.missingChaptersCount(): Int {
+    if (this.isEmpty()) {
         return 0
     }
 
-    val chapters = chaptersInput
-        // Remove any invalid chapters
-        .filter { it != -1f }
+    val chapters = this
+        // Ignore unknown chapter numbers
+        .filterNot { it == -1f }
         // Convert to integers, as we cannot check if 16.5 is missing
-        .map { floor(it.toDouble()).toInt() }
+        .map(Float::toInt)
         // Only keep unique chapters so that -1 or 16 are not counted multiple times
         .distinct()
         .sorted()
 
     if (chapters.isEmpty()) {
-        return null
+        return 0
     }
 
     var missingChaptersCount = 0

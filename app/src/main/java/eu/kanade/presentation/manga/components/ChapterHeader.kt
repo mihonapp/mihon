@@ -14,13 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
-import tachiyomi.presentation.core.util.secondaryItemAlpha
+import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 
 @Composable
 fun ChapterHeader(
     enabled: Boolean,
     chapterCount: Int?,
-    missingChapterCount: Int?,
+    missingChapterCount: Int,
     onClick: () -> Unit,
 ) {
     Column(
@@ -48,19 +48,16 @@ fun ChapterHeader(
 }
 
 @Composable
-private fun MissingChaptersWarning(count: Int?) {
-    val text = when {
-        count == null -> stringResource(R.string.missing_chapters_unknown)
-        count > 0 -> pluralStringResource(id = R.plurals.missing_chapters, count = count, count)
-        else -> return
+private fun MissingChaptersWarning(count: Int) {
+    if (count == 0) {
+        return
     }
 
     Text(
-        modifier = Modifier.secondaryItemAlpha(),
-        text = text,
+        text = pluralStringResource(id = R.plurals.missing_chapters, count = count, count),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.error,
+        color = MaterialTheme.colorScheme.error.copy(alpha = SecondaryItemAlpha),
     )
 }
