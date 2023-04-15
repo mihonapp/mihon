@@ -75,7 +75,7 @@
     <string name="history">Nakaraan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
-    <string name="manga">Mga babasahin sa aklatan</string>
+    <string name="manga">Mga entry ng aklatan</string>
     <string name="categories">Kategorya</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para makagawa ka ng isa para maayos mo ang Aklatan mo.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
@@ -102,7 +102,7 @@
     <string name="lock_never">Hindi</string>
     <string name="lock_always">Palagi</string>
     <string name="lock_when_idle">Isara kung nakatambay</string>
-    <string name="lock_with_biometrics">I-lock gamit ang biometrics</string>
+    <string name="lock_with_biometrics">Nangangailangang i-unlock</string>
     <string name="pref_manage_notifications">Pamahalaan ang mga abiso</string>
     <string name="pref_category_security">Seguridad at privacy</string>
     <string name="pref_confirm_exit">Kumpirmahing aalis</string>
@@ -185,7 +185,7 @@
     <string name="pref_custom_color_filter">Pinili kong filter ng kulay</string>
     <string name="pref_custom_brightness">Pinili kong liwanag</string>
     <string name="pref_crop_borders">Gupitin ang gilid</string>
-    <string name="pref_true_color_summary">Nababawasan ang pagkakaroon ng linya, pero dagdag-pasanin ito sa app</string>
+    <string name="pref_true_color_summary">Binabawasan ang banding, ngunit maaaring makaapekto ito sa performance</string>
     <string name="pref_true_color">Totoong kulay (32-bit)</string>
     <string name="pref_show_reading_mode_summary">Mabilis na ipakita ang kasalukuyang ginagamit kapag nakabukas ang reader</string>
     <string name="pref_show_reading_mode">Ipakita ang paraan ng pagbasa</string>
@@ -334,7 +334,7 @@
     <string name="viewer">Pagbasa</string>
     <string name="pref_category_for_this_series">Para sa seryeng ito</string>
     <string name="confirm_set_image_as_cover">Gamiting cover ang larawang ito\?</string>
-    <string name="decode_image_error">Di mai-pakita ang larawan</string>
+    <string name="decode_image_error">Di mai-load ang larawan</string>
     <string name="no_next_chapter">Di makita ang susunod na kabanata</string>
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Napalitan na ang cover</string>
@@ -479,8 +479,8 @@
     <string name="ext_nsfw_warning">Posibleng may NSFW (18+) content ang mga source mula sa extension na ito</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa pinagmula o na-filter ang mga ito</item>
-        <item quantity="other">Nilaktawan ang %d na (mga) kabanata, maaaring wala ang pinagmulan nila o na-filter ang mga ito</item>
+        <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa source o na-filter ang mga ito</item>
+        <item quantity="other">Nilaktawan ang %d na (mga) kabanata, maaaring wala sa source o na-filter ang mga ito</item>
     </plurals>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
     <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
@@ -489,7 +489,7 @@
     <string name="share_page_info">%1$s: %2$s, pahina %3$d</string>
     <string name="also_set_chapter_settings_for_library">Ilapat din sa lahat ng mga entry sa Aklatan ko</string>
     <string name="chapter_settings">Pagsasaayos ng Kabanata</string>
-    <string name="downloaded_chapters">Mga naka-download na kabanata</string>
+    <string name="downloaded_chapters">Bilang ng na-download</string>
     <string name="manga_from_library">Mula sa Aklatan</string>
     <string name="action_search_settings">Maghanap ng setting</string>
     <string name="pref_incognito_mode_summary">Hinihinto ang pagtala sa nakaraan</string>
@@ -504,11 +504,9 @@
     <string name="pref_show_nsfw_source">Ipakita sa mga source at extension</string>
     <string name="pref_category_nsfw_content">Mga source na NSFW (18+)</string>
     <string name="myanimelist_relogin">Mag-login muli po sa MAL</string>
-    <string name="channel_crash_logs">Crash log</string>
     <string name="track_finished_reading_date">Natapos basahin</string>
     <string name="track_started_reading_date">Sinimulang basahin</string>
-    <string name="pref_dump_crash_logs">Itambak ang mga crash log</string>
-    <string name="crash_log_saved">Nai-save na ang crash log</string>
+    <string name="pref_dump_crash_logs">Magbahagi ng mga crash log</string>
     <string name="pref_dump_crash_logs_summary">Sine-save ang mga error log sa isang file para maibahagi sa mga developer</string>
     <string name="pref_viewer_nav">Mga tap zone</string>
     <string name="edge_nav">Sulok</string>
@@ -594,7 +592,7 @@
     <string name="pref_low">Mababa</string>
     <string name="pref_high">Mataas</string>
     <string name="pref_highest">Pinakamataas</string>
-    <string name="pref_hide_threshold">Sensitivity ng pagtago sa menu pagka-scroll</string>
+    <string name="pref_hide_threshold">Sensitivity para sa pagtatago ng menu sa scroll</string>
     <string name="pref_inverted_colors">Baligtad</string>
     <string name="pref_relative_time_long">Mahaba (Maiksi+, n (na) araw ang nakalipas)</string>
     <string name="pref_relative_time_short">Maiksi (Ngayon, Kahapon)</string>
@@ -649,10 +647,10 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Ipakita ang entry</string>
     <string name="action_display_cover_only_grid">Pabalat lang</string>
-    <string name="skipped_reason_completed">Nilaktawan dahil tapos na ang serye</string>
+    <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>
     <string name="pref_update_only_started">Hindi pa nasisimulan</string>
-    <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nababasang kabanata</string>
-    <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nababasang kabanata</string>
+    <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang (mga) kabanata</string>
+    <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nabasang (mga) kabanata</string>
     <string name="pref_landscape_zoom">Mag-zoom sa pahigang larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan kapag tina-tap</string>
     <string name="learn_more">Matuto pa</string>
@@ -711,7 +709,7 @@
     <string name="theme_tidalwave">Daluyong</string>
     <string name="download_ahead">I-download agad</string>
     <string name="auto_download_while_reading">Kusang mag-download habang nagbabasa</string>
-    <string name="download_ahead_info">Gagana lang sa mga entry sa aklatan at kung naka-download na ang kasalukuyang kabanata pati ang susunod</string>
+    <string name="download_ahead_info">Gumagana lamang sa mga entry sa aklatan at kung ang kasalukuyang kabanata at ang susunod na kabanata ay na-download na</string>
     <string name="are_you_sure">Sigurado ka ba\?</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Susunod na hindi pa nababasang kabanata</item>
@@ -719,8 +717,8 @@
     </plurals>
     <string name="multi_lang">Marami</string>
     <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa aklatan mo</string>
-    <string name="updates_last_update_info">Huling update sa Aklatan: %s</string>
-    <string name="pref_long_strip_split">Hatiin ang mga matatangkad na larawan (BETA)</string>
+    <string name="updates_last_update_info">Huling update sa aklatan: %s</string>
+    <string name="pref_long_strip_split">Hatiin ang mga matatangkad na (mga) larawan (BETA)</string>
     <string name="popular">Sikat</string>
     <string name="missing_storage_permission">Hindi binigay ang mga permiso sa storage</string>
     <string name="skipped_reason_not_always_update">Nilaktawan dahil hindi kailangan ang pag-update sa serye</string>
@@ -734,7 +732,7 @@
     <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
     <string name="pref_library_summary">Mga kategorya, panlahatang update</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
-    <string name="crash_screen_description">Nakaranas ang %s ng isang di inaasahang error. Minumungkahi namin na i-screenshot itong mensahe, itambak ang mga crash log, at saka ibahagi ito sa aming support channel sa Discord.</string>
+    <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
     <string name="crash_screen_title">Ay!</string>
     <string name="pref_general_summary">Wika ng app, mga abiso</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
@@ -747,7 +745,7 @@
     <string name="action_open_random_manga">Buksan ang random na entry</string>
     <string name="fdroid_warning">Ang mga build ng F-Droid ay hindi opisyal na sinusuportahan.
 \nI-tap para matuto pa.</string>
-    <string name="action_display_show_continue_reading_button">Ipakita ang butones sa tuluyang pagbasa</string>
+    <string name="action_display_show_continue_reading_button">Magpatuloy na bumasa na button</string>
     <string name="track_remove_date_conf_title">Tanggalin ang petsa\?</string>
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng kayarian magmula sa %s</string>
@@ -800,5 +798,5 @@
     <string name="pref_page_rotate">I-rotate ang malalawak na (mga) pahina para magkasya</string>
     <string name="pref_page_rotate_invert">I-flip ang oryentasyon ng mga pinaikot na malalawak na (mga) pahina</string>
     <string name="overlay_header">Nakapatong (Overlay)</string>
-    <string name="split_tall_images">Hatiin ang mga matatanngkad na (mga) larawan</string>
+    <string name="split_tall_images">Hatiin ang mga matatangkad na (mga) larawan</string>
 </resources>

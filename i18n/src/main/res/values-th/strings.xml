@@ -252,7 +252,7 @@
     <string name="cover_updated">อัปเดตปกแล้ว</string>
     <string name="chapter_progress">หน้า: %1$d</string>
     <string name="no_next_chapter">ไม่พบตอนถัดไป</string>
-    <string name="decode_image_error">ไม่สามารถโหลดรูปภาพได้</string>
+    <string name="decode_image_error">ไม่สามารถโหลดภาพนี้ได้</string>
     <string name="confirm_set_image_as_cover">ใช้ภาพนี้เป็นรูปปก\?</string>
     <string name="transition_finished">อ่านจบแล้ว:</string>
     <string name="transition_current">ปัจจุบัน:</string>
@@ -484,9 +484,8 @@
     <string name="battery_optimization_disabled">การเพิ่มประสิทธิภาพแบตเตอรี่ถูกปิดใช้งานอยู่แล้ว</string>
     <string name="pref_disable_battery_optimization_summary">ช่วยในการอัปเดตและสำรองข้อมูลคลังในพื้นหลัง</string>
     <string name="pref_disable_battery_optimization">ปิดการใช้งานการเพิ่มประสิทธิภาพแบตเตอรี่</string>
-    <string name="crash_log_saved">บันทึกบันทึกข้อขัดข้องแล้ว</string>
     <string name="pref_dump_crash_logs_summary">บันทึกบันทึกข้อผิดพลาดลงในแฟ้มเพื่อแบ่งปันกับผู้พัฒนา</string>
-    <string name="pref_dump_crash_logs">ดัมพ์บันทึกข้อขัดข้อง</string>
+    <string name="pref_dump_crash_logs">แบ่งปันบันทึกข้อขัดข้อง</string>
     <string name="pref_refresh_library_covers">โหลดปกในคลังใหม่</string>
     <string name="label_data">ข้อมูล</string>
     <string name="requires_app_restart">ต้องรีสตาร์ทแอปจึงจะมีผล</string>
@@ -529,7 +528,6 @@
         <item quantity="other">มี %d รายการ</item>
     </plurals>
     <string name="spen_previous_page">หน้าก่อน</string>
-    <string name="channel_crash_logs">บันทึกข้อขัดข้อง</string>
     <string name="channel_ext_updates">การอัปเดตส่วนขยาย</string>
     <string name="channel_new_chapters">อัปเดตตอน</string>
     <string name="channel_errors">ข้อผิดพลาด</string>
@@ -723,7 +721,7 @@
     <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
     <string name="pref_advanced_summary">ดัมพ์บันทึกข้อขัดข้อง, การเพิ่มประสิทธิภาพแบตเตอรี่</string>
     <string name="crash_screen_title">เกิดความผิดพลาด!</string>
-    <string name="crash_screen_description">%s เกิดข้อผิดพลาดอย่างไม่คาดคิด ขอแนะนำให้คุณบันทึกภาพหน้าจอข้อความนี้ จากนั้นดัมพ์บันทึกข้อขัดข้อง แล้วส่งลงไปในช่องสนับสนุนของเราใน Discord</string>
+    <string name="crash_screen_description">%s เกิดข้อผิดพลาดอย่างไม่คาดคิด ขอแนะนำให้คุณแบ่งปันบันทึกข้อขัดข้อง แล้วส่งลงไปในช่องสนับสนุนของเราใน Discord</string>
     <string name="invalid_location">ตำแหน่งไม่ถูกต้อง: %s</string>
     <string name="unknown_title">ไม่ทราบชื่อเรื่อง</string>
     <string name="crash_screen_restart_application">เริ่มแอปพลิเคชันใหม่</string>
@@ -778,4 +776,12 @@
     <string name="pref_hide_in_library_items">ซ่อนรายการที่มีอยู่ในคลังอยู่แล้ว</string>
     <string name="action_copy_to_clipboard">คัดลอกไปยังคลิปบอร์ด</string>
     <string name="action_update_category">อัปเดตหมวดหมู่</string>
+    <string name="missing_chapters_unknown">อาจเป็นตอนที่ไม่พบ</string>
+    <string name="split_tall_images">แยกภาพสูงยาว</string>
+    <string name="overlay_header">โอเวอร์เลย์</string>
+    <plurals name="missing_chapters">
+        <item quantity="other">ไม่พบ %1$s ตอน</item>
+    </plurals>
+    <string name="pref_page_rotate">หมุนหน้ากว้างให้พอดี</string>
+    <string name="pref_page_rotate_invert">พลิกการวางแนวของหน้ากว้างที่หมุน</string>
 </resources>

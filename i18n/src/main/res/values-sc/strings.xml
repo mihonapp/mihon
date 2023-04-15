@@ -508,12 +508,10 @@
     <string name="pref_viewer_nav">Zonas de tocu</string>
     <string name="kindlish_nav">A tipu Kindle</string>
     <string name="l_nav">A forma de L</string>
-    <string name="channel_crash_logs">Registros de sos arrestos anòmalos</string>
     <string name="track_finished_reading_date">Data de fine</string>
     <string name="track_started_reading_date">Data de incumintzu</string>
-    <string name="crash_log_saved">Registros de sos arrestos anòmalos sarvados</string>
     <string name="pref_dump_crash_logs_summary">Sarva sos registros de sos errores in unu documentu pro lu cumpartzire cun sos isvilupadores</string>
-    <string name="pref_dump_crash_logs">Iscàrriga sos registros de sos arrestos anòmalos</string>
+    <string name="pref_dump_crash_logs">Cumpartzi sos registros de sos arrestos anòmalos</string>
     <string name="action_desc">In achirrada</string>
     <string name="action_asc">Creschente</string>
     <string name="action_order_by_chapter_number">Pro nùmeru de capìtulu</string>
@@ -725,7 +723,7 @@
     <string name="missing_storage_permission">Permissu de archiviatzione non cuntzessu</string>
     <string name="skipped_reason_not_always_update">Brincadu ca sa sèrie non tenet bisòngiu de agiornamentos</string>
     <string name="action_search_hint">Chirca…</string>
-    <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu. Ti cussigiamus de sarvare un\'ischermada de custu messàgiu, iscarrigare sos registros de sas serraduras anòmalas e de cumpartzire totu custu in su canale de suportu nostru de Discord.</string>
+    <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu. Ti cussigiamus de cumpartzire sos registros de sas serraduras anòmalas in su canale de suportu nostru de Discord.</string>
     <string name="crash_screen_restart_application">Torra a allùghere s\'aplicatzione</string>
     <string name="pref_general_summary">Limba de s\'aplicatzione, notìficas</string>
     <string name="pref_appearance_summary">Tema, data e formadu de s\'ora</string>

@@ -349,7 +349,7 @@
     <string name="theme_system">Par défaut du système</string>
     <string name="pref_manage_notifications">Notifications</string>
     <string name="pref_category_security">Sécurité et confidentialité</string>
-    <string name="lock_with_biometrics">Imposer un déverrouillage à l\'ouverture</string>
+    <string name="lock_with_biometrics">Nécessite un déverrouillage</string>
     <string name="lock_when_idle">Verrouiller en cas d\'inactivité</string>
     <string name="lock_always">Toujours</string>
     <string name="lock_never">Jamais</string>
@@ -549,12 +549,10 @@
     <string name="myanimelist_relogin">Veuillez vous reconnecter à MAL</string>
     <string name="file_picker_error">L’application de sélection de fichier est introuvable</string>
     <string name="pref_show_nsfw_source">Afficher dans les listes de sources et d\'extensions</string>
-    <string name="channel_crash_logs">Rapports de plantage</string>
     <string name="track_finished_reading_date">Date de fin</string>
     <string name="track_started_reading_date">Date de début</string>
     <string name="kindlish_nav">Style Kindle</string>
-    <string name="crash_log_saved">Rapports de plantage sauvegardés</string>
-    <string name="pref_dump_crash_logs">Archivage des rapports de plantage</string>
+    <string name="pref_dump_crash_logs">Partager les rapports de plantage</string>
     <string name="pref_dump_crash_logs_summary">Enregistre les rapports de plantage dans un fichier pour les partager avec les développeurs</string>
     <string name="pref_viewer_nav">Zones tactiles</string>
     <string name="edge_nav">Bord</string>
@@ -784,7 +782,7 @@
     <string name="pref_library_summary">Catégories, mise à jour globale</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>
     <string name="pref_security_summary">Verrouillage des applications, écran sécurisé</string>
-    <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de faire une capture d\'écran de ce message, d\'extraire les rapports de plantage et de les partager dans notre salon d\'assistance sur Discord.</string>
+    <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de nous partager les rapports de plantage dans notre salon d\'assistance sur Discord.</string>
     <string name="invalid_location">Emplacement invalide : %s</string>
     <string name="error_user_agent_string_invalid">Chaîne d\'agent utilisateur invalide</string>
     <string name="unknown_title">Titre inconnu</string>
@@ -843,9 +841,9 @@
     <string name="split_tall_images">Diviser les grandes images</string>
     <string name="overlay_header">Superposition</string>
     <plurals name="missing_chapters">
-        <item quantity="one">Manque %1$s chapitre</item>
-        <item quantity="many">Manque %1$s chapitres</item>
-        <item quantity="other">Manque %1$s chapitres</item>
+        <item quantity="one">%1$s chapitre manquant</item>
+        <item quantity="many">%1$s chapitres manquants</item>
+        <item quantity="other">%1$s chapitres manquants</item>
     </plurals>
     <string name="missing_chapters_unknown">Il pourrait manquer des chapitres</string>
     <string name="pref_page_rotate_invert">Inverser l\'orientation des pages larges retournées</string>

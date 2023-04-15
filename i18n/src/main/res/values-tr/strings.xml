@@ -2,7 +2,7 @@
 <resources>
     <string name="name">Ad</string>
     <string name="categories">Kategoriler</string>
-    <string name="manga">Kitaplık girdileri</string>
+    <string name="manga">Kütüphane girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
     <string name="history">Geçmiş</string>
@@ -36,10 +36,10 @@
     <string name="action_update_library">Kitaplığı güncelle</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_add">Ekle</string>
-    <string name="action_add_category">Ulam ekle</string>
-    <string name="action_edit_categories">Ulamları düzenle</string>
-    <string name="action_rename_category">Ulamı yeniden adlandır</string>
-    <string name="action_move_category">Ulamları ayarla</string>
+    <string name="action_add_category">Kategori ekle</string>
+    <string name="action_edit_categories">Kategorileri düzenle</string>
+    <string name="action_rename_category">Kategorileri yeniden adlandır</string>
+    <string name="action_move_category">Kategorileri ayarla</string>
     <string name="action_edit_cover">Kapağı düzenle</string>
     <string name="action_pause">Duraklat</string>
     <string name="action_previous_chapter">Önceki bölüm</string>
@@ -435,7 +435,7 @@
     <string name="action_migrate">Taşın</string>
     <string name="action_display_comfortable_grid">Rahat ızgara</string>
     <string name="tabs_header">Sekmeler</string>
-    <string name="action_display_show_tabs">Ulam sekmelerini göster</string>
+    <string name="action_display_show_tabs">Kategori sekmelerini göster</string>
     <string name="page_list_empty_error">Sayfa bulunamadı</string>
     <string name="action_disable_all">Tümünü devre dışı bırak</string>
     <string name="action_enable_all">Tümünü etkinleştir</string>
@@ -508,12 +508,10 @@
     <string name="edge_nav">Kenar</string>
     <string name="kindlish_nav">Kindle gibi</string>
     <string name="l_nav">L şeklinde</string>
-    <string name="channel_crash_logs">Çökme günlükleri</string>
     <string name="track_finished_reading_date">Bitirme tarihi</string>
     <string name="track_started_reading_date">Başlama tarihi</string>
-    <string name="crash_log_saved">Çökme günlükleri kaydedildi</string>
     <string name="pref_dump_crash_logs_summary">Geliştiricilerle paylaşmak için hata günlüklerini bir dosyaya kaydeder</string>
-    <string name="pref_dump_crash_logs">Çökme günlüklerini kaydet</string>
+    <string name="pref_dump_crash_logs">Çökme günlüklerini paylaş</string>
     <string name="action_desc">Azalan</string>
     <string name="action_asc">Artan</string>
     <string name="action_order_by_chapter_number">Bölüm numarasına göre</string>
@@ -697,8 +695,8 @@
     <string name="pref_app_language">Uygulama dili</string>
     <string name="description_placeholder">Açıklama yok</string>
     <string name="theme_lavender">Lavanta</string>
-    <string name="delete_category">Ulamı sil</string>
-    <string name="delete_category_confirmation">\"%s\" ulamını silmek istiyor musunuz\?</string>
+    <string name="delete_category">Kategoriyi sil</string>
+    <string name="delete_category_confirmation">\"%s\" kategorilerini silmek istiyor musunuz\?</string>
     <string name="internal_error">İçsel sorun: Daha çok bilgi için çökme günlüklerine bakın</string>
     <string name="pref_user_agent_string">Öntanımlı kullanıcı aracısı dizgesi</string>
     <string name="pref_reset_user_agent_string">Öntanımlı kullanıcı aracısı dizgesini sıfırla</string>
@@ -729,7 +727,7 @@
     <string name="pref_security_summary">Uygulama kilidi, güvenli ekran</string>
     <string name="pref_advanced_summary">Çökme günlükleri dökümü, pil iyileştirmeleri</string>
     <string name="pref_general_summary">Uygulama dili, bildirimler</string>
-    <string name="pref_library_summary">Ulamlar, genel güncelleme</string>
+    <string name="pref_library_summary">Kategorileri, genel güncelle</string>
     <string name="pref_browse_summary">Kaynaklar, uzantılar, genel arama</string>
     <string name="pref_downloads_summary">Kendiliğinden indir, önceden indir</string>
     <string name="pref_reader_summary">Okuma kipi, görüntüleme, gezinme</string>
@@ -737,7 +735,7 @@
     <string name="pref_tracking_summary">Tek yönlü ilerleme eşitlemesi, gelişmiş eşitleme</string>
     <string name="crash_screen_restart_application">Uygulamayı yeniden başlat</string>
     <string name="crash_screen_title">Tüh!</string>
-    <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Bu mesajın ekran görüntüsünü ve çökme günlüklerinin dökümünü almanızı, ardından Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
+    <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Çökme günlüklerini Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="invalid_location">Geçersiz konum: %s</string>
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>

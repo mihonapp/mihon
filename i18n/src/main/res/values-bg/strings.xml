@@ -545,7 +545,6 @@
     <string name="pref_dump_crash_logs">Разтовари записите от сривовете</string>
     <string name="off">Не</string>
     <string name="rotation_landscape">Пейзаж</string>
-    <string name="crash_log_saved">Записите са запазени</string>
     <string name="label_background_activity">Работа на заден план</string>
     <string name="notification_incognito_text">Изключи инкогнито</string>
     <string name="notification_updating">Обновяване на библиотеката… (%1$d/%2$d)</string>
@@ -638,7 +637,6 @@
     <string name="file_picker_error">Не бе намерено приложение за подбор на файлове</string>
     <string name="getting_started_guide">Първи стъпки</string>
     <string name="chapter_settings_updated">Стандартните настройки на главите бяха обновени</string>
-    <string name="channel_crash_logs">Записи от сривове</string>
     <string name="spen_previous_page">Предишна страница</string>
     <string name="spen_next_page">Следваща страница</string>
     <string name="action_display_language_badge">Език</string>

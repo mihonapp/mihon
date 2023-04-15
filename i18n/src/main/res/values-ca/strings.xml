@@ -504,10 +504,8 @@
     <string name="file_picker_error">No s\'ha trobat cap aplicació de selecció de fitxers</string>
     <string name="pref_show_nsfw_source">Mostra a la llista de fonts i extensions</string>
     <string name="myanimelist_relogin">Torneu a iniciar la sessió a MAL</string>
-    <string name="channel_crash_logs">Registres de fallades</string>
     <string name="track_finished_reading_date">Data de finalització</string>
     <string name="track_started_reading_date">Data d’inici</string>
-    <string name="crash_log_saved">S\'han desat els registres de fallades</string>
     <string name="pref_dump_crash_logs_summary">Desa els registres d\'errors en un fitxer perquè el pugueu compartir amb els desenvolupadors</string>
     <string name="pref_dump_crash_logs">Bolca els registres de fallades</string>
     <string name="pref_viewer_nav">Zones de toc</string>

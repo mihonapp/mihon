@@ -509,10 +509,8 @@
     <string name="kindlish_nav">Kindle tyylinen</string>
     <string name="l_nav">L-muotoinen</string>
     <string name="pref_dump_crash_logs">Poista kaatumislokit</string>
-    <string name="channel_crash_logs">Kaatumislokit</string>
     <string name="track_finished_reading_date">Lopetuspäivämäärä</string>
     <string name="track_started_reading_date">Aloituspäivämäärä</string>
-    <string name="crash_log_saved">Kaatumislokit tallennettu</string>
     <string name="pref_dump_crash_logs_summary">Tallentaa virhelokit tiedostoon jaettavaksi kehittäjien kanssa</string>
     <string name="action_desc">Laskeva</string>
     <string name="action_asc">Nouseva</string>

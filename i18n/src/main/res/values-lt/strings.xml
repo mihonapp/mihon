@@ -510,7 +510,6 @@
     <string name="update_check_open">Atidaryti „GitHub“ svetainėje</string>
     <string name="channel_app_updates">Programėlių atnaujinimai</string>
     <string name="channel_ext_updates">Plėtinių atnaujinimai</string>
-    <string name="channel_crash_logs">Strigčių žurnalai</string>
     <string name="spen_previous_page">Ankstesnis puslapis</string>
     <string name="restore_miui_warning">Atsarginės kopijos kūrimas / atkūrimas gali veikti netinkamai, jei \"MIUI Optimization\" yra išjungtas.</string>
     <string name="restoring_backup_canceled">Atšauktas atkūrimas</string>
@@ -584,7 +583,6 @@
     <string name="pref_reset_viewer_flags_summary">Iš naujo nustatyti visų serijų skaitymo režimą ir orientaciją</string>
     <string name="pref_reset_viewer_flags_success">Visų skaitytuvo nustatymų nustatymas iš naujo</string>
     <string name="pref_reset_viewer_flags_error">Nepavyko atstatyti skaitytuvo nustatymų</string>
-    <string name="crash_log_saved">Išsaugoti strigčių žurnalai</string>
     <string name="label_background_activity">Fono veikla</string>
     <string name="pref_disable_battery_optimization_summary">Padeda su fono bibliotekos naujinimais ir atsarginėmis kopijomis</string>
     <string name="battery_optimization_disabled">Akumuliatoriaus optimizavimas jau išjungtas</string>

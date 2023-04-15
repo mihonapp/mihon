@@ -677,4 +677,6 @@
     <string name="restore_miui_warning">پشتیبانی/بازگردانی ممکن است کار نکند اگر بهینه‌سازی MIUI غیر فعال باشد</string>
     <string name="enhanced_services_not_installed">در دسترس است اما افزونه منبع نصب نشده است: %s</string>
     <string name="backup_info">شما باید از پشتیبانی ها در جا های دیگر هم کپی داشته باشید.</string>
+    <string name="action_update_category">بروزرسانی دسته بندی</string>
+    <string name="action_copy_to_clipboard">کپی کردن به کلیپ‌برد</string>
 </resources>

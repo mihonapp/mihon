@@ -572,7 +572,6 @@
     </plurals>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="download_notifier_split_page_not_found">Strana %d sa pri rozdeľovaní nenašla</string>
-    <string name="channel_crash_logs">Logy zlyhaní</string>
     <string name="publishing_finished">Publikovanie ukončené</string>
     <string name="no_pinned_sources">Nemáte žiadne pripnuté zdroje</string>
     <string name="update_check_eol">Táto verzia systému Android už nie je podporovaná</string>
@@ -635,7 +634,6 @@
     <string name="update_check_open">Otvoriť na GitHub-e</string>
     <string name="update_check_fdroid_migration_info">Nová verzia je k dispozícii z oficiálnych vydaní. Klepnutím sa dozviete, ako migrovať z neoficiálnych vydaní F-Droid.</string>
     <string name="getting_started_guide">Príručka Začíname</string>
-    <string name="crash_log_saved">Uložené logy o zlyhaní</string>
     <string name="notification_incognito_text">Zakázať režim inkognito</string>
     <string name="manga_info_collapse">Menej</string>
     <string name="webtoon_side_padding_5">5%</string>

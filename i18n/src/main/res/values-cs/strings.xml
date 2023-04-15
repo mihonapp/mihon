@@ -123,7 +123,7 @@
     <string name="custom_filter">Vlastní filtr</string>
     <string name="chapter_progress">Stránka: %1$d</string>
     <string name="no_next_chapter">Další kapitola nenalezena</string>
-    <string name="decode_image_error">Obrázek nemohl být načten</string>
+    <string name="decode_image_error">Obrázek se nepodařilo načíst</string>
     <string name="transition_finished">Dokončeno:</string>
     <string name="transition_current">Aktuální:</string>
     <string name="transition_next">Následující:</string>
@@ -370,9 +370,8 @@
     <string name="battery_optimization_disabled">Optimalizace je již vypnuta</string>
     <string name="pref_disable_battery_optimization_summary">Pomáhá s aktualizacemi knihovny a záloh na pozadí</string>
     <string name="pref_disable_battery_optimization">Vypnout optimalizaci baterie</string>
-    <string name="crash_log_saved">Chybový protokol uložen</string>
     <string name="pref_dump_crash_logs_summary">Uloží chybové protokoly do souboru pro sdílení s vývojáři</string>
-    <string name="pref_dump_crash_logs">Vypsat protokoly o selhání</string>
+    <string name="pref_dump_crash_logs">Sdílet protokoly o selhání</string>
     <string name="pref_refresh_library_covers">Obnovit přebaly v knihovně</string>
     <string name="label_data">Data</string>
     <string name="requires_app_restart">Pro projevení je nutný restart aplikace</string>
@@ -447,7 +446,6 @@
     <string name="action_disable">Zakázat</string>
     <string name="action_display_show_number_of_items">Zobrazovat počet položek</string>
     <string name="action_start">Začít</string>
-    <string name="channel_crash_logs">Záznamy o pádech</string>
     <string name="channel_ext_updates">Aktualizace rozšíření</string>
     <string name="channel_new_chapters">Aktualizace kapitol</string>
     <string name="channel_errors">Chyby</string>
@@ -731,7 +729,7 @@
     <string name="download_ahead_info">Funguje pouze na položky v knihovně a pokud je již stažena aktuální kapitola a následující kapitola</string>
     <string name="are_you_sure">Jste si jistí\?</string>
     <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
-    <string name="multi_lang">Multi</string>
+    <string name="multi_lang">Více</string>
     <string name="pref_long_strip_split">Rozdělit vysoké obrázky (BETA)</string>
     <string name="updates_last_update_info">Poslední aktualizace knihovny: %s</string>
     <string name="popular">Populární</string>
@@ -747,7 +745,7 @@
     <string name="pref_browse_summary">Zdroje, rozšíření, globální vyhledávání</string>
     <string name="pref_security_summary">Zámek aplikace, zabezpečená obrazovka</string>
     <string name="pref_advanced_summary">Výpis protokolů selhání, optimalizace baterie</string>
-    <string name="crash_screen_description">%s narazil na neočekávanou chybu. Doporučujeme vám pořídit snímek obrazovky, vypsat protokoly o selhání a poté je sdílet v našem kanálu podpory na Discordu.</string>
+    <string name="crash_screen_description">%s narazil na neočekávanou chybu. Doporučujeme vám sdílet protokoly o selhání a poté je sdílet v našem kanálu podpory na Discordu.</string>
     <string name="crash_screen_restart_application">Restartujte aplikaci</string>
     <string name="pref_backup_summary">Ruční a automatické zálohování</string>
     <string name="crash_screen_title">Ups!</string>

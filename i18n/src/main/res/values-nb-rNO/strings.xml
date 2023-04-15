@@ -492,7 +492,6 @@
     <string name="pref_webtoon_side_padding">Sidepolstring</string>
     <string name="spen_next_page">Neste side</string>
     <string name="spen_previous_page">Forrige side</string>
-    <string name="channel_crash_logs">Feillogg</string>
     <string name="file_picker_error">Ingen app for filvelging funnet</string>
     <string name="migration_help_guide">Veiledning for kilde-flytting</string>
     <string name="clear_history_confirmation">Er du sikker\? All historikk vil gå tapt.</string>
@@ -505,8 +504,7 @@
     <string name="manga_from_library">Fra biblioteket</string>
     <string name="pref_incognito_mode_summary">Setter lesehistorikken på pause</string>
     <string name="pref_incognito_mode">Inkognitomodus</string>
-    <string name="crash_log_saved">Feillogger lagret</string>
-    <string name="pref_dump_crash_logs">Dump feillogg</string>
+    <string name="pref_dump_crash_logs">Del krasjlogger</string>
     <string name="pref_dump_crash_logs_summary">Lagrer feillogger i en fil som kan sendes til utviklerne</string>
     <string name="pref_viewer_nav">Navigasjonsoppsett</string>
     <string name="edge_nav">Kant</string>
@@ -719,7 +717,7 @@
     <string name="delete_category">Slett kategori</string>
     <string name="internal_error">InternalError: Sjekk krasjlogger for mer informasjon</string>
     <string name="crash_screen_title">Oops!</string>
-    <string name="crash_screen_description">%s fikk en uventet feil. Vi foreslår at du tar et skjermbilde av denne meldingen, dumper krasjloggene og derette deler dette i vår støttekanal på Discord.</string>
+    <string name="crash_screen_description">%s fikk en uventet feil. Vi foreslår at du deler krasjloggene i vår støttekanal på Discord.</string>
     <string name="pref_app_language">Appspråk</string>
     <string name="description_placeholder">Ingen beskrivelse</string>
     <string name="action_search_hint">Søk…</string>

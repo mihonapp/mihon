@@ -461,7 +461,6 @@
     <string name="check_for_updates">Pārbaudīt, vai nav atjauninājumu</string>
     <string name="pref_clear_webview_data">Notīrīt WebView datus</string>
     <string name="webview_data_deleted">WebView dati notīrīti</string>
-    <string name="crash_log_saved">Avārijas žurnāli saglabāti</string>
     <string name="label_background_activity">Fona darbība</string>
     <string name="battery_optimization_setting_activity_not_found">Nevarēja atvērt ierīces iestatījumus</string>
     <string name="services">Serviss</string>
@@ -588,7 +587,6 @@
     <string name="skipped_reason_not_started">Izlaists, jo neviena nodaļa nav izlasīta</string>
     <string name="file_select_cover">Atlasiet vāka attēlu</string>
     <string name="file_select_backup">Atlasiet dublējuma failu</string>
-    <string name="channel_crash_logs">Avāriju žurnāli</string>
     <string name="spen_previous_page">Iepriekšējā lapa</string>
     <string name="copy">Kopēt</string>
     <string name="update_check_fdroid_migration_info">Jaunā versija ir pieejama no oficiālajām versijām. Pieskarieties, lai uzzinātu, kā migrēt no neoficiālajām F-Droid versijām.</string>

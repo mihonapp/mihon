@@ -554,10 +554,8 @@
     <string name="action_order_by_upload_date">Por data de envio</string>
     <string name="action_filter_tracked">Monitorizado</string>
     <string name="edge_nav">Borda</string>
-    <string name="channel_crash_logs">Registos de falhas</string>
     <string name="track_finished_reading_date">Data de conclusão</string>
     <string name="track_started_reading_date">Data de início</string>
-    <string name="crash_log_saved">Registos de falhas guardados</string>
     <string name="pref_dump_crash_logs">Guardar registos de falhas</string>
     <string name="pref_dump_crash_logs_summary">Guarda registos de erros num ficheiro para partilhar com os desenvolvedores</string>
     <string name="action_display_show_number_of_items">Mostrar número de itens</string>

@@ -530,12 +530,10 @@
     <string name="edge_nav">По краям</string>
     <string name="kindlish_nav">Kindle-подобная</string>
     <string name="l_nav">L-образная</string>
-    <string name="channel_crash_logs">Журнал с ошибками</string>
     <string name="track_finished_reading_date">Дата окончания</string>
     <string name="track_started_reading_date">Дата начала</string>
-    <string name="crash_log_saved">Журнал с ошибками сохранён</string>
     <string name="pref_dump_crash_logs_summary">Сохраняет журнал с ошибками в файл для отправки разработчикам</string>
-    <string name="pref_dump_crash_logs">Выгрузить журнал с ошибками</string>
+    <string name="pref_dump_crash_logs">Поделиться журналом с ошибками</string>
     <string name="action_desc">По убыванию</string>
     <string name="action_asc">По возрастанию</string>
     <string name="action_order_by_chapter_number">Номер главы</string>
@@ -763,7 +761,7 @@
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
     <string name="pref_advanced_summary">Выгрузка журнала с ошибками, оптимизация батареи</string>
     <string name="crash_screen_title">Ой, ошибочка вышла!</string>
-    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем сделать скриншот этого сообщения, выгрузить журнал с ошибками и после поделиться этим журналом/скиншотом в нашем Discord сервере в канале поддержки.</string>
+    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем поделиться журналом с ошибками в нашем Discord сервере в ветке support.</string>
     <string name="unknown_title">Неизвестное название</string>
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>

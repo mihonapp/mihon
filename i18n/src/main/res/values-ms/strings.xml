@@ -501,10 +501,8 @@
     <string name="action_asc">Menaik</string>
     <string name="action_order_by_chapter_number">Mengikut nombor bab</string>
     <string name="action_order_by_upload_date">Mengikut tarikh muat naik</string>
-    <string name="channel_crash_logs">Log kerosakan</string>
-    <string name="crash_log_saved">Log kerosakan disimpan</string>
     <string name="pref_dump_crash_logs_summary">Simpan log ralat untuk dikongsi dengan pembangunan aplikasi</string>
-    <string name="pref_dump_crash_logs">Kumpulan log kerosakan</string>
+    <string name="pref_dump_crash_logs">Kongsi log kerosakan</string>
     <string name="track_started_reading_date">Tarikh mula</string>
     <string name="track_finished_reading_date">Tarikh selesai</string>
     <string name="action_filter_tracked">Dijejaki</string>
@@ -724,7 +722,7 @@
     <string name="crash_screen_title">Aduhai!</string>
     <string name="crash_screen_restart_application">Mulakan semula aplikasi</string>
     <string name="pref_browse_summary">Sumber, sambungan, carian keseluruhan</string>
-    <string name="crash_screen_description">%s mengalami ralat tidak dijangka. Kami mencadangkan anda untuk tangkapan skrin mesej ini, mengumpulkan log kerosakan, dan kemudian mengongsi ia pada Discord kami di saluran bantuan.</string>
+    <string name="crash_screen_description">%s mengalami ralat tidak dijangka. Kami mencadangkan anda untuk kongsi log kerosakan pada Discord kami di saluran bantuan.</string>
     <string name="unknown_title">Tajuk tidak diketahui</string>
     <string name="invalid_location">Lokasi tidak sah: %s</string>
     <string name="error_user_agent_string_invalid">Rentetan ejen pengguna tidak sah</string>

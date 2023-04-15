@@ -496,7 +496,6 @@
     <string name="pref_auto_clear_chapter_cache">Қолданба жабылғанда тараулар кешің тазалау</string>
     <string name="pref_reset_viewer_flags">Оқыма баптауын әрбір туынды үшін қалпына келтіру</string>
     <string name="pref_reset_viewer_flags_summary">Барлық туындылар үшін оқу режимі мен бағдарын қалпына келтіреді</string>
-    <string name="crash_log_saved">Қателіктер тіркеуі сақталды</string>
     <string name="label_background_activity">Аялық белсенділік</string>
     <string name="pref_disable_battery_optimization">Батареяның оңтайландыруын өшіру</string>
     <string name="battery_optimization_setting_activity_not_found">Құрылғы баптауы ашылмады</string>
@@ -615,7 +614,6 @@
     <string name="update_check_confirm">Жүктеп алу</string>
     <string name="channel_common">Ортақ</string>
     <string name="channel_progress">Прогресс</string>
-    <string name="channel_crash_logs">Қателіктер тіркеуі</string>
     <string name="also_set_chapter_settings_for_library">Сонымен қоса кітапханадағы жазбаларға қолдану</string>
     <string name="chapter_settings">Тарау баптауы</string>
     <string name="chapter_error">Қателік</string>

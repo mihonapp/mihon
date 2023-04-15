@@ -11,7 +11,7 @@
     <string name="action_filter_tracked">Gisubay</string>
     <string name="action_filter_unread">Wala mabasa</string>
     <string name="action_sort_alpha">Alpabetiko</string>
-    <string name="action_sort_count">Kinatibuk sa manga</string>
+    <string name="action_sort_count">Hingpit nga mga entry</string>
     <string name="action_sort_total">Kinatibuk sa mga kapitulo</string>
     <string name="action_sort_last_read">Katapusan nga pagbasa</string>
     <string name="action_sort_unread_count">Wala mabasa nga ihap</string>
@@ -454,7 +454,6 @@
     <string name="pref_reset_viewer_flags_summary">I-reset ang mode sa pagbasa ug oryentasyon sa tanan nga serye</string>
     <string name="pref_reset_viewer_flags_success">Ang tanan nga mga setting sa magbabasa gi-reset</string>
     <string name="pref_reset_viewer_flags_error">Dili ma-reset ang mga setting sa magbabasa</string>
-    <string name="crash_log_saved">Na-save ang mga crash log</string>
     <string name="label_background_activity">Kalihokan sa background</string>
     <string name="pref_disable_battery_optimization_summary">Nagtabang sa mga update sa librarya sa background ug pag-backup</string>
     <string name="pref_verbose_logging">Verbose logging</string>

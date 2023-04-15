@@ -272,7 +272,6 @@
     <string name="copy">Másolás</string>
     <string name="migrate">Áttelepítés</string>
     <string name="display_mode_chapter">%1$s. fejezet</string>
-    <string name="channel_crash_logs">Összeomlási naplók</string>
     <string name="information_webview_required">A Tachiyomi működéséhez WebView szükséges</string>
     <string name="notification_chapters_multiple">%1$s. fejezetek</string>
     <string name="notification_chapters_single_and_more">A(z) %1$s. fejezet és %2$d egyéb fejezetek</string>
@@ -675,7 +674,6 @@
     <string name="webview_data_deleted">WebView adatok törölve</string>
     <string name="pref_reset_viewer_flags_summary">Helyreállítja az olvasó módot és orientációt minden elemnél</string>
     <string name="pref_reset_viewer_flags_error">Nem lehetett visszaállítani az olvasói beállításokat</string>
-    <string name="crash_log_saved">Hibaüzenetek elmentve</string>
     <string name="pref_disable_battery_optimization">Akkumulátor optimalizálás kikapcsolása</string>
     <string name="pref_disable_battery_optimization_summary">Segít háttérbeli könyvtár frissítésben és a biztonsági mentésekben</string>
     <string name="battery_optimization_disabled">Akkumulátor optimalizálás már ki van kapcsolva</string>

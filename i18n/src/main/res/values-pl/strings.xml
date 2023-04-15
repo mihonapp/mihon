@@ -526,10 +526,8 @@
     <string name="file_picker_error">Nie znaleziono aplikacji do przeglądania plików</string>
     <string name="myanimelist_relogin">Wymagane ponowne zalogowanie do MAL</string>
     <string name="pref_show_nsfw_source">Pokazuj na liście źródeł i rozszerzeń</string>
-    <string name="channel_crash_logs">Logi crashy</string>
     <string name="track_finished_reading_date">Data zakończenia</string>
     <string name="track_started_reading_date">Data rozpoczęcia</string>
-    <string name="crash_log_saved">Logi crasha zapisane</string>
     <string name="pref_dump_crash_logs_summary">Zapisuje logi błędów do pliku do udostępnienia programistom</string>
     <string name="pref_dump_crash_logs">Zapisz logi crasha</string>
     <string name="pref_viewer_nav">Strefy kliknięcia</string>

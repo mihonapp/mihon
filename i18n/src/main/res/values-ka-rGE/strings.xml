@@ -2,7 +2,7 @@
 <resources>
     <string name="name">სახელი</string>
     <string name="categories">კატეგორიები</string>
-    <string name="manga">მანგა</string>
+    <string name="manga">ბიბლიოთეკის ჩანაწერები</string>
     <string name="history">ისტორია</string>
     <string name="label_more">მეტი</string>
     <string name="label_settings">პარამეტრები</string>
@@ -45,7 +45,7 @@
     <string name="action_remove">წაშლა</string>
     <string name="action_resume">გაგრძელება</string>
     <string name="action_open_in_browser">ბრაუზერში გახსნა</string>
-    <string name="action_open_in_web_view">აპლიკაციაში გახსნა</string>
+    <string name="action_open_in_web_view">WebView-ში გახსნა</string>
     <string name="action_display_mode">ჩვენების რეჟიმი</string>
     <string name="action_display">ჩვენება</string>
     <string name="action_display_grid">კომპაქტური ბადე</string>
@@ -87,8 +87,8 @@
     <string name="pref_date_format">თარიღის ფორმატი</string>
     <string name="pref_confirm_exit">გამოსვლის დადასტურება</string>
     <string name="pref_manage_notifications">შეტყობინებების მართვა</string>
-    <string name="pref_category_security">უსაფრთხოება</string>
-    <string name="lock_with_biometrics">თითის ანაბეჭდით ბლოკი</string>
+    <string name="pref_category_security">უსაფრთხოება და კონფიდენციალობა</string>
+    <string name="lock_with_biometrics">განბლოკვის მოთხოვნა</string>
     <string name="lock_when_idle">ბლოკირება უმოქმედობის დროს</string>
     <string name="lock_always">ყოველთვის</string>
     <string name="lock_never">არასდროს</string>
@@ -203,11 +203,11 @@
     <string name="pref_backup_slots">მაქსიმალური რეზერვი</string>
     <string name="backup_created">რეზერვი შექმნილია</string>
     <string name="invalid_backup_file">არასწორი სარეზერვო ფაილი</string>
-    <string name="invalid_backup_file_missing_manga">რეზერვი არ შეიცავს არცერთ მანგას.</string>
+    <string name="invalid_backup_file_missing_manga">მარქაფი ბიბლიოთეკის ჩანაწერებს არ შეიცავს.</string>
     <string name="backup_restore_missing_sources">დაკარგული წყაროები:</string>
     <string name="restore_completed">აღდგენა შესრულებულია</string>
     <string name="restore_duration">%02d წუთი, %02d წამი</string>
-    <string name="backup_in_progress">რეზერვის შემქნა პროგრესშია</string>
+    <string name="backup_in_progress">მარქაფი უკვე მიმდინარეობს</string>
     <string name="backup_choice">რას გსურს რომ შეუქმნა რეზერვი\?</string>
     <string name="creating_backup">რეზერვის შექმნა</string>
     <string name="creating_backup_error">რეზერვის შექმნა ვერ მოხერხდა</string>
@@ -223,8 +223,8 @@
     <string name="pref_clear_cookies">Cookie -ების გასუფთავება</string>
     <string name="cookies_cleared">Cookie -ები გასუფთავებულია</string>
     <string name="pref_clear_database">მონაცემთა ბაზის გასუფთავება</string>
-    <string name="pref_clear_database_summary">ბიბლიოთეკაში შეუნახავი მანგების ისტორიის წაშლა</string>
-    <string name="clear_database_confirmation">დარწმუნებული ხარ? წაკითხული თავები და ბიბლიოთეკაში არ არსებული მანგების პროგრესი დაიკარგება</string>
+    <string name="pref_clear_database_summary">ისტორიიდან წაიშლება ჩანაწერები, რომლებიც თქვენს ბიბლიოთეკაში არაა შენახული</string>
+    <string name="clear_database_confirmation">დარწმუნებული ბრძანდებით\? წაკითხული თავები და ბიბლიოთეკაში არ არსებული ჩანაწერების პროგრესი დაიკარგება</string>
     <string name="clear_database_completed">ჩანაწერები წაშლილია</string>
     <string name="pref_refresh_library_covers">ბიბლიოთეკის მანგების ყდის ცვლილება</string>
     <string name="pref_refresh_library_tracking">თვალყურის დევნების განახლება</string>
@@ -236,7 +236,7 @@
     <string name="pref_enable_acra">ქრეშის რეპორტის გაგზავნა</string>
     <string name="pref_acra_summary">ეხმარება შეცდომების გამოსწორებაში. სენსიტიური მონაცემები არ იქნება გაგზავნილი</string>
     <string name="label_downloaded_only">მხოლოდ გადმოწერილები</string>
-    <string name="downloaded_only_summary">ფილტრავს ყველა მანგას შენს ბიბლიოთეკაში</string>
+    <string name="downloaded_only_summary">თქვენს ბიბლიოთეკაში ყველა ჩანაწერის გაფილტვრა</string>
     <string name="login_title">შესვლა %1$s-ში</string>
     <string name="username">მომხმარებლის სახელი</string>
     <string name="email">ელ. ფოსტა</string>
@@ -251,7 +251,7 @@
     <string name="tabs_header">ჩანართები</string>
     <string name="no_more_results">შედეგების სიის დასასრული</string>
     <string name="no_results_found">შედეგი ვერ მოიძებნა</string>
-    <string name="http_error_hint">ვებსაიტის ნახვა აპლიკაციაში</string>
+    <string name="http_error_hint">ვებსაიტის ნახვა WebView-ში</string>
     <string name="local_source">ლოცალური წყარო</string>
     <string name="other_source">სხვა</string>
     <string name="last_used_source">ბოლოს გამოყენებული</string>
@@ -272,7 +272,7 @@
     <string name="copied_to_clipboard">დაკოპირებულია ბუფერში:
 \n%1$s</string>
     <string name="source_not_installed">წყარო არ არის დაინსტალირებული: %1$s</string>
-    <string name="snack_add_to_library">დავამატო მანგა ბიბლიოთეკაში?</string>
+    <string name="snack_add_to_library">დავამატო ბიბლიოთეკაში\?</string>
     <string name="display_mode_chapter">თავი %1$s</string>
     <string name="chapter_downloading_progress">მიმდინარეობს გადმოწერა (%1$d/%2$d)</string>
     <string name="chapter_error">შეცდომა</string>
@@ -305,7 +305,7 @@
     <string name="picture_saved">სურათი შენახულია</string>
     <string name="chapter_progress">გვერდი: %1$d</string>
     <string name="no_next_chapter">შემდეგი თავი ვერ მოიძებნა</string>
-    <string name="decode_image_error">სურათის გადმოტვირთვა ვერ მოხერხდა</string>
+    <string name="decode_image_error">გამოსახულებსი ჩატვირთვის შეცდომა</string>
     <string name="pref_category_for_this_series">ამ სერიებისთვის</string>
     <string name="viewer">კითხვის რეჟიმი</string>
     <string name="transition_finished">დამთავრებულია:</string>
@@ -330,22 +330,22 @@
     <string name="notification_chapters_single_and_more">თავი %1$s და %2$d მეტი</string>
     <string name="notification_chapters_multiple">თავები %1$s</string>
     <string name="notification_cover_update_failed">ვერ მოხერხდა ყდის განახლება</string>
-    <string name="notification_first_add_to_library">გთხოვთ ჯერ დაამატოთ მანგა თქვენს ბიბლიოთეკაში</string>
+    <string name="notification_first_add_to_library">გთხოვთ ჯერ დაამატოთ ჩანაწერი თქვენს ბიბლიოთეკაში</string>
     <string name="file_select_cover">ამოირჩიე ყდის სურათი</string>
     <string name="file_select_backup">ამოირჩიე რეზერვის ფაილი</string>
     <string name="update_check_confirm">გადმოწერა</string>
     <string name="update_check_no_new_updates">განახლება ვერ მოიძებნა</string>
     <string name="update_check_look_for_updates">განახლების ძებნა…</string>
     <string name="update_check_notification_download_in_progress">გადმოწერა…</string>
-    <string name="update_check_notification_download_complete">გადმოწერა დასრულებულია</string>
+    <string name="update_check_notification_download_complete">განახლების დასაყენებლად დაატყაპუნეთ</string>
     <string name="update_check_notification_download_error">გადმოწერის შეცდომა</string>
     <string name="update_check_notification_update_available">ხელმისაწვდომია ახალი ვერსია!</string>
     <string name="information_no_downloads">გადმოწერები არ არის</string>
     <string name="information_no_recent">განახლებები არ არის</string>
-    <string name="information_empty_library">შენი ბიბლიოთეკა ცარიელია, დაამატე სერიები შენს ბიბლიოთეკაში \"დაათვალიერე\"-დან.</string>
+    <string name="information_empty_library">თქვენი ბიბლიოთეკა ცარიელია</string>
     <string name="download_notifier_text_only_wifi">Wi-Fi კავშირი არ არის ხელმისაწვდომი</string>
     <string name="download_notifier_no_network">ინტერნეტთან კავშირი არ არის ხელმისაწვდომი</string>
-    <string name="download_notifier_download_paused">გადმოწერა დაპაუზებულია</string>
+    <string name="download_notifier_download_paused">გადმოწერა შეჩერებულია</string>
     <string name="channel_common">საერთო</string>
     <string name="channel_new_chapters">თავების განახლებები</string>
     <string name="channel_ext_updates">გავრცობის განახლებები</string>
@@ -369,7 +369,7 @@
     <string name="ext_trust">ნდობა</string>
     <string name="ext_untrusted">არასანდო</string>
     <string name="untrusted_extension">არასანდო დამატება</string>
-    <string name="obsolete_extension_message">დამატება აღარ არის ხელმისაწვდომი.</string>
+    <string name="obsolete_extension_message">დამატება ხელმისაწვდომი აღარაა. მან შეიძლება არასწორად იმუშაოს და აპლიკაციას პრობლემები შეუქმნას. გირჩევთ, წაშალოთ ის.</string>
     <string name="unofficial_extension_message">დამატება არ არის Tachiyomi-ს ოფიციალური დამატებების სიიდან.</string>
     <string name="pref_double_tap_anim_speed">ორჯერ დაჭერისას ანიმაციის სისწრაფე</string>
     <string name="pref_true_color_summary">აუმჯობესებს ხარისხს, თუმცა ამცირებს წარმადობას</string>
@@ -379,13 +379,13 @@
     <string name="pref_read_with_long_tap">დიალოგი ხანგრძლივი დაჭერისას</string>
     <string name="webtoon_viewer">ვებ კომიქსი</string>
     <string name="pager_viewer">დანომრილი</string>
-    <string name="pref_search_pinned_sources_only">შეიყვანე მხოლოდ მიმაგრებული წყაროები</string>
+    <string name="pref_search_pinned_sources_only">გლობალურ ძებნაში მხოლოდ მიჭიკარტებულ წყაროებში ძებნა</string>
     <string name="pref_disable_battery_optimization">გამორთე ბატარეის ოპტიმიზაცია</string>
     <string name="pref_disable_battery_optimization_summary">ეხმარება უკანა ფონში მიმდინარე ბიბლიოთეკის განახლებებსდა რეზერვს</string>
     <string name="licenses">ღია კოდის ლიცენზია</string>
     <string name="pinned_sources">მიმაგრებული</string>
     <string name="local_source_help_guide">ლოკალური წყაროს გიდი</string>
-    <string name="dialog_with_checkbox_reset">ამ მანგას ყველა თავის წაკითხვა</string>
+    <string name="dialog_with_checkbox_reset">ამ ჩანაწერის ყველა თავის თავიდან წაკითხვა</string>
     <string name="custom_filter">პრესონიფიცირებული ფილტრი</string>
     <string name="set_as_cover">ყდად დაყენება</string>
     <string name="cover_updated">ყდა განახლდა</string>
@@ -405,7 +405,7 @@
 \nმავნე დამატებას შეუძლია წაიკითხოს შესვლის მონაცემები შენახული ამ აპლიკაციაში ან გაუშვას თავისი კოდი.
 \n
 \nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
-    <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ მანგებს მათი ჩანართებიდან</string>
+    <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ ჩანაწერებს მათი ჩანართებიდან.</string>
     <string name="pref_refresh_library_tracking_summary">ანახლებს სტატუსს, შეფასებას და ბოლო თავს წაკითხულს თვალყურის სადევნებელ სერვისებიდან</string>
     <string name="filter_mode_overlay">გადაფარება</string>
     <string name="information_cloudflare_bypass_failure">ვერ მოხერხდა CloudFlare-ს შემოვლა</string>
@@ -427,8 +427,8 @@
         <item quantity="other">ნაპოვნია %1$d ახალი თავი</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">ნაპოვნია ახალი თავები ნაწარმოებისთვის</item>
-        <item quantity="other">ნაპოვნია ახალი თავები %d ნაწარმოებისთვის</item>
+        <item quantity="one">%d ჩანაწერისთვის</item>
+        <item quantity="other">%d ჩანაწერისთვის</item>
     </plurals>
     <string name="download_insufficient_space">შეუძლებელია თავების გადმოწერა დისკზე ადგილის უკმარისობის გამო</string>
     <string name="loader_not_implemented_error">წყარო ვერ მოიძებნა</string>
@@ -448,8 +448,8 @@
     <string name="requires_app_restart">ასამოქმედებლად საჭიროა აპლიკაციის გადატვირთვა</string>
     <string name="label_network">ქსელი</string>
     <plurals name="restore_completed_message">
-        <item quantity="one">გაკეთებულია %1$s %2$s შეცდომით</item>
-        <item quantity="other">გაკეთებულია %1$s %2$s შეცდომებით</item>
+        <item quantity="one">დასრულების დრო %1$s. %2$s შეცდომა</item>
+        <item quantity="other">დასრულების დრო %1$s. %2$s შეცდომა</item>
     </plurals>
     <string name="pref_category_reading_mode">კითხვის რეჟიმი</string>
     <plurals name="num_categories">
@@ -469,7 +469,7 @@
     <string name="pref_remove_bookmarked_chapters">მონიშნული თავების წაშლა</string>
     <string name="pref_category_delete_chapters">თავების წაშლა</string>
     <string name="right_and_left_nav">მარჯვენა და მარცხენა</string>
-    <string name="pref_dual_page_split">გვერდების ორმაგი გაყოფა (ალფა)</string>
+    <string name="pref_dual_page_split">განიერი გვერდების გაყოფა</string>
     <string name="parental_controls_info">ეს არ აღმოფხვრავს პროგრამაში NSFW (18+) შიგთავსის არაოფიციალურ, ან შესაძლო არასწორად მონიშნული გაფართოებებოიდან გამოჩენას.</string>
     <string name="action_display_show_number_of_items">საგნების რაოდენობის ჩვენება</string>
     <string name="action_search_settings">პარამეტრების ძიება</string>
@@ -483,4 +483,5 @@
     <string name="pref_category_appearance">გარეგნობა</string>
     <string name="label_default">ნაგულისხმევი</string>
     <string name="action_show_errors">დააჭირე დეტალების სანახავად</string>
+    <string name="unread">წაუკითხავი</string>
 </resources>

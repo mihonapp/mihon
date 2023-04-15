@@ -508,12 +508,10 @@
     <string name="edge_nav">Άκρη</string>
     <string name="kindlish_nav">Σαν Kindle</string>
     <string name="l_nav">Σχήματος L</string>
-    <string name="channel_crash_logs">Αρχεία καταγραφής σφαλμάτων</string>
     <string name="track_finished_reading_date">Ημερομηνία λήξης</string>
     <string name="track_started_reading_date">Ημερομηνία έναρξης</string>
-    <string name="crash_log_saved">Τα αρχεία καταγραφής σφαλμάτων αποθηκεύτηκαν</string>
     <string name="pref_dump_crash_logs_summary">Αποθηκεύει αρχεία καταγραφής σφαλμάτων σε ένα αρχείο για κοινή χρήση με τους προγραμματιστές</string>
-    <string name="pref_dump_crash_logs">Άδειασμα αρχείων καταγραφής σφαλμάτων</string>
+    <string name="pref_dump_crash_logs">Κοινή χρήση αρχείων καταγραφής σφαλμάτων</string>
     <string name="action_desc">Φθίνουσα</string>
     <string name="action_asc">Αύξουσα</string>
     <string name="action_order_by_chapter_number">Κατά αριθμό κεφαλαίου</string>
@@ -737,7 +735,7 @@
     <string name="crash_screen_restart_application">Επανεκκίνηση της εφαρμογής</string>
     <string name="pref_downloads_summary">Αυτόματη λήψη, λήψη εκ των προτέρων</string>
     <string name="pref_advanced_summary">Αρχεία καταγραφής σφαλμάτων, βελτιστοποιήσεις μπαταρίας</string>
-    <string name="crash_screen_description">Το %s αντιμετώπισε ένα μη αναμενόμενο σφάλμα. Σας προτείνουμε να κάνετε στιγμιότυπο οθόνης αυτού του μηνύματος, να αποθηκεύσετε τα αρχεία καταγραφής σφαλμάτων και, στη συνέχεια να το μοιραστείτε στο κανάλι υποστήριξης μας στο Discord.</string>
+    <string name="crash_screen_description">Το %s αντιμετώπισε ένα απροσδόκητο σφάλμα. Σας προτείνουμε να μοιραστείτε τα αρχεία καταγραφής σφαλμάτων στο κανάλι υποστήριξης μας στο Discord.</string>
     <string name="unknown_title">Άγνωστος τίτλος</string>
     <string name="invalid_location">Μη έγκυρη τοποθεσία: %s</string>
     <string name="error_user_agent_string_invalid">Μη έγκυρη συμβολοσειρά πράκτορα χρήστη</string>

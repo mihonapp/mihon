@@ -66,7 +66,6 @@
         <item quantity="other">%1$s-n egin da %2$s errorerekin</item>
     </plurals>
     <string name="cookies_cleared">Cookieak garbitu dira</string>
-    <string name="crash_log_saved">Gorde dira erroreen erregistroak</string>
     <string name="dropped">Alde batera utzia</string>
     <string name="status">Egoera</string>
     <string name="untrusted_extension">Fidagarria ez den luzapena</string>
@@ -469,7 +468,6 @@
     <string name="information_no_recent">Ez dago azkenaldiko eguneraketarik</string>
     <string name="information_empty_library">Zure liburutegia hutsik dago</string>
     <string name="information_empty_category">Ez daukazu kategoriarik. Sakatu gehiketa botoia zure liburutegia antolatzeko bat sortzeko.</string>
-    <string name="channel_crash_logs">Erroreen erregistroak</string>
     <string name="spen_previous_page">Aurreko orrialdea</string>
     <string name="on">Piztu</string>
     <string name="action_newest">Berriena</string>

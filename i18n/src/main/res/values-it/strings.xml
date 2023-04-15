@@ -552,12 +552,10 @@
     <string name="edge_nav">Bordo</string>
     <string name="kindlish_nav">Stile Kindle</string>
     <string name="l_nav">A forma di L</string>
-    <string name="channel_crash_logs">Registro dei crash</string>
     <string name="track_finished_reading_date">Data fine</string>
     <string name="track_started_reading_date">Data inizio</string>
-    <string name="crash_log_saved">Registro dei crash salvato</string>
     <string name="pref_dump_crash_logs_summary">Salva un registro degli errori su un file per condividerlo con gli sviluppatori</string>
-    <string name="pref_dump_crash_logs">Salva un registro dei crash</string>
+    <string name="pref_dump_crash_logs">Condividi il registro dei crash</string>
     <string name="action_desc">Decrescente</string>
     <string name="action_asc">Crescente</string>
     <string name="action_order_by_chapter_number">Per numero di capitolo</string>
@@ -773,7 +771,7 @@
     <string name="action_search_hint">Ricerca…</string>
     <string name="pref_general_summary">Lingua dell\'app, notifiche</string>
     <string name="pref_appearance_summary">Tema, formato data e ora</string>
-    <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di fare uno screenshot di questo messaggio, scaricare i registri degli arresti anomali e condividerli nel nostro canale di supporto su Discord.</string>
+    <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di condividere il registro degli arresti anomali nel nostro canale di supporto su Discord.</string>
     <string name="pref_library_summary">Categorie, aggiornamenti globali</string>
     <string name="pref_downloads_summary">Download automatico, download anticipato</string>
     <string name="pref_browse_summary">Fonti, estensioni, ricerca globale</string>

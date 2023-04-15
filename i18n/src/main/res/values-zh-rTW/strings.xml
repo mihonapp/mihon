@@ -229,7 +229,7 @@
     <string name="title">標題</string>
     <string name="status">狀態</string>
     <string name="track_status">狀態</string>
-    <string name="decode_image_error">無法載入該圖片</string>
+    <string name="decode_image_error">圖片無法載入</string>
     <string name="notification_first_add_to_library">請先將作品收藏至書櫃</string>
     <string name="file_select_backup">選擇備份檔案</string>
     <string name="information_empty_category">尚無任何類別，輕觸新增按鈕即可建立類別以組織你的書櫃。</string>
@@ -320,7 +320,7 @@
     <string name="lock_always">立即</string>
     <string name="lock_when_idle">閒置時鎖定</string>
     <string name="unlock_app">解除鎖定 Tachiyomi</string>
-    <string name="lock_with_biometrics">需要解鎖</string>
+    <string name="lock_with_biometrics">上鎖應用程式</string>
     <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面</string>
     <string name="secure_screen">防窺畫面</string>
     <string name="pref_category_security">隱私</string>
@@ -497,10 +497,8 @@
     <string name="kindlish_nav">Kindle 式</string>
     <string name="l_nav">L 式</string>
     <string name="action_filter_tracked">已登錄歷程</string>
-    <string name="channel_crash_logs">當機記錄</string>
-    <string name="crash_log_saved">已產生當機記錄</string>
     <string name="pref_dump_crash_logs_summary">產生錯誤記錄檔以便分享予開發人員</string>
-    <string name="pref_dump_crash_logs">傾印當機記錄</string>
+    <string name="pref_dump_crash_logs">分享當機記錄</string>
     <string name="pref_viewer_nav">輕觸區域</string>
     <string name="right_and_left_nav">左右式</string>
     <string name="action_order_by_upload_date">依上傳日期</string>
@@ -722,7 +720,7 @@
     <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
     <string name="crash_screen_title">哎呀！</string>
-    <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你擷取此畫面、傾印當機記錄並分享至我們位於 Discord 上的 support 頻道。</string>
+    <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你將當機記錄分享至我們位於 Discord 上的 support 頻道。</string>
     <string name="pref_library_summary">類別、全域更新</string>
     <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
     <string name="invalid_location">無效的位置：%s</string>

@@ -498,11 +498,9 @@
     <string name="action_order_by_chapter_number">Menurut nomor bab</string>
     <string name="action_order_by_upload_date">Menurut tanggal unggahan</string>
     <string name="action_filter_tracked">Dilacak</string>
-    <string name="pref_dump_crash_logs">Buat log kerusakan</string>
-    <string name="channel_crash_logs">Log kerusakan</string>
+    <string name="pref_dump_crash_logs">Bagikan log kerusakan</string>
     <string name="track_finished_reading_date">Tanggal selesai</string>
     <string name="track_started_reading_date">Tanggal mulai</string>
-    <string name="crash_log_saved">Log kerusakan disimpan</string>
     <string name="pref_dump_crash_logs_summary">Simpan log kerusakan ke sebuah berkas untuk dibagikan dengan pengembang aplikasi</string>
     <string name="pref_viewer_nav">Zona ketuk</string>
     <string name="right_and_left_nav">Kanan dan Kiri</string>
@@ -715,7 +713,7 @@
     <string name="pref_browse_summary">Sumber, ekstensi, pencarian global</string>
     <string name="pref_reader_summary">Mode membaca, tampilan, navigasi</string>
     <string name="pref_tracking_summary">Sinkronisasi kemajuan satu arah, sinkronisasi yang ditingkatkan</string>
-    <string name="crash_screen_description">%s mengalami kesalahan yang tak terduga. Kami menyarankan Anda mengambil tangkapan layar pesan ini, membuat log kerusakan, dan kemudian membagikannya di saluran dukungan kami di Discord.</string>
+    <string name="crash_screen_description">%s mengalami kesalahan tak terduga. Kami menyarankan Anda membagi log kerusakan di saluran dukungan kami di Discord.</string>
     <string name="pref_downloads_summary">Unduh otomatis, unduh di depan</string>
     <string name="pref_security_summary">Kunci aplikasi, layar aman</string>
     <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>

@@ -508,12 +508,10 @@
     <string name="pref_viewer_nav">Tippzonen</string>
     <string name="kindlish_nav">Kindle-Stil</string>
     <string name="l_nav">L-förmig</string>
-    <string name="channel_crash_logs">Absturzprotokolle</string>
     <string name="track_finished_reading_date">Enddatum</string>
     <string name="track_started_reading_date">Startdatum</string>
-    <string name="crash_log_saved">Absturzprotokolle gespeichert</string>
     <string name="pref_dump_crash_logs_summary">Speichert Fehlerprotokolle in einer Datei, die dann mit den Entwicklern geteilt wird</string>
-    <string name="pref_dump_crash_logs">Absturzprotokolle ausgeben</string>
+    <string name="pref_dump_crash_logs">Absturzprotokolle teilen</string>
     <string name="action_desc">Absteigend</string>
     <string name="action_asc">Aufsteigend</string>
     <string name="action_order_by_chapter_number">Nach Kapitelnummer</string>
@@ -736,7 +734,7 @@
     <string name="crash_screen_title">Ups!</string>
     <string name="pref_advanced_summary">Absturzprotokolle ausgeben, Akkuverbrauch-Optimierung</string>
     <string name="pref_backup_summary">Manuelle und automatische Datensicherungen</string>
-    <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, einen Screenshot von dieser Nachricht zu machen, die Absturzprotokolle auszugeben und sie dann in unserem Support-Kanal auf Discord zu teilen.</string>
+    <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, die Absturzprotokolle in unserem Support-Kanal auf Discord zu teilen.</string>
     <string name="pref_security_summary">App-Sperre, sicherer Bildschirm</string>
     <string name="unknown_title">Unbekannter Titel</string>
     <string name="invalid_location">Ungültiger Speicherort: %s</string>

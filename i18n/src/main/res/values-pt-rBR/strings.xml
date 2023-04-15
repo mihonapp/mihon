@@ -519,12 +519,10 @@
     <string name="kindlish_nav">Kindle</string>
     <string name="l_nav">Em forma de L</string>
     <string name="pref_viewer_nav">Zonas de toque</string>
-    <string name="channel_crash_logs">Registros de travamentos</string>
     <string name="track_finished_reading_date">Data de término</string>
     <string name="track_started_reading_date">Data de início</string>
-    <string name="crash_log_saved">Registros de travamento salvos</string>
     <string name="pref_dump_crash_logs_summary">Salva os registros de erro em um arquivo para o compartilhamento com os desenvolvedores</string>
-    <string name="pref_dump_crash_logs">Exportar os registros de travamentos</string>
+    <string name="pref_dump_crash_logs">Compartilhar os registros de travamentos</string>
     <string name="action_desc">Decrescente</string>
     <string name="action_asc">Crescente</string>
     <string name="action_order_by_chapter_number">Pelo número do capítulo</string>
@@ -750,7 +748,7 @@
     <string name="pref_advanced_summary">Exportar registros de travamento, otimizações de bateria</string>
     <string name="crash_screen_title">Ooops!</string>
     <string name="crash_screen_restart_application">Reiniciar o aplicativo</string>
-    <string name="crash_screen_description">%s teve um erro inesperado. Nós sugerimos que você capture a tela com essa mensagem, exporte os registros de travamento e então compartilhá-los no nosso canal de suporte no Discord.</string>
+    <string name="crash_screen_description">%s teve um erro inesperado. Nós sugerimos que você compartilhe os registros de travamento em nosso canal de suporte no Discord.</string>
     <string name="unknown_title">Título desconhecido</string>
     <string name="invalid_location">Local inválido: %s</string>
     <string name="error_user_agent_string_invalid">Valor de user agent inválido</string>

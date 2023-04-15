@@ -515,10 +515,8 @@
     <string name="file_picker_error">No se encontró ninguna aplicación de selección de archivos</string>
     <string name="myanimelist_relogin">Por favor iniciar sesión con MAL de nuevo</string>
     <string name="pref_show_nsfw_source">Mostrar en la lista de fuentes y extensiones</string>
-    <string name="channel_crash_logs">Registros de accidentes</string>
     <string name="track_finished_reading_date">Fecha de lectura terminada</string>
     <string name="track_started_reading_date">Fecha de inicio de lectura</string>
-    <string name="crash_log_saved">Registros de fallos guardados</string>
     <string name="pref_dump_crash_logs_summary">Guarda los registros de errores en un archivo para compartirlos con los desarrolladores</string>
     <string name="pref_dump_crash_logs">Volcar registros de accidentes</string>
     <string name="pref_viewer_nav">Zona de toque</string>

@@ -590,7 +590,6 @@
     <string name="label_background_activity">Aktiviteti në sfond</string>
     <string name="pref_disable_battery_optimization_summary">Ndihmon me përditësimet dhe kopjet rezervë të bibliotekës në sfond</string>
     <string name="pref_dump_crash_logs_summary">Ruan regjistrat e gabimeve në një skedar për t\'i ndarë me zhvilluesit</string>
-    <string name="crash_log_saved">Regjistrat e aksidenteve u ruajtën</string>
     <string name="battery_optimization_disabled">Optimizimi i baterisë është tashmë i çaktivizuar</string>
     <string name="battery_optimization_setting_activity_not_found">Cilësimet e pajisjes nuk mund të hapeshin</string>
     <string name="check_for_updates">Kontrolloni për përditësime</string>
@@ -741,7 +740,6 @@
     <string name="dialog_with_checkbox_remove_description">Kjo do të heqë datën e leximit të këtij kapitulli. A je i sigurt\?</string>
     <string name="track_remove_start_date_conf_text">Kjo do të heqë datën e fillimit të zgjedhur më parë nga %s</string>
     <string name="update_check_eol">Ky version Android nuk mbështetet më</string>
-    <string name="channel_crash_logs">Regjistrat e përplasjeve</string>
     <string name="website">Faqja e internetit</string>
     <string name="version">Version</string>
     <string name="whats_new">Cfare ka te re</string>

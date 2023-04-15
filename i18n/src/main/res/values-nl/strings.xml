@@ -508,10 +508,8 @@
     <string name="edge_nav">Rand</string>
     <string name="kindlish_nav">Kindle-achtig</string>
     <string name="l_nav">L-vormig</string>
-    <string name="channel_crash_logs">Crashlogboeken</string>
     <string name="track_finished_reading_date">Einddatum</string>
     <string name="track_started_reading_date">Begindatum</string>
-    <string name="crash_log_saved">Crashlogboeken opgeslagen</string>
     <string name="pref_dump_crash_logs_summary">Slaat foutmeldingslogboeken op in een bestand om te delen met de ontwikkelaars</string>
     <string name="pref_dump_crash_logs">Crashlogboeken opslaan</string>
     <string name="action_desc">Aflopend</string>

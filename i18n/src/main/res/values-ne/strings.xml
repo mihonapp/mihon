@@ -480,8 +480,7 @@
     <string name="no_pinned_sources">तपाईंसँग पिन गरिएको स्रोतहरू छैनन्</string>
     <string name="local_invalid_format">अवैध अध्याय ढाँचा</string>
     <string name="downloaded_only_summary">तपाईंको पुस्तकालयमा सबै इन्ट्री फिल्टर गर्नेछ</string>
-    <string name="pref_dump_crash_logs">क्र्यास लगहरू डम्प गर्नुहोस्</string>
-    <string name="crash_log_saved">क्र्यास लगहरू बचत गरियो</string>
+    <string name="pref_dump_crash_logs">क्र्यास लगहरू साझा गर्नुहोस्</string>
     <string name="pref_disable_battery_optimization">ब्याट्री अप्टिमाइजेसन असक्षम पार्नुहोस्</string>
     <string name="unknown">अज्ञात</string>
     <string name="no_results_found">कुनै परिणाम फेला परेन</string>
@@ -551,7 +550,7 @@
     <string name="sort_by_upload_date">अपलोड मिति द्वारा</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d अध्याय छोड्दै, या त स्रोत सँग छैन वा यसलाई फिल्टर गरिएको छ</item>
-        <item quantity="other">%d अध्यायहरु छोड्दै, या त स्रोत सँग छैन वा तिनिहरू फिल्टर गरिएका छन्</item>
+        <item quantity="other">%d अध्यायहरु छोड्दै, या त स्रोत सँग छैन वा यसलाई फिल्टर गरिएको छ</item>
     </plurals>
     <string name="migration_help_guide">स्रोत स्थानान्तरण गाइड</string>
     <string name="migration_selection_prompt">स्थानान्तरण गर्नको लागि स्रोत चयन गर्नुहोस्</string>
@@ -656,7 +655,6 @@
     <string name="update_check_eol">यो एन्ड्रोइड संस्करण अब समर्थित छैन</string>
     <string name="getting_started_guide">सुरु गर्ने गाइड</string>
     <string name="pref_navigate_pan">ट्याप गर्दा चौडा छविहरू प्यान गर्नुहोस्</string>
-    <string name="channel_crash_logs">क्र्यास लगहरू</string>
     <string name="pref_landscape_zoom">जूम ल्यान्डस्केप छवि</string>
     <string name="notification_update_error">%1$d अपडेट(हरू) असफल भयो</string>
     <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
@@ -703,7 +701,7 @@
 \nके तपाईं अझै जारी राख्न चाहनुहुन्छ\?</string>
     <string name="reading_list">पढ्ने सूची</string>
     <string name="updates_last_update_info">पुस्तकालय पछिल्लो पटक अपडेट गरिएको: %s</string>
-    <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। हामी तपाईंलाई यो सन्देशको स्क्रिनसट, क्र्यास लगहरू डम्प गर्ने, र त्यसपछि Discord मा रहेको हाम्रो support च्यानलमा साझेदारी गर्न सुझाव दिन्छौं।</string>
+    <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागी हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा क्र्यास लगहरू साझेदारी गर्न सुझाव दिन्छौं।</string>
     <string name="update_check_open">GitHub मा खोल्नुहोस्</string>
     <string name="pref_invalidate_download_cache_summary">डाउनलोड गरिएका अध्यायहरू पुन: जाँच गर्न एपलाई फोर्स गर्नुहोस्</string>
     <string name="pref_tracking_summary">एकतर्फी प्रगति सिंक, परिष्कृत सिंक</string>

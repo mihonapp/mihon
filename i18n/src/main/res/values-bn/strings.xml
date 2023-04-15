@@ -504,13 +504,11 @@
     <string name="action_display_show_number_of_items">আইটেমের সংখ্যা প্রদর্শন করুন</string>
     <string name="spen_next_page">পরের পৃষ্ঠা</string>
     <string name="spen_previous_page">আগের পৃষ্ঠা</string>
-    <string name="channel_crash_logs">ক্র্যাশ লগগুলো</string>
     <string name="file_picker_error">কোনো ফাইল বাছাইকারী অ্যাপ পাওয়া যায় নি</string>
     <string name="migration_help_guide">উৎস স্থানান্তর গাইড</string>
     <string name="myanimelist_relogin">দয়া করে MAL এ আবার লগইন করুন</string>
     <string name="track_finished_reading_date">শেষ করার তারিখ</string>
     <string name="track_started_reading_date">শুরু করার তারিখ</string>
-    <string name="crash_log_saved">ক্র্যাশ লগগুলো সংরক্ষিত হয়েছে</string>
     <string name="pref_dump_crash_logs_summary">বিকাশকারীদের সাথে সেয়ার করার জন্য এরর লগগুলো একটি ফাইলে সংরক্ষণ করে</string>
     <string name="right_and_left_nav">ডান ও বাম</string>
     <string name="edge_nav">কিনার</string>

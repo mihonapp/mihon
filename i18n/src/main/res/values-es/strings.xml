@@ -547,12 +547,10 @@
     <string name="file_picker_error">No se ha encontrado ninguna aplicación con la que elegir archivos</string>
     <string name="myanimelist_relogin">Vuelve a iniciar sesión en MAL</string>
     <string name="kindlish_nav">Estilo Kindle</string>
-    <string name="channel_crash_logs">Registros de fallos</string>
     <string name="track_finished_reading_date">Fecha de finalización</string>
     <string name="track_started_reading_date">Fecha de inicio</string>
-    <string name="crash_log_saved">Registros de errores guardados</string>
     <string name="pref_dump_crash_logs_summary">Guarda los registros de errores en un archivo para compartirlos con los desarrolladores</string>
-    <string name="pref_dump_crash_logs">Volcar registros de fallos</string>
+    <string name="pref_dump_crash_logs">Compartir los registros de fallos</string>
     <string name="pref_viewer_nav">Zonas de toque</string>
     <string name="edge_nav">Borde</string>
     <string name="l_nav">En forma de L</string>
@@ -772,7 +770,7 @@
     <string name="pref_tracking_summary">Sincroniza tu progreso de lectura; unidireccional o mejorada</string>
     <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
     <string name="pref_library_summary">Categorías y actualizaciones generales</string>
-    <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que hagas una captura de pantalla de lo que ves, vuelques todos registros de depuración y que nos los envíes a nuestro canal de apoyo en Discord, en inglés.</string>
+    <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que compartas todos tus registros de depuración, enviándolos a nuestro canal de apoyo en Discord, en inglés.</string>
     <string name="pref_reader_summary">Modos de lectura, apariencia y navegación</string>
     <string name="pref_general_summary">Idioma de la interfaz y notificaciones</string>
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>

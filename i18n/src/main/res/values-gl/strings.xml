@@ -426,7 +426,6 @@
     <string name="pref_create_backup">Crear unha copia de seguridade</string>
     <string name="creating_backup_error">Non se puido facer a copia de seguridade</string>
     <string name="pref_refresh_library_covers">Actualizar as portadas da biblioteca</string>
-    <string name="crash_log_saved">Gardáronse os rexistros de erros</string>
     <string name="invalid_backup_file">O arquivo da copia de seguridade non é válido</string>
     <string name="invalid_backup_file_missing_manga">A copia de seguriade non contén ningún elemento da biblioteca.</string>
     <string name="pref_dns_over_https">DNS por HTTPS (DoH)</string>
@@ -696,7 +695,6 @@
     <string name="chapter_progress">Páxina: %1$d</string>
     <string name="error_saving_picture">Produciuse un erro ao gardar a imaxe</string>
     <string name="notification_update_error">Actualizacións erradas: %1$d</string>
-    <string name="channel_crash_logs">Rexistros de erros</string>
     <string name="update_check_confirm">Baixar</string>
     <string name="channel_app_updates">Actualizacións da aplicación</string>
     <string name="learn_more">Preme para saber máis</string>

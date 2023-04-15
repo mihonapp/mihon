@@ -502,12 +502,10 @@
     <string name="migration_help_guide">स्रोत माइग्रेशन गाइड</string>
     <string name="pref_show_nsfw_source">स्रोतों और एक्सटेंशन सूचियों में दिखाएं</string>
     <string name="pref_category_nsfw_content">NSFW (18+) स्रोत</string>
-    <string name="channel_crash_logs">क्रैश लॉग</string>
     <string name="file_picker_error">कोई फ़ाइल पिकर ऐप नहीं मिला</string>
     <string name="myanimelist_relogin">कृपया फिर से MAL पर लॉगिन करें</string>
     <string name="track_finished_reading_date">समाप्ति की तिथि</string>
     <string name="track_started_reading_date">आरंभ करने की तिथि</string>
-    <string name="crash_log_saved">क्रैश लॉग सहेजे गए</string>
     <string name="pref_dump_crash_logs_summary">डेवलपर्स के साथ साझा करने के लिए फ़ाइल में त्रुटि लॉग सहेजता है</string>
     <string name="pref_dump_crash_logs">डंप क्रैश लॉग</string>
     <string name="pref_viewer_nav">टैप ज़ोन</string>

@@ -445,7 +445,6 @@
     <string name="pref_clear_database">दत्तनिधिं मार्जयतु</string>
     <string name="database_clean">दत्तनिधिः मार्जितः</string>
     <string name="label_background_activity">पृष्ठभूमिकार्यक्रमम्</string>
-    <string name="crash_log_saved">ध्वंसेतिवृत्तानि रक्षितानि</string>
     <string name="pref_disable_battery_optimization">विद्युत्कोषवृद्धिकरणम् अशक्तं करोतु</string>
     <string name="whats_new">नूतनं किम्</string>
     <string name="pref_tablet_ui_mode">टाबलेट् यू॰ऐ</string>
@@ -517,7 +516,6 @@
     <string name="channel_new_chapters">अध्यायनवीकरणानि</string>
     <string name="channel_app_updates">अनुप्रयोगनवीकरणानि</string>
     <string name="channel_ext_updates">विस्तारनवीकरणानि</string>
-    <string name="channel_crash_logs">ध्वंसेतिवृत्तानि</string>
     <plurals name="download_queue_summary">
         <item quantity="one">१ शेषम्</item>
         <item quantity="other">२ शेषे</item>

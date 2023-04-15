@@ -497,12 +497,10 @@
     <string name="edge_nav">边缘样式</string>
     <string name="kindlish_nav">Kindle 样式</string>
     <string name="l_nav">L 样式</string>
-    <string name="channel_crash_logs">崩溃日志</string>
     <string name="track_finished_reading_date">阅读完毕日期</string>
     <string name="track_started_reading_date">开始阅读日期</string>
-    <string name="crash_log_saved">崩溃日志已保存</string>
     <string name="pref_dump_crash_logs_summary">将错误日志保存到文件中，以便分享给开发者</string>
-    <string name="pref_dump_crash_logs">导出崩溃日志</string>
+    <string name="pref_dump_crash_logs">分享崩溃日志</string>
     <string name="action_desc">降序</string>
     <string name="action_asc">升序</string>
     <string name="action_order_by_chapter_number">按章节编号</string>
@@ -713,7 +711,7 @@
     <string name="skipped_reason_not_always_update">已跳过，因为作品无需更新</string>
     <string name="action_search_hint">搜索…</string>
     <string name="crash_screen_title">哦豁</string>
-    <string name="crash_screen_description">%s 发生了意外错误。建议你将此信息截图，导出崩溃日志，并在 Discord #support 频道或者 GitHub 上反馈。</string>
+    <string name="crash_screen_description">%s 发生了意外错误。建议你将崩溃日志分享到 Discord #support 频道或者在 GitHub 上反馈。</string>
     <string name="crash_screen_restart_application">重启应用</string>
     <string name="pref_appearance_summary">主题 • 日期格式</string>
     <string name="pref_general_summary">应用语言 • 通知</string>

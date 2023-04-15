@@ -210,7 +210,7 @@
     <string name="cover_updated">حُدِّث الغلاف</string>
     <string name="chapter_progress">الصفحة: %1$d</string>
     <string name="no_next_chapter">لم يتم العثور على الفصل التالي</string>
-    <string name="decode_image_error">تعذّر تحميل الصورة</string>
+    <string name="decode_image_error">تعذَّر تحميل هذه الصورة</string>
     <string name="confirm_set_image_as_cover">هل تريد تعيين هذه الصورة كغلاف؟</string>
     <string name="download_queue_error">فشل تنزيل الفصول. يمكنك إعادة المحاولة في قسم التنزيلات</string>
     <string name="notification_new_chapters">تم إيجاد فصول جديدة</string>
@@ -343,7 +343,7 @@
     <string name="restoring_backup_error">فشل استعادة النسخ الاحتياطي</string>
     <string name="restore_in_progress">الاستعادة قيد التقدم بالفعل</string>
     <string name="creating_backup_error">فشل النسخ الاحتياطي</string>
-    <string name="backup_in_progress">النسخ الاحتياطي قيد التقدم بالفعل</string>
+    <string name="backup_in_progress">يُنسخ احتياطيًّا بالفعل</string>
     <string name="restore_duration">%02d دقيقة و %02d ثانية</string>
     <string name="webtoon_side_padding_25">٢٥٪</string>
     <string name="webtoon_side_padding_20">٢٠٪</string>
@@ -534,7 +534,7 @@
     <string name="confirm_set_chapter_settings">هل أنت متأكد أنك تريد حفظ هذه الإعدادات كافتراضي؟</string>
     <string name="chapter_settings">إعدادات الفصل</string>
     <string name="action_search_settings">إعدادات البحث</string>
-    <string name="downloaded_chapters">الفصول المنزّلة</string>
+    <string name="downloaded_chapters">الفصول المنزَّلة</string>
     <string name="manga_from_library">من المكتبة</string>
     <string name="clear_history_confirmation">أمتأكِّد؟ سوف يُحذف التاريخ.</string>
     <string name="clear_history_completed">حُذف التاريخ</string>
@@ -554,12 +554,10 @@
     <string name="kindlish_nav">كأنه كِندِل</string>
     <string name="action_filter_tracked">مُتتبَعة</string>
     <string name="action_display_show_number_of_items">إظهار عدد العناصر</string>
-    <string name="channel_crash_logs">سجلات الاخطاء</string>
     <string name="track_finished_reading_date">تاريخ انهاء القراءة</string>
     <string name="track_started_reading_date">تاريخ بدء القراءة</string>
-    <string name="crash_log_saved">تم حفظ سجلات الأخطاء</string>
     <string name="pref_dump_crash_logs_summary">يحفظ سجلات الأخطاء في ملف للمشاركة مع المطورين</string>
-    <string name="pref_dump_crash_logs">استخراج سجلات الاخطاء</string>
+    <string name="pref_dump_crash_logs">شارك سجلَّات الانهيار</string>
     <string name="right_and_left_nav">يميناً ويساراً</string>
     <string name="pref_dual_page_invert_summary">إذا كان موضع تقسيم الصفحات العريضة لا يتطابق مع اتجاه القراءة</string>
     <string name="pref_dual_page_invert">عكس موضع تقسيم الصفحة</string>
@@ -722,8 +720,8 @@
     <string name="source_empty_screen">لا يوجد مصدر</string>
     <string name="action_sort_unread_count">المانجا الغير مقروءة</string>
     <string name="action_sort_last_manga_update">آخر فحص للتحديث</string>
-    <string name="split_tall_images_summary">يحسن أداء القارئ</string>
-    <string name="download_notifier_split_page_not_found">لم يتم العثور على الصفحة %d أثناء التقسيم</string>
+    <string name="split_tall_images_summary">يحسِّن أداء القارئ</string>
+    <string name="download_notifier_split_page_not_found">لم يُعثر على الصفحة %d أثناء التقسيم</string>
     <string name="download_notifier_split_page_path_not_found">لم يتم العثور على مسار الصفخة %d</string>
     <string name="pref_reset_viewer_flags_success">اعادة تعيين جميع اعدادات القارئ</string>
     <string name="pref_reset_viewer_flags_summary">إعادة تعيين اعدادات القراءه لكل القصص</string>
@@ -750,8 +748,8 @@
     <string name="delete_category">مسح الفئة</string>
     <string name="description_placeholder">لا وصف</string>
     <string name="theme_lavender">أُرجواني</string>
-    <string name="appwidget_unavailable_locked">القطعة غير متاحة عند تمكين قفل التطبيق</string>
-    <string name="appwidget_updates_description">الاطلاع على إدخالات المكتبة التي تم تحديثها مؤخرا</string>
+    <string name="appwidget_unavailable_locked">لا تتاح الأداة حال تمكين قفل التطبيق</string>
+    <string name="appwidget_updates_description">اطَّلع على ما حُدِّث مؤخَّرًا في مكتبتك</string>
     <string name="action_remove_everything">حذف كل شيء</string>
     <string name="loader_rar5_error">تنسيق RARv5 ليس مدعومًا</string>
     <string name="theme_tidalwave">موجة مد و جزر</string>
@@ -777,7 +775,7 @@
     <string name="missing_storage_permission">لم يتم منح أذن التخزين</string>
     <string name="action_search_hint">بحث…</string>
     <string name="skipped_reason_not_always_update">تُخُطِّيت لأن السلسلة لا تتطلب تحديثات</string>
-    <string name="crash_screen_description">%s واجه خطأ غير متوقع. نقترح عليك أخد لقطة شاشة لهذه الرسالة، وتفريغ سجلات التعطل ، ثم مشاركتها في قناة الدعم الخاصة بنا على Discord.</string>
+    <string name="crash_screen_description">واجه %s خطأً غير متوقَّع. تنبغي لك مشاركة سجلَّات الانهيار في قناة الدعم في دسكورد.</string>
     <string name="crash_screen_title">عفوًا!</string>
     <string name="crash_screen_restart_application">أعد تشغيل التطبيق</string>
     <string name="pref_general_summary">لغة التطبيق، الإشعارات</string>
@@ -803,7 +801,7 @@
     <string name="unknown_title">عنوان غير معروف</string>
     <string name="download_notifier_cache_renewal">التحقق من التنزيلات</string>
     <string name="action_open_random_manga">فتح إدخال عشوائي</string>
-    <string name="error_user_agent_string_invalid">سلسلة عوامل الاستخدام غير المستقرة</string>
+    <string name="error_user_agent_string_invalid">سلسلة وكيل المستخدم المبدئية غير صالحة</string>
     <string name="information_no_entries_found">لم يتم العثور على إدخالات في هذه الفئة</string>
     <string name="label_stats">إحصائيات</string>
     <string name="label_started">بدأت</string>

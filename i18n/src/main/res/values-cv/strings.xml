@@ -514,8 +514,6 @@
     <string name="action_order_by_chapter_number">Сыпӑк шучӗпе</string>
     <string name="action_order_by_upload_date">Тийесе илни вӑхӑчӗпе</string>
     <string name="action_filter_tracked">Йӗрленет</string>
-    <string name="channel_crash_logs">Тухсан кайни ҫинчен логсем</string>
-    <string name="crash_log_saved">Тухса кайни ҫинчен логсем упраннӑ</string>
     <string name="pref_dump_crash_logs_summary">Файлсенчи йӑнӑшсен логсене хатерлевҫӗсем патне яма упрать</string>
     <string name="pref_dump_crash_logs">Тухса кайни инчен логсене тиесе яни</string>
     <string name="pref_viewer_nav">Куҫӑм палли</string>
