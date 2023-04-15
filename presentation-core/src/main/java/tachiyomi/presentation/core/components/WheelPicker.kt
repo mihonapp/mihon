@@ -25,10 +25,13 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import tachiyomi.presentation.core.components.material.padding
 import java.text.DateFormatSymbols
@@ -48,12 +51,15 @@ fun WheelPicker(
     itemContent: @Composable LazyItemScope.(index: Int) -> Unit,
 ) {
     val lazyListState = rememberLazyListState(startIndex)
+    val haptic = LocalHapticFeedback.current
 
     LaunchedEffect(lazyListState, onSelectionChanged) {
         snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
             .map { calculateSnappedItemIndex(lazyListState) }
             .distinctUntilChanged()
+            .drop(1)
             .collectLatest {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 onSelectionChanged(it)
             }
     }
