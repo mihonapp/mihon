@@ -81,8 +81,6 @@ fun EmptyScreen(
                 modifier = Modifier
                     .padding(
                         top = 24.dp,
-                        start = 24.dp,
-                        end = 24.dp,
                     ),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
