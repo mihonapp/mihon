@@ -1,6 +1,6 @@
 package tachiyomi.domain.chapter.service
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
@@ -261,7 +261,6 @@ class ChapterRecognitionTest {
     }
 
     private fun assertChapter(mangaTitle: String, name: String, expected: Float) {
-        val chapterNumber = ChapterRecognition.parseChapterNumber(mangaTitle, name)
-        assertEquals(chapterNumber, expected)
+        ChapterRecognition.parseChapterNumber(mangaTitle, name) shouldBe expected
     }
 }

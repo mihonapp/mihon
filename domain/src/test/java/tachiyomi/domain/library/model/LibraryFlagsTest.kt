@@ -1,16 +1,19 @@
 package tachiyomi.domain.library.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 
+@Execution(ExecutionMode.CONCURRENT)
 class LibraryFlagsTest {
 
     @Test
     fun `Check the amount of flags`() {
-        assertEquals(4, LibraryDisplayMode.values.size)
-        assertEquals(8, LibrarySort.types.size)
-        assertEquals(2, LibrarySort.directions.size)
+        LibraryDisplayMode.values.size shouldBe 4
+        LibrarySort.types.size shouldBe 8
+        LibrarySort.directions.size shouldBe 2
     }
 
     @Test
@@ -19,7 +22,7 @@ class LibraryFlagsTest {
         val new = LibraryDisplayMode.CoverOnlyGrid
         val flag = current + new
 
-        assertEquals(0b00000011, flag)
+        flag shouldBe 0b00000011
     }
 
     @Test
@@ -28,7 +31,7 @@ class LibraryFlagsTest {
         val new = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
         val flag = current + new
 
-        assertEquals(0b01011100, flag)
+        flag shouldBe 0b01011100
     }
 
     @Test
@@ -37,7 +40,7 @@ class LibraryFlagsTest {
         val sort = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
         val flag = display + sort
 
-        assertEquals(0b01011111, flag)
+        flag shouldBe 0b01011111
     }
 
     @Test
@@ -50,9 +53,9 @@ class LibraryFlagsTest {
         val sort = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
         val flag = currentFlag + display + sort
 
-        assertEquals(0b00001110, currentFlag)
-        assertEquals(0b01011111, flag)
-        assertNotEquals(currentFlag, flag)
+        currentFlag shouldBe 0b00001110
+        flag shouldBe 0b01011111
+        flag shouldNotBe currentFlag
     }
 
     @Test
@@ -61,6 +64,6 @@ class LibraryFlagsTest {
         val display = LibraryDisplayMode.default
         val flag = display + sort.type + sort.direction
 
-        assertEquals(0b01000000, flag)
+        flag shouldBe 0b01000000
     }
 }
