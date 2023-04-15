@@ -1,4 +1,4 @@
-package eu.kanade.presentation.more.settings.screen
+package eu.kanade.presentation.more.settings.screen.debug
 
 import android.content.Context
 import androidx.compose.foundation.horizontalScroll
@@ -11,22 +11,16 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.asFlow
 import androidx.work.WorkInfo
 import androidx.work.WorkQuery
@@ -36,47 +30,42 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.ioCoroutineScope
-import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.LazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.util.plus
 
 object WorkerInfoScreen : Screen() {
 
+    const val title = "Worker info"
+
     @Composable
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val clipboardManager = LocalClipboardManager.current
 
         val screenModel = rememberScreenModel { Model(context) }
         val enqueued by screenModel.enqueued.collectAsState()
         val finished by screenModel.finished.collectAsState()
         val running by screenModel.running.collectAsState()
 
-        val snackbarHostState = remember { SnackbarHostState() }
-        val scope = rememberCoroutineScope()
-
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = stringResource(R.string.pref_worker_info)) },
+                    title = { Text(text = title) },
                     navigationIcon = {
                         IconButton(onClick = navigator::pop) {
                             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
                         }
                     },
                     actions = {
-                        val copiedString = stringResource(R.string.copied_to_clipboard_plain)
                         IconButton(
                             onClick = {
-                                clipboardManager.setText(AnnotatedString(enqueued + finished + running))
-                                scope.launch { snackbarHostState.showSnackbar(copiedString) }
+                                context.copyToClipboard(title, enqueued + finished + running)
                             },
                         ) {
                             Icon(imageVector = Icons.Default.ContentCopy, contentDescription = null)
@@ -85,7 +74,6 @@ object WorkerInfoScreen : Screen() {
                     scrollBehavior = it,
                 )
             },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { contentPadding ->
             LazyColumn(
                 contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
@@ -146,7 +134,7 @@ object WorkerInfoScreen : Screen() {
             if (list.isEmpty()) {
                 appendLine("-")
             } else {
-                list.forEach { workInfo ->
+                list.fastForEach { workInfo ->
                     appendLine("Id: ${workInfo.id}")
                     appendLine("Tags:")
                     workInfo.tags.forEach {

@@ -540,7 +540,7 @@
     <string name="pref_tablet_ui_mode">Tablet UI</string>
     <string name="pref_verbose_logging">Verbose logging</string>
     <string name="pref_verbose_logging_summary">Print verbose logs to system log (reduces app performance)</string>
-    <string name="pref_worker_info">Worker info</string>
+    <string name="pref_debug_info">Debug info</string>
 
       <!-- About section -->
     <string name="website">Website</string>

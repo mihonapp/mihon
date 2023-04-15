@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import kotlin.random.Random
@@ -79,12 +80,10 @@ fun EmptyScreen(
         if (!actions.isNullOrEmpty()) {
             Row(
                 modifier = Modifier
-                    .padding(
-                        top = 24.dp,
-                    ),
+                    .padding(top = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
-                actions.forEach {
+                actions.fastForEach {
                     ActionButton(
                         modifier = Modifier.weight(1f),
                         title = stringResource(it.stringResId),
