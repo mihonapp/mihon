@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
+import tachiyomi.presentation.core.components.WheelNumberPicker
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.Divider
@@ -96,10 +97,10 @@ fun TrackChapterSelector(
     BaseSelector(
         title = stringResource(R.string.chapters),
         content = {
-            WheelTextPicker(
+            WheelNumberPicker(
                 modifier = Modifier.align(Alignment.Center),
                 startIndex = selection,
-                texts = range.map { "$it" },
+                items = range.toList(),
                 onSelectionChanged = { onSelectionChange(it) },
             )
         },
@@ -122,7 +123,7 @@ fun TrackScoreSelector(
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
                 startIndex = selections.indexOf(selection).coerceAtLeast(0),
-                texts = selections,
+                items = selections,
                 onSelectionChanged = { onSelectionChange(selections[it]) },
             )
         },

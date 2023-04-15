@@ -89,7 +89,9 @@ fun Modifier.showSoftKeyboard(show: Boolean): Modifier = if (show) {
  * For TextField, this modifier will clear focus when soft
  * keyboard is hidden.
  */
-fun Modifier.clearFocusOnSoftKeyboardHide(): Modifier = composed {
+fun Modifier.clearFocusOnSoftKeyboardHide(
+    onFocusCleared: (() -> Unit)? = null,
+): Modifier = composed {
     var isFocused by remember { mutableStateOf(false) }
     var keyboardShowedSinceFocused by remember { mutableStateOf(false) }
     if (isFocused) {
@@ -100,6 +102,7 @@ fun Modifier.clearFocusOnSoftKeyboardHide(): Modifier = composed {
                 keyboardShowedSinceFocused = true
             } else if (keyboardShowedSinceFocused) {
                 focusManager.clearFocus()
+                onFocusCleared?.invoke()
             }
         }
     }

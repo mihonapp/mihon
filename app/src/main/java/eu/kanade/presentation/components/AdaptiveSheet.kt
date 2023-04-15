@@ -84,6 +84,7 @@ fun AdaptiveSheet(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
         ),
     ) {
         AdaptiveSheetImpl(
