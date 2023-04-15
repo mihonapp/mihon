@@ -50,6 +50,18 @@ fun HeadingItem(
 }
 
 @Composable
+fun BasicItem(
+    label: String,
+    onClick: () -> Unit,
+) {
+    SortItem(
+        label = label,
+        sortDescending = null,
+        onClick = onClick,
+    )
+}
+
+@Composable
 fun SortItem(
     label: String,
     sortDescending: Boolean?,

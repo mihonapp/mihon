@@ -7,6 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.TabbedDialog
@@ -22,6 +25,7 @@ import tachiyomi.domain.library.model.display
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.TriStateFilter
+import tachiyomi.presentation.core.components.BasicItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.RadioItem
@@ -170,6 +174,23 @@ private fun ColumnScope.DisplayPage(
     category: Category,
     screenModel: LibrarySettingsScreenModel,
 ) {
+    val portraitColumns by screenModel.libraryPreferences.portraitColumns().collectAsState()
+    val landscapeColumns by screenModel.libraryPreferences.landscapeColumns().collectAsState()
+
+    var showColumnsDialog by rememberSaveable { mutableStateOf(false) }
+    if (showColumnsDialog) {
+        LibraryColumnsDialog(
+            initialPortrait = portraitColumns,
+            initialLandscape = landscapeColumns,
+            onDismissRequest = { showColumnsDialog = false },
+            onValueChanged = { portrait, landscape ->
+                screenModel.libraryPreferences.portraitColumns().set(portrait)
+                screenModel.libraryPreferences.landscapeColumns().set(landscape)
+                showColumnsDialog = false
+            },
+        )
+    }
+
     HeadingItem(R.string.action_display_mode)
     listOf(
         R.string.action_display_grid to LibraryDisplayMode.CompactGrid,
@@ -181,6 +202,13 @@ private fun ColumnScope.DisplayPage(
             label = stringResource(titleRes),
             selected = category.display == mode,
             onClick = { screenModel.setDisplayMode(category, mode) },
+        )
+    }
+
+    if (category.display != LibraryDisplayMode.List) {
+        BasicItem(
+            label = stringResource(R.string.pref_library_columns),
+            onClick = { showColumnsDialog = true },
         )
     }
 
