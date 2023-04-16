@@ -27,10 +27,10 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v3
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: adopt
 
       - name: Build app and run unit tests
