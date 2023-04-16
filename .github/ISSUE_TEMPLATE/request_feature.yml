@@ -33,7 +33,7 @@ body:
           required: true
         - label: If this is an issue with an extension, I should be opening an issue in the [extensions repository](https://github.com/tachiyomiorg/tachiyomi-extensions/issues/new/choose).
           required: true
-        - label: I have updated the app to version **[0.14.5](https://github.com/tachiyomiorg/tachiyomi/releases/latest)**.
+        - label: I have updated the app to version **[0.14.6](https://github.com/tachiyomiorg/tachiyomi/releases/latest)**.
           required: true
         - label: I will fill out all of the requested information in this form.
           required: true
