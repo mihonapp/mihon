@@ -10,6 +10,7 @@ gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "
 coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version = "1.6.4" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
+coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava" }
 
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "serialization_version" }
@@ -19,7 +20,7 @@ serialization-xml-core = { module = "io.github.pdvrieze.xmlutil:core-android", v
 serialization-xml = { module = "io.github.pdvrieze.xmlutil:serialization-android", version.ref = "xml_serialization_version" }
 
 [bundles]
-coroutines = ["coroutines-core", "coroutines-android"]
+coroutines = ["coroutines-core", "coroutines-android", "coroutines-guava"]
 serialization = ["serialization-json", "serialization-json-okio", "serialization-protobuf", "serialization-xml-core", "serialization-xml"]
 
 [plugins]

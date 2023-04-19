@@ -239,7 +239,7 @@ object AboutScreen : Screen() {
         }
     }
 
-    private fun getFormattedBuildTime(): String {
+    internal fun getFormattedBuildTime(): String {
         return try {
             val inputDf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
             inputDf.timeZone = TimeZone.getTimeZone("UTC")
