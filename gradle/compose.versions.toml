@@ -1,10 +1,10 @@
 [versions]
-compiler = "1.4.5"
+compiler = "1.4.6"
 compose-bom = "2023.03.00"
 accompanist = "0.30.1"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.7.0"
+activity = "androidx.activity:activity-compose:1.7.1"
 bom = { group = "dev.chrisbanes.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
