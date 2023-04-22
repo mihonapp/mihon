@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.preference.bindToPreference
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import uy.kohesive.injekt.injectLazy
@@ -136,6 +137,8 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
             .onEach { binding.webtoonPrefsGroup.dualPageInvert.isVisible = it }
             .launchIn((context as ReaderActivity).lifecycleScope)
         binding.webtoonPrefsGroup.dualPageInvert.bindToPreference(readerPreferences.dualPageInvertWebtoon())
+
+        binding.webtoonPrefsGroup.longStripSplit.isVisible = !isReleaseBuildType
         binding.webtoonPrefsGroup.longStripSplit.bindToPreference(readerPreferences.longStripSplitWebtoon())
     }
 }

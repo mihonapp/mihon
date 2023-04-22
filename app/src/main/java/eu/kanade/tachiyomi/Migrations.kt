@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.preference.minusAssign
 import eu.kanade.tachiyomi.util.preference.plusAssign
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
 import tachiyomi.core.preference.PreferenceStore
@@ -362,6 +363,13 @@ object Migrations {
             }
             if (oldVersion < 100) {
                 BackupCreateJob.setupTask(context)
+            }
+            if (oldVersion < 102) {
+                // This was accidentally visible from the reader settings sheet, but should always
+                // be disabled in release builds.
+                if (isReleaseBuildType) {
+                    readerPreferences.longStripSplitWebtoon().set(false)
+                }
             }
             return true
         }
