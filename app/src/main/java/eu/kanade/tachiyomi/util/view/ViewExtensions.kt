@@ -25,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.forEach
 import com.google.android.material.shape.MaterialShapeDrawable
 import eu.kanade.presentation.theme.TachiyomiTheme
@@ -36,6 +38,22 @@ inline fun ComponentActivity.setComposeContent(
     crossinline content: @Composable () -> Unit,
 ) {
     setContent(parent) {
+        TachiyomiTheme {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.bodySmall,
+                LocalContentColor provides MaterialTheme.colorScheme.onBackground,
+            ) {
+                content()
+            }
+        }
+    }
+}
+
+fun ComposeView.setComposeContent(
+    content: @Composable () -> Unit,
+) {
+    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+    setContent {
         TachiyomiTheme {
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.bodySmall,
