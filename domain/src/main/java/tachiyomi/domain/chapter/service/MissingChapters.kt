@@ -1,5 +1,8 @@
 package tachiyomi.domain.chapter.service
 
+import tachiyomi.domain.chapter.model.Chapter
+import kotlin.math.floor
+
 fun List<Float>.missingChaptersCount(): Int {
     if (this.isEmpty()) {
         return 0
@@ -32,4 +35,15 @@ fun List<Float>.missingChaptersCount(): Int {
     }
 
     return missingChaptersCount
+}
+
+fun calculateChapterGap(higherChapter: Chapter?, lowerChapter: Chapter?): Int {
+    if (higherChapter == null || lowerChapter == null) return 0
+    if (!higherChapter.isRecognizedNumber || !lowerChapter.isRecognizedNumber) return 0
+    return calculateChapterGap(higherChapter.chapterNumber, lowerChapter.chapterNumber)
+}
+
+fun calculateChapterGap(higherChapterNumber: Float, lowerChapterNumber: Float): Int {
+    if (higherChapterNumber < 0f || lowerChapterNumber < 0f) return 0
+    return floor(higherChapterNumber).toInt() - floor(lowerChapterNumber).toInt() - 1
 }
