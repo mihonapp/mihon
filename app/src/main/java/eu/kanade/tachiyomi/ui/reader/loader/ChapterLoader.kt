@@ -78,7 +78,6 @@ class ChapterLoader(
         val isDownloaded = downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source, skipCache = true)
         return when {
             isDownloaded -> DownloadPageLoader(chapter, manga, source, downloadManager, downloadProvider)
-            source is HttpSource -> HttpPageLoader(chapter, source)
             source is LocalSource -> source.getFormat(chapter.chapter).let { format ->
                 when (format) {
                     is Format.Directory -> DirectoryPageLoader(format.file)
@@ -91,6 +90,7 @@ class ChapterLoader(
                     is Format.Epub -> EpubPageLoader(format.file)
                 }
             }
+            source is HttpSource -> HttpPageLoader(chapter, source)
             source is StubSource -> error(context.getString(R.string.source_not_installed, source.toString()))
             else -> error(context.getString(R.string.loader_not_implemented_error))
         }
