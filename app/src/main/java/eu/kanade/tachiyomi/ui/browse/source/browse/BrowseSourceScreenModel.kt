@@ -311,7 +311,7 @@ class BrowseSourceScreenModel(
         return getCategories.subscribe()
             .firstOrNull()
             ?.filterNot { it.isSystemCategory }
-            ?: emptyList()
+            .orEmpty()
     }
 
     suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {

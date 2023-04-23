@@ -57,10 +57,9 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
             val title = getString(R.styleable.MaterialSpinnerView_title).orEmpty()
             binding.title.text = title
 
-            val viewEntries = (
-                getTextArray(R.styleable.MaterialSpinnerView_android_entries)
-                    ?: emptyArray()
-                ).map { it.toString() }
+            val viewEntries = getTextArray(R.styleable.MaterialSpinnerView_android_entries)
+                .orEmpty()
+                .map { it.toString() }
             entries = viewEntries
             binding.details.text = viewEntries.firstOrNull().orEmpty()
         }

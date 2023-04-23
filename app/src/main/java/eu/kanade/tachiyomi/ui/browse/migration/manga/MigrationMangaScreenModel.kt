@@ -64,7 +64,7 @@ data class MigrateMangaState(
 ) {
 
     val titles: List<Manga>
-        get() = titleList ?: emptyList()
+        get() = titleList.orEmpty()
 
     val isLoading: Boolean
         get() = source == null || titleList == null

@@ -290,8 +290,8 @@ actual class LocalSource(
     fun getFormat(chapter: SChapter): Format {
         try {
             return fileSystem.getBaseDirectories()
-                .map { directory -> File(directory, chapter.url) }
-                .find { chapterFile -> chapterFile.exists() }
+                .map { dir -> File(dir, chapter.url) }
+                .find { it.exists() }
                 ?.let(Format.Companion::valueOf)
                 ?: throw Exception(context.getString(R.string.chapter_not_found))
         } catch (e: Format.UnknownFormatException) {
