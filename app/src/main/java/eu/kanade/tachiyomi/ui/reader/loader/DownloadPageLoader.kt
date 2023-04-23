@@ -17,7 +17,7 @@ import java.io.File
 /**
  * Loader used to load a chapter from the downloaded chapters.
  */
-class DownloadPageLoader(
+internal class DownloadPageLoader(
     private val chapter: ReaderChapter,
     private val manga: Manga,
     private val source: Source,
@@ -25,19 +25,12 @@ class DownloadPageLoader(
     private val downloadProvider: DownloadProvider,
 ) : PageLoader() {
 
-    // Needed to open input streams
     private val context: Application by injectLazy()
 
     private var zipPageLoader: ZipPageLoader? = null
 
-    override fun recycle() {
-        super.recycle()
-        zipPageLoader?.recycle()
-    }
+    override var isLocal: Boolean = true
 
-    /**
-     * Returns the pages found on this downloaded chapter.
-     */
     override suspend fun getPages(): List<ReaderPage> {
         val dbChapter = chapter.chapter
         val chapterPath = downloadProvider.findChapterDir(dbChapter.name, dbChapter.scanlator, manga.title, source)
@@ -46,6 +39,11 @@ class DownloadPageLoader(
         } else {
             getPagesFromDirectory()
         }
+    }
+
+    override fun recycle() {
+        super.recycle()
+        zipPageLoader?.recycle()
     }
 
     private suspend fun getPagesFromArchive(chapterPath: UniFile): List<ReaderPage> {

@@ -8,24 +8,12 @@ import java.io.File
 /**
  * Loader used to load a chapter from a .epub file.
  */
-class EpubPageLoader(file: File) : PageLoader() {
+internal class EpubPageLoader(file: File) : PageLoader() {
 
-    /**
-     * The epub file.
-     */
     private val epub = EpubFile(file)
 
-    /**
-     * Recycles this loader and the open zip.
-     */
-    override fun recycle() {
-        super.recycle()
-        epub.close()
-    }
+    override var isLocal: Boolean = true
 
-    /**
-     * Returns the pages found on this zip archive ordered with a natural comparator.
-     */
     override suspend fun getPages(): List<ReaderPage> {
         return epub.getImagesFromPages()
             .mapIndexed { i, path ->
@@ -37,10 +25,12 @@ class EpubPageLoader(file: File) : PageLoader() {
             }
     }
 
-    /**
-     * No additional action required to load the page
-     */
     override suspend fun loadPage(page: ReaderPage) {
         check(!isRecycled)
+    }
+
+    override fun recycle() {
+        super.recycle()
+        epub.close()
     }
 }

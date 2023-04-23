@@ -10,11 +10,10 @@ import java.io.FileInputStream
 /**
  * Loader used to load a chapter from a directory given on [file].
  */
-class DirectoryPageLoader(val file: File) : PageLoader() {
+internal class DirectoryPageLoader(val file: File) : PageLoader() {
 
-    /**
-     * Returns the pages found on this directory ordered with a natural comparator.
-     */
+    override var isLocal: Boolean = true
+
     override suspend fun getPages(): List<ReaderPage> {
         return file.listFiles()
             ?.filter { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
@@ -28,9 +27,4 @@ class DirectoryPageLoader(val file: File) : PageLoader() {
             }
             .orEmpty()
     }
-
-    /**
-     * No additional action required to load the page
-     */
-    override suspend fun loadPage(page: ReaderPage) {}
 }

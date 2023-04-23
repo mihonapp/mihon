@@ -12,28 +12,16 @@ import java.util.zip.ZipFile
 /**
  * Loader used to load a chapter from a .zip or .cbz file.
  */
-class ZipPageLoader(file: File) : PageLoader() {
+internal class ZipPageLoader(file: File) : PageLoader() {
 
-    /**
-     * The zip file to load pages from.
-     */
     private val zip = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         ZipFile(file, StandardCharsets.ISO_8859_1)
     } else {
         ZipFile(file)
     }
 
-    /**
-     * Recycles this loader and the open zip.
-     */
-    override fun recycle() {
-        super.recycle()
-        zip.close()
-    }
+    override var isLocal: Boolean = true
 
-    /**
-     * Returns the pages found on this zip archive ordered with a natural comparator.
-     */
     override suspend fun getPages(): List<ReaderPage> {
         return zip.entries().asSequence()
             .filter { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
@@ -47,10 +35,12 @@ class ZipPageLoader(file: File) : PageLoader() {
             .toList()
     }
 
-    /**
-     * No additional action required to load the page
-     */
     override suspend fun loadPage(page: ReaderPage) {
         check(!isRecycled)
+    }
+
+    override fun recycle() {
+        super.recycle()
+        zip.close()
     }
 }

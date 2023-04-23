@@ -28,7 +28,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.download.DownloadManager
-import eu.kanade.tachiyomi.ui.reader.loader.DownloadPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import tachiyomi.domain.chapter.service.calculateChapterGap
 import tachiyomi.domain.manga.model.Manga
@@ -43,7 +42,7 @@ fun ChapterTransition(
     manga ?: return
 
     val currChapter = transition.from.chapter
-    val currChapterDownloaded = transition.from.pageLoader is DownloadPageLoader
+    val currChapterDownloaded = transition.from.pageLoader?.isLocal == true
 
     val goingToChapter = transition.to?.chapter
     val goingToChapterDownloaded = if (goingToChapter != null) {
