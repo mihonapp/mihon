@@ -317,6 +317,11 @@ object SettingsReaderScreen : SearchableSettings {
                     subtitle = stringResource(R.string.split_tall_images_summary),
                     enabled = !isReleaseBuildType, // TODO: Show in release build when the feature is stable
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.webtoonDoubleTapZoomEnabled(),
+                    title = stringResource(R.string.pref_double_tap_zoom),
+                    enabled = true,
+                ),
             ),
         )
     }

@@ -34,6 +34,8 @@ class ReaderPreferences(
     // TODO: Enable in release build when the feature is stable
     fun longStripSplitWebtoon() = preferenceStore.getBoolean("pref_long_strip_split_webtoon", !isReleaseBuildType)
 
+    fun webtoonDoubleTapZoomEnabled() = preferenceStore.getBoolean("pref_enable_double_tap_zoom_webtoon", true)
+
     fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
     fun zoomStart() = preferenceStore.getInt("pref_zoom_start_key", 1)

@@ -142,6 +142,10 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             ActivityCompat.recreate(activity)
         }
 
+        config.doubleTapZoomChangedListener = {
+            frame.doubleTapZoom = it
+        }
+
         config.navigationModeChangedListener = {
             val showOnStart = config.navigationOverlayOnStart || config.forceNavigationOverlay
             activity.binding.navigationOverlay.setNavigation(config.navigator, showOnStart)

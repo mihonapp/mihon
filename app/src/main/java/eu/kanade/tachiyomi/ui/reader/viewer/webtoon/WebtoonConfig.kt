@@ -37,6 +37,11 @@ class WebtoonConfig(
 
     var longStripSplitChangedListener: ((Boolean) -> Unit)? = null
 
+    var doubleTapZoom = true
+        private set
+
+    var doubleTapZoomChangedListener: ((Boolean) -> Unit)? = null
+
     val theme = readerPreferences.readerTheme().get()
 
     init {
@@ -69,6 +74,12 @@ class WebtoonConfig(
                     imagePropertyChangedListener?.invoke()
                     longStripSplitChangedListener?.invoke(it)
                 },
+            )
+
+        readerPreferences.webtoonDoubleTapZoomEnabled()
+            .register(
+                { doubleTapZoom = it },
+                { doubleTapZoomChangedListener?.invoke(it) },
             )
 
         readerPreferences.readerTheme().changes()

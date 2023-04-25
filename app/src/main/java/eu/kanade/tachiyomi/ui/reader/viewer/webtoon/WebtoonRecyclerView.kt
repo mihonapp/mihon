@@ -37,6 +37,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private val listener = GestureListener()
     private val detector = Detector()
 
+    var doubleTapZoom = true
+
     var tapListener: ((MotionEvent) -> Unit)? = null
     var longTapListener: ((MotionEvent) -> Boolean)? = null
 
@@ -209,7 +211,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
         }
 
         fun onDoubleTapConfirmed(ev: MotionEvent) {
-            if (!isZooming) {
+            if (!isZooming && doubleTapZoom) {
                 if (scaleX != DEFAULT_RATE) {
                     zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
                 } else {
