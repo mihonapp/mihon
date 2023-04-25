@@ -103,7 +103,7 @@ private fun LibraryRegularToolbar(
 
             OverflowMenu { closeMenu ->
                 DropdownMenuItem(
-                    text = { Text(text = stringResource(R.string.pref_category_library_update)) },
+                    text = { Text(text = stringResource(R.string.action_update_library)) },
                     onClick = {
                         onClickGlobalUpdate()
                         closeMenu()
