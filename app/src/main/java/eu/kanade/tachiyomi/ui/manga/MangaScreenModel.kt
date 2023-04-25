@@ -121,6 +121,9 @@ class MangaInfoScreenModel(
     private val filteredChapters: Sequence<ChapterItem>?
         get() = successState?.processedChapters
 
+    val chapterSwipeEndAction = libraryPreferences.swipeEndAction().get()
+    val chapterSwipeStartAction = libraryPreferences.swipeStartAction().get()
+
     val relativeTime by uiPreferences.relativeTime().asState(coroutineScope)
     val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
     private val skipFiltered by readerPreferences.skipFiltered().asState(coroutineScope)
@@ -520,6 +523,49 @@ class MangaInfoScreenModel(
             coroutineScope.launch {
                 snackbarHostState.showSnackbar(message = message)
             }
+        }
+    }
+
+    /**
+     * @throws IllegalStateException if the swipe action is [LibraryPreferences.ChapterSwipeAction.Disabled]
+     */
+    fun chapterSwipe(chapterItem: ChapterItem, swipeAction: LibraryPreferences.ChapterSwipeAction) {
+        coroutineScope.launch {
+            executeChapterSwipeAction(chapterItem, swipeAction)
+        }
+    }
+
+    /**
+     * @throws IllegalStateException if the swipe action is [LibraryPreferences.ChapterSwipeAction.Disabled]
+     */
+    private fun executeChapterSwipeAction(
+        chapterItem: ChapterItem,
+        swipeAction: LibraryPreferences.ChapterSwipeAction,
+    ) {
+        val chapter = chapterItem.chapter
+        when (swipeAction) {
+            LibraryPreferences.ChapterSwipeAction.ToggleRead -> {
+                markChaptersRead(listOf(chapter), !chapter.read)
+            }
+            LibraryPreferences.ChapterSwipeAction.ToggleBookmark -> {
+                bookmarkChapters(listOf(chapter), !chapter.bookmark)
+            }
+            LibraryPreferences.ChapterSwipeAction.Download -> {
+                val downloadAction: ChapterDownloadAction = when (chapterItem.downloadState) {
+                    Download.State.ERROR,
+                    Download.State.NOT_DOWNLOADED,
+                    -> ChapterDownloadAction.START_NOW
+                    Download.State.QUEUE,
+                    Download.State.DOWNLOADING,
+                    -> ChapterDownloadAction.CANCEL
+                    Download.State.DOWNLOADED -> ChapterDownloadAction.DELETE
+                }
+                runChapterDownloadActions(
+                    items = listOf(chapterItem),
+                    action = downloadAction,
+                )
+            }
+            LibraryPreferences.ChapterSwipeAction.Disabled -> throw IllegalStateException()
         }
     }
 

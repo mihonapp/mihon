@@ -167,7 +167,7 @@
 
     <string name="pref_general_summary">App language, notifications</string>
     <string name="pref_appearance_summary">Theme, date &amp; time format</string>
-    <string name="pref_library_summary">Categories, global update</string>
+    <string name="pref_library_summary">Categories, global update, chapter swipe</string>
     <string name="pref_reader_summary">Reading mode, display, navigation</string>
     <string name="pref_downloads_summary">Automatic download, download ahead</string>
     <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
@@ -272,6 +272,10 @@
     <string name="none">None</string>
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
+
+    <string name="pref_chapter_swipe">Chapter swipe</string>
+    <string name="pref_chapter_swipe_end">Swipe to end action</string>
+    <string name="pref_chapter_swipe_start">Swipe to start action</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
