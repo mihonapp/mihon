@@ -26,9 +26,11 @@ internal class RarPageLoader(file: File) : PageLoader() {
             rar.fileHeaders.asSequence()
                 .filterNot { it.isDirectory }
                 .forEach { header ->
-                    val pageFile = File(tmpDir, header.fileName).also { it.createNewFile() }
+                    val pageOutputStream = File(tmpDir, header.fileName.substringAfterLast("/"))
+                        .also { it.createNewFile() }
+                        .outputStream()
                     getStream(rar, header).use {
-                        it.copyTo(pageFile.outputStream())
+                        it.copyTo(pageOutputStream)
                     }
                 }
         }

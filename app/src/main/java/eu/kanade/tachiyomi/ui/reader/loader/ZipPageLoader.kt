@@ -24,7 +24,8 @@ internal class ZipPageLoader(file: File) : PageLoader() {
             generateSequence { zipInputStream.nextEntry }
                 .filterNot { it.isDirectory }
                 .forEach { entry ->
-                    File(tmpDir, entry.name).also { it.createNewFile() }
+                    File(tmpDir, entry.name.substringAfterLast("/"))
+                        .also { it.createNewFile() }
                         .outputStream().use { pageOutputStream ->
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 pageOutputStream.write(zipInputStream.readNBytes(entry.size.toInt()))
