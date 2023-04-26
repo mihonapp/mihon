@@ -94,36 +94,44 @@ object DebugInfoScreen : Screen() {
     }
 
     private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
-        val items = mutableListOf(
-            Preference.PreferenceItem.TextPreference(
-                title = "Model",
-                subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
-            ),
-        )
-
-        if (DeviceUtil.oneUiVersion != null) {
-            items += Preference.PreferenceItem.TextPreference(
-                title = "OneUI version",
-                subtitle = "${DeviceUtil.oneUiVersion}",
+        val items = buildList {
+            add(
+                Preference.PreferenceItem.TextPreference(
+                    title = "Model",
+                    subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
+                ),
             )
-        } else if (DeviceUtil.miuiMajorVersion != null) {
-            items += Preference.PreferenceItem.TextPreference(
-                title = "MIUI version",
-                subtitle = "${DeviceUtil.miuiMajorVersion}",
+
+            if (DeviceUtil.oneUiVersion != null) {
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = "OneUI version",
+                        subtitle = "${DeviceUtil.oneUiVersion}",
+                    ),
+                )
+            } else if (DeviceUtil.miuiMajorVersion != null) {
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = "MIUI version",
+                        subtitle = "${DeviceUtil.miuiMajorVersion}",
+                    ),
+                )
+            }
+
+            val androidVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Build.VERSION.RELEASE_OR_CODENAME
+            } else {
+                Build.VERSION.RELEASE
+            }
+            add(
+                Preference.PreferenceItem.TextPreference(
+                    title = "Android version",
+                    subtitle = "$androidVersion (${Build.DISPLAY})",
+                ),
             )
         }
-
-        val androidVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Build.VERSION.RELEASE_OR_PREVIEW_DISPLAY
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Build.VERSION.RELEASE_OR_CODENAME
-        } else {
-            Build.VERSION.RELEASE
-        }
-        items += Preference.PreferenceItem.TextPreference(
-            title = "Android version",
-            subtitle = "$androidVersion (${Build.DISPLAY})",
-        )
 
         return Preference.PreferenceGroup(
             title = "Device info",
