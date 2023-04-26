@@ -274,8 +274,10 @@
     <string name="exclude">Exclude: %s</string>
 
     <string name="pref_chapter_swipe">Chapter swipe</string>
-    <string name="pref_chapter_swipe_end">Swipe to end action</string>
-    <string name="pref_chapter_swipe_start">Swipe to start action</string>
+    <!-- This should be to the left for RTL locales -->
+    <string name="pref_chapter_swipe_end">Swipe to right action</string>
+    <!-- This should be to the right for RTL locales -->
+    <string name="pref_chapter_swipe_start">Swipe to left action</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
