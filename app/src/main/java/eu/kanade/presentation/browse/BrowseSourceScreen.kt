@@ -21,10 +21,10 @@ import eu.kanade.presentation.browse.components.BrowseSourceComfortableGrid
 import eu.kanade.presentation.browse.components.BrowseSourceCompactGrid
 import eu.kanade.presentation.browse.components.BrowseSourceList
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.flow.StateFlow
-import tachiyomi.data.source.NoResultsException
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
@@ -54,12 +54,7 @@ fun BrowseSourceContent(
         ?: mangaList.loadState.append.takeIf { it is LoadState.Error }
 
     val getErrorMessage: (LoadState.Error) -> String = { state ->
-        when {
-            state.error is NoResultsException -> context.getString(R.string.no_results_found)
-            state.error.message.isNullOrEmpty() -> ""
-            state.error.message.orEmpty().startsWith("HTTP error") -> "${state.error.message}: ${context.getString(R.string.http_error_hint)}"
-            else -> state.error.message.orEmpty()
-        }
+        with(context) { state.error.formattedMessage }
     }
 
     LaunchedEffect(errorState) {
