@@ -530,10 +530,7 @@ class LibraryScreenModel(
     }
 
     fun showSettingsDialog() {
-        mutableState.update {
-            val category = it.categories.getOrNull(activeCategoryIndex) ?: return@update it
-            it.copy(dialog = Dialog.SettingsSheet(category))
-        }
+        mutableState.update { it.copy(dialog = Dialog.SettingsSheet) }
     }
 
     fun clearSelection() {
@@ -654,7 +651,7 @@ class LibraryScreenModel(
     }
 
     sealed class Dialog {
-        data class SettingsSheet(val category: Category) : Dialog()
+        object SettingsSheet : Dialog()
         data class ChangeCategory(val manga: List<Manga>, val initialSelection: List<CheckboxState<Category>>) : Dialog()
         data class DeleteManga(val manga: List<Manga>) : Dialog()
     }
