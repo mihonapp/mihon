@@ -176,7 +176,7 @@ fun SourceOptionsDialog(
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
                 )
-                if (source.isLocal()) {
+                if (!source.isLocal()) {
                     Text(
                         text = stringResource(R.string.action_disable),
                         modifier = Modifier
