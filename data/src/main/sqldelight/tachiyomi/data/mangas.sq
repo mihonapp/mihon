@@ -16,13 +16,13 @@ CREATE TABLE mangas(
     favorite INTEGER AS Boolean NOT NULL,
     last_update INTEGER AS Long,
     next_update INTEGER AS Long,
-    calculate_interval INTEGER DEFAULT 0 NOT NULL,
     initialized INTEGER AS Boolean NOT NULL,
     viewer INTEGER NOT NULL,
     chapter_flags INTEGER NOT NULL,
     cover_last_modified INTEGER AS Long NOT NULL,
     date_added INTEGER AS Long NOT NULL,
-    update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0
+    update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
+    calculate_interval INTEGER DEFAULT 0 NOT NULL
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -81,8 +81,8 @@ DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
 
 insert:
-INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,calculate_interval,initialized,viewer,chapter_flags,cover_last_modified,date_added,update_strategy)
-VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnailUrl,:favorite,:lastUpdate,:nextUpdate,:calculateInterval,:initialized,:viewerFlags,:chapterFlags,:coverLastModified,:dateAdded,:updateStrategy);
+INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added,update_strategy,calculate_interval)
+VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnailUrl,:favorite,:lastUpdate,:nextUpdate,:initialized,:viewerFlags,:chapterFlags,:coverLastModified,:dateAdded,:updateStrategy,:calculateInterval);
 
 update:
 UPDATE mangas SET
@@ -98,13 +98,13 @@ UPDATE mangas SET
     favorite = coalesce(:favorite, favorite),
     last_update = coalesce(:lastUpdate, last_update),
     next_update = coalesce(:nextUpdate, next_update),
-    calculate_interval = coalesce(:calculateInterval, calculate_interval),
     initialized = coalesce(:initialized, initialized),
     viewer = coalesce(:viewer, viewer),
     chapter_flags = coalesce(:chapterFlags, chapter_flags),
     cover_last_modified = coalesce(:coverLastModified, cover_last_modified),
     date_added = coalesce(:dateAdded, date_added),
-    update_strategy = coalesce(:updateStrategy, update_strategy)
+    update_strategy = coalesce(:updateStrategy, update_strategy),
+    calculate_interval = coalesce(:calculateInterval, calculate_interval)
 WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
