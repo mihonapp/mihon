@@ -39,7 +39,7 @@ internal object ExtensionLoader {
     private const val METADATA_HAS_README = "tachiyomi.extension.hasReadme"
     private const val METADATA_HAS_CHANGELOG = "tachiyomi.extension.hasChangelog"
     const val LIB_VERSION_MIN = 1.3
-    const val LIB_VERSION_MAX = 1.4
+    const val LIB_VERSION_MAX = 1.5
 
     private const val PACKAGE_FLAGS = PackageManager.GET_CONFIGURATIONS or PackageManager.GET_SIGNATURES
 
