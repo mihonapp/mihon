@@ -30,15 +30,6 @@
         android:entries="@array/invert_tapping_mode"
         app:title="@string/pref_read_with_tapping_inverted" />
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/navigate_pan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_navigate_pan"
-        android:textColor="?android:attr/textColorSecondary" />
-
     <eu.kanade.tachiyomi.widget.MaterialSpinnerView
         android:id="@+id/scale_type"
         android:layout_width="match_parent"
@@ -69,6 +60,15 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="16dp"
         android:text="@string/pref_crop_borders"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/navigate_pan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:text="@string/pref_navigate_pan"
         android:textColor="?android:attr/textColorSecondary" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
