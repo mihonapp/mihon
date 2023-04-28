@@ -1,25 +1,34 @@
 package eu.kanade.presentation.library
 
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Apps
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.presentation.components.TriStateItem
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
+import kotlinx.coroutines.flow.map
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
@@ -29,8 +38,8 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
-import tachiyomi.presentation.core.components.IconItem
 import tachiyomi.presentation.core.components.RadioItem
+import tachiyomi.presentation.core.components.SettingsItemsPaddings
 import tachiyomi.presentation.core.components.SortItem
 
 @Composable
@@ -176,23 +185,6 @@ private fun ColumnScope.DisplayPage(
     category: Category,
     screenModel: LibrarySettingsScreenModel,
 ) {
-    val portraitColumns by screenModel.libraryPreferences.portraitColumns().collectAsState()
-    val landscapeColumns by screenModel.libraryPreferences.landscapeColumns().collectAsState()
-
-    var showColumnsDialog by rememberSaveable { mutableStateOf(false) }
-    if (showColumnsDialog) {
-        LibraryColumnsDialog(
-            initialPortrait = portraitColumns,
-            initialLandscape = landscapeColumns,
-            onDismissRequest = { showColumnsDialog = false },
-            onValueChanged = { portrait, landscape ->
-                screenModel.libraryPreferences.portraitColumns().set(portrait)
-                screenModel.libraryPreferences.landscapeColumns().set(landscape)
-                showColumnsDialog = false
-            },
-        )
-    }
-
     HeadingItem(R.string.action_display_mode)
     listOf(
         R.string.action_display_grid to LibraryDisplayMode.CompactGrid,
@@ -208,11 +200,46 @@ private fun ColumnScope.DisplayPage(
     }
 
     if (category.display != LibraryDisplayMode.List) {
-        IconItem(
-            label = stringResource(R.string.pref_library_columns),
-            icon = Icons.Outlined.Apps,
-            onClick = { showColumnsDialog = true },
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = SettingsItemsPaddings.Horizontal,
+                    vertical = SettingsItemsPaddings.Vertical,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+        ) {
+            val configuration = LocalConfiguration.current
+            val columnPreference = remember {
+                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    screenModel.libraryPreferences.landscapeColumns()
+                } else {
+                    screenModel.libraryPreferences.portraitColumns()
+                }
+            }
+
+            val columns by columnPreference.changes().collectAsState(initial = 0)
+            Column {
+                Text(
+                    stringResource(id = R.string.pref_library_columns),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                if (columns > 0) {
+                    Text(stringResource(id = R.string.pref_library_columns_per_row, columns))
+                } else {
+                    Text(stringResource(id = R.string.label_default))
+                }
+            }
+
+            Slider(
+                value = columns.toFloat(),
+                onValueChange = { columnPreference.set(it.toInt()) },
+                modifier = Modifier.weight(1f),
+                valueRange = 0f..10f,
+                steps = 10,
+            )
+        }
     }
 
     HeadingItem(R.string.overlay_header)
