@@ -83,7 +83,7 @@ sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extension
 sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.9.2"
+junit = "org.junit.jupiter:junit-jupiter:5.9.3"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.1"
 
 voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voyager" }
