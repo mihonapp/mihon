@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import tachiyomi.domain.release.model.Release
 
 internal class AppUpdateNotifier(private val context: Context) {
 
@@ -27,18 +28,22 @@ internal class AppUpdateNotifier(private val context: Context) {
         context.notify(id, build())
     }
 
+    fun cancel() {
+        NotificationReceiver.dismissNotification(context, Notifications.ID_APP_UPDATER)
+    }
+
     @SuppressLint("LaunchActivityFromNotification")
-    fun promptUpdate(release: GithubRelease) {
-        val intent = Intent(context, AppUpdateService::class.java).apply {
+    fun promptUpdate(release: Release) {
+        val updateIntent = Intent(context, AppUpdateService::class.java).run {
             putExtra(AppUpdateService.EXTRA_DOWNLOAD_URL, release.getDownloadLink())
             putExtra(AppUpdateService.EXTRA_DOWNLOAD_TITLE, release.version)
+            PendingIntent.getService(context, 0, this, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
-        val updateIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-        val releaseIntent = Intent(Intent.ACTION_VIEW, release.releaseLink.toUri()).apply {
+        val releaseIntent = Intent(Intent.ACTION_VIEW, release.releaseLink.toUri()).run {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            PendingIntent.getActivity(context, release.hashCode(), this, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }
-        val releaseInfoIntent = PendingIntent.getActivity(context, release.hashCode(), releaseIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.update_check_notification_update_available))
@@ -55,7 +60,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_info_24dp,
                 context.getString(R.string.whats_new),
-                releaseInfoIntent,
+                releaseIntent,
             )
         }
         notificationBuilder.show()
@@ -168,9 +173,5 @@ internal class AppUpdateNotifier(private val context: Context) {
             )
         }
         notificationBuilder.show(Notifications.ID_APP_UPDATER)
-    }
-
-    fun cancel() {
-        NotificationReceiver.dismissNotification(context, Notifications.ID_APP_UPDATER)
     }
 }

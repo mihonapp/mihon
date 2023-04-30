@@ -20,6 +20,7 @@ import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
 import tachiyomi.data.manga.MangaRepositoryImpl
+import tachiyomi.data.release.ReleaseServiceImpl
 import tachiyomi.data.source.SourceDataRepositoryImpl
 import tachiyomi.data.source.SourceRepositoryImpl
 import tachiyomi.data.track.TrackRepositoryImpl
@@ -56,6 +57,8 @@ import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.release.interactor.GetApplicationRelease
+import tachiyomi.domain.release.service.ReleaseService
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
 import tachiyomi.domain.source.repository.SourceDataRepository
@@ -101,6 +104,9 @@ class DomainModule : InjektModule {
         addFactory { NetworkToLocalManga(get()) }
         addFactory { UpdateManga(get()) }
         addFactory { SetMangaCategories(get()) }
+
+        addSingletonFactory<ReleaseService> { ReleaseServiceImpl(get(), get()) }
+        addFactory { GetApplicationRelease(get(), get()) }
 
         addSingletonFactory<TrackRepository> { TrackRepositoryImpl(get()) }
         addFactory { DeleteTrack(get()) }

@@ -31,7 +31,6 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
-import eu.kanade.tachiyomi.data.updater.AppUpdateResult
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
@@ -43,6 +42,7 @@ import logcat.LogPriority
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.presentation.core.components.LinkIcon
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -186,16 +186,16 @@ object AboutScreen : Screen() {
     /**
      * Checks version and shows a user prompt if an update is available.
      */
-    private suspend fun checkVersion(context: Context, onAvailableUpdate: (AppUpdateResult.NewUpdate) -> Unit) {
+    private suspend fun checkVersion(context: Context, onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit) {
         val updateChecker = AppUpdateChecker()
         withUIContext {
             context.toast(R.string.update_check_look_for_updates)
             try {
-                when (val result = withIOContext { updateChecker.checkForUpdate(context, isUserPrompt = true) }) {
-                    is AppUpdateResult.NewUpdate -> {
+                when (val result = withIOContext { updateChecker.checkForUpdate(context, forceCheck = true) }) {
+                    is GetApplicationRelease.Result.NewUpdate -> {
                         onAvailableUpdate(result)
                     }
-                    is AppUpdateResult.NoNewUpdate -> {
+                    is GetApplicationRelease.Result.NoNewUpdate -> {
                         context.toast(R.string.update_check_no_new_updates)
                     }
                     else -> {}

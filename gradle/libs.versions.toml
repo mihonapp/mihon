@@ -92,6 +92,8 @@ voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = 
 
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
+mockk = "io.mockk:mockk:1.13.5"
+
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
@@ -101,4 +103,4 @@ coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
-test = ["junit", "kotest-assertions"]
+test = ["junit", "kotest-assertions", "mockk"]

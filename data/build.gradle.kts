@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("plugin.serialization")
     id("com.squareup.sqldelight")
 }
 
@@ -27,4 +28,13 @@ dependencies {
     api(libs.sqldelight.android.driver)
     api(libs.sqldelight.coroutines)
     api(libs.sqldelight.android.paging)
+}
+
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+        )
+    }
 }

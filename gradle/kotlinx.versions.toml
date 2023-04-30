@@ -11,6 +11,7 @@ coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", vers
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version" }
 serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-okio", version.ref = "serialization_version" }
