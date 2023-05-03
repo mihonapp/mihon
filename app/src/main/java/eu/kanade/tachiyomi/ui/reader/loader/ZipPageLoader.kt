@@ -1,12 +1,13 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.app.Application
-import android.os.Build
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
+import org.apache.commons.compress.archivers.zip.ZipFile
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import uy.kohesive.injekt.injectLazy
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
-import java.util.zip.ZipInputStream
 
 /**
  * Loader used to load a chapter from a .zip or .cbz file.
@@ -20,29 +21,21 @@ internal class ZipPageLoader(file: File) : PageLoader() {
     }
 
     init {
-        ZipInputStream(FileInputStream(file)).use { zipInputStream ->
-            generateSequence { zipInputStream.nextEntry }
-                .filterNot { it.isDirectory }
-                .forEach { entry ->
-                    File(tmpDir, entry.name.substringAfterLast("/"))
-                        .also { it.createNewFile() }
-                        .outputStream().use { pageOutputStream ->
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                pageOutputStream.write(zipInputStream.readNBytes(entry.size.toInt()))
-                            } else {
-                                val buffer = ByteArray(2048)
-                                var len: Int
-                                while (
-                                    zipInputStream.read(buffer, 0, buffer.size)
-                                        .also { len = it } >= 0
-                                ) {
-                                    pageOutputStream.write(buffer, 0, len)
-                                }
+        ByteArrayOutputStream().use { byteArrayOutputStream ->
+            FileInputStream(file).use { it.copyTo(byteArrayOutputStream) }
+
+            ZipFile(SeekableInMemoryByteChannel(byteArrayOutputStream.toByteArray())).use { zip ->
+                zip.entries.asSequence()
+                    .filterNot { it.isDirectory }
+                    .forEach { entry ->
+                        File(tmpDir, entry.name.substringAfterLast("/"))
+                            .also { it.createNewFile() }
+                            .outputStream().use { pageOutputStream ->
+                                zip.getInputStream(entry).copyTo(pageOutputStream)
+                                pageOutputStream.flush()
                             }
-                            pageOutputStream.flush()
-                        }
-                    zipInputStream.closeEntry()
-                }
+                    }
+            }
         }
     }
 
