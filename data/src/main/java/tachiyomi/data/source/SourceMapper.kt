@@ -1,7 +1,7 @@
 package tachiyomi.data.source
 
 import tachiyomi.domain.source.model.Source
-import tachiyomi.domain.source.model.SourceData
+import tachiyomi.domain.source.model.StubSource
 
 val sourceMapper: (eu.kanade.tachiyomi.source.Source) -> Source = { source ->
     Source(
@@ -13,6 +13,6 @@ val sourceMapper: (eu.kanade.tachiyomi.source.Source) -> Source = { source ->
     )
 }
 
-val sourceDataMapper: (Long, String, String) -> SourceData = { id, lang, name ->
-    SourceData(id, lang, name)
+val sourceDataMapper: (Long, String, String) -> StubSource = { id, lang, name ->
+    StubSource(id, lang, name)
 }

@@ -2,22 +2,22 @@ package tachiyomi.data.source
 
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.domain.source.model.SourceData
-import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.domain.source.model.StubSource
+import tachiyomi.domain.source.repository.StubSourceRepository
 
-class SourceDataRepositoryImpl(
+class StubSourceRepositoryImpl(
     private val handler: DatabaseHandler,
-) : SourceDataRepository {
+) : StubSourceRepository {
 
-    override fun subscribeAll(): Flow<List<SourceData>> {
+    override fun subscribeAll(): Flow<List<StubSource>> {
         return handler.subscribeToList { sourcesQueries.findAll(sourceDataMapper) }
     }
 
-    override suspend fun getSourceData(id: Long): SourceData? {
+    override suspend fun getStubSource(id: Long): StubSource? {
         return handler.awaitOneOrNull { sourcesQueries.findOne(id, sourceDataMapper) }
     }
 
-    override suspend fun upsertSourceData(id: Long, lang: String, name: String) {
+    override suspend fun upsertStubSource(id: Long, lang: String, name: String) {
         handler.await { sourcesQueries.upsert(id, lang, name) }
     }
 }

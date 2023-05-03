@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
-import eu.kanade.tachiyomi.extension.model.AvailableSources
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -22,7 +21,7 @@ import rx.Observable
 import tachiyomi.core.util.lang.launchNow
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.source.model.SourceData
+import tachiyomi.domain.source.model.StubSource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Locale
@@ -73,12 +72,12 @@ class ExtensionManager(
     private val _availableExtensionsFlow = MutableStateFlow(emptyList<Extension.Available>())
     val availableExtensionsFlow = _availableExtensionsFlow.asStateFlow()
 
-    private var availableExtensionsSourcesData: Map<Long, SourceData> = emptyMap()
+    private var availableExtensionsSourcesData: Map<Long, StubSource> = emptyMap()
 
     private fun setupAvailableExtensionsSourcesDataMap(extensions: List<Extension.Available>) {
         if (extensions.isEmpty()) return
         availableExtensionsSourcesData = extensions
-            .flatMap { ext -> ext.sources.map { it.toSourceData() } }
+            .flatMap { ext -> ext.sources.map { it.toStubSource() } }
             .associateBy { it.id }
     }
 
@@ -145,8 +144,8 @@ class ExtensionManager(
         // Use the source lang as some aren't present on the extension level.
         val availableLanguages = extensions
             .flatMap(Extension.Available::sources)
-            .distinctBy(AvailableSources::lang)
-            .map(AvailableSources::lang)
+            .distinctBy(Extension.Available.Source::lang)
+            .map(Extension.Available.Source::lang)
 
         val deviceLanguage = Locale.getDefault().language
         val defaultLanguages = preferences.enabledLanguages().defaultValue()

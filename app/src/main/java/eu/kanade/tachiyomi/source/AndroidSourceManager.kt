@@ -13,9 +13,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import tachiyomi.domain.source.model.SourceData
 import tachiyomi.domain.source.model.StubSource
-import tachiyomi.domain.source.repository.SourceDataRepository
+import tachiyomi.domain.source.repository.StubSourceRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.source.local.LocalSource
 import uy.kohesive.injekt.Injekt
@@ -26,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap
 class AndroidSourceManager(
     private val context: Context,
     private val extensionManager: ExtensionManager,
-    private val sourceRepository: SourceDataRepository,
+    private val sourceRepository: StubSourceRepository,
 ) : SourceManager {
 
     private val downloadManager: DownloadManager by injectLazy()
@@ -55,7 +54,7 @@ class AndroidSourceManager(
                     extensions.forEach { extension ->
                         extension.sources.forEach {
                             mutableMap[it.id] = it
-                            registerStubSource(it.toSourceData())
+                            registerStubSource(it.toStubSource())
                         }
                     }
                     sourcesMapFlow.value = mutableMap
@@ -67,7 +66,7 @@ class AndroidSourceManager(
                 .collectLatest { sources ->
                     val mutableMap = stubSourcesMap.toMutableMap()
                     sources.forEach {
-                        mutableMap[it.id] = StubSource(it)
+                        mutableMap[it.id] = it
                     }
                 }
         }
@@ -92,26 +91,25 @@ class AndroidSourceManager(
         return stubSourcesMap.values.filterNot { it.id in onlineSourceIds }
     }
 
-    private fun registerStubSource(sourceData: SourceData) {
+    private fun registerStubSource(source: StubSource) {
         scope.launch {
-            val (id, lang, name) = sourceData
-            val dbSourceData = sourceRepository.getSourceData(id)
-            if (dbSourceData == sourceData) return@launch
-            sourceRepository.upsertSourceData(id, lang, name)
-            if (dbSourceData != null) {
-                downloadManager.renameSource(StubSource(dbSourceData), StubSource(sourceData))
+            val dbSource = sourceRepository.getStubSource(source.id)
+            if (dbSource == source) return@launch
+            sourceRepository.upsertStubSource(source.id, source.lang, source.name)
+            if (dbSource != null) {
+                downloadManager.renameSource(dbSource, source)
             }
         }
     }
 
     private suspend fun createStubSource(id: Long): StubSource {
-        sourceRepository.getSourceData(id)?.let {
-            return StubSource(it)
+        sourceRepository.getStubSource(id)?.let {
+            return it
         }
         extensionManager.getSourceData(id)?.let {
             registerStubSource(it)
-            return StubSource(it)
+            return it
         }
-        return StubSource(SourceData(id, "", ""))
+        return StubSource(id, "", "")
     }
 }
