@@ -16,15 +16,11 @@
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants" />
 
-        <eu.kanade.tachiyomi.ui.reader.PageIndicatorTextView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/page_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:padding="4dp"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textDirection="ltr"
-            android:textStyle="bold" />
+            android:layout_gravity="bottom|center_horizontal" />
 
     </FrameLayout>
 

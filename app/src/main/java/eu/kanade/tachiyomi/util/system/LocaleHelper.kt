@@ -15,9 +15,13 @@ object LocaleHelper {
      * Sorts by display name, except keeps the "all" (displayed as "Multi") locale at the top.
      */
     val comparator = { a: String, b: String ->
-        if (a == "all") -1
-        else if (b == "all") 1
-        else getDisplayName(a).compareTo(getDisplayName(b))
+        if (a == "all") {
+            -1
+        } else if (b == "all") {
+            1
+        } else {
+            getDisplayName(a).compareTo(getDisplayName(b))
+        }
     }
 
     /**

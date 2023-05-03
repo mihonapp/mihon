@@ -29,6 +29,8 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
@@ -46,6 +48,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.manga.model.orientationType
+import eu.kanade.presentation.reader.PageIndicatorText
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -77,6 +80,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.copy
 import eu.kanade.tachiyomi.util.view.popupMenu
+import eu.kanade.tachiyomi.util.view.setComposeContent
 import eu.kanade.tachiyomi.util.view.setTooltip
 import eu.kanade.tachiyomi.widget.listener.SimpleAnimationListener
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -405,6 +409,15 @@ class ReaderActivity : BaseActivity() {
                     },
                 )
             }
+        }
+
+        binding.pageNumber.setComposeContent {
+            val state by viewModel.state.collectAsState()
+
+            PageIndicatorText(
+                currentPage = state.currentPage,
+                totalPages = state.viewerChapters?.currChapter?.pages?.size ?: -1,
+            )
         }
 
         // Init listeners on bottom menu
@@ -785,7 +798,7 @@ class ReaderActivity : BaseActivity() {
      * other cases are handled with chapter transitions on the viewers and chapter preloading.
      */
     @Suppress("DEPRECATION")
-    fun setProgressDialog(show: Boolean) {
+    private fun setProgressDialog(show: Boolean) {
         progressDialog?.dismiss()
         progressDialog = if (show) {
             ProgressDialog.show(this, null, getString(R.string.loading), true)
@@ -835,9 +848,6 @@ class ReaderActivity : BaseActivity() {
     fun onPageSelected(page: ReaderPage) {
         viewModel.onPageSelected(page)
         val pages = page.chapter.pages ?: return
-
-        // Set bottom page number
-        binding.pageNumber.text = "${page.number}/${pages.size}"
 
         // Set page numbers
         if (viewer !is R2LPagerViewer) {

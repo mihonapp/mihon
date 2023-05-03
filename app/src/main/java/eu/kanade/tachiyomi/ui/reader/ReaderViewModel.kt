@@ -412,6 +412,11 @@ class ReaderViewModel(
         }
 
         // Save last page read and mark as read if needed
+        mutableState.update {
+            it.copy(
+                currentPage = page.index + 1,
+            )
+        }
         selectedChapter.chapter.last_page_read = page.index
         val shouldTrack = !incognitoMode || hasTrackers
         if (selectedChapter.pages?.lastIndex == page.index && shouldTrack) {
@@ -875,6 +880,7 @@ class ReaderViewModel(
         val manga: Manga? = null,
         val viewerChapters: ViewerChapters? = null,
         val isLoadingAdjacentChapter: Boolean = false,
+        val currentPage: Int = -1,
     )
 
     sealed class Event {
