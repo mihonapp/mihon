@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemKey
 import eu.kanade.presentation.library.components.CommonMangaItemDefaults
 import eu.kanade.presentation.library.components.MangaListItem
 import kotlinx.coroutines.flow.StateFlow
@@ -32,9 +32,11 @@ fun BrowseSourceList(
             }
         }
 
-        items(mangaList) { mangaflow ->
-            mangaflow ?: return@items
-            val manga by mangaflow.collectAsState()
+        items(
+            count = mangaList.itemCount,
+            key = mangaList.itemKey { it.value.id },
+        ) { index ->
+            val manga by mangaList[index]?.collectAsState() ?: return@items
             BrowseSourceListItem(
                 manga = manga,
                 onClick = { onMangaClick(manga) },
