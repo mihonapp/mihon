@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
-import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation.NavigationRegion
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -26,10 +26,10 @@ import uy.kohesive.injekt.injectLazy
 import kotlin.math.min
 
 /**
- * Implementation of a [BaseViewer] to display pages with a [ViewPager].
+ * Implementation of a [Viewer] to display pages with a [ViewPager].
  */
 @Suppress("LeakingThis")
-abstract class PagerViewer(val activity: ReaderActivity) : BaseViewer {
+abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     val downloadManager: DownloadManager by injectLazy()
 

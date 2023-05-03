@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.ui.reader.viewer.BaseViewer
+import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.L2RPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.VerticalPagerViewer
@@ -31,7 +31,7 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @D
 
         fun fromSpinner(position: Int?) = values().find { value -> value.prefValue == position } ?: DEFAULT
 
-        fun toViewer(preference: Int?, activity: ReaderActivity): BaseViewer {
+        fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
             return when (fromPreference(preference)) {
                 LEFT_TO_RIGHT -> L2RPagerViewer(activity)
                 RIGHT_TO_LEFT -> R2LPagerViewer(activity)

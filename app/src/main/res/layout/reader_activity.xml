@@ -59,82 +59,12 @@
             android:layout_gravity="bottom"
             android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/reader_nav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
-                android:layoutDirection="ltr"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/left_chapter"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="@string/action_previous_chapter"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:srcCompat="@drawable/ic_skip_previous_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-                <LinearLayout
-                    android:id="@+id/reader_seekbar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    tools:ignore="KeyboardInaccessibleWidget">
-
-                    <TextView
-                        android:id="@+id/left_page_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:minWidth="32dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="15sp"
-                        tools:text="1" />
-
-                    <!--
-                        Wonky way of setting height due to issues with horizontally centering the thumb in Android 5.
-                        See https://stackoverflow.com/questions/15701767/android-thumb-is-not-centered-in-seekbar
-                    -->
-                    <eu.kanade.tachiyomi.ui.reader.ReaderSlider
-                        android:id="@+id/page_slider"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:maxHeight="?attr/actionBarSize"
-                        android:minHeight="?attr/actionBarSize"
-                        app:tickVisible="true"/>
-
-                    <TextView
-                        android:id="@+id/right_page_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:minWidth="32dp"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="15sp"
-                        tools:text="15" />
-
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/right_chapter"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="@string/action_next_chapter"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:srcCompat="@drawable/ic_skip_next_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-            </LinearLayout>
+                android:layoutDirection="ltr" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/toolbar_bottom"

@@ -34,7 +34,7 @@ class ReaderReadingModeSettings @JvmOverloads constructor(context: Context, attr
 
         initGeneralPreferences()
 
-        when ((context as ReaderActivity).viewer) {
+        when ((context as ReaderActivity).viewModel.state.value.viewer) {
             is PagerViewer -> initPagerPreferences()
             is WebtoonViewer -> initWebtoonPreferences()
         }

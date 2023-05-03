@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
-import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.view.ContextThemeWrapper
@@ -87,19 +86,6 @@ fun Context.hasPermission(permission: String) = PermissionChecker.checkSelfPermi
     }
 
     return color
-}
-
-@ColorInt fun Context.getThemeColor(attr: Int): Int {
-    val tv = TypedValue()
-    return if (this.theme.resolveAttribute(attr, tv, true)) {
-        if (tv.resourceId != 0) {
-            getColor(tv.resourceId)
-        } else {
-            tv.data
-        }
-    } else {
-        0
-    }
 }
 
 val Context.powerManager: PowerManager
