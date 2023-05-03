@@ -64,7 +64,7 @@ private fun SourcesFilterContent(
         state.items.forEach { (language, sources) ->
             val enabled = language in state.enabledLanguages
             item(
-                key = language.hashCode(),
+                key = language,
                 contentType = "source-filter-header",
             ) {
                 SourcesFilterHeader(
@@ -74,18 +74,19 @@ private fun SourcesFilterContent(
                     onClickItem = onClickLanguage,
                 )
             }
-            if (!enabled) return@forEach
-            items(
-                items = sources,
-                key = { "source-filter-${it.key()}" },
-                contentType = { "source-filter-item" },
-            ) { source ->
-                SourcesFilterItem(
-                    modifier = Modifier.animateItemPlacement(),
-                    source = source,
-                    enabled = "${source.id}" !in state.disabledSources,
-                    onClickItem = onClickSource,
-                )
+            if (enabled) {
+                items(
+                    items = sources,
+                    key = { "source-filter-${it.key()}" },
+                    contentType = { "source-filter-item" },
+                ) { source ->
+                    SourcesFilterItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        source = source,
+                        enabled = "${source.id}" !in state.disabledSources,
+                        onClickItem = onClickSource,
+                    )
+                }
             }
         }
     }

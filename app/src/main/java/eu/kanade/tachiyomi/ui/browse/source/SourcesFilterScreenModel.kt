@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.source.model.Source
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.SortedMap
 
 class SourcesFilterScreenModel(
     private val preferences: SourcePreferences = Injekt.get(),
@@ -66,7 +67,7 @@ sealed class SourcesFilterState {
     ) : SourcesFilterState()
 
     data class Success(
-        val items: Map<String, List<Source>>,
+        val items: SortedMap<String, List<Source>>,
         val enabledLanguages: Set<String>,
         val disabledSources: Set<String>,
     ) : SourcesFilterState() {
