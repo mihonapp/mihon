@@ -225,7 +225,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val skippedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
-        val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
         val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
 
         coroutineScope {
@@ -290,6 +289,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                     }
 
                                     if (libraryPreferences.autoUpdateTrackers().get()) {
+                                        val loggedServices = trackManager.services.filter { it.isLogged }
                                         updateTrackings(manga, loggedServices)
                                     }
                                 }
