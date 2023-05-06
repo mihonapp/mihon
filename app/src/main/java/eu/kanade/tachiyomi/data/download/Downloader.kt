@@ -338,21 +338,21 @@ class Downloader(
 
             download.status = Download.State.DOWNLOADING
 
-            // Get all the URLs to the source images, fetch pages if necessary
-            pageList.filter { it.imageUrl.isNullOrEmpty() }.forEach { page ->
-                page.status = Page.State.LOAD_PAGE
-                try {
-                    page.imageUrl = download.source.fetchImageUrl(page).awaitSingle()
-                } catch (e: Throwable) {
-                    page.status = Page.State.ERROR
-                }
-            }
-
             // Start downloading images, consider we can have downloaded images already
             // Concurrently do 2 pages at a time
             pageList.asFlow()
                 .flatMapMerge(concurrency = 2) { page ->
                     flow {
+                        // Fetch image URL if necessary
+                        if (page.imageUrl.isNullOrEmpty()) {
+                            page.status = Page.State.LOAD_PAGE
+                            try {
+                                page.imageUrl = download.source.fetchImageUrl(page).awaitSingle()
+                            } catch (e: Throwable) {
+                                page.status = Page.State.ERROR
+                            }
+                        }
+
                         withIOContext { getOrDownloadImage(page, download, tmpDir) }
                         emit(page)
                     }.flowOn(Dispatchers.IO)
