@@ -526,9 +526,15 @@ class Downloader(
         dirname: String,
     ) {
         // Page list hasn't been initialized
-        val downloadPageCount = download.pages?.size ?: return
-        // Ensure that all pages has been downloaded
-        if (download.downloadedImages < downloadPageCount) return
+        val downloadPageCount = download.pages?.size ?: run {
+            download.status = Download.State.ERROR
+            return
+        }
+        // Ensure that all pages have been downloaded
+        if (download.downloadedImages != downloadPageCount) {
+            download.status = Download.State.ERROR
+            return
+        }
         // Ensure that the chapter folder has all the pages
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
             val fileName = it.name.orEmpty()
@@ -540,29 +546,29 @@ class Downloader(
                 else -> true
             }
         }
-
-        download.status = if (downloadedImagesCount == downloadPageCount) {
-            createComicInfoFile(
-                tmpDir,
-                download.manga,
-                download.chapter,
-                download.source,
-            )
-
-            // Only rename the directory if it's downloaded
-            if (downloadPreferences.saveChaptersAsCBZ().get()) {
-                archiveChapter(mangaDir, dirname, tmpDir)
-            } else {
-                tmpDir.renameTo(dirname)
-            }
-            cache.addChapter(dirname, mangaDir, download.manga)
-
-            DiskUtil.createNoMediaFile(tmpDir, context)
-
-            Download.State.DOWNLOADED
-        } else {
-            Download.State.ERROR
+        if (downloadedImagesCount != downloadPageCount) {
+            download.status = Download.State.ERROR
+            return
         }
+
+        createComicInfoFile(
+            tmpDir,
+            download.manga,
+            download.chapter,
+            download.source,
+        )
+
+        // Only rename the directory if it's downloaded
+        if (downloadPreferences.saveChaptersAsCBZ().get()) {
+            archiveChapter(mangaDir, dirname, tmpDir)
+        } else {
+            tmpDir.renameTo(dirname)
+        }
+        cache.addChapter(dirname, mangaDir, download.manga)
+
+        DiskUtil.createNoMediaFile(tmpDir, context)
+
+        download.status = Download.State.DOWNLOADED
     }
 
     /**
