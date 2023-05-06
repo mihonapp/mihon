@@ -47,7 +47,7 @@
     <string name="pref_category_library_update">Globalno aktualiziranje</string>
     <string name="landscape">Ležeći format</string>
     <string name="portrait">Uspravni format</string>
-    <string name="pref_library_columns">Broj elemenata po retku</string>
+    <string name="pref_library_columns">Veličina mreže</string>
     <string name="pref_category_display">Prikaz</string>
     <string name="hide_notification_content">Sakrij sadržaj obavijesti</string>
     <string name="secure_screen_summary">Siguran ekran skriva sadržaj programa prilikom prebacivanja između programa i blokira snimke ekrana</string>
@@ -113,7 +113,7 @@
     <string name="action_pin">Označi</string>
     <string name="action_display_download_badge">Preuzeta poglavlja</string>
     <string name="action_display_list">Popis</string>
-    <string name="action_display_grid">Zbijeno popločeno</string>
+    <string name="action_display_grid">Kompaktno</string>
     <string name="action_display">Prikaz</string>
     <string name="action_display_mode">Modus prikaza</string>
     <string name="action_open_in_web_view">Otvori u WebView</string>
@@ -214,13 +214,13 @@
     <string name="scale_type_fit_width">Prilagodi širinu</string>
     <string name="scale_type_stretch">Rastegni</string>
     <string name="scale_type_fit_screen">Prilagodi ekranu</string>
-    <string name="pref_image_scale_type">Skaliranje</string>
-    <string name="pager_viewer">Pregled stranica</string>
-    <string name="vertical_plus_viewer">Kontinuirano okomito</string>
-    <string name="webtoon_viewer">Digitalni strip</string>
-    <string name="vertical_viewer">Okomito</string>
-    <string name="right_to_left_viewer">S desna na lijevo</string>
-    <string name="left_to_right_viewer">S lijeva na desno</string>
+    <string name="pref_image_scale_type">Vrsta skaliranja</string>
+    <string name="pager_viewer">Stranice</string>
+    <string name="vertical_plus_viewer">Duga traka s razmacima</string>
+    <string name="webtoon_viewer">Duga traka</string>
+    <string name="vertical_viewer">Stranica (okomito)</string>
+    <string name="right_to_left_viewer">Stranica (s desna na lijevo)</string>
+    <string name="left_to_right_viewer">Stranica (s lijeva na desno)</string>
     <string name="pref_viewer_type">Standardni modus čitanja</string>
     <string name="black_background">Crna</string>
     <string name="gray_background">Siva</string>
@@ -448,7 +448,7 @@
     <string name="pref_show_reading_mode_summary">Nakratko prikaži trenutačni modus kad se čitač otvori</string>
     <string name="pref_show_reading_mode">Prikaži modus čitanja</string>
     <string name="action_display_show_tabs">Prikaži kartice kategorija</string>
-    <string name="action_display_comfortable_grid">Popločeno</string>
+    <string name="action_display_comfortable_grid">Mreža</string>
     <string name="action_start">Pokreni</string>
     <string name="action_disable">Deaktiviraj</string>
     <string name="loader_not_implemented_error">Izvor nije pronađen</string>
@@ -659,8 +659,8 @@
     <string name="action_show_manga">Prikaži unos</string>
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
     <string name="webtoon_side_padding_5">5 %</string>
-    <string name="pref_navigate_pan">Pomicanje širokih slika dodirom</string>
-    <string name="pref_landscape_zoom">Promijeni uvećanje slike u ležećem formatu</string>
+    <string name="pref_navigate_pan">Panoramski prikaz širokih slika</string>
+    <string name="pref_landscape_zoom">Zumiraj slike u ležećem formatu</string>
     <string name="pref_update_only_started">Koja još nisu pokrenuta</string>
     <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
@@ -715,12 +715,12 @@
     <string name="label_started">Započeto</string>
     <string name="label_local">Lokalno</string>
     <string name="action_search_hint">Traži …</string>
-    <string name="pref_library_summary">Kategorije, globalno ažuriranje</string>
+    <string name="pref_library_summary">Kategorije, globalno ažuriranje, listanje poglavlja</string>
     <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije</string>
     <string name="label_stats">Statistike</string>
     <string name="label_downloaded">Preuzeto</string>
     <string name="action_display_show_continue_reading_button">Gumb za nastavljanje čitanja</string>
-    <string name="pref_appearance_summary">Format teme, datuma i vremena</string>
+    <string name="pref_appearance_summary">Tema, format datuma i vremena</string>
     <string name="pref_browse_summary">Izvori, ekstenzije, globalno pretraživanje</string>
     <string name="pref_general_summary">Jezik aplikacije, obavijesti</string>
     <string name="pref_reader_summary">Način čitanja, zaslon, navigacija</string>
@@ -747,7 +747,7 @@
     <string name="seconds_short">%ds</string>
     <string name="empty_screen">Pa, ovo je nezgodno</string>
     <string name="unknown_title">Nepoznat naslov</string>
-    <string name="updates_last_update_info">Zadnje ažuriranje biblioteke bilo je: %s</string>
+    <string name="updates_last_update_info">Zadnje aktualiziranje biblioteke: %s</string>
     <string name="are_you_sure">Sigurno\?</string>
     <string name="crash_screen_description">%s je naišao na neočekivanu grešku. Predlažemo da podijeliš zapis o prekidu programa u našem kanalu za podršku na Discordu.</string>
     <string name="label_overview_section">Pregled</string>
@@ -777,9 +777,9 @@
 \nDodirnite da biste saznali više.</string>
     <string name="download_notifier_cache_renewal">Provjeravanje preuzimanja</string>
     <string name="update_check_open">Otvorite na GitHubu</string>
-    <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva ažuriranje</string>
+    <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva aktualiziranja</string>
     <string name="update_check_fdroid_migration_info">Nova verzija dostupna je u službenim izdanjima. Dodirnite da biste saznali kako migrirati iz neslužbenih F-Droid izdanja.</string>
-    <string name="appwidget_updates_description">Pogledajte nedavno ažurirane unose u biblioteci</string>
+    <string name="appwidget_updates_description">Pogledajte nedavno aktualizirane unose u biblioteci</string>
     <string name="remove_manga">Upravo ćete ukloniti \"%s\" iz svoje biblioteke</string>
     <string name="appwidget_unavailable_locked">Widget nije dostupan kada je omogućeno zaključavanje aplikacije</string>
     <string name="information_no_entries_found">Nije pronađen nijedan unos u ovoj kategoriji</string>
@@ -788,7 +788,6 @@
     <string name="pref_library_update_show_tab_badge">Prikaži broj nepročitanih na ikoni aktualiziranja</string>
     <string name="information_no_manga_category">Kategorija je prazna</string>
     <string name="copied_to_clipboard_plain">Kopirano u međuspremnik</string>
-    <string name="pref_worker_info">Podaci razvoja</string>
     <string name="enhanced_services_not_installed">Dostupne, ali izvor nije instaliran: %s</string>
     <string name="confirm_add_duplicate_manga">U tvojoj biblioteci imaš unos s istim imenom.
 \n
@@ -811,7 +810,12 @@
         <item quantity="few">Nedostaju %1$s poglavlja</item>
         <item quantity="other">Nedostaje %1$s poglavlja</item>
     </plurals>
-    <string name="missing_chapters_unknown">Možda nedostaje poglavlje</string>
     <string name="pref_page_rotate">Prilagodi prikaz širokih stranica okretanjem</string>
     <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
+    <string name="pref_debug_info">Informacije otklanjanja grešaka</string>
+    <string name="pref_library_columns_per_row">%d po retku</string>
+    <string name="pref_chapter_swipe_start">Povuci prstom ulijevo</string>
+    <string name="pref_double_tap_zoom">Dodirni dvaput za zumiranje</string>
+    <string name="pref_chapter_swipe">Listanje u poglavljima</string>
+    <string name="pref_chapter_swipe_end">Povuci prstom udesno</string>
 </resources>

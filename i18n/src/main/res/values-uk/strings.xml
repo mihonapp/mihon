@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Відстеження</string>
     <string name="pref_category_advanced">Додатково</string>
     <string name="pref_category_about">Інформація</string>
-    <string name="pref_library_columns">Елементів у ряд</string>
+    <string name="pref_library_columns">Розмір сітки</string>
     <string name="portrait">Портретна</string>
     <string name="landscape">Альбомна</string>
     <string name="pref_library_update_interval">Автоматичні оновлення</string>
@@ -117,10 +117,10 @@
     <string name="white_background">Білий</string>
     <string name="black_background">Чорний</string>
     <string name="pref_viewer_type">Напрямок читання за замовчуванням</string>
-    <string name="left_to_right_viewer">Зліва направо</string>
-    <string name="right_to_left_viewer">Справа наліво</string>
-    <string name="vertical_viewer">Вертикальний</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Посторінково (зліва направо)</string>
+    <string name="right_to_left_viewer">Посторінково (справа наліво)</string>
+    <string name="vertical_viewer">Посторінковий (вертикальний)</string>
+    <string name="webtoon_viewer">Довга смуга</string>
     <string name="pager_viewer">Посторінково</string>
     <string name="pref_image_scale_type">Масштабування</string>
     <string name="scale_type_fit_screen">По екрану</string>
@@ -385,7 +385,7 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">Без меж</string>
     <string name="pref_webtoon_side_padding">Бічний відступ</string>
-    <string name="vertical_plus_viewer">Безперервний вертикальний</string>
+    <string name="vertical_plus_viewer">Довга смуга з проміжками</string>
     <string name="action_select_inverse">Інвертувати вибір</string>
     <string name="add_tracking">Додати стеження</string>
     <string name="pinned_sources">Прикріплено</string>
@@ -594,7 +594,7 @@
     <string name="action_display_local_badge">Локальне джерело</string>
     <string name="information_empty_category_dialog">У вашій бібліотеці ще немає категорій.</string>
     <string name="notification_updating">Оновлення бібліотеки... (%1$d/%2$d)</string>
-    <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
+    <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження застосунків, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
     <string name="label_background_activity">Фонова активність</string>
     <string name="restore_miui_warning">Резервування/Відновлення можуть не працювати належним чином, у випадку, якщо вимкнено Оптимізацію MIUI.</string>
     <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Записи будуть автоматично відстежуватись при додаванні до бібліотеки.</string>
@@ -660,7 +660,7 @@
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Пропускати оновлення записів</string>
-    <string name="pref_update_only_completely_read">Є непрочитані розділи</string>
+    <string name="pref_update_only_completely_read">Є непрочитана(ні) глава(и)</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
@@ -713,7 +713,7 @@
     <string name="ext_info_language">Мова</string>
     <string name="ext_info_age_rating">Вікові обмеження</string>
     <string name="download_notifier_split_page_path_not_found">Не вдалось знайти шлях сторінки %d</string>
-    <string name="pref_navigate_pan">Панорамування широких зображень при тицянні</string>
+    <string name="pref_navigate_pan">Панорамування широких зображень</string>
     <string name="pref_landscape_zoom">Збільшити горизонтальне зображення</string>
     <string name="action_close">Закрити</string>
     <string name="update_check_open">Відкрити на GitHub</string>
@@ -749,7 +749,7 @@
     <string name="crash_screen_description">%s зіткнулися з неочікуваною помилкою. Ми пропонуємо вам поділитися журналами збоїв у нашому каналі підтримки на Discord.</string>
     <string name="pref_general_summary">Мова застосунку, сповіщення</string>
     <string name="pref_appearance_summary">Тема, формат дати та часу</string>
-    <string name="pref_library_summary">Категорії, глобальне оновлення</string>
+    <string name="pref_library_summary">Категорії, глобальне оновлення, гортання розділів</string>
     <string name="pref_reader_summary">Режим читання, відображення, навігація</string>
     <string name="pref_downloads_summary">Автоматичне завантаження, завантаження наперед</string>
     <string name="pref_tracking_summary">Одностороння синхронізація прогресу, розширена синхронізація</string>
@@ -799,7 +799,6 @@
     <string name="action_not_now">Не зараз</string>
     <string name="pref_library_update_show_tab_badge">Відображення кількості непрочитаних на значку \"Оновлення\"</string>
     <string name="information_no_manga_category">Категорія порожня</string>
-    <string name="pref_worker_info">Інформація про працівника</string>
     <string name="copied_to_clipboard_plain">Скопійовано в буфер обміну</string>
     <string name="enhanced_services_not_installed">Доступно, але джерело не встановлене: %s</string>
     <string name="pref_skip_dupe_chapters">Пропуск повторюваних розділів</string>
@@ -819,7 +818,6 @@
     <string name="action_update_category">Оновити категорію</string>
     <string name="split_tall_images">Розділяти довгі зображення</string>
     <string name="overlay_header">Оверлей</string>
-    <string name="missing_chapters_unknown">Можливо, відсутні розділи</string>
     <string name="pref_page_rotate">Повернути широкі сторінки за розміром</string>
     <string name="pref_page_rotate_invert">Перевернути орієнтацію обернутих широких сторінок</string>
     <plurals name="missing_chapters">
@@ -828,4 +826,10 @@
         <item quantity="many">Відсутні %1$s розділів</item>
         <item quantity="other">Відсутні %1$s розділів</item>
     </plurals>
+    <string name="pref_debug_info">Інформація про налагодження</string>
+    <string name="pref_chapter_swipe">Гортання розділів</string>
+    <string name="pref_chapter_swipe_end">Проведіть пальцем праворуч</string>
+    <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
+    <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
+    <string name="pref_library_columns_per_row">%d на рядок</string>
 </resources>

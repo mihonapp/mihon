@@ -89,7 +89,7 @@
     <string name="app_not_available">แอพไม่พร้อมใช้งาน</string>
     <string name="pref_category_downloads">การดาวน์โหลด</string>
     <string name="pref_category_tracking">การติดตาม</string>
-    <string name="pref_library_columns">จำนวนต่อแถว</string>
+    <string name="pref_library_columns">ขนาดตาราง</string>
     <string name="portrait">แนวตั้ง</string>
     <string name="landscape">แนวนอน</string>
     <string name="pref_library_update_interval">การอัปเดตอัตโนมัติ</string>
@@ -118,10 +118,10 @@
     <string name="pref_read_with_volume_keys">ปุ่มปรับระดับเสียง</string>
     <string name="pref_read_with_volume_keys_inverted">สลับด้านปุ่มปรับระดับเสียง</string>
     <string name="pref_viewer_type">โหมดการอ่านเริ่มต้น</string>
-    <string name="left_to_right_viewer">จากซ้ายไปขวา</string>
-    <string name="right_to_left_viewer">จากขวาไปซ้าย</string>
-    <string name="vertical_viewer">แนวตั้ง</string>
-    <string name="webtoon_viewer">เว็บตูน</string>
+    <string name="left_to_right_viewer">แสดงเป็นหน้า (จากซ้ายไปขวา)</string>
+    <string name="right_to_left_viewer">แสดงเป็นหน้า (จากขวาไปซ้าย)</string>
+    <string name="vertical_viewer">แสดงเป็นหน้า (แนวตั้ง)</string>
+    <string name="webtoon_viewer">หน้ายาว</string>
     <string name="pager_viewer">แสดงเป็นหน้า</string>
     <string name="pref_image_scale_type">ชนิดมาตราส่วน</string>
     <string name="scale_type_fit_screen">พอดีกับหน้าจอ</string>
@@ -412,7 +412,7 @@
     <string name="pref_category_reading_mode">โหมดการอ่าน</string>
     <string name="rotation_type">ประเภทการหมุน</string>
     <string name="pref_viewer_nav">โซนการแตะ</string>
-    <string name="vertical_plus_viewer">แนวตั้งต่อเนื่อง</string>
+    <string name="vertical_plus_viewer">หน้ายาวแยกช่องว่าง</string>
     <string name="nav_zone_right">ขวา</string>
     <string name="nav_zone_next">ถัดไป</string>
     <string name="edge_nav">ขอบ</string>
@@ -633,7 +633,7 @@
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
     <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
     <string name="webtoon_side_padding_5">5%</string>
-    <string name="pref_navigate_pan">แพนหน้ากว้างเมื่อแตะ</string>
+    <string name="pref_navigate_pan">แพนหน้ากว้าง</string>
     <string name="action_display_cover_only_grid">ตารางแสดงแค่หน้าปก</string>
     <string name="pref_landscape_zoom">ซูมภาพแนวนอน</string>
     <string name="skipped_reason_not_caught_up">ถูกข้ามเนื่องจากมีตอนที่ยังไม่ได้อ่าน</string>
@@ -712,7 +712,7 @@
     <string name="skipped_reason_not_always_update">ถูกข้ามเนื่องจากเรื่องไม่จำเป็นต้องถูกอัปเดต</string>
     <string name="pref_general_summary">ภาษาของแอป, การแจ้งเตือน</string>
     <string name="pref_appearance_summary">ธีม, รูปแบบวันที่และเวลา</string>
-    <string name="pref_library_summary">หมวดหมู่, การอัปเดตคลัง</string>
+    <string name="pref_library_summary">หมวดหมู่, การอัปเดตคลัง, การปัดรายการตอน</string>
     <string name="pref_reader_summary">โหมดการอ่าน, การแสดงผล, การนำทาง</string>
     <string name="pref_downloads_summary">การดาวน์โหลดอัตโนมัติ, การดาวน์โหลดล่วงหน้า</string>
     <string name="pref_tracking_summary">การประมวลผลซิงก์ทางเดียง, เสริมการวิงก์</string>
@@ -761,7 +761,6 @@
     <string name="action_not_now">ไม่ใช่ตอนนี้</string>
     <string name="pref_library_update_show_tab_badge">แสดงจำนวนที่ยังไม่ได้อ่านบนไอคอนการอัปเดต</string>
     <string name="information_no_manga_category">หมวดหมู่ว่างเปล่า</string>
-    <string name="pref_worker_info">ข้อมูลของตัวทำงาน</string>
     <string name="copied_to_clipboard_plain">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
     <string name="pref_skip_dupe_chapters">ข้ามตอนที่ซ้ำกัน</string>
     <string name="enhanced_services_not_installed">พร้อมใช้งานแต่ไม่ได้ติดตั้งแหล่งที่มา: %s</string>
@@ -776,7 +775,6 @@
     <string name="pref_hide_in_library_items">ซ่อนรายการที่มีอยู่ในคลังอยู่แล้ว</string>
     <string name="action_copy_to_clipboard">คัดลอกไปยังคลิปบอร์ด</string>
     <string name="action_update_category">อัปเดตหมวดหมู่</string>
-    <string name="missing_chapters_unknown">อาจเป็นตอนที่ไม่พบ</string>
     <string name="split_tall_images">แยกภาพสูงยาว</string>
     <string name="overlay_header">โอเวอร์เลย์</string>
     <plurals name="missing_chapters">
@@ -784,4 +782,10 @@
     </plurals>
     <string name="pref_page_rotate">หมุนหน้ากว้างให้พอดี</string>
     <string name="pref_page_rotate_invert">พลิกการวางแนวของหน้ากว้างที่หมุน</string>
+    <string name="pref_debug_info">ข้อมูลดีบัก</string>
+    <string name="pref_chapter_swipe">การปัดรายการตอน</string>
+    <string name="pref_chapter_swipe_end">การกระทำเมื่อปัดไปทางขวา</string>
+    <string name="pref_chapter_swipe_start">การกระทำเมื่อปัดไปทางซ้าย</string>
+    <string name="pref_double_tap_zoom">แตะสองครั้งเพื่อซูม</string>
+    <string name="pref_library_columns_per_row">%d ต่อแถว</string>
 </resources>

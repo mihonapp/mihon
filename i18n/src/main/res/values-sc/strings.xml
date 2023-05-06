@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Arrastamentu</string>
     <string name="pref_category_advanced">Avantzadas</string>
     <string name="pref_category_about">Informatziones</string>
-    <string name="pref_library_columns">Elementos pro riga</string>
+    <string name="pref_library_columns">Mannària de sa grìllia</string>
     <string name="portrait">Verticale</string>
     <string name="landscape">Orizontale</string>
     <string name="pref_library_update_interval">Agiornamentos automàticos</string>
@@ -118,10 +118,10 @@
     <string name="white_background">Arbu/biancu</string>
     <string name="black_background">Nieddu</string>
     <string name="pref_viewer_type">Modalidade de leghidura predefinida</string>
-    <string name="left_to_right_viewer">Dae manca a destra</string>
-    <string name="right_to_left_viewer">Dae destra a manca</string>
-    <string name="vertical_viewer">Verticale</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Pro pàgina (dae manca a destra)</string>
+    <string name="right_to_left_viewer">Pro pàgina (dae destra a manca)</string>
+    <string name="vertical_viewer">Pro pàgina (verticale)</string>
+    <string name="webtoon_viewer">Verticale longu</string>
     <string name="pager_viewer">Impaginadu</string>
     <string name="pref_image_scale_type">Casta de iscala</string>
     <string name="scale_type_fit_screen">Adata a s\'ischermu</string>
@@ -376,7 +376,7 @@
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
     <string name="webtoon_side_padding_10">10%</string>
-    <string name="vertical_plus_viewer">Verticale sighidu</string>
+    <string name="vertical_plus_viewer">Verticale longu cun interrutziones</string>
     <string name="action_select_inverse">Fùrria s\'ischertada</string>
     <string name="pinned_sources">Apicadu</string>
     <string name="action_unpin">Boga</string>
@@ -649,7 +649,7 @@
     <string name="pref_landscape_zoom">Ismànnia s\'immàgine in orizontale</string>
     <string name="action_display_cover_only_grid">Grìllia cun coberteddas ebbia</string>
     <string name="pref_update_only_started">No incumintzadas</string>
-    <string name="pref_navigate_pan">Iscurre sas pàginas largas tochende·las</string>
+    <string name="pref_navigate_pan">Iscurre sas pàginas largas</string>
     <string name="skipped_reason_completed">Brincadu ca sa sèrie est acabada</string>
     <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
     <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>
@@ -727,7 +727,7 @@
     <string name="crash_screen_restart_application">Torra a allùghere s\'aplicatzione</string>
     <string name="pref_general_summary">Limba de s\'aplicatzione, notìficas</string>
     <string name="pref_appearance_summary">Tema, data e formadu de s\'ora</string>
-    <string name="pref_library_summary">Categorias, agiornamentos globales</string>
+    <string name="pref_library_summary">Categorias, agiornamentos globales, iscurrimentu de capìtulos</string>
     <string name="pref_reader_summary">Modalidade de leghidura, aspetu, navigatzione</string>
     <string name="pref_downloads_summary">Iscarrigamentu automàticu, iscarrigamentu antitzipadu</string>
     <string name="pref_tracking_summary">Sincronizatzione uni-diretzionale de avantzamentu, sincronizatzione megiorada</string>
@@ -774,7 +774,6 @@
     <string name="action_not_now">Como nono</string>
     <string name="information_no_manga_category">Sa categoria est bòida</string>
     <string name="pref_library_update_show_tab_badge">Ammustra su nùmeru de non lèghidos in s\'icona de agiornamentu</string>
-    <string name="pref_worker_info">Informatziones subra de sos protzessos</string>
     <string name="copied_to_clipboard_plain">Copiadu in punta de billete</string>
     <string name="confirm_add_duplicate_manga">Tenes giai un\'elementu in sa biblioteca tua cun su matessi nùmene.
 \n
@@ -792,11 +791,16 @@
     <string name="action_update_category">Agiorna sa categoria</string>
     <string name="split_tall_images">Partzi sas immàgines artas</string>
     <string name="overlay_header">Istratu superiore</string>
-    <string name="missing_chapters_unknown">Diant pòdere mancare capìtulos</string>
     <string name="pref_page_rotate">Gira sas pàginas largas pro las adatare</string>
     <string name="pref_page_rotate_invert">Fùrria s\'orientamentu de sas pàginas largas giradas</string>
     <plurals name="missing_chapters">
         <item quantity="one">Mancat %1$s capìtulu</item>
         <item quantity="other">Mancant %1$s capìtulos</item>
     </plurals>
+    <string name="pref_library_columns_per_row">%d pro riga</string>
+    <string name="pref_double_tap_zoom">Tocu dòpiu pro ismanniare</string>
+    <string name="pref_chapter_swipe_end">Atzione de iscurrimentu a destra</string>
+    <string name="pref_chapter_swipe">Iscurrimentu de capìtulu</string>
+    <string name="pref_chapter_swipe_start">Atzione de iscurrimentu a manca</string>
+    <string name="pref_debug_info">Informatziones de depuratzione de còdighe</string>
 </resources>

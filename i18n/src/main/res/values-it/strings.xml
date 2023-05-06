@@ -58,7 +58,7 @@
     <string name="pref_category_advanced">Avanzate</string>
     <string name="pref_category_about">Info</string>
     <!-- General section -->
-    <string name="pref_library_columns">Elementi per riga</string>
+    <string name="pref_library_columns">Dimensione della griglia</string>
     <string name="portrait">Verticale</string>
     <string name="landscape">Orizzontale</string>
     <string name="pref_library_update_interval">Aggiornamenti automatici</string>
@@ -85,10 +85,10 @@
     <string name="white_background">Bianco</string>
     <string name="black_background">Nero</string>
     <string name="pref_viewer_type">Modalità di lettura predefinita</string>
-    <string name="left_to_right_viewer">Sinistra a destra</string>
-    <string name="right_to_left_viewer">Destra a sinistra</string>
-    <string name="vertical_viewer">Verticale</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Per pagina (da sinistra a destra)</string>
+    <string name="right_to_left_viewer">Per pagina (da destra a sinistra)</string>
+    <string name="vertical_viewer">Per pagina (verticale)</string>
+    <string name="webtoon_viewer">Verticale lungo</string>
     <string name="pref_image_scale_type">Tipo di scala</string>
     <string name="scale_type_fit_screen">Adatta a schermo</string>
     <string name="scale_type_stretch">Riempi schermo</string>
@@ -348,7 +348,7 @@
     <string name="theme_system">Usa il tema di sistema</string>
     <string name="pref_manage_notifications">Gestisci le notifiche</string>
     <string name="pref_category_security">Sicurezza e privacy</string>
-    <string name="lock_with_biometrics">Richiede sblocco</string>
+    <string name="lock_with_biometrics">Richiedi sblocco</string>
     <string name="lock_when_idle">Blocca quando inattivo</string>
     <string name="lock_always">Sempre</string>
     <string name="lock_never">Mai</string>
@@ -419,7 +419,7 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">Nessuno</string>
     <string name="pref_webtoon_side_padding">Riempimento laterale</string>
-    <string name="vertical_plus_viewer">Verticale continuo</string>
+    <string name="vertical_plus_viewer">Verticale lungo con interruzioni</string>
     <string name="action_unpin">Sblocca</string>
     <string name="action_select_inverse">Inverti selezione</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
@@ -520,7 +520,7 @@
     <string name="ext_nsfw_warning">Fonti di questa estensione potrebbero contenere materiale NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Un capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
+        <item quantity="one">%d capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
         <item quantity="many">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
         <item quantity="other">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
     </plurals>
@@ -691,7 +691,7 @@
     <string name="action_faq_and_guides">Domande frequenti e guide</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostra voce</string>
-    <string name="pref_navigate_pan">Scorri le pagine larghe toccando</string>
+    <string name="pref_navigate_pan">Scorri le immagini larghe</string>
     <string name="pref_landscape_zoom">Ingrandisci le immagini orizzontali</string>
     <string name="action_display_cover_only_grid">Griglia con solo copertine</string>
     <string name="pref_update_only_started">Che non sono state iniziate</string>
@@ -772,7 +772,7 @@
     <string name="pref_general_summary">Lingua dell\'app, notifiche</string>
     <string name="pref_appearance_summary">Tema, formato data e ora</string>
     <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di condividere il registro degli arresti anomali nel nostro canale di supporto su Discord.</string>
-    <string name="pref_library_summary">Categorie, aggiornamenti globali</string>
+    <string name="pref_library_summary">Categorie, aggiornamenti globali, azioni di scorrimento capitoli</string>
     <string name="pref_downloads_summary">Download automatico, download anticipato</string>
     <string name="pref_browse_summary">Fonti, estensioni, ricerca globale</string>
     <string name="pref_reader_summary">Modalità di lettura, aspetto, navigazione</string>
@@ -820,7 +820,6 @@
     <string name="action_not_now">Non ora</string>
     <string name="information_no_manga_category">La categoria è vuota</string>
     <string name="pref_library_update_show_tab_badge">Mostra il numero dei capitoli non letti nell\'icona Novità</string>
-    <string name="pref_worker_info">Informazioni sui processi</string>
     <string name="copied_to_clipboard_plain">Copiato negli appunti</string>
     <string name="enhanced_services_not_installed">Disponibile ma la fonte non è installata: %s</string>
     <string name="pref_skip_dupe_chapters">Salta i capitoli duplicati</string>
@@ -846,5 +845,10 @@
         <item quantity="many">Mancano %1$s capitoli</item>
         <item quantity="other">Mancano %1$s capitoli</item>
     </plurals>
-    <string name="missing_chapters_unknown">Potrebbero mancare alcuni capitoli</string>
+    <string name="pref_debug_info">Informazioni di debug</string>
+    <string name="pref_chapter_swipe">Scorrimento capitolo</string>
+    <string name="pref_double_tap_zoom">Doppio tocco per ingrandire</string>
+    <string name="pref_chapter_swipe_end">Azione di scorrimento a destra</string>
+    <string name="pref_chapter_swipe_start">Azione di scorrimento a sinistra</string>
+    <string name="pref_library_columns_per_row">%d per riga</string>
 </resources>

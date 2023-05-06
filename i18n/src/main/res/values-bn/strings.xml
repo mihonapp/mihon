@@ -2,7 +2,7 @@
 <resources>
     <string name="name">নাম</string>
     <string name="categories">বিভাগসমূহ</string>
-    <string name="manga">মাঙ্গা</string>
+    <string name="manga">পুস্তক সংগ্রহ</string>
     <string name="chapters">অধ্যায়সমূহ</string>
     <string name="track">ট্র্যাকিং</string>
     <string name="history">ইতিহাস</string>
@@ -602,7 +602,7 @@
     <string name="action_start_downloading_now">এখনই ডাউনলোড শুরু করুন</string>
     <string name="action_show_errors">সকল ত্রুটি দেখুন</string>
     <string name="cancel_all_for_series">এই সিরিজের সব বাতিল করুন</string>
-    <string name="action_display_local_badge">স্থানীয় মাঙ্গা</string>
+    <string name="action_display_local_badge">স্থানীয় উৎস</string>
     <string name="information_empty_category_dialog">আপনার এখনও কোন বিভাগ নেই |</string>
     <string name="update_check_eol">এই অ্যান্ড্রয়েড সংস্করণটি আর সমর্থিত নয়</string>
     <string name="confirm_lock_change">পরিবর্তন নিশ্চিত করতে প্রমাণীকরণ করুন</string>
@@ -623,7 +623,7 @@
     <string name="help_translate">অনুবাদে সাহায্য করুন</string>
     <string name="ext_installer_shizuku_unavailable_dialog">এক্সটেনশন ইনস্টলার হিসাবে Shizuku ব্যবহার করতে Shizuku ইনস্টল করুন এবং শুরু করুন।</string>
     <string name="pref_tablet_ui_mode">তাব্লেত উই</string>
-    <string name="action_sort_count">মোট মাঙ্গা</string>
+    <string name="action_sort_count">মোট লেখা</string>
     <string name="label_warning">সতর্কতা</string>
     <string name="action_display_language_badge">ভাষা</string>
     <string name="update_72hour">প্রতি ৩ দিন</string>
@@ -652,7 +652,7 @@
     </plurals>
     <string name="action_sort_unread_count">অপঠিত সংখ্যা</string>
     <string name="action_remove_everything">সবকিছু মুছুন</string>
-    <string name="action_show_manga">মাঙ্গা দেখান</string>
+    <string name="action_show_manga">লেখা দেখান</string>
     <string name="delete_category">বিভাগ মুছুন</string>
     <string name="theme_lavender">ল্যাভেণ্ডার</string>
     <string name="action_search_hint">খুঁজুন…</string>
@@ -682,4 +682,18 @@
     <string name="loader_rar5_error">RARv5 ধরন সমর্থিত নয়</string>
     <string name="skipped_reason_not_caught_up">অপঠিত অধ্যায় থাকায় এড়িয়ে যাওয়া হয়েছে</string>
     <string name="label_local">স্থানীয়</string>
+    <string name="action_copy_to_clipboard">ক্লিপবোর্ডে কপি করুন</string>
+    <string name="pref_reset_viewer_flags_success">সমস্ত পাঠক সেটিংস আবার</string>
+    <string name="label_stats">পরিসংখ্যান</string>
+    <string name="label_downloaded">ডাউনলোড হয়েছে</string>
+    <string name="label_started">শুরু হয়েছে</string>
+    <string name="appwidget_unavailable_locked">অ্যাপ লক চালু থাকলে Widget পাওয়া যায় না</string>
+    <string name="action_update_category">বিভাগ আপডেট করুন</string>
+    <string name="action_open_random_manga">এলোমেলো এন্ট্রি খুলুন</string>
+    <string name="action_display_show_continue_reading_button">পড়া চালিয়ে যান বোতাম</string>
+    <string name="download_notifier_cache_renewal">ডাউনলোড চেক করা হচ্ছে</string>
+    <string name="download_notifier_split_page_path_not_found">পৃষ্ঠার ফাইল পাথ খুঁজে পাওয়া যায়নি %d</string>
+    <string name="pref_invalidate_download_cache">অবৈধ ডাউনলোড সমুহ</string>
+    <string name="action_not_now">এখন না</string>
+    <string name="pref_debug_info">ডিবাগ তথ্য</string>
 </resources>

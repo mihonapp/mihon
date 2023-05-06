@@ -61,7 +61,7 @@
     <string name="pref_category_advanced">Avancé</string>
     <string name="pref_category_about">À propos</string>
     <!-- General section -->
-    <string name="pref_library_columns">Nombre d\'éléments par ligne</string>
+    <string name="pref_library_columns">Nombre de colonnes</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
     <string name="pref_library_update_interval">Mises à jour automatiques</string>
@@ -88,10 +88,10 @@
     <string name="white_background">Blanc</string>
     <string name="black_background">Noir</string>
     <string name="pref_viewer_type">Mode de lecture par défaut</string>
-    <string name="left_to_right_viewer">De gauche à droite</string>
-    <string name="right_to_left_viewer">De droite à gauche</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Pages (gauche à droite)</string>
+    <string name="right_to_left_viewer">Pages (droite à gauche)</string>
+    <string name="vertical_viewer">Pages (vertical)</string>
+    <string name="webtoon_viewer">Bande continue</string>
     <string name="pref_image_scale_type">Type de mise à l\'échelle</string>
     <string name="scale_type_fit_screen">Adapter à l\'écran</string>
     <string name="scale_type_stretch">Étirer</string>
@@ -413,7 +413,7 @@
     <string name="webtoon_side_padding_10">10 %</string>
     <string name="webtoon_side_padding_0">Aucun</string>
     <string name="pref_category_reading">En cours</string>
-    <string name="vertical_plus_viewer">Vertical continu</string>
+    <string name="vertical_plus_viewer">Bande continue avec espaces</string>
     <string name="pref_skip_filtered_chapters">Passer les chapitres filtrés</string>
     <string name="action_pin">Épingler</string>
     <string name="action_select_inverse">Inverser la sélection</string>
@@ -693,7 +693,7 @@
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="action_show_manga">Afficher le titre</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
-    <string name="pref_navigate_pan">Panoramique des images larges en appuyant</string>
+    <string name="pref_navigate_pan">Panoramique des images larges</string>
     <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
     <string name="skipped_reason_completed">Sauté car la série est terminée</string>
@@ -779,7 +779,7 @@
     <string name="crash_screen_restart_application">Redémarrer l\'application</string>
     <string name="pref_general_summary">Langage d\'application, notifications</string>
     <string name="pref_browse_summary">Sources, extensions, recherche globale</string>
-    <string name="pref_library_summary">Catégories, mise à jour globale</string>
+    <string name="pref_library_summary">Catégories, mise à jour globale, glissement de chapitre</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>
     <string name="pref_security_summary">Verrouillage des applications, écran sécurisé</string>
     <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de nous partager les rapports de plantage dans notre salon d\'assistance sur Discord.</string>
@@ -829,7 +829,6 @@
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
-    <string name="pref_worker_info">Infos sur les processus</string>
     <string name="pref_hide_in_library_items">Masquer les entrées déjà présentes dans la bibliothèque</string>
     <plurals name="download_amount">
         <item quantity="one">Chapitre suivant</item>
@@ -845,7 +844,12 @@
         <item quantity="many">%1$s chapitres manquants</item>
         <item quantity="other">%1$s chapitres manquants</item>
     </plurals>
-    <string name="missing_chapters_unknown">Il pourrait manquer des chapitres</string>
     <string name="pref_page_rotate_invert">Inverser l\'orientation des pages larges retournées</string>
     <string name="pref_page_rotate">Tourner les pages larges pour qu\'elles rentrent</string>
+    <string name="pref_debug_info">Informations de débogage</string>
+    <string name="pref_chapter_swipe_start">Action de Glisser vers la gauche</string>
+    <string name="pref_library_columns_per_row">%d par ligne</string>
+    <string name="pref_chapter_swipe">Glissement de chapitre</string>
+    <string name="pref_chapter_swipe_end">Action de Glisser vers la droite</string>
+    <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
 </resources>

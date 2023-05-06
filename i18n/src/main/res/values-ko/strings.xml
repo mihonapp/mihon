@@ -64,7 +64,7 @@
     <string name="pref_category_tracking">동기화</string>
     <string name="pref_category_advanced">고급</string>
     <string name="pref_category_about">정보</string>
-    <string name="pref_library_columns">서재 정렬</string>
+    <string name="pref_library_columns">격자 크기</string>
     <string name="label_migration">데이터 이전</string>
     <string name="label_extensions">확장기능</string>
     <string name="label_extension_info">확장기능 정보</string>
@@ -108,9 +108,9 @@
     <string name="pref_read_with_volume_keys">볼륨 키</string>
     <string name="pref_read_with_volume_keys_inverted">볼륨 키 뒤바꾸기</string>
     <string name="pref_viewer_type">기본 읽기 모드</string>
-    <string name="left_to_right_viewer">왼쪽에서 오른쪽</string>
-    <string name="right_to_left_viewer">오른쪽에서 왼쪽</string>
-    <string name="vertical_viewer">수직</string>
+    <string name="left_to_right_viewer">페이지 (왼쪽에서 오른쪽)</string>
+    <string name="right_to_left_viewer">페이지 (오른쪽에서 왼쪽)</string>
+    <string name="vertical_viewer">페이지 (수직)</string>
     <string name="webtoon_viewer">웹툰</string>
     <string name="scale_type_stretch">늘리기</string>
     <string name="scale_type_fit_width">가로 맞추기</string>
@@ -530,7 +530,7 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare를 통과하지 못했습니다</string>
     <string name="information_webview_required">Tachiyomi를 사용하려면 WebView가 필요합니다</string>
     <string name="information_webview_outdated">호환성을 위해 WebView 어플리케이션을 업데이트 해 주세요</string>
-    <string name="pref_navigate_pan">탭 하여 넓은 이미지 이동</string>
+    <string name="pref_navigate_pan">넓은 이미지 이동</string>
     <string name="obsolete_extension_message">이 확장 프로그램은 더 이상 사용할 수 없습니다. 제대로 작동하지 않을 수 있으며 앱에 문제가 발생할 수 있습니다. 제거하는 것이 좋습니다.</string>
     <string name="ext_install_service_notif">확장기능 설치 중…</string>
     <string name="ext_installer_legacy">레거시</string>
@@ -711,7 +711,7 @@
     <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>
     <string name="action_search_hint">검색…</string>
     <string name="pref_general_summary">앱 언어, 알림</string>
-    <string name="pref_library_summary">카테고리, 전역 업데이트</string>
+    <string name="pref_library_summary">카테고리, 전역 업데이트, 회차 스와이프</string>
     <string name="pref_reader_summary">읽기 모드, 디스플레이, 탐색</string>
     <string name="pref_tracking_summary">단방향 진행 동기화, 향상된 동기화</string>
     <string name="pref_browse_summary">소스, 확장 기능, 전체 검색</string>
@@ -762,7 +762,6 @@
     <string name="pref_library_update_show_tab_badge">업데이트 아이콘에 읽지 않은 수 표시</string>
     <string name="information_no_manga_category">카테고리가 비어 있습니다</string>
     <string name="copied_to_clipboard_plain">클립보드에 복사됨</string>
-    <string name="pref_worker_info">worker 정보</string>
     <string name="enhanced_services_not_installed">사용 가능하지만 소스가 설치되지 않음: %s</string>
     <string name="pref_skip_dupe_chapters">중복 회차 건너뛰기</string>
     <string name="track_error">%1$s 오류: %2$s</string>
@@ -780,8 +779,13 @@
     <string name="overlay_header">오버레이</string>
     <string name="pref_page_rotate">화면에 맞게 넓은 페이지 회전</string>
     <string name="pref_page_rotate_invert">회전된 넓은 페이지의 회전 방향</string>
-    <string name="missing_chapters_unknown">챕터가 누락되었을 수 있습니다</string>
     <plurals name="missing_chapters">
         <item quantity="other">누락된 회차 %1$s개</item>
     </plurals>
+    <string name="pref_debug_info">디버그 정보</string>
+    <string name="pref_library_columns_per_row">행당 %d개</string>
+    <string name="pref_chapter_swipe_start">왼쪽으로 스와이프 액션</string>
+    <string name="pref_chapter_swipe_end">오른쪽으로 스와이프 액션</string>
+    <string name="pref_chapter_swipe">회차 스와이프</string>
+    <string name="pref_double_tap_zoom">두 번 탭하여 줌</string>
 </resources>

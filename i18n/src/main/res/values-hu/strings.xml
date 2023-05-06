@@ -743,4 +743,42 @@
     </plurals>
     <string name="pref_browse_summary">Források, bővítmények, globális keresés</string>
     <string name="action_copy_to_clipboard">Másolás a vágólapra</string>
+    <string name="action_update_category">Kategória frissítése</string>
+    <string name="copied_to_clipboard_plain">Vágólapra másolva</string>
+    <string name="confirm_add_duplicate_manga">Van már ilyen nevű ... a könyvtáradban.
+\n
+\nBiztos folytatni akarod\?</string>
+    <string name="track_remove_start_date_conf_text">Ez eltávolítja az eddig kiválasztott kezdeti dátumot a/az %s</string>
+    <string name="fdroid_warning">F-Droid csomagok nem hivatalosan támogatottak.
+\nKattincs további információért.</string>
+    <string name="label_completed_titles">Befejezett olvasmányok</string>
+    <string name="crash_screen_title">Hoppá!</string>
+    <string name="enhanced_services_not_installed">Elérhető de a forrás nincs telepítve: %s</string>
+    <string name="missing_storage_permission">Tárhely engedély nincs megadva</string>
+    <plurals name="download_amount">
+        <item quantity="one">Következő fejezet</item>
+        <item quantity="other">Következő %d fejezetek</item>
+    </plurals>
+    <string name="label_used">Használt</string>
+    <string name="track_error">%1$s error: %2$s</string>
+    <string name="are_you_sure">Biztos vagy benne\?</string>
+    <string name="information_no_manga_category">Kategória üres</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Hiányzó %1$s fejezet</item>
+        <item quantity="other">Hiányzó %1$s fejezetek</item>
+    </plurals>
+    <string name="track_remove_finish_date_conf_text">Ez eltávolítja az eddig kiválasztott befejezési dátumot a/az %s</string>
+    <string name="label_read_duration">Olvasási idő</string>
+    <string name="information_no_entries_found">Nem található bejegyzés ebben a kategóriában</string>
+    <string name="remove_manga">A/az \"%s\"-t elfogod távolítani a könyvtáradból</string>
+    <string name="updates_last_update_info_just_now">Éppen most</string>
+    <string name="download_notifier_cache_renewal">Letöltések ellenőrzése</string>
+    <string name="pref_debug_info">Debug információ</string>
+    <string name="popular">Felkapott</string>
+    <string name="update_already_running">A frissités már folyamatban van</string>
+    <string name="crash_screen_description">%s hibába ütközött. A hiba üzenetet kérünk oszd meg velünk a Discord szerverünkön.</string>
+    <string name="track_remove_date_conf_title">Dátum eltávolítása\?</string>
+    <string name="crash_screen_restart_application">Applikáció újrainditása</string>
+    <string name="label_titles_in_global_update">Globális frissités</string>
+    <string name="information_required_plain">*kötelező</string>
 </resources>

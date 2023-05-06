@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">Sinkronisasi</string>
     <string name="pref_category_advanced">Lanjutan</string>
     <string name="pref_category_about">Tentang</string>
-    <string name="pref_library_columns">Item per baris</string>
+    <string name="pref_library_columns">Ukuran kisi</string>
     <string name="portrait">Layar tegak</string>
     <string name="landscape">Layar mendatar</string>
     <string name="pref_library_update_interval">Pembaruan otomatis</string>
@@ -94,10 +94,10 @@
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
     <string name="pref_viewer_type">Mode baca bawaan</string>
-    <string name="left_to_right_viewer">Kiri ke kanan</string>
-    <string name="right_to_left_viewer">Kanan ke kiri</string>
-    <string name="vertical_viewer">Tegak</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Halaman (kiri ke kanan)</string>
+    <string name="right_to_left_viewer">Halaman (kanan ke kiri)</string>
+    <string name="vertical_viewer">Halaman (vertikal)</string>
+    <string name="webtoon_viewer">Strip panjang</string>
     <string name="pref_image_scale_type">Tipe skala</string>
     <string name="scale_type_fit_screen">Pas layar</string>
     <string name="scale_type_stretch">Rentangkan</string>
@@ -387,7 +387,7 @@
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
-    <string name="vertical_plus_viewer">Tegak kontinu</string>
+    <string name="vertical_plus_viewer">Strip panjang dengan celah</string>
     <string name="local_source_help_guide">Petunjuk sumber lokal</string>
     <string name="last_used_source">Terakhir digunakan</string>
     <plurals name="download_queue_summary">
@@ -640,7 +640,7 @@
     <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Perbesar gambar lanskap</string>
-    <string name="pref_navigate_pan">Geser gambar lebar saat mengetuk</string>
+    <string name="pref_navigate_pan">Geser gambar lebar</string>
     <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
     <string name="channel_skipped">Terlewat</string>
@@ -718,7 +718,7 @@
     <string name="pref_security_summary">Kunci aplikasi, layar aman</string>
     <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>
     <string name="pref_appearance_summary">Tema, format tanggal &amp; waktu</string>
-    <string name="pref_library_summary">Kategori, pembaruan global</string>
+    <string name="pref_library_summary">Kategori, pembaruan global, geser chapter</string>
     <string name="pref_backup_summary">Pencadangan manual &amp; otomatis</string>
     <string name="pref_advanced_summary">Buat log kerusakan, pengoptimalan baterai</string>
     <string name="crash_screen_title">Aduh!</string>
@@ -762,7 +762,6 @@
     <string name="pref_library_update_show_tab_badge">Tampilkan jumlah yang belum dibaca pada ikon Pembaruan</string>
     <string name="information_no_manga_category">Kategori ini kosong</string>
     <string name="copied_to_clipboard_plain">Tersalin di papan klip</string>
-    <string name="pref_worker_info">Informasi pekerja</string>
     <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak terpasang: %s</string>
     <string name="pref_skip_dupe_chapters">Melewati bab terduplikasi</string>
     <string name="confirm_add_duplicate_manga">Kamu memiliki entri di pustaka dengan nama yang sama.
@@ -783,5 +782,10 @@
     <plurals name="missing_chapters">
         <item quantity="other">Bab %1$s yang hilang</item>
     </plurals>
-    <string name="missing_chapters_unknown">Mungkin ada bab yang terlewat</string>
+    <string name="pref_debug_info">Info debug</string>
+    <string name="pref_chapter_swipe">Geser chapter</string>
+    <string name="pref_chapter_swipe_end">Geser kekanan</string>
+    <string name="pref_chapter_swipe_start">Geser kekiri</string>
+    <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
+    <string name="pref_library_columns_per_row">%d per baris</string>
 </resources>

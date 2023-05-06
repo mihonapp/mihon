@@ -100,11 +100,11 @@
     <string name="white_background">白</string>
     <string name="black_background">ブラック</string>
     <string name="pref_viewer_type">既定のビューアモード</string>
-    <string name="left_to_right_viewer">左から右</string>
-    <string name="right_to_left_viewer">右から左</string>
-    <string name="vertical_viewer">縦反転</string>
-    <string name="webtoon_viewer">Webtoon</string>
-    <string name="pager_viewer">ページの表示</string>
+    <string name="left_to_right_viewer">ページに分ける（左から右）</string>
+    <string name="right_to_left_viewer">ページに分ける（右から左）</string>
+    <string name="vertical_viewer">ページに分ける（上から下）</string>
+    <string name="webtoon_viewer">縦長のストリップ</string>
+    <string name="pager_viewer">ページに分ける</string>
     <string name="pref_image_scale_type">スケールの種類</string>
     <string name="scale_type_fit_screen">画面サイズに合わせる</string>
     <string name="scale_type_stretch">ストレッチ</string>
@@ -365,8 +365,8 @@
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
     <string name="pref_always_show_chapter_transition">章の間の遷移ページを常に表示</string>
-    <string name="vertical_plus_viewer">上から下へ（連続）</string>
-    <string name="gray_background">灰色</string>
+    <string name="vertical_plus_viewer">ギャップ付き縦長のストリップ</string>
+    <string name="gray_background">グレー</string>
     <string name="pref_skip_filtered_chapters">フィルターされた章をスキップ</string>
     <string name="filter_mode_darken">焼き込み/比較（暗）</string>
     <string name="filter_mode_lighten">覆い焼き/比較（明）</string>
@@ -381,7 +381,7 @@
     </plurals>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>
     <string name="pref_library_update_refresh_metadata">メタデータを自動で更新</string>
-    <string name="pref_library_columns">行あたりの項目数</string>
+    <string name="pref_library_columns">グリッドの項目数</string>
     <string name="pref_category_display">画面</string>
     <string name="hide_notification_content">通知内容を非表示</string>
     <string name="secure_screen_summary">セキュア画面はアプリを切り替える時アプリの内容を非表示し、画面キャプチャを無効化します</string>
@@ -640,7 +640,7 @@
     <string name="pref_landscape_zoom">横長の画像をズーム</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
-    <string name="pref_navigate_pan">タップで幅広い画像を左右に移動</string>
+    <string name="pref_navigate_pan">幅広い画像を左右に移動</string>
     <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
     <string name="learn_more">タップでもっと詳しく</string>
     <string name="channel_skipped">スキップ済み</string>
@@ -726,7 +726,7 @@
     <string name="pref_security_summary">アプリロック、セキュア画面</string>
     <string name="pref_advanced_summary">クラッシュ ログのダンプ、バッテリーの最適化</string>
     <string name="pref_appearance_summary">テーマ、日付と時刻の形式</string>
-    <string name="pref_library_summary">カテゴリ、グローバル アップデート</string>
+    <string name="pref_library_summary">カテゴリ、グローバル アップデート、章の間のスワイプ</string>
     <string name="action_open_random_manga">おまかせ閲覧</string>
     <string name="information_no_entries_found">このカテゴリに項目がありません</string>
     <string name="download_notifier_cache_renewal">ダウンロード内容を検査しています</string>
@@ -761,7 +761,6 @@
     <string name="action_not_now">後で</string>
     <string name="information_no_manga_category">カテゴリが空です</string>
     <string name="pref_library_update_show_tab_badge">アップデートアイコンに未読メッセージの件数を表示</string>
-    <string name="pref_worker_info">ワーカースレッドの情報</string>
     <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
     <string name="enhanced_services_not_installed">利用可能ですが、ソースがインストールされていません: %s</string>
     <string name="pref_skip_dupe_chapters">重複の章をスキップ</string>
@@ -783,5 +782,10 @@
     <plurals name="missing_chapters">
         <item quantity="other">%1$s章が欠けています</item>
     </plurals>
-    <string name="missing_chapters_unknown">一部の章が足りない可能性あり</string>
+    <string name="pref_debug_info">デバッグ情報</string>
+    <string name="pref_chapter_swipe_start">左へスワイプ時の操作</string>
+    <string name="pref_chapter_swipe_end">右へスワイプ時の操作</string>
+    <string name="pref_library_columns_per_row">列あたり%d件の項目</string>
+    <string name="pref_chapter_swipe">章の間のスワイプ</string>
+    <string name="pref_double_tap_zoom">ダブルタップでズーム</string>
 </resources>

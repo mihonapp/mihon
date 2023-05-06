@@ -773,7 +773,6 @@
         <item quantity="one">Trūkst %1$s nodaļa</item>
         <item quantity="other">Trūkst %1$s nodaļas</item>
     </plurals>
-    <string name="missing_chapters_unknown">Iespējams, trūkst nodaļu</string>
     <plurals name="download_amount">
         <item quantity="zero">Nākošā %d nodaļa</item>
         <item quantity="one">Nākošā %d nodaļa</item>
@@ -795,7 +794,6 @@
         <item quantity="one">Nākamā nelasītā nodaļa</item>
         <item quantity="other">Nākamās %d nelasītas nodaļas</item>
     </plurals>
-    <string name="pref_worker_info">Worker info</string>
     <string name="action_not_now">Ne tagad</string>
     <string name="action_search_hint">Meklē…</string>
     <string name="fdroid_warning">F-Droid versijas netiek oficiāli atbalstītas.

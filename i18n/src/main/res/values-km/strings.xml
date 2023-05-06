@@ -10,7 +10,7 @@
     <string name="track">ការតាមដានការអាន</string>
     <string name="label_sources">ប្រភព</string>
     <string name="label_recent_manga">ប្រវត្តិ</string>
-    <string name="action_sort_alpha">តម្រៀបតាមអក្សរ</string>
+    <string name="action_sort_alpha">តម្រៀបតាមអក្ខរក្រម</string>
     <string name="name">ឈ្មោះ</string>
     <string name="categories">ការតម្រៀបថ្នាក់</string>
     <string name="history">ប្រវត្តិ</string>
@@ -21,7 +21,7 @@
     <string name="label_migration">ផ្លាស់ប្ដូរ</string>
     <string name="label_extensions">ប្រភពម៊េងហ្គា</string>
     <string name="label_help">ជំនួយ</string>
-    <string name="label_default">ធម្មតា</string>
+    <string name="label_default">លំនាំដើម</string>
     <string name="unlock_app">បើកតាឈិយ៉ូមិ</string>
     <string name="action_filter">ហ្វីលធឺ</string>
     <string name="action_filter_bookmarked">បានបញ្ចូលទៅក្នុងបណ្ណាល័យ</string>
@@ -30,7 +30,7 @@
     <string name="action_sort_count">ចំនួនម៊េងហ្គាទាំងអស់</string>
     <string name="action_sort_total">ចំនួនភាគទាំងអស់</string>
     <string name="action_sort_chapter_fetch_date">ថ្ងៃខែដែលបានកែប្រែ</string>
-    <string name="action_sort_date_added">បានបញ្ចូលទោបណ្ណាល័យនៅថ្ងៃខែ</string>
+    <string name="action_sort_date_added">បានបញ្ចូលតាមកាលបរិច្ឆេទ</string>
     <string name="action_global_search">ស្វែងរកជាសកល</string>
     <string name="action_select_inverse">ជ្រើសរើសផ្ទុយ</string>
     <string name="action_mark_as_read">បញ្ជាក់ថាបានអាន</string>
@@ -77,7 +77,7 @@
     <string name="information_empty_category">អ្នកពុំមានការទម្រៀបម៊េងហ្គាឡើយ។ ចុចប៊ូតុងសញ្ញាបូកដើម្បីទម្រៀបម៊េងហ្គាសម្រាប់បណ្ណាល័យរបស់អ្នក។</string>
     <string name="manga">ម៊េងហ្គា</string>
     <string name="confirm_lock_change">Authenticateដើម្បីបញ្ចាក់ពីការកែប្រែ</string>
-    <string name="confirm_exit">ថយម្ដងទៀតដើម្បីចេញ</string>
+    <string name="confirm_exit">ចុចថយម្ដងទៀតដើម្បីចេញ</string>
     <string name="action_settings">ការកំណត់</string>
     <string name="action_menu">កន្លែងកំណត់</string>
     <string name="action_mark_previous_as_read">បញ្ចាក់ភាគមុនថាបានអាន</string>
@@ -140,7 +140,7 @@
     <string name="pref_date_format">ទម្រង់ថ្ងៃខែ</string>
     <string name="pref_confirm_exit">បញ្ចាក់ការចាកចេញ</string>
     <string name="pref_manage_notifications">កំណត់ការជូនដំណឹង</string>
-    <string name="pref_category_security">សន្តិសុខ</string>
+    <string name="pref_category_security">សន្តិសុខនិងឯកជនភាព</string>
     <string name="lock_with_biometrics">ត្រូវការការបើកសោ</string>
     <string name="lock_when_idle">ចាក់សោនៅពេលមិនធ្វើអ្វី</string>
     <string name="lock_always">គ្រប់ពេល</string>
@@ -196,4 +196,10 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">%d ភាគបន្ទាប់ដែលមិនទាន់អាន</item>
     </plurals>
+    <string name="update_check_notification_download_in_progress">កំពុងទាញយក…</string>
+    <string name="label_stats">ស្ថិតិ</string>
+    <string name="label_downloaded">បានទាញយក</string>
+    <string name="information_cloudflare_bypass_failure">បរាជ័យក្នុងការឆ្លងកាត់Cloudflare</string>
+    <string name="action_search_hint">ស្វែងរក…</string>
+    <string name="notification_new_chapters">មានភាគថ្មី</string>
 </resources>

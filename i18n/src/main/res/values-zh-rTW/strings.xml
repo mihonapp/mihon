@@ -174,10 +174,10 @@
     <string name="white_background">白色</string>
     <string name="black_background">黑色</string>
     <string name="pref_viewer_type">預設閱讀模式</string>
-    <string name="left_to_right_viewer">由左至右</string>
-    <string name="right_to_left_viewer">由右至左</string>
-    <string name="vertical_viewer">由上至下</string>
-    <string name="webtoon_viewer">Webtoon 模式</string>
+    <string name="left_to_right_viewer">單頁式 (由左至右)</string>
+    <string name="right_to_left_viewer">單頁式 (由右至左)</string>
+    <string name="vertical_viewer">單頁式 (由上至下)</string>
+    <string name="webtoon_viewer">捲動式</string>
     <string name="pager_viewer">單頁式</string>
     <string name="pref_image_scale_type">縮放模式</string>
     <string name="scale_type_fit_screen">符合螢幕</string>
@@ -420,7 +420,7 @@
     <string name="tapping_inverted_horizontal">水平</string>
     <string name="pref_read_with_tapping_inverted">反轉輕觸區域</string>
     <string name="notification_check_updates">正在檢查是否有新章節</string>
-    <string name="vertical_plus_viewer">垂直連貫</string>
+    <string name="vertical_plus_viewer">捲動式 (頁間留空)</string>
     <string name="tapping_inverted_none">無</string>
     <plurals name="restore_completed_message">
         <item quantity="other">歷時 %1$s，出現 %2$s 個錯誤</item>
@@ -721,7 +721,7 @@
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
     <string name="crash_screen_title">哎呀！</string>
     <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你將當機記錄分享至我們位於 Discord 上的 support 頻道。</string>
-    <string name="pref_library_summary">類別、全域更新</string>
+    <string name="pref_library_summary">類別、全域更新、目錄滑動動作</string>
     <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
     <string name="invalid_location">無效的位置：%s</string>
     <string name="unknown_title">未知的標題</string>
@@ -762,7 +762,6 @@
     <string name="information_no_manga_category">類別尚無作品</string>
     <string name="pref_library_update_show_tab_badge">在「新刊」導覽圖示上標記未讀章數</string>
     <string name="copied_to_clipboard_plain">已複製到剪貼簿</string>
-    <string name="pref_worker_info">工作站資訊</string>
     <string name="pref_skip_dupe_chapters">略過重複的章節</string>
     <string name="enhanced_services_not_installed">可供使用但來源尚未安裝：%s</string>
     <string name="confirm_add_duplicate_manga">書櫃中已有同名作品。
@@ -778,10 +777,14 @@
     <string name="action_update_category">更新類別</string>
     <string name="split_tall_images">分割過高的圖片</string>
     <string name="overlay_header">封面附加元素</string>
-    <string name="missing_chapters_unknown">部分章節可能缺漏</string>
     <plurals name="missing_chapters">
         <item quantity="other">缺漏 %1$s 章</item>
     </plurals>
     <string name="pref_page_rotate">旋轉寬頁以符合螢幕</string>
     <string name="pref_page_rotate_invert">調換旋轉寬頁方向</string>
+    <string name="pref_debug_info">偵錯資訊</string>
+    <string name="pref_chapter_swipe_start">向左滑動</string>
+    <string name="pref_double_tap_zoom">輕觸兩下以縮放</string>
+    <string name="pref_chapter_swipe_end">向右滑動</string>
+    <string name="pref_chapter_swipe">目錄滑動動作</string>
 </resources>

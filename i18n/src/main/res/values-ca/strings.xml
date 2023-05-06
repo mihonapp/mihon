@@ -783,7 +783,6 @@
     <string name="label_used">En ús</string>
     <string name="not_applicable">N/A</string>
     <string name="day_short">%dd</string>
-    <string name="pref_worker_info">Informació dels fils d\'execució</string>
     <string name="hour_short">%dh</string>
     <string name="minute_short">%dm</string>
     <string name="seconds_short">%ds</string>

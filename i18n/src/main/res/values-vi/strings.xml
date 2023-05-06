@@ -809,12 +809,10 @@
     <string name="pref_page_rotate">Quay những trang rộng để vừa màn hình</string>
     <string name="pref_page_rotate_invert">Lật hướng của các trang rộng đã xoay</string>
     <string name="overlay_header">Phủ lên</string>
-    <string name="missing_chapters_unknown">Có thể đang thiếu chương</string>
     <plurals name="missing_chapters">
         <item quantity="other">Đang thiếu %1$s</item>
     </plurals>
     <string name="track_remove_date_conf_title">Loại bỏ ngày\?</string>
-    <string name="pref_worker_info">Thông tin worker</string>
     <string name="track_error">%1$s Lỗi: %2$s</string>
     <string name="not_applicable">N/A</string>
     <string name="information_required_plain">*bắt buộc</string>

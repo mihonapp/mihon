@@ -297,7 +297,6 @@
     <string name="pref_dump_crash_logs_summary">Garda os rexistros de erros nun ficheiro para compartilo cos desenvolvedores</string>
     <string name="pref_disable_battery_optimization_summary">Fai que funcionen mellor as actualizacións e as copias de seguridade que se fagan en segundo plano</string>
     <string name="check_for_updates">Procurar actualizacións</string>
-    <string name="pref_worker_info">Detalles sobre procesos</string>
     <string name="licenses">Licenzas de código aberto</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="updated_version">Actualizado a v%1$s</string>
@@ -795,7 +794,6 @@
         <item quantity="one">Falta %1$s capítulo</item>
         <item quantity="other">Faltan %1$s capítulos</item>
     </plurals>
-    <string name="missing_chapters_unknown">Pode que falte algún capítulo</string>
     <string name="pref_page_rotate">Xirar as páxinas anchas para adaptalas á pantalla</string>
     <string name="pref_page_rotate_invert">Voltear a orientación das páxinas anchas xiradas</string>
     <string name="overlay_header">Superposición</string>

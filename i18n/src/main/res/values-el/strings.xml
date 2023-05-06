@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Παρακολούθηση</string>
     <string name="pref_category_advanced">Για προχωρημένους</string>
     <string name="pref_category_about">Περί</string>
-    <string name="pref_library_columns">Στοιχεία ανά σειρά</string>
+    <string name="pref_library_columns">Μέγεθος πλέγματος</string>
     <string name="portrait">Κατακόρυφα</string>
     <string name="landscape">Οριζόντια</string>
     <string name="pref_library_update_interval">Αυτόματες ενημερώσεις</string>
@@ -117,10 +117,10 @@
     <string name="white_background">Άσπρο</string>
     <string name="black_background">Μαύρο</string>
     <string name="pref_viewer_type">Προεπιλεγμένη λειτουργία ανάγνωσης</string>
-    <string name="left_to_right_viewer">Αριστερά προς τα δεξιά</string>
-    <string name="right_to_left_viewer">Δεξιά προς τα αριστερά</string>
-    <string name="vertical_viewer">Κάθετα</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Σελιδοποιημένο (από αριστερά προς τα δεξιά)</string>
+    <string name="right_to_left_viewer">Σελιδοποιημένο (από δεξιά προς τα αριστερά)</string>
+    <string name="vertical_viewer">Σελιδοποιημένο (κατακόρυφα)</string>
+    <string name="webtoon_viewer">Μακριά λωρίδα</string>
     <string name="pager_viewer">Σελιδοποίηση</string>
     <string name="pref_image_scale_type">Τύπος κλίμακας</string>
     <string name="scale_type_fit_screen">Προσαρμογή στην οθόνη</string>
@@ -359,7 +359,7 @@
     <string name="pref_webtoon_side_padding">Πλευρικό γέμισμα</string>
     <string name="pref_category_reading">Ανάγνωση</string>
     <string name="pref_always_show_chapter_transition">Να εμφανίζεται πάντα η μετάβαση κεφαλαίου</string>
-    <string name="vertical_plus_viewer">Συνεχής κατακόρυφος</string>
+    <string name="vertical_plus_viewer">Μακριά λωρίδα με κενά</string>
     <string name="pref_skip_filtered_chapters">Παράλειψη φιλτραρισμένων κεφαλαίων</string>
     <string name="pref_cutout_short">Εμφάνιση περιεχομένου στην περιοχή αποκοπής</string>
     <string name="ext_updates_pending">Εκκρεμούν ενημερώσεις</string>
@@ -649,7 +649,7 @@
     <string name="pref_landscape_zoom">Ζουμ οριζόντιας εικόνας</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
     <string name="pref_update_only_started">Που δεν έχουν ξεκινήσει</string>
-    <string name="pref_navigate_pan">Μετατόπιση πλατιών εικόνων κατά το πάτημα</string>
+    <string name="pref_navigate_pan">Μετατόπιση πλατιών εικόνων</string>
     <string name="skipped_reason_completed">Παραλείφθηκε επειδή η σειρά ολοκληρώθηκε</string>
     <string name="skipped_reason_not_caught_up">Παραβλέφθηκε επειδή υπάρχουν μη αναγνωσμένα κεφάλαια</string>
     <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
@@ -727,7 +727,7 @@
     <string name="crash_screen_title">Ουπς!</string>
     <string name="pref_general_summary">Γλώσσα εφαρμογής, ειδοποιήσεις</string>
     <string name="pref_appearance_summary">Θέμα, μορφή ημερομηνίας και ώρας</string>
-    <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση</string>
+    <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση, σύρσιμο κεφαλαίου</string>
     <string name="pref_reader_summary">Λειτουργία ανάγνωσης, οθόνη, πλοήγηση</string>
     <string name="pref_tracking_summary">Μονόδρομος συγχρονισμός προόδου, ενισχυμένος συγχρονισμός</string>
     <string name="pref_backup_summary">Χειροκίνητα &amp; αυτόματα αντίγραφα ασφαλείας</string>
@@ -775,7 +775,6 @@
     <string name="information_no_manga_category">Η κατηγορία είναι άδεια</string>
     <string name="pref_library_update_show_tab_badge">Εμφάνιση του αριθμού των μη αναγνωσμένων στο εικονίδιο Ενημερώσεις</string>
     <string name="copied_to_clipboard_plain">Αντιγράφηκε στο πρόχειρο</string>
-    <string name="pref_worker_info">Πληροφορίες εργαζομένου</string>
     <string name="confirm_add_duplicate_manga">Έχετε μια καταχώρηση στη βιβλιοθήκη σας με το ίδιο όνομα.
 \n
 \nΘέλετε να συνεχίσετε;</string>
@@ -796,7 +795,12 @@
         <item quantity="one">Λείπει %1$s κεφάλαιο</item>
         <item quantity="other">Λείπουν %1$s κεφάλαια</item>
     </plurals>
-    <string name="missing_chapters_unknown">Μπορεί να λείπουν κεφάλαια</string>
     <string name="pref_page_rotate">Περιστροφή πλατιών σελίδων για να χωρέσουν</string>
     <string name="pref_page_rotate_invert">Αναστροφή του προσανατολισμού των πλατιών σελίδων που έχουν περιστραφεί</string>
+    <string name="pref_debug_info">Πληροφορίες εντοπισμού σφαλμάτων</string>
+    <string name="pref_chapter_swipe">Σύρσιμο κεφαλαίου</string>
+    <string name="pref_double_tap_zoom">Διπλό πάτημα για ζουμ</string>
+    <string name="pref_chapter_swipe_start">Ενέργεια συρσίματος προς τα αριστερά</string>
+    <string name="pref_chapter_swipe_end">Ενέργεια συρσίματος προς τα δεξιά</string>
+    <string name="pref_library_columns_per_row">%d ανά σειρά</string>
 </resources>

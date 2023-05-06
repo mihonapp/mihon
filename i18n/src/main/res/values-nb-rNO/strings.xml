@@ -113,10 +113,10 @@
     <string name="white_background">Hvit</string>
     <string name="black_background">Svart</string>
     <string name="pref_viewer_type">Standard lesemodus</string>
-    <string name="left_to_right_viewer">Venstre til høyre</string>
-    <string name="right_to_left_viewer">Høyre til venstre</string>
-    <string name="vertical_viewer">Loddrett</string>
-    <string name="webtoon_viewer">Nett-tegneserie</string>
+    <string name="left_to_right_viewer">Sider (venstre til høyre)</string>
+    <string name="right_to_left_viewer">Sider (høyre til venstre)</string>
+    <string name="vertical_viewer">Sider (loddrett)</string>
+    <string name="webtoon_viewer">Lang stripe</string>
     <string name="pref_image_scale_type">Skalatype</string>
     <string name="scale_type_fit_screen">Tilpass skjerm</string>
     <string name="scale_type_stretch">Strekk</string>
@@ -256,7 +256,7 @@
     <string name="filter_mode_screen">Skjerm</string>
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned kapitler</string>
-    <string name="pref_library_columns">Elementer per rad</string>
+    <string name="pref_library_columns">Rutenettstørrelse</string>
     <string name="untrusted_extension_message">Denne utvidelsen ble signert med et usikkert sertifikat, og ble dermed ikke aktivert
 \n
 \nEn skadelig utvidelse kan lese innloggingsdetaljer lagret i Tachiyomi, eller kjøre ukjent kode.
@@ -353,7 +353,7 @@
     <string name="webtoon_side_padding_0">Ingen</string>
     <string name="pref_category_reading">Leser</string>
     <string name="pref_always_show_chapter_transition">Alltid vis kapittelovergang</string>
-    <string name="vertical_plus_viewer">Kontinuerlig loddrett</string>
+    <string name="vertical_plus_viewer">Lang stripe med mellomrom</string>
     <string name="pref_skip_filtered_chapters">Hopp over filtrerte kapitler</string>
     <string name="hide_notification_content">Skjul merknadsinnhold</string>
     <string name="secure_screen_summary">Sikker skjerm skjuler programinnhold ved bytting av programmer og blokker skjermavbildninger</string>
@@ -381,7 +381,7 @@
     <string name="action_migrate">Flytt</string>
     <string name="action_start">Start</string>
     <string name="tapping_inverted_both">Begge</string>
-    <string name="tapping_inverted_vertical">loddrett</string>
+    <string name="tapping_inverted_vertical">Loddrett</string>
     <string name="tapping_inverted_horizontal">vannrett</string>
     <string name="tapping_inverted_none">Ingen</string>
     <plurals name="notification_chapters_generic">
@@ -648,7 +648,7 @@
     <string name="action_display_cover_only_grid">Kun omslags-rutenett</string>
     <string name="pref_update_only_started">Som ikke er påbegynt</string>
     <string name="pref_landscape_zoom">Zoom landskapsbilde</string>
-    <string name="pref_navigate_pan">Panorer brede bilder ved å trykke</string>
+    <string name="pref_navigate_pan">Panorer brede bilder</string>
     <string name="clear_database_source_item_count">%1$d ikke-bibliotek oppføringer i databasen</string>
     <string name="action_move_to_top_all_for_series">Flytt serien til toppen</string>
     <string name="extension_api_error">Kunne ikke hente utvidelseslisten</string>
@@ -774,7 +774,6 @@
     <string name="action_not_now">Ikke nå</string>
     <string name="information_no_manga_category">Kategorien er tom</string>
     <string name="pref_library_update_show_tab_badge">Vis antall uleste på oppdateringsikonet</string>
-    <string name="pref_worker_info">Arbeider info</string>
     <string name="copied_to_clipboard_plain">Kopiert til utklippstavlen</string>
     <string name="enhanced_services_not_installed">Tilgjengelig, men kilden er ikke installert: %s</string>
     <string name="confirm_add_duplicate_manga">Du har en oppføring i biblioteket med samme navn.
@@ -796,7 +795,8 @@
         <item quantity="one">Mangler %1$s kapittel</item>
         <item quantity="other">Mangler %1$s kapitler</item>
     </plurals>
-    <string name="missing_chapters_unknown">Kan mangle kapitler</string>
-    <string name="pref_page_rotate_invert">Vend sideretning for roterte brede sider</string>
+    <string name="pref_page_rotate_invert">Skift retning på roterte brede sider</string>
     <string name="pref_page_rotate">Roter brede sider slik at de passer</string>
+    <string name="pref_debug_info">Debug info</string>
+    <string name="pref_library_columns_per_row">%d per rad</string>
 </resources>

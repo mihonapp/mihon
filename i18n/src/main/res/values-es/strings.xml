@@ -49,7 +49,7 @@
     <string name="pref_category_advanced">Avanzado</string>
     <string name="pref_category_about">Acerca de</string>
     <!-- General section -->
-    <string name="pref_library_columns">Elementos por fila</string>
+    <string name="pref_library_columns">Tamaño de cuadrícula</string>
     <string name="portrait">En vertical</string>
     <string name="landscape">En horizontal</string>
     <string name="pref_library_update_interval">Actualizaciones automáticas</string>
@@ -74,10 +74,10 @@
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Sentido de lectura normal</string>
-    <string name="left_to_right_viewer">De izquierda a derecha</string>
-    <string name="right_to_left_viewer">De derecha a izquierda</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Por páginas; de izquierda a derecha</string>
+    <string name="right_to_left_viewer">Páginas (de derecha a izquierda)</string>
+    <string name="vertical_viewer">Por páginas; vertical</string>
+    <string name="webtoon_viewer">Tira vertical continua</string>
     <string name="pref_image_scale_type">Método de ampliación</string>
     <string name="scale_type_fit_screen">Ajustar al tamaño de pantalla</string>
     <string name="scale_type_stretch">Estirar la imagen</string>
@@ -408,7 +408,7 @@
     <string name="pref_category_reading">Lectura</string>
     <string name="label_sources">Fuentes</string>
     <string name="action_select_inverse">Invertir selección</string>
-    <string name="vertical_plus_viewer">Vertical continua</string>
+    <string name="vertical_plus_viewer">Tira vertical discontinua</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -769,7 +769,7 @@
     <string name="action_search_hint">Buscar…</string>
     <string name="pref_tracking_summary">Sincroniza tu progreso de lectura; unidireccional o mejorada</string>
     <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
-    <string name="pref_library_summary">Categorías y actualizaciones generales</string>
+    <string name="pref_library_summary">Categorías, actualizaciones generales y acciones al deslizar el dedo</string>
     <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que compartas todos tus registros de depuración, enviándolos a nuestro canal de apoyo en Discord, en inglés.</string>
     <string name="pref_reader_summary">Modos de lectura, apariencia y navegación</string>
     <string name="pref_general_summary">Idioma de la interfaz y notificaciones</string>
@@ -819,7 +819,6 @@
     <string name="information_no_manga_category">La categoría está vacía</string>
     <string name="pref_library_update_show_tab_badge">Mostrar los capítulos por leer en el icono de actualizar</string>
     <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
-    <string name="pref_worker_info">Detalles sobre hilos de trabajo</string>
     <string name="pref_skip_dupe_chapters">Saltarse los capítulos repetidos</string>
     <string name="enhanced_services_not_installed">Está disponible, pero la fuente todavía no se ha instalado: %s</string>
     <string name="confirm_add_duplicate_manga">Ya tienes un elemento en la biblioteca con este mismo nombre.
@@ -839,10 +838,15 @@
     <string name="overlay_header">Superposición</string>
     <plurals name="missing_chapters">
         <item quantity="one">Falta %1$s capítulo</item>
-        <item quantity="many">"Faltan %1$s  capítulos"</item>
+        <item quantity="many">Faltan %1$s capítulos</item>
         <item quantity="other">Faltan %1$s capítulos</item>
     </plurals>
     <string name="pref_page_rotate">Girar las páginas anchas para adaptarlas a la pantalla</string>
-    <string name="missing_chapters_unknown">Puede que le falte algún capítulo</string>
     <string name="pref_page_rotate_invert">Girar las páginas anchas en la dirección opuesta</string>
+    <string name="pref_debug_info">Información de depuración</string>
+    <string name="pref_chapter_swipe">Deslizamiento de dedo en capítulos</string>
+    <string name="pref_chapter_swipe_start">Deslizar a la izquierda</string>
+    <string name="pref_chapter_swipe_end">Deslizar a la derecha</string>
+    <string name="pref_double_tap_zoom">Ampliar tocando dos veces la pantalla</string>
+    <string name="pref_library_columns_per_row">%d por fila</string>
 </resources>

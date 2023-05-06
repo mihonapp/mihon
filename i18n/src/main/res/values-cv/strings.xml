@@ -206,7 +206,7 @@
     <string name="custom_dir">Усӑҫ палӑртнӑ вырӑнӗ</string>
     <string name="pref_remove_after_marked_as_read">Вуланӑ пек палӑртнӑ хыҫҫӑн катерт</string>
     <string name="scale_type_original_size">Хӑйӗн виҫе</string>
-    <string name="pager_viewer">Эл тӑрӑх</string>
+    <string name="pager_viewer">Елсерен</string>
     <string name="pref_viewer_type">Яланхилле вулав тытӑмӗ</string>
     <string name="pref_color_filter_mode">Тӗс алипе хутӑштармалли тытӑм</string>
     <string name="pref_show_reading_mode_summary">Вулӑш уҫӑ пулсан хальхи тытӑма кӗскен палӑртмалла</string>
@@ -235,10 +235,10 @@
     <string name="scale_type_fit_screen">Экранпа</string>
     <string name="pref_image_scale_type">Сарӑмлани</string>
     <string name="vertical_plus_viewer">Вӗҫӗмсӗрех урлӑ</string>
-    <string name="webtoon_viewer">Webtoon</string>
-    <string name="vertical_viewer">Урлӑ</string>
-    <string name="right_to_left_viewer">Сылтӑмран сулахаялла</string>
-    <string name="left_to_right_viewer">Сулахайран сылтӑмалла</string>
+    <string name="webtoon_viewer">Вӑрӑм елсем</string>
+    <string name="vertical_viewer">Елсерен (урлӑ)</string>
+    <string name="right_to_left_viewer">Елсерен (сылтӑмран сулахайалла)</string>
+    <string name="left_to_right_viewer">Елсерен (сулахайран сылтӑмалла)</string>
     <string name="gray_background">Сӑрӑ</string>
     <string name="pref_read_with_long_tap">Пусса тӑннӑ чух кӑтарт</string>
     <string name="pref_read_with_volume_keys_inverted">Янравлӑх пускӑчӗсене вырӑнсемпе улӑштар</string>
@@ -255,16 +255,16 @@
     <string name="pref_crop_borders">Касӑк чиккисем</string>
     <string name="pref_true_color_summary">Йӑрӑм-йӑрӑм чакать, анчах тухӑҫлӑх ҫине витӗм кӳрет</string>
     <string name="pref_true_color">32 битлӑ тӗс</string>
-    <string name="pref_show_page_number">Эл шутне кӑтарт</string>
+    <string name="pref_show_page_number">Ел шутне кӑтартни</string>
     <string name="pref_double_tap_anim_speed">Икӗ хут пуссан эним хӑвӑртлӑхӗ</string>
-    <string name="pref_page_transitions">Энимленӗ элсен куҫни</string>
-    <string name="unofficial_extension_message">Ҫак хушма Tachiyomi-н официаллӑ хушмасен ят-йыша кӗмест.</string>
-    <string name="obsolete_extension_message">Ҫак хушмана урӑх кӗме май ҫук.</string>
-    <string name="untrusted_extension_message">Ку хушмана шанчӑклӑ мар сертификатпа алӑ пуснӑ тата ӑна активламан.
+    <string name="pref_page_transitions">Елсем хушшипе енимлӗ куҫни</string>
+    <string name="unofficial_extension_message">Ҫак хушма Tachiyomi-н ӗҫ йӗркиллӗ хушмасен йат-йышне кӗмест.</string>
+    <string name="obsolete_extension_message">Ҫак хушмана урӑх кӗме май ҫук. Вӑл тӗрӗс мар ӗҫлеме тата апа йӑнӑшлаттарма пултарать. Ӑна катертме сӗнетпӗр.</string>
+    <string name="untrusted_extension_message">Ку хушмана шанчӑклӑ мар ӗнентерӳ хучӗпе алӑ пуснӑ тата ӑна пуҫарман.
 \n
-\nСиенлӗ хушма Tachiyomi-ри упранакан кирек мӗнле шут пӗлӗмсене шута илме е хӑй ирӗклӗ юма пурнӑҫлама пултарать.
+\nСийенлӗ хушма Tachiyomi-ри упранакан кирек мӗнле шут пӗлӗмӗсене шута илме йе хӑй ирӗклӗ йума пурнӑҫлама пултарать.
 \n
-\nҪак сертификата шаннипе эсӗ ҫав теветкеле йышӑнатӑн.</string>
+\nҪак ӗнентерӳ хутне шаннипе есӗ ҫав теветкеле йышӑнатӑн.</string>
     <plurals name="restore_completed_message">
         <item quantity="one">%1$s,%2$s йӑнӑшпа тӑвӑннӑ</item>
         <item quantity="other">%1$s, %2$s йӑнӑшпа тӑвӑннӑ</item>
@@ -325,9 +325,9 @@
     <string name="recent_manga_time">%1$s-мӗш сыпӑка %2$s</string>
     <string name="updating_library">Вулавӑша ҫӗнетни</string>
     <string name="loader_not_implemented_error">Ҫӑл куҫ тупӑнман</string>
-    <string name="page_list_empty_error">Элсем тупӑнман</string>
-    <string name="transition_pages_error">Элсем тиенеймерӗҫ: %1$s</string>
-    <string name="transition_pages_loading">Элсем тиевӗ…</string>
+    <string name="page_list_empty_error">Пӗр ел те тупӑнман</string>
+    <string name="transition_pages_error">Елсем тийенеймерӗҫ: %1$s</string>
+    <string name="transition_pages_loading">Елсене тийени…</string>
     <string name="transition_no_previous">Умӗнхи сыпӑк ҫук</string>
     <string name="transition_no_next">Малалли сыпӑк ҫук</string>
     <string name="transition_previous">Умӗнхи:</string>
@@ -336,10 +336,10 @@
     <string name="transition_finished">Пӗтернӗ:</string>
     <string name="viewer">Вулав тытӑмӗ</string>
     <string name="pref_category_for_this_series">Ҫак серилӗх валли</string>
-    <string name="confirm_set_image_as_cover">Ҫак ӳкерчĕке хуплашка пек усӑ курмалла-и\?</string>
-    <string name="decode_image_error">Ӳкерчӗк тиенмерӗ</string>
+    <string name="confirm_set_image_as_cover">Ҫак сӑна хуплашка пек усӑ курмалла-и\?</string>
+    <string name="decode_image_error">Сӑн тийенмерӗ</string>
     <string name="no_next_chapter">Малалли сыпӑк тупӑнман</string>
-    <string name="chapter_progress">%1$d-мӗш эл</string>
+    <string name="chapter_progress">%1$d-мӗш ел</string>
     <string name="cover_updated">Хуплашкана ҫӗнетнӗ</string>
     <string name="set_as_cover">Хуплашка пек ларт</string>
     <string name="picture_saved">Ӳкерчӗке упранӑ</string>
@@ -461,7 +461,7 @@
     <string name="whats_new">Мӗн ҫӗнни</string>
     <string name="pref_category_theme">Темӑ</string>
     <string name="action_sort_date_added">Хушни вӑхӑчӗпе</string>
-    <string name="download_insufficient_space">Тиск ҫинче вырӑн ҫитмен пирки сыпӑксене тиесе илес ҫук</string>
+    <string name="download_insufficient_space">Тиск ҫинче вырӑн ҫитмен пирки сыпӑксем тийенеймерӗҫ</string>
     <string name="action_global_search_query">\"%1$s\" пур ҫӗрте шыра</string>
     <string name="pref_category_reading_mode">Вулав тытӑмӗ</string>
     <plurals name="num_trackers">
@@ -487,7 +487,7 @@
     <string name="chapter_settings_updated">Яланхилле сыпӑк ӗнерлев ҫӗнетнӗ</string>
     <string name="set_chapter_settings_as_default">Яланхилле</string>
     <string name="confirm_set_chapter_settings">Ҫак ӗнерелевсене яланхилле упрасшӑнах-и\?</string>
-    <string name="share_page_info">%1$s: %2$s, %3$d эл</string>
+    <string name="share_page_info">%1$s: %2$s, %3$d-мӗш ел</string>
     <string name="chapter_settings">Сыпӑк ӗнерлеве</string>
     <string name="action_search_settings">Ӗнерӳ шыра</string>
     <string name="downloaded_chapters">Тиесе илнӗ сыпӑксем</string>
@@ -518,9 +518,9 @@
     <string name="pref_dump_crash_logs">Тухса кайни инчен логсене тиесе яни</string>
     <string name="pref_viewer_nav">Куҫӑм палли</string>
     <string name="right_and_left_nav">Сылтӑмран сулахаялла</string>
-    <string name="pref_dual_page_invert_summary">Ик эллӗ уйарни вулав майлӑ мар пулсан</string>
-    <string name="pref_dual_page_invert">Ик эллӗ уйарнине ҫавӑр</string>
-    <string name="pref_dual_page_split">Ик эллӗ уйӑрни</string>
+    <string name="pref_dual_page_invert_summary">Анлӑ елсене пайлани вулав майлӑ мар пулсан</string>
+    <string name="pref_dual_page_invert">Анлӑ елсене тепӗр майлӑ пайлани</string>
+    <string name="pref_dual_page_split">Анлӑ елсене пайлани</string>
     <string name="action_display_show_number_of_items">Серилӗхсен шутне кӑтарт</string>
     <string name="nav_zone_right">Сылтӑм</string>
     <string name="nav_zone_left">Сулахай</string>
@@ -537,8 +537,8 @@
     <string name="rotation_landscape">Тӑрӑх</string>
     <string name="rotation_portrait">Урлӑ</string>
     <string name="rotation_type">Урлӑ-тӑрӑх тӗсӗ</string>
-    <string name="pref_create_folder_per_manga_summary">Папкӑсене манкӑ ячӗпе тумалла</string>
-    <string name="pref_create_folder_per_manga">Уйрӑм папкӑсенче элсене упрамалла</string>
+    <string name="pref_create_folder_per_manga_summary">Папкӑсене сери ячӗпе туни</string>
+    <string name="pref_create_folder_per_manga">Елсене уйрӑм папкӑсенче упрамалла</string>
     <string name="pref_reader_actions">Тӑвӑмсем</string>
     <string name="pref_show_navigation_mode_summary">Пусма вырӑнсене вулӑш уҫӑ чухне кӑтартмалла</string>
     <string name="action_show_errors">Йӑнӑшсене кӑтарт</string>
@@ -615,4 +615,23 @@
     <string name="pref_backup_summary">Хӑй тӗллӗн тата хӑй-хальлӗн йантӑлав</string>
     <string name="action_update_category">Пухмӑш ҫӗнет</string>
     <string name="pref_advanced_summary">Йӑнӑш кӗнекине тийесе йани, петтерей лайӑхлатни</string>
+    <string name="pref_library_update_show_tab_badge">Вуламан сыпӑксен шутне «Ҫӗнӗлӗх» ыккун ҫинче кӑтартни</string>
+    <string name="pref_landscape_zoom">Сӑна тӑрӑх пысӑклатни</string>
+    <string name="multi_lang">Нумай чӗлхеллӗ</string>
+    <string name="automatic_background">Хӑй-хальлӗн</string>
+    <string name="disabled_nav">Сӳнтернӗ</string>
+    <string name="extension_api_error">Хушмасен йат-йышне илесси пулаймарӗ</string>
+    <string name="pref_library_update_refresh_trackers_summary">Вулавӑша ҫӗнетнӗ май йӗрлеве те ҫӗнетни</string>
+    <string name="pref_long_strip_split">Вӑрӑм сӑнсене пайлани (ПЕТТӖ)</string>
+    <string name="categorized_display_settings">Кашни пухмӑшӑн хӑйӗн ӗнерӳсем</string>
+    <string name="ext_app_info">Ап ҫинчен</string>
+    <string name="split_tall_images_summary">Вулӑшӑн тухӑҫа лайӑхлатать</string>
+    <string name="error_user_agent_string_blank">User agent пушӑ пулмалла мар</string>
+    <string name="ext_info_language">Чӗлхе</string>
+    <string name="pref_navigate_pan">Пуснӑ чухне анлӑ сӑнсене сарӑмлатни</string>
+    <string name="split_tall_images">Вӑрӑм сӑнсене пайлани</string>
+    <string name="missing_storage_permission">Управ ирӗкӗсене паман</string>
+    <string name="ext_info_version">Версси</string>
+    <string name="pref_library_update_refresh_trackers">Йӗрлеве хӑй-хальлӗн ҫӗнетни</string>
+    <string name="ext_update_all">Пурне те ҫӗнет</string>
 </resources>

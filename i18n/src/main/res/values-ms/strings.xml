@@ -66,7 +66,7 @@
     <string name="pref_category_tracking">Penjejakan</string>
     <string name="pref_category_advanced">Lanjutan</string>
     <string name="pref_category_about">Tentang</string>
-    <string name="pref_library_columns">Kandungan setiap baris</string>
+    <string name="pref_library_columns">Saiz grid</string>
     <string name="portrait">Potret</string>
     <string name="landscape">Landskap</string>
     <string name="pref_library_update_interval">Kemas kini automatik</string>
@@ -97,10 +97,10 @@
     <string name="white_background">Putih</string>
     <string name="black_background">Hitam</string>
     <string name="pref_viewer_type">Mod membaca lalai</string>
-    <string name="left_to_right_viewer">Kiri ke kanan</string>
-    <string name="right_to_left_viewer">Kanan ke kiri</string>
-    <string name="vertical_viewer">Menegak</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Muka surat (kiri ke kanan)</string>
+    <string name="right_to_left_viewer">Muka surat (kanan ke kiri)</string>
+    <string name="vertical_viewer">Muka surat (menegak)</string>
+    <string name="webtoon_viewer">Sebaris panjang</string>
     <string name="pref_image_scale_type">Skala</string>
     <string name="scale_type_fit_screen">Muat skrin</string>
     <string name="scale_type_stretch">Regang</string>
@@ -363,7 +363,7 @@
     <string name="http_error_hint">Semak laman web dalam WebView</string>
     <string name="updating_library">Mengemas kini pustaka</string>
     <string name="pref_category_reading">Membaca</string>
-    <string name="vertical_plus_viewer">Menegak berterusan</string>
+    <string name="vertical_plus_viewer">Sebaris panjang dengan sela</string>
     <string name="pref_skip_filtered_chapters">Lingkau bab yang ditapis</string>
     <string name="action_select_inverse">Pilih songsang</string>
     <string name="label_sources">Sumber</string>
@@ -640,7 +640,7 @@
     <string name="skipped_reason_not_caught_up">Dilangkau kerana ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Zum imej landskap</string>
-    <string name="pref_navigate_pan">panorama imej lebar apabila mengetik</string>
+    <string name="pref_navigate_pan">Panorama imej lebar</string>
     <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="notification_update_skipped">%1$d kemas kini dilangkau</string>
     <string name="channel_skipped">Dilangkau</string>
@@ -712,7 +712,7 @@
     <string name="action_search_hint">Cari…</string>
     <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>
     <string name="pref_appearance_summary">Tema, tarikh &amp; format masa</string>
-    <string name="pref_library_summary">Kategori, Kemas kini keseluruhan</string>
+    <string name="pref_library_summary">Kategori, Kemas kini keseluruhan, leret bab</string>
     <string name="pref_reader_summary">Mod membaca, paparan, navigasi</string>
     <string name="pref_downloads_summary">Muat turun automatik, muat turun maju</string>
     <string name="pref_tracking_summary">Sinkron kemajuan satu hala, pertingkat sinkron</string>
@@ -764,7 +764,6 @@
     <string name="pref_skip_dupe_chapters">Langkau bab pendua</string>
     <string name="enhanced_services_not_installed">Tersedia tetapi sumber tidak dipasang: %s</string>
     <string name="copied_to_clipboard_plain">Disalin ke papan keratan</string>
-    <string name="pref_worker_info">Maklumat Worker</string>
     <string name="track_error">%1$s ralat: %2$s</string>
     <string name="confirm_add_duplicate_manga">Entri di dalam pustaka anda mempunyai nama yang sama.
 \n
@@ -781,7 +780,12 @@
     <plurals name="missing_chapters">
         <item quantity="other">Hilang %1$s bab</item>
     </plurals>
-    <string name="missing_chapters_unknown">Berkemungkinan ada bab yang hilang</string>
     <string name="pref_page_rotate_invert">Terbalikkan orientasi muka surat lebar yang diputarkan</string>
     <string name="pref_page_rotate">Putar muka surat lebar agar muat</string>
+    <string name="pref_debug_info">Maklumat nyahpepijat</string>
+    <string name="pref_chapter_swipe_end">Tindakan leret ke kanan</string>
+    <string name="pref_library_columns_per_row">%d setiap baris</string>
+    <string name="pref_chapter_swipe">Leret bab</string>
+    <string name="pref_double_tap_zoom">Ketik dua kali untuk zum</string>
+    <string name="pref_chapter_swipe_start">Tindakan leret ke kiri</string>
 </resources>

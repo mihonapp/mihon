@@ -74,8 +74,8 @@
     <string name="pref_reader_theme">Barva pozadí</string>
     <string name="white_background">Bílá</string>
     <string name="black_background">Černá</string>
-    <string name="left_to_right_viewer">Zleva doprava</string>
-    <string name="right_to_left_viewer">Zprava doleva</string>
+    <string name="left_to_right_viewer">Stránkované (zleva doprava)</string>
+    <string name="right_to_left_viewer">Stránkované (zprava doleva)</string>
     <string name="pref_rotation_type">Výchozí typ otáčení</string>
     <string name="rotation_free">Volné</string>
     <string name="rotation_force_portrait">Zamknuto na výšku</string>
@@ -174,7 +174,7 @@
     <string name="pref_category_tracking">Sledování</string>
     <string name="pref_category_advanced">Pokročilé</string>
     <string name="pref_category_about">O aplikaci</string>
-    <string name="pref_library_columns">Počet položek na řádek</string>
+    <string name="pref_library_columns">Velikost mřížky</string>
     <string name="portrait">Na výšku</string>
     <string name="landscape">Na šířku</string>
     <string name="pref_library_update_interval">Automatické aktualizace</string>
@@ -188,8 +188,8 @@
     <string name="pref_custom_brightness">Vlastní jas</string>
     <string name="pref_custom_color_filter">Vlastní barevný filtr</string>
     <string name="pref_viewer_type">Výchozí režim čtení</string>
-    <string name="vertical_viewer">Vertikální</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="vertical_viewer">Stránkovaný (svisle)</string>
+    <string name="webtoon_viewer">Dlouhý pruh</string>
     <string name="pref_image_scale_type">Typ úpravy velikosti</string>
     <string name="scale_type_fit_screen">Přizpůsobit obrazovce</string>
     <string name="scale_type_stretch">Natáhnout</string>
@@ -408,7 +408,7 @@
     <string name="nav_zone_next">Další</string>
     <string name="right_and_left_nav">Vpravo a Vlevo</string>
     <string name="l_nav">Ve tvaru písmene L</string>
-    <string name="gray_background">Šedé</string>
+    <string name="gray_background">Šedá</string>
     <string name="tapping_inverted_both">Obě</string>
     <string name="tapping_inverted_vertical">Vertikální</string>
     <string name="tapping_inverted_horizontal">Horizontální</string>
@@ -540,7 +540,7 @@
     <string name="action_display_show_tabs">Zobrazovat karty kategorií</string>
     <string name="update_check_eol">Tato verze systému Android již není podporována</string>
     <string name="clipboard_copy_error">Kopírování do schránky se nezdařilo</string>
-    <string name="vertical_plus_viewer">Průběžné vertikální</string>
+    <string name="vertical_plus_viewer">Dlouhý pruh s mezerami</string>
     <string name="edge_nav">Okraj</string>
     <string name="pref_read_with_tapping_inverted">Invertovat oblasti dotyku</string>
     <string name="pref_dual_page_split">Rozdělit široké stránky</string>
@@ -697,7 +697,7 @@
     <string name="empty_screen">No, tohle je trapné</string>
     <string name="download_notifier_split_page_not_found">Stránka %d nebyla při rozdělení nalezena</string>
     <string name="download_notifier_split_page_path_not_found">Nepodařilo se najít cestu k souboru stránky %d</string>
-    <string name="pref_navigate_pan">Posunutí širokých snímků při klepnutí</string>
+    <string name="pref_navigate_pan">Posunutí širokých snímků</string>
     <string name="action_sort_unread_count">Počet nepřečtených</string>
     <string name="action_sort_last_manga_update">Poslední kontrola aktualizace</string>
     <string name="battery_not_low">Když baterie není vybitá</string>
@@ -740,7 +740,7 @@
     <string name="pref_reader_summary">Režim čtení, displej, navigace</string>
     <string name="pref_tracking_summary">Jednosměrná synchronizace postupu, rozšířená synchronizace</string>
     <string name="pref_appearance_summary">Téma, formát data a času</string>
-    <string name="pref_library_summary">Kategorie, globální aktualizace</string>
+    <string name="pref_library_summary">Kategorie, globální aktualizace, přejetí po kapitole</string>
     <string name="pref_downloads_summary">Automatické stahování, stahování dopředu</string>
     <string name="pref_browse_summary">Zdroje, rozšíření, globální vyhledávání</string>
     <string name="pref_security_summary">Zámek aplikace, zabezpečená obrazovka</string>
@@ -788,7 +788,6 @@
     <string name="information_no_manga_category">Kategorie je prázdná</string>
     <string name="pref_library_update_show_tab_badge">Zobrazit počet nepřečtených kapitol na ikoně Aktualizace</string>
     <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
-    <string name="pref_worker_info">Informace o pracovníkovi</string>
     <string name="enhanced_services_not_installed">K dispozici, ale zdroj není nainstalován: %s</string>
     <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
     <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
@@ -813,5 +812,10 @@
         <item quantity="few">Chybí %1$s kapitoly</item>
         <item quantity="other">Chybí %1$s kapitol</item>
     </plurals>
-    <string name="missing_chapters_unknown">Mohou chybět kapitoly</string>
+    <string name="pref_debug_info">Ladící informace</string>
+    <string name="pref_chapter_swipe">Přejetí po kapitole</string>
+    <string name="pref_chapter_swipe_end">Přejetí prstem doprava</string>
+    <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
+    <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
+    <string name="pref_library_columns_per_row">%d na řádek</string>
 </resources>

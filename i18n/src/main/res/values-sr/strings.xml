@@ -793,7 +793,6 @@
     <string name="source_filter_empty_screen">Није пронађен инсталирани извор</string>
     <string name="theme_tidalwave">Цунами</string>
     <string name="pref_user_agent_string">Подразумеван низ корисничког агента</string>
-    <string name="pref_worker_info">Подаци о worker-у</string>
     <string name="track_error">%1$s грешка: %2$s</string>
     <string name="information_required_plain">*неопходно</string>
 </resources>

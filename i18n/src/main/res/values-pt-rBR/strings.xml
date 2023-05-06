@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">Monitoramento</string>
     <string name="pref_category_advanced">Avançado</string>
     <string name="pref_category_about">Sobre</string>
-    <string name="pref_library_columns">Itens por linha</string>
+    <string name="pref_library_columns">Tamanho da grade</string>
     <string name="portrait">Retrato</string>
     <string name="landscape">Paisagem</string>
     <string name="pref_library_update_interval">Atualizações automáticas</string>
@@ -96,10 +96,10 @@
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
     <string name="pref_viewer_type">Modo de leitura padrão</string>
-    <string name="left_to_right_viewer">Esquerda para direita</string>
-    <string name="right_to_left_viewer">Direita para esquerda</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Paginado (esquerda para direita)</string>
+    <string name="right_to_left_viewer">Paginado (direita para esquerda)</string>
+    <string name="vertical_viewer">Paginado (vertical)</string>
+    <string name="webtoon_viewer">Tira longa</string>
     <string name="pref_image_scale_type">Tipo de escala</string>
     <string name="scale_type_fit_screen">Ajustar à tela</string>
     <string name="scale_type_stretch">Estender</string>
@@ -376,7 +376,7 @@
     <string name="pref_skip_filtered_chapters">Pular os capítulos filtrados</string>
     <string name="label_sources">Fontes</string>
     <string name="action_select_inverse">Inverter a seleção</string>
-    <string name="vertical_plus_viewer">Vertical contínuo</string>
+    <string name="vertical_plus_viewer">Tira longa com lacunas</string>
     <string name="webtoon_side_padding_25">25%</string>
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
@@ -633,7 +633,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instale e inicie o Shizuku para utilizá-lo como o instalador de extensões.</string>
     <string name="action_sort_count">Total de itens</string>
     <string name="pref_verbose_logging_summary">Imprime registros detalhados no registro de eventos do sistema (reduz o desempenho do aplicativo)</string>
-    <string name="pref_verbose_logging">Registro de eventos verboso</string>
+    <string name="pref_verbose_logging">Registro de eventos detalhado</string>
     <string name="action_display_language_badge">Idioma</string>
     <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria. Toque para saber mais.</string>
     <string name="label_warning">Aviso</string>
@@ -658,7 +658,7 @@
     <string name="action_faq_and_guides">FAQ e Guias</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar o item</string>
-    <string name="pref_navigate_pan">Navegar imagens longas ao tocar</string>
+    <string name="pref_navigate_pan">Navegar imagens longas</string>
     <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
     <string name="pref_update_only_started">Que não tiveram a leitura iniciada</string>
@@ -738,7 +738,7 @@
     <string name="action_search_hint">Pesquisar…</string>
     <string name="pref_general_summary">Idioma do aplicativo, notificações</string>
     <string name="pref_appearance_summary">Tema, formato de data e hora</string>
-    <string name="pref_library_summary">Categorias, atualização global</string>
+    <string name="pref_library_summary">Categorias, atualização global, ações do capítulo</string>
     <string name="pref_reader_summary">Modo de leitura, exibição, navegação</string>
     <string name="pref_downloads_summary">Download automático, download a frente</string>
     <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
@@ -788,7 +788,6 @@
     <string name="information_no_manga_category">A categoria está vazia</string>
     <string name="pref_library_update_show_tab_badge">Mostrar a contagem no ícone de Atualizações</string>
     <string name="copied_to_clipboard_plain">Copiado para a área de transferência</string>
-    <string name="pref_worker_info">Informações do worker</string>
     <string name="enhanced_services_not_installed">Disponíveis, mas a fonte não está instalada: %s</string>
     <string name="pref_skip_dupe_chapters">Pular capítulos duplicados</string>
     <string name="confirm_add_duplicate_manga">Você possui um item na sua biblioteca com o mesmo nome.
@@ -808,10 +807,15 @@
     <string name="overlay_header">Sobreposição</string>
     <string name="pref_page_rotate">Rotacionar páginas largas para caber</string>
     <string name="pref_page_rotate_invert">Inverter a orientação das páginas largas rotacionadas</string>
-    <string name="missing_chapters_unknown">Pode ter capítulos faltando</string>
     <plurals name="missing_chapters">
         <item quantity="one">Faltando %1$s capítulo</item>
         <item quantity="many">Faltando %1$s capítulos</item>
         <item quantity="other">Faltando %1$s capítulos</item>
     </plurals>
+    <string name="pref_debug_info">Informações de depuração</string>
+    <string name="pref_chapter_swipe">Ações do capítulo</string>
+    <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
+    <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
+    <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
+    <string name="pref_library_columns_per_row">%d por linha</string>
 </resources>

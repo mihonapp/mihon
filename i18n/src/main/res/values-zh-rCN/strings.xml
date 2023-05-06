@@ -62,7 +62,7 @@
     <string name="action_open_log">打开日志</string>
     <string name="action_restore">还原</string>
     <string name="loading">正在加载…</string>
-    <string name="action_display_download_badge">已下载章节</string>
+    <string name="action_display_download_badge">已下载的章节数</string>
     <string name="app_not_available">应用不可用</string>
     <string name="pref_category_general">常规</string>
     <string name="pref_category_reader">阅读</string>
@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">进度记录</string>
     <string name="pref_category_advanced">高级</string>
     <string name="pref_category_about">关于</string>
-    <string name="pref_library_columns">书架界面网格</string>
+    <string name="pref_library_columns">网格大小</string>
     <string name="portrait">竖屏</string>
     <string name="landscape">横屏</string>
     <string name="pref_library_update_interval">自动更新</string>
@@ -97,7 +97,7 @@
     <string name="ext_untrusted">不可信</string>
     <string name="ext_uninstall">卸载</string>
     <string name="untrusted_extension">不可信的插件</string>
-    <string name="untrusted_extension_message">此插件的证书并不可信，且尚未被启用。
+    <string name="untrusted_extension_message">此插件的证书并不可信，且尚未被开启。
 \n
 \n恶意的插件可能会读取储存在 Tachiyomi 中的任何登录凭据或执行任意代码。
 \n
@@ -117,9 +117,9 @@
     <string name="white_background">白色</string>
     <string name="black_background">黑色</string>
     <string name="pref_viewer_type">默认阅读模式</string>
-    <string name="left_to_right_viewer">从左到右</string>
-    <string name="right_to_left_viewer">从右到左</string>
-    <string name="vertical_viewer">从上到下</string>
+    <string name="left_to_right_viewer">单页式（从左到右）</string>
+    <string name="right_to_left_viewer">单页式（从右到左）</string>
+    <string name="vertical_viewer">单页式（从上到下）</string>
     <string name="webtoon_viewer">条漫</string>
     <string name="pager_viewer">单页式</string>
     <string name="pref_image_scale_type">缩放模式</string>
@@ -174,8 +174,8 @@
     <string name="used_cache">已使用空间：%1$s</string>
     <string name="cache_deleted">缓存已清除。%1$d 个文件已被删除</string>
     <string name="cache_delete_error">清除时出现错误</string>
-    <string name="pref_clear_cookies">清除 Cookies</string>
-    <string name="cookies_cleared">Cookies 已清除</string>
+    <string name="pref_clear_cookies">清除 Cookie</string>
+    <string name="cookies_cleared">Cookie 已清除</string>
     <string name="pref_clear_database">清理数据库</string>
     <string name="pref_clear_database_summary">删除未添加到书架的作品记录</string>
     <string name="clear_database_confirmation">你确定吗？不在书架中的作品的已读章节和进度将会丢失</string>
@@ -204,7 +204,7 @@
     <string name="remove_from_library">移出书架</string>
     <string name="manga_added_library">已添加到书架</string>
     <string name="manga_removed_library">已移出书架</string>
-    <string name="delete_downloads_for_manga">删除已下载的章节？</string>
+    <string name="delete_downloads_for_manga">要删除已下载的章节吗？</string>
     <string name="copied_to_clipboard">已复制到剪贴板：
 \n「%1$s」</string>
     <string name="source_not_installed">未安装图源：%1$s</string>
@@ -217,7 +217,7 @@
     <string name="sort_by_source">按图源</string>
     <string name="sort_by_number">按章节编号</string>
     <string name="manga_download">下载章节</string>
-    <string name="download_unread">下载未读</string>
+    <string name="download_unread">未读</string>
     <string name="confirm_delete_chapters">你确定删除所选章节吗？</string>
     <string name="manga_tracking_tab">进度记录</string>
     <string name="reading">阅读中</string>
@@ -374,7 +374,7 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">无</string>
     <string name="pref_webtoon_side_padding">侧边填充</string>
-    <string name="vertical_plus_viewer">从上到下（连续）</string>
+    <string name="vertical_plus_viewer">条漫（页间有空隙）</string>
     <string name="action_select_inverse">反选</string>
     <string name="add_tracking">添加进度记录</string>
     <string name="information_webview_required">Tachiyomi 依赖于 WebView</string>
@@ -430,7 +430,7 @@
     <string name="action_display_show_tabs">显示分类标签</string>
     <string name="page_list_empty_error">没有找到页面</string>
     <string name="action_disable_all">全部关闭</string>
-    <string name="action_enable_all">全部启用</string>
+    <string name="action_enable_all">全部开启</string>
     <string name="pref_show_reading_mode_summary">开始阅读时，短暂显示当前阅读模式</string>
     <string name="pref_show_reading_mode">阅读模式提示</string>
     <string name="action_start">开始阅读</string>
@@ -623,7 +623,7 @@
     <string name="database_clean">无需清理</string>
     <string name="clear_database_source_item_count">数据库中有 %1$d 部作品未添加到书架</string>
     <string name="extension_api_error">无法获取插件列表</string>
-    <string name="privacy_policy">隐私政策</string>
+    <string name="privacy_policy">隐私声明</string>
     <string name="pref_update_only_completely_read">有未读章节</string>
     <string name="pref_library_update_manga_restriction">跳过更新以下作品</string>
     <string name="library_errors_help">关于书架更新出错的解决方法，请参阅 %1$s</string>
@@ -715,7 +715,7 @@
     <string name="crash_screen_restart_application">重启应用</string>
     <string name="pref_appearance_summary">主题 • 日期格式</string>
     <string name="pref_general_summary">应用语言 • 通知</string>
-    <string name="pref_library_summary">分类 • 全局更新</string>
+    <string name="pref_library_summary">分类 • 全局更新 • 目录左右滑动</string>
     <string name="pref_downloads_summary">自动下载 • 预先下载</string>
     <string name="pref_tracking_summary">阅读进度上传 • 增强同步</string>
     <string name="pref_advanced_summary">导出崩溃日志 • 电池优化</string>
@@ -761,7 +761,6 @@
     <string name="hour_short">%d 时</string>
     <string name="pref_library_update_show_tab_badge">在“更新”图标上显示未读章数</string>
     <string name="information_no_manga_category">分类为空</string>
-    <string name="pref_worker_info">Worker 信息</string>
     <string name="copied_to_clipboard_plain">已复制到剪贴板</string>
     <string name="enhanced_services_not_installed">支持以下平台但图源尚未安装：%s</string>
     <string name="pref_skip_dupe_chapters">跳过重复章节</string>
@@ -782,6 +781,11 @@
     <plurals name="missing_chapters">
         <item quantity="other">缺少 %1$s 章</item>
     </plurals>
-    <string name="missing_chapters_unknown">可能缺少章节</string>
     <string name="pref_page_rotate_invert">旋转横向图片时反转方向</string>
+    <string name="pref_debug_info">调试信息</string>
+    <string name="pref_chapter_swipe">目录左右滑动</string>
+    <string name="pref_chapter_swipe_end">向右滑动操作</string>
+    <string name="pref_chapter_swipe_start">向左滑动操作</string>
+    <string name="pref_double_tap_zoom">双击放大</string>
+    <string name="pref_library_columns_per_row">每行 %d 个</string>
 </resources>
