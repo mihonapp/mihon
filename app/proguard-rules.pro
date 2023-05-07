@@ -71,9 +71,6 @@
 # XmlUtil
 -keep public enum nl.adaptivity.xmlutil.EventType { *; }
 
-# org.apache.commons:commons-compress
--keep,allowoptimization class org.apache.commons.compress.archivers.zip.**
-
 # Firebase
 -keep class com.google.firebase.installations.** { *; }
 -keep interface com.google.firebase.installations.** { *; }
