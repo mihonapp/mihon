@@ -118,7 +118,6 @@ class MangaCoverScreenModel(
     fun editCover(context: Context, data: Uri) {
         val manga = state.value ?: return
         coroutineScope.launchIO {
-            @Suppress("BlockingMethodInNonBlockingContext")
             context.contentResolver.openInputStream(data)?.use {
                 try {
                     manga.editCover(Injekt.get(), it, updateManga, coverCache)
