@@ -9,8 +9,8 @@ import rx.Observable
 @Suppress("OverridingDeprecatedMember")
 class StubSource(
     override val id: Long,
-    override val name: String,
     override val lang: String,
+    override val name: String,
 ) : Source {
 
     val isInvalid: Boolean = name.isBlank() || lang.isBlank()
