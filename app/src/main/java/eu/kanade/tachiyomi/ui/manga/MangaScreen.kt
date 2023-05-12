@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.net.toUri
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -31,7 +32,6 @@ import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
 import eu.kanade.presentation.util.AssistContentScreen
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
@@ -59,7 +59,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 class MangaScreen(
     private val mangaId: Long,
     val fromSource: Boolean = false,
-) : Screen(), AssistContentScreen {
+) : Screen, AssistContentScreen {
 
     private var assistUrl: String? = null
 

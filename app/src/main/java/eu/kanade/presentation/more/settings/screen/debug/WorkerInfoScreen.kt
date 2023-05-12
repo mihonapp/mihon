@@ -26,9 +26,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkQuery
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.workManager
@@ -39,7 +39,7 @@ import tachiyomi.presentation.core.components.LazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.util.plus
 
-object WorkerInfoScreen : Screen() {
+object WorkerInfoScreen : Screen {
 
     const val title = "Worker info"
 

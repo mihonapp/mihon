@@ -6,7 +6,7 @@ shizuku_version = "12.2.0"
 sqlite = "2.3.1"
 sqldelight = "1.5.5"
 leakcanary = "2.10"
-voyager = "1.0.0-rc07"
+voyager = "1.0.0-rc06"
 richtext = "0.16.0"
 
 [libraries]
@@ -86,9 +86,9 @@ sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.
 junit = "org.junit.jupiter:junit-jupiter:5.9.3"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
 
-voyager-navigator = { module = "ca.gosyer:voyager-navigator", version.ref = "voyager" }
-voyager-tab-navigator = { module = "ca.gosyer:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "ca.gosyer:voyager-transitions", version.ref = "voyager" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
