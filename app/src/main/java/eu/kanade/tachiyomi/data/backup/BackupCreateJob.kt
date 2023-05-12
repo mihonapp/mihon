@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
+import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -22,6 +23,8 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
 
 class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
@@ -29,11 +32,14 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
     private val notifier = BackupNotifier(context)
 
     override suspend fun doWork(): Result {
+        val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)
+
+        if (isAutoBackup && BackupRestoreJob.isRunning(context)) return Result.retry()
+
         val backupPreferences = Injekt.get<BackupPreferences>()
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: backupPreferences.backupsDirectory().get().toUri()
         val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupConst.BACKUP_ALL)
-        val isAutoBackup = inputData.getBoolean(IS_AUTO_BACKUP_KEY, true)
 
         try {
             setForeground(getForegroundInfo())
@@ -76,6 +82,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
                     10,
                     TimeUnit.MINUTES,
                 )
+                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10.minutes.toJavaDuration())
                     .addTag(TAG_AUTO)
                     .setInputData(workDataOf(IS_AUTO_BACKUP_KEY to true))
                     .build()
