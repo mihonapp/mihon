@@ -17,6 +17,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -179,21 +180,36 @@ fun AppBarActions(
     var showMenu by remember { mutableStateOf(false) }
 
     actions.filterIsInstance<AppBar.Action>().map {
-        IconButton(
-            onClick = it.onClick,
-            enabled = it.enabled,
+        PlainTooltipBox(
+            tooltip = { Text(it.title) },
         ) {
-            Icon(
-                imageVector = it.icon,
-                contentDescription = it.title,
-            )
+            IconButton(
+                onClick = it.onClick,
+                enabled = it.enabled,
+                modifier = Modifier.tooltipAnchor(),
+            ) {
+                Icon(
+                    imageVector = it.icon,
+                    contentDescription = it.title,
+                )
+            }
         }
     }
 
     val overflowActions = actions.filterIsInstance<AppBar.OverflowAction>()
     if (overflowActions.isNotEmpty()) {
-        IconButton(onClick = { showMenu = !showMenu }) {
-            Icon(Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.abc_action_menu_overflow_description))
+        PlainTooltipBox(
+            tooltip = { Text(stringResource(R.string.abc_action_menu_overflow_description)) },
+        ) {
+            IconButton(
+                onClick = { showMenu = !showMenu },
+                modifier = Modifier.tooltipAnchor(),
+            ) {
+                Icon(
+                    Icons.Outlined.MoreVert,
+                    contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
+                )
+            }
         }
 
         DropdownMenu(
@@ -301,17 +317,35 @@ fun SearchToolbar(
                 if (!searchEnabled) {
                     // Don't show search action
                 } else if (searchQuery == null) {
-                    IconButton(onClick) {
-                        Icon(Icons.Outlined.Search, contentDescription = stringResource(R.string.action_search))
+                    PlainTooltipBox(
+                        tooltip = { Text(stringResource(R.string.action_search)) },
+                    ) {
+                        IconButton(
+                            onClick = onClick,
+                            modifier = Modifier.tooltipAnchor(),
+                        ) {
+                            Icon(
+                                Icons.Outlined.Search,
+                                contentDescription = stringResource(R.string.action_search),
+                            )
+                        }
                     }
                 } else if (searchQuery.isNotEmpty()) {
-                    IconButton(
-                        onClick = {
-                            onClick()
-                            focusRequester.requestFocus()
-                        },
+                    PlainTooltipBox(
+                        tooltip = { Text(stringResource(R.string.action_reset)) },
                     ) {
-                        Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.action_reset))
+                        IconButton(
+                            onClick = {
+                                onClick()
+                                focusRequester.requestFocus()
+                            },
+                            modifier = Modifier.tooltipAnchor(),
+                        ) {
+                            Icon(
+                                Icons.Outlined.Close,
+                                contentDescription = stringResource(R.string.action_reset),
+                            )
+                        }
                     }
                 }
             }
