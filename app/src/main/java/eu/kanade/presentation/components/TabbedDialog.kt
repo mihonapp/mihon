@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
@@ -31,7 +32,6 @@ import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.TabIndicator
-import tachiyomi.presentation.core.components.rememberPagerState
 
 object TabbedDialogPaddings {
     val Horizontal = 24.dp
@@ -84,7 +84,7 @@ fun TabbedDialog(
 
             HorizontalPager(
                 modifier = Modifier.animateContentSize(),
-                count = tabTitles.size,
+                pageCount = tabTitles.size,
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
             ) { page ->
