@@ -3,17 +3,17 @@ package eu.kanade.tachiyomi.ui.webview
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.AssistContentScreen
+import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.webview.WebViewScreenContent
 
 class WebViewScreen(
     private val url: String,
     private val initialTitle: String? = null,
     private val sourceId: Long? = null,
-) : Screen, AssistContentScreen {
+) : Screen(), AssistContentScreen {
 
     private var assistUrl: String? = null
 

@@ -32,7 +32,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -46,6 +45,7 @@ import eu.kanade.presentation.track.TrackInfoDialogHome
 import eu.kanade.presentation.track.TrackScoreSelector
 import eu.kanade.presentation.track.TrackServiceSearch
 import eu.kanade.presentation.track.TrackStatusSelector
+import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -85,7 +85,7 @@ data class TrackInfoDialogHomeScreen(
     private val mangaId: Long,
     private val mangaTitle: String,
     private val sourceId: Long,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -266,7 +266,7 @@ data class TrackInfoDialogHomeScreen(
 private data class TrackStatusSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -315,7 +315,7 @@ private data class TrackStatusSelectorScreen(
 private data class TrackChapterSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -370,7 +370,7 @@ private data class TrackChapterSelectorScreen(
 private data class TrackScoreSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -421,7 +421,7 @@ private data class TrackDateSelectorScreen(
     private val track: Track,
     private val serviceId: Long,
     private val start: Boolean,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -530,7 +530,7 @@ private data class TrackDateRemoverScreen(
     private val track: Track,
     private val serviceId: Long,
     private val start: Boolean,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -613,7 +613,7 @@ data class TrackServiceSearchScreen(
     private val initialQuery: String,
     private val currentUrl: String?,
     private val serviceId: Long,
-) : Screen {
+) : Screen() {
 
     @Composable
     override fun Content() {
