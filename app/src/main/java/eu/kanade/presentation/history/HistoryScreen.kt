@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -14,6 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.SearchToolbar
@@ -47,12 +47,17 @@ fun HistoryScreen(
                 searchQuery = state.searchQuery,
                 onChangeSearchQuery = onSearchQueryChange,
                 actions = {
-                    IconButton(onClick = { onDialogChange(HistoryScreenModel.Dialog.DeleteAll) }) {
-                        Icon(
-                            Icons.Outlined.DeleteSweep,
-                            contentDescription = stringResource(R.string.pref_clear_history),
-                        )
-                    }
+                    AppBarActions(
+                        listOf(
+                            AppBar.Action(
+                                title = stringResource(R.string.pref_clear_history),
+                                icon = Icons.Outlined.DeleteSweep,
+                                onClick = {
+                                    onDialogChange(HistoryScreenModel.Dialog.DeleteAll)
+                                },
+                            ),
+                        ),
+                    )
                 },
                 scrollBehavior = scrollBehavior,
             )

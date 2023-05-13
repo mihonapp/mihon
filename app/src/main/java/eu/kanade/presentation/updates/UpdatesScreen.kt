@@ -7,8 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SelectAll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -24,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.tachiyomi.R
@@ -144,28 +143,33 @@ private fun UpdatesAppBar(
         modifier = modifier,
         title = stringResource(R.string.label_recent_updates),
         actions = {
-            IconButton(onClick = onUpdateLibrary) {
-                Icon(
-                    imageVector = Icons.Outlined.Refresh,
-                    contentDescription = stringResource(R.string.action_update_library),
-                )
-            }
+            AppBarActions(
+                listOf(
+                    AppBar.Action(
+                        title = stringResource(R.string.action_update_library),
+                        icon = Icons.Outlined.Refresh,
+                        onClick = onUpdateLibrary,
+                    ),
+                ),
+            )
         },
         actionModeCounter = actionModeCounter,
         onCancelActionMode = onCancelActionMode,
         actionModeActions = {
-            IconButton(onClick = onSelectAll) {
-                Icon(
-                    imageVector = Icons.Outlined.SelectAll,
-                    contentDescription = stringResource(R.string.action_select_all),
-                )
-            }
-            IconButton(onClick = onInvertSelection) {
-                Icon(
-                    imageVector = Icons.Outlined.FlipToBack,
-                    contentDescription = stringResource(R.string.action_select_inverse),
-                )
-            }
+            AppBarActions(
+                listOf(
+                    AppBar.Action(
+                        title = stringResource(R.string.action_select_all),
+                        icon = Icons.Outlined.SelectAll,
+                        onClick = onSelectAll,
+                    ),
+                    AppBar.Action(
+                        title = stringResource(R.string.action_select_inverse),
+                        icon = Icons.Outlined.FlipToBack,
+                        onClick = onInvertSelection,
+                    ),
+                ),
+            )
         },
         scrollBehavior = scrollBehavior,
     )

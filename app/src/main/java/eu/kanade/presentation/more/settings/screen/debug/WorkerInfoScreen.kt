@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -29,7 +30,10 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.ioCoroutineScope
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.flow.SharingStarted
@@ -63,13 +67,17 @@ object WorkerInfoScreen : Screen {
                         }
                     },
                     actions = {
-                        IconButton(
-                            onClick = {
-                                context.copyToClipboard(title, enqueued + finished + running)
-                            },
-                        ) {
-                            Icon(imageVector = Icons.Default.ContentCopy, contentDescription = null)
-                        }
+                        AppBarActions(
+                            listOf(
+                                AppBar.Action(
+                                    title = stringResource(R.string.action_copy_to_clipboard),
+                                    icon = Icons.Default.ContentCopy,
+                                    onClick = {
+                                        context.copyToClipboard(title, enqueued + finished + running)
+                                    },
+                                ),
+                            ),
+                        )
                     },
                     scrollBehavior = it,
                 )

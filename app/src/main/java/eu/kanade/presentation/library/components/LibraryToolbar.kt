@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.R
@@ -139,12 +140,20 @@ private fun LibrarySelectionToolbar(
     AppBar(
         titleContent = { Text(text = "$selectedCount") },
         actions = {
-            IconButton(onClick = onClickSelectAll) {
-                Icon(Icons.Outlined.SelectAll, contentDescription = stringResource(R.string.action_select_all))
-            }
-            IconButton(onClick = onClickInvertSelection) {
-                Icon(Icons.Outlined.FlipToBack, contentDescription = stringResource(R.string.action_select_inverse))
-            }
+            AppBarActions(
+                listOf(
+                    AppBar.Action(
+                        title = stringResource(R.string.action_select_all),
+                        icon = Icons.Outlined.SelectAll,
+                        onClick = onClickSelectAll,
+                    ),
+                    AppBar.Action(
+                        title = stringResource(R.string.action_select_inverse),
+                        icon = Icons.Outlined.FlipToBack,
+                        onClick = onClickInvertSelection,
+                    ),
+                ),
+            )
         },
         isActionMode = true,
         onCancelActionMode = onClickUnselectAll,
