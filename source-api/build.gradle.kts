@@ -19,6 +19,10 @@ kotlin {
             dependencies {
                 implementation(project(":core"))
                 api(libs.preferencektx)
+
+                // Workaround for https://youtrack.jetbrains.com/issue/KT-57605
+                implementation(kotlinx.coroutines.android)
+                implementation(project.dependencies.platform(kotlinx.coroutines.bom))
             }
         }
     }
