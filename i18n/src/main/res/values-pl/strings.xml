@@ -59,7 +59,7 @@
     <string name="pref_category_downloads">Pobieranie</string>
     <string name="pref_category_advanced">Zaawansowane</string>
     <string name="pref_category_about">O aplikacji</string>
-    <string name="pref_library_columns">Ilość okładek w rzędzie</string>
+    <string name="pref_library_columns">Rozmiar siatki</string>
     <string name="remove_from_library">Usuń z biblioteki</string>
     <string name="display_mode_chapter">Rozdział %1$s</string>
     <string name="chapter_error">Błąd</string>
@@ -672,7 +672,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_landscape_zoom">Przybliżaj poziome obrazy</string>
     <string name="action_show_manga">Pokaż wpis</string>
-    <string name="pref_navigate_pan">Dotknij aby przesunąć szeroki obraz</string>
+    <string name="pref_navigate_pan">Przesuń szeroki obraz</string>
     <string name="action_display_cover_only_grid">Siatka z samych okładek</string>
     <string name="skipped_reason_not_started">Pominięto - brak przeczytanych rozdziałów</string>
     <string name="skipped_reason_completed">Pominięto ponieważ seria została ukończona</string>
@@ -828,4 +828,8 @@
         <item quantity="many">Brakuje %1$s rozdziałów</item>
         <item quantity="other">Brakuje %1$s rozdziałów</item>
     </plurals>
+    <string name="pref_library_columns_per_row">%d na rząd</string>
+    <string name="pref_double_tap_zoom">Dotknij dwukrotnie, aby powiększyć</string>
+    <string name="pref_chapter_swipe_end">Przesuń palcem w prawo</string>
+    <string name="pref_chapter_swipe_start">Przesuń palcem w lewo</string>
 </resources>

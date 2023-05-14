@@ -20,7 +20,7 @@
     <string name="action_open_log">लग खोल्नुहोस्</string>
     <string name="action_undo">पूर्ववत गर्नुहोस्</string>
     <string name="action_reset">रिसेट गर्नुहोस्</string>
-    <string name="action_save">बचत गर्नुहोस्</string>
+    <string name="action_save">सेभ गर्नुहोस्</string>
     <string name="action_share">साझा गर्नुहोस्</string>
     <string name="action_install">स्थापना गर्नुहोस्</string>
     <string name="action_move_to_bottom">तल सार्नुहोस्</string>
@@ -60,10 +60,10 @@
     <string name="action_edit_categories">वर्गहरू सम्पादन गर्नुहोस्</string>
     <string name="action_add_category">वर्ग थप्नुहोस्</string>
     <string name="action_add">थप्नुहोस्</string>
-    <string name="action_edit">सम्पादन</string>
-    <string name="action_disable_all">सबैलाई अस्वीकार गर्नुहोस्</string>
-    <string name="action_enable_all">सबैलाई स्वीकार गर्नुहोस्</string>
-    <string name="action_update_library">पुस्तकालय अपडेट गर्नुहोस्</string>
+    <string name="action_edit">सम्पादन गर्नुहोस्</string>
+    <string name="action_disable_all">सबैलाई असक्षम गर्नुहोस्</string>
+    <string name="action_enable_all">सबैलाई सक्षम गर्नुहोस्</string>
+    <string name="action_update_library">लाइब्रेरी अपडेट गर्नुहोस्</string>
     <string name="action_delete">हटाउनुहोस्</string>
     <string name="action_remove_bookmark">अध्यायमा पुस्तकचिनो हटाउनुहोस्</string>
     <string name="action_bookmark">अध्यायमा पुस्तकचिनो लगाउनुहोस्</string>
@@ -75,7 +75,7 @@
     <string name="action_global_search">ग्लोबल खोज</string>
     <string name="action_search_settings">सेटिङमा खोज्नुहोस्</string>
     <string name="action_search">खोज्नुहोस्</string>
-    <string name="action_sort_last_read">अन्तिम पढिएको</string>
+    <string name="action_sort_last_read">पछिल्लो पटक पढिएको</string>
     <string name="action_sort_total">कुल अध्यायहरू</string>
     <string name="action_sort_alpha">वर्णमाला अनुसार</string>
     <string name="action_filter_empty">फिल्टर हटाउनुहोस्</string>
@@ -88,10 +88,10 @@
     <string name="history">इतिहास</string>
     <string name="track">ट्र्याकिङ</string>
     <string name="chapters">अध्याय</string>
-    <string name="manga">पुस्तकालयका इन्ट्रीहरू</string>
+    <string name="manga">लाइब्रेरीका इन्ट्रीहरू</string>
     <string name="categories">वर्गहरू</string>
-    <string name="information_empty_category">तपाईंसँग कुनै वर्गहरू छैन। तपाईंको पुस्तकालय व्यवस्थित गर्न प्लस बटन थिच्नुहोस्।</string>
-    <string name="information_empty_library">तपाईंको पुस्तकालय खाली छ</string>
+    <string name="information_empty_category">तपाईंसँग कुनै वर्गहरू छैन। वर्ग बनाएर पुस्तकालय व्यवस्थित गर्न प्लस बटन थिच्नुहोस्।</string>
+    <string name="information_empty_library">तपाईंको लाइब्रेरी खाली छ</string>
     <string name="information_no_recent_manga">हालै केहि पढेको छैन</string>
     <string name="information_no_recent">कुनै नयाँ अपडेटहरू छैन</string>
     <string name="label_download_queue">डाउनलोड लाम</string>
@@ -102,20 +102,20 @@
     <string name="label_extension_info">एक्सटेन्शनको जानकारी</string>
     <string name="label_extensions">एक्सटेन्शन</string>
     <string name="label_migration">स्थानान्तरण</string>
-    <string name="label_backup">ब्याकअप र पुनर्स्थापना</string>
+    <string name="label_backup">ब्याकअप र रिस्टोर</string>
     <string name="label_sources">स्रोतहरू</string>
     <string name="label_recent_manga">इतिहास</string>
     <string name="label_recent_updates">अपडेटहरू</string>
-    <string name="label_library">पुस्तकालय</string>
+    <string name="label_library">लाइब्रेरी</string>
     <string name="label_settings">सेटिङहरू</string>
     <string name="label_more">अरू</string>
     <string name="name">नाम</string>
     <string name="information_cloudflare_bypass_failure">क्लाउडफ्लेयरलाई बाइपास गर्न असफल भयो</string>
-    <string name="action_display_mode">प्रदर्शन मोड</string>
+    <string name="action_display_mode">देखाउने तरिका</string>
     <string name="action_select_inverse">उल्टो चयन गर्नु</string>
     <string name="action_sort_date_added">राखिएको मिती</string>
     <string name="action_sort_chapter_fetch_date">अध्याय ल्याएको मिति</string>
-    <string name="action_sort_latest_chapter">सबैभन्दा नयाँ अध्याय</string>
+    <string name="action_sort_latest_chapter">नवीनतम अध्याय</string>
     <string name="pref_library_update_refresh_trackers_summary">पुस्तकालय अपडेट गर्दा ट्र्याकरहरू अपडेट गर्नुहोस्</string>
     <string name="pref_library_update_refresh_trackers">ट्र्याकरहरू स्वचालित रूपमा रिफ्रेस गर्नुहोस्</string>
     <string name="pref_library_update_refresh_metadata_summary">पुस्तकालय अपडेट गर्दा नयाँ आवरण र विवरणहरूको लागि जाँच गर्नुहोस्</string>
@@ -123,7 +123,7 @@
     <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको</string>
     <string name="restrictions">प्रतिबन्धहरू: %s</string>
     <string name="charging">चार्ज हुँदा</string>
-    <string name="pref_library_update_restriction">स्वचालित अपडेटहरू को यन्त्र प्रतिबन्धहरू</string>
+    <string name="pref_library_update_restriction">स्वचालित अपडेटहरू यन्त्र प्रतिबन्धहरू</string>
     <string name="update_weekly">साप्ताहिक</string>
     <string name="update_48hour">प्रत्येक २ दिन</string>
     <string name="update_24hour">दैनिक</string>
@@ -190,11 +190,11 @@
     <string name="pref_acra_summary">कुनै पनि बगहरू ठीक गर्न मद्दत गर्दछ। कुनै संवेदनशील डाटा पठाइने छैन</string>
     <string name="pref_enable_acra">क्रेश रिपोर्टहरू पठाउनुहोस्</string>
     <string name="updated_version">v%1$s मा अपडेट गरियो</string>
-    <string name="check_for_updates">अपडेटका लागि चेक गर्नुहोस्</string>
+    <string name="check_for_updates">अपडेटका लागि जाँच गर्नुहोस्</string>
     <string name="decode_image_error">छवि लोड गर्न सकिएन</string>
     <string name="download_queue_error">अध्यायहरू डाउनलोड गर्न सकिएन। तपाईं डाउनलोड कतारमा फेरि प्रयास गर्न सक्नुहुन्छ</string>
     <string name="ext_uninstall">स्थापना रद्द गर्नुहोस्</string>
-    <string name="third_to_last">तेस्रो अन्तिम अध्याय</string>
+    <string name="third_to_last">अन्तिम पढिएको अध्याय भन्दा २ अध्याय अघि</string>
     <string name="portrait">पोर्ट्रेट</string>
     <string name="pref_color_filter_mode">रङ फिल्टर मिश्रण मोड</string>
     <string name="default_category_summary">सधैं सोध्नुहोस्</string>
@@ -253,7 +253,7 @@
     <string name="filter_mode_screen">स्क्रिन</string>
     <string name="filter_mode_lighten">डज / हल्का</string>
     <string name="filter_mode_darken">जलाउनु / अँध्यारो गर्नु</string>
-    <string name="pref_create_folder_per_manga">पृष्ठहरू अलग फोल्डरहरूमा बचत गर्नुहोस्</string>
+    <string name="pref_create_folder_per_manga">फरक फोल्डरमा पृष्ठहरू सेभ गर्नुहोस्</string>
     <string name="pref_keep_screen_on">स्क्रिन अन राख्नुहोस्</string>
     <string name="pref_create_folder_per_manga_summary">इन्ट्रीहरूको शीर्षक अनुसार फोल्डरहरू सिर्जना गर्दछ</string>
     <string name="action_sort_count">कुल इन्ट्रीहरू</string>
@@ -295,13 +295,13 @@
     <string name="vertical_viewer">पृष्ठबद्ध (ठाडो)</string>
     <string name="webtoon_viewer">लामो स्ट्रिप</string>
     <string name="vertical_plus_viewer">खाली ठाउँ भएको लामो स्ट्रिप</string>
-    <string name="nav_zone_prev">पछिल्लो</string>
+    <string name="nav_zone_prev">पहिलेको</string>
     <string name="kindlish_nav">किन्डल जस्तै</string>
-    <string name="right_to_left_viewer">पृष्ठबद्ध (दायाँ देखि बायाँ)</string>
+    <string name="right_to_left_viewer">दायाँ देखि बायाँ</string>
     <string name="right_and_left_nav">दायाँ र बायाँ</string>
-    <string name="nav_zone_next">अघिल्लो</string>
+    <string name="nav_zone_next">अर्को</string>
     <string name="nav_zone_left">बायाँ</string>
-    <string name="left_to_right_viewer">पृष्ठबद्ध (बायाँ देखि दायाँ)</string>
+    <string name="left_to_right_viewer">बायाँ देखि दायाँ</string>
     <string name="nav_zone_right">दायाँ</string>
     <string name="browse">ब्राउज</string>
     <string name="creating_backup">ब्याकअप सिर्जना गर्दै</string>
@@ -322,12 +322,12 @@
     <string name="webtoon_side_padding_25">२५%</string>
     <string name="pref_hide_threshold">स्क्रोलमा मेनु लुकाउनको लागि संवेदनशीलता</string>
     <string name="pref_download_directory">डाउनलोड स्थान</string>
-    <string name="second_to_last">दोस्रो अन्तिम अध्याय</string>
+    <string name="second_to_last">अन्तिम पढिएको अध्याय भन्दा पहिले १ अध्याय</string>
     <string name="pref_category_auto_download">स्वत: डाउनलोड गर्नुहोस्</string>
     <string name="tracking_guide">ट्र्याकिङ गाइड</string>
     <string name="pref_auto_update_manga_sync">पढिसकेपछि प्रगति अपडेट गर्नुहोस्</string>
     <string name="pref_remove_bookmarked_chapters">पुस्तकचिनो लगाइएका अध्यायहरू हटाउन अनुमति दिनुहोस्</string>
-    <string name="last_read_chapter">पछिल्लो पढिएको अध्याय</string>
+    <string name="last_read_chapter">अन्तिम पढिएको अध्याय</string>
     <string name="enhanced_tracking_info">सेवाहरू जसले विशिष्ट स्रोतहरूको लागि परिष्कृत सुविधाहरू प्रदान गर्दछ। तपाईंको पुस्तकालयमा इन्ट्री थप्दा स्वतः ट्र्याक गरिन्छ।</string>
     <string name="action_track">ट्र्याक</string>
     <string name="pref_search_pinned_sources_only">ग्लोबल खोजमा पिन गरिएका स्रोतहरू मात्र खोज्नुहोस्</string>
@@ -357,7 +357,7 @@
     <string name="backup_created">ब्याकअप सिर्जना गरियो</string>
     <string name="backup_restore_content_full">ब्याकअप फाइलबाट डाटा पुनर्स्थापित हुनेछ।
 \n
-\nतपाईंले कुनै पनि छुटेका एक्सटेन्शन स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
+\nतपाईंले कुनै पनि छुटेको एक्सटेन्शनहरू स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
     <string name="restore_in_progress">पुनर्स्थापना पहिले नै प्रगतिमा छ</string>
     <string name="label_network">नेटवर्क</string>
     <string name="restoring_backup_error">ब्याकअप पुनर्स्थापना असफल भयो</string>
@@ -388,8 +388,8 @@
     <string name="custom_dir">कस्टम स्थान</string>
     <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिनो लगाइएपछि</string>
     <string name="pref_remove_after_read">पढिसकेपछि स्वचालित रूपमा हटाउनुहोस्</string>
-    <string name="save_chapter_as_cbz">CBZ अभिलेख को रूपमा बचत गर्नुहोस्</string>
-    <string name="fourth_to_last">चौथो अन्तिम अध्याय</string>
+    <string name="save_chapter_as_cbz">CBZ अभिलेख को रूपमा सेभ गर्नुहोस्</string>
+    <string name="fourth_to_last">अन्तिम पढिएको अध्याय भन्दा ३ अध्याय अघि</string>
     <string name="pref_download_new">नयाँ अध्यायहरू डाउनलोड गर्नुहोस्</string>
     <string name="notification_chapters_multiple">अध्यायहरू %1$s</string>
     <plurals name="update_check_notification_ext_updates">
@@ -404,7 +404,7 @@
     <string name="backup_restore_missing_sources">छुटेको स्रोतहरू:</string>
     <string name="pref_clear_chapter_cache">अध्याय क्यास खाली गर्नुहोस्</string>
     <string name="pref_remove_exclude_categories">बहिष्कृत वर्गहरू</string>
-    <string name="fifth_to_last">पाँचौं अन्तिम अध्याय</string>
+    <string name="fifth_to_last">अन्तिम पढिएको अध्याय भन्दा ४ अध्याय अघि</string>
     <string name="pref_download_new_categories_details">\"बहिष्कृत\" वर्गहरूमा इन्ट्री \"समावेश गरिएका\" वर्गहरूमा भए पनि डाउनलोड गरिने छैन।</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">अध्याय %1$s र 1 थप</item>
@@ -468,7 +468,7 @@
     <string name="other_source">अन्य</string>
     <string name="manga_from_library">पुस्तकालयबाट</string>
     <string name="tabs_header">ट्याबहरू</string>
-    <string name="latest">पछिल्लो</string>
+    <string name="latest">नवीनतम</string>
     <string name="local_filter_order_by">द्वारा अर्डर गर्नुहोस्</string>
     <string name="date">मिति</string>
     <string name="login_title">%1$s मा लग इन गर्नुहोस्</string>
@@ -564,7 +564,7 @@
     <string name="confirm_set_image_as_cover">यो छवि आवरण को रूपमा राख्न चाहनुहुन्छ\?</string>
     <string name="dialog_with_checkbox_reset">यो इन्ट्रीको सबै अध्यायहरू रिसेट गर्नुहोस्</string>
     <string name="download_unread">नपढिएको</string>
-    <string name="cover_saved">आवरण बचत भयो</string>
+    <string name="cover_saved">आवरण सेभ भयो</string>
     <string name="pref_category_for_this_series">यो श्रृंखलाको लागि</string>
     <string name="transition_pages_loading">पृष्ठहरू लोड हुँदै…</string>
     <string name="migration_dialog_what_to_include">डाटा समावेश गर्न चुन्नुहोस्</string>
@@ -583,11 +583,11 @@
     <string name="viewer">पढ्ने मोड</string>
     <string name="transition_finished">सकिएको:</string>
     <string name="updating_library">पुस्तकालय अपडेट गर्दै</string>
-    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिङहरूलाई पूर्वनिर्धारित रूपमा बचत गर्न चाहनुहुन्छ\?</string>
+    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिङहरूलाई पूर्वनिर्धारित रूपमा सेभ गर्न चाहनुहुन्छ\?</string>
     <string name="also_set_chapter_settings_for_library">मेरो पुस्तकालयका सबै इन्ट्रीहरूमा पनि लागू गर्नुहोस्</string>
     <string name="no_chapters_error">अध्यायहरू भेटिएन</string>
     <string name="track_status">स्थिति</string>
-    <string name="picture_saved">फोटो बचत गरियो</string>
+    <string name="picture_saved">फोटो सेभ गरियो</string>
     <string name="action_show_manga">इन्ट्री देखाउनुहोस्</string>
     <string name="unread">नपढिएको</string>
     <string name="paused">रोकिएको</string>
@@ -601,7 +601,7 @@
         <item quantity="other">%d ट्र्याकरहरू</item>
     </plurals>
     <string name="repeating">फेरी पढ्दै</string>
-    <string name="transition_current">वर्तमान:</string>
+    <string name="transition_current">हालको:</string>
     <string name="error_no_match">कुनै मेल फेला परेन</string>
     <string name="myanimelist_relogin">कृपया MAL मा फेरि लगइन गर्नुहोस्</string>
     <string name="source_unsupported">स्रोत समर्थित छैन</string>
@@ -620,7 +620,7 @@
     <string name="migrate">स्थानान्तरण</string>
     <string name="action_faq_and_guides">बारम्बार सोधिएका प्रश्न उत्तर र गाइडहरू</string>
     <string name="manga_download">डाउनलोड</string>
-    <string name="transition_no_previous">पहिलेको अध्याय छैन</string>
+    <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
     <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा ताचियोमीलाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
     <string name="notification_updating">पुस्तकालय अपडेट गर्दै...(%1$d/%2$d)</string>
@@ -662,8 +662,8 @@
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
     <string name="action_sort_unread_count">नपढिएको संख्या</string>
     <string name="action_close">बन्द</string>
-    <string name="pref_library_summary">वर्गहरू, ग्लोबल अपडेट, अध्याय स्वाइप</string>
-    <string name="action_sort_last_manga_update">पछिल्लो अपडेट चेक</string>
+    <string name="pref_library_summary">वर्गहरू, ग्लोबल अपडेट</string>
+    <string name="action_sort_last_manga_update">पछिल्लो अपडेट जाँच</string>
     <string name="delete_category_confirmation">के तपाई \"%s\" वर्ग हटाउन चाहनु हुन्छ\?</string>
     <string name="delete_category">वर्ग हटाउनुहोस्</string>
     <string name="action_search_hint">खोज्नुहोस्…</string>
@@ -683,9 +683,9 @@
     <string name="pref_skip_dupe_chapters">डुप्लिकेट अध्यायहरू छोड्नुहोस्</string>
     <string name="action_display_show_continue_reading_button">जारी राख्नुहोस् बटन</string>
     <string name="label_stats">तथ्याङ्क</string>
-    <string name="label_started">सुरु भएको</string>
+    <string name="label_started">सुरु गरिएको</string>
     <string name="label_local">लोकल</string>
-    <string name="label_downloaded">डाउनलोड गरेको</string>
+    <string name="label_downloaded">डाउनलोड गरिएको</string>
     <string name="network_not_metered">मापन नगरिएको नेटवर्कमा मात्र</string>
     <string name="download_ahead">अगाडि डाउनलोड गर्नुहोस्</string>
     <string name="pref_appearance_summary">थीम, मिति र समय ढाँचा</string>
@@ -799,8 +799,8 @@
     </plurals>
     <string name="pref_debug_info">Debug जानकारी</string>
     <string name="pref_chapter_swipe">अध्याय स्वाइप</string>
-    <string name="pref_chapter_swipe_end">दायाँ कार्यमा स्वाइप गर्नुहोस्</string>
-    <string name="pref_chapter_swipe_start">बायाँ कार्यमा स्वाइप गर्नुहोस्</string>
+    <string name="pref_chapter_swipe_end">दायाँ स्वाइप</string>
+    <string name="pref_chapter_swipe_start">बायाँ स्वाइप</string>
     <string name="pref_double_tap_zoom">जूम गर्न डबल ट्याप गर्नुहोस्</string>
     <string name="pref_library_columns_per_row">%d प्रति पङ्क्ति</string>
 </resources>

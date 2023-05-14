@@ -696,4 +696,5 @@
     <string name="pref_invalidate_download_cache">অবৈধ ডাউনলোড সমুহ</string>
     <string name="action_not_now">এখন না</string>
     <string name="pref_debug_info">ডিবাগ তথ্য</string>
+    <string name="skipped_reason_not_always_update">বাদ দেওয়া হয়েছে কারণ সিরিজের আপডেটের প্রয়োজন নেই৷</string>
 </resources>

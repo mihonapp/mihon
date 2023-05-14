@@ -49,11 +49,11 @@
     <string name="scale_type_fit_screen">Axustar á pantalla</string>
     <string name="pref_image_scale_type">Tipo de escala</string>
     <string name="pager_viewer">Paxinado</string>
-    <string name="vertical_plus_viewer">Vertical contínuo</string>
-    <string name="webtoon_viewer">Webtoon</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="right_to_left_viewer">De dereita a esquerda</string>
-    <string name="left_to_right_viewer">De esquerda a dereita</string>
+    <string name="vertical_plus_viewer">Tira longa con espacios</string>
+    <string name="webtoon_viewer">Tira longa</string>
+    <string name="vertical_viewer">Por páxinas (vertical)</string>
+    <string name="right_to_left_viewer">Por páxinas (De dereita a esquerda)</string>
+    <string name="left_to_right_viewer">Por páxinas (de esquerda a dereita)</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
     <string name="black_background">Negro</string>
     <string name="gray_background">Gris</string>
@@ -128,7 +128,7 @@
     <string name="pref_category_library_update">Actualización global</string>
     <string name="landscape">Horizontal</string>
     <string name="portrait">Vertical</string>
-    <string name="pref_library_columns">Elementos por fila</string>
+    <string name="pref_library_columns">Tamaño da reixa</string>
     <string name="pref_category_display">Amosar</string>
     <string name="parental_controls_info">Isto non evita que as extensións non oficiais ou mal clasificadas mostren contido NSFW (+18) dentro da aplicación.</string>
     <string name="hide_notification_content">Esconde os contidos das notificacións</string>
@@ -357,7 +357,7 @@
     <string name="pref_low">Baixa</string>
     <string name="creating_backup">Creando a copia de seguridade</string>
     <string name="pref_general_summary">Idioma da interface, notificacións</string>
-    <string name="pref_library_summary">Categorías, actualización global</string>
+    <string name="pref_library_summary">Categorías, actualización global, accións ao arrastrar</string>
     <string name="pref_reader_summary">Modo de lectura, aparencia e navegación</string>
     <string name="pref_downloads_summary">Baixadas automáticas e por adiantado</string>
     <string name="pref_backup_summary">Copias de seguridade manuais e automáticas</string>
@@ -384,7 +384,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instala e inicia Shizuku para utilizalo como instalador de extensións.</string>
     <string name="automatic_background">Automático</string>
     <string name="l_nav">En forma de L</string>
-    <string name="pref_navigate_pan">Desprazarse polas imaxes anchas ao premer</string>
+    <string name="pref_navigate_pan">Desprazarse polas imaxes anchas</string>
     <string name="pref_auto_update_manga_sync">Actualizar o progreso ao rematar a lectura</string>
     <string name="services">Servizos</string>
     <string name="restoring_backup_canceled">Cancelouse a restauración</string>
@@ -399,7 +399,7 @@
     <string name="pref_backup_directory">Localización da copia de seguridade</string>
     <string name="pref_backup_service_category">Copias de seguridade automáticas</string>
     <string name="backup_in_progress">Xa se está facendo unha copia de seguridade</string>
-    <string name="pref_dump_crash_logs">Baixar os rexistros de erros</string>
+    <string name="pref_dump_crash_logs">Compartir os rexistros de erros</string>
     <string name="error_sharing_cover">Error ao compartir a portada</string>
     <string name="cache_delete_error">Produciuse un erro ao borrar</string>
     <string name="pref_relative_time_short">Curto (Hoxe, Onte)</string>
@@ -647,7 +647,7 @@
     <string name="reading">Lendo</string>
     <string name="notification_check_updates">Procurando capítulos novos</string>
     <string name="download_notifier_text_only_wifi">Non hai ningunha conexión Wi-Fi dispoñible</string>
-    <string name="crash_screen_description">%s pechouse por un problema inesperado. Aconsellámoste que fagas unha captura de pantalla desta mensaxe, baixes os rexistros de erros e logo os compartas na canle de soporte no Discord (en inglés).</string>
+    <string name="crash_screen_description">%s pechouse por un problema inesperado. Aconsellámoste que compartas os rexistros de erros na canle de soporte no Discord (en inglés).</string>
     <string name="crash_screen_restart_application">Reinicia a aplicación</string>
     <string name="source_filter_empty_screen">Non se atopou ninguna fonte instalada</string>
     <string name="download_queue_size_warning">Advertencia: As baixadas grandes poden facer que as fontes se volvan máis lentas e/ou bloqueen Tachiyomi. Preme para saber máis.</string>
@@ -797,4 +797,10 @@
     <string name="pref_page_rotate">Xirar as páxinas anchas para adaptalas á pantalla</string>
     <string name="pref_page_rotate_invert">Voltear a orientación das páxinas anchas xiradas</string>
     <string name="overlay_header">Superposición</string>
+    <string name="pref_library_columns_per_row">%d por fila</string>
+    <string name="pref_chapter_swipe_start">Acción de arrastrar á esquerda</string>
+    <string name="pref_double_tap_zoom">Amplía dando dous toques na pantalla</string>
+    <string name="pref_chapter_swipe">Arrastre de capítulo</string>
+    <string name="pref_chapter_swipe_end">Acción de arrastrar á dereita</string>
+    <string name="pref_debug_info">Información de depuración</string>
 </resources>

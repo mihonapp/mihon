@@ -159,8 +159,8 @@
     <string name="scale_type_fit_screen">Pagkasyahin sa screen</string>
     <string name="pref_image_scale_type">Uri ng pagsasalaki</string>
     <string name="pager_viewer">Nakapahina</string>
-    <string name="vertical_plus_viewer">Patayong tuloy-tuloy</string>
-    <string name="webtoon_viewer">Pa-webtoon</string>
+    <string name="vertical_plus_viewer">Pahabang strip na may puwang</string>
+    <string name="webtoon_viewer">Pahabang strip</string>
     <string name="vertical_viewer">Pahina (patayo)</string>
     <string name="right_to_left_viewer">Pahina (kanan pakaliwa)</string>
     <string name="left_to_right_viewer">Pahina (kaliwa pakanan)</string>
@@ -236,7 +236,7 @@
     <string name="pref_category_library_update">Panlahatang update</string>
     <string name="landscape">Pahiga</string>
     <string name="portrait">Patayo</string>
-    <string name="pref_library_columns">Item kada hilera</string>
+    <string name="pref_library_columns">Laki ng grid</string>
     <string name="pref_category_display">Pagpapakita</string>
     <string name="hide_notification_content">Itago ang laman ng abiso</string>
     <string name="secure_screen_summary">Tinatago ng seguridad sa screen ang laman ng app habang nagpapalit ng app at hinaharangan din nito ang mga screenshot</string>
@@ -652,7 +652,7 @@
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang mga kabanata</string>
     <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nabasang mga kabanata</string>
     <string name="pref_landscape_zoom">Mag-zoom sa pahigang larawan</string>
-    <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan kapag tina-tap</string>
+    <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
     <string name="channel_skipped">Nilaktawan</string>
     <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
@@ -730,7 +730,7 @@
     <string name="pref_backup_summary">Mano-mano at kusang pag-backup</string>
     <string name="pref_security_summary">Pag-lock aa app, bantayan ang screen</string>
     <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
-    <string name="pref_library_summary">Mga kategorya, panlahatang update</string>
+    <string name="pref_library_summary">Mga kategorya, panlahatang update, pag-swipe ng kabanata</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
     <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
     <string name="crash_screen_title">Ay!</string>

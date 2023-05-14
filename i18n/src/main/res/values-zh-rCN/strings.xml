@@ -412,7 +412,7 @@
         <item quantity="other">耗时 %1$s，出现 %2$s 个错误</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">无法打开设备设置</string>
-    <string name="pref_true_color_summary">减少色带，但可能会影响性能</string>
+    <string name="pref_true_color_summary">缓解色带问题，但可能会影响性能</string>
     <string name="pref_refresh_library_covers">刷新书架封面</string>
     <string name="tracking_info">将阅读进度上传到进度记录平台。在作品页面点击“进度记录”按钮即可设置。</string>
     <string name="unofficial_extension_message">此插件不是 Tachiyomi 官方插件</string>

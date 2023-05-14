@@ -11,7 +11,7 @@
     <!-- Actions -->
     <string name="action_settings">Paramètres</string>
     <string name="action_filter">Filtre</string>
-    <string name="action_filter_bookmarked">Signets</string>
+    <string name="action_filter_bookmarked">Favori</string>
     <string name="action_filter_unread">Non lus</string>
     <string name="action_filter_empty">Retirer le filtre</string>
     <string name="action_sort_alpha">Alphabétiquement</string>
@@ -23,7 +23,7 @@
     <string name="action_mark_previous_as_read">Marquer les précédents comme lus</string>
     <string name="action_download">Télécharger</string>
     <string name="action_bookmark">Marquer le chapitre</string>
-    <string name="action_remove_bookmark">Enlever le signet</string>
+    <string name="action_remove_bookmark">Retirer des favoris</string>
     <string name="action_delete">Supprimer</string>
     <string name="action_update_library">Mettre à jour la bibliothèque</string>
     <string name="action_edit">Modifier</string>
@@ -31,8 +31,8 @@
     <string name="action_add_category">Ajouter une catégorie</string>
     <string name="action_edit_categories">Modifier les catégories</string>
     <string name="action_rename_category">Renommer la catégorie</string>
-    <string name="action_move_category">Déplacer vers une catégorie</string>
-    <string name="action_edit_cover">Changer l\'image de couverture</string>
+    <string name="action_move_category">Définir la catégorie</string>
+    <string name="action_edit_cover">Modifier la couverture</string>
     <string name="action_pause">Pause</string>
     <string name="action_previous_chapter">Chapitre précédent</string>
     <string name="action_next_chapter">Chapitre suivant</string>
@@ -61,7 +61,7 @@
     <string name="pref_category_advanced">Avancé</string>
     <string name="pref_category_about">À propos</string>
     <!-- General section -->
-    <string name="pref_library_columns">Nombre de colonnes</string>
+    <string name="pref_library_columns">Taille de grille</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Paysage</string>
     <string name="pref_library_update_interval">Mises à jour automatiques</string>
@@ -88,8 +88,8 @@
     <string name="white_background">Blanc</string>
     <string name="black_background">Noir</string>
     <string name="pref_viewer_type">Mode de lecture par défaut</string>
-    <string name="left_to_right_viewer">Pages (gauche à droite)</string>
-    <string name="right_to_left_viewer">Pages (droite à gauche)</string>
+    <string name="left_to_right_viewer">Pagé (gauche à droite)</string>
+    <string name="right_to_left_viewer">De droite à gauche</string>
     <string name="vertical_viewer">Pages (vertical)</string>
     <string name="webtoon_viewer">Bande continue</string>
     <string name="pref_image_scale_type">Type de mise à l\'échelle</string>
@@ -249,7 +249,7 @@
     <string name="backup_choice">Que voulez-vous sauvegarder \?</string>
     <string name="delete_downloads_for_manga">Supprimer les chapitres téléchargés ?</string>
     <string name="track">Suivi</string>
-    <string name="action_sort_total">Nombre de chapitres</string>
+    <string name="action_sort_total">Total de chapitres</string>
     <string name="pref_create_backup">Créer une sauvegarde</string>
     <string name="pref_create_backup_summ">Peut être utilisé pour restaurer la bibliothèque actuelle</string>
     <string name="pref_restore_backup">Restaurer une sauvegarde</string>
@@ -535,7 +535,7 @@
     <string name="share_page_info">%1$s : %2$s, page %3$d</string>
     <string name="downloaded_chapters">Chapitres téléchargés</string>
     <string name="manga_from_library">De la bibliothèque</string>
-    <string name="action_search_settings">Rechercher des paramètres</string>
+    <string name="action_search_settings">Rechercher les paramètres</string>
     <string name="pref_incognito_mode_summary">Suspend l\'historique de lecture</string>
     <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'historique sera effacé.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
@@ -613,7 +613,7 @@
     <string name="cover_saved">Couverture enregistrée</string>
     <string name="manga_cover">Couverture</string>
     <string name="tracking_guide">Manuel de suivi</string>
-    <string name="off">Désactivé(e)</string>
+    <string name="off">Désactivé</string>
     <string name="on">Activé</string>
     <string name="categorized_display_settings">Rendre les réglages de tri et d\'affichage propres à chaque catégorie</string>
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
@@ -665,11 +665,11 @@
     <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_pref">Installateur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
-    <string name="action_sort_count">Total des entrées</string>
+    <string name="action_sort_count">Entrées totales</string>
     <string name="pref_verbose_logging">Rapports détaillés</string>
     <string name="pref_verbose_logging_summary">Inclut des rapports détaillés dans les traces systèmes (réduit les performances de l\'application)</string>
     <string name="action_display_language_badge">Langue</string>
-    <string name="label_warning">Attention</string>
+    <string name="label_warning">Avertissement</string>
     <string name="notification_size_warning">Les mises à jour importantes nuisent aux sources et peuvent entraîner un ralentissement des mises à jour ainsi qu\'une augmentation de l\'utilisation de la batterie. Appuyez pour en savoir plus.</string>
     <string name="backup_info">Vous devez également conserver des copies des sauvegardes à d\'autres endroits.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
@@ -715,7 +715,7 @@
     <string name="action_close">Fermer</string>
     <string name="battery_not_low">Quand la batterie n\'est pas faible</string>
     <string name="source_filter_empty_screen">Aucune source installée trouvée</string>
-    <string name="action_sort_last_manga_update">Dernière mise à jour</string>
+    <string name="action_sort_last_manga_update">Dernière verification de mise à jour</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>
     <string name="source_empty_screen">Aucune source trouvée</string>
     <string name="split_tall_images_summary">Améliore les performances du lecteur</string>
@@ -779,7 +779,7 @@
     <string name="crash_screen_restart_application">Redémarrer l\'application</string>
     <string name="pref_general_summary">Langage d\'application, notifications</string>
     <string name="pref_browse_summary">Sources, extensions, recherche globale</string>
-    <string name="pref_library_summary">Catégories, mise à jour globale, glissement de chapitre</string>
+    <string name="pref_library_summary">Catégories, mise à jour globale, faire glisser le chapitre</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>
     <string name="pref_security_summary">Verrouillage des applications, écran sécurisé</string>
     <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de nous partager les rapports de plantage dans notre salon d\'assistance sur Discord.</string>
@@ -847,9 +847,9 @@
     <string name="pref_page_rotate_invert">Inverser l\'orientation des pages larges retournées</string>
     <string name="pref_page_rotate">Tourner les pages larges pour qu\'elles rentrent</string>
     <string name="pref_debug_info">Informations de débogage</string>
-    <string name="pref_chapter_swipe_start">Action de Glisser vers la gauche</string>
+    <string name="pref_chapter_swipe_start">Action de glisser à gauche</string>
     <string name="pref_library_columns_per_row">%d par ligne</string>
     <string name="pref_chapter_swipe">Glissement de chapitre</string>
-    <string name="pref_chapter_swipe_end">Action de Glisser vers la droite</string>
+    <string name="pref_chapter_swipe_end">Action de glisser à droite</string>
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
 </resources>
