@@ -110,6 +110,6 @@ class AndroidSourceManager(
             registerStubSource(it)
             return it
         }
-        return StubSource(id, "", "")
+        return StubSource(id = id, lang = "", name = "")
     }
 }
