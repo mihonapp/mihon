@@ -217,7 +217,13 @@ class Downloader(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    completeDownload(it)
+                    // Remove successful download from queue
+                    if (it.status == Download.State.DOWNLOADED) {
+                        removeFromQueue(it)
+                    }
+                    if (areAllDownloadsFinished()) {
+                        stop()
+                    }
                 },
                 { error ->
                     logcat(LogPriority.ERROR, error)
@@ -363,7 +369,30 @@ class Downloader(
                 }
 
             // Do after download completes
-            ensureSuccessfulDownload(download, mangaDir, tmpDir, chapterDirname)
+
+            if (!isDownloadSuccessful(download, tmpDir)) {
+                download.status = Download.State.ERROR
+                return
+            }
+
+            createComicInfoFile(
+                tmpDir,
+                download.manga,
+                download.chapter,
+                download.source,
+            )
+
+            // Only rename the directory if it's downloaded
+            if (downloadPreferences.saveChaptersAsCBZ().get()) {
+                archiveChapter(mangaDir, chapterDirname, tmpDir)
+            } else {
+                tmpDir.renameTo(chapterDirname)
+            }
+            cache.addChapter(chapterDirname, mangaDir, download.manga)
+
+            DiskUtil.createNoMediaFile(tmpDir, context)
+
+            download.status = Download.State.DOWNLOADED
         } catch (error: Throwable) {
             if (error is CancellationException) throw error
             // If the page list threw, it will resume here
@@ -515,26 +544,20 @@ class Downloader(
      * Checks if the download was successful.
      *
      * @param download the download to check.
-     * @param mangaDir the manga directory of the download.
      * @param tmpDir the directory where the download is currently stored.
-     * @param dirname the real (non temporary) directory name of the download.
      */
-    private suspend fun ensureSuccessfulDownload(
+    private fun isDownloadSuccessful(
         download: Download,
-        mangaDir: UniFile,
         tmpDir: UniFile,
-        dirname: String,
-    ) {
+    ): Boolean {
         // Page list hasn't been initialized
-        val downloadPageCount = download.pages?.size ?: run {
-            download.status = Download.State.ERROR
-            return
-        }
+        val downloadPageCount = download.pages?.size ?: return false
+
         // Ensure that all pages have been downloaded
         if (download.downloadedImages != downloadPageCount) {
-            download.status = Download.State.ERROR
-            return
+            return false
         }
+
         // Ensure that the chapter folder has all the pages
         val downloadedImagesCount = tmpDir.listFiles().orEmpty().count {
             val fileName = it.name.orEmpty()
@@ -547,28 +570,10 @@ class Downloader(
             }
         }
         if (downloadedImagesCount != downloadPageCount) {
-            download.status = Download.State.ERROR
-            return
+            return false
         }
 
-        createComicInfoFile(
-            tmpDir,
-            download.manga,
-            download.chapter,
-            download.source,
-        )
-
-        // Only rename the directory if it's downloaded
-        if (downloadPreferences.saveChaptersAsCBZ().get()) {
-            archiveChapter(mangaDir, dirname, tmpDir)
-        } else {
-            tmpDir.renameTo(dirname)
-        }
-        cache.addChapter(dirname, mangaDir, download.manga)
-
-        DiskUtil.createNoMediaFile(tmpDir, context)
-
-        download.status = Download.State.DOWNLOADED
+        return true
     }
 
     /**
@@ -625,20 +630,6 @@ class Downloader(
     }
 
     /**
-     * Completes a download. This method is called in the main thread.
-     */
-    private fun completeDownload(download: Download) {
-        // Delete successful downloads from queue
-        if (download.status == Download.State.DOWNLOADED) {
-            // Remove downloaded chapter from queue
-            removeFromQueue(download)
-        }
-        if (areAllDownloadsFinished()) {
-            stop()
-        }
-    }
-
-    /**
      * Returns true if all the queued downloads are in DOWNLOADED or ERROR state.
      */
     private fun areAllDownloadsFinished(): Boolean {
@@ -665,14 +656,26 @@ class Downloader(
         }
     }
 
-    fun removeFromQueue(chapters: List<Chapter>) {
-        chapters.forEach { chapter ->
-            queueState.value.find { it.chapter.id == chapter.id }?.let { removeFromQueue(it) }
+    private inline fun removeFromQueueByPredicate(predicate: (Download) -> Boolean) {
+        _queueState.update { queue ->
+            val downloads = queue.filter { predicate(it) }
+            store.removeAll(downloads)
+            downloads.forEach { download ->
+                if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
+                    download.status = Download.State.NOT_DOWNLOADED
+                }
+            }
+            queue - downloads
         }
     }
 
+    fun removeFromQueue(chapters: List<Chapter>) {
+        val chapterIds = chapters.map { it.id }
+        removeFromQueueByPredicate { it.chapter.id in chapterIds }
+    }
+
     fun removeFromQueue(manga: Manga) {
-        queueState.value.filter { it.manga.id == manga.id }.forEach { removeFromQueue(it) }
+        removeFromQueueByPredicate { it.manga.id == manga.id }
     }
 
     private fun _clearQueue() {

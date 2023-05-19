@@ -60,6 +60,17 @@ class DownloadStore(
     }
 
     /**
+     * Removes a list of downloads from the store.
+     *
+     * @param downloads the download to remove.
+     */
+    fun removeAll(downloads: List<Download>) {
+        preferences.edit {
+            downloads.forEach { remove(getKey(it)) }
+        }
+    }
+
+    /**
      * Removes all the downloads from the store.
      */
     fun clear() {
