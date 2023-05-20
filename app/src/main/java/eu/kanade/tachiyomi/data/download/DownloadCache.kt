@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
@@ -96,7 +96,7 @@ class DownloadCache(
         get() = File(context.cacheDir, "dl_index_cache")
 
     private val rootDownloadsDirLock = Mutex()
-    private var rootDownloadsDir: RootDirectory
+    private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
 
     init {
         downloadPreferences.downloadsDirectory().changes()
@@ -106,20 +106,20 @@ class DownloadCache(
             }
             .launchIn(scope)
 
-        rootDownloadsDir = runBlocking(Dispatchers.IO) {
-            try {
-                val diskCache = diskCacheFile.inputStream().use {
-                    ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
+        // Attempt to read cache file
+        scope.launch {
+            rootDownloadsDirLock.withLock {
+                try {
+                    val diskCache = diskCacheFile.inputStream().use {
+                        ProtoBuf.decodeFromByteArray<RootDirectory>(it.readBytes())
+                    }
+                    rootDownloadsDir = diskCache
+                    lastRenew = System.currentTimeMillis()
+                } catch (e: Throwable) {
+                    diskCacheFile.delete()
                 }
-                lastRenew = 1 // Just so that the banner won't show up
-                diskCache
-            } catch (e: Throwable) {
-                diskCacheFile.delete()
-                null
             }
-        } ?: RootDirectory(getDirectoryFromPreference())
-
-        notifyChanges()
+        }
     }
 
     /**
