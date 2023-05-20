@@ -6,7 +6,7 @@
     <string name="label_download_queue">File de téléchargement</string>
     <string name="label_library">Bibliothèque</string>
     <string name="label_recent_manga">Historique</string>
-    <string name="label_recent_updates">Nouveautés</string>
+    <string name="label_recent_updates">Mises à jour</string>
     <string name="label_backup">Sauvegarder et restaurer</string>
     <!-- Actions -->
     <string name="action_settings">Paramètres</string>

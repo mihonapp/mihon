@@ -70,8 +70,8 @@
     <string name="pref_category_tracking">Праћење</string>
     <string name="pref_category_advanced">Напредно</string>
     <string name="pref_category_about">O апликацији</string>
-    <string name="pref_library_columns">Број ставки по реду</string>
-    <string name="portrait">Вертикално</string>
+    <string name="pref_library_columns">Величина мреже</string>
+    <string name="portrait">Усправно</string>
     <string name="landscape">Хоризонтално</string>
     <string name="pref_library_update_interval">Аутоматска ажурирања</string>
     <string name="update_never">Искључено</string>
@@ -117,10 +117,10 @@
     <string name="white_background">Бела</string>
     <string name="black_background">Црна</string>
     <string name="pref_viewer_type">Подразумевани начин читања</string>
-    <string name="left_to_right_viewer">Слева надесно</string>
-    <string name="right_to_left_viewer">Здесна налево</string>
-    <string name="vertical_viewer">Вертикално</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Страница (слева надесно)</string>
+    <string name="right_to_left_viewer">Страница (сдесна налево)</string>
+    <string name="vertical_viewer">Страница (вертикално)</string>
+    <string name="webtoon_viewer">Дуги стрип</string>
     <string name="pager_viewer">Странично</string>
     <string name="pref_image_scale_type">Тип скалирања</string>
     <string name="scale_type_fit_screen">Попуни екран</string>
@@ -246,7 +246,7 @@
     <string name="theme_dark">Укључено</string>
     <string name="theme_system">По систему</string>
     <string name="pref_manage_notifications">Управљај обавештењима</string>
-    <string name="pref_category_security">Безбедност</string>
+    <string name="pref_category_security">Безбедност и приватност</string>
     <string name="lock_when_idle">Закључај приликом мировања</string>
     <string name="lock_always">Увек</string>
     <string name="lock_never">Никада</string>
@@ -364,7 +364,7 @@
     <string name="pref_webtoon_side_padding">Растојање од ивице</string>
     <string name="pref_category_reading">Читање</string>
     <string name="pref_always_show_chapter_transition">Увек прикажи транзицију поглавља</string>
-    <string name="vertical_plus_viewer">Континуирано вертикално</string>
+    <string name="vertical_plus_viewer">Дуги стрип са размацима</string>
     <string name="pref_skip_filtered_chapters">Прескочи филтрирана поглавља</string>
     <string name="pref_cutout_short">Прикажи садржај у исечку</string>
     <string name="set_as_cover">Постави као омот</string>
@@ -454,9 +454,9 @@
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Инсталер</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Прескаче се %d поглавље, не постоји у извору или је филтрирано</item>
-        <item quantity="few">Прескачу се %d поглавља, не постоје у извору или су филтрирана</item>
-        <item quantity="other">Прескаче се %d поглавља, не постоје у извору или су филтрирана</item>
+        <item quantity="one">Прескаче се %d поглавље, или не постоји у извору или је филтером издвојено</item>
+        <item quantity="few">Прескаче се %d поглавља, или не постоји у извору или је филтером издвојено</item>
+        <item quantity="other">Прескаче се %d поглавља, или не постоји у извору или је филтером издвојено</item>
     </plurals>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
     <string name="action_track">Прати</string>
@@ -502,7 +502,7 @@
 \nМораћете да инсталирате све додатке које недостају и да се после тога пријавите на трекере да бисте их користили.</string>
     <string name="enhanced_tracking_info">Сервиси који пружају побољшане услуге за одређене изворе. Наслов се аутоматски прати када га додате у колекцију.</string>
     <string name="help_translate">Помозите у превођењу</string>
-    <string name="pref_dump_crash_logs">Избаци извештаје о паду</string>
+    <string name="pref_dump_crash_logs">Дели извештаје о паду</string>
     <string name="pref_verbose_logging_summary">Исписуј детаљне извештаје у системски дневник (смањује перформансе апликације)</string>
     <string name="battery_optimization_setting_activity_not_found">Није могуће отворити подешавања уређаја</string>
     <string name="pref_refresh_library_covers">Освежи омоте у колекцији</string>
@@ -559,7 +559,7 @@
         <item quantity="few">Поглавља %1$s и још %2$d</item>
         <item quantity="other">Поглавља %1$s и још %2$d</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Укључи само означене изворе</string>
+    <string name="pref_search_pinned_sources_only">Претражи само означене изворе у глобалној претрази</string>
     <string name="pref_show_navigation_mode">Прикажи начин навигације</string>
     <string name="track_finished_reading_date">Датум завршетка</string>
     <string name="automatic_background">Аутоматски</string>
@@ -638,7 +638,7 @@
     <string name="clear_history_completed">Историја је избрисана</string>
     <string name="clear_history_confirmation">Да ли сте сигурни\? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
-    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Tachiyomi-ја. Додирни за даље информације.</string>
+    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Tachiyomi-ја. Додирни да сазнаш више.</string>
     <string name="notification_updating">Ажурирање колекције... (%1$d/%2$d)</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
@@ -662,7 +662,7 @@
     <string name="skipped_reason_not_started">Прескочено јер ниједно поглавље није прочитано</string>
     <string name="channel_skipped">Прескочено</string>
     <string name="action_display_cover_only_grid">Мрежа насловница</string>
-    <string name="pref_navigate_pan">Померај широке слике додиром</string>
+    <string name="pref_navigate_pan">Померај широке слике</string>
     <string name="pref_landscape_zoom">Зумирај пејзажну слику</string>
     <string name="action_faq_and_guides">Питања и водичи</string>
     <string name="save_chapter_as_cbz">Sačuvaj kao CBZ arhivu</string>
@@ -680,7 +680,7 @@
     <string name="battery_not_low">Батерија није празна</string>
     <string name="pref_clear_webview_data">Обриши податке WebView-a</string>
     <string name="webview_data_deleted">Подаци WebView-a су обрисани</string>
-    <string name="pref_library_summary">Категорије, глобално ажурирање</string>
+    <string name="pref_library_summary">Категорије, глобално ажурирање, листање поглавља</string>
     <string name="pref_reader_summary">Режим читања, дисплеј, навигација</string>
     <string name="pref_downloads_summary">Аутоматско преузимање, преузимање унапред</string>
     <string name="pref_tracking_summary">Једносмерна синхронизација напретка, побољшана синхронизација</string>
@@ -691,7 +691,7 @@
     <string name="pref_reset_viewer_flags_success">Сва подешавања читача су ресетована</string>
     <string name="pref_invalidate_download_cache_summary">Присили апликацију да поново провери преузета поглавља</string>
     <string name="not_installed">Није инсталирано</string>
-    <string name="crash_screen_description">%s је наишао на неочекивану грешку. Предлажемо да снимите ову поруку и евиденције о паду, а затим да их поделите на нашем каналу за подршку на Discord-у.</string>
+    <string name="crash_screen_description">%s је наишао на неочекивану грешку. Предлажемо да поделите запис о прекиду програма на нашем каналу за подршку на Discord-у.</string>
     <string name="appwidget_unavailable_locked">Widget није доступан када је омогућено закључавање апликације</string>
     <string name="pref_library_update_show_tab_badge">Прокажи број непрочитаних на икони ажурирања</string>
     <string name="wish_list">Листа жеља</string>
@@ -735,7 +735,7 @@
     <string name="minute_short">%d минута</string>
     <string name="seconds_short">%d секунди</string>
     <string name="description_placeholder">Нема описа</string>
-    <string name="action_display_show_continue_reading_button">Покажи дугме за наставак читања</string>
+    <string name="action_display_show_continue_reading_button">Дугме за наставак читања</string>
     <string name="internal_error">InternalError: Провери записнике о прекиду програма за даље информације</string>
     <string name="pref_skip_dupe_chapters">Прескочи дупликатска поглавља</string>
     <string name="multi_lang">Више језика</string>
@@ -795,4 +795,27 @@
     <string name="pref_user_agent_string">Подразумеван низ корисничког агента</string>
     <string name="track_error">%1$s грешка: %2$s</string>
     <string name="information_required_plain">*неопходно</string>
+    <string name="action_update_category">Ажурирај категорију</string>
+    <string name="pref_hide_in_library_items">Сакри уносе који се већ налазе у колекцији</string>
+    <string name="overlay_header">Прекривање</string>
+    <string name="split_tall_images">Растави високе слике</string>
+    <string name="pref_library_columns_per_row">%d по реду</string>
+    <string name="pref_chapter_swipe_end">Превуци удесно</string>
+    <string name="pref_chapter_swipe_start">Превуци улево</string>
+    <string name="pref_chapter_swipe">Прелистај поглавље</string>
+    <string name="pref_double_tap_zoom">Додирни двапут за зумирање</string>
+    <plurals name="download_amount">
+        <item quantity="one">Следеће поглавље</item>
+        <item quantity="few">Следећа %d поглавља</item>
+        <item quantity="other">Следећих %d поглавља</item>
+    </plurals>
+    <string name="action_copy_to_clipboard">Копирај</string>
+    <string name="pref_page_rotate_invert">Окрени положај широких страница</string>
+    <string name="pref_page_rotate">Прилагоди широке странице ротирањем</string>
+    <string name="pref_debug_info">Информације за отклањање грешака</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Недостаје %1$s поглавље</item>
+        <item quantity="few">Недостају %1$s поглавља</item>
+        <item quantity="other">Недостаје %1$s поглавља</item>
+    </plurals>
 </resources>

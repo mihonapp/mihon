@@ -194,7 +194,7 @@
     <!-- Download Notification -->
     <string name="download_notifier_title_error">Erro</string>
     <string name="download_notifier_unknown_error">Não foi possível transferir o capítulo devido a um erro inesperado</string>
-    <string name="download_notifier_text_only_wifi">Sem ligação de Wi-Fi disponível</string>
+    <string name="download_notifier_text_only_wifi">A ligação Wi-Fi está indisponível</string>
     <string name="categories">Categorias</string>
     <string name="manga">Itens da biblioteca</string>
     <string name="track">Monitorização</string>
@@ -310,9 +310,9 @@
     <string name="copy">Copiar</string>
     <string name="notification_cover_update_failed">Falha ao atualizar a capa</string>
     <string name="information_empty_category">Não tem nenhuma categoria. Toque no botão (+) para criar uma e organizar a sua biblioteca.</string>
-    <string name="download_notifier_downloader_title">Descarregador</string>
-    <string name="download_notifier_no_network">Conexão à rede indisponível</string>
-    <string name="download_notifier_download_paused">Descargas pausados</string>
+    <string name="download_notifier_downloader_title">Gestor de transferências</string>
+    <string name="download_notifier_no_network">A ligação à rede está indisponível</string>
+    <string name="download_notifier_download_paused">Transferências em pausa</string>
     <string name="channel_common">Comum</string>
     <string name="filter_mode_overlay">Sobrepor</string>
     <string name="filter_mode_multiply">Multiplicação</string>
@@ -542,7 +542,7 @@
     <string name="spen_next_page">Página seguinte</string>
     <string name="spen_previous_page">Página anterior</string>
     <string name="migration_help_guide">Guia de migração de fonte</string>
-    <string name="file_picker_error">Não foi encontrada app de selecção de ficheiros</string>
+    <string name="file_picker_error">Não foi encontrada nenhuma app de seleção de ficheiros</string>
     <string name="myanimelist_relogin">Por favor inicie sessão no MAL novamente</string>
     <string name="pref_show_nsfw_source">Mostrar na lista de fontes e extensões</string>
     <string name="pref_viewer_nav">Zonas de toque</string>
@@ -815,7 +815,7 @@
     <string name="label_mean_score">Avaliação média</string>
     <string name="label_used">Usados</string>
     <string name="seconds_short">%ds</string>
-    <string name="download_notifier_cache_renewal">A verificar as descargas</string>
+    <string name="download_notifier_cache_renewal">A verificar as transferências</string>
     <string name="track_remove_date_conf_title">Remover data\?</string>
     <string name="label_overview_section">Visão geral</string>
     <string name="label_completed_titles">Itens completos</string>

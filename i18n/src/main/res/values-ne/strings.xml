@@ -3,7 +3,7 @@
     <string name="theme_dark">अन</string>
     <string name="theme_light">अफ</string>
     <string name="pref_theme_mode">अँध्यारो मोड</string>
-    <string name="pref_category_theme">थीम</string>
+    <string name="pref_category_theme">थिम</string>
     <string name="pref_category_about">बारेमा</string>
     <string name="pref_category_advanced">उन्नत सेटिङहरू</string>
     <string name="pref_category_tracking">ट्र्याकिङ</string>
@@ -16,7 +16,7 @@
     <string name="action_webview_refresh">रिफ्रेस गर्नुहोस्</string>
     <string name="action_webview_forward">अगाडि</string>
     <string name="action_webview_back">पछाडि</string>
-    <string name="action_restore">पुनर्स्थापना गर्नुहोस्</string>
+    <string name="action_restore">रिस्टोर गर्नुहोस्</string>
     <string name="action_open_log">लग खोल्नुहोस्</string>
     <string name="action_undo">पूर्ववत गर्नुहोस्</string>
     <string name="action_reset">रिसेट गर्नुहोस्</string>
@@ -63,7 +63,7 @@
     <string name="action_edit">सम्पादन गर्नुहोस्</string>
     <string name="action_disable_all">सबैलाई असक्षम गर्नुहोस्</string>
     <string name="action_enable_all">सबैलाई सक्षम गर्नुहोस्</string>
-    <string name="action_update_library">लाइब्रेरी अपडेट गर्नुहोस्</string>
+    <string name="action_update_library">पुस्तकालय अपडेट गर्नुहोस्</string>
     <string name="action_delete">हटाउनुहोस्</string>
     <string name="action_remove_bookmark">अध्यायमा पुस्तकचिनो हटाउनुहोस्</string>
     <string name="action_bookmark">अध्यायमा पुस्तकचिनो लगाउनुहोस्</string>
@@ -88,10 +88,10 @@
     <string name="history">इतिहास</string>
     <string name="track">ट्र्याकिङ</string>
     <string name="chapters">अध्याय</string>
-    <string name="manga">लाइब्रेरीका इन्ट्रीहरू</string>
+    <string name="manga">पुस्तकालयका इन्ट्रीहरू</string>
     <string name="categories">वर्गहरू</string>
     <string name="information_empty_category">तपाईंसँग कुनै वर्गहरू छैन। वर्ग बनाएर पुस्तकालय व्यवस्थित गर्न प्लस बटन थिच्नुहोस्।</string>
-    <string name="information_empty_library">तपाईंको लाइब्रेरी खाली छ</string>
+    <string name="information_empty_library">तपाईंको पुस्तकालय खाली छ</string>
     <string name="information_no_recent_manga">हालै केहि पढेको छैन</string>
     <string name="information_no_recent">कुनै नयाँ अपडेटहरू छैन</string>
     <string name="label_download_queue">डाउनलोड लाम</string>
@@ -106,12 +106,12 @@
     <string name="label_sources">स्रोतहरू</string>
     <string name="label_recent_manga">इतिहास</string>
     <string name="label_recent_updates">अपडेटहरू</string>
-    <string name="label_library">लाइब्रेरी</string>
+    <string name="label_library">पुस्तकालय</string>
     <string name="label_settings">सेटिङहरू</string>
     <string name="label_more">अरू</string>
     <string name="name">नाम</string>
     <string name="information_cloudflare_bypass_failure">क्लाउडफ्लेयरलाई बाइपास गर्न असफल भयो</string>
-    <string name="action_display_mode">देखाउने तरिका</string>
+    <string name="action_display_mode">प्रदर्शन मोड</string>
     <string name="action_select_inverse">उल्टो चयन गर्नु</string>
     <string name="action_sort_date_added">राखिएको मिती</string>
     <string name="action_sort_chapter_fetch_date">अध्याय ल्याएको मिति</string>
@@ -144,7 +144,7 @@
     <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
     <string name="pref_category_nsfw_content">NSFW (१८+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>
-    <string name="secure_screen_summary">एपहरू स्विच गर्दा \"सुरक्षित स्क्रिनले\" एप सामग्रीहरू लुकाउँछ र स्क्रिनसटहरू रोक्छ</string>
+    <string name="secure_screen_summary">एपहरू स्विच गर्दा \"स्क्रिन सुरक्षित गर्नुहोस्\" ले एप सामग्रीहरू लुकाउँछ र स्क्रिनसटहरू रोक्छ</string>
     <string name="secure_screen">स्क्रिन सुरक्षित गर्नुहोस्</string>
     <plurals name="lock_after_mins">
         <item quantity="one">%1$s मिनेट पछि</item>
@@ -171,7 +171,7 @@
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
     <string name="theme_greenapple">हरियो स्याउ</string>
     <string name="theme_monet">गतिशील</string>
-    <string name="pref_app_theme">एपको थीम</string>
+    <string name="pref_app_theme">एपको थिम</string>
     <string name="theme_system">सिस्टम पालना गर्नुहोस्</string>
     <string name="pref_category_appearance">रूप</string>
     <string name="action_start_downloading_now">अहिले डाउनलोड गर्न सुरु गर्नुहोस्</string>
@@ -331,7 +331,7 @@
     <string name="enhanced_tracking_info">सेवाहरू जसले विशिष्ट स्रोतहरूको लागि परिष्कृत सुविधाहरू प्रदान गर्दछ। तपाईंको पुस्तकालयमा इन्ट्री थप्दा स्वतः ट्र्याक गरिन्छ।</string>
     <string name="action_track">ट्र्याक</string>
     <string name="pref_search_pinned_sources_only">ग्लोबल खोजमा पिन गरिएका स्रोतहरू मात्र खोज्नुहोस्</string>
-    <string name="restore_completed">पुनर्स्थापना सम्पन्न भयो</string>
+    <string name="restore_completed">रिस्टोर सम्पन्न भयो</string>
     <plurals name="restore_completed_message">
         <item quantity="one">%2$s त्रुटिको साथ %1$s मा सम्पन्न भयो</item>
         <item quantity="other">%2$s त्रुटिहरूसँग %1$s मा सम्पन्न भयो</item>
@@ -355,10 +355,10 @@
     <string name="services">सेवाहरू</string>
     <string name="invalid_backup_file">अवैध ब्याकअप फाइल</string>
     <string name="backup_created">ब्याकअप सिर्जना गरियो</string>
-    <string name="backup_restore_content_full">ब्याकअप फाइलबाट डाटा पुनर्स्थापित हुनेछ।
+    <string name="backup_restore_content_full">ब्याकअप फाइलबाट डाटा रिस्टोर हुनेछ।
 \n
 \nतपाईंले कुनै पनि छुटेको एक्सटेन्शनहरू स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
-    <string name="restore_in_progress">पुनर्स्थापना पहिले नै प्रगतिमा छ</string>
+    <string name="restore_in_progress">रिस्टोर पहिले नै प्रगतिमा छ</string>
     <string name="label_network">नेटवर्क</string>
     <string name="restoring_backup_error">ब्याकअप पुनर्स्थापना असफल भयो</string>
     <string name="backup_info">तपाईंले ब्याकअपको प्रतिलिपिहरू अन्य ठाउँहरूमा पनि राख्नु पर्छ।</string>
@@ -370,7 +370,7 @@
     <string name="pref_highest">उच्चतम</string>
     <string name="disabled">असक्षम</string>
     <string name="enhanced_services">परिष्कृत सेवाहरू</string>
-    <string name="restoring_backup_canceled">पुनर्स्थापना रद्द गरियो</string>
+    <string name="restoring_backup_canceled">रिस्टोर रद्द गरियो</string>
     <string name="download_notifier_title_error">त्रुटि</string>
     <string name="scale_type_stretch">तन्काउनुहोस्</string>
     <string name="scale_type_smart_fit">स्मार्ट फिट</string>
@@ -411,7 +411,7 @@
         <item quantity="other">अध्याय %1$s र %2$d थप</item>
     </plurals>
     <string name="pref_create_backup">ब्याकअप सिर्जना गर्नुहोस्</string>
-    <string name="pref_create_backup_summ">हालको पुस्तकालय पुनर्स्थापना गर्न प्रयोग गर्न सकिन्छ</string>
+    <string name="pref_create_backup_summ">हालको पुस्तकालय रिस्टोर गर्न प्रयोग गर्न सकिन्छ</string>
     <string name="cookies_cleared">कुकीहरू खाली गरियो</string>
     <string name="label_data">डाटा</string>
     <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
@@ -437,7 +437,7 @@
     <string name="extension_api_error">एक्सटेन्शनहरूको सूची प्राप्त गर्न असफल भयो</string>
     <string name="zoom_start_right">दायाँ</string>
     <string name="pref_restore_backup">ब्याकअप रिस्टोर गर्नुहोस्</string>
-    <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय पुनर्स्थापना गर्नुहोस्</string>
+    <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय रिस्टोर गर्नुहोस्</string>
     <string name="pref_backup_service_category">स्वचालित ब्याकअपहरू</string>
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
     <string name="pref_backup_directory">ब्याकअप स्थान</string>
@@ -506,7 +506,7 @@
     <string name="local_source_help_guide">लोकल स्रोत गाइड</string>
     <string name="ongoing">जारी छ</string>
     <string name="unknown_status">अज्ञात स्थिति</string>
-    <string name="licensed">इजाजतपत्र प्राप्त</string>
+    <string name="licensed">लाइसेन्स प्राप्त</string>
     <string name="password">पासवर्ड</string>
     <string name="pref_clear_database_summary">पुस्तकालयमा नभएका इन्ट्रीको इतिहास हटाउनुहोस्</string>
     <string name="clear_database_confirmation">के तपाईँ निश्चित हुनुहुन्छ\? तपाईंले पढ्नुभएको अध्यायहरू र गैर-पुस्तकालय इन्ट्रीहरूको प्रगति हराउनेछ</string>
@@ -516,7 +516,7 @@
     <string name="version">संस्करण</string>
     <string name="website">वेबसाइट</string>
     <string name="help_translate">अनुवाद गर्न मद्दत गर्नुहोस्</string>
-    <string name="licenses">खुला स्रोत इजाजतपत्रहरू</string>
+    <string name="licenses">खुला स्रोत लाइसेन्सहरू</string>
     <string name="remove_from_library">पुस्तकालयबाट हटाउनुहोस्</string>
     <string name="publishing_finished">प्रकाशन सकियो</string>
     <string name="cancelled">रद्द गरेको</string>
@@ -658,11 +658,11 @@
     <string name="pref_landscape_zoom">जूम ल्यान्डस्केप छवि</string>
     <string name="notification_update_error">%1$d अपडेट(हरू) असफल भयो</string>
     <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
-    <string name="disabled_nav">अक्षम</string>
+    <string name="disabled_nav">असक्षम</string>
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
     <string name="action_sort_unread_count">नपढिएको संख्या</string>
     <string name="action_close">बन्द</string>
-    <string name="pref_library_summary">वर्गहरू, ग्लोबल अपडेट</string>
+    <string name="pref_library_summary">वर्गहरू, ग्लोबल अपडेट, अध्याय स्वाइप</string>
     <string name="action_sort_last_manga_update">पछिल्लो अपडेट जाँच</string>
     <string name="delete_category_confirmation">के तपाई \"%s\" वर्ग हटाउन चाहनु हुन्छ\?</string>
     <string name="delete_category">वर्ग हटाउनुहोस्</string>
@@ -688,7 +688,7 @@
     <string name="label_downloaded">डाउनलोड गरिएको</string>
     <string name="network_not_metered">मापन नगरिएको नेटवर्कमा मात्र</string>
     <string name="download_ahead">अगाडि डाउनलोड गर्नुहोस्</string>
-    <string name="pref_appearance_summary">थीम, मिति र समय ढाँचा</string>
+    <string name="pref_appearance_summary">थिम, मिति र समय ढाँचा</string>
     <string name="download_ahead_info">केवल पुस्तकालयका इन्ट्रीहरूमा काम गर्दछ र यदि हालको अध्याय + अर्को पहिले नै डाउनलोड गरिएको छ</string>
     <string name="theme_tidalwave">समुन्द्री लहर</string>
     <string name="ext_info_version">संस्करण</string>

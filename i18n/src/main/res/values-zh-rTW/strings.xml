@@ -157,7 +157,7 @@
     <string name="download_notifier_text_only_wifi">沒有可用的 Wi-Fi 連線</string>
     <string name="download_notifier_no_network">尚未連接至網路</string>
     <string name="download_notifier_download_paused">下載已暫停</string>
-    <string name="pref_library_columns">欄數</string>
+    <string name="pref_library_columns">格線大小</string>
     <string name="pref_page_transitions">翻頁轉場動畫</string>
     <string name="pref_crop_borders">邊緣裁剪</string>
     <string name="pref_color_filter_mode">濾鏡融合機制</string>

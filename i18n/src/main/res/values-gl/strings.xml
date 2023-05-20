@@ -52,7 +52,7 @@
     <string name="vertical_plus_viewer">Tira longa con espacios</string>
     <string name="webtoon_viewer">Tira longa</string>
     <string name="vertical_viewer">Por páxinas (vertical)</string>
-    <string name="right_to_left_viewer">Por páxinas (De dereita a esquerda)</string>
+    <string name="right_to_left_viewer">Páxinas (De dereita a esquerda)</string>
     <string name="left_to_right_viewer">Por páxinas (de esquerda a dereita)</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
     <string name="black_background">Negro</string>

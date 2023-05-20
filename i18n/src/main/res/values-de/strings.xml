@@ -727,7 +727,7 @@
     <string name="pref_appearance_summary">Thema, Datums- und Zeitformat</string>
     <string name="pref_reader_summary">Lesemodus, Anzeige, Navigation</string>
     <string name="pref_downloads_summary">Automatische Downloads, im Voraus herunterladen</string>
-    <string name="pref_library_summary">Kategorien, globale Aktualisierungen, Kapitelstreichen</string>
+    <string name="pref_library_summary">Kategorien, globale Aktualisierungen, Kapitelaktionen</string>
     <string name="crash_screen_restart_application">Anwendung neustarten</string>
     <string name="pref_tracking_summary">Einweg-Synchronisation, erweiterte Synchronisation</string>
     <string name="pref_browse_summary">Quellen, Erweiterungen, globale Suche</string>
@@ -798,7 +798,7 @@
     </plurals>
     <string name="pref_page_rotate_invert">Ausrichtung gedrehter breiter Seiten spiegeln</string>
     <string name="pref_debug_info">Debug-Info</string>
-    <string name="pref_chapter_swipe">Kapitelstreichen</string>
+    <string name="pref_chapter_swipe">Kapitelaktionen</string>
     <string name="pref_chapter_swipe_end">Aktion beim Streichen nach rechts</string>
     <string name="pref_chapter_swipe_start">Aktion beim Streichen nach links</string>
     <string name="pref_double_tap_zoom">Zum Zoomen doppeltippen</string>
