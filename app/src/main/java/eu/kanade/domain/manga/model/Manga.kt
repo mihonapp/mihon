@@ -98,6 +98,7 @@ fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
 fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String) = ComicInfo(
     title = ComicInfo.Title(chapter.name),
     series = ComicInfo.Series(manga.title),
+    number = chapter.chapterNumber.takeIf { it >= 0 }?.let { ComicInfo.Number(it.toString()) },
     web = ComicInfo.Web(chapterUrl),
     summary = manga.description?.let { ComicInfo.Summary(it) },
     writer = manga.author?.let { ComicInfo.Writer(it) },

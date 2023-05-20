@@ -44,6 +44,7 @@ fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
 data class ComicInfo(
     val title: Title?,
     val series: Series?,
+    val number: Number?,
     val summary: Summary?,
     val writer: Writer?,
     val penciller: Penciller?,
@@ -74,6 +75,10 @@ data class ComicInfo(
     @Serializable
     @XmlSerialName("Series", "", "")
     data class Series(@XmlValue(true) val value: String = "")
+
+    @Serializable
+    @XmlSerialName("Number", "", "")
+    data class Number(@XmlValue(true) val value: String = "")
 
     @Serializable
     @XmlSerialName("Summary", "", "")
