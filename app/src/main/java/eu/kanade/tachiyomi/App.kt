@@ -28,6 +28,7 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
+import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.coil.MangaCoverFetcher
 import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
@@ -53,6 +54,7 @@ import org.acra.ktx.initAcra
 import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
 import tachiyomi.core.util.system.logcat
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.presentation.widget.TachiyomiWidgetManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -62,9 +64,11 @@ import java.security.Security
 class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     private val basePreferences: BasePreferences by injectLazy()
+    private val libraryPreferences: LibraryPreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
+    private val chapterCache: ChapterCache by injectLazy()
 
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
@@ -168,6 +172,10 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
     override fun onStop(owner: LifecycleOwner) {
         SecureActivityDelegate.onApplicationStopped()
+
+        if (libraryPreferences.autoClearChapterCache().get()) {
+            chapterCache.clear()
+        }
     }
 
     override fun getPackageName(): String {

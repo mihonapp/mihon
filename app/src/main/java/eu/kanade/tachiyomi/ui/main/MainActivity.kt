@@ -66,7 +66,6 @@ import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
@@ -111,7 +110,6 @@ class MainActivity : BaseActivity() {
     private val uiPreferences: UiPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
 
-    private val chapterCache: ChapterCache by injectLazy()
     private val downloadCache: DownloadCache by injectLazy()
 
     // To be checked by splash screen. If true then splash screen will be removed.
@@ -423,7 +421,7 @@ class MainActivity : BaseActivity() {
 
                 // Get the search query provided in extras, and if not null, perform a global search with it.
                 val query = intent.getStringExtra(SearchManager.QUERY) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
-                if (query != null && query.isNotEmpty()) {
+                if (!query.isNullOrEmpty()) {
                     navigator.popUntilRoot()
                     navigator.push(GlobalSearchScreen(query))
                 }
@@ -431,7 +429,7 @@ class MainActivity : BaseActivity() {
             }
             INTENT_SEARCH -> {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
-                if (query != null && query.isNotEmpty()) {
+                if (!query.isNullOrEmpty()) {
                     val filter = intent.getStringExtra(INTENT_SEARCH_FILTER) ?: ""
                     navigator.popUntilRoot()
                     navigator.push(GlobalSearchScreen(query, filter))
@@ -447,16 +445,6 @@ class MainActivity : BaseActivity() {
 
         ready = true
         return true
-    }
-
-    override fun onBackPressed() {
-        if (navigator?.size == 1 &&
-            !onBackPressedDispatcher.hasEnabledCallbacks() &&
-            libraryPreferences.autoClearChapterCache().get()
-        ) {
-            chapterCache.clear()
-        }
-        super.onBackPressed()
     }
 
     init {
