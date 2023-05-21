@@ -1,15 +1,14 @@
 package eu.kanade.presentation.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.ArrowLeft
+import androidx.compose.material.icons.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,13 +16,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import eu.kanade.tachiyomi.R
-import me.saket.cascade.CascadeColumnScope
-import me.saket.cascade.CascadeDropdownMenu
 import androidx.compose.material3.DropdownMenu as ComposeDropdownMenu
 
 @Composable
@@ -72,25 +71,29 @@ fun RadioMenuItem(
 }
 
 @Composable
-fun OverflowMenu(
-    content: @Composable CascadeColumnScope.(() -> Unit) -> Unit,
+fun NestedMenuItem(
+    text: @Composable () -> Unit,
+    children: @Composable ColumnScope.(() -> Unit) -> Unit,
 ) {
-    var moreExpanded by remember { mutableStateOf(false) }
-    val closeMenu = { moreExpanded = false }
+    var nestedExpanded by remember { mutableStateOf(false) }
+    val closeMenu = { nestedExpanded = false }
+    val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
 
-    Box {
-        IconButton(onClick = { moreExpanded = !moreExpanded }) {
+    DropdownMenuItem(
+        text = text,
+        onClick = { nestedExpanded = true },
+        trailingIcon = {
             Icon(
-                imageVector = Icons.Outlined.MoreVert,
-                contentDescription = stringResource(R.string.abc_action_menu_overflow_description),
+                imageVector = if (isLtr) Icons.Outlined.ArrowRight else Icons.Outlined.ArrowLeft,
+                contentDescription = null,
             )
-        }
-        CascadeDropdownMenu(
-            expanded = moreExpanded,
-            onDismissRequest = closeMenu,
-            offset = DpOffset(8.dp, (-56).dp),
-        ) {
-            content(closeMenu)
-        }
+        },
+    )
+
+    DropdownMenu(
+        expanded = nestedExpanded,
+        onDismissRequest = closeMenu,
+    ) {
+        children(closeMenu)
     }
 }

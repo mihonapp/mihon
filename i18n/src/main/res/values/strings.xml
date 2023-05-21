@@ -120,7 +120,6 @@
     <string name="action_cancel_all">Cancel all</string>
     <string name="cancel_all_for_series">Cancel all for this series</string>
     <string name="action_sort">Sort</string>
-    <string name="action_reorganize_by">Reorder</string>
     <string name="action_order_by_upload_date">By upload date</string>
     <string name="action_order_by_chapter_number">By chapter number</string>
     <string name="action_newest">Newest</string>

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.Sort
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,7 +49,9 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.OverflowMenu
+import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
@@ -120,70 +124,77 @@ object DownloadQueueScreen : Screen() {
                     navigateUp = navigator::pop,
                     actions = {
                         if (downloadList.isNotEmpty()) {
-                            OverflowMenu { closeMenu ->
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_reorganize_by)) },
-                                    children = {
+                            var sortExpanded by remember { mutableStateOf(false) }
+                            val onDismissRequest = { sortExpanded = false }
+                            DropdownMenu(
+                                expanded = sortExpanded,
+                                onDismissRequest = onDismissRequest,
+                            ) {
+                                NestedMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_order_by_upload_date)) },
+                                    children = { closeMenu ->
                                         DropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.action_order_by_upload_date)) },
-                                            children = {
-                                                androidx.compose.material3.DropdownMenuItem(
-                                                    text = { Text(text = stringResource(R.string.action_newest)) },
-                                                    onClick = {
-                                                        screenModel.reorderQueue(
-                                                            { it.download.chapter.dateUpload },
-                                                            true,
-                                                        )
-                                                        closeMenu()
-                                                    },
+                                            text = { Text(text = stringResource(R.string.action_newest)) },
+                                            onClick = {
+                                                screenModel.reorderQueue(
+                                                    { it.download.chapter.dateUpload },
+                                                    true,
                                                 )
-                                                androidx.compose.material3.DropdownMenuItem(
-                                                    text = { Text(text = stringResource(R.string.action_oldest)) },
-                                                    onClick = {
-                                                        screenModel.reorderQueue(
-                                                            { it.download.chapter.dateUpload },
-                                                            false,
-                                                        )
-                                                        closeMenu()
-                                                    },
-                                                )
+                                                closeMenu()
                                             },
                                         )
                                         DropdownMenuItem(
-                                            text = { Text(text = stringResource(R.string.action_order_by_chapter_number)) },
-                                            children = {
-                                                androidx.compose.material3.DropdownMenuItem(
-                                                    text = { Text(text = stringResource(R.string.action_asc)) },
-                                                    onClick = {
-                                                        screenModel.reorderQueue(
-                                                            { it.download.chapter.chapterNumber },
-                                                            false,
-                                                        )
-                                                        closeMenu()
-                                                    },
+                                            text = { Text(text = stringResource(R.string.action_oldest)) },
+                                            onClick = {
+                                                screenModel.reorderQueue(
+                                                    { it.download.chapter.dateUpload },
+                                                    false,
                                                 )
-                                                androidx.compose.material3.DropdownMenuItem(
-                                                    text = { Text(text = stringResource(R.string.action_desc)) },
-                                                    onClick = {
-                                                        screenModel.reorderQueue(
-                                                            { it.download.chapter.chapterNumber },
-                                                            true,
-                                                        )
-                                                        closeMenu()
-                                                    },
-                                                )
+                                                closeMenu()
                                             },
                                         )
                                     },
                                 )
-                                androidx.compose.material3.DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_cancel_all)) },
-                                    onClick = {
-                                        screenModel.clearQueue()
-                                        closeMenu()
+                                NestedMenuItem(
+                                    text = { Text(text = stringResource(R.string.action_order_by_chapter_number)) },
+                                    children = { closeMenu ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.action_asc)) },
+                                            onClick = {
+                                                screenModel.reorderQueue(
+                                                    { it.download.chapter.chapterNumber },
+                                                    false,
+                                                )
+                                                closeMenu()
+                                            },
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text(text = stringResource(R.string.action_desc)) },
+                                            onClick = {
+                                                screenModel.reorderQueue(
+                                                    { it.download.chapter.chapterNumber },
+                                                    true,
+                                                )
+                                                closeMenu()
+                                            },
+                                        )
                                     },
                                 )
                             }
+
+                            AppBarActions(
+                                listOf(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_sort),
+                                        icon = Icons.Outlined.Sort,
+                                        onClick = { sortExpanded = true },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_cancel_all),
+                                        onClick = { screenModel.clearQueue() },
+                                    ),
+                                ),
+                            )
                         }
                     },
                     scrollBehavior = scrollBehavior,

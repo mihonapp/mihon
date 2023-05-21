@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -82,12 +82,15 @@ fun AdaptiveSheet(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val isTabletUi = isTabletUi()
+    val contentPadding = if (isTabletUi) {
+        PaddingValues()
+    } else {
+        WindowInsets.safeContent.only(WindowInsetsSides.Bottom).asPaddingValues()
+    }
+
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false,
-        ),
+        properties = dialogProperties,
     ) {
         AdaptiveSheetImpl(
             isTabletUi = isTabletUi,
@@ -95,12 +98,12 @@ fun AdaptiveSheet(
             enableSwipeDismiss = enableSwipeDismiss,
             onDismissRequest = onDismissRequest,
         ) {
-            val contentPadding = if (isTabletUi) {
-                PaddingValues()
-            } else {
-                WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).asPaddingValues()
-            }
             content(contentPadding)
         }
     }
 }
+
+private val dialogProperties = DialogProperties(
+    usePlatformDefaultWidth = false,
+    decorFitsSystemWindows = false,
+)

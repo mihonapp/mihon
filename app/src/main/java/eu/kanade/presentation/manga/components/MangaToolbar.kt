@@ -1,6 +1,5 @@
 package eu.kanade.presentation.manga.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -18,8 +17,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
@@ -89,27 +90,28 @@ fun MangaToolbar(
                         ),
                     )
                 } else {
+                    var downloadExpanded by remember { mutableStateOf(false) }
                     if (onClickDownload != null) {
-                        val (downloadExpanded, onDownloadExpanded) = remember { mutableStateOf(false) }
-                        Box {
-                            IconButton(onClick = { onDownloadExpanded(!downloadExpanded) }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Download,
-                                    contentDescription = stringResource(R.string.manga_download),
-                                )
-                            }
-                            val onDismissRequest = { onDownloadExpanded(false) }
-                            DownloadDropdownMenu(
-                                expanded = downloadExpanded,
-                                onDismissRequest = onDismissRequest,
-                                onDownloadClicked = onClickDownload,
-                            )
-                        }
+                        val onDismissRequest = { downloadExpanded = false }
+                        DownloadDropdownMenu(
+                            expanded = downloadExpanded,
+                            onDismissRequest = onDismissRequest,
+                            onDownloadClicked = onClickDownload,
+                        )
                     }
 
                     val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
                     AppBarActions(
                         actions = buildList {
+                            if (onClickDownload != null) {
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.manga_download),
+                                        icon = Icons.Outlined.Download,
+                                        onClick = { downloadExpanded = !downloadExpanded },
+                                    ),
+                                )
+                            }
                             add(
                                 AppBar.Action(
                                     title = stringResource(R.string.action_filter),

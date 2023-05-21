@@ -237,7 +237,6 @@ dependencies {
     implementation(libs.bundles.richtext)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.bundles.voyager)
-    implementation(libs.compose.cascade)
     implementation(libs.compose.materialmotion)
     implementation(libs.compose.simpleicons)
 
