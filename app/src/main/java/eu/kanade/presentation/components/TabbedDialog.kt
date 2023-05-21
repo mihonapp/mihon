@@ -49,7 +49,7 @@ fun TabbedDialog(
         onDismissRequest = onDismissRequest,
     ) { contentPadding ->
         val scope = rememberCoroutineScope()
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState { tabTitles.size }
 
         Column {
             Row {
@@ -84,7 +84,6 @@ fun TabbedDialog(
 
             HorizontalPager(
                 modifier = Modifier.animateContentSize(),
-                pageCount = tabTitles.size,
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
             ) { page ->

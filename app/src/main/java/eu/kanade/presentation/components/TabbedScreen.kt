@@ -36,7 +36,7 @@ fun TabbedScreen(
     onChangeSearchQuery: (String?) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
-    val state = rememberPagerState()
+    val state = rememberPagerState { tabs.size }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(startIndex) {
@@ -82,7 +82,6 @@ fun TabbedScreen(
             }
 
             HorizontalPager(
-                pageCount = tabs.size,
                 modifier = Modifier.fillMaxSize(),
                 state = state,
                 verticalAlignment = Alignment.Top,

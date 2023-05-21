@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -136,13 +137,14 @@ fun TrackScoreSelector(
 fun TrackDateSelector(
     title: String,
     initialSelectedDateMillis: Long,
-    dateValidator: (Long) -> Boolean,
+    selectableDates: SelectableDates,
     onConfirm: (Long) -> Unit,
     onRemove: (() -> Unit)?,
     onDismissRequest: () -> Unit,
 ) {
     val pickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialSelectedDateMillis,
+        selectableDates = selectableDates,
     )
     AlertDialogContent(
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
@@ -151,7 +153,6 @@ fun TrackDateSelector(
             Column {
                 DatePicker(
                     state = pickerState,
-                    dateValidator = dateValidator,
                     title = null,
                     headline = null,
                     showModeToggle = false,

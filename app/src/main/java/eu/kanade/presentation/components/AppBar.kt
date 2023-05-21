@@ -188,7 +188,7 @@ fun AppBarActions(
             IconButton(
                 onClick = it.onClick,
                 enabled = it.enabled,
-                modifier = Modifier.tooltipAnchor(),
+                modifier = Modifier.tooltipTrigger(),
             ) {
                 Icon(
                     imageVector = it.icon,
@@ -206,7 +206,7 @@ fun AppBarActions(
         ) {
             IconButton(
                 onClick = { showMenu = !showMenu },
-                modifier = Modifier.tooltipAnchor(),
+                modifier = Modifier.tooltipTrigger(),
             ) {
                 Icon(
                     Icons.Outlined.MoreVert,
@@ -325,7 +325,7 @@ fun SearchToolbar(
                     ) {
                         IconButton(
                             onClick = onClick,
-                            modifier = Modifier.tooltipAnchor(),
+                            modifier = Modifier.tooltipTrigger(),
                         ) {
                             Icon(
                                 Icons.Outlined.Search,
@@ -342,7 +342,7 @@ fun SearchToolbar(
                                 onClick()
                                 focusRequester.requestFocus()
                             },
-                            modifier = Modifier.tooltipAnchor(),
+                            modifier = Modifier.tooltipTrigger(),
                         ) {
                             Icon(
                                 Icons.Outlined.Close,

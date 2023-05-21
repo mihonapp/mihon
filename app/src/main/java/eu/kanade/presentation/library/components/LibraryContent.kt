@@ -54,7 +54,7 @@ fun LibraryContent(
         ),
     ) {
         val coercedCurrentPage = remember { currentPage().coerceAtMost(categories.lastIndex) }
-        val pagerState = rememberPagerState(coercedCurrentPage)
+        val pagerState = rememberPagerState(coercedCurrentPage) { categories.size }
 
         val scope = rememberCoroutineScope()
         var isRefreshing by remember(pagerState.currentPage) { mutableStateOf(false) }
@@ -98,7 +98,6 @@ fun LibraryContent(
             LibraryPager(
                 state = pagerState,
                 contentPadding = PaddingValues(bottom = contentPadding.calculateBottomPadding()),
-                pageCount = categories.size,
                 hasActiveFilters = hasActiveFilters,
                 selectedManga = selection,
                 searchQuery = searchQuery,

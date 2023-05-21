@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -423,6 +424,62 @@ private data class TrackDateSelectorScreen(
     private val start: Boolean,
 ) : Screen() {
 
+    private val selectableDates = object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            val dateToCheck = Instant.ofEpochMilli(utcTimeMillis)
+                .atZone(ZoneOffset.systemDefault())
+                .toLocalDate()
+
+            if (dateToCheck > LocalDate.now()) {
+                // Disallow future dates
+                return false
+            }
+
+            return if (start && track.finishDate > 0) {
+                // Disallow start date to be set later than finish date
+                val dateFinished = Instant.ofEpochMilli(track.finishDate)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                dateToCheck <= dateFinished
+            } else if (!start && track.startDate > 0) {
+                // Disallow end date to be set earlier than start date
+                val dateStarted = Instant.ofEpochMilli(track.startDate)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                dateToCheck >= dateStarted
+            } else {
+                // Nothing set before
+                true
+            }
+        }
+
+        override fun isSelectableYear(year: Int): Boolean {
+            if (year > LocalDate.now().year) {
+                // Disallow future dates
+                return false
+            }
+
+            return if (start && track.finishDate > 0) {
+                // Disallow start date to be set later than finish date
+                val dateFinished = Instant.ofEpochMilli(track.finishDate)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .year
+                year <= dateFinished
+            } else if (!start && track.startDate > 0) {
+                // Disallow end date to be set earlier than start date
+                val dateStarted = Instant.ofEpochMilli(track.startDate)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .year
+                year >= dateStarted
+            } else {
+                // Nothing set before
+                true
+            }
+        }
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -446,33 +503,7 @@ private data class TrackDateSelectorScreen(
                 stringResource(R.string.track_finished_reading_date)
             },
             initialSelectedDateMillis = sm.initialSelection,
-            dateValidator = { utcMillis ->
-                val dateToCheck = Instant.ofEpochMilli(utcMillis)
-                    .atZone(ZoneOffset.systemDefault())
-                    .toLocalDate()
-
-                if (dateToCheck > LocalDate.now()) {
-                    // Disallow future dates
-                    return@TrackDateSelector false
-                }
-
-                if (start && track.finishDate > 0) {
-                    // Disallow start date to be set later than finish date
-                    val dateFinished = Instant.ofEpochMilli(track.finishDate)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                    dateToCheck <= dateFinished
-                } else if (!start && track.startDate > 0) {
-                    // Disallow end date to be set earlier than start date
-                    val dateStarted = Instant.ofEpochMilli(track.startDate)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                    dateToCheck >= dateStarted
-                } else {
-                    // Nothing set before
-                    true
-                }
-            },
+            selectableDates = selectableDates,
             onConfirm = { sm.setDate(it); navigator.pop() },
             onRemove = { sm.confirmRemoveDate(navigator) }.takeIf { canRemove },
             onDismissRequest = navigator::pop,

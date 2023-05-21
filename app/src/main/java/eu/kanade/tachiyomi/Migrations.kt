@@ -26,7 +26,6 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
 import tachiyomi.domain.manga.model.TriStateFilter
-import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
 
@@ -136,7 +135,6 @@ object Migrations {
                 // Force MAL log out due to login flow change
                 // v52: switched from scraping to WebView
                 // v53: switched from WebView to OAuth
-                val trackManager = Injekt.get<TrackManager>()
                 if (trackManager.myAnimeList.isLogged) {
                     trackManager.myAnimeList.logout()
                     context.toast(R.string.myanimelist_relogin)

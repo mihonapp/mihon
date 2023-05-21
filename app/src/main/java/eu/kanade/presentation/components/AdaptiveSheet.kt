@@ -4,7 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -20,7 +20,7 @@ import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.core.lifecycle.DisposableEffectIgnoringConfiguration
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.ScreenTransition
+import eu.kanade.presentation.util.ScreenTransition
 import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.presentation.core.components.AdaptiveSheet as AdaptiveSheetImpl
 
@@ -43,7 +43,7 @@ fun NavigatorAdaptiveSheet(
                 ScreenTransition(
                     navigator = sheetNavigator,
                     transition = {
-                        fadeIn(animationSpec = tween(220, delayMillis = 90)) with
+                        fadeIn(animationSpec = tween(220, delayMillis = 90)) togetherWith
                             fadeOut(animationSpec = tween(90))
                     },
                 )

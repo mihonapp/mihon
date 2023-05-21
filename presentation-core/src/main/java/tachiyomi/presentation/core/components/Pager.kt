@@ -4,9 +4,9 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +19,8 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun HorizontalPager(
-    pageCount: Int,
+    state: PagerState,
     modifier: Modifier = Modifier,
-    state: PagerState = rememberPagerState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     pageSize: PageSize = PageSize.Fill,
     beyondBoundsPageCount: Int = 0,
@@ -33,12 +32,11 @@ fun HorizontalPager(
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
         Orientation.Horizontal,
     ),
-    pageContent: @Composable (page: Int) -> Unit,
+    pageContent: @Composable PagerScope.(page: Int) -> Unit,
 ) {
     androidx.compose.foundation.pager.HorizontalPager(
-        pageCount = pageCount,
-        modifier = modifier,
         state = state,
+        modifier = modifier,
         contentPadding = contentPadding,
         pageSize = pageSize,
         beyondBoundsPageCount = beyondBoundsPageCount,

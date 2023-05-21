@@ -1,8 +1,12 @@
 package eu.kanade.presentation.util
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.ScreenModelStore
 import cafe.adriel.voyager.core.screen.Screen
@@ -10,7 +14,7 @@ import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.ScreenTransition
+import cafe.adriel.voyager.transitions.ScreenTransitionContent
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,4 +66,22 @@ fun DefaultNavigatorScreenTransition(navigator: Navigator) {
             )
         },
     )
+}
+
+@Composable
+fun ScreenTransition(
+    navigator: Navigator,
+    transition: AnimatedContentTransitionScope<Screen>.() -> ContentTransform,
+    modifier: Modifier = Modifier,
+    content: ScreenTransitionContent = { it.Content() },
+) {
+    AnimatedContent(
+        targetState = navigator.lastItem,
+        transitionSpec = transition,
+        modifier = modifier,
+    ) { screen ->
+        navigator.saveableState("transition", screen) {
+            content(screen)
+        }
+    }
 }
