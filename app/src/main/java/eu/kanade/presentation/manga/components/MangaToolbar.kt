@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.SelectAll
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DownloadDropdownMenu
-import eu.kanade.presentation.components.OverflowMenu
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.theme.active
@@ -110,46 +108,48 @@ fun MangaToolbar(
                     }
 
                     val filterTint = if (hasFilters) MaterialTheme.colorScheme.active else LocalContentColor.current
-                    IconButton(onClick = onClickFilter) {
-                        Icon(Icons.Outlined.FilterList, contentDescription = stringResource(R.string.action_filter), tint = filterTint)
-                    }
-
-                    OverflowMenu { closeMenu ->
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(R.string.action_webview_refresh)) },
-                            onClick = {
-                                onClickRefresh()
-                                closeMenu()
-                            },
-                        )
-                        if (onClickEditCategory != null) {
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.action_edit_categories)) },
-                                onClick = {
-                                    onClickEditCategory()
-                                    closeMenu()
-                                },
+                    AppBarActions(
+                        actions = buildList {
+                            add(
+                                AppBar.Action(
+                                    title = stringResource(R.string.action_filter),
+                                    icon = Icons.Outlined.FilterList,
+                                    iconTint = filterTint,
+                                    onClick = onClickFilter,
+                                ),
                             )
-                        }
-                        if (onClickMigrate != null) {
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.action_migrate)) },
-                                onClick = {
-                                    onClickMigrate()
-                                    closeMenu()
-                                },
+                            add(
+                                AppBar.OverflowAction(
+                                    title = stringResource(R.string.action_webview_refresh),
+                                    onClick = onClickRefresh,
+                                ),
                             )
-                        }
-                        if (onClickShare != null) {
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.action_share)) },
-                                onClick = {
-                                    onClickShare()
-                                    closeMenu()
-                                },
-                            )
-                        }
-                    }
+                            if (onClickEditCategory != null) {
+                                add(
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_edit_categories),
+                                        onClick = onClickEditCategory,
+                                    ),
+                                )
+                            }
+                            if (onClickMigrate != null) {
+                                add(
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_migrate),
+                                        onClick = onClickMigrate,
+                                    ),
+                                )
+                            }
+                            if (onClickShare != null) {
+                                add(
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_share),
+                                        onClick = onClickShare,
+                                    ),
+                                )
+                            }
+                        },
+                    )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(

@@ -43,6 +43,8 @@ import coil.imageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.R
@@ -88,18 +90,24 @@ fun MangaCoverDialog(
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     ActionsPill {
-                        IconButton(onClick = onShareClick) {
-                            Icon(
-                                imageVector = Icons.Outlined.Share,
-                                contentDescription = stringResource(R.string.action_share),
-                            )
-                        }
-                        IconButton(onClick = onSaveClick) {
-                            Icon(
-                                imageVector = Icons.Outlined.Save,
-                                contentDescription = stringResource(R.string.action_save),
-                            )
-                        }
+                        AppBarActions(
+                            actions = buildList {
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_share),
+                                        icon = Icons.Outlined.Share,
+                                        onClick = onShareClick,
+                                    ),
+                                )
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_save),
+                                        icon = Icons.Outlined.Save,
+                                        onClick = onSaveClick,
+                                    ),
+                                )
+                            },
+                        )
                         if (onEditClick != null) {
                             Box {
                                 var expanded by remember { mutableStateOf(false) }
