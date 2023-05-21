@@ -36,7 +36,7 @@ junrar = "com.github.junrar:junrar:7.5.4"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
-sqlite-android = "com.github.requery:sqlite-android:3.41.1"
+sqlite-android = "com.github.requery:sqlite-android:3.41.2"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.0"
 
