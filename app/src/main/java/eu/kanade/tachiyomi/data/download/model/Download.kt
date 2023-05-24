@@ -22,8 +22,8 @@ data class Download(
     val source: HttpSource,
     val manga: Manga,
     val chapter: Chapter,
-    var pages: List<Page>? = null,
 ) {
+    var pages: List<Page>? = null
 
     val totalProgress: Int
         get() = pages?.sumOf(Page::progress) ?: 0
