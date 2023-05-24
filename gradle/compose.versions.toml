@@ -4,7 +4,7 @@ compose-bom = "2023.04.00-alpha04"
 accompanist = "0.31.2-alpha"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.7.1"
+activity = "androidx.activity:activity-compose:1.7.2"
 bom = { group = "dev.chrisbanes.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
