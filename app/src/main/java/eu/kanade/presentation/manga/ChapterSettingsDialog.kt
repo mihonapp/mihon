@@ -69,10 +69,9 @@ fun ChapterSettingsDialog(
                 },
             )
         },
-    ) { contentPadding, page ->
+    ) { page ->
         Column(
             modifier = Modifier
-                .padding(contentPadding)
                 .padding(vertical = TabbedDialogPaddings.Vertical)
                 .verticalScroll(rememberScrollState()),
         ) {

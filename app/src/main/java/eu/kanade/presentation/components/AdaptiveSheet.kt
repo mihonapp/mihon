@@ -5,12 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -79,14 +73,9 @@ fun AdaptiveSheet(
     tonalElevation: Dp = 1.dp,
     enableSwipeDismiss: Boolean = true,
     onDismissRequest: () -> Unit,
-    content: @Composable (PaddingValues) -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val isTabletUi = isTabletUi()
-    val contentPadding = if (isTabletUi) {
-        PaddingValues()
-    } else {
-        WindowInsets.safeContent.only(WindowInsetsSides.Bottom).asPaddingValues()
-    }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -98,7 +87,7 @@ fun AdaptiveSheet(
             enableSwipeDismiss = enableSwipeDismiss,
             onDismissRequest = onDismissRequest,
         ) {
-            content(contentPadding)
+            content()
         }
     }
 }

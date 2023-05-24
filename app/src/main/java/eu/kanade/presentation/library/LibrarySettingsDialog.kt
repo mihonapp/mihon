@@ -55,10 +55,9 @@ fun LibrarySettingsDialog(
             stringResource(R.string.action_sort),
             stringResource(R.string.action_display),
         ),
-    ) { contentPadding, page ->
+    ) { page ->
         Column(
             modifier = Modifier
-                .padding(contentPadding)
                 .padding(vertical = TabbedDialogPaddings.Vertical)
                 .verticalScroll(rememberScrollState()),
         ) {
