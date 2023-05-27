@@ -31,6 +31,10 @@ object DebugInfoScreen : Screen() {
                         title = WorkerInfoScreen.title,
                         onClick = { navigator.push(WorkerInfoScreen) },
                     ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = BackupSchemaScreen.title,
+                        onClick = { navigator.push(BackupSchemaScreen) },
+                    ),
                     getAppInfoGroup(),
                     getDeviceInfoGroup(),
                 )
