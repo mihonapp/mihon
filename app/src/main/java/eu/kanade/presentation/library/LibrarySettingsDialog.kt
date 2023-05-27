@@ -220,7 +220,9 @@ private fun ColumnScope.DisplayPage(
             }
 
             val columns by columnPreference.changes().collectAsState(initial = 0)
-            Column {
+            Column(
+                Modifier.weight(.5f),
+            ) {
                 Text(
                     stringResource(id = R.string.pref_library_columns),
                     style = MaterialTheme.typography.bodyMedium,
@@ -235,7 +237,7 @@ private fun ColumnScope.DisplayPage(
             Slider(
                 value = columns.toFloat(),
                 onValueChange = { columnPreference.set(it.toInt()) },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1.5f),
                 valueRange = 0f..10f,
                 steps = 10,
             )
