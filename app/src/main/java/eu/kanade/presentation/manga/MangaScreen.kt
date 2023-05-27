@@ -340,7 +340,7 @@ private fun MangaScreenSmallImpl(
             refreshing = state.isRefreshingData,
             onRefresh = onRefresh,
             enabled = chapters.fastAll { !it.selected },
-            indicatorPadding = contentPadding,
+            indicatorPadding = WindowInsets.systemBars.only(WindowInsetsSides.Top).asPaddingValues(),
         ) {
             val layoutDirection = LocalLayoutDirection.current
             VerticalFastScroller(
