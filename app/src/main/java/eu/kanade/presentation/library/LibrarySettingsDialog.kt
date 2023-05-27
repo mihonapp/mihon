@@ -13,10 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -28,7 +26,6 @@ import eu.kanade.presentation.components.TriStateItem
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
-import kotlinx.coroutines.flow.map
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
@@ -219,19 +216,19 @@ private fun ColumnScope.DisplayPage(
                 }
             }
 
-            val columns by columnPreference.changes().collectAsState(initial = 0)
-            Column(
-                Modifier.weight(.5f),
-            ) {
+            val columns by columnPreference.collectAsState()
+            Column(modifier = Modifier.weight(0.5f)) {
                 Text(
                     stringResource(id = R.string.pref_library_columns),
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                if (columns > 0) {
-                    Text(stringResource(id = R.string.pref_library_columns_per_row, columns))
-                } else {
-                    Text(stringResource(id = R.string.label_default))
-                }
+                Text(
+                    if (columns > 0) {
+                        stringResource(id = R.string.pref_library_columns_per_row, columns)
+                    } else {
+                        stringResource(id = R.string.label_default)
+                    },
+                )
             }
 
             Slider(

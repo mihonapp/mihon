@@ -180,7 +180,6 @@ dependencies {
     implementation(androidx.appcompat)
     implementation(androidx.biometricktx)
     implementation(androidx.constraintlayout)
-    implementation(androidx.coordinatorlayout)
     implementation(androidx.corektx)
     implementation(androidx.splashscreen)
     implementation(androidx.recyclerview)
@@ -228,7 +227,6 @@ dependencies {
     // UI libraries
     implementation(libs.material)
     implementation(libs.flexible.adapter.core)
-    implementation(libs.flexible.adapter.ui)
     implementation(libs.photoview)
     implementation(libs.directionalviewpager) {
         exclude(group = "androidx.viewpager", module = "viewpager")

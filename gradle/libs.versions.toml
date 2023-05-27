@@ -56,7 +56,6 @@ richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", 
 
 material = "com.google.android.material:material:1.9.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
-flexible-adapter-ui = "com.github.arkon.FlexibleAdapter:flexible-adapter-ui:c8013533"
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
@@ -66,7 +65,7 @@ compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.9.7"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.2.2"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlib_version" }
@@ -84,14 +83,13 @@ sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.
 
 junit = "org.junit.jupiter:junit-jupiter:5.9.3"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
+mockk = "io.mockk:mockk:1.13.5"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
-
-mockk = "io.mockk:mockk:1.13.5"
 
 [bundles]
 reactivex = ["rxandroid", "rxjava", "rxrelay"]
