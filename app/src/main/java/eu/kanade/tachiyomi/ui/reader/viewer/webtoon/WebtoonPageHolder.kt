@@ -25,10 +25,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.suspendCancellableCoroutine
+import logcat.LogPriority
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.util.system.logcat
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -234,19 +236,24 @@ class WebtoonPageHolder(
     }
 
     private fun onStripSplit(imageStream: BufferedInputStream): InputStream {
-        // If we have reached this point [page] and its stream shouldn't be null
-        val page = page!!
-        val stream = page.stream!!
-        val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
-        val currentSplitData = splitData.removeFirst()
-        val newPages = splitData.map {
-            StencilPage(page) { ImageUtil.splitStrip(it, stream) }
-        }
-        return ImageUtil.splitStrip(currentSplitData) { imageStream }
-            .also {
-                // Running [onLongStripSplit] first results in issues with splitting
-                viewer.onLongStripSplit(page, newPages)
+        try {
+            // If we have reached this point [page] and its stream shouldn't be null
+            val page = page!!
+            val stream = page.stream!!
+            val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
+            val currentSplitData = splitData.removeFirst()
+            val newPages = splitData.map {
+                StencilPage(page) { ImageUtil.splitStrip(it, stream) }
             }
+            return ImageUtil.splitStrip(currentSplitData) { imageStream }
+                .also {
+                    // Running [onLongStripSplit] first results in issues with splitting
+                    viewer.onLongStripSplit(page, newPages)
+                }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e) { "Failed to split image" }
+            return imageStream
+        }
     }
 
     /**

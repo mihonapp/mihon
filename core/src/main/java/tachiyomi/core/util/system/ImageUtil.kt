@@ -298,9 +298,8 @@ object ImageUtil {
                 "splitHeight=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
         }
 
-        val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
-
         try {
+            val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
             val splitBitmap = bitmapRegionDecoder.decodeRegion(region, null)
             val outputStream = ByteArrayOutputStream()
             splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)

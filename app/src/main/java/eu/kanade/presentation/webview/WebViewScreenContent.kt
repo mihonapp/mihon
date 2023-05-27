@@ -81,15 +81,15 @@ fun WebViewScreenContent(
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_share),
-                                    onClick = { onShare(state.lastLoadedUrl!!) },
+                                    onClick = { onShare(state.lastLoadedUrl ?: url) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_open_in_browser),
-                                    onClick = { onOpenInBrowser(state.lastLoadedUrl!!) },
+                                    onClick = { onOpenInBrowser(state.lastLoadedUrl ?: url) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.pref_clear_cookies),
-                                    onClick = { onClearCookies(state.lastLoadedUrl!!) },
+                                    onClick = { onClearCookies(state.lastLoadedUrl ?: url) },
                                 ),
                             ),
                         )
