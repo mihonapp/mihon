@@ -34,6 +34,7 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -191,7 +192,7 @@ fun MangaChapterListItem(
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        var textHeight by remember { mutableStateOf(0) }
+                        var textHeight by remember { mutableIntStateOf(0) }
                         if (!read) {
                             Icon(
                                 imageVector = Icons.Filled.Circle,

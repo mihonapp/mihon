@@ -26,7 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -61,7 +61,7 @@ fun AdaptiveSheet(
 ) {
     val scope = rememberCoroutineScope()
     if (isTabletUi) {
-        var targetAlpha by remember { mutableStateOf(0f) }
+        var targetAlpha by remember { mutableFloatStateOf(0f) }
         val alpha by animateFloatAsState(
             targetValue = targetAlpha,
             animationSpec = SheetAnimationSpec,

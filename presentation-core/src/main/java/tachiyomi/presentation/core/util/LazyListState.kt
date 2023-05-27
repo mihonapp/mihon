@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,8 +31,8 @@ fun LazyListState.isScrolledToEnd(): Boolean {
 
 @Composable
 fun LazyListState.isScrollingUp(): Boolean {
-    var previousIndex by remember { mutableStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember { mutableStateOf(firstVisibleItemScrollOffset) }
+    var previousIndex by remember { mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember { mutableIntStateOf(firstVisibleItemScrollOffset) }
     return remember {
         derivedStateOf {
             if (previousIndex != firstVisibleItemIndex) {
@@ -48,8 +49,8 @@ fun LazyListState.isScrollingUp(): Boolean {
 
 @Composable
 fun LazyListState.isScrollingDown(): Boolean {
-    var previousIndex by remember { mutableStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember { mutableStateOf(firstVisibleItemScrollOffset) }
+    var previousIndex by remember { mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember { mutableIntStateOf(firstVisibleItemScrollOffset) }
     return remember {
         derivedStateOf {
             if (previousIndex != firstVisibleItemIndex) {

@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -113,7 +114,7 @@ private fun <T> WheelPicker(
     val haptic = LocalHapticFeedback.current
     val lazyListState = rememberLazyListState(startIndex)
 
-    var internalIndex by remember { mutableStateOf(startIndex) }
+    var internalIndex by remember { mutableIntStateOf(startIndex) }
     val internalOnSelectionChanged: (Int) -> Unit = {
         internalIndex = it
         onSelectionChanged(it)

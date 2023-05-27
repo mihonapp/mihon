@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -93,7 +94,7 @@ class SourcePreferencesScreen(val sourceId: Long) : Screen() {
         commit: FragmentTransaction.(containerId: Int) -> Unit,
     ) {
         val containerId by rememberSaveable {
-            mutableStateOf(View.generateViewId())
+            mutableIntStateOf(View.generateViewId())
         }
         var initialized by rememberSaveable { mutableStateOf(false) }
         AndroidView(

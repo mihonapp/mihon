@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -165,7 +166,7 @@ object SettingsAdvancedScreen : SearchableSettings {
         val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
 
         val chapterCache = remember { Injekt.get<ChapterCache>() }
-        var readableSizeSema by remember { mutableStateOf(0) }
+        var readableSizeSema by remember { mutableIntStateOf(0) }
         val readableSize = remember(readableSizeSema) { chapterCache.readableSize }
 
         return Preference.PreferenceGroup(
