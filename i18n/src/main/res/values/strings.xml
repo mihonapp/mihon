@@ -262,15 +262,18 @@
     <string name="pref_update_only_non_completed">With \"Completed\" status</string>
     <string name="pref_update_only_started">That haven\'t been started</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_update_only_in_release_period">Outside release period</string>
+    <string name="pref_update_only_in_release_period">Outside expected release period</string>
 
-    <string name="pref_update_release_grace_period">Grace release period:</string>
-    <string name="pref_update_release_leading_days">Check %s day(s) before</string>
-    <string name="pref_update_release_following_days">Check %s day(s) after</string>
-    <string name="pref_update_release_grace_period_info1">It is recommended to keep small grace period to minimize stress on servers.</string>
-    <string name="pref_update_release_grace_period_info2">The more checks comic missed, the longer extend check interval (max at 28 day).</string>
-    <string name="pref_update_release_grace_period_info3">It is recommend to remove or migrate source if comic in Dropped status filter.</string>
-
+    <string name="pref_update_release_grace_period">Expected release grace period</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d day before</item>
+        <item quantity="other">%d days before</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d day after</item>
+        <item quantity="other">%d days after</item>
+    </plurals>
+    <string name="pref_update_release_grace_period_info">A low grace period is recommended to minimize stress on sources. The more checks for an entry that are missed, the longer the interval in between checks will be with a maximum of 28 days.</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>

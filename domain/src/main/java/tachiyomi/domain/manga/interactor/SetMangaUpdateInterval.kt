@@ -11,6 +11,8 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.absoluteValue
 
+const val MAX_GRACE_PERIOD = 28
+
 fun updateIntervalMeta(
     manga: Manga,
     chapters: List<Chapter>,
@@ -29,41 +31,54 @@ fun updateIntervalMeta(
         null
     } else { MangaUpdate(id = manga.id, nextUpdate = nextUpdate, calculateInterval = interval) }
 }
+
 fun calculateInterval(chapters: List<Chapter>, zonedDateTime: ZonedDateTime): Int {
-    val sortChapters =
-        chapters.sortedWith(compareBy<Chapter> { it.dateUpload }.thenBy { it.dateFetch })
-            .reversed().take(50)
-    val uploadDates = sortChapters.filter { it.dateUpload != 0L }.map {
-        ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateUpload), zonedDateTime.zone).toLocalDate()
-            .atStartOfDay()
-    }
-    val uploadDateDistinct = uploadDates.distinctBy { it }
-    val fetchDates = sortChapters.map {
-        ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateFetch), zonedDateTime.zone).toLocalDate()
-            .atStartOfDay()
-    }
-    val fetchDatesDistinct = fetchDates.distinctBy { it }
+    val sortedChapters = chapters
+        .sortedWith(compareByDescending<Chapter> { it.dateUpload }.thenByDescending { it.dateFetch })
+        .take(50)
+
+    val uploadDates = sortedChapters
+        .filter { it.dateUpload > 0L }
+        .map {
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateUpload), zonedDateTime.zone)
+                .toLocalDate()
+                .atStartOfDay()
+        }
+        .distinct()
+    val fetchDates = sortedChapters
+        .map {
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateFetch), zonedDateTime.zone)
+                .toLocalDate()
+                .atStartOfDay()
+        }
+        .distinct()
+
     val newInterval = when {
-        // enough upload date from source
-        (uploadDateDistinct.size >= 3) -> {
-            val uploadDelta = uploadDateDistinct.last().until(uploadDateDistinct.first(), ChronoUnit.DAYS)
-            val uploadPeriod = uploadDates.indexOf(uploadDateDistinct.last())
-            (uploadDelta).floorDiv(uploadPeriod).toInt()
+        // Enough upload date from source
+        uploadDates.size >= 3 -> {
+            val uploadDelta = uploadDates.last().until(uploadDates.first(), ChronoUnit.DAYS)
+            val uploadPeriod = uploadDates.indexOf(uploadDates.last())
+            uploadDelta.floorDiv(uploadPeriod).toInt()
         }
-        // enough fetch date from client
-        (fetchDatesDistinct.size >= 3) -> {
-            val fetchDelta = fetchDatesDistinct.last().until(fetchDatesDistinct.first(), ChronoUnit.DAYS)
-            val uploadPeriod = fetchDates.indexOf(fetchDatesDistinct.last())
-            (fetchDelta).floorDiv(uploadPeriod).toInt()
+        // Enough fetch date from client
+        fetchDates.size >= 3 -> {
+            val fetchDelta = fetchDates.last().until(fetchDates.first(), ChronoUnit.DAYS)
+            val uploadPeriod = fetchDates.indexOf(fetchDates.last())
+            fetchDelta.floorDiv(uploadPeriod).toInt()
         }
-        // default 7 days
+        // Default to 7 days
         else -> 7
     }
-    // min 1, max 28 days
-    return newInterval.coerceIn(1, 28)
+    // Min 1, max 28 days
+    return newInterval.coerceIn(1, MAX_GRACE_PERIOD)
 }
 
-private fun calculateNextUpdate(manga: Manga, interval: Int, zonedDateTime: ZonedDateTime, currentFetchRange: Pair<Long, Long>): Long {
+private fun calculateNextUpdate(
+    manga: Manga,
+    interval: Int,
+    zonedDateTime: ZonedDateTime,
+    currentFetchRange: Pair<Long, Long>,
+): Long {
     return if (manga.nextUpdate !in currentFetchRange.first.rangeTo(currentFetchRange.second + 1) ||
         manga.calculateInterval == 0
     ) {

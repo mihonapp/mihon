@@ -1,7 +1,9 @@
 package eu.kanade.presentation.more.settings.screen
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +55,7 @@ import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_HAS_U
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_OUTSIDE_RELEASE_PERIOD
-import tachiyomi.presentation.core.components.WheelPickerDefaults
+import tachiyomi.domain.manga.interactor.MAX_GRACE_PERIOD
 import tachiyomi.presentation.core.components.WheelTextPicker
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -144,6 +147,7 @@ object SettingsLibraryScreen : SearchableSettings {
         val libraryUpdateCategoriesExcludePref = libraryPreferences.libraryUpdateCategoriesExclude()
 
         val libraryUpdateInterval by libraryUpdateIntervalPref.collectAsState()
+        val libraryUpdateMangaRestriction by libraryUpdateMangaRestrictionPref.collectAsState()
 
         val included by libraryUpdateCategoriesPref.collectAsState()
         val excluded by libraryUpdateCategoriesExcludePref.collectAsState()
@@ -182,7 +186,7 @@ object SettingsLibraryScreen : SearchableSettings {
         }
         return Preference.PreferenceGroup(
             title = stringResource(R.string.pref_category_library_update),
-            preferenceItems = listOf(
+            preferenceItems = listOfNotNull(
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryUpdateIntervalPref,
                     title = stringResource(R.string.pref_library_update_interval),
@@ -216,34 +220,6 @@ object SettingsLibraryScreen : SearchableSettings {
                         true
                     },
                 ),
-                Preference.PreferenceItem.MultiSelectListPreference(
-                    pref = libraryUpdateMangaRestrictionPref,
-                    title = stringResource(R.string.pref_library_update_manga_restriction),
-                    entries = mapOf(
-                        MANGA_HAS_UNREAD to stringResource(R.string.pref_update_only_completely_read),
-                        MANGA_NON_READ to stringResource(R.string.pref_update_only_started),
-                        MANGA_NON_COMPLETED to stringResource(R.string.pref_update_only_non_completed),
-                        MANGA_OUTSIDE_RELEASE_PERIOD to stringResource(R.string.pref_update_only_in_release_period),
-                    ),
-                ),
-                Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_library_update_manga_restriction),
-                    subtitle = setOf(
-                        stringResource(R.string.pref_update_release_leading_days, leadRange),
-                        stringResource(R.string.pref_update_release_following_days, followRange),
-                    )
-                        .joinToString(";"),
-                    onClick = { showFetchRangesDialog = true },
-                ),
-                Preference.PreferenceItem.InfoPreference(
-                    title = stringResource(R.string.pref_update_release_grace_period_info1),
-                ),
-                Preference.PreferenceItem.InfoPreference(
-                    title = stringResource(R.string.pref_update_release_grace_period_info2),
-                ),
-                Preference.PreferenceItem.InfoPreference(
-                    title = stringResource(R.string.pref_update_release_grace_period_info3),
-                ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.categories),
                     subtitle = getCategoriesLabel(
@@ -264,6 +240,27 @@ object SettingsLibraryScreen : SearchableSettings {
                     title = stringResource(R.string.pref_library_update_refresh_trackers),
                     subtitle = stringResource(R.string.pref_library_update_refresh_trackers_summary),
                 ),
+                Preference.PreferenceItem.MultiSelectListPreference(
+                    pref = libraryUpdateMangaRestrictionPref,
+                    title = stringResource(R.string.pref_library_update_manga_restriction),
+                    entries = mapOf(
+                        MANGA_HAS_UNREAD to stringResource(R.string.pref_update_only_completely_read),
+                        MANGA_NON_READ to stringResource(R.string.pref_update_only_started),
+                        MANGA_NON_COMPLETED to stringResource(R.string.pref_update_only_non_completed),
+                        MANGA_OUTSIDE_RELEASE_PERIOD to stringResource(R.string.pref_update_only_in_release_period),
+                    ),
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(R.string.pref_update_release_grace_period),
+                    subtitle = listOf(
+                        pluralStringResource(R.plurals.pref_update_release_leading_days, leadRange, leadRange),
+                        pluralStringResource(R.plurals.pref_update_release_following_days, followRange, followRange),
+                    ).joinToString(),
+                    onClick = { showFetchRangesDialog = true },
+                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction },
+                Preference.PreferenceItem.InfoPreference(
+                    title = stringResource(R.string.pref_update_release_grace_period_info),
+                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction },
             ),
         )
     }
@@ -306,45 +303,48 @@ object SettingsLibraryScreen : SearchableSettings {
         onDismissRequest: () -> Unit,
         onValueChanged: (portrait: Int, landscape: Int) -> Unit,
     ) {
-        val context = LocalContext.current
-        var leadValue by rememberSaveable { mutableStateOf(initialLead) }
-        var followValue by rememberSaveable { mutableStateOf(initialFollow) }
+        var leadValue by rememberSaveable { mutableIntStateOf(initialLead) }
+        var followValue by rememberSaveable { mutableIntStateOf(initialFollow) }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = { Text(text = stringResource(R.string.pref_update_release_grace_period)) },
             text = {
-                Row {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.pref_update_release_leading_days, "x"),
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.pref_update_release_following_days, "x"),
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium,
-                    )
+                Column {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = pluralStringResource(R.plurals.pref_update_release_leading_days, leadValue, leadValue),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = pluralStringResource(R.plurals.pref_update_release_following_days, followValue, followValue),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
                 }
                 BoxWithConstraints(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    WheelPickerDefaults.Background(size = DpSize(maxWidth, maxHeight))
-
                     val size = DpSize(width = maxWidth / 2, height = 128.dp)
-                    val items = (0..28).map {
+                    val items = (0..MAX_GRACE_PERIOD).map {
                         if (it == 0) {
                             stringResource(R.string.label_default)
                         } else {
                             it.toString()
                         }
                     }
-                    Row {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
                         WheelTextPicker(
                             size = size,
                             items = items,
