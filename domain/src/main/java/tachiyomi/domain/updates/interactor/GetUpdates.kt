@@ -13,10 +13,8 @@ class GetUpdates(
         return repository.awaitWithRead(read, after)
     }
 
-    fun subscribe(calendar: Calendar): Flow<List<UpdatesWithRelations>> = subscribe(calendar.time.time)
-
-    fun subscribe(after: Long): Flow<List<UpdatesWithRelations>> {
-        return repository.subscribeAll(after)
+    fun subscribe(calendar: Calendar): Flow<List<UpdatesWithRelations>> {
+        return repository.subscribeAll(calendar.time.time, limit = 250)
     }
 
     fun subscribe(read: Boolean, after: Long): Flow<List<UpdatesWithRelations>> {

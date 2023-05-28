@@ -20,10 +20,11 @@ WHERE favorite = 1
 AND date_fetch > date_added
 ORDER BY date_fetch DESC;
 
-updates:
+getRecentUpdates:
 SELECT *
 FROM updatesView
-WHERE dateUpload > :after;
+WHERE dateUpload > :after
+LIMIT :limit;
 
 getUpdatesByReadStatus:
 SELECT *

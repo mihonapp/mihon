@@ -19,9 +19,9 @@ class UpdatesRepositoryImpl(
         }
     }
 
-    override fun subscribeAll(after: Long): Flow<List<UpdatesWithRelations>> {
+    override fun subscribeAll(after: Long, limit: Long): Flow<List<UpdatesWithRelations>> {
         return databaseHandler.subscribeToList {
-            updatesViewQueries.updates(after, updateWithRelationMapper)
+            updatesViewQueries.getRecentUpdates(after, limit, updateWithRelationMapper)
         }
     }
 
