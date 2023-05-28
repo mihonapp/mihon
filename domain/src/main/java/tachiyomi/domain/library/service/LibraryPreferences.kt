@@ -34,8 +34,12 @@ class LibraryPreferences(
             MANGA_HAS_UNREAD,
             MANGA_NON_COMPLETED,
             MANGA_NON_READ,
+            MANGA_OUTSIDE_RELEASE_PERIOD,
         ),
     )
+
+    fun leadingExpectedDays() = preferenceStore.getInt("pref_library_before_expect_key", 1)
+    fun followingExpectedDays() = preferenceStore.getInt("pref_library_after_expect_key", 1)
 
     fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
 
@@ -54,6 +58,16 @@ class LibraryPreferences(
     fun filterBookmarked() = preferenceStore.getEnum("pref_filter_library_bookmarked_v2", TriStateFilter.DISABLED)
 
     fun filterCompleted() = preferenceStore.getEnum("pref_filter_library_completed_v2", TriStateFilter.DISABLED)
+
+    fun filterIntervalCustom() = preferenceStore.getEnum("pref_filter_library_interval_custom", TriStateFilter.DISABLED)
+
+    fun filterIntervalLong() = preferenceStore.getEnum("pref_filter_library_interval_long", TriStateFilter.DISABLED)
+
+    fun filterIntervalLate() = preferenceStore.getEnum("pref_filter_library_interval_late", TriStateFilter.DISABLED)
+
+    fun filterIntervalDropped() = preferenceStore.getEnum("pref_filter_library_interval_dropped", TriStateFilter.DISABLED)
+
+    fun filterIntervalPassed() = preferenceStore.getEnum("pref_filter_library_interval_passed", TriStateFilter.DISABLED)
 
     fun filterTracking(id: Int) = preferenceStore.getEnum("pref_filter_library_tracked_${id}_v2", TriStateFilter.DISABLED)
 
@@ -142,5 +156,6 @@ class LibraryPreferences(
         const val MANGA_NON_COMPLETED = "manga_ongoing"
         const val MANGA_HAS_UNREAD = "manga_fully_read"
         const val MANGA_NON_READ = "manga_started"
+        const val MANGA_OUTSIDE_RELEASE_PERIOD = "manga_outside_release_period"
     }
 }
