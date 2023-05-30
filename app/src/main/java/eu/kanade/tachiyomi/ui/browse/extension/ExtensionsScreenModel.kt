@@ -14,16 +14,18 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import rx.Observable
 import tachiyomi.core.util.lang.launchIO
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -130,28 +132,24 @@ class ExtensionsScreenModel(
 
     fun updateAllExtensions() {
         coroutineScope.launchIO {
-            with(state.value) {
-                if (isEmpty) return@launchIO
-                items.values
-                    .flatten()
-                    .mapNotNull {
-                        when {
-                            it.extension !is Extension.Installed -> null
-                            !it.extension.hasUpdate -> null
-                            else -> it.extension
-                        }
-                    }
-                    .forEach(::updateExtension)
-            }
+            state.value.items.values.flatten()
+                .map { it.extension }
+                .filterIsInstance<Extension.Installed>()
+                .filter { it.hasUpdate }
+                .forEach(::updateExtension)
         }
     }
 
     fun installExtension(extension: Extension.Available) {
-        extensionManager.installExtension(extension).subscribeToInstallUpdate(extension)
+        coroutineScope.launchIO {
+            extensionManager.installExtension(extension).collectToInstallUpdate(extension)
+        }
     }
 
     fun updateExtension(extension: Extension.Installed) {
-        extensionManager.updateExtension(extension).subscribeToInstallUpdate(extension)
+        coroutineScope.launchIO {
+            extensionManager.updateExtension(extension).collectToInstallUpdate(extension)
+        }
     }
 
     fun cancelInstallUpdateExtension(extension: Extension) {
@@ -159,29 +157,18 @@ class ExtensionsScreenModel(
     }
 
     private fun removeDownloadState(extension: Extension) {
-        _currentDownloads.update { _map ->
-            val map = _map.toMutableMap()
-            map.remove(extension.pkgName)
-            map
-        }
+        _currentDownloads.update { it - extension.pkgName }
     }
 
     private fun addDownloadState(extension: Extension, installStep: InstallStep) {
-        _currentDownloads.update { _map ->
-            val map = _map.toMutableMap()
-            map[extension.pkgName] = installStep
-            map
-        }
+        _currentDownloads.update { it + Pair(extension.pkgName, installStep) }
     }
 
-    private fun Observable<InstallStep>.subscribeToInstallUpdate(extension: Extension) {
+    private suspend fun Flow<InstallStep>.collectToInstallUpdate(extension: Extension) =
         this
-            .doOnUnsubscribe { removeDownloadState(extension) }
-            .subscribe(
-                { installStep -> addDownloadState(extension, installStep) },
-                { removeDownloadState(extension) },
-            )
-    }
+            .onEach { installStep -> addDownloadState(extension, installStep) }
+            .onCompletion { removeDownloadState(extension) }
+            .collect()
 
     fun uninstallExtension(pkgName: String) {
         extensionManager.uninstallExtension(pkgName)

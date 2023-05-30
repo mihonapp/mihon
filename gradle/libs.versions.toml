@@ -16,7 +16,6 @@ google-services-gradle = "com.google.gms:google-services:4.3.15"
 
 rxandroid = "io.reactivex:rxandroid:1.2.1"
 rxjava = "io.reactivex:rxjava:1.3.8"
-rxrelay = "com.jakewharton.rxrelay:rxrelay:1.2.0"
 flowreactivenetwork = "ru.beryukhov:flowreactivenetwork:1.0.4"
 
 okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_version" }
@@ -92,7 +91,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
 [bundles]
-reactivex = ["rxandroid", "rxjava", "rxrelay"]
+reactivex = ["rxandroid", "rxjava"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]

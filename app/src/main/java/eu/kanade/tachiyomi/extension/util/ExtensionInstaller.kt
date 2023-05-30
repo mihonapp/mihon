@@ -10,20 +10,27 @@ import android.os.Environment
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
-import com.jakewharton.rxrelay.PublishRelay
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.extension.installer.Installer
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.transformWhile
 import logcat.LogPriority
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
+import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * The installer which installs, updates and uninstalls the extensions.
@@ -48,10 +55,7 @@ internal class ExtensionInstaller(private val context: Context) {
      */
     private val activeDownloads = hashMapOf<String, Long>()
 
-    /**
-     * Relay used to notify the installation step of every download.
-     */
-    private val downloadsRelay = PublishRelay.create<Pair<Long, InstallStep>>()
+    private val downloadsStateFlows = hashMapOf<Long, MutableStateFlow<InstallStep>>()
 
     private val extensionInstaller = Injekt.get<BasePreferences>().extensionInstaller()
 
@@ -62,7 +66,7 @@ internal class ExtensionInstaller(private val context: Context) {
      * @param url The url of the apk.
      * @param extension The extension to install.
      */
-    fun downloadAndInstall(url: String, extension: Extension) = Observable.defer {
+    fun downloadAndInstall(url: String, extension: Extension): Flow<InstallStep> {
         val pkgName = extension.pkgName
 
         val oldDownload = activeDownloads[pkgName]
@@ -83,48 +87,59 @@ internal class ExtensionInstaller(private val context: Context) {
         val id = downloadManager.enqueue(request)
         activeDownloads[pkgName] = id
 
-        downloadsRelay.filter { it.first == id }
-            .map { it.second }
-            // Poll download status
-            .mergeWith(pollStatus(id))
+        val downloadStateFlow = MutableStateFlow(InstallStep.Pending)
+        downloadsStateFlows[id] = downloadStateFlow
+
+        // Poll download status
+        val pollStatusFlow = downloadStatusFlow(id).mapNotNull { downloadStatus ->
+            // Map to our model
+            when (downloadStatus) {
+                DownloadManager.STATUS_PENDING -> InstallStep.Pending
+                DownloadManager.STATUS_RUNNING -> InstallStep.Downloading
+                else -> null
+            }
+        }
+
+        return merge(downloadStateFlow, pollStatusFlow).transformWhile {
+            emit(it)
             // Stop when the application is installed or errors
-            .takeUntil { it.isCompleted() }
+            !it.isCompleted()
+        }.onCompletion {
             // Always notify on main thread
-            .observeOn(AndroidSchedulers.mainThread())
-            // Always remove the download when unsubscribed
-            .doOnUnsubscribe { deleteDownload(pkgName) }
+            withUIContext {
+                // Always remove the download when unsubscribed
+                deleteDownload(pkgName)
+            }
+        }
     }
 
     /**
-     * Returns an observable that polls the given download id for its status every second, as the
+     * Returns a flow that polls the given download id for its status every second, as the
      * manager doesn't have any notification system. It'll stop once the download finishes.
      *
      * @param id The id of the download to poll.
      */
-    private fun pollStatus(id: Long): Observable<InstallStep> {
+    private fun downloadStatusFlow(id: Long): Flow<Int> = flow {
         val query = DownloadManager.Query().setFilterById(id)
-
-        return Observable.interval(0, 1, TimeUnit.SECONDS)
+        while (true) {
             // Get the current download status
-            .map {
-                downloadManager.query(query).use { cursor ->
-                    cursor.moveToFirst()
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-                }
+            val downloadStatus = downloadManager.query(query).use { cursor ->
+                if (!cursor.moveToFirst()) return@flow
+                cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
             }
-            // Ignore duplicate results
-            .distinctUntilChanged()
+
+            emit(downloadStatus)
+
             // Stop polling when the download fails or finishes
-            .takeUntil { it == DownloadManager.STATUS_SUCCESSFUL || it == DownloadManager.STATUS_FAILED }
-            // Map to our model
-            .flatMap { status ->
-                when (status) {
-                    DownloadManager.STATUS_PENDING -> Observable.just(InstallStep.Pending)
-                    DownloadManager.STATUS_RUNNING -> Observable.just(InstallStep.Downloading)
-                    else -> Observable.empty()
-                }
+            if (downloadStatus == DownloadManager.STATUS_SUCCESSFUL || downloadStatus == DownloadManager.STATUS_FAILED) {
+                return@flow
             }
+
+            delay(1.seconds)
+        }
     }
+        // Ignore duplicate results
+        .distinctUntilChanged()
 
     /**
      * Starts an intent to install the extension at the given uri.
@@ -176,7 +191,7 @@ internal class ExtensionInstaller(private val context: Context) {
      * @param step New install step.
      */
     fun updateInstallStep(downloadId: Long, step: InstallStep) {
-        downloadsRelay.call(downloadId to step)
+        downloadsStateFlows[downloadId]?.let { it.value = step }
     }
 
     /**
@@ -188,6 +203,7 @@ internal class ExtensionInstaller(private val context: Context) {
         val downloadId = activeDownloads.remove(pkgName)
         if (downloadId != null) {
             downloadManager.remove(downloadId)
+            downloadsStateFlows.remove(downloadId)
         }
         if (activeDownloads.isEmpty()) {
             downloadReceiver.unregister()
@@ -240,7 +256,7 @@ internal class ExtensionInstaller(private val context: Context) {
             // Set next installation step
             if (uri == null) {
                 logcat(LogPriority.ERROR) { "Couldn't locate downloaded APK" }
-                downloadsRelay.call(id to InstallStep.Error)
+                updateInstallStep(id, InstallStep.Error)
                 return
             }
 
