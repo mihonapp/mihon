@@ -335,13 +335,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     contentAlignment = Alignment.Center,
                 ) {
                     val size = DpSize(width = maxWidth / 2, height = 128.dp)
-                    val items = (0..MAX_GRACE_PERIOD).map {
-                        if (it == 0) {
-                            stringResource(R.string.label_default)
-                        } else {
-                            it.toString()
-                        }
-                    }
+                    val items = (0..MAX_GRACE_PERIOD).map(Int::toString)
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
