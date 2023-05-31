@@ -329,7 +329,7 @@ object ImageUtil {
                     "$partCount parts @ ${optimalSplitHeight}px height per part"
             }
 
-            return mutableListOf<SplitData>().apply {
+            return buildList {
                 val range = 0 until partCount
                 for (index in range) {
                     // Only continue if the list is empty or there is image remaining

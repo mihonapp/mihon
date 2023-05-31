@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
@@ -34,9 +33,13 @@ object SettingsGeneralScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val prefs = remember { Injekt.get<BasePreferences>() }
         val libraryPrefs = remember { Injekt.get<LibraryPreferences>() }
-        return mutableListOf<Preference>().apply {
+        val context = LocalContext.current
+
+        val langs = remember { getLangs(context) }
+        var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
+
+        return buildList {
             add(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPrefs.newShowUpdatesCount(),
@@ -44,14 +47,6 @@ object SettingsGeneralScreen : SearchableSettings {
                 ),
             )
 
-            add(
-                Preference.PreferenceItem.SwitchPreference(
-                    pref = prefs.confirmExit(),
-                    title = stringResource(R.string.pref_confirm_exit),
-                ),
-            )
-
-            val context = LocalContext.current
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 add(
                     Preference.PreferenceItem.TextPreference(
@@ -66,8 +61,6 @@ object SettingsGeneralScreen : SearchableSettings {
                 )
             }
 
-            val langs = remember { getLangs(context) }
-            var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
             add(
                 Preference.PreferenceItem.BasicListPreference(
                     value = currentLanguage,

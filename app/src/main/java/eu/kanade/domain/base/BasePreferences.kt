@@ -11,8 +11,6 @@ class BasePreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun confirmExit() = preferenceStore.getBoolean("pref_confirm_exit", false)
-
     fun downloadedOnly() = preferenceStore.getBoolean("pref_downloaded_only", false)
 
     fun incognitoMode() = preferenceStore.getBoolean("incognito_mode", false)
