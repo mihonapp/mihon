@@ -27,6 +27,8 @@ dependencies {
 
     implementation(androidx.glance)
 
+    implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)
+
     api(libs.injekt.core)
 }

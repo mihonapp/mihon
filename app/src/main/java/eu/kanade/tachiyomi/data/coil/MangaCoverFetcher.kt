@@ -222,18 +222,22 @@ class MangaCoverFetcher(
     }
 
     private fun readFromDiskCache(): DiskCache.Snapshot? {
-        return if (options.diskCachePolicy.readEnabled) diskCacheLazy.value[diskCacheKey] else null
+        return if (options.diskCachePolicy.readEnabled) {
+            diskCacheLazy.value.openSnapshot(diskCacheKey)
+        } else {
+            null
+        }
     }
 
     private fun writeToDiskCache(
         response: Response,
     ): DiskCache.Snapshot? {
-        val editor = diskCacheLazy.value.edit(diskCacheKey) ?: return null
+        val editor = diskCacheLazy.value.openEditor(diskCacheKey) ?: return null
         try {
             diskCacheLazy.value.fileSystem.write(editor.data) {
                 response.body.source().readAll(this)
             }
-            return editor.commitAndGet()
+            return editor.commitAndOpenSnapshot()
         } catch (e: Exception) {
             try {
                 editor.abort()

@@ -1,7 +1,6 @@
 [versions]
-aboutlib_version = "10.6.2"
+aboutlib_version = "10.7.0"
 okhttp_version = "5.0.0-alpha.11"
-coil_version = "2.3.0"
 shizuku_version = "12.2.0"
 sqlite = "2.3.1"
 sqldelight = "1.5.5"
@@ -41,9 +40,10 @@ preferencektx = "androidx.preference:preference-ktx:1.2.0"
 
 injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
-coil-core = { module = "io.coil-kt:coil", version.ref = "coil_version" }
-coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil_version" }
-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil_version" }
+coil-bom = { module = "io.coil-kt:coil-bom", version = "2.4.0" }
+coil-core = { module = "io.coil-kt:coil" }
+coil-gif = { module = "io.coil-kt:coil-gif" }
+coil-compose = { module = "io.coil-kt:coil-compose" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:c8e2650"
 image-decoder = "com.github.tachiyomiorg:image-decoder:7879b45"
