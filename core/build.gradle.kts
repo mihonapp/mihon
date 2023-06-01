@@ -10,6 +10,7 @@ android {
     kotlinOptions {
         freeCompilerArgs += listOf(
             "-Xcontext-receivers",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
         )
     }

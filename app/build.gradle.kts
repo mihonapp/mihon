@@ -279,8 +279,6 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.freeCompilerArgs += listOf(
             "-Xcontext-receivers",
-            "-opt-in=coil.annotation.ExperimentalCoilApi",
-            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
@@ -289,6 +287,8 @@ tasks {
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi",
+            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
