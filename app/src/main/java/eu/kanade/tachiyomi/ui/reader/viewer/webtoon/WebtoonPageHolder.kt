@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.content.res.Resources
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -119,7 +118,7 @@ class WebtoonPageHolder(
 
         removeErrorLayout()
         frame.recycle()
-        progressIndicator.setProgress(0, animated = false)
+        progressIndicator.setProgress(0)
     }
 
     /**
@@ -288,7 +287,6 @@ class WebtoonPageHolder(
 
         val progress = ReaderProgressIndicator(context).apply {
             updateLayoutParams<FrameLayout.LayoutParams> {
-                gravity = Gravity.CENTER_HORIZONTAL
                 updateMargins(top = parentHeight / 4)
             }
         }

@@ -15,7 +15,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -24,7 +23,6 @@ import android.view.View.LAYER_TYPE_HARDWARE
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
@@ -36,7 +34,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.internal.ToolbarUtils
@@ -69,7 +66,6 @@ import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.preference.toggle
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
-import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
 import eu.kanade.tachiyomi.util.system.toShareIntent
@@ -660,12 +656,7 @@ class ReaderActivity : BaseActivity() {
 
         supportActionBar?.title = manga.title
 
-        val loadingIndicatorContext = createReaderThemeContext()
-        loadingIndicator = ReaderProgressIndicator(loadingIndicatorContext).apply {
-            updateLayoutParams<FrameLayout.LayoutParams> {
-                gravity = Gravity.CENTER
-            }
-        }
+        loadingIndicator = ReaderProgressIndicator(this)
         binding.readerContainer.addView(loadingIndicator)
 
         startPostponedEnterTransition()
