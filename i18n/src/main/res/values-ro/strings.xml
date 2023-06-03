@@ -359,7 +359,6 @@
         <item quantity="other">Pentru %d intrări</item>
     </plurals>
     <string name="action_menu">Meniu</string>
-    <string name="action_reorganize_by">Reordonează</string>
     <string name="action_newest">Cele mai recente</string>
     <string name="action_oldest">Cele mai vechi</string>
     <string name="action_move_to_top">Mută pe primă poziție</string>
@@ -397,7 +396,6 @@
     <string name="website">Pagină web</string>
     <string name="restoring_backup_error">Restaurarea copiei de rezervă a eșuat</string>
     <string name="creating_backup_error">Crearea copiei de rezervă a eșuat</string>
-    <string name="pref_confirm_exit">Confirmare ieșire</string>
     <string name="confirm_exit">Apăsați din nou pentru a ieși</string>
     <string name="label_downloaded_only">Doar descărcate</string>
     <string name="restoring_backup_canceled">Restaurare anulată</string>

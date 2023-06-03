@@ -90,7 +90,6 @@
     <string name="action_disable">Deaktivér</string>
     <string name="action_pin">Fastgør</string>
     <string name="action_unpin">Frigør</string>
-    <string name="action_reorganize_by">Omarranger</string>
     <string name="action_order_by_upload_date">Efter upload dato</string>
     <string name="action_order_by_chapter_number">Efter kapitelnummer</string>
     <string name="action_oldest">Ældste</string>
@@ -148,7 +147,6 @@
     <string name="pref_date_format">Dato format</string>
     <string name="pref_relative_format">Relative tidsstempler</string>
     <string name="pref_relative_time_short">Kort (I dag, I går)</string>
-    <string name="pref_confirm_exit">Bekræft afslut</string>
     <string name="pref_manage_notifications">Håndter notifikationer</string>
     <string name="pref_category_security">Sikkerhed</string>
     <string name="lock_with_biometrics">Kræv oplåsning</string>

@@ -83,7 +83,6 @@
     <string name="action_cancel">लुम्पतु</string>
     <string name="action_cancel_all">सर्वाणि लुम्पतु</string>
     <string name="action_sort">विन्यासः</string>
-    <string name="action_reorganize_by">पुनः विरचयतु</string>
     <string name="action_order_by_chapter_number">अध्यायस्य क्रमसङ्ख्यया</string>
     <string name="action_newest">नविष्ठम्</string>
     <string name="information_no_recent_manga">सद्यः किमपि न पठितम्</string>
@@ -151,7 +150,6 @@
     <string name="secure_screen">पटलम् अभिरक्षतु</string>
     <string name="hide_notification_content">आवेदनवस्तु वृणोतु</string>
     <string name="pref_date_format">तिथिसंरूपम्</string>
-    <string name="pref_confirm_exit">निष्क्रमणं द्रढयतु</string>
     <string name="lock_when_idle">कार्याभावे अपिदधातु</string>
     <plurals name="lock_after_mins">
         <item quantity="one">एकनिमेषानन्तरम्</item>

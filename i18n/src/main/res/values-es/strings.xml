@@ -391,7 +391,6 @@
         <item quantity="other">Para %d títulos</item>
     </plurals>
     <string name="action_menu">Menú</string>
-    <string name="action_reorganize_by">Reordenar</string>
     <string name="action_newest">Lo más nuevo</string>
     <string name="action_oldest">Lo más antiguo</string>
     <string name="action_move_to_top">Mover al principio</string>
@@ -426,7 +425,6 @@
     <string name="manga_info_expand">Más</string>
     <string name="licenses">Licencias de código abierto</string>
     <string name="website">Página web</string>
-    <string name="pref_confirm_exit">Confirmar salida</string>
     <string name="confirm_exit">Pulsa atrás de nuevo para salir</string>
     <string name="label_downloaded_only">Sólo ya descargados</string>
     <string name="recent_manga_time">Caps. %1$s-%2$s</string>
@@ -849,4 +847,35 @@
     <string name="pref_chapter_swipe_end">Deslizar a la derecha</string>
     <string name="pref_double_tap_zoom">Ampliar tocando dos veces la pantalla</string>
     <string name="pref_library_columns_per_row">%d por fila</string>
+    <string name="action_filter_interval_late">Tras 10 o más días</string>
+    <string name="action_sort_next_updated">La siguiente actualización se espera</string>
+    <string name="pref_update_only_in_release_period">Fuera del período de publicación esperable</string>
+    <string name="intervals_header">Intervalos</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d día antes</item>
+        <item quantity="many">%d días antes</item>
+        <item quantity="other">%d días antes</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d día después</item>
+        <item quantity="many">%d días después</item>
+        <item quantity="other">%d días después</item>
+    </plurals>
+    <string name="action_filter_interval_passed">Ha pasado el período de comprobación</string>
+    <string name="manga_display_interval_title">Estimar cada</string>
+    <plurals name="day">
+        <item quantity="one">Un día</item>
+        <item quantity="many">%d días</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
+    <string name="action_filter_interval_dropped">¿Abandonado\? Tras más de 20 días y 2 meses</string>
+    <string name="pref_update_release_grace_period">Período de gracia de publicación esperable</string>
+    <string name="pref_update_release_grace_period_info">Se recomienda un período de gracia corto para evitar sobrecargar las páginas de descarga. Cuántas más veces fallen las comprobaciones mayor será el espacio de tiempo hasta un tope de 28 días.</string>
+    <string name="manga_display_modified_interval_title">Forzar actualización cada</string>
+    <string name="skipped_reason_not_in_release_period">No se ha comprobado ninguna actualización hoy al no esperar ningún cambio</string>
+    <string name="manga_modify_interval_title">Cambiar intervalo</string>
+    <string name="action_set_interval">Establecer intervalo</string>
+    <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
+    <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
 </resources>

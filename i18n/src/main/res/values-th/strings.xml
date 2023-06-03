@@ -357,7 +357,6 @@
     <string name="lock_with_biometrics">จำเป็นต้องปลดล็อก</string>
     <string name="pref_category_security">ความปลอดภัยและความเป็นส่วนตัว</string>
     <string name="pref_manage_notifications">จัดการการแจ้งเตือน</string>
-    <string name="pref_confirm_exit">ยืนยันการออก</string>
     <string name="pref_date_format">รูปแบบวันที่</string>
     <string name="theme_dark">เปิด</string>
     <string name="theme_light">ปิด</string>
@@ -377,7 +376,6 @@
     <string name="action_newest">ล่าสุด</string>
     <string name="action_order_by_chapter_number">ตามเลขตอน</string>
     <string name="action_order_by_upload_date">ตามวันที่อัปโหลด</string>
-    <string name="action_reorganize_by">จัดเรียงใหม่</string>
     <string name="cancel_all_for_series">ยกเลิกทั้งหมดสำหรับเรื่องนี้</string>
     <string name="action_cancel_all">ยกเลิกทั้งหมด</string>
     <string name="action_unpin">ยกเลิกการตรึง</string>
@@ -625,7 +623,7 @@
     <string name="update_72hour">ทุก 3 วัน</string>
     <string name="restrictions">ข้อจำกัด: %s</string>
     <string name="connected_to_wifi">เฉพาะขณะเชื่อมต่อ Wi-Fi</string>
-    <string name="download_queue_size_warning">คำเตือน: การดาวน์โหลดจำนวนมากอาจทำให้แหล่งข้อมูลทำงานช้าลงและ/หรือปิดกั้น Tachiyomi แตะเพื่อเรียนรู้เพิ่มเติม</string>
+    <string name="download_queue_size_warning">คำเตือน: การดาวน์โหลดจำนวนมากอาจทำให้แหล่งที่มาทำงานช้าลงและ/หรือปิดกั้น Tachiyomi แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="notification_updating">กำลังอัปเดตคลัง… (%1$d/%2$d)</string>
     <string name="notification_size_warning">การอัปเดตจำนวนมากเป็นอันตรายต่อแหล่งที่มาและอาจทำให้การอัปเดตช้าลงและใช้งานแบตเตอรี่เพิ่มขึ้น แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
@@ -788,4 +786,29 @@
     <string name="pref_chapter_swipe_start">การกระทำเมื่อปัดไปทางซ้าย</string>
     <string name="pref_double_tap_zoom">แตะสองครั้งเพื่อซูม</string>
     <string name="pref_library_columns_per_row">%d ต่อแถว</string>
+    <string name="action_set_interval">กำหนดช่วงเวลา</string>
+    <string name="action_filter_interval_custom">กำหนดช่วงเวลาการดึงข้อมูล</string>
+    <string name="action_filter_interval_long">ดึงข้อมูลรายเดือน (ทุก 28 วัน)</string>
+    <string name="action_filter_interval_late">ตรวจสอบเรื่องล่าสุด 10+</string>
+    <string name="action_filter_interval_dropped">ดรอปแล้ว\? ตรวจสอบเรื่องล่าสุด 20+ และภายใน 2 เดือน</string>
+    <string name="action_filter_interval_passed">การตรวจสอบที่ผ่านมา</string>
+    <string name="action_sort_next_updated">การอัปเดตที่คาดไว้ต่อไป</string>
+    <string name="pref_update_only_in_release_period">ระยะเวลาการออกที่คาดไว้จากภายนอก</string>
+    <string name="pref_update_release_grace_period">ระยะเวลาการเลื่อนออกที่คาดไว้</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">%d วันก่อน</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">อีก %d วัน</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="other">%d วัน</item>
+    </plurals>
+    <string name="skipped_reason_not_in_release_period">ข้ามไปเนื่องจากคาดว่าจะไม่มีการออกในวันนี้</string>
+    <string name="manga_display_interval_title">ประมาณทุกๆ</string>
+    <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
+    <string name="manga_modify_interval_title">แก้ไขช่วงเวลา</string>
+    <string name="pref_update_release_grace_period_info">ขอแนะนำให้ใช้ระยะเวลาเลื่อนเพื่อเพิ่มความรวดเร็วจากแหล่งที่มา ยิ่งมีการตรวจสอบรายการที่ขาดหายไปมากเท่าใด ช่วงเวลาระหว่างการตรวจสอบก็จะนานขึ้นสูงสุด 28 วัน</string>
+    <string name="intervals_header">ช่วงเวลา</string>
+    <string name="manga_modify_calculated_interval_title">ปรับแต่งช่วงเวลา</string>
 </resources>

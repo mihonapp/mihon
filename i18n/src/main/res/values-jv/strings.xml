@@ -99,7 +99,7 @@
     <string name="label_settings">Setelan</string>
     <string name="label_more">Liyane</string>
     <string name="name">Jeneng</string>
-    <string name="manga">Manga</string>
+    <string name="manga">Entri perpustakaan</string>
     <string name="download_notifier_download_paused">Donlotan mandheg</string>
     <string name="download_notifier_downloader_title">Donloder</string>
     <string name="channel_complete">Komplit</string>
@@ -147,7 +147,6 @@
     <string name="action_asc">Munggah</string>
     <string name="action_order_by_upload_date">Miturut tanggal unggah</string>
     <string name="action_order_by_chapter_number">Miturut nomer bab</string>
-    <string name="action_reorganize_by">Atur maneh</string>
     <string name="action_sort">Urutke</string>
     <string name="cancel_all_for_series">Batalke kabeh seri iki</string>
     <string name="action_cancel_all">Batalke kabeh</string>
@@ -166,7 +165,7 @@
     <string name="action_resume">Teruske</string>
     <string name="action_start">Mulai</string>
     <string name="action_remove">Hapus</string>
-    <string name="action_sort_count">Total manga</string>
+    <string name="action_sort_count">Total entri</string>
     <string name="confirm_lock_change">Otentikasi kanggo konfirmasi perubahan</string>
     <string name="label_default">Default</string>
     <string name="action_show_manga">Nampilno manga</string>
@@ -204,7 +203,6 @@
     <plurals name="lock_after_mins">
         <item quantity="other">Sawise %1$s menit</item>
     </plurals>
-    <string name="pref_confirm_exit">Konfirmasi metu</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
     <string name="secure_screen_summary">Amanaken layar sembunikan konten aplikasi wektu ngaleh aplikasi lan blokir tangkapan layar</string>
     <string name="theme_midnightdusk">Surup wengi</string>
@@ -263,7 +261,7 @@
     <string name="pref_skip_read_chapters">Lewati bab dithandani kawaca</string>
     <string name="pref_read_with_volume_keys">Tombol volume</string>
     <string name="l_nav">Wangun L</string>
-    <string name="action_sort_last_manga_update">Nganyari manga pungkasan</string>
+    <string name="action_sort_last_manga_update">Priksa nganyari pungkasan</string>
     <string name="action_sort_unread_count">Total gak diwoco</string>
     <string name="pref_relative_format">Stempel wektu sing relatif</string>
     <string name="pref_category_library_update">Updatean umum</string>
@@ -333,4 +331,9 @@
     <string name="pref_reader_actions">Aksi</string>
     <string name="pref_read_with_long_tap">Tampilake ing tunyuk dawa</string>
     <string name="pref_create_folder_per_manga">Simpen kaca menyang folder sing kapisah</string>
+    <string name="label_stats">Statistik</string>
+    <string name="label_local">Lokal</string>
+    <string name="label_started">Diwiwiti</string>
+    <string name="label_downloaded">Diundhuh</string>
+    <string name="action_search_hint">Telusuri…</string>
 </resources>

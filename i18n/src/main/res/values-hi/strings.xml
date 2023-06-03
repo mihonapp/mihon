@@ -21,7 +21,7 @@
     <string name="action_sort_total">कुल अध्याय</string>
     <string name="action_sort_last_read">आखिर में पढ़ा हुआ</string>
     <string name="action_search">खोज</string>
-    <string name="action_global_search">विश्वीय खोज</string>
+    <string name="action_global_search">वैश्विक खोज</string>
     <string name="action_select_all">सभी का चयन करे</string>
     <string name="action_mark_as_read">पढ़ा हुआ चिह्न करे</string>
     <string name="action_mark_as_unread">अपठित चिह्न करे</string>
@@ -67,7 +67,7 @@
     <string name="pref_category_tracking">पदचिह्न</string>
     <string name="pref_category_advanced">विकसित</string>
     <string name="pref_category_about">संबंध में</string>
-    <string name="pref_library_columns">मद प्रति पंक्ति</string>
+    <string name="pref_library_columns">ग्रिड आकार</string>
     <string name="portrait">चित्र</string>
     <string name="landscape">लैंडस्केप</string>
     <string name="pref_library_update_interval">स्वचालित अद्यतन</string>
@@ -100,8 +100,8 @@
     <string name="pref_viewer_type">डिफ़ॉल्ट रीडिंग मोड</string>
     <string name="left_to_right_viewer">बाएं से दाएं</string>
     <string name="right_to_left_viewer">दाएं से बाएं</string>
-    <string name="vertical_viewer">शीर्ष से असंतत</string>
-    <string name="webtoon_viewer">वेबटून</string>
+    <string name="vertical_viewer">सीधा</string>
+    <string name="webtoon_viewer">लंबी पट्टी</string>
     <string name="pref_image_scale_type">मापन प्ररूप</string>
     <string name="scale_type_fit_screen">उपयुक्त स्क्रीन</string>
     <string name="scale_type_stretch">खींचें</string>
@@ -300,7 +300,7 @@
     <string name="ext_obsolete">अप्रचलित</string>
     <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है। यह अब शायद ठीक से काम न करे और मसला खड़ा करे। इसे अनइंस्टॉल करने की सलाह दी गई है।</string>
     <string name="pref_date_format">दिनांक स्वरूप</string>
-    <string name="pref_category_library_update">अद्यतन</string>
+    <string name="pref_category_library_update">वैश्विक अपडेट</string>
     <string name="logout_title">%1$s से लॉगआउट करें\?</string>
     <string name="logout">लॉग आउट</string>
     <string name="logout_success">अब आप लॉग आउट है</string>
@@ -355,7 +355,6 @@
         <item quantity="other">%d आइटम के लिए</item>
     </plurals>
     <string name="action_menu">मेन्यू</string>
-    <string name="action_reorganize_by">पुनःक्रमित</string>
     <string name="action_newest">नवीनतम</string>
     <string name="action_oldest">सबसे पुराना</string>
     <string name="action_move_to_top">शीर्ष पर ले जाएँ</string>
@@ -377,7 +376,7 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">कुछ नहीं</string>
     <string name="pref_webtoon_side_padding">साइड पैडिंग</string>
-    <string name="vertical_plus_viewer">लगातार लंबवत</string>
+    <string name="vertical_plus_viewer">गैप के साथ लंबी पट्टी</string>
     <string name="action_unpin">अनपिन</string>
     <string name="action_pin">पिन</string>
     <string name="action_select_inverse">विलोम का चयन करें</string>
@@ -389,7 +388,6 @@
     <string name="information_webview_required">ताचियोमी के लिए WebView आवश्यक है</string>
     <string name="licenses">ओपन सोर्स लाइसेंस</string>
     <string name="website">वेबसाइट</string>
-    <string name="pref_confirm_exit">बाहर निकलने की पुष्टि करें</string>
     <string name="confirm_exit">बाहर निकलने के लिए फिर से वापस दबाएं</string>
     <string name="label_downloaded_only">केवल डाउनलोड किए गए</string>
     <string name="recent_manga_time">अध्याय %1$s – %2$s</string>
@@ -485,7 +483,7 @@
     <string name="chapter_settings_updated">अपडेट किए गए डिफ़ॉल्ट अध्याय सेटिंग्स</string>
     <string name="no_chapters_error">कोई अध्याय नहीं मिला</string>
     <string name="set_chapter_settings_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
-    <string name="also_set_chapter_settings_for_library">मेरी लाइब्रेरी में सभी मंगा पर भी लागू करें</string>
+    <string name="also_set_chapter_settings_for_library">मेरी पुस्तकालय में सभी एन्ट्री पर भी लागू करें</string>
     <string name="confirm_set_chapter_settings">क्या आप वाकई इन सेटिंग्स को डिफ़ॉल्ट के रूप में सहेजना चाहते हैं\?</string>
     <string name="chapter_settings">अध्याय सेटिंग्स</string>
     <string name="share_page_info">%1$s: %2$s, पृष्ठ %3$d</string>
@@ -507,7 +505,7 @@
     <string name="track_finished_reading_date">समाप्ति की तिथि</string>
     <string name="track_started_reading_date">आरंभ करने की तिथि</string>
     <string name="pref_dump_crash_logs_summary">डेवलपर्स के साथ साझा करने के लिए फ़ाइल में त्रुटि लॉग सहेजता है</string>
-    <string name="pref_dump_crash_logs">डंप क्रैश लॉग</string>
+    <string name="pref_dump_crash_logs">क्रैश लॉग शेयर करें</string>
     <string name="pref_viewer_nav">टैप ज़ोन</string>
     <string name="right_and_left_nav">दाएं और बाएं</string>
     <string name="edge_nav">धार</string>
@@ -657,7 +655,7 @@
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
     <string name="notification_update_error">%1$d अपडेट विफल</string>
     <string name="notification_update_skipped">%1$d अपडेट छोड़े गए</string>
-    <string name="pref_navigate_pan">टैप करते समय छवियों को पैन करें</string>
+    <string name="pref_navigate_pan">चौड़ी छवियां पैन करें</string>
     <string name="pref_landscape_zoom">ज़ूम लैंडस्केप इमेज</string>
     <string name="action_move_to_top_all_for_series">श्रृंखला को शीर्ष पर ले जाएं</string>
     <string name="source_empty_screen">कोई स्रोत नहीं मिला</string>
@@ -697,7 +695,7 @@
     <string name="network_not_metered">केवल अनमीटर्ड कनेक्शन पर</string>
     <string name="loader_rar5_error">RARv5 प्रारूप समर्थित नहीं है</string>
     <string name="updates_last_update_info">पुस्तकालय पिछली बार अपडेट किया गया: %s</string>
-    <string name="appwidget_updates_description">अपना हाल ही में अपडेट किया गया मांगा देखें</string>
+    <string name="appwidget_updates_description">अपनी हाल ही में अपडेट की गई पुस्तकालय एन्ट्री देखें</string>
     <string name="download_ahead_info">केवल लाइब्रेरी में प्रविष्टियों पर काम करता है। और यदि वर्तमान अध्याय और अगला अध्याय पहले ही डाउनलोड हो चुका है</string>
     <string name="custom_cover">कस्टम कवर</string>
     <string name="pref_user_agent_string">चूक यूजर एजेंट स्ट्रिंग (User agent string)</string>
@@ -739,7 +737,7 @@
     <string name="pref_library_update_show_tab_badge">नए अपडेट आइकन पर अपठित संख्या दिखाएं</string>
     <string name="enhanced_services_not_installed">उपलब्ध है लेकिन स्रोत स्थापित नहीं है: %s</string>
     <string name="pref_hide_in_library_items">पुस्तकालय में पहले से ही रही आइटम को छिपाएँ</string>
-    <string name="pref_library_summary">श्रेणियाँ, वैश्विक अपडेट</string>
+    <string name="pref_library_summary">श्रेणियाँ, वैश्विक अपडेट, अध्याय स्वाइप</string>
     <string name="pref_page_rotate">फिट होने के लिए चौड़े पृष्ठों को घुमाएं</string>
     <string name="pref_backup_summary">मैनुअल और स्वचालित बैकअप</string>
     <string name="pref_security_summary">ऐप लॉक, सुरक्षित स्क्रीन</string>

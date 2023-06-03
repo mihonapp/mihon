@@ -77,7 +77,6 @@
     <string name="action_cancel_all">هەڵوەشاندنەوەی هەموو</string>
     <string name="cancel_all_for_series">هەڵوەشاندنەوەی هەموو بۆ ئەم زنجیرەیە</string>
     <string name="action_sort">ڕیزکردن</string>
-    <string name="action_reorganize_by">دووبارە ڕێکخستن</string>
     <string name="action_move_to_bottom">گواستنەوە بۆ خوارەوە</string>
     <string name="action_install">دامەزراندن</string>
     <string name="action_share">هاوبەشیکردن</string>
@@ -166,7 +165,6 @@
     <string name="pref_relative_time_short">کورت (ئەمڕۆ، دوێنێ)</string>
     <string name="pref_relative_time_long">درێژ (کورت، + چەند ڕۆژ پێش ئێستا)</string>
     <string name="pref_date_format">ڕێکخستنی بەروار</string>
-    <string name="pref_confirm_exit">دڵنیابوون لە دەرچوون</string>
     <string name="pref_manage_notifications">بەڕێوەبردنی ئاگانامەکان</string>
     <string name="pref_category_security">سازکاری پارێزراوی</string>
     <string name="lock_with_biometrics">پێویست بە کردنەوە دەکات</string>

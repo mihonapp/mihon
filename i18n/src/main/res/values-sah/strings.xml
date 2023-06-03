@@ -86,7 +86,6 @@
     <string name="lock_with_biometrics">Арыйыыны ирдээ</string>
     <string name="pref_category_security">Көмүскэл</string>
     <string name="pref_manage_notifications">Биллэриилэри салай</string>
-    <string name="pref_confirm_exit">Тахсыыны бигэргэт</string>
     <string name="pref_date_format">Даататын формаата</string>
     <string name="theme_dark">Холбоммут</string>
     <string name="theme_light">Араарыллыбыт</string>
@@ -116,7 +115,6 @@
     <string name="action_move_to_top">Саҕаланыыга көһөр</string>
     <string name="action_oldest">Олох урукку</string>
     <string name="action_newest">Сабыс-саҥа</string>
-    <string name="action_reorganize_by">Саҥаттаан сааһылыы</string>
     <string name="action_sort">Сааһылаа</string>
     <string name="action_cancel_all">Барытын уларыт</string>
     <string name="action_cancel">Уларытыы</string>

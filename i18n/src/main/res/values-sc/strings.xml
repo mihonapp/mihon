@@ -355,7 +355,6 @@
         <item quantity="other">Pro %d elementos</item>
     </plurals>
     <string name="action_menu">Menù</string>
-    <string name="action_reorganize_by">Riòrdina</string>
     <string name="action_newest">Prus noos</string>
     <string name="action_oldest">Prus betzos</string>
     <string name="action_move_to_top">Manda a pitzus</string>
@@ -389,7 +388,6 @@
     <string name="information_webview_required">Pro Tachiyomi b\'at bisòngiu de WebView</string>
     <string name="licenses">Litzèntzias a còdighe abertu</string>
     <string name="website">Situ web</string>
-    <string name="pref_confirm_exit">Cunfirma s\'essida</string>
     <string name="confirm_exit">Incarca in segus torra pro essire</string>
     <string name="label_downloaded_only">Iscarrigados ebbia</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>

@@ -149,7 +149,6 @@
     <string name="pref_category_nsfw_content">Fontes NSFW (+18)</string>
     <string name="pref_category_security">Seguridade e privacidade</string>
     <string name="pref_manage_notifications">Xestionar notificacións</string>
-    <string name="pref_confirm_exit">Confirmar a saída</string>
     <string name="pref_date_format">Formato da data</string>
     <string name="theme_dark">Activado</string>
     <string name="theme_light">Desactivado</string>
@@ -179,7 +178,6 @@
     <string name="action_move_to_top">Mover ao principio</string>
     <string name="action_oldest">Máis antigos</string>
     <string name="action_newest">Os máis novos</string>
-    <string name="action_reorganize_by">Reordenar</string>
     <string name="action_sort">Ordenar</string>
     <string name="action_cancel_all">Cancelar todos</string>
     <string name="action_cancel">Cancelar</string>

@@ -55,7 +55,6 @@
     <string name="action_move_to_top">वर हलवा</string>
     <string name="action_oldest">सगळ्यात जुने</string>
     <string name="action_newest">सगळ्यात नवे</string>
-    <string name="action_reorganize_by">पुन्हा क्रमवारी लावा</string>
     <string name="action_sort">क्रमवारी लावा</string>
     <string name="action_cancel_all">सगळे रद्द करा</string>
     <string name="action_cancel">रद्द करा</string>
@@ -104,7 +103,6 @@
     <string name="lock_with_biometrics">बिॉमेट्रिकस सह लॉक करा</string>
     <string name="pref_category_security">सुरक्षा</string>
     <string name="pref_manage_notifications">सुचनेचे व्यवस्थापन</string>
-    <string name="pref_confirm_exit">बाहेर पडायसाठी पुन्हा पुष्टी करा</string>
     <string name="pref_date_format">तारिकेचा स्वरूप</string>
     <string name="theme_system">तंत्राचे अनुसरण करा</string>
     <string name="theme_dark">डार्क</string>

@@ -351,7 +351,6 @@
         <item quantity="other">Untuk entri %d</item>
     </plurals>
     <string name="action_menu">Menu</string>
-    <string name="action_reorganize_by">Susun semula</string>
     <string name="action_newest">Terbaru</string>
     <string name="action_oldest">Terlama</string>
     <string name="action_move_to_top">Naik ke atas</string>
@@ -388,7 +387,6 @@
     <string name="webtoon_side_padding_20">20%</string>
     <string name="webtoon_side_padding_15">15%</string>
     <string name="webtoon_side_padding_0">Tiada</string>
-    <string name="pref_confirm_exit">Sahkan keluar</string>
     <string name="action_unpin">Buang sematkan</string>
     <string name="action_pin">Sematkan</string>
     <string name="confirm_exit">Tekan kembali sekali lagi untuk keluar</string>

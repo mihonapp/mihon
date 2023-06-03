@@ -321,7 +321,6 @@
     <string name="lock_with_biometrics">আনলক প্রয়োজন</string>
     <string name="pref_category_security">নিরাপত্তা</string>
     <string name="pref_manage_notifications">বিজ্ঞপ্তিগুলি নিয়ন্ত্রণ করুন</string>
-    <string name="pref_confirm_exit">বের হতে নিশ্চিত করুন</string>
     <string name="pref_date_format">তারিখের রীতি</string>
     <string name="theme_dark">চালু করুন</string>
     <string name="theme_light">বন্ধ করুন</string>
@@ -332,7 +331,6 @@
     <string name="action_move_to_top">শীর্ষে সরান</string>
     <string name="action_oldest">প্রবীণতম</string>
     <string name="action_newest">নবীনতম</string>
-    <string name="action_reorganize_by">পুনরায় সাজান</string>
     <string name="action_cancel_all">সব বাতিল করুন</string>
     <string name="action_unpin">আলগা করুন</string>
     <string name="action_pin">আটকান</string>

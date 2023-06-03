@@ -340,7 +340,6 @@
     <string name="action_move_to_top">Przenieś na górę</string>
     <string name="action_oldest">Najstarsze</string>
     <string name="action_newest">Najnowsze</string>
-    <string name="action_reorganize_by">Zmień kolejność</string>
     <string name="action_cancel_all">Anuluj wszystko</string>
     <string name="action_select_inverse">Odwróć zaznaczenie</string>
     <string name="action_sort_latest_chapter">Ostatni rozdział</string>
@@ -378,7 +377,6 @@
         <item quantity="other">%d kategorii</item>
     </plurals>
     <string name="secure_screen">Ukryj ekran</string>
-    <string name="pref_confirm_exit">Potwierdź wyjście</string>
     <string name="action_unpin">Odepnij</string>
     <string name="action_pin">Przypnij</string>
     <string name="confirm_exit">Wciśnij wstecz ponownie, aby wyjść</string>
@@ -780,7 +778,7 @@
     <string name="label_total_chapters">Całość</string>
     <string name="action_search_hint">Szukaj…</string>
     <string name="action_open_random_manga">Otwórz losową pozycję</string>
-    <string name="pref_library_summary">Kategorie, globalna aktualizacja</string>
+    <string name="pref_library_summary">Kategorie, aktualizacja globalna, przesunięcie rozdziału</string>
     <string name="pref_invalidate_download_cache">Unieważnij indeks pobierania</string>
     <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane.
 \nNaciśnij, aby dowiedzieć się więcej.</string>
@@ -832,4 +830,5 @@
     <string name="pref_double_tap_zoom">Dotknij dwukrotnie, aby powiększyć</string>
     <string name="pref_chapter_swipe_end">Przesuń palcem w prawo</string>
     <string name="pref_chapter_swipe_start">Przesuń palcem w lewo</string>
+    <string name="pref_chapter_swipe">Przesunięcie rozdziału</string>
 </resources>

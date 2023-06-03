@@ -79,7 +79,6 @@
     <string name="action_install">Instali</string>
     <string name="action_oldest">Plej malnovaj</string>
     <string name="action_newest">Plej novaj</string>
-    <string name="action_reorganize_by">Reordigi</string>
     <string name="action_sort">Ordigi</string>
     <string name="action_cancel_all">Nuligi ĉiujn</string>
     <string name="action_cancel">Nuligi</string>
@@ -202,7 +201,6 @@
     <string name="pref_category_display">Montrado</string>
     <string name="pref_show_nsfw_source">Montri en fontlisto kaj kromaĵlisto</string>
     <string name="pref_category_nsfw_content">MPL/NSFW (18+) fontoj</string>
-    <string name="pref_confirm_exit">Konfirmi eliron</string>
     <string name="pref_category_general">Ĝenerala</string>
     <string name="app_not_available">Apo maldisponebla</string>
     <string name="action_restore">Restaŭro</string>

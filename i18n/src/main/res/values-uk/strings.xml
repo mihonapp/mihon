@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="name">Ім\'я</string>
+    <string name="name">Назва</string>
     <string name="categories">Категорії</string>
     <string name="manga">Записи бібліотеки</string>
     <string name="chapters">Розділи</string>
     <string name="track">Відстеження</string>
     <string name="history">Історія</string>
     <string name="label_settings">Налаштування</string>
-    <string name="label_download_queue">Черга завантаження</string>
+    <string name="label_download_queue">Черга завантажень</string>
     <string name="label_library">Бібліотека</string>
     <string name="label_recent_manga">Історія</string>
-    <string name="label_recent_updates">Оновлення</string>
+    <string name="label_recent_updates">Нове</string>
     <string name="label_backup">Резервування та відновлення</string>
     <string name="label_migration">Міграція</string>
     <string name="label_extensions">Розширення</string>
     <string name="label_extension_info">Інформація про розширення</string>
     <string name="action_settings">Налаштування</string>
     <string name="action_filter">Фільтр</string>
-    <string name="action_filter_bookmarked">Закладки</string>
-    <string name="action_filter_unread">Непрочитані</string>
+    <string name="action_filter_bookmarked">В закладках</string>
+    <string name="action_filter_unread">Непрочитане</string>
     <string name="action_filter_empty">Видалити фільтр</string>
     <string name="action_sort_alpha">В алфавітному порядку</string>
     <string name="action_sort_total">За кількістю розділів</string>
@@ -49,7 +49,7 @@
     <string name="action_resume">Продовжити</string>
     <string name="action_open_in_browser">Відкрити в браузері</string>
     <string name="action_display_mode">Режим відображення</string>
-    <string name="action_display">Відобразити</string>
+    <string name="action_display">Вигляд</string>
     <string name="action_display_grid">Компактна сітка</string>
     <string name="action_display_list">Список</string>
     <string name="action_display_download_badge">Завантажені розділи</string>
@@ -73,7 +73,7 @@
     <string name="pref_library_columns">Розмір сітки</string>
     <string name="portrait">Портретна</string>
     <string name="landscape">Альбомна</string>
-    <string name="pref_library_update_interval">Автоматичні оновлення</string>
+    <string name="pref_library_update_interval">Автоматичне оновлення</string>
     <string name="update_never">Вимкнути</string>
     <string name="update_6hour">Кожні 6 годин</string>
     <string name="update_12hour">Кожні 12 годин</string>
@@ -85,7 +85,7 @@
     <string name="charging">Коли заряджається</string>
     <string name="pref_update_only_non_completed">З статусом \"Завершено\"</string>
     <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
-    <string name="default_category">Категорія за замовчуванням</string>
+    <string name="default_category">Типова категорія</string>
     <string name="default_category_summary">Завжди запитувати</string>
     <string name="ext_update">Оновлення</string>
     <string name="ext_install">Встановити</string>
@@ -106,7 +106,7 @@
     <string name="pref_page_transitions">Анімація переходів сторінки</string>
     <string name="pref_double_tap_anim_speed">Швидкість анімації при подвійному натиснені</string>
     <string name="pref_show_page_number">Показувати номер сторінки</string>
-    <string name="pref_crop_borders">Межі обрізки</string>
+    <string name="pref_crop_borders">Обрізати поля</string>
     <string name="pref_custom_brightness">Користувацька яскравість</string>
     <string name="pref_custom_color_filter">Користувацький кольоровий фільтр</string>
     <string name="pref_keep_screen_on">Тримати екран ввімкненим</string>
@@ -116,7 +116,7 @@
     <string name="pref_reader_theme">Колір фону</string>
     <string name="white_background">Білий</string>
     <string name="black_background">Чорний</string>
-    <string name="pref_viewer_type">Напрямок читання за замовчуванням</string>
+    <string name="pref_viewer_type">Типовий напрямок читання</string>
     <string name="left_to_right_viewer">Посторінково (зліва направо)</string>
     <string name="right_to_left_viewer">Посторінково (справа наліво)</string>
     <string name="vertical_viewer">Посторінковий (вертикальний)</string>
@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Без анімації</string>
     <string name="double_tap_anim_speed_normal">Нормальна</string>
     <string name="double_tap_anim_speed_fast">Швидка</string>
-    <string name="pref_rotation_type">Тип орієнтації за замовчуванням</string>
+    <string name="pref_rotation_type">Тип основної орієнтації</string>
     <string name="rotation_free">Вільна</string>
     <string name="rotation_force_portrait">Заблокована портретна</string>
     <string name="rotation_force_landscape">Заблокована альбомна</string>
@@ -145,7 +145,7 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">Директорія завантаження</string>
+    <string name="pref_download_directory">Директорія завантажень</string>
     <string name="pref_remove_after_marked_as_read">Після того, як було відмічено прочитаним вручну</string>
     <string name="pref_remove_after_read">Автоматично видаляти після прочитання</string>
     <string name="custom_dir">Користувацька директорія</string>
@@ -174,8 +174,8 @@
     <string name="used_cache">Використано: %1$s</string>
     <string name="cache_deleted">Кеш очищено %1$d файлів було видалено</string>
     <string name="cache_delete_error">Виникла помилка при видаленні кешу</string>
-    <string name="pref_clear_cookies">Очистити реп`яшки</string>
-    <string name="cookies_cleared">Реп`яшки очищено</string>
+    <string name="pref_clear_cookies">Очистити реп\'яшки</string>
+    <string name="cookies_cleared">Реп\'яшки очищено</string>
     <string name="pref_clear_database">Очистити базу даних</string>
     <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
     <string name="clear_database_confirmation">Ви впевнені\? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
@@ -196,7 +196,7 @@
     <string name="local_source">Локальне джерело</string>
     <string name="other_source">Інші</string>
     <string name="action_global_search_hint">Глобальний пошук…</string>
-    <string name="latest">Остання</string>
+    <string name="latest">Новинки</string>
     <string name="browse">Огляд</string>
     <string name="ongoing">Онгоінг</string>
     <string name="unknown">Невідомо</string>
@@ -219,9 +219,9 @@
     <string name="manga_download">Завантажити</string>
     <string name="download_unread">Непрочитані</string>
     <string name="confirm_delete_chapters">Ви впевнені, що бажаєте видалити вибрані розділи\?</string>
-    <string name="manga_tracking_tab">Відслідковувати</string>
+    <string name="manga_tracking_tab">Стежити</string>
     <string name="reading">В процесі читання</string>
-    <string name="completed">Завершено</string>
+    <string name="completed">Завершене</string>
     <string name="dropped">Кинуто</string>
     <string name="on_hold">Заморожено</string>
     <string name="plan_to_read">Планую почитати</string>
@@ -265,7 +265,7 @@
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
     <string name="update_check_look_for_updates">Перевірити оновлення…</string>
     <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
-    <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлення</string>
+    <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлень</string>
     <string name="update_check_notification_download_error">Помилка завантаження</string>
     <string name="update_check_notification_update_available">Доступна нова версія!</string>
     <string name="information_no_downloads">Завантажень немає</string>
@@ -325,7 +325,7 @@
         <item quantity="many">Після %1$s хвилин</item>
         <item quantity="other">Після %1$s хвилин</item>
     </plurals>
-    <string name="secure_screen">Екран безпеки</string>
+    <string name="secure_screen">Захистити екран додатку</string>
     <string name="ext_updates_pending">Очікуються оновлення</string>
     <string name="pref_cutout_short">Відображати вміст обітнутої області</string>
     <string name="information_cloudflare_bypass_failure">Не вдалось обійти Cloudflare</string>
@@ -349,7 +349,7 @@
         <item quantity="many">Розділи %1$s та %2$d більше</item>
         <item quantity="other">Розділи %1$s та %2$d більше</item>
     </plurals>
-    <string name="hide_notification_content">Приховати вміст сповіщення</string>
+    <string name="hide_notification_content">Приховати вміст сповіщень</string>
     <string name="notification_check_updates">Перевірка нових розділів</string>
     <string name="pref_disable_battery_optimization">Вимкнути збереження батареї</string>
     <string name="pref_disable_battery_optimization_summary">Допомагає фоновому оновленню бібліотеки та резервним копіям</string>
@@ -363,7 +363,6 @@
         <item quantity="other">Для %d записів</item>
     </plurals>
     <string name="action_menu">Меню</string>
-    <string name="action_reorganize_by">Переупорядкувати</string>
     <string name="action_newest">Найновіші</string>
     <string name="action_oldest">Найстаріші</string>
     <string name="action_move_to_top">Перемістити догори</string>
@@ -374,7 +373,7 @@
         <item quantity="many">%d наявних оновлень розширень</item>
     </plurals>
     <string name="channel_ext_updates">Оновлення розширень</string>
-    <string name="http_error_hint">Глипнути сайт в WebView</string>
+    <string name="http_error_hint">Відкрити сайт у WebView</string>
     <string name="pref_category_reading">Читання</string>
     <string name="label_sources">Джерела</string>
     <string name="updating_library">Оновлення бібліотеки</string>
@@ -387,7 +386,7 @@
     <string name="pref_webtoon_side_padding">Бічний відступ</string>
     <string name="vertical_plus_viewer">Довга смуга з проміжками</string>
     <string name="action_select_inverse">Інвертувати вибір</string>
-    <string name="add_tracking">Додати стеження</string>
+    <string name="add_tracking">Додати відстеження</string>
     <string name="pinned_sources">Прикріплено</string>
     <string name="action_unpin">Відкріпити</string>
     <string name="action_pin">Закріпити</string>
@@ -398,7 +397,6 @@
     <string name="information_webview_required">WebView необхідний для Tachiyomi</string>
     <string name="licenses">Ліцензії з відкритим кодом</string>
     <string name="website">Сторінка</string>
-    <string name="pref_confirm_exit">Підтвердити вихід</string>
     <string name="confirm_exit">Натисніть ще раз, щоб вийти</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
@@ -444,8 +442,8 @@
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодних записів бібліотеки.</string>
     <string name="invalid_backup_file">Невірний файл резервної копії</string>
-    <string name="pref_search_pinned_sources_only">У глобальному пошуку шукайте лише закріплені джерела</string>
-    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу розділу в службах стеження. Налаштуйте для окремих записів з допомогою кнопки \"Стеження\".</string>
+    <string name="pref_search_pinned_sources_only">При глобальному пошуку, шукати лише у закріплених джерелах</string>
+    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу розділу в службах стеження. Налаштуйте для окремих записів з допомогою кнопки \"Стежити\".</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
     <string name="recent_manga_time">Розд. %1$s - %2$s</string>
@@ -490,7 +488,7 @@
     <string name="no_pinned_sources">У вас немає закріплених джерел</string>
     <string name="channel_errors">Помилки</string>
     <string name="channel_complete">Завершено</string>
-    <string name="channel_progress">Поступ</string>
+    <string name="channel_progress">Прогрес</string>
     <string name="backup_restore_missing_trackers">Трекери не авторизовано:</string>
     <string name="pref_remove_bookmarked_chapters">Дозволити видалення розділів з закладок</string>
     <string name="pref_category_delete_chapters">Видалити розділи</string>
@@ -504,11 +502,11 @@
         <item quantity="other">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
     </plurals>
     <string name="no_chapters_error">Немає розділів</string>
-    <string name="chapter_settings_updated">Оновлено налаштування розділу за замовчуванням</string>
+    <string name="chapter_settings_updated">Налаштування розділу оновлено</string>
     <string name="share_page_info">%1$s: %2$s, сторінка %3$d</string>
-    <string name="set_chapter_settings_as_default">За замовчуванням</string>
+    <string name="set_chapter_settings_as_default">Зберегти налаштування</string>
     <string name="also_set_chapter_settings_for_library">Також застосувати для усіх записів в моїй бібліотеці</string>
-    <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування за замовчуванням\?</string>
+    <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування як основні\?</string>
     <string name="chapter_settings">Налаштування розділу</string>
     <string name="downloaded_chapters">Завантажені розділи</string>
     <string name="manga_from_library">З бібліотеки</string>
@@ -537,7 +535,7 @@
     <string name="action_asc">За зростанням</string>
     <string name="action_order_by_chapter_number">За номером розділу</string>
     <string name="action_order_by_upload_date">За датою завантаження</string>
-    <string name="action_filter_tracked">Відслідковуваний</string>
+    <string name="action_filter_tracked">Відстежуване</string>
     <string name="action_display_show_number_of_items">Показати кількість об\'єктів</string>
     <string name="right_and_left_nav">Праворуч та ліворуч</string>
     <string name="pref_dual_page_split">Розділення широких сторінок</string>
@@ -575,16 +573,16 @@
     <string name="cancel_all_for_series">Скасувати для усієї серії</string>
     <string name="error_no_match">Збігів не знайдено</string>
     <string name="source_unsupported">Джерело не підтримується</string>
-    <string name="unread">Не прочитано</string>
+    <string name="unread">Не прочитане</string>
     <string name="error_sharing_cover">Помилка відправлення обкладинки</string>
     <string name="error_saving_cover">Помилка при збереженні обкладинки</string>
     <string name="cover_saved">Обкладинку збережено</string>
     <string name="manga_cover">Обкладинка</string>
     <string name="date">Дата</string>
     <string name="local_filter_order_by">Сортувати за</string>
-    <string name="local_invalid_format">Невірний формат розділу</string>
+    <string name="local_invalid_format">Невірний формат розділів</string>
     <string name="chapter_not_found">Розділ не знайдено</string>
-    <string name="tracking_guide">Гайд відслідковування</string>
+    <string name="tracking_guide">Гайд відстежування</string>
     <string name="off">Вимкнено</string>
     <string name="on">Увімкнено</string>
     <string name="categorized_display_settings">Налаштування сортування та відображення для кожної категорії</string>
@@ -631,7 +629,7 @@
     <string name="label_default">Типово</string>
     <string name="pref_category_timestamps">Часові мітки</string>
     <string name="pref_category_appearance">Вигляд</string>
-    <string name="action_track">Відслідковувати</string>
+    <string name="action_track">Стежити</string>
     <string name="getting_started_guide">Посібник з початку роботи</string>
     <string name="pref_tablet_ui_mode">Планшетний інтерфейс</string>
     <string name="help_translate">Допомогти з перекладом</string>
@@ -660,7 +658,7 @@
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Пропускати оновлення записів</string>
-    <string name="pref_update_only_completely_read">Є непрочитана(ні) глава(и)</string>
+    <string name="pref_update_only_completely_read">Є непрочитаний(ні) розділ(и)</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
@@ -723,9 +721,9 @@
     <string name="delete_category">Видалити категорію</string>
     <string name="appwidget_updates_description">Переглянути нещодавно оновлені записи бібліотеки</string>
     <string name="appwidget_unavailable_locked">Віджет не доступний при ввімкненому блокуванні застосунку</string>
-    <string name="pref_user_agent_string">User agent за замовчуванням</string>
+    <string name="pref_user_agent_string">Типовий user agent</string>
     <string name="action_remove_everything">Видалити все</string>
-    <string name="pref_reset_user_agent_string">Скинути user agent за замовчуванням</string>
+    <string name="pref_reset_user_agent_string">Скинути типовий user agent</string>
     <string name="loader_rar5_error">Формат RARv5 не підтримується</string>
     <string name="multi_lang">Багатомовне</string>
     <string name="pref_long_strip_split">Розділяти високі зображення (БЕТА)</string>
@@ -738,7 +736,7 @@
         <item quantity="other">Наступні %d непрочитані розділи</item>
     </plurals>
     <string name="download_ahead">Завантажувати наперед</string>
-    <string name="download_ahead_info">Працює тільки на манґу збережену в бібліотеці, якщо поточний розділ, та наступний вже завантажені</string>
+    <string name="download_ahead_info">Працює тільки з манґою збереженою в бібліотеці, якщо поточний розділ, та наступний за ним вже завантажені</string>
     <string name="remove_manga">Ви збираєтесь видалити \"%s\" з вашої бібліотеки</string>
     <string name="theme_tidalwave">Приливна Хвиля</string>
     <string name="are_you_sure">Ви впевнені\?</string>
@@ -785,8 +783,8 @@
     <string name="minute_short">%dm</string>
     <string name="label_stats">Статистика</string>
     <string name="label_local">Локально</string>
-    <string name="label_downloaded">Завантажено</string>
-    <string name="label_started">Розпочато</string>
+    <string name="label_downloaded">Завантажене</string>
+    <string name="label_started">Розпочате</string>
     <string name="label_overview_section">Огляд</string>
     <string name="label_titles_in_global_update">У глобальному оновленні</string>
     <string name="label_used">Використано</string>
@@ -797,7 +795,7 @@
     <string name="hour_short">%dh</string>
     <string name="seconds_short">%ds</string>
     <string name="action_not_now">Не зараз</string>
-    <string name="pref_library_update_show_tab_badge">Відображення кількості непрочитаних на значку \"Оновлення\"</string>
+    <string name="pref_library_update_show_tab_badge">Відображення кількості непрочитаних на значку \"Нове\"</string>
     <string name="information_no_manga_category">Категорія порожня</string>
     <string name="copied_to_clipboard_plain">Скопійовано в буфер обміну</string>
     <string name="enhanced_services_not_installed">Доступно, але джерело не встановлене: %s</string>
@@ -832,4 +830,38 @@
     <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
     <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
     <string name="pref_library_columns_per_row">%d на рядок</string>
+    <string name="action_set_interval">Встановити інтервал</string>
+    <string name="action_filter_interval_late">Перевірка останніх 10+</string>
+    <string name="action_filter_interval_dropped">Покинуто\? Останні 20+ і 2 місяці</string>
+    <string name="action_filter_interval_passed">Пройдено період перевірки</string>
+    <string name="manga_display_interval_title">Оцініть кожну</string>
+    <string name="pref_update_release_grace_period">Очікуваний пільговий період випуску</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d день після</item>
+        <item quantity="few">%d дні після</item>
+        <item quantity="many">%d днів після</item>
+        <item quantity="other">%d днів після</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 день</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d днів</item>
+        <item quantity="other">%d днів</item>
+    </plurals>
+    <string name="action_filter_interval_long">Отримувати щомісяця (28 днів)</string>
+    <string name="action_filter_interval_custom">Налаштувати інтервал отримання</string>
+    <string name="pref_update_only_in_release_period">Поза очікуваним періодом випуску</string>
+    <string name="action_sort_next_updated">Наступне очікуване оновлення</string>
+    <string name="intervals_header">Інтервали</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d день тому</item>
+        <item quantity="few">%d дні тому</item>
+        <item quantity="many">%d днів тому</item>
+        <item quantity="other">%d днів тому</item>
+    </plurals>
+    <string name="pref_update_release_grace_period_info">Для мінімізації навантаження на джерела рекомендується невеликий пільговий період. Чим більше перевірок запису буде пропущено, тим довшим буде інтервал між перевірками - максимум 28 днів.</string>
+    <string name="manga_display_modified_interval_title">Налаштовано на оновлення кожної</string>
+    <string name="manga_modify_interval_title">Змінити інтервал</string>
+    <string name="manga_modify_calculated_interval_title">Налаштувати інтервал</string>
+    <string name="skipped_reason_not_in_release_period">Пропущено, оскільки сьогодні не очікується жодного релізу</string>
 </resources>

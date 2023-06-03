@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Seguiment</string>
     <string name="pref_category_advanced">Avançat</string>
     <string name="pref_category_about">Quant a</string>
-    <string name="pref_library_columns">Elements per fila</string>
+    <string name="pref_library_columns">Mida de la quadrícula</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horitzontal</string>
     <string name="pref_library_update_interval">Actualitzacions automàtiques</string>
@@ -116,10 +116,10 @@
     <string name="white_background">Blanc</string>
     <string name="black_background">Negre</string>
     <string name="pref_viewer_type">Mode de lectura per defecte</string>
-    <string name="left_to_right_viewer">D\'esquerra a dreta</string>
+    <string name="left_to_right_viewer">Paginat (d\'esquerra a dreta)</string>
     <string name="right_to_left_viewer">De dreta a esquerra</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="webtoon_viewer">Webtoons</string>
+    <string name="vertical_viewer">Paginat (vertical)</string>
+    <string name="webtoon_viewer">Tira vertical</string>
     <string name="pager_viewer">Paginat</string>
     <string name="pref_image_scale_type">Tipus d\'escalat</string>
     <string name="scale_type_fit_screen">Ajusta a la pantalla</string>
@@ -355,7 +355,6 @@
         <item quantity="other">Per a %d elements</item>
     </plurals>
     <string name="action_menu">Menú</string>
-    <string name="action_reorganize_by">Reordena</string>
     <string name="action_newest">Els més nous</string>
     <string name="action_oldest">Els més antics</string>
     <string name="action_move_to_top">Mou a dalt de tot</string>
@@ -380,7 +379,7 @@
     <string name="webtoon_side_padding_10">10%</string>
     <string name="webtoon_side_padding_0">Cap</string>
     <string name="pref_webtoon_side_padding">Espaiat lateral</string>
-    <string name="vertical_plus_viewer">Continu en vertical</string>
+    <string name="vertical_plus_viewer">Tira vertical amb separació</string>
     <string name="action_unpin">Desfixa</string>
     <string name="in_library">A la biblioteca</string>
     <string name="add_to_library">Afegeix a la biblioteca</string>
@@ -389,7 +388,6 @@
     <string name="manga_info_expand">Més</string>
     <string name="licenses">Llicències de codi obert</string>
     <string name="website">Lloc web</string>
-    <string name="pref_confirm_exit">Confirma la sortida</string>
     <string name="confirm_exit">Torneu a prémer Endarrere per a sortir</string>
     <string name="label_downloaded_only">Només els baixats</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
@@ -465,14 +463,14 @@
     <string name="action_start">Inicia</string>
     <string name="action_sort_date_added">Data d\'incorporació</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d seguidor</item>
-        <item quantity="other">%d seguidors</item>
+        <item quantity="one">%d servei de seguiment</item>
+        <item quantity="other">%d serveis de seguiment</item>
     </plurals>
     <string name="no_pinned_sources">No teniu cap origen fixat</string>
     <string name="channel_complete">Completada</string>
     <string name="channel_progress">Progrés</string>
     <string name="channel_errors">Errors</string>
-    <string name="backup_restore_missing_trackers">Seguidors sense sessió iniciada:</string>
+    <string name="backup_restore_missing_trackers">Serveis de seguiment sense sessió iniciada:</string>
     <string name="pref_remove_bookmarked_chapters">Permet la supressió dels capítols marcats</string>
     <string name="pref_category_delete_chapters">Suprimeix capítols</string>
     <string name="ext_nsfw_warning">Les fonts d\'aquesta extensió poden contenir contingut NSFW (+18)</string>
@@ -507,7 +505,7 @@
     <string name="track_finished_reading_date">Data de finalització</string>
     <string name="track_started_reading_date">Data d’inici</string>
     <string name="pref_dump_crash_logs_summary">Desa els registres d\'errors en un fitxer perquè el pugueu compartir amb els desenvolupadors</string>
-    <string name="pref_dump_crash_logs">Bolca els registres de fallades</string>
+    <string name="pref_dump_crash_logs">Comparteix el registre d\'errors</string>
     <string name="pref_viewer_nav">Zones de toc</string>
     <string name="edge_nav">Vora</string>
     <string name="kindlish_nav">Semblant al Kindle</string>
@@ -558,8 +556,8 @@
     <string name="date">Data</string>
     <string name="local_filter_order_by">Ordena per</string>
     <string name="local_invalid_format">El format del capítol no és vàlid</string>
-    <string name="pref_library_update_refresh_trackers_summary">Actualitza els seguidors en actualitzar la biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Actualitza automàticament els seguidors</string>
+    <string name="pref_library_update_refresh_trackers_summary">Actualitza els serveis de seguiment en actualitzar la biblioteca</string>
+    <string name="pref_library_update_refresh_trackers">Actualitza automàticament els serveis de seguiment</string>
     <string name="chapter_not_found">No s\'ha trobat el capítol</string>
     <string name="error_sharing_cover">S\'ha produït un error en compartir la portada</string>
     <string name="error_saving_cover">S\'ha produït un error en desar la portada</string>
@@ -599,7 +597,7 @@
     <string name="theme_strawberrydaiquiri">Daiquiri de maduixa</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_tealturquoise">Xarxet i turquesa</string>
-    <string name="theme_yinyang">Ying i yang</string>
+    <string name="theme_yinyang">Yin i yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Mode fosc negre pur</string>
     <string name="pref_category_timestamps">Marques de temps</string>
@@ -647,7 +645,7 @@
     <string name="notification_size_warning">Les actualitzacions grosses perjudiquen les fonts i poden implicar actualitzacions més lentes i un augment en l\'ús de bateria. Premeu per a obtenir-ne més informació.</string>
     <string name="pref_landscape_zoom">Amplia la imatge en horitzontal</string>
     <string name="action_show_manga">Mostra l\'element</string>
-    <string name="pref_navigate_pan">Fes panoràmiques les imatges amples en fer un toc</string>
+    <string name="pref_navigate_pan">Fes panoràmiques les imatges amples</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
     <string name="pref_update_only_started">Que no s\'hagin començat</string>
     <string name="skipped_reason_completed">S\'ha omès perquè la sèrie està completada</string>
@@ -679,7 +677,7 @@
     <string name="pref_reset_viewer_flags_summary">Restableix el mode de lectura i l\'orientació de totes les sèries</string>
     <string name="pref_reset_viewer_flags_success">S\'han restablert tota la configuració del lector</string>
     <string name="pref_reset_viewer_flags_error">No s\'ha pogut restablir la configuració del lector</string>
-    <string name="empty_screen">Ostres, que estrany...</string>
+    <string name="empty_screen">Ostres, que estrany</string>
     <string name="ext_info_language">Llengua</string>
     <string name="ext_info_version">Versió</string>
     <string name="ext_info_age_rating">Valoració d\'edat</string>
@@ -708,13 +706,13 @@
     <string name="theme_tidalwave">Tsunami</string>
     <string name="error_user_agent_string_blank">La cadena de l\'agent d\'usuari no pot estar buida</string>
     <string name="pref_appearance_summary">Tema, formats de data i hora</string>
-    <string name="pref_library_summary">Categories i actualitzacions globals</string>
+    <string name="pref_library_summary">Categories, actualitzacions globals i lliscament en capítols</string>
     <string name="are_you_sure">N\'esteu segur\?</string>
     <string name="invalid_location">Ubicació invàlida: %s</string>
     <string name="auto_download_while_reading">Baixa automàticament mentre es llegeix</string>
     <string name="download_ahead_info">Només funciona en elements de la biblioteca i si el capítol actual i el següent ja estan baixats</string>
     <string name="crash_screen_title">Ups!</string>
-    <string name="crash_screen_description">S\'ha produït un error inesperat al %s. Us suggerim que feu una captura de pantalla d\'aquest missatge, bolqueu els registres d\'errors i els compartiu amb el nostre canal d\'assistència al Discord.</string>
+    <string name="crash_screen_description">S\'ha produït un error inesperat al %s. Us suggerim que compartiu el registre d\'errors al nostre canal d\'assistència al Discord.</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">El següent capítol no llegit</item>
         <item quantity="other">Els següents %d capítols no llegits</item>
@@ -771,7 +769,7 @@
     <string name="action_not_now">Ara no</string>
     <string name="label_titles_in_global_update">A l\'actualització global</string>
     <string name="label_overview_section">Resum</string>
-    <string name="label_tracker_section">Seguidors</string>
+    <string name="label_tracker_section">Serveis de seguiment</string>
     <string name="label_tracked_titles">Elements seguits</string>
     <string name="label_mean_score">Puntuació mitjana</string>
     <string name="information_required_plain">*obligatori</string>
@@ -790,4 +788,17 @@
     <string name="action_copy_to_clipboard">Copia al porta-retalls</string>
     <string name="action_update_category">Actualitza la categoria</string>
     <string name="split_tall_images">Divideix les imatges altes</string>
+    <string name="pref_library_columns_per_row">%d per fila</string>
+    <string name="pref_chapter_swipe">Lliscament en capítols</string>
+    <string name="pref_chapter_swipe_end">Acció en lliscar cap a la dreta</string>
+    <string name="pref_chapter_swipe_start">Acció en lliscar cap a l\'esquerra</string>
+    <string name="pref_double_tap_zoom">Toca dues vegades per a ampliar</string>
+    <string name="overlay_header">Superposició</string>
+    <string name="pref_page_rotate_invert">Inverteix l’orientació de les pàgines amples rotades</string>
+    <string name="pref_page_rotate">Rota les pàgines amples perquè s’ajustin a la pantalla</string>
+    <plurals name="missing_chapters">
+        <item quantity="one">Manca %1$s capítol</item>
+        <item quantity="other">Manquen %1$s capítols</item>
+    </plurals>
+    <string name="pref_debug_info">Informació de depuració</string>
 </resources>

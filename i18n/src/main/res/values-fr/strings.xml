@@ -393,7 +393,6 @@
         <item quantity="other">Pour %d titres</item>
     </plurals>
     <string name="action_menu">Menu</string>
-    <string name="action_reorganize_by">Réorganiser</string>
     <string name="action_newest">Plus récent</string>
     <string name="action_oldest">Plus ancien</string>
     <string name="action_move_to_top">Déplacer au début</string>
@@ -432,7 +431,6 @@
     <string name="manga_info_collapse">Moins</string>
     <string name="manga_info_expand">Plus</string>
     <string name="website">Site web</string>
-    <string name="pref_confirm_exit">Confirmer la fermeture</string>
     <string name="recent_manga_time">Ch. %1$s – %2$s</string>
     <string name="licenses">Licences à code source ouvert</string>
     <string name="confirm_exit">Appuyer à nouveau pour quitter</string>

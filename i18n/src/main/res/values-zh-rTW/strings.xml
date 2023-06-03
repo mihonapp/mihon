@@ -304,7 +304,6 @@
     <string name="pref_theme_mode">深色模式</string>
     <string name="theme_dark">開啟</string>
     <string name="pref_date_format">日期格式</string>
-    <string name="pref_confirm_exit">確認離開應用程式</string>
     <string name="confirm_exit">再按一次以離開</string>
     <string name="downloaded_only_summary">將套用至你書櫃中的作品</string>
     <string name="label_downloaded_only">僅限下載內容</string>
@@ -392,7 +391,6 @@
     <string name="action_move_to_bottom">排至最後</string>
     <string name="action_move_to_top">排至最前</string>
     <string name="action_cancel_all">全部取消</string>
-    <string name="action_reorganize_by">重新排序</string>
     <string name="sort_by_upload_date">上傳日期</string>
     <string name="action_sort_latest_chapter">最新章節</string>
     <string name="invalid_backup_file">無效的備份檔</string>

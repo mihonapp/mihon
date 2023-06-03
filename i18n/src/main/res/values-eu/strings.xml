@@ -425,7 +425,6 @@
     <string name="action_cancel">Ezeztatu</string>
     <string name="action_cancel_all">Utzi guztiak alde batera</string>
     <string name="action_sort">Ordenatu</string>
-    <string name="action_reorganize_by">Berrantolatu</string>
     <string name="action_order_by_upload_date">Igoera dataren arabera</string>
     <string name="action_order_by_chapter_number">Kapitulu zenbakiaren arabera</string>
     <string name="theme_system">Sistemarena erabili</string>
@@ -437,7 +436,6 @@
     <string name="pref_relative_time_short">Laburra (Gaur, Atzo)</string>
     <string name="pref_relative_time_long">Luzea (Laburra+, duela n egun)</string>
     <string name="pref_date_format">Dataren formatua</string>
-    <string name="pref_confirm_exit">Berretsi irteera</string>
     <string name="pref_manage_notifications">Kudeatu jakinarazpenak</string>
     <string name="pref_category_security">Segurtasuna</string>
     <string name="lock_always">Beti</string>

@@ -35,7 +35,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_tidalwave">valët e baticës</string>
     <string name="pref_dark_theme_pure_black">E zezë e pastër modaliteti i errët</string>
-    <string name="pref_confirm_exit">Konfirmo daljen</string>
     <string name="pref_manage_notifications">Menaxho njoftimet</string>
     <string name="pref_app_language">Gjuha e aplikacionit</string>
     <string name="pref_category_security">Siguria dhe privatësia</string>
@@ -142,7 +141,6 @@
     <string name="loading">Po ngarkohet…</string>
     <string name="action_order_by_upload_date">Sipas datës së ngarkimit</string>
     <string name="action_sort">Rendit</string>
-    <string name="action_reorganize_by">Rirendit</string>
     <string name="action_oldest">Më e vjetrat</string>
     <string name="action_asc">Në ngjitje</string>
     <string name="action_move_to_top">Lëvizni në krye</string>

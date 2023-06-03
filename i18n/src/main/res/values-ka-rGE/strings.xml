@@ -56,7 +56,6 @@
     <string name="action_cancel">გააუქმე</string>
     <string name="action_cancel_all">გააუქმე ყველა</string>
     <string name="action_sort">დალაგება</string>
-    <string name="action_reorganize_by">გადალაგება</string>
     <string name="action_newest">უახლესი</string>
     <string name="action_oldest">უძველესი</string>
     <string name="action_move_to_top">თავში ატანა</string>
@@ -85,7 +84,6 @@
     <string name="theme_light">მსუბუქი</string>
     <string name="theme_dark">ჩართული</string>
     <string name="pref_date_format">თარიღის ფორმატი</string>
-    <string name="pref_confirm_exit">გამოსვლის დადასტურება</string>
     <string name="pref_manage_notifications">შეტყობინებების მართვა</string>
     <string name="pref_category_security">უსაფრთხოება და კონფიდენციალობა</string>
     <string name="lock_with_biometrics">განბლოკვის მოთხოვნა</string>

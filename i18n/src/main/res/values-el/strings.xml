@@ -378,7 +378,6 @@
     <string name="lock_with_biometrics">Απαιτείται ξεκλείδωμα</string>
     <string name="pref_category_security">Ασφάλεια και ιδιωτικότητα</string>
     <string name="pref_manage_notifications">Διαχείριση ειδοποιήσεων</string>
-    <string name="pref_confirm_exit">Επιβεβαίωση εξόδου</string>
     <string name="pref_date_format">Μορφή ημερομηνίας</string>
     <string name="theme_system">Ακολουθήστε το σύστημα</string>
     <string name="theme_dark">Ενεργοποιημένο</string>
@@ -397,7 +396,6 @@
     <string name="label_sources">Πηγές</string>
     <string name="action_oldest">Παλαιότερο</string>
     <string name="action_newest">Νεότερο</string>
-    <string name="action_reorganize_by">Αναδιάταξη</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Κεφάλαια %1$s και 1 ακόμη</item>
         <item quantity="other">Κεφάλαια %1$s και %2$d ακόμη</item>
@@ -803,4 +801,32 @@
     <string name="pref_chapter_swipe_start">Ενέργεια συρσίματος προς τα αριστερά</string>
     <string name="pref_chapter_swipe_end">Ενέργεια συρσίματος προς τα δεξιά</string>
     <string name="pref_library_columns_per_row">%d ανά σειρά</string>
+    <string name="action_set_interval">Ορισμός χρονικού διαστήματος</string>
+    <string name="action_filter_interval_custom">Προσαρμοσμένο διάστημα ανάκτησης</string>
+    <string name="action_filter_interval_dropped">Dropped\? Αργά 20+ και 2 μήνες</string>
+    <string name="action_filter_interval_late">Αργός έλεγχος 10+</string>
+    <string name="action_filter_interval_passed">Πέρασε την περίοδο ελέγχου</string>
+    <string name="pref_update_only_in_release_period">Εκτός αναμενόμενης περιόδου κυκλοφορίας</string>
+    <string name="intervals_header">Διαστήματα</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d ημέρα μετά</item>
+        <item quantity="other">%d ημέρες μετά</item>
+    </plurals>
+    <string name="pref_update_release_grace_period_info">Συνιστάται χαμηλή περίοδος χάριτος για την ελαχιστοποίηση της πίεσης στις πηγές. Όσο περισσότεροι έλεγχοι για μια καταχώρηση παραλείπονται, τόσο μεγαλύτερο θα είναι το διάστημα μεταξύ των ελέγχων με μέγιστο όριο τις 28 ημέρες.</string>
+    <plurals name="day">
+        <item quantity="one">1 ημέρα</item>
+        <item quantity="other">%d ημέρες</item>
+    </plurals>
+    <string name="manga_display_interval_title">Εκτίμηση κάθε</string>
+    <string name="manga_display_modified_interval_title">Ρύθμιση για ενημέρωση κάθε</string>
+    <string name="action_filter_interval_long">Ανάκτηση μηνιαίως (28 ημέρες)</string>
+    <string name="action_sort_next_updated">Επόμενη αναμενόμενη ενημέρωση</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d ημέρα πριν</item>
+        <item quantity="other">%d ημέρες πριν</item>
+    </plurals>
+    <string name="pref_update_release_grace_period">Αναμενόμενη περίοδος χάριτος κυκλοφορίας</string>
+    <string name="manga_modify_interval_title">Τροποποίηση διαστήματος</string>
+    <string name="manga_modify_calculated_interval_title">Προσαρμογή διαστήματος</string>
+    <string name="skipped_reason_not_in_release_period">Παραλείφθηκε επειδή δεν αναμενόταν κυκλοφορία σήμερα</string>
 </resources>

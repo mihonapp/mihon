@@ -7,7 +7,6 @@
     <string name="action_newest">Найноўшы</string>
     <string name="action_order_by_chapter_number">Па нумару часткi</string>
     <string name="action_order_by_upload_date">Па даце загрузкі</string>
-    <string name="action_reorganize_by">Пераупарадкаваць</string>
     <string name="action_sort">Сартаваць</string>
     <string name="cancel_all_for_series">Адмяніце ўсе для гэтай серыі</string>
     <string name="action_cancel_all">Адмяніць усе</string>
@@ -154,7 +153,6 @@
     <string name="lock_with_biometrics">Патрабаваць разблакоўку</string>
     <string name="pref_category_security">Бяспека</string>
     <string name="pref_manage_notifications">Кіраванне апавяшчэннямі</string>
-    <string name="pref_confirm_exit">Пацвярджаць выхад</string>
     <string name="pref_date_format">Фармат даты</string>
     <string name="pref_dark_theme_pure_black">Чысты чорны цёмны рэжым</string>
     <string name="theme_yotsuba">Ёцуба</string>

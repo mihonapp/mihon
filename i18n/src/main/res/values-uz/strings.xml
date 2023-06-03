@@ -104,7 +104,6 @@
     <string name="pref_theme_mode">Qorong\'u rejim</string>
     <string name="theme_light">O\'chiq</string>
     <string name="theme_greenapple">Yashil olma</string>
-    <string name="action_reorganize_by">Qayta tartiblash</string>
     <string name="pref_category_theme">Mavzu</string>
     <string name="pref_security_summary">Ilova qulflanishi, ekran himoyasi</string>
     <string name="pref_manage_notifications">Bildirishnomalarni boshqarish</string>
@@ -118,7 +117,6 @@
     <string name="pref_browse_summary">Manbaalar, kengaytmalar, global qidiruv</string>
     <string name="pref_backup_summary">Qo\'lbola va avtomatik zaxira nusxalar</string>
     <string name="pref_date_format">Sana formati</string>
-    <string name="pref_confirm_exit">Chiqishni tasdiqlash</string>
     <string name="theme_tidalwave">Toshgan to\'lqin</string>
     <string name="action_start_downloading_now">Yuklashni boshlash</string>
     <string name="action_display_comfortable_grid">Qulay ko\'rinish</string>

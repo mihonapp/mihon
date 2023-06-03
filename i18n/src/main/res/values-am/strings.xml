@@ -58,7 +58,6 @@
     <string name="lock_with_biometrics">በባዮሜትሪክስ ቆልፍ</string>
     <string name="pref_category_security">ደህንነት</string>
     <string name="pref_manage_notifications">ማሳወቂያዎችን ያቀናብሩ</string>
-    <string name="pref_confirm_exit">መውጫውን ያረጋግጡ</string>
     <string name="pref_date_format">የቀን ቅርጸት</string>
     <string name="theme_dark">በርቷል</string>
     <string name="theme_light">ጠፍቷል</string>
@@ -88,7 +87,6 @@
     <string name="action_move_to_top">ወደ ላይ ውሰድ</string>
     <string name="action_oldest">በጣም ጥንታዊ</string>
     <string name="action_newest">በጣም አዲስ</string>
-    <string name="action_reorganize_by">እንደገና አስተካክል</string>
     <string name="action_sort">ደርድር</string>
     <string name="action_cancel_all">ሁሉንም ሰርዝ</string>
     <string name="action_cancel">ሰርዝ</string>

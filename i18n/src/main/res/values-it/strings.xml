@@ -366,7 +366,6 @@
     <string name="unlock_app">Sblocca Tachiyomi</string>
     <string name="secure_screen_summary">Schermo sicuro nasconde i contenuti dell\'app quando cambi applicazione e blocca gli screenshot</string>
     <string name="pref_category_display">Visualizzazione</string>
-    <string name="action_reorganize_by">Riordina</string>
     <string name="channel_ext_updates">Aggiornamenti estensione</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Aggiornamento estensione disponibile</item>
@@ -432,7 +431,6 @@
     <string name="restore_in_progress">Ripristino già in corso</string>
     <string name="creating_backup_error">Backup fallito</string>
     <string name="backup_in_progress">Il backup è già in corso</string>
-    <string name="pref_confirm_exit">Conferma uscita</string>
     <string name="confirm_exit">Premi indietro nuovamente per uscire</string>
     <string name="label_downloaded_only">Solo scaricati</string>
     <string name="information_webview_required">È necessaria l\'app WebView per Tachiyomi</string>
@@ -851,4 +849,35 @@
     <string name="pref_chapter_swipe_end">Azione di scorrimento a destra</string>
     <string name="pref_chapter_swipe_start">Azione di scorrimento a sinistra</string>
     <string name="pref_library_columns_per_row">%d per riga</string>
+    <string name="action_set_interval">Imposta intervallo</string>
+    <string name="action_filter_interval_long">Recupera mensilmente (28 giorni)</string>
+    <string name="action_filter_interval_dropped">Abbandonato\? In ritardo tra 20 giorni e 2 mesi</string>
+    <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
+    <string name="pref_update_release_grace_period">Periodo di grazia previsto per l\'uscita</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d giorno prima</item>
+        <item quantity="many">%d giorni prima</item>
+        <item quantity="other">%d giorni prima</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d giorno dopo</item>
+        <item quantity="many">%d giorni dopo</item>
+        <item quantity="other">%d giorni dopo</item>
+    </plurals>
+    <string name="manga_modify_calculated_interval_title">Personalizza intervallo</string>
+    <string name="intervals_header">Intervalli</string>
+    <plurals name="day">
+        <item quantity="one">Un giorno</item>
+        <item quantity="many">%d giorni</item>
+        <item quantity="other">%d giorni</item>
+    </plurals>
+    <string name="manga_display_interval_title">Stima ogni</string>
+    <string name="action_filter_interval_custom">Intervallo di recupero personalizzato</string>
+    <string name="action_filter_interval_passed">Periodo di controllo superato</string>
+    <string name="action_filter_interval_late">In ritardo di 10+ giorni</string>
+    <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
+    <string name="pref_update_release_grace_period_info">Si consiglia un periodo di grazia basso per ridurre al minimo lo stress sulle fonti. Più controlli per una voce vengono persi, più lungo sarà l\'intervallo tra i controlli, con un massimo di 28 giorni.</string>
+    <string name="manga_display_modified_interval_title">Imposta l\'aggiornamento ogni</string>
+    <string name="skipped_reason_not_in_release_period">Saltato perché oggi non era previsto alcun rilascio</string>
+    <string name="manga_modify_interval_title">Modifica intervallo</string>
 </resources>

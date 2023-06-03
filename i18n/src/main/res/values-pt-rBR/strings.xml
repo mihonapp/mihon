@@ -359,7 +359,6 @@
         <item quantity="other">Para %d itens</item>
     </plurals>
     <string name="action_menu">Menu</string>
-    <string name="action_reorganize_by">Reordenar</string>
     <string name="action_newest">Mais novos</string>
     <string name="action_oldest">Mais antigos</string>
     <string name="action_move_to_top">Mover para o topo</string>
@@ -391,7 +390,6 @@
     <string name="in_library">Na biblioteca</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="manga_info_expand">Mais</string>
-    <string name="pref_confirm_exit">Confirmar ao sair</string>
     <string name="confirm_exit">Pressione voltar novamente para sair</string>
     <string name="information_webview_required">A WebView é necessária para o Tachiyomi</string>
     <string name="licenses">Licenças de código aberto</string>
@@ -818,4 +816,27 @@
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
     <string name="pref_library_columns_per_row">%d por linha</string>
+    <string name="action_filter_interval_late">Verificação dos últimos 10+</string>
+    <string name="action_sort_next_updated">Próxima atualização esperada</string>
+    <string name="pref_update_only_in_release_period">Fora do intervalo de lançamento</string>
+    <string name="action_set_interval">Definir intervalo</string>
+    <string name="action_filter_interval_custom">Personalizar o intervalo de requisições</string>
+    <string name="action_filter_interval_long">Requisitar mensalmente (28 dias)</string>
+    <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
+    <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
+    <string name="pref_update_release_grace_period">Intervalo de lançamento com carência</string>
+    <string name="pref_update_release_leading_days">Verificar %s dia(s) antes</string>
+    <string name="pref_update_release_following_days">Verificar %s dia(s) depois</string>
+    <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
+    <plurals name="day">
+        <item quantity="one">%d dia(s)</item>
+        <item quantity="many">%d dias</item>
+        <item quantity="other">%d dias</item>
+    </plurals>
+    <string name="skipped_reason_not_in_release_period">Pulado porque nenhum lançamento era esperado hoje</string>
+    <string name="intervals_header">Intervalos</string>
+    <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
+    <string name="pref_update_release_grace_period_info">Um intervalo com uma carência pequena é recomendado para minimizar o estresse nas fontes. Quanto mais verificações para um item forem perdidas, maior será o intervalo entre as verificações, com um máximo de 28 dias.</string>
+    <string name="manga_display_interval_title">Estimar todo</string>
+    <string name="manga_modify_interval_title">Modificar intervalo</string>
 </resources>

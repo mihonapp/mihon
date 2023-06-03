@@ -17,7 +17,6 @@
     <string name="lock_with_biometrics">ಅನ್ ಲಾಕ್ ಅಗತ್ಯವಿದೆ</string>
     <string name="pref_category_security">ಭದ್ರತೆ</string>
     <string name="pref_manage_notifications">ಸೂಚನೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ</string>
-    <string name="pref_confirm_exit">ನಿರ್ಗಮನವನ್ನು ಖಚಿತಪಡಿಸಿ</string>
     <string name="pref_date_format">ದಿನಾಂಕ ಸ್ವರೂಪ</string>
     <string name="theme_system">ಸಿಸ್ಟಮ್ ಅನುಕರಿಸಿ</string>
     <string name="theme_dark">ಆನ್</string>
@@ -46,7 +45,6 @@
     <string name="action_move_to_top">ಮೇಲಕ್ಕೆ ಸರಿಸಿ</string>
     <string name="action_oldest">ಹಳೆಯದು</string>
     <string name="action_newest">ಹೊಸತು</string>
-    <string name="action_reorganize_by">ಮರುಕ್ರಮಗೊಳಿಸಿ</string>
     <string name="action_sort">ವಿಂಗಡಿಸಿ</string>
     <string name="action_cancel_all">ಎಲ್ಲವನ್ನೂ ರದ್ದುಮಾಡಿ</string>
     <string name="action_cancel">ರದ್ದುಮಾಡಿ</string>

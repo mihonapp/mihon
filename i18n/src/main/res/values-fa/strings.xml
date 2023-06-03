@@ -298,7 +298,6 @@
     <string name="lock_with_biometrics">نیاز به باز کردن قفل</string>
     <string name="pref_category_security">امنیت</string>
     <string name="pref_manage_notifications">مدیریت اعلان‌ها</string>
-    <string name="pref_confirm_exit">هنگام خروج از برنامه تایید گرفته شود</string>
     <string name="pref_date_format">فرمت تاریخ</string>
     <string name="theme_dark">روشن</string>
     <string name="theme_light">خاموش</string>
@@ -327,7 +326,6 @@
     <string name="action_move_to_top">جابه‌جایی به بالا</string>
     <string name="action_oldest">قدیمی ترین</string>
     <string name="action_newest">جدیدترین</string>
-    <string name="action_reorganize_by">دوباره مرتب کردن</string>
     <string name="action_sort">مرتب سازی</string>
     <string name="action_cancel_all">لغو همه</string>
     <string name="action_cancel">لغو</string>

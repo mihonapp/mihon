@@ -102,7 +102,6 @@
     <string name="action_cancel_all">Cancel tanan</string>
     <string name="cancel_all_for_series">Ikansela ang tanan alang niini nga serye</string>
     <string name="action_sort">Pagsunud-sunod</string>
-    <string name="action_reorganize_by">Pag-order pag-usab</string>
     <string name="action_newest">Pinakabag-o</string>
     <string name="action_move_to_bottom">Lihok sa ubos</string>
     <string name="action_install">Pag-instalar</string>
@@ -191,7 +190,6 @@
     <string name="pref_category_security">Seguridad</string>
     <string name="pref_show_nsfw_source">Ipakita sa mga tinubdan ug mga lista sa mga extension</string>
     <string name="pref_dark_theme_pure_black">Purong itom nga dark mode</string>
-    <string name="pref_confirm_exit">Kumpirma ang paggawas</string>
     <string name="pref_category_timestamps">Mga timestamp</string>
     <string name="pref_relative_format">Relatibo nga mga timestamp</string>
     <string name="pref_relative_time_short">Mubo (Karon, Kagahapon)</string>

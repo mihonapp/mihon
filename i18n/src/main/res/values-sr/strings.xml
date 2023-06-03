@@ -271,12 +271,10 @@
     <string name="ext_obsolete">Застарело</string>
     <string name="secure_screen_summary">Сакриј приказ апликације приликом пребацивања између апликација и онемогући снимке екрана</string>
     <string name="lock_with_biometrics">Захтевај закључавање</string>
-    <string name="pref_confirm_exit">Потврди затварање програма</string>
     <string name="action_move_to_bottom">Премести на дно</string>
     <string name="action_move_to_top">Премести на врх</string>
     <string name="action_oldest">Најстарије</string>
     <string name="action_newest">Најновије</string>
-    <string name="action_reorganize_by">Преуреди</string>
     <string name="action_unpin">Откачи</string>
     <string name="action_pin">Закачи</string>
     <string name="action_select_inverse">Изабери обрнуто</string>

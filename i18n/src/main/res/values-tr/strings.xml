@@ -355,7 +355,6 @@
         <item quantity="other">%d girdi için</item>
     </plurals>
     <string name="action_menu">Komut-Seçenek Dizelgesi</string>
-    <string name="action_reorganize_by">Yeniden sırala</string>
     <string name="action_newest">En yeni</string>
     <string name="action_oldest">En eski</string>
     <string name="action_move_to_top">En üste taşı</string>
@@ -389,7 +388,6 @@
     <string name="website">Web sitesi</string>
     <string name="information_webview_required">WebView, Tachiyomi için gereklidir</string>
     <string name="licenses">Açık kaynak lisansları</string>
-    <string name="pref_confirm_exit">Çıkışı doğrula</string>
     <string name="confirm_exit">Çıkmak için yeniden geriye basın</string>
     <string name="label_downloaded_only">Yalnızca indirilen</string>
     <string name="recent_manga_time">Böl. %1$s - %2$s</string>

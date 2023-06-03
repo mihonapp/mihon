@@ -14,7 +14,6 @@
     <string name="action_move_to_top">Itaas</string>
     <string name="action_oldest">Pinakaluma</string>
     <string name="action_newest">Pinakabago</string>
-    <string name="action_reorganize_by">Isaayos</string>
     <string name="action_sort">Ayusin</string>
     <string name="action_cancel_all">Ikansela lahat</string>
     <string name="action_cancel">Ikansela</string>
@@ -105,7 +104,6 @@
     <string name="lock_with_biometrics">Nangangailangang i-unlock</string>
     <string name="pref_manage_notifications">Pamahalaan ang mga abiso</string>
     <string name="pref_category_security">Seguridad at privacy</string>
-    <string name="pref_confirm_exit">Kumpirmahing aalis</string>
     <string name="pref_date_format">Ayos ng petsa</string>
     <string name="theme_dark">Nakabukas</string>
     <string name="theme_light">Nakasara</string>
@@ -414,7 +412,7 @@
     <string name="login">Mag-login</string>
     <string name="password">Password</string>
     <string name="email">Email address</string>
-    <string name="username">Username</string>
+    <string name="username">Username (pangalan)</string>
     <string name="login_title">Mag-login sa %1$s</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s na lang</item>
@@ -803,4 +801,11 @@
     <string name="pref_double_tap_zoom">I-double tap para mag-zoom</string>
     <string name="pref_library_columns_per_row">%d kada hilera</string>
     <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
+    <string name="action_set_interval">Itakda ang pagitan</string>
+    <string name="action_filter_interval_custom">Sinadyang takdang pagkuha</string>
+    <string name="action_filter_interval_late">Nahuling 10+ pagsusuri</string>
+    <string name="action_sort_next_updated">Inaasahang kasunod na updeyt</string>
+    <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
+    <string name="action_filter_interval_passed">Pasadong pagsusuri ng panahon</string>
+    <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
 </resources>

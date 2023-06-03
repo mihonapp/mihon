@@ -170,7 +170,7 @@
     <string name="ongoing">Fortlaufend</string>
     <string name="unknown">Unbekannt</string>
     <string name="licensed">Lizenziert</string>
-    <string name="remove_from_library">Aus Bibliothek entfernen</string>
+    <string name="remove_from_library">Aus der Bibliothek entfernen</string>
     <string name="delete_downloads_for_manga">Heruntergeladene Kapitel löschen?</string>
     <string name="display_mode_chapter">Kapitel %1$s</string>
     <string name="chapter_downloading_progress">Wird heruntergeladen (%1$d/%2$d)</string>
@@ -355,7 +355,6 @@
         <item quantity="other">Für %d Einträge</item>
     </plurals>
     <string name="action_menu">Menü</string>
-    <string name="action_reorganize_by">Umordnen</string>
     <string name="action_newest">Neueste</string>
     <string name="action_oldest">Älteste</string>
     <string name="action_move_to_top">Nach oben verschieben</string>
@@ -390,7 +389,6 @@
     <string name="information_webview_required">WebView ist für Tachiyomi erforderlich</string>
     <string name="licenses">Quelloffene Lizenzen</string>
     <string name="website">Webseite</string>
-    <string name="pref_confirm_exit">Beenden bestätigen</string>
     <string name="label_downloaded_only">Nur Heruntergeladenes</string>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
     <string name="restoring_backup_error">Sicherungswiederherstellung fehlgeschlagen</string>
@@ -600,7 +598,7 @@
     <string name="pref_relative_time_long">Lang (Kurz+, vor n Tagen)</string>
     <plurals name="relative_time">
         <item quantity="one">Gestern</item>
-        <item quantity="other">vor %1$d Tagen</item>
+        <item quantity="other">Vor %1$d Tagen</item>
     </plurals>
     <string name="relative_time_today">Heute</string>
     <string name="pref_category_timestamps">Zeitstempel</string>
@@ -803,4 +801,27 @@
     <string name="pref_chapter_swipe_start">Aktion beim Streichen nach links</string>
     <string name="pref_double_tap_zoom">Zum Zoomen doppeltippen</string>
     <string name="pref_library_columns_per_row">%d pro Zeile</string>
+    <string name="intervals_header">Intervalle</string>
+    <plurals name="day">
+        <item quantity="one">1 Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
+    <string name="action_filter_interval_custom">Benutzerdefiniertes Abrufintervall</string>
+    <string name="action_set_interval">Intervall einstellen</string>
+    <string name="action_filter_interval_long">Monatlich abrufen (28 Tage)</string>
+    <string name="action_sort_next_updated">Nächste erwartete Aktualisierung</string>
+    <string name="pref_update_only_in_release_period">Außerhalb des erwarteten Veröffentlichungszeitraums</string>
+    <string name="pref_update_release_grace_period">Erwarteter Veröffentlichungstoleranzzeitraum</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">1 Tag davor</item>
+        <item quantity="other">%d Tage davor</item>
+    </plurals>
+    <string name="manga_modify_calculated_interval_title">Intervall anpassen</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">1 Tag danach</item>
+        <item quantity="other">%d Tage danach</item>
+    </plurals>
+    <string name="manga_modify_interval_title">Intervall ändern</string>
+    <string name="skipped_reason_not_in_release_period">Übersprungen, da heute keine Veröffentlichung erwartet wurde</string>
+    <string name="pref_update_release_grace_period_info">Ein niedriger Toleranzzeitraum wird empfohlen, um die Auslastung der Quellen zu minimieren. Je mehr Überprüfungen für einen Eintrag fehlschlagen, desto länger wird das Intervall zwischen den Überprüfungen, mit einem Maximum von 28 Tagen.</string>
 </resources>

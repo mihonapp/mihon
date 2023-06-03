@@ -195,7 +195,6 @@
     <string name="action_move_to_top">עבור לראש הדף</string>
     <string name="action_oldest">הישן ביותר</string>
     <string name="action_newest">החדש ביותר</string>
-    <string name="action_reorganize_by">סדר מחדש</string>
     <string name="action_sort">מיון</string>
     <string name="action_cancel_all">בטל הכל</string>
     <string name="action_display">תצוגה</string>
@@ -384,7 +383,6 @@
     <string name="pref_category_tracking">מעקב</string>
     <string name="pref_category_theme">נושא</string>
     <string name="pref_relative_time_long">ארוך (קצר+, לפני n ימים)</string>
-    <string name="pref_confirm_exit">אשר יציאה</string>
     <string name="pref_category_nsfw_content">מקורות NSFW (18+)</string>
     <string name="pref_show_nsfw_source">הצג ברשימות מקורות ותוספים</string>
     <string name="parental_controls_info">זה לא מונע תוספים לא רשמיים או תוספים שעלולים לסמן באופן שגוי מלהציג תוכן NSFW (18+) בתוך האפליקציה.</string>

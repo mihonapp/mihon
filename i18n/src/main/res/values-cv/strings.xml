@@ -58,7 +58,6 @@
     </plurals>
     <string name="pref_category_security">Сыхлав тата вӑрттӑнлӑх</string>
     <string name="pref_manage_notifications">Систерӳсене ӗнер</string>
-    <string name="pref_confirm_exit">Тухнине ҫирӗплет</string>
     <string name="pref_date_format">Ҫул-кун хармачӗ</string>
     <string name="theme_dark">Ҫутнӑ</string>
     <string name="theme_light">Сӳнтернӗ</string>
@@ -164,7 +163,6 @@
     <string name="hide_notification_content">Систерӳсенче мӗн ҫырнине пытарни</string>
     <string name="lock_never">Нихӑҫан</string>
     <string name="lock_always">Йаланах</string>
-    <string name="action_reorganize_by">Ҫӗнӗрен йӗркеле</string>
     <string name="action_open_log">Тӑвӑм-пулӑм кӗнекине уҫ</string>
     <string name="action_reset">Тасат</string>
     <string name="action_sort">Уйӑр</string>

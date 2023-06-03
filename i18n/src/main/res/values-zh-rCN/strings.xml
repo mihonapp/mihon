@@ -351,7 +351,6 @@
         <item quantity="other">共 %d 部作品</item>
     </plurals>
     <string name="action_menu">菜单</string>
-    <string name="action_reorganize_by">重新排序</string>
     <string name="action_newest">最新</string>
     <string name="action_oldest">最旧</string>
     <string name="action_move_to_top">移到顶部</string>
@@ -383,7 +382,6 @@
     <string name="licenses">开源许可证</string>
     <string name="website">官网</string>
     <string name="confirm_exit">再按一次退出</string>
-    <string name="pref_confirm_exit">退出时确认</string>
     <string name="add_to_library">添加到书架</string>
     <string name="in_library">在书架中</string>
     <string name="label_downloaded_only">仅限已下载内容</string>
@@ -788,4 +786,12 @@
     <string name="pref_chapter_swipe_start">向左滑动操作</string>
     <string name="pref_double_tap_zoom">双击放大</string>
     <string name="pref_library_columns_per_row">每行 %d 个</string>
+    <string name="pref_update_release_grace_period">预计更新时间宽限</string>
+    <string name="pref_update_only_in_release_period">未到预计更新时间</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">提前 %d 天</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">延后 %d 天</item>
+    </plurals>
 </resources>

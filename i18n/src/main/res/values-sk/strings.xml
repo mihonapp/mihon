@@ -304,7 +304,6 @@
     <string name="action_cancel_all">Zrušiť všetky</string>
     <string name="unlock_app">Odomknúť Tachiyomi</string>
     <string name="action_menu">Menu</string>
-    <string name="action_reorganize_by">Zmeniť poradie</string>
     <string name="action_newest">Najnovšie</string>
     <string name="action_oldest">Najstaršie</string>
     <string name="action_move_to_top">Presunúť navrch</string>
@@ -394,7 +393,6 @@
     <string name="pref_relative_format">Relatívne časové značky</string>
     <string name="pref_relative_time_short">Krátky (dnes, včera)</string>
     <string name="pref_date_format">Formát dátumu</string>
-    <string name="pref_confirm_exit">Potvrdenie odchodu</string>
     <string name="pref_manage_notifications">Spravovať oznámenia</string>
     <string name="pref_category_security">Bezpečnosť</string>
     <string name="lock_with_biometrics">Vyžaduje odomknutie</string>

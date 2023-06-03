@@ -355,7 +355,6 @@
         <item quantity="other">%d sarjalle</item>
     </plurals>
     <string name="action_menu">Valikko</string>
-    <string name="action_reorganize_by">Uudelleenjärjestä</string>
     <string name="action_newest">Uusin</string>
     <string name="action_oldest">Vanhin</string>
     <string name="action_move_to_top">Siirrä alkuun</string>
@@ -384,7 +383,6 @@
     <string name="action_unpin">Poista kiinnitys</string>
     <string name="action_pin">Kiinnitä</string>
     <string name="action_select_inverse">Valitse käänteinen</string>
-    <string name="pref_confirm_exit">Vahvista poistuminen</string>
     <string name="vertical_plus_viewer">Jatkuva pystysuora</string>
     <string name="information_webview_required">WebView on pakollinen Tachiyomissa</string>
     <string name="restore_in_progress">Palautus on jo käynnissä</string>

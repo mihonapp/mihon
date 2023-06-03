@@ -302,7 +302,6 @@
     <string name="action_move_to_top">نقل إلى الأعلى</string>
     <string name="action_oldest">الأقدم</string>
     <string name="action_newest">الأَحدثْ</string>
-    <string name="action_reorganize_by">إعادة ترتيب</string>
     <string name="action_cancel_all">إلغاء الكل</string>
     <string name="action_view_chapters">عرض الفصول</string>
     <string name="action_sort_latest_chapter">أحدث فصل</string>
@@ -350,7 +349,6 @@
     <string name="webtoon_side_padding_15">١٥٪</string>
     <string name="webtoon_side_padding_10">١٠٪</string>
     <string name="webtoon_side_padding_0">بلا</string>
-    <string name="pref_confirm_exit">تأكيد الخروج</string>
     <string name="action_unpin">إلغاء التثبيت</string>
     <string name="action_pin">تثبيت</string>
     <string name="action_select_inverse">عكس التحديد</string>
@@ -863,4 +861,44 @@
     <string name="pref_chapter_swipe_end">إجراء التمرير الأيسر</string>
     <string name="pref_chapter_swipe_start">إجراء التمرير الأيمن</string>
     <string name="pref_library_columns_per_row">%d كلَّ صفٍّ</string>
+    <string name="action_set_interval">عيِّد المدة</string>
+    <string name="action_filter_interval_custom">مدة جلب مخصَّصة</string>
+    <string name="action_filter_interval_long">اجلب كلَّ شهر (٢٨ يومًا)</string>
+    <string name="action_filter_interval_passed">مرت مدة الالتماس</string>
+    <string name="action_filter_interval_late">١٠+ التماسات متأخرة</string>
+    <string name="action_filter_interval_dropped">ربما أُلغيت؟ ٢٠ التماسًا متأخرًا وشهران</string>
+    <string name="manga_display_interval_title">قدِّر كلَّ</string>
+    <string name="pref_update_only_in_release_period">ليس ضمن مدة الإصدار المتوقعة</string>
+    <string name="pref_update_release_grace_period">مدة سماح الإصدار المتوقعة</string>
+    <string name="pref_update_release_grace_period_info">مدة سماح قصيرة خير من مدة سماح طويلة، وذلك لتخفف الضغط على المصادر. وكلما تُلتمس مدخلة وليس لهذا تحديث تصير مدة الالتماس أطول، وأقصاها ٢٨ يومًا.</string>
+    <string name="manga_modify_calculated_interval_title">خصِّص المدة</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="zero">لا يوم بعد</item>
+        <item quantity="one">بعد يوم واحد</item>
+        <item quantity="two">بعد يومين</item>
+        <item quantity="few">بعد %d أيام</item>
+        <item quantity="many">بعد %d يومًا</item>
+        <item quantity="other">بعد %d يوم</item>
+    </plurals>
+    <string name="skipped_reason_not_in_release_period">تُخُطِّيت بسبب عدم توقع صدور اليوم</string>
+    <string name="manga_modify_interval_title">عدِّل المدة</string>
+    <string name="manga_display_modified_interval_title">عيِّن التحديث كلَّ</string>
+    <plurals name="day">
+        <item quantity="zero">لا يوم</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%d أيام</item>
+        <item quantity="many">%d يومًا</item>
+        <item quantity="other">%d يوم</item>
+    </plurals>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="zero">لا يوم قبل</item>
+        <item quantity="one">قبل يوم واحد</item>
+        <item quantity="two">قبل يومين</item>
+        <item quantity="few">قبل %d أيام</item>
+        <item quantity="many">قبل %d يومًا</item>
+        <item quantity="other">قبل %d يوم</item>
+    </plurals>
+    <string name="intervals_header">المدة</string>
+    <string name="action_sort_next_updated">التحديث المتوقع القادم</string>
 </resources>

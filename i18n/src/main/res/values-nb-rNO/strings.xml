@@ -357,8 +357,6 @@
     <string name="pref_skip_filtered_chapters">Hopp over filtrerte kapitler</string>
     <string name="hide_notification_content">Skjul merknadsinnhold</string>
     <string name="secure_screen_summary">Sikker skjerm skjuler programinnhold ved bytting av programmer og blokker skjermavbildninger</string>
-    <string name="pref_confirm_exit">Bekreft avslutning</string>
-    <string name="action_reorganize_by">Sorter etter</string>
     <string name="confirm_exit">Trykk \"Tilbake\" igjen for å avslutte</string>
     <string name="label_downloaded_only">Kun nedlastet</string>
     <string name="ext_unofficial">Uoffisiell</string>

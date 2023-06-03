@@ -122,7 +122,6 @@
     <string name="information_no_recent_manga">Nekas nesen lasīts</string>
     <string name="information_no_recent">Nekas nesen lasīts</string>
     <string name="action_newest">Jaunākais</string>
-    <string name="action_reorganize_by">Pārkārtot</string>
     <string name="action_cancel_all">Atcelt visu</string>
     <string name="action_unpin">Atspraust</string>
     <string name="action_pin">Piespraust</string>
@@ -149,7 +148,6 @@
     <string name="lock_with_biometrics">Vajadzīgs atbloķēt</string>
     <string name="pref_category_security">Drošība un privātums</string>
     <string name="pref_manage_notifications">Pārvaldiet paziņojumus</string>
-    <string name="pref_confirm_exit">Apstipriniet izeju</string>
     <string name="pref_date_format">Datuma formāts</string>
     <string name="theme_dark">Ieslēgts</string>
     <string name="theme_light">Izslēgts</string>

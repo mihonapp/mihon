@@ -111,7 +111,7 @@
     <string name="left_to_right_viewer">페이지 (왼쪽에서 오른쪽)</string>
     <string name="right_to_left_viewer">페이지 (오른쪽에서 왼쪽)</string>
     <string name="vertical_viewer">페이지 (수직)</string>
-    <string name="webtoon_viewer">웹툰</string>
+    <string name="webtoon_viewer">긴 스트립</string>
     <string name="scale_type_stretch">늘리기</string>
     <string name="scale_type_fit_width">가로 맞추기</string>
     <string name="scale_type_fit_height">세로 맞추기</string>
@@ -399,7 +399,7 @@
     <string name="getting_started_guide">초기 설정 도움말</string>
     <string name="pref_incognito_mode_summary">읽은 내역의 기록을 일시 정지합니다</string>
     <string name="action_enable_all">모두 활성화</string>
-    <string name="vertical_plus_viewer">웹툰 (이미지 간격 띄움)</string>
+    <string name="vertical_plus_viewer">간격이 있는 긴 스트립</string>
     <string name="none">없음</string>
     <string name="pref_relative_time_long">길게 (오늘, n일 전)</string>
     <string name="pref_date_format">날짜 형식</string>
@@ -460,7 +460,6 @@
     <string name="channel_ext_updates">확장기능 업데이트</string>
     <string name="set_chapter_settings_as_default">기본값으로 설정</string>
     <string name="pref_manage_notifications">알림 설정</string>
-    <string name="pref_confirm_exit">앱 종료 전에 확인</string>
     <string name="also_set_chapter_settings_for_library">서재의 모든 항목에 적용</string>
     <string name="channel_app_updates">앱 업데이트</string>
     <string name="channel_progress">진행 상황</string>
@@ -558,7 +557,6 @@
     <string name="action_desc">내림차순</string>
     <string name="theme_monet">다이내믹</string>
     <string name="action_display_cover_only_grid">표지만 있는 격자</string>
-    <string name="action_reorganize_by">재정렬</string>
     <string name="action_newest">최신 순</string>
     <string name="pref_category_theme">테마</string>
     <string name="theme_midnightdusk">황혼</string>

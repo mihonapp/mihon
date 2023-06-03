@@ -103,7 +103,6 @@
     <string name="pref_relative_time_short">Stutt (i dag, i går)</string>
     <string name="pref_relative_time_long">Lang (Stutt+, n dagar sidan)</string>
     <string name="pref_date_format">Datoformat</string>
-    <string name="pref_confirm_exit">Stadfest avslutning</string>
     <string name="pref_manage_notifications">Handter varslingar</string>
     <string name="pref_category_security">Sikkerheit</string>
     <string name="lock_always">Alltid</string>

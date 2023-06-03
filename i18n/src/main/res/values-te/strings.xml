@@ -124,7 +124,6 @@
     <string name="theme_light">ఆపుము</string>
     <string name="theme_dark">ప్రారంభించుము</string>
     <string name="pref_app_theme">అనువర్తన వీక్షణము</string>
-    <string name="action_reorganize_by">క్రమీకరించుము</string>
     <string name="action_order_by_upload_date">ఎగుమతి తారీఖును బట్టి</string>
     <string name="action_desc">అవరోహికము</string>
     <string name="action_install">ప్రతిష్ఠాపించుము</string>
@@ -151,7 +150,6 @@
     <string name="pref_dark_theme_pure_black">స్వచ్ఛమైన నలుపు వీక్షణ</string>
     <string name="pref_category_timestamps">సమయ ముద్రణలు</string>
     <string name="pref_relative_format">సంబంధిత సమయ ముద్రణలు</string>
-    <string name="pref_confirm_exit">నిష్రమణమును నిర్ధారించుము</string>
     <string name="pref_category_security">భద్రత</string>
     <string name="lock_with_biometrics">తాళమును తెరుచుట ఆవశ్యకము</string>
     <string name="lock_when_idle">కార్యచరణము లేనిచో తాళమును వేయుము</string>

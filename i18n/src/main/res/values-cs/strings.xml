@@ -430,7 +430,6 @@
     <string name="secure_screen_summary">Secure screen skryje obsah aplikace při přepínání aplikací a blokuje tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
     <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
-    <string name="pref_confirm_exit">Potvrdit opuštění</string>
     <string name="theme_dark">Zapnuto</string>
     <string name="theme_light">Vypnuto</string>
     <string name="pref_theme_mode">Temný vzhled</string>
@@ -438,7 +437,6 @@
     <string name="action_move_to_top">Přesunout nahoru</string>
     <string name="action_desc">Sestupně</string>
     <string name="action_asc">Vzestupně</string>
-    <string name="action_reorganize_by">Seřadit</string>
     <string name="action_order_by_chapter_number">Podle čísel kapitol</string>
     <string name="action_order_by_upload_date">Podle data nahrání</string>
     <string name="action_unpin">Odepnout</string>
@@ -818,4 +816,35 @@
     <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
     <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
     <string name="pref_library_columns_per_row">%d na řádek</string>
+    <string name="manga_modify_calculated_interval_title">Přizpůsobit interval</string>
+    <string name="action_filter_interval_passed">Uplynulé kontrolní období</string>
+    <string name="action_filter_interval_custom">Přizpůsobený interval načítání</string>
+    <string name="action_filter_interval_long">Načíst měsíčně (28 dní)</string>
+    <string name="action_filter_interval_late">Pozdní kontrola 10+</string>
+    <string name="action_sort_next_updated">Další očekávaná aktualizace</string>
+    <string name="manga_display_interval_title">Odhadovat každý</string>
+    <string name="manga_display_modified_interval_title">Nastavit aktualizaci každých</string>
+    <string name="manga_modify_interval_title">Upravit interval</string>
+    <string name="action_set_interval">Nastavit interval</string>
+    <string name="action_filter_interval_dropped">Opuštěný\? Pozdě 20+ a 2 měsíce</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">Před %d dnem</item>
+        <item quantity="few">Před %d dny</item>
+        <item quantity="other">před %d dny</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">po %d dni</item>
+        <item quantity="few">po %d dnech</item>
+        <item quantity="other">po %d dnech</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 den</item>
+        <item quantity="few">%d dny</item>
+        <item quantity="other">%d dní</item>
+    </plurals>
+    <string name="pref_update_only_in_release_period">Mimo očekávané období vydání</string>
+    <string name="pref_update_release_grace_period_info">Pro minimalizaci zátěže zdrojů se doporučuje nízká doba odkladu. Čím více kontrol záznamu bude zmeškáno, tím delší bude interval mezi kontrolami, maximálně však 28 dní.</string>
+    <string name="pref_update_release_grace_period">Očekávané období tolerance vydání</string>
+    <string name="intervals_header">Intervaly</string>
+    <string name="skipped_reason_not_in_release_period">Přeskočeno, protože dnes nebylo očekáváno žádné vydání</string>
 </resources>

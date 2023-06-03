@@ -421,7 +421,6 @@
     <string name="lock_with_biometrics">Изисквай отключване</string>
     <string name="pref_category_security">Сигурност</string>
     <string name="pref_manage_notifications">Уведомления</string>
-    <string name="pref_confirm_exit">Потвърждение при излизане</string>
     <string name="theme_system">Система на абонаментите</string>
     <string name="theme_dark">Включено</string>
     <string name="theme_light">Изключено</string>
@@ -430,7 +429,6 @@
     <string name="action_move_to_bottom">Премести най-долу</string>
     <string name="action_oldest">Най-стари</string>
     <string name="action_newest">Най-нови</string>
-    <string name="action_reorganize_by">Пренареди</string>
     <string name="action_cancel_all">Отмени всичко</string>
     <string name="action_unpin">Откачи</string>
     <string name="action_pin">Закачи</string>

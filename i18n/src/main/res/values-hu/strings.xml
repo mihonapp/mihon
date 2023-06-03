@@ -186,7 +186,6 @@
     <string name="lock_always">Mindig</string>
     <string name="pref_category_security">Biztonság</string>
     <string name="pref_manage_notifications">Értesítések kezelése</string>
-    <string name="pref_confirm_exit">Kilépés megerősítése</string>
     <string name="theme_system">Rendszerbeállítás követése</string>
     <string name="pref_theme_mode">Sötét mód</string>
     <string name="pref_category_theme">Téma</string>
@@ -319,7 +318,6 @@
     <string name="action_asc">Növekvő</string>
     <string name="action_order_by_chapter_number">Fejezet száma szerint</string>
     <string name="action_order_by_upload_date">Feltöltési idő szerint</string>
-    <string name="action_reorganize_by">Újrarendezés</string>
     <string name="cancel_all_for_series">Mégse az összesre a sorozatból</string>
     <string name="action_cancel_all">Mégse az összesre</string>
     <string name="action_unpin">Tűzés visszavonása</string>

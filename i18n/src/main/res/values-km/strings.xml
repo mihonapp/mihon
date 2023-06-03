@@ -62,7 +62,6 @@
     <string name="action_cancel_all">ឈប់ធ្វើទាំងអស់</string>
     <string name="cancel_all_for_series">Cancelទាំងអស់ចំពោះម៊េងហ្គាមួយនេះ</string>
     <string name="action_sort">តម្រៀប</string>
-    <string name="action_reorganize_by">តម្រៀប</string>
     <string name="action_order_by_upload_date">តម្រៀបតាមកាលបរិច្ឆេទ</string>
     <string name="action_order_by_chapter_number">តម្រៀបតាមភាគ</string>
     <string name="action_newest">ថ្មីបំផុត</string>
@@ -138,7 +137,6 @@
     <string name="pref_category_timestamps">timestamps</string>
     <string name="pref_relative_format">relative timestamps</string>
     <string name="pref_date_format">ទម្រង់ថ្ងៃខែ</string>
-    <string name="pref_confirm_exit">បញ្ចាក់ការចាកចេញ</string>
     <string name="pref_manage_notifications">កំណត់ការជូនដំណឹង</string>
     <string name="pref_category_security">សន្តិសុខនិងឯកជនភាព</string>
     <string name="lock_with_biometrics">ត្រូវការការបើកសោ</string>

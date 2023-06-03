@@ -48,7 +48,7 @@
     <string name="pref_category_advanced">Avançado</string>
     <string name="pref_category_about">Sobre</string>
     <!-- General section -->
-    <string name="pref_library_columns">Itens por fila</string>
+    <string name="pref_library_columns">Tamanho da grade</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horizontal</string>
     <string name="pref_library_update_interval">Atualizações automáticas</string>
@@ -74,10 +74,10 @@
     <string name="white_background">Branco</string>
     <string name="black_background">Preto</string>
     <string name="pref_viewer_type">Modo de leitura padrão</string>
-    <string name="left_to_right_viewer">Esquerda para a direita</string>
-    <string name="right_to_left_viewer">Direita para a esquerda</string>
-    <string name="vertical_viewer">Vertical</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Paginado (da esquerda para a direita)</string>
+    <string name="right_to_left_viewer">Paginado (da direita para a esquerda)</string>
+    <string name="vertical_viewer">Paginação (vertical)</string>
+    <string name="webtoon_viewer">Página longa</string>
     <string name="pref_image_scale_type">Tipo de escala</string>
     <string name="scale_type_fit_screen">Ajustar ao ecrã</string>
     <string name="scale_type_stretch">Esticar</string>
@@ -165,7 +165,7 @@
     <!-- Reader activity -->
     <string name="chapter_progress">Página: %1$d</string>
     <string name="no_next_chapter">Capítulo seguinte não encontrado</string>
-    <string name="decode_image_error">Não foi possível carregar a imagem</string>
+    <string name="decode_image_error">A imagem não pôde ser carregada</string>
     <!-- Backup fragment -->
     <!-- Recent manga fragment -->
     <!-- Downloads activity and service -->
@@ -383,7 +383,6 @@
         <item quantity="other">Para %d o acesso</item>
     </plurals>
     <string name="action_menu">Menu</string>
-    <string name="action_reorganize_by">Reordenar</string>
     <string name="action_newest">Mais novos</string>
     <string name="action_oldest">Mais antigos</string>
     <string name="action_move_to_top">Mover para o topo</string>
@@ -410,7 +409,7 @@
     <string name="webtoon_side_padding_0">Nenhum</string>
     <string name="pref_webtoon_side_padding">Preenchimento lateral</string>
     <string name="pref_category_reading">Lendo</string>
-    <string name="vertical_plus_viewer">Vertical contínuo</string>
+    <string name="vertical_plus_viewer">Página longa com espaços</string>
     <string name="pref_skip_filtered_chapters">Ignorar capítulos filtrados</string>
     <string name="action_unpin">Desafixar</string>
     <string name="action_pin">Fixar</string>
@@ -422,7 +421,6 @@
     <string name="restore_in_progress">Restauro já em progresso</string>
     <string name="creating_backup_error">Cópia de segurança falhou</string>
     <string name="backup_in_progress">Cópia de segurança já em progresso</string>
-    <string name="pref_confirm_exit">Confirmar sair</string>
     <string name="confirm_exit">Pressione novamente para sair</string>
     <string name="label_downloaded_only">Apenas transferidos</string>
     <string name="information_webview_required">WebView é necessária para Tachiyomi</string>
@@ -444,7 +442,7 @@
         <item quantity="many">%1$s restantes</item>
         <item quantity="other">%1$s restantes</item>
     </plurals>
-    <string name="gray_background">Cinzento</string>
+    <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
     <string name="pref_true_color_summary">Reduz bandas de cor, mas pode impactar a performance</string>
@@ -556,7 +554,7 @@
     <string name="edge_nav">Borda</string>
     <string name="track_finished_reading_date">Data de conclusão</string>
     <string name="track_started_reading_date">Data de início</string>
-    <string name="pref_dump_crash_logs">Guardar registos de falhas</string>
+    <string name="pref_dump_crash_logs">Compartilhar registros de falha</string>
     <string name="pref_dump_crash_logs_summary">Guarda registos de erros num ficheiro para partilhar com os desenvolvedores</string>
     <string name="action_display_show_number_of_items">Mostrar número de itens</string>
     <string name="right_and_left_nav">Direita e Esquerda</string>
@@ -706,7 +704,7 @@
     <string name="notification_update_error">%1$d actualização(ões) falhada(s)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="update_check_fdroid_migration_info">Uma nova versão está disponível a partir dos lançamentos oficiais. Toque para saber como migrar de versões não oficiais do F-Droid.</string>
-    <string name="pref_navigate_pan">Navegar imagens longas ao tocar</string>
+    <string name="pref_navigate_pan">Imagens panorâmicas</string>
     <string name="pref_landscape_zoom">Ampliar imagem horizontal</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="update_check_open">Abrir no GitHub</string>
@@ -766,10 +764,10 @@
     <string name="skipped_reason_not_always_update">Ignorado porque a série não requer atualizações</string>
     <string name="action_search_hint">Pesquisar…</string>
     <string name="missing_storage_permission">Permissões de armazenamento não concedidas</string>
-    <string name="action_display_show_continue_reading_button">Exibir botão de \"continuar lendo\"</string>
+    <string name="action_display_show_continue_reading_button">Botão de continuar lendo</string>
     <string name="pref_general_summary">Linguagem do aplicativo, notificações</string>
     <string name="pref_appearance_summary">Tema, data e formato de hora</string>
-    <string name="pref_library_summary">Categorias, atualização de mangás</string>
+    <string name="pref_library_summary">Categorias, atualização global, trocar de capítulo</string>
     <string name="pref_reader_summary">Modo leitura, exibir, navegação</string>
     <string name="action_open_random_manga">Abrir mangá aleatório</string>
     <string name="label_stats">Estatisticas</string>
@@ -785,7 +783,7 @@
     <string name="updates_last_update_info_just_now">Agora mesmo</string>
     <string name="crash_screen_restart_application">Reinicie o aplicativo</string>
     <string name="crash_screen_title">Ops!</string>
-    <string name="crash_screen_description">%s encontrou um erro inesperado. Sugerimos que você capture esta mensagem, despeje os logs de falha e compartilhe-a em nosso canal de suporte no Discord.</string>
+    <string name="crash_screen_description">%s encontrou um erro inesperado. Sugerimos que você compartilhe os registros de falha em nosso canal de suporte no Discord.</string>
     <string name="pref_downloads_summary">Descarga automática, descarga a frente</string>
     <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
     <string name="pref_browse_summary">Fontes, extensões, pesquisa global</string>
@@ -841,5 +839,38 @@
         <item quantity="one">Falta %1$s capítulo</item>
         <item quantity="many">Faltam %1$s capítulos</item>
         <item quantity="other">Faltam %1$s capítulos</item>
+    </plurals>
+    <string name="pref_library_columns_per_row">%d por linha</string>
+    <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
+    <string name="pref_double_tap_zoom">Toque duplo para aproximar</string>
+    <string name="action_set_interval">Definir intervalo</string>
+    <string name="action_filter_interval_long">Buscar mensalmente (28 dias)</string>
+    <string name="pref_update_only_in_release_period">Fora do período esperado de lançamento</string>
+    <string name="pref_update_release_grace_period">Período de tolerância de liberação esperado</string>
+    <string name="pref_debug_info">Informações de depuração</string>
+    <plurals name="day">
+        <item quantity="one">Um dia</item>
+        <item quantity="many">%d dias</item>
+        <item quantity="other">%d dias</item>
+    </plurals>
+    <string name="manga_modify_calculated_interval_title">Customizar intervalo</string>
+    <string name="pref_chapter_swipe">Trocar de capítulo</string>
+    <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
+    <string name="intervals_header">intervalos</string>
+    <string name="manga_display_interval_title">Estimado a cada</string>
+    <string name="action_filter_interval_custom">Intervalo de busca customizado</string>
+    <string name="action_sort_next_updated">Próxima atualização esperada</string>
+    <string name="manga_modify_interval_title">Modificar intervalo</string>
+    <string name="manga_display_modified_interval_title">Definido para atualizar a cada</string>
+    <string name="skipped_reason_not_in_release_period">Pulado, pois nenhum lançamento é esperado para hoje</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d dia depois</item>
+        <item quantity="many">%d dias depois</item>
+        <item quantity="other">%d dias depois</item>
+    </plurals>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d dia atrás</item>
+        <item quantity="many">%d dias atrás</item>
+        <item quantity="other">%d dias atrás</item>
     </plurals>
 </resources>
