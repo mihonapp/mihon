@@ -3,6 +3,7 @@ package eu.kanade.presentation.more.settings.screen
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
 import android.webkit.WebStorage
 import android.webkit.WebView
@@ -68,6 +69,7 @@ import uy.kohesive.injekt.api.get
 import java.io.File
 
 object SettingsAdvancedScreen : SearchableSettings {
+
     @ReadOnlyComposable
     @Composable
     @StringRes
@@ -82,41 +84,62 @@ object SettingsAdvancedScreen : SearchableSettings {
         val basePreferences = remember { Injekt.get<BasePreferences>() }
         val networkPreferences = remember { Injekt.get<NetworkPreferences>() }
 
-        return listOf(
-            Preference.PreferenceItem.SwitchPreference(
-                pref = basePreferences.acraEnabled(),
-                title = stringResource(R.string.pref_enable_acra),
-                subtitle = stringResource(R.string.pref_acra_summary),
-                enabled = isPreviewBuildType || isReleaseBuildType,
-            ),
-            Preference.PreferenceItem.TextPreference(
-                title = stringResource(R.string.pref_dump_crash_logs),
-                subtitle = stringResource(R.string.pref_dump_crash_logs_summary),
-                onClick = {
-                    scope.launch {
-                        CrashLogUtil(context).dumpLogs()
-                    }
-                },
-            ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = networkPreferences.verboseLogging(),
-                title = stringResource(R.string.pref_verbose_logging),
-                subtitle = stringResource(R.string.pref_verbose_logging_summary),
-                onValueChanged = {
-                    context.toast(R.string.requires_app_restart)
-                    true
-                },
-            ),
-            Preference.PreferenceItem.TextPreference(
-                title = stringResource(R.string.pref_debug_info),
-                onClick = { navigator.push(DebugInfoScreen) },
-            ),
-            getBackgroundActivityGroup(),
-            getDataGroup(),
-            getNetworkGroup(networkPreferences = networkPreferences),
-            getLibraryGroup(),
-            getExtensionsGroup(basePreferences = basePreferences),
-        )
+        return buildList {
+            addAll(
+                listOf(
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = basePreferences.acraEnabled(),
+                        title = stringResource(R.string.pref_enable_acra),
+                        subtitle = stringResource(R.string.pref_acra_summary),
+                        enabled = isPreviewBuildType || isReleaseBuildType,
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(R.string.pref_dump_crash_logs),
+                        subtitle = stringResource(R.string.pref_dump_crash_logs_summary),
+                        onClick = {
+                            scope.launch {
+                                CrashLogUtil(context).dumpLogs()
+                            }
+                        },
+                    ),
+                    Preference.PreferenceItem.SwitchPreference(
+                        pref = networkPreferences.verboseLogging(),
+                        title = stringResource(R.string.pref_verbose_logging),
+                        subtitle = stringResource(R.string.pref_verbose_logging_summary),
+                        onValueChanged = {
+                            context.toast(R.string.requires_app_restart)
+                            true
+                        },
+                    ),
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(R.string.pref_debug_info),
+                        onClick = { navigator.push(DebugInfoScreen) },
+                    ),
+                ),
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                add(
+                    Preference.PreferenceItem.TextPreference(
+                        title = stringResource(R.string.pref_manage_notifications),
+                        onClick = {
+                            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                            }
+                            context.startActivity(intent)
+                        },
+                    ),
+                )
+            }
+            addAll(
+                listOf(
+                    getBackgroundActivityGroup(),
+                    getDataGroup(),
+                    getNetworkGroup(networkPreferences = networkPreferences),
+                    getLibraryGroup(),
+                    getExtensionsGroup(basePreferences = basePreferences),
+                ),
+            )
+        }
     }
 
     @Composable

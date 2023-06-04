@@ -20,7 +20,6 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.SettingsBackupRestore
 import androidx.compose.material.icons.outlined.Sync
-import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -187,12 +186,6 @@ object SettingsMainScreen : Screen() {
     )
 
     private val items = listOf(
-        Item(
-            titleRes = R.string.pref_category_general,
-            subtitleRes = R.string.pref_general_summary,
-            icon = Icons.Outlined.Tune,
-            screen = SettingsGeneralScreen,
-        ),
         Item(
             titleRes = R.string.pref_category_appearance,
             subtitleRes = R.string.pref_appearance_summary,

@@ -265,6 +265,10 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.InfoPreference(
                     title = stringResource(R.string.pref_update_release_grace_period_info),
                 ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction && isDevFlavor },
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = libraryPreferences.newShowUpdatesCount(),
+                    title = stringResource(R.string.pref_library_update_show_tab_badge),
+                ),
             ),
         )
     }
