@@ -10,8 +10,7 @@ class ResetCategoryFlags(
 ) {
 
     suspend fun await() {
-        val display = preferences.libraryDisplayMode().get()
         val sort = preferences.librarySortingMode().get()
-        categoryRepository.updateAllFlags(display + sort.type + sort.direction)
+        categoryRepository.updateAllFlags(sort.type + sort.direction)
     }
 }

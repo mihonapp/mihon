@@ -1,17 +1,11 @@
 package tachiyomi.domain.library.model
 
-import tachiyomi.domain.category.model.Category
+sealed class LibraryDisplayMode {
 
-sealed class LibraryDisplayMode(
-    override val flag: Long,
-) : FlagWithMask {
-
-    override val mask: Long = 0b00000011L
-
-    object CompactGrid : LibraryDisplayMode(0b00000000)
-    object ComfortableGrid : LibraryDisplayMode(0b00000001)
-    object List : LibraryDisplayMode(0b00000010)
-    object CoverOnlyGrid : LibraryDisplayMode(0b00000011)
+    object CompactGrid : LibraryDisplayMode()
+    object ComfortableGrid : LibraryDisplayMode()
+    object List : LibraryDisplayMode()
+    object CoverOnlyGrid : LibraryDisplayMode()
 
     object Serializer {
         fun deserialize(serialized: String): LibraryDisplayMode {
@@ -26,13 +20,6 @@ sealed class LibraryDisplayMode(
     companion object {
         val values by lazy { setOf(CompactGrid, ComfortableGrid, List, CoverOnlyGrid) }
         val default = CompactGrid
-
-        fun valueOf(flag: Long?): LibraryDisplayMode {
-            if (flag == null) return default
-            return values
-                .find { mode -> mode.flag == flag and mode.mask }
-                ?: default
-        }
 
         fun deserialize(serialized: String): LibraryDisplayMode {
             return when (serialized) {
@@ -54,6 +41,3 @@ sealed class LibraryDisplayMode(
         }
     }
 }
-
-val Category?.display: LibraryDisplayMode
-    get() = LibraryDisplayMode.valueOf(this?.flags)
