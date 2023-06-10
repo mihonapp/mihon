@@ -14,7 +14,10 @@ import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,13 +46,14 @@ fun WebViewScreenContent(
 ) {
     val state = rememberWebViewState(url = url, additionalHttpHeaders = headers)
     val navigator = rememberWebViewNavigator()
+    var currentUrl by remember { mutableStateOf(url) }
 
     Scaffold(
         topBar = {
             Box {
                 AppBar(
                     title = state.pageTitle ?: initialTitle,
-                    subtitle = state.lastLoadedUrl,
+                    subtitle = currentUrl,
                     navigateUp = onNavigateUp,
                     navigationIcon = Icons.Outlined.Close,
                     actions = {
@@ -81,15 +85,15 @@ fun WebViewScreenContent(
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_share),
-                                    onClick = { onShare(state.lastLoadedUrl ?: url) },
+                                    onClick = { onShare(currentUrl) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.action_open_in_browser),
-                                    onClick = { onOpenInBrowser(state.lastLoadedUrl ?: url) },
+                                    onClick = { onOpenInBrowser(currentUrl) },
                                 ),
                                 AppBar.OverflowAction(
                                     title = stringResource(R.string.pref_clear_cookies),
-                                    onClick = { onClearCookies(state.lastLoadedUrl ?: url) },
+                                    onClick = { onClearCookies(currentUrl) },
                                 ),
                             ),
                         )
@@ -116,7 +120,22 @@ fun WebViewScreenContent(
             object : AccompanistWebViewClient() {
                 override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
-                    url?.let { onUrlChange(it) }
+                    url?.let {
+                        currentUrl = it
+                        onUrlChange(it)
+                    }
+                }
+
+                override fun doUpdateVisitedHistory(
+                    view: WebView,
+                    url: String?,
+                    isReload: Boolean,
+                ) {
+                    super.doUpdateVisitedHistory(view, url, isReload)
+                    url?.let {
+                        currentUrl = it
+                        onUrlChange(it)
+                    }
                 }
 
                 override fun shouldOverrideUrlLoading(
