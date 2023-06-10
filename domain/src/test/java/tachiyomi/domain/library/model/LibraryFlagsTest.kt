@@ -17,15 +17,6 @@ class LibraryFlagsTest {
     }
 
     @Test
-    fun `Test Flag plus operator (LibraryDisplayMode)`() {
-        val current = LibraryDisplayMode.List
-        val new = LibraryDisplayMode.CoverOnlyGrid
-        val flag = current + new
-
-        flag shouldBe 0b00000011
-    }
-
-    @Test
     fun `Test Flag plus operator (LibrarySort)`() {
         val current = LibrarySort(LibrarySort.Type.LastRead, LibrarySort.Direction.Ascending)
         val new = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
@@ -36,33 +27,27 @@ class LibraryFlagsTest {
 
     @Test
     fun `Test Flag plus operator`() {
-        val display = LibraryDisplayMode.CoverOnlyGrid
         val sort = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
-        val flag = display + sort
 
-        flag shouldBe 0b01011111
+        sort.flag shouldBe 0b01011100
     }
 
     @Test
     fun `Test Flag plus operator with old flag as base`() {
-        val currentDisplay = LibraryDisplayMode.List
         val currentSort = LibrarySort(LibrarySort.Type.UnreadCount, LibrarySort.Direction.Descending)
-        val currentFlag = currentDisplay + currentSort
+        currentSort.flag shouldBe 0b00001100
 
-        val display = LibraryDisplayMode.CoverOnlyGrid
         val sort = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)
-        val flag = currentFlag + display + sort
+        val flag = currentSort.flag + sort
 
-        currentFlag shouldBe 0b00001110
-        flag shouldBe 0b01011111
-        flag shouldNotBe currentFlag
+        flag shouldBe 0b01011100
+        flag shouldNotBe currentSort.flag
     }
 
     @Test
     fun `Test default flags`() {
         val sort = LibrarySort.default
-        val display = LibraryDisplayMode.default
-        val flag = display + sort.type + sort.direction
+        val flag = sort.type + sort.direction
 
         flag shouldBe 0b01000000
     }
