@@ -286,16 +286,16 @@ class ReaderActivity : BaseActivity() {
         assistUrl?.let { outContent.webUri = it.toUri() }
     }
 
-    /**
-     * Called when the options menu of the toolbar is being created. It adds our custom menu.
-     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.reader, menu)
 
         val isChapterBookmarked = viewModel.getCurrentChapter()?.chapter?.bookmark ?: false
         menu.findItem(R.id.action_bookmark).isVisible = !isChapterBookmarked
         menu.findItem(R.id.action_remove_bookmark).isVisible = isChapterBookmarked
-        menu.findItem(R.id.action_open_in_web_view).isVisible = viewModel.getSource() is HttpSource
+
+        val isHttpSource = viewModel.getSource() is HttpSource
+        menu.findItem(R.id.action_open_in_web_view).isVisible = isHttpSource
+        menu.findItem(R.id.action_share).isVisible = isHttpSource
 
         return true
     }
@@ -307,7 +307,7 @@ class ReaderActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_open_in_web_view -> {
-                openChapterInWebview()
+                openChapterInWebView()
             }
             R.id.action_bookmark -> {
                 viewModel.bookmarkCurrentChapter(true)
@@ -316,6 +316,12 @@ class ReaderActivity : BaseActivity() {
             R.id.action_remove_bookmark -> {
                 viewModel.bookmarkCurrentChapter(false)
                 invalidateOptionsMenu()
+            }
+            R.id.action_share -> {
+                assistUrl?.let {
+                    val intent = it.toUri().toShareIntent(this, type = "text/plain")
+                    startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -662,14 +668,12 @@ class ReaderActivity : BaseActivity() {
         startPostponedEnterTransition()
     }
 
-    private fun openChapterInWebview() {
+    private fun openChapterInWebView() {
         val manga = viewModel.manga ?: return
         val source = viewModel.getSource() ?: return
-        lifecycleScope.launchIO {
-            viewModel.getChapterUrl()?.let { url ->
-                val intent = WebViewActivity.newIntent(this@ReaderActivity, url, source.id, manga.title)
-                withUIContext { startActivity(intent) }
-            }
+        assistUrl?.let {
+            val intent = WebViewActivity.newIntent(this@ReaderActivity, it, source.id, manga.title)
+            startActivity(intent)
         }
     }
 
