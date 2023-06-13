@@ -831,9 +831,10 @@ class ReaderViewModel(
      * will run in a background thread and errors are ignored.
      */
     private fun updateTrackChapterRead(readerChapter: ReaderChapter) {
+        if (basePreferences.incognitoMode().get()) return
         if (!trackPreferences.autoUpdateTrack().get()) return
-        val manga = manga ?: return
 
+        val manga = manga ?: return
         val chapterRead = readerChapter.chapter.chapter_number.toDouble()
 
         val trackManager = Injekt.get<TrackManager>()
