@@ -114,4 +114,7 @@ object DiskUtil {
     }
 
     const val NOMEDIA_FILE = ".nomedia"
+
+    // Safe theoretical max filename size is 255 bytes and 1 char = 2-4 bytes (UTF-8)
+    const val MAX_FILE_NAME_BYTES = 250
 }
