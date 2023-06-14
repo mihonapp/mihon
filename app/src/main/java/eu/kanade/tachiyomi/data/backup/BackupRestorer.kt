@@ -73,7 +73,6 @@ class BackupRestorer(
         return File("")
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun performRestore(uri: Uri): Boolean {
         val backup = BackupUtil.decodeBackup(context, uri)
 

@@ -72,7 +72,7 @@ class GlobalExceptionHandler private constructor(
             return try {
                 Json.decodeFromString(ThrowableSerializer, intent.getStringExtra(INTENT_EXTRA)!!)
             } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Wasn't able to retrive throwable from intent" }
+                logcat(LogPriority.ERROR, e) { "Wasn't able to retrieve throwable from intent" }
                 null
             }
         }

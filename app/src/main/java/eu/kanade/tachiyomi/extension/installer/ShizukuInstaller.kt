@@ -43,7 +43,6 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
 
     override var ready = false
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override fun processEntry(entry: Entry) {
         super.processEntry(entry)
         scope.launch {

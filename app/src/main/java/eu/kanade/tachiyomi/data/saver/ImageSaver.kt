@@ -60,7 +60,6 @@ class ImageSaver(
 
         try {
             data().use { input ->
-                @Suppress("BlockingMethodInNonBlockingContext")
                 context.contentResolver.openOutputStream(picture, "w").use { output ->
                     input.copyTo(output!!)
                 }
