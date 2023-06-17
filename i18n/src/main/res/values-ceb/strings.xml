@@ -491,6 +491,5 @@
     <string name="label_downloaded">Gi-download</string>
     <string name="label_local">Lokal</string>
     <string name="pref_appearance_summary">Tema, format sa petsa ug panahon</string>
-    <string name="pref_general_summary">Pinulongan sa app, pagpahibawo</string>
     <string name="action_not_now">Dili karon</string>
 </resources>

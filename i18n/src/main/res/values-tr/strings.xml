@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Ad</string>
-    <string name="categories">Ulamlar</string>
+    <string name="categories">Kategoriler</string>
     <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
@@ -20,7 +20,7 @@
     <string name="action_filter_bookmarked">Yer imli</string>
     <string name="action_filter_unread">Okunmayan</string>
     <string name="action_filter_empty">Süzgeci kaldır</string>
-    <string name="action_sort_alpha">Abecesel</string>
+    <string name="action_sort_alpha">Alfabetik</string>
     <string name="action_sort_total">Toplam bölüm</string>
     <string name="action_sort_last_read">Son okunan</string>
     <string name="action_search">Ara</string>
@@ -36,10 +36,10 @@
     <string name="action_update_library">Kitaplığı güncelle</string>
     <string name="action_edit">Düzenle</string>
     <string name="action_add">Ekle</string>
-    <string name="action_add_category">Ulam ekle</string>
-    <string name="action_edit_categories">Ulamları düzenle</string>
-    <string name="action_rename_category">Ulamı yeniden adlandır</string>
-    <string name="action_move_category">Ulama taşı</string>
+    <string name="action_add_category">Kategori ekle</string>
+    <string name="action_edit_categories">Kategorileri düzenle</string>
+    <string name="action_rename_category">Kategoriyi yeniden adlandır</string>
+    <string name="action_move_category">Kategorileri uygula</string>
     <string name="action_edit_cover">Kapağı düzenle</string>
     <string name="action_pause">Duraklat</string>
     <string name="action_previous_chapter">Önceki bölüm</string>
@@ -85,7 +85,7 @@
     <string name="charging">Şarj olurken</string>
     <string name="pref_update_only_non_completed">\"Bitirilmiş\" durumda olan</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
-    <string name="default_category">Varsayılan ulam</string>
+    <string name="default_category">Varsayılan kategori</string>
     <string name="default_category_summary">Her zaman sor</string>
     <string name="ext_update">Güncelle</string>
     <string name="ext_install">Kur</string>
@@ -191,7 +191,7 @@
     <string name="login">Giriş</string>
     <string name="login_success">Giriş yapıldı</string>
     <string name="unknown_error">Bilinmeyen sorun</string>
-    <string name="updating_category">Ulam güncelleniyor</string>
+    <string name="updating_category">Kategori güncelleniyor</string>
     <string name="no_more_results">Başka sonuç yok</string>
     <string name="local_source">Yerel kaynak</string>
     <string name="other_source">Diğer</string>
@@ -231,8 +231,8 @@
     <string name="status">Durum</string>
     <string name="track_status">Durum</string>
     <string name="track_type">Tür</string>
-    <string name="error_category_exists">Bu adla bir ulam zaten var!</string>
-    <string name="snack_categories_deleted">Ulamlar silindi</string>
+    <string name="error_category_exists">Bu adla bir kategori zaten var!</string>
+    <string name="snack_categories_deleted">Kategoriler silindi</string>
     <string name="dialog_with_checkbox_remove_description">Bu, bu bölümün okunma tarihini kaldıracak. Emin misiniz?</string>
     <string name="dialog_with_checkbox_reset">Bu girdi için tüm bölümleri sıfırla</string>
     <string name="snack_add_to_library">Kitaplığa eklensin mi\?</string>
@@ -264,7 +264,7 @@
     <string name="information_no_recent">Yeni güncelleme yok</string>
     <string name="information_no_recent_manga">Yakında okunan yok</string>
     <string name="information_empty_library">Kitaplığınız boş</string>
-    <string name="information_empty_category">Ulamınız yok. Kitaplığınızı düzenlemek için artı düğmesine basarak bir tane oluşturun.</string>
+    <string name="information_empty_category">Kategoriniz yok. Kitaplığınızı düzenlemek için artı düğmesine basarak bir tane oluşturun.</string>
     <string name="download_notifier_downloader_title">İndirici</string>
     <string name="download_notifier_title_error">Hata</string>
     <string name="download_notifier_unknown_error">Bölüm, beklenmeyen hata sonucu indirilemedi</string>
@@ -354,7 +354,7 @@
         <item quantity="one">%d girdi için</item>
         <item quantity="other">%d girdi için</item>
     </plurals>
-    <string name="action_menu">Komut-Seçenek Dizelgesi</string>
+    <string name="action_menu">Menü</string>
     <string name="action_newest">En yeni</string>
     <string name="action_oldest">En eski</string>
     <string name="action_move_to_top">En üste taşı</string>
@@ -411,8 +411,8 @@
     <string name="viewer">Okuma kipi</string>
     <string name="pref_category_for_this_series">Bu dizi için</string>
     <plurals name="num_categories">
-        <item quantity="one">%d ulam</item>
-        <item quantity="other">%d ulam</item>
+        <item quantity="one">%d kategori</item>
+        <item quantity="other">%d kategoriler</item>
     </plurals>
     <string name="battery_optimization_setting_activity_not_found">Aygıt ayarları açılamadı</string>
     <plurals name="restore_completed_message">
@@ -433,7 +433,7 @@
     <string name="action_migrate">Geçiş yap</string>
     <string name="action_display_comfortable_grid">Rahat ızgara</string>
     <string name="tabs_header">Sekmeler</string>
-    <string name="action_display_show_tabs">Ulam sekmelerini göster</string>
+    <string name="action_display_show_tabs">Kategori sekmelerini göster</string>
     <string name="page_list_empty_error">Sayfa bulunamadı</string>
     <string name="action_disable_all">Tümünü devre dışı bırak</string>
     <string name="action_enable_all">Tümünü etkinleştir</string>
@@ -534,9 +534,9 @@
     <string name="include">Dahil et: %s</string>
     <string name="none">Yok</string>
     <string name="action_sort_chapter_fetch_date">Bölümün alındığı tarih</string>
-    <string name="pref_download_new_categories_details">Hariç tutulan ulamlardaki girdiler, dahil edilen ulamlarda olsa bile indirilmeyecektir.</string>
+    <string name="pref_download_new_categories_details">Hariç tutulan kategorilerdeki girdiler, dahil edilen kategorilerde olsa bile indirilmeyecektir.</string>
     <string name="pref_category_auto_download">Kendiliğinden indir</string>
-    <string name="pref_library_update_categories_details">Hariç tutulan ulamlardaki girdiler, dahil edilen ulamlarda olsa bile güncellenmeyecektir.</string>
+    <string name="pref_library_update_categories_details">Hariç tutulan kategorilerdeki girdiler, dahil edilen kategorilerde olsa bile güncellenmeyecektir.</string>
     <string name="action_show_errors">Ayrıntıları görmek için dokun</string>
     <string name="update_check_eol">Bu Android sürümü artık desteklenmiyor</string>
     <string name="clipboard_copy_error">Panoya kopyalanamadı</string>
@@ -567,9 +567,9 @@
     <string name="error_saving_cover">Kapak kaydedilemedi</string>
     <string name="cover_saved">Kapak kaydedildi</string>
     <string name="manga_cover">Kapak</string>
-    <string name="categorized_display_settings">Ulam kapsamında sıralama ve görüntüleme ayarları</string>
+    <string name="categorized_display_settings">Kategori kapsamında sıralama ayarları</string>
     <string name="tracking_guide">İzleme kılavuzu</string>
-    <string name="information_empty_category_dialog">Henüz bir ulamınız yok.</string>
+    <string name="information_empty_category_dialog">Henüz bir kategoriniz yok.</string>
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
     <string name="notification_updating">Kitaplık güncelleniyor… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Bazı üreticilerin arka plan hizmetlerini durduran ek uygulama kısıtlamaları vardır. Bu web sitesinde durumun nasıl düzeltileceği hakkında daha fazla bilgi var.</string>
@@ -609,7 +609,7 @@
     <string name="action_track">İzle</string>
     <string name="getting_started_guide">Başlangıç kılavuzu</string>
     <string name="pref_tablet_ui_mode">Tablet arayüzü</string>
-    <string name="pref_remove_exclude_categories">Hariç tutulan ulamlar</string>
+    <string name="pref_remove_exclude_categories">Hariç tutulan kategoriler</string>
     <string name="help_translate">Çeviriye yardım edin</string>
     <string name="ext_app_info">Uygulama bilgisi</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Uzantı kurucusu olarak kullanmak için Shizuku\'yu kurun ve başlatın.</string>
@@ -693,8 +693,8 @@
     <string name="pref_app_language">Uygulama dili</string>
     <string name="description_placeholder">Açıklama yok</string>
     <string name="theme_lavender">Lavanta</string>
-    <string name="delete_category">Ulamı sil</string>
-    <string name="delete_category_confirmation">\"%s\" ulamını silmek istiyor musunuz\?</string>
+    <string name="delete_category">Kategoriyi sil</string>
+    <string name="delete_category_confirmation">\"%s\" kategorisini silmek istiyor musunuz\?</string>
     <string name="internal_error">İçsel sorun: Daha çok bilgi için çökme günlüklerine bakın</string>
     <string name="pref_user_agent_string">Öntanımlı kullanıcı aracısı dizgesi</string>
     <string name="pref_reset_user_agent_string">Öntanımlı kullanıcı aracısı dizgesini sıfırla</string>
@@ -724,8 +724,7 @@
     <string name="pref_backup_summary">Elle ve kendiliğinden yedeklemeler</string>
     <string name="pref_security_summary">Uygulama kilidi, güvenli ekran</string>
     <string name="pref_advanced_summary">Çökme günlükleri dökümü, pil iyileştirmeleri</string>
-    <string name="pref_general_summary">Uygulama dili, bildirimler</string>
-    <string name="pref_library_summary">Ulamlar, genel güncelleme, bölüm kaydırma</string>
+    <string name="pref_library_summary">Kategoriler, genel güncelleme, bölüm kaydırma</string>
     <string name="pref_browse_summary">Kaynaklar, uzantılar, genel arama</string>
     <string name="pref_downloads_summary">Kendiliğinden indir, önceden indir</string>
     <string name="pref_reader_summary">Okuma kipi, görüntüleme, gezinme</string>
@@ -739,8 +738,8 @@
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
     <string name="updates_last_update_info_just_now">Şimdi</string>
     <string name="download_notifier_cache_renewal">İndirilenler denetleniyor</string>
-    <string name="action_open_random_manga">Gelişigüzel girdi aç</string>
-    <string name="information_no_entries_found">Bu ulamda girdi bulunamadı</string>
+    <string name="action_open_random_manga">Rastgele girdi aç</string>
+    <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
     <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
 \nDaha fazla bilgi edinmek için dokunun.</string>
     <string name="action_display_show_continue_reading_button">Okumayı sürdür düğmesi</string>
@@ -749,7 +748,7 @@
     <string name="track_remove_finish_date_conf_text">Bu, daha önce seçtiğiniz %s bitiş tarihini kaldıracak</string>
     <string name="pref_invalidate_download_cache">İndirmeler dizinini geçersiz kıl</string>
     <string name="pref_invalidate_download_cache_summary">Uygulamayı indirilen bölümleri yeniden denetlemeye zorla</string>
-    <string name="label_stats">Sayımlamalar</string>
+    <string name="label_stats">İstatistikler</string>
     <string name="label_started">Başladı</string>
     <string name="label_downloaded">İndirilen</string>
     <string name="label_total_chapters">Toplam</string>
@@ -770,7 +769,7 @@
     <string name="minute_short">%ddak</string>
     <string name="seconds_short">%dsn</string>
     <string name="action_not_now">Şimdi değil</string>
-    <string name="information_no_manga_category">Ulam boş</string>
+    <string name="information_no_manga_category">Kategori boş</string>
     <string name="pref_library_update_show_tab_badge">Güncellemeler simgesinde okunmayan sayısını göster</string>
     <string name="copied_to_clipboard_plain">Panoya kopyalandı</string>
     <string name="enhanced_services_not_installed">Kullanılabilir ancak kaynak kurulu değil: %s</string>
@@ -786,7 +785,7 @@
         <item quantity="other">Sonraki %d bölüm</item>
     </plurals>
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
-    <string name="action_update_category">Ulamı güncelle</string>
+    <string name="action_update_category">Kategoriyi güncelle</string>
     <string name="split_tall_images">Uzun görselleri otomatik böl</string>
     <string name="overlay_header">Kaplama</string>
     <plurals name="missing_chapters">
@@ -801,4 +800,11 @@
     <string name="pref_chapter_swipe_start">Sola kaydırma eylemi</string>
     <string name="pref_double_tap_zoom">Yakınlaştırmak için iki kez dokun</string>
     <string name="pref_library_columns_per_row">Satır başına %d</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d gün önce</item>
+        <item quantity="other">%d gün önce</item>
+    </plurals>
+    <string name="action_set_interval">Aralığı ayarlama</string>
+    <string name="action_filter_interval_custom">Özelleştirilmiş fetch aralığı</string>
+    <string name="action_filter_interval_long">Aylık getirme (28 gün)</string>
 </resources>

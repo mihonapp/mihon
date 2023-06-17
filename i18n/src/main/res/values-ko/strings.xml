@@ -472,7 +472,7 @@
     <string name="include">포함: %s</string>
     <string name="label_background_activity">백그라운드 활동</string>
     <string name="pref_update_only_completely_read">안 읽은 회차가 있을 때만</string>
-    <string name="categorized_display_settings">카테고리 별 표시/정렬 설정</string>
+    <string name="categorized_display_settings">카테고리 별 정렬 설정</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku를 확장기능 인스톨러로 사용하려면 Shizuku를 먼저 설치해 주세요.</string>
     <string name="ext_update_all">전부 업데이트</string>
     <string name="invalid_backup_file_missing_manga">백업에 항목이 포함되어 있지 않습니다.</string>
@@ -708,7 +708,6 @@
     <string name="are_you_sure">정말로 실행합니까\?</string>
     <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>
     <string name="action_search_hint">검색…</string>
-    <string name="pref_general_summary">앱 언어, 알림</string>
     <string name="pref_library_summary">카테고리, 전역 업데이트, 회차 스와이프</string>
     <string name="pref_reader_summary">읽기 모드, 디스플레이, 탐색</string>
     <string name="pref_tracking_summary">단방향 진행 동기화, 향상된 동기화</string>
@@ -786,4 +785,19 @@
     <string name="pref_chapter_swipe_end">오른쪽으로 스와이프 액션</string>
     <string name="pref_chapter_swipe">회차 스와이프</string>
     <string name="pref_double_tap_zoom">두 번 탭하여 줌</string>
+    <plurals name="day">
+        <item quantity="other">%d일</item>
+    </plurals>
+    <string name="action_set_interval">간격 설정</string>
+    <string name="action_filter_interval_custom">사용자 지정 가져오기 간격</string>
+    <string name="action_filter_interval_long">매월 가져오기 (28일)</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">%d일 후</item>
+    </plurals>
+    <string name="intervals_header">간격</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">%d일 전</item>
+    </plurals>
+    <string name="manga_modify_interval_title">간격 변경</string>
+    <string name="manga_modify_calculated_interval_title">간격 설정</string>
 </resources>

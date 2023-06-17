@@ -670,7 +670,6 @@
     <string name="pref_clear_webview_data">ওয়েবভিইউ ডাটা মুছুন</string>
     <string name="multi_lang">বহু</string>
     <string name="action_faq_and_guides">FAQ এবং নির্দেশনা</string>
-    <string name="pref_general_summary">অ্যাপ ভাষা, বিজ্ঞপ্তি</string>
     <string name="pref_library_summary">বিভাগসমূহ, সার্বজনীন হালনাগাদ</string>
     <string name="pref_app_language">অ্যাপ ভাষা</string>
     <string name="pref_appearance_summary">থিম,সময় ও তারিখের ধরন</string>

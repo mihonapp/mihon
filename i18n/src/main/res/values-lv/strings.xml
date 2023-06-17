@@ -753,7 +753,6 @@
     <string name="track_remove_start_date_conf_text">Tādējādi no %s tiks noņemts iepriekš atlasītais sākuma datums</string>
     <string name="overlay_header">Pārklājums</string>
     <string name="pref_security_summary">Aplikācijas slēdzis, ekrāna aizsargāšana</string>
-    <string name="pref_general_summary">Aplikācijas valoda, paziņojumi</string>
     <string name="action_copy_to_clipboard">Kopēt starpliktuvē</string>
     <string name="pref_downloads_summary">Automātiskā lejupielāde, lejupielādes rinda</string>
     <string name="pref_tracking_summary">Vienvirziena progresa sinhronizācija, uzlabota sinhronizācija</string>

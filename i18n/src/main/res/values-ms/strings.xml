@@ -708,7 +708,6 @@
     <string name="missing_storage_permission">Kebenaran storan tidak diberikan</string>
     <string name="skipped_reason_not_always_update">Dilangkau kerana siri tidak memerlukan kemas kini</string>
     <string name="action_search_hint">Cari…</string>
-    <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>
     <string name="pref_appearance_summary">Tema, tarikh &amp; format masa</string>
     <string name="pref_library_summary">Kategori, Kemas kini keseluruhan, leret bab</string>
     <string name="pref_reader_summary">Mod membaca, paparan, navigasi</string>
@@ -786,4 +785,10 @@
     <string name="pref_chapter_swipe">Leret bab</string>
     <string name="pref_double_tap_zoom">Ketik dua kali untuk zum</string>
     <string name="pref_chapter_swipe_start">Tindakan leret ke kiri</string>
+    <string name="action_set_interval">Tetapkan jarak masa</string>
+    <string name="action_filter_interval_custom">Jarak masa diambil tersuai</string>
+    <string name="action_filter_interval_long">Ambil bulanan (28 hari)</string>
+    <string name="action_filter_interval_late">Lewat semak 10+</string>
+    <string name="action_filter_interval_dropped">Diabaikan\? Lewat 20+ dan 2 bulan</string>
+    <string name="action_sort_next_updated">Kemas kini seterusnya dijangka</string>
 </resources>

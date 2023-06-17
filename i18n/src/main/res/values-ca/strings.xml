@@ -727,7 +727,6 @@
     <string name="unknown_title">Títol desconegut</string>
     <string name="updates_last_update_info_just_now">Ara mateix</string>
     <string name="download_ahead">Baixa per avançat</string>
-    <string name="pref_general_summary">Llengua de l\'aplicació i notificacions</string>
     <string name="pref_tracking_summary">Sincronització en un sentit o millorada</string>
     <string name="pref_browse_summary">Fonts, extensions i cerca global</string>
     <string name="pref_security_summary">Blocatge de l\'aplicació i mode discret</string>

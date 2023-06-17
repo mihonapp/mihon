@@ -731,7 +731,6 @@
     <string name="pref_browse_summary">स्रोत, विस्तार, वैश्विक खोज</string>
     <string name="invalid_location">अवैध स्थान: %s</string>
     <string name="action_update_category">श्रेणी अपडेट करें</string>
-    <string name="pref_general_summary">एप की भाषा, सूचनाएं</string>
     <string name="pref_appearance_summary">थीम, दिनांक और समय प्रारूप</string>
     <string name="pref_downloads_summary">स्वचालित डाउनलोड, आगे डाउनलोड करें</string>
     <string name="pref_library_update_show_tab_badge">नए अपडेट आइकन पर अपठित संख्या दिखाएं</string>

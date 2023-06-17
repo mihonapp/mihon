@@ -772,7 +772,6 @@
         <item quantity="other">Следећих %d непрочитаних поглавља</item>
     </plurals>
     <string name="action_not_now">Не сада</string>
-    <string name="pref_general_summary">Језик апликације, обавештења</string>
     <string name="pref_appearance_summary">Формат теме, датума и времена</string>
     <string name="pref_security_summary">Закључавање апликације, сигуран екран</string>
     <string name="pref_advanced_summary">Записници гашења апликације, оптимизације батерије</string>

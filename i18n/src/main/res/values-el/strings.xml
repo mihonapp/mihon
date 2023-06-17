@@ -567,7 +567,7 @@
     <string name="error_saving_cover">Σφάλμα αποθήκευσης εξωφύλλου</string>
     <string name="cover_saved">Το εξώφυλλο αποθηκεύτηκε</string>
     <string name="manga_cover">Εξώφυλλο</string>
-    <string name="categorized_display_settings">Ρυθμίσεις για ταξινόμηση και εμφάνιση ανά κατηγορία</string>
+    <string name="categorized_display_settings">Ρυθμίσεις για ταξινόμηση ανά κατηγορία</string>
     <string name="tracking_guide">Οδηγός tracking</string>
     <string name="information_empty_category_dialog">Δεν έχετε κατηγορίες ακόμα.</string>
     <string name="action_start_downloading_now">Έναρξη λήψης τώρα</string>
@@ -723,7 +723,6 @@
     <string name="action_search_hint">Αναζήτηση…</string>
     <string name="pref_browse_summary">Πηγές, επεκτάσεις, καθολική αναζήτηση</string>
     <string name="crash_screen_title">Ουπς!</string>
-    <string name="pref_general_summary">Γλώσσα εφαρμογής, ειδοποιήσεις</string>
     <string name="pref_appearance_summary">Θέμα, μορφή ημερομηνίας και ώρας</string>
     <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση, σύρσιμο κεφαλαίου</string>
     <string name="pref_reader_summary">Λειτουργία ανάγνωσης, οθόνη, πλοήγηση</string>

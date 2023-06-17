@@ -775,7 +775,6 @@
     <string name="pref_backup_summary">Sauvegardes manuelles et automatiques</string>
     <string name="pref_advanced_summary">Rapports de plantage, optimisations de la batterie</string>
     <string name="crash_screen_restart_application">Redémarrer l\'application</string>
-    <string name="pref_general_summary">Langage d\'application, notifications</string>
     <string name="pref_browse_summary">Sources, extensions, recherche globale</string>
     <string name="pref_library_summary">Catégories, mise à jour globale, faire glisser le chapitre</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>

@@ -585,7 +585,7 @@
     <string name="tracking_guide">Гайд відстежування</string>
     <string name="off">Вимкнено</string>
     <string name="on">Увімкнено</string>
-    <string name="categorized_display_settings">Налаштування сортування та відображення для кожної категорії</string>
+    <string name="categorized_display_settings">Налаштування сортування для кожної категорії</string>
     <string name="pref_library_update_refresh_trackers_summary">Оновлювати відстежуване при оновлені бібліотеки</string>
     <string name="pref_library_update_refresh_trackers">Автоматично оновлювати відстежуване</string>
     <string name="restrictions">Обмеження %s</string>
@@ -745,7 +745,6 @@
     <string name="popular">Популярне</string>
     <string name="auto_download_while_reading">Автоматичне завантаження під час читання</string>
     <string name="crash_screen_description">%s зіткнулися з неочікуваною помилкою. Ми пропонуємо вам поділитися журналами збоїв у нашому каналі підтримки на Discord.</string>
-    <string name="pref_general_summary">Мова застосунку, сповіщення</string>
     <string name="pref_appearance_summary">Тема, формат дати та часу</string>
     <string name="pref_library_summary">Категорії, глобальне оновлення, гортання розділів</string>
     <string name="pref_reader_summary">Режим читання, відображення, навігація</string>

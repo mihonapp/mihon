@@ -100,7 +100,6 @@
     <string name="action_newest">Eng yangi</string>
     <string name="loading">Yuklanmoqda…</string>
     <string name="internal_error">InternalError: Qo\'shimcha ma\'lumot uchun xatolar ro\'yhatini ko\'ring</string>
-    <string name="pref_general_summary">Ilova tili, bildirishnomalar</string>
     <string name="pref_theme_mode">Qorong\'u rejim</string>
     <string name="theme_light">O\'chiq</string>
     <string name="theme_greenapple">Yashil olma</string>

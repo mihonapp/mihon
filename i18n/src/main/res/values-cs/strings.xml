@@ -576,7 +576,7 @@
     <string name="manga_cover">Přebal</string>
     <string name="off">Vypnuto</string>
     <string name="on">Zapnuto</string>
-    <string name="categorized_display_settings">Nastavení zobrazení a řazení pro jednotlivé kategorie</string>
+    <string name="categorized_display_settings">Nastavení řazení pro jednotlivé kategorie</string>
     <string name="information_empty_category_dialog">Nemáte žádné kategorie.</string>
     <string name="action_start_downloading_now">Začít stahovat nyní</string>
     <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
@@ -734,7 +734,6 @@
     <string name="missing_storage_permission">Nebyla udělena oprávnění k úložišti</string>
     <string name="skipped_reason_not_always_update">Přeskočeno, protože série nevyžaduje aktualizace</string>
     <string name="action_search_hint">Vyhledat…</string>
-    <string name="pref_general_summary">Jazyk aplikace, oznámení</string>
     <string name="pref_reader_summary">Režim čtení, displej, navigace</string>
     <string name="pref_tracking_summary">Jednosměrná synchronizace postupu, rozšířená synchronizace</string>
     <string name="pref_appearance_summary">Téma, formát data a času</string>

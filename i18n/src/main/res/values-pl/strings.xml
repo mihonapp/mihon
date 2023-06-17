@@ -562,7 +562,7 @@
     <string name="pref_category_auto_download">Automatyczne pobieranie</string>
     <string name="rotation_landscape">Poziomo</string>
     <string name="rotation_portrait">Pionowo</string>
-    <string name="action_show_errors">Kliknij, by wyświetlić detale</string>
+    <string name="action_show_errors">Kliknij aby wyświetlić szczegóły</string>
     <string name="notification_incognito_text">Wyłącz tryb incognito</string>
     <string name="action_sort_chapter_fetch_date">Data pobrania rozdziału</string>
     <string name="error_no_match">Nie znaleziono pasującego wyniku</string>
@@ -588,7 +588,7 @@
     <string name="tracking_guide">Przewodnik śledzenia postępu</string>
     <string name="off">Wyłączone</string>
     <string name="on">Włączone</string>
-    <string name="categorized_display_settings">Ustawienia wyświetlania dla kategorii i sortowania</string>
+    <string name="categorized_display_settings">Ustawienia sortowania dla każdej kategorii</string>
     <string name="action_display_local_badge">Lokalne źródło</string>
     <string name="information_empty_category_dialog">Nie masz jeszcze żadnych kategorii.</string>
     <string name="restrictions">Ograniczenia: %s</string>
@@ -641,7 +641,7 @@
     <string name="ext_installer_shizuku_stopped">Shizuku nie jest aktywne</string>
     <string name="pref_verbose_logging_summary">Zapisuje szczegółowe logi w logu systemu (obniża wydajność aplikacji)</string>
     <string name="backup_info">Radzimy przechowywać kopie również w innych miejscach.</string>
-    <string name="action_sort_count">Ilość wpisów</string>
+    <string name="action_sort_count">Ilość wejść</string>
     <string name="action_display_language_badge">Język</string>
     <string name="label_warning">Ostrzeżenie</string>
     <string name="download_queue_size_warning">Ostrzeżenie: Duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł.</string>
@@ -669,12 +669,12 @@
     <string name="pref_update_only_started">Brak przeczytanych rozdziałów</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_landscape_zoom">Przybliżaj poziome obrazy</string>
-    <string name="action_show_manga">Pokaż wpis</string>
+    <string name="action_show_manga">Pokaż</string>
     <string name="pref_navigate_pan">Przesuń szeroki obraz</string>
     <string name="action_display_cover_only_grid">Siatka z samych okładek</string>
-    <string name="skipped_reason_not_started">Pominięto - brak przeczytanych rozdziałów</string>
-    <string name="skipped_reason_completed">Pominięto ponieważ seria została ukończona</string>
-    <string name="skipped_reason_not_caught_up">Pominięto ponieważ istnieją nieprzeczytane rozdziały</string>
+    <string name="skipped_reason_not_started">Pominięto, ponieważ brak przeczytanych rozdziałów</string>
+    <string name="skipped_reason_completed">Pominięto, ponieważ seria została ukończona</string>
+    <string name="skipped_reason_not_caught_up">Pominięto, ponieważ istnieją nieprzeczytane rozdziały</string>
     <string name="channel_skipped">Pominięty</string>
     <string name="notification_update_skipped">%1$d pominięto aktualizację(-e)</string>
     <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
@@ -753,7 +753,6 @@
     <string name="pref_reader_summary">Tryb czytania, wyświetl, nawigacja</string>
     <string name="invalid_location">Nieprawidłowa lokalizacja: %s</string>
     <string name="action_display_show_continue_reading_button">Przycisk wznów czytanie</string>
-    <string name="pref_general_summary">Język aplikacji, powiadomienia</string>
     <string name="pref_tracking_summary">Jednokierunkowa synchronizacja postępu, ulepszona synchronizacja</string>
     <string name="pref_browse_summary">Źródła, rozszerzenia, globalne wyszukiwanie</string>
     <string name="pref_security_summary">Blokada aplikacji, bezpieczny ekran</string>
@@ -831,4 +830,25 @@
     <string name="pref_chapter_swipe_end">Przesuń palcem w prawo</string>
     <string name="pref_chapter_swipe_start">Przesuń palcem w lewo</string>
     <string name="pref_chapter_swipe">Przesunięcie rozdziału</string>
+    <string name="action_set_interval">Ustaw interwał</string>
+    <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d dzień po</item>
+        <item quantity="few">%d dni po</item>
+        <item quantity="many">%d dni po</item>
+        <item quantity="other">%d dni po</item>
+    </plurals>
+    <string name="manga_display_modified_interval_title">Aktualizuj co</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d dzień przed</item>
+        <item quantity="few">%d dni przed</item>
+        <item quantity="many">%d dni przed</item>
+        <item quantity="other">%d dni przed</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 dzień</item>
+        <item quantity="few">%d dni</item>
+        <item quantity="many">%d dni</item>
+        <item quantity="other">%d dni</item>
+    </plurals>
 </resources>

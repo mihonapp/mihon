@@ -742,7 +742,6 @@
     <string name="multi_lang">Đa Ngôn Ngữ</string>
     <string name="skipped_reason_not_always_update">Bỏ qua vì loạt truyện không cần cập nhật</string>
     <string name="action_search_hint">Tìm kiếm…</string>
-    <string name="pref_general_summary">Ngôn ngữ ứng dụng, thông báo</string>
     <string name="pref_appearance_summary">Chủ đề, kiểu hiển thị ngày &amp; giờ</string>
     <string name="pref_library_summary">Danh mục, cập nhật toàn bộ, vuốt chương</string>
     <string name="pref_reader_summary">Dạng đọc, hiển thị, điều hướng</string>

@@ -723,7 +723,6 @@
     <string name="action_search_hint">Chirca…</string>
     <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu. Ti cussigiamus de cumpartzire sos registros de sas serraduras anòmalas in su canale de suportu nostru de Discord.</string>
     <string name="crash_screen_restart_application">Torra a allùghere s\'aplicatzione</string>
-    <string name="pref_general_summary">Limba de s\'aplicatzione, notìficas</string>
     <string name="pref_appearance_summary">Tema, data e formadu de s\'ora</string>
     <string name="pref_library_summary">Categorias, agiornamentos globales, iscurrimentu de capìtulos</string>
     <string name="pref_reader_summary">Modalidade de leghidura, aspetu, navigatzione</string>

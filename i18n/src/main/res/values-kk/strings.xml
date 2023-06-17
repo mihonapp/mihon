@@ -622,7 +622,6 @@
     <string name="not_installed">Орнатылмады</string>
     <string name="notification_chapters_multiple">%1$s Тарау</string>
     <string name="library_errors_help">Кітапхананы жаңарту қателіктерін жөндеу үшін %1$s</string>
-    <string name="pref_general_summary">Қолданба тілі, мәлімдемелер</string>
     <string name="pref_appearance_summary">Кейіп, күні мен уақыт пішімі</string>
     <string name="pref_library_summary">Санаттар, ауқымды жаңарту</string>
     <string name="pref_tracking_summary">Прогрессті біржақты синхрондау, кеңейтілген синхрондау</string>

@@ -14,7 +14,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_filter_bookmarked">Lesezeichen</string>
     <string name="action_filter_unread">Ungelesen</string>
-    <string name="action_filter_empty">Filter löschen</string>
+    <string name="action_filter_empty">Filter entfernen</string>
     <string name="action_sort_alpha">Alphabetisch</string>
     <string name="action_sort_total">Kapitelanzahl</string>
     <string name="action_sort_last_read">Zuletzt gelesen</string>
@@ -105,7 +105,7 @@
     <string name="scale_type_fit_height">Vertikal ausfüllen</string>
     <string name="scale_type_original_size">Orginalgröße</string>
     <string name="scale_type_smart_fit">Intelligentes Ausfüllen</string>
-    <string name="pref_zoom_start">Anfangsposition des Zooms</string>
+    <string name="pref_zoom_start">Anfangsposition der Vergrößerung</string>
     <string name="zoom_start_automatic">Automatisch</string>
     <string name="zoom_start_left">Links</string>
     <string name="zoom_start_right">Rechts</string>
@@ -567,7 +567,7 @@
     <string name="error_saving_cover">Fehler beim Speichern des Covers</string>
     <string name="cover_saved">Cover gespeichert</string>
     <string name="manga_cover">Cover</string>
-    <string name="categorized_display_settings">Sortierungs- und Anzeigeeinstellungen pro Kategorie</string>
+    <string name="categorized_display_settings">Sortierungseinstellungen pro Kategorie</string>
     <string name="tracking_guide">Tracking-Anleitung</string>
     <string name="information_empty_category_dialog">Du hast noch keine Kategorien.</string>
     <string name="action_start_downloading_now">Download jetzt starten</string>
@@ -721,7 +721,6 @@
     <string name="missing_storage_permission">Speicherberechtigungen nicht erteilt</string>
     <string name="skipped_reason_not_always_update">Übersprungen, da die Serie keine Aktualisierung benötigt</string>
     <string name="action_search_hint">Suchen…</string>
-    <string name="pref_general_summary">App-Sprache, Benachrichtigungen</string>
     <string name="pref_appearance_summary">Thema, Datums- und Zeitformat</string>
     <string name="pref_reader_summary">Lesemodus, Anzeige, Navigation</string>
     <string name="pref_downloads_summary">Automatische Downloads, im Voraus herunterladen</string>
@@ -824,4 +823,9 @@
     <string name="manga_modify_interval_title">Intervall ändern</string>
     <string name="skipped_reason_not_in_release_period">Übersprungen, da heute keine Veröffentlichung erwartet wurde</string>
     <string name="pref_update_release_grace_period_info">Ein niedriger Toleranzzeitraum wird empfohlen, um die Auslastung der Quellen zu minimieren. Je mehr Überprüfungen für einen Eintrag fehlschlagen, desto länger wird das Intervall zwischen den Überprüfungen, mit einem Maximum von 28 Tagen.</string>
+    <string name="manga_display_interval_title">Schätzt alle</string>
+    <string name="manga_display_modified_interval_title">Aktualisiert alle</string>
+    <string name="action_filter_interval_dropped">Abgebrochen\? Um 20+ Tage und 2 Monate verspätet</string>
+    <string name="action_filter_interval_passed">Überprüfungszeitraum überschritten</string>
+    <string name="action_filter_interval_late">Um 10+ Tage verspätet</string>
 </resources>

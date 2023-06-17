@@ -732,7 +732,6 @@
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
     <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
     <string name="crash_screen_title">Ay!</string>
-    <string name="pref_general_summary">Wika ng app, mga abiso</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
     <string name="invalid_location">Invalid na lugar: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
@@ -808,4 +807,23 @@
     <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
     <string name="action_filter_interval_passed">Pasadong pagsusuri ng panahon</string>
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">pagkatapos ng %d araw</item>
+        <item quantity="other">pagkatapos ng %d (mga) araw</item>
+    </plurals>
+    <string name="pref_update_release_grace_period">Inaasahang palugit na panahon ng release</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">bago ang %d araw</item>
+        <item quantity="other">bago ang %d (mga) araw</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 araw</item>
+        <item quantity="other">% (mga) araw</item>
+    </plurals>
+    <string name="manga_display_interval_title">Tantyahin bawat</string>
+    <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
+    <string name="pref_update_only_in_release_period">Sa labas ng inaasahang panahon ng release</string>
+    <string name="intervals_header">Mga pagitan</string>
+    <string name="manga_modify_interval_title">Baguhin bawat</string>
+    <string name="pref_update_release_grace_period_info">Ang isang mababang palugit na panahon ay inirerekomenda upang mabawasan ang stress sa mga source. Kung mas maraming tseke para sa isang entry na napalampas, mas mahaba ang pagitan sa pagitan ng mga tseke na may maximum na 28 araw.</string>
 </resources>

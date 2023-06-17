@@ -608,7 +608,7 @@
     <string name="manga_cover">غطاء</string>
     <string name="local_invalid_format">تنسيق الفصل غير صالح</string>
     <string name="tracking_guide">تعليمات التعقب</string>
-    <string name="categorized_display_settings">اعدادات فرز والعرض لكل صنف</string>
+    <string name="categorized_display_settings">إعدادات فرز كل صنف</string>
     <string name="pref_library_update_refresh_trackers_summary">تحديث المتعقبات عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_trackers">تحديث المتعقبات تلقائياً</string>
     <string name="cancel_all_for_series">إلغاء الكل لهذه السلسلة</string>
@@ -776,7 +776,6 @@
     <string name="crash_screen_description">واجه %s خطأً غير متوقَّع. تنبغي لك مشاركة سجلَّات الانهيار في قناة الدعم في دسكورد.</string>
     <string name="crash_screen_title">عفوًا!</string>
     <string name="crash_screen_restart_application">أعد تشغيل التطبيق</string>
-    <string name="pref_general_summary">لغة التطبيق، الإشعارات</string>
     <string name="pref_appearance_summary">مظهر، التاريخ والوقت</string>
     <string name="pref_library_summary">الفئات، التحديث الشامل، تمرير الفصول</string>
     <string name="pref_reader_summary">وضع القراءة، العرض، التنقل</string>

@@ -173,7 +173,6 @@
     <string name="delete_category_confirmation">మీరు \"%s\" క్యాటగిరీ తీసివేయాలి అనుకుంటున్నారా\?</string>
     <string name="delete_category">క్యాటగిరీ తీసేయండి</string>
     <string name="action_move_to_top_all_for_series">సిరీస్ పైన పెట్టండి</string>
-    <string name="pref_general_summary">యాప్ భాష, నోటిఫికేషన్‌లు</string>
     <string name="action_search_hint">అన్వేషించండి…</string>
     <string name="action_not_now">ఇప్పుడు కాదు</string>
     <string name="action_open_random_manga">"ఏదైనా  తెరవండి"</string>

@@ -624,7 +624,7 @@
     <string name="automatic_background">Automático</string>
     <string name="off">No</string>
     <string name="on">Sí</string>
-    <string name="categorized_display_settings">Ajustes propios de ordenar y mostrar para cada categoría</string>
+    <string name="categorized_display_settings">Establecer el tipo de orden para cada categoría</string>
     <string name="pref_library_update_refresh_trackers_summary">Actualizar los servicios de seguimiento al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_trackers">Actualizar automáticamente los servicios de seguimiento</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
@@ -770,7 +770,6 @@
     <string name="pref_library_summary">Categorías, actualizaciones generales y acciones al deslizar el dedo</string>
     <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que compartas todos tus registros de depuración, enviándolos a nuestro canal de apoyo en Discord, en inglés.</string>
     <string name="pref_reader_summary">Modos de lectura, apariencia y navegación</string>
-    <string name="pref_general_summary">Idioma de la interfaz y notificaciones</string>
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
     <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>
     <string name="pref_security_summary">Pantalla segura y desbloqueo biométrico</string>

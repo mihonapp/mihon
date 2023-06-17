@@ -54,7 +54,7 @@
     <string name="action_reset">Atur ulang</string>
     <string name="action_undo">Kembalikan</string>
     <string name="action_open_log">Buka log</string>
-    <string name="name">Nama</string>
+    <string name="name">Ultimate Legend: Kang Hae Hyo</string>
     <string name="action_display_grid">Grid kompak</string>
     <string name="action_restore">Pulihkan</string>
     <string name="loading">Memuat…</string>
@@ -555,7 +555,7 @@
     <string name="off">Nonaktif</string>
     <string name="on">Aktif</string>
     <string name="tracking_guide">Panduan pelacakan</string>
-    <string name="categorized_display_settings">Pengaturan per-kategori untuk tampilan dan urutan</string>
+    <string name="categorized_display_settings">Pengaturan per-kategori untuk urutan</string>
     <string name="information_empty_category_dialog">Anda belum memiliki kategori apapun.</string>
     <string name="action_start_downloading_now">Mulai mengunduh sekarang</string>
     <string name="about_dont_kill_my_app">Beberapa pabrikan mempunyai batasan aplikasi tambahan yang mematikan layanan latar belakang. Website ini memiliki info lebih lanjut untuk memperbaikinya.</string>
@@ -714,7 +714,6 @@
     <string name="crash_screen_description">%s mengalami kesalahan tak terduga. Kami menyarankan Anda membagi log kerusakan di saluran dukungan kami di Discord.</string>
     <string name="pref_downloads_summary">Unduh otomatis, unduh di depan</string>
     <string name="pref_security_summary">Kunci aplikasi, layar aman</string>
-    <string name="pref_general_summary">Bahasa aplikasi, notifikasi</string>
     <string name="pref_appearance_summary">Tema, format tanggal &amp; waktu</string>
     <string name="pref_library_summary">Kategori, pembaruan global, geser chapter</string>
     <string name="pref_backup_summary">Pencadangan manual &amp; otomatis</string>

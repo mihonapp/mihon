@@ -724,7 +724,6 @@
     <string name="label_started">Empezados</string>
     <string name="label_local">Local</string>
     <string name="label_downloaded">Descargados</string>
-    <string name="pref_general_summary">Idioma aplicación, notificaciones</string>
     <string name="action_not_now">No ahora</string>
     <string name="action_open_random_manga">Abrir manga aleatorio</string>
     <string name="skipped_reason_not_always_update">Saltado porque el manga no requiere actualización</string>

@@ -715,7 +715,6 @@
     <string name="crash_screen_title">おっと！</string>
     <string name="updates_last_update_info_just_now">ちょうど今</string>
     <string name="crash_screen_restart_application">アプリケーションを再起動</string>
-    <string name="pref_general_summary">アプリの言語、通知</string>
     <string name="pref_reader_summary">ビューアモード、表示、ナビゲーション</string>
     <string name="pref_downloads_summary">自動ダウンロード、事前ダウンロード</string>
     <string name="pref_tracking_summary">一方同期、高度な同期</string>

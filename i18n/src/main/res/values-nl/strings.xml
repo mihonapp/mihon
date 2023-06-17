@@ -700,7 +700,6 @@
     <string name="label_downloaded">Gedownload</string>
     <string name="action_not_now">Niet nu</string>
     <string name="action_open_random_manga">Willekeurige openen</string>
-    <string name="pref_general_summary">App-taal, meldingen</string>
     <string name="pref_appearance_summary">Thema, datum- en tijdnotatie</string>
     <string name="pref_library_summary">Categorieën, globaal bijwerken</string>
     <string name="pref_reader_summary">Leesmodus, weergave, navigatie</string>

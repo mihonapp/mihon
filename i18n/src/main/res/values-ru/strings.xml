@@ -589,7 +589,7 @@
     <string name="error_saving_cover">Ошибка сохранения обложки</string>
     <string name="cover_saved">Обложка сохранена</string>
     <string name="manga_cover">Обложка</string>
-    <string name="categorized_display_settings">Каждая категория имеет собственные настройки</string>
+    <string name="categorized_display_settings">Каждая категория имеет собственные настройки сортировки</string>
     <string name="tracking_guide">Руководство по отслеживанию</string>
     <string name="information_empty_category_dialog">Ваша библиотека не имеет категорий.</string>
     <string name="action_start_downloading_now">Начать загрузку сейчас</string>
@@ -748,7 +748,6 @@
     <string name="skipped_reason_not_always_update">Пропущено, т.к серия не нуждается в обновлении</string>
     <string name="action_search_hint">Искать…</string>
     <string name="crash_screen_restart_application">Перезапустить приложение</string>
-    <string name="pref_general_summary">Язык приложения, уведомления</string>
     <string name="pref_appearance_summary">Тема, формат даты и времени</string>
     <string name="pref_library_summary">Категории, глобальное обновление, перелистывание глав</string>
     <string name="pref_reader_summary">Режим чтения, отображение, навигация</string>

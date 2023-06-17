@@ -549,7 +549,7 @@
     <string name="library_errors_help">สำหรับความช่วยเหลือเกี่ยวกับวิธีการแก้ไขข้อผิดพลาดในการอัปเดตคลัง ไปยัง %1$s</string>
     <string name="local_filter_order_by">เรียงตาม</string>
     <string name="date">วันที่</string>
-    <string name="categorized_display_settings">การตั้งค่าตามหมวดหมู่สำหรับการจัดเรียงและแสดงผล</string>
+    <string name="categorized_display_settings">การตั้งค่าการจัดเรียงตามหมวดหมู่</string>
     <string name="ext_install_service_notif">กำลังติดตั้งส่วนขยาย…</string>
     <string name="pref_hide_threshold">ความเร็วในการซ่อนเมนูบนเมื่อเลื่อน</string>
     <string name="restore_miui_warning">การสำรอง/กู้คืนอาจทำงานไม่ถูกต้องหากปิดใช้งานการเพิ่มประสิทธิภาพ MIUI</string>
@@ -708,7 +708,6 @@
     <string name="missing_storage_permission">ไม่ได้รับการอนุญาตให้ใช้งานที่จัดเก็บ</string>
     <string name="action_search_hint">ค้นหา…</string>
     <string name="skipped_reason_not_always_update">ถูกข้ามเนื่องจากเรื่องไม่จำเป็นต้องถูกอัปเดต</string>
-    <string name="pref_general_summary">ภาษาของแอป, การแจ้งเตือน</string>
     <string name="pref_appearance_summary">ธีม, รูปแบบวันที่และเวลา</string>
     <string name="pref_library_summary">หมวดหมู่, การอัปเดตคลัง, การปัดรายการตอน</string>
     <string name="pref_reader_summary">โหมดการอ่าน, การแสดงผล, การนำทาง</string>

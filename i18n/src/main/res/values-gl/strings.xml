@@ -354,7 +354,6 @@
     <string name="pref_download_new_categories_details">Os elementos das categorías excluídas non se baixarán aínda se están en categorías incluídas.</string>
     <string name="pref_low">Baixa</string>
     <string name="creating_backup">Creando a copia de seguridade</string>
-    <string name="pref_general_summary">Idioma da interface, notificacións</string>
     <string name="pref_library_summary">Categorías, actualización global, accións ao arrastrar</string>
     <string name="pref_reader_summary">Modo de lectura, aparencia e navegación</string>
     <string name="pref_downloads_summary">Baixadas automáticas e por adiantado</string>

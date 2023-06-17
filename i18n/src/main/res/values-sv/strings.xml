@@ -731,7 +731,6 @@
     <string name="missing_storage_permission">Lagrings rättigheter inte tillagda</string>
     <string name="skipped_reason_not_always_update">Hoppat över för att serien inte behöver uppdateras</string>
     <string name="crash_screen_description">%s stötte på ett oväntat fel. Vi föreslår att du delar med dig av kraschloggen i vår supportkanal på Discord.</string>
-    <string name="pref_general_summary">Appspråk, notifikationer</string>
     <string name="pref_appearance_summary">Tema, datum och tids format</string>
     <string name="pref_browse_summary">Källor, tillägg, global sökning</string>
     <string name="crash_screen_restart_application">Starta om applikationen</string>

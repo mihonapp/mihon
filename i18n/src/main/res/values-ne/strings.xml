@@ -263,7 +263,7 @@
     <string name="action_display_language_badge">भाषा</string>
     <string name="parental_controls_info">यसले अनौपचारिक वा सम्भावित रूपमा गलत रूपमा फ्ल्याग गरिएका एक्सटेन्शनहरूलाई एप भित्र NSFW (१८+) सामग्री आउन बाट रोक्दैन।</string>
     <string name="default_category">पूर्वनिर्धारित वर्ग</string>
-    <string name="categorized_display_settings">क्रमबद्ध र प्रदर्शनको लागि प्रति-वर्गका सेटिङहरू</string>
+    <string name="categorized_display_settings">क्रमबद्धका लागि प्रति-वर्ग सेटिङहरू</string>
     <string name="include">समावेश गर्नुहोस्: %s</string>
     <string name="pref_library_update_categories_details">\"बहिष्कृत\" वर्गहरूमा रहेका इन्ट्री \"समावेश गरिएका\" वर्गहरूमा भए पनि अपडेट हुने छैनन्।</string>
     <string name="ext_app_info">एप जानकारी</string>
@@ -745,7 +745,6 @@
     <string name="track_remove_date_conf_title">मिति हटाउने हो\?</string>
     <string name="track_remove_start_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको सुरु मिति हटाउनेछ</string>
     <string name="track_remove_finish_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको समाप्त मिति हटाउनेछ</string>
-    <string name="pref_general_summary">एप को भाषा, सूचनाहरू</string>
     <string name="update_already_running">एउटा अपडेट पहिले नै जारी छ</string>
     <string name="empty_screen">ल, यो के भयो</string>
     <string name="not_installed">स्थापना गरिएको छैन</string>

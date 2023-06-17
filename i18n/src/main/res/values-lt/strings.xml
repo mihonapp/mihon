@@ -734,7 +734,6 @@
     <string name="pref_downloads_summary">Automatinis atsisiuntimas, atsisiuntimas į priekį</string>
     <string name="pref_backup_summary">Rankinės ir automatinės atsarginės kopijos</string>
     <string name="pref_security_summary">Programos užraktas, saugus ekranas</string>
-    <string name="pref_general_summary">Programos kalba, pranešimai</string>
     <string name="pref_appearance_summary">Tema, datos ir laiko formatas</string>
     <string name="pref_reader_summary">Skaitymo režimas, rodymas, navigacija</string>
     <string name="pref_tracking_summary">Vienpusis progreso sinchronizavimas, patobulintas sinchronizavimas</string>

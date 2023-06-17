@@ -736,7 +736,6 @@
     <string name="pref_verbose_logging">Consemnare verbală</string>
     <string name="crash_screen_description">%s a întâmpinat o eroare neașteptată. Vă sugerăm să faceți o captură de ecran a acestui mesaj, să descărcați registrele de erori și apoi să le partajați prin intermediul canalului nostru de asistență pe Discord.</string>
     <string name="appwidget_unavailable_locked">Widgetul nu este disponibil atunci când este activată blocarea aplicației</string>
-    <string name="pref_general_summary">Limba aplicației, notificări</string>
     <string name="pref_appearance_summary">Tema, formatul datei și al orei</string>
     <string name="pref_library_summary">Categorii, actualizări globale</string>
     <string name="pref_reader_summary">Modul de citire, afișare, navigare</string>

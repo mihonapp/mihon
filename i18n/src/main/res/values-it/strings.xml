@@ -604,7 +604,7 @@
     <string name="error_saving_cover">Errore nel salvataggio della copertina</string>
     <string name="cover_saved">Copertina salvata</string>
     <string name="unread">Non letti</string>
-    <string name="categorized_display_settings">Impostazioni di ordinamento e visualizzazione per categoria</string>
+    <string name="categorized_display_settings">Impostazioni di ordinamento per categoria</string>
     <string name="information_empty_category_dialog">Non hai ancora nessuna categoria.</string>
     <string name="on">Attivo</string>
     <string name="restrictions">Restrizioni: %s</string>
@@ -767,7 +767,6 @@
     <string name="missing_storage_permission">Autorizzazioni per l\'archiviazione non concesse</string>
     <string name="skipped_reason_not_always_update">Saltato perché la serie non richiede aggiornamenti</string>
     <string name="action_search_hint">Ricerca…</string>
-    <string name="pref_general_summary">Lingua dell\'app, notifiche</string>
     <string name="pref_appearance_summary">Tema, formato data e ora</string>
     <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di condividere il registro degli arresti anomali nel nostro canale di supporto su Discord.</string>
     <string name="pref_library_summary">Categorie, aggiornamenti globali, azioni di scorrimento capitoli</string>

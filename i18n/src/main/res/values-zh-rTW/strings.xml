@@ -3,7 +3,7 @@
     <string name="categories">類別</string>
     <string name="manga">藏書</string>
     <string name="chapters">章節</string>
-    <string name="history">記錄</string>
+    <string name="history">歷史記錄</string>
     <string name="label_settings">設定</string>
     <string name="label_download_queue">下載佇列</string>
     <string name="label_library">書櫃</string>
@@ -565,7 +565,7 @@
     <string name="enhanced_tracking_info">為特定來源提供增強功能的服務。當作品被加入書櫃時，將自動登錄閱讀歷程。</string>
     <string name="enhanced_services">增強服務</string>
     <string name="tracking_guide">歷程平台說明</string>
-    <string name="categorized_display_settings">獨立各類別的排序和檢視設定</string>
+    <string name="categorized_display_settings">獨立各類別的排序方式</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
     <string name="theme_yinyang">陰陽</string>
@@ -703,13 +703,12 @@
     <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
     <string name="multi_lang">多語</string>
     <string name="remove_manga">即將從書櫃中移除《%s》</string>
-    <string name="updates_last_update_info">書櫃更新於：%s</string>
+    <string name="updates_last_update_info">最近一次更新書櫃：%s</string>
     <string name="popular">熱門</string>
     <string name="missing_storage_permission">未被授予儲存空間權限</string>
     <string name="skipped_reason_not_always_update">由於叢書無須更新，因此略過</string>
     <string name="action_search_hint">搜尋…</string>
     <string name="pref_reader_summary">閱讀模式、檢視、導覽</string>
-    <string name="pref_general_summary">應用程式語言、通知</string>
     <string name="pref_appearance_summary">主題、日期格式</string>
     <string name="pref_downloads_summary">自動下載、預先下載</string>
     <string name="pref_tracking_summary">單向進度同步、增強式同步</string>

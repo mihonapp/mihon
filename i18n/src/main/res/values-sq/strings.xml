@@ -25,7 +25,6 @@
     <string name="action_webview_forward">Përpara</string>
     <string name="action_webview_refresh">Rifresko</string>
     <string name="app_not_available">Aplikacioni i padisponueshem</string>
-    <string name="pref_general_summary">Gjuha e aplikacionit, njoftimet</string>
     <string name="pref_downloads_summary">Shkarkim automatik, shkarko përpara</string>
     <string name="pref_theme_mode">Modaliteti i errët</string>
     <string name="theme_dark">Aktiv</string>
