@@ -58,7 +58,7 @@ flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.2"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.3"
 compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
