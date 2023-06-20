@@ -63,7 +63,7 @@ compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.9.7"
+acra-http = "ch.acra:acra-http:5.10.1"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
