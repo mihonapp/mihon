@@ -1,6 +1,7 @@
 [versions]
 agp_version = "8.0.2"
 lifecycle_version = "2.6.1"
+paging_version = "3.2.0-rc01"
 
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
@@ -23,8 +24,8 @@ lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", ve
 work-runtime = "androidx.work:work-runtime-ktx:2.8.1"
 guava = "com.google.guava:guava:31.1-android"
 
-paging-runtime = "androidx.paging:paging-runtime:3.1.1"
-paging-compose = "androidx.paging:paging-compose:1.0.0-alpha20"
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.1.1"
 test-ext = "androidx.test.ext:junit-ktx:1.1.5"
