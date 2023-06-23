@@ -22,7 +22,7 @@ lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.r
 lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
 
 work-runtime = "androidx.work:work-runtime-ktx:2.8.1"
-guava = "com.google.guava:guava:31.1-android"
+guava = "com.google.guava:guava:32.0.1-android"
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }

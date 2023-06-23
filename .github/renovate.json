@@ -3,8 +3,11 @@
     "config:base"
   ],
   "schedule": ["every sunday"],
-  "ignoreDeps": [
-    "com.android.tools:r8",
-    "com.google.guava:guava"
+  "packageRules": [
+    {
+      "managers": ["maven"],
+      "packageNames": ["com.google.guava:guava"],
+      "versionScheme": "docker"
+    }
   ]
 }
