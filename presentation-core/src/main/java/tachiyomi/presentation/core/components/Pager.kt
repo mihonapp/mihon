@@ -30,7 +30,8 @@ fun HorizontalPager(
     reverseLayout: Boolean = false,
     key: ((index: Int) -> Any)? = null,
     pageNestedScrollConnection: NestedScrollConnection = PagerDefaults.pageNestedScrollConnection(
-        Orientation.Horizontal,
+        state = state,
+        orientation = Orientation.Horizontal,
     ),
     pageContent: @Composable PagerScope.(page: Int) -> Unit,
 ) {
