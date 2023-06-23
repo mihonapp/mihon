@@ -30,7 +30,8 @@ dependencies {
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.animation.graphics)
-    implementation(compose.ui.tooling)
+    debugImplementation(compose.ui.tooling)
+    implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
 }
 
