@@ -245,7 +245,7 @@ private fun Modifier.commonClickable(
 ) = composed {
     val haptic = LocalHapticFeedback.current
 
-    this.combinedClickable(
+    Modifier.combinedClickable(
         enabled = enabled,
         onLongClick = {
             onLongClick()
