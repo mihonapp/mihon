@@ -110,6 +110,27 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         }
     }
 
+    suspend fun deleteLibManga(track: Track): Track {
+        return withIOContext {
+            val query = """
+            |mutation DeleteManga(${'$'}listId: Int) {
+                |DeleteMediaListEntry(id: ${'$'}listId) { 
+                    |deleted
+                |} 
+            |}
+            |
+            """.trimMargin()
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("listId", track.library_id)
+                }
+            }
+            authClient.newCall(POST(apiUrl, body = payload.toString().toRequestBody(jsonMime)))
+                .awaitSuccess()
+            track
+        }
+    }
     suspend fun search(search: String): List<TrackSearch> {
         return withIOContext {
             val query = """

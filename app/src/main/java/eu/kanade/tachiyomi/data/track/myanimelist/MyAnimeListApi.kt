@@ -158,6 +158,20 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
         }
     }
 
+    suspend fun deleteItem(track: Track): Track {
+        return withIOContext {
+            val request = Request.Builder()
+                .url(mangaUrl(track.media_id).toString())
+                .delete()
+                .build()
+            with(json) {
+                authClient.newCall(request)
+                    .awaitSuccess()
+                track
+            }
+        }
+    }
+
     suspend fun findListItem(track: Track): Track? {
         return withIOContext {
             val uri = "$baseApiUrl/manga".toUri().buildUpon()

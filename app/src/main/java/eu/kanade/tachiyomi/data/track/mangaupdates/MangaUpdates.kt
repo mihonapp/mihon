@@ -4,12 +4,13 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.copyTo
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.toTrackSearch
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 
-class MangaUpdates(id: Long) : TrackService(id) {
+class MangaUpdates(id: Long) : TrackService(id), DeletableTrackService {
 
     companion object {
         const val READING_LIST = 0
@@ -63,6 +64,11 @@ class MangaUpdates(id: Long) : TrackService(id) {
             track.status = READING_LIST
         }
         api.updateSeriesListItem(track)
+        return track
+    }
+
+    override suspend fun delete(track: Track): Track {
+        api.deleteSeriesFromList(track)
         return track
     }
 

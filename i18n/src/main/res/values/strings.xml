@@ -124,6 +124,7 @@
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
     <string name="action_cancel_all">Cancel all</string>
     <string name="cancel_all_for_series">Cancel all for this series</string>
     <string name="action_sort">Sort</string>
@@ -754,6 +755,9 @@
     <string name="track_remove_date_conf_title">Remove date?</string>
     <string name="track_remove_start_date_conf_text">This will remove your previously selected start date from %s</string>
     <string name="track_remove_finish_date_conf_text">This will remove your previously selected finish date from %s</string>
+    <string name="track_delete_title">Remove %s tracking?</string>
+    <string name="track_delete_text">This will remove the tracking locally.</string>
+    <string name="track_delete_remote_text">Also remove from %s</string>
 
     <!-- Category activity -->
     <string name="error_category_exists">A category with this name already exists!</string>

@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.decodeFromString
@@ -11,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Shikimori(id: Long) : TrackService(id) {
+class Shikimori(id: Long) : TrackService(id), DeletableTrackService {
 
     companion object {
         const val READING = 1
@@ -57,6 +58,10 @@ class Shikimori(id: Long) : TrackService(id) {
         return api.updateLibManga(track, getUsername())
     }
 
+    override suspend fun delete(track: Track): Track {
+        return api.deleteLibManga(track)
+    }
+
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.findLibManga(track, getUsername())
         return if (remoteTrack != null) {
@@ -83,6 +88,7 @@ class Shikimori(id: Long) : TrackService(id) {
 
     override suspend fun refresh(track: Track): Track {
         api.findLibManga(track, getUsername())?.let { remoteTrack ->
+            track.library_id = remoteTrack.library_id
             track.copyPersonalFrom(remoteTrack)
             track.total_chapters = remoteTrack.total_chapters
         }

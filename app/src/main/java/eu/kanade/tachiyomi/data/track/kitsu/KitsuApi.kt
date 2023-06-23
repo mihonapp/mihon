@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.network.DELETE
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -123,6 +124,21 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         }
     }
 
+    suspend fun removeLibManga(track: Track): Track {
+        return withIOContext {
+            authClient.newCall(
+                DELETE(
+                    "${baseUrl}library-entries/${track.media_id}",
+                    headers = headersOf(
+                        "Content-Type",
+                        "application/vnd.api+json",
+                    ),
+                ),
+            )
+                .awaitSuccess()
+            track
+        }
+    }
     suspend fun search(query: String): List<TrackSearch> {
         return withIOContext {
             with(json) {

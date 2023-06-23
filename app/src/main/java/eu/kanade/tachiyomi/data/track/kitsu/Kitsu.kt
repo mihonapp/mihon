@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.decodeFromString
@@ -12,7 +13,7 @@ import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
 
-class Kitsu(id: Long) : TrackService(id) {
+class Kitsu(id: Long) : TrackService(id), DeletableTrackService {
 
     companion object {
         const val READING = 1
@@ -91,6 +92,10 @@ class Kitsu(id: Long) : TrackService(id) {
         }
 
         return api.updateLibManga(track)
+    }
+
+    override suspend fun delete(track: Track): Track {
+        return api.removeLibManga(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

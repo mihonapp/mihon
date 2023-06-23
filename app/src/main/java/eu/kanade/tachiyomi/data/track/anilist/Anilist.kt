@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.decodeFromString
@@ -12,7 +13,7 @@ import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : TrackService(id) {
+class Anilist(id: Long) : TrackService(id), DeletableTrackService {
 
     companion object {
         const val READING = 1
@@ -165,6 +166,15 @@ class Anilist(id: Long) : TrackService(id) {
         }
 
         return api.updateLibManga(track)
+    }
+
+    override suspend fun delete(track: Track): Track {
+        if (track.library_id == null || track.library_id!! == 0L) {
+            val libManga = api.findLibManga(track, getUsername().toInt()) ?: return track
+            track.library_id = libManga.library_id
+        }
+
+        return api.deleteLibManga(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

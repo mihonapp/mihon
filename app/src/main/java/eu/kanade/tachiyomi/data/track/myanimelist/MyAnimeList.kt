@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.decodeFromString
@@ -11,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class MyAnimeList(id: Long) : TrackService(id) {
+class MyAnimeList(id: Long) : TrackService(id), DeletableTrackService {
 
     companion object {
         const val READING = 1
@@ -88,6 +89,10 @@ class MyAnimeList(id: Long) : TrackService(id) {
         }
 
         return api.updateItem(track)
+    }
+
+    override suspend fun delete(track: Track): Track {
+        return api.deleteItem(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

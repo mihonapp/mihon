@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.manga.track
 import android.app.Application
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,7 @@ import eu.kanade.presentation.track.TrackServiceSearch
 import eu.kanade.presentation.track.TrackStatusSelector
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -157,7 +160,16 @@ data class TrackInfoDialogHomeScreen(
                 }
             },
             onOpenInBrowser = { openTrackerInBrowser(context, it) },
-        ) { sm.unregisterTracking(it.service.id) }
+            onRemoved = {
+                navigator.push(
+                    TrackServiceRemoveScreen(
+                        mangaId = mangaId,
+                        track = it.track!!,
+                        serviceId = it.service.id,
+                    ),
+                )
+            },
+        )
     }
 
     /**
@@ -174,7 +186,6 @@ data class TrackInfoDialogHomeScreen(
         private val mangaId: Long,
         private val sourceId: Long,
         private val getTracks: GetTracks = Injekt.get(),
-        private val deleteTrack: DeleteTrack = Injekt.get(),
     ) : StateScreenModel<Model.State>(State()) {
 
         init {
@@ -202,10 +213,6 @@ data class TrackInfoDialogHomeScreen(
                     withUIContext { Injekt.get<Application>().toast(R.string.error_no_match) }
                 }
             }
-        }
-
-        fun unregisterTracking(serviceId: Long) {
-            coroutineScope.launchNonCancellable { deleteTrack.await(mangaId, serviceId) }
         }
 
         private suspend fun refreshTrackers() {
@@ -721,5 +728,102 @@ data class TrackServiceSearchScreen(
             val queryResult: Result<List<TrackSearch>>? = null,
             val selected: TrackSearch? = null,
         )
+    }
+}
+
+private data class TrackServiceRemoveScreen(
+    private val mangaId: Long,
+    private val track: Track,
+    private val serviceId: Long,
+) : Screen() {
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val sm = rememberScreenModel {
+            Model(
+                mangaId = mangaId,
+                track = track,
+                service = Injekt.get<TrackManager>().getService(serviceId)!!,
+            )
+        }
+        val serviceName = stringResource(sm.getServiceNameRes())
+        var removeRemoteTrack by remember { mutableStateOf(false) }
+        AlertDialogContent(
+            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null,
+                )
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.track_delete_title, serviceName),
+                    textAlign = TextAlign.Center,
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.track_delete_text, serviceName),
+                    )
+                    if (sm.isServiceDeletable()) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(checked = removeRemoteTrack, onCheckedChange = { removeRemoteTrack = it })
+                            Text(text = stringResource(R.string.track_delete_remote_text, serviceName))
+                        }
+                    }
+                }
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        MaterialTheme.padding.small,
+                        Alignment.End,
+                    ),
+                ) {
+                    TextButton(onClick = navigator::pop) {
+                        Text(text = stringResource(R.string.action_cancel))
+                    }
+                    FilledTonalButton(
+                        onClick = {
+                            sm.unregisterTracking(serviceId)
+                            if (removeRemoteTrack) sm.deleteMangaFromService()
+                            navigator.pop()
+                        },
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        ),
+                    ) {
+                        Text(text = stringResource(R.string.action_ok))
+                    }
+                }
+            },
+        )
+    }
+
+    private class Model(
+        private val mangaId: Long,
+        private val track: Track,
+        private val service: TrackService,
+        private val deleteTrack: DeleteTrack = Injekt.get(),
+    ) : ScreenModel {
+
+        fun getServiceNameRes() = service.nameRes()
+
+        fun isServiceDeletable() = service is DeletableTrackService
+
+        fun deleteMangaFromService() {
+            coroutineScope.launchNonCancellable {
+                (service as DeletableTrackService).delete(track.toDbTrack())
+            }
+        }
+
+        fun unregisterTracking(serviceId: Long) {
+            coroutineScope.launchNonCancellable { deleteTrack.await(mangaId, serviceId) }
+        }
     }
 }
