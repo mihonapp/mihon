@@ -16,8 +16,8 @@ fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
     listOfNotNull(
         comicInfo.genre?.value,
         comicInfo.tags?.value,
+        comicInfo.categories?.value,
     )
-        .flatMap { it.split(", ") }
         .distinct()
         .joinToString(", ") { it.trim() }
         .takeIf { it.isNotEmpty() }
@@ -57,6 +57,7 @@ data class ComicInfo(
     val tags: Tags?,
     val web: Web?,
     val publishingStatus: PublishingStatusTachiyomi?,
+    val categories: CategoriesTachiyomi?,
 ) {
     @Suppress("UNUSED")
     @XmlElement(false)
@@ -128,6 +129,10 @@ data class ComicInfo(
     @Serializable
     @XmlSerialName("PublishingStatusTachiyomi", "http://www.w3.org/2001/XMLSchema", "ty")
     data class PublishingStatusTachiyomi(@XmlValue(true) val value: String = "")
+
+    @Serializable
+    @XmlSerialName("Categories", "http://www.w3.org/2001/XMLSchema", "ty")
+    data class CategoriesTachiyomi(@XmlValue(true) val value: String = "")
 }
 
 enum class ComicInfoPublishingStatus(
