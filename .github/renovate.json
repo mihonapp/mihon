@@ -4,7 +4,6 @@
   ],
   "schedule": ["every sunday"],
   "ignoreDeps": [
-    "androidx.core:core-splashscreen",
     "com.android.tools:r8",
     "com.google.guava:guava"
   ]
