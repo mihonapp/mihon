@@ -11,6 +11,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.structuralEqualityPolicy
+import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
@@ -24,10 +25,12 @@ import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
 import eu.kanade.presentation.util.collectAsState
 import kotlinx.coroutines.launch
 import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.presentation.core.components.SliderItem
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 val LocalPreferenceHighlighted = compositionLocalOf(structuralEqualityPolicy()) { false }
+val LocalPreferenceMinHeight = compositionLocalOf(structuralEqualityPolicy()) { 56.dp }
 
 @Composable
 fun StatusWrapper(
@@ -73,6 +76,21 @@ internal fun PreferenceItem(
                             if (item.onValueChanged(newValue)) {
                                 item.pref.set(newValue)
                             }
+                        }
+                    },
+                )
+            }
+            is Preference.PreferenceItem.SliderPreference -> {
+                // TODO: use different composable?
+                SliderItem(
+                    label = item.title,
+                    min = item.min,
+                    max = item.max,
+                    value = item.value,
+                    valueText = item.value.toString(),
+                    onChange = {
+                        scope.launch {
+                            item.onValueChanged(it)
                         }
                     },
                 )

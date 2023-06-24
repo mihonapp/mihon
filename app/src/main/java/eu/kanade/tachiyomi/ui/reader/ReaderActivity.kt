@@ -58,6 +58,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderColorFilterDialog
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsSheet
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
@@ -409,10 +410,20 @@ class ReaderActivity : BaseActivity() {
 
         binding.dialogRoot.setComposeContent {
             val state by viewModel.state.collectAsState()
-
+            val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
+                is ReaderViewModel.Dialog.ColorFilter -> {
+                    setMenuVisibility(false)
+                    ReaderColorFilterDialog(
+                        onDismissRequest = {
+                            onDismissRequest()
+                            setMenuVisibility(true)
+                        },
+                        readerPreferences = viewModel.readerPreferences,
+                    )
+                }
                 is ReaderViewModel.Dialog.Page -> ReaderPageDialog(
-                    onDismissRequest = viewModel::closeDialog,
+                    onDismissRequest = onDismissRequest,
                     onSetAsCover = viewModel::setAsCover,
                     onShare = viewModel::shareImage,
                     onSave = viewModel::saveImage,
@@ -548,11 +559,14 @@ class ReaderActivity : BaseActivity() {
                 if (readerSettingSheet?.isShowing == true) return@setOnClickListener
                 readerSettingSheet = ReaderSettingsSheet(this@ReaderActivity).apply { show() }
             }
+        }
 
-            setOnLongClickListener {
-                if (readerSettingSheet?.isShowing == true) return@setOnLongClickListener false
-                readerSettingSheet = ReaderSettingsSheet(this@ReaderActivity, showColorFilterSettings = true).apply { show() }
-                true
+        // Color filter sheet
+        with(binding.actionColorSettings) {
+            setTooltip(R.string.custom_filter)
+
+            setOnClickListener {
+                viewModel.openColorFilterDialog()
             }
         }
     }

@@ -67,12 +67,6 @@
         <item>@string/rotation_reverse_portrait</item>
     </string-array>
 
-    <string-array name="color_filter_modes">
-        <item>@string/label_default</item>
-        <item>@string/filter_mode_multiply</item>
-        <item>@string/filter_mode_screen</item>
-    </string-array>
-
     <string-array name="invert_tapping_mode">
         <item>@string/tapping_inverted_none</item>
         <item>@string/tapping_inverted_horizontal</item>

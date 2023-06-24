@@ -199,7 +199,6 @@ private fun ColumnScope.DisplayPage(
         val columns by columnPreference.collectAsState()
         SliderItem(
             label = stringResource(R.string.pref_library_columns),
-            min = 0,
             max = 10,
             value = columns,
             valueText = if (columns > 0) {

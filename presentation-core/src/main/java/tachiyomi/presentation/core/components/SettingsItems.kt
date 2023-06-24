@@ -140,7 +140,7 @@ fun RadioItem(
 @Composable
 fun SliderItem(
     label: String,
-    min: Int,
+    min: Int = 0,
     max: Int,
     value: Int,
     valueText: String,
