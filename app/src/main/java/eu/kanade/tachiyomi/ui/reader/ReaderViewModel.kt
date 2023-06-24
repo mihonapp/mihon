@@ -719,12 +719,21 @@ class ReaderViewModel(
         ) + filenameSuffix
     }
 
+    fun openPageDialog(page: ReaderPage) {
+        mutableState.update { it.copy(dialog = Dialog.Page(page)) }
+    }
+
+    fun closeDialog() {
+        mutableState.update { it.copy(dialog = null) }
+    }
+
     /**
-     * Saves the image of this [page] on the pictures directory and notifies the UI of the result.
+     * Saves the image of the selected page on the pictures directory and notifies the UI of the result.
      * There's also a notification to allow sharing the image somewhere else or deleting it.
      */
-    fun saveImage(page: ReaderPage) {
-        if (page.status != Page.State.READY) return
+    fun saveImage() {
+        val page = (state.value.dialog as? Dialog.Page)?.page
+        if (page?.status != Page.State.READY) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -758,14 +767,15 @@ class ReaderViewModel(
     }
 
     /**
-     * Shares the image of this [page] and notifies the UI with the path of the file to share.
+     * Shares the image of the selected page and notifies the UI with the path of the file to share.
      * The image must be first copied to the internal partition because there are many possible
      * formats it can come from, like a zipped chapter, in which case it's not possible to directly
      * get a path to the file and it has to be decompressed somewhere first. Only the last shared
      * image will be kept so it won't be taking lots of internal disk space.
      */
-    fun shareImage(page: ReaderPage) {
-        if (page.status != Page.State.READY) return
+    fun shareImage() {
+        val page = (state.value.dialog as? Dialog.Page)?.page
+        if (page?.status != Page.State.READY) return
         val manga = manga ?: return
 
         val context = Injekt.get<Application>()
@@ -791,10 +801,11 @@ class ReaderViewModel(
     }
 
     /**
-     * Sets the image of this [page] as cover and notifies the UI of the result.
+     * Sets the image of the selected page as cover and notifies the UI of the result.
      */
-    fun setAsCover(page: ReaderPage) {
-        if (page.status != Page.State.READY) return
+    fun setAsCover() {
+        val page = (state.value.dialog as? Dialog.Page)?.page
+        if (page?.status != Page.State.READY) return
         val manga = manga ?: return
         val stream = page.stream ?: return
 
@@ -907,9 +918,14 @@ class ReaderViewModel(
          * Viewer used to display the pages (pager, webtoon, ...).
          */
         val viewer: Viewer? = null,
+        val dialog: Dialog? = null,
     ) {
         val totalPages: Int
             get() = viewerChapters?.currChapter?.pages?.size ?: -1
+    }
+
+    sealed class Dialog {
+        data class Page(val page: ReaderPage) : Dialog()
     }
 
     sealed class Event {
