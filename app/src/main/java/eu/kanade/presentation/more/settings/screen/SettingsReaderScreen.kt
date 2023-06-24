@@ -190,11 +190,6 @@ object SettingsReaderScreen : SearchableSettings {
                         6 to stringResource(R.string.scale_type_smart_fit),
                     ),
                 ),
-                Preference.PreferenceItem.SwitchPreference(
-                    pref = readerPreferences.landscapeZoom(),
-                    title = stringResource(R.string.pref_landscape_zoom),
-                    enabled = imageScaleType == 1,
-                ),
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.zoomStart(),
                     title = stringResource(R.string.pref_zoom_start),
@@ -209,6 +204,11 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.cropBorders(),
                     title = stringResource(R.string.pref_crop_borders),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.landscapeZoom(),
+                    title = stringResource(R.string.pref_landscape_zoom),
+                    enabled = imageScaleType == 1,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.navigateToPan(),
