@@ -3,6 +3,7 @@ package tachiyomi.presentation.core.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -133,6 +135,43 @@ fun RadioItem(
         },
         onClick = onClick,
     )
+}
+
+@Composable
+fun SliderItem(
+    label: String,
+    min: Int,
+    max: Int,
+    value: Int,
+    valueText: String,
+    onChange: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = SettingsItemsPaddings.Horizontal,
+                vertical = SettingsItemsPaddings.Vertical,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        Column(modifier = Modifier.weight(0.5f)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(valueText)
+        }
+
+        Slider(
+            value = value.toFloat(),
+            onValueChange = { onChange(it.toInt()) },
+            modifier = Modifier.weight(1.5f),
+            valueRange = min.toFloat()..max.toFloat(),
+            steps = max - min,
+        )
+    }
 }
 
 @Composable
