@@ -123,7 +123,7 @@ fun TrackScoreSelector(
         content = {
             WheelTextPicker(
                 modifier = Modifier.align(Alignment.Center),
-                startIndex = selections.indexOf(selection).coerceAtLeast(0),
+                startIndex = selections.indexOf(selection).takeIf { it > 0 } ?: (selections.size / 2),
                 items = selections,
                 onSelectionChanged = { onSelectionChange(selections[it]) },
             )
