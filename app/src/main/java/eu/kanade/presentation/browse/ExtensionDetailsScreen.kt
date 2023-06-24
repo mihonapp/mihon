@@ -415,7 +415,7 @@ private fun NsfwWarningDialog(
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {
-                Text(text = stringResource(android.R.string.ok))
+                Text(text = stringResource(R.string.action_ok))
             }
         },
         onDismissRequest = onClickConfirm,

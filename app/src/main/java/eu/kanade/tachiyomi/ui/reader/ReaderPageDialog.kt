@@ -89,7 +89,7 @@ private fun SetCoverDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(android.R.string.ok))
+                Text(stringResource(R.string.action_ok))
             }
         },
         dismissButton = {

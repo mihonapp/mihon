@@ -373,7 +373,7 @@ object SettingsLibraryScreen : SearchableSettings {
             },
             confirmButton = {
                 TextButton(onClick = { onValueChanged(leadValue, followValue) }) {
-                    Text(text = stringResource(android.R.string.ok))
+                    Text(text = stringResource(R.string.action_ok))
                 }
             },
         )

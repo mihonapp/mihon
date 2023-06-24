@@ -174,7 +174,7 @@ fun TrackDateSelector(
                         Text(text = stringResource(android.R.string.cancel))
                     }
                     TextButton(onClick = { onConfirm(pickerState.selectedDateMillis!!) }) {
-                        Text(text = stringResource(android.R.string.ok))
+                        Text(text = stringResource(R.string.action_ok))
                     }
                 }
             }
@@ -212,7 +212,7 @@ private fun BaseSelector(
                     Text(text = stringResource(android.R.string.cancel))
                 }
                 TextButton(onClick = onConfirm) {
-                    Text(text = stringResource(android.R.string.ok))
+                    Text(text = stringResource(R.string.action_ok))
                 }
             }
         },
