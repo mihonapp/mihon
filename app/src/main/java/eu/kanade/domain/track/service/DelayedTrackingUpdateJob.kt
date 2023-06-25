@@ -19,19 +19,24 @@ import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
 
 class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        if (runAttemptCount > 3) {
+            return Result.failure()
+        }
+
         val getTracks = Injekt.get<GetTracks>()
         val insertTrack = Injekt.get<InsertTrack>()
 
         val trackManager = Injekt.get<TrackManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
-        val results = withIOContext {
+        withIOContext {
             delayedTrackingStore.getItems()
                 .mapNotNull {
                     val track = getTracks.awaitOne(it.trackId)
@@ -40,7 +45,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                     }
                     track?.copy(lastChapterRead = it.lastChapterRead.toDouble())
                 }
-                .mapNotNull { track ->
+                .forEach { track ->
                     try {
                         val service = trackManager.getService(track.syncId)
                         if (service != null && service.isLogged) {
@@ -49,15 +54,13 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                             insertTrack.await(track)
                         }
                         delayedTrackingStore.remove(track.id)
-                        null
                     } catch (e: Exception) {
                         logcat(LogPriority.ERROR, e)
-                        false
                     }
                 }
         }
 
-        return if (results.isNotEmpty()) Result.failure() else Result.success()
+        return if (delayedTrackingStore.getItems().isEmpty()) Result.success() else Result.retry()
     }
 
     companion object {
@@ -70,7 +73,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
 
             val request = OneTimeWorkRequestBuilder<DelayedTrackingUpdateJob>()
                 .setConstraints(constraints)
-                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 20, TimeUnit.SECONDS)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5.minutes.toJavaDuration())
                 .addTag(TAG)
                 .build()
 
