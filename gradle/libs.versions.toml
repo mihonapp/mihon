@@ -3,7 +3,7 @@ aboutlib_version = "10.8.3"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
 sqlite = "2.3.1"
-sqldelight = "1.5.5"
+sqldelight = "2.0.0"
 leakcanary = "2.12"
 voyager = "1.0.0-rc06"
 richtext = "0.17.0"
@@ -77,10 +77,12 @@ shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizu
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakcanary" }
 
-sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
-sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref = "sqldelight" }
-sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
+sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
+sqldelight-primitive-adapters = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
+sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
 junit = "org.junit.jupiter:junit-jupiter:5.10.0"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
@@ -99,6 +101,7 @@ js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
+sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging", "sqldelight-primitive-adapters"]
 voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
 test = ["junit", "kotest-assertions", "mockk"]

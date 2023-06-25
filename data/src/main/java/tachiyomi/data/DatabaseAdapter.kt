@@ -1,6 +1,6 @@
 package tachiyomi.data
 
-import com.squareup.sqldelight.ColumnAdapter
+import app.cash.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import java.util.Date
 

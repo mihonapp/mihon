@@ -74,7 +74,7 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun insert(manga: Manga): Long? {
-        return handler.awaitOneOrNull(inTransaction = true) {
+        return handler.awaitOneOrNullExecutable(inTransaction = true) {
             mangasQueries.insert(
                 source = manga.source,
                 url = manga.url,
@@ -133,11 +133,11 @@ class MangaRepositoryImpl(
                     title = value.title,
                     status = value.status,
                     thumbnailUrl = value.thumbnailUrl,
-                    favorite = value.favorite?.toLong(),
+                    favorite = value.favorite,
                     lastUpdate = value.lastUpdate,
                     nextUpdate = value.nextUpdate,
                     calculateInterval = value.fetchInterval?.toLong(),
-                    initialized = value.initialized?.toLong(),
+                    initialized = value.initialized,
                     viewer = value.viewerFlags,
                     chapterFlags = value.chapterFlags,
                     coverLastModified = value.coverLastModified,

@@ -5,8 +5,9 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.service.TrackPreferences
@@ -37,9 +38,11 @@ import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.provider.AndroidBackupFolderProvider
 import tachiyomi.core.provider.AndroidDownloadFolderProvider
 import tachiyomi.data.AndroidDatabaseHandler
+import tachiyomi.data.Chapters
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.History
+import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
 import tachiyomi.data.dateAdapter
 import tachiyomi.data.listOfStringsAdapter
@@ -90,8 +93,14 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory {
             Database(
                 driver = get(),
+                chaptersAdapter = Chapters.Adapter(
+                    chapter_numberAdapter = FloatColumnAdapter,
+                ),
                 historyAdapter = History.Adapter(
                     last_readAdapter = dateAdapter,
+                ),
+                manga_syncAdapter = Manga_sync.Adapter(
+                    scoreAdapter = FloatColumnAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
                     genreAdapter = listOfStringsAdapter,
