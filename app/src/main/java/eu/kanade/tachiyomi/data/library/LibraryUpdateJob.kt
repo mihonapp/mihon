@@ -111,7 +111,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val preferences = Injekt.get<LibraryPreferences>()
             val restrictions = preferences.libraryUpdateDeviceRestriction().get()
             if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
-                return Result.failure()
+                return Result.retry()
             }
 
             // Find a running manual worker. If exists, try again later
