@@ -9,12 +9,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
+import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.material.Scaffold
 
-class LicensesScreen : Screen() {
+class OpenSourceLicensesScreen : Screen() {
 
     @Composable
     override fun Content() {
@@ -38,6 +39,14 @@ class LicensesScreen : Screen() {
                     badgeBackgroundColor = MaterialTheme.colorScheme.primary,
                     badgeContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
+                onLibraryClick = {
+                    val libraryLicenseScreen = OpenSourceLibraryLicenseScreen(
+                        name = it.name,
+                        website = it.website,
+                        license = it.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
+                    )
+                    navigator.push(libraryLicenseScreen)
+                },
             )
         }
     }
