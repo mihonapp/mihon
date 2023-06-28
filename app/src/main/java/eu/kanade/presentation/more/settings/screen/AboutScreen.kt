@@ -1,14 +1,21 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -62,6 +69,7 @@ object AboutScreen : Screen() {
         val uriHandler = LocalUriHandler.current
         val handleBack = LocalBackPress.current
         val navigator = LocalNavigator.currentOrThrow
+        var isCheckingUpdates by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = { scrollBehavior ->
@@ -94,22 +102,41 @@ object AboutScreen : Screen() {
                     item {
                         TextPreferenceWidget(
                             title = stringResource(R.string.check_for_updates),
+                            widget = {
+                                AnimatedVisibility(visible = isCheckingUpdates) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(28.dp),
+                                        strokeWidth = 3.dp,
+                                    )
+                                }
+                            },
                             onPreferenceClick = {
-                                scope.launch {
-                                    checkVersion(context) { result ->
-                                        val updateScreen = NewUpdateScreen(
-                                            versionName = result.release.version,
-                                            changelogInfo = result.release.info,
-                                            releaseLink = result.release.releaseLink,
-                                            downloadLink = result.release.getDownloadLink(),
+                                if (!isCheckingUpdates) {
+                                    scope.launch {
+                                        isCheckingUpdates = true
+
+                                        checkVersion(
+                                            context = context,
+                                            onAvailableUpdate = { result ->
+                                                val updateScreen = NewUpdateScreen(
+                                                    versionName = result.release.version,
+                                                    changelogInfo = result.release.info,
+                                                    releaseLink = result.release.releaseLink,
+                                                    downloadLink = result.release.getDownloadLink(),
+                                                )
+                                                navigator.push(updateScreen)
+                                            },
+                                            onFinish = {
+                                                isCheckingUpdates = false
+                                            },
                                         )
-                                        navigator.push(updateScreen)
                                     }
                                 }
                             },
                         )
                     }
                 }
+
                 if (!BuildConfig.DEBUG) {
                     item {
                         TextPreferenceWidget(
@@ -186,10 +213,13 @@ object AboutScreen : Screen() {
     /**
      * Checks version and shows a user prompt if an update is available.
      */
-    private suspend fun checkVersion(context: Context, onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit) {
+    private suspend fun checkVersion(
+        context: Context,
+        onAvailableUpdate: (GetApplicationRelease.Result.NewUpdate) -> Unit,
+        onFinish: () -> Unit,
+    ) {
         val updateChecker = AppUpdateChecker()
         withUIContext {
-            context.toast(R.string.update_check_look_for_updates)
             try {
                 when (val result = withIOContext { updateChecker.checkForUpdate(context, forceCheck = true) }) {
                     is GetApplicationRelease.Result.NewUpdate -> {
@@ -203,6 +233,8 @@ object AboutScreen : Screen() {
             } catch (e: Exception) {
                 context.toast(e.message)
                 logcat(LogPriority.ERROR, e)
+            } finally {
+                onFinish()
             }
         }
     }
