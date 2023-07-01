@@ -718,6 +718,10 @@ class ReaderViewModel(
         ) + filenameSuffix
     }
 
+    fun showMenus(visible: Boolean) {
+        mutableState.update { it.copy(menuVisible = visible) }
+    }
+
     fun showLoadingDialog() {
         mutableState.update { it.copy(dialog = Dialog.Loading) }
     }
@@ -926,6 +930,7 @@ class ReaderViewModel(
          */
         val viewer: Viewer? = null,
         val dialog: Dialog? = null,
+        val menuVisible: Boolean = false,
     ) {
         val totalPages: Int
             get() = viewerChapters?.currChapter?.pages?.size ?: -1

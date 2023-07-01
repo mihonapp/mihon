@@ -91,7 +91,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     onScrolled()
 
-                    if ((dy > threshold || dy < -threshold) && activity.menuVisible) {
+                    if ((dy > threshold || dy < -threshold) && activity.viewModel.state.value.menuVisible) {
                         activity.hideMenu()
                     }
 
@@ -120,7 +120,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             }
         }
         recycler.longTapListener = f@{ event ->
-            if (activity.menuVisible || config.longTapEnabled) {
+            if (activity.viewModel.state.value.menuVisible || config.longTapEnabled) {
                 val child = recycler.findChildViewUnder(event.x, event.y)
                 if (child != null) {
                     val position = recycler.getChildAdapterPosition(child)
@@ -310,14 +310,14 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 
         when (event.keyCode) {
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (!config.volumeKeysEnabled || activity.menuVisible) {
+                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
                     if (!config.volumeKeysInverted) scrollDown() else scrollUp()
                 }
             }
             KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (!config.volumeKeysEnabled || activity.menuVisible) {
+                if (!config.volumeKeysEnabled || activity.viewModel.state.value.menuVisible) {
                     return false
                 } else if (isUp) {
                     if (!config.volumeKeysInverted) scrollUp() else scrollDown()

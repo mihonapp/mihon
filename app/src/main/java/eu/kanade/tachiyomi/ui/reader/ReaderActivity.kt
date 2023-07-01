@@ -99,7 +99,8 @@ import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import kotlin.math.abs
 
 class ReaderActivity : BaseActivity() {
@@ -114,8 +115,8 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    private val readerPreferences: ReaderPreferences by injectLazy()
-    private val preferences: BasePreferences by injectLazy()
+    private val readerPreferences = Injekt.get<ReaderPreferences>()
+    private val preferences = Injekt.get<BasePreferences>()
 
     lateinit var binding: ReaderActivityBinding
 
@@ -125,18 +126,11 @@ class ReaderActivity : BaseActivity() {
     val hasCutout by lazy { hasDisplayCutout() }
 
     /**
-     * Whether the menu is currently visible.
-     */
-    var menuVisible = false
-        private set
-
-    /**
      * Configuration at reader level, like background color or forced orientation.
      */
     private var config: ReaderConfig? = null
 
     private var menuToggleToast: Toast? = null
-
     private var readingModeToast: Toast? = null
 
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, binding.root) }
@@ -159,8 +153,8 @@ class ReaderActivity : BaseActivity() {
         setContentView(binding.root)
 
         if (viewModel.needsInit()) {
-            val manga = intent.extras!!.getLong("manga", -1)
-            val chapter = intent.extras!!.getLong("chapter", -1)
+            val manga = intent.extras?.getLong("manga", -1) ?: -1L
+            val chapter = intent.extras?.getLong("chapter", -1) ?: -1L
             if (manga == -1L || chapter == -1L) {
                 finish()
                 return
@@ -176,10 +170,6 @@ class ReaderActivity : BaseActivity() {
                     }
                 }
             }
-        }
-
-        if (savedInstanceState != null) {
-            menuVisible = savedInstanceState.getBoolean(::menuVisible.name)
         }
 
         config = ReaderConfig()
@@ -250,7 +240,6 @@ class ReaderActivity : BaseActivity() {
      * activity isn't changing configurations.
      */
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(::menuVisible.name, menuVisible)
         viewModel.onSaveInstanceState()
         super.onSaveInstanceState(outState)
     }
@@ -267,7 +256,7 @@ class ReaderActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.setReadStartTime()
-        setMenuVisibility(menuVisible, animate = false)
+        setMenuVisibility(viewModel.state.value.menuVisible, animate = false)
     }
 
     /**
@@ -277,7 +266,7 @@ class ReaderActivity : BaseActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            setMenuVisibility(menuVisible, animate = false)
+            setMenuVisibility(viewModel.state.value.menuVisible, animate = false)
         }
     }
 
@@ -413,7 +402,7 @@ class ReaderActivity : BaseActivity() {
             when (state.dialog) {
                 is ReaderViewModel.Dialog.Loading -> {
                     AlertDialog(
-                        onDismissRequest = { /* Non dismissible */ },
+                        onDismissRequest = {},
                         confirmButton = {},
                         text = {
                             Row(
@@ -488,7 +477,7 @@ class ReaderActivity : BaseActivity() {
         }
 
         // Set initial visibility
-        setMenuVisibility(menuVisible)
+        setMenuVisibility(viewModel.state.value.menuVisible)
     }
 
     private fun initBottomShortcuts() {
@@ -614,7 +603,7 @@ class ReaderActivity : BaseActivity() {
      * [animate] the views.
      */
     fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
-        menuVisible = visible
+        viewModel.showMenus(visible)
         if (visible) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             binding.readerMenu.isVisible = true
@@ -844,14 +833,14 @@ class ReaderActivity : BaseActivity() {
      * viewer because each one implements its own touch and key events.
      */
     fun toggleMenu() {
-        setMenuVisibility(!menuVisible)
+        setMenuVisibility(!viewModel.state.value.menuVisible)
     }
 
     /**
      * Called from the viewer to show the menu.
      */
     fun showMenu() {
-        if (!menuVisible) {
+        if (!viewModel.state.value.menuVisible) {
             setMenuVisibility(true)
         }
     }
@@ -860,7 +849,7 @@ class ReaderActivity : BaseActivity() {
      * Called from the viewer to hide the menu.
      */
     fun hideMenu() {
-        if (menuVisible) {
+        if (viewModel.state.value.menuVisible) {
             setMenuVisibility(false)
         }
     }
@@ -1058,7 +1047,7 @@ class ReaderActivity : BaseActivity() {
             }
 
             // Trigger relayout
-            setMenuVisibility(menuVisible)
+            setMenuVisibility(viewModel.state.value.menuVisible)
         }
 
         /**
