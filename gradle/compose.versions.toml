@@ -16,7 +16,7 @@ ui-util = { module = "androidx.compose.ui:ui-util" }
 material3-core = { module = "androidx.compose.material3:material3" }
 material-icons = { module = "androidx.compose.material:material-icons-extended" }
 
-# Here until M3's swipeable became public https://issuetracker.google.com/issues/234640556
+# Some components aren't available in Material3
 material-core = { module = "androidx.compose.material:material" }
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
