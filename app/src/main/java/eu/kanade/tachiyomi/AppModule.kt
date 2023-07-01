@@ -31,7 +31,6 @@ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import kotlinx.serialization.json.Json
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
-import nl.adaptivity.xmlutil.serialization.UnknownChildHandler
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.core.preference.AndroidPreferenceStore
 import tachiyomi.core.preference.PreferenceStore
@@ -110,10 +109,12 @@ class AppModule(val app: Application) : InjektModule {
         }
         addSingletonFactory {
             XML {
-                unknownChildHandler = UnknownChildHandler { _, _, _, _, _ -> emptyList() }
+                defaultPolicy {
+                    ignoreUnknownChildren()
+                }
                 autoPolymorphic = true
                 xmlDeclMode = XmlDeclMode.Charset
-                indent = 4
+                indent = 2
                 xmlVersion = XmlVersion.XML10
             }
         }

@@ -168,7 +168,7 @@ internal object ExtensionLoader {
             }
             .flatMap {
                 try {
-                    when (val obj = Class.forName(it, false, classLoader).newInstance()) {
+                    when (val obj = Class.forName(it, false, classLoader).getDeclaredConstructor().newInstance()) {
                         is Source -> listOf(obj)
                         is SourceFactory -> obj.createSources()
                         else -> throw Exception("Unknown source class type! ${obj.javaClass}")
