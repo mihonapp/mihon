@@ -52,11 +52,15 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
         recycler?.getHitRect(recyclerRect) ?: return super.dispatchTouchEvent(ev)
         // Shrink the box to account for any rounding issues.
         recyclerRect.inset(1, 1)
+
+        if (recyclerRect.right < recyclerRect.left || recyclerRect.bottom < recyclerRect.top) {
+            return super.dispatchTouchEvent(ev)
+        }
+
         ev.setLocation(
             ev.x.coerceIn(recyclerRect.left.toFloat(), recyclerRect.right.toFloat()),
             ev.y.coerceIn(recyclerRect.top.toFloat(), recyclerRect.bottom.toFloat()),
         )
-
         return super.dispatchTouchEvent(ev)
     }
 
