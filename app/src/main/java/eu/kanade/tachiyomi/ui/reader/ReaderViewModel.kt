@@ -718,8 +718,12 @@ class ReaderViewModel(
         ) + filenameSuffix
     }
 
+    fun showLoadingDialog() {
+        mutableState.update { it.copy(dialog = Dialog.Loading) }
+    }
+
     fun openPageDialog(page: ReaderPage) {
-        mutableState.update { it.copy(dialog = Dialog.Page(page)) }
+        mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
     }
 
     fun openColorFilterDialog() {
@@ -735,7 +739,7 @@ class ReaderViewModel(
      * There's also a notification to allow sharing the image somewhere else or deleting it.
      */
     fun saveImage() {
-        val page = (state.value.dialog as? Dialog.Page)?.page
+        val page = (state.value.dialog as? Dialog.PageActions)?.page
         if (page?.status != Page.State.READY) return
         val manga = manga ?: return
 
@@ -777,7 +781,7 @@ class ReaderViewModel(
      * image will be kept so it won't be taking lots of internal disk space.
      */
     fun shareImage() {
-        val page = (state.value.dialog as? Dialog.Page)?.page
+        val page = (state.value.dialog as? Dialog.PageActions)?.page
         if (page?.status != Page.State.READY) return
         val manga = manga ?: return
 
@@ -807,7 +811,7 @@ class ReaderViewModel(
      * Sets the image of the selected page as cover and notifies the UI of the result.
      */
     fun setAsCover() {
-        val page = (state.value.dialog as? Dialog.Page)?.page
+        val page = (state.value.dialog as? Dialog.PageActions)?.page
         if (page?.status != Page.State.READY) return
         val manga = manga ?: return
         val stream = page.stream ?: return
@@ -928,8 +932,9 @@ class ReaderViewModel(
     }
 
     sealed class Dialog {
+        object Loading : Dialog()
         object ColorFilter : Dialog()
-        data class Page(val page: ReaderPage) : Dialog()
+        data class PageActions(val page: ReaderPage) : Dialog()
     }
 
     sealed class Event {

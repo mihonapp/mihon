@@ -25,7 +25,7 @@ import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
-fun ReaderPageDialog(
+fun ReaderPageActionsDialog(
     onDismissRequest: () -> Unit,
     onSetAsCover: () -> Unit,
     onShare: () -> Unit,

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.ProgressDialog
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -25,8 +24,16 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
@@ -127,12 +134,6 @@ class ReaderActivity : BaseActivity() {
      * Configuration at reader level, like background color or forced orientation.
      */
     private var config: ReaderConfig? = null
-
-    /**
-     * Progress dialog used when switching chapters from the menu buttons.
-     */
-    @Suppress("DEPRECATION")
-    private var progressDialog: ProgressDialog? = null
 
     private var menuToggleToast: Toast? = null
 
@@ -242,8 +243,6 @@ class ReaderActivity : BaseActivity() {
         config = null
         menuToggleToast?.cancel()
         readingModeToast?.cancel()
-        progressDialog?.dismiss()
-        progressDialog = null
     }
 
     /**
@@ -412,6 +411,21 @@ class ReaderActivity : BaseActivity() {
             val state by viewModel.state.collectAsState()
             val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
+                is ReaderViewModel.Dialog.Loading -> {
+                    AlertDialog(
+                        onDismissRequest = { /* Non dismissible */ },
+                        confirmButton = {},
+                        text = {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                CircularProgressIndicator()
+                                Text(stringResource(R.string.loading))
+                            }
+                        },
+                    )
+                }
                 is ReaderViewModel.Dialog.ColorFilter -> {
                     setMenuVisibility(false)
                     ReaderColorFilterDialog(
@@ -422,12 +436,14 @@ class ReaderActivity : BaseActivity() {
                         readerPreferences = viewModel.readerPreferences,
                     )
                 }
-                is ReaderViewModel.Dialog.Page -> ReaderPageDialog(
-                    onDismissRequest = onDismissRequest,
-                    onSetAsCover = viewModel::setAsCover,
-                    onShare = viewModel::shareImage,
-                    onSave = viewModel::saveImage,
-                )
+                is ReaderViewModel.Dialog.PageActions -> {
+                    ReaderPageActionsDialog(
+                        onDismissRequest = onDismissRequest,
+                        onSetAsCover = viewModel::setAsCover,
+                        onShare = viewModel::shareImage,
+                        onSave = viewModel::saveImage,
+                    )
+                }
                 null -> {}
             }
         }
@@ -757,13 +773,11 @@ class ReaderActivity : BaseActivity() {
      * [show]. This is only used when the next/previous buttons on the toolbar are clicked; the
      * other cases are handled with chapter transitions on the viewers and chapter preloading.
      */
-    @Suppress("DEPRECATION")
     private fun setProgressDialog(show: Boolean) {
-        progressDialog?.dismiss()
-        progressDialog = if (show) {
-            ProgressDialog.show(this, null, getString(R.string.loading), true)
+        if (show) {
+            viewModel.showLoadingDialog()
         } else {
-            null
+            viewModel.closeDialog()
         }
     }
 
