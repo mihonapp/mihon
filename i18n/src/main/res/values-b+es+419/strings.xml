@@ -233,7 +233,6 @@
     <string name="update_check_notification_download_error">Error al descargar</string>
     <string name="update_check_notification_download_complete">Toca para instalar la actualización</string>
     <string name="update_check_notification_download_in_progress">Descargando…</string>
-    <string name="update_check_look_for_updates">Buscando actualizaciones…</string>
     <string name="portrait">Vertical</string>
     <string name="pref_library_columns">Elementos por fila</string>
     <string name="pref_category_display">Monitor</string>

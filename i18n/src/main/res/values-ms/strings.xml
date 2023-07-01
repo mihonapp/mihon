@@ -221,7 +221,6 @@
     <string name="file_select_backup">Pilih fail sandaran</string>
     <string name="update_check_confirm">Muat turun</string>
     <string name="update_check_no_new_updates">Tiada versi baharu tersedia</string>
-    <string name="update_check_look_for_updates">Mencari versi baharu…</string>
     <string name="update_check_notification_download_in_progress">Memuat turun…</string>
     <string name="update_check_notification_download_complete">Ketik untuk memasang kemas kini</string>
     <string name="update_check_notification_download_error">Ralat muat turun</string>
@@ -556,7 +555,7 @@
     <string name="error_saving_cover">Ralat menyimpan muka hadapan</string>
     <string name="cover_saved">Muka hadapan disimpan</string>
     <string name="manga_cover">Muka hadapan</string>
-    <string name="categorized_display_settings">Tetapan setiap kategori untuk susunan dan paparan</string>
+    <string name="categorized_display_settings">Tetapan setiap kategori untuk susunan</string>
     <string name="tracking_guide">Panduan penjejakan</string>
     <string name="information_empty_category_dialog">Anda belum mempunyai kategori.</string>
     <string name="action_start_downloading_now">Mula memuat turun sekarang</string>
@@ -637,7 +636,7 @@
     <string name="pref_update_only_started">Yang mana bacaan belum dimulakan</string>
     <string name="skipped_reason_not_caught_up">Dilangkau kerana ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilangkau kerana tiada bab yang dibaca</string>
-    <string name="pref_landscape_zoom">Zum imej landskap</string>
+    <string name="pref_landscape_zoom">Zum secara automatik pada imej lebar</string>
     <string name="pref_navigate_pan">Panorama imej lebar</string>
     <string name="notification_update_error">%1$d kemas kini gagal</string>
     <string name="notification_update_skipped">%1$d kemas kini dilangkau</string>
@@ -791,4 +790,27 @@
     <string name="action_filter_interval_late">Lewat semak 10+</string>
     <string name="action_filter_interval_dropped">Diabaikan\? Lewat 20+ dan 2 bulan</string>
     <string name="action_sort_next_updated">Kemas kini seterusnya dijangka</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">%d hari selepasnya</item>
+    </plurals>
+    <string name="manga_display_modified_interval_title">Tetapkan untuk kemas kini setiap</string>
+    <string name="skipped_reason_not_in_release_period">Dilangkau kerana tiada keluaran yang dijangkakan hari ini</string>
+    <string name="pref_update_release_grace_period">Dalam jangkaan tempoh tangguh keluaran</string>
+    <string name="intervals_header">Jarak masa</string>
+    <plurals name="day">
+        <item quantity="other">%d hari</item>
+    </plurals>
+    <string name="manga_modify_calculated_interval_title">Tersuai Jarak Masa</string>
+    <string name="manga_modify_interval_title">Ubahsuai jarak masa</string>
+    <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
+    <string name="manga_display_interval_title">Anggaran setiap</string>
+    <string name="pref_update_release_grace_period_info">Tempoh tangguh yang rendah adalah digalakkan untuk meminimumkan tekanan kepada sumber. Lebih banyak semakan pada entri yang terlepas, semakin lama jarak masa akan diambil untuk menyemak dengan 28 hari maksimum.</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">%d hari sebelumnya</item>
+    </plurals>
+    <string name="action_filter_interval_passed">Melepasi tempoh semak</string>
+    <string name="track_delete_title">Buang penjejakan %s\?</string>
+    <string name="track_delete_text">Ini akan membuang penjejakan secara lokal.</string>
+    <string name="action_ok">OK</string>
+    <string name="track_delete_remote_text">Juga buang daripada %s</string>
 </resources>

@@ -177,7 +177,6 @@
     <string name="update_48hour">Каждые 2 дня</string>
     <string name="update_6hour">Каждые 6 часов</string>
     <string name="update_check_confirm">Загрузить</string>
-    <string name="update_check_look_for_updates">Поиск обновлений…</string>
     <string name="update_check_no_new_updates">Нет обновлений</string>
     <string name="update_check_notification_download_complete">Нажмите для установки обновления</string>
     <string name="update_check_notification_download_error">Ошибка загрузки</string>
@@ -670,7 +669,7 @@
     <string name="action_show_manga">Показать серию</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений</string>
-    <string name="pref_landscape_zoom">Увеличивать изображение по горизонтали</string>
+    <string name="pref_landscape_zoom">Автоматически увеличивать широкие изображения</string>
     <string name="pref_update_only_started">Серия не начата</string>
     <string name="skipped_reason_completed">Пропущено, т.к серия завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
@@ -864,4 +863,8 @@
         <item quantity="other">%d дней</item>
     </plurals>
     <string name="skipped_reason_not_in_release_period">Пропущено, т.к сегодня не ожидается выпуска</string>
+    <string name="track_delete_title">Удалить отслеживание %s\?</string>
+    <string name="track_delete_text">Это удалит отслеживание локально.</string>
+    <string name="track_delete_remote_text">Также удалить из %s</string>
+    <string name="action_ok">ОК</string>
 </resources>

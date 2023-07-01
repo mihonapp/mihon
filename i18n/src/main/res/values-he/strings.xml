@@ -23,7 +23,6 @@
     <string name="update_check_notification_download_error">שגיאה בהורדה</string>
     <string name="update_check_notification_download_complete">לחץ כדי להתקין</string>
     <string name="update_check_notification_download_in_progress">מוריד…</string>
-    <string name="update_check_look_for_updates">מחפש עדכונים…</string>
     <string name="update_check_no_new_updates">אין עדכונים חדשים זמינים</string>
     <string name="update_check_confirm">הורדה</string>
     <string name="file_select_backup">בחר קובץ גיבוי</string>

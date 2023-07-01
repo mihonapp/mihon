@@ -548,7 +548,6 @@
     <string name="pref_category_for_this_series">अस्यै धारावाहिकायै</string>
     <string name="file_select_cover">मुखचित्रम् चिनोतु</string>
     <string name="file_select_backup">प्रतिलेखनसञ्चिकां चिनोतु</string>
-    <string name="update_check_look_for_updates">नवीकरणेभ्यः अवेक्षते…</string>
     <string name="pref_navigate_pan">पुटान्तरे प्लवतु</string>
     <string name="pref_landscape_zoom">अनुप्रस्थचित्रं सर्पकं करोतु</string>
     <plurals name="notification_new_chapters_summary">

@@ -215,7 +215,6 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Tải xuống</string>
     <string name="update_check_no_new_updates">Không có cập nhật mới</string>
-    <string name="update_check_look_for_updates">Đang tìm cập nhật mới…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Đang tải xuống…</string>
     <string name="update_check_notification_download_complete">Nhấn để cập nhật</string>

@@ -270,7 +270,6 @@
     <string name="file_select_cover">Velg omslagsbilde</string>
     <string name="file_select_backup">Velg sikkerhetskopifil</string>
     <string name="update_check_no_new_updates">Ingen nye oppdateringer tilgjengelige</string>
-    <string name="update_check_look_for_updates">Ser etter oppdateringer…</string>
     <string name="update_check_notification_download_in_progress">Laster ned…</string>
     <string name="update_check_notification_download_complete">Trykk for å installere oppdatering</string>
     <string name="update_check_notification_download_error">Feil ved nedlasting</string>

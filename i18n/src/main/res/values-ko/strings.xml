@@ -217,7 +217,6 @@
     <string name="file_select_backup">백업 파일 선택</string>
     <string name="update_check_confirm">다운로드</string>
     <string name="update_check_no_new_updates">새로운 업데이트 없음</string>
-    <string name="update_check_look_for_updates">업데이트를 찾는중…</string>
     <string name="update_check_notification_download_in_progress">다운로드 중…</string>
     <string name="update_check_notification_download_complete">탭하여 업데이트 설치</string>
     <string name="update_check_notification_download_error">다운로드 오류</string>

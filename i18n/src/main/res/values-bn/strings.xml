@@ -221,7 +221,6 @@
     <string name="file_select_backup">ব্যাকআপ ফাইল নির্বাচন করুন</string>
     <string name="update_check_confirm">ডাউনলোড</string>
     <string name="update_check_no_new_updates">নতুন কোন হালনাগাদ নেই</string>
-    <string name="update_check_look_for_updates">হালনাগাদের অনুসন্ধান হচ্ছে…</string>
     <string name="update_check_notification_download_in_progress">ডাউনলোড হচ্ছে…</string>
     <string name="update_check_notification_download_complete">ডাউনলোড সম্পন্ন হয়ে গেছে</string>
     <string name="update_check_notification_download_error">ডাউনলোড ত্রুটি দেখা গিয়েছে</string>

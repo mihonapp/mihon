@@ -202,7 +202,6 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Télécharger</string>
     <string name="update_check_no_new_updates">Aucune mise à jour disponible</string>
-    <string name="update_check_look_for_updates">Vérification des mises à jour…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Téléchargement en cours…</string>
     <string name="update_check_notification_download_complete">Appuyer pour installer</string>
@@ -849,4 +848,14 @@
     <string name="pref_chapter_swipe">Glissement de chapitre</string>
     <string name="pref_chapter_swipe_end">Action de glisser à droite</string>
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
+    <string name="action_filter_interval_long">Recherche mensuelle (28 jours)</string>
+    <string name="action_filter_interval_late">Vérification tardive 10+</string>
+    <string name="action_filter_interval_dropped">Abandonné \? Fin 20+ et 2 mois</string>
+    <string name="action_filter_interval_passed">Période de contrôle réussie</string>
+    <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
+    <string name="pref_update_release_grace_period">Délai de grâce prévu pour la publication</string>
+    <string name="pref_update_only_in_release_period">Période de diffusion prévue</string>
+    <string name="action_set_interval">Définir l\'intervalle</string>
+    <string name="action_ok">Valider</string>
+    <string name="action_filter_interval_custom">Intervalle de recherche personnalisé</string>
 </resources>

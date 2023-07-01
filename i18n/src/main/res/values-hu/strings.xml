@@ -527,7 +527,6 @@
     <string name="on_hold">Tartva</string>
     <string name="snack_categories_deleted">Kategóriák törölve</string>
     <string name="file_select_cover">Válasszon képet a fedlapnak</string>
-    <string name="update_check_look_for_updates">Frissítések keresése…</string>
     <string name="update_check_no_new_updates">Nem található új frissítés</string>
     <string name="channel_skipped">Kihagyott</string>
     <string name="pref_refresh_library_tracking">Tracking frissítése</string>

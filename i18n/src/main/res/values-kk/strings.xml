@@ -659,7 +659,6 @@
     <string name="skipped_reason_completed">Туынды аяқталған үшін өткізіп жіберілді</string>
     <string name="update_check_open">GitHub-та ашу</string>
     <string name="update_check_eol">Бұл Android нұсқасы қолжетімсіз</string>
-    <string name="update_check_look_for_updates">Жаңалтулар ізделуде…</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Кеңейту үшін жаңарту бар</item>
         <item quantity="other">%d кеңейту үшін жаңарту бар</item>

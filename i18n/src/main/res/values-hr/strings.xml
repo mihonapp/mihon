@@ -250,7 +250,6 @@
     <string name="update_check_notification_download_error">Greška pri preuzimanju</string>
     <string name="update_check_notification_download_complete">Dodirnite da biste instalirali ažuriranje</string>
     <string name="update_check_notification_download_in_progress">Preuzimanje …</string>
-    <string name="update_check_look_for_updates">Traženje novih verzija …</string>
     <string name="update_check_no_new_updates">Nema novih verzija</string>
     <string name="update_check_confirm">Preuzmi</string>
     <string name="file_select_backup">Odaberi datoteku sigurnosne kopije</string>
@@ -577,7 +576,7 @@
     <string name="tracking_guide">Vodič za praćenje</string>
     <string name="off">Isključeno</string>
     <string name="on">Uključeno</string>
-    <string name="categorized_display_settings">Postavke prikaza i sortiranja po kategorijama</string>
+    <string name="categorized_display_settings">Postavke kategorija za sortiranje</string>
     <string name="pref_library_update_refresh_trackers_summary">Aktualiziraj pratioce prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_trackers">Automatski osvježi pratioce</string>
     <string name="restrictions">Ograničenja: %s</string>
@@ -658,7 +657,7 @@
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
     <string name="webtoon_side_padding_5">5 %</string>
     <string name="pref_navigate_pan">Panoramski prikaz širokih slika</string>
-    <string name="pref_landscape_zoom">Zumiraj slike u ležećem formatu</string>
+    <string name="pref_landscape_zoom">Automatski zumiraj u široke slike</string>
     <string name="pref_update_only_started">Koja još nisu pokrenuta</string>
     <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
@@ -818,4 +817,32 @@
     <string name="action_set_interval">Postavi interval</string>
     <string name="action_filter_interval_custom">Prilagođeni interval dohvaćanja</string>
     <string name="action_filter_interval_long">Mjesečno dohvaćanje (28 dana)</string>
+    <string name="manga_display_interval_title">Procijeni svakih</string>
+    <string name="manga_modify_calculated_interval_title">Prilagodi interval</string>
+    <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
+    <string name="manga_display_modified_interval_title">Postavi za aktualiziranje svakih</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d dan nakon</item>
+        <item quantity="few">%d dana nakon</item>
+        <item quantity="other">%d dana nakon</item>
+    </plurals>
+    <string name="action_ok">U redu</string>
+    <string name="pref_update_only_in_release_period">Izvan očekivanog razdoblja izdavanja</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d dan prije</item>
+        <item quantity="few">%d dana prije</item>
+        <item quantity="other">%d dana prije</item>
+    </plurals>
+    <string name="intervals_header">Intervali</string>
+    <string name="track_delete_title">Ukloniti praćenje %s\?</string>
+    <string name="skipped_reason_not_in_release_period">Preskočeno, jer se danas nije očekivalo izdanje</string>
+    <plurals name="day">
+        <item quantity="one">%d dan</item>
+        <item quantity="few">%d dana</item>
+        <item quantity="other">%d dana</item>
+    </plurals>
+    <string name="pref_update_release_grace_period">Očekivano razdoblje odgode izdanja</string>
+    <string name="manga_modify_interval_title">Pomijeni interval</string>
+    <string name="track_delete_text">Ovo će ukloniti lokalno praćenje.</string>
+    <string name="track_delete_remote_text">Također ukloni iz %s</string>
 </resources>

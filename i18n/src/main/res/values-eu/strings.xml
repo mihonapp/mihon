@@ -176,7 +176,6 @@
     <string name="page_list_empty_error">Ez dira orrialderik aurkitu</string>
     <string name="loader_not_implemented_error">Ez da iturria aurkitu</string>
     <string name="update_check_confirm">Deskargatu</string>
-    <string name="update_check_look_for_updates">Eguneraketak bilatzen…</string>
     <string name="update_check_notification_download_complete">Deskarga bukatua</string>
     <string name="download_notifier_title_error">Errorea</string>
     <string name="ext_installer_legacy">Ondare</string>

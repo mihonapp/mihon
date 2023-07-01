@@ -263,7 +263,6 @@
     <string name="file_select_backup">Selectează fișierul de rezervă</string>
     <string name="update_check_confirm">Descarcă</string>
     <string name="update_check_no_new_updates">Nu sunt exista actualizări noi</string>
-    <string name="update_check_look_for_updates">Se caută actualizări…</string>
     <string name="update_check_notification_download_in_progress">Se descarcă…</string>
     <string name="update_check_notification_download_complete">Apăsați pentru a instala actualizarea</string>
     <string name="update_check_notification_download_error">Eroare la descărcare</string>

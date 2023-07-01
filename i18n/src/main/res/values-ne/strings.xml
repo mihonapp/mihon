@@ -631,7 +631,6 @@
     <string name="skipped_reason_completed">श्रृङ्खला पूरा भएकोले छोडियो</string>
     <string name="learn_more">थप जान्नका लागि ट्याप गर्नुहोस्</string>
     <string name="update_check_no_new_updates">कुनै नयाँ अपडेट उपलब्ध छैन</string>
-    <string name="update_check_look_for_updates">अपडेट खोज्दै…</string>
     <string name="information_empty_category_dialog">तपाईंसँग अहिलेसम्म कुनै पनि वर्गहरू छैन।</string>
     <string name="chapter_settings_updated">पूर्वनिर्धारित अध्याय सेटिङहरू अपडेट गरियो</string>
     <string name="channel_skipped">छोडियो</string>
@@ -653,7 +652,7 @@
     <string name="update_check_eol">यो एन्ड्रोइड संस्करण अब समर्थित छैन</string>
     <string name="getting_started_guide">सुरु गर्ने गाइड</string>
     <string name="pref_navigate_pan">चौडा छविहरू प्यान गर्नुहोस्</string>
-    <string name="pref_landscape_zoom">जूम ल्यान्डस्केप छवि</string>
+    <string name="pref_landscape_zoom">फराकिलो छविहरूमा स्वचालित रूपमा जूम गर्नुहोस्</string>
     <string name="notification_update_error">%1$d अपडेट(हरू) असफल भयो</string>
     <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
     <string name="disabled_nav">असक्षम</string>
@@ -828,4 +827,8 @@
     <string name="pref_update_release_grace_period_info">स्रोतहरूमा तनाव कम गर्न छोटो ग्रेस अवधिको साथ अन्तराल सिफारिस गरिन्छ। छुटेको इन्ट्रीको लागि जति धेरै जाँचहरू छन्, जाँचहरू बीचको अन्तर त्यति नै लामो हुन्छ, अधिकतम २८ दिनको साथ।</string>
     <string name="manga_display_interval_title">प्रत्येक अनुमान लगाउनुहोस्</string>
     <string name="action_filter_interval_dropped">छोडियो\? ढिलो २०+ र २ महिना</string>
+    <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो\?</string>
+    <string name="track_delete_remote_text">%s बाट पनि हटाउनुहोस्</string>
+    <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
+    <string name="action_ok">ठीक छ</string>
 </resources>

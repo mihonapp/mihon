@@ -294,7 +294,6 @@
         <item quantity="other">%d хушма валли ҫӗнетӳ пур</item>
     </plurals>
     <string name="update_check_notification_download_in_progress">Тиев…</string>
-    <string name="update_check_look_for_updates">Ҫӗнетӳсем шырани…</string>
     <string name="update_check_no_new_updates">Ҫӗнетӳсем тупӑнман</string>
     <string name="update_check_confirm">Тиесе ил</string>
     <string name="file_select_cover">Хуплашка суйла</string>

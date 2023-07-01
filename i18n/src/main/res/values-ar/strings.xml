@@ -220,7 +220,6 @@
     <string name="file_select_backup">اختر ملف النسخة الاحتياطية</string>
     <string name="update_check_confirm">تنزيل</string>
     <string name="update_check_no_new_updates">لا تتوفر تحديثات جديدة</string>
-    <string name="update_check_look_for_updates">البحث عن التحديثات…</string>
     <string name="update_check_notification_download_in_progress">جار التنزيل…</string>
     <string name="update_check_notification_download_complete">اضغط لتثبيت التحديث</string>
     <string name="update_check_notification_download_error">حدث خطأ في التنزيل</string>
@@ -698,7 +697,7 @@
     <string name="pref_update_only_started">لم يبدأ هذا بعد</string>
     <string name="skipped_reason_completed">تُخُطِّيت لأنها تمِّت</string>
     <string name="pref_navigate_pan">حرِّك الصور الواسعة</string>
-    <string name="pref_landscape_zoom">كبر الصوره الأفقية</string>
+    <string name="pref_landscape_zoom">كبِّر الصور العريضة تلقائيًّا</string>
     <string name="channel_skipped">متجاوَز</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
@@ -900,4 +899,8 @@
     </plurals>
     <string name="intervals_header">المدة</string>
     <string name="action_sort_next_updated">التحديث المتوقع القادم</string>
+    <string name="track_delete_title">أأزيل تتبع %s؟</string>
+    <string name="track_delete_text">هذا يزيل التتبع محليًّا.</string>
+    <string name="action_ok">حسنًا</string>
+    <string name="track_delete_remote_text">وكذلك أزله من %s</string>
 </resources>

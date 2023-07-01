@@ -280,7 +280,6 @@
     <string name="file_select_backup">Vyberte záložný súbor</string>
     <string name="update_check_confirm">Stiahnuť</string>
     <string name="update_check_no_new_updates">Žiadné nové aktualizácie</string>
-    <string name="update_check_look_for_updates">Vyhľadávanie aktualizácií…</string>
     <string name="update_check_notification_download_in_progress">Prebiehá stahovanie…</string>
     <string name="update_check_notification_download_complete">Klepnutím nainštalujte</string>
     <string name="update_check_notification_download_error">Chyba sťahovania</string>

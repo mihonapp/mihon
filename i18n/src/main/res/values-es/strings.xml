@@ -175,7 +175,6 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Descargar</string>
     <string name="update_check_no_new_updates">No hay nuevas actualizaciones disponibles</string>
-    <string name="update_check_look_for_updates">Buscando actualizaciones…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="update_check_notification_download_complete">Toca aquí para instalar la actualización</string>
@@ -877,4 +876,8 @@
     <string name="action_set_interval">Establecer intervalo</string>
     <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
     <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
+    <string name="action_ok">DE ACUERDO</string>
+    <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
+    <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
+    <string name="track_delete_remote_text">Quitar también de %s</string>
 </resources>

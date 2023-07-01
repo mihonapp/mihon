@@ -263,7 +263,6 @@
     <string name="file_select_backup">Επιλέξτε αρχείο αντιγράφου ασφαλείας</string>
     <string name="update_check_confirm">Λήψη</string>
     <string name="update_check_no_new_updates">Δεν υπάρχουν διαθέσιμες νέες ενημερώσεις</string>
-    <string name="update_check_look_for_updates">Αναζήτηση για ενημερώσεις…</string>
     <string name="update_check_notification_download_in_progress">Γίνεται λήψη…</string>
     <string name="update_check_notification_download_complete">Πατήστε για να εγκαταστήσετε την ενημέρωση</string>
     <string name="update_check_notification_download_error">Σφάλμα λήψης</string>
@@ -644,7 +643,7 @@
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Εμφάνιση καταχώρισης</string>
-    <string name="pref_landscape_zoom">Ζουμ οριζόντιας εικόνας</string>
+    <string name="pref_landscape_zoom">Αυτόματο ζουμ σε ευρείες εικόνες</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
     <string name="pref_update_only_started">Που δεν έχουν ξεκινήσει</string>
     <string name="pref_navigate_pan">Μετατόπιση πλατιών εικόνων</string>
@@ -828,4 +827,8 @@
     <string name="manga_modify_interval_title">Τροποποίηση διαστήματος</string>
     <string name="manga_modify_calculated_interval_title">Προσαρμογή διαστήματος</string>
     <string name="skipped_reason_not_in_release_period">Παραλείφθηκε επειδή δεν αναμενόταν κυκλοφορία σήμερα</string>
+    <string name="action_ok">Εντάξει</string>
+    <string name="track_delete_title">Κατάργηση παρακολούθησης %s;</string>
+    <string name="track_delete_remote_text">Επίσης, αφαιρέστε από %s</string>
+    <string name="track_delete_text">Αυτό θα καταργήσει την παρακολούθηση τοπικά.</string>
 </resources>

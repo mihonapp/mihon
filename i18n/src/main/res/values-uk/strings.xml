@@ -174,8 +174,8 @@
     <string name="used_cache">Використано: %1$s</string>
     <string name="cache_deleted">Кеш очищено %1$d файлів було видалено</string>
     <string name="cache_delete_error">Виникла помилка при видаленні кешу</string>
-    <string name="pref_clear_cookies">Очистити реп\'яшки</string>
-    <string name="cookies_cleared">Реп\'яшки очищено</string>
+    <string name="pref_clear_cookies">Очистити куки</string>
+    <string name="cookies_cleared">Куки очищено</string>
     <string name="pref_clear_database">Очистити базу даних</string>
     <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
     <string name="clear_database_confirmation">Ви впевнені\? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
@@ -211,7 +211,7 @@
     <string name="display_mode_chapter">Розділ %1$s</string>
     <string name="chapter_downloading_progress">Завантажується (%1$d/%2$d)</string>
     <string name="chapter_error">Помилка</string>
-    <string name="chapter_paused">Пауза</string>
+    <string name="chapter_paused">Призупинено</string>
     <string name="show_title">Назва джерела</string>
     <string name="show_chapter_number">Номер розділу</string>
     <string name="sort_by_source">За каталогом</string>
@@ -263,7 +263,6 @@
     <string name="file_select_backup">Виберіть файл резервної копії</string>
     <string name="update_check_confirm">Завантажити</string>
     <string name="update_check_no_new_updates">Оновлень не виявлено</string>
-    <string name="update_check_look_for_updates">Перевірити оновлення…</string>
     <string name="update_check_notification_download_in_progress">Завантаження в процесі…</string>
     <string name="update_check_notification_download_complete">Тицьніть для встановлення оновлень</string>
     <string name="update_check_notification_download_error">Помилка завантаження</string>
@@ -712,7 +711,7 @@
     <string name="ext_info_age_rating">Вікові обмеження</string>
     <string name="download_notifier_split_page_path_not_found">Не вдалось знайти шлях сторінки %d</string>
     <string name="pref_navigate_pan">Панорамування широких зображень</string>
-    <string name="pref_landscape_zoom">Збільшити горизонтальне зображення</string>
+    <string name="pref_landscape_zoom">Автоматичне масштабування широких зображень</string>
     <string name="action_close">Закрити</string>
     <string name="update_check_open">Відкрити на GitHub</string>
     <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
@@ -863,4 +862,8 @@
     <string name="manga_modify_interval_title">Змінити інтервал</string>
     <string name="manga_modify_calculated_interval_title">Налаштувати інтервал</string>
     <string name="skipped_reason_not_in_release_period">Пропущено, оскільки сьогодні не очікується жодного релізу</string>
+    <string name="action_ok">ОК</string>
+    <string name="track_delete_remote_text">Також видалити з %s</string>
+    <string name="track_delete_title">Видалити відстеження %s\?</string>
+    <string name="track_delete_text">Це видалить відстеження локально.</string>
 </resources>

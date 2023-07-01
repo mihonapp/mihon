@@ -224,7 +224,6 @@
     <string name="decode_image_error">De afbeelding kon niet worden geladen</string>
     <string name="download_queue_error">Kon hoofdstukken niet downloaden. Je kan het opnieuw proberen in het downloadscherm</string>
     <string name="notification_cover_update_failed">Updaten van omslag mislukt</string>
-    <string name="update_check_look_for_updates">Zoeken naar updates…</string>
     <string name="update_check_notification_download_in_progress">Downloaden…</string>
     <string name="update_check_notification_download_error">Fout bij het downloaden</string>
     <string name="action_filter_bookmarked">Met bladwijzer</string>

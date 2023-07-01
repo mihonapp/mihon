@@ -50,7 +50,7 @@
     <string name="unlock_app">Malŝlosi Tachiyomi-n</string>
     <string name="history">Historio</string>
     <string name="chapters">Ĉapitroj</string>
-    <string name="manga">Mangao</string>
+    <string name="manga">Biblioteka kontribuoj</string>
     <string name="categories">Kategorioj</string>
     <string name="information_empty_library">Via biblioteko malplenas</string>
     <string name="information_no_recent_manga">Neniu legita laste</string>
@@ -234,7 +234,6 @@
     <string name="update_check_notification_download_error">Elŝutada eraro</string>
     <string name="update_check_notification_download_complete">Elŝutado finita</string>
     <string name="update_check_notification_download_in_progress">Elŝutas…</string>
-    <string name="update_check_look_for_updates">Serĉas ĝisdatigojn…</string>
     <string name="update_check_no_new_updates">Neniu nova ĝisdatigo disponebla</string>
     <string name="update_check_confirm">Elŝuti</string>
     <string name="file_select_backup">Elekti savkopian dosieron</string>
@@ -526,4 +525,10 @@
     <string name="secure_screen_summary">Kaŝi aplikaĵan enhavon kiam ŝaltumas aplikaĵojn kaj malebligi ekrankopion</string>
     <string name="label_stats">Statistiko</string>
     <string name="label_warning">Averto</string>
+    <string name="label_started">Komenciĝis</string>
+    <string name="label_local">Loka</string>
+    <string name="label_downloaded">Elŝutita</string>
+    <string name="action_set_interval">Meti intervalon</string>
+    <string name="action_filter_interval_custom">Personaligita intervalo de elŝutoj</string>
+    <string name="action_filter_interval_long">Prenu ĉiumonate (28 tagoj)</string>
 </resources>

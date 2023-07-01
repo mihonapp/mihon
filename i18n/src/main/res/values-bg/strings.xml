@@ -214,7 +214,6 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Изтегли</string>
     <string name="update_check_no_new_updates">Няма налични актуализации</string>
-    <string name="update_check_look_for_updates">Търсене на актуализации…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">Изтегля се…</string>
     <string name="update_check_notification_download_complete">Изтегляне завършено</string>

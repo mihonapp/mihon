@@ -105,7 +105,7 @@
     <string name="scale_type_fit_height">Vertikal ausfüllen</string>
     <string name="scale_type_original_size">Orginalgröße</string>
     <string name="scale_type_smart_fit">Intelligentes Ausfüllen</string>
-    <string name="pref_zoom_start">Anfangsposition der Vergrößerung</string>
+    <string name="pref_zoom_start">Anfangsposition des Zooms</string>
     <string name="zoom_start_automatic">Automatisch</string>
     <string name="zoom_start_left">Links</string>
     <string name="zoom_start_right">Rechts</string>
@@ -213,7 +213,6 @@
     <string name="file_select_backup">Wähle eine Sicherungsdatei</string>
     <string name="update_check_confirm">Herunterladen</string>
     <string name="update_check_no_new_updates">Keine neue Aktualisierung verfügbar</string>
-    <string name="update_check_look_for_updates">Suche nach Aktualisierungen…</string>
     <string name="update_check_notification_download_in_progress">Herunterladen…</string>
     <string name="update_check_notification_download_complete">Tippe, um die Aktualisierung zu installieren</string>
     <string name="update_check_notification_download_error">Fehler beim Herunterladen</string>
@@ -645,7 +644,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Eintrag anzeigen</string>
     <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
-    <string name="pref_landscape_zoom">Bild im Querformat vergrößern</string>
+    <string name="pref_landscape_zoom">Bei breiten Bildern automatisch hineinzoomen</string>
     <string name="pref_navigate_pan">Innerhalb breiter Seiten navigieren</string>
     <string name="pref_update_only_started">Die noch nicht begonnen wurden</string>
     <string name="skipped_reason_completed">Übersprungen, da die Serie abgeschlossen ist</string>
@@ -828,4 +827,8 @@
     <string name="action_filter_interval_dropped">Abgebrochen\? Um 20+ Tage und 2 Monate verspätet</string>
     <string name="action_filter_interval_passed">Überprüfungszeitraum überschritten</string>
     <string name="action_filter_interval_late">Um 10+ Tage verspätet</string>
+    <string name="track_delete_text">Dies wird das lokale Tracking entfernen.</string>
+    <string name="track_delete_remote_text">Auch aus %s entfernen</string>
+    <string name="action_ok">OK</string>
+    <string name="track_delete_title">Tracking von %s entfernen\?</string>
 </resources>

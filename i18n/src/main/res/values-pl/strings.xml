@@ -84,7 +84,6 @@
     <string name="file_select_cover">Wybierz okładkę</string>
     <string name="update_check_confirm">Pobierz</string>
     <string name="update_check_no_new_updates">Brak nowych aktualizacji</string>
-    <string name="update_check_look_for_updates">Szukanie aktualizacji…</string>
     <string name="update_check_notification_download_in_progress">Pobieranie…</string>
     <string name="update_check_notification_download_complete">Naciśnij, by zaktualizować</string>
     <string name="update_check_notification_download_error">Błąd pobierania</string>

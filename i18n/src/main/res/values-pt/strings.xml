@@ -179,7 +179,6 @@
     <!--UpdateCheck-->
     <string name="update_check_confirm">Transferir</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_look_for_updates">À procura de atualizações…</string>
     <!--UpdateCheck Notifications-->
     <string name="update_check_notification_download_in_progress">A transferir…</string>
     <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>

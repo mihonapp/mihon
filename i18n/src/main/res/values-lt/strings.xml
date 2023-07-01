@@ -418,7 +418,6 @@
     <string name="update_check_notification_download_complete">Bakstelėkite, kad įdiegtumėte atnaujinimą</string>
     <string name="update_check_eol">Ši \"Android\" versija nebepalaikoma</string>
     <string name="update_check_no_new_updates">Naujų atnaujinimų nėra</string>
-    <string name="update_check_look_for_updates">Ieškoma naujinimų…</string>
     <string name="migration_dialog_what_to_include">Pasirinkite duomenis, kuriuos norite įtraukti</string>
     <string name="copy">Kopijuoti</string>
     <string name="notification_new_chapters">Atrasti nauji skyriai</string>

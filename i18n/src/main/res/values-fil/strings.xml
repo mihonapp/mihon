@@ -287,7 +287,6 @@
     <string name="update_check_notification_download_error">Nagka-error sa pag-download</string>
     <string name="update_check_notification_download_complete">I-tap upang ma-install ang update</string>
     <string name="update_check_notification_download_in_progress">Dina-download…</string>
-    <string name="update_check_look_for_updates">Naghahanap ng mga update…</string>
     <string name="update_check_no_new_updates">Walang bagong update</string>
     <string name="update_check_confirm">I-download</string>
     <string name="file_select_backup">Pumili ng backup</string>
@@ -567,7 +566,7 @@
     <string name="off">Naka-off</string>
     <string name="on">Naka-on</string>
     <string name="action_display_local_badge">Lokal na source</string>
-    <string name="categorized_display_settings">Pagpapakita kada kategorya</string>
+    <string name="categorized_display_settings">Mga setting ng bawat kategorya para sa pag-aayos</string>
     <string name="information_empty_category_dialog">Wala ka pang kategorya.</string>
     <string name="tracking_guide">Gabay sa pag-track</string>
     <string name="action_start_downloading_now">I-download na</string>
@@ -803,9 +802,9 @@
     <string name="action_set_interval">Itakda ang pagitan</string>
     <string name="action_filter_interval_custom">Sinadyang takdang pagkuha</string>
     <string name="action_filter_interval_late">Nahuling 10+ pagsusuri</string>
-    <string name="action_sort_next_updated">Inaasahang kasunod na updeyt</string>
+    <string name="action_sort_next_updated">Susunod na inaasahang update</string>
     <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
-    <string name="action_filter_interval_passed">Pasadong pagsusuri ng panahon</string>
+    <string name="action_filter_interval_passed">Lumipas ang check period</string>
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <plurals name="pref_update_release_following_days">
         <item quantity="one">pagkatapos ng %d araw</item>
@@ -822,8 +821,10 @@
     </plurals>
     <string name="manga_display_interval_title">Tantyahin bawat</string>
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
-    <string name="pref_update_only_in_release_period">Sa labas ng inaasahang panahon ng release</string>
+    <string name="pref_update_only_in_release_period">Sa labas ng inaasahang release period</string>
     <string name="intervals_header">Mga pagitan</string>
     <string name="manga_modify_interval_title">Baguhin bawat</string>
     <string name="pref_update_release_grace_period_info">Ang isang mababang palugit na panahon ay inirerekomenda upang mabawasan ang stress sa mga source. Kung mas maraming tseke para sa isang entry na napalampas, mas mahaba ang pagitan sa pagitan ng mga tseke na may maximum na 28 araw.</string>
+    <string name="manga_modify_calculated_interval_title">I-customize ang Interval</string>
+    <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
 </resources>

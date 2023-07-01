@@ -264,7 +264,6 @@
     <string name="file_select_backup">Ischerta sa còpia de seguresa</string>
     <string name="update_check_confirm">Iscàrriga</string>
     <string name="update_check_no_new_updates">Non bi sunt agiornamentos disponìbiles noos</string>
-    <string name="update_check_look_for_updates">Chirchende agiornamentos…</string>
     <string name="update_check_notification_download_in_progress">Iscarrighende…</string>
     <string name="update_check_notification_download_complete">Toca pro installare s\'agiornamentu</string>
     <string name="update_check_notification_download_error">Errore de iscarrigamentu</string>

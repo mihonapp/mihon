@@ -381,7 +381,6 @@
     <string name="update_check_notification_download_error">Грешка током преузимања</string>
     <string name="update_check_notification_download_complete">Додирните за инсталирање ажурирања</string>
     <string name="update_check_notification_download_in_progress">Преузимање…</string>
-    <string name="update_check_look_for_updates">Тражење ажурирања…</string>
     <string name="update_check_no_new_updates">Нема нових ажурирања</string>
     <string name="update_check_confirm">Преузми</string>
     <string name="file_select_backup">Изаберите датотеку резервне копије</string>

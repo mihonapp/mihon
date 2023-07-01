@@ -8,7 +8,6 @@
     <string name="update_check_notification_download_error">خطا در دانلود</string>
     <string name="update_check_notification_download_complete">دانلود کامل شد</string>
     <string name="update_check_notification_download_in_progress">در حال دانلود…</string>
-    <string name="update_check_look_for_updates">در حال جستجوی آپدیت‌ها …</string>
     <string name="update_check_no_new_updates">آپدیت جدیدی موجود نیست</string>
     <string name="update_check_confirm">دانلود</string>
     <string name="file_select_backup">فایل پشتیبان را انتخاب کنید</string>

@@ -252,7 +252,6 @@
     <string name="file_select_backup">バックアップファイルを選択</string>
     <string name="update_check_confirm">ダウンロード</string>
     <string name="update_check_no_new_updates">新しいバージョンがありません</string>
-    <string name="update_check_look_for_updates">アップデートを確認中…</string>
     <string name="update_check_notification_download_in_progress">ダウンロード中…</string>
     <string name="update_check_notification_download_complete">タップでアップデートをインストール</string>
     <string name="update_check_notification_download_error">ダウンロード中にエラー発生</string>
@@ -551,7 +550,7 @@
     <string name="pref_grayscale">グレースケール</string>
     <string name="off">OFF</string>
     <string name="on">ON</string>
-    <string name="categorized_display_settings">カテゴリ別のソート及び表示設定</string>
+    <string name="categorized_display_settings">カテゴリ別のソート設定</string>
     <string name="pref_library_update_refresh_trackers_summary">ライブラリを更新時、トラッカーも更新する</string>
     <string name="pref_library_update_refresh_trackers">トラッカーを自動でリロード</string>
     <string name="restrictions">制限：%s</string>
@@ -635,7 +634,7 @@
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="pref_update_only_started">読み始めていない</string>
     <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
-    <string name="pref_landscape_zoom">横長の画像をズーム</string>
+    <string name="pref_landscape_zoom">横長の画像に自動でズームイン</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
     <string name="pref_navigate_pan">幅広い画像を左右に移動</string>

@@ -263,7 +263,6 @@
     <string name="file_select_backup">Välj säkerhetskopia</string>
     <string name="update_check_confirm">Ladda ner</string>
     <string name="update_check_no_new_updates">Inga nya uppdateringar tillgängliga</string>
-    <string name="update_check_look_for_updates">Söker efter uppdateringar…</string>
     <string name="update_check_notification_download_in_progress">Laddar ner…</string>
     <string name="update_check_notification_download_complete">Tryck för att installera uppdateringen</string>
     <string name="update_check_notification_download_error">Nedladdningsfel</string>

@@ -221,7 +221,6 @@
     <string name="file_select_backup">बैकअप फ़ाइल का चयन करें</string>
     <string name="update_check_confirm">डाउनलोड</string>
     <string name="update_check_no_new_updates">कोई नया अद्यतन उपलब्ध नहीं है</string>
-    <string name="update_check_look_for_updates">अपडेट्स ढूंढ रहे हैं…</string>
     <string name="update_check_notification_download_in_progress">डाउनलोडिंग…</string>
     <string name="update_check_notification_download_complete">अपडेट इंस्टॉल करने के लिए यहा टेप करें</string>
     <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>

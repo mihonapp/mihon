@@ -706,7 +706,6 @@
     <string name="file_select_backup">Zgjidhni skedarin rezervë</string>
     <string name="update_check_no_new_updates">Nuk disponohen përditësime të reja</string>
     <string name="update_check_notification_download_in_progress">Po shkarkohet…</string>
-    <string name="update_check_look_for_updates">Duke kërkuar për përditësime…</string>
     <string name="update_check_notification_update_available">Versioni i ri në dispozicion!</string>
     <string name="chapter_settings_updated">Cilësimet e kapitullit të parazgjedhur të përditësuara</string>
     <plurals name="num_trackers">

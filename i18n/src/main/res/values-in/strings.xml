@@ -54,7 +54,7 @@
     <string name="action_reset">Atur ulang</string>
     <string name="action_undo">Kembalikan</string>
     <string name="action_open_log">Buka log</string>
-    <string name="name">Ultimate Legend: Kang Hae Hyo</string>
+    <string name="name">Nama</string>
     <string name="action_display_grid">Grid kompak</string>
     <string name="action_restore">Pulihkan</string>
     <string name="loading">Memuat…</string>
@@ -213,7 +213,6 @@
     <string name="file_select_backup">Pilih berkas cadangan</string>
     <string name="update_check_confirm">Unduh</string>
     <string name="update_check_no_new_updates">Pembaruan tidak tersedia</string>
-    <string name="update_check_look_for_updates">Mencari pembaruan…</string>
     <string name="update_check_notification_download_in_progress">Mengunduh…</string>
     <string name="update_check_notification_download_complete">Ketuk untuk menginstal pembaruan</string>
     <string name="update_check_notification_download_error">Terjadi kesalahan saat mengunduh</string>
@@ -637,7 +636,7 @@
     <string name="skipped_reason_completed">Dilewati karena seri telah selesai</string>
     <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
-    <string name="pref_landscape_zoom">Perbesar gambar lanskap</string>
+    <string name="pref_landscape_zoom">Secara otomatis melebarkan gambar</string>
     <string name="pref_navigate_pan">Geser gambar lebar</string>
     <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
@@ -810,4 +809,8 @@
     <string name="manga_display_interval_title">Perkirakan setiap</string>
     <string name="manga_display_modified_interval_title">Atur untuk memperbarui setiap</string>
     <string name="manga_modify_interval_title">Ubah interval</string>
+    <string name="track_delete_title">Hapus %s pelacakan\?</string>
+    <string name="action_ok">Oke</string>
+    <string name="track_delete_text">Ini akan menghapus pelacakan lokal.</string>
+    <string name="track_delete_remote_text">Hapus juga dari %s</string>
 </resources>

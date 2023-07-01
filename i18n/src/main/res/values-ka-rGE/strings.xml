@@ -333,7 +333,6 @@
     <string name="file_select_backup">ამოირჩიე რეზერვის ფაილი</string>
     <string name="update_check_confirm">გადმოწერა</string>
     <string name="update_check_no_new_updates">განახლება ვერ მოიძებნა</string>
-    <string name="update_check_look_for_updates">განახლების ძებნა…</string>
     <string name="update_check_notification_download_in_progress">გადმოწერა…</string>
     <string name="update_check_notification_download_complete">განახლების დასაყენებლად დაატყაპუნეთ</string>
     <string name="update_check_notification_download_error">გადმოწერის შეცდომა</string>

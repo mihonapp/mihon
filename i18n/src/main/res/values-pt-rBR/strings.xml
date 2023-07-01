@@ -215,7 +215,6 @@
     <string name="file_select_backup">Selecionar arquivo de backup</string>
     <string name="update_check_confirm">Fazer download</string>
     <string name="update_check_no_new_updates">Sem atualizações disponíveis</string>
-    <string name="update_check_look_for_updates">Procurando por atualizações…</string>
     <string name="update_check_notification_download_in_progress">Fazendo download…</string>
     <string name="update_check_notification_download_complete">Toque para instalar a atualização</string>
     <string name="update_check_notification_download_error">Erro ao fazer download</string>
@@ -657,7 +656,7 @@
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar o item</string>
     <string name="pref_navigate_pan">Navegar imagens longas</string>
-    <string name="pref_landscape_zoom">Dar zoom em imagens horizontais</string>
+    <string name="pref_landscape_zoom">Dar zoom automaticamente em imagens largas</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
     <string name="pref_update_only_started">Que não tiveram a leitura iniciada</string>
     <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
@@ -838,4 +837,8 @@
     <string name="pref_update_release_grace_period_info">Um intervalo com uma carência pequena é recomendado para minimizar o estresse nas fontes. Quanto mais verificações para um item forem perdidas, maior será o intervalo entre as verificações, com um máximo de 28 dias.</string>
     <string name="manga_display_interval_title">Estimar todo</string>
     <string name="manga_modify_interval_title">Modificar intervalo</string>
+    <string name="action_ok">OK</string>
+    <string name="track_delete_title">Remover o monitoramento do %s\?</string>
+    <string name="track_delete_text">Isso irá remover o monitoramento localmente.</string>
+    <string name="track_delete_remote_text">Também remover do %s</string>
 </resources>

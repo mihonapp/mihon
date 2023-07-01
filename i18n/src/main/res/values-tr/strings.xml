@@ -255,7 +255,6 @@
     <string name="file_select_backup">Yedek dosyasını seç</string>
     <string name="update_check_confirm">İndir</string>
     <string name="update_check_no_new_updates">Yeni güncelleme yok</string>
-    <string name="update_check_look_for_updates">Güncellemeler aranıyor…</string>
     <string name="update_check_notification_download_in_progress">İndiriliyor…</string>
     <string name="update_check_notification_download_complete">Güncellemeyi kurmak için dokunun</string>
     <string name="update_check_notification_download_error">İndirme hatası</string>
@@ -354,7 +353,7 @@
         <item quantity="one">%d girdi için</item>
         <item quantity="other">%d girdi için</item>
     </plurals>
-    <string name="action_menu">Menü</string>
+    <string name="action_menu">Komut-Seçenek Dizelgesi</string>
     <string name="action_newest">En yeni</string>
     <string name="action_oldest">En eski</string>
     <string name="action_move_to_top">En üste taşı</string>
@@ -650,7 +649,7 @@
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
     <string name="pref_navigate_pan">Geniş görüntüleri kaydır</string>
-    <string name="pref_landscape_zoom">Yatay görseli yakınlaştır</string>
+    <string name="pref_landscape_zoom">Geniş görselleri kendiliğinden yakınlaştır</string>
     <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="notification_update_skipped">%1$d güncelleme atlandı</string>
     <string name="learn_more">Daha çok bilgi edinmek için dokunun</string>
@@ -738,7 +737,7 @@
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>
     <string name="updates_last_update_info_just_now">Şimdi</string>
     <string name="download_notifier_cache_renewal">İndirilenler denetleniyor</string>
-    <string name="action_open_random_manga">Rastgele girdi aç</string>
+    <string name="action_open_random_manga">Gelişigüzel girdi aç</string>
     <string name="information_no_entries_found">Bu kategoride girdi bulunamadı</string>
     <string name="fdroid_warning">F-Droid derlemeleri resmi olarak desteklenmemektedir.
 \nDaha fazla bilgi edinmek için dokunun.</string>
@@ -806,5 +805,29 @@
     </plurals>
     <string name="action_set_interval">Aralığı ayarlama</string>
     <string name="action_filter_interval_custom">Özelleştirilmiş fetch aralığı</string>
-    <string name="action_filter_interval_long">Aylık getirme (28 gün)</string>
+    <string name="action_filter_interval_long">Aylık getir (28 gün)</string>
+    <string name="intervals_header">Zaman aralıkları</string>
+    <string name="action_filter_interval_late">Son 10+ kontrolü</string>
+    <string name="action_filter_interval_dropped">Bırakıldı mı\? Son 20+ ve 2 ay</string>
+    <string name="action_filter_interval_passed">Geçmiş denetim süresi</string>
+    <string name="action_sort_next_updated">Sonraki beklenen güncelleme</string>
+    <string name="pref_update_only_in_release_period">Beklenen yayınlanma dönemi dışında</string>
+    <plurals name="day">
+        <item quantity="one">1 gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d gün sonra</item>
+        <item quantity="other">%d gün sonra</item>
+    </plurals>
+    <string name="pref_update_release_grace_period">Beklenen yayınlama süresi</string>
+    <string name="action_ok">TAMAM</string>
+    <string name="manga_display_interval_title">Hepsini tahmin et</string>
+    <string name="track_delete_title">%s izlemesi kaldırılsın mı\?</string>
+    <string name="manga_modify_calculated_interval_title">Aralığı özelleştir</string>
+    <string name="pref_update_release_grace_period_info">Kaynaklar üzerindeki baskıyı en aza indirgemek için düşük dönem önerilir. Bir girdinin denetimi ne kadar fazla kaçırılırsa, en fazla 28 gün olacak şekilde denetim sürelerinin aralığı o kadar uzar.</string>
+    <string name="manga_modify_interval_title">Aralığı değiştir</string>
+    <string name="skipped_reason_not_in_release_period">Atlandı çünkü bugün bir yayın beklenmiyordu</string>
+    <string name="track_delete_text">Bu, izlemeyi yerel olarak kaldıracak.</string>
+    <string name="track_delete_remote_text">Ayrıca şuradan da kaldır: %s</string>
 </resources>
