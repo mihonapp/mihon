@@ -12,7 +12,7 @@ import tachiyomi.core.util.system.logcat
 object WebViewUtil {
     const val SPOOF_PACKAGE_NAME = "org.chromium.chrome"
 
-    const val MINIMUM_WEBVIEW_VERSION = 109
+    const val MINIMUM_WEBVIEW_VERSION = 111
 
     fun supportsWebView(context: Context): Boolean {
         try {
@@ -47,6 +47,8 @@ fun WebView.setDefaultSettings() {
         builtInZoomControls = true
         displayZoomControls = false
     }
+
+    CookieManager.getInstance().acceptThirdPartyCookies(this)
 }
 
 private fun WebView.getWebViewMajorVersion(): Int {
