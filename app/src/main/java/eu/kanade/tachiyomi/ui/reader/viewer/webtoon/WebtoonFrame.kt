@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.viewer.webtoon
 
 import android.content.Context
+import android.graphics.Rect
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -44,6 +45,18 @@ class WebtoonFrame(context: Context) : FrameLayout(context) {
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(ev)
         flingDetector.onTouchEvent(ev)
+
+        // Get the bounding box of the recyclerview and translate any motion events to be within it.
+        // Used to allow scrolling outside the recyclerview.
+        val recyclerRect = Rect()
+        recycler?.getHitRect(recyclerRect) ?: return super.dispatchTouchEvent(ev)
+        // Shrink the box to account for any rounding issues.
+        recyclerRect.inset(1, 1)
+        ev.setLocation(
+            ev.x.coerceIn(recyclerRect.left.toFloat(), recyclerRect.right.toFloat()),
+            ev.y.coerceIn(recyclerRect.top.toFloat(), recyclerRect.bottom.toFloat()),
+        )
+
         return super.dispatchTouchEvent(ev)
     }
 
