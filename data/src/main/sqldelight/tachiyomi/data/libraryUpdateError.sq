@@ -1,0 +1,19 @@
+CREATE TABLE libraryUpdateError (
+    _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    manga_id INTEGER NOT NULL,
+    message_id INTEGER NOT NULL
+);
+
+getAllErrors:
+SELECT *
+FROM libraryUpdateError;
+
+insert:
+INSERT INTO libraryUpdateError(manga_id, message_id) VALUES (:mangaId, :messageId);
+
+deleteAllErrors:
+DELETE FROM libraryUpdateError;
+
+deleteError:
+DELETE FROM libraryUpdateError
+WHERE _id = :_id;

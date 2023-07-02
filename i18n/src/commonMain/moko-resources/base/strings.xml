@@ -573,6 +573,11 @@
     <string name="syncing_library">Syncing library</string>
     <string name="library_sync_complete">Library sync complete</string>
 
+    <!-- Error section -->
+    <string name="option_label_library_update_errors">Library update errors</string>
+    <string name="label_library_update_errors">Library update errors (%d)</string>
+    <string name="info_empty_library_update_errors">You have no library update errors.</string>
+
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
