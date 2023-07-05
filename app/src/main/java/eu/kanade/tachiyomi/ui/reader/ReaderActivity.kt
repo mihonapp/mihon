@@ -236,20 +236,6 @@ class ReaderActivity : BaseActivity() {
     }
 
     /**
-     * Called when the activity is saving instance state. Current progress is persisted if this
-     * activity isn't changing configurations.
-     */
-    override fun onSaveInstanceState(outState: Bundle) {
-        viewModel.onSaveInstanceState()
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onPause() {
-        viewModel.saveCurrentChapterReadingProgress()
-        super.onPause()
-    }
-
-    /**
      * Set menu visibility again on activity resume to apply immersive mode again if needed.
      * Helps with rotations.
      */

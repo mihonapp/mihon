@@ -223,7 +223,6 @@ class ReaderViewModel(
         val currentChapters = state.value.viewerChapters
         if (currentChapters != null) {
             currentChapters.unref()
-            saveReadingProgress(currentChapters.currChapter)
             chapterToDownload?.let {
                 downloadManager.addDownloadsToStartOfQueue(listOf(it))
             }
@@ -236,17 +235,6 @@ class ReaderViewModel(
      */
     fun onActivityFinish() {
         deletePendingChapters()
-    }
-
-    /**
-     * Called when the activity is saved. It updates the database
-     * to persist the current progress of the active chapter.
-     */
-    fun onSaveInstanceState() {
-        val currentChapter = getCurrentChapter() ?: return
-        viewModelScope.launchNonCancellable {
-            saveChapterProgress(currentChapter)
-        }
     }
 
     /**
@@ -346,7 +334,6 @@ class ReaderViewModel(
      */
     private suspend fun loadAdjacent(chapter: ReaderChapter) {
         val loader = loader ?: return
-        saveCurrentChapterReadingProgress()
 
         logcat { "Loading adjacent ${chapter.chapter.url}" }
 
@@ -420,16 +407,17 @@ class ReaderViewModel(
      * [page]'s chapter is different from the currently active.
      */
     fun onPageSelected(page: ReaderPage) {
-        val currentChapters = state.value.viewerChapters ?: return
-
-        val selectedChapter = page.chapter
-
         // InsertPage and StencilPage doesn't change page progress
         if (page is InsertPage || page is StencilPage) {
             return
         }
 
+        val currentChapters = state.value.viewerChapters ?: return
+        val pages = page.chapter.pages ?: return
+        val selectedChapter = page.chapter
+
         // Save last page read and mark as read if needed
+        saveReadingProgress()
         mutableState.update {
             it.copy(
                 currentPage = page.index + 1,
@@ -446,11 +434,9 @@ class ReaderViewModel(
 
         if (selectedChapter != currentChapters.currChapter) {
             logcat { "Setting ${selectedChapter.chapter.url} as active" }
-            saveReadingProgress(currentChapters.currChapter)
             setReadStartTime()
             viewModelScope.launch { loadNewChapter(selectedChapter) }
         }
-        val pages = page.chapter.pages ?: return
         val inDownloadRange = page.number.toDouble() / pages.size > 0.25
         if (inDownloadRange) {
             downloadNextChapters()
@@ -520,17 +506,15 @@ class ReaderViewModel(
         }
     }
 
-    fun saveCurrentChapterReadingProgress() {
-        getCurrentChapter()?.let { saveReadingProgress(it) }
-    }
-
     /**
      * Called when reader chapter is changed in reader or when activity is paused.
      */
-    private fun saveReadingProgress(readerChapter: ReaderChapter) {
-        viewModelScope.launchNonCancellable {
-            saveChapterProgress(readerChapter)
-            saveChapterHistory(readerChapter)
+    private fun saveReadingProgress() {
+        getCurrentChapter()?.let {
+            viewModelScope.launchNonCancellable {
+                saveChapterProgress(it)
+                saveChapterHistory(it)
+            }
         }
     }
 
@@ -542,7 +526,7 @@ class ReaderViewModel(
         if (incognitoMode) return
 
         val chapter = readerChapter.chapter
-        getCurrentChapter()?.requestedPage = chapter.last_page_read
+        readerChapter.requestedPage = chapter.last_page_read
         updateChapter.await(
             ChapterUpdate(
                 id = chapter.id!!,
