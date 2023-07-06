@@ -16,6 +16,7 @@ import eu.kanade.presentation.more.settings.screen.AboutScreen
 import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
 import eu.kanade.presentation.more.settings.screen.SettingsBackupScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
+import eu.kanade.presentation.more.settings.screen.SettingsSyncScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
@@ -24,6 +25,7 @@ import tachiyomi.presentation.core.components.TwoPanelBox
 
 class SettingsScreen private constructor(
     val toBackup: Boolean,
+    val toSync: Boolean,
     val toAbout: Boolean,
 ) : Screen() {
 
@@ -34,6 +36,8 @@ class SettingsScreen private constructor(
             Navigator(
                 screen = if (toBackup) {
                     SettingsBackupScreen
+                } else if (toSync) {
+                    SettingsSyncScreen
                 } else if (toAbout) {
                     AboutScreen
                 } else {
@@ -56,6 +60,8 @@ class SettingsScreen private constructor(
             Navigator(
                 screen = if (toBackup) {
                     SettingsBackupScreen
+                } else if (toSync) {
+                    SettingsSyncScreen
                 } else if (toAbout) {
                     AboutScreen
                 } else {
@@ -79,10 +85,12 @@ class SettingsScreen private constructor(
     }
 
     companion object {
-        fun toMainScreen() = SettingsScreen(toBackup = false, toAbout = false)
+        fun toMainScreen() = SettingsScreen(toBackup = false, toSync = false, toAbout = false)
 
-        fun toBackupScreen() = SettingsScreen(toBackup = true, toAbout = false)
+        fun toBackupScreen() = SettingsScreen(toBackup = true, toSync = false, toAbout = false)
 
-        fun toAboutScreen() = SettingsScreen(toBackup = false, toAbout = true)
+        fun toSyncScreen() = SettingsScreen(toBackup = false, toSync = true, toAbout = false)
+
+        fun toAboutScreen() = SettingsScreen(toBackup = false, toSync = false, toAbout = true)
     }
 }

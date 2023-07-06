@@ -1,5 +1,7 @@
 package tachiyomi.core.preference
 
+import java.time.Instant
+
 interface PreferenceStore {
 
     fun getString(key: String, defaultValue: String = ""): Preference<String>
@@ -13,6 +15,15 @@ interface PreferenceStore {
     fun getBoolean(key: String, defaultValue: Boolean = false): Preference<Boolean>
 
     fun getStringSet(key: String, defaultValue: Set<String> = emptySet()): Preference<Set<String>>
+
+    fun getInstant(key: String, defaultValue: Instant = Instant.EPOCH): Preference<Instant> {
+        return getObject(
+            key = key,
+            defaultValue = defaultValue,
+            serializer = { it.epochSecond.toString() },
+            deserializer = { Instant.ofEpochSecond(it.toLong()) },
+        )
+    }
 
     fun <T> getObject(
         key: String,

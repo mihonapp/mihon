@@ -24,6 +24,7 @@ data class Manga(
     val thumbnailUrl: String?,
     val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
+    val lastModifiedAt: Long?,
 ) : Serializable {
 
     val sorting: Long
@@ -109,6 +110,7 @@ data class Manga(
             thumbnailUrl = null,
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
+            lastModifiedAt = 0L,
         )
     }
 }

@@ -19,6 +19,8 @@ interface Chapter : SChapter, Serializable {
     var date_fetch: Long
 
     var source_order: Int
+
+    var last_modified: Long?
 }
 
 fun Chapter.toDomainChapter(): DomainChapter? {
@@ -36,5 +38,6 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         dateUpload = date_upload,
         chapterNumber = chapter_number,
         scanlator = scanlator,
+        lastModifiedAt = last_modified,
     )
 }

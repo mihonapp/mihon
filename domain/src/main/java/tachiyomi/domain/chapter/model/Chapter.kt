@@ -13,6 +13,7 @@ data class Chapter(
     val dateUpload: Long,
     val chapterNumber: Float,
     val scanlator: String?,
+    val lastModifiedAt: Long?,
 ) {
     val isRecognizedNumber: Boolean
         get() = chapterNumber >= 0f
@@ -31,6 +32,7 @@ data class Chapter(
             dateUpload = -1,
             chapterNumber = -1f,
             scanlator = null,
+            lastModifiedAt = null,
         )
     }
 }

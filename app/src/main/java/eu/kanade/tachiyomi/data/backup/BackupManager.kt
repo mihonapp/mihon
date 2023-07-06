@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.chapter.model.copyFrom
-import eu.kanade.domain.manga.model.copyFrom
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY_MASK
@@ -134,7 +133,7 @@ class BackupManager(
         }
     }
 
-    private fun backupExtensionInfo(mangas: List<Manga>): List<BackupSource> {
+    fun backupExtensionInfo(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -149,7 +148,7 @@ class BackupManager(
      *
      * @return list of [BackupCategory] to be backed up
      */
-    private suspend fun backupCategories(options: Int): List<BackupCategory> {
+    suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
             getCategories.await()
@@ -160,7 +159,7 @@ class BackupManager(
         }
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
+    suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
         return mangas.map {
             backupManga(it, flags)
         }
@@ -455,7 +454,7 @@ class BackupManager(
                 updatedChapter = updatedChapter.copy(id = dbChapter._id)
                 updatedChapter = updatedChapter.copyFrom(dbChapter)
                 if (dbChapter.read && !updatedChapter.read) {
-                    updatedChapter = updatedChapter.copy(read = true, lastPageRead = dbChapter.last_page_read)
+                    updatedChapter = updatedChapter.copy(read = chapter.read, lastPageRead = dbChapter.last_page_read)
                 } else if (updatedChapter.lastPageRead == 0L && dbChapter.last_page_read != 0L) {
                     updatedChapter = updatedChapter.copy(lastPageRead = dbChapter.last_page_read)
                 }
@@ -513,7 +512,7 @@ class BackupManager(
         }
     }
 
-    private suspend fun updateManga(manga: Manga): Long {
+    suspend fun updateManga(manga: Manga): Long {
         handler.await(true) {
             mangasQueries.update(
                 source = manga.source,

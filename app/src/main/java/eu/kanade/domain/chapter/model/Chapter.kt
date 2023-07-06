@@ -24,6 +24,7 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         dateUpload = sChapter.date_upload,
         chapterNumber = sChapter.chapter_number,
         scanlator = sChapter.scanlator?.ifBlank { null },
+        lastModifiedAt = null,
     )
 }
 
@@ -34,6 +35,7 @@ fun Chapter.copyFrom(other: Chapters): Chapter {
         dateUpload = other.date_upload,
         chapterNumber = other.chapter_number,
         scanlator = other.scanlator?.ifBlank { null },
+        lastModifiedAt = other.last_modified_at,
     )
 }
 
@@ -50,4 +52,5 @@ fun Chapter.toDbChapter(): DbChapter = ChapterImpl().also {
     it.date_upload = dateUpload
     it.chapter_number = chapterNumber
     it.source_order = sourceOrder.toInt()
+    it.last_modified = lastModifiedAt
 }

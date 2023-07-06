@@ -23,6 +23,7 @@
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
     <string name="label_backup">Backup and restore</string>
+    <string name="label_sync">Sync</string>
     <string name="label_stats">Statistics</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
@@ -243,6 +244,9 @@
     <string name="pref_category_library_update">Global update</string>
     <string name="pref_library_update_interval">Automatic updates</string>
     <string name="update_never">Off</string>
+    <string name="update_30min">Every 30 minutes</string>
+    <string name="update_1hour">Every hour</string>
+    <string name="update_3hour">Every 3 hours</string>
     <string name="update_6hour">Every 6 hours</string>
     <string name="update_12hour">Every 12 hours</string>
     <string name="update_24hour">Daily</string>
@@ -522,7 +526,35 @@
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well.</string>
 
-      <!-- Advanced section -->
+      <!-- Sync section -->
+    <string name="syncing_data">Syncing data</string>
+    <string name="sync_error">Syncing data failed</string>
+    <string name="sync_complete">Syncing data complete</string>
+    <string name="sync_in_progress">Sync is already in progress</string>
+    <string name="pref_sync_device_name">Device name</string>
+    <string name="pref_sync_device_name_summ">Enter a name for this device</string>
+    <string name="pref_sync_host">Host</string>
+    <string name="pref_sync_host_summ">Enter the host address for synchronizing your library</string>
+    <string name="pref_sync_api_key">API key</string>
+    <string name="pref_sync_api_key_summ">Enter the API key to synchronize your library</string>
+    <string name="pref_sync_summary">Sync your library with a remote server</string>
+    <string name="pref_sync_now_group_title">Sync Actions</string>
+    <string name="pref_sync_now">Sync now</string>
+    <string name="pref_sync_confirmation_title">Sync confirmation</string>
+    <string name="pref_sync_now_subtitle">Initiate immediate synchronization of your data</string>
+    <string name="pref_sync_confirmation_message">Syncing will overwrite your local library with the remote library. Are you sure you want to continue?</string>
+    <string name="pref_sync_service">Service</string>
+    <string name="pref_sync_service_summ">Select the service to sync your library with</string>
+    <string name="pref_sync_service_category">Automatic Synchronization</string>
+    <string name="pref_sync_interval">Synchronization frequency</string>
+    <string name="self_host">Self-hosted (SyncYomi)</string>
+    <string name="sync_completed_message">Done in %1$s</string>
+    <string name="last_synchronization">Last Synchronization</string>
+
+
+
+
+    <!-- Advanced section -->
     <string name="label_network">Network</string>
     <string name="pref_clear_cookies">Clear cookies</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>

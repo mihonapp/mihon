@@ -48,6 +48,7 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import uy.kohesive.injekt.api.InjektModule
@@ -196,6 +197,9 @@ class PreferenceModule(val application: Application) : InjektModule {
                 folderProvider = get<AndroidBackupFolderProvider>(),
                 preferenceStore = get(),
             )
+        }
+        addSingletonFactory {
+            SyncPreferences(get())
         }
         addSingletonFactory {
             UiPreferences(get())

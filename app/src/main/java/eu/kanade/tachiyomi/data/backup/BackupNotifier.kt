@@ -79,9 +79,9 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
-    fun showRestoreProgress(content: String = "", progress: Int = 0, maxAmount: Int = 100): NotificationCompat.Builder {
+    fun showRestoreProgress(content: String = "", contentTitle: String = context.getString(R.string.restoring_backup), progress: Int = 0, maxAmount: Int = 100): NotificationCompat.Builder {
         val builder = with(progressNotificationBuilder) {
-            setContentTitle(context.getString(R.string.restoring_backup))
+            setContentTitle(contentTitle)
 
             if (!preferences.hideNotificationContent().get()) {
                 setContentText(content)
@@ -114,7 +114,7 @@ class BackupNotifier(private val context: Context) {
         }
     }
 
-    fun showRestoreComplete(time: Long, errorCount: Int, path: String?, file: String?) {
+    fun showRestoreComplete(time: Long, errorCount: Int, path: String?, file: String?, contentTitle: String = context.getString(R.string.restore_completed)) {
         context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
 
         val timeString = context.getString(
@@ -126,7 +126,7 @@ class BackupNotifier(private val context: Context) {
         )
 
         with(completeNotificationBuilder) {
-            setContentTitle(context.getString(R.string.restore_completed))
+            setContentTitle(contentTitle)
             setContentText(context.resources.getQuantityString(R.plurals.restore_completed_message, errorCount, timeString, errorCount))
 
             clearActions()

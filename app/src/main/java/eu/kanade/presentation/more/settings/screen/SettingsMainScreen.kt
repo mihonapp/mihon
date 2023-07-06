@@ -229,6 +229,12 @@ object SettingsMainScreen : Screen() {
             screen = SettingsBackupScreen,
         ),
         Item(
+            titleRes = R.string.label_sync,
+            subtitleRes = R.string.pref_sync_summary,
+            icon = Icons.Outlined.Sync,
+            screen = SettingsSyncScreen,
+        ),
+        Item(
             titleRes = R.string.pref_category_security,
             subtitleRes = R.string.pref_security_summary,
             icon = Icons.Outlined.Security,
