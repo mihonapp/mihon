@@ -1,7 +1,7 @@
 [versions]
 kotlin_version = "1.8.22"
 serialization_version = "1.5.1"
-xml_serialization_version = "0.86.0"
+xml_serialization_version = "0.86.1"
 
 [libraries]
 reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin_version" }
