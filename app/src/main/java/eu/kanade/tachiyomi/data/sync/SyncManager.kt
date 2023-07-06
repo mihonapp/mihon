@@ -8,7 +8,7 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
-import eu.kanade.tachiyomi.data.sync.models.SData
+import eu.kanade.tachiyomi.data.sync.models.SyncData
 import eu.kanade.tachiyomi.data.sync.models.SyncDevice
 import eu.kanade.tachiyomi.data.sync.models.SyncStatus
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
@@ -87,7 +87,7 @@ class SyncManager(
         )
 
         // Create the SyncData object
-        val syncData = SData(
+        val syncData = SyncData(
             sync = syncStatus,
             backup = backup,
             device = device,

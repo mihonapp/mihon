@@ -56,8 +56,10 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         private const val TAG_AUTO = "$TAG_JOB:auto"
         private const val TAG_MANUAL = "$TAG_JOB:manual"
 
-        fun isManualJobRunning(context: Context): Boolean {
-            return context.workManager.isRunning(TAG_MANUAL)
+        private val jobTagList = listOf(TAG_AUTO, TAG_MANUAL)
+
+        fun isAnyJobRunning(context: Context): Boolean {
+            return jobTagList.any { context.workManager.isRunning(it) }
         }
 
         fun setupTask(context: Context, prefInterval: Int? = null) {

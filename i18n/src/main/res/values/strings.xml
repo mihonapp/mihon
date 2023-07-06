@@ -549,7 +549,7 @@
     <string name="pref_sync_interval">Synchronization frequency</string>
     <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>
-    <string name="last_synchronization">Last Synchronization</string>
+    <string name="last_synchronization">Last Synchronization: %1$s</string>
 
 
 

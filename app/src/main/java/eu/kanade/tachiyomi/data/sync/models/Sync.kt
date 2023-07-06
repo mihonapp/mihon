@@ -17,7 +17,7 @@ data class SyncDevice(
 )
 
 @Serializable
-data class SData(
+data class SyncData(
     val sync: SyncStatus? = null,
     val backup: Backup? = null,
     val device: SyncDevice? = null,

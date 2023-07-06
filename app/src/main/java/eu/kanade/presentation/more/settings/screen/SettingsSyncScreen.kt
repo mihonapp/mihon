@@ -22,6 +22,8 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.sync.SyncDataJob
+import eu.kanade.tachiyomi.data.sync.SyncManager
+import eu.kanade.tachiyomi.data.sync.SyncManager.SyncService
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import tachiyomi.domain.sync.SyncPreferences
@@ -37,7 +39,7 @@ object SettingsSyncScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val syncPreferences = Injekt.get<SyncPreferences>()
+        val syncPreferences = remember { Injekt.get<SyncPreferences>() }
         val syncService by syncPreferences.syncService().collectAsState()
 
         return listOf(
@@ -45,8 +47,8 @@ object SettingsSyncScreen : SearchableSettings {
                 pref = syncPreferences.syncService(),
                 title = stringResource(R.string.pref_sync_service),
                 entries = mapOf(
-                    0 to stringResource(R.string.off),
-                    1 to stringResource(R.string.syncyomi),
+                    SyncService.NONE.value to stringResource(R.string.off),
+                    SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
                 ),
                 onValueChanged = { true },
             ),
@@ -55,16 +57,10 @@ object SettingsSyncScreen : SearchableSettings {
 
     @Composable
     private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
-        val servicePreferences = when (syncService) {
-            1 -> getSelfHostPreferences(syncPreferences)
-            else -> emptyList()
-        }
-
-        return if (syncService != 0) {
-            servicePreferences + getSyncNowPref() + getAutomaticSyncGroup(syncPreferences)
-        } else {
-            servicePreferences
-        }
+        return when (SyncService.fromInt(syncService)) {
+            SyncService.NONE -> emptyList()
+            SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
+        } + getSyncNowPref() + getAutomaticSyncGroup(syncPreferences)
     }
 
     @Composable
@@ -102,7 +98,7 @@ object SettingsSyncScreen : SearchableSettings {
                 onConfirm = {
                     showDialog.value = false
                     scope.launch {
-                        if (!SyncDataJob.isManualJobRunning(context)) {
+                        if (!SyncDataJob.isAnyJobRunning(context)) {
                             SyncDataJob.startNow(context)
                         } else {
                             context.toast(R.string.sync_in_progress)
@@ -156,7 +152,7 @@ object SettingsSyncScreen : SearchableSettings {
                         true
                     },
                 ),
-                Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization) + ": " + formattedLastSync),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization, formattedLastSync)),
             ),
         )
     }
