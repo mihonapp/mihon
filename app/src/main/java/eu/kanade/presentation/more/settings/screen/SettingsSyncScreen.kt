@@ -16,13 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.sync.SyncDataJob
-import eu.kanade.tachiyomi.data.sync.SyncManager
 import eu.kanade.tachiyomi.data.sync.SyncManager.SyncService
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
@@ -90,13 +90,12 @@ object SettingsSyncScreen : SearchableSettings {
     @Composable
     private fun getSyncNowPref(): Preference.PreferenceGroup {
         val scope = rememberCoroutineScope()
-        val showDialog = remember { mutableStateOf(false) }
+        var showDialog by remember { mutableStateOf(false) }
         val context = LocalContext.current
-
-        if (showDialog.value) {
+        if (showDialog) {
             SyncConfirmationDialog(
                 onConfirm = {
-                    showDialog.value = false
+                    showDialog = false
                     scope.launch {
                         if (!SyncDataJob.isAnyJobRunning(context)) {
                             SyncDataJob.startNow(context)
@@ -105,7 +104,7 @@ object SettingsSyncScreen : SearchableSettings {
                         }
                     }
                 },
-                onDismissRequest = { showDialog.value = false },
+                onDismissRequest = { showDialog = false },
             )
         }
         return Preference.PreferenceGroup(
@@ -115,7 +114,7 @@ object SettingsSyncScreen : SearchableSettings {
                     title = stringResource(R.string.pref_sync_now),
                     subtitle = stringResource(R.string.pref_sync_now_subtitle),
                     onClick = {
-                        showDialog.value = true
+                        showDialog = true
                     },
                     icon = Icons.Outlined.Sync,
                 ),
