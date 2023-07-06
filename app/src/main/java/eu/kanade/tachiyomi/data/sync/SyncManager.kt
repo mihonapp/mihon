@@ -49,7 +49,7 @@ class SyncManager(
 
     enum class SyncService(val value: Int) {
         NONE(0),
-        SELF_HOSTED(1),
+        SYNCYOMI(1),
         ;
 
         companion object {
@@ -95,7 +95,7 @@ class SyncManager(
 
         // Handle sync based on the selected service
         val syncService = when (val syncService = SyncService.fromInt(syncPreferences.syncService().get())) {
-            SyncService.SELF_HOSTED -> {
+            SyncService.SYNCYOMI -> {
                 SyncYomiSyncService(
                     context,
                     json,

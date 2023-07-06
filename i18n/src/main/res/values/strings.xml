@@ -547,7 +547,7 @@
     <string name="pref_sync_service_summ">Select the service to sync your library with</string>
     <string name="pref_sync_service_category">Automatic Synchronization</string>
     <string name="pref_sync_interval">Synchronization frequency</string>
-    <string name="self_host">Self-hosted (SyncYomi)</string>
+    <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>
     <string name="last_synchronization">Last Synchronization</string>
 
