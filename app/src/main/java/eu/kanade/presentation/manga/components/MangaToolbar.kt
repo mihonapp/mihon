@@ -2,13 +2,11 @@ package eu.kanade.presentation.manga.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.SelectAll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DownloadDropdownMenu
+import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.theme.active
@@ -67,10 +66,7 @@ fun MangaToolbar(
             },
             navigationIcon = {
                 IconButton(onClick = onBackClicked) {
-                    Icon(
-                        imageVector = if (isActionMode) Icons.Outlined.Close else Icons.Outlined.ArrowBack,
-                        contentDescription = stringResource(R.string.abc_action_bar_up_description),
-                    )
+                    UpIcon(Icons.Outlined.Close.takeIf { isActionMode })
                 }
             },
             actions = {

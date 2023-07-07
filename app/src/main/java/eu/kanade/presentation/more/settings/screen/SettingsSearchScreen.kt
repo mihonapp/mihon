@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
@@ -97,11 +97,7 @@ class SettingsSearchScreen : Screen() {
                             val canPop = remember { navigator.canPop }
                             if (canPop) {
                                 IconButton(onClick = navigator::pop) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.ArrowBack,
-                                        contentDescription = stringResource(R.string.abc_action_bar_up_description),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
+                                    UpIcon()
                                 }
                             }
                         },
