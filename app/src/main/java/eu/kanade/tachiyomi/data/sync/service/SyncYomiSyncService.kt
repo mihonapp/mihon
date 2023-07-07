@@ -81,4 +81,4 @@ class SyncYomiSyncService(
             }
         }
     }
- }
+}
