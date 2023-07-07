@@ -63,6 +63,7 @@ import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
@@ -105,6 +106,7 @@ class MainActivity : BaseActivity() {
     private val preferences: BasePreferences by injectLazy()
 
     private val downloadCache: DownloadCache by injectLazy()
+    private val chapterCache: ChapterCache by injectLazy()
 
     // To be checked by splash screen. If true then splash screen will be removed.
     var ready = false
@@ -112,12 +114,14 @@ class MainActivity : BaseActivity() {
     private var navigator: Navigator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val isLaunch = savedInstanceState == null
+
         // Prevent splash screen showing up on configuration changes
-        val splashScreen = if (savedInstanceState == null) installSplashScreen() else null
+        val splashScreen = if (isLaunch) installSplashScreen() else null
 
         super.onCreate(savedInstanceState)
 
-        val didMigration = if (savedInstanceState == null) {
+        val didMigration = if (isLaunch) {
             Migrations.upgrade(
                 context = applicationContext,
                 basePreferences = preferences,
@@ -149,7 +153,7 @@ class MainActivity : BaseActivity() {
             val downloadOnly by preferences.downloadedOnly().collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
 
-            // Set statusbar color considering the top app state banner
+            // Set status bar color considering the top app state banner
             val systemUiController = rememberSystemUiController()
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
@@ -189,7 +193,7 @@ class MainActivity : BaseActivity() {
                 LaunchedEffect(navigator) {
                     this@MainActivity.navigator = navigator
 
-                    if (savedInstanceState == null) {
+                    if (isLaunch) {
                         // Set start screen
                         handleIntentAction(intent, navigator)
 
@@ -267,6 +271,10 @@ class MainActivity : BaseActivity() {
             elapsed <= SPLASH_MIN_DURATION || (!ready && elapsed <= SPLASH_MAX_DURATION)
         }
         setSplashScreenExitAnimation(splashScreen)
+
+        if (isLaunch && libraryPreferences.autoClearChapterCache().get()) {
+            chapterCache.clear()
+        }
     }
 
     override fun onProvideAssistContent(outContent: AssistContent) {
@@ -279,7 +287,7 @@ class MainActivity : BaseActivity() {
     }
 
     @Composable
-    fun HandleOnNewIntent(context: Context, navigator: Navigator) {
+    private fun HandleOnNewIntent(context: Context, navigator: Navigator) {
         LaunchedEffect(Unit) {
             callbackFlow<Intent> {
                 val componentActivity = context as ComponentActivity
