@@ -12,6 +12,7 @@
     <string name="manga">Library entries</string>
     <string name="chapters">Chapters</string>
     <string name="track">Tracking</string>
+    <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
 
     <!-- Screen titles -->
