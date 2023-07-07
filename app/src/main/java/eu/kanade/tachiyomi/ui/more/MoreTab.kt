@@ -72,7 +72,6 @@ object MoreTab : Tab {
             onClickCategories = { navigator.push(CategoryScreen()) },
             onClickStats = { navigator.push(StatsScreen()) },
             onClickBackupAndRestore = { navigator.push(SettingsScreen.toBackupScreen()) },
-            onClickSync = { navigator.push(SettingsScreen.toSyncScreen()) },
             onClickSettings = { navigator.push(SettingsScreen.toMainScreen()) },
             onClickAbout = { navigator.push(SettingsScreen.toAboutScreen()) },
         )

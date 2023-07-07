@@ -22,7 +22,8 @@
     <string name="label_recent_updates">Updates</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
-    <string name="label_backup">Backup and restore</string>
+    <string name="label_backup">Backup</string>
+    <string name="label_backup_and_sync">Backup and Sync</string>
     <string name="label_sync">Sync</string>
     <string name="label_stats">Statistics</string>
     <string name="label_migration">Migrate</string>
@@ -179,7 +180,7 @@
     <string name="pref_downloads_summary">Automatic download, download ahead</string>
     <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
     <string name="pref_browse_summary">Sources, extensions, global search</string>
-    <string name="pref_backup_summary">Manual &amp; automatic backups</string>
+    <string name="pref_backup_and_sync_summary">Manual &amp; automatic backups and sync</string>
     <string name="pref_security_summary">App lock, secure screen</string>
     <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
 
@@ -499,6 +500,7 @@
     <string name="pref_restore_backup_summ">Restore library from backup file</string>
     <string name="pref_backup_directory">Backup location</string>
     <string name="pref_backup_service_category">Automatic backups</string>
+    <string name="pref_backup_manual_category">Manual backups</string>
     <string name="pref_backup_interval">Backup frequency</string>
     <string name="pref_backup_slots">Maximum backups</string>
     <string name="backup_created">Backup created</string>
@@ -537,7 +539,6 @@
     <string name="pref_sync_host_summ">Enter the host address for synchronizing your library</string>
     <string name="pref_sync_api_key">API key</string>
     <string name="pref_sync_api_key_summ">Enter the API key to synchronize your library</string>
-    <string name="pref_sync_summary">Sync your library with a remote server</string>
     <string name="pref_sync_now_group_title">Sync Actions</string>
     <string name="pref_sync_now">Sync now</string>
     <string name="pref_sync_confirmation_title">Sync confirmation</string>

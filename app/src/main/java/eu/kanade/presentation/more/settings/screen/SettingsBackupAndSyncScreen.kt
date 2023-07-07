@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,12 +50,15 @@ import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.sync.SyncDataJob
+import eu.kanade.tachiyomi.data.sync.SyncManager
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.util.isScrolledToEnd
@@ -74,11 +78,107 @@ object SettingsBackupScreen : SearchableSettings {
         val backupPreferences = Injekt.get<BackupPreferences>()
 
         DiskUtil.RequestStoragePermission()
+        val syncPreferences = remember { Injekt.get<SyncPreferences>() }
+        val syncService by syncPreferences.syncService().collectAsState()
 
         return listOf(
-            getCreateBackupPref(),
-            getRestoreBackupPref(),
+            getManualBackupGroup(),
             getAutomaticBackupGroup(backupPreferences = backupPreferences),
+        ) + listOf(
+            Preference.PreferenceGroup(
+                title = stringResource(R.string.pref_backup_manual_category),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.ListPreference(
+                        pref = syncPreferences.syncService(),
+                        title = stringResource(R.string.pref_sync_service),
+                        entries = mapOf(
+                            SyncManager.SyncService.NONE.value to stringResource(R.string.off),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
+                        ),
+                        onValueChanged = { true },
+                    ),
+                ),
+            ),
+        ) + getSyncServicePreferences(syncPreferences, syncService)
+    }
+
+    @Composable
+    private fun getManualBackupGroup(): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            title = stringResource(R.string.pref_backup_manual_category),
+            preferenceItems = listOf(
+                getCreateBackupPref(),
+                getRestoreBackupPref(),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getAutomaticBackupGroup(
+        backupPreferences: BackupPreferences,
+    ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val backupIntervalPref = backupPreferences.backupInterval()
+        val backupInterval by backupIntervalPref.collectAsState()
+        val backupDirPref = backupPreferences.backupsDirectory()
+        val backupDir by backupDirPref.collectAsState()
+        val pickBackupLocation = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenDocumentTree(),
+        ) { uri ->
+            if (uri != null) {
+                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+
+                context.contentResolver.takePersistableUriPermission(uri, flags)
+
+                val file = UniFile.fromUri(context, uri)
+                backupDirPref.set(file.uri.toString())
+            }
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(R.string.pref_backup_service_category),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.ListPreference(
+                    pref = backupIntervalPref,
+                    title = stringResource(R.string.pref_backup_interval),
+                    entries = mapOf(
+                        0 to stringResource(R.string.off),
+                        6 to stringResource(R.string.update_6hour),
+                        12 to stringResource(R.string.update_12hour),
+                        24 to stringResource(R.string.update_24hour),
+                        48 to stringResource(R.string.update_48hour),
+                        168 to stringResource(R.string.update_weekly),
+                    ),
+                    onValueChanged = {
+                        BackupCreateJob.setupTask(context, it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(R.string.pref_backup_directory),
+                    enabled = backupInterval != 0,
+                    subtitle = remember(backupDir) {
+                        (UniFile.fromUri(context, backupDir.toUri())?.filePath)?.let {
+                            "$it/automatic"
+                        }
+                    } ?: stringResource(R.string.invalid_location, backupDir),
+                    onClick = {
+                        try {
+                            pickBackupLocation.launch(null)
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(R.string.file_picker_error)
+                        }
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = backupPreferences.numberOfBackups(),
+                    enabled = backupInterval != 0,
+                    title = stringResource(R.string.pref_backup_slots),
+                    entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
+                ),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
+            ),
         )
     }
 
@@ -343,71 +443,127 @@ object SettingsBackupScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getAutomaticBackupGroup(
-        backupPreferences: BackupPreferences,
-    ): Preference.PreferenceGroup {
-        val context = LocalContext.current
-        val backupIntervalPref = backupPreferences.backupInterval()
-        val backupInterval by backupIntervalPref.collectAsState()
-        val backupDirPref = backupPreferences.backupsDirectory()
-        val backupDir by backupDirPref.collectAsState()
-        val pickBackupLocation = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.OpenDocumentTree(),
-        ) { uri ->
-            if (uri != null) {
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-
-                context.contentResolver.takePersistableUriPermission(uri, flags)
-
-                val file = UniFile.fromUri(context, uri)
-                backupDirPref.set(file.uri.toString())
+    private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
+        val syncServiceType = SyncManager.SyncService.fromInt(syncService)
+        return when (syncServiceType) {
+            SyncManager.SyncService.NONE -> emptyList()
+            SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
+        } +
+            if (syncServiceType == SyncManager.SyncService.NONE) {
+                emptyList()
+            } else {
+                listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
             }
+    }
+
+    @Composable
+    private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Preference> {
+        return listOf(
+            Preference.PreferenceItem.EditTextPreference(
+                title = stringResource(R.string.pref_sync_device_name),
+                subtitle = stringResource(R.string.pref_sync_device_name_summ),
+                pref = syncPreferences.deviceName(),
+            ),
+            Preference.PreferenceItem.EditTextPreference(
+                title = stringResource(R.string.pref_sync_host),
+                subtitle = stringResource(R.string.pref_sync_host_summ),
+                pref = syncPreferences.syncHost(),
+            ),
+            Preference.PreferenceItem.EditTextPreference(
+                title = stringResource(R.string.pref_sync_api_key),
+                subtitle = stringResource(R.string.pref_sync_api_key_summ),
+                pref = syncPreferences.syncAPIKey(),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getSyncNowPref(): Preference.PreferenceGroup {
+        val scope = rememberCoroutineScope()
+        var showDialog by remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        if (showDialog) {
+            SyncConfirmationDialog(
+                onConfirm = {
+                    showDialog = false
+                    scope.launch {
+                        if (!SyncDataJob.isAnyJobRunning(context)) {
+                            SyncDataJob.startNow(context)
+                        } else {
+                            context.toast(R.string.sync_in_progress)
+                        }
+                    }
+                },
+                onDismissRequest = { showDialog = false },
+            )
         }
+        return Preference.PreferenceGroup(
+            title = stringResource(R.string.pref_sync_now_group_title),
+            preferenceItems = listOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(R.string.pref_sync_now),
+                    subtitle = stringResource(R.string.pref_sync_now_subtitle),
+                    onClick = {
+                        showDialog = true
+                    },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val syncIntervalPref = syncPreferences.syncInterval()
+        val lastSync by syncPreferences.syncLastSync().collectAsState()
+        val formattedLastSync = DateUtils.getRelativeTimeSpanString(lastSync.toEpochMilli(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_backup_service_category),
+            title = stringResource(R.string.pref_sync_service_category),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
-                    pref = backupIntervalPref,
-                    title = stringResource(R.string.pref_backup_interval),
+                    pref = syncIntervalPref,
+                    title = stringResource(R.string.pref_sync_interval),
                     entries = mapOf(
                         0 to stringResource(R.string.off),
-                        6 to stringResource(R.string.update_6hour),
-                        12 to stringResource(R.string.update_12hour),
-                        24 to stringResource(R.string.update_24hour),
-                        48 to stringResource(R.string.update_48hour),
-                        168 to stringResource(R.string.update_weekly),
+                        30 to stringResource(R.string.update_30min),
+                        60 to stringResource(R.string.update_1hour),
+                        180 to stringResource(R.string.update_3hour),
+                        360 to stringResource(R.string.update_6hour),
+                        720 to stringResource(R.string.update_12hour),
+                        1440 to stringResource(R.string.update_24hour),
+                        2880 to stringResource(R.string.update_48hour),
+                        10080 to stringResource(R.string.update_weekly),
                     ),
                     onValueChanged = {
-                        BackupCreateJob.setupTask(context, it)
+                        SyncDataJob.setupTask(context, it)
                         true
                     },
                 ),
-                Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_backup_directory),
-                    enabled = backupInterval != 0,
-                    subtitle = remember(backupDir) {
-                        (UniFile.fromUri(context, backupDir.toUri())?.filePath)?.let {
-                            "$it/automatic"
-                        }
-                    } ?: stringResource(R.string.invalid_location, backupDir),
-                    onClick = {
-                        try {
-                            pickBackupLocation.launch(null)
-                        } catch (e: ActivityNotFoundException) {
-                            context.toast(R.string.file_picker_error)
-                        }
-                    },
-                ),
-                Preference.PreferenceItem.ListPreference(
-                    pref = backupPreferences.numberOfBackups(),
-                    enabled = backupInterval != 0,
-                    title = stringResource(R.string.pref_backup_slots),
-                    entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
-                ),
-                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization, formattedLastSync)),
             ),
+        )
+    }
+
+    @Composable
+    fun SyncConfirmationDialog(
+        onConfirm: () -> Unit,
+        onDismissRequest: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text(text = stringResource(R.string.pref_sync_confirmation_title)) },
+            text = { Text(text = stringResource(R.string.pref_sync_confirmation_message)) },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = stringResource(R.string.action_cancel))
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirm) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            },
         )
     }
 }

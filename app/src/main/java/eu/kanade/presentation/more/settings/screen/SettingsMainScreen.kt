@@ -223,16 +223,10 @@ object SettingsMainScreen : Screen() {
             screen = SettingsBrowseScreen,
         ),
         Item(
-            titleRes = R.string.label_backup,
-            subtitleRes = R.string.pref_backup_summary,
+            titleRes = R.string.label_backup_and_sync,
+            subtitleRes = R.string.pref_backup_and_sync_summary,
             icon = Icons.Outlined.SettingsBackupRestore,
             screen = SettingsBackupScreen,
-        ),
-        Item(
-            titleRes = R.string.label_sync,
-            subtitleRes = R.string.pref_sync_summary,
-            icon = Icons.Outlined.Sync,
-            screen = SettingsSyncScreen,
         ),
         Item(
             titleRes = R.string.pref_category_security,
