@@ -65,8 +65,6 @@ class SyncManager(
      */
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
-
-        logcat(LogPriority.DEBUG) { "Mangas to sync: $databaseManga" }
         val backup = Backup(
             backupManager.backupMangas(databaseManga, BACKUP_ALL),
             backupManager.backupCategories(BACKUP_ALL),
@@ -115,7 +113,12 @@ class SyncManager(
         if (remoteBackup != null) {
             val (filteredFavorites, nonFavorites) = filterFavoritesAndNonFavorites(remoteBackup)
             updateNonFavorites(nonFavorites)
-            SyncHolder.backup = backup.copy(backupManga = filteredFavorites)
+            SyncHolder.backup = backup.copy(
+                backupManga = filteredFavorites,
+                backupCategories = remoteBackup.backupCategories,
+                backupSources = remoteBackup.backupSources,
+                backupBrokenSources = remoteBackup.backupBrokenSources,
+            )
             BackupRestoreJob.start(context, "".toUri(), true)
             syncPreferences.syncLastSync().set(Instant.now())
         }
