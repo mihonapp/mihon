@@ -66,7 +66,7 @@ import tachiyomi.presentation.core.util.isScrolledToStart
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-object SettingsBackupScreen : SearchableSettings {
+object SettingsBackupAndSyncScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable

@@ -14,7 +14,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.screen.AboutScreen
 import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
-import eu.kanade.presentation.more.settings.screen.SettingsBackupScreen
+import eu.kanade.presentation.more.settings.screen.SettingsBackupAndSyncScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
@@ -33,7 +33,7 @@ class SettingsScreen private constructor(
         if (!isTabletUi()) {
             Navigator(
                 screen = if (toBackup) {
-                    SettingsBackupScreen
+                    SettingsBackupAndSyncScreen
                 } else if (toAbout) {
                     AboutScreen
                 } else {
@@ -55,7 +55,7 @@ class SettingsScreen private constructor(
         } else {
             Navigator(
                 screen = if (toBackup) {
-                    SettingsBackupScreen
+                    SettingsBackupAndSyncScreen
                 } else if (toAbout) {
                     AboutScreen
                 } else {

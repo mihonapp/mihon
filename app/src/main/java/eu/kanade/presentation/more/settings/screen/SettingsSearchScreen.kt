@@ -290,7 +290,7 @@ private val settingScreens = listOf(
     SettingsDownloadScreen,
     SettingsTrackingScreen,
     SettingsBrowseScreen,
-    SettingsBackupScreen,
+    SettingsBackupAndSyncScreen,
     SettingsSecurityScreen,
     SettingsAdvancedScreen,
 )

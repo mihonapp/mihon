@@ -226,7 +226,7 @@ object SettingsMainScreen : Screen() {
             titleRes = R.string.label_backup_and_sync,
             subtitleRes = R.string.pref_backup_and_sync_summary,
             icon = Icons.Outlined.SettingsBackupRestore,
-            screen = SettingsBackupScreen,
+            screen = SettingsBackupAndSyncScreen,
         ),
         Item(
             titleRes = R.string.pref_category_security,
