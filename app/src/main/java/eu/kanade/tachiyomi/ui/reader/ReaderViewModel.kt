@@ -204,6 +204,7 @@ class ReaderViewModel(
     }
 
     private val incognitoMode = preferences.incognitoMode().get()
+    private val downloadAheadAmount = downloadPreferences.autoDownloadWhileReading().get()
 
     init {
         // To save state
@@ -444,9 +445,8 @@ class ReaderViewModel(
     }
 
     private fun downloadNextChapters() {
+        if (downloadAheadAmount == 0) return
         val manga = manga ?: return
-        val amount = downloadPreferences.autoDownloadWhileReading().get()
-        if (amount == 0 || !manga.favorite) return
 
         // Only download ahead if current + next chapter is already downloaded too to avoid jank
         if (getCurrentChapter()?.pageLoader?.isLocal == true) return
@@ -466,7 +466,7 @@ class ReaderViewModel(
                 } else {
                     this
                 }
-            }.take(amount)
+            }.take(downloadAheadAmount)
 
             downloadManager.downloadChapters(
                 manga,
