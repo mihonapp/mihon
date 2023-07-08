@@ -281,7 +281,7 @@ object SettingsLibraryScreen : SearchableSettings {
             title = stringResource(R.string.pref_chapter_swipe),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
-                    pref = libraryPreferences.swipeEndAction(),
+                    pref = libraryPreferences.swipeToStartAction(),
                     title = stringResource(R.string.pref_chapter_swipe_end),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to stringResource(R.string.disabled),
@@ -291,7 +291,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     ),
                 ),
                 Preference.PreferenceItem.ListPreference(
-                    pref = libraryPreferences.swipeStartAction(),
+                    pref = libraryPreferences.swipeToEndAction(),
                     title = stringResource(R.string.pref_chapter_swipe_start),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to stringResource(R.string.disabled),

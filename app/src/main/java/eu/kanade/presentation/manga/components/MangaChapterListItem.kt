@@ -22,6 +22,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -68,8 +69,8 @@ fun MangaChapterListItem(
     downloadIndicatorEnabled: Boolean,
     downloadStateProvider: () -> Download.State,
     downloadProgressProvider: () -> Int,
-    chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction,
     chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction,
+    chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
@@ -226,19 +227,19 @@ private fun getSwipeAction(
     onSwipe: () -> Unit,
 ): me.saket.swipe.SwipeAction? {
     return when (action) {
-        LibraryPreferences.ChapterSwipeAction.ToggleRead -> SwipeAction(
+        LibraryPreferences.ChapterSwipeAction.ToggleRead -> swipeAction(
             icon = if (!read) Icons.Outlined.Done else Icons.Outlined.RemoveDone,
             background = background,
             isUndo = read,
             onSwipe = onSwipe,
         )
-        LibraryPreferences.ChapterSwipeAction.ToggleBookmark -> SwipeAction(
+        LibraryPreferences.ChapterSwipeAction.ToggleBookmark -> swipeAction(
             icon = if (!bookmark) Icons.Outlined.BookmarkAdd else Icons.Outlined.BookmarkRemove,
             background = background,
             isUndo = bookmark,
             onSwipe = onSwipe,
         )
-        LibraryPreferences.ChapterSwipeAction.Download -> SwipeAction(
+        LibraryPreferences.ChapterSwipeAction.Download -> swipeAction(
             icon = when (downloadState) {
                 Download.State.NOT_DOWNLOADED, Download.State.ERROR -> Icons.Outlined.Download
                 Download.State.QUEUE, Download.State.DOWNLOADING -> Icons.Outlined.FileDownloadOff
@@ -251,7 +252,7 @@ private fun getSwipeAction(
     }
 }
 
-private fun SwipeAction(
+private fun swipeAction(
     onSwipe: () -> Unit,
     icon: ImageVector,
     background: Color,
@@ -262,7 +263,7 @@ private fun SwipeAction(
             Icon(
                 modifier = Modifier.padding(16.dp),
                 imageVector = icon,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = contentColorFor(background),
                 contentDescription = null,
             )
         },
