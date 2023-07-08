@@ -314,7 +314,7 @@
     <string name="theme_system">सिस्टम का पालन करें</string>
     <string name="pref_manage_notifications">सूचनाओं का प्रबंधन</string>
     <string name="pref_category_security">सुरक्षा और गोपनीयता</string>
-    <string name="lock_with_biometrics">अनलॉक की आवश्यकता है</string>
+    <string name="lock_with_biometrics">खोलने की आवश्यकता है</string>
     <string name="lock_when_idle">निष्क्रिय होने पर लॉक करें</string>
     <string name="lock_always">हमेशा</string>
     <string name="lock_never">कभी नहीँ</string>
@@ -739,4 +739,9 @@
     <string name="pref_page_rotate">फिट होने के लिए चौड़े पृष्ठों को घुमाएं</string>
     <string name="pref_backup_summary">मैनुअल और स्वचालित बैकअप</string>
     <string name="pref_security_summary">ऐप लॉक, सुरक्षित स्क्रीन</string>
+    <string name="action_set_interval">अंतराल निर्धारित करें</string>
+    <string name="action_filter_interval_custom">अनुकूलित लाने का अंतराल</string>
+    <string name="action_filter_interval_long">मासिक प्राप्त करें (28 दिन)</string>
+    <string name="action_filter_interval_late">देर से 10+ की जाँच</string>
+    <string name="action_filter_interval_dropped">छोड़ा हुआ\? देर से 20+ और 2 महीने</string>
 </resources>

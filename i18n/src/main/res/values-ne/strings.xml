@@ -421,7 +421,7 @@
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
     <string name="pref_zoom_start">जूम सुरु स्थिति</string>
-    <string name="pref_auto_clear_chapter_cache">एप बन्दमा अध्याय क्यास खाली गर्नुहोस्</string>
+    <string name="pref_auto_clear_chapter_cache">एप खोलेमा अध्याय क्यास खाली गर्नुहोस्</string>
     <string name="information_webview_outdated">राम्रो संगतताको लागि कृपया WebView एप अपडेट गर्नुहोस्</string>
     <string name="pref_library_update_manga_restriction">इन्ट्री अपडेट गर्न छोड्नुहोस्</string>
     <string name="pref_update_only_completely_read">नपढेको अध्याय(हरू) सँग</string>
@@ -696,7 +696,7 @@
     <string name="confirm_add_duplicate_manga">तपाईको पुस्तकालयमा एउटै नामको इन्ट्री छ।
 \n
 \nके तपाईं अझै जारी राख्न चाहनुहुन्छ\?</string>
-    <string name="reading_list">पढ्ने सूची</string>
+    <string name="reading_list">पढिरहेको सूची</string>
     <string name="updates_last_update_info">पुस्तकालय पछिल्लो पटक अपडेट गरिएको: %s</string>
     <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागि हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा क्र्यास लगहरू साझेदारी गर्न सुझाव दिन्छौं।</string>
     <string name="update_check_open">GitHub मा खोल्नुहोस्</string>
@@ -831,4 +831,5 @@
     <string name="track_delete_remote_text">%s बाट पनि हटाउनुहोस्</string>
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
     <string name="action_ok">ठीक छ</string>
+    <string name="delete_downloaded">डाउनलोड गरिएको मेट्नुहोस्</string>
 </resources>

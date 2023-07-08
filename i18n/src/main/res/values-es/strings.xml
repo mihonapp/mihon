@@ -671,7 +671,7 @@
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi. Toca aquí para más información.</string>
     <string name="ext_update_all">Actualizar todas</string>
     <string name="channel_app_updates">Actualizaciones de la aplicación</string>
-    <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al cerrar la aplicación</string>
+    <string name="pref_auto_clear_chapter_cache">Borrar la caché de capítulos al abrir la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">Hay %1$d elementos en la base de datos que no están en la biblioteca</string>
     <string name="extension_api_error">No se pudo descargar el listado de extensiones</string>
@@ -880,4 +880,5 @@
     <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>
+    <string name="delete_downloaded">Borrar los ya descargados</string>
 </resources>

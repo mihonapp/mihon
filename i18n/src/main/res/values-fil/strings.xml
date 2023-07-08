@@ -64,7 +64,7 @@
     <string name="action_sort_total">Dami ng kabanata</string>
     <string name="action_sort_alpha">Pa-alpabeto</string>
     <string name="action_filter_empty">Tanggalin ang pansala</string>
-    <string name="action_filter_unread">Babasahin</string>
+    <string name="action_filter_unread">Hindi Nabasa</string>
     <string name="action_filter_bookmarked">Tinandaan</string>
     <string name="action_filter">Pansala</string>
     <string name="action_menu">Menu</string>
@@ -801,10 +801,10 @@
     <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
     <string name="action_set_interval">Itakda ang pagitan</string>
     <string name="action_filter_interval_custom">Sinadyang takdang pagkuha</string>
-    <string name="action_filter_interval_late">Nahuling 10+ pagsusuri</string>
+    <string name="action_filter_interval_late">Huling 10+ pagsusuri</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
     <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
-    <string name="action_filter_interval_passed">Lumipas ang check period</string>
+    <string name="action_filter_interval_passed">Lumipas na panahon ng pagsuri</string>
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <plurals name="pref_update_release_following_days">
         <item quantity="one">pagkatapos ng %d araw</item>
