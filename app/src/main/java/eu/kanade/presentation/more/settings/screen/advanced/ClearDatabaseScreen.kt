@@ -1,4 +1,4 @@
-package eu.kanade.presentation.more.settings.screen
+package eu.kanade.presentation.more.settings.screen.advanced
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.content.res.Resources
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -39,12 +38,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -52,7 +53,6 @@ import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.system.isLTR
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -165,6 +165,8 @@ private fun SearchResult(
 ) {
     if (searchKey.isEmpty()) return
 
+    val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
+
     val index = getIndex()
     val result by produceState<List<SearchResultItem>?>(initialValue = null, searchKey) {
         value = index.asSequence()
@@ -200,7 +202,7 @@ private fun SearchResult(
                         SearchResultItem(
                             route = settingsData.route,
                             title = p.title,
-                            breadcrumbs = getLocalizedBreadcrumb(path = settingsData.title, node = categoryTitle),
+                            breadcrumbs = getLocalizedBreadcrumb(path = settingsData.title, node = categoryTitle, isLtr = isLtr),
                             highlightKey = p.title,
                         )
                     }
@@ -265,11 +267,11 @@ private fun getIndex() = settingScreens
         )
     }
 
-private fun getLocalizedBreadcrumb(path: String, node: String?): String {
+private fun getLocalizedBreadcrumb(path: String, node: String?, isLtr: Boolean): String {
     return if (node == null) {
         path
     } else {
-        if (Resources.getSystem().isLTR) {
+        if (isLtr) {
             // This locale reads left to right.
             "$path > $node"
         } else {

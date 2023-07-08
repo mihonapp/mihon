@@ -12,7 +12,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.PreferenceScaffold
-import eu.kanade.presentation.more.settings.screen.AboutScreen
+import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
