@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import coil3.asDrawable
@@ -142,9 +141,8 @@ class LibraryUpdateNotifier(
      * Shows notification containing update entries that failed with action to open full log.
      *
      * @param failed Number of entries that failed to update.
-     * @param uri Uri for error log file containing all titles that failed.
      */
-    fun showUpdateErrorNotification(failed: Int, uri: Uri) {
+    fun showUpdateErrorNotification(failed: Int) {
         if (failed == 0) {
             return
         }
@@ -157,7 +155,7 @@ class LibraryUpdateNotifier(
             setContentText(context.stringResource(MR.strings.action_show_errors))
             setSmallIcon(R.drawable.ic_mihon)
 
-            setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context, uri))
+            setContentIntent(NotificationReceiver.openErrorLogPendingActivity(context))
         }
     }
 

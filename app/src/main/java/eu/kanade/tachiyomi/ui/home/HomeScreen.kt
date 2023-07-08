@@ -41,6 +41,7 @@ import eu.kanade.tachiyomi.ui.browse.BrowseTab
 import eu.kanade.tachiyomi.ui.download.DownloadQueueScreen
 import eu.kanade.tachiyomi.ui.history.HistoryTab
 import eu.kanade.tachiyomi.ui.library.LibraryTab
+import eu.kanade.tachiyomi.ui.libraryUpdateError.LibraryUpdateErrorScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.MoreTab
 import eu.kanade.tachiyomi.ui.updates.UpdatesTab
@@ -166,8 +167,12 @@ object HomeScreen : Screen() {
                         if (it is Tab.Library && it.mangaIdToOpen != null) {
                             navigator.push(MangaScreen(it.mangaIdToOpen))
                         }
-                        if (it is Tab.More && it.toDownloads) {
-                            navigator.push(DownloadQueueScreen)
+                        if (it is Tab.More) {
+                            if (it.toDownloads) {
+                                navigator.push(DownloadQueueScreen)
+                            } else if (it.toLibraryUpdateErrors) {
+                                navigator.push(LibraryUpdateErrorScreen())
+                            }
                         }
                     }
                 }
@@ -307,6 +312,9 @@ object HomeScreen : Screen() {
         data object Updates : Tab
         data object History : Tab
         data class Browse(val toExtensions: Boolean = false) : Tab
-        data class More(val toDownloads: Boolean) : Tab
+        data class More(
+            val toDownloads: Boolean,
+            val toLibraryUpdateErrors: Boolean = false,
+        ) : Tab
     }
 }

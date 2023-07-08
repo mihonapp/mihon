@@ -403,6 +403,10 @@ class MainActivity : BaseActivity() {
                 navigator.popUntilRoot()
                 HomeScreen.Tab.More(toDownloads = true)
             }
+            Constants.SHORTCUT_LIBRARY_UPDATE_ERRORS -> {
+                navigator.popUntilRoot()
+                HomeScreen.Tab.More(toDownloads = false, toLibraryUpdateErrors = true)
+            }
             Intent.ACTION_SEARCH, Intent.ACTION_SEND, "com.google.android.gms.actions.SEARCH_ACTION" -> {
                 // If the intent match the "standard" Android search intent
                 // or the Google-specific search intent (triggered by saying or typing "search *query* on *Tachiyomi*" in Google Search/Google Assistant)
