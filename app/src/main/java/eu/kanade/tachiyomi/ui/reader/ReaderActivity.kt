@@ -235,13 +235,18 @@ class ReaderActivity : BaseActivity() {
         readingModeToast?.cancel()
     }
 
+    override fun onPause() {
+        viewModel.flushReadTimer()
+        super.onPause()
+    }
+
     /**
      * Set menu visibility again on activity resume to apply immersive mode again if needed.
      * Helps with rotations.
      */
     override fun onResume() {
         super.onResume()
-        viewModel.setReadStartTime()
+        viewModel.restartReadTimer()
         setMenuVisibility(viewModel.state.value.menuVisible, animate = false)
     }
 
@@ -588,7 +593,7 @@ class ReaderActivity : BaseActivity() {
      * Sets the visibility of the menu according to [visible] and with an optional parameter to
      * [animate] the views.
      */
-    fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
+    private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
         viewModel.showMenus(visible)
         if (visible) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
@@ -793,7 +798,6 @@ class ReaderActivity : BaseActivity() {
      * Called from the viewer whenever a [page] is marked as active. It updates the values of the
      * bottom menu and delegates the change to the presenter.
      */
-    @SuppressLint("SetTextI18n")
     fun onPageSelected(page: ReaderPage) {
         viewModel.onPageSelected(page)
     }
@@ -811,7 +815,7 @@ class ReaderActivity : BaseActivity() {
      * the viewer is reaching the beginning or end of a chapter or the transition page is active.
      */
     fun requestPreloadChapter(chapter: ReaderChapter) {
-        lifecycleScope.launchIO { viewModel.preloadChapter(chapter) }
+        lifecycleScope.launchIO { viewModel.preload(chapter) }
     }
 
     /**
@@ -898,7 +902,7 @@ class ReaderActivity : BaseActivity() {
     /**
      * Updates viewer inset depending on fullscreen reader preferences.
      */
-    fun updateViewerInset(fullscreen: Boolean) {
+    private fun updateViewerInset(fullscreen: Boolean) {
         viewModel.state.value.viewer?.getView()?.applyInsetter {
             if (!fullscreen) {
                 type(navigationBars = true, statusBars = true) {
