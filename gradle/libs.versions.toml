@@ -61,6 +61,8 @@ insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.3"
 compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
+swipe = "me.saket.swipe:swipe:1.2.0"
+
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.10.1"
