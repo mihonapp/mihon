@@ -1,7 +1,7 @@
-ALTER TABLE mangas ADD COLUMN last_modified_at INTEGER AS Long NOT NULL;
+ALTER TABLE mangas ADD COLUMN last_modified_at INTEGER AS Long NOT NULL DEFAULT 0;
 ALTER TABLE mangas ADD COLUMN favorite_modified_at INTEGER AS Long;
-ALTER TABLE mangas_categories ADD COLUMN last_modified_at INTEGER AS Long NOT NULL;
-ALTER TABLE chapters ADD COLUMN last_modified_at INTEGER AS Long NOT NULL;
+ALTER TABLE mangas_categories ADD COLUMN last_modified_at INTEGER AS Long NOT NULL DEFAULT 0;
+ALTER TABLE chapters ADD COLUMN last_modified_at INTEGER AS Long NOT NULL DEFAULT 0;
 
 UPDATE mangas SET last_modified_at = strftime('%s', 'now');
 UPDATE mangas SET favorite_modified_at = strftime('%s', 'now') WHERE favorite = 1;

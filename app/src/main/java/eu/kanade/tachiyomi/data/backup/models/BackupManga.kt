@@ -40,7 +40,7 @@ data class BackupManga(
     @ProtoNumber(104) var history: List<BackupHistory> = emptyList(),
     @ProtoNumber(105) var updateStrategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
-    @ProtoNumber(107) var favoriteModifiedAt: Long? = 0,
+    @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(

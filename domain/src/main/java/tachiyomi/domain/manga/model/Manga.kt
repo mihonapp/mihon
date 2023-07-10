@@ -112,7 +112,7 @@ data class Manga(
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
             lastModifiedAt = 0L,
-            favoriteModifiedAt = 0L,
+            favoriteModifiedAt = null,
         )
     }
 }
