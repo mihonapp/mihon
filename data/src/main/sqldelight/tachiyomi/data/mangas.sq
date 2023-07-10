@@ -22,11 +22,30 @@ CREATE TABLE mangas(
     cover_last_modified INTEGER AS Long NOT NULL,
     date_added INTEGER AS Long NOT NULL,
     update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
-    calculate_interval INTEGER DEFAULT 0 NOT NULL
+    calculate_interval INTEGER DEFAULT 0 NOT NULL,
+    last_modified_at INTEGER AS Long NOT NULL,
+    favorite_modified_at INTEGER AS Long
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
 CREATE INDEX mangas_url_index ON mangas(url);
+
+CREATE TRIGGER update_favorite_modified_at_mangas
+AFTER UPDATE OF favorite ON mangas
+BEGIN
+  UPDATE mangas
+  SET favorite_modified_at = strftime('%s', 'now')
+  WHERE _id = new._id;
+END;
+
+CREATE TRIGGER update_last_modified_at_mangas
+AFTER UPDATE ON mangas
+FOR EACH ROW
+BEGIN
+  UPDATE mangas
+  SET last_modified_at = strftime('%s', 'now')
+  WHERE _id = new._id;
+END;
 
 getMangaById:
 SELECT *
@@ -44,6 +63,15 @@ getFavorites:
 SELECT *
 FROM mangas
 WHERE favorite = 1;
+
+getAllManga:
+SELECT *
+FROM mangas;
+
+getMangasWithFavoriteTimestamp:
+SELECT *
+FROM mangas
+WHERE favorite_modified_at IS NOT NULL;
 
 getSourceIdWithFavoriteCount:
 SELECT
@@ -81,8 +109,8 @@ DELETE FROM mangas
 WHERE favorite = 0 AND source IN :sourceIds;
 
 insert:
-INSERT INTO mangas(source,url,artist,author,description,genre,title,status,thumbnail_url,favorite,last_update,next_update,initialized,viewer,chapter_flags,cover_last_modified,date_added,update_strategy,calculate_interval)
-VALUES (:source,:url,:artist,:author,:description,:genre,:title,:status,:thumbnailUrl,:favorite,:lastUpdate,:nextUpdate,:initialized,:viewerFlags,:chapterFlags,:coverLastModified,:dateAdded,:updateStrategy,:calculateInterval);
+INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, strftime('%s', 'now'));
 
 update:
 UPDATE mangas SET

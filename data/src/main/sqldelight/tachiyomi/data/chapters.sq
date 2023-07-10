@@ -11,12 +11,22 @@ CREATE TABLE chapters(
     source_order INTEGER NOT NULL,
     date_fetch INTEGER AS Long NOT NULL,
     date_upload INTEGER AS Long NOT NULL,
+    last_modified_at INTEGER AS Long NOT NULL,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );
 
 CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
 CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
+
+CREATE TRIGGER update_last_modified_at_chapters
+AFTER UPDATE ON chapters
+FOR EACH ROW
+BEGIN
+  UPDATE chapters
+  SET last_modified_at = strftime('%s', 'now')
+  WHERE _id = new._id;
+END;
 
 getChapterById:
 SELECT *
@@ -50,8 +60,8 @@ DELETE FROM chapters
 WHERE _id IN :chapterIds;
 
 insert:
-INSERT INTO chapters(manga_id,url,name,scanlator,read,bookmark,last_page_read,chapter_number,source_order,date_fetch,date_upload)
-VALUES (:mangaId,:url,:name,:scanlator,:read,:bookmark,:lastPageRead,:chapterNumber,:sourceOrder,:dateFetch,:dateUpload);
+INSERT INTO chapters(manga_id, url, name, scanlator, read, bookmark, last_page_read, chapter_number, source_order, date_fetch, date_upload, last_modified_at)
+VALUES (:mangaId, :url, :name, :scanlator, :read, :bookmark, :lastPageRead, :chapterNumber, :sourceOrder, :dateFetch, :dateUpload, strftime('%s', 'now'));
 
 update:
 UPDATE chapters

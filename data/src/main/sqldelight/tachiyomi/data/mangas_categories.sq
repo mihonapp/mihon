@@ -2,15 +2,25 @@ CREATE TABLE mangas_categories(
     _id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
+    last_modified_at INTEGER AS Long NOT NULL,
     FOREIGN KEY(category_id) REFERENCES categories (_id)
     ON DELETE CASCADE,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );
 
+CREATE TRIGGER update_last_modified_at_mangas_categories
+AFTER UPDATE ON mangas_categories
+FOR EACH ROW
+BEGIN
+  UPDATE mangas_categories
+  SET last_modified_at = strftime('%s', 'now')
+  WHERE _id = new._id;
+END;
+
 insert:
-INSERT INTO mangas_categories(manga_id, category_id)
-VALUES (:mangaId, :categoryId);
+INSERT INTO mangas_categories(manga_id, category_id, last_modified_at)
+VALUES (:mangaId, :categoryId, strftime('%s', 'now'));
 
 deleteMangaCategoryByMangaId:
 DELETE FROM mangas_categories
