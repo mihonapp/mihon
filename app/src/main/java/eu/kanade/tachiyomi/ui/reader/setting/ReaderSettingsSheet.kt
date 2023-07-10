@@ -16,7 +16,6 @@ class ReaderSettingsSheet(
 
     private val tabs = listOf(
         ReaderReadingModeSettings(activity) to R.string.pref_category_reading_mode,
-        ReaderGeneralSettings(activity) to R.string.pref_category_general,
     )
 
     private lateinit var binding: CommonTabbedSheetBinding

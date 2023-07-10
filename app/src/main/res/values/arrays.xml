@@ -9,20 +9,6 @@
         <item>@string/vertical_plus_viewer</item>
     </string-array>
 
-    <string-array name="reader_themes">
-        <item>@string/black_background</item>
-        <item>@string/gray_background</item>
-        <item>@string/white_background</item>
-        <item>@string/automatic_background</item>
-    </string-array>
-
-    <string-array name="reader_themes_values">
-        <item>1</item>
-        <item>2</item>
-        <item>0</item>
-        <item>3</item>
-    </string-array>
-
     <string-array name="image_scale_type">
         <item>@string/scale_type_fit_screen</item>
         <item>@string/scale_type_stretch</item>

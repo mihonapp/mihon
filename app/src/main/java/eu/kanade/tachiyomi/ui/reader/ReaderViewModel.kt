@@ -685,8 +685,8 @@ class ReaderViewModel(
         mutableState.update { it.copy(dialog = Dialog.PageActions(page)) }
     }
 
-    fun openColorFilterDialog() {
-        mutableState.update { it.copy(dialog = Dialog.ColorFilter) }
+    fun openSettingsDialog() {
+        mutableState.update { it.copy(dialog = Dialog.Settings) }
     }
 
     fun closeDialog() {
@@ -863,7 +863,7 @@ class ReaderViewModel(
 
     sealed class Dialog {
         object Loading : Dialog()
-        object ColorFilter : Dialog()
+        object Settings : Dialog()
         data class PageActions(val page: ReaderPage) : Dialog()
     }
 
