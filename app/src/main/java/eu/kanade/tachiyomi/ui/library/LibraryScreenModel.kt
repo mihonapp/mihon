@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import tachiyomi.core.preference.CheckboxState
+import tachiyomi.core.preference.TriState
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withIOContext
@@ -57,7 +58,6 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
-import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
@@ -153,7 +153,7 @@ class LibraryScreenModel(
                     prefs.filterBookmarked,
                     prefs.filterCompleted,
                 ) + trackFilter.values
-                ).any { it != TriStateFilter.DISABLED }
+                ).any { it != TriState.DISABLED }
         }
             .distinctUntilChanged()
             .onEach {
@@ -169,12 +169,12 @@ class LibraryScreenModel(
      */
     private suspend fun LibraryMap.applyFilters(
         trackMap: Map<Long, List<Long>>,
-        loggedInTrackServices: Map<Long, TriStateFilter>,
+        loggedInTrackServices: Map<Long, TriState>,
     ): LibraryMap {
         val prefs = getLibraryItemPreferencesFlow().first()
         val downloadedOnly = prefs.globalFilterDownloaded
         val filterDownloaded =
-            if (downloadedOnly) TriStateFilter.ENABLED_IS else prefs.filterDownloaded
+            if (downloadedOnly) TriState.ENABLED_IS else prefs.filterDownloaded
         val filterUnread = prefs.filterUnread
         val filterStarted = prefs.filterStarted
         val filterBookmarked = prefs.filterBookmarked
@@ -182,8 +182,8 @@ class LibraryScreenModel(
 
         val isNotLoggedInAnyTrack = loggedInTrackServices.isEmpty()
 
-        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateFilter.ENABLED_NOT) it.key else null }
-        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriStateFilter.ENABLED_IS) it.key else null }
+        val excludedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_NOT) it.key else null }
+        val includedTracks = loggedInTrackServices.mapNotNull { if (it.value == TriState.ENABLED_IS) it.key else null }
         val trackFiltersIsIgnored = includedTracks.isEmpty() && excludedTracks.isEmpty()
 
         val filterFnDownloaded: (LibraryItem) -> Boolean = {
@@ -308,11 +308,11 @@ class LibraryScreenModel(
                     localBadge = it[1] as Boolean,
                     languageBadge = it[2] as Boolean,
                     globalFilterDownloaded = it[3] as Boolean,
-                    filterDownloaded = it[4] as TriStateFilter,
-                    filterUnread = it[5] as TriStateFilter,
-                    filterStarted = it[6] as TriStateFilter,
-                    filterBookmarked = it[7] as TriStateFilter,
-                    filterCompleted = it[8] as TriStateFilter,
+                    filterDownloaded = it[4] as TriState,
+                    filterUnread = it[5] as TriState,
+                    filterStarted = it[6] as TriState,
+                    filterBookmarked = it[7] as TriState,
+                    filterCompleted = it[8] as TriState,
                 )
             },
         )
@@ -365,7 +365,7 @@ class LibraryScreenModel(
      *
      * @return map of track id with the filter value
      */
-    private fun getTrackingFilterFlow(): Flow<Map<Long, TriStateFilter>> {
+    private fun getTrackingFilterFlow(): Flow<Map<Long, TriState>> {
         val loggedServices = trackManager.services.filter { it.isLogged }
         return if (loggedServices.isNotEmpty()) {
             val prefFlows = loggedServices
@@ -670,11 +670,11 @@ class LibraryScreenModel(
         val languageBadge: Boolean,
 
         val globalFilterDownloaded: Boolean,
-        val filterDownloaded: TriStateFilter,
-        val filterUnread: TriStateFilter,
-        val filterStarted: TriStateFilter,
-        val filterBookmarked: TriStateFilter,
-        val filterCompleted: TriStateFilter,
+        val filterDownloaded: TriState,
+        val filterUnread: TriState,
+        val filterStarted: TriState,
+        val filterBookmarked: TriState,
+        val filterCompleted: TriState,
     )
 
     @Immutable

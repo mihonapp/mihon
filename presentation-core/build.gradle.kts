@@ -21,6 +21,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
     // Compose
     implementation(platform(compose.bom))
     implementation(compose.activity)

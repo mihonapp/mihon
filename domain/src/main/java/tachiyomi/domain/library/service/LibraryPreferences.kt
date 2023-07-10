@@ -1,11 +1,11 @@
 package tachiyomi.domain.library.service
 
 import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.getEnum
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.manga.model.TriStateFilter
 
 class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
@@ -49,27 +49,27 @@ class LibraryPreferences(
 
     // region Filter
 
-    fun filterDownloaded() = preferenceStore.getEnum("pref_filter_library_downloaded_v2", TriStateFilter.DISABLED)
+    fun filterDownloaded() = preferenceStore.getEnum("pref_filter_library_downloaded_v2", TriState.DISABLED)
 
-    fun filterUnread() = preferenceStore.getEnum("pref_filter_library_unread_v2", TriStateFilter.DISABLED)
+    fun filterUnread() = preferenceStore.getEnum("pref_filter_library_unread_v2", TriState.DISABLED)
 
-    fun filterStarted() = preferenceStore.getEnum("pref_filter_library_started_v2", TriStateFilter.DISABLED)
+    fun filterStarted() = preferenceStore.getEnum("pref_filter_library_started_v2", TriState.DISABLED)
 
-    fun filterBookmarked() = preferenceStore.getEnum("pref_filter_library_bookmarked_v2", TriStateFilter.DISABLED)
+    fun filterBookmarked() = preferenceStore.getEnum("pref_filter_library_bookmarked_v2", TriState.DISABLED)
 
-    fun filterCompleted() = preferenceStore.getEnum("pref_filter_library_completed_v2", TriStateFilter.DISABLED)
+    fun filterCompleted() = preferenceStore.getEnum("pref_filter_library_completed_v2", TriState.DISABLED)
 
-    fun filterIntervalCustom() = preferenceStore.getEnum("pref_filter_library_interval_custom", TriStateFilter.DISABLED)
+    fun filterIntervalCustom() = preferenceStore.getEnum("pref_filter_library_interval_custom", TriState.DISABLED)
 
-    fun filterIntervalLong() = preferenceStore.getEnum("pref_filter_library_interval_long", TriStateFilter.DISABLED)
+    fun filterIntervalLong() = preferenceStore.getEnum("pref_filter_library_interval_long", TriState.DISABLED)
 
-    fun filterIntervalLate() = preferenceStore.getEnum("pref_filter_library_interval_late", TriStateFilter.DISABLED)
+    fun filterIntervalLate() = preferenceStore.getEnum("pref_filter_library_interval_late", TriState.DISABLED)
 
-    fun filterIntervalDropped() = preferenceStore.getEnum("pref_filter_library_interval_dropped", TriStateFilter.DISABLED)
+    fun filterIntervalDropped() = preferenceStore.getEnum("pref_filter_library_interval_dropped", TriState.DISABLED)
 
-    fun filterIntervalPassed() = preferenceStore.getEnum("pref_filter_library_interval_passed", TriStateFilter.DISABLED)
+    fun filterIntervalPassed() = preferenceStore.getEnum("pref_filter_library_interval_passed", TriState.DISABLED)
 
-    fun filterTracking(id: Int) = preferenceStore.getEnum("pref_filter_library_tracked_${id}_v2", TriStateFilter.DISABLED)
+    fun filterTracking(id: Int) = preferenceStore.getEnum("pref_filter_library_tracked_${id}_v2", TriState.DISABLED)
 
     // endregion
 
