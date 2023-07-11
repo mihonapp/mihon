@@ -61,7 +61,7 @@ fun BrowseSourceContent(
         if (mangaList.itemCount > 0 && errorState != null && errorState is LoadState.Error) {
             val result = snackbarHostState.showSnackbar(
                 message = getErrorMessage(errorState),
-                actionLabel = context.getString(R.string.action_webview_refresh),
+                actionLabel = context.getString(R.string.action_retry),
                 duration = SnackbarDuration.Indefinite,
             )
             when (result) {
