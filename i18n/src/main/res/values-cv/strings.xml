@@ -565,7 +565,7 @@
     <string name="pref_appearance_summary">Темӑ, кун тата вӑхӑт хармачӗ</string>
     <string name="pref_library_summary">Пухмӑшсем, пӗтӗмӗшле ҫӗнетӳ</string>
     <string name="pref_reader_summary">Вулав тытӑмӗ, кӑтартӑнни, куҫӑм</string>
-    <string name="label_default">Пӳрӳлле</string>
+    <string name="label_default">Йаланхилле</string>
     <string name="action_open_random_manga">Ӑнсӑрт ҫырав уҫ</string>
     <string name="theme_strawberrydaiquiri">Ҫӗр ҫырли тайккирийӗ</string>
     <string name="theme_midnightdusk">Ҫур ҫӗр ӗнтрӗкӗ</string>
@@ -630,4 +630,5 @@
     <string name="ext_info_version">Версси</string>
     <string name="pref_library_update_refresh_trackers">Йӗрлеве хӑй-хальлӗн ҫӗнетни</string>
     <string name="ext_update_all">Пурне те ҫӗнет</string>
+    <string name="delete_downloaded">Тийесе илнисене катерт</string>
 </resources>

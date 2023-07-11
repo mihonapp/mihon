@@ -7,9 +7,9 @@ import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.ComicInfoPublishingStatus
+import tachiyomi.core.preference.TriState
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.manga.model.TriStateFilter
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -20,19 +20,19 @@ val Manga.readingModeType: Long
 val Manga.orientationType: Long
     get() = viewerFlags and OrientationType.MASK.toLong()
 
-val Manga.downloadedFilter: TriStateFilter
+val Manga.downloadedFilter: TriState
     get() {
-        if (forceDownloaded()) return TriStateFilter.ENABLED_IS
+        if (forceDownloaded()) return TriState.ENABLED_IS
         return when (downloadedFilterRaw) {
-            Manga.CHAPTER_SHOW_DOWNLOADED -> TriStateFilter.ENABLED_IS
-            Manga.CHAPTER_SHOW_NOT_DOWNLOADED -> TriStateFilter.ENABLED_NOT
-            else -> TriStateFilter.DISABLED
+            Manga.CHAPTER_SHOW_DOWNLOADED -> TriState.ENABLED_IS
+            Manga.CHAPTER_SHOW_NOT_DOWNLOADED -> TriState.ENABLED_NOT
+            else -> TriState.DISABLED
         }
     }
 fun Manga.chaptersFiltered(): Boolean {
-    return unreadFilter != TriStateFilter.DISABLED ||
-        downloadedFilter != TriStateFilter.DISABLED ||
-        bookmarkedFilter != TriStateFilter.DISABLED
+    return unreadFilter != TriState.DISABLED ||
+        downloadedFilter != TriState.DISABLED ||
+        bookmarkedFilter != TriState.DISABLED
 }
 fun Manga.forceDownloaded(): Boolean {
     return favorite && Injekt.get<BasePreferences>().downloadedOnly().get()

@@ -830,4 +830,5 @@
     <string name="skipped_reason_not_in_release_period">Atlandı çünkü bugün bir yayın beklenmiyordu</string>
     <string name="track_delete_text">Bu, izlemeyi yerel olarak kaldıracak.</string>
     <string name="track_delete_remote_text">Ayrıca şuradan da kaldır: %s</string>
+    <string name="manga_display_modified_interval_title">Güncelleme aralığını ayarla</string>
 </resources>

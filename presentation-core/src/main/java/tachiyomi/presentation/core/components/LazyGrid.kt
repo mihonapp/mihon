@@ -1,6 +1,5 @@
 package tachiyomi.presentation.core.components
 
-import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import tachiyomi.presentation.core.util.flingBehaviorIgnoringMotionScale
 
 @Composable
 fun FastScrollLazyVerticalGrid(
@@ -31,7 +29,6 @@ fun FastScrollLazyVerticalGrid(
     verticalArrangement: Arrangement.Vertical =
         if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    flingBehavior: FlingBehavior = flingBehaviorIgnoringMotionScale(),
     userScrollEnabled: Boolean = true,
     content: LazyGridScope.() -> Unit,
 ) {
@@ -54,7 +51,6 @@ fun FastScrollLazyVerticalGrid(
             reverseLayout = reverseLayout,
             verticalArrangement = verticalArrangement,
             horizontalArrangement = horizontalArrangement,
-            flingBehavior = flingBehavior,
             userScrollEnabled = userScrollEnabled,
             content = content,
         )

@@ -3,6 +3,7 @@ package eu.kanade.presentation.more.stats
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CollectionsBookmark
@@ -19,7 +20,6 @@ import eu.kanade.presentation.more.stats.components.StatsSection
 import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.presentation.util.toDurationString
 import eu.kanade.tachiyomi.R
-import tachiyomi.presentation.core.components.LazyColumn
 import tachiyomi.presentation.core.components.material.padding
 import java.util.Locale
 import kotlin.time.DurationUnit

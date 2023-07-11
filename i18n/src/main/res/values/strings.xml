@@ -12,6 +12,7 @@
     <string name="manga">Library entries</string>
     <string name="chapters">Chapters</string>
     <string name="track">Tracking</string>
+    <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
 
     <!-- Screen titles -->
@@ -380,7 +381,7 @@
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Both</string>
     <string name="pref_reader_actions">Actions</string>
-    <string name="pref_read_with_long_tap">Show on long tap</string>
+    <string name="pref_read_with_long_tap">Show actions on long tap</string>
     <string name="pref_create_folder_per_manga">Save pages into separate folders</string>
     <string name="pref_create_folder_per_manga_summary">Creates folders according to entries\' title</string>
     <string name="pref_reader_theme">Background color</string>
@@ -474,7 +475,7 @@
         <item quantity="one">Next unread chapter</item>
         <item quantity="other">Next %d unread chapters</item>
     </plurals>
-    <string name="download_ahead_info">Only works on entries in library and if the current chapter plus the next one are already downloaded</string>
+    <string name="download_ahead_info">Only works if the current chapter + the next one are already downloaded.</string>
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
     <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
@@ -570,7 +571,7 @@
     <string name="used_cache">Used: %1$s</string>
     <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
-    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app close</string>
+    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="pref_invalidate_download_cache">Invalidate downloads index</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
     <string name="pref_clear_database">Clear database</string>

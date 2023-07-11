@@ -639,7 +639,7 @@
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
     <string name="notification_size_warning">Varování: velké aktualizace poškozují zdroje a můžou vést k pomalejším aktualizacím a zvýšenému využití baterie. Klepnutím se dozvíte více.</string>
-    <string name="pref_auto_clear_chapter_cache">Vymazat mezipaměť kapitol při zavření aplikace</string>
+    <string name="pref_auto_clear_chapter_cache">Vymazat mezipaměť kapitol při spuštění aplikace</string>
     <string name="extension_api_error">Chyba v získání seznamu rozšíření</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
     <string name="clear_database_source_item_count">%1$d neknihovní záznamy v databázi</string>
@@ -849,4 +849,5 @@
     <string name="track_delete_remote_text">Odebrat také z %s</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Odebrat sledování %s\?</string>
+    <string name="delete_downloaded">Odstranit stažené</string>
 </resources>

@@ -616,7 +616,7 @@
     <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">應用程式更新</string>
-    <string name="pref_auto_clear_chapter_cache">結束應用程式時清除章節快取</string>
+    <string name="pref_auto_clear_chapter_cache">啟動應用程式時清除章節快取</string>
     <string name="clear_database_source_item_count">資料庫中有 %1$d 部作品不屬於藏書</string>
     <string name="database_clean">無須清理</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
@@ -631,7 +631,7 @@
     <string name="action_faq_and_guides">常見問題與指南</string>
     <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">顯示作品</string>
-    <string name="pref_landscape_zoom">縮放橫向圖片</string>
+    <string name="pref_landscape_zoom">自動縮放寬頁</string>
     <string name="pref_navigate_pan">導覽寬頁時先平移後翻頁</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
     <string name="pref_update_only_started">無已讀的章節</string>
@@ -785,4 +785,8 @@
     <string name="pref_chapter_swipe">目錄滑動動作</string>
     <string name="pref_library_columns_per_row">每列 %d 欄</string>
     <string name="action_ok">確定</string>
+    <string name="delete_downloaded">刪除舊有下載章節</string>
+    <string name="track_delete_title">移除「%s」歷程平台？</string>
+    <string name="track_delete_text">這將在本機上解除登錄該歷程平台。</string>
+    <string name="track_delete_remote_text">同時移除「%s」上的資料</string>
 </resources>

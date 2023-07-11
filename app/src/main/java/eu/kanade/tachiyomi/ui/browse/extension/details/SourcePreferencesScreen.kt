@@ -7,9 +7,6 @@ import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,7 +18,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
@@ -38,6 +34,7 @@ import androidx.preference.forEach
 import androidx.preference.getOnBindEditTextListener
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
@@ -62,10 +59,7 @@ class SourcePreferencesScreen(val sourceId: Long) : Screen() {
                     title = { Text(text = Injekt.get<SourceManager>().getOrStub(sourceId).toString()) },
                     navigationIcon = {
                         IconButton(onClick = navigator::pop) {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowBack,
-                                contentDescription = stringResource(R.string.abc_action_bar_up_description),
-                            )
+                            UpIcon()
                         }
                     },
                     scrollBehavior = it,

@@ -27,20 +27,20 @@ import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.forceDownloaded
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import eu.kanade.presentation.components.TriStateItem
 import eu.kanade.tachiyomi.R
+import tachiyomi.core.preference.TriState
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.manga.model.TriStateFilter
 import tachiyomi.presentation.core.components.RadioItem
 import tachiyomi.presentation.core.components.SortItem
+import tachiyomi.presentation.core.components.TriStateItem
 
 @Composable
 fun ChapterSettingsDialog(
     onDismissRequest: () -> Unit,
     manga: Manga? = null,
-    onDownloadFilterChanged: (TriStateFilter) -> Unit,
-    onUnreadFilterChanged: (TriStateFilter) -> Unit,
-    onBookmarkedFilterChanged: (TriStateFilter) -> Unit,
+    onDownloadFilterChanged: (TriState) -> Unit,
+    onUnreadFilterChanged: (TriState) -> Unit,
+    onBookmarkedFilterChanged: (TriState) -> Unit,
     onSortModeChanged: (Long) -> Unit,
     onDisplayModeChanged: (Long) -> Unit,
     onSetAsDefault: (applyToExistingManga: Boolean) -> Unit,
@@ -78,11 +78,11 @@ fun ChapterSettingsDialog(
             when (page) {
                 0 -> {
                     FilterPage(
-                        downloadFilter = manga?.downloadedFilter ?: TriStateFilter.DISABLED,
+                        downloadFilter = manga?.downloadedFilter ?: TriState.DISABLED,
                         onDownloadFilterChanged = onDownloadFilterChanged.takeUnless { manga?.forceDownloaded() == true },
-                        unreadFilter = manga?.unreadFilter ?: TriStateFilter.DISABLED,
+                        unreadFilter = manga?.unreadFilter ?: TriState.DISABLED,
                         onUnreadFilterChanged = onUnreadFilterChanged,
-                        bookmarkedFilter = manga?.bookmarkedFilter ?: TriStateFilter.DISABLED,
+                        bookmarkedFilter = manga?.bookmarkedFilter ?: TriState.DISABLED,
                         onBookmarkedFilterChanged = onBookmarkedFilterChanged,
                     )
                 }
@@ -106,12 +106,12 @@ fun ChapterSettingsDialog(
 
 @Composable
 private fun ColumnScope.FilterPage(
-    downloadFilter: TriStateFilter,
-    onDownloadFilterChanged: ((TriStateFilter) -> Unit)?,
-    unreadFilter: TriStateFilter,
-    onUnreadFilterChanged: (TriStateFilter) -> Unit,
-    bookmarkedFilter: TriStateFilter,
-    onBookmarkedFilterChanged: (TriStateFilter) -> Unit,
+    downloadFilter: TriState,
+    onDownloadFilterChanged: ((TriState) -> Unit)?,
+    unreadFilter: TriState,
+    onUnreadFilterChanged: (TriState) -> Unit,
+    bookmarkedFilter: TriState,
+    onBookmarkedFilterChanged: (TriState) -> Unit,
 ) {
     TriStateItem(
         label = stringResource(R.string.label_downloaded),

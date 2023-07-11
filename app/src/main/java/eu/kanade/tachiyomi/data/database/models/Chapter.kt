@@ -20,7 +20,7 @@ interface Chapter : SChapter, Serializable {
 
     var source_order: Int
 
-    var last_modified: Long?
+    var last_modified: Long
 }
 
 fun Chapter.toDomainChapter(): DomainChapter? {

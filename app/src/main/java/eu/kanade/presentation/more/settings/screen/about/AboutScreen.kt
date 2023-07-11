@@ -1,4 +1,4 @@
-package eu.kanade.presentation.more.settings.screen
+package eu.kanade.presentation.more.settings.screen.about
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
