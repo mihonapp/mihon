@@ -71,7 +71,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
     @ReadOnlyComposable
     @Composable
     @StringRes
-    override fun getTitleRes() = R.string.label_backup
+    override fun getTitleRes() = R.string.label_backup_and_sync
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -86,7 +86,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
             getAutomaticBackupGroup(backupPreferences = backupPreferences),
         ) + listOf(
             Preference.PreferenceGroup(
-                title = stringResource(R.string.pref_backup_manual_category),
+                title = stringResource(R.string.label_sync),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.ListPreference(
                         pref = syncPreferences.syncService(),
