@@ -282,7 +282,7 @@ object SettingsLibraryScreen : SearchableSettings {
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.swipeToStartAction(),
-                    title = stringResource(R.string.pref_chapter_swipe_end),
+                    title = stringResource(R.string.pref_chapter_swipe_start),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to stringResource(R.string.disabled),
                         LibraryPreferences.ChapterSwipeAction.ToggleBookmark to stringResource(R.string.action_bookmark),
@@ -292,7 +292,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.swipeToEndAction(),
-                    title = stringResource(R.string.pref_chapter_swipe_start),
+                    title = stringResource(R.string.pref_chapter_swipe_end),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to stringResource(R.string.disabled),
                         LibraryPreferences.ChapterSwipeAction.ToggleBookmark to stringResource(R.string.action_bookmark),
