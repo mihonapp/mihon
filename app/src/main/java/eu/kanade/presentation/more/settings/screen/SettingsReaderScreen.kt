@@ -250,9 +250,11 @@ object SettingsReaderScreen : SearchableSettings {
     private fun getWebtoonGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
         val navModePref = readerPreferences.navigationModeWebtoon()
         val dualPageSplitPref = readerPreferences.dualPageSplitWebtoon()
+        val webtoonSidePaddingPref = readerPreferences.webtoonSidePadding()
 
         val navMode by navModePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
+        val webtoonSidePadding by webtoonSidePaddingPref.collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.webtoon_viewer),
@@ -275,17 +277,16 @@ object SettingsReaderScreen : SearchableSettings {
                     ),
                     enabled = navMode != 5,
                 ),
-                Preference.PreferenceItem.ListPreference(
-                    pref = readerPreferences.webtoonSidePadding(),
+                Preference.PreferenceItem.SliderPreference(
+                    value = webtoonSidePadding,
                     title = stringResource(R.string.pref_webtoon_side_padding),
-                    entries = mapOf(
-                        0 to stringResource(R.string.webtoon_side_padding_0),
-                        5 to stringResource(R.string.webtoon_side_padding_5),
-                        10 to stringResource(R.string.webtoon_side_padding_10),
-                        15 to stringResource(R.string.webtoon_side_padding_15),
-                        20 to stringResource(R.string.webtoon_side_padding_20),
-                        25 to stringResource(R.string.webtoon_side_padding_25),
-                    ),
+                    subtitle = stringResource(R.string.percentage, webtoonSidePadding),
+                    min = ReaderPreferences.WEBTOON_PADDING_MIN,
+                    max = ReaderPreferences.WEBTOON_PADDING_MAX,
+                    onValueChanged = {
+                        webtoonSidePaddingPref.set(it)
+                        true
+                    },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.readerHideThreshold(),

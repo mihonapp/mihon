@@ -15,7 +15,7 @@ import tachiyomi.presentation.core.components.RadioItem
 @Composable
 internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     // TODO: show this in a nicer way
-    HeadingItem(stringResource(R.string.pref_reader_theme))
+    HeadingItem(R.string.pref_reader_theme)
     val readerTheme by screenModel.preferences.readerTheme().collectAsState()
     listOf(
         R.string.black_background to 1,

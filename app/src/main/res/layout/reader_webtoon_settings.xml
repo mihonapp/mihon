@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -29,65 +28,5 @@
         android:layout_height="wrap_content"
         android:entries="@array/invert_tapping_mode"
         app:title="@string/pref_read_with_tapping_inverted" />
-
-    <eu.kanade.tachiyomi.widget.MaterialSpinnerView
-        android:id="@+id/webtoon_side_padding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/webtoon_side_padding"
-        app:title="@string/pref_webtoon_side_padding" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/crop_borders_webtoon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_crop_borders"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_split"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_dual_page_split"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_invert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_dual_page_invert"
-        android:textColor="?android:attr/textColorSecondary"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/long_strip_split"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="@string/pref_long_strip_split"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/double_tap_zoom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="@string/pref_double_tap_zoom"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/tapping_prefs_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="webtoon_nav,tapping_inverted,dual_page_split,dual_page_invert" />
 
 </LinearLayout>

@@ -87,7 +87,7 @@ internal fun PreferenceItem(
                     min = item.min,
                     max = item.max,
                     value = item.value,
-                    valueText = item.value.toString(),
+                    valueText = item.subtitle.takeUnless { it.isNullOrEmpty() } ?: item.value.toString(),
                     onChange = {
                         scope.launch {
                             item.onValueChanged(it)

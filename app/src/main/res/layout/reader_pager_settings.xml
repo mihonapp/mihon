@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -43,78 +42,5 @@
         android:layout_height="wrap_content"
         android:entries="@array/zoom_start"
         app:title="@string/pref_zoom_start" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/crop_borders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_crop_borders"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/landscape_zoom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_landscape_zoom"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/navigate_pan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_navigate_pan"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_split"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_dual_page_split"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_invert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_dual_page_invert"
-        android:textColor="?android:attr/textColorSecondary"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_rotate_to_fit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_page_rotate"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/dual_page_rotate_to_fit_invert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp"
-        android:text="@string/pref_page_rotate_invert"
-        android:textColor="?android:attr/textColorSecondary"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/tapping_prefs_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="pager_nav,tapping_inverted,dual_page_split,dual_page_invert,dual_page_rotate_to_fit,dual_page_rotate_to_fit_invert" />
 
 </LinearLayout>

@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.FrameLayout
-import androidx.annotation.ArrayRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
@@ -93,17 +92,6 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         enumConstants?.indexOf(pref.get())?.let { setSelection(it) }
 
         popup = makeSettingsPopup(pref, clazz)
-        setOnTouchListener(popup?.dragToOpenListener)
-        setOnClickListener {
-            popup?.show()
-        }
-    }
-
-    fun bindToIntPreference(pref: Preference<Int>, @ArrayRes intValuesResource: Int, block: ((Int) -> Unit)? = null) {
-        val intValues = resources.getStringArray(intValuesResource).map { it.toIntOrNull() }
-        setSelection(intValues.indexOf(pref.get()))
-
-        popup = makeSettingsPopup(pref, intValues, block)
         setOnTouchListener(popup?.dragToOpenListener)
         setOnClickListener {
             popup?.show()
