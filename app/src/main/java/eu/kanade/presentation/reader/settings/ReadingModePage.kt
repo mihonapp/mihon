@@ -3,6 +3,7 @@ package eu.kanade.presentation.reader.settings
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
@@ -12,6 +13,7 @@ import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SliderItem
+import java.text.NumberFormat
 
 @Composable
 internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel) {
@@ -105,6 +107,8 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
 
 @Composable
 private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenModel) {
+    val numberFormat = remember { NumberFormat.getPercentInstance() }
+
     HeadingItem(R.string.webtoon_viewer)
 
     // TODO: Tap zones
@@ -116,7 +120,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         min = ReaderPreferences.WEBTOON_PADDING_MIN,
         max = ReaderPreferences.WEBTOON_PADDING_MAX,
         value = webtoonSidePadding,
-        valueText = stringResource(R.string.percentage, webtoonSidePadding),
+        valueText = numberFormat.format(webtoonSidePadding / 100f),
         onChange = {
             screenModel.preferences.webtoonSidePadding().set(it)
         },

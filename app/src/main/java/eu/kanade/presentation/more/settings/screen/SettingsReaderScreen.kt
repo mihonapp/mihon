@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.text.NumberFormat
 
 object SettingsReaderScreen : SearchableSettings {
 
@@ -248,6 +249,8 @@ object SettingsReaderScreen : SearchableSettings {
 
     @Composable
     private fun getWebtoonGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val numberFormat = remember { NumberFormat.getPercentInstance() }
+
         val navModePref = readerPreferences.navigationModeWebtoon()
         val dualPageSplitPref = readerPreferences.dualPageSplitWebtoon()
         val webtoonSidePaddingPref = readerPreferences.webtoonSidePadding()
@@ -280,7 +283,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SliderPreference(
                     value = webtoonSidePadding,
                     title = stringResource(R.string.pref_webtoon_side_padding),
-                    subtitle = stringResource(R.string.percentage, webtoonSidePadding),
+                    subtitle = numberFormat.format(webtoonSidePadding / 100f),
                     min = ReaderPreferences.WEBTOON_PADDING_MIN,
                     max = ReaderPreferences.WEBTOON_PADDING_MAX,
                     onValueChanged = {
