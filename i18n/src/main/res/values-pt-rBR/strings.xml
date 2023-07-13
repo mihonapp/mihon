@@ -817,8 +817,6 @@
     <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
     <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
     <string name="pref_update_release_grace_period">Intervalo de lançamento com carência</string>
-    <string name="pref_update_release_leading_days">Verificar %s dia(s) antes</string>
-    <string name="pref_update_release_following_days">Verificar %s dia(s) depois</string>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <plurals name="day">
         <item quantity="one">%d dia(s)</item>
