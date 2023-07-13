@@ -182,11 +182,6 @@
     <string name="pref_remove_after_read">Automatski izbriši nakon čitanja</string>
     <string name="pref_remove_after_marked_as_read">Nakon ručnog označivanja kao pročitano</string>
     <string name="pref_download_directory">Mjesto preuzimanja</string>
-    <string name="webtoon_side_padding_25">25 %</string>
-    <string name="webtoon_side_padding_20">20 %</string>
-    <string name="webtoon_side_padding_15">15 %</string>
-    <string name="webtoon_side_padding_10">10 %</string>
-    <string name="webtoon_side_padding_0">Bez</string>
     <string name="pref_webtoon_side_padding">Odmak od ruba</string>
     <string name="pref_category_reading">Čitanje</string>
     <string name="pref_always_show_chapter_transition">Uvijek prikaži prijelaze između poglavlja</string>
@@ -655,7 +650,6 @@
     <string name="action_faq_and_guides">ČPP i vodiči</string>
     <string name="action_show_manga">Prikaži unos</string>
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
-    <string name="webtoon_side_padding_5">5 %</string>
     <string name="pref_navigate_pan">Panoramski prikaz širokih slika</string>
     <string name="pref_landscape_zoom">Automatski zumiraj u široke slike</string>
     <string name="pref_update_only_started">Koja još nisu pokrenuta</string>

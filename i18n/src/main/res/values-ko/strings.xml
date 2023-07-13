@@ -393,7 +393,6 @@
         <item quantity="other">%1$d일 전</item>
     </plurals>
     <string name="pref_webtoon_side_padding">모서리 여백</string>
-    <string name="webtoon_side_padding_0">없음</string>
     <string name="ext_app_info">앱 정보</string>
     <string name="getting_started_guide">초기 설정 도움말</string>
     <string name="pref_incognito_mode_summary">읽은 내역의 기록을 일시 정지합니다</string>
@@ -440,7 +439,7 @@
     <string name="connected_to_wifi">Wi-Fi 에서만</string>
     <string name="on">활성화</string>
     <string name="updating_library">서재 업데이트 중</string>
-    <string name="pref_landscape_zoom">가로 이미지 확대</string>
+    <string name="pref_landscape_zoom">넓은 이미지로 자동 확대</string>
     <string name="pref_category_reading">읽기</string>
     <string name="pref_lowest">매우 낮음</string>
     <string name="pref_show_reading_mode">읽기 모드 표시</string>
@@ -482,7 +481,7 @@
     <string name="disabled_nav">비활성화</string>
     <string name="backup_restore_missing_sources">없어진 소스:</string>
     <string name="backup_restore_missing_trackers">로그인 되지않은 트래커:</string>
-    <string name="pref_auto_clear_chapter_cache">앱 종료 시 회차 캐시 삭제</string>
+    <string name="pref_auto_clear_chapter_cache">앱 실행 시 회차 캐시 삭제</string>
     <string name="clear_database_source_item_count">데이터베이스에 없는 항목이 %1$d개 있습니다</string>
     <string name="about_dont_kill_my_app">일부 제조사는 백그라운드 서비스를 종료하는 추가적인 제한 사항이 있습니다. 자세한 사항은 웹사이트를 참조하세요.</string>
     <string name="pref_tablet_ui_mode">태블릿 UI</string>
@@ -532,7 +531,6 @@
     <string name="obsolete_extension_message">이 확장 프로그램은 더 이상 사용할 수 없습니다. 제대로 작동하지 않을 수 있으며 앱에 문제가 발생할 수 있습니다. 제거하는 것이 좋습니다.</string>
     <string name="ext_install_service_notif">확장기능 설치 중…</string>
     <string name="ext_installer_legacy">레거시</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="action_track">트래킹</string>
     <string name="pref_refresh_library_covers">서재 표지 새로고침</string>
     <string name="pref_dump_crash_logs">오류 로그 공유</string>
@@ -582,12 +580,8 @@
     <string name="exclude">제외: %s</string>
     <string name="unofficial_extension_message">이 확장기능은 공식 확장기능이 아닙니다.</string>
     <string name="tracking_info">트래커 서비스에 항목 진행 상황을 동기화합니다. 트래킹 버튼을 이용하여 각각의 항목 별로 트래킹을 설정하세요.</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="tracking_guide">트래커 가이드</string>
     <string name="enhanced_services">향상된 서비스</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="pref_download_new_categories_details">카테고리가 다운로드에서 제외된 경우 다른 카테고리에 포함되어 있어도 다운로드 되지 않습니다.</string>
     <string name="enhanced_tracking_info">특정 소스에 향상된 서비스를 제공합니다. 서재에 항목이 추가될 시 자동으로 트래킹 됩니다.</string>
     <string name="pref_search_pinned_sources_only">전체 검색 시 핀 설정된 소스만 검색</string>
@@ -702,7 +696,7 @@
     </plurals>
     <string name="auto_download_while_reading">읽을 때 자동 다운로드</string>
     <string name="updates_last_update_info">마지막 서재 업데이트: %s</string>
-    <string name="download_ahead_info">만화가 내 서재에 추가되어 있고, 현재 회차와 다음 회차가 이미 다운로드된 경우에만 작동됩니다</string>
+    <string name="download_ahead_info">현재 회차 + 다음 회차가 이미 다운로드된 경우에만 작동됩니다</string>
     <string name="popular">인기</string>
     <string name="are_you_sure">정말로 실행합니까\?</string>
     <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>

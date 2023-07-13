@@ -279,7 +279,7 @@
     <string name="download_notifier_no_network">Δεν υπάρχει διαθέσιμη σύνδεση δικτύου</string>
     <string name="download_notifier_download_paused">Λήψεις σε παύση</string>
     <string name="channel_common">Κοινό</string>
-    <string name="pref_read_with_long_tap">Εμφάνιση με παρατεταμένο πάτημα</string>
+    <string name="pref_read_with_long_tap">Εμφάνιση ενεργειών με παρατεταμένο πάτημα</string>
     <string name="action_open_in_web_view">Άνοιγμα στο WebView</string>
     <string name="pref_true_color">Χρώμα 32-bit</string>
     <string name="pref_skip_read_chapters">Προσπέραση διαβασμένων κεφαλαίων</string>
@@ -350,11 +350,6 @@
     <string name="restore_in_progress">Η επαναφορά βρίσκεται ήδη σε εξέλιξη</string>
     <string name="creating_backup_error">Η δημιουργία αντιγράφων ασφαλείας απέτυχε</string>
     <string name="backup_in_progress">Η δημιουργία αντιγράφων ασφαλείας βρίσκεται ήδη σε εξέλιξη</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Κανένα</string>
     <string name="pref_webtoon_side_padding">Πλευρικό γέμισμα</string>
     <string name="pref_category_reading">Ανάγνωση</string>
     <string name="pref_always_show_chapter_transition">Να εμφανίζεται πάντα η μετάβαση κεφαλαίου</string>
@@ -641,7 +636,6 @@
     <string name="on_hiatus">Σε αναστολή</string>
     <string name="publishing_finished">Η έκδοση ολοκληρώθηκε</string>
     <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Εμφάνιση καταχώρισης</string>
     <string name="pref_landscape_zoom">Αυτόματο ζουμ σε ευρείες εικόνες</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
@@ -710,7 +704,7 @@
         <item quantity="one">Επόμενο αδιάβαστο κεφάλαιο</item>
         <item quantity="other">Επόμενα %d αδιάβαστα κεφάλαια</item>
     </plurals>
-    <string name="download_ahead_info">Λειτουργεί μόνο σε καταχωρήσεις στη βιβλιοθήκη και αν το τρέχον κεφάλαιο και το επόμενο έχουν ήδη ληφθεί</string>
+    <string name="download_ahead_info">Λειτουργεί μόνο εάν το τρέχον κεφάλαιο + το επόμενο έχουν ήδη ληφθεί.</string>
     <string name="are_you_sure">Είστε σίγουροι;</string>
     <string name="pref_long_strip_split">Διαχωρισμός ψηλών εικόνων (BETA)</string>
     <string name="multi_lang">Πολλαπλό</string>

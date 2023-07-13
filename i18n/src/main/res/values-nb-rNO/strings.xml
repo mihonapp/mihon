@@ -328,10 +328,6 @@
     <string name="email">E-postadresse</string>
     <string name="in_library">I biblioteket</string>
     <string name="add_to_library">Legg til i bibliotek</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="action_move_to_bottom">Flytt til bunnen</string>
     <string name="action_move_to_top">Flytt til toppen</string>
     <string name="action_oldest">Eldste</string>
@@ -349,7 +345,6 @@
     <string name="pinned_sources">Festet</string>
     <string name="website">Nettside</string>
     <string name="creating_backup_error">Sikkerhetskopiering mislyktes</string>
-    <string name="webtoon_side_padding_0">Ingen</string>
     <string name="pref_category_reading">Leser</string>
     <string name="pref_always_show_chapter_transition">Alltid vis kapittelovergang</string>
     <string name="vertical_plus_viewer">Lang stripe med mellomrom</string>
@@ -629,7 +624,6 @@
     <string name="action_show_manga">Vis oppføring</string>
     <string name="privacy_policy">Personvernerklæring</string>
     <string name="publishing_finished">Ferdig publisert</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_update_only_completely_read">Med uleste kapitler</string>
     <string name="cancelled">Kansellert</string>
     <string name="on_hiatus">På pause</string>

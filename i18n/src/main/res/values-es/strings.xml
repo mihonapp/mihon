@@ -75,7 +75,7 @@
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Sentido de lectura normal</string>
     <string name="left_to_right_viewer">Por páginas; de izquierda a derecha</string>
-    <string name="right_to_left_viewer">Páginas (de derecha a izquierda)</string>
+    <string name="right_to_left_viewer">Por páginas (de derecha a izquierda)</string>
     <string name="vertical_viewer">Por páginas; vertical</string>
     <string name="webtoon_viewer">Tira vertical continua</string>
     <string name="pref_image_scale_type">Método de ampliación</string>
@@ -407,11 +407,6 @@
     <string name="label_sources">Fuentes</string>
     <string name="action_select_inverse">Invertir selección</string>
     <string name="vertical_plus_viewer">Tira vertical discontinua</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Ninguno</string>
     <string name="pref_webtoon_side_padding">Espaciado lateral</string>
     <string name="pinned_sources">Ancladas</string>
     <string name="action_unpin">Desanclar</string>
@@ -684,7 +679,6 @@
     <string name="publishing_finished">Serie terminada</string>
     <string name="cancelled">Cancelada</string>
     <string name="action_faq_and_guides">Guías y soluciones</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar el elemento</string>
     <string name="pref_navigate_pan">Desplazarse por el resto de la página antes de cambiar</string>
     <string name="action_display_cover_only_grid">Cuadrícula sólo de portadas</string>
@@ -747,7 +741,7 @@
     <string name="update_already_running">Ya se está actualizando</string>
     <string name="theme_tidalwave">Marea</string>
     <string name="error_user_agent_string_blank">La cadena con el agente de usuario no puede estar vacía</string>
-    <string name="download_ahead_info">Solo funciona con elementos que ya estén en tu biblioteca y si el capítulo actual y el que va después ya están descargados</string>
+    <string name="download_ahead_info">Solo funciona si el capítulo actual y el que va después ya están descargados.</string>
     <string name="download_ahead">Descargar por adelantado</string>
     <string name="auto_download_while_reading">Descarga los capítulos siguientes mientras lees</string>
     <plurals name="next_unread_chapters">
@@ -846,8 +840,8 @@
     <string name="pref_double_tap_zoom">Ampliar tocando dos veces la pantalla</string>
     <string name="pref_library_columns_per_row">%d por fila</string>
     <string name="action_filter_interval_late">Tras 10 o más días</string>
-    <string name="action_sort_next_updated">La siguiente actualización se espera</string>
-    <string name="pref_update_only_in_release_period">Fuera del período de publicación esperable</string>
+    <string name="action_sort_next_updated">Siguiente actualizacion esperada</string>
+    <string name="pref_update_only_in_release_period">Fuera del período de publicación esperado</string>
     <string name="intervals_header">Intervalos</string>
     <plurals name="pref_update_release_leading_days">
         <item quantity="one">%d día antes</item>
@@ -868,7 +862,7 @@
     </plurals>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <string name="action_filter_interval_dropped">¿Abandonado\? Tras más de 20 días y 2 meses</string>
-    <string name="pref_update_release_grace_period">Período de gracia de publicación esperable</string>
+    <string name="pref_update_release_grace_period">Período de gracia de publicación esperado</string>
     <string name="pref_update_release_grace_period_info">Se recomienda un período de gracia corto para evitar sobrecargar las páginas de descarga. Cuántas más veces fallen las comprobaciones mayor será el espacio de tiempo hasta un tope de 28 días.</string>
     <string name="manga_display_modified_interval_title">Forzar actualización cada</string>
     <string name="skipped_reason_not_in_release_period">No se ha comprobado ninguna actualización hoy al no esperar ningún cambio</string>
@@ -876,7 +870,7 @@
     <string name="action_set_interval">Establecer intervalo</string>
     <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
     <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
-    <string name="action_ok">DE ACUERDO</string>
+    <string name="action_ok">OK</string>
     <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>

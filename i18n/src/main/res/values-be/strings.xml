@@ -326,11 +326,6 @@
     <string name="pref_high">Высокая</string>
     <string name="pref_highest">Найвышэйшая</string>
     <string name="pref_hide_threshold">Аўтаматычнае утойванне меню пры адчувальнасці да прагортцы</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Не</string>
     <string name="pref_webtoon_side_padding">Бакавой водступ</string>
     <string name="pref_category_reading">Чытаньне</string>
     <string name="pref_category_reading_mode">Рэжым чытання</string>

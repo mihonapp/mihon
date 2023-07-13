@@ -366,11 +366,6 @@
     <string name="pinned_sources">已置顶</string>
     <string name="action_unpin">取消置顶</string>
     <string name="action_pin">置顶</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">无</string>
     <string name="pref_webtoon_side_padding">侧边填充</string>
     <string name="vertical_plus_viewer">条漫（页间有空隙）</string>
     <string name="action_select_inverse">反选</string>
@@ -629,7 +624,6 @@
     <string name="cancelled">已中止</string>
     <string name="on_hiatus">休刊中</string>
     <string name="action_faq_and_guides">常见问题和指南</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">显示作品</string>
     <string name="action_display_cover_only_grid">封面网格</string>
     <string name="pref_landscape_zoom">自动放大横向图片</string>
@@ -697,7 +691,7 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">后续 %d 个未读章节</item>
     </plurals>
-    <string name="download_ahead_info">仅对书架中的作品有效，并且要求当前章节和下一章节都已下载</string>
+    <string name="download_ahead_info">要求当前章节和下一章节都已下载。</string>
     <string name="are_you_sure">你确定吗？</string>
     <string name="pref_long_strip_split">分割长图 (测试版)</string>
     <string name="multi_lang">多语言</string>
@@ -798,4 +792,20 @@
     <string name="track_delete_remote_text">同时删除 %s 上的数据</string>
     <string name="track_delete_text">将会在本地删除进度记录的关联。</string>
     <string name="delete_downloaded">删除已下载章节</string>
+    <string name="action_filter_interval_custom">自定义更新间隔</string>
+    <string name="action_set_interval">设定间隔</string>
+    <string name="action_filter_interval_dropped">放弃\? 延迟 20+ 和 2个月</string>
+    <string name="action_filter_interval_passed">通过检查期</string>
+    <string name="action_sort_next_updated">下次预期更新</string>
+    <string name="action_filter_interval_long">每月更新（28天）</string>
+    <string name="action_filter_interval_late">延迟10+检查</string>
+    <string name="intervals_header">间隔</string>
+    <plurals name="day">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <string name="manga_display_interval_title">估计每个</string>
+    <string name="manga_modify_interval_title">修改间隔</string>
+    <string name="manga_display_modified_interval_title">设定更新为每</string>
+    <string name="manga_modify_calculated_interval_title">自定义间隔</string>
+    <string name="skipped_reason_not_in_release_period">跳过、今天预期没有新发布</string>
 </resources>

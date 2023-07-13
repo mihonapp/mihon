@@ -339,8 +339,6 @@
     <string name="pref_auto_update_manga_sync">Po perskaitymo atnaujinti statusą</string>
     <string name="pref_search_pinned_sources_only">Įtraukti tik prisegtus šaltinius</string>
     <string name="backup_restore_missing_sources">Trūksta šaltinių:</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="services">Paslaugos</string>
     <string name="second_to_last">Priešpaskutinis perskaitytas skyrius</string>
     <string name="fourth_to_last">Ketvirtas skyrius nuo paskutinio skaityto</string>
@@ -356,18 +354,14 @@
     <string name="pref_lowest">Mažiausias</string>
     <string name="pref_remove_after_marked_as_read">Rankinių būdu pažymėtas, kaip skaitytas</string>
     <string name="pref_remove_after_read">Perskaičius automatiškai naikinti</string>
-    <string name="webtoon_side_padding_0">Ne vienas</string>
     <string name="enhanced_services">Patobulintos paslaugos</string>
     <string name="pref_restore_backup_summ">Atkurti biblioteką iš atsarginės failo kopijos</string>
     <string name="pref_backup_directory">Atsarginės kopijos vieta</string>
     <string name="invalid_backup_file_missing_manga">Atsarginėje kopijoje nėra jokių bibliotekos įrašų.</string>
     <string name="invalid_backup_file">Netinkamas atsarginės kopijos failas</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_highest">Aukščiausias</string>
     <string name="pref_create_backup">Kurti atsarginę kopiją</string>
     <string name="pref_restore_backup">Atkurti atsarginę kopiją</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_remove_exclude_categories">Neįtrauktos kategorijos</string>
     <string name="custom_dir">Pasirinktina vieta</string>
     <string name="last_read_chapter">Paskiausiai skaitytas skyrius</string>

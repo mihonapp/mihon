@@ -372,11 +372,6 @@
     <string name="in_library">I biblioteket</string>
     <string name="add_to_library">Lägg till i biblioteket</string>
     <string name="pinned_sources">Nålad</string>
-    <string name="webtoon_side_padding_25">25 %</string>
-    <string name="webtoon_side_padding_20">20 %</string>
-    <string name="webtoon_side_padding_15">15 %</string>
-    <string name="webtoon_side_padding_10">10 %</string>
-    <string name="webtoon_side_padding_0">Ingen</string>
     <string name="pref_webtoon_side_padding">Sidofyllning</string>
     <string name="vertical_plus_viewer">Kontinuerlig vertikal</string>
     <string name="action_unpin">Lossa</string>
@@ -641,7 +636,6 @@
     <string name="action_faq_and_guides">Vanliga frågor och guider</string>
     <string name="pref_update_only_completely_read">Med olästa kapitel</string>
     <string name="extension_api_error">Det gick inte att hämta tilläggslistan</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Visa inlägg</string>
     <string name="action_display_cover_only_grid">Endast omslags-rutnät</string>
     <string name="pref_update_only_started">Som inte har startats</string>

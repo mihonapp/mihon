@@ -22,12 +22,7 @@
     <string name="title">Titulua</string>
     <string name="completed">Bukatua</string>
     <string name="unread">Irakurri gabea</string>
-    <string name="webtoon_side_padding_25">%25</string>
     <string name="l_nav">L formakoa</string>
-    <string name="webtoon_side_padding_0">Ezer ez</string>
-    <string name="webtoon_side_padding_10">%10</string>
-    <string name="webtoon_side_padding_15">%15</string>
-    <string name="webtoon_side_padding_20">%20</string>
     <string name="kindlish_nav">Kindle erakoa</string>
     <string name="edge_nav">Egde erakoa</string>
     <string name="right_and_left_nav">Ezkerra eta eskuma</string>
@@ -641,7 +636,6 @@
     <string name="pref_dual_page_invert_summary">Orrialde bikoitzeko zatiketaren kokapena irakurketa noranzkoarekin bat ez badator</string>
     <string name="pref_library_update_restriction">Eguneraketa automatikoentzako gailuaren murrizketak</string>
     <string name="action_faq_and_guides">Ohiko galderak eta gidak</string>
-    <string name="webtoon_side_padding_5">%5</string>
     <string name="action_show_manga">Manga erakutsi</string>
     <string name="skipped_reason_not_caught_up">Saltatu egin da irakurri gabeko kapituluak daudelako</string>
     <string name="pref_update_only_started">Kapitulurik irakurri gabe</string>

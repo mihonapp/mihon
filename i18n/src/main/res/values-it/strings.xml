@@ -316,7 +316,7 @@
     <string name="pref_true_color">Colori a 32 bit</string>
     <string name="pref_skip_read_chapters">Salta i capitoli segnati come letti</string>
     <string name="filter_mode_screen">Schermo</string>
-    <string name="pref_read_with_long_tap">Mostra alla pressione lunga</string>
+    <string name="pref_read_with_long_tap">Mostra azioni con un tocco prolungato</string>
     <string name="pref_color_filter_mode">Modalità di fusione del filtro colore</string>
     <string name="filter_mode_overlay">Sovrimpressione</string>
     <string name="filter_mode_multiply">Moltiplica</string>
@@ -411,11 +411,6 @@
     <string name="in_library">Nella libreria</string>
     <string name="add_to_library">Aggiungi alla libreria</string>
     <string name="pinned_sources">Fissato</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Nessuno</string>
     <string name="pref_webtoon_side_padding">Riempimento laterale</string>
     <string name="vertical_plus_viewer">Verticale lungo con interruzioni</string>
     <string name="action_unpin">Sblocca</string>
@@ -686,7 +681,6 @@
     <string name="on_hiatus">In pausa</string>
     <string name="publishing_finished">Pubblicazione terminata</string>
     <string name="action_faq_and_guides">Domande frequenti e guide</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostra voce</string>
     <string name="pref_navigate_pan">Scorri le immagini larghe</string>
     <string name="pref_landscape_zoom">Ingrandisci automaticamente le immagini larghe</string>
@@ -756,7 +750,7 @@
         <item quantity="other">I prossimi %d capitoli non letti</item>
     </plurals>
     <string name="auto_download_while_reading">Download automatico durante la lettura</string>
-    <string name="download_ahead_info">Funziona solo sui manga nella libreria e se il capitolo corrente e quello successivo sono già stati scaricati</string>
+    <string name="download_ahead_info">Funziona se il capitolo corrente e quello successivo sono già stati scaricati.</string>
     <string name="are_you_sure">Sei sicuro\?</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Ultimo aggiornamento libreria: %s</string>

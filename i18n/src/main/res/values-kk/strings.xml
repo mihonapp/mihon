@@ -304,7 +304,6 @@
     <string name="rotation_landscape">Көлденең</string>
     <string name="pref_webtoon_side_padding">Бүйірлік шегініс</string>
     <string name="color_filter_r_value">Қ</string>
-    <string name="webtoon_side_padding_0">Жоқ</string>
     <string name="pref_landscape_zoom">Кескінді көлденеңінен үлкейту</string>
     <string name="pref_zoom_start">Үлкейтудің бастапқы қалпы</string>
     <string name="black_background">Қара</string>
@@ -385,12 +384,7 @@
     <string name="download_ahead_info">Кітапханадағы жазбаларда ғана жұмыс істейді, сондай-ақ ағымдағы және келесі тарау әлдеқашан жүктелген болса</string>
     <string name="edge_nav">Шеті</string>
     <string name="pref_read_with_volume_keys">Дыбыс пернелері</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="tapping_inverted_both">Екеуі де</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="split_tall_images_summary">Оқыманың өнімділігін жақсартады</string>
     <string name="pref_navigate_pan">Кең суретті басқанда панорамалау</string>
     <plurals name="next_unread_chapters">

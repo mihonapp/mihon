@@ -212,13 +212,8 @@
     <string name="pref_fullscreen">Тулли экран</string>
     <string name="untrusted_extension">Шанчӑклӑ мар хушма</string>
     <string name="lock_when_idle">Ним туман чух ҫаклатни</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="display_mode_chapter">%1$s-мӗш сыпӑк</string>
     <string name="lock_with_biometrics">Ҫаклатӑва уҫма пӳрне йӗрӗ ыйтни</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_0">Чакусӑр</string>
     <string name="pref_webtoon_side_padding">Аяккинчи чаку</string>
     <string name="pref_always_show_chapter_transition">Сыпӑксем урлӑ каҫнине яланах кӑтарт</string>
     <string name="color_filter_a_value">Тӑрӑлӑх мар</string>

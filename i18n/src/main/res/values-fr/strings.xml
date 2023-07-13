@@ -405,11 +405,6 @@
     <string name="http_error_hint">Consultez le site Web de WebView</string>
     <string name="updating_library">Mise à jour de la bibliothèque</string>
     <string name="label_sources">Sources</string>
-    <string name="webtoon_side_padding_25">25 %</string>
-    <string name="webtoon_side_padding_20">20 %</string>
-    <string name="webtoon_side_padding_15">15 %</string>
-    <string name="webtoon_side_padding_10">10 %</string>
-    <string name="webtoon_side_padding_0">Aucun</string>
     <string name="pref_category_reading">En cours</string>
     <string name="vertical_plus_viewer">Bande continue avec espaces</string>
     <string name="pref_skip_filtered_chapters">Passer les chapitres filtrés</string>
@@ -687,7 +682,6 @@
     <string name="publishing_finished">Publication terminée</string>
     <string name="cancelled">Annulé</string>
     <string name="action_faq_and_guides">FAQ et guides</string>
-    <string name="webtoon_side_padding_5">5 %</string>
     <string name="action_show_manga">Afficher le titre</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
     <string name="pref_navigate_pan">Panoramique des images larges</string>

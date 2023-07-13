@@ -384,11 +384,6 @@
     <string name="pref_high">Magas</string>
     <string name="pref_highest">Legmagasabb</string>
     <string name="pref_hide_threshold">Görgetés közbeni menü-elrejtés érzékenysége</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Semennyi</string>
     <string name="pref_webtoon_side_padding">Bélés oldalon</string>
     <string name="pref_category_reading_mode">Olvasási mód</string>
     <string name="pref_always_show_chapter_transition">Mindig mutasson fejezet áttűnést</string>
@@ -651,7 +646,6 @@
     <string name="action_track">Követ</string>
     <string name="extension_api_error">Nem sikerült a kiterjesztési lista megnyitása</string>
     <string name="disabled_nav">Kikapcsolva</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="enhanced_tracking_info">Szolgáltatások, melyek fejlett funkciókat kínálnak. A manga automatikusan könyvtárhoz lesz adva és frissítve lesz.</string>
     <string name="pref_search_pinned_sources_only">Csak kitűzött forrásokból</string>
     <string name="pref_create_backup">Biztonsági mentés készítése</string>

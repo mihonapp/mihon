@@ -356,11 +356,6 @@
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
     <string name="pref_search_pinned_sources_only">グローバル検索の時にピン留め済みのソースのみで検索</string>
     <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">なし</string>
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
     <string name="pref_always_show_chapter_transition">章の間の遷移ページを常に表示</string>
@@ -629,7 +624,6 @@
     <string name="cancelled">キャンセル済み</string>
     <string name="on_hiatus">休載中</string>
     <string name="action_faq_and_guides">よくあるご質問とガイド</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">項目を表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="pref_update_only_started">読み始めていない</string>

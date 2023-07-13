@@ -125,11 +125,6 @@
     <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
     <string name="pref_remove_after_read">Pagkatapos basahin, kusang burahin</string>
     <string name="pref_download_directory">Lugar ng paglalagyan</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Wala</string>
     <string name="pref_webtoon_side_padding">Kapal ng gilid</string>
     <string name="pref_category_reading">Pagbabasa</string>
     <string name="pref_always_show_chapter_transition">Ipakita palagi ang paglipat-kabanata</string>
@@ -641,7 +636,6 @@
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="action_faq_and_guides">Mga Madalas Itanong (FAQ) at Gabay</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Ipakita ang entry</string>
     <string name="action_display_cover_only_grid">Pabalat lang</string>
     <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>

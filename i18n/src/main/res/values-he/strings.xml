@@ -460,9 +460,6 @@
     <string name="rotation_type">סוג הסיבוב</string>
     <string name="rotation_portrait">מאונך</string>
     <string name="rotation_landscape">מאוזן</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="pref_hide_threshold">רגישות החבאת התפריט בגלילה</string>
     <string name="pref_highest">הכי גבוה</string>
     <string name="pref_high">גבוה</string>
@@ -478,10 +475,7 @@
     <string name="nav_zone_left">שמאל</string>
     <string name="nav_zone_prev">הקודם</string>
     <string name="pref_category_reading">קריאה</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_category_reading_mode">מצב קריאה</string>
-    <string name="webtoon_side_padding_0">ללא</string>
     <string name="pref_category_auto_download">הורדה אוטומטית</string>
     <string name="gray_background">אפור</string>
     <string name="vertical_plus_viewer">אנכי מתמשך</string>

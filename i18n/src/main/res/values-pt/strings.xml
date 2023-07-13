@@ -401,11 +401,6 @@
     <string name="updating_library">Atualizando biblioteca</string>
     <string name="pinned_sources">Fixado</string>
     <string name="http_error_hint">Verifique o sítio web no WebView</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Nenhum</string>
     <string name="pref_webtoon_side_padding">Preenchimento lateral</string>
     <string name="pref_category_reading">Lendo</string>
     <string name="vertical_plus_viewer">Página longa com espaços</string>
@@ -705,7 +700,6 @@
     <string name="update_check_fdroid_migration_info">Uma nova versão está disponível a partir dos lançamentos oficiais. Toque para saber como migrar de versões não oficiais do F-Droid.</string>
     <string name="pref_navigate_pan">Imagens panorâmicas</string>
     <string name="pref_landscape_zoom">Ampliar imagem horizontal</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="error_saving_picture">Erro ao guardar a imagem</string>
     <string name="action_sort_last_manga_update">Último mangá atualizado</string>

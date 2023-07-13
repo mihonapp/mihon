@@ -279,7 +279,7 @@
     <string name="transition_no_previous">لا يوجدُ فصل سابق</string>
     <string name="transition_pages_loading">جار تحميل الصّفحات…</string>
     <string name="transition_pages_error">فشل تحميل الصّفحات: %1$s</string>
-    <string name="pref_read_with_long_tap">إظهار عند النقر لفترة طويلة</string>
+    <string name="pref_read_with_long_tap">أظهر الإجراءات عند الضغط المطوَّل</string>
     <string name="action_open_in_web_view">فتح في WebView</string>
     <string name="pref_true_color">ألوان 32bit</string>
     <string name="pref_skip_read_chapters">تخطي الفصول المقروءة</string>
@@ -343,11 +343,6 @@
     <string name="creating_backup_error">فشل النسخ الاحتياطي</string>
     <string name="backup_in_progress">يُنسخ احتياطيًّا بالفعل</string>
     <string name="restore_duration">%02d دقيقة و %02d ثانية</string>
-    <string name="webtoon_side_padding_25">٢٥٪</string>
-    <string name="webtoon_side_padding_20">٢٠٪</string>
-    <string name="webtoon_side_padding_15">١٥٪</string>
-    <string name="webtoon_side_padding_10">١٠٪</string>
-    <string name="webtoon_side_padding_0">بلا</string>
     <string name="action_unpin">إلغاء التثبيت</string>
     <string name="action_pin">تثبيت</string>
     <string name="action_select_inverse">عكس التحديد</string>
@@ -682,14 +677,13 @@
     <string name="pref_library_update_manga_restriction">تخطي تحديث الإدخالات</string>
     <string name="pref_update_only_completely_read">فيها فصول لم تُقرأ</string>
     <string name="ext_installer_legacy">قياسي</string>
-    <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند إغلاق التطبيق</string>
+    <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند فتح التطبيق</string>
     <string name="database_clean">لا شئ للتنظيف</string>
     <string name="clear_database_source_item_count">%1$d عدد الإدخالات غير المتواجدة بقاعدة بيانات المكتبه</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">ثبِّت «شيزوكو» وشغِّله لتستخدمه مثبِّت إضافات.</string>
     <string name="download_queue_size_warning">تحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر Tachiyomi منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
     <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
-    <string name="webtoon_side_padding_5">٥٪</string>
     <string name="action_show_manga">إظهار الدخول</string>
     <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
     <string name="skipped_reason_not_started">تُخُطِّيت بسبب عدم وجود فصول قُرئت</string>
@@ -754,7 +748,7 @@
     <string name="pref_long_strip_split">إنقسام الصور الطويلة (بيتا)</string>
     <string name="update_already_running">هنالك تحديث جارٍ بالفعل</string>
     <string name="download_ahead">التنزيل المسبق</string>
-    <string name="download_ahead_info">يعمل فقط على الإدخالات في المكتبة وإذا كان الفصل الحالي بالإضافة إلى الفصل التالي قد تم تنزيلهم بالفعل</string>
+    <string name="download_ahead_info">ينفع حين كون الفصل الحاليِّ والذي يليه منزَّلين.</string>
     <string name="auto_download_while_reading">التحميل تلقائيا أثناء القراءة</string>
     <string name="are_you_sure">هل أنت واثق؟</string>
     <string name="updates_last_update_info">آخر تحديث للمكتبة: %s</string>
@@ -903,4 +897,5 @@
     <string name="track_delete_text">هذا يزيل التتبع محليًّا.</string>
     <string name="action_ok">حسنًا</string>
     <string name="track_delete_remote_text">وكذلك أزله من %s</string>
+    <string name="delete_downloaded">احذف ما نُزِّل</string>
 </resources>

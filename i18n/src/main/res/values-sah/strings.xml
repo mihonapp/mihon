@@ -144,11 +144,6 @@
     <string name="action_rename_category">Бөлөх аатын уларыт</string>
     <string name="action_edit_categories">Бөлөхтөрү уларыт</string>
     <string name="action_add_category">Бөлөҕү киллэр</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Тэйиитэ суох</string>
     <string name="pref_webtoon_side_padding">Ойоҕостон тэйии</string>
     <string name="pref_category_reading">Ааҕы</string>
     <string name="pref_category_reading_mode">Ааҕы эрэһиимэ</string>

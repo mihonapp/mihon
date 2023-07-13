@@ -315,9 +315,6 @@
     <string name="color_filter_r_value">R</string>
     <string name="color_filter_g_value">G</string>
     <string name="pref_category_reading_mode">पढ्ने मोड</string>
-    <string name="webtoon_side_padding_10">१०%</string>
-    <string name="webtoon_side_padding_20">२०%</string>
-    <string name="webtoon_side_padding_25">२५%</string>
     <string name="pref_hide_threshold">स्क्रोलमा मेनु लुकाउनका लागि संवेदनशीलता</string>
     <string name="pref_download_directory">डाउनलोड स्थान</string>
     <string name="second_to_last">अन्तिम पढिएको अध्याय भन्दा पहिले १ अध्याय</string>
@@ -346,8 +343,6 @@
     <string name="backup_in_progress">ब्याकअप पहिले नै प्रगतिमा छ</string>
     <string name="update_check_notification_update_available">नयाँ संस्करण उपलब्ध छ!</string>
     <string name="rotation_portrait">पोर्ट्रेट</string>
-    <string name="webtoon_side_padding_0">कुनै पनि हैन</string>
-    <string name="webtoon_side_padding_15">१५%</string>
     <string name="scale_type_fit_height">फिट उचाइ</string>
     <string name="scale_type_fit_width">फिट चौडाइ</string>
     <string name="services">सेवाहरू</string>
@@ -554,7 +549,6 @@
     <string name="migration_selection_prompt">स्थानान्तरण गर्नको लागि स्रोत चयन गर्नुहोस्</string>
     <string name="error_saving_cover">आवरण सेभ गर्दा त्रुटि भयो</string>
     <string name="action_display_cover_only_grid">आवरण मात्र ग्रिड</string>
-    <string name="webtoon_side_padding_5">५%</string>
     <string name="error_sharing_cover">आवरण साझा गर्दा त्रुटि भयो</string>
     <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ\?</string>
     <string name="chapter_settings">अध्याय सेटिङ</string>
