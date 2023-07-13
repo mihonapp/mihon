@@ -149,7 +149,8 @@ class MangaInfoScreenModel(
             combine(
                 getMangaAndChapters.subscribe(mangaId).distinctUntilChanged(),
                 downloadCache.changes,
-            ) { mangaAndChapters, _ -> mangaAndChapters }
+                downloadManager.queueState,
+            ) { mangaAndChapters, _, _ -> mangaAndChapters }
                 .collectLatest { (manga, chapters) ->
                     updateSuccessState {
                         it.copy(
