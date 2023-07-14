@@ -1,9 +1,11 @@
 package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
-import androidx.core.net.toUri
+import android.net.Uri
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_ALL
 import eu.kanade.tachiyomi.data.backup.BackupManager
+import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
@@ -13,6 +15,7 @@ import eu.kanade.tachiyomi.data.sync.models.SyncDevice
 import eu.kanade.tachiyomi.data.sync.models.SyncStatus
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.Chapters
@@ -24,6 +27,9 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.sync.SyncPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.time.Instant
 
 /**
@@ -42,10 +48,10 @@ class SyncManager(
     },
     private val getFavorites: GetFavorites = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-
 ) {
     private val backupManager: BackupManager = BackupManager(context)
     private val notifier: SyncNotifier = SyncNotifier(context)
+    private val backupNotify: BackupNotifier = BackupNotifier(context)
 
     enum class SyncService(val value: Int) {
         NONE(0),
@@ -80,7 +86,6 @@ class SyncManager(
 
         // Create the Device object
         val device = SyncDevice(
-            id = syncPreferences.deviceID().get(),
             name = syncPreferences.deviceName().get(),
         )
 
@@ -113,14 +118,41 @@ class SyncManager(
         if (remoteBackup != null) {
             val (filteredFavorites, nonFavorites) = filterFavoritesAndNonFavorites(remoteBackup)
             updateNonFavorites(nonFavorites)
-            SyncHolder.backup = backup.copy(
+
+            val newSyncData = backup.copy(
                 backupManga = filteredFavorites,
                 backupCategories = remoteBackup.backupCategories,
                 backupSources = remoteBackup.backupSources,
                 backupBrokenSources = remoteBackup.backupBrokenSources,
             )
-            BackupRestoreJob.start(context, "".toUri(), true)
-            syncPreferences.syncLastSync().set(Instant.now())
+
+            // It's local sync no need to restore data. (just update remote data)
+            if (filteredFavorites.isEmpty()) {
+                backupNotify.showRestoreComplete(0, 0, "", "", contentTitle = context.getString(R.string.sync_complete))
+                return
+            }
+
+            val backupUri = writeSyncDataToFile(context, newSyncData)
+            logcat(LogPriority.DEBUG) { "Got Backup Uri: $backupUri" }
+            if (backupUri != null) {
+                BackupRestoreJob.start(context, backupUri, sync = true)
+                syncPreferences.syncLastSync().set(Instant.now())
+            } else {
+                logcat(LogPriority.ERROR) { "Failed to write sync data to file" }
+            }
+        }
+    }
+
+    private fun writeSyncDataToFile(context: Context, backup: Backup): Uri? {
+        val file = File(context.filesDir, "tachiyomi_sync_data.proto.gz")
+        return try {
+            FileOutputStream(file).use { output ->
+                output.write(ProtoBuf.encodeToByteArray(Backup.serializer(), backup))
+                Uri.fromFile(file)
+            }
+        } catch (e: IOException) {
+            logcat(LogPriority.ERROR) { "Failed to write sync data locally" }
+            null
         }
     }
 
@@ -143,7 +175,22 @@ class SyncManager(
         val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id).executeAsList() }
         val localCategories = getCategories.await(localManga.id).map { it.order }
 
-        return localManga.source != remoteManga.source || localManga.url != remoteManga.url || localManga.title != remoteManga.title || localManga.artist != remoteManga.artist || localManga.author != remoteManga.author || localManga.description != remoteManga.description || localManga.genre != remoteManga.genre || localManga.status.toInt() != remoteManga.status || localManga.thumbnailUrl != remoteManga.thumbnailUrl || localManga.dateAdded != remoteManga.dateAdded || localManga.chapterFlags.toInt() != remoteManga.chapterFlags || localManga.favorite != remoteManga.favorite || localManga.viewerFlags.toInt() != remoteManga.viewer_flags || localManga.updateStrategy != remoteManga.updateStrategy || areChaptersDifferent(localChapters, remoteManga.chapters) || localCategories != remoteManga.categories
+        return localManga.source != remoteManga.source ||
+            localManga.url != remoteManga.url ||
+            localManga.title != remoteManga.title ||
+            localManga.artist != remoteManga.artist ||
+            localManga.author != remoteManga.author ||
+            localManga.description != remoteManga.description ||
+            localManga.genre != remoteManga.genre ||
+            localManga.status.toInt() != remoteManga.status ||
+            localManga.thumbnailUrl != remoteManga.thumbnailUrl ||
+            localManga.dateAdded != remoteManga.dateAdded ||
+            localManga.chapterFlags.toInt() != remoteManga.chapterFlags ||
+            localManga.favorite != remoteManga.favorite ||
+            localManga.viewerFlags.toInt() != remoteManga.viewer_flags ||
+            localManga.updateStrategy != remoteManga.updateStrategy ||
+            areChaptersDifferent(localChapters, remoteManga.chapters) ||
+            localCategories != remoteManga.categories
     }
 
     /**
@@ -161,7 +208,15 @@ class SyncManager(
 
         return remoteChapters.any { remoteChapter ->
             localChapterMap[remoteChapter.url]?.let { localChapter ->
-                localChapter.name != remoteChapter.name || localChapter.scanlator != remoteChapter.scanlator || localChapter.read != remoteChapter.read || localChapter.bookmark != remoteChapter.bookmark || localChapter.last_page_read != remoteChapter.lastPageRead || localChapter.date_fetch != remoteChapter.dateFetch || localChapter.date_upload != remoteChapter.dateUpload || localChapter.chapter_number != remoteChapter.chapterNumber || localChapter.source_order != remoteChapter.sourceOrder
+                localChapter.name != remoteChapter.name ||
+                    localChapter.scanlator != remoteChapter.scanlator ||
+                    localChapter.read != remoteChapter.read ||
+                    localChapter.bookmark != remoteChapter.bookmark ||
+                    localChapter.last_page_read != remoteChapter.lastPageRead ||
+                    localChapter.date_fetch != remoteChapter.dateFetch ||
+                    localChapter.date_upload != remoteChapter.dateUpload ||
+                    localChapter.chapter_number != remoteChapter.chapterNumber ||
+                    localChapter.source_order != remoteChapter.sourceOrder
             } ?: true
         }
     }

@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
-import eu.kanade.tachiyomi.data.sync.SyncHolder
 import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.coroutineScope
@@ -79,11 +78,7 @@ class BackupRestorer(
     }
 
     private suspend fun performRestore(uri: Uri, sync: Boolean): Boolean {
-        val backup = if (sync) {
-            SyncHolder.backup ?: throw IllegalStateException("syncBackup cannot be null when sync is true")
-        } else {
-            BackupUtil.decodeBackup(context, uri)
-        }
+        val backup = BackupUtil.decodeBackup(context, uri)
 
         restoreAmount = backup.backupManga.size + 1 // +1 for categories
 
