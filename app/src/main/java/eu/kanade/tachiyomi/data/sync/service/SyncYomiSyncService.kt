@@ -25,8 +25,7 @@ class SyncYomiSyncService(
     override suspend fun pushSyncData(): SyncData? {
         val host = syncPreferences.syncHost().get()
         val apiKey = syncPreferences.syncAPIKey().get()
-        val deviceId = syncPreferences.deviceID().get()
-        val downloadUrl = "$host/api/sync/download?deviceId=$deviceId"
+        val downloadUrl = "$host/api/sync/download"
 
         val client = OkHttpClient()
         val headers = Headers.Builder().add("X-API-Token", apiKey).build()
