@@ -24,7 +24,6 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         dateUpload = sChapter.date_upload,
         chapterNumber = sChapter.chapter_number,
         scanlator = sChapter.scanlator?.ifBlank { null },
-        lastModifiedAt = null,
     )
 }
 
