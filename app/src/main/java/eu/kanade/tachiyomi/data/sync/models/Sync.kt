@@ -12,7 +12,6 @@ data class SyncStatus(
 
 @Serializable
 data class SyncDevice(
-    val id: Int? = null,
     val name: String? = null,
 )
 
