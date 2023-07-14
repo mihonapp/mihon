@@ -375,12 +375,7 @@
     <string name="label_sources">Surse</string>
     <string name="action_select_inverse">Selectează invers</string>
     <string name="vertical_plus_viewer">Vertical continuu</string>
-    <string name="webtoon_side_padding_0">Fără</string>
     <string name="pinned_sources">Fixate</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_webtoon_side_padding">Căptușeală laterală</string>
     <string name="action_unpin">Anulați fixarea</string>
     <string name="action_pin">Fixează</string>
@@ -641,7 +636,6 @@
     <string name="update_72hour">La fiecare 3 zile</string>
     <string name="connected_to_wifi">Doar prin Wi Fi</string>
     <string name="pref_library_update_refresh_trackers_summary">Actualizeaza trackerele la actualizarea bibliotecii</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="loader_rar5_error">Formatul RARv5 nu este acceptat</string>
     <string name="off">Oprit</string>
     <string name="ext_app_info">Informații despre aplicație</string>

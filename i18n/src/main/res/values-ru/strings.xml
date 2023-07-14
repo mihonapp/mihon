@@ -279,7 +279,7 @@
     <string name="transition_no_previous">Предыдущей главы нет</string>
     <string name="transition_pages_loading">Идёт загрузка страниц…</string>
     <string name="transition_pages_error">Не удалось загрузить страницы: %1$s</string>
-    <string name="pref_read_with_long_tap">Опции читалки при долгом нажатии на экран</string>
+    <string name="pref_read_with_long_tap">Показать действия при долгом нажатии</string>
     <string name="action_open_in_web_view">Открыть в WebView</string>
     <string name="pref_skip_read_chapters">Пропускать прочитанные главы</string>
     <string name="pref_true_color">32-битный цвет</string>
@@ -381,11 +381,6 @@
     <string name="action_select_inverse">Выбрать наоборот</string>
     <string name="vertical_plus_viewer">Длинные страницы с зазорами</string>
     <string name="pref_webtoon_side_padding">Боковой отступ</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Нет</string>
     <string name="pinned_sources">Закреплено</string>
     <string name="action_unpin">Открепить</string>
     <string name="action_pin">Закрепить</string>
@@ -665,7 +660,6 @@
     <string name="on_hiatus">Перерыв</string>
     <string name="publishing_finished">Публикация завершена</string>
     <string name="action_faq_and_guides">Руководства и FAQ</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Показать серию</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений</string>
@@ -736,7 +730,7 @@
     </plurals>
     <string name="download_ahead">Загрузить наперёд</string>
     <string name="auto_download_while_reading">При чтении</string>
-    <string name="download_ahead_info">Работает только с элементами в библиотеке, а также если текущая и следующая главы уже загружены</string>
+    <string name="download_ahead_info">Работает только если текущая + следующая главы уже загружены</string>
     <string name="are_you_sure">Вы уверены\?</string>
     <string name="multi_lang">Многоязыковое</string>
     <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>

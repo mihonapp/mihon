@@ -282,7 +282,7 @@
     <string name="action_open_in_web_view">In WebView öffnen</string>
     <string name="pref_true_color">32-Bit-Farben</string>
     <string name="pref_skip_read_chapters">Gelesene Kapitel überspringen</string>
-    <string name="pref_read_with_long_tap">Bei langem Antippen anzeigen</string>
+    <string name="pref_read_with_long_tap">Aktionen bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Overlay</string>
     <string name="filter_mode_multiply">Multiplizieren</string>
     <string name="filter_mode_screen">Bildschirm</string>
@@ -370,11 +370,6 @@
     <string name="label_sources">Quellen</string>
     <string name="action_select_inverse">Auswahl umkehren</string>
     <string name="vertical_plus_viewer">Langer Streifen mit Lücken</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Keine</string>
     <string name="pref_webtoon_side_padding">Seitenränder</string>
     <string name="pinned_sources">Angeheftet</string>
     <string name="action_unpin">Loslösen</string>
@@ -641,7 +636,6 @@
     <string name="on_hiatus">Unterbrochen</string>
     <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
     <string name="action_faq_and_guides">Häufige Fragen und Leitfäden</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Eintrag anzeigen</string>
     <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
     <string name="pref_landscape_zoom">Bei breiten Bildern automatisch hineinzoomen</string>
@@ -710,7 +704,7 @@
         <item quantity="one">Nächstes ungelesenes Kapitel</item>
         <item quantity="other">Nächste %d ungelesene Kapitel</item>
     </plurals>
-    <string name="download_ahead_info">Funktioniert nur bei Werken in der Bibliothek und wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind</string>
+    <string name="download_ahead_info">Funktioniert nur, wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind.</string>
     <string name="are_you_sure">Bist du dir sicher\?</string>
     <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
     <string name="remove_manga">Du bist gerade dabei, „%s“ aus deiner Bibliothek zu entfernen</string>

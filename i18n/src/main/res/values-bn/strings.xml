@@ -364,11 +364,6 @@
     <string name="pref_search_pinned_sources_only">শুধু আটকানো উৎস যোগ করুন</string>
     <string name="pref_remove_bookmarked_chapters">বুকমার্ক করা অধ্যায়গুলি মুছে ফেলার অনুমতি দিন</string>
     <string name="pref_category_delete_chapters">অধ্যায় মুছুন</string>
-    <string name="webtoon_side_padding_25">২৫%</string>
-    <string name="webtoon_side_padding_20">২০%</string>
-    <string name="webtoon_side_padding_15">১৫%</string>
-    <string name="webtoon_side_padding_10">১০%</string>
-    <string name="webtoon_side_padding_0">কিছুই না</string>
     <string name="pref_webtoon_side_padding">পার্শ্ব প্যাডিং</string>
     <string name="pref_category_reading">পড়া হচ্ছে</string>
     <string name="pref_category_reading_mode">পঠন ধরন</string>

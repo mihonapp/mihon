@@ -392,10 +392,6 @@
     <string name="label_more">Thêm</string>
     <string name="pref_search_pinned_sources_only">Chỉ bao gồm những nguồn được ghim khi tìm kiếm toàn bộ</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ nút theo dõi.</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_category_reading_mode">Kiểu đọc</string>
     <string name="vertical_plus_viewer">Dải dài có khoảng cách</string>
     <string name="pref_show_reading_mode_summary">Hiển thị ngắn gọn chế độ hiện tại khi mở trang đọc truyện</string>
@@ -532,7 +528,6 @@
     <string name="pref_remove_bookmarked_chapters">Cho phép xóa các chương đã đánh dấu</string>
     <string name="pref_category_delete_chapters">Xoá chương</string>
     <string name="pref_webtoon_side_padding">Kích cỡ hai bên</string>
-    <string name="webtoon_side_padding_0">Không</string>
     <string name="rotation_landscape">Chế độ nằm ngang</string>
     <string name="rotation_portrait">Chế độ dọc</string>
     <string name="rotation_type">Kiểu xoay</string>
@@ -668,7 +663,6 @@
     <string name="learn_more">Nhấn để tìm hiểu thêm</string>
     <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
     <string name="action_show_manga">Hiển thị truyện</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_navigate_pan">Xoay ảnh rộng</string>
     <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
     <string name="rotation_reverse_portrait">Đảo ngược chân dung</string>

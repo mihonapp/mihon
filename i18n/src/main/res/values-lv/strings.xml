@@ -323,8 +323,6 @@
     <string name="zoom_start_left">Pa kreisi</string>
     <string name="zoom_start_right">Pa labi</string>
     <string name="double_tap_anim_speed_normal">Normāls</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_remove_bookmarked_chapters">Atļaut dzēst ar grāmatzīmēm atzīmētās nodaļas</string>
     <string name="last_read_chapter">Pēdējā lasītā nodaļa</string>
     <string name="second_to_last">Pirmspēdējā nodaļa</string>
@@ -338,8 +336,6 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_always_show_chapter_transition">Vienmēr rādīt nodaļu pāreju</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_hide_threshold">Jutīgums, lai ritinājumā paslēptu izvēlni</string>
     <string name="rotation_force_landscape">Aizslēgts ainavas režīmā</string>
     <string name="pref_lowest">Zemākais</string>
@@ -347,12 +343,10 @@
     <string name="save_chapter_as_cbz">Saglabāt kā CBZ arhīvu</string>
     <string name="nav_zone_next">Nākamais</string>
     <string name="l_nav">L formas</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="gray_background">Pelēks</string>
     <string name="disabled_nav">Atspējots</string>
     <string name="white_background">Balts</string>
     <string name="vertical_plus_viewer">Nepārtraukta vertikāle</string>
-    <string name="webtoon_side_padding_0">Nekāds</string>
     <string name="pref_webtoon_side_padding">Sānu platums</string>
     <string name="pref_remove_exclude_categories">Izslēgtās kategorijas</string>
     <string name="action_display_local_badge">Lokālais avots</string>

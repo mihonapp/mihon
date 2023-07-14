@@ -136,10 +136,8 @@
     <string name="rotation_landscape">باری ئاسۆیی</string>
     <string name="rotation_force_portrait">باری ستوونی قوفڵکراو</string>
     <string name="color_filter_b_value">B</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="pref_category_reading_mode">دۆخی خوێندنەوە</string>
     <string name="pref_category_reading">سازکاری خوێندنەوە</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="manga_added_library">کراوەتە ناو کۆکراوەکان</string>
     <string name="gray_background">خۆڵەمێشی</string>
     <string name="rotation_type">جۆری خولانەوە</string>
@@ -179,8 +177,6 @@
     <string name="recently">لەم دواییانەدا</string>
     <string name="relative_time_today">ئەمڕۆ</string>
     <string name="pref_category_display">شێوازی پیشاندان</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">هیچ</string>
     <string name="notification_updating">نوێکردنەوەی تۆماری ڕابردوو…( (%2$d) / (%1$d) )</string>
     <string name="pref_read_with_tapping_inverted">نەرمە لێدانی پێچەوانە</string>
     <string name="tapping_inverted_none">هیچ</string>
@@ -208,7 +204,6 @@
     <string name="add_tracking">بەدواداچوون زیاد بکە</string>
     <string name="add_to_library">کردنە ناو کۆکراوەکان</string>
     <string name="notification_first_add_to_library">تکایە مانگا بۆ کۆکراوەکان زیاد بکە پێش کردنی ئەمە</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="snack_add_to_library">زیادکردنی مانگا بۆ کۆکراوەکان؟</string>
     <string name="pref_download_directory">شوێنی داونلۆد</string>
     <string name="ext_downloading">داونلۆدکردن</string>

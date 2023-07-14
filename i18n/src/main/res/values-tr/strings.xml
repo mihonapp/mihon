@@ -370,11 +370,6 @@
     <string name="label_sources">Kaynaklar</string>
     <string name="action_select_inverse">Tersini seç</string>
     <string name="vertical_plus_viewer">Aralıklı uzun şerit</string>
-    <string name="webtoon_side_padding_25">%25</string>
-    <string name="webtoon_side_padding_20">%20</string>
-    <string name="webtoon_side_padding_15">%15</string>
-    <string name="webtoon_side_padding_10">%10</string>
-    <string name="webtoon_side_padding_0">Yok</string>
     <string name="pref_webtoon_side_padding">Yan dolgu</string>
     <string name="pinned_sources">İğnelenmiş</string>
     <string name="action_unpin">İğnelemeyi kaldır</string>
@@ -639,7 +634,6 @@
     <string name="cancelled">İptal edildi</string>
     <string name="on_hiatus">Molada</string>
     <string name="action_show_manga">Girdiyi göster</string>
-    <string name="webtoon_side_padding_5">%5</string>
     <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
     <string name="action_display_cover_only_grid">Yalnızca kapağa ızgara</string>
     <string name="action_faq_and_guides">SSS ve Kılavuzlar</string>

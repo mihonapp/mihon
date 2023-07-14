@@ -448,7 +448,6 @@
     <string name="file_picker_error">Nenašla sa žiadna aplikácia na výber súborov</string>
     <string name="channel_complete">Kompletný</string>
     <string name="theme_tidalwave">Prílivová vlna</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="pref_category_delete_chapters">Odstrániť kapitoly</string>
     <string name="save_chapter_as_cbz">Uložiť ako archív CBZ</string>
     <string name="split_tall_images_summary">Zlepšuje výkon čítačky</string>
@@ -524,7 +523,6 @@
     <string name="right_and_left_nav">Vpravo a vľavo</string>
     <string name="nav_zone_left">Vľavo</string>
     <string name="rotation_reverse_portrait">Obrátený portrét</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_remove_bookmarked_chapters">Povoliť odstraňovanie kapitol so záložkami</string>
     <string name="channel_ext_updates">Aktualizácie rozšírení</string>
     <string name="pref_app_language">Jazyk aplikácie</string>
@@ -622,18 +620,15 @@
     </plurals>
     <string name="battery_not_low">Keď batéria nie je vybitá</string>
     <string name="rotation_type">Typ rotácie</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="action_close">Zatvoriť</string>
     <string name="pref_library_update_categories_details">Záznamy vo vylúčených kategóriách nebudú aktualizované, aj keď sú tiež v zahrnutých kategóriách.</string>
     <string name="ext_updates_pending">Čakajúce aktualizácie</string>
-    <string name="webtoon_side_padding_0">Žiadne</string>
     <string name="spen_next_page">Ďalšia strana</string>
     <string name="update_check_open">Otvoriť na GitHub-e</string>
     <string name="update_check_fdroid_migration_info">Nová verzia je k dispozícii z oficiálnych vydaní. Klepnutím sa dozviete, ako migrovať z neoficiálnych vydaní F-Droid.</string>
     <string name="getting_started_guide">Príručka Začíname</string>
     <string name="notification_incognito_text">Zakázať režim inkognito</string>
     <string name="manga_info_collapse">Menej</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="enhanced_tracking_info">Služby, ktoré poskytujú rozšírené funkcie pre konkrétne zdroje. Mangy sú automaticky sledované po pridaní do vašej knižnice.</string>
     <string name="pref_dual_page_split">Rozdelenie na dve strany</string>
     <string name="action_sort_last_manga_update">Posledná aktualizácia</string>
@@ -688,7 +683,6 @@
     <string name="chapter_settings_updated">Aktualizované predvolené nastavenia kapitol</string>
     <string name="pref_inverted_colors">Inverzný</string>
     <string name="theme_lavender">Levanduľa</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="pref_download_new_categories_details">Mangy vo vylúčených kategóriách nebudú stiahnuté, aj keď sú tiež v zahrnutých kategóriách.</string>
     <string name="database_clean">Čistenie databázy</string>
     <string name="pref_clear_webview_data">Vymazanie údajov WebView</string>

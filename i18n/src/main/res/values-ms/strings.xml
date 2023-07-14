@@ -258,7 +258,7 @@
     <string name="pref_double_tap_anim_speed">Kelajuan animasi ketik dua kali</string>
     <string name="pref_true_color">32-bit warna</string>
     <string name="pref_skip_read_chapters">Langkau bab yang sudah dibaca</string>
-    <string name="pref_read_with_long_tap">Tunjuk dialog bila menahan ketik</string>
+    <string name="pref_read_with_long_tap">Tunjuk tindakan bila menahan ketik</string>
     <string name="pager_viewer">Muka surat</string>
     <string name="double_tap_anim_speed_0">Tiada animasi</string>
     <string name="double_tap_anim_speed_normal">Biasa</string>
@@ -366,7 +366,6 @@
     <string name="action_select_inverse">Pilih songsang</string>
     <string name="label_sources">Sumber</string>
     <string name="pref_webtoon_side_padding">Tambahan sisi</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="information_webview_required">WebView diperlukan untuk Tachiyomi</string>
     <string name="recent_manga_time">Bab %1$s - %2$s</string>
     <string name="add_tracking">Tambah penjejakan</string>
@@ -382,10 +381,6 @@
     <string name="restore_in_progress">Pemulihan sedang dijalankan</string>
     <string name="creating_backup_error">Sandaran gagal</string>
     <string name="backup_in_progress">Sandaran sedang dijalankan</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_0">Tiada</string>
     <string name="action_unpin">Buang sematkan</string>
     <string name="action_pin">Sematkan</string>
     <string name="confirm_exit">Tekan kembali sekali lagi untuk keluar</string>
@@ -629,7 +624,6 @@
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="on_hiatus">Dalam hiatus</string>
     <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Tunjuk entri</string>
     <string name="action_display_cover_only_grid">Cuma grid muka hadapan</string>
     <string name="skipped_reason_completed">Dilangkau kerana siri sudah lengkap</string>
@@ -694,7 +688,7 @@
     <string name="auto_download_while_reading">Muat turun automatik semasa membaca</string>
     <string name="theme_tidalwave">Tidal Wave</string>
     <string name="download_ahead">Muat turun maju</string>
-    <string name="download_ahead_info">Hanya berguna pada kemasukan dalam pustaka dan sekiranya bab sekarang dan seterusnya telah dimuat turun</string>
+    <string name="download_ahead_info">Hanya berguna sekiranya bab sekarang + seterusnya telah dimuat turun.</string>
     <plurals name="next_unread_chapters">
         <item quantity="other">%d bab tidak dibaca seterusnya</item>
     </plurals>

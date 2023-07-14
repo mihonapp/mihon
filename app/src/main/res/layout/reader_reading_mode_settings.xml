@@ -36,7 +36,6 @@
             android:entries="@array/rotation_type"
             app:title="@string/rotation_type" />
 
-        <!-- Pager preferences -->
         <include
             android:id="@+id/pager_prefs_group"
             layout="@layout/reader_pager_settings"
@@ -45,7 +44,6 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <!-- Webtoon preferences -->
         <include
             android:id="@+id/webtoon_prefs_group"
             layout="@layout/reader_webtoon_settings"

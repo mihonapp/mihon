@@ -152,11 +152,6 @@
     <string name="disabled">غیرفعال شده</string>
     <string name="pref_remove_after_read">بعد از خواندن به‌صورت خودکار پاک کن</string>
     <string name="pref_remove_after_marked_as_read">بعد از آن‌هایی که به صورت دستی به عنوان خوانده‌شده علامت‌گذاری شده‌اند</string>
-    <string name="webtoon_side_padding_25">۲۵٪</string>
-    <string name="webtoon_side_padding_20">۲۰٪</string>
-    <string name="webtoon_side_padding_15">۱۵٪</string>
-    <string name="webtoon_side_padding_10">۱۰٪</string>
-    <string name="webtoon_side_padding_0">هیچ</string>
     <string name="pref_webtoon_side_padding">فاصله از کنار صفحه</string>
     <string name="pref_category_reading">درحال خواندن</string>
     <string name="pref_always_show_chapter_transition">همیشه انتقال قسمت را نشان داده شود</string>
@@ -601,7 +596,6 @@
     <string name="l_nav">L شکل</string>
     <string name="rotation_type">حالت دوران</string>
     <string name="rotation_portrait">عمودی</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_low">پایین</string>
     <string name="action_display_cover_only_grid">الگوی فقط جلد</string>
     <string name="pref_lowest">پایین‌ترین</string>

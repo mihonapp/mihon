@@ -281,7 +281,7 @@
     <string name="channel_common">Běžný</string>
     <string name="label_help">Nápověda</string>
     <string name="action_open_in_web_view">Otevřít ve WebView</string>
-    <string name="pref_read_with_long_tap">Zobrazit na dlouhém podržení</string>
+    <string name="pref_read_with_long_tap">Zobrazit akce dlouhým stisknutím</string>
     <string name="pref_true_color">32bitová barva</string>
     <string name="pref_skip_read_chapters">Přeskakovat přečtené kapitoly</string>
     <string name="pref_color_filter_mode">Režim mísení filtru barev</string>
@@ -397,11 +397,6 @@
     <string name="tracking_info">Jednosměrná synchronizace pro aktualizaci počtu přečtených kapitol ve sledovacích službách. Nastavení sledování pro každou položku je možné z jejich tlačítka sledování.</string>
     <string name="pref_remove_bookmarked_chapters">Povolení mazání kapitol se záložkami</string>
     <string name="pref_category_delete_chapters">Smazat kapitoly</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Žádné</string>
     <string name="pref_category_reading_mode">Režim čtení</string>
     <string name="pref_viewer_nav">Oblasti dotyku</string>
     <string name="nav_zone_next">Další</string>
@@ -654,7 +649,6 @@
     <string name="cancelled">Zrušeno</string>
     <string name="action_show_manga">Zobrazit položku</string>
     <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_update_only_started">Které nebyly rozečteny</string>
     <string name="notification_update_error">%1$d aktualizace(í) selhalo</string>
     <string name="notification_update_skipped">%1$d aktualizace(í) přeskočena(y)</string>
@@ -723,7 +717,7 @@
         <item quantity="other">Dalších %d nepřečtených kapitol</item>
     </plurals>
     <string name="auto_download_while_reading">Automatické stahování při čtení</string>
-    <string name="download_ahead_info">Funguje pouze na položky v knihovně a pokud je již stažena aktuální kapitola a následující kapitola</string>
+    <string name="download_ahead_info">Funguje pouze v případě, že aktuální kapitola + následující kapitola jsou již staženy.</string>
     <string name="are_you_sure">Jste si jistí\?</string>
     <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
     <string name="multi_lang">Více</string>

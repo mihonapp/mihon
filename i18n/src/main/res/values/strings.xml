@@ -439,12 +439,6 @@
     <string name="pref_category_reading_mode">Reading mode</string>
     <string name="pref_category_reading">Reading</string>
     <string name="pref_webtoon_side_padding">Side padding</string>
-    <string name="webtoon_side_padding_0">None</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_hide_threshold">Sensitivity for hiding menu on scroll</string>
     <string name="pref_highest">Highest</string>
     <string name="pref_high">High</string>

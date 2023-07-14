@@ -168,7 +168,7 @@
     <string name="pref_reader_navigation">導覽</string>
     <string name="pref_read_with_volume_keys">音量按鈕</string>
     <string name="pref_read_with_volume_keys_inverted">反轉音量按鈕</string>
-    <string name="pref_read_with_long_tap">長按顯示</string>
+    <string name="pref_read_with_long_tap">長按顯示操作</string>
     <string name="pref_reader_theme">背景顏色</string>
     <string name="white_background">白色</string>
     <string name="black_background">黑色</string>
@@ -354,11 +354,6 @@
     <string name="pref_refresh_library_covers">重新整理書櫃中的封面</string>
     <string name="ext_updates_pending">等待更新中</string>
     <string name="pref_disable_battery_optimization_summary">有助於背景更新書櫃與自動備份</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">無</string>
     <string name="pinned_sources">已釘選</string>
     <string name="action_unpin">取消釘選</string>
     <string name="action_pin">釘選</string>
@@ -629,7 +624,6 @@
     <string name="cancelled">已取消</string>
     <string name="publishing_finished">出版完畢</string>
     <string name="action_faq_and_guides">常見問題與指南</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">顯示作品</string>
     <string name="pref_landscape_zoom">自動縮放寬頁</string>
     <string name="pref_navigate_pan">導覽寬頁時先平移後翻頁</string>
@@ -697,7 +691,7 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">接下來未讀的 %d 章</item>
     </plurals>
-    <string name="download_ahead_info">僅適用於書櫃中的作品，並且目前章節及下一章節皆已下載</string>
+    <string name="download_ahead_info">只有在當前章節和下一章節已經下載的情況下才有效。</string>
     <string name="are_you_sure">你確定嗎？</string>
     <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
     <string name="multi_lang">多語</string>
@@ -789,4 +783,29 @@
     <string name="track_delete_title">移除「%s」歷程平台？</string>
     <string name="track_delete_text">這將在本機上解除登錄該歷程平台。</string>
     <string name="track_delete_remote_text">同時移除「%s」上的資料</string>
+    <string name="action_filter_interval_custom">自訂更新間隔</string>
+    <string name="action_filter_interval_long">每月更新（28 天）</string>
+    <string name="action_filter_interval_late">延遲 10+ 檢查</string>
+    <string name="action_set_interval">設定間隔</string>
+    <string name="action_filter_interval_dropped">放棄？延遲 20+ 和 2 個月</string>
+    <string name="action_filter_interval_passed">已過檢查期</string>
+    <string name="action_sort_next_updated">下次預期更新</string>
+    <string name="intervals_header">間隔</string>
+    <string name="pref_update_release_grace_period">預期發布寬限期</string>
+    <string name="manga_display_interval_title">預計每個</string>
+    <string name="pref_update_release_grace_period_info">建議使用較短的寬限期以減少資源的壓力。錯過越多條目的檢查，檢查之間的間隔時間就會變長，最長為28天。</string>
+    <string name="pref_update_only_in_release_period">超出預期發行期間</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">%d 天前</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">%d 天後</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <string name="manga_display_modified_interval_title">設定為每個</string>
+    <string name="manga_modify_interval_title">修改間隔</string>
+    <string name="manga_modify_calculated_interval_title">自訂間隔</string>
+    <string name="skipped_reason_not_in_release_period">跳過，因為今天不預期有新章節發佈</string>
 </resources>

@@ -279,7 +279,7 @@
     <string name="transition_no_previous">Não há capítulo anterior</string>
     <string name="transition_pages_loading">Carregando as páginas…</string>
     <string name="transition_pages_error">Falha ao carregar as páginas: %1$s</string>
-    <string name="pref_read_with_long_tap">Mostrar ao toque longo</string>
+    <string name="pref_read_with_long_tap">Mostrar as ações no toque longo</string>
     <string name="action_open_in_web_view">Abrir na WebView</string>
     <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_skip_read_chapters">Pular os capítulos marcados como lidos</string>
@@ -375,11 +375,6 @@
     <string name="label_sources">Fontes</string>
     <string name="action_select_inverse">Inverter a seleção</string>
     <string name="vertical_plus_viewer">Tira longa com lacunas</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Nenhum</string>
     <string name="pref_webtoon_side_padding">Margem lateral</string>
     <string name="pinned_sources">Fixado</string>
     <string name="action_unpin">Desafixar</string>
@@ -653,7 +648,6 @@
     <string name="cancelled">Cancelado</string>
     <string name="on_hiatus">Em hiato</string>
     <string name="action_faq_and_guides">FAQ e Guias</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="action_show_manga">Mostrar o item</string>
     <string name="pref_navigate_pan">Navegar imagens longas</string>
     <string name="pref_landscape_zoom">Dar zoom automaticamente em imagens largas</string>
@@ -718,7 +712,7 @@
     <string name="theme_tidalwave">Onda Tidal</string>
     <string name="download_ahead">Fazer download a frente</string>
     <string name="auto_download_while_reading">Download automático durante a leitura</string>
-    <string name="download_ahead_info">Funciona somente em itens na biblioteca e se o capítulo atual e próximo já estão disponíveis offline</string>
+    <string name="download_ahead_info">Funciona somente se o capítulo atual e próximo já estão disponíveis offline.</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Próximo capítulo não lido</item>
         <item quantity="many">Próximos %d capítulos não lidos</item>
@@ -823,8 +817,6 @@
     <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
     <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
     <string name="pref_update_release_grace_period">Intervalo de lançamento com carência</string>
-    <string name="pref_update_release_leading_days">Verificar %s dia(s) antes</string>
-    <string name="pref_update_release_following_days">Verificar %s dia(s) depois</string>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <plurals name="day">
         <item quantity="one">%d dia(s)</item>

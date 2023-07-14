@@ -148,11 +148,6 @@
     <string name="pref_remove_after_read">ಓದಿದ ನಂತರ</string>
     <string name="pref_remove_after_marked_as_read">ಓದಿದಂತೆ ಗುರುತಿಸಿದಾಗ ತೆಗೆದುಹಾಕಿ</string>
     <string name="pref_download_directory">ಡೌನ್‌ಲೋಡ್ ಸ್ಥಳ</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">ಯಾವುದೂ ಇಲ್ಲ</string>
     <string name="pref_webtoon_side_padding">ಸೈಡ್ ಪ್ಯಾಡಿಂಗ್</string>
     <string name="pref_category_reading">ಓದುತ್ತಿರುವ</string>
     <string name="pref_always_show_chapter_transition">ಅಧ್ಯಾಯ ಪರಿವರ್ತನೆಯನ್ನು ಯಾವಾಗಲೂ ತೋರಿಸಿ</string>

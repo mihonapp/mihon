@@ -362,8 +362,6 @@
     <string name="rotation_force_landscape">Peizazh i mbyllur</string>
     <string name="color_filter_g_value">G</string>
     <string name="pref_category_reading_mode">Modaliteti i leximit</string>
-    <string name="webtoon_side_padding_0">Asnje</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_highest">Më e larta</string>
     <string name="pref_low">E ulët</string>
     <string name="pref_download_directory">Shkarko vendndodhjen</string>
@@ -405,14 +403,10 @@
     <string name="color_filter_a_value">A</string>
     <string name="pref_always_show_chapter_transition">Trego gjithmonë kalimin e kapitullit</string>
     <string name="pref_webtoon_side_padding">Mbushje anësore</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="rotation_landscape">Peizazh</string>
     <string name="color_filter_r_value">R</string>
     <string name="pref_category_reading">Duke lexuar</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="pref_hide_threshold">Ndjeshmëria për fshehjen e menysë në lëvizje</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_high">E lartë</string>
     <string name="pref_lowest">Më e ulëta</string>
     <string name="pref_remove_after_marked_as_read">Pasi është shënuar manualisht si e lexuar</string>

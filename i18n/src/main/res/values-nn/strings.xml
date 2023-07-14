@@ -196,11 +196,6 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="webtoon_side_padding_0">Ingen</string>
-    <string name="webtoon_side_padding_5">5%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="pref_highest">Høgaste</string>
     <string name="pref_high">Høg</string>
     <string name="pref_low">Låg</string>
@@ -270,7 +265,6 @@
     <string name="obsolete_extension_message">Denne utvidinga er ikkje lengre tilgjengeleg.</string>
     <string name="ext_nsfw_warning">Kan innehalda NSFW (18+) innhald</string>
     <string name="pref_category_delete_chapters">Slett kapittel</string>
-    <string name="webtoon_side_padding_25">25%</string>
     <string name="pref_download_new_categories_details">Manga i utelatne kategoriar vil ikkje bli nedlasta sjølv om dei òg er i inkluderte kategoriar.</string>
     <string name="pref_backup_service_category">Automatisk reservekopiar</string>
     <string name="pref_backup_interval">Reservekopifrekvens</string>

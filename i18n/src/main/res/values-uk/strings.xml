@@ -279,7 +279,7 @@
     <string name="download_notifier_no_network">Немає мережевого з`єднання</string>
     <string name="download_notifier_download_paused">Завантаження призупинено</string>
     <string name="channel_common">Звичайний</string>
-    <string name="pref_read_with_long_tap">Показувати при довгому натисканні</string>
+    <string name="pref_read_with_long_tap">Показувати дії при довгому натисканні</string>
     <string name="action_open_in_web_view">Відкрити у WebView</string>
     <string name="pref_true_color">32-бітний колір</string>
     <string name="pref_skip_read_chapters">Пропускати розділи, відмічені як прочитані</string>
@@ -377,11 +377,6 @@
     <string name="label_sources">Джерела</string>
     <string name="updating_library">Оновлення бібліотеки</string>
     <string name="pref_skip_filtered_chapters">Пропускати відфільтровані розділи</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Без меж</string>
     <string name="pref_webtoon_side_padding">Бічний відступ</string>
     <string name="vertical_plus_viewer">Довга смуга з проміжками</string>
     <string name="action_select_inverse">Інвертувати вибір</string>
@@ -652,7 +647,7 @@
     <string name="update_72hour">Що 3 дні</string>
     <string name="connected_to_wifi">Тільки через Wi-Fi</string>
     <string name="extension_api_error">Не вдалося отримати список розширень</string>
-    <string name="pref_auto_clear_chapter_cache">Очищати кеш розділів при закритті застосунку</string>
+    <string name="pref_auto_clear_chapter_cache">Очищати кеш розділів під час запуску застосунку</string>
     <string name="clear_database_source_item_count">%1$d небібліотечний записів у базі даних</string>
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
@@ -669,7 +664,6 @@
     <string name="action_faq_and_guides">Довідка та FAQ</string>
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="channel_skipped">Пропущено</string>
     <string name="notification_update_error">%1$d оновлення(нь) не вдалось</string>
     <string name="notification_update_skipped">%1$d оновлення(нь) пропущено</string>
@@ -735,7 +729,7 @@
         <item quantity="other">Наступні %d непрочитані розділи</item>
     </plurals>
     <string name="download_ahead">Завантажувати наперед</string>
-    <string name="download_ahead_info">Працює тільки з манґою збереженою в бібліотеці, якщо поточний розділ, та наступний за ним вже завантажені</string>
+    <string name="download_ahead_info">Працює, якщо поточний розділ + наступний вже завантажені.</string>
     <string name="remove_manga">Ви збираєтесь видалити \"%s\" з вашої бібліотеки</string>
     <string name="theme_tidalwave">Приливна Хвиля</string>
     <string name="are_you_sure">Ви впевнені\?</string>
@@ -866,4 +860,5 @@
     <string name="track_delete_remote_text">Також видалити з %s</string>
     <string name="track_delete_title">Видалити відстеження %s\?</string>
     <string name="track_delete_text">Це видалить відстеження локально.</string>
+    <string name="delete_downloaded">Видалити завантажене</string>
 </resources>

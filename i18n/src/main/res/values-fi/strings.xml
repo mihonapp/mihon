@@ -366,10 +366,6 @@
     <string name="restoring_backup_canceled">Palautus peruttu</string>
     <string name="restoring_backup_error">Varmuuskopion palautus epäonnistui</string>
     <string name="creating_backup_error">Varmuuskopiointi epäonnistui</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_skip_filtered_chapters">Ohita suodatetut luvut</string>
     <string name="confirm_exit">Paina takaisin uudestaan poistuaksesi</string>
     <string name="label_downloaded_only">Ladatut</string>
@@ -393,7 +389,6 @@
     <string name="manga_info_expand">Enemmän</string>
     <string name="pinned_sources">Kiinnitetyt</string>
     <string name="http_error_hint">Katso sivu WebViewissä</string>
-    <string name="webtoon_side_padding_0">Ei yhtään</string>
     <string name="pref_category_reading">Luettavana</string>
     <string name="check_for_updates">Tarkista päivitykset</string>
     <string name="last_used_source">Viimeksi käytetty</string>
@@ -600,7 +595,6 @@
     <string name="update_72hour">Joka 3. Päivä</string>
     <string name="connected_to_wifi">Ainoastaan WiFillä</string>
     <string name="pref_inverted_colors">Käänteisväri</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="ext_app_info">Sovelluksen tiedot</string>
     <string name="ext_installer_legacy">Perinteinen</string>
     <string name="rotation_reverse_portrait">Käänteinen kuva</string>

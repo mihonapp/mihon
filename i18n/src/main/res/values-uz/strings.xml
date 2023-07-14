@@ -342,11 +342,9 @@
     <string name="double_tap_anim_speed_fast">Tez</string>
     <string name="pref_rotation_type">Standart aylanish</string>
     <string name="pref_highest">Eng baland</string>
-    <string name="webtoon_side_padding_10">10%</string>
     <string name="pref_high">Baland</string>
     <string name="color_filter_b_value">K</string>
     <string name="color_filter_a_value">A</string>
-    <string name="webtoon_side_padding_15">15%</string>
     <string name="fourth_to_last">O\'qilgan bobdan to\'rtinchisi</string>
     <string name="fifth_to_last">O\'qilgan bobdan beshinchisi</string>
     <string name="pref_category_auto_download">Avto-yuklash</string>
@@ -360,7 +358,6 @@
     <string name="pref_category_delete_chapters">Boblarni o\'chirish</string>
     <string name="invalid_location">Noto\'g\'ri joylashuv: %s</string>
     <string name="pref_low">Past</string>
-    <string name="webtoon_side_padding_0">Yo\'q</string>
     <string name="custom_dir">Foydalanuvchi papkasi</string>
     <string name="pref_remove_after_marked_as_read">«O\'qilgan» deb belgilangandan so\'ng o\'chirish</string>
     <string name="zoom_start_automatic">Avtomatik</string>
@@ -377,7 +374,6 @@
     <string name="color_filter_g_value">Y</string>
     <string name="disabled">O\'chirilgan</string>
     <string name="zoom_start_left">Chapdan</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="pref_remove_exclude_categories">Istisno qilingan toifalar</string>
     <string name="pref_navigate_pan">Keng rasmlarga teginishda panoramalash</string>
     <string name="scale_type_original_size">Original o\'lcham</string>
@@ -388,8 +384,6 @@
     <string name="pref_always_show_chapter_transition">Boblar aro o\'tish</string>
     <string name="pref_category_reading_mode">O\'qish rejimi</string>
     <string name="pref_category_reading">O\'qish</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
     <string name="scale_type_fit_height">Uzunasiga</string>
     <string name="pref_webtoon_side_padding">Yon bo\'shliq</string>
     <string name="pref_remove_bookmarked_chapters">Xatchopli boblarni o\'chirish</string>

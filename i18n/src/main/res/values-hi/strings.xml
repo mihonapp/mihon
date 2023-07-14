@@ -369,11 +369,6 @@
     <string name="pref_skip_filtered_chapters">फ़िल्टर किए गए अध्यायों को छोड़ें</string>
     <string name="label_sources">स्रोत</string>
     <string name="pinned_sources">पिन की गई</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">कुछ नहीं</string>
     <string name="pref_webtoon_side_padding">साइड पैडिंग</string>
     <string name="vertical_plus_viewer">गैप के साथ लंबी पट्टी</string>
     <string name="action_unpin">अनपिन</string>
@@ -641,7 +636,6 @@
     <string name="cancelled">रद्द किया गया</string>
     <string name="on_hiatus">अंतराल पर है</string>
     <string name="publishing_finished">प्रकाशन समाप्त</string>
-    <string name="webtoon_side_padding_5">५%</string>
     <string name="channel_skipped">छोड़े गए</string>
     <string name="learn_more">अधिक जानकारी के लिए दबाए</string>
     <string name="skipped_reason_completed">छोड़े गए क्योंकि श्रृंखला पूरी हो गई है</string>

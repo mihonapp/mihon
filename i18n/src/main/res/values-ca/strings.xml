@@ -279,7 +279,7 @@
     <string name="download_notifier_no_network">No hi ha cap connexió de xarxa disponible</string>
     <string name="download_notifier_download_paused">Baixades pausades</string>
     <string name="channel_common">General</string>
-    <string name="pref_read_with_long_tap">Mostra amb un toc llarg</string>
+    <string name="pref_read_with_long_tap">Mostra les accions amb un toc llarg</string>
     <string name="action_open_in_web_view">Obre en una WebView</string>
     <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_skip_read_chapters">Omet capítols marcats com a llegits</string>
@@ -372,11 +372,6 @@
     <string name="pinned_sources">Fixades</string>
     <string name="action_pin">Fixa</string>
     <string name="add_tracking">Segueix</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Cap</string>
     <string name="pref_webtoon_side_padding">Espaiat lateral</string>
     <string name="vertical_plus_viewer">Tira vertical amb separació</string>
     <string name="action_unpin">Desfixa</string>
@@ -620,7 +615,7 @@
     <string name="ext_install_service_notif">S’està instal·lant l’extensió…</string>
     <string name="ext_installer_pref">Instal·lador</string>
     <string name="ext_installer_legacy">Antic</string>
-    <string name="pref_auto_clear_chapter_cache">Buida la memòria cau de capítols en tancar l’aplicació</string>
+    <string name="pref_auto_clear_chapter_cache">Buida la memòria cau de capítols en obrir l’aplicació</string>
     <string name="enhanced_tracking_info">Aquests serveis proporcionen funcionalitats millorades per a fonts específiques. Els elements se segueixen automàticament en afegir-los a la vostra biblioteca.</string>
     <string name="about_dont_kill_my_app">Alguns fabricants tenen restriccions addicionals per a les aplicacions que finalitzen els serveis en segon pla. Aquest lloc web té més informació de com solucionar-ho.</string>
     <string name="clear_database_source_item_count">Hi ha %1$d elements a la base de dades que no són a la biblioteca</string>
@@ -630,7 +625,6 @@
     <string name="action_faq_and_guides">PMF i guies</string>
     <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels elements</string>
     <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
     <string name="backup_info">També hauríeu de desar còpies de les còpies de seguretat en altres llocs.</string>
     <string name="database_clean">No hi ha res que calgui buidar</string>
@@ -709,7 +703,7 @@
     <string name="are_you_sure">N’esteu segur\?</string>
     <string name="invalid_location">Ubicació invàlida: %s</string>
     <string name="auto_download_while_reading">Baixa automàticament mentre es llegeix</string>
-    <string name="download_ahead_info">Només funciona en elements de la biblioteca i si el capítol actual i el següent ja estan baixats</string>
+    <string name="download_ahead_info">Només funciona si el capítol actual i el següent ja estan baixats.</string>
     <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_description">S’ha produït un error inesperat al %s. Us suggerim que compartiu el registre d’errors al nostre canal d’assistència al Discord.</string>
     <plurals name="next_unread_chapters">

@@ -191,13 +191,9 @@
     <string name="all">అన్ని</string>
     <string name="edge_nav">అంచు</string>
     <string name="latest">తాజా</string>
-    <string name="webtoon_side_padding_10">౧౦%</string>
     <string name="reading">చదువుతున్నారు</string>
     <string name="title">శీర్షిక</string>
     <string name="score">గణన</string>
-    <string name="webtoon_side_padding_0">ఏదీ లేదు</string>
-    <string name="webtoon_side_padding_20">౨౦%</string>
-    <string name="webtoon_side_padding_25">౨౫%</string>
     <string name="kindlish_nav">కిండల్ మాదిరి</string>
     <string name="ongoing">కొనసాగుతున్నది</string>
     <string name="status">స్థితి</string>
@@ -207,6 +203,5 @@
     <string name="dropped">విడిచెను</string>
     <string name="portrait">చిత్తరువు</string>
     <string name="landscape">ప్రకృతి దృశ్యం</string>
-    <string name="webtoon_side_padding_15">౧౫%</string>
     <string name="paused">నిలిపివేయబడింది</string>
 </resources>

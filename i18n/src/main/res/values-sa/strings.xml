@@ -317,14 +317,8 @@
     <string name="pref_category_reading_mode">पठनदशा</string>
     <string name="pref_category_reading">पठनम्</string>
     <string name="pref_webtoon_side_padding">पक्षस्य पाडिङ्गः</string>
-    <string name="webtoon_side_padding_0">किमपि न</string>
-    <string name="webtoon_side_padding_10">१०%</string>
     <string name="pref_image_scale_type">मापनप्रकारः</string>
     <string name="scale_type_fit_height">ऊर्ध्वत्वं समुचितं कुरु</string>
-    <string name="webtoon_side_padding_5">५%</string>
-    <string name="webtoon_side_padding_15">१५%</string>
-    <string name="webtoon_side_padding_20">२०%</string>
-    <string name="webtoon_side_padding_25">२५%</string>
     <string name="pref_high">उच्चम्</string>
     <string name="pref_low">अधस्तनम्</string>
     <string name="pref_highest">उच्चतमम्</string>

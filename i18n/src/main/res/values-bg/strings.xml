@@ -395,11 +395,6 @@
     <string name="backup_in_progress">Копието вече се запазва</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
     <string name="pref_search_pinned_sources_only">Включвай само закачени източници</string>
-    <string name="webtoon_side_padding_25">25%</string>
-    <string name="webtoon_side_padding_20">20%</string>
-    <string name="webtoon_side_padding_15">15%</string>
-    <string name="webtoon_side_padding_10">10%</string>
-    <string name="webtoon_side_padding_0">Никакво</string>
     <string name="pref_webtoon_side_padding">Странично разстояние</string>
     <string name="pref_category_reading">Четене</string>
     <string name="pref_always_show_chapter_transition">Винаги показвай прехода между главите</string>
@@ -682,7 +677,6 @@
     <string name="battery_not_low">Когато батерията не е паднала</string>
     <string name="ext_info_language">Език</string>
     <string name="crash_screen_title">Случи се неочаквана грешка</string>
-    <string name="webtoon_side_padding_5">5%</string>
     <string name="auto_download_while_reading">Автоматично изтегляне при четене</string>
     <string name="description_placeholder">Няма описание</string>
     <string name="empty_backup_error">Няма заглавия в библиотеката за резервно копие</string>
