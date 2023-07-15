@@ -30,23 +30,25 @@ import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchFilter
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchState
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreenModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.VerticalDivider
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun GlobalSearchScreen(
-    state: GlobalSearchState,
+    state: GlobalSearchScreenModel.State,
     items: Map<CatalogueSource, SearchItemResult>,
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
-    onChangeFilter: (GlobalSearchFilter) -> Unit,
+    onChangeSearchFilter: (SourceFilter) -> Unit,
+    onToggleResults: () -> Unit,
     getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
     onClickItem: (Manga) -> Unit,
@@ -71,13 +73,29 @@ fun GlobalSearchScreen(
                         .padding(horizontal = MaterialTheme.padding.small),
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 ) {
+                    // TODO: make this UX better; it only applies when triggering a new search
                     FilterChip(
-                        selected = state.searchFilter == GlobalSearchFilter.All,
-                        onClick = { onChangeFilter(GlobalSearchFilter.All) },
+                        selected = state.sourceFilter == SourceFilter.PinnedOnly,
+                        onClick = { onChangeSearchFilter(SourceFilter.PinnedOnly) },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.PushPin,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(FilterChipDefaults.IconSize),
+                            )
+                        },
+                        label = {
+                            Text(text = stringResource(id = R.string.pinned_sources))
+                        },
+                    )
+                    FilterChip(
+                        selected = state.sourceFilter == SourceFilter.All,
+                        onClick = { onChangeSearchFilter(SourceFilter.All) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.DoneAll,
-                                contentDescription = "",
+                                contentDescription = null,
                                 modifier = Modifier
                                     .size(FilterChipDefaults.IconSize),
                             )
@@ -87,29 +105,15 @@ fun GlobalSearchScreen(
                         },
                     )
 
-                    FilterChip(
-                        selected = state.searchFilter == GlobalSearchFilter.PinnedOnly,
-                        onClick = { onChangeFilter(GlobalSearchFilter.PinnedOnly) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.PushPin,
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(FilterChipDefaults.IconSize),
-                            )
-                        },
-                        label = {
-                            Text(text = stringResource(id = R.string.pinned_sources))
-                        },
-                    )
+                    VerticalDivider()
 
                     FilterChip(
-                        selected = state.searchFilter == GlobalSearchFilter.AvailableOnly,
-                        onClick = { onChangeFilter(GlobalSearchFilter.AvailableOnly) },
+                        selected = state.onlyShowHasResults,
+                        onClick = { onToggleResults() },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.FilterList,
-                                contentDescription = "",
+                                contentDescription = null,
                                 modifier = Modifier
                                     .size(FilterChipDefaults.IconSize),
                             )

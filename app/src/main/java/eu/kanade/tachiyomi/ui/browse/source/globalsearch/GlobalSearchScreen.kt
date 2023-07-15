@@ -63,7 +63,8 @@ class GlobalSearchScreen(
                 onChangeSearchQuery = screenModel::updateSearchQuery,
                 onSearch = screenModel::search,
                 getManga = { screenModel.getManga(it) },
-                onChangeFilter = screenModel::setFilter,
+                onChangeSearchFilter = screenModel::setSourceFilter,
+                onToggleResults = screenModel::toggleFilterResults,
                 onClickSource = {
                     if (!screenModel.incognitoMode.get()) {
                         screenModel.lastUsedSourceId.set(it.id)

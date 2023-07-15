@@ -30,7 +30,5 @@ class SourcePreferences(
 
     fun trustedSignatures() = preferenceStore.getStringSet("trusted_signatures", emptySet())
 
-    fun searchPinnedSourcesOnly() = preferenceStore.getBoolean("search_pinned_sources_only", false)
-
     fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 }
