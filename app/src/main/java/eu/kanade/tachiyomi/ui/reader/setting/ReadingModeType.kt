@@ -29,8 +29,6 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @D
             return mode == LEFT_TO_RIGHT || mode == RIGHT_TO_LEFT || mode == VERTICAL
         }
 
-        fun fromSpinner(position: Int?) = values().find { value -> value.prefValue == position } ?: DEFAULT
-
         fun toViewer(preference: Int?, activity: ReaderActivity): Viewer {
             return when (fromPreference(preference)) {
                 LEFT_TO_RIGHT -> L2RPagerViewer(activity)

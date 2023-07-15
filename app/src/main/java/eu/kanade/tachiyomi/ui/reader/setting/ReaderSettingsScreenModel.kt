@@ -25,6 +25,11 @@ class ReaderSettingsScreenModel(
         .distinctUntilChanged()
         .stateIn(ioCoroutineScope, SharingStarted.Lazily, null)
 
+    val mangaFlow = readerState
+        .map { it.manga }
+        .distinctUntilChanged()
+        .stateIn(ioCoroutineScope, SharingStarted.Lazily, null)
+
     fun togglePreference(preference: (ReaderPreferences) -> Preference<Boolean>) {
         preference(preferences).toggle()
     }

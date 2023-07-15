@@ -6,6 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import eu.kanade.domain.manga.model.orientationType
+import eu.kanade.domain.manga.model.readingModeType
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
@@ -26,12 +28,15 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
 
     HeadingItem(R.string.pref_category_for_this_series)
 
+    val manga by screenModel.mangaFlow.collectAsState()
+    val readingMode = remember(manga) { ReadingModeType.fromPreference(manga?.readingModeType?.toInt()) }
+    val orientation = remember(manga) { OrientationType.fromPreference(manga?.orientationType?.toInt()) }
+
     HeadingItem(R.string.pref_category_reading_mode)
     ReadingModeType.values().map {
         RadioItem(
             label = stringResource(it.stringRes),
-            // TODO: Reading mode
-            selected = false,
+            selected = readingMode == it,
             onClick = { screenModel.onChangeReadingMode(it) },
         )
     }
@@ -40,8 +45,7 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
     OrientationType.values().map {
         RadioItem(
             label = stringResource(it.stringRes),
-            // TODO: Rotation type
-            selected = false,
+            selected = orientation == it,
             onClick = { screenModel.onChangeOrientation(it) },
         )
     }
