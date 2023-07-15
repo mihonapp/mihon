@@ -23,25 +23,12 @@ fun ReaderSettingsDialog(
     onHideMenus: () -> Unit,
     screenModel: ReaderSettingsScreenModel,
 ) {
-    // TODO: undimming doesn't seem to work
-    val window = (LocalView.current.parent as? DialogWindowProvider)?.window
-
     val tabTitles = listOf(
         stringResource(R.string.pref_category_reading_mode),
         stringResource(R.string.pref_category_general),
         stringResource(R.string.custom_filter),
     )
     val pagerState = rememberPagerState { tabTitles.size }
-
-    LaunchedEffect(pagerState.currentPage) {
-        if (pagerState.currentPage == 2) {
-            window?.setDimAmount(0f)
-            onHideMenus()
-        } else {
-            window?.setDimAmount(0.75f)
-            onShowMenus()
-        }
-    }
 
     TabbedDialog(
         onDismissRequest = {
@@ -51,6 +38,18 @@ fun ReaderSettingsDialog(
         tabTitles = tabTitles,
         pagerState = pagerState,
     ) { page ->
+        val window = (LocalView.current.parent as? DialogWindowProvider)?.window
+
+        LaunchedEffect(pagerState.currentPage) {
+            if (pagerState.currentPage == 2) {
+                window?.setDimAmount(0f)
+                onHideMenus()
+            } else {
+                window?.setDimAmount(0.5f)
+                onShowMenus()
+            }
+        }
+
         Column(
             modifier = Modifier
                 .padding(vertical = TabbedDialogPaddings.Vertical)

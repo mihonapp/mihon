@@ -113,6 +113,10 @@ class MainActivity : BaseActivity() {
 
     private var navigator: Navigator? = null
 
+    init {
+        registerSecureActivity(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val isLaunch = savedInstanceState == null
 
@@ -427,10 +431,6 @@ class MainActivity : BaseActivity() {
 
         ready = true
         return true
-    }
-
-    init {
-        registerSecureActivity(this)
     }
 
     companion object {

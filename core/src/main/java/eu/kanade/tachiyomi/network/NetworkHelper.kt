@@ -15,9 +15,9 @@ class NetworkHelper(
     private val preferences: NetworkPreferences,
 ) {
 
-    val cookieJar by lazy { AndroidCookieJar() }
+    val cookieJar = AndroidCookieJar()
 
-    val client by lazy {
+    val client: OkHttpClient = run {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -64,7 +64,7 @@ class NetworkHelper(
      */
     @Deprecated("The regular client handles Cloudflare by default")
     @Suppress("UNUSED")
-    val cloudflareClient by lazy { client }
+    val cloudflareClient: OkHttpClient = client
 
     fun defaultUserAgentProvider() = preferences.defaultUserAgent().get().trim()
 }
