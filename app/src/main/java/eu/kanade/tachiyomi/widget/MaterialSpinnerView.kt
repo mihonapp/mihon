@@ -77,43 +77,6 @@ class MaterialSpinnerView @JvmOverloads constructor(context: Context, attrs: Att
         binding.details.text = entries.getOrNull(selection).orEmpty()
     }
 
-    fun bindToPreference(pref: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null) {
-        setSelection(pref.get() - offset)
-
-        popup = makeSettingsPopup(pref, offset, block)
-        setOnTouchListener(popup?.dragToOpenListener)
-        setOnClickListener {
-            popup?.show()
-        }
-    }
-
-    fun <T : Enum<T>> bindToPreference(pref: Preference<T>, clazz: Class<T>) {
-        val enumConstants = clazz.enumConstants
-        enumConstants?.indexOf(pref.get())?.let { setSelection(it) }
-
-        popup = makeSettingsPopup(pref, clazz)
-        setOnTouchListener(popup?.dragToOpenListener)
-        setOnClickListener {
-            popup?.show()
-        }
-    }
-
-    private fun <T : Enum<T>> makeSettingsPopup(preference: Preference<T>, clazz: Class<T>): PopupMenu {
-        return createPopupMenu { pos ->
-            onItemSelectedListener?.invoke(pos)
-
-            val enumConstants = clazz.enumConstants
-            enumConstants?.get(pos)?.let { enumValue -> preference.set(enumValue) }
-        }
-    }
-
-    private fun makeSettingsPopup(preference: Preference<Int>, intValues: List<Int?>, block: ((Int) -> Unit)? = null): PopupMenu {
-        return createPopupMenu { pos ->
-            preference.set(intValues[pos] ?: 0)
-            block?.invoke(pos)
-        }
-    }
-
     private fun makeSettingsPopup(preference: Preference<Int>, offset: Int = 0, block: ((Int) -> Unit)? = null): PopupMenu {
         return createPopupMenu { pos ->
             preference.set(pos + offset)

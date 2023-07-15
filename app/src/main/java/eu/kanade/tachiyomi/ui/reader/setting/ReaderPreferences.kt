@@ -1,5 +1,7 @@
 package eu.kanade.tachiyomi.ui.reader.setting
 
+import androidx.annotation.StringRes
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
@@ -122,11 +124,15 @@ class ReaderPreferences(
 
     // endregion
 
-    enum class TappingInvertMode(val shouldInvertHorizontal: Boolean = false, val shouldInvertVertical: Boolean = false) {
-        NONE,
-        HORIZONTAL(shouldInvertHorizontal = true),
-        VERTICAL(shouldInvertVertical = true),
-        BOTH(shouldInvertHorizontal = true, shouldInvertVertical = true),
+    enum class TappingInvertMode(
+        @StringRes val titleResId: Int,
+        val shouldInvertHorizontal: Boolean = false,
+        val shouldInvertVertical: Boolean = false,
+    ) {
+        NONE(R.string.tapping_inverted_none),
+        HORIZONTAL(R.string.tapping_inverted_horizontal, shouldInvertHorizontal = true),
+        VERTICAL(R.string.tapping_inverted_vertical, shouldInvertVertical = true),
+        BOTH(R.string.tapping_inverted_both, shouldInvertHorizontal = true, shouldInvertVertical = true),
     }
 
     enum class ReaderHideThreshold(val threshold: Int) {
@@ -139,5 +145,30 @@ class ReaderPreferences(
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
+
+        val TapZones = listOf(
+            R.string.label_default,
+            R.string.l_nav,
+            R.string.kindlish_nav,
+            R.string.edge_nav,
+            R.string.right_and_left_nav,
+            R.string.disabled_nav,
+        )
+
+        val ImageScaleType = listOf(
+            R.string.scale_type_fit_screen,
+            R.string.scale_type_stretch,
+            R.string.scale_type_fit_width,
+            R.string.scale_type_fit_height,
+            R.string.scale_type_original_size,
+            R.string.scale_type_smart_fit,
+        )
+
+        val ZoomStart = listOf(
+            R.string.zoom_start_automatic,
+            R.string.zoom_start_left,
+            R.string.zoom_start_right,
+            R.string.zoom_start_center,
+        )
     }
 }

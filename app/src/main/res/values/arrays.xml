@@ -9,22 +9,6 @@
         <item>@string/vertical_plus_viewer</item>
     </string-array>
 
-    <string-array name="image_scale_type">
-        <item>@string/scale_type_fit_screen</item>
-        <item>@string/scale_type_stretch</item>
-        <item>@string/scale_type_fit_width</item>
-        <item>@string/scale_type_fit_height</item>
-        <item>@string/scale_type_original_size</item>
-        <item>@string/scale_type_smart_fit</item>
-    </string-array>
-
-    <string-array name="zoom_start">
-        <item>@string/zoom_start_automatic</item>
-        <item>@string/zoom_start_left</item>
-        <item>@string/zoom_start_right</item>
-        <item>@string/zoom_start_center</item>
-    </string-array>
-
     <string-array name="rotation_type">
         <item>@string/label_default</item>
         <item>@string/rotation_free</item>
@@ -33,30 +17,5 @@
         <item>@string/rotation_force_portrait</item>
         <item>@string/rotation_force_landscape</item>
         <item>@string/rotation_reverse_portrait</item>
-    </string-array>
-
-    <string-array name="invert_tapping_mode">
-        <item>@string/tapping_inverted_none</item>
-        <item>@string/tapping_inverted_horizontal</item>
-        <item>@string/tapping_inverted_vertical</item>
-        <item>@string/tapping_inverted_both</item>
-    </string-array>
-
-    <string-array name="pager_nav">
-        <item>@string/label_default</item>
-        <item>@string/l_nav</item>
-        <item>@string/kindlish_nav</item>
-        <item>@string/edge_nav</item>
-        <item>@string/right_and_left_nav</item>
-        <item>@string/disabled_nav</item>
-    </string-array>
-
-    <string-array name="webtoon_nav">
-        <item>@string/label_default</item>
-        <item>@string/l_nav</item>
-        <item>@string/kindlish_nav</item>
-        <item>@string/edge_nav</item>
-        <item>@string/right_and_left_nav</item>
-        <item>@string/disabled_nav</item>
     </string-array>
 </resources>
