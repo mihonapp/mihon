@@ -20,6 +20,7 @@ import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -265,6 +266,7 @@ data class TrackInfoDialogHomeScreen(
                 .filter { (it.service as? EnhancedTrackService)?.accept(source) ?: true }
         }
 
+        @Immutable
         data class State(
             val trackItems: List<TrackItem> = emptyList(),
         )
@@ -314,6 +316,7 @@ private data class TrackStatusSelectorScreen(
             }
         }
 
+        @Immutable
         data class State(
             val selection: Int,
         )
@@ -369,6 +372,7 @@ private data class TrackChapterSelectorScreen(
             }
         }
 
+        @Immutable
         data class State(
             val selection: Int,
         )
@@ -419,6 +423,7 @@ private data class TrackScoreSelectorScreen(
             }
         }
 
+        @Immutable
         data class State(
             val selection: String,
         )
@@ -724,6 +729,7 @@ data class TrackServiceSearchScreen(
             mutableState.update { it.copy(selected = selected) }
         }
 
+        @Immutable
         data class State(
             val queryResult: Result<List<TrackSearch>>? = null,
             val selected: TrackSearch? = null,

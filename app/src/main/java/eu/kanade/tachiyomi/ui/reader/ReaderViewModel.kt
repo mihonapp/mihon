@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.app.Application
 import android.net.Uri
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -790,16 +791,12 @@ class ReaderViewModel(
         }
     }
 
-    /**
-     * Results of the set as cover feature.
-     */
     enum class SetAsCoverResult {
-        Success, AddToLibraryFirst, Error
+        Success,
+        AddToLibraryFirst,
+        Error,
     }
 
-    /**
-     * Results of the save image feature.
-     */
     sealed class SaveImageResult {
         class Success(val uri: Uri) : SaveImageResult()
         class Error(val error: Throwable) : SaveImageResult()
@@ -844,6 +841,7 @@ class ReaderViewModel(
         }
     }
 
+    @Immutable
     data class State(
         val manga: Manga? = null,
         val viewerChapters: ViewerChapters? = null,
