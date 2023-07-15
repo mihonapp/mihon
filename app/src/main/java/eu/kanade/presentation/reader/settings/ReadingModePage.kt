@@ -2,13 +2,17 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
@@ -22,16 +26,32 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
 
     HeadingItem(R.string.pref_category_for_this_series)
 
-    // TODO: Reading mode
     HeadingItem(R.string.pref_category_reading_mode)
+    ReadingModeType.values().map {
+        RadioItem(
+            label = stringResource(it.stringRes),
+            // TODO: Reading mode
+            selected = false,
+            onClick = { screenModel.onChangeReadingMode(it) },
+        )
+    }
 
-    // TODO: Rotation type
     HeadingItem(R.string.rotation_type)
+    OrientationType.values().map {
+        RadioItem(
+            label = stringResource(it.stringRes),
+            // TODO: Rotation type
+            selected = false,
+            onClick = { screenModel.onChangeOrientation(it) },
+        )
+    }
 
-    // TODO: if (pager)
-    PagerViewerSettings(screenModel)
-
-    WebtoonViewerSettings(screenModel)
+    val viewer by screenModel.viewerFlow.collectAsState()
+    if (viewer is WebtoonViewer) {
+        WebtoonViewerSettings(screenModel)
+    } else {
+        PagerViewerSettings(screenModel)
+    }
 }
 
 @Composable

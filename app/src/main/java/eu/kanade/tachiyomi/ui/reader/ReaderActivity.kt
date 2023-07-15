@@ -69,7 +69,6 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsSheet
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
@@ -391,7 +390,13 @@ class ReaderActivity : BaseActivity() {
 
         binding.dialogRoot.setComposeContent {
             val state by viewModel.state.collectAsState()
-            val settingsScreenModel = remember { ReaderSettingsScreenModel() }
+            val settingsScreenModel = remember {
+                ReaderSettingsScreenModel(
+                    readerState = viewModel.state,
+                    onChangeReadingMode = viewModel::setMangaReadingMode,
+                    onChangeOrientation = viewModel::setMangaOrientationType,
+                )
+            }
 
             val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
@@ -485,7 +490,7 @@ class ReaderActivity : BaseActivity() {
                 ) {
                     val newReadingMode = ReadingModeType.fromPreference(itemId)
 
-                    viewModel.setMangaReadingMode(newReadingMode.flagValue)
+                    viewModel.setMangaReadingMode(newReadingMode)
 
                     menuToggleToast?.cancel()
                     if (!readerPreferences.showReadingMode().get()) {
@@ -539,7 +544,7 @@ class ReaderActivity : BaseActivity() {
                 ) {
                     val newOrientation = OrientationType.fromPreference(itemId)
 
-                    viewModel.setMangaOrientationType(newOrientation.flagValue)
+                    viewModel.setMangaOrientationType(newOrientation)
 
                     menuToggleToast?.cancel()
                     menuToggleToast = toast(newOrientation.stringRes)
@@ -548,16 +553,6 @@ class ReaderActivity : BaseActivity() {
         }
 
         // Settings sheet
-        with(binding.actionSettingsLegacy) {
-            setTooltip(R.string.action_settings)
-
-            var readerSettingSheet: ReaderSettingsSheet? = null
-
-            setOnClickListener {
-                if (readerSettingSheet?.isShowing == true) return@setOnClickListener
-                readerSettingSheet = ReaderSettingsSheet(this@ReaderActivity).apply { show() }
-            }
-        }
         with(binding.actionSettings) {
             setTooltip(R.string.action_settings)
 

@@ -20,33 +20,6 @@
     </style>
 
 
-    <!--===========-->
-    <!--BottomSheet-->
-    <!--===========-->
-
-    <style name="ThemeOverlay.Tachiyomi.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/Widget.Tachiyomi.BottomSheet.Modal</item>
-        <item name="android:windowAnimationStyle">@style/Animation.Tachiyomi.BottomSheetDialog</item>
-    </style>
-
-    <style name="Widget.Tachiyomi.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Tachiyomi.BottomSheet</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Tachiyomi.BottomSheet" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">@dimen/dialog_radius</item>
-        <item name="cornerSizeTopLeft">@dimen/dialog_radius</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-    </style>
-
-    <style name="Animation.Tachiyomi.BottomSheetDialog" parent="Animation.AppCompat.Dialog">
-        <item name="android:windowEnterAnimation">@anim/bottom_sheet_slide_in</item>
-        <item name="android:windowExitAnimation">@anim/bottom_sheet_slide_out</item>
-    </style>
-
-
     <!--===============-->
     <!--Text Appearance-->
     <!--===============-->
@@ -71,18 +44,6 @@
     </style>
 
 
-    <!--=================-->
-    <!--Widgets.TabLayout-->
-    <!--=================-->
-    <style name="Widget.Tachiyomi.TabLayout" parent="Widget.Material3.TabLayout">
-        <item name="tabGravity">center</item>
-        <item name="tabInlineLabel">true</item>
-        <item name="tabMinWidth">75dp</item>
-        <item name="tabMode">scrollable</item>
-        <item name="tabRippleColor">@color/ripple_toolbar_fainter</item>
-    </style>
-
-
     <!--==============-->
     <!--Widgets.Switch-->
     <!--==============-->
@@ -92,16 +53,6 @@
 
     <style name="ThemeOverlay.Tachiyomi.Switch" parent="">
         <item name="elevationOverlayEnabled">@bool/elevationOverlayEnabled</item>
-    </style>
-
-    <!--==============-->
-    <!--Widgets.Slider-->
-    <!--==============-->
-    <style name="Widget.Tachiyomi.Slider" parent="Widget.Material3.Slider">
-        <item name="labelBehavior">gone</item>
-        <item name="tickVisible">false</item>
-        <item name="trackColorInactive">@color/slider_inactive_track</item>
-        <item name="trackColorActive">@color/slider_active_track</item>
     </style>
 
 

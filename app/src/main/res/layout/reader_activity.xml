@@ -119,19 +119,6 @@
                     app:tint="?attr/colorOnSurface" />
 
                 <ImageButton
-                    android:id="@+id/action_settings_legacy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_settings"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@+id/action_settings"
-                    app:layout_constraintStart_toEndOf="@id/action_rotation"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_settings_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
                     android:id="@+id/action_settings"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -139,7 +126,7 @@
                     android:contentDescription="@string/action_settings"
                     android:padding="@dimen/screen_edge_margin"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/action_settings_legacy"
+                    app:layout_constraintStart_toEndOf="@id/action_rotation"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_settings_24dp"
                     app:tint="?attr/colorOnSurface" />
