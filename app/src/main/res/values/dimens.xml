@@ -1,6 +1,4 @@
 <resources>
-    <dimen name="dialog_radius">8dp</dimen>
-
     <dimen name="screen_edge_margin">16dp</dimen>
 
     <dimen name="appwidget_background_radius">16dp</dimen>

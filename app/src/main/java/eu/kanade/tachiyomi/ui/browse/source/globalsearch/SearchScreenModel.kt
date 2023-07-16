@@ -68,16 +68,7 @@ abstract class SearchScreenModel<T>(
         val enabledSources = getEnabledSources()
 
         if (filter.isEmpty()) {
-            val shouldSearchPinnedOnly = sourcePreferences.searchPinnedSourcesOnly().get()
-            val pinnedSources = sourcePreferences.pinnedSources().get()
-
-            return enabledSources.filter {
-                if (shouldSearchPinnedOnly) {
-                    "${it.id}" in pinnedSources
-                } else {
-                    true
-                }
-            }
+            return enabledSources
         }
 
         return extensionManager.installedExtensionsFlow.value
@@ -135,6 +126,11 @@ abstract class SearchScreenModel<T>(
                 .awaitAll()
         }
     }
+}
+
+enum class SourceFilter {
+    All,
+    PinnedOnly,
 }
 
 sealed class SearchItemResult {

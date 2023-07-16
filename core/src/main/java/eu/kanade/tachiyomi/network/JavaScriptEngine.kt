@@ -7,6 +7,7 @@ import tachiyomi.core.util.lang.withIOContext
 /**
  * Util for evaluating JavaScript in sources.
  */
+@Suppress("UNUSED", "UNCHECKED_CAST")
 class JavaScriptEngine(context: Context) {
 
     /**
@@ -17,7 +18,6 @@ class JavaScriptEngine(context: Context) {
      * @param script JavaScript to execute.
      * @return Result of JavaScript code as a primitive type.
      */
-    @Suppress("UNUSED", "UNCHECKED_CAST")
     suspend fun <T> evaluate(script: String): T = withIOContext {
         QuickJs.create().use {
             it.evaluate(script) as T

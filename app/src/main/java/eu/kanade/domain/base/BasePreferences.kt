@@ -1,6 +1,7 @@
 package eu.kanade.domain.base
 
 import android.content.Context
+import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
@@ -19,7 +20,7 @@ class BasePreferences(
 
     fun acraEnabled() = preferenceStore.getBoolean("acra.enable", isPreviewBuildType || isReleaseBuildType)
 
-    enum class ExtensionInstaller(val titleResId: Int) {
+    enum class ExtensionInstaller(@StringRes val titleResId: Int) {
         LEGACY(R.string.ext_installer_legacy),
         PACKAGEINSTALLER(R.string.ext_installer_packageinstaller),
         SHIZUKU(R.string.ext_installer_shizuku),

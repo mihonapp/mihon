@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.app.Application
 import android.net.Uri
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -601,10 +602,10 @@ class ReaderViewModel(
     /**
      * Updates the viewer position for the open manga.
      */
-    fun setMangaReadingMode(readingModeType: Int) {
+    fun setMangaReadingMode(readingModeType: ReadingModeType) {
         val manga = manga ?: return
         runBlocking(Dispatchers.IO) {
-            setMangaViewerFlags.awaitSetMangaReadingMode(manga.id, readingModeType.toLong())
+            setMangaViewerFlags.awaitSetMangaReadingMode(manga.id, readingModeType.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page
@@ -637,10 +638,10 @@ class ReaderViewModel(
     /**
      * Updates the orientation type for the open manga.
      */
-    fun setMangaOrientationType(rotationType: Int) {
+    fun setMangaOrientationType(rotationType: OrientationType) {
         val manga = manga ?: return
         viewModelScope.launchIO {
-            setMangaViewerFlags.awaitSetOrientationType(manga.id, rotationType.toLong())
+            setMangaViewerFlags.awaitSetOrientationType(manga.id, rotationType.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page
@@ -790,16 +791,12 @@ class ReaderViewModel(
         }
     }
 
-    /**
-     * Results of the set as cover feature.
-     */
     enum class SetAsCoverResult {
-        Success, AddToLibraryFirst, Error
+        Success,
+        AddToLibraryFirst,
+        Error,
     }
 
-    /**
-     * Results of the save image feature.
-     */
     sealed class SaveImageResult {
         class Success(val uri: Uri) : SaveImageResult()
         class Error(val error: Throwable) : SaveImageResult()
@@ -844,6 +841,7 @@ class ReaderViewModel(
         }
     }
 
+    @Immutable
     data class State(
         val manga: Manga? = null,
         val viewerChapters: ViewerChapters? = null,

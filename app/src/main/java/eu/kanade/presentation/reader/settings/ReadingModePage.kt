@@ -2,40 +2,100 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import eu.kanade.domain.manga.model.orientationType
+import eu.kanade.domain.manga.model.readingModeType
 import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
+import tachiyomi.presentation.core.components.SelectItem
 import tachiyomi.presentation.core.components.SliderItem
 import java.text.NumberFormat
+
+private val readingModeOptions = ReadingModeType.values().map { it.stringRes to it }
+private val orientationTypeOptions = OrientationType.values().map { it.stringRes to it }
+private val tappingInvertModeOptions = ReaderPreferences.TappingInvertMode.values().map { it.titleResId to it }
 
 @Composable
 internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel) {
     HeadingItem(R.string.pref_category_for_this_series)
+    val manga by screenModel.mangaFlow.collectAsState()
 
-    // Reading mode
-    // Rotation type
+    val readingMode = remember(manga) { ReadingModeType.fromPreference(manga?.readingModeType?.toInt()) }
+    SelectItem(
+        label = stringResource(R.string.pref_category_reading_mode),
+        options = readingModeOptions.map { stringResource(it.first) }.toTypedArray(),
+        selectedIndex = readingModeOptions.indexOfFirst { it.second == readingMode },
+    ) {
+        screenModel.onChangeReadingMode(readingModeOptions[it].second)
+    }
 
-    // if (pager)
-    PagerViewerSettings(screenModel)
+    val orientationType = remember(manga) { OrientationType.fromPreference(manga?.orientationType?.toInt()) }
+    SelectItem(
+        label = stringResource(R.string.rotation_type),
+        options = orientationTypeOptions.map { stringResource(it.first) }.toTypedArray(),
+        selectedIndex = orientationTypeOptions.indexOfFirst { it.second == orientationType },
+    ) {
+        screenModel.onChangeOrientation(orientationTypeOptions[it].second)
+    }
 
-    WebtoonViewerSettings(screenModel)
+    val viewer by screenModel.viewerFlow.collectAsState()
+    if (viewer is WebtoonViewer) {
+        WebtoonViewerSettings(screenModel)
+    } else {
+        PagerViewerSettings(screenModel)
+    }
 }
 
 @Composable
 private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenModel) {
     HeadingItem(R.string.pager_viewer)
 
-    // Tap zones
-    // Invert tap zones
-    // Scale type
-    // Zoom start position
+    val navigationModePager by screenModel.preferences.navigationModePager().collectAsState()
+    SelectItem(
+        label = stringResource(R.string.pref_viewer_nav),
+        options = ReaderPreferences.TapZones.map { stringResource(it) }.toTypedArray(),
+        selectedIndex = navigationModePager,
+        onSelect = { screenModel.preferences.navigationModePager().set(it) },
+    )
+
+    if (navigationModePager != 5) {
+        val pagerNavInverted by screenModel.preferences.pagerNavInverted().collectAsState()
+        SelectItem(
+            label = stringResource(R.string.pref_read_with_tapping_inverted),
+            options = tappingInvertModeOptions.map { stringResource(it.first) }.toTypedArray(),
+            selectedIndex = tappingInvertModeOptions.indexOfFirst { it.second == pagerNavInverted },
+            onSelect = {
+                screenModel.preferences.pagerNavInverted().set(tappingInvertModeOptions[it].second)
+            },
+        )
+    }
+
+    val imageScaleType by screenModel.preferences.imageScaleType().collectAsState()
+    SelectItem(
+        label = stringResource(R.string.pref_image_scale_type),
+        options = ReaderPreferences.ImageScaleType.map { stringResource(it) }.toTypedArray(),
+        selectedIndex = imageScaleType - 1,
+        onSelect = { screenModel.preferences.imageScaleType().set(it + 1) },
+    )
+
+    val zoomStart by screenModel.preferences.zoomStart().collectAsState()
+    SelectItem(
+        label = stringResource(R.string.pref_zoom_start),
+        options = ReaderPreferences.ZoomStart.map { stringResource(it) }.toTypedArray(),
+        selectedIndex = zoomStart - 1,
+        onSelect = { screenModel.preferences.zoomStart().set(it + 1) },
+    )
 
     val cropBorders by screenModel.preferences.cropBorders().collectAsState()
     CheckboxItem(
@@ -111,8 +171,25 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
 
     HeadingItem(R.string.webtoon_viewer)
 
-    // TODO: Tap zones
-    // TODO: Invert tap zones
+    val navigationModeWebtoon by screenModel.preferences.navigationModeWebtoon().collectAsState()
+    SelectItem(
+        label = stringResource(R.string.pref_viewer_nav),
+        options = ReaderPreferences.TapZones.map { stringResource(it) }.toTypedArray(),
+        selectedIndex = navigationModeWebtoon,
+        onSelect = { screenModel.preferences.navigationModeWebtoon().set(it) },
+    )
+
+    if (navigationModeWebtoon != 5) {
+        val webtoonNavInverted by screenModel.preferences.webtoonNavInverted().collectAsState()
+        SelectItem(
+            label = stringResource(R.string.pref_read_with_tapping_inverted),
+            options = tappingInvertModeOptions.map { stringResource(it.first) }.toTypedArray(),
+            selectedIndex = tappingInvertModeOptions.indexOfFirst { it.second == webtoonNavInverted },
+            onSelect = {
+                screenModel.preferences.webtoonNavInverted().set(tappingInvertModeOptions[it].second)
+            },
+        )
+    }
 
     val webtoonSidePadding by screenModel.preferences.webtoonSidePadding().collectAsState()
     SliderItem(

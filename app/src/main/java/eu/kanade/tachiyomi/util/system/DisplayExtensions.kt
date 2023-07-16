@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
-import android.view.Display
 import android.view.View
-import android.view.WindowManager
-import androidx.core.content.getSystemService
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.TabletUiMode
 import uy.kohesive.injekt.Injekt
@@ -66,14 +63,6 @@ fun Context.prepareTabletUiContext(): Context {
 fun Context.isNightMode(): Boolean {
     return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }
-
-val Context.displayCompat: Display?
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        display
-    } else {
-        @Suppress("DEPRECATION")
-        getSystemService<WindowManager>()?.defaultDisplay
-    }
 
 val Resources.isLTR
     get() = configuration.layoutDirection == View.LAYOUT_DIRECTION_LTR

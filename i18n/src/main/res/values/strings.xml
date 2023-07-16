@@ -388,7 +388,7 @@
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
     <string name="black_background">Black</string>
-    <string name="automatic_background">Automatic</string>
+    <string name="automatic_background">Auto</string>
     <string name="pref_viewer_type">Default reading mode</string>
     <string name="l_nav">L shaped</string>
     <string name="kindlish_nav">Kindle-ish</string>
@@ -485,7 +485,6 @@
     <string name="action_track">Track</string>
 
       <!-- Browse section -->
-    <string name="pref_search_pinned_sources_only">Only search pinned sources in global search</string>
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
 
       <!-- Backup section -->
@@ -660,6 +659,7 @@
     <string name="latest">Latest</string>
     <string name="popular">Popular</string>
     <string name="browse">Browse</string>
+    <string name="has_results">Has results</string>
     <string name="local_source_help_guide">Local source guide</string>
     <string name="no_pinned_sources">You have no pinned sources</string>
     <string name="chapter_not_found">Chapter not found</string>
