@@ -40,6 +40,7 @@ object TabbedDialogPaddings {
 
 @Composable
 fun TabbedDialog(
+    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     tabTitles: List<String>,
     tabOverflowMenuContent: (@Composable ColumnScope.(() -> Unit) -> Unit)? = null,
@@ -47,6 +48,7 @@ fun TabbedDialog(
     content: @Composable (Int) -> Unit,
 ) {
     AdaptiveSheet(
+        modifier = modifier,
         onDismissRequest = onDismissRequest,
     ) {
         val scope = rememberCoroutineScope()

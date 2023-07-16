@@ -1,6 +1,8 @@
 package eu.kanade.presentation.reader.settings
 
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -30,35 +32,38 @@ fun ReaderSettingsDialog(
     )
     val pagerState = rememberPagerState { tabTitles.size }
 
-    TabbedDialog(
-        onDismissRequest = {
-            onDismissRequest()
-            onShowMenus()
-        },
-        tabTitles = tabTitles,
-        pagerState = pagerState,
-    ) { page ->
-        val window = (LocalView.current.parent as? DialogWindowProvider)?.window
-
-        LaunchedEffect(pagerState.currentPage) {
-            if (pagerState.currentPage == 2) {
-                window?.setDimAmount(0f)
-                onHideMenus()
-            } else {
-                window?.setDimAmount(0.5f)
+    BoxWithConstraints {
+        TabbedDialog(
+            modifier = Modifier.heightIn(max = maxHeight * 0.75f),
+            onDismissRequest = {
+                onDismissRequest()
                 onShowMenus()
-            }
-        }
+            },
+            tabTitles = tabTitles,
+            pagerState = pagerState,
+        ) { page ->
+            val window = (LocalView.current.parent as? DialogWindowProvider)?.window
 
-        Column(
-            modifier = Modifier
-                .padding(vertical = TabbedDialogPaddings.Vertical)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            when (page) {
-                0 -> ReadingModePage(screenModel)
-                1 -> GeneralPage(screenModel)
-                2 -> ColorFilterPage(screenModel)
+            LaunchedEffect(pagerState.currentPage) {
+                if (pagerState.currentPage == 2) {
+                    window?.setDimAmount(0f)
+                    onHideMenus()
+                } else {
+                    window?.setDimAmount(0.5f)
+                    onShowMenus()
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .padding(vertical = TabbedDialogPaddings.Vertical)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                when (page) {
+                    0 -> ReadingModePage(screenModel)
+                    1 -> GeneralPage(screenModel)
+                    2 -> ColorFilterPage(screenModel)
+                }
             }
         }
     }
