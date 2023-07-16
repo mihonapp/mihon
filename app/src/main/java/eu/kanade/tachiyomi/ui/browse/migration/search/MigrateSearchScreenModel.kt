@@ -17,15 +17,13 @@ import uy.kohesive.injekt.api.get
 
 class MigrateSearchScreenModel(
     val mangaId: Long,
-    initialExtensionFilter: String = "",
     preferences: BasePreferences = Injekt.get(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
-) : SearchScreenModel<MigrateSearchState>(MigrateSearchState()) {
+) : SearchScreenModel<MigrateSearchScreenModel.State>(State()) {
 
     init {
-        extensionFilter = initialExtensionFilter
         coroutineScope.launch {
             val manga = getManga.await(mangaId)!!
 
@@ -73,21 +71,19 @@ class MigrateSearchScreenModel(
             it.copy(dialog = dialog)
         }
     }
+
+    @Immutable
+    data class State(
+        val manga: Manga? = null,
+        val searchQuery: String? = null,
+        val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
+        val dialog: MigrateSearchDialog? = null,
+    ) {
+        val progress: Int = items.count { it.value !is SearchItemResult.Loading }
+        val total: Int = items.size
+    }
 }
 
 sealed class MigrateSearchDialog {
     data class Migrate(val manga: Manga) : MigrateSearchDialog()
-}
-
-@Immutable
-data class MigrateSearchState(
-    val manga: Manga? = null,
-    val searchQuery: String? = null,
-    val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
-    val dialog: MigrateSearchDialog? = null,
-) {
-
-    val progress: Int = items.count { it.value !is SearchItemResult.Loading }
-
-    val total: Int = items.size
 }

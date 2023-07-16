@@ -1,26 +1,17 @@
 package eu.kanade.presentation.browse
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import eu.kanade.presentation.browse.components.GlobalSearchCardRow
-import eu.kanade.presentation.browse.components.GlobalSearchEmptyResultItem
-import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
-import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
-import eu.kanade.presentation.browse.components.GlobalSearchResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchState
-import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
-import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreenModel
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun MigrateSearchScreen(
     navigateUp: () -> Unit,
-    state: MigrateSearchState,
+    state: MigrateSearchScreenModel.State,
     getManga: @Composable (Manga) -> State<Manga>,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
@@ -41,8 +32,8 @@ fun MigrateSearchScreen(
             )
         },
     ) { paddingValues ->
-        MigrateSearchContent(
-            sourceId = state.manga?.source ?: -1,
+        GlobalSearchContent(
+            sourceId = state.manga?.source,
             items = state.items,
             contentPadding = paddingValues,
             getManga = getManga,
@@ -50,52 +41,5 @@ fun MigrateSearchScreen(
             onClickItem = onClickItem,
             onLongClickItem = onLongClickItem,
         )
-    }
-}
-
-@Composable
-private fun MigrateSearchContent(
-    sourceId: Long,
-    items: Map<CatalogueSource, SearchItemResult>,
-    contentPadding: PaddingValues,
-    getManga: @Composable (Manga) -> State<Manga>,
-    onClickSource: (CatalogueSource) -> Unit,
-    onClickItem: (Manga) -> Unit,
-    onLongClickItem: (Manga) -> Unit,
-) {
-    LazyColumn(
-        contentPadding = contentPadding,
-    ) {
-        items.forEach { (source, result) ->
-            item(key = source.id) {
-                GlobalSearchResultItem(
-                    title = if (source.id == sourceId) "▶ ${source.name}" else source.name,
-                    subtitle = LocaleHelper.getDisplayName(source.lang),
-                    onClick = { onClickSource(source) },
-                ) {
-                    when (result) {
-                        SearchItemResult.Loading -> {
-                            GlobalSearchLoadingResultItem()
-                        }
-                        is SearchItemResult.Success -> {
-                            if (result.isEmpty) {
-                                GlobalSearchEmptyResultItem()
-                                return@GlobalSearchResultItem
-                            }
-
-                            GlobalSearchCardRow(
-                                titles = result.result,
-                                getManga = getManga,
-                                onClick = onClickItem,
-                                onLongClick = onLongClickItem,
-                            )
-                        }
-                        is SearchItemResult.Error -> {
-                            GlobalSearchErrorResultItem(message = result.throwable.message)
-                        }
-                    }
-                }
-            }
-        }
     }
 }

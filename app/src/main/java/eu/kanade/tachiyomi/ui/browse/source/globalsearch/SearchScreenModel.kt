@@ -36,7 +36,7 @@ abstract class SearchScreenModel<T>(
     private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
 
     protected var query: String? = null
-    protected lateinit var extensionFilter: String
+    protected var extensionFilter: String? = null
 
     private val sources by lazy { getSelectedSources() }
     private val pinnedSources by lazy { sourcePreferences.pinnedSources().get() }
@@ -63,11 +63,10 @@ abstract class SearchScreenModel<T>(
     abstract fun getEnabledSources(): List<CatalogueSource>
 
     private fun getSelectedSources(): List<CatalogueSource> {
-        val filter = extensionFilter
-
         val enabledSources = getEnabledSources()
 
-        if (filter.isEmpty()) {
+        val filter = extensionFilter
+        if (filter.isNullOrEmpty()) {
             return enabledSources
         }
 

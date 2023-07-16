@@ -24,6 +24,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.browse.components.GlobalSearchCardRow
+import eu.kanade.presentation.browse.components.GlobalSearchEmptyResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchErrorResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchLoadingResultItem
 import eu.kanade.presentation.browse.components.GlobalSearchResultItem
@@ -43,7 +44,6 @@ import tachiyomi.presentation.core.components.material.padding
 @Composable
 fun GlobalSearchScreen(
     state: GlobalSearchScreenModel.State,
-    items: Map<CatalogueSource, SearchItemResult>,
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
@@ -129,7 +129,7 @@ fun GlobalSearchScreen(
         },
     ) { paddingValues ->
         GlobalSearchContent(
-            items = items,
+            items = state.filteredItems,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,
@@ -140,7 +140,8 @@ fun GlobalSearchScreen(
 }
 
 @Composable
-private fun GlobalSearchContent(
+internal fun GlobalSearchContent(
+    sourceId: Long? = null,
     items: Map<CatalogueSource, SearchItemResult>,
     contentPadding: PaddingValues,
     getManga: @Composable (Manga) -> State<Manga>,
@@ -154,7 +155,7 @@ private fun GlobalSearchContent(
         items.forEach { (source, result) ->
             item(key = source.id) {
                 GlobalSearchResultItem(
-                    title = source.name,
+                    title = sourceId?.let { "▶ ${source.name}".takeIf { source.id == sourceId } } ?: source.name,
                     subtitle = LocaleHelper.getDisplayName(source.lang),
                     onClick = { onClickSource(source) },
                 ) {
@@ -164,14 +165,7 @@ private fun GlobalSearchContent(
                         }
                         is SearchItemResult.Success -> {
                             if (result.isEmpty) {
-                                Text(
-                                    text = stringResource(R.string.no_results_found),
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = MaterialTheme.padding.medium,
-                                            vertical = MaterialTheme.padding.small,
-                                        ),
-                                )
+                                GlobalSearchEmptyResultItem()
                                 return@GlobalSearchResultItem
                             }
 
