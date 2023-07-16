@@ -3,6 +3,9 @@ package eu.kanade.tachiyomi.util.lang
 import android.content.Context
 import eu.kanade.tachiyomi.R
 import java.text.DateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
@@ -15,6 +18,16 @@ fun Date.toDateTimestampString(dateFormatter: DateFormat): String {
 
 fun Date.toTimestampString(): String {
     return DateFormat.getTimeInstance(DateFormat.SHORT).format(this)
+}
+
+fun Long.convertEpochMillisZone(
+    from: ZoneId,
+    to: ZoneId,
+): Long {
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(this), from)
+        .atZone(to)
+        .toInstant()
+        .toEpochMilli()
 }
 
 /**

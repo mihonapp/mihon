@@ -56,6 +56,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTrackService
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.catch
@@ -82,7 +83,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
@@ -534,13 +534,13 @@ private data class TrackDateSelectorScreen(
                 val millis = (if (start) track.startDate else track.finishDate)
                     .takeIf { it != 0L }
                     ?: Instant.now().toEpochMilli()
-                return convertEpochMillisZone(millis, ZoneOffset.systemDefault(), ZoneOffset.UTC)
+                return millis.convertEpochMillisZone(ZoneOffset.systemDefault(), ZoneOffset.UTC)
             }
 
         // In UTC
         fun setDate(millis: Long) {
             // Convert to local time
-            val localMillis = convertEpochMillisZone(millis, ZoneOffset.UTC, ZoneOffset.systemDefault())
+            val localMillis = millis.convertEpochMillisZone(ZoneOffset.UTC, ZoneOffset.systemDefault())
             coroutineScope.launchNonCancellable {
                 if (start) {
                     service.setRemoteStartDate(track.toDbTrack(), localMillis)
@@ -552,19 +552,6 @@ private data class TrackDateSelectorScreen(
 
         fun confirmRemoveDate(navigator: Navigator) {
             navigator.push(TrackDateRemoverScreen(track, service.id, start))
-        }
-    }
-
-    companion object {
-        private fun convertEpochMillisZone(
-            localMillis: Long,
-            from: ZoneId,
-            to: ZoneId,
-        ): Long {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(localMillis), from)
-                .atZone(to)
-                .toInstant()
-                .toEpochMilli()
         }
     }
 }
