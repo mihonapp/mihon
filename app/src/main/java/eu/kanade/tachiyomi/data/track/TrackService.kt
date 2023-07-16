@@ -145,7 +145,7 @@ abstract class TrackService(val id: Long) {
     }
 
     suspend fun setRemoteLastChapterRead(track: Track, chapterNumber: Int) {
-        if (track.last_chapter_read == 0F && track.last_chapter_read < chapterNumber && track.status != getRereadingStatus()) {
+        if (track.last_chapter_read == 0f && track.last_chapter_read < chapterNumber && track.status != getRereadingStatus()) {
             track.status = getReadingStatus()
         }
         track.last_chapter_read = chapterNumber.toFloat()
