@@ -10,16 +10,19 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.CatalogueSource
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tachiyomi.core.util.lang.awaitSingle
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.Executors
@@ -27,6 +30,7 @@ import java.util.concurrent.Executors
 abstract class SearchScreenModel<T>(
     initialState: T,
     private val sourcePreferences: SourcePreferences = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
@@ -34,12 +38,13 @@ abstract class SearchScreenModel<T>(
 ) : StateScreenModel<T>(initialState) {
 
     private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
+    private var searchJob: Job? = null
 
     protected var query: String? = null
     protected var extensionFilter: String? = null
 
     private val sources by lazy { getSelectedSources() }
-    private val pinnedSources by lazy { sourcePreferences.pinnedSources().get() }
+    protected val pinnedSources = sourcePreferences.pinnedSources().get()
 
     private val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
         compareBy<CatalogueSource>(
@@ -53,14 +58,27 @@ abstract class SearchScreenModel<T>(
     fun getManga(initialManga: Manga): State<Manga> {
         return produceState(initialValue = initialManga) {
             getManga.subscribe(initialManga.url, initialManga.source)
+                .filterNotNull()
                 .collectLatest { manga ->
-                    if (manga == null) return@collectLatest
                     value = manga
                 }
         }
     }
 
-    abstract fun getEnabledSources(): List<CatalogueSource>
+    open fun getEnabledSources(): List<CatalogueSource> {
+        val enabledLanguages = sourcePreferences.enabledLanguages().get()
+        val disabledSources = sourcePreferences.disabledSources().get()
+        val pinnedSources = sourcePreferences.pinnedSources().get()
+
+        return sourceManager.getCatalogueSources()
+            .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
+            .sortedWith(
+                compareBy(
+                    { "${it.id}" !in pinnedSources },
+                    { "${it.name.lowercase()} (${it.lang})" },
+                ),
+            )
+    }
 
     private fun getSelectedSources(): List<CatalogueSource> {
         val enabledSources = getEnabledSources()
@@ -73,8 +91,8 @@ abstract class SearchScreenModel<T>(
         return extensionManager.installedExtensionsFlow.value
             .filter { it.pkgName == filter }
             .flatMap { it.sources }
-            .filter { it in enabledSources }
             .filterIsInstance<CatalogueSource>()
+            .filter { it in enabledSources }
     }
 
     abstract fun updateSearchQuery(query: String?)
@@ -87,15 +105,19 @@ abstract class SearchScreenModel<T>(
         updateItems(function(getItems()))
     }
 
+    abstract fun setSourceFilter(filter: SourceFilter)
+
+    abstract fun toggleFilterResults()
+
     fun search(query: String) {
         if (this.query == query) return
 
         this.query = query
 
+        searchJob?.cancel()
         val initialItems = getSelectedSources().associateWith { SearchItemResult.Loading }
         updateItems(initialItems)
-
-        ioCoroutineScope.launch {
+        searchJob = ioCoroutineScope.launch {
             sources
                 .map { source ->
                     async {

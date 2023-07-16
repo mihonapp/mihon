@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Interceptor

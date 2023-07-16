@@ -2,8 +2,6 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.coroutineScope
-import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchItemResult
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
@@ -12,20 +10,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MigrateSearchScreenModel(
     val mangaId: Long,
-    preferences: BasePreferences = Injekt.get(),
-    private val sourcePreferences: SourcePreferences = Injekt.get(),
-    private val sourceManager: SourceManager = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
+    getManga: GetManga = Injekt.get(),
 ) : SearchScreenModel<MigrateSearchScreenModel.State>(State()) {
-
-    val incognitoMode = preferences.incognitoMode()
-    val lastUsedSourceId = sourcePreferences.lastUsedSource()
 
     init {
         coroutineScope.launch {
@@ -40,16 +31,15 @@ class MigrateSearchScreenModel(
     }
 
     override fun getEnabledSources(): List<CatalogueSource> {
-        val enabledLanguages = sourcePreferences.enabledLanguages().get()
-        val disabledSources = sourcePreferences.disabledSources().get()
-        val pinnedSources = sourcePreferences.pinnedSources().get()
-
-        return sourceManager.getCatalogueSources()
+        return super.getEnabledSources()
             .filter { mutableState.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
-            .filter { it.lang in enabledLanguages }
-            .filterNot { "${it.id}" in disabledSources }
-            .sortedWith(compareBy({ "${it.id}" !in pinnedSources }, { "${it.name.lowercase()} (${it.lang})" }))
-            .sortedByDescending { it.id == state.value.manga!!.source }
+            .sortedWith(
+                compareBy(
+                    { it.id != state.value.manga!!.source },
+                    { "${it.id}" !in pinnedSources },
+                    { "${it.name.lowercase()} (${it.lang})" },
+                ),
+            )
     }
 
     override fun updateSearchQuery(query: String?) {
@@ -68,17 +58,17 @@ class MigrateSearchScreenModel(
         return mutableState.value.items
     }
 
-    fun setSourceFilter(filter: SourceFilter) {
+    override fun setSourceFilter(filter: SourceFilter) {
         mutableState.update { it.copy(sourceFilter = filter) }
     }
 
-    fun toggleFilterResults() {
+    override fun toggleFilterResults() {
         mutableState.update {
             it.copy(onlyShowHasResults = !it.onlyShowHasResults)
         }
     }
 
-    fun setDialog(dialog: MigrateSearchDialog?) {
+    fun setDialog(dialog: Dialog?) {
         mutableState.update {
             it.copy(dialog = dialog)
         }
@@ -87,7 +77,7 @@ class MigrateSearchScreenModel(
     @Immutable
     data class State(
         val manga: Manga? = null,
-        val dialog: MigrateSearchDialog? = null,
+        val dialog: Dialog? = null,
 
         val searchQuery: String? = null,
         val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
@@ -98,8 +88,8 @@ class MigrateSearchScreenModel(
         val total: Int = items.size
         val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
     }
-}
 
-sealed class MigrateSearchDialog {
-    data class Migrate(val manga: Manga) : MigrateSearchDialog()
+    sealed class Dialog {
+        data class Migrate(val manga: Manga) : Dialog()
+    }
 }

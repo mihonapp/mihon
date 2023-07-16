@@ -3,11 +3,9 @@ package eu.kanade.tachiyomi.ui.browse.source
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
-import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.browse.SourceUiModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
@@ -24,12 +22,10 @@ import uy.kohesive.injekt.api.get
 import java.util.TreeMap
 
 class SourcesScreenModel(
-    private val preferences: BasePreferences = Injekt.get(),
-    private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val getEnabledSources: GetEnabledSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
     private val toggleSourcePin: ToggleSourcePin = Injekt.get(),
-) : StateScreenModel<SourcesState>(SourcesState()) {
+) : StateScreenModel<SourcesScreenModel.State>(State()) {
 
     private val _events = Channel<Event>(Int.MAX_VALUE)
     val events = _events.receiveAsFlow()
@@ -81,12 +77,6 @@ class SourcesScreenModel(
         }
     }
 
-    fun onOpenSource(source: Source) {
-        if (!preferences.incognitoMode().get()) {
-            sourcePreferences.lastUsedSource().set(source.id)
-        }
-    }
-
     fun toggleSource(source: Source) {
         toggleSource.await(source)
     }
@@ -109,17 +99,17 @@ class SourcesScreenModel(
 
     data class Dialog(val source: Source)
 
+    @Immutable
+    data class State(
+        val dialog: Dialog? = null,
+        val isLoading: Boolean = true,
+        val items: List<SourceUiModel> = emptyList(),
+    ) {
+        val isEmpty = items.isEmpty()
+    }
+
     companion object {
         const val PINNED_KEY = "pinned"
         const val LAST_USED_KEY = "last_used"
     }
-}
-
-@Immutable
-data class SourcesState(
-    val dialog: SourcesScreenModel.Dialog? = null,
-    val isLoading: Boolean = true,
-    val items: List<SourceUiModel> = emptyList(),
-) {
-    val isEmpty = items.isEmpty()
 }

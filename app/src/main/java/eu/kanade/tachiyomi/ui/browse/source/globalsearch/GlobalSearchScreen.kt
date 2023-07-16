@@ -64,9 +64,6 @@ class GlobalSearchScreen(
                 onChangeSearchFilter = screenModel::setSourceFilter,
                 onToggleResults = screenModel::toggleFilterResults,
                 onClickSource = {
-                    if (!screenModel.incognitoMode.get()) {
-                        screenModel.lastUsedSourceId.set(it.id)
-                    }
                     navigator.push(BrowseSourceScreen(it.id, state.searchQuery))
                 },
                 onClickItem = { navigator.push(MangaScreen(it.id, true)) },

@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.download
 import android.content.Context
 import androidx.core.content.edit
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.domain.chapter.model.Chapter
