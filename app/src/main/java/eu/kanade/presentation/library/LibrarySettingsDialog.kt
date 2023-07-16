@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +31,6 @@ import tachiyomi.presentation.core.components.SettingsFlowRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
-import tachiyomi.presentation.core.components.material.ChoiceChip
 
 @Composable
 fun LibrarySettingsDialog(
@@ -183,10 +183,10 @@ private fun ColumnScope.DisplayPage(
     val displayMode by screenModel.libraryPreferences.libraryDisplayMode().collectAsState()
     SettingsFlowRow(R.string.action_display_mode) {
         displayModes.map { (titleRes, mode) ->
-            ChoiceChip(
-                isSelected = displayMode == mode,
+            FilterChip(
+                selected = displayMode == mode,
                 onClick = { screenModel.setDisplayMode(mode) },
-                content = { Text(stringResource(titleRes)) },
+                label = { Text(stringResource(titleRes)) },
             )
         }
     }

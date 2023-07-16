@@ -2,6 +2,7 @@ package eu.kanade.presentation.reader.settings
 
 import android.os.Build
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +19,6 @@ import tachiyomi.core.preference.getAndSet
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsFlowRow
 import tachiyomi.presentation.core.components.SliderItem
-import tachiyomi.presentation.core.components.material.ChoiceChip
 
 @Composable
 internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel) {
@@ -126,10 +126,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
         val colorFilterMode by screenModel.preferences.colorFilterMode().collectAsState()
         SettingsFlowRow(R.string.pref_color_filter_mode) {
             colorFilterModes.mapIndexed { index, it ->
-                ChoiceChip(
-                    isSelected = colorFilterMode == index,
+                FilterChip(
+                    selected = colorFilterMode == index,
                     onClick = { screenModel.preferences.colorFilterMode().set(index) },
-                    content = { Text(it) },
+                    label = { Text(it) },
                 )
             }
         }

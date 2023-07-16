@@ -331,7 +331,7 @@ fun SettingsFlowRow(
                 end = SettingsItemsPaddings.Horizontal,
                 bottom = SettingsItemsPaddings.Vertical,
             ),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             content = content,
         )
     }

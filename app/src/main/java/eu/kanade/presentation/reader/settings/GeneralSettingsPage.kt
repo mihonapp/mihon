@@ -1,6 +1,7 @@
 package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,7 +12,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsFlowRow
-import tachiyomi.presentation.core.components.material.ChoiceChip
 
 private val themes = listOf(
     R.string.black_background to 1,
@@ -25,10 +25,10 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val readerTheme by screenModel.preferences.readerTheme().collectAsState()
     SettingsFlowRow(R.string.pref_reader_theme) {
         themes.map { (labelRes, value) ->
-            ChoiceChip(
-                isSelected = readerTheme == value,
+            FilterChip(
+                selected = readerTheme == value,
                 onClick = { screenModel.preferences.readerTheme().set(value) },
-                content = { Text(stringResource(labelRes)) },
+                label = { Text(stringResource(labelRes)) },
             )
         }
     }
