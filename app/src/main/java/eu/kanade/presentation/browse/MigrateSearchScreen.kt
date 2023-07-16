@@ -5,16 +5,19 @@ import androidx.compose.runtime.State
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreenModel
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun MigrateSearchScreen(
-    navigateUp: () -> Unit,
     state: MigrateSearchScreenModel.State,
-    getManga: @Composable (Manga) -> State<Manga>,
+    navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
+    onChangeSearchFilter: (SourceFilter) -> Unit,
+    onToggleResults: () -> Unit,
+    getManga: @Composable (Manga) -> State<Manga>,
     onClickSource: (CatalogueSource) -> Unit,
     onClickItem: (Manga) -> Unit,
     onLongClickItem: (Manga) -> Unit,
@@ -28,13 +31,17 @@ fun MigrateSearchScreen(
                 navigateUp = navigateUp,
                 onChangeSearchQuery = onChangeSearchQuery,
                 onSearch = onSearch,
+                sourceFilter = state.sourceFilter,
+                onChangeSearchFilter = onChangeSearchFilter,
+                onlyShowHasResults = state.onlyShowHasResults,
+                onToggleResults = onToggleResults,
                 scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
         GlobalSearchContent(
-            sourceId = state.manga?.source,
-            items = state.items,
+            fromSourceId = state.manga?.source,
+            items = state.filteredItems,
             contentPadding = paddingValues,
             getManga = getManga,
             onClickSource = onClickSource,

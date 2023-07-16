@@ -62,18 +62,6 @@ fun GlobalSearchResultItem(
 }
 
 @Composable
-fun GlobalSearchEmptyResultItem() {
-    Text(
-        text = stringResource(R.string.no_results_found),
-        modifier = Modifier
-            .padding(
-                horizontal = MaterialTheme.padding.medium,
-                vertical = MaterialTheme.padding.small,
-            ),
-    )
-}
-
-@Composable
 fun GlobalSearchLoadingResultItem() {
     Box(
         modifier = Modifier

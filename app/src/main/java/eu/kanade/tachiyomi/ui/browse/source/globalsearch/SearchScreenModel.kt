@@ -145,4 +145,8 @@ sealed class SearchItemResult {
         val isEmpty: Boolean
             get() = result.isEmpty()
     }
+
+    fun isVisible(onlyShowHasResults: Boolean): Boolean {
+        return !onlyShowHasResults || (this is Success && !this.isEmpty)
+    }
 }

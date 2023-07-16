@@ -19,6 +19,7 @@ class GlobalSearchScreenModel(
 
     val incognitoMode = preferences.incognitoMode()
     val lastUsedSourceId = sourcePreferences.lastUsedSource()
+
     init {
         extensionFilter = initialExtensionFilter
         if (initialQuery.isNotBlank() || !initialExtensionFilter.isNullOrBlank()) {
@@ -75,8 +76,4 @@ class GlobalSearchScreenModel(
         val total: Int = items.size
         val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
     }
-}
-
-private fun SearchItemResult.isVisible(onlyShowHasResults: Boolean): Boolean {
-    return !onlyShowHasResults || (this is SearchItemResult.Success && !this.isEmpty)
 }
