@@ -4,14 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import eu.kanade.presentation.browse.components.GlobalSearchToolbar
 import eu.kanade.tachiyomi.source.CatalogueSource
-import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreenModel
+import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Scaffold
 
 @Composable
 fun MigrateSearchScreen(
-    state: MigrateSearchScreenModel.State,
+    state: SearchScreenModel.State,
+    fromSourceId: Long?,
     navigateUp: () -> Unit,
     onChangeSearchQuery: (String?) -> Unit,
     onSearch: (String) -> Unit,
@@ -40,7 +41,7 @@ fun MigrateSearchScreen(
         },
     ) { paddingValues ->
         GlobalSearchContent(
-            fromSourceId = state.manga?.source,
+            fromSourceId = fromSourceId,
             items = state.filteredItems,
             contentPadding = paddingValues,
             getManga = getManga,

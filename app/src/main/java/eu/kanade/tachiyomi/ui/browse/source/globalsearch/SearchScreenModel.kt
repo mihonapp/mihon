@@ -1,10 +1,9 @@
 package eu.kanade.tachiyomi.ui.browse.source.globalsearch
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.produceState
 import cafe.adriel.voyager.core.model.StateScreenModel
-import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDomainManga
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.util.ioCoroutineScope
@@ -16,6 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tachiyomi.core.util.lang.awaitSingle
@@ -27,15 +27,14 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.Executors
 
-abstract class SearchScreenModel<T>(
-    initialState: T,
+abstract class SearchScreenModel(
+    initialState: State = State(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
-    private val updateManga: UpdateManga = Injekt.get(),
-) : StateScreenModel<T>(initialState) {
+) : StateScreenModel<SearchScreenModel.State>(initialState) {
 
     private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
     private var searchJob: Job? = null
@@ -55,7 +54,7 @@ abstract class SearchScreenModel<T>(
     }
 
     @Composable
-    fun getManga(initialManga: Manga): State<Manga> {
+    fun getManga(initialManga: Manga): androidx.compose.runtime.State<Manga> {
         return produceState(initialValue = initialManga) {
             getManga.subscribe(initialManga.url, initialManga.source)
                 .filterNotNull()
@@ -95,19 +94,25 @@ abstract class SearchScreenModel<T>(
             .filter { it in enabledSources }
     }
 
-    abstract fun updateSearchQuery(query: String?)
-
-    abstract fun updateItems(items: Map<CatalogueSource, SearchItemResult>)
-
-    abstract fun getItems(): Map<CatalogueSource, SearchItemResult>
-
-    private fun getAndUpdateItems(function: (Map<CatalogueSource, SearchItemResult>) -> Map<CatalogueSource, SearchItemResult>) {
-        updateItems(function(getItems()))
+    fun updateSearchQuery(query: String?) {
+        mutableState.update {
+            it.copy(searchQuery = query)
+        }
     }
 
-    abstract fun setSourceFilter(filter: SourceFilter)
+    fun getItems(): Map<CatalogueSource, SearchItemResult> {
+        return mutableState.value.items
+    }
 
-    abstract fun toggleFilterResults()
+    fun setSourceFilter(filter: SourceFilter) {
+        mutableState.update { it.copy(sourceFilter = filter) }
+    }
+
+    fun toggleFilterResults() {
+        mutableState.update {
+            it.copy(onlyShowHasResults = !it.onlyShowHasResults)
+        }
+    }
 
     fun search(query: String) {
         if (this.query == query) return
@@ -146,6 +151,29 @@ abstract class SearchScreenModel<T>(
                 }
                 .awaitAll()
         }
+    }
+
+    private fun updateItems(items: Map<CatalogueSource, SearchItemResult>) {
+        mutableState.update {
+            it.copy(items = items)
+        }
+    }
+
+    private fun getAndUpdateItems(function: (Map<CatalogueSource, SearchItemResult>) -> Map<CatalogueSource, SearchItemResult>) {
+        updateItems(function(getItems()))
+    }
+
+    @Immutable
+    data class State(
+        val fromSourceId: Long? = null,
+        val searchQuery: String? = null,
+        val sourceFilter: SourceFilter = SourceFilter.PinnedOnly,
+        val onlyShowHasResults: Boolean = false,
+        val items: Map<CatalogueSource, SearchItemResult> = emptyMap(),
+    ) {
+        val progress: Int = items.count { it.value !is SearchItemResult.Loading }
+        val total: Int = items.size
+        val filteredItems = items.filter { (_, result) -> result.isVisible(onlyShowHasResults) }
     }
 }
 
