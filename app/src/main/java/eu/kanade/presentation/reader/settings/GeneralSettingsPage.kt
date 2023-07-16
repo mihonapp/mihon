@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.presentation.core.components.CheckboxItem
-import tachiyomi.presentation.core.components.SettingsFlowRow
+import tachiyomi.presentation.core.components.SettingsChipRow
 
 private val themes = listOf(
     R.string.black_background to 1,
@@ -23,7 +23,7 @@ private val themes = listOf(
 @Composable
 internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
     val readerTheme by screenModel.preferences.readerTheme().collectAsState()
-    SettingsFlowRow(R.string.pref_reader_theme) {
+    SettingsChipRow(R.string.pref_reader_theme) {
         themes.map { (labelRes, value) ->
             FilterChip(
                 selected = readerTheme == value,

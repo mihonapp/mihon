@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.core.preference.getAndSet
 import tachiyomi.presentation.core.components.CheckboxItem
-import tachiyomi.presentation.core.components.SettingsFlowRow
+import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 
 @Composable
@@ -124,7 +124,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
         )
 
         val colorFilterMode by screenModel.preferences.colorFilterMode().collectAsState()
-        SettingsFlowRow(R.string.pref_color_filter_mode) {
+        SettingsChipRow(R.string.pref_color_filter_mode) {
             colorFilterModes.mapIndexed { index, it ->
                 FilterChip(
                     selected = colorFilterMode == index,
