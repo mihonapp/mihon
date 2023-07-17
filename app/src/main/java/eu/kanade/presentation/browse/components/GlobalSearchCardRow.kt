@@ -63,6 +63,7 @@ private fun MangaItem(
     Box(modifier = Modifier.width(96.dp)) {
         MangaComfortableGridItem(
             title = title,
+            titleMaxLines = 3,
             coverData = cover,
             coverBadgeStart = {
                 InLibraryBadge(enabled = isFavorite)
