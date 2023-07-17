@@ -39,10 +39,11 @@ abstract class SearchScreenModel(
     private val coroutineDispatcher = Executors.newFixedThreadPool(5).asCoroutineDispatcher()
     private var searchJob: Job? = null
 
-    protected var query: String? = null
-    protected var extensionFilter: String? = null
-
     private val sources by lazy { getSelectedSources() }
+    private var lastQuery: String? = null
+    private var lastSourceFilter: SourceFilter? = null
+
+    protected var extensionFilter: String? = null
     protected val pinnedSources = sourcePreferences.pinnedSources().get()
 
     private val sortComparator = { map: Map<CatalogueSource, SearchItemResult> ->
@@ -95,72 +96,67 @@ abstract class SearchScreenModel(
     }
 
     fun updateSearchQuery(query: String?) {
-        mutableState.update {
-            it.copy(searchQuery = query)
-        }
-    }
-
-    fun getItems(): Map<CatalogueSource, SearchItemResult> {
-        return mutableState.value.items
+        mutableState.update { it.copy(searchQuery = query) }
     }
 
     fun setSourceFilter(filter: SourceFilter) {
         mutableState.update { it.copy(sourceFilter = filter) }
+        search()
     }
 
     fun toggleFilterResults() {
-        mutableState.update {
-            it.copy(onlyShowHasResults = !it.onlyShowHasResults)
-        }
+        mutableState.update { it.copy(onlyShowHasResults = !it.onlyShowHasResults) }
     }
 
-    fun search(query: String) {
-        if (this.query == query) return
+    fun search() {
+        val query = state.value.searchQuery
+        val sourceFilter = state.value.sourceFilter
 
-        this.query = query
+        if (query.isNullOrBlank()) return
+        if (this.lastQuery == query && this.lastSourceFilter == sourceFilter) return
+
+        this.lastQuery = query
+        this.lastSourceFilter = sourceFilter
 
         searchJob?.cancel()
         val initialItems = getSelectedSources().associateWith { SearchItemResult.Loading }
         updateItems(initialItems)
         searchJob = ioCoroutineScope.launch {
-            sources
-                .map { source ->
-                    async {
-                        try {
-                            val page = withContext(coroutineDispatcher) {
-                                source.fetchSearchManga(1, query, source.getFilterList()).awaitSingle()
-                            }
+            sources.map { source ->
+                async {
+                    try {
+                        val page = withContext(coroutineDispatcher) {
+                            source.fetchSearchManga(1, query, source.getFilterList()).awaitSingle()
+                        }
 
-                            val titles = page.mangas.map {
-                                networkToLocalManga.await(it.toDomainManga(source.id))
-                            }
+                        val titles = page.mangas.map {
+                            networkToLocalManga.await(it.toDomainManga(source.id))
+                        }
 
-                            getAndUpdateItems { items ->
-                                val mutableMap = items.toMutableMap()
-                                mutableMap[source] = SearchItemResult.Success(titles)
-                                mutableMap.toSortedMap(sortComparator(mutableMap))
-                            }
-                        } catch (e: Exception) {
-                            getAndUpdateItems { items ->
-                                val mutableMap = items.toMutableMap()
-                                mutableMap[source] = SearchItemResult.Error(e)
-                                mutableMap.toSortedMap(sortComparator(mutableMap))
-                            }
+                        getAndUpdateItems { items ->
+                            val mutableMap = items.toMutableMap()
+                            mutableMap[source] = SearchItemResult.Success(titles)
+                            mutableMap.toSortedMap(sortComparator(mutableMap))
+                        }
+                    } catch (e: Exception) {
+                        getAndUpdateItems { items ->
+                            val mutableMap = items.toMutableMap()
+                            mutableMap[source] = SearchItemResult.Error(e)
+                            mutableMap.toSortedMap(sortComparator(mutableMap))
                         }
                     }
                 }
+            }
                 .awaitAll()
         }
     }
 
     private fun updateItems(items: Map<CatalogueSource, SearchItemResult>) {
-        mutableState.update {
-            it.copy(items = items)
-        }
+        mutableState.update { it.copy(items = items) }
     }
 
     private fun getAndUpdateItems(function: (Map<CatalogueSource, SearchItemResult>) -> Map<CatalogueSource, SearchItemResult>) {
-        updateItems(function(getItems()))
+        updateItems(function(state.value.items))
     }
 
     @Immutable

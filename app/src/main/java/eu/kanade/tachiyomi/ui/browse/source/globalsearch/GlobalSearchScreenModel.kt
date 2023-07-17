@@ -10,7 +10,7 @@ class GlobalSearchScreenModel(
     init {
         extensionFilter = initialExtensionFilter
         if (initialQuery.isNotBlank() || !initialExtensionFilter.isNullOrBlank()) {
-            search(initialQuery)
+            search()
         }
     }
 
