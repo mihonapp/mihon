@@ -16,6 +16,6 @@ class GlobalSearchScreenModel(
 
     override fun getEnabledSources(): List<CatalogueSource> {
         return super.getEnabledSources()
-            .filter { mutableState.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
+            .filter { state.value.sourceFilter != SourceFilter.PinnedOnly || "${it.id}" in pinnedSources }
     }
 }
