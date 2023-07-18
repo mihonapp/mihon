@@ -854,10 +854,10 @@ class MangaInfoScreenModel(
                         // Try to select the items in-between when possible
                         val range: IntRange
                         if (selectedIndex < selectedPositions[0]) {
-                            range = selectedIndex + 1 until selectedPositions[0]
+                            range = selectedIndex + 1..<selectedPositions[0]
                             selectedPositions[0] = selectedIndex
                         } else if (selectedIndex > selectedPositions[1]) {
-                            range = (selectedPositions[1] + 1) until selectedIndex
+                            range = (selectedPositions[1] + 1)..<selectedIndex
                             selectedPositions[1] = selectedIndex
                         } else {
                             // Just select itself
@@ -946,9 +946,9 @@ class MangaInfoScreenModel(
         data class ChangeCategory(val manga: Manga, val initialSelection: List<CheckboxState<Category>>) : Dialog()
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog()
         data class DuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog()
-        object SettingsSheet : Dialog()
-        object TrackSheet : Dialog()
-        object FullCover : Dialog()
+        data object SettingsSheet : Dialog()
+        data object TrackSheet : Dialog()
+        data object FullCover : Dialog()
     }
 
     fun dismissDialog() {

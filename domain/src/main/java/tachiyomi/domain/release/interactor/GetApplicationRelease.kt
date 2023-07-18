@@ -72,8 +72,8 @@ class GetApplicationRelease(
     )
 
     sealed class Result {
-        class NewUpdate(val release: Release) : Result()
-        object NoNewUpdate : Result()
-        object ThirdPartyInstallation : Result()
+        data class NewUpdate(val release: Release) : Result()
+        data object NoNewUpdate : Result()
+        data object ThirdPartyInstallation : Result()
     }
 }

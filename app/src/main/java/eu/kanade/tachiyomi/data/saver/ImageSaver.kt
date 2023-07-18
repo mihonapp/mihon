@@ -161,7 +161,7 @@ sealed class Location {
         }
     }
 
-    object Cache : Location()
+    data object Cache : Location()
 
     fun directory(context: Context): File {
         return when (this) {

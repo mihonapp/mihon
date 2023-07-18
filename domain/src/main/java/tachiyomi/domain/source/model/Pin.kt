@@ -1,9 +1,9 @@
 package tachiyomi.domain.source.model
 
 sealed class Pin(val code: Int) {
-    object Unpinned : Pin(0b00)
-    object Pinned : Pin(0b01)
-    object Actual : Pin(0b10)
+    data object Unpinned : Pin(0b00)
+    data object Pinned : Pin(0b01)
+    data object Actual : Pin(0b10)
 }
 
 inline fun Pins(builder: Pins.PinsBuilder.() -> Unit = {}): Pins {

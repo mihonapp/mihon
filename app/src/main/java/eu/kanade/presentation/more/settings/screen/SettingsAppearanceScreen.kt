@@ -136,7 +136,7 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.tabletUiMode(),
                     title = stringResource(R.string.pref_tablet_ui_mode),
-                    entries = TabletUiMode.values().associateWith { stringResource(it.titleResId) },
+                    entries = TabletUiMode.entries.associateWith { stringResource(it.titleResId) },
                     onValueChanged = {
                         context.toast(R.string.requires_app_restart)
                         true
@@ -180,7 +180,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         var eventType = parser.eventType
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG && parser.name == "locale") {
-                for (i in 0 until parser.attributeCount) {
+                for (i in 0..<parser.attributeCount) {
                     if (parser.getAttributeName(i) == "name") {
                         val langTag = parser.getAttributeValue(i)
                         val displayName = LocaleHelper.getDisplayName(langTag)

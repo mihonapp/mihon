@@ -330,7 +330,7 @@ object ImageUtil {
             }
 
             return buildList {
-                val range = 0 until partCount
+                val range = 0..<partCount
                 for (index in range) {
                     // Only continue if the list is empty or there is image remaining
                     if (isNotEmpty() && imageHeight <= last().bottomOffset) break
@@ -440,7 +440,7 @@ object ImageUtil {
             var blackStreak = false
             var whiteStreak = false
             val notOffset = x == left || x == right
-            inner@ for ((index, y) in (0 until image.height step image.height / 25).withIndex()) {
+            inner@ for ((index, y) in (0..<image.height step image.height / 25).withIndex()) {
                 val pixel = image[x, y]
                 val pixelOff = image[x + (if (x < image.width / 2) -offsetX else offsetX), y]
                 if (pixel.isWhite()) {

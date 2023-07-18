@@ -270,7 +270,7 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
     }
 
     sealed class State {
-        object Loading : State()
+        data object Loading : State()
         data class Ready(
             val items: List<SourceWithCount>,
             val selection: List<Long> = emptyList(),

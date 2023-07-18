@@ -21,10 +21,8 @@ val listOfStringsAdapter = object : ColumnAdapter<List<String>, String> {
 }
 
 val updateStrategyAdapter = object : ColumnAdapter<UpdateStrategy, Long> {
-    private val enumValues by lazy { UpdateStrategy.values() }
-
     override fun decode(databaseValue: Long): UpdateStrategy =
-        enumValues.getOrElse(databaseValue.toInt()) { UpdateStrategy.ALWAYS_UPDATE }
+        UpdateStrategy.entries.getOrElse(databaseValue.toInt()) { UpdateStrategy.ALWAYS_UPDATE }
 
     override fun encode(value: UpdateStrategy): Long = value.ordinal.toLong()
 }

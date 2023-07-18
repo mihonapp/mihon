@@ -60,7 +60,7 @@ class SourcesFilterScreenModel(
 
 sealed class SourcesFilterState {
 
-    object Loading : SourcesFilterState()
+    data object Loading : SourcesFilterState()
 
     data class Error(
         val throwable: Throwable,

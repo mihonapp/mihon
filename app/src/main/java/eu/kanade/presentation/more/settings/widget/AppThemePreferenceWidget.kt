@@ -75,7 +75,7 @@ private fun AppThemesList(
     onItemClick: (AppTheme) -> Unit,
 ) {
     val appThemes = remember {
-        AppTheme.values()
+        AppTheme.entries
             .filterNot { it.titleResId == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
     }
     LazyRow(

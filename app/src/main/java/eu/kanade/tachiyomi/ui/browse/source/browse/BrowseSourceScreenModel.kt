@@ -350,8 +350,8 @@ class BrowseSourceScreenModel(
     }
 
     sealed class Listing(open val query: String?, open val filters: FilterList) {
-        object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
-        object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
+        data object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
+        data object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
         data class Search(override val query: String?, override val filters: FilterList) : Listing(query = query, filters = filters)
 
         companion object {
@@ -366,7 +366,7 @@ class BrowseSourceScreenModel(
     }
 
     sealed class Dialog {
-        object Filter : Dialog()
+        data object Filter : Dialog()
         data class RemoveManga(val manga: Manga) : Dialog()
         data class AddDuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog()
         data class ChangeMangaCategory(

@@ -66,7 +66,7 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
 
     private fun addToken(token: String, oidFormBody: FormBody): FormBody {
         val newFormBody = FormBody.Builder()
-        for (i in 0 until oidFormBody.size) {
+        for (i in 0..<oidFormBody.size) {
             newFormBody.add(oidFormBody.name(i), oidFormBody.value(i))
         }
         newFormBody.add("access_token", token)

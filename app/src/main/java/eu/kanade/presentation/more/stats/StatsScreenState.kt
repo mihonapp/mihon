@@ -5,7 +5,7 @@ import eu.kanade.presentation.more.stats.data.StatsData
 
 sealed class StatsScreenState {
     @Immutable
-    object Loading : StatsScreenState()
+    data object Loading : StatsScreenState()
 
     @Immutable
     data class Success(

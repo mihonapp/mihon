@@ -55,13 +55,13 @@ class ExtensionFilterScreenModel(
 }
 
 sealed class ExtensionFilterEvent {
-    object FailedFetchingLanguages : ExtensionFilterEvent()
+    data object FailedFetchingLanguages : ExtensionFilterEvent()
 }
 
 sealed class ExtensionFilterState {
 
     @Immutable
-    object Loading : ExtensionFilterState()
+    data object Loading : ExtensionFilterState()
 
     @Immutable
     data class Success(

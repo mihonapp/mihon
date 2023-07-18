@@ -58,8 +58,8 @@ class ReorderCategory(
     }
 
     sealed class Result {
-        object Success : Result()
-        object Unchanged : Result()
+        data object Success : Result()
+        data object Unchanged : Result()
         data class InternalError(val error: Throwable) : Result()
     }
 

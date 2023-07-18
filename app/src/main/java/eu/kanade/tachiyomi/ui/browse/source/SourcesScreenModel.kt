@@ -94,7 +94,7 @@ class SourcesScreenModel(
     }
 
     sealed class Event {
-        object FailedFetchingSources : Event()
+        data object FailedFetchingSources : Event()
     }
 
     data class Dialog(val source: Source)

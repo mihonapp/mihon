@@ -70,7 +70,7 @@ object SettingsSecurityScreen : SearchableSettings {
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.secureScreen(),
                 title = stringResource(R.string.secure_screen),
-                entries = SecurityPreferences.SecureScreenMode.values()
+                entries = SecurityPreferences.SecureScreenMode.entries
                     .associateWith { stringResource(it.titleResId) },
             ),
             Preference.PreferenceItem.InfoPreference(stringResource(R.string.secure_screen_summary)),

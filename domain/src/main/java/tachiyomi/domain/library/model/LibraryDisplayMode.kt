@@ -2,10 +2,10 @@ package tachiyomi.domain.library.model
 
 sealed class LibraryDisplayMode {
 
-    object CompactGrid : LibraryDisplayMode()
-    object ComfortableGrid : LibraryDisplayMode()
-    object List : LibraryDisplayMode()
-    object CoverOnlyGrid : LibraryDisplayMode()
+    data object CompactGrid : LibraryDisplayMode()
+    data object ComfortableGrid : LibraryDisplayMode()
+    data object List : LibraryDisplayMode()
+    data object CoverOnlyGrid : LibraryDisplayMode()
 
     object Serializer {
         fun deserialize(serialized: String): LibraryDisplayMode {

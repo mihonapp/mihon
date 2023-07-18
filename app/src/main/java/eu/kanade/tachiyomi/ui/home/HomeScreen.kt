@@ -293,8 +293,8 @@ object HomeScreen : Screen() {
 
     sealed class Tab {
         data class Library(val mangaIdToOpen: Long? = null) : Tab()
-        object Updates : Tab()
-        object History : Tab()
+        data object Updates : Tab()
+        data object History : Tab()
         data class Browse(val toExtensions: Boolean = false) : Tab()
         data class More(val toDownloads: Boolean) : Tab()
     }

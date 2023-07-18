@@ -22,14 +22,14 @@ data class LibrarySort(
 
         override val mask: Long = 0b00111100L
 
-        object Alphabetical : Type(0b00000000)
-        object LastRead : Type(0b00000100)
-        object LastUpdate : Type(0b00001000)
-        object UnreadCount : Type(0b00001100)
-        object TotalChapters : Type(0b00010000)
-        object LatestChapter : Type(0b00010100)
-        object ChapterFetchDate : Type(0b00011000)
-        object DateAdded : Type(0b00011100)
+        data object Alphabetical : Type(0b00000000)
+        data object LastRead : Type(0b00000100)
+        data object LastUpdate : Type(0b00001000)
+        data object UnreadCount : Type(0b00001100)
+        data object TotalChapters : Type(0b00010000)
+        data object LatestChapter : Type(0b00010100)
+        data object ChapterFetchDate : Type(0b00011000)
+        data object DateAdded : Type(0b00011100)
 
         companion object {
             fun valueOf(flag: Long): Type {
@@ -44,8 +44,8 @@ data class LibrarySort(
 
         override val mask: Long = 0b01000000L
 
-        object Ascending : Direction(0b01000000)
-        object Descending : Direction(0b00000000)
+        data object Ascending : Direction(0b01000000)
+        data object Descending : Direction(0b00000000)
 
         companion object {
             fun valueOf(flag: Long): Direction {

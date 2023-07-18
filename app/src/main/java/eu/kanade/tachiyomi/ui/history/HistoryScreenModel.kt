@@ -114,14 +114,14 @@ class HistoryScreenModel(
     }
 
     sealed class Dialog {
-        object DeleteAll : Dialog()
+        data object DeleteAll : Dialog()
         data class Delete(val history: HistoryWithRelations) : Dialog()
     }
 
     sealed class Event {
         data class OpenChapter(val chapter: Chapter?) : Event()
-        object InternalError : Event()
-        object HistoryCleared : Event()
+        data object InternalError : Event()
+        data object HistoryCleared : Event()
     }
 }
 

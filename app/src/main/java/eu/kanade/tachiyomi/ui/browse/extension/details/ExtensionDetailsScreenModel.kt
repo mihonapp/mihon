@@ -163,7 +163,7 @@ class ExtensionDetailsScreenModel(
 }
 
 sealed class ExtensionDetailsEvent {
-    object Uninstalled : ExtensionDetailsEvent()
+    data object Uninstalled : ExtensionDetailsEvent()
 }
 
 @Immutable

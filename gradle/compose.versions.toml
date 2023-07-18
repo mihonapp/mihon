@@ -1,5 +1,5 @@
 [versions]
-compiler = "1.4.8"
+compiler = "1.5.0"
 compose-bom = "2023.07.00-alpha01"
 accompanist = "0.31.5-beta"
 

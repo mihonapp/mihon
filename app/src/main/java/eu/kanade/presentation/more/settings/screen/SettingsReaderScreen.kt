@@ -33,7 +33,7 @@ object SettingsReaderScreen : SearchableSettings {
             Preference.PreferenceItem.ListPreference(
                 pref = readerPref.defaultReadingMode(),
                 title = stringResource(R.string.pref_viewer_type),
-                entries = ReadingModeType.values().drop(1)
+                entries = ReadingModeType.entries.drop(1)
                     .associate { it.flagValue to stringResource(it.stringRes) },
             ),
             Preference.PreferenceItem.ListPreference(
@@ -84,7 +84,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.defaultOrientationType(),
                     title = stringResource(R.string.pref_rotation_type),
-                    entries = OrientationType.values().drop(1)
+                    entries = OrientationType.entries.drop(1)
                         .associate { it.flagValue to stringResource(it.stringRes) },
                 ),
                 Preference.PreferenceItem.ListPreference(

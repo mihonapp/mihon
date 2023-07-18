@@ -40,9 +40,9 @@ data class ReaderChapter(val chapter: Chapter) {
     }
 
     sealed class State {
-        object Wait : State()
-        object Loading : State()
-        class Error(val error: Throwable) : State()
-        class Loaded(val pages: List<ReaderPage>) : State()
+        data object Wait : State()
+        data object Loading : State()
+        data class Error(val error: Throwable) : State()
+        data class Loaded(val pages: List<ReaderPage>) : State()
     }
 }

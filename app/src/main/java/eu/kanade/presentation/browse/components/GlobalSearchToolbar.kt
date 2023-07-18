@@ -56,7 +56,7 @@ fun GlobalSearchToolbar(
                 navigateUp = navigateUp,
                 scrollBehavior = scrollBehavior,
             )
-            if (progress in 1 until total) {
+            if (progress in 1..<total) {
                 LinearProgressIndicator(
                     progress = progress / total.toFloat(),
                     modifier = Modifier

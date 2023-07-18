@@ -10,11 +10,11 @@ import eu.kanade.tachiyomi.util.lang.invert
 abstract class ViewerNavigation {
 
     sealed class NavigationRegion(@StringRes val nameRes: Int, val colorRes: Int) {
-        object MENU : NavigationRegion(R.string.action_menu, R.color.navigation_menu)
-        object PREV : NavigationRegion(R.string.nav_zone_prev, R.color.navigation_prev)
-        object NEXT : NavigationRegion(R.string.nav_zone_next, R.color.navigation_next)
-        object LEFT : NavigationRegion(R.string.nav_zone_left, R.color.navigation_left)
-        object RIGHT : NavigationRegion(R.string.nav_zone_right, R.color.navigation_right)
+        data object MENU : NavigationRegion(R.string.action_menu, R.color.navigation_menu)
+        data object PREV : NavigationRegion(R.string.nav_zone_prev, R.color.navigation_prev)
+        data object NEXT : NavigationRegion(R.string.nav_zone_next, R.color.navigation_next)
+        data object LEFT : NavigationRegion(R.string.nav_zone_left, R.color.navigation_left)
+        data object RIGHT : NavigationRegion(R.string.nav_zone_right, R.color.navigation_right)
     }
 
     data class Region(

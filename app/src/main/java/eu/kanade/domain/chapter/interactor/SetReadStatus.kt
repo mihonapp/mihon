@@ -73,8 +73,8 @@ class SetReadStatus(
         await(manga.id, read)
 
     sealed class Result {
-        object Success : Result()
-        object NoChapters : Result()
+        data object Success : Result()
+        data object NoChapters : Result()
         data class InternalError(val error: Throwable) : Result()
     }
 }

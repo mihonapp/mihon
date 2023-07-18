@@ -77,7 +77,7 @@ class MigrateSourceScreenModel(
     }
 
     sealed class Event {
-        object FailedFetchingSourcesWithCount : Event()
+        data object FailedFetchingSourcesWithCount : Event()
     }
 }
 

@@ -24,9 +24,9 @@ import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import java.text.NumberFormat
 
-private val readingModeOptions = ReadingModeType.values().map { it.stringRes to it }
-private val orientationTypeOptions = OrientationType.values().map { it.stringRes to it }
-private val tappingInvertModeOptions = ReaderPreferences.TappingInvertMode.values().map { it.titleResId to it }
+private val readingModeOptions = ReadingModeType.entries.map { it.stringRes to it }
+private val orientationTypeOptions = OrientationType.entries.map { it.stringRes to it }
+private val tappingInvertModeOptions = ReaderPreferences.TappingInvertMode.entries.map { it.titleResId to it }
 
 @Composable
 internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel) {

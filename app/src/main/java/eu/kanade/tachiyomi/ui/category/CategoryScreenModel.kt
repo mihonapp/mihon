@@ -108,20 +108,20 @@ class CategoryScreenModel(
 }
 
 sealed class CategoryDialog {
-    object Create : CategoryDialog()
+    data object Create : CategoryDialog()
     data class Rename(val category: Category) : CategoryDialog()
     data class Delete(val category: Category) : CategoryDialog()
 }
 
 sealed class CategoryEvent {
     sealed class LocalizedMessage(@StringRes val stringRes: Int) : CategoryEvent()
-    object InternalError : LocalizedMessage(R.string.internal_error)
+    data object InternalError : LocalizedMessage(R.string.internal_error)
 }
 
 sealed class CategoryScreenState {
 
     @Immutable
-    object Loading : CategoryScreenState()
+    data object Loading : CategoryScreenState()
 
     @Immutable
     data class Success(

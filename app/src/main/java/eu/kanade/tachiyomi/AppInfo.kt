@@ -29,5 +29,5 @@ object AppInfo {
      *
      * @since extension-lib 1.5
      */
-    fun getSupportedImageMimeTypes(): List<String> = ImageUtil.ImageType.values().map { it.mime }
+    fun getSupportedImageMimeTypes(): List<String> = ImageUtil.ImageType.entries.map { it.mime }
 }
