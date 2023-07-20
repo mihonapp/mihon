@@ -11,7 +11,7 @@ CREATE TABLE chapters(
     source_order INTEGER NOT NULL,
     date_fetch INTEGER AS Long NOT NULL,
     date_upload INTEGER AS Long NOT NULL,
-    last_modified_at INTEGER AS Long NOT NULL,
+    last_modified_at INTEGER AS Long NOT NULL DEFAULT 0,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );

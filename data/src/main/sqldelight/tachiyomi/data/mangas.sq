@@ -23,14 +23,14 @@ CREATE TABLE mangas(
     date_added INTEGER AS Long NOT NULL,
     update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
     calculate_interval INTEGER DEFAULT 0 NOT NULL,
-    last_modified_at INTEGER AS Long NOT NULL,
+    last_modified_at INTEGER AS Long NOT NULL DEFAULT 0,
     favorite_modified_at INTEGER AS Long
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
 CREATE INDEX mangas_url_index ON mangas(url);
 
-CREATE TRIGGER update_favorite_modified_at_mangas
+CREATE TRIGGER update_last_favorited_at_mangas
 AFTER UPDATE OF favorite ON mangas
 BEGIN
   UPDATE mangas
