@@ -16,6 +16,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tachiyomi.core.util.lang.awaitSingle
@@ -111,17 +112,32 @@ abstract class SearchScreenModel(
         val sourceFilter = state.value.sourceFilter
 
         if (query.isNullOrBlank()) return
-        if (this.lastQuery == query && this.lastSourceFilter == sourceFilter) return
+
+        val sameQuery = this.lastQuery == query
+        if (sameQuery && this.lastSourceFilter == sourceFilter) return
 
         this.lastQuery = query
         this.lastSourceFilter = sourceFilter
 
         searchJob?.cancel()
-        val initialItems = getSelectedSources().associateWith { SearchItemResult.Loading }
-        updateItems(initialItems)
+
+        val sources = getSelectedSources()
+
+        // Reuse previous results if possible
+        if (sameQuery) {
+            val existingResults = state.value.items
+            updateItems(sources.associateWith { existingResults[it] ?: SearchItemResult.Loading })
+        } else {
+            updateItems(sources.associateWith { SearchItemResult.Loading })
+        }
+
         searchJob = ioCoroutineScope.launch {
-            getSelectedSources().map { source ->
+            sources.map { source ->
                 async {
+                    if (state.value.items[source] !is SearchItemResult.Loading) {
+                        return@async
+                    }
+
                     try {
                         val page = withContext(coroutineDispatcher) {
                             source.fetchSearchManga(1, query, source.getFilterList()).awaitSingle()
@@ -131,16 +147,12 @@ abstract class SearchScreenModel(
                             networkToLocalManga.await(it.toDomainManga(source.id))
                         }
 
-                        getAndUpdateItems { items ->
-                            val mutableMap = items.toMutableMap()
-                            mutableMap[source] = SearchItemResult.Success(titles)
-                            mutableMap.toSortedMap(sortComparator(mutableMap))
+                        if (isActive) {
+                            updateItem(source, SearchItemResult.Success(titles))
                         }
                     } catch (e: Exception) {
-                        getAndUpdateItems { items ->
-                            val mutableMap = items.toMutableMap()
-                            mutableMap[source] = SearchItemResult.Error(e)
-                            mutableMap.toSortedMap(sortComparator(mutableMap))
+                        if (isActive) {
+                            updateItem(source, SearchItemResult.Error(e))
                         }
                     }
                 }
@@ -150,11 +162,13 @@ abstract class SearchScreenModel(
     }
 
     private fun updateItems(items: Map<CatalogueSource, SearchItemResult>) {
-        mutableState.update { it.copy(items = items) }
+        mutableState.update { it.copy(items = items.toSortedMap(sortComparator(items))) }
     }
 
-    private fun getAndUpdateItems(function: (Map<CatalogueSource, SearchItemResult>) -> Map<CatalogueSource, SearchItemResult>) {
-        updateItems(function(state.value.items))
+    private fun updateItem(source: CatalogueSource, result: SearchItemResult) {
+        val mutableItems = state.value.items.toMutableMap()
+        mutableItems[source] = result
+        updateItems(mutableItems)
     }
 
     @Immutable
