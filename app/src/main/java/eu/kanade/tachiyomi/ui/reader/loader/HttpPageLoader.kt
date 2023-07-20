@@ -50,9 +50,7 @@ internal class HttpPageLoader(
                 }
             }
                 .filter { it.status == Page.State.QUEUE }
-                .collect {
-                    _loadPage(it)
-                }
+                .collect(::internalLoadPage)
         }
     }
 
@@ -80,32 +78,30 @@ internal class HttpPageLoader(
     /**
      * Loads a page through the queue. Handles re-enqueueing pages if they were evicted from the cache.
      */
-    override suspend fun loadPage(page: ReaderPage) {
-        withIOContext {
-            val imageUrl = page.imageUrl
+    override suspend fun loadPage(page: ReaderPage) = withIOContext {
+        val imageUrl = page.imageUrl
 
-            // Check if the image has been deleted
-            if (page.status == Page.State.READY && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
-                page.status = Page.State.QUEUE
-            }
+        // Check if the image has been deleted
+        if (page.status == Page.State.READY && imageUrl != null && !chapterCache.isImageInCache(imageUrl)) {
+            page.status = Page.State.QUEUE
+        }
 
-            // Automatically retry failed pages when subscribed to this page
-            if (page.status == Page.State.ERROR) {
-                page.status = Page.State.QUEUE
-            }
+        // Automatically retry failed pages when subscribed to this page
+        if (page.status == Page.State.ERROR) {
+            page.status = Page.State.QUEUE
+        }
 
-            val queuedPages = mutableListOf<PriorityPage>()
-            if (page.status == Page.State.QUEUE) {
-                queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
-            }
-            queuedPages += preloadNextPages(page, preloadSize)
+        val queuedPages = mutableListOf<PriorityPage>()
+        if (page.status == Page.State.QUEUE) {
+            queuedPages += PriorityPage(page, 1).also { queue.offer(it) }
+        }
+        queuedPages += preloadNextPages(page, preloadSize)
 
-            suspendCancellableCoroutine<Nothing> { continuation ->
-                continuation.invokeOnCancellation {
-                    queuedPages.forEach {
-                        if (it.page.status == Page.State.QUEUE) {
-                            queue.remove(it)
-                        }
+        suspendCancellableCoroutine<Nothing> { continuation ->
+            continuation.invokeOnCancellation {
+                queuedPages.forEach {
+                    if (it.page.status == Page.State.QUEUE) {
+                        queue.remove(it)
                     }
                 }
             }
@@ -128,8 +124,7 @@ internal class HttpPageLoader(
         queue.clear()
 
         // Cache current page list progress for online chapters to allow a faster reopen
-        val pages = chapter.pages
-        if (pages != null) {
+        chapter.pages?.let { pages ->
             launchIO {
                 try {
                     // Convert to pages without reader information
@@ -171,7 +166,7 @@ internal class HttpPageLoader(
      *
      * @param page the page whose source image has to be downloaded.
      */
-    private suspend fun _loadPage(page: ReaderPage) {
+    private suspend fun internalLoadPage(page: ReaderPage) {
         try {
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LOAD_PAGE

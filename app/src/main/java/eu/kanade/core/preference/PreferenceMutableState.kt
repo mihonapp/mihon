@@ -31,7 +31,7 @@ class PreferenceMutableState<T>(
     }
 
     override fun component2(): (T) -> Unit {
-        return { preference.set(it) }
+        return preference::set
     }
 }
 

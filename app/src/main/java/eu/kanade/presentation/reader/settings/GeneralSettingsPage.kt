@@ -6,12 +6,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
+import tachiyomi.presentation.core.util.collectAsState
 
 private val themes = listOf(
     R.string.black_background to 1,
@@ -33,67 +32,39 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         }
     }
 
-    val showPageNumber by screenModel.preferences.showPageNumber().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_show_page_number),
-        checked = showPageNumber,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::showPageNumber)
-        },
+        pref = screenModel.preferences.showPageNumber(),
     )
 
-    val fullscreen by screenModel.preferences.fullscreen().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_fullscreen),
-        checked = fullscreen,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::fullscreen)
-        },
+        pref = screenModel.preferences.fullscreen(),
     )
 
     // TODO: hide if there's no cutout
-    val cutoutShort by screenModel.preferences.cutoutShort().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_cutout_short),
-        checked = cutoutShort,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::cutoutShort)
-        },
+        pref = screenModel.preferences.cutoutShort(),
     )
 
-    val keepScreenOn by screenModel.preferences.keepScreenOn().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_keep_screen_on),
-        checked = keepScreenOn,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::keepScreenOn)
-        },
+        pref = screenModel.preferences.keepScreenOn(),
     )
 
-    val readWithLongTap by screenModel.preferences.readWithLongTap().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_read_with_long_tap),
-        checked = readWithLongTap,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::readWithLongTap)
-        },
+        pref = screenModel.preferences.readWithLongTap(),
     )
 
-    val alwaysShowChapterTransition by screenModel.preferences.alwaysShowChapterTransition().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_always_show_chapter_transition),
-        checked = alwaysShowChapterTransition,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::alwaysShowChapterTransition)
-        },
+        pref = screenModel.preferences.alwaysShowChapterTransition(),
     )
 
-    val pageTransitions by screenModel.preferences.pageTransitions().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_page_transitions),
-        checked = pageTransitions,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::pageTransitions)
-        },
+        pref = screenModel.preferences.pageTransitions(),
     )
 }

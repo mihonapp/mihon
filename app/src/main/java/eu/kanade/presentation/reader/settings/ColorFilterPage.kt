@@ -11,14 +11,13 @@ import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
-import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.core.preference.getAndSet
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
+import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel) {
@@ -44,10 +43,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     val customBrightness by screenModel.preferences.customBrightness().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_custom_brightness),
-        checked = customBrightness,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::customBrightness)
-        },
+        pref = screenModel.preferences.customBrightness(),
     )
 
     /**
@@ -71,10 +67,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     val colorFilter by screenModel.preferences.colorFilter().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_custom_color_filter),
-        checked = colorFilter,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::colorFilter)
-        },
+        pref = screenModel.preferences.colorFilter(),
     )
     if (colorFilter) {
         val colorFilterValue by screenModel.preferences.colorFilterValue().collectAsState()
@@ -135,21 +128,13 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
         }
     }
 
-    val grayscale by screenModel.preferences.grayscale().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_grayscale),
-        checked = grayscale,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::grayscale)
-        },
+        pref = screenModel.preferences.grayscale(),
     )
-    val invertedColors by screenModel.preferences.invertedColors().collectAsState()
     CheckboxItem(
         label = stringResource(R.string.pref_inverted_colors),
-        checked = invertedColors,
-        onClick = {
-            screenModel.togglePreference(ReaderPreferences::invertedColors)
-        },
+        pref = screenModel.preferences.invertedColors(),
     )
 }
 

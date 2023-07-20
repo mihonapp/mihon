@@ -22,10 +22,10 @@ import eu.kanade.presentation.more.settings.widget.MultiSelectListPreferenceWidg
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
-import eu.kanade.presentation.util.collectAsState
 import kotlinx.coroutines.launch
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.presentation.core.components.SliderItem
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
