@@ -46,7 +46,7 @@ coil-gif = { module = "io.coil-kt:coil-gif" }
 coil-compose = { module = "io.coil-kt:coil-compose" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:c8e2650"
-image-decoder = "com.github.tachiyomiorg:image-decoder:7879b45"
+image-decoder = "com.github.tachiyomiorg:image-decoder:16eda64574"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
@@ -65,7 +65,7 @@ swipe = "me.saket.swipe:swipe:1.2.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.10.1"
+acra-http = "ch.acra:acra-http:5.11.0"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
