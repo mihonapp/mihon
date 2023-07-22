@@ -26,6 +26,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
     override suspend fun doWork(): Result {
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: return Result.failure()
+        val sync = inputData.getBoolean(SYNC, false)
 
         try {
             setForeground(getForegroundInfo())
@@ -35,7 +36,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
         return try {
             val restorer = BackupRestorer(context, notifier)
-            restorer.restoreBackup(uri)
+            restorer.syncFromBackup(uri, sync)
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
@@ -63,9 +64,10 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
             return context.workManager.isRunning(TAG)
         }
 
-        fun start(context: Context, uri: Uri) {
+        fun start(context: Context, uri: Uri, sync: Boolean = false) {
             val inputData = workDataOf(
                 LOCATION_URI_KEY to uri.toString(),
+                SYNC to sync,
             )
             val request = OneTimeWorkRequestBuilder<BackupRestoreJob>()
                 .addTag(TAG)
@@ -83,3 +85,5 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 private const val TAG = "BackupRestore"
 
 private const val LOCATION_URI_KEY = "location_uri" // String
+
+private const val SYNC = "sync" // Boolean

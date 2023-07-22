@@ -81,7 +81,7 @@ class BackupManager(
             backupMangas(databaseManga, flags),
             backupCategories(flags),
             emptyList(),
-            backupExtensionInfo(databaseManga),
+            prepExtensionInfoForSync(databaseManga),
         )
 
         var file: UniFile? = null
@@ -135,7 +135,7 @@ class BackupManager(
         }
     }
 
-    private fun backupExtensionInfo(mangas: List<Manga>): List<BackupSource> {
+    fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -150,7 +150,7 @@ class BackupManager(
      *
      * @return list of [BackupCategory] to be backed up
      */
-    private suspend fun backupCategories(options: Int): List<BackupCategory> {
+    suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
             getCategories.await()
@@ -161,7 +161,7 @@ class BackupManager(
         }
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
+    suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
         return mangas.map {
             backupManga(it, flags)
         }
@@ -514,7 +514,7 @@ class BackupManager(
         }
     }
 
-    private suspend fun updateManga(manga: Manga): Long {
+    suspend fun updateManga(manga: Manga): Long {
         handler.await(true) {
             mangasQueries.update(
                 source = manga.source,
