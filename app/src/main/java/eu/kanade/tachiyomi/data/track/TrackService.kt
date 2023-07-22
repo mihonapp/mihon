@@ -110,7 +110,7 @@ abstract class TrackService(val id: Long) {
                 val hasReadChapters = allChapters.any { it.read }
                 bind(item, hasReadChapters)
 
-                val track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
+                var track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
 
                 Injekt.get<InsertTrack>().await(track)
 
@@ -123,10 +123,10 @@ abstract class TrackService(val id: Long) {
                         ?.chapterNumber?.toDouble() ?: -1.0
 
                     if (latestLocalReadChapterNumber > track.lastChapterRead) {
-                        val updatedTrack = track.copy(
+                        track = track.copy(
                             lastChapterRead = latestLocalReadChapterNumber,
                         )
-                        setRemoteLastChapterRead(updatedTrack.toDbTrack(), latestLocalReadChapterNumber.toInt())
+                        setRemoteLastChapterRead(track.toDbTrack(), latestLocalReadChapterNumber.toInt())
                     }
 
                     if (track.startDate <= 0) {
@@ -137,6 +137,9 @@ abstract class TrackService(val id: Long) {
 
                         firstReadChapterDate?.let {
                             val startDate = firstReadChapterDate.time.convertEpochMillisZone(ZoneOffset.systemDefault(), ZoneOffset.UTC)
+                            track = track.copy(
+                                startDate = startDate,
+                            )
                             setRemoteStartDate(track.toDbTrack(), startDate)
                         }
                     }

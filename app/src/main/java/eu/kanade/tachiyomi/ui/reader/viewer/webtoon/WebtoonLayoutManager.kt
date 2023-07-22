@@ -2,8 +2,8 @@
 
 package androidx.recyclerview.widget
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
-import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 
 /**
  * Layout manager used by the webtoon viewer. Item prefetch is disabled because the extra layout
@@ -13,12 +13,12 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
  * This layout manager uses the same package name as the support library in order to use a package
  * protected method.
  */
-class WebtoonLayoutManager(activity: ReaderActivity) : LinearLayoutManager(activity) {
+class WebtoonLayoutManager(context: Context) : LinearLayoutManager(context) {
 
     /**
      * Extra layout space is set to half the screen height.
      */
-    private val extraLayoutSpace = activity.resources.displayMetrics.heightPixels / 2
+    private val extraLayoutSpace = context.resources.displayMetrics.heightPixels / 2
 
     init {
         isItemPrefetchEnabled = false
