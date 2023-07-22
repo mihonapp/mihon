@@ -19,8 +19,6 @@
     <color name="surface_amoled">#000001</color>
     <color name="background_amoled">#000000</color>
 
-    <color name="reader_background_dark">#202125</color>
-
     <!-- Material Design Colors -->
     <color name="md_black_1000">#000000</color>
     <color name="md_black_1000_87">#DE000000</color>
@@ -38,36 +36,5 @@
     <color name="md_white_1000_12">#1FFFFFFF</color>
     <color name="md_white_1000_8">#14FFFFFF</color>
     <color name="md_white_1000_6">#0FFFFFFF</color>
-
-    <color name="md_grey_50">#FAFAFA</color>
-    <color name="md_grey_50_75">#BFFAFAFA</color>
-    <color name="md_grey_100">#F5F5F5</color>
-    <color name="md_grey_300">#E0E0E0</color>
-    <color name="md_grey_800">#424242</color>
-    <color name="md_grey_900">#212121</color>
-    <color name="md_grey_900_75">#BF212121</color>
-
-    <color name="md_blue_A200">#448AFF</color>
-    <color name="md_blue_A200_75">#BF448AFF</color>
-    <color name="md_blue_A200_50">#80448AFF</color>
-
-    <color name="md_blue_A400">#2979FF</color>
-    <color name="md_blue_A400_75">#BF2979FF</color>
-    <color name="md_blue_A400_38">#612979FF</color>
-    <color name="md_blue_A400_12">#1F2979FF</color>
-
-    <color name="md_blue_grey_900">#263238</color>
-    <color name="md_blue_grey_800">#37474F</color>
-
-    <!-- Navigation Overlay Colors -->
-    <color name="navigation_next">#CB84E296</color>
-    <color name="navigation_prev">#CCFF7733</color>
-    <color name="navigation_menu">#CC95818D</color>
-    <color name="navigation_right">#CCA6CFD5</color>
-    <color name="navigation_left">#CC7D1128</color>
-
-    <!-- ActionMode status bar color -->
-    <color name="abc_decor_view_status_guard" tools:override="true">@android:color/transparent</color>
-    <color name="abc_decor_view_status_guard_light" tools:override="true">@android:color/transparent</color>
 
 </resources>

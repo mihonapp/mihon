@@ -66,7 +66,7 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
 
             // Scale rect from 1f,1f to screen width and height
             canvas.withScale(width.toFloat(), height.toFloat()) {
-                regionPaint.color = context.getColor(region.type.colorRes)
+                regionPaint.color = region.type.color
                 drawRect(rect, regionPaint)
             }
 
