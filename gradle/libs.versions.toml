@@ -6,7 +6,7 @@ sqlite = "2.3.1"
 sqldelight = "1.5.5"
 leakcanary = "2.12"
 voyager = "1.0.0-rc06"
-richtext = "0.16.0"
+richtext = "0.17.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
