@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Block
@@ -164,14 +165,19 @@ fun MangaActionRow(
     modifier: Modifier = Modifier,
     favorite: Boolean,
     trackingCount: Int,
+    intervalDisplay: () -> Pair<Int, Int>?,
+    isUserIntervalMode: Boolean,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
     onWebViewLongClicked: (() -> Unit)?,
     onTrackingClicked: (() -> Unit)?,
+    onEditIntervalClicked: (() -> Unit)?,
     onEditCategory: (() -> Unit)?,
 ) {
+    val interval: Pair<Int, Int>? = intervalDisplay()
+    val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
+
     Row(modifier = modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
-        val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
         MangaActionButton(
             title = if (favorite) {
                 stringResource(R.string.in_library)
@@ -183,6 +189,19 @@ fun MangaActionRow(
             onClick = onAddToLibraryClicked,
             onLongClick = onEditCategory,
         )
+        if (onEditIntervalClicked != null && interval != null) {
+            MangaActionButton(
+                title =
+                if (interval.first == interval.second) {
+                    pluralStringResource(id = R.plurals.day, count = interval.second, interval.second)
+                } else {
+                    pluralStringResource(id = R.plurals.range_interval_day, count = interval.second, interval.first, interval.second)
+                },
+                icon = Icons.Default.HourglassEmpty,
+                color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
+                onClick = onEditIntervalClicked,
+            )
+        }
         if (onTrackingClicked != null) {
             MangaActionButton(
                 title = if (trackingCount == 0) {

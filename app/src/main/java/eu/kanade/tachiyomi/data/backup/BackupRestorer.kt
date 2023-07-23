@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
+import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
@@ -12,10 +13,15 @@ import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.chapter.repository.ChapterRepository
+import tachiyomi.domain.manga.interactor.SetMangaUpdateInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
 import java.util.Date
 import java.util.Locale
 
@@ -23,6 +29,12 @@ class BackupRestorer(
     private val context: Context,
     private val notifier: BackupNotifier,
 ) {
+    private val updateManga: UpdateManga = Injekt.get()
+    private val chapterRepository: ChapterRepository = Injekt.get()
+    private val setMangaUpdateInterval: SetMangaUpdateInterval = Injekt.get()
+
+    private var zonedDateTime = ZonedDateTime.now()
+    private var currentRange = setMangaUpdateInterval.getCurrentFetchRange(zonedDateTime)
 
     private var backupManager = BackupManager(context)
 
@@ -90,6 +102,8 @@ class BackupRestorer(
         // Store source mapping for error messages
         val backupMaps = backup.backupBrokenSources.map { BackupSource(it.name, it.sourceId) } + backup.backupSources
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
+        zonedDateTime = ZonedDateTime.now()
+        currentRange = setMangaUpdateInterval.getCurrentFetchRange(zonedDateTime)
 
         return coroutineScope {
             // Restore individual manga
@@ -122,7 +136,7 @@ class BackupRestorer(
 
         try {
             val dbManga = backupManager.getMangaFromDatabase(manga.url, manga.source)
-            if (dbManga == null) {
+            val restoredManga = if (dbManga == null) {
                 // Manga not in database
                 restoreExistingManga(manga, chapters, categories, history, tracks, backupCategories)
             } else {
@@ -132,6 +146,8 @@ class BackupRestorer(
                 // Fetch rest of manga information
                 restoreNewManga(updatedManga, chapters, categories, history, tracks, backupCategories)
             }
+            val updatedChapters = chapterRepository.getChapterByMangaId(restoredManga.id)
+            updateManga.awaitUpdateFetchInterval(restoredManga, updatedChapters, zonedDateTime, currentRange)
         } catch (e: Exception) {
             val sourceName = sourceMapping[manga.source] ?: manga.source.toString()
             errors.add(Date() to "${manga.title} [$sourceName]: ${e.message}")
@@ -159,10 +175,11 @@ class BackupRestorer(
         history: List<BackupHistory>,
         tracks: List<Track>,
         backupCategories: List<BackupCategory>,
-    ) {
+    ): Manga {
         val fetchedManga = backupManager.restoreNewManga(manga)
         backupManager.restoreChapters(fetchedManga, chapters)
         restoreExtras(fetchedManga, categories, history, tracks, backupCategories)
+        return fetchedManga
     }
 
     private suspend fun restoreNewManga(
@@ -172,9 +189,10 @@ class BackupRestorer(
         history: List<BackupHistory>,
         tracks: List<Track>,
         backupCategories: List<BackupCategory>,
-    ) {
+    ): Manga {
         backupManager.restoreChapters(backupManga, chapters)
         restoreExtras(backupManga, categories, history, tracks, backupCategories)
+        return backupManga
     }
 
     private suspend fun restoreExtras(manga: Manga, categories: List<Int>, history: List<BackupHistory>, tracks: List<Track>, backupCategories: List<BackupCategory>) {
