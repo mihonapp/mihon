@@ -72,9 +72,9 @@ class SetReadStatus(
     suspend fun await(manga: Manga, read: Boolean) =
         await(manga.id, read)
 
-    sealed class Result {
-        data object Success : Result()
-        data object NoChapters : Result()
-        data class InternalError(val error: Throwable) : Result()
+    sealed interface Result {
+        data object Success : Result
+        data object NoChapters : Result
+        data class InternalError(val error: Throwable) : Result
     }
 }

@@ -57,10 +57,10 @@ class ReorderCategory(
         }
     }
 
-    sealed class Result {
-        data object Success : Result()
-        data object Unchanged : Result()
-        data class InternalError(val error: Throwable) : Result()
+    sealed interface Result {
+        data object Success : Result
+        data object Unchanged : Result
+        data class InternalError(val error: Throwable) : Result
     }
 
     private enum class MoveTo {

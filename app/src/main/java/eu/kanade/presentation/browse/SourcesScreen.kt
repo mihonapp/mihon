@@ -192,7 +192,7 @@ fun SourceOptionsDialog(
     )
 }
 
-sealed class SourceUiModel {
-    data class Item(val source: Source) : SourceUiModel()
-    data class Header(val language: String) : SourceUiModel()
+sealed interface SourceUiModel {
+    data class Item(val source: Source) : SourceUiModel
+    data class Header(val language: String) : SourceUiModel
 }

@@ -75,12 +75,12 @@ class MangaScreen(
 
         val state by screenModel.state.collectAsState()
 
-        if (state is MangaScreenState.Loading) {
+        if (state is MangaScreenModel.State.Loading) {
             LoadingScreen()
             return
         }
 
-        val successState = state as MangaScreenState.Success
+        val successState = state as MangaScreenModel.State.Success
         val isHttpSource = remember { successState.source is HttpSource }
 
         LaunchedEffect(successState.manga, screenModel.source) {

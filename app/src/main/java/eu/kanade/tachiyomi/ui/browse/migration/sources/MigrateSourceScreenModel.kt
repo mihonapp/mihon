@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.migration.sources
 
+import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
@@ -23,7 +24,7 @@ class MigrateSourceScreenModel(
     preferences: SourcePreferences = Injekt.get(),
     private val getSourcesWithFavoriteCount: GetSourcesWithFavoriteCount = Injekt.get(),
     private val setMigrateSorting: SetMigrateSorting = Injekt.get(),
-) : StateScreenModel<MigrateSourceState>(MigrateSourceState()) {
+) : StateScreenModel<MigrateSourceScreenModel.State>(State()) {
 
     private val _channel = Channel<Event>(Int.MAX_VALUE)
     val channel = _channel.receiveAsFlow()
@@ -76,16 +77,17 @@ class MigrateSourceScreenModel(
         }
     }
 
-    sealed class Event {
-        data object FailedFetchingSourcesWithCount : Event()
+    @Immutable
+    data class State(
+        val isLoading: Boolean = true,
+        val items: List<Pair<Source, Long>> = emptyList(),
+        val sortingMode: SetMigrateSorting.Mode = SetMigrateSorting.Mode.ALPHABETICAL,
+        val sortingDirection: SetMigrateSorting.Direction = SetMigrateSorting.Direction.ASCENDING,
+    ) {
+        val isEmpty = items.isEmpty()
     }
-}
 
-data class MigrateSourceState(
-    val isLoading: Boolean = true,
-    val items: List<Pair<Source, Long>> = emptyList(),
-    val sortingMode: SetMigrateSorting.Mode = SetMigrateSorting.Mode.ALPHABETICAL,
-    val sortingDirection: SetMigrateSorting.Direction = SetMigrateSorting.Direction.ASCENDING,
-) {
-    val isEmpty = items.isEmpty()
+    sealed interface Event {
+        data object FailedFetchingSourcesWithCount : Event
+    }
 }

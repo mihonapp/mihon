@@ -54,20 +54,20 @@ class ExtensionFilterScreenModel(
     }
 }
 
-sealed class ExtensionFilterEvent {
-    data object FailedFetchingLanguages : ExtensionFilterEvent()
+sealed interface ExtensionFilterEvent {
+    data object FailedFetchingLanguages : ExtensionFilterEvent
 }
 
-sealed class ExtensionFilterState {
+sealed interface ExtensionFilterState {
 
     @Immutable
-    data object Loading : ExtensionFilterState()
+    data object Loading : ExtensionFilterState
 
     @Immutable
     data class Success(
         val languages: List<String>,
         val enabledLanguages: Set<String> = emptySet(),
-    ) : ExtensionFilterState() {
+    ) : ExtensionFilterState {
 
         val isEmpty: Boolean
             get() = languages.isEmpty()

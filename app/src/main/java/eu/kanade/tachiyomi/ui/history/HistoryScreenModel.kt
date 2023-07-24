@@ -34,7 +34,7 @@ class HistoryScreenModel(
     private val getHistory: GetHistory = Injekt.get(),
     private val getNextChapters: GetNextChapters = Injekt.get(),
     private val removeHistory: RemoveHistory = Injekt.get(),
-) : StateScreenModel<HistoryState>(HistoryState()) {
+) : StateScreenModel<HistoryScreenModel.State>(State()) {
 
     private val _events: Channel<Event> = Channel(Channel.UNLIMITED)
     val events: Flow<Event> = _events.receiveAsFlow()
@@ -113,21 +113,21 @@ class HistoryScreenModel(
         mutableState.update { it.copy(dialog = dialog) }
     }
 
-    sealed class Dialog {
-        data object DeleteAll : Dialog()
-        data class Delete(val history: HistoryWithRelations) : Dialog()
+    @Immutable
+    data class State(
+        val searchQuery: String? = null,
+        val list: List<HistoryUiModel>? = null,
+        val dialog: Dialog? = null,
+    )
+
+    sealed interface Dialog {
+        data object DeleteAll : Dialog
+        data class Delete(val history: HistoryWithRelations) : Dialog
     }
 
-    sealed class Event {
-        data class OpenChapter(val chapter: Chapter?) : Event()
-        data object InternalError : Event()
-        data object HistoryCleared : Event()
+    sealed interface Event {
+        data class OpenChapter(val chapter: Chapter?) : Event
+        data object InternalError : Event
+        data object HistoryCleared : Event
     }
 }
-
-@Immutable
-data class HistoryState(
-    val searchQuery: String? = null,
-    val list: List<HistoryUiModel>? = null,
-    val dialog: HistoryScreenModel.Dialog? = null,
-)

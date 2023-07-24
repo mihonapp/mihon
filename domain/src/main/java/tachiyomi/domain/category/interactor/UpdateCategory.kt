@@ -17,8 +17,8 @@ class UpdateCategory(
         }
     }
 
-    sealed class Result {
-        data object Success : Result()
-        data class Error(val error: Exception) : Result()
+    sealed interface Result {
+        data object Success : Result
+        data class Error(val error: Exception) : Result
     }
 }

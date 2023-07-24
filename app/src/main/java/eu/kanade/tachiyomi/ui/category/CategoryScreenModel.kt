@@ -107,27 +107,27 @@ class CategoryScreenModel(
     }
 }
 
-sealed class CategoryDialog {
-    data object Create : CategoryDialog()
-    data class Rename(val category: Category) : CategoryDialog()
-    data class Delete(val category: Category) : CategoryDialog()
+sealed interface CategoryDialog {
+    data object Create : CategoryDialog
+    data class Rename(val category: Category) : CategoryDialog
+    data class Delete(val category: Category) : CategoryDialog
 }
 
-sealed class CategoryEvent {
-    sealed class LocalizedMessage(@StringRes val stringRes: Int) : CategoryEvent()
+sealed interface CategoryEvent {
+    sealed class LocalizedMessage(@StringRes val stringRes: Int) : CategoryEvent
     data object InternalError : LocalizedMessage(R.string.internal_error)
 }
 
-sealed class CategoryScreenState {
+sealed interface CategoryScreenState {
 
     @Immutable
-    data object Loading : CategoryScreenState()
+    data object Loading : CategoryScreenState
 
     @Immutable
     data class Success(
         val categories: List<Category>,
         val dialog: CategoryDialog? = null,
-    ) : CategoryScreenState() {
+    ) : CategoryScreenState {
 
         val isEmpty: Boolean
             get() = categories.isEmpty()

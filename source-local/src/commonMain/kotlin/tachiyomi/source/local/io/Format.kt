@@ -2,11 +2,11 @@ package tachiyomi.source.local.io
 
 import java.io.File
 
-sealed class Format {
-    data class Directory(val file: File) : Format()
-    data class Zip(val file: File) : Format()
-    data class Rar(val file: File) : Format()
-    data class Epub(val file: File) : Format()
+sealed interface Format {
+    data class Directory(val file: File) : Format
+    data class Zip(val file: File) : Format
+    data class Rar(val file: File) : Format
+    data class Epub(val file: File) : Format
 
     class UnknownFormatException : Exception()
 

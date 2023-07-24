@@ -152,8 +152,8 @@ sealed class Image(
         }
 }
 
-sealed class Location {
-    data class Pictures private constructor(val relativePath: String) : Location() {
+sealed interface Location {
+    data class Pictures private constructor(val relativePath: String) : Location {
         companion object {
             fun create(relativePath: String = ""): Pictures {
                 return Pictures(relativePath)
@@ -161,7 +161,7 @@ sealed class Location {
         }
     }
 
-    data object Cache : Location()
+    data object Cache : Location
 
     fun directory(context: Context): File {
         return when (this) {

@@ -190,16 +190,16 @@ enum class SourceFilter {
     PinnedOnly,
 }
 
-sealed class SearchItemResult {
-    data object Loading : SearchItemResult()
+sealed interface SearchItemResult {
+    data object Loading : SearchItemResult
 
     data class Error(
         val throwable: Throwable,
-    ) : SearchItemResult()
+    ) : SearchItemResult
 
     data class Success(
         val result: List<Manga>,
-    ) : SearchItemResult() {
+    ) : SearchItemResult {
         val isEmpty: Boolean
             get() = result.isEmpty()
     }

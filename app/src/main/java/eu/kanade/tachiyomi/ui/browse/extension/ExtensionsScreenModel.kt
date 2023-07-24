@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.extension
 
 import android.app.Application
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
@@ -35,7 +36,7 @@ class ExtensionsScreenModel(
     preferences: SourcePreferences = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
-) : StateScreenModel<ExtensionsState>(ExtensionsState()) {
+) : StateScreenModel<ExtensionsScreenModel.State>(State()) {
 
     private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
@@ -190,16 +191,17 @@ class ExtensionsScreenModel(
     fun trustSignature(signatureHash: String) {
         extensionManager.trustSignature(signatureHash)
     }
-}
 
-data class ExtensionsState(
-    val isLoading: Boolean = true,
-    val isRefreshing: Boolean = false,
-    val items: ItemGroups = mutableMapOf(),
-    val updates: Int = 0,
-    val searchQuery: String? = null,
-) {
-    val isEmpty = items.isEmpty()
+    @Immutable
+    data class State(
+        val isLoading: Boolean = true,
+        val isRefreshing: Boolean = false,
+        val items: ItemGroups = mutableMapOf(),
+        val updates: Int = 0,
+        val searchQuery: String? = null,
+    ) {
+        val isEmpty = items.isEmpty()
+    }
 }
 
 typealias ItemGroups = MutableMap<ExtensionUiModel.Header, List<ExtensionUiModel.Item>>

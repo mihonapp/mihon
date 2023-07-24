@@ -108,8 +108,8 @@ private class MoreScreenModel(
     }
 }
 
-sealed class DownloadQueueState {
-    data object Stopped : DownloadQueueState()
-    data class Paused(val pending: Int) : DownloadQueueState()
-    data class Downloading(val pending: Int) : DownloadQueueState()
+sealed interface DownloadQueueState {
+    data object Stopped : DownloadQueueState
+    data class Paused(val pending: Int) : DownloadQueueState
+    data class Downloading(val pending: Int) : DownloadQueueState
 }

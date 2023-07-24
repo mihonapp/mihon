@@ -53,7 +53,7 @@ import eu.kanade.presentation.more.settings.widget.TrailingWidgetBuffer
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsState
+import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.DIVIDER_ALPHA
@@ -65,7 +65,7 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 @Composable
 fun ExtensionDetailsScreen(
     navigateUp: () -> Unit,
-    state: ExtensionDetailsState,
+    state: ExtensionDetailsScreenModel.State,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickWhatsNew: () -> Unit,
     onClickReadme: () -> Unit,

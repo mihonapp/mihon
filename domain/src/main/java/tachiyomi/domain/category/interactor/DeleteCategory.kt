@@ -35,8 +35,8 @@ class DeleteCategory(
         }
     }
 
-    sealed class Result {
-        data object Success : Result()
-        data class InternalError(val error: Throwable) : Result()
+    sealed interface Result {
+        data object Success : Result
+        data class InternalError(val error: Throwable) : Result
     }
 }
