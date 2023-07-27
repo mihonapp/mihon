@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.compose.material3.SnackbarHostState
 import cafe.adriel.voyager.core.model.StateScreenModel
@@ -16,6 +15,7 @@ import eu.kanade.tachiyomi.data.saver.Image
 import eu.kanade.tachiyomi.data.saver.ImageSaver
 import eu.kanade.tachiyomi.data.saver.Location
 import eu.kanade.tachiyomi.util.editCover
+import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -98,7 +98,7 @@ class MangaCoverScreenModel(
             val result = context.imageLoader.execute(req).drawable
 
             // TODO: Handle animated cover
-            val bitmap = (result as? BitmapDrawable)?.bitmap ?: return@withIOContext null
+            val bitmap = result?.getBitmapOrNull() ?: return@withIOContext null
             imageSaver.save(
                 Image.Cover(
                     bitmap = bitmap,
