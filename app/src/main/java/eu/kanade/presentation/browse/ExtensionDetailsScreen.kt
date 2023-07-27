@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,8 +58,6 @@ import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
-import tachiyomi.presentation.core.components.material.DIVIDER_ALPHA
-import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -314,7 +314,7 @@ private fun DetailsHeader(
             }
         }
 
-        Divider()
+        HorizontalDivider()
     }
 }
 
@@ -356,11 +356,8 @@ private fun InfoText(
 
 @Composable
 private fun InfoDivider() {
-    Divider(
-        modifier = Modifier
-            .height(20.dp)
-            .width(1.dp),
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = DIVIDER_ALPHA),
+    VerticalDivider(
+        modifier = Modifier.height(20.dp),
     )
 }
 

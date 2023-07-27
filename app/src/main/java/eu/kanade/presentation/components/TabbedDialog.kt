@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +31,6 @@ import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
-import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.TabIndicator
 
 object TabbedDialogPaddings {
@@ -82,7 +82,7 @@ fun TabbedDialog(
 
                 tabOverflowMenuContent?.let { MoreMenu(it) }
             }
-            Divider()
+            HorizontalDivider()
 
             HorizontalPager(
                 modifier = Modifier.animateContentSize(),
