@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.more.settings.Preference.PreferenceItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
@@ -134,19 +133,6 @@ sealed class Preference {
         ) : PreferenceItem<String>()
 
         /**
-         * A [PreferenceItem] that shows previews of [AppTheme] selection.
-         */
-        data class AppThemePreference(
-            val pref: PreferenceData<AppTheme>,
-            override val title: String,
-        ) : PreferenceItem<AppTheme>() {
-            override val enabled: Boolean = true
-            override val subtitle: String? = null
-            override val icon: ImageVector? = null
-            override val onValueChanged: suspend (newValue: AppTheme) -> Boolean = { true }
-        }
-
-        /**
          * A [PreferenceItem] for individual tracking service.
          */
         data class TrackingPreference(
@@ -163,6 +149,16 @@ sealed class Preference {
 
         data class InfoPreference(
             override val title: String,
+        ) : PreferenceItem<String>() {
+            override val enabled: Boolean = true
+            override val subtitle: String? = null
+            override val icon: ImageVector? = null
+            override val onValueChanged: suspend (newValue: String) -> Boolean = { true }
+        }
+
+        data class CustomPreference(
+            override val title: String,
+            val content: @Composable (PreferenceItem<String>) -> Unit,
         ) : PreferenceItem<String>() {
             override val enabled: Boolean = true
             override val subtitle: String? = null
