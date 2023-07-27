@@ -35,12 +35,8 @@ class SaveImageNotifier(private val context: Context) {
             .memoryCachePolicy(CachePolicy.DISABLED)
             .size(720, 1280)
             .target(
-                onSuccess = { result ->
-                    showCompleteNotification(uri, (result as BitmapDrawable).bitmap)
-                },
-                onError = {
-                    onError(null)
-                },
+                onSuccess = { showCompleteNotification(uri, (it as? BitmapDrawable)?.bitmap) },
+                onError = { onError(null) },
             )
             .build()
         context.imageLoader.enqueue(request)
@@ -67,11 +63,11 @@ class SaveImageNotifier(private val context: Context) {
         updateNotification()
     }
 
-    private fun showCompleteNotification(uri: Uri, image: Bitmap) {
+    private fun showCompleteNotification(uri: Uri, image: Bitmap?) {
         with(notificationBuilder) {
             setContentTitle(context.getString(R.string.picture_saved))
             setSmallIcon(R.drawable.ic_photo_24dp)
-            setStyle(NotificationCompat.BigPictureStyle().bigPicture(image))
+            image?.let { setStyle(NotificationCompat.BigPictureStyle().bigPicture(it)) }
             setLargeIcon(image)
             setAutoCancel(true)
 
