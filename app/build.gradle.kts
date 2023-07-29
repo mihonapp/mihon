@@ -70,7 +70,6 @@ android {
             signingConfig = debugType.signingConfig
             versionNameSuffix = debugType.versionNameSuffix
             applicationIdSuffix = debugType.applicationIdSuffix
-            isProfileable = false
             matchingFallbacks.add("release")
         }
         create("benchmark") {
