@@ -590,7 +590,6 @@
         <item quantity="other">För %1$d dagar sedan</item>
     </plurals>
     <string name="relative_time_today">Idag</string>
-    <string name="recently">Nyligen</string>
     <string name="theme_tealturquoise">Teal och turkos</string>
     <string name="pref_category_appearance">Utseende</string>
     <string name="confirm_lock_change">Autentisera för att bekräfta ändringen</string>

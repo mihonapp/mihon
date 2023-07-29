@@ -576,7 +576,6 @@
     <string name="local_invalid_format">รูปแบบตอนไม่ถูกต้อง</string>
     <string name="manga_cover">ปก</string>
     <string name="unread">ยังไม่ได้อ่าน</string>
-    <string name="recently">ล่าสุด</string>
     <string name="pref_inverted_colors">สลับสี</string>
     <string name="action_sort_count">รายการทั้งหมด</string>
     <string name="pref_tablet_ui_mode">UI แท็บเล็ต</string>

@@ -589,7 +589,6 @@
         <item quantity="one">Kahapon</item>
         <item quantity="other">%1$d araw na ang makalipas</item>
     </plurals>
-    <string name="recently">Kamakailan</string>
     <string name="relative_time_today">Ngayon</string>
     <string name="theme_tealturquoise">Teal at Turquoise</string>
     <string name="pref_category_appearance">Hitsura</string>

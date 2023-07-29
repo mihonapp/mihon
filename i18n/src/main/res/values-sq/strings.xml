@@ -49,7 +49,6 @@
     <string name="secure_screen">Ekran i sigurt</string>
     <string name="pref_category_nsfw_content">Burimet NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Shfaq në listat e burimeve dhe shtesave</string>
-    <string name="recently">Kohët e fundit</string>
     <string name="relative_time_today">Sot</string>
     <plurals name="relative_time">
         <item quantity="one">Dje</item>

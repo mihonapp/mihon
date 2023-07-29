@@ -590,7 +590,6 @@
         <item quantity="other">%1$d gün önce</item>
     </plurals>
     <string name="relative_time_today">Bugün</string>
-    <string name="recently">Yakınlarda</string>
     <string name="theme_tealturquoise">Deniz kökçesi &amp; Türk kökçesi</string>
     <string name="confirm_lock_change">Değişikliği onaylamak için kimlik doğrula</string>
     <string name="label_default">Varsayılan</string>

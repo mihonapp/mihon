@@ -600,7 +600,6 @@
         <item quantity="other">Hace %1$d dias</item>
     </plurals>
     <string name="relative_time_today">Hoy</string>
-    <string name="recently">Recientemente</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro con negro puro</string>
     <string name="theme_yotsuba">Tema Yotsuba</string>
     <string name="theme_yinyang">Yin y Yang</string>

@@ -614,7 +614,6 @@
         <item quantity="other">%1$d дней назад</item>
     </plurals>
     <string name="relative_time_today">Сегодня</string>
-    <string name="recently">Недавно</string>
     <string name="theme_tealturquoise">Бирюзовая</string>
     <string name="confirm_lock_change">Выполните аутентификацию, чтобы подтвердить изменение</string>
     <string name="label_default">По умолчанию</string>

@@ -585,7 +585,6 @@
     <string name="pref_highest">Höchste</string>
     <string name="pref_hide_threshold">Empfindlichkeit für das Menü-Ausblenden beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
-    <string name="recently">Kürzlich</string>
     <plurals name="relative_time">
         <item quantity="one">Gestern</item>
         <item quantity="other">Vor %1$d Tagen</item>

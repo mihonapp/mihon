@@ -576,7 +576,6 @@
     <string name="pref_inverted_colors">反轉</string>
     <string name="theme_tealturquoise">綠松色</string>
     <string name="confirm_lock_change">驗證以確認變更</string>
-    <string name="recently">剛剛</string>
     <string name="pref_category_appearance">外觀</string>
     <string name="relative_time_today">今天</string>
     <plurals name="relative_time">
@@ -691,7 +690,7 @@
     <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
     <string name="multi_lang">多語</string>
     <string name="remove_manga">即將從書櫃中移除《%s》</string>
-    <string name="updates_last_update_info">最近一次更新書櫃：%s</string>
+    <string name="updates_last_update_info">書櫃更新於：%s</string>
     <string name="popular">熱門</string>
     <string name="missing_storage_permission">未被授予儲存空間權限</string>
     <string name="skipped_reason_not_always_update">由於叢書無須更新，因此略過</string>
@@ -805,4 +804,5 @@
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
     <string name="library_sync_complete">書櫃同步完畢</string>
+    <string name="download_cache_invalidated">已清除下載索引</string>
 </resources>

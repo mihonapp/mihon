@@ -94,7 +94,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) дереккөздері</string>
     <string name="pref_show_nsfw_source">Дереккөздер мен кеңейтулер тізімінде көрсету</string>
     <string name="parental_controls_info">Бұл қолданбадағы NSFW (18+) мазмұнын көрсетуге бейресми немесе ықтимал қате белгіленген кеңейтулерге кедергі жасамайды.</string>
-    <string name="recently">Жақында</string>
     <string name="action_mark_as_read">Оқылған деп белгілеу</string>
     <string name="action_mark_as_unread">Оқылмаған деп белгілеу</string>
     <string name="action_mark_previous_as_read">Алдыңғысын оқылған деп белгілеу</string>

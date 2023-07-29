@@ -602,7 +602,6 @@
         <item quantity="other">Před %1$d dny</item>
     </plurals>
     <string name="relative_time_today">Dnes</string>
-    <string name="recently">Nedávno</string>
     <string name="theme_tealturquoise">Modrozelená a Tyrkysová</string>
     <string name="pref_category_appearance">Vzhled</string>
     <string name="confirm_lock_change">Potvrďte změnu ověřením</string>

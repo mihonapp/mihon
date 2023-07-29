@@ -613,7 +613,6 @@
         <item quantity="other">%1$d днів тому</item>
     </plurals>
     <string name="relative_time_today">Сьогодні</string>
-    <string name="recently">Нещодавно</string>
     <string name="theme_tealturquoise">Бірюзова</string>
     <string name="confirm_lock_change">Виконайте автентифікацію, щоб підтвердити зміну</string>
     <string name="label_default">Типово</string>

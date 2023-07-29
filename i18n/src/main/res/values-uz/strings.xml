@@ -180,7 +180,6 @@
     <string name="secure_screen">Ilova ekrani himoyasi</string>
     <string name="pref_show_nsfw_source">Manbaa va kengaytmalar ro\'yhatida ko\'rsatish</string>
     <string name="parental_controls_info">Bu, ilovada norasmiy yoki noto\'g\'ri belgilangan kengaytmalardan NSFW (18+) kontent paydo bo\'lishini oldini olmaydi.</string>
-    <string name="recently">Yaqinda</string>
     <string name="relative_time_today">Bugun</string>
     <string name="pref_category_display">Ko\'rsatish</string>
     <string name="pref_library_columns">Qismlar soni</string>

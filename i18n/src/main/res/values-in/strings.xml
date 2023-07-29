@@ -575,7 +575,6 @@
     <plurals name="relative_time">
         <item quantity="other">%1$d hari yang lalu</item>
     </plurals>
-    <string name="recently">Baru saja</string>
     <string name="relative_time_today">Hari Ini</string>
     <string name="getting_started_guide">Panduan awal mulai</string>
     <string name="action_track">Lacak</string>

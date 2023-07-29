@@ -352,7 +352,6 @@
     <string name="information_no_recent_manga">שום דבר נקרא לאחרונה</string>
     <string name="information_no_recent">אין עידכונים אחרונים</string>
     <string name="action_filter_bookmarked">סומן</string>
-    <string name="recently">לאחרונה</string>
     <string name="pref_library_update_refresh_trackers">רענון עוקבים אוטומטית</string>
     <string name="label_default">ברירת המחדל</string>
     <string name="pref_app_theme">ערכת הנושא של האפליקציה</string>

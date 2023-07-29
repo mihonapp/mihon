@@ -636,7 +636,6 @@
         <item quantity="other">Il y a %1$d jours</item>
     </plurals>
     <string name="relative_time_today">Aujourd\'hui</string>
-    <string name="recently">Récemment</string>
     <string name="theme_tealturquoise">Bleu canard et turquoise</string>
     <string name="confirm_lock_change">Authentifiez-vous pour confirmer les changements</string>
     <string name="pref_category_appearance">Apparence</string>

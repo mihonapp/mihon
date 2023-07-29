@@ -197,7 +197,6 @@
     <string name="pref_show_navigation_mode_summary">Īsi parādīt, kad ir atvērts lasītājs</string>
     <string name="restrictions">Ierobežojums: %s</string>
     <string name="pref_library_update_refresh_metadata">Automātiski atsvaidzina metadatus</string>
-    <string name="recently">Nesen</string>
     <string name="pref_library_update_refresh_metadata_summary">Atjauninot bibliotēku, meklēt jaunu vāku un kopsavilkumu</string>
     <string name="network_not_metered">Tikai nemērītā tīklā</string>
     <string name="charging">Uzlādējot</string>

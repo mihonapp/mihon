@@ -578,7 +578,6 @@
     <plurals name="relative_time">
         <item quantity="other">%1$d 天前</item>
     </plurals>
-    <string name="recently">最近</string>
     <string name="theme_tealturquoise">青色与绿松色</string>
     <string name="confirm_lock_change">验证以确认更改</string>
     <string name="label_default">默认</string>

@@ -590,7 +590,6 @@
         <item quantity="other">Prije %1$d dana</item>
     </plurals>
     <string name="relative_time_today">Danas</string>
-    <string name="recently">Nedavno</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="pref_category_appearance">Izgled</string>

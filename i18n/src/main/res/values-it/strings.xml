@@ -622,7 +622,6 @@
         <item quantity="other">%1$d giorni fa</item>
     </plurals>
     <string name="relative_time_today">Oggi</string>
-    <string name="recently">Recentemente</string>
     <string name="pref_dark_theme_pure_black">Modalità scura con nero puro</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin e Yang</string>

@@ -574,7 +574,6 @@
         <item quantity="other">%1$d dager siden</item>
     </plurals>
     <string name="relative_time_today">I dag</string>
-    <string name="recently">Nylig</string>
     <string name="theme_monet">Dynamisk</string>
     <string name="pref_app_theme">Programdrakt</string>
     <string name="pref_category_appearance">Utseende</string>

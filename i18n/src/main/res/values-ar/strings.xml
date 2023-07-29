@@ -628,7 +628,6 @@
     <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. الإدخالات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
     <string name="enhanced_services">خدمات محسَّنة</string>
     <string name="relative_time_today">اليوم</string>
-    <string name="recently">مؤخراً</string>
     <string name="confirm_lock_change">المصادقة لتأكيد التغيير</string>
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>

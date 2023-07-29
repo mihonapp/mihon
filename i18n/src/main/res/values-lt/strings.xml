@@ -56,7 +56,6 @@
         <item quantity="other">Prieš %1$d dienų</item>
     </plurals>
     <string name="relative_time_today">Šiandien</string>
-    <string name="recently">Neseniai</string>
     <string name="parental_controls_info">Tai nesustabdo neoficialių ar potencialiai neteisingai pažymėtų plėtinių nuo N18+ turinio rodymo programoje.</string>
     <string name="pref_show_nsfw_source">Rodyti šaltiniuose ir plėtinių sąrašuose</string>
     <string name="pref_category_nsfw_content">N18+ šaltiniai</string>

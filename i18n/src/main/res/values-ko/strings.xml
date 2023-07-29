@@ -569,7 +569,6 @@
     <string name="action_asc">오름차순</string>
     <string name="action_oldest">오래된 순</string>
     <string name="theme_tealturquoise">옥색</string>
-    <string name="recently">최근</string>
     <string name="theme_strawberrydaiquiri">딸기 칵테일</string>
     <string name="extension_api_error">확장기능 목록 취득 실패</string>
     <string name="pref_library_update_refresh_trackers_summary">서재 업데이트 시 트래커 갱신</string>

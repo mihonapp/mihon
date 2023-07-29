@@ -390,7 +390,6 @@
         <item quantity="other">Antaŭ %1$d tagoj</item>
     </plurals>
     <string name="relative_time_today">Hodiaŭ</string>
-    <string name="recently">Laste</string>
     <string name="theme_yinyang">Jino kaj Jango</string>
     <string name="theme_greenapple">Verda pomo</string>
     <string name="pref_app_theme">Apa etoso</string>

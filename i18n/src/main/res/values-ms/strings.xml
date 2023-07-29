@@ -573,7 +573,6 @@
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_hide_threshold">Sensitiviti menyembunyikan menu apabila skrol</string>
     <string name="label_background_activity">Aktiviti latar belakang</string>
-    <string name="recently">Baru-baru ini</string>
     <string name="pref_inverted_colors">Songsang</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d hari lalu</item>

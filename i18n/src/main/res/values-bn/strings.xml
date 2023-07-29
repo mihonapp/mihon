@@ -574,7 +574,6 @@
         <item quantity="other">%1$d দিন আগে</item>
     </plurals>
     <string name="relative_time_today">সম্প্রতি</string>
-    <string name="recently">সম্প্রতি</string>
     <string name="pref_dark_theme_pure_black">বিশুদ্ধ কালো অন্ধকার মোড</string>
     <string name="theme_yotsuba">চার পাতা</string>
     <string name="theme_yinyang">ইয়িন এবং ইয়াং</string>

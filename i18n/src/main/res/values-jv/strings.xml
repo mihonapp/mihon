@@ -181,7 +181,6 @@
     <string name="theme_greenapple">Ijo apel</string>
     <string name="action_faq_and_guides">Takon jawab lan panduan</string>
     <string name="parental_controls_info">Iki ora nyegah ekstensi kang ora resmi utawa salah dilabeli kanggo nampilake konten NSFW (18+) ing aplikasi.</string>
-    <string name="recently">Nembe mawon</string>
     <string name="relative_time_today">Dinten puniki</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d dinten kala-wingi</item>

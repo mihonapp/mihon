@@ -575,7 +575,6 @@
         <item quantity="other">%1$d日前</item>
     </plurals>
     <string name="relative_time_today">今日</string>
-    <string name="recently">最近</string>
     <string name="help_translate">翻訳に協力</string>
     <string name="getting_started_guide">入門ガイド</string>
     <string name="pref_tablet_ui_mode">タブレットUI</string>

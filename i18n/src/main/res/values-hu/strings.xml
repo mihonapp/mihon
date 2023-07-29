@@ -345,7 +345,6 @@
         <item quantity="other">%1$d napja</item>
     </plurals>
     <string name="relative_time_today">Ma</string>
-    <string name="recently">Nem rég</string>
     <string name="pref_dark_theme_pure_black">Teljesen fekete sötét mód</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin és Jang</string>

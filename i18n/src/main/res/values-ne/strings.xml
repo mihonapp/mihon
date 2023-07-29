@@ -139,7 +139,6 @@
         <item quantity="other">%1$d दिन अघि</item>
     </plurals>
     <string name="relative_time_today">आज</string>
-    <string name="recently">हालसालै</string>
     <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
     <string name="pref_category_nsfw_content">NSFW (१८+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>
