@@ -69,7 +69,7 @@ import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_R
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_OUTSIDE_RELEASE_PERIOD
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
-import tachiyomi.domain.manga.interactor.SetMangaUpdateInterval
+import tachiyomi.domain.manga.interactor.SetFetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.model.SourceNotInstalledException
@@ -104,7 +104,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val getTracks: GetTracks = Injekt.get()
     private val insertTrack: InsertTrack = Injekt.get()
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get()
-    private val setMangaUpdateInterval: SetMangaUpdateInterval = Injekt.get()
+    private val setFetchInterval: SetFetchInterval = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -232,8 +232,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
 
         val now = ZonedDateTime.now()
-        val fetchRange = setMangaUpdateInterval.getCurrentFetchRange(now)
-        val higherLimit = fetchRange.second
+        val fetchInterval = setFetchInterval.getCurrent(now)
+        val higherLimit = fetchInterval.second
 
         coroutineScope {
             mangaToUpdate.groupBy { it.manga.source }.values
@@ -272,7 +272,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
                                         else -> {
                                             try {
-                                                val newChapters = updateManga(manga, now, fetchRange)
+                                                val newChapters = updateManga(manga, now, fetchInterval)
                                                     .sortedByDescending { it.sourceOrder }
 
                                                 if (newChapters.isNotEmpty()) {

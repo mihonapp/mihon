@@ -13,32 +13,32 @@ import kotlin.math.absoluteValue
 
 const val MAX_GRACE_PERIOD = 28
 
-class SetMangaUpdateInterval(
+class SetFetchInterval(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) {
 
-    fun updateInterval(
+    fun update(
         manga: Manga,
         chapters: List<Chapter>,
         zonedDateTime: ZonedDateTime,
         fetchRange: Pair<Long, Long>,
     ): MangaUpdate? {
-        val currentFetchRange = if (fetchRange.first == 0L && fetchRange.second == 0L) {
-            getCurrentFetchRange(ZonedDateTime.now())
+        val currentInterval = if (fetchRange.first == 0L && fetchRange.second == 0L) {
+            getCurrent(ZonedDateTime.now())
         } else {
             fetchRange
         }
-        val interval = manga.calculateInterval.takeIf { it < 0 } ?: calculateInterval(chapters, zonedDateTime)
-        val nextUpdate = calculateNextUpdate(manga, interval, zonedDateTime, currentFetchRange)
+        val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(chapters, zonedDateTime)
+        val nextUpdate = calculateNextUpdate(manga, interval, zonedDateTime, currentInterval)
 
-        return if (manga.nextUpdate == nextUpdate && manga.calculateInterval == interval) {
+        return if (manga.nextUpdate == nextUpdate && manga.fetchInterval == interval) {
             null
         } else {
-            MangaUpdate(id = manga.id, nextUpdate = nextUpdate, calculateInterval = interval)
+            MangaUpdate(id = manga.id, nextUpdate = nextUpdate, fetchInterval = interval)
         }
     }
 
-    fun getCurrentFetchRange(timeToCal: ZonedDateTime): Pair<Long, Long> {
+    fun getCurrent(timeToCal: ZonedDateTime): Pair<Long, Long> {
         // lead range and the following range depend on if updateOnlyExpectedPeriod set.
         var followRange = 0
         var leadRange = 0
@@ -103,7 +103,7 @@ class SetMangaUpdateInterval(
     ): Long {
         return if (
             manga.nextUpdate !in fetchRange.first.rangeTo(fetchRange.second + 1) ||
-            manga.calculateInterval == 0
+            manga.fetchInterval == 0
         ) {
             val latestDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(manga.lastUpdate), zonedDateTime.zone).toLocalDate().atStartOfDay()
             val timeSinceLatest = ChronoUnit.DAYS.between(latestDate, zonedDateTime).toInt()

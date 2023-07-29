@@ -14,7 +14,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.repository.ChapterRepository
-import tachiyomi.domain.manga.interactor.SetMangaUpdateInterval
+import tachiyomi.domain.manga.interactor.SetFetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track
 import uy.kohesive.injekt.Injekt
@@ -31,10 +31,10 @@ class BackupRestorer(
 ) {
     private val updateManga: UpdateManga = Injekt.get()
     private val chapterRepository: ChapterRepository = Injekt.get()
-    private val setMangaUpdateInterval: SetMangaUpdateInterval = Injekt.get()
+    private val setFetchInterval: SetFetchInterval = Injekt.get()
 
     private var zonedDateTime = ZonedDateTime.now()
-    private var currentRange = setMangaUpdateInterval.getCurrentFetchRange(zonedDateTime)
+    private var currentFetchInterval = setFetchInterval.getCurrent(zonedDateTime)
 
     private var backupManager = BackupManager(context)
 
@@ -103,7 +103,7 @@ class BackupRestorer(
         val backupMaps = backup.backupBrokenSources.map { BackupSource(it.name, it.sourceId) } + backup.backupSources
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
         zonedDateTime = ZonedDateTime.now()
-        currentRange = setMangaUpdateInterval.getCurrentFetchRange(zonedDateTime)
+        currentFetchInterval = setFetchInterval.getCurrent(zonedDateTime)
 
         return coroutineScope {
             // Restore individual manga
@@ -147,7 +147,7 @@ class BackupRestorer(
                 restoreNewManga(updatedManga, chapters, categories, history, tracks, backupCategories)
             }
             val updatedChapters = chapterRepository.getChapterByMangaId(restoredManga.id)
-            updateManga.awaitUpdateFetchInterval(restoredManga, updatedChapters, zonedDateTime, currentRange)
+            updateManga.awaitUpdateFetchInterval(restoredManga, updatedChapters, zonedDateTime, currentFetchInterval)
         } catch (e: Exception) {
             val sourceName = sourceMapping[manga.source] ?: manga.source.toString()
             errors.add(Date() to "${manga.title} [$sourceName]: ${e.message}")

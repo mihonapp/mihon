@@ -10,14 +10,14 @@ import java.time.Duration
 import java.time.ZonedDateTime
 
 @Execution(ExecutionMode.CONCURRENT)
-class SetMangaUpdateIntervalTest {
+class SetFetchIntervalTest {
     private val testTime = ZonedDateTime.parse("2020-01-01T00:00:00Z")
     private var chapter = Chapter.create().copy(
         dateFetch = testTime.toEpochSecond() * 1000,
         dateUpload = testTime.toEpochSecond() * 1000,
     )
 
-    private val setMangaUpdateInterval = SetMangaUpdateInterval(mockk())
+    private val setFetchInterval = SetFetchInterval(mockk())
 
     private fun chapterAddTime(chapter: Chapter, duration: Duration): Chapter {
         val newTime = testTime.plus(duration).toEpochSecond() * 1000
@@ -33,7 +33,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 7
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 7
     }
 
     @Test
@@ -44,7 +44,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 7
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 7
     }
 
     @Test
@@ -60,7 +60,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 7
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 7
     }
 
     // Default 1 if interval less than 1
@@ -72,7 +72,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 1
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 1
     }
 
     // Normal interval calculation
@@ -84,7 +84,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 1
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 1
     }
 
     @Test
@@ -95,7 +95,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 2
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 2
     }
 
     // If interval is decimal, floor to closest integer
@@ -107,7 +107,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 1
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 1
     }
 
     @Test
@@ -118,7 +118,7 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 1
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 1
     }
 
     // Use fetch time if upload time not available
@@ -130,6 +130,6 @@ class SetMangaUpdateIntervalTest {
             val newChapter = chapterAddTime(chapter, duration).copy(dateUpload = 0L)
             chapters.add(newChapter)
         }
-        setMangaUpdateInterval.calculateInterval(chapters, testTime) shouldBe 1
+        setFetchInterval.calculateInterval(chapters, testTime) shouldBe 1
     }
 }
