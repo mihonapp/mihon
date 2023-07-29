@@ -120,7 +120,7 @@ fun Date.toRelativeString(
     val difference = now.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY) - this.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY)
     val days = difference.floorDiv(MILLISECONDS_IN_DAY).toInt()
     return when {
-        difference < 0 -> context.getString(R.string.recently)
+        difference < 0 -> dateFormat.format(this)
         difference < MILLISECONDS_IN_DAY -> context.getString(R.string.relative_time_today)
         difference < MILLISECONDS_IN_DAY.times(7) -> context.resources.getQuantityString(
             R.plurals.relative_time,
