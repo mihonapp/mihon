@@ -162,15 +162,6 @@ object SettingsAppearanceScreen : SearchableSettings {
                             "${it.ifEmpty { stringResource(R.string.label_default) }} ($formattedDate)"
                         },
                 ),
-                Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.relativeTime(),
-                    title = stringResource(R.string.pref_relative_format),
-                    entries = mapOf(
-                        0 to stringResource(R.string.off),
-                        2 to stringResource(R.string.pref_relative_time_short),
-                        7 to stringResource(R.string.pref_relative_time_long),
-                    ),
-                ),
             ),
         )
     }

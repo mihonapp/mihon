@@ -98,7 +98,6 @@ private fun HistoryScreenContent(
     onClickDelete: (HistoryWithRelations) -> Unit,
     preferences: UiPreferences = Injekt.get(),
 ) {
-    val relativeTime: Int = remember { preferences.relativeTime().get() }
     val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     FastScrollLazyColumn(
@@ -119,7 +118,6 @@ private fun HistoryScreenContent(
                     RelativeDateHeader(
                         modifier = Modifier.animateItemPlacement(),
                         date = item.date,
-                        relativeTime = relativeTime,
                         dateFormat = dateFormat,
                     )
                 }
