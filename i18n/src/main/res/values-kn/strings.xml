@@ -133,7 +133,6 @@
     <string name="pref_restore_backup">ಬ್ಯಾಕಪ್ ಮರುಸ್ಥಾಪಿಸಿ</string>
     <string name="pref_create_backup_summ">ಪ್ರಸ್ತುತ ಗ್ರಂಥಾಲಯವನ್ನು ಪುನಃಸ್ಥಾಪಿಸಲು ಬಳಸಬಹುದು</string>
     <string name="pref_create_backup">ಬ್ಯಾಕಪ್ ರಚಿಸಿ</string>
-    <string name="pref_search_pinned_sources_only">ಪಿನ್ ಮಾಡಿದ ಮೂಲಗಳನ್ನು ಮಾತ್ರ ಸೇರಿಸಿ</string>
     <string name="tracking_info">ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇವೆಗಳಲ್ಲಿ ಅಧ್ಯಾಯದ ಪ್ರಗತಿಯನ್ನು ನವೀಕರಿಸಲು ಏಕಮುಖ ಸಿಂಕ್. ಅವರ ಟ್ರ್ಯಾಕಿಂಗ್ ಬಟನ್ ನಿಂದ ಪ್ರತ್ಯೇಕ ಮಾಂಗಾ ನಮೂದುಗಳಿಗಾಗಿ ಟ್ರ್ಯಾಕಿಂಗ್ ಅನ್ನು ಹೊಂದಿಸಿ.</string>
     <string name="services">ಸೇವೆಗಳು</string>
     <string name="pref_auto_update_manga_sync">ಓದಿದ ನಂತರ ಅಧ್ಯಾಯದ ಪ್ರಗತಿಯನ್ನು ನವೀಕರಿಸಿ</string>

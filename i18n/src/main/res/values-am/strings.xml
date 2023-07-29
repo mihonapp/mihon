@@ -264,7 +264,6 @@
     <string name="pref_restore_backup">ምትኬ ወደነበረበት</string>
     <string name="pref_create_backup_summ">የአሁኑን ቤተ-መጽሐፍት ወደነበረበት ለመመለስ ሊያገለግል ይችላል</string>
     <string name="pref_create_backup">ምትኬን ይፍጠሩ</string>
-    <string name="pref_search_pinned_sources_only">የታሰሩ ምንጮችን ብቻ ያካትቱ</string>
     <string name="tracking_info">በክትትል አገልግሎቶች ውስጥ የምዕራፍ እድገትን ለማዘመን የአንድ-መንገድ ማመሳሰል። ከመከታተያ አዝራራቸው የግለሰቦችን የማንጋ ግቤቶች መከታተልን ያዘጋጁ።</string>
     <string name="services">አገልግሎቶች</string>
     <string name="pref_auto_update_manga_sync">ካነበቡ በኋላ የምዕራፍ እድገትን ያዘምኑ</string>

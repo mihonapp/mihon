@@ -256,7 +256,6 @@
     <string name="pref_restore_backup">Хаппаас куопуйаны куолутунан туруоруу</string>
     <string name="pref_create_backup_summ">Билиҥни бибилиотеканы төнүннэрэргэ туттуохха сөп</string>
     <string name="pref_create_backup">Хаппаас куопуйаны оҥоруу</string>
-    <string name="pref_search_pinned_sources_only">Сыһыарыллыбыт эрэ төрүттэри киллэр</string>
     <string name="tracking_info">Биир өттүттэн мэнэйдэһии, кэтээһин өҥөлөргө баар түһүмэхтэр туруктарын саҥардыыга. Маанга туспа суругун уонна талкыйын кэтээһинин түстэлгэ уларыт.</string>
     <string name="services">Өҥөлөр</string>
     <string name="pref_auto_update_manga_sync">Түһүмэх туругун ааҕы кэннэ саҥарт</string>
