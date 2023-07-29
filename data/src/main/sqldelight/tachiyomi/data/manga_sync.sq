@@ -1,5 +1,3 @@
-import kotlin.Float;
-
 CREATE TABLE manga_sync(
     _id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
@@ -10,7 +8,7 @@ CREATE TABLE manga_sync(
     last_chapter_read REAL NOT NULL,
     total_chapters INTEGER NOT NULL,
     status INTEGER NOT NULL,
-    score REAL AS Float NOT NULL,
+    score REAL NOT NULL,
     remote_url TEXT NOT NULL,
     start_date INTEGER NOT NULL,
     finish_date INTEGER NOT NULL,

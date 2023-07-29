@@ -30,9 +30,9 @@ object ChapterRecognition {
      */
     private val unwantedWhiteSpace = Regex("""\s(?=extra|special|omake)""")
 
-    fun parseChapterNumber(mangaTitle: String, chapterName: String, chapterNumber: Float? = null): Float {
+    fun parseChapterNumber(mangaTitle: String, chapterName: String, chapterNumber: Double? = null): Double {
         // If chapter number is known return.
-        if (chapterNumber != null && (chapterNumber == -2f || chapterNumber > -1f)) {
+        if (chapterNumber != null && (chapterNumber == -2.0 || chapterNumber > -1.0)) {
             return chapterNumber
         }
 
@@ -57,7 +57,7 @@ object ChapterRecognition {
         // Take the first number encountered.
         number.find(name)?.let { return getChapterNumberFromMatch(it) }
 
-        return chapterNumber ?: -1f
+        return chapterNumber ?: -1.0
     }
 
     /**
@@ -65,9 +65,9 @@ object ChapterRecognition {
      * @param match result of regex
      * @return chapter number if found else null
      */
-    private fun getChapterNumberFromMatch(match: MatchResult): Float {
+    private fun getChapterNumberFromMatch(match: MatchResult): Double {
         return match.let {
-            val initial = it.groups[1]?.value?.toFloat()!!
+            val initial = it.groups[1]?.value?.toDouble()!!
             val subChapterDecimal = it.groups[2]?.value
             val subChapterAlpha = it.groups[3]?.value
             val addition = checkForDecimal(subChapterDecimal, subChapterAlpha)

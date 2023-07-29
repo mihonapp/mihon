@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
-import app.cash.sqldelight.adapter.primitive.FloatColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import eu.kanade.domain.base.BasePreferences
@@ -38,15 +37,13 @@ import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.provider.AndroidBackupFolderProvider
 import tachiyomi.core.provider.AndroidDownloadFolderProvider
 import tachiyomi.data.AndroidDatabaseHandler
-import tachiyomi.data.Chapters
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
-import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
-import tachiyomi.data.dateAdapter
-import tachiyomi.data.listOfStringsAdapter
-import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.data.StringListColumnAdapter
+import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -93,18 +90,12 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory {
             Database(
                 driver = get(),
-                chaptersAdapter = Chapters.Adapter(
-                    chapter_numberAdapter = FloatColumnAdapter,
-                ),
                 historyAdapter = History.Adapter(
-                    last_readAdapter = dateAdapter,
-                ),
-                manga_syncAdapter = Manga_sync.Adapter(
-                    scoreAdapter = FloatColumnAdapter,
+                    last_readAdapter = DateColumnAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
-                    genreAdapter = listOfStringsAdapter,
-                    update_strategyAdapter = updateStrategyAdapter,
+                    genreAdapter = StringListColumnAdapter,
+                    update_strategyAdapter = UpdateStrategyColumnAdapter,
                 ),
             )
         }

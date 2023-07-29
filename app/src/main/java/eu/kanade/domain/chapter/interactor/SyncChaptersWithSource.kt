@@ -151,9 +151,9 @@ class SyncChaptersWithSource(
 
         val reAdded = mutableListOf<Chapter>()
 
-        val deletedChapterNumbers = TreeSet<Float>()
-        val deletedReadChapterNumbers = TreeSet<Float>()
-        val deletedBookmarkedChapterNumbers = TreeSet<Float>()
+        val deletedChapterNumbers = TreeSet<Double>()
+        val deletedReadChapterNumbers = TreeSet<Double>()
+        val deletedBookmarkedChapterNumbers = TreeSet<Double>()
 
         toDelete.forEach { chapter ->
             if (chapter.read) deletedReadChapterNumbers.add(chapter.chapterNumber)

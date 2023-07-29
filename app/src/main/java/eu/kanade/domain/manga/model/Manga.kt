@@ -99,7 +99,7 @@ fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String, categories:
     title = ComicInfo.Title(chapter.name),
     series = ComicInfo.Series(manga.title),
     number = chapter.chapterNumber.takeIf { it >= 0 }?.let {
-        if ((it.rem(1) == 0.0F)) {
+        if ((it.rem(1) == 0.0)) {
             ComicInfo.Number(it.toInt().toString())
         } else {
             ComicInfo.Number(it.toString())

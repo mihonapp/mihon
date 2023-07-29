@@ -12,7 +12,7 @@ fun Chapter.toSChapter(): SChapter {
         it.url = url
         it.name = name
         it.date_upload = dateUpload
-        it.chapter_number = chapterNumber
+        it.chapter_number = chapterNumber.toFloat()
         it.scanlator = scanlator
     }
 }
@@ -22,7 +22,7 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         name = sChapter.name,
         url = sChapter.url,
         dateUpload = sChapter.date_upload,
-        chapterNumber = sChapter.chapter_number,
+        chapterNumber = sChapter.chapter_number.toDouble(),
         scanlator = sChapter.scanlator?.ifBlank { null },
     )
 }
@@ -48,6 +48,6 @@ fun Chapter.toDbChapter(): DbChapter = ChapterImpl().also {
     it.last_page_read = lastPageRead.toInt()
     it.date_fetch = dateFetch
     it.date_upload = dateUpload
-    it.chapter_number = chapterNumber
+    it.chapter_number = chapterNumber.toFloat()
     it.source_order = sourceOrder.toInt()
 }

@@ -65,7 +65,7 @@ abstract class TrackService(val id: Long) {
     abstract fun getScoreList(): List<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
-    open fun get10PointScore(track: DomainTrack): Float {
+    open fun get10PointScore(track: DomainTrack): Double {
         return track.score
     }
 

@@ -11,7 +11,7 @@ data class ChapterUpdate(
     val url: String? = null,
     val name: String? = null,
     val dateUpload: Long? = null,
-    val chapterNumber: Float? = null,
+    val chapterNumber: Double? = null,
     val scanlator: String? = null,
 )
 
