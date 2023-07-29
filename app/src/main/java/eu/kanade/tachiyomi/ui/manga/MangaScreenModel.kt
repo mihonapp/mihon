@@ -284,7 +284,7 @@ class MangaScreenModel(
                 // Add to library
                 // First, check if duplicate exists if callback is provided
                 if (checkDuplicate) {
-                    val duplicate = getDuplicateLibraryManga.await(manga.title)
+                    val duplicate = getDuplicateLibraryManga.await(manga).getOrNull(0)
 
                     if (duplicate != null) {
                         updateSuccessState { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }

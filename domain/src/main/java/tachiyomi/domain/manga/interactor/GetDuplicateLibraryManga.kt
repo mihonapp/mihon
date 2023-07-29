@@ -7,7 +7,7 @@ class GetDuplicateLibraryManga(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend fun await(title: String): Manga? {
-        return mangaRepository.getDuplicateLibraryManga(title.lowercase())
+    suspend fun await(manga: Manga): List<Manga> {
+        return mangaRepository.getDuplicateLibraryManga(manga.id, manga.title.lowercase())
     }
 }

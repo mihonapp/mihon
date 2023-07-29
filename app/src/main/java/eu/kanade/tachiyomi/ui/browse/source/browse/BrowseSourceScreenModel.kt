@@ -321,7 +321,7 @@ class BrowseSourceScreenModel(
     }
 
     suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {
-        return getDuplicateLibraryManga.await(manga.title)
+        return getDuplicateLibraryManga.await(manga).getOrNull(0)
     }
 
     private fun moveMangaToCategories(manga: Manga, vararg categories: Category) {
