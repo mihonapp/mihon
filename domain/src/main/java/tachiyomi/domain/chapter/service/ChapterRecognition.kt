@@ -81,22 +81,22 @@ object ChapterRecognition {
      * @param alpha alpha value of regex
      * @return decimal/alpha float value
      */
-    private fun checkForDecimal(decimal: String?, alpha: String?): Float {
+    private fun checkForDecimal(decimal: String?, alpha: String?): Double {
         if (!decimal.isNullOrEmpty()) {
-            return decimal.toFloat()
+            return decimal.toDouble()
         }
 
         if (!alpha.isNullOrEmpty()) {
             if (alpha.contains("extra")) {
-                return .99f
+                return 0.99
             }
 
             if (alpha.contains("omake")) {
-                return .98f
+                return 0.98
             }
 
             if (alpha.contains("special")) {
-                return .97f
+                return 0.97
             }
 
             val trimmedAlpha = alpha.trimStart('.')
@@ -105,15 +105,15 @@ object ChapterRecognition {
             }
         }
 
-        return .0f
+        return 0.0
     }
 
     /**
      * x.a -> x.1, x.b -> x.2, etc
      */
-    private fun parseAlphaPostFix(alpha: Char): Float {
+    private fun parseAlphaPostFix(alpha: Char): Double {
         val number = alpha.code - ('a'.code - 1)
-        if (number >= 10) return 0f
-        return number / 10f
+        if (number >= 10) return 0.0
+        return number / 10.0
     }
 }
