@@ -72,7 +72,7 @@ fun WebViewScreenContent(
                 super.onPageFinished(view, url)
                 scope.launch {
                     val html = view.getHtml()
-                    showCloudflareHelp = "Checking if the site connection is secure" in html
+                    showCloudflareHelp = "window._cf_chl_opt" in html
                 }
             }
 

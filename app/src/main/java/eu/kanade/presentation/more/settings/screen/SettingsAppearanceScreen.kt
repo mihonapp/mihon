@@ -49,7 +49,6 @@ object SettingsAppearanceScreen : SearchableSettings {
         return listOf(
             getThemeGroup(context = context, uiPreferences = uiPreferences),
             getDisplayGroup(context = context, uiPreferences = uiPreferences),
-            getTimestampGroup(uiPreferences = uiPreferences),
         )
     }
 
@@ -122,6 +121,7 @@ object SettingsAppearanceScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val langs = remember { getLangs(context) }
         var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
+        val now = remember { Date().time }
 
         LaunchedEffect(currentLanguage) {
             val locale = if (currentLanguage.isEmpty()) {
@@ -153,25 +153,6 @@ object SettingsAppearanceScreen : SearchableSettings {
                         true
                     },
                 ),
-            ),
-        )
-    }
-
-    @Composable
-    private fun getTimestampGroup(uiPreferences: UiPreferences): Preference.PreferenceGroup {
-        val now = remember { Date().time }
-        return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_category_timestamps),
-            preferenceItems = listOf(
-                Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.relativeTime(),
-                    title = stringResource(R.string.pref_relative_format),
-                    entries = mapOf(
-                        0 to stringResource(R.string.off),
-                        2 to stringResource(R.string.pref_relative_time_short),
-                        7 to stringResource(R.string.pref_relative_time_long),
-                    ),
-                ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.dateFormat(),
                     title = stringResource(R.string.pref_date_format),
@@ -181,10 +162,18 @@ object SettingsAppearanceScreen : SearchableSettings {
                             "${it.ifEmpty { stringResource(R.string.label_default) }} ($formattedDate)"
                         },
                 ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = uiPreferences.relativeTime(),
+                    title = stringResource(R.string.pref_relative_format),
+                    entries = mapOf(
+                        0 to stringResource(R.string.off),
+                        2 to stringResource(R.string.pref_relative_time_short),
+                        7 to stringResource(R.string.pref_relative_time_long),
+                    ),
+                ),
             ),
         )
     }
-
     private fun getLangs(context: Context): Map<String, String> {
         val langs = mutableListOf<Pair<String, String>>()
         val parser = context.resources.getXml(R.xml.locales_config)
