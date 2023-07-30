@@ -78,13 +78,13 @@ import coil.compose.AsyncImage
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.ui.manga.FetchInterval
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))
@@ -166,7 +166,7 @@ fun MangaActionRow(
     modifier: Modifier = Modifier,
     favorite: Boolean,
     trackingCount: Int,
-    fetchInterval: FetchInterval?,
+    fetchInterval: Int?,
     isUserIntervalMode: Boolean,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
@@ -190,14 +190,8 @@ fun MangaActionRow(
             onLongClick = onEditCategory,
         )
         if (onEditIntervalClicked != null && fetchInterval != null) {
-            val intervalPair = 1.coerceAtLeast(fetchInterval.interval - fetchInterval.leadDays) to (fetchInterval.interval + fetchInterval.followDays)
             MangaActionButton(
-                title =
-                if (intervalPair.first == intervalPair.second) {
-                    pluralStringResource(id = R.plurals.day, count = intervalPair.second, intervalPair.second)
-                } else {
-                    pluralStringResource(id = R.plurals.range_interval_day, count = intervalPair.second, intervalPair.first, intervalPair.second)
-                },
+                title = pluralStringResource(id = R.plurals.day, count = fetchInterval.absoluteValue, fetchInterval.absoluteValue),
                 icon = Icons.Default.HourglassEmpty,
                 color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
                 onClick = onEditIntervalClicked,

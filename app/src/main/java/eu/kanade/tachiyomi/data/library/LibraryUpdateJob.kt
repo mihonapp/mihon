@@ -231,9 +231,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val hasDownloads = AtomicBoolean(false)
         val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
 
-        val now = ZonedDateTime.now()
-        val fetchInterval = setFetchInterval.getCurrent(now)
-        val higherLimit = fetchInterval.second
+        val fetchWindow by lazy { setFetchInterval.getWindow(ZonedDateTime.now()) }
 
         coroutineScope {
             mangaToUpdate.groupBy { it.manga.source }.values
@@ -255,8 +253,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                     manga,
                                 ) {
                                     when {
-                                        MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && manga.nextUpdate > higherLimit ->
-                                            skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_in_release_period))
+                                        manga.updateStrategy != UpdateStrategy.ALWAYS_UPDATE ->
+                                            skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_always_update))
 
                                         MANGA_NON_COMPLETED in restrictions && manga.status.toInt() == SManga.COMPLETED ->
                                             skippedUpdates.add(manga to context.getString(R.string.skipped_reason_completed))
@@ -267,12 +265,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         MANGA_NON_READ in restrictions && libraryManga.totalChapters > 0L && !libraryManga.hasStarted ->
                                             skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_started))
 
-                                        manga.updateStrategy != UpdateStrategy.ALWAYS_UPDATE ->
-                                            skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_always_update))
+                                        MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && manga.nextUpdate !in fetchWindow.first.rangeTo(fetchWindow.second) ->
+                                            skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_in_release_period))
 
                                         else -> {
                                             try {
-                                                val newChapters = updateManga(manga, now, fetchInterval)
+                                                val newChapters = updateManga(manga, fetchWindow)
                                                     .sortedByDescending { it.sourceOrder }
 
                                                 if (newChapters.isNotEmpty()) {
@@ -328,6 +326,13 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             )
         }
         if (skippedUpdates.isNotEmpty()) {
+            // TODO: surface skipped reasons to user
+            logcat {
+                skippedUpdates
+                    .groupBy { it.second }
+                    .map { (reason, entries) -> "$reason: [${entries.map { it.first.title }.sorted().joinToString()}]" }
+                    .joinToString()
+            }
             notifier.showUpdateSkippedNotification(skippedUpdates.size)
         }
     }
@@ -344,7 +349,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
      * @param manga the manga to update.
      * @return a pair of the inserted and removed chapters.
      */
-    private suspend fun updateManga(manga: Manga, zoneDateTime: ZonedDateTime, fetchRange: Pair<Long, Long>): List<Chapter> {
+    private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga metadata if needed
@@ -359,7 +364,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         // to get latest data so it doesn't get overwritten later on
         val dbManga = getManga.await(manga.id)?.takeIf { it.favorite } ?: return emptyList()
 
-        return syncChaptersWithSource.await(chapters, dbManga, source, false, zoneDateTime, fetchRange)
+        return syncChaptersWithSource.await(chapters, dbManga, source, false, fetchWindow)
     }
 
     private suspend fun updateCovers() {

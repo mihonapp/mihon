@@ -3,7 +3,6 @@ package eu.kanade.domain.manga.interactor
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.SetFetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
@@ -79,16 +78,12 @@ class UpdateManga(
 
     suspend fun awaitUpdateFetchInterval(
         manga: Manga,
-        chapters: List<Chapter>,
-        zonedDateTime: ZonedDateTime = ZonedDateTime.now(),
-        fetchRange: Pair<Long, Long> = setFetchInterval.getCurrent(zonedDateTime),
+        dateTime: ZonedDateTime = ZonedDateTime.now(),
+        window: Pair<Long, Long> = setFetchInterval.getWindow(dateTime),
     ): Boolean {
-        val updatedManga = setFetchInterval.update(manga, chapters, zonedDateTime, fetchRange)
-        return if (updatedManga != null) {
-            mangaRepository.update(updatedManga)
-        } else {
-            true
-        }
+        return setFetchInterval.toMangaUpdateOrNull(manga, dateTime, window)
+            ?.let { mangaRepository.update(it) }
+            ?: false
     }
 
     suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {

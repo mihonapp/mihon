@@ -38,9 +38,6 @@ class LibraryPreferences(
         ),
     )
 
-    fun leadingExpectedDays() = preferenceStore.getInt("pref_library_before_expect_key", 1)
-    fun followingExpectedDays() = preferenceStore.getInt("pref_library_after_expect_key", 1)
-
     fun autoUpdateMetadata() = preferenceStore.getBoolean("auto_update_metadata", false)
 
     fun autoUpdateTrackers() = preferenceStore.getBoolean("auto_update_trackers", false)

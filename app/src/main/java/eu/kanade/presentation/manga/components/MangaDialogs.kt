@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
-import tachiyomi.domain.manga.interactor.MAX_GRACE_PERIOD
+import tachiyomi.domain.manga.interactor.MAX_FETCH_INTERVAL
 import tachiyomi.presentation.core.components.WheelTextPicker
 
 @Composable
@@ -56,7 +56,7 @@ fun SetIntervalDialog(
     onDismissRequest: () -> Unit,
     onValueChanged: (Int) -> Unit,
 ) {
-    var intervalValue by rememberSaveable { mutableIntStateOf(interval) }
+    var selectedInterval by rememberSaveable { mutableIntStateOf(if (interval < 0) -interval else 0) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -67,7 +67,7 @@ fun SetIntervalDialog(
                 contentAlignment = Alignment.Center,
             ) {
                 val size = DpSize(width = maxWidth / 2, height = 128.dp)
-                val items = (0..MAX_GRACE_PERIOD).map {
+                val items = (0..MAX_FETCH_INTERVAL).map {
                     if (it == 0) {
                         stringResource(R.string.label_default)
                     } else {
@@ -77,8 +77,8 @@ fun SetIntervalDialog(
                 WheelTextPicker(
                     size = size,
                     items = items,
-                    startIndex = intervalValue,
-                    onSelectionChanged = { intervalValue = it },
+                    startIndex = selectedInterval,
+                    onSelectionChanged = { selectedInterval = it },
                 )
             }
         },
@@ -89,7 +89,7 @@ fun SetIntervalDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                onValueChanged(intervalValue)
+                onValueChanged(selectedInterval)
                 onDismissRequest()
             },) {
                 Text(text = stringResource(R.string.action_ok))
