@@ -40,7 +40,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
-import eu.kanade.tachiyomi.util.system.isDevFlavor
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.category.interactor.GetCategories
@@ -258,10 +257,10 @@ object SettingsLibraryScreen : SearchableSettings {
                         pluralStringResource(R.plurals.pref_update_release_following_days, followRange, followRange),
                     ).joinToString(),
                     onClick = { showFetchRangesDialog = true },
-                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction && isDevFlavor },
+                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction },
                 Preference.PreferenceItem.InfoPreference(
                     title = stringResource(R.string.pref_update_release_grace_period_info),
-                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction && isDevFlavor },
+                ).takeIf { MANGA_OUTSIDE_RELEASE_PERIOD in libraryUpdateMangaRestriction },
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.newShowUpdatesCount(),
                     title = stringResource(R.string.pref_library_update_show_tab_badge),

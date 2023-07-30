@@ -132,7 +132,7 @@ class ExtensionDetailsScreenModel(
 
     fun uninstallExtension() {
         val extension = state.value.extension ?: return
-        extensionManager.uninstallExtension(extension.pkgName)
+        extensionManager.uninstallExtension(extension)
     }
 
     fun toggleSource(sourceId: Long) {

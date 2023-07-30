@@ -171,8 +171,8 @@ class ExtensionsScreenModel(
             .onCompletion { removeDownloadState(extension) }
             .collect()
 
-    fun uninstallExtension(pkgName: String) {
-        extensionManager.uninstallExtension(pkgName)
+    fun uninstallExtension(extension: Extension) {
+        extensionManager.uninstallExtension(extension)
     }
 
     fun findAvailableExtensions() {

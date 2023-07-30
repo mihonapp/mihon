@@ -238,10 +238,10 @@ class ExtensionManager(
     /**
      * Uninstalls the extension that matches the given package name.
      *
-     * @param pkgName The package name of the application to uninstall.
+     * @param extension The extension to uninstall.
      */
-    fun uninstallExtension(pkgName: String) {
-        installer.uninstallApk(pkgName)
+    fun uninstallExtension(extension: Extension) {
+        installer.uninstallApk(extension.pkgName)
     }
 
     /**
@@ -260,18 +260,13 @@ class ExtensionManager(
         val nowTrustedExtensions = _untrustedExtensionsFlow.value.filter { it.signatureHash == signature }
         _untrustedExtensionsFlow.value -= nowTrustedExtensions
 
-        val ctx = context
         launchNow {
             nowTrustedExtensions
                 .map { extension ->
-                    async { ExtensionLoader.loadExtensionFromPkgName(ctx, extension.pkgName) }
+                    async { ExtensionLoader.loadExtensionFromPkgName(context, extension.pkgName) }.await()
                 }
-                .map { it.await() }
-                .forEach { result ->
-                    if (result is LoadResult.Success) {
-                        registerNewExtension(result.extension)
-                    }
-                }
+                .filterIsInstance<LoadResult.Success>()
+                .forEach { registerNewExtension(it.extension) }
         }
     }
 
