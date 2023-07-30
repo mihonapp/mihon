@@ -114,7 +114,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(R.string.pref_debug_info),
-                        onClick = { navigator.push(DebugInfoScreen) },
+                        onClick = { navigator.push(DebugInfoScreen()) },
                     ),
                 ),
             )
