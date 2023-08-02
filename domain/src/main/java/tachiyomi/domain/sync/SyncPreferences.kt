@@ -15,4 +15,20 @@ class SyncPreferences(
     fun deviceName() = preferenceStore.getString("device_name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT)
 
     fun syncService() = preferenceStore.getInt("sync_service", 0)
+
+    private fun googleDriveAccessToken() = preferenceStore.getString("google_drive_access_token", "")
+
+    fun setGoogleDriveAccessToken(accessToken: String) {
+        googleDriveAccessToken().set(accessToken)
+    }
+
+    fun getGoogleDriveAccessToken() = googleDriveAccessToken().get()
+
+    private fun googleDriveRefreshToken() = preferenceStore.getString("google_drive_refresh_token", "")
+
+    fun setGoogleDriveRefreshToken(refreshToken: String) {
+        googleDriveRefreshToken().set(refreshToken)
+    }
+
+    fun getGoogleDriveRefreshToken() = googleDriveRefreshToken().get()
 }

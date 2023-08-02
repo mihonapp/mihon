@@ -257,6 +257,9 @@ dependencies {
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
+
+    implementation(libs.google.api.services.drive)
+    implementation(libs.google.api.client.oauth)
 }
 
 androidComponents {

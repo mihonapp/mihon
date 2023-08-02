@@ -91,6 +91,9 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
+google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev197-1.25.0"
+google-api-client-oauth = "com.google.oauth-client:google-oauth-client:1.34.1"
+
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
 [bundles]

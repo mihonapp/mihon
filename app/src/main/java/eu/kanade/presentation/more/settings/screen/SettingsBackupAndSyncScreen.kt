@@ -52,6 +52,8 @@ import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.data.sync.SyncManager
+import eu.kanade.tachiyomi.data.sync.service.GoogleDriveService
+import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -94,6 +96,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                         entries = mapOf(
                             SyncManager.SyncService.NONE.value to stringResource(R.string.off),
                             SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
+                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(R.string.google_drive),
                         ),
                         onValueChanged = { true },
                     ),
@@ -448,12 +451,81 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
         return when (syncServiceType) {
             SyncManager.SyncService.NONE -> emptyList()
             SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
+            SyncManager.SyncService.GOOGLE_DRIVE -> getGoogleDrivePreferences()
         } +
             if (syncServiceType == SyncManager.SyncService.NONE) {
                 emptyList()
             } else {
                 listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
             }
+    }
+
+    @Composable
+    private fun getGoogleDrivePreferences(): List<Preference> {
+        val context = LocalContext.current
+        val googleDriveSync = Injekt.get<GoogleDriveService>()
+        return listOf(
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(R.string.pref_google_drive_sign_in),
+                onClick = {
+                    val intent = googleDriveSync.getSignInIntent()
+                    context.startActivity(intent)
+                },
+            ),
+            getGoogleDrivePurge(),
+        )
+    }
+
+    @Composable
+    private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
+        val scope = rememberCoroutineScope()
+        val showPurgeDialog = remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        val googleDriveSync = remember { GoogleDriveSyncService(context) }
+
+        if (showPurgeDialog.value) {
+            PurgeConfirmationDialog(
+                onConfirm = {
+                    showPurgeDialog.value = false
+                    scope.launch {
+                        val result = googleDriveSync.deleteSyncDataFromGoogleDrive()
+                        if (result) {
+                            context.toast(R.string.google_drive_sync_data_purged)
+                        } else {
+                            context.toast(R.string.google_drive_sync_data_not_found)
+                        }
+                    }
+                },
+                onDismissRequest = { showPurgeDialog.value = false },
+            )
+        }
+
+        return Preference.PreferenceItem.TextPreference(
+            title = stringResource(R.string.pref_google_drive_purge_sync_data),
+            onClick = { showPurgeDialog.value = true },
+        )
+    }
+
+    @Composable
+    fun PurgeConfirmationDialog(
+        onConfirm: () -> Unit,
+        onDismissRequest: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text(text = stringResource(R.string.pref_purge_confirmation_title)) },
+            text = { Text(text = stringResource(R.string.pref_purge_confirmation_message)) },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = stringResource(R.string.action_cancel))
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirm) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            },
+        )
     }
 
     @Composable

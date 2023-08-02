@@ -106,8 +106,8 @@ abstract class SyncService(
         localMangaMap.forEach { (key, localManga) ->
             val remoteManga = remoteMangaMap[key]
             if (remoteManga != null) {
-                val localInstant = localManga.lastModifiedAt?.let { Instant.ofEpochMilli(it) }
-                val remoteInstant = remoteManga.lastModifiedAt?.let { Instant.ofEpochMilli(it) }
+                val localInstant = localManga.lastModifiedAt.let { Instant.ofEpochMilli(it) }
+                val remoteInstant = remoteManga.lastModifiedAt.let { Instant.ofEpochMilli(it) }
 
                 val mergedManga = if ((localInstant ?: Instant.MIN) >= (
                     remoteInstant
@@ -164,8 +164,8 @@ abstract class SyncService(
         localChapterMap.forEach { (url, localChapter) ->
             val remoteChapter = remoteChapterMap[url]
             if (remoteChapter != null) {
-                val localInstant = localChapter.lastModifiedAt?.let { Instant.ofEpochMilli(it) }
-                val remoteInstant = remoteChapter.lastModifiedAt?.let { Instant.ofEpochMilli(it) }
+                val localInstant = localChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) }
+                val remoteInstant = remoteChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) }
 
                 val mergedChapter =
                     if ((localInstant ?: Instant.MIN) >= (remoteInstant ?: Instant.MIN)) {

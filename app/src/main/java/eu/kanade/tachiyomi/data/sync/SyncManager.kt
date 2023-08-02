@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.sync.models.SyncData
 import eu.kanade.tachiyomi.data.sync.models.SyncDevice
 import eu.kanade.tachiyomi.data.sync.models.SyncStatus
+import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -56,6 +57,7 @@ class SyncManager(
     enum class SyncService(val value: Int) {
         NONE(0),
         SYNCYOMI(1),
+        GOOGLE_DRIVE(2),
         ;
 
         companion object {
@@ -105,6 +107,10 @@ class SyncManager(
                     syncPreferences,
                     notifier,
                 )
+            }
+
+            SyncService.GOOGLE_DRIVE -> {
+                GoogleDriveSyncService(context, json, syncPreferences)
             }
 
             else -> {
