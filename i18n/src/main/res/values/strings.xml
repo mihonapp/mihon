@@ -509,8 +509,8 @@
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
     <string name="library_sync_complete">Library sync complete</string>
-    <string name="sync_error">Syncing data failed</string>
-    <string name="sync_complete">Syncing data complete</string>
+    <string name="sync_error">Syncing library failed</string>
+    <string name="sync_complete">Syncing library complete</string>
     <string name="sync_in_progress">Sync is already in progress</string>
     <string name="pref_sync_device_name">Device name</string>
     <string name="pref_sync_device_name_summ">Enter a name for this device</string>

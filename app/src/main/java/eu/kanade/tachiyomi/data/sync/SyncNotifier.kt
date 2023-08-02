@@ -36,7 +36,7 @@ class SyncNotifier(private val context: Context) {
 
     fun showSyncProgress(content: String = "", progress: Int = 0, maxAmount: Int = 100): NotificationCompat.Builder {
         val builder = with(progressNotificationBuilder) {
-            setContentTitle(context.getString(R.string.syncing_data))
+            setContentTitle(context.getString(R.string.syncing_library))
 
             if (!preferences.hideNotificationContent().get()) {
                 setContentText(content)

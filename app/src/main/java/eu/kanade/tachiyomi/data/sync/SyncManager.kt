@@ -75,7 +75,7 @@ class SyncManager(
             backupManager.backupMangas(databaseManga, BACKUP_ALL),
             backupManager.backupCategories(BACKUP_ALL),
             emptyList(),
-            backupManager.backupExtensionInfo(databaseManga),
+            backupManager.prepExtensionInfoForSync(databaseManga),
         )
 
         // Create the SyncStatus object
@@ -215,7 +215,7 @@ class SyncManager(
                     localChapter.last_page_read != remoteChapter.lastPageRead ||
                     localChapter.date_fetch != remoteChapter.dateFetch ||
                     localChapter.date_upload != remoteChapter.dateUpload ||
-                    localChapter.chapter_number != remoteChapter.chapterNumber ||
+                    localChapter.chapter_number.toFloat() != remoteChapter.chapterNumber ||
                     localChapter.source_order != remoteChapter.sourceOrder
             } ?: true
         }
