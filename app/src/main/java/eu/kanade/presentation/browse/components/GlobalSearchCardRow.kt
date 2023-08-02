@@ -3,17 +3,21 @@ package eu.kanade.presentation.browse.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.library.components.CommonMangaItemDefaults
 import eu.kanade.presentation.library.components.MangaComfortableGridItem
+import eu.kanade.tachiyomi.R
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.manga.model.asMangaCover
@@ -26,13 +30,18 @@ fun GlobalSearchCardRow(
     onClick: (Manga) -> Unit,
     onLongClick: (Manga) -> Unit,
 ) {
+    if (titles.isEmpty()) {
+        EmptyResultItem()
+        return
+    }
+
     LazyRow(
         contentPadding = PaddingValues(MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny),
     ) {
         items(titles) {
             val title by getManga(it)
-            GlobalSearchCard(
+            MangaItem(
                 title = title.title,
                 cover = title.asMangaCover(),
                 isFavorite = title.favorite,
@@ -44,7 +53,7 @@ fun GlobalSearchCardRow(
 }
 
 @Composable
-private fun GlobalSearchCard(
+private fun MangaItem(
     title: String,
     cover: MangaCover,
     isFavorite: Boolean,
@@ -54,6 +63,7 @@ private fun GlobalSearchCard(
     Box(modifier = Modifier.width(96.dp)) {
         MangaComfortableGridItem(
             title = title,
+            titleMaxLines = 3,
             coverData = cover,
             coverBadgeStart = {
                 InLibraryBadge(enabled = isFavorite)
@@ -63,4 +73,16 @@ private fun GlobalSearchCard(
             onLongClick = onLongClick,
         )
     }
+}
+
+@Composable
+private fun EmptyResultItem() {
+    Text(
+        text = stringResource(R.string.no_results_found),
+        modifier = Modifier
+            .padding(
+                horizontal = MaterialTheme.padding.medium,
+                vertical = MaterialTheme.padding.small,
+            ),
+    )
 }

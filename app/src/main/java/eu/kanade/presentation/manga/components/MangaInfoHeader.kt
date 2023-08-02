@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Block
@@ -43,7 +44,6 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -84,6 +84,7 @@ import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))
@@ -165,14 +166,18 @@ fun MangaActionRow(
     modifier: Modifier = Modifier,
     favorite: Boolean,
     trackingCount: Int,
+    fetchInterval: Int?,
+    isUserIntervalMode: Boolean,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
     onWebViewLongClicked: (() -> Unit)?,
     onTrackingClicked: (() -> Unit)?,
+    onEditIntervalClicked: (() -> Unit)?,
     onEditCategory: (() -> Unit)?,
 ) {
+    val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
+
     Row(modifier = modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
-        val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
         MangaActionButton(
             title = if (favorite) {
                 stringResource(R.string.in_library)
@@ -184,6 +189,14 @@ fun MangaActionRow(
             onClick = onAddToLibraryClicked,
             onLongClick = onEditCategory,
         )
+        if (onEditIntervalClicked != null && fetchInterval != null) {
+            MangaActionButton(
+                title = pluralStringResource(id = R.plurals.day, count = fetchInterval.absoluteValue, fetchInterval.absoluteValue),
+                icon = Icons.Default.HourglassEmpty,
+                color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
+                onClick = onEditIntervalClicked,
+            )
+        }
         if (onTrackingClicked != null) {
             MangaActionButton(
                 title = if (trackingCount == 0) {
@@ -652,11 +665,6 @@ private fun TagsChip(
             modifier = modifier,
             onClick = onClick,
             label = { Text(text = text, style = MaterialTheme.typography.bodySmall) },
-            border = null,
-            colors = SuggestionChipDefaults.suggestionChipColors(
-                containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                labelColor = MaterialTheme.colorScheme.onSurface,
-            ),
         )
     }
 }

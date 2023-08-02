@@ -49,7 +49,6 @@
     <string name="secure_screen">Ekran i sigurt</string>
     <string name="pref_category_nsfw_content">Burimet NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Shfaq në listat e burimeve dhe shtesave</string>
-    <string name="recently">Kohët e fundit</string>
     <string name="relative_time_today">Sot</string>
     <plurals name="relative_time">
         <item quantity="one">Dje</item>
@@ -180,10 +179,6 @@
     <string name="pref_app_theme">Tema e aplikacionit</string>
     <string name="theme_monet">Dinamik</string>
     <string name="theme_tako">Tako</string>
-    <string name="pref_relative_time_long">E gjatë (Shkurt+, n ditë më parë)</string>
-    <string name="pref_category_timestamps">Vula kohore</string>
-    <string name="pref_relative_format">Vula kohore relative</string>
-    <string name="pref_relative_time_short">E shkurtër (sot, dje)</string>
     <string name="pref_date_format">Formati i datës</string>
     <string name="landscape">Peizazhi</string>
     <string name="secure_screen_summary">Ekrani i sigurt fsheh përmbajtjen e aplikacionit kur ndërron aplikacionet dhe bllokon screenshots</string>
@@ -540,7 +535,6 @@
         <item quantity="one">Ofrohet përditësim i shtesës</item>
         <item quantity="other">Ofrohen %d përditësime shtesë</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Kërko vetëm burime të fiksuara në kërkimin global</string>
     <string name="pref_create_backup">Krijo kopje rezervë</string>
     <string name="pref_create_backup_summ">Mund të përdoret për të rivendosur bibliotekën aktuale</string>
     <string name="pref_restore_backup">Rivendos kopjen rezervë</string>

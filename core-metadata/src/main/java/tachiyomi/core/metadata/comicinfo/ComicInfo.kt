@@ -150,12 +150,12 @@ enum class ComicInfoPublishingStatus(
 
     companion object {
         fun toComicInfoValue(value: Long): String {
-            return values().firstOrNull { it.sMangaModelValue == value.toInt() }?.comicInfoValue
+            return entries.firstOrNull { it.sMangaModelValue == value.toInt() }?.comicInfoValue
                 ?: UNKNOWN.comicInfoValue
         }
 
         fun toSMangaValue(value: String?): Int {
-            return values().firstOrNull { it.comicInfoValue == value }?.sMangaModelValue
+            return entries.firstOrNull { it.comicInfoValue == value }?.sMangaModelValue
                 ?: UNKNOWN.sMangaModelValue
         }
     }

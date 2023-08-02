@@ -148,14 +148,10 @@
     <string name="theme_tealturquoise">టీల్ మరియు మణి</string>
     <string name="theme_yotsuba">యోట్సూబ</string>
     <string name="pref_dark_theme_pure_black">స్వచ్ఛమైన నలుపు వీక్షణ</string>
-    <string name="pref_category_timestamps">సమయ ముద్రణలు</string>
-    <string name="pref_relative_format">సంబంధిత సమయ ముద్రణలు</string>
     <string name="pref_category_security">భద్రత</string>
     <string name="lock_with_biometrics">తాళమును తెరుచుట ఆవశ్యకము</string>
     <string name="lock_when_idle">కార్యచరణము లేనిచో తాళమును వేయుము</string>
     <string name="lock_always">ఎల్లప్పుడు</string>
-    <string name="pref_relative_time_short">సంక్షిప్తము (నేడు మరియు నిన్న)</string>
-    <string name="pref_relative_time_long">దీర్ఘము (సంక్షిప్త+, మరియు n రోజుల క్రితము)</string>
     <string name="pref_date_format">తారీఖు స్వరూపము</string>
     <string name="pref_manage_notifications">సూచనలను నిర్వహించుము</string>
     <string name="label_stats">గణాంకాలు</string>

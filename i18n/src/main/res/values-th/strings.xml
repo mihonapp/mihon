@@ -228,7 +228,7 @@
     <string name="plan_to_read">วางแผนที่จะอ่าน</string>
     <string name="repeating">อ่านอีกครั้ง</string>
     <string name="score">คะแนน</string>
-    <string name="pref_read_with_long_tap">แสดงเมื่อแตะค้าง</string>
+    <string name="pref_read_with_long_tap">แสดงการกระทำเมื่อแตะค้าง</string>
     <string name="action_open_in_web_view">เปิดใน WebView</string>
     <string name="pref_true_color">สี 32 บิต</string>
     <string name="pref_skip_read_chapters">ข้ามตอนที่ทำเครื่องหมายว่าอ่านแล้ว</string>
@@ -499,7 +499,6 @@
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
     <string name="invalid_backup_file_missing_manga">แฟ้มสํารองข้อมูลไม่มีรายการคลังใด ๆ</string>
     <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง</string>
-    <string name="pref_search_pinned_sources_only">ค้นหาในทั้งหมดเฉพาะในแหล่งที่มาที่ตรึงไว้เท่านั้น</string>
     <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับบริการการติดตาม ตั้งค่าการติดตามรายการในแต่ละรายการได้จากปุ่มติดตาม</string>
     <string name="pref_download_new_categories_details">รายการในหมวดหมู่ที่ยกเว้นไว้จะไม่ถูกดาวน์โหลดแม้ว่าจะอยู่ในหมวดหมู่ที่รวมอยู่ด้วยก็ตาม</string>
     <string name="pref_category_auto_download">ดาวน์โหลดอัตโนมัติ</string>
@@ -577,7 +576,6 @@
     <string name="local_invalid_format">รูปแบบตอนไม่ถูกต้อง</string>
     <string name="manga_cover">ปก</string>
     <string name="unread">ยังไม่ได้อ่าน</string>
-    <string name="recently">ล่าสุด</string>
     <string name="pref_inverted_colors">สลับสี</string>
     <string name="action_sort_count">รายการทั้งหมด</string>
     <string name="pref_tablet_ui_mode">UI แท็บเล็ต</string>
@@ -600,7 +598,7 @@
     <string name="enhanced_tracking_info">บริการที่มีคุณลักษณะขั้นสูงสำหรับแหล่งที่มาเฉพาะ รายการจะถูกติดตามโดยอัตโนมัติเมื่อเพิ่มลงในคลัง</string>
     <string name="ext_app_info">ข้อมูลแอพ</string>
     <string name="extension_api_error">เกิดข้อผิดพลาดในการรับรายการส่วนขยาย</string>
-    <string name="pref_auto_clear_chapter_cache">ล้างแคชตอนในเมื่อปิดแอพ</string>
+    <string name="pref_auto_clear_chapter_cache">ล้างแคชตอนในเมื่อเปิดแอพ</string>
     <string name="label_warning">คำเตือน</string>
     <string name="action_display_local_badge">แหล่งที่มาในเครื่อง</string>
     <string name="action_display_language_badge">ภาษา</string>
@@ -610,10 +608,6 @@
     <string name="theme_yinyang">หยินหยาง</string>
     <string name="theme_yotsuba">โยทซึบะ</string>
     <string name="pref_dark_theme_pure_black">โหมดมืดดำสนิท</string>
-    <string name="pref_category_timestamps">การประทับเวลา</string>
-    <string name="pref_relative_format">การประทับเวลาเชิงสัมพัทธ์</string>
-    <string name="pref_relative_time_short">สั้น (วันนี้, เมื่อวาน)</string>
-    <string name="pref_relative_time_long">ยาว (สั้น+, n วันที่ผ่านมา)</string>
     <string name="update_72hour">ทุก 3 วัน</string>
     <string name="restrictions">ข้อจำกัด: %s</string>
     <string name="connected_to_wifi">เฉพาะขณะเชื่อมต่อ Wi-Fi</string>
@@ -688,7 +682,7 @@
     <string name="theme_tidalwave">ไทเดลเวฟ</string>
     <string name="download_ahead">ดาวน์โหลดล่วงหน้า</string>
     <string name="auto_download_while_reading">ดาวน์โหลดอัตโนมัติขณะกำลังอ่าน</string>
-    <string name="download_ahead_info">ใช้ได้เฉพาะกับรายการที่อยู่ในคลังและตอนปัจจุบันกับตอนถัด ๆ ไปดาวน์โหลดไว้อยู่แล้ว</string>
+    <string name="download_ahead_info">ใช้ได้เฉพาะกับตอนปัจจุบัน + ตอนถัด ๆ ไปดาวน์โหลดไว้อยู่แล้ว</string>
     <plurals name="next_unread_chapters">
         <item quantity="other">%d ตอนที่ยังไม่ได้อ่านถัดไป</item>
     </plurals>
@@ -799,7 +793,6 @@
     <string name="skipped_reason_not_in_release_period">ข้ามไปเนื่องจากคาดว่าจะไม่มีการออกในวันนี้</string>
     <string name="manga_display_interval_title">ประมาณทุกๆ</string>
     <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
-    <string name="manga_modify_interval_title">แก้ไขช่วงเวลา</string>
     <string name="pref_update_release_grace_period_info">ขอแนะนำให้ใช้ระยะเวลาเลื่อนเพื่อเพิ่มความรวดเร็วจากแหล่งที่มา ยิ่งมีการตรวจสอบรายการที่ขาดหายไปมากเท่าใด ช่วงเวลาระหว่างการตรวจสอบก็จะนานขึ้นสูงสุด 28 วัน</string>
     <string name="intervals_header">ช่วงเวลา</string>
     <string name="manga_modify_calculated_interval_title">ปรับแต่งช่วงเวลา</string>
@@ -807,4 +800,8 @@
     <string name="track_delete_title">นำการติดตามของ %s ออกไหม\?</string>
     <string name="track_delete_text">การกระทำนี้จะเป็นการลบการติดตามภายในเครื่อง</string>
     <string name="track_delete_remote_text">และลบออกจาก %s เช่นกัน</string>
+    <string name="library_sync_complete">ซิงค์คลังเสร็จสมบูรณ์</string>
+    <string name="has_results">มีผลลัพธ์</string>
+    <string name="syncing_library">กำลังซิงค์คลัง</string>
+    <string name="delete_downloaded">ลบการดาวน์โหลด</string>
 </resources>

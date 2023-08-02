@@ -71,9 +71,9 @@ class GetApplicationRelease(
         val forceCheck: Boolean = false,
     )
 
-    sealed class Result {
-        class NewUpdate(val release: Release) : Result()
-        object NoNewUpdate : Result()
-        object ThirdPartyInstallation : Result()
+    sealed interface Result {
+        data class NewUpdate(val release: Release) : Result
+        data object NoNewUpdate : Result
+        data object ThirdPartyInstallation : Result
     }
 }

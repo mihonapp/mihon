@@ -44,7 +44,7 @@ data class BackupTracking(
             title = this@BackupTracking.title,
             lastChapterRead = this@BackupTracking.lastChapterRead.toDouble(),
             totalChapters = this@BackupTracking.totalChapters.toLong(),
-            score = this@BackupTracking.score,
+            score = this@BackupTracking.score.toDouble(),
             status = this@BackupTracking.status.toLong(),
             startDate = this@BackupTracking.startedReadingDate,
             finishDate = this@BackupTracking.finishedReadingDate,
@@ -54,7 +54,7 @@ data class BackupTracking(
 }
 
 val backupTrackMapper = {
-        _: Long, _: Long, syncId: Long, mediaId: Long, libraryId: Long?, title: String, lastChapterRead: Double, totalChapters: Long, status: Long, score: Float, remoteUrl: String, startDate: Long, finishDate: Long ->
+        _: Long, _: Long, syncId: Long, mediaId: Long, libraryId: Long?, title: String, lastChapterRead: Double, totalChapters: Long, status: Long, score: Double, remoteUrl: String, startDate: Long, finishDate: Long ->
     BackupTracking(
         syncId = syncId.toInt(),
         mediaId = mediaId,
@@ -63,7 +63,7 @@ val backupTrackMapper = {
         title = title,
         lastChapterRead = lastChapterRead.toFloat(),
         totalChapters = totalChapters.toInt(),
-        score = score,
+        score = score.toFloat(),
         status = status.toInt(),
         startedReadingDate = startDate,
         finishedReadingDate = finishDate,

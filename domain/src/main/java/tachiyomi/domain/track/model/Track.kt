@@ -10,7 +10,7 @@ data class Track(
     val lastChapterRead: Double,
     val totalChapters: Long,
     val status: Long,
-    val score: Float,
+    val score: Double,
     val remoteUrl: String,
     val startDate: Long,
     val finishDate: Long,

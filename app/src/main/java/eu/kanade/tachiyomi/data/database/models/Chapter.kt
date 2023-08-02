@@ -36,7 +36,7 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         url = url,
         name = name,
         dateUpload = date_upload,
-        chapterNumber = chapter_number,
+        chapterNumber = chapter_number.toDouble(),
         scanlator = scanlator,
         lastModifiedAt = last_modified,
     )

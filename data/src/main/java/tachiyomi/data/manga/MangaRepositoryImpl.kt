@@ -2,11 +2,10 @@ package tachiyomi.data.manga
 
 import kotlinx.coroutines.flow.Flow
 import logcat.LogPriority
-import tachiyomi.core.util.lang.toLong
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.data.listOfStringsAdapter
-import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.data.StringListColumnAdapter
+import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
@@ -48,9 +47,9 @@ class MangaRepositoryImpl(
         return handler.subscribeToList { mangasQueries.getFavoriteBySourceId(sourceId, mangaMapper) }
     }
 
-    override suspend fun getDuplicateLibraryManga(title: String): Manga? {
-        return handler.awaitOneOrNull {
-            mangasQueries.getDuplicateLibraryManga(title, mangaMapper)
+    override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<Manga> {
+        return handler.awaitList {
+            mangasQueries.getDuplicateLibraryManga(title, id, mangaMapper)
         }
     }
 
@@ -74,7 +73,7 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun insert(manga: Manga): Long? {
-        return handler.awaitOneOrNull(inTransaction = true) {
+        return handler.awaitOneOrNullExecutable(inTransaction = true) {
             mangasQueries.insert(
                 source = manga.source,
                 url = manga.url,
@@ -88,7 +87,7 @@ class MangaRepositoryImpl(
                 favorite = manga.favorite,
                 lastUpdate = manga.lastUpdate,
                 nextUpdate = manga.nextUpdate,
-                calculateInterval = manga.calculateInterval.toLong(),
+                calculateInterval = manga.fetchInterval.toLong(),
                 initialized = manga.initialized,
                 viewerFlags = manga.viewerFlags,
                 chapterFlags = manga.chapterFlags,
@@ -129,21 +128,21 @@ class MangaRepositoryImpl(
                     artist = value.artist,
                     author = value.author,
                     description = value.description,
-                    genre = value.genre?.let(listOfStringsAdapter::encode),
+                    genre = value.genre?.let(StringListColumnAdapter::encode),
                     title = value.title,
                     status = value.status,
                     thumbnailUrl = value.thumbnailUrl,
-                    favorite = value.favorite?.toLong(),
+                    favorite = value.favorite,
                     lastUpdate = value.lastUpdate,
                     nextUpdate = value.nextUpdate,
-                    calculateInterval = value.calculateInterval?.toLong(),
-                    initialized = value.initialized?.toLong(),
+                    calculateInterval = value.fetchInterval?.toLong(),
+                    initialized = value.initialized,
                     viewer = value.viewerFlags,
                     chapterFlags = value.chapterFlags,
                     coverLastModified = value.coverLastModified,
                     dateAdded = value.dateAdded,
                     mangaId = value.id,
-                    updateStrategy = value.updateStrategy?.let(updateStrategyAdapter::encode),
+                    updateStrategy = value.updateStrategy?.let(UpdateStrategyColumnAdapter::encode),
                 )
             }
         }

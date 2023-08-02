@@ -194,7 +194,6 @@
     <string name="ext_trust">Шанчӑклӑ</string>
     <string name="ext_pending">Кӗтет</string>
     <string name="backup_restore_missing_sources">Ҫук ҫӑл куҫсем:</string>
-    <string name="pref_search_pinned_sources_only">Ҫакнӑ ҫӑл куҫсене ҫеҫ кӗрт</string>
     <string name="tracking_info">Сӑнану сервиссенче сыпӑкӑн ӳсӗмне ҫӗнетме пӗр енлӗ пӗрлӗхлени. Манкӑн уйрӑм ҫыравӗсемпе вӗсен сӑнану пускӑчсем валли сӑнану ӗнерле.</string>
     <string name="pref_auto_update_manga_sync">Вуланӑ хыҫҫӑн сыпӑксен ӳсӗме ҫӗнет</string>
     <string name="fifth_to_last">Вуланӑ сыпӑкран пиллӗкмӗшӗ</string>
@@ -575,11 +574,7 @@
     <string name="label_local">Вырӑнти</string>
     <string name="label_downloaded">Тийесе илнӗ</string>
     <string name="theme_tidalwave">Шыв хӑпарнин хумӗ</string>
-    <string name="pref_category_timestamps">Вӑхӑт паллисем</string>
-    <string name="pref_relative_format">Чухлавлӑ вӑхӑт палли</string>
-    <string name="pref_relative_time_long">Вӑрӑм (кӗске+, n кун кайалла)</string>
     <string name="pref_app_theme">Ап темми</string>
-    <string name="recently">Анчахрах</string>
     <string name="relative_time_today">Пайан</string>
     <string name="theme_lavender">Лавантӑ</string>
     <string name="theme_yinyang">Ин тата Йан</string>
@@ -597,7 +592,6 @@
     <string name="pref_dark_theme_pure_black">Хуп-хура темӑ</string>
     <string name="pref_app_language">Ап чӗлхи</string>
     <string name="action_not_now">Халь мар</string>
-    <string name="pref_relative_time_short">Кӗске (пайан, ӗнер)</string>
     <string name="update_72hour">Кашни 3 кун</string>
     <string name="theme_tealturquoise">Симӗс кӑвак</string>
     <string name="theme_monet">Куҫӑмлӑ</string>

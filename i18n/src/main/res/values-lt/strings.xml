@@ -56,7 +56,6 @@
         <item quantity="other">Prieš %1$d dienų</item>
     </plurals>
     <string name="relative_time_today">Šiandien</string>
-    <string name="recently">Neseniai</string>
     <string name="parental_controls_info">Tai nesustabdo neoficialių ar potencialiai neteisingai pažymėtų plėtinių nuo N18+ turinio rodymo programoje.</string>
     <string name="pref_show_nsfw_source">Rodyti šaltiniuose ir plėtinių sąrašuose</string>
     <string name="pref_category_nsfw_content">N18+ šaltiniai</string>
@@ -75,10 +74,6 @@
     <string name="pref_category_security">Sauga</string>
     <string name="pref_manage_notifications">Tvarkyti pranešimus</string>
     <string name="pref_date_format">Datos formatas</string>
-    <string name="pref_relative_time_long">Ilgi (Trumpi+, prieš n dienų)</string>
-    <string name="pref_relative_time_short">Trumpi(Šiandien,Vakar)</string>
-    <string name="pref_relative_format">Reliatyvūs laiko štampai</string>
-    <string name="pref_category_timestamps">Laiko štampai</string>
     <string name="pref_dark_theme_pure_black">Visiškai juodas tamsus režimas</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin ir Jang</string>
@@ -337,7 +332,6 @@
     <string name="pref_download_new">Atsisiųsti naujus skyrius</string>
     <string name="save_chapter_as_cbz">Išsaugoti kaip CBZ archyvą</string>
     <string name="pref_auto_update_manga_sync">Po perskaitymo atnaujinti statusą</string>
-    <string name="pref_search_pinned_sources_only">Įtraukti tik prisegtus šaltinius</string>
     <string name="backup_restore_missing_sources">Trūksta šaltinių:</string>
     <string name="services">Paslaugos</string>
     <string name="second_to_last">Priešpaskutinis perskaitytas skyrius</string>

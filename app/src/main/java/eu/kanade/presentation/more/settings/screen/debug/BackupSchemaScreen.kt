@@ -28,9 +28,11 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
 import tachiyomi.presentation.core.components.material.Scaffold
 
-object BackupSchemaScreen : Screen() {
+class BackupSchemaScreen : Screen() {
 
-    const val title = "Backup file schema"
+    companion object {
+        const val title = "Backup file schema"
+    }
 
     @Composable
     override fun Content() {

@@ -30,7 +30,6 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
-import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
@@ -65,6 +64,7 @@ import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -114,7 +114,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(R.string.pref_debug_info),
-                        onClick = { navigator.push(DebugInfoScreen) },
+                        onClick = { navigator.push(DebugInfoScreen()) },
                     ),
                 ),
             )
@@ -221,7 +221,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_invalidate_download_cache),
                     subtitle = stringResource(R.string.pref_invalidate_download_cache_summary),
-                    onClick = { Injekt.get<DownloadCache>().invalidateCache() },
+                    onClick = {
+                        Injekt.get<DownloadCache>().invalidateCache()
+                        context.toast(R.string.download_cache_invalidated)
+                    },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_clear_database),

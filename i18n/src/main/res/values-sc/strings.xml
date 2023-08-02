@@ -395,7 +395,6 @@
     <string name="restore_duration">%02d min e %02d seg</string>
     <string name="local_source_help_guide">Ghia a sas fontes locales</string>
     <string name="downloaded_only_summary">Filtrat totu sos elementos in sa biblioteca tua</string>
-    <string name="pref_search_pinned_sources_only">Chirca petzi in sas fontes apicadas in sa chirca globale</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Nd\'abarrat %1$s</item>
         <item quantity="other">Nd\'abarrant %1$s</item>
@@ -586,19 +585,14 @@
     <string name="pref_hide_threshold">Sensibilidade pro cuare su menù cun s\'iscurrimentu</string>
     <string name="label_background_activity">Atividade in s\'isfundu</string>
     <string name="pref_inverted_colors">Furriada</string>
-    <string name="pref_relative_time_long">Longa (curtza+, n dies a oe)</string>
-    <string name="pref_relative_time_short">Curtza (oe, eris)</string>
-    <string name="pref_relative_format">Marcas temporales relativas</string>
     <plurals name="relative_time">
         <item quantity="one">Eris</item>
         <item quantity="other">%1$d dies a oe</item>
     </plurals>
     <string name="relative_time_today">Oe</string>
-    <string name="recently">Dae pagu</string>
     <string name="theme_tealturquoise">Birde abba e turchesu</string>
     <string name="confirm_lock_change">Autèntica·ti pro cunfirmare sa modìfica</string>
     <string name="label_default">Predefinida</string>
-    <string name="pref_category_timestamps">Marcas temporales</string>
     <string name="pref_category_appearance">Aparèntzia</string>
     <string name="action_track">Arrasta</string>
     <string name="getting_started_guide">Ghia pro incumintzare</string>
@@ -801,7 +795,6 @@
     <string name="pref_update_only_in_release_period">Foras de su perìodu de publicatzione prevìdidu</string>
     <string name="intervals_header">Intervallos</string>
     <string name="manga_display_modified_interval_title">Imposta s\'agiornamentu pro cada</string>
-    <string name="manga_modify_interval_title">Modìfica s\'intervallu</string>
     <string name="skipped_reason_not_in_release_period">Brincadu ca non bi fiat peruna publicatzione prevìdida oe</string>
     <string name="action_set_interval">Imposta s\'intervallu</string>
     <string name="action_filter_interval_late">Verìfica in ritardu de 10+ dies</string>

@@ -510,7 +510,6 @@
         <item quantity="other">%d sledovačů</item>
     </plurals>
     <string name="also_set_chapter_settings_for_library">Také nastavit pro všechny položky v mé knihovně</string>
-    <string name="pref_search_pinned_sources_only">V globálním vyhledávání prohledávejte pouze připnuté zdroje</string>
     <string name="pref_category_reading">Čtení</string>
     <string name="pref_show_reading_mode_summary">Při otevření čtečky krátce zobrazí aktuální režim</string>
     <string name="ext_updates_pending">Čekajících aktualizací</string>
@@ -550,7 +549,7 @@
     <string name="nav_zone_left">Vlevo</string>
     <string name="nav_zone_prev">Předchozí</string>
     <string name="notification_incognito_text">Zakázat anonymní režim</string>
-    <string name="automatic_background">Automaticky</string>
+    <string name="automatic_background">Auto</string>
     <string name="pref_grayscale">Odstíny šedé</string>
     <string name="cancel_all_for_series">Zrušit vše pro tuto sérii</string>
     <string name="error_no_match">Žádná shoda nenalezena</string>
@@ -603,11 +602,6 @@
         <item quantity="other">Před %1$d dny</item>
     </plurals>
     <string name="relative_time_today">Dnes</string>
-    <string name="recently">Nedávno</string>
-    <string name="pref_relative_time_long">Dlouhé (Krátké+, před n dny)</string>
-    <string name="pref_relative_time_short">Krátký (dnes, včera)</string>
-    <string name="pref_relative_format">Relativní časová razítka</string>
-    <string name="pref_category_timestamps">Časová razítka</string>
     <string name="theme_tealturquoise">Modrozelená a Tyrkysová</string>
     <string name="pref_category_appearance">Vzhled</string>
     <string name="confirm_lock_change">Potvrďte změnu ověřením</string>
@@ -816,7 +810,6 @@
     <string name="action_sort_next_updated">Další očekávaná aktualizace</string>
     <string name="manga_display_interval_title">Odhadovat každý</string>
     <string name="manga_display_modified_interval_title">Nastavit aktualizaci každých</string>
-    <string name="manga_modify_interval_title">Upravit interval</string>
     <string name="action_set_interval">Nastavit interval</string>
     <string name="action_filter_interval_dropped">Opuštěný\? Pozdě 20+ a 2 měsíce</string>
     <plurals name="pref_update_release_leading_days">
@@ -844,4 +837,7 @@
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Odebrat sledování %s\?</string>
     <string name="delete_downloaded">Odstranit stažené</string>
+    <string name="has_results">Má výsledky</string>
+    <string name="syncing_library">Synchronizace knihovny</string>
+    <string name="library_sync_complete">Synchronizace knihovny dokončena</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FlipToBack
@@ -14,10 +15,12 @@ import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,8 +50,6 @@ import tachiyomi.data.Database
 import tachiyomi.domain.source.interactor.GetSourcesWithNonLibraryManga
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
-import tachiyomi.presentation.core.components.FastScrollLazyColumn
-import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -135,7 +136,7 @@ class ClearDatabaseScreen : Screen() {
                                 .padding(contentPadding)
                                 .fillMaxSize(),
                         ) {
-                            FastScrollLazyColumn(
+                            LazyColumn(
                                 modifier = Modifier.weight(1f),
                             ) {
                                 items(s.items) { sourceWithCount ->
@@ -148,7 +149,7 @@ class ClearDatabaseScreen : Screen() {
                                 }
                             }
 
-                            Divider()
+                            HorizontalDivider()
 
                             Button(
                                 modifier = Modifier
@@ -269,12 +270,15 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
         state.copy(showConfirmation = false)
     }
 
-    sealed class State {
-        object Loading : State()
+    sealed interface State {
+        @Immutable
+        data object Loading : State
+
+        @Immutable
         data class Ready(
             val items: List<SourceWithCount>,
             val selection: List<Long> = emptyList(),
             val showConfirmation: Boolean = false,
-        ) : State()
+        ) : State
     }
 }

@@ -399,7 +399,6 @@
         <item quantity="one">En resta %1$s</item>
         <item quantity="other">En resten %1$s</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Cerca només a les fonts fixades a la cerca global</string>
     <string name="gray_background">Gris</string>
     <string name="viewer">Mode de lectura</string>
     <string name="pref_category_for_this_series">Per a aquesta sèrie</string>
@@ -585,7 +584,6 @@
     <string name="action_sort_count">Nombre total d’elements</string>
     <string name="pref_app_theme">Tema de l’aplicació</string>
     <string name="theme_monet">Dinàmic</string>
-    <string name="recently">Recentment</string>
     <string name="action_display_language_badge">Llengua</string>
     <string name="theme_midnightdusk">Capvespre</string>
     <string name="theme_strawberrydaiquiri">Daiquiri de maduixa</string>
@@ -594,12 +592,8 @@
     <string name="theme_yinyang">Yin i yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Mode fosc negre pur</string>
-    <string name="pref_category_timestamps">Marques de temps</string>
-    <string name="pref_relative_format">Marques de temps relatives</string>
     <string name="update_72hour">Cada 3 dies</string>
     <string name="connected_to_wifi">Només amb Wi-Fi</string>
-    <string name="pref_relative_time_short">Curtes (Avui, Ahir)</string>
-    <string name="pref_relative_time_long">Llargues (Curtes+, fa N dies)</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instal·leu i inicieu el Shizuku per a utilitzar-lo com a instal·lador d’extensions.</string>
     <string name="pref_hide_threshold">Sensibilitat a l’hora d’amagar el menú en desplaçar</string>
     <string name="pref_verbose_logging">Registre detallat</string>
@@ -817,7 +811,6 @@
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
-    <string name="manga_modify_interval_title">Modifica l’interval</string>
     <string name="manga_modify_calculated_interval_title">Personalitza l’interval</string>
     <string name="track_delete_title">Voleu deixar de seguir %s\?</string>
     <string name="track_delete_remote_text">Elimina també de %s</string>
@@ -826,4 +819,7 @@
     <string name="action_filter_interval_passed">Període de comprovació superat</string>
     <string name="pref_update_release_grace_period_info">Es recomana un període de gràcia baix per a minimitzar la sobrecàrrega de les fonts. Com més comprovacions fallides es produeixin, més interval hi haurà entre comprovacions, fins a un màxim de 28 dies.</string>
     <string name="delete_downloaded">Suprimeix els baixats</string>
+    <string name="has_results">Té resultats</string>
+    <string name="syncing_library">S’està sincronitzant la biblioteca</string>
+    <string name="library_sync_complete">S’ha completat la sincronització de la biblioteca</string>
 </resources>

@@ -22,7 +22,7 @@ enum class ReadingModeType(val prefValue: Int, @StringRes val stringRes: Int, @D
     companion object {
         const val MASK = 0x00000007
 
-        fun fromPreference(preference: Int?): ReadingModeType = values().find { it.flagValue == preference } ?: DEFAULT
+        fun fromPreference(preference: Int?): ReadingModeType = entries.find { it.flagValue == preference } ?: DEFAULT
 
         fun isPagerType(preference: Int): Boolean {
             val mode = fromPreference(preference)

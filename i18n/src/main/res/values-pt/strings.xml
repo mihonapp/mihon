@@ -430,7 +430,6 @@
     <string name="licenses">Licenças de código aberto</string>
     <string name="downloaded_only_summary">Filtra todos os itens nasua biblioteca</string>
     <string name="restore_duration">%02d min, %02d seg</string>
-    <string name="pref_search_pinned_sources_only">Pesquise apenas fontes fixadas na pesquisa global</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restante</item>
         <item quantity="many">%1$s restantes</item>
@@ -621,9 +620,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
     <string name="getting_started_guide">Guia de introdução</string>
     <string name="theme_tealturquoise">Azul-petróleo e Turquesa</string>
-    <string name="pref_relative_time_long">Longo (Curto+, n dias atrás)</string>
-    <string name="pref_relative_time_short">Curto (Hoje, Ontem)</string>
-    <string name="recently">Recentemente</string>
     <plurals name="relative_time">
         <item quantity="one">Ontem</item>
         <item quantity="many">Há %1$d dias</item>
@@ -670,8 +666,6 @@
     <string name="ext_installer_pref">Instalador</string>
     <string name="ext_installer_legacy">Legado</string>
     <string name="ext_installer_shizuku_stopped">O Shizuku não está em execução</string>
-    <string name="pref_category_timestamps">Data e hora</string>
-    <string name="pref_relative_format">Data e hora relativas</string>
     <string name="help_translate">Ajude a traduzir</string>
     <string name="pref_highest">Mais alta</string>
     <string name="on_hiatus">Em hiato</string>
@@ -852,7 +846,6 @@
     <string name="manga_display_interval_title">Estimado a cada</string>
     <string name="action_filter_interval_custom">Intervalo de busca customizado</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
-    <string name="manga_modify_interval_title">Modificar intervalo</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar a cada</string>
     <string name="skipped_reason_not_in_release_period">Pulado, pois nenhum lançamento é esperado para hoje</string>
     <plurals name="pref_update_release_following_days">

@@ -8,10 +8,10 @@ CREATE TABLE manga_sync(
     last_chapter_read REAL NOT NULL,
     total_chapters INTEGER NOT NULL,
     status INTEGER NOT NULL,
-    score REAL AS Float NOT NULL,
+    score REAL NOT NULL,
     remote_url TEXT NOT NULL,
-    start_date INTEGER AS Long NOT NULL,
-    finish_date INTEGER AS Long NOT NULL,
+    start_date INTEGER NOT NULL,
+    finish_date INTEGER NOT NULL,
     UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE

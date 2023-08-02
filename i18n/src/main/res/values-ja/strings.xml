@@ -278,7 +278,7 @@
     <string name="transition_no_previous">前の章がありません</string>
     <string name="transition_pages_loading">ページをロード中…</string>
     <string name="transition_pages_error">ページのロードに失敗：%1$s</string>
-    <string name="pref_read_with_long_tap">長押しで表示</string>
+    <string name="pref_read_with_long_tap">長押しでアクションを表示</string>
     <string name="pref_true_color">32ビットカラー</string>
     <string name="pref_skip_read_chapters">読み終わった章をスキップ</string>
     <string name="pref_color_filter_mode">ｶﾗｰﾌｨﾙﾀｰﾌﾞﾚﾝﾄﾞﾓｰﾄﾞ</string>
@@ -354,7 +354,6 @@
     <string name="backup_restore_missing_sources">ソースがありません：</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはライブラリの項目が含まれません。</string>
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
-    <string name="pref_search_pinned_sources_only">グローバル検索の時にピン留め済みのソースのみで検索</string>
     <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
@@ -572,21 +571,16 @@
     <string name="pref_high">高い</string>
     <string name="pref_highest">最高</string>
     <string name="pref_inverted_colors">反転配色</string>
-    <string name="pref_relative_time_long">長め（短め、n日前）</string>
-    <string name="pref_relative_time_short">短め（今日、昨日）</string>
-    <string name="pref_relative_format">相対的なタイムスタンプ</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d日前</item>
     </plurals>
     <string name="relative_time_today">今日</string>
-    <string name="recently">最近</string>
     <string name="help_translate">翻訳に協力</string>
     <string name="getting_started_guide">入門ガイド</string>
     <string name="pref_tablet_ui_mode">タブレットUI</string>
     <string name="action_track">追跡</string>
     <string name="pref_remove_exclude_categories">除外されるカテゴリー</string>
     <string name="pref_hide_threshold">メニューを自動非表示するスクロール量</string>
-    <string name="pref_category_timestamps">タイムスタンプ</string>
     <string name="theme_tealturquoise">青緑&amp;土耳古石</string>
     <string name="pref_category_appearance">外観</string>
     <string name="confirm_lock_change">認証を行って変更を確認してください</string>
@@ -612,7 +606,7 @@
     <string name="ext_update_all">全て更新</string>
     <string name="channel_app_updates">アプリ更新</string>
     <string name="clear_database_source_item_count">データベースにはライブラリにない項目は%1$d件あります</string>
-    <string name="pref_auto_clear_chapter_cache">アプリ終了時に章のキャッシュを消去</string>
+    <string name="pref_auto_clear_chapter_cache">アプリ起動時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
@@ -691,7 +685,7 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">次の未読の%d章</item>
     </plurals>
-    <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ、そしてライブラリの項目にのみ有効です</string>
+    <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ有効です</string>
     <string name="are_you_sure">本当に実行しますか？</string>
     <string name="multi_lang">多言語</string>
     <string name="updates_last_update_info">前回のライブラリ更新：%s</string>
@@ -790,5 +784,24 @@
     </plurals>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="manga_modify_calculated_interval_title">間隔を設定</string>
-    <string name="manga_modify_interval_title">間隔を変更</string>
+    <string name="has_results">実績あり</string>
+    <string name="track_delete_title">%s の追跡を削除しますか\?</string>
+    <string name="manga_display_interval_title">毎に評価</string>
+    <string name="pref_update_release_grace_period_info">ソースの負担を軽減するため、少しの猶予時間を設定しておくことをおすすめします。チェック時に更新が見つからない場合、チェック間の間隔が自動で最大28日まで増えられます。</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="other">%d 日前</item>
+    </plurals>
+    <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
+    <string name="track_delete_text">ローカルの追跡が削除されます。</string>
+    <string name="track_delete_remote_text">%s からも削除</string>
+    <string name="delete_downloaded">ダウンロード削除</string>
+    <string name="action_filter_interval_late">10+チェック後半</string>
+    <string name="action_filter_interval_dropped">落とした\? 20歳以上後半と2ヶ月</string>
+    <string name="action_filter_interval_passed">チェック期間を過ぎました</string>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="other">%d日後</item>
+    </plurals>
+    <string name="action_ok">OK</string>
+    <string name="syncing_library">ライブラリを同期しています</string>
+    <string name="library_sync_complete">ライブラリを同期しました</string>
 </resources>

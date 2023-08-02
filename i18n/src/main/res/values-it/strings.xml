@@ -447,7 +447,6 @@
         <item quantity="other">Completato in %1$s con %2$s errori</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
-    <string name="pref_search_pinned_sources_only">Usa solo le fonti fissate per la ricerca globale</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
@@ -582,7 +581,7 @@
     <string name="notification_incognito_text">Disabilita modalità incognito</string>
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
-    <string name="automatic_background">Automatico</string>
+    <string name="automatic_background">Auto</string>
     <string name="pref_create_folder_per_manga_summary">Crea cartelle in base al titolo delle voci</string>
     <string name="cancel_all_for_series">Annulla tutti per questa serie</string>
     <string name="pref_create_folder_per_manga">Salva pagine in cartelle separate</string>
@@ -617,16 +616,12 @@
     <string name="pref_highest">Più alto</string>
     <string name="pref_hide_threshold">Sensibilità per nascondere il menù allo scorrimento</string>
     <string name="pref_inverted_colors">Inversa</string>
-    <string name="pref_relative_time_long">Lunga (Corta+, n giorni fa)</string>
-    <string name="pref_relative_time_short">Corta (Oggi, Ieri)</string>
-    <string name="pref_relative_format">Data e Ora relativi</string>
     <plurals name="relative_time">
         <item quantity="one">Ieri</item>
         <item quantity="many">%1$d giorni fa</item>
         <item quantity="other">%1$d giorni fa</item>
     </plurals>
     <string name="relative_time_today">Oggi</string>
-    <string name="recently">Recentemente</string>
     <string name="pref_dark_theme_pure_black">Modalità scura con nero puro</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin e Yang</string>
@@ -643,7 +638,6 @@
     <string name="restore_miui_warning">Le funzioni di backup e ripristino potrebbero non funzionare correttamente se le ottimizzazioni MIUI sono disabilitate.</string>
     <string name="enhanced_tracking_info">Servizi che offrono funzioni migliorate per fonti specifiche. Le voci sono tracciate automaticamente quando aggiunte alla libreria.</string>
     <string name="enhanced_services">Servizi migliorati</string>
-    <string name="pref_category_timestamps">Data e Ora</string>
     <string name="pref_category_appearance">Aspetto</string>
     <string name="action_track">Traccia</string>
     <string name="getting_started_guide">Guida introduttiva</string>
@@ -871,10 +865,18 @@
     <string name="pref_update_release_grace_period_info">Si consiglia un periodo di grazia basso per ridurre al minimo lo stress sulle fonti. Più controlli per una voce vengono persi, più lungo sarà l\'intervallo tra i controlli, con un massimo di 28 giorni.</string>
     <string name="manga_display_modified_interval_title">Imposta l\'aggiornamento ogni</string>
     <string name="skipped_reason_not_in_release_period">Saltato perché oggi non era previsto alcun rilascio</string>
-    <string name="manga_modify_interval_title">Modifica intervallo</string>
     <string name="track_delete_title">Rimuovere il tracking di %s\?</string>
     <string name="track_delete_remote_text">Rimuovi anche da %s</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_text">Questo rimuoverà il tracciamento locale.</string>
     <string name="delete_downloaded">Cancella scaricati</string>
+    <string name="has_results">Con risultati</string>
+    <string name="library_sync_complete">Sincronizzazione libreria completata</string>
+    <string name="syncing_library">Sincronizzazione libreria</string>
+    <string name="information_cloudflare_help">Tocca qua per assistenza con Cloudflare</string>
+    <plurals name="range_interval_day">
+        <item quantity="one">%1$d - %2$d giorni</item>
+        <item quantity="many">%1$d - %2$d giorni</item>
+        <item quantity="other">%1$d - %2$d giorni</item>
+    </plurals>
 </resources>

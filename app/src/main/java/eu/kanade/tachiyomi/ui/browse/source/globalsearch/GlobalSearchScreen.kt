@@ -18,7 +18,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 
 class GlobalSearchScreen(
     val searchQuery: String = "",
-    private val extensionFilter: String = "",
+    private val extensionFilter: String? = null,
 ) : Screen() {
 
     @Composable
@@ -33,9 +33,8 @@ class GlobalSearchScreen(
         }
         val state by screenModel.state.collectAsState()
         var showSingleLoadingScreen by remember {
-            mutableStateOf(searchQuery.isNotEmpty() && extensionFilter.isNotEmpty() && state.total == 1)
+            mutableStateOf(searchQuery.isNotEmpty() && !extensionFilter.isNullOrEmpty() && state.total == 1)
         }
-        val filteredSources by screenModel.searchPagerFlow.collectAsState()
 
         if (showSingleLoadingScreen) {
             LoadingScreen()
@@ -58,17 +57,13 @@ class GlobalSearchScreen(
         } else {
             GlobalSearchScreen(
                 state = state,
-                items = filteredSources,
                 navigateUp = navigator::pop,
                 onChangeSearchQuery = screenModel::updateSearchQuery,
-                onSearch = screenModel::search,
+                onSearch = { screenModel.search() },
                 getManga = { screenModel.getManga(it) },
                 onChangeSearchFilter = screenModel::setSourceFilter,
                 onToggleResults = screenModel::toggleFilterResults,
                 onClickSource = {
-                    if (!screenModel.incognitoMode.get()) {
-                        screenModel.lastUsedSourceId.set(it.id)
-                    }
                     navigator.push(BrowseSourceScreen(it.id, state.searchQuery))
                 },
                 onClickItem = { navigator.push(MangaScreen(it.id, true)) },

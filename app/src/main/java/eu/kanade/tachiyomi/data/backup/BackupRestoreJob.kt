@@ -36,7 +36,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
         return try {
             val restorer = BackupRestorer(context, notifier)
-            restorer.restoreBackup(uri, sync)
+            restorer.syncFromBackup(uri, sync)
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {

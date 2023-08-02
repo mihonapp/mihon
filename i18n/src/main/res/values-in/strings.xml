@@ -280,7 +280,7 @@
     <string name="action_open_in_web_view">Buka dalam WebView</string>
     <string name="pref_true_color">Warna 32-bit</string>
     <string name="pref_skip_read_chapters">Lewati bab yang sudah dibaca</string>
-    <string name="pref_read_with_long_tap">Tampilkan saat tekan lama</string>
+    <string name="pref_read_with_long_tap">Tampilkan tindakan saat tekan lama</string>
     <string name="pref_color_filter_mode">Mode saringan warna campur</string>
     <string name="filter_mode_overlay">Lapisan</string>
     <string name="filter_mode_multiply">Gandakan</string>
@@ -391,7 +391,6 @@
     <string name="restore_in_progress">Pemulihan masih dalam proses</string>
     <string name="backup_in_progress">Pencadangan masih dalam proses</string>
     <string name="restore_duration">%02d menit, %02d detik</string>
-    <string name="pref_search_pinned_sources_only">Hanya mencari pada sumber di-sematkan dalam pencarian global</string>
     <string name="viewer">Mode membaca</string>
     <string name="pref_true_color_summary">Mengurangi banding, namun berdampak pada performa</string>
     <plurals name="num_categories">
@@ -573,17 +572,12 @@
     <string name="pref_high">Tinggi</string>
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_inverted_colors">Terbalik</string>
-    <string name="pref_relative_time_long">Panjang (Pendek+, n hari yang lalu)</string>
-    <string name="pref_relative_time_short">Pendek (Hari Ini, Kemarin)</string>
-    <string name="pref_relative_format">Waktu relatif</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d hari yang lalu</item>
     </plurals>
-    <string name="recently">Baru saja</string>
     <string name="relative_time_today">Hari Ini</string>
     <string name="getting_started_guide">Panduan awal mulai</string>
     <string name="action_track">Lacak</string>
-    <string name="pref_category_timestamps">Stempel waktu</string>
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
     <string name="pref_category_appearance">Penampilan</string>
     <string name="confirm_lock_change">Autentikasi untuk mengonfirmasi perubahan</string>
@@ -611,7 +605,7 @@
     <string name="connected_to_wifi">Hanya pada Wi-FI</string>
     <string name="channel_app_updates">Pembaruan aplikasi</string>
     <string name="ext_update_all">Perbarui semuanya</string>
-    <string name="pref_auto_clear_chapter_cache">Bersihkan cache saat aplikasi tertutup</string>
+    <string name="pref_auto_clear_chapter_cache">Bersihkan cache bab saat aplikasi dibuka</string>
     <string name="database_clean">Tidak ada yang perlu dibersihkan</string>
     <string name="clear_database_source_item_count">%1$d entri non-perpustakaan dalam database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
@@ -691,7 +685,7 @@
     <plurals name="next_unread_chapters">
         <item quantity="other">Selanjutnya chapter %d yang belum dibaca</item>
     </plurals>
-    <string name="download_ahead_info">Hanya berfungsi pada entri di perpustakaan dan jika bab saat ini ditambah yang berikutnya sudah diunduh</string>
+    <string name="download_ahead_info">Hanya berfungsi jika bab saat ini + bab berikutnya sudah diunduh.</string>
     <string name="remove_manga">Kamu akan menghapus \"%s\" dari pustaka</string>
     <string name="updates_last_update_info">Pustaka terakhir diperbarui: %s</string>
     <string name="multi_lang">banyak</string>
@@ -802,10 +796,12 @@
     </plurals>
     <string name="manga_display_interval_title">Perkirakan setiap</string>
     <string name="manga_display_modified_interval_title">Atur untuk memperbarui setiap</string>
-    <string name="manga_modify_interval_title">Ubah interval</string>
     <string name="track_delete_title">Hapus %s pelacakan\?</string>
     <string name="action_ok">Oke</string>
     <string name="track_delete_text">Ini akan menghapus pelacakan lokal.</string>
     <string name="track_delete_remote_text">Hapus juga dari %s</string>
     <string name="delete_downloaded">Hapus unduhan</string>
+    <string name="has_results">Memiliki hasil</string>
+    <string name="syncing_library">Sinkronisasi pustaka</string>
+    <string name="library_sync_complete">Sinkronisasi pustaka selesai</string>
 </resources>

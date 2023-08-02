@@ -287,11 +287,6 @@
         <item quantity="other">%1$d дзён таму</item>
     </plurals>
     <string name="relative_time_today">Сёння</string>
-    <string name="recently">Нядаўна</string>
-    <string name="pref_relative_time_long">Доўгія (Кароткія+, n дзён таму)</string>
-    <string name="pref_relative_time_short">Кароткі (Сёння, Учора)</string>
-    <string name="pref_relative_format">Адносныя часовыя пазнакі</string>
-    <string name="pref_category_timestamps">Пазнакі часу</string>
     <string name="theme_tealturquoise">Бірузовы</string>
     <string name="pref_category_appearance">Знешнасць</string>
     <string name="confirm_lock_change">Аўтэнтыфікацыя для пацверджання змяненняў</string>

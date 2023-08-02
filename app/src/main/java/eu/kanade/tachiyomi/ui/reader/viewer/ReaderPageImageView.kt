@@ -277,10 +277,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         )
 
         when (image) {
-            is Drawable -> {
-                val bitmap = (image as BitmapDrawable).bitmap
-                setImage(ImageSource.bitmap(bitmap))
-            }
+            is BitmapDrawable -> setImage(ImageSource.bitmap(image.bitmap))
             is InputStream -> setImage(ImageSource.inputStream(image))
             else -> throw IllegalArgumentException("Not implemented for class ${image::class.simpleName}")
         }

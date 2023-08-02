@@ -405,7 +405,6 @@
         <item quantity="few">%1$s rămase</item>
         <item quantity="other">%1$s rămase</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Includeți numai surse fixate</string>
     <string name="viewer">Mod de citire</string>
     <string name="pref_category_for_this_series">Pentru această serie</string>
     <string name="gray_background">Gri</string>
@@ -607,15 +606,12 @@
     <string name="split_tall_images_summary">Îmbunătățește performanța cititorului</string>
     <string name="action_close">Închide</string>
     <string name="battery_not_low">Când bateria nu este scăzută</string>
-    <string name="recently">Recent</string>
     <string name="relative_time_today">Azi</string>
     <string name="reading_list">Listă de citit</string>
     <string name="wish_list">Lista de dorințe</string>
     <string name="complete_list">Lista completă</string>
     <string name="action_display_cover_only_grid">Acoperire tip grilaj</string>
     <string name="action_move_to_top_all_for_series">Mutați seria în partea de sus</string>
-    <string name="pref_category_timestamps">Marcaje temporale</string>
-    <string name="pref_relative_format">Marcaje temporale relative</string>
     <string name="pref_library_update_manga_restriction">Omiteți actualizarea intrărilor</string>
     <string name="pref_update_only_started">Care nu au fost începute</string>
     <string name="ext_installer_shizuku_stopped">Shizuku nu rulează</string>
@@ -630,7 +626,6 @@
     <string name="pref_update_only_completely_read">Cu capitol(e) necitit(e)</string>
     <string name="pref_lowest">Cel mai scăzut</string>
     <string name="unfinished_list">Lista neterminată</string>
-    <string name="pref_relative_time_short">Scurt (Astăzi, Ieri)</string>
     <string name="action_sort_unread_count">Număr de necitite</string>
     <string name="restore_miui_warning">Este posibil să nu funcționeze corect backup/restaurare dacă MIUI Optimization este dezactivată.</string>
     <string name="update_72hour">La fiecare 3 zile</string>
@@ -643,7 +638,6 @@
     <string name="manga_cover">Copertă</string>
     <string name="update_already_running">O actualizare rulează deja</string>
     <string name="pref_remove_exclude_categories">Categorii excluse</string>
-    <string name="pref_relative_time_long">Lung (Scurt+, acum n zile)</string>
     <string name="categorized_display_settings">Setări per categorie pentru sortare și afișare</string>
     <string name="rotation_type">Tip de rotație</string>
     <string name="rotation_portrait">Portret</string>

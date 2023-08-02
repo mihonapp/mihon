@@ -121,8 +121,8 @@ internal fun MigrateDialog(
                 ) {
                     TextButton(
                         onClick = {
-                            onClickTitle()
                             onDismissRequest()
+                            onClickTitle()
                         },
                     ) {
                         Text(text = stringResource(R.string.action_show_manga))

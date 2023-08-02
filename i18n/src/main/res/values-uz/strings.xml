@@ -122,7 +122,6 @@
     <string name="theme_monet">O\'zgaruvchan</string>
     <string name="action_resume">Davom ettirish</string>
     <string name="action_sort_chapter_fetch_date">Oxirgi bob sanasi</string>
-    <string name="pref_relative_time_short">Qisqa (Bugun, Kecha)</string>
     <string name="pref_app_language">Ilova tili</string>
     <string name="action_sort_unread_count">O\'qilmagan boblar</string>
     <string name="action_display_mode">Ko\'rsatish rejimi</string>
@@ -164,9 +163,6 @@
     <string name="action_share">Ulashish</string>
     <string name="action_reset">Tashlash</string>
     <string name="action_undo">Bekor qilish</string>
-    <string name="pref_category_timestamps">Vaqt belgilari</string>
-    <string name="pref_relative_format">Nisbiy vaqt belgilari</string>
-    <string name="pref_relative_time_long">Uzun (Qisqa+, n-kun oldin)</string>
     <string name="pref_category_security">Xavfsizlik</string>
     <string name="pref_dark_theme_pure_black">Qop-qora qorong\'u rejim</string>
     <string name="action_open_random_manga">Tasodifiy qismni ochish</string>
@@ -184,7 +180,6 @@
     <string name="secure_screen">Ilova ekrani himoyasi</string>
     <string name="pref_show_nsfw_source">Manbaa va kengaytmalar ro\'yhatida ko\'rsatish</string>
     <string name="parental_controls_info">Bu, ilovada norasmiy yoki noto\'g\'ri belgilangan kengaytmalardan NSFW (18+) kontent paydo bo\'lishini oldini olmaydi.</string>
-    <string name="recently">Yaqinda</string>
     <string name="relative_time_today">Bugun</string>
     <string name="pref_category_display">Ko\'rsatish</string>
     <string name="pref_library_columns">Qismlar soni</string>

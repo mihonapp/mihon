@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +29,6 @@ import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TextItem
 import tachiyomi.presentation.core.components.TriStateItem
 import tachiyomi.presentation.core.components.material.Button
-import tachiyomi.presentation.core.components.material.Divider
 
 @Composable
 fun SourceFilterDialog(
@@ -68,7 +68,7 @@ fun SourceFilterDialog(
                         Text(stringResource(R.string.action_filter))
                     }
                 }
-                Divider()
+                HorizontalDivider()
             }
 
             items(filters) {
@@ -85,7 +85,7 @@ private fun FilterItem(filter: Filter<*>, onUpdate: () -> Unit) {
             HeadingItem(filter.name)
         }
         is Filter.Separator -> {
-            Divider()
+            HorizontalDivider()
         }
         is Filter.CheckBox -> {
             CheckboxItem(

@@ -13,6 +13,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
 import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
 import okhttp3.OkHttpClient
@@ -20,10 +21,12 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
+import java.time.ZoneOffset
 import tachiyomi.domain.track.model.Track as DomainTrack
 
 abstract class TrackService(val id: Long) {
@@ -62,7 +65,7 @@ abstract class TrackService(val id: Long) {
     abstract fun getScoreList(): List<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
-    open fun get10PointScore(track: DomainTrack): Float {
+    open fun get10PointScore(track: DomainTrack): Double {
         return track.score
     }
 
@@ -107,7 +110,7 @@ abstract class TrackService(val id: Long) {
                 val hasReadChapters = allChapters.any { it.read }
                 bind(item, hasReadChapters)
 
-                val track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
+                var track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
 
                 Injekt.get<InsertTrack>().await(track)
 
@@ -120,10 +123,25 @@ abstract class TrackService(val id: Long) {
                         ?.chapterNumber?.toDouble() ?: -1.0
 
                     if (latestLocalReadChapterNumber > track.lastChapterRead) {
-                        val updatedTrack = track.copy(
+                        track = track.copy(
                             lastChapterRead = latestLocalReadChapterNumber,
                         )
-                        setRemoteLastChapterRead(updatedTrack.toDbTrack(), latestLocalReadChapterNumber.toInt())
+                        setRemoteLastChapterRead(track.toDbTrack(), latestLocalReadChapterNumber.toInt())
+                    }
+
+                    if (track.startDate <= 0) {
+                        val firstReadChapterDate = Injekt.get<GetHistory>().await(mangaId)
+                            .sortedBy { it.readAt }
+                            .firstOrNull()
+                            ?.readAt
+
+                        firstReadChapterDate?.let {
+                            val startDate = firstReadChapterDate.time.convertEpochMillisZone(ZoneOffset.systemDefault(), ZoneOffset.UTC)
+                            track = track.copy(
+                                startDate = startDate,
+                            )
+                            setRemoteStartDate(track.toDbTrack(), startDate)
+                        }
                     }
                 }
 
@@ -145,7 +163,7 @@ abstract class TrackService(val id: Long) {
     }
 
     suspend fun setRemoteLastChapterRead(track: Track, chapterNumber: Int) {
-        if (track.last_chapter_read == 0F && track.last_chapter_read < chapterNumber && track.status != getRereadingStatus()) {
+        if (track.last_chapter_read == 0f && track.last_chapter_read < chapterNumber && track.status != getRereadingStatus()) {
             track.status = getReadingStatus()
         }
         track.last_chapter_read = chapterNumber.toFloat()

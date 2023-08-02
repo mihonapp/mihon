@@ -26,7 +26,7 @@ data class BackupChapter(
         return Chapter.create().copy(
             url = this@BackupChapter.url,
             name = this@BackupChapter.name,
-            chapterNumber = this@BackupChapter.chapterNumber,
+            chapterNumber = this@BackupChapter.chapterNumber.toDouble(),
             scanlator = this@BackupChapter.scanlator,
             read = this@BackupChapter.read,
             bookmark = this@BackupChapter.bookmark,
@@ -39,11 +39,11 @@ data class BackupChapter(
     }
 }
 
-val backupChapterMapper = { _: Long, _: Long, url: String, name: String, scanlator: String?, read: Boolean, bookmark: Boolean, lastPageRead: Long, chapterNumber: Float, source_order: Long, dateFetch: Long, dateUpload: Long, lastModifiedAt: Long ->
+val backupChapterMapper = { _: Long, _: Long, url: String, name: String, scanlator: String?, read: Boolean, bookmark: Boolean, lastPageRead: Long, chapterNumber: Double, source_order: Long, dateFetch: Long, dateUpload: Long, lastModifiedAt: Long ->
     BackupChapter(
         url = url,
         name = name,
-        chapterNumber = chapterNumber,
+        chapterNumber = chapterNumber.toFloat(),
         scanlator = scanlator,
         read = read,
         bookmark = bookmark,

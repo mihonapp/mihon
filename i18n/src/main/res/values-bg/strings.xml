@@ -394,7 +394,6 @@
     <string name="creating_backup_error">Съхраняването неуспешно</string>
     <string name="backup_in_progress">Копието вече се запазва</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
-    <string name="pref_search_pinned_sources_only">Включвай само закачени източници</string>
     <string name="pref_webtoon_side_padding">Странично разстояние</string>
     <string name="pref_category_reading">Четене</string>
     <string name="pref_always_show_chapter_transition">Винаги показвай прехода между главите</string>
@@ -540,11 +539,7 @@
     <string name="label_background_activity">Работа на заден план</string>
     <string name="notification_incognito_text">Изключи инкогнито</string>
     <string name="notification_updating">Обновяване на библиотеката… (%1$d/%2$d)</string>
-    <string name="pref_category_timestamps">Времеотметки</string>
-    <string name="pref_relative_time_short">Къси (Днес, Вчера)</string>
-    <string name="pref_relative_time_long">Дълги (Къси+, преди х дни)</string>
     <string name="pref_category_appearance">Облик</string>
-    <string name="pref_relative_format">Относителни времеотметки</string>
     <string name="on">Да</string>
     <string name="l_nav">L-образно</string>
     <string name="kindlish_nav">Kindle-подобно</string>
@@ -633,7 +628,6 @@
     <string name="spen_next_page">Следваща страница</string>
     <string name="action_display_language_badge">Език</string>
     <string name="pref_show_nsfw_source">Показвай в списъка с източници и разширения</string>
-    <string name="recently">Скорошни</string>
     <string name="relative_time_today">Днес</string>
     <string name="ext_app_info">Информация</string>
     <string name="pref_show_navigation_mode_summary">Покажи зони за натискане, когато четецът се отвори</string>

@@ -7,7 +7,6 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.DeletableTrackService
 import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
@@ -94,9 +93,9 @@ class Anilist(id: Long) : TrackService(id), DeletableTrackService {
         }
     }
 
-    override fun get10PointScore(track: DomainTrack): Float {
+    override fun get10PointScore(track: DomainTrack): Double {
         // Score is stored in 100 point format
-        return track.score / 10f
+        return track.score / 10.0
     }
 
     override fun indexToScore(index: Int): Float {

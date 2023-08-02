@@ -399,7 +399,6 @@
         <item quantity="one">%1$s बचा हुआ</item>
         <item quantity="other">%1$s बचे हुए</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">केवल वैश्विक खोज में पिन किए गए स्रोतों की खोज करें</string>
     <string name="viewer">पढ़न मोड</string>
     <string name="pref_category_for_this_series">इस श्रृंखला के लिए</string>
     <string name="gray_background">ग्रे</string>
@@ -563,9 +562,6 @@
     <string name="rotation_landscape">परिदृश्य</string>
     <string name="action_sort_count">कुल आइटम</string>
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
-    <string name="pref_relative_time_short">लघु (आज, कल)</string>
-    <string name="pref_relative_time_long">लंबा (लघु+, n दिन पहले)</string>
-    <string name="recently">हाल ही में</string>
     <string name="relative_time_today">आज</string>
     <string name="pref_library_update_refresh_trackers_summary">पुस्तकालय अपडेट करते समय ट्रैकर्स को अपडेट करें</string>
     <string name="include">शामिल करें: %s</string>
@@ -593,8 +589,6 @@
     <string name="information_empty_category_dialog">आपके पास अभी तक कोई श्रेणी नहीं है।</string>
     <string name="confirm_lock_change">परिवर्तन की पुष्टि करने के लिए प्रमाणित करें</string>
     <string name="action_sort_chapter_fetch_date">अध्याय लाई की तिथि</string>
-    <string name="pref_category_timestamps">मुहर</string>
-    <string name="pref_relative_format">सापेक्ष टाइमस्टैम्प</string>
     <string name="pref_library_update_categories_details">बहिष्कृत श्रेणियों की पुस्तकें अपडेट नहीं की जाएंगी, भले ही वे भी शामिल श्रेणियों में हों।</string>
     <string name="ext_installer_shizuku_unavailable_dialog">शिज़ुकु को एक्सटेंशन इंस्टॉलर के रूप में उपयोग करने के लिए शिज़ुकु को इंस्टॉल और प्रारंभ करें।</string>
     <string name="help_translate">अनुवाद में मदद करें</string>

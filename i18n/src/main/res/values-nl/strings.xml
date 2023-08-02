@@ -405,7 +405,6 @@
         <item quantity="one">Voltooid in %1$s met %2$s foutmelding</item>
         <item quantity="other">Voltooid in %1$s met %2$s foutmeldingen</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Zoek alleen in vastgepinde bronnen bij globaal zoeken</string>
     <string name="pref_webtoon_side_padding">Opvulling zijkant</string>
     <string name="gray_background">Grijs</string>
     <string name="pref_true_color_summary">Vermindert kleurstrepen, maar beïnvloedt de prestaties</string>
@@ -596,11 +595,6 @@
         <item quantity="other">%1$d dagen geleden</item>
     </plurals>
     <string name="relative_time_today">Vandaag</string>
-    <string name="recently">Recent</string>
-    <string name="pref_relative_time_long">Lang (Kort+, n dagen geleden)</string>
-    <string name="pref_relative_time_short">Kort (vandaag, gisteren)</string>
-    <string name="pref_relative_format">Relatieve tijdstempel</string>
-    <string name="pref_category_timestamps">Tijdstempel</string>
     <string name="theme_tealturquoise">Blauwgroen &amp; Turkoois</string>
     <string name="pref_category_appearance">Uiterlijk</string>
     <string name="confirm_lock_change">Authenticeer om de wijziging te bevestigen</string>

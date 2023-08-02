@@ -352,8 +352,6 @@
     <string name="information_no_recent_manga">שום דבר נקרא לאחרונה</string>
     <string name="information_no_recent">אין עידכונים אחרונים</string>
     <string name="action_filter_bookmarked">סומן</string>
-    <string name="recently">לאחרונה</string>
-    <string name="pref_relative_time_short">קצר (היום, אתמול)</string>
     <string name="pref_library_update_refresh_trackers">רענון עוקבים אוטומטית</string>
     <string name="label_default">ברירת המחדל</string>
     <string name="pref_app_theme">ערכת הנושא של האפליקציה</string>
@@ -381,7 +379,6 @@
     <string name="pref_category_reader">מצב קריאה</string>
     <string name="pref_category_tracking">מעקב</string>
     <string name="pref_category_theme">נושא</string>
-    <string name="pref_relative_time_long">ארוך (קצר+, לפני n ימים)</string>
     <string name="pref_category_nsfw_content">מקורות NSFW (18+)</string>
     <string name="pref_show_nsfw_source">הצג ברשימות מקורות ותוספים</string>
     <string name="parental_controls_info">זה לא מונע תוספים לא רשמיים או תוספים שעלולים לסמן באופן שגוי מלהציג תוכן NSFW (18+) בתוך האפליקציה.</string>
@@ -413,8 +410,6 @@
     <string name="action_show_manga">הראה פריט</string>
     <string name="pref_update_only_completely_read">עם פרק(ים) שלא נקרא(ו)</string>
     <string name="action_move_to_top_all_for_series">העבר סדרה לראש</string>
-    <string name="pref_category_timestamps">חותמת זמן</string>
-    <string name="pref_relative_format">חותמות זמן קשורות</string>
     <string name="ext_obsolete">מיושן</string>
     <string name="pref_update_only_started">זה עוד לא התחיל</string>
     <string name="ext_update_all">עדכן הכל</string>
@@ -494,7 +489,6 @@
     <string name="backup_restore_missing_sources">מקורות חסרים:</string>
     <string name="invalid_backup_file">קובץ גיבוי לא תקין</string>
     <string name="invalid_backup_file_missing_manga">הגיבוי לא מכיל שום מנגה.</string>
-    <string name="pref_search_pinned_sources_only">כלול רק מקורות נעוצים</string>
     <string name="action_track">מעקב</string>
     <string name="pref_auto_clear_chapter_cache">נקה את זיכרון המטמון של הפרקים כשהאפליקציה נסגרת</string>
     <string name="clear_database_source_item_count">יש %1$d מנגה שנמצאות במסד הנתונים אבל לא בספרייה</string>

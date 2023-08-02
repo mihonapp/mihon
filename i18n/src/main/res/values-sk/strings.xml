@@ -374,7 +374,6 @@
     <string name="action_unpin">Odopnúť</string>
     <string name="label_warning">Upozornenie</string>
     <string name="action_filter_tracked">Sledované</string>
-    <string name="pref_relative_time_long">Dlhý (krátky+, pred n dňami)</string>
     <string name="action_faq_and_guides">FAQ a návody</string>
     <string name="pref_category_theme">Téma</string>
     <string name="pref_theme_mode">Tmavý režim</string>
@@ -388,9 +387,6 @@
     <string name="pref_dark_theme_pure_black">Čisto čierny tmavý režim</string>
     <string name="theme_strawberrydaiquiri">Jahodové Daiquiri</string>
     <string name="theme_tealturquoise">Modrozelená a tyrkysová</string>
-    <string name="pref_category_timestamps">Časová značka</string>
-    <string name="pref_relative_format">Relatívne časové značky</string>
-    <string name="pref_relative_time_short">Krátky (dnes, včera)</string>
     <string name="pref_date_format">Formát dátumu</string>
     <string name="pref_manage_notifications">Spravovať oznámenia</string>
     <string name="pref_category_security">Bezpečnosť</string>
@@ -401,7 +397,6 @@
     <string name="pref_library_update_manga_restriction">Preskočiť aktualizáciu záznamov</string>
     <string name="pref_show_nsfw_source">Zobraziť v zoznamoch zdrojov a rozšírení</string>
     <string name="pref_category_nsfw_content">NSFW (18+) zdroje</string>
-    <string name="recently">Nedávno</string>
     <string name="relative_time_today">Dnes</string>
     <string name="connected_to_wifi">Iba na Wi-Fi</string>
     <string name="restrictions">Obmedzenia: %s</string>
@@ -584,7 +579,6 @@
     <string name="pref_create_folder_per_manga">Uloženie stránok do samostatných priečinkov</string>
     <string name="gray_background">Sivá</string>
     <string name="rotation_landscape">Na šírku</string>
-    <string name="pref_search_pinned_sources_only">Zahrnúť len pripnuté zdroje</string>
     <string name="restore_in_progress">Obnovenie už prebieha</string>
     <string name="pref_dump_crash_logs_summary">Uložiť logy o chybách do súboru na zdieľanie s vývojármi</string>
     <string name="manga_cover">Obal</string>

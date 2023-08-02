@@ -405,7 +405,6 @@
     <string name="creating_backup_error">Не удалось создать резервную копию</string>
     <string name="backup_in_progress">Резервная копия уже выполняется</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
-    <string name="pref_search_pinned_sources_only">Искать только закреплённые источники при глобальном поиске</string>
     <plurals name="download_queue_summary">
         <item quantity="one">Осталась %1$s глава</item>
         <item quantity="few">Осталось %1$s главы</item>
@@ -608,9 +607,6 @@
     <string name="pref_highest">Самая высокая</string>
     <string name="pref_hide_threshold">Чувствительность скрытия меню при прокрутке</string>
     <string name="pref_inverted_colors">Цвета наоборот</string>
-    <string name="pref_relative_time_long">Длинные (Короткие+, н-кол дней назад)</string>
-    <string name="pref_relative_time_short">Короткие (Сегодня, Вчера)</string>
-    <string name="pref_relative_format">Относительные метки времени</string>
     <plurals name="relative_time">
         <item quantity="one">Вчера</item>
         <item quantity="few">%1$d дня назад</item>
@@ -618,11 +614,9 @@
         <item quantity="other">%1$d дней назад</item>
     </plurals>
     <string name="relative_time_today">Сегодня</string>
-    <string name="recently">Недавно</string>
     <string name="theme_tealturquoise">Бирюзовая</string>
     <string name="confirm_lock_change">Выполните аутентификацию, чтобы подтвердить изменение</string>
     <string name="label_default">По умолчанию</string>
-    <string name="pref_category_timestamps">Метки времени</string>
     <string name="pref_category_appearance">Отображение</string>
     <string name="getting_started_guide">Руководство по началу работы с приложением</string>
     <string name="action_track">Отслеживать</string>
@@ -730,7 +724,7 @@
     </plurals>
     <string name="download_ahead">Загрузить наперёд</string>
     <string name="auto_download_while_reading">При чтении</string>
-    <string name="download_ahead_info">Работает только если текущая + следующая главы уже загружены</string>
+    <string name="download_ahead_info">Работает только если текущая + следующая главы уже загружены.</string>
     <string name="are_you_sure">Вы уверены\?</string>
     <string name="multi_lang">Многоязыковое</string>
     <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>
@@ -832,7 +826,6 @@
         <item quantity="many">через %d дней</item>
         <item quantity="other">через %d дней</item>
     </plurals>
-    <string name="manga_modify_interval_title">Изменить интервал</string>
     <string name="pref_update_release_grace_period">Внутри предела ожидаемого периода выпуска</string>
     <plurals name="pref_update_release_leading_days">
         <item quantity="one">за %d день до</item>
@@ -862,4 +855,14 @@
     <string name="track_delete_remote_text">Также удалить из %s</string>
     <string name="action_ok">ОК</string>
     <string name="delete_downloaded">Удалить загруженное</string>
+    <string name="has_results">Имеет результаты</string>
+    <string name="library_sync_complete">Синхронизация библиотеки завершена</string>
+    <string name="syncing_library">Синхронизация библиотеки</string>
+    <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
+    <plurals name="range_interval_day">
+        <item quantity="one">%1$d - %2$d день</item>
+        <item quantity="few">%1$d - %2$d дня</item>
+        <item quantity="many">%1$d - %2$d дней</item>
+        <item quantity="other">%1$d - %2$d дней</item>
+    </plurals>
 </resources>

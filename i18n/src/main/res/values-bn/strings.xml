@@ -361,7 +361,6 @@
     <string name="backup_restore_missing_sources">উৎস অনুপলব্ধ:</string>
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
     <string name="invalid_backup_file">ব্যাকআপ ফাইল গ্রহণযোগ্য নয়</string>
-    <string name="pref_search_pinned_sources_only">শুধু আটকানো উৎস যোগ করুন</string>
     <string name="pref_remove_bookmarked_chapters">বুকমার্ক করা অধ্যায়গুলি মুছে ফেলার অনুমতি দিন</string>
     <string name="pref_category_delete_chapters">অধ্যায় মুছুন</string>
     <string name="pref_webtoon_side_padding">পার্শ্ব প্যাডিং</string>
@@ -575,11 +574,6 @@
         <item quantity="other">%1$d দিন আগে</item>
     </plurals>
     <string name="relative_time_today">সম্প্রতি</string>
-    <string name="recently">সম্প্রতি</string>
-    <string name="pref_relative_time_long">দীর্ঘ (সংক্ষিপ্ত+, n দিন আগে)</string>
-    <string name="pref_relative_time_short">সংক্ষিপ্ত (আজ, গতকাল)</string>
-    <string name="pref_relative_format">আপেক্ষিক টাইমস্ট্যাম্প</string>
-    <string name="pref_category_timestamps">টাইমস্ট্যাম্প</string>
     <string name="pref_dark_theme_pure_black">বিশুদ্ধ কালো অন্ধকার মোড</string>
     <string name="theme_yotsuba">চার পাতা</string>
     <string name="theme_yinyang">ইয়িন এবং ইয়াং</string>

@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+
 CREATE TABLE chapters(
     _id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
@@ -7,11 +9,11 @@ CREATE TABLE chapters(
     read INTEGER AS Boolean NOT NULL,
     bookmark INTEGER AS Boolean NOT NULL,
     last_page_read INTEGER NOT NULL,
-    chapter_number REAL AS Float NOT NULL,
+    chapter_number REAL NOT NULL,
     source_order INTEGER NOT NULL,
-    date_fetch INTEGER AS Long NOT NULL,
-    date_upload INTEGER AS Long NOT NULL,
-    last_modified_at INTEGER AS Long NOT NULL,
+    date_fetch INTEGER NOT NULL,
+    date_upload INTEGER NOT NULL,
+    last_modified_at INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
 );

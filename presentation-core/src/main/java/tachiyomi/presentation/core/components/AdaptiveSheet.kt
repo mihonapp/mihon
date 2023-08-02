@@ -56,6 +56,7 @@ private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 
 @Composable
 fun AdaptiveSheet(
+    modifier: Modifier = Modifier,
     isTabletUi: Boolean,
     tonalElevation: Dp,
     enableSwipeDismiss: Boolean,
@@ -69,6 +70,7 @@ fun AdaptiveSheet(
         val alpha by animateFloatAsState(
             targetValue = targetAlpha,
             animationSpec = sheetAnimationSpec,
+            label = "alpha",
         )
         val internalOnDismissRequest: () -> Unit = {
             scope.launch {
@@ -97,7 +99,8 @@ fun AdaptiveSheet(
                         onClick = {},
                     )
                     .systemBarsPadding()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 16.dp)
+                    .then(modifier),
                 shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = tonalElevation,
                 content = {
@@ -160,6 +163,7 @@ fun AdaptiveSheet(
                             Modifier
                         },
                     )
+                    .then(modifier)
                     .offset {
                         IntOffset(
                             0,

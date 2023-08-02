@@ -32,7 +32,7 @@
     <string name="label_settings">Mga setting</string>
     <string name="label_sources">Tinubdan</string>
     <string name="label_default">Default</string>
-    <string name="label_download_queue">Pag-download sa Pila</string>
+    <string name="label_download_queue">Pila sa Pag-download</string>
     <string name="manga">Mga entri sa basahonan</string>
     <string name="track">Pagsubay</string>
     <string name="label_library">Librarya</string>
@@ -55,7 +55,7 @@
     <string name="all">Tanan</string>
     <string name="information_no_recent">Walay bag-o nga mga update</string>
     <string name="categorized_display_settings">Matag-kategorya nga mga setting alang sa paghan-ay ug pagpakita</string>
-    <string name="information_no_downloads">Walay downloads</string>
+    <string name="information_no_downloads">Walay mga pag-download</string>
     <string name="information_no_recent_manga">Walay nabasa bag-o lang</string>
     <string name="information_empty_category">Wala kay mga kategorya. i-tap ang plus button aron makahimo og usa para sa pag-organisar sa imong library.</string>
     <string name="information_empty_library">Walay sulod ang imong library</string>
@@ -137,7 +137,6 @@
     <string name="hide_notification_content">Tagoa ang sulod sa pahibalo</string>
     <string name="secure_screen">Lig-on nga screen</string>
     <string name="pref_category_nsfw_content">NSFW (18+) Mga Tinubdan</string>
-    <string name="recently">Bag-o lang</string>
     <string name="relative_time_today">Karon</string>
     <string name="pref_category_display">Pagpakita</string>
     <string name="pref_library_columns">Mga butang kada laray</string>
@@ -185,14 +184,10 @@
     <string name="action_start_downloading_now">Sugdi ang pag-download karon</string>
     <string name="theme_system">Sunda ang sistema</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
-    <string name="pref_relative_time_long">Dugay (Mubo+, n adlaw ang milabay)</string>
     <string name="pref_manage_notifications">Pagdumala sa mga pahibalo</string>
     <string name="pref_category_security">Seguridad</string>
     <string name="pref_show_nsfw_source">Ipakita sa mga tinubdan ug mga lista sa mga extension</string>
     <string name="pref_dark_theme_pure_black">Purong itom nga dark mode</string>
-    <string name="pref_category_timestamps">Mga timestamp</string>
-    <string name="pref_relative_format">Relatibo nga mga timestamp</string>
-    <string name="pref_relative_time_short">Mubo (Karon, Kagahapon)</string>
     <string name="parental_controls_info">Dili kini makapugong sa dili opisyal o posibleng sayop nga gi-flag nga mga extension gikan sa pag-surf sa NSFW (18+) nga sulod sulod sa app.</string>
     <string name="lock_always">Kanunay</string>
     <string name="secure_screen_summary">Ang luwas nga screen nagtago sa mga sulod sa app sa dihang nagbalhin-balhin og mga app ug nag-block sa mga screenshot</string>
@@ -367,7 +362,6 @@
     <string name="split_tall_images_summary">Nagpauswag sa pasundayag sa magbabasa pinaagi sa pagbahin sa taas nga na-download nga mga imahe.</string>
     <string name="services">Mga serbisyo</string>
     <string name="pref_viewer_nav">Pag-tap sa mga zone</string>
-    <string name="pref_search_pinned_sources_only">Iapil lang ang mga pinned nga tinubdan</string>
     <string name="pref_create_backup">Paghimo og backup</string>
     <string name="pref_create_backup_summ">Mahimong gamiton aron mapasig-uli ang kasamtangan nga librarya</string>
     <string name="pref_image_scale_type">Uri sa sukdanan sa hulagway</string>
@@ -486,4 +480,6 @@
     <string name="label_local">Lokal</string>
     <string name="pref_appearance_summary">Tema, format sa petsa ug panahon</string>
     <string name="action_not_now">Dili karon</string>
+    <string name="information_webview_required">Gikinahanlan ang WebView alang sa Tachiyomi</string>
+    <string name="information_required_plain">*gikinahanlan</string>
 </resources>

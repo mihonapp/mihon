@@ -3,16 +3,16 @@ package tachiyomi.domain.chapter.service
 import tachiyomi.domain.chapter.model.Chapter
 import kotlin.math.floor
 
-fun List<Float>.missingChaptersCount(): Int {
+fun List<Double>.missingChaptersCount(): Int {
     if (this.isEmpty()) {
         return 0
     }
 
     val chapters = this
         // Ignore unknown chapter numbers
-        .filterNot { it == -1f }
+        .filterNot { it == -1.0 }
         // Convert to integers, as we cannot check if 16.5 is missing
-        .map(Float::toInt)
+        .map(Double::toInt)
         // Only keep unique chapters so that -1 or 16 are not counted multiple times
         .distinct()
         .sorted()
@@ -43,7 +43,7 @@ fun calculateChapterGap(higherChapter: Chapter?, lowerChapter: Chapter?): Int {
     return calculateChapterGap(higherChapter.chapterNumber, lowerChapter.chapterNumber)
 }
 
-fun calculateChapterGap(higherChapterNumber: Float, lowerChapterNumber: Float): Int {
-    if (higherChapterNumber < 0f || lowerChapterNumber < 0f) return 0
+fun calculateChapterGap(higherChapterNumber: Double, lowerChapterNumber: Double): Int {
+    if (higherChapterNumber < 0.0 || lowerChapterNumber < 0.0) return 0
     return floor(higherChapterNumber).toInt() - floor(lowerChapterNumber).toInt() - 1
 }

@@ -345,11 +345,6 @@
         <item quantity="other">%1$d napja</item>
     </plurals>
     <string name="relative_time_today">Ma</string>
-    <string name="recently">Nem rég</string>
-    <string name="pref_relative_time_long">Hosszú (Rövid+, x napja)</string>
-    <string name="pref_relative_time_short">Rövid (Ma, Holnap)</string>
-    <string name="pref_relative_format">Mától függő (relatív) időbélyegek</string>
-    <string name="pref_category_timestamps">Időbélyegek</string>
     <string name="pref_dark_theme_pure_black">Teljesen fekete sötét mód</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin és Jang</string>
@@ -647,7 +642,6 @@
     <string name="extension_api_error">Nem sikerült a kiterjesztési lista megnyitása</string>
     <string name="disabled_nav">Kikapcsolva</string>
     <string name="enhanced_tracking_info">Szolgáltatások, melyek fejlett funkciókat kínálnak. A manga automatikusan könyvtárhoz lesz adva és frissítve lesz.</string>
-    <string name="pref_search_pinned_sources_only">Csak kitűzött forrásokból</string>
     <string name="pref_create_backup">Biztonsági mentés készítése</string>
     <string name="pref_create_backup_summ">Felhasználható az aktuális könyvtár visszaállítására</string>
     <string name="pref_restore_backup">Biztonsági mentés visszaállítása</string>

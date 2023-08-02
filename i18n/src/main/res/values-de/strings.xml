@@ -399,7 +399,6 @@
         <item quantity="one">%1$s verbleibend</item>
         <item quantity="other">%1$s verbleibend</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Nur angeheftete Quellen in der globalen Suche durchsuchen</string>
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
     <string name="pref_category_for_this_series">Für diese Serie</string>
@@ -471,8 +470,8 @@
     <string name="ext_nsfw_short">Ü18</string>
     <string name="parental_controls_info">Dies verhindert nicht, dass inoffizielle oder möglicherweise falsch gekennzeichnete Erweiterungen NSFW/Ü18-Inhalte in der App anzeigen.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d Kapitel wird übersprungen, da die Quelle dieses entweder nicht besitzt, oder, weil es rausgefiltert wurde</item>
-        <item quantity="other">%d Kapitel werden übersprungen, da die Quelle diese entweder nicht besitzt, oder, weil sie rausgefiltert wurden</item>
+        <item quantity="one">%d Kapitel wird übersprungen, da die Quelle dieses entweder nicht besitzt, oder weil es rausgefiltert wurde</item>
+        <item quantity="other">%d Kapitel werden übersprungen, da die Quelle diese entweder nicht besitzt, oder weil sie rausgefiltert wurden</item>
     </plurals>
     <string name="no_chapters_error">Keine Kapitel gefunden</string>
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
@@ -586,16 +585,11 @@
     <string name="pref_highest">Höchste</string>
     <string name="pref_hide_threshold">Empfindlichkeit für das Menü-Ausblenden beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
-    <string name="pref_relative_time_short">Kurz (Heute, Gestern)</string>
-    <string name="pref_relative_format">Relative Zeitstempel</string>
-    <string name="recently">Kürzlich</string>
-    <string name="pref_relative_time_long">Lang (Kurz+, vor n Tagen)</string>
     <plurals name="relative_time">
         <item quantity="one">Gestern</item>
         <item quantity="other">Vor %1$d Tagen</item>
     </plurals>
     <string name="relative_time_today">Heute</string>
-    <string name="pref_category_timestamps">Zeitstempel</string>
     <string name="theme_tealturquoise">Blaugrün &amp; Türkis</string>
     <string name="pref_category_appearance">Erscheinungsbild</string>
     <string name="confirm_lock_change">Authentifiziere dich, um die Änderungen zu bestätigen</string>
@@ -813,7 +807,6 @@
         <item quantity="one">1 Tag danach</item>
         <item quantity="other">%d Tage danach</item>
     </plurals>
-    <string name="manga_modify_interval_title">Intervall ändern</string>
     <string name="skipped_reason_not_in_release_period">Übersprungen, da heute keine Veröffentlichung erwartet wurde</string>
     <string name="pref_update_release_grace_period_info">Ein niedriger Toleranzzeitraum wird empfohlen, um die Auslastung der Quellen zu minimieren. Je mehr Überprüfungen für einen Eintrag fehlschlagen, desto länger wird das Intervall zwischen den Überprüfungen, mit einem Maximum von 28 Tagen.</string>
     <string name="manga_display_interval_title">Schätzt alle</string>
@@ -826,4 +819,12 @@
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Tracking von %s entfernen\?</string>
     <string name="delete_downloaded">Heruntergeladenes löschen</string>
+    <string name="has_results">Hat Ergebnisse</string>
+    <string name="syncing_library">Bibliothek wird synchronisiert</string>
+    <string name="library_sync_complete">Bibliothekssynchronisierung abgeschlossen</string>
+    <string name="information_cloudflare_help">Tippe hier, um Hilfe zu Cloudflare zu erhalten</string>
+    <plurals name="range_interval_day">
+        <item quantity="one">%1$d ‐ %2$d Tag</item>
+        <item quantity="other">%1$d - %2$d Tage</item>
+    </plurals>
 </resources>

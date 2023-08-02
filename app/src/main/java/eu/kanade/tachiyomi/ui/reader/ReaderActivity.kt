@@ -73,7 +73,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
-import eu.kanade.tachiyomi.util.preference.toggle
 import eu.kanade.tachiyomi.util.system.applySystemAnimatorScale
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
@@ -95,6 +94,7 @@ import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
+import tachiyomi.core.preference.toggle
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
@@ -485,7 +485,7 @@ class ReaderActivity : BaseActivity() {
 
             setOnClickListener {
                 popupMenu(
-                    items = ReadingModeType.values().map { it.flagValue to it.stringRes },
+                    items = ReadingModeType.entries.map { it.flagValue to it.stringRes },
                     selectedItemId = viewModel.getMangaReadingMode(resolveDefault = false),
                 ) {
                     val newReadingMode = ReadingModeType.fromPreference(itemId)
@@ -538,7 +538,7 @@ class ReaderActivity : BaseActivity() {
 
             setOnClickListener {
                 popupMenu(
-                    items = OrientationType.values().map { it.flagValue to it.stringRes },
+                    items = OrientationType.entries.map { it.flagValue to it.stringRes },
                     selectedItemId = viewModel.manga?.orientationType?.toInt()
                         ?: readerPreferences.defaultOrientationType().get(),
                 ) {
@@ -936,18 +936,20 @@ class ReaderActivity : BaseActivity() {
             }
         }
 
+        private val grayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
+
         /**
          * Initializes the reader subscriptions.
          */
         init {
             readerPreferences.readerTheme().changes()
                 .onEach { theme ->
-                    binding.readerContainer.setBackgroundResource(
+                    binding.readerContainer.setBackgroundColor(
                         when (theme) {
-                            0 -> R.color.md_white_1000
-                            2 -> R.color.reader_background_dark
+                            0 -> Color.WHITE
+                            2 -> grayBackgroundColor
                             3 -> automaticBackgroundColor()
-                            else -> R.color.md_black_1000
+                            else -> Color.BLACK
                         },
                     )
                 }
@@ -1000,9 +1002,9 @@ class ReaderActivity : BaseActivity() {
          */
         private fun automaticBackgroundColor(): Int {
             return if (baseContext.isNightMode()) {
-                R.color.reader_background_dark
+                grayBackgroundColor
             } else {
-                R.color.md_white_1000
+                Color.WHITE
             }
         }
 

@@ -359,7 +359,6 @@
     <string name="restore_in_progress">Kopia zapasowa jest w trakcie przywracania</string>
     <string name="backup_in_progress">Kopia zapasowa jest już w trakcie tworzenia</string>
     <string name="restore_duration">%02d min, %02d s</string>
-    <string name="pref_search_pinned_sources_only">Wyszukaj tylko w przypiętych źródłach</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
     <string name="pref_true_color_summary">Ogranicza banding, ale może mieć wpływ na wydajność</string>
@@ -605,11 +604,8 @@
         <item quantity="many">%1$d dni temu</item>
         <item quantity="other">%1$d dni temu</item>
     </plurals>
-    <string name="pref_relative_time_long">Długi (Krótki+, n dni temu)</string>
-    <string name="pref_relative_time_short">Krótki (Dzisiaj, Jutro)</string>
     <string name="label_background_activity">Aktywność w tle</string>
     <string name="action_track">Śledź</string>
-    <string name="pref_category_timestamps">Znaczniki czasowe</string>
     <string name="pref_category_appearance">Wygląd</string>
     <string name="confirm_lock_change">Autoryzuj, aby potwierdzić zmianę</string>
     <string name="label_default">Domyślny</string>
@@ -624,7 +620,6 @@
     <string name="pref_inverted_colors">Odwrócone</string>
     <string name="ext_app_info">Informacje o aplikacji</string>
     <string name="relative_time_today">Dzisiaj</string>
-    <string name="recently">Ostatnio</string>
     <string name="theme_tealturquoise">Błękitny &amp; Turkusowy</string>
     <string name="theme_midnightdusk">Zmierzch północy</string>
     <string name="notification_size_warning">Ostrzeżenie: duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł. Kliknij, by dowiedzieć się więcej.</string>
@@ -646,7 +641,6 @@
     <string name="channel_app_updates">Aktualizacje aplikacji</string>
     <string name="ext_update_all">Zaktualizuj wszystko</string>
     <string name="ext_installer_legacy">Przestarzały</string>
-    <string name="pref_relative_format">Relatywne znaczniki czasowe</string>
     <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy wychodzeniu z aplikacji</string>
     <string name="extension_api_error">Nie można uzyskać listy rozszerzeń</string>
     <string name="publishing_finished">Opublikowane w całości</string>

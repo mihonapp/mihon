@@ -12,7 +12,7 @@ import eu.kanade.presentation.browse.components.BaseSourceItem
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterState
+import eu.kanade.tachiyomi.ui.browse.source.SourcesFilterScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.domain.source.model.Source
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -22,7 +22,7 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 @Composable
 fun SourcesFilterScreen(
     navigateUp: () -> Unit,
-    state: SourcesFilterState.Success,
+    state: SourcesFilterScreenModel.State.Success,
     onClickLanguage: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {
@@ -54,7 +54,7 @@ fun SourcesFilterScreen(
 @Composable
 private fun SourcesFilterContent(
     contentPadding: PaddingValues,
-    state: SourcesFilterState.Success,
+    state: SourcesFilterScreenModel.State.Success,
     onClickLanguage: (String) -> Unit,
     onClickSource: (Source) -> Unit,
 ) {

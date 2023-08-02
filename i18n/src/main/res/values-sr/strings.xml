@@ -406,9 +406,6 @@
     <string name="pref_library_update_refresh_metadata">Аутоматски освежи метаподатке</string>
     <string name="parental_controls_info">Ово не спречава незваничне или потенцијално погрешно означене додатке да прикажу садржај за одрасле (18+) унутар апликације.</string>
     <string name="action_filter_tracked">Запраћено</string>
-    <string name="pref_category_timestamps">Ознаке за време</string>
-    <string name="pref_relative_format">Релативне ознаке за време</string>
-    <string name="pref_relative_time_short">Кратко (Данас, Јуче)</string>
     <string name="label_warning">Упозорење</string>
     <string name="confirm_lock_change">Оверите да бисте потврдили промене</string>
     <string name="action_sort_count">Укупно наслова</string>
@@ -423,7 +420,6 @@
     <string name="action_asc">Растуће</string>
     <string name="label_default">Подразумевано</string>
     <string name="action_start_downloading_now">Покрени преузимање одмах</string>
-    <string name="pref_relative_time_long">Дуго (Кратко+, пре n дана)</string>
     <string name="action_display_show_number_of_items">Прикажи број ставки</string>
     <string name="cancel_all_for_series">Откажи све за овај наслов</string>
     <string name="action_desc">Опадајуће</string>
@@ -551,7 +547,6 @@
         <item quantity="few">Поглавља %1$s и још %2$d</item>
         <item quantity="other">Поглавља %1$s и још %2$d</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Претражи само означене изворе у глобалној претрази</string>
     <string name="pref_show_navigation_mode">Прикажи начин навигације</string>
     <string name="track_finished_reading_date">Датум завршетка</string>
     <string name="automatic_background">Аутоматски</string>
@@ -574,7 +569,6 @@
     </plurals>
     <string name="channel_errors">Грешке</string>
     <string name="chapter_settings">Подешавања поглавља</string>
-    <string name="recently">Скоро</string>
     <string name="relative_time_today">Данас</string>
     <string name="nav_zone_left">Лево</string>
     <string name="information_empty_category_dialog">Још немате категорија.</string>

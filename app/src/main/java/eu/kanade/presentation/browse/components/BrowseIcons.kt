@@ -142,7 +142,7 @@ private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): St
 }
 
 sealed class Result<out T> {
-    object Loading : Result<Nothing>()
-    object Error : Result<Nothing>()
+    data object Loading : Result<Nothing>()
+    data object Error : Result<Nothing>()
     data class Success<out T>(val value: T) : Result<T>()
 }

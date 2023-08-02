@@ -11,7 +11,7 @@ data class Chapter(
     val url: String,
     val name: String,
     val dateUpload: Long,
-    val chapterNumber: Float,
+    val chapterNumber: Double,
     val scanlator: String?,
     val lastModifiedAt: Long,
 ) {
@@ -30,7 +30,7 @@ data class Chapter(
             url = "",
             name = "",
             dateUpload = -1,
-            chapterNumber = -1f,
+            chapterNumber = -1.0,
             scanlator = null,
             lastModifiedAt = 0,
         )

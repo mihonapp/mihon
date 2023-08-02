@@ -140,7 +140,6 @@
     <string name="pref_restore_backup">برگرداندن نسخه پشتیبان</string>
     <string name="pref_create_backup_summ">می تواند برای بازگرداندن کتابخانه فعلی استفاده شود</string>
     <string name="pref_create_backup">تهیه نسخه پشتیبان</string>
-    <string name="pref_search_pinned_sources_only">فقط افزونه‌های پین شده شامل شوند</string>
     <string name="services">خدمات</string>
     <string name="pref_auto_update_manga_sync">بعد از خوانده‌شدن، وضعیت قسمت بروزرسانی شود</string>
     <string name="pref_download_new">دانلود قسمت‌های جدید</string>
@@ -558,15 +557,10 @@
         <item quantity="one">دیروز</item>
         <item quantity="other">%1$d روز پیش</item>
     </plurals>
-    <string name="pref_category_timestamps">برچسب‌های زمانی</string>
-    <string name="pref_relative_format">برچسب‌های زمانی نسبی</string>
-    <string name="pref_relative_time_short">کوتاه (امروز، دیروز)</string>
-    <string name="pref_relative_time_long">طولانی (کوتاه+، n روز پیش)</string>
     <string name="pref_update_only_completely_read">با قسمت‌(های) خوانده‌نشده</string>
     <string name="pref_library_update_refresh_trackers">ردیاب‌ها را به طور خودکار تازه کن</string>
     <string name="battery_not_low">هنگامی که باتری کم نیست</string>
     <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>
-    <string name="recently">اخیراً</string>
     <string name="relative_time_today">امروز</string>
     <string name="update_72hour">هر 3 روز</string>
     <string name="connected_to_wifi">فقط روی Wi-Fi</string>

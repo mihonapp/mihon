@@ -427,8 +427,6 @@
     <string name="pref_app_theme">Aplikazioaren gaia</string>
     <string name="theme_monet">Dinamikoa</string>
     <string name="theme_greenapple">Sagar Berdea</string>
-    <string name="pref_relative_time_short">Laburra (Gaur, Atzo)</string>
-    <string name="pref_relative_time_long">Luzea (Laburra+, duela n egun)</string>
     <string name="pref_date_format">Dataren formatua</string>
     <string name="pref_manage_notifications">Kudeatu jakinarazpenak</string>
     <string name="pref_category_security">Segurtasuna</string>
@@ -437,7 +435,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) iturriak</string>
     <string name="pref_show_nsfw_source">Erakutsi iturrien eta luzapenen zerrendetan</string>
     <string name="parental_controls_info">Honek ez du eragozten ofizialak ez diren edo oker markatutako luzapenek NSFW (18+) edukia aplikazioan erakustea.</string>
-    <string name="recently">Duela gutxi</string>
     <string name="relative_time_today">Gaur</string>
     <string name="pref_category_display">Bistaratu</string>
     <string name="pref_library_columns">Errenkada bakoitzeko elementu kopurua</string>
@@ -478,7 +475,6 @@
     <string name="color_filter_g_value">B</string>
     <string name="color_filter_a_value">A</string>
     <string name="pref_highest">Altuena</string>
-    <string name="pref_search_pinned_sources_only">Sartu ainguratutako iturriak soilik</string>
     <string name="pref_restore_backup">Babeskopia erabili</string>
     <string name="pref_restore_backup_summ">Berreskuratu liburutegia babeskopia fitxategitik</string>
     <string name="pref_backup_directory">Babeskopiaren kokapena</string>
@@ -531,8 +527,6 @@
     <string name="theme_yinyang">Yin eta Yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Beltz hutseko modu iluna</string>
-    <string name="pref_category_timestamps">Denbora-zigiluak</string>
-    <string name="pref_relative_format">Denbora-zigilu erlatiboak</string>
     <string name="update_never">Itzali</string>
     <string name="update_6hour">6 orduro</string>
     <string name="update_12hour">12 orduro</string>

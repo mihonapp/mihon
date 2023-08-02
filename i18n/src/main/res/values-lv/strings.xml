@@ -197,7 +197,6 @@
     <string name="pref_show_navigation_mode_summary">Īsi parādīt, kad ir atvērts lasītājs</string>
     <string name="restrictions">Ierobežojums: %s</string>
     <string name="pref_library_update_refresh_metadata">Automātiski atsvaidzina metadatus</string>
-    <string name="recently">Nesen</string>
     <string name="pref_library_update_refresh_metadata_summary">Atjauninot bibliotēku, meklēt jaunu vāku un kopsavilkumu</string>
     <string name="network_not_metered">Tikai nemērītā tīklā</string>
     <string name="charging">Uzlādējot</string>
@@ -233,11 +232,7 @@
     <string name="pref_library_update_manga_restriction">Izlaist ierakstu atjaunināšanu</string>
     <string name="action_faq_and_guides">Biežāk uzdotie jautājumi un rokasgrāmatas</string>
     <string name="action_close">Aizvērt</string>
-    <string name="pref_category_timestamps">Laikspiedols</string>
-    <string name="pref_relative_format">Relatīvais laikspiedols</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
-    <string name="pref_relative_time_short">Īss (Šodien, Vakar)</string>
-    <string name="pref_relative_time_long">Garš (Īss+, pirms n dienām)</string>
     <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>
     <string name="relative_time_today">Šodien</string>
     <string name="pref_library_update_interval">Automātiskie atjauninājumi</string>
@@ -416,7 +411,6 @@
     <string name="tracking_guide">Izsekošanas rokasgrāmata</string>
     <string name="pref_dump_crash_logs">Saglabā avārijas žurnālu</string>
     <string name="pref_dump_crash_logs_summary">Saglabā kļūdu žurnālus failā priekš koplietošanas ar izstrādātājiem</string>
-    <string name="pref_search_pinned_sources_only">Globālajā meklēšanā izmantot tikai piespraustos avotus</string>
     <string name="pref_clear_chapter_cache">Notīrīt nodaļas kešatmiņu</string>
     <string name="pref_refresh_library_covers">Atsvaidzināt bibliotēkas vākus</string>
     <string name="clear_database_completed">Ieraksti izdzēsti</string>

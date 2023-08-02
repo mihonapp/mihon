@@ -36,8 +36,8 @@ fun UpdatesWidget(data: List<Pair<Long, Bitmap?>>?) {
         } else if (data.isEmpty()) {
             Text(text = stringResource(R.string.information_no_recent))
         } else {
-            (0 until rowCount).forEach { i ->
-                val coverRow = (0 until columnCount).mapNotNull { j ->
+            (0..<rowCount).forEach { i ->
+                val coverRow = (0..<columnCount).mapNotNull { j ->
                     data.getOrNull(j + (i * columnCount))
                 }
                 if (coverRow.isNotEmpty()) {

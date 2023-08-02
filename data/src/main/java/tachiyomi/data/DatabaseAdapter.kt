@@ -1,30 +1,28 @@
 package tachiyomi.data
 
-import com.squareup.sqldelight.ColumnAdapter
+import app.cash.sqldelight.ColumnAdapter
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import java.util.Date
 
-val dateAdapter = object : ColumnAdapter<Date, Long> {
+object DateColumnAdapter : ColumnAdapter<Date, Long> {
     override fun decode(databaseValue: Long): Date = Date(databaseValue)
     override fun encode(value: Date): Long = value.time
 }
 
-private const val listOfStringsSeparator = ", "
-val listOfStringsAdapter = object : ColumnAdapter<List<String>, String> {
+private const val LIST_OF_STRINGS_SEPARATOR = ", "
+object StringListColumnAdapter : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String) =
         if (databaseValue.isEmpty()) {
             emptyList()
         } else {
-            databaseValue.split(listOfStringsSeparator)
+            databaseValue.split(LIST_OF_STRINGS_SEPARATOR)
         }
-    override fun encode(value: List<String>) = value.joinToString(separator = listOfStringsSeparator)
+    override fun encode(value: List<String>) = value.joinToString(separator = LIST_OF_STRINGS_SEPARATOR)
 }
 
-val updateStrategyAdapter = object : ColumnAdapter<UpdateStrategy, Long> {
-    private val enumValues by lazy { UpdateStrategy.values() }
-
+object UpdateStrategyColumnAdapter : ColumnAdapter<UpdateStrategy, Long> {
     override fun decode(databaseValue: Long): UpdateStrategy =
-        enumValues.getOrElse(databaseValue.toInt()) { UpdateStrategy.ALWAYS_UPDATE }
+        UpdateStrategy.entries.getOrElse(databaseValue.toInt()) { UpdateStrategy.ALWAYS_UPDATE }
 
     override fun encode(value: UpdateStrategy): Long = value.ordinal.toLong()
 }

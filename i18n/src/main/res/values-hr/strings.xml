@@ -156,7 +156,7 @@
     <string name="unlock_app">Otključaj Tachiyomi</string>
     <string name="history">Povijest</string>
     <string name="track">Praćenje</string>
-    <string name="manga">Unosi u biblioteku</string>
+    <string name="manga">Unosi u biblioteci</string>
     <string name="restore_duration">%02d min, %02d s</string>
     <string name="restore_completed">Obnavljanje je završeno</string>
     <string name="backup_created">Sigurnosna kopija je stvorena</string>
@@ -168,7 +168,6 @@
     <string name="pref_restore_backup">Obnovi sigurnosnu kopiju</string>
     <string name="pref_create_backup_summ">Može se koristiti za obnavljanje trenutačne biblioteke</string>
     <string name="pref_create_backup">Stvori sigurnosnu kopiju</string>
-    <string name="pref_search_pinned_sources_only">U globalnu pretragu uključi samo označene izvore</string>
     <string name="services">Usluge</string>
     <string name="pref_auto_update_manga_sync">Ažuriraj napredak nakon čitanja</string>
     <string name="pref_download_new">Preuzmi nova poglavlja</string>
@@ -235,7 +234,7 @@
     <string name="pref_page_transitions">Animiraj prijelaze stranica</string>
     <string name="pref_cutout_short">Prikaži sadržaj u izrezanom području</string>
     <string name="pref_reader_theme">Boja pozadine</string>
-    <string name="pref_read_with_long_tap">Prikaži pri dugom dodiru</string>
+    <string name="pref_read_with_long_tap">Prikaži radnje pri dugom dodiru</string>
     <string name="pref_read_with_volume_keys_inverted">Preokreni tipke za glasnoću</string>
     <string name="pref_read_with_volume_keys">Tipke za glasnoću</string>
     <string name="pref_reader_navigation">Navigacija</string>
@@ -591,11 +590,6 @@
         <item quantity="other">Prije %1$d dana</item>
     </plurals>
     <string name="relative_time_today">Danas</string>
-    <string name="recently">Nedavno</string>
-    <string name="pref_relative_time_long">Dugo (Kratko+, n proteklih dana)</string>
-    <string name="pref_relative_time_short">Kratko (danas, jučer)</string>
-    <string name="pref_relative_format">Relativna vremenska oznaka</string>
-    <string name="pref_category_timestamps">Vremenska oznaka</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="pref_category_appearance">Izgled</string>
@@ -626,7 +620,7 @@
     <string name="pref_low">Niska</string>
     <string name="label_background_activity">Aktivnost u pozadini</string>
     <string name="pref_hide_threshold">Osjetljivost za skrivanje izbornika pri pomicanju</string>
-    <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom zatvaranja aplikacije</string>
+    <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom pokretanja aplikacije</string>
     <string name="channel_app_updates">Ažuriranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
     <string name="pref_update_only_completely_read">S nepročitanim poglavljima</string>
@@ -674,7 +668,7 @@
     <string name="unfinished_list">Popis nedovršenih</string>
     <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom rastavljanja</string>
     <string name="loader_rar5_error">RARv5 format nije podržan</string>
-    <string name="download_ahead_info">Radi samo na unosima u biblioteci i ako je trenutačno poglavlje plus sljedeće već preuzeto</string>
+    <string name="download_ahead_info">Radi samo ako je trenutačno i sljedeće poglavlje već preuzeto.</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Sljedeće nepročitano poglavlje</item>
         <item quantity="few">Sljedeća %d nepročitana poglavlja</item>
@@ -836,7 +830,8 @@
         <item quantity="other">%d dana</item>
     </plurals>
     <string name="pref_update_release_grace_period">Očekivano razdoblje odgode izdanja</string>
-    <string name="manga_modify_interval_title">Pomijeni interval</string>
     <string name="track_delete_text">Ovo će ukloniti lokalno praćenje.</string>
     <string name="track_delete_remote_text">Također ukloni iz %s</string>
+    <string name="delete_downloaded">Izbriši preuzete</string>
+    <string name="has_results">Ima rezultate</string>
 </resources>

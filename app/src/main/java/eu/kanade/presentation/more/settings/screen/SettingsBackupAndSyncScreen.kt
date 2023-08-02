@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,7 +44,6 @@ import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.extensions.RequestStoragePermission
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
-import tachiyomi.presentation.core.components.material.Divider
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 import uy.kohesive.injekt.Injekt
@@ -280,8 +280,8 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                             }
                         }
                     }
-                    if (!state.isScrolledToStart()) Divider(modifier = Modifier.align(Alignment.TopCenter))
-                    if (!state.isScrolledToEnd()) Divider(modifier = Modifier.align(Alignment.BottomCenter))
+                    if (!state.isScrolledToStart()) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
+                    if (!state.isScrolledToEnd()) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
                 }
             },
             dismissButton = {

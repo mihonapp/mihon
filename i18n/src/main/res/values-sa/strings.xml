@@ -138,10 +138,6 @@
     <string name="pref_app_theme">अनुप्रयोगस्य दृश्यशैली</string>
     <string name="theme_tako">टाकोशैली</string>
     <string name="theme_yotsuba">योट्सूबः</string>
-    <string name="pref_category_timestamps">समयमुद्राः</string>
-    <string name="pref_relative_format">सम्बन्धकसमयमुद्राः</string>
-    <string name="pref_relative_time_short">लघु (अद्य श्वः च)</string>
-    <string name="pref_relative_time_long">दीर्घम् (लघु+, n दिनपूर्वम्)</string>
     <string name="pref_manage_notifications">आवेदनानि निर्वहतु</string>
     <string name="pref_category_security">संरक्षणम्</string>
     <string name="lock_with_biometrics">उद्घाटनम् आवश्यकम्</string>
@@ -158,7 +154,6 @@
     <string name="secure_screen_summary">अभिरक्षणपटलम् अनुप्रयोगाणां परिवर्तने अनुप्रयोगवस्तु वृणोति पटलप्रतिकृतीनां च सृष्टिं निवारयति॥</string>
     <string name="pref_category_nsfw_content">प्रौढानां कृते एव (१८+) वस्तुमूलानि</string>
     <string name="pref_show_nsfw_source">मूलानां विस्ताराणां च सूचीषु दर्शयतु</string>
-    <string name="recently">सद्यः</string>
     <string name="relative_time_today">अद्य</string>
     <plurals name="relative_time">
         <item quantity="one">ह्यः</item>
@@ -344,7 +339,6 @@
     <string name="tracking_guide">अनुप्रज्ञानमार्गदर्शनम्</string>
     <string name="enhanced_services">विवृद्धसेवाः</string>
     <string name="action_track">अनुप्रजानातु</string>
-    <string name="pref_search_pinned_sources_only">केवलम् अग्रिमस्थकृतमूलम्</string>
     <string name="pref_create_backup">प्रतिलेखनं निर्मातु</string>
     <string name="pref_create_backup_summ">एतत् उपयुज्य वर्तमानग्रन्थालयं समादातुं शक्यते</string>
     <string name="pref_restore_backup">प्रतिलेखनं समाददातु</string>

@@ -3,9 +3,7 @@ package eu.kanade.domain.manga.interactor
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.manga.interactor.getCurrentFetchRange
-import tachiyomi.domain.manga.interactor.updateIntervalMeta
+import tachiyomi.domain.manga.interactor.SetFetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -17,6 +15,7 @@ import java.util.Date
 
 class UpdateManga(
     private val mangaRepository: MangaRepository,
+    private val setFetchInterval: SetFetchInterval,
 ) {
 
     suspend fun await(mangaUpdate: MangaUpdate): Boolean {
@@ -77,19 +76,14 @@ class UpdateManga(
         )
     }
 
-    suspend fun awaitUpdateIntervalMeta(
+    suspend fun awaitUpdateFetchInterval(
         manga: Manga,
-        chapters: List<Chapter>,
-        zonedDateTime: ZonedDateTime = ZonedDateTime.now(),
-        setCurrentFetchRange: Pair<Long, Long> = getCurrentFetchRange(zonedDateTime),
+        dateTime: ZonedDateTime = ZonedDateTime.now(),
+        window: Pair<Long, Long> = setFetchInterval.getWindow(dateTime),
     ): Boolean {
-        val newMeta = updateIntervalMeta(manga, chapters, zonedDateTime, setCurrentFetchRange)
-
-        return if (newMeta != null) {
-            mangaRepository.update(newMeta)
-        } else {
-            true
-        }
+        return setFetchInterval.toMangaUpdateOrNull(manga, dateTime, window)
+            ?.let { mangaRepository.update(it) }
+            ?: false
     }
 
     suspend fun awaitUpdateLastUpdate(mangaId: Long): Boolean {

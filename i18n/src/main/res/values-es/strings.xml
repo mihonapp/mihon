@@ -74,9 +74,9 @@
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Sentido de lectura normal</string>
-    <string name="left_to_right_viewer">Por páginas; de izquierda a derecha</string>
-    <string name="right_to_left_viewer">Por páginas (de derecha a izquierda)</string>
-    <string name="vertical_viewer">Por páginas; vertical</string>
+    <string name="left_to_right_viewer">Por páginas, de izquierda a derecha</string>
+    <string name="right_to_left_viewer">Por páginas, de derecha a izquierda</string>
+    <string name="vertical_viewer">Por páginas, de arriba abajo</string>
     <string name="webtoon_viewer">Tira vertical continua</string>
     <string name="pref_image_scale_type">Método de ampliación</string>
     <string name="scale_type_fit_screen">Ajustar al tamaño de pantalla</string>
@@ -310,7 +310,7 @@
     <string name="transition_pages_error">Error al cargar páginas: %1$s</string>
     <string name="migration_dialog_what_to_include">Seleccionar datos para incluir</string>
     <string name="pref_double_tap_anim_speed">Velocidad de animación de doble toque</string>
-    <string name="pager_viewer">Paginado</string>
+    <string name="pager_viewer">Por páginas</string>
     <string name="pref_read_with_long_tap">Menú de pulsación prolongada</string>
     <string name="action_open_in_web_view">Abrir en WebView</string>
     <string name="pref_skip_read_chapters">Saltar capítulos leídos</string>
@@ -437,7 +437,6 @@
         <item quantity="other">Quedan %1$s</item>
     </plurals>
     <string name="downloaded_only_summary">Filtra todos los elementos de tu biblioteca para ver solo los que estén disponibles sin conexión</string>
-    <string name="pref_search_pinned_sources_only">Solo incluir fuentes ancladas en la búsqueda global</string>
     <string name="viewer">Modo de lectura</string>
     <string name="pref_category_for_this_series">Para esta serie</string>
     <string name="gray_background">Gris</string>
@@ -637,11 +636,6 @@
         <item quantity="other">Hace %1$d días</item>
     </plurals>
     <string name="relative_time_today">Hoy</string>
-    <string name="recently">Recientemente</string>
-    <string name="pref_relative_time_long">Largas (Cortas+, hace X días)</string>
-    <string name="pref_relative_time_short">Cortas (Hoy, ayer)</string>
-    <string name="pref_relative_format">Marcas de tiempo relativas</string>
-    <string name="pref_category_timestamps">Marcas de tiempo</string>
     <string name="theme_tealturquoise">Azul marino y turquesa</string>
     <string name="pref_category_appearance">Apariencia</string>
     <string name="confirm_lock_change">Identifícate para confirmar el cambio</string>
@@ -753,7 +747,7 @@
     <string name="pref_long_strip_split">Separar imágenes más altas que anchas (en desarrollo)</string>
     <string name="updates_last_update_info">La biblioteca se actualizó: %s</string>
     <string name="remove_manga">Estás a punto de borrar «%s» de tu biblioteca</string>
-    <string name="popular">Popular</string>
+    <string name="popular">Populares</string>
     <string name="multi_lang">Varios idiomas</string>
     <string name="missing_storage_permission">No se han concedido los permisos de almacenamiento</string>
     <string name="skipped_reason_not_always_update">Saltando, porque este manga no necesita actualizarse</string>
@@ -840,7 +834,7 @@
     <string name="pref_double_tap_zoom">Ampliar tocando dos veces la pantalla</string>
     <string name="pref_library_columns_per_row">%d por fila</string>
     <string name="action_filter_interval_late">Tras 10 o más días</string>
-    <string name="action_sort_next_updated">Siguiente actualizacion esperada</string>
+    <string name="action_sort_next_updated">Próxima actualización prevista</string>
     <string name="pref_update_only_in_release_period">Fuera del período de publicación esperado</string>
     <string name="intervals_header">Intervalos</string>
     <plurals name="pref_update_release_leading_days">
@@ -866,13 +860,21 @@
     <string name="pref_update_release_grace_period_info">Se recomienda un período de gracia corto para evitar sobrecargar las páginas de descarga. Cuántas más veces fallen las comprobaciones mayor será el espacio de tiempo hasta un tope de 28 días.</string>
     <string name="manga_display_modified_interval_title">Forzar actualización cada</string>
     <string name="skipped_reason_not_in_release_period">No se ha comprobado ninguna actualización hoy al no esperar ningún cambio</string>
-    <string name="manga_modify_interval_title">Cambiar intervalo</string>
     <string name="action_set_interval">Establecer intervalo</string>
     <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
     <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
-    <string name="action_ok">OK</string>
+    <string name="action_ok">Aceptar</string>
     <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>
     <string name="delete_downloaded">Borrar los ya descargados</string>
+    <string name="has_results">Con resultados</string>
+    <string name="library_sync_complete">La biblioteca se ha sincronizado correctamente</string>
+    <string name="syncing_library">Sincronizando la biblioteca</string>
+    <string name="information_cloudflare_help">Toca aquí para solucionar problemas de acceso con Cloudflare</string>
+    <plurals name="range_interval_day">
+        <item quantity="one">%1$d - %2$d día</item>
+        <item quantity="many">%1$d - %2$d días</item>
+        <item quantity="other">%1$d - %2$d días</item>
+    </plurals>
 </resources>

@@ -6,13 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.download.Downloader
@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.cancelNotification
+import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.Constants
@@ -29,8 +30,6 @@ import tachiyomi.core.util.lang.launchUI
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.injectLazy
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 
 class LibraryUpdateNotifier(private val context: Context) {
 
@@ -275,20 +274,14 @@ class LibraryUpdateNotifier(private val context: Context) {
             .size(NOTIF_ICON_SIZE)
             .build()
         val drawable = context.imageLoader.execute(request).drawable
-        return (drawable as? BitmapDrawable)?.bitmap
+        return drawable?.getBitmapOrNull()
     }
 
     private fun getNewChaptersDescription(chapters: Array<Chapter>): String {
-        val formatter = DecimalFormat(
-            "#.###",
-            DecimalFormatSymbols()
-                .apply { decimalSeparator = '.' },
-        )
-
         val displayableChapterNumbers = chapters
             .filter { it.isRecognizedNumber }
             .sortedBy { it.chapterNumber }
-            .map { formatter.format(it.chapterNumber) }
+            .map { formatChapterNumber(it.chapterNumber) }
             .toSet()
 
         return when (displayableChapterNumbers.size) {

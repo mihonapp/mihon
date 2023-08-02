@@ -203,10 +203,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_tidalwave">Tidal Wave</string>
     <string name="pref_dark_theme_pure_black">Pure black dark mode</string>
-    <string name="pref_category_timestamps">Timestamps</string>
-    <string name="pref_relative_format">Relative timestamps</string>
-    <string name="pref_relative_time_short">Short (Today, Yesterday)</string>
-    <string name="pref_relative_time_long">Long (Short+, n days ago)</string>
     <string name="pref_date_format">Date format</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
@@ -229,7 +225,6 @@
     <string name="pref_show_nsfw_source">Show in sources and extensions lists</string>
     <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
 
-    <string name="recently">Recently</string>
     <string name="relative_time_today">Today</string>
     <plurals name="relative_time">
         <item quantity="one">Yesterday</item>
@@ -268,17 +263,6 @@
     <string name="pref_update_only_started">That haven\'t been started</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
     <string name="pref_update_only_in_release_period">Outside expected release period</string>
-
-    <string name="pref_update_release_grace_period">Expected release grace period</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d day before</item>
-        <item quantity="other">%d days before</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d day after</item>
-        <item quantity="other">%d days after</item>
-    </plurals>
-    <string name="pref_update_release_grace_period_info">A low grace period is recommended to minimize stress on sources. The more checks for an entry that are missed, the longer the interval in between checks will be with a maximum of 28 days.</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -522,8 +506,9 @@
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well.</string>
 
-      <!-- Sync section -->
-    <string name="syncing_data">Syncing data</string>
+    <!-- Sync section -->
+    <string name="syncing_library">Syncing library</string>
+    <string name="library_sync_complete">Library sync complete</string>
     <string name="sync_error">Syncing data failed</string>
     <string name="sync_complete">Syncing data complete</string>
     <string name="sync_in_progress">Sync is already in progress</string>
@@ -546,9 +531,6 @@
     <string name="sync_completed_message">Done in %1$s</string>
     <string name="last_synchronization">Last Synchronization: %1$s</string>
 
-
-
-
     <!-- Advanced section -->
     <string name="label_network">Network</string>
     <string name="pref_clear_cookies">Clear cookies</string>
@@ -567,6 +549,7 @@
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="pref_invalidate_download_cache">Invalidate downloads index</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
+    <string name="download_cache_invalidated">Downloads index invalidated</string>
     <string name="pref_clear_database">Clear database</string>
     <string name="pref_clear_database_summary">Delete history for entries that are not saved in your library</string>
     <string name="clear_database_source_item_count">%1$d non-library entries in database</string>
@@ -711,8 +694,7 @@
     <string name="display_mode_chapter">Chapter %1$s</string>
     <string name="manga_display_interval_title">Estimate every</string>
     <string name="manga_display_modified_interval_title">Set to update every</string>
-    <string name="manga_modify_interval_title">Modify interval</string>
-    <string name="manga_modify_calculated_interval_title">Customize Interval</string>
+    <string name="manga_modify_calculated_interval_title">Customize interval</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>
     <string name="chapter_paused">Paused</string>
@@ -952,6 +934,7 @@
     <string name="information_empty_category">You have no categories. Tap the plus button to create one for organizing your library.</string>
     <string name="information_empty_category_dialog">You don\'t have any categories yet.</string>
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
+    <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>
     <string name="information_required_plain">*required</string>
     <!-- Do not translate "WebView" -->
     <string name="information_webview_required">WebView is required for Tachiyomi</string>

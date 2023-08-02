@@ -28,7 +28,7 @@ import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
-import eu.kanade.tachiyomi.ui.updates.UpdatesState
+import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -40,10 +40,9 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun UpdateScreen(
-    state: UpdatesState,
+    state: UpdatesScreenModel.State,
     snackbarHostState: SnackbarHostState,
     lastUpdated: Long,
-    relativeTime: Int,
     onClickCover: (UpdatesItem) -> Unit,
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
@@ -114,7 +113,7 @@ fun UpdateScreen(
                         }
 
                         updatesUiItems(
-                            uiModels = state.getUiModel(context, relativeTime),
+                            uiModels = state.getUiModel(context),
                             selectionMode = state.selectionMode,
                             onUpdateSelected = onUpdateSelected,
                             onClickCover = onClickCover,
@@ -209,7 +208,7 @@ private fun UpdatesBottomBar(
     )
 }
 
-sealed class UpdatesUiModel {
-    data class Header(val date: String) : UpdatesUiModel()
-    data class Item(val item: UpdatesItem) : UpdatesUiModel()
+sealed interface UpdatesUiModel {
+    data class Header(val date: String) : UpdatesUiModel
+    data class Item(val item: UpdatesItem) : UpdatesUiModel
 }

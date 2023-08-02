@@ -30,9 +30,9 @@ object ChapterRecognition {
      */
     private val unwantedWhiteSpace = Regex("""\s(?=extra|special|omake)""")
 
-    fun parseChapterNumber(mangaTitle: String, chapterName: String, chapterNumber: Float? = null): Float {
+    fun parseChapterNumber(mangaTitle: String, chapterName: String, chapterNumber: Double? = null): Double {
         // If chapter number is known return.
-        if (chapterNumber != null && (chapterNumber == -2f || chapterNumber > -1f)) {
+        if (chapterNumber != null && (chapterNumber == -2.0 || chapterNumber > -1.0)) {
             return chapterNumber
         }
 
@@ -57,7 +57,7 @@ object ChapterRecognition {
         // Take the first number encountered.
         number.find(name)?.let { return getChapterNumberFromMatch(it) }
 
-        return chapterNumber ?: -1f
+        return chapterNumber ?: -1.0
     }
 
     /**
@@ -65,9 +65,9 @@ object ChapterRecognition {
      * @param match result of regex
      * @return chapter number if found else null
      */
-    private fun getChapterNumberFromMatch(match: MatchResult): Float {
+    private fun getChapterNumberFromMatch(match: MatchResult): Double {
         return match.let {
-            val initial = it.groups[1]?.value?.toFloat()!!
+            val initial = it.groups[1]?.value?.toDouble()!!
             val subChapterDecimal = it.groups[2]?.value
             val subChapterAlpha = it.groups[3]?.value
             val addition = checkForDecimal(subChapterDecimal, subChapterAlpha)
@@ -81,22 +81,22 @@ object ChapterRecognition {
      * @param alpha alpha value of regex
      * @return decimal/alpha float value
      */
-    private fun checkForDecimal(decimal: String?, alpha: String?): Float {
+    private fun checkForDecimal(decimal: String?, alpha: String?): Double {
         if (!decimal.isNullOrEmpty()) {
-            return decimal.toFloat()
+            return decimal.toDouble()
         }
 
         if (!alpha.isNullOrEmpty()) {
             if (alpha.contains("extra")) {
-                return .99f
+                return 0.99
             }
 
             if (alpha.contains("omake")) {
-                return .98f
+                return 0.98
             }
 
             if (alpha.contains("special")) {
-                return .97f
+                return 0.97
             }
 
             val trimmedAlpha = alpha.trimStart('.')
@@ -105,15 +105,15 @@ object ChapterRecognition {
             }
         }
 
-        return .0f
+        return 0.0
     }
 
     /**
      * x.a -> x.1, x.b -> x.2, etc
      */
-    private fun parseAlphaPostFix(alpha: Char): Float {
+    private fun parseAlphaPostFix(alpha: Char): Double {
         val number = alpha.code - ('a'.code - 1)
-        if (number >= 10) return 0f
-        return number / 10f
+        if (number >= 10) return 0.0
+        return number / 10.0
     }
 }

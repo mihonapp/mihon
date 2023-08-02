@@ -1,12 +1,12 @@
 [versions]
-aboutlib_version = "10.8.2"
+aboutlib_version = "10.8.3"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
 sqlite = "2.3.1"
-sqldelight = "1.5.5"
+sqldelight = "2.0.0"
 leakcanary = "2.12"
 voyager = "1.0.0-rc06"
-richtext = "0.16.0"
+richtext = "0.17.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
@@ -30,7 +30,7 @@ jsoup = "org.jsoup:jsoup:1.16.1"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:17bec43"
-junrar = "com.github.junrar:junrar:7.5.4"
+junrar = "com.github.junrar:junrar:7.5.5"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
@@ -46,7 +46,7 @@ coil-gif = { module = "io.coil-kt:coil-gif" }
 coil-compose = { module = "io.coil-kt:coil-compose" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:c8e2650"
-image-decoder = "com.github.tachiyomiorg:image-decoder:7879b45"
+image-decoder = "com.github.tachiyomiorg:image-decoder:16eda64574"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
@@ -65,7 +65,7 @@ swipe = "me.saket.swipe:swipe:1.2.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.10.1"
+acra-http = "ch.acra:acra-http:5.11.0"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
@@ -77,12 +77,13 @@ shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizu
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 leakcanary-plumber = { module = "com.squareup.leakcanary:plumber-android", version.ref = "leakcanary" }
 
-sqldelight-android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
-sqldelight-android-paging = { module = "com.squareup.sqldelight:android-paging3-extensions", version.ref = "sqldelight" }
-sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
+sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
+sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.9.3"
+junit = "org.junit.jupiter:junit-jupiter:5.10.0"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
 mockk = "io.mockk:mockk:1.13.5"
 
@@ -99,6 +100,7 @@ js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
+sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
 voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
 test = ["junit", "kotest-assertions", "mockk"]

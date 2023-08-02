@@ -94,7 +94,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) дереккөздері</string>
     <string name="pref_show_nsfw_source">Дереккөздер мен кеңейтулер тізімінде көрсету</string>
     <string name="parental_controls_info">Бұл қолданбадағы NSFW (18+) мазмұнын көрсетуге бейресми немесе ықтимал қате белгіленген кеңейтулерге кедергі жасамайды.</string>
-    <string name="recently">Жақында</string>
     <string name="action_mark_as_read">Оқылған деп белгілеу</string>
     <string name="action_mark_as_unread">Оқылмаған деп белгілеу</string>
     <string name="action_mark_previous_as_read">Алдыңғысын оқылған деп белгілеу</string>
@@ -176,7 +175,6 @@
     <string name="loading">Жүктелуде…</string>
     <string name="app_not_available">Қолданба қолжетімсіз</string>
     <string name="pref_category_general">Жалпы</string>
-    <string name="pref_relative_time_short">Қысқа (бүгін, кеше)</string>
     <string name="pref_date_format">Күн пішімі</string>
     <string name="pref_manage_notifications">Хабарландыруларды басқару</string>
     <string name="pref_category_security">Қауіпсіздік пен құпиялық</string>
@@ -248,9 +246,6 @@
     <string name="pref_true_color">32-битті түс</string>
     <string name="pref_true_color_summary">Жолақты азайтады, бірақ өнімділікке әсер етуі мүмкін</string>
     <string name="pref_crop_borders">Кесу жиектері</string>
-    <string name="pref_category_timestamps">Уақыт белгісі</string>
-    <string name="pref_relative_format">Жуық уақыт белгісі</string>
-    <string name="pref_relative_time_long">Ұзақ (Қысқа+, n күн бұрын)</string>
     <string name="extension_api_error">Кеңейтулер тізімін алу сәтсіз өтті</string>
     <string name="pref_cutout_short">Мазмұнды кесу аймағында көрсету</string>
     <string name="pref_library_update_manga_restriction">Жазбаларды жаңартуды өткізіп жіберу</string>
@@ -510,7 +505,6 @@
     <string name="on_hiatus">Үзілісте</string>
     <string name="enhanced_tracking_info">Белгілі бір дереккөздер үшін жақсартылған мүмкіндіктерді қамтамасыз ететін қызметтер. Кітапханаға қосылған кезде жазбалар автоматты түрде бақыланады.</string>
     <string name="pref_restore_backup">Сақтық көшірмеден қайтару</string>
-    <string name="pref_search_pinned_sources_only">Ауқымды іздеуде тек бекітілген дереккөздерді табу</string>
     <string name="pref_create_backup_summ">Қазіргі кітапхананы қалпына келтіру үшін қолдануға болады</string>
     <string name="pref_backup_interval">Сақтық көшірме жиілігі</string>
     <string name="pref_restore_backup_summ">Сақтық көшірмеден кітапхананы қайтару</string>

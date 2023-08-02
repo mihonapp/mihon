@@ -399,7 +399,6 @@
         <item quantity="one">1 jäljellä</item>
         <item quantity="other">%1$s jäljellä</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Sisällytä vain kiinnitetyt lähteet</string>
     <string name="gray_background">Harmaa</string>
     <string name="pref_category_for_this_series">Tälle sarjalle</string>
     <plurals name="num_categories">
@@ -564,7 +563,6 @@
     <string name="action_display_cover_only_grid">Kansikuva ruudukko</string>
     <string name="theme_monet">Dynaaminen</string>
     <string name="theme_greenapple">Vihreä omena</string>
-    <string name="recently">Viimeaikoina</string>
     <string name="label_default">Oletus</string>
     <string name="action_display_local_badge">Laitteelle tallennettu manga</string>
     <string name="pref_library_update_refresh_trackers">Päivitä seurantapalvelimet automaattisesti</string>
@@ -578,16 +576,12 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Täysin musta pimeätila</string>
     <string name="pref_update_only_started">Ei lukemattomia lukuja</string>
-    <string name="pref_relative_format">Suhteelliset aikamerkit</string>
-    <string name="pref_relative_time_short">Lyhyt (tänään, eilen)</string>
-    <string name="pref_relative_time_long">Pitkä (lyhyt+, N päivää sitten)</string>
     <string name="relative_time_today">Tänään</string>
     <string name="pref_update_only_completely_read">Sarjalla on lukemattomia kappaleita</string>
     <string name="pref_app_theme">Sovelluksen teema</string>
     <string name="label_warning">Varoitus</string>
     <string name="confirm_lock_change">Tunnistaudu vahvistaaksesi muutokset</string>
     <string name="action_display_language_badge">Kieli</string>
-    <string name="pref_category_timestamps">Aikaleimat</string>
     <string name="action_faq_and_guides">Usein kysytyt kysymykset ja oppaat</string>
     <string name="pref_library_update_manga_restriction">Ohita päivitys</string>
     <string name="action_move_to_top_all_for_series">Siirrä sarja päällimmäiseksi</string>

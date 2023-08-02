@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SelectableDates
@@ -34,7 +35,6 @@ import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.WheelNumberPicker
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
-import tachiyomi.presentation.core.components.material.Divider
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
@@ -79,8 +79,8 @@ fun TrackStatusSelector(
                     }
                 }
             }
-            if (!state.isScrolledToStart()) Divider(modifier = Modifier.align(Alignment.TopCenter))
-            if (!state.isScrolledToEnd()) Divider(modifier = Modifier.align(Alignment.BottomCenter))
+            if (!state.isScrolledToStart()) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
+            if (!state.isScrolledToEnd()) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
         },
         onConfirm = onConfirm,
         onDismissRequest = onDismissRequest,

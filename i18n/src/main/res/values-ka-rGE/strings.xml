@@ -371,7 +371,6 @@
     <string name="pref_read_with_long_tap">დიალოგი ხანგრძლივი დაჭერისას</string>
     <string name="webtoon_viewer">ვებ კომიქსი</string>
     <string name="pager_viewer">დანომრილი</string>
-    <string name="pref_search_pinned_sources_only">გლობალურ ძებნაში მხოლოდ მიჭიკარტებულ წყაროებში ძებნა</string>
     <string name="pref_disable_battery_optimization">გამორთე ბატარეის ოპტიმიზაცია</string>
     <string name="pref_disable_battery_optimization_summary">ეხმარება უკანა ფონში მიმდინარე ბიბლიოთეკის განახლებებსდა რეზერვს</string>
     <string name="licenses">ღია კოდის ლიცენზია</string>

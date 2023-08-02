@@ -12,7 +12,7 @@ val mangaMapper: (Long, Long, String, String?, String?, String?, List<String>?, 
             favorite = favorite,
             lastUpdate = lastUpdate ?: 0,
             nextUpdate = nextUpdate ?: 0,
-            calculateInterval = calculateInterval.toInt(),
+            fetchInterval = calculateInterval.toInt(),
             dateAdded = dateAdded,
             viewerFlags = viewerFlags,
             chapterFlags = chapterFlags,
@@ -32,7 +32,7 @@ val mangaMapper: (Long, Long, String, String?, String?, String?, List<String>?, 
         )
     }
 
-val libraryManga: (Long, Long, String, String?, String?, String?, List<String>?, String, Long, String?, Boolean, Long?, Long?, Boolean, Long, Long, Long, Long, UpdateStrategy, Long, Long, Long?, Long, Long, Long, Long, Long, Long, Long) -> LibraryManga =
+val libraryManga: (Long, Long, String, String?, String?, String?, List<String>?, String, Long, String?, Boolean, Long?, Long?, Boolean, Long, Long, Long, Long, UpdateStrategy, Long, Long, Long?, Long, Double, Long, Long, Long, Double, Long) -> LibraryManga =
     { id, source, url, artist, author, description, genre, title, status, thumbnailUrl, favorite, lastUpdate, nextUpdate, initialized, viewerFlags, chapterFlags, coverLastModified, dateAdded, updateStrategy, calculateInterval, lastModifiedAt, favoriteModifiedAt, totalCount, readCount, latestUpload, chapterFetchedAt, lastRead, bookmarkCount, category ->
         LibraryManga(
             manga = mangaMapper(
@@ -61,8 +61,8 @@ val libraryManga: (Long, Long, String, String?, String?, String?, List<String>?,
             ),
             category = category,
             totalChapters = totalCount,
-            readCount = readCount,
-            bookmarkCount = bookmarkCount,
+            readCount = readCount.toLong(),
+            bookmarkCount = bookmarkCount.toLong(),
             latestUpload = latestUpload,
             chapterFetchedAt = chapterFetchedAt,
             lastRead = lastRead,

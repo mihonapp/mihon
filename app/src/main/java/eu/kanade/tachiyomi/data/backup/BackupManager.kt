@@ -30,15 +30,15 @@ import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
-import tachiyomi.core.util.lang.toLong
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
-import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
+import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
@@ -60,6 +60,7 @@ class BackupManager(
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val getCategories: GetCategories = Injekt.get()
     private val getFavorites: GetFavorites = Injekt.get()
+    private val getHistory: GetHistory = Injekt.get()
 
     internal val parser = ProtoBuf
 
@@ -79,7 +80,7 @@ class BackupManager(
             backupMangas(databaseManga, flags),
             backupCategories(flags),
             emptyList(),
-            backupExtensionInfo(databaseManga),
+            prepExtensionInfoForSync(databaseManga),
         )
 
         var file: UniFile? = null
@@ -133,7 +134,7 @@ class BackupManager(
         }
     }
 
-    fun backupExtensionInfo(mangas: List<Manga>): List<BackupSource> {
+    fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -204,11 +205,11 @@ class BackupManager(
 
         // Check if user wants history information in backup
         if (options and BACKUP_HISTORY_MASK == BACKUP_HISTORY) {
-            val historyByMangaId = handler.awaitList(true) { historyQueries.getHistoryByMangaId(manga.id) }
+            val historyByMangaId = getHistory.await(manga.id)
             if (historyByMangaId.isNotEmpty()) {
                 val history = historyByMangaId.map { history ->
-                    val chapter = handler.awaitOne { chaptersQueries.getChapterById(history.chapter_id) }
-                    BackupHistory(chapter.url, history.last_read?.time ?: 0L, history.time_read)
+                    val chapter = handler.awaitOne { chaptersQueries.getChapterById(history.chapterId) }
+                    BackupHistory(chapter.url, history.readAt?.time ?: 0L, history.readDuration)
                 }
                 if (history.isNotEmpty()) {
                     mangaObject.history = history
@@ -262,7 +263,7 @@ class BackupManager(
             }
             if (!found) {
                 // Let the db assign the id
-                val id = handler.awaitOne {
+                val id = handler.awaitOneExecutable {
                     categoriesQueries.insert(category.name, category.order, category.flags)
                     categoriesQueries.selectLastInsertedRowId()
                 }
@@ -413,7 +414,7 @@ class BackupManager(
                         track.last_chapter_read,
                         track.total_chapters,
                         track.status,
-                        track.score.toDouble(),
+                        track.score,
                         track.remote_url,
                         track.start_date,
                         track.finish_date,
@@ -486,7 +487,7 @@ class BackupManager(
      * @return id of [Manga], null if not found
      */
     private suspend fun insertManga(manga: Manga): Long {
-        return handler.awaitOne(true) {
+        return handler.awaitOneExecutable(true) {
             mangasQueries.insert(
                 source = manga.source,
                 url = manga.url,
@@ -524,17 +525,17 @@ class BackupManager(
                 title = manga.title,
                 status = manga.status,
                 thumbnailUrl = manga.thumbnailUrl,
-                favorite = manga.favorite.toLong(),
+                favorite = manga.favorite,
                 lastUpdate = manga.lastUpdate,
                 nextUpdate = null,
                 calculateInterval = null,
-                initialized = manga.initialized.toLong(),
+                initialized = manga.initialized,
                 viewer = manga.viewerFlags,
                 chapterFlags = manga.chapterFlags,
                 coverLastModified = manga.coverLastModified,
                 dateAdded = manga.dateAdded,
                 mangaId = manga.id,
-                updateStrategy = manga.updateStrategy.let(updateStrategyAdapter::encode),
+                updateStrategy = manga.updateStrategy.let(UpdateStrategyColumnAdapter::encode),
             )
         }
         return manga.id
@@ -574,8 +575,8 @@ class BackupManager(
                     url = null,
                     name = null,
                     scanlator = null,
-                    read = chapter.read.toLong(),
-                    bookmark = chapter.bookmark.toLong(),
+                    read = chapter.read,
+                    bookmark = chapter.bookmark,
                     lastPageRead = chapter.lastPageRead,
                     chapterNumber = null,
                     sourceOrder = null,

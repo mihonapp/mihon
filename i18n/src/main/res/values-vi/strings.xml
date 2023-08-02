@@ -390,7 +390,6 @@
     <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
     <string name="label_more">Thêm</string>
-    <string name="pref_search_pinned_sources_only">Chỉ bao gồm những nguồn được ghim khi tìm kiếm toàn bộ</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ nút theo dõi.</string>
     <string name="pref_category_reading_mode">Kiểu đọc</string>
     <string name="vertical_plus_viewer">Dải dài có khoảng cách</string>
@@ -602,8 +601,6 @@
     <string name="enhanced_services">Dịch vụ nâng cao</string>
     <string name="enhanced_tracking_info">Dịch vụ cung cấp các tính năng nâng cao cho các nguồn cụ thể. Truyện sẽ tự động theo dõi khi được thêm vào thư viện của bạn.</string>
     <string name="about_dont_kill_my_app">Một vài nhà sản xuất có các hạn chế về việc chạy ngầm của ứng dụng có thể gây dừng hiện thị dịch vụ nền. Xem thêm ở địa chỉ này để sửa chữa chúng.</string>
-    <string name="pref_relative_format">Dấu thời gian liên quan</string>
-    <string name="pref_category_timestamps">Dấu thời gian</string>
     <string name="theme_tealturquoise">Chủ đề: Xanh lam &amp; Xanh ngọc</string>
     <string name="pref_category_appearance">Giao diện</string>
     <string name="confirm_lock_change">Xác nhận thay đổi</string>
@@ -623,9 +620,6 @@
         <item quantity="other">%1$d ngày trước</item>
     </plurals>
     <string name="relative_time_today">Hôm nay</string>
-    <string name="recently">Gần đây</string>
-    <string name="pref_relative_time_long">Dài (Ngắn+, nhiều ngày trước)</string>
-    <string name="pref_relative_time_short">Ngắn (Hôm nay, Hôm qua)</string>
     <string name="help_translate">Hỗ trợ dịch thuật</string>
     <string name="ext_app_info">Thông tin ứng dụng</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Cài và chạy Shizuku để sử dụng Shizuku như một trình cài đặt tiện ích mở rộng.</string>

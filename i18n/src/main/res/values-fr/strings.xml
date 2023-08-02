@@ -439,7 +439,6 @@
         <item quantity="other">%1$s restants</item>
     </plurals>
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>
-    <string name="pref_search_pinned_sources_only">Rechercher uniquement les sources épinglées dans la recherche globale</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
     <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
@@ -631,19 +630,14 @@
     <string name="pref_highest">Maximale</string>
     <string name="pref_hide_threshold">Sensibilité pour masquer le menu lors du défilement</string>
     <string name="pref_inverted_colors">Inversé</string>
-    <string name="pref_relative_time_long">Long (Court+, il y a n jours)</string>
-    <string name="pref_relative_time_short">Court (Aujourd\'hui, Hier)</string>
-    <string name="pref_relative_format">Horodatages relatifs</string>
     <plurals name="relative_time">
         <item quantity="one">Hier</item>
         <item quantity="many">Il y a %1$d jours</item>
         <item quantity="other">Il y a %1$d jours</item>
     </plurals>
     <string name="relative_time_today">Aujourd\'hui</string>
-    <string name="recently">Récemment</string>
     <string name="theme_tealturquoise">Bleu canard et turquoise</string>
     <string name="confirm_lock_change">Authentifiez-vous pour confirmer les changements</string>
-    <string name="pref_category_timestamps">Horodatage</string>
     <string name="pref_category_appearance">Apparence</string>
     <string name="label_default">Par défaut</string>
     <string name="action_track">Suivre</string>

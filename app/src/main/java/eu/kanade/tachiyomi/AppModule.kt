@@ -5,8 +5,8 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.service.TrackPreferences
@@ -39,11 +39,11 @@ import tachiyomi.core.provider.AndroidDownloadFolderProvider
 import tachiyomi.data.AndroidDatabaseHandler
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.DateColumnAdapter
 import tachiyomi.data.History
 import tachiyomi.data.Mangas
-import tachiyomi.data.dateAdapter
-import tachiyomi.data.listOfStringsAdapter
-import tachiyomi.data.updateStrategyAdapter
+import tachiyomi.data.StringListColumnAdapter
+import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -92,11 +92,11 @@ class AppModule(val app: Application) : InjektModule {
             Database(
                 driver = get(),
                 historyAdapter = History.Adapter(
-                    last_readAdapter = dateAdapter,
+                    last_readAdapter = DateColumnAdapter,
                 ),
                 mangasAdapter = Mangas.Adapter(
-                    genreAdapter = listOfStringsAdapter,
-                    update_strategyAdapter = updateStrategyAdapter,
+                    genreAdapter = StringListColumnAdapter,
+                    update_strategyAdapter = UpdateStrategyColumnAdapter,
                 ),
             )
         }

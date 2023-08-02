@@ -43,9 +43,11 @@ import kotlinx.coroutines.flow.stateIn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.util.plus
 
-object WorkerInfoScreen : Screen() {
+class WorkerInfoScreen : Screen() {
 
-    const val title = "Worker info"
+    companion object {
+        const val title = "Worker info"
+    }
 
     @Composable
     override fun Content() {

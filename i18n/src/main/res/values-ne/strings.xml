@@ -139,7 +139,6 @@
         <item quantity="other">%1$d दिन अघि</item>
     </plurals>
     <string name="relative_time_today">आज</string>
-    <string name="recently">हालसालै</string>
     <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
     <string name="pref_category_nsfw_content">NSFW (१८+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>
@@ -156,10 +155,6 @@
     <string name="pref_category_security">सुरक्षा र गोपनीयता</string>
     <string name="pref_manage_notifications">सूचनाहरू व्यवस्थापन गर्नुहोस्</string>
     <string name="pref_date_format">मिति ढाँचा</string>
-    <string name="pref_relative_time_long">लामो (छोटो+, n दिन पहिले)</string>
-    <string name="pref_relative_time_short">छोटो (आज, हिजो)</string>
-    <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्प</string>
-    <string name="pref_category_timestamps">टाइमस्ट्याम्प</string>
     <string name="pref_dark_theme_pure_black">शुद्ध कालो डार्क मोड</string>
     <string name="theme_yotsuba">योत्सुबा</string>
     <string name="theme_yinyang">यिन र यांग</string>
@@ -228,11 +223,11 @@
     <string name="tapping_inverted_vertical">ठाडो</string>
     <string name="tapping_inverted_both">दुबै</string>
     <string name="pref_reader_actions">कार्यहरू</string>
-    <string name="pref_read_with_long_tap">लामो ट्यापमा देखाउनुहोस्</string>
+    <string name="pref_read_with_long_tap">लामो ट्यापमा कार्यहरू देखाउनुहोस्</string>
     <string name="pref_reader_theme">पृष्ठभूमि रङ</string>
     <string name="gray_background">खैरो</string>
     <string name="black_background">कालो</string>
-    <string name="automatic_background">स्वचालित</string>
+    <string name="automatic_background">स्वत</string>
     <string name="l_nav">L आकारको</string>
     <string name="ext_downloading">डाउनलोड गर्दै</string>
     <string name="ext_installing">स्थापना गर्दै</string>
@@ -325,7 +320,6 @@
     <string name="last_read_chapter">अन्तिम पढिएको अध्याय</string>
     <string name="enhanced_tracking_info">सेवाहरू जसले विशिष्ट स्रोतहरूको लागि परिष्कृत सुविधाहरू प्रदान गर्दछ। तपाईंको पुस्तकालयमा इन्ट्री थप्दा स्वतः ट्र्याक गरिन्छ।</string>
     <string name="action_track">ट्र्याक</string>
-    <string name="pref_search_pinned_sources_only">ग्लोबल खोजमा पिन गरिएका स्रोतहरू मात्र खोज्नुहोस्</string>
     <string name="restore_completed">रिस्टोर सम्पन्न भयो</string>
     <plurals name="restore_completed_message">
         <item quantity="one">%2$s त्रुटिको साथ %1$s मा सम्पन्न भयो</item>
@@ -680,7 +674,7 @@
     <string name="network_not_metered">मापन नगरिएको नेटवर्कमा मात्र</string>
     <string name="download_ahead">अगाडि डाउनलोड गर्नुहोस्</string>
     <string name="pref_appearance_summary">थिम, मिति र समय ढाँचा</string>
-    <string name="download_ahead_info">केवल पुस्तकालयका इन्ट्रीहरूमा काम गर्दछ र यदि हालको अध्याय + अर्को पहिले नै डाउनलोड गरिएको छ</string>
+    <string name="download_ahead_info">हालको अध्याय + अर्को पहिले नै डाउनलोड गरिएमा मात्र काम गर्दछ।</string>
     <string name="theme_tidalwave">समुन्द्री लहर</string>
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
@@ -802,7 +796,6 @@
     </plurals>
     <string name="pref_update_release_grace_period">अपेक्षित रिलीज ग्रेस अवधि</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
-    <string name="manga_modify_interval_title">अन्तराल परिमार्जन गर्नुहोस्</string>
     <string name="manga_modify_calculated_interval_title">अन्तराल कस्टम गर्नुहोस्</string>
     <string name="skipped_reason_not_in_release_period">छोडियो किनभने आज कुनै रिलीज अपेक्षित थिएन</string>
     <plurals name="pref_update_release_following_days">
@@ -826,4 +819,5 @@
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
     <string name="action_ok">ठीक छ</string>
     <string name="delete_downloaded">डाउनलोड गरिएको मेट्नुहोस्</string>
+    <string name="has_results">परिणामहरू छन्</string>
 </resources>

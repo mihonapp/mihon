@@ -142,11 +142,7 @@
     <string name="theme_yinyang">Yin-yang</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Kulsort</string>
-    <string name="pref_category_timestamps">Tidsstempler</string>
-    <string name="pref_relative_time_long">Lang (Kort+, n dage siden)</string>
     <string name="pref_date_format">Dato format</string>
-    <string name="pref_relative_format">Relative tidsstempler</string>
-    <string name="pref_relative_time_short">Kort (I dag, I går)</string>
     <string name="pref_manage_notifications">Håndter notifikationer</string>
     <string name="pref_category_security">Sikkerhed</string>
     <string name="lock_with_biometrics">Kræv oplåsning</string>
@@ -157,7 +153,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) kilder</string>
     <string name="pref_show_nsfw_source">Vis i kilder og udvidelsesliste</string>
     <string name="parental_controls_info">Dette forhindrer ikke uofficielle eller potentielt ukorrekt markerede udvidelser fra at vise NSFW (18+) indhold i appen.</string>
-    <string name="recently">For nylig</string>
     <string name="relative_time_today">I dag</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Efter %1$s minut</item>

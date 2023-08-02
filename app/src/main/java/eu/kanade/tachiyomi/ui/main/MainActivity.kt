@@ -59,7 +59,6 @@ import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
-import eu.kanade.presentation.util.collectAsState
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.Migrations
 import eu.kanade.tachiyomi.R
@@ -93,6 +92,7 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -416,7 +416,7 @@ class MainActivity : BaseActivity() {
             INTENT_SEARCH -> {
                 val query = intent.getStringExtra(INTENT_SEARCH_QUERY)
                 if (!query.isNullOrEmpty()) {
-                    val filter = intent.getStringExtra(INTENT_SEARCH_FILTER) ?: ""
+                    val filter = intent.getStringExtra(INTENT_SEARCH_FILTER)
                     navigator.popUntilRoot()
                     navigator.push(GlobalSearchScreen(query, filter))
                 }

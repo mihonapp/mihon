@@ -85,7 +85,6 @@
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_create_backup_summ">Se puede utilizar para restaurar la biblioteca actual</string>
     <string name="pref_create_backup">Crear copia de seguridad</string>
-    <string name="pref_search_pinned_sources_only">Solamente buscar fuentes fijados en búsqueda global</string>
     <string name="tracking_info">Sincronización unidireccional para actualizar el progreso del capítulo en los servicios de sincronización. Configure el seguimiento de las entradas de manga individuales desde su botón de seguimiento.</string>
     <string name="services">Servicios</string>
     <string name="pref_auto_update_manga_sync">Actualizar el progreso después de leer</string>
@@ -126,12 +125,12 @@
     <string name="scale_type_stretch">Estirado</string>
     <string name="scale_type_fit_screen">Ajustar pantalla</string>
     <string name="pref_image_scale_type">Tipo de escalado</string>
-    <string name="pager_viewer">Paginado</string>
-    <string name="vertical_plus_viewer">Vertical discontinuo</string>
+    <string name="pager_viewer">Por páginas</string>
+    <string name="vertical_plus_viewer">Tira vertical discontinua</string>
     <string name="webtoon_viewer">Tira vertical continua</string>
-    <string name="vertical_viewer">Paginado (vertical)</string>
-    <string name="right_to_left_viewer">Paginado (derecha a izquierda)</string>
-    <string name="left_to_right_viewer">Paginado (izquierda a derecha)</string>
+    <string name="vertical_viewer">Por páginas (vertical)</string>
+    <string name="right_to_left_viewer">Por páginas (derecha a izquierda)</string>
+    <string name="left_to_right_viewer">Por páginas (izquierda a derecha)</string>
     <string name="pref_viewer_type">Modo de lectura por defecto</string>
     <string name="black_background">Negro</string>
     <string name="gray_background">Gris</string>
@@ -595,17 +594,12 @@
     <string name="pref_library_update_refresh_trackers_summary">Actualizar rastreadores cuando se actualice la biblioteca</string>
     <string name="pref_library_update_refresh_trackers">Actualizar rastreadores automáticamente</string>
     <string name="restrictions">Restricciones: %s</string>
-    <string name="pref_relative_time_long">Largo (Corto +, Hace x días)</string>
     <plurals name="relative_time">
         <item quantity="one">Ayer</item>
         <item quantity="many">Hace %1$d dias</item>
         <item quantity="other">Hace %1$d dias</item>
     </plurals>
     <string name="relative_time_today">Hoy</string>
-    <string name="recently">Recientemente</string>
-    <string name="pref_relative_time_short">Corto (Hoy, Ayer)</string>
-    <string name="pref_relative_format">Marcas de tiempo importantes</string>
-    <string name="pref_category_timestamps">Marca de tiempo</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro con negro puro</string>
     <string name="theme_yotsuba">Tema Yotsuba</string>
     <string name="theme_yinyang">Yin y Yang</string>
@@ -747,7 +741,7 @@
     <string name="remove_manga">Estás apunto de remover \"%s\" de tu librería</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
     <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Sugerimos que compartas los registros de errores en nuestro canal de soporte en Discord.</string>
-    <string name="popular">Popular</string>
+    <string name="popular">Populares</string>
     <string name="updates_last_update_info">Última actualización de librería: %s</string>
     <string name="track_remove_date_conf_title">¿Quitar fecha\?</string>
     <string name="track_remove_start_date_conf_text">Esto eliminará la fecha de inicio previamente seleccionada de %s</string>
@@ -802,7 +796,7 @@
     <string name="action_filter_interval_long">Búsqueda mensual (28 días)</string>
     <string name="action_set_interval">Establecer intervalo</string>
     <string name="action_filter_interval_custom">Intervalo de búsqueda personalizado</string>
-    <string name="action_sort_next_updated">Siguiente actualizacion esperada</string>
+    <string name="action_sort_next_updated">Próxima actualización prevista</string>
     <string name="pref_library_columns_per_row">%d por fila</string>
     <string name="intervals_header">Intervalos</string>
     <string name="skipped_reason_not_in_release_period">Omitido porque no se espera ninguna actualización hoy</string>
@@ -834,8 +828,7 @@
     </plurals>
     <string name="manga_display_interval_title">Estimar cada</string>
     <string name="manga_display_modified_interval_title">Establecer la actualización cada</string>
-    <string name="manga_modify_interval_title">Cambiar intervalo</string>
-    <string name="action_ok">OK</string>
+    <string name="action_ok">Aceptar</string>
     <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>
@@ -844,4 +837,5 @@
         <item quantity="many">%d días</item>
         <item quantity="other">%d días</item>
     </plurals>
+    <string name="has_results">Con resultados</string>
 </resources>

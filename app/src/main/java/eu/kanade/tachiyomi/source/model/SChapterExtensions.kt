@@ -6,6 +6,6 @@ fun SChapter.copyFrom(other: Chapters) {
     name = other.name
     url = other.url
     date_upload = other.date_upload
-    chapter_number = other.chapter_number
+    chapter_number = other.chapter_number.toFloat()
     scanlator = other.scanlator
 }

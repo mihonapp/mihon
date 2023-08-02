@@ -13,6 +13,7 @@ import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.preference.asState
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDomainManga
@@ -65,6 +66,7 @@ class BrowseSourceScreenModel(
     listingQuery: String?,
     sourceManager: SourceManager = Injekt.get(),
     sourcePreferences: SourcePreferences = Injekt.get(),
+    basePreferences: BasePreferences = Injekt.get(),
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val getRemoteManga: GetRemoteManga = Injekt.get(),
@@ -103,6 +105,10 @@ class BrowseSourceScreenModel(
                     toolbarQuery = query,
                 )
             }
+        }
+
+        if (!basePreferences.incognitoMode().get()) {
+            sourcePreferences.lastUsedSource().set(source.id)
         }
     }
 
@@ -315,7 +321,7 @@ class BrowseSourceScreenModel(
     }
 
     suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {
-        return getDuplicateLibraryManga.await(manga.title)
+        return getDuplicateLibraryManga.await(manga).getOrNull(0)
     }
 
     private fun moveMangaToCategories(manga: Manga, vararg categories: Category) {
@@ -344,8 +350,8 @@ class BrowseSourceScreenModel(
     }
 
     sealed class Listing(open val query: String?, open val filters: FilterList) {
-        object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
-        object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
+        data object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
+        data object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
         data class Search(override val query: String?, override val filters: FilterList) : Listing(query = query, filters = filters)
 
         companion object {
@@ -359,15 +365,15 @@ class BrowseSourceScreenModel(
         }
     }
 
-    sealed class Dialog {
-        object Filter : Dialog()
-        data class RemoveManga(val manga: Manga) : Dialog()
-        data class AddDuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog()
+    sealed interface Dialog {
+        data object Filter : Dialog
+        data class RemoveManga(val manga: Manga) : Dialog
+        data class AddDuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog
         data class ChangeMangaCategory(
             val manga: Manga,
             val initialSelection: List<CheckboxState.State<Category>>,
-        ) : Dialog()
-        data class Migrate(val newManga: Manga) : Dialog()
+        ) : Dialog
+        data class Migrate(val newManga: Manga) : Dialog
     }
 
     @Immutable

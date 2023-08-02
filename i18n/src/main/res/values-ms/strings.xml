@@ -393,7 +393,6 @@
     <plurals name="download_queue_summary">
         <item quantity="other">%1$s baki</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Hanya cari sumber yang disematkan di dalam carian keseluruhan</string>
     <string name="gray_background">Kelabu</string>
     <string name="viewer">Mod membaca</string>
     <string name="pref_category_for_this_series">Untuk siri ini</string>
@@ -531,7 +530,7 @@
     <string name="rotation_type">Jenis putaran skrin</string>
     <string name="pref_grayscale">Skala kelabu</string>
     <string name="notification_incognito_text">Nyahdaya mod inkognito</string>
-    <string name="automatic_background">Automatik</string>
+    <string name="automatic_background">Auto</string>
     <string name="cancel_all_for_series">Batalkan semua untuk siri ini</string>
     <string name="error_no_match">Tiada padanan dijumpai</string>
     <string name="source_unsupported">Sumber tidak disokong</string>
@@ -574,11 +573,7 @@
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_hide_threshold">Sensitiviti menyembunyikan menu apabila skrol</string>
     <string name="label_background_activity">Aktiviti latar belakang</string>
-    <string name="recently">Baru-baru ini</string>
     <string name="pref_inverted_colors">Songsang</string>
-    <string name="pref_relative_time_long">Panjang (Pendek+, n hari yang lalu)</string>
-    <string name="pref_relative_time_short">Pendek (Hari ini, Semalam)</string>
-    <string name="pref_relative_format">Cap masa relatif</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d hari lalu</item>
     </plurals>
@@ -587,7 +582,6 @@
     <string name="confirm_lock_change">Sahkan untuk mengesahkan perubahan</string>
     <string name="label_default">Lalai</string>
     <string name="pref_category_appearance">Tampilan</string>
-    <string name="pref_category_timestamps">Cap Masa</string>
     <string name="action_track">Jejak</string>
     <string name="getting_started_guide">Panduan penggunaan</string>
     <string name="pref_tablet_ui_mode">UI tablet</string>
@@ -795,7 +789,6 @@
         <item quantity="other">%d hari</item>
     </plurals>
     <string name="manga_modify_calculated_interval_title">Tersuai Jarak Masa</string>
-    <string name="manga_modify_interval_title">Ubahsuai jarak masa</string>
     <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
     <string name="pref_update_release_grace_period_info">Tempoh tangguh yang rendah adalah digalakkan untuk meminimumkan tekanan kepada sumber. Lebih banyak semakan pada entri yang terlepas, semakin lama jarak masa akan diambil untuk menyemak dengan 28 hari maksimum.</string>
@@ -808,4 +801,5 @@
     <string name="action_ok">OK</string>
     <string name="track_delete_remote_text">Juga buang daripada %s</string>
     <string name="delete_downloaded">Padam dimuat turun</string>
+    <string name="has_results">Mempunyai hasil</string>
 </resources>

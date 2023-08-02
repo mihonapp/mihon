@@ -38,7 +38,7 @@ class ExtensionDetailsScreenModel(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionSources: GetExtensionSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
-) : StateScreenModel<ExtensionDetailsState>(ExtensionDetailsState()) {
+) : StateScreenModel<ExtensionDetailsScreenModel.State>(State()) {
 
     private val _events: Channel<ExtensionDetailsEvent> = Channel()
     val events: Flow<ExtensionDetailsEvent> = _events.receiveAsFlow()
@@ -132,7 +132,7 @@ class ExtensionDetailsScreenModel(
 
     fun uninstallExtension() {
         val extension = state.value.extension ?: return
-        extensionManager.uninstallExtension(extension.pkgName)
+        extensionManager.uninstallExtension(extension)
     }
 
     fun toggleSource(sourceId: Long) {
@@ -160,21 +160,21 @@ class ExtensionDetailsScreenModel(
             url + "/src/" + pkgName.replace(".", "/") + path
         }
     }
+
+    @Immutable
+    data class State(
+        val extension: Extension.Installed? = null,
+        private val _sources: List<ExtensionSourceItem>? = null,
+    ) {
+
+        val sources: List<ExtensionSourceItem>
+            get() = _sources.orEmpty()
+
+        val isLoading: Boolean
+            get() = extension == null || _sources == null
+    }
 }
 
-sealed class ExtensionDetailsEvent {
-    object Uninstalled : ExtensionDetailsEvent()
-}
-
-@Immutable
-data class ExtensionDetailsState(
-    val extension: Extension.Installed? = null,
-    private val _sources: List<ExtensionSourceItem>? = null,
-) {
-
-    val sources: List<ExtensionSourceItem>
-        get() = _sources.orEmpty()
-
-    val isLoading: Boolean
-        get() = extension == null || _sources == null
+sealed interface ExtensionDetailsEvent {
+    data object Uninstalled : ExtensionDetailsEvent
 }

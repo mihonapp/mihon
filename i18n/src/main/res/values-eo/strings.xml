@@ -390,7 +390,6 @@
         <item quantity="other">Antaŭ %1$d tagoj</item>
     </plurals>
     <string name="relative_time_today">Hodiaŭ</string>
-    <string name="recently">Laste</string>
     <string name="theme_yinyang">Jino kaj Jango</string>
     <string name="theme_greenapple">Verda pomo</string>
     <string name="pref_app_theme">Apa etoso</string>
@@ -445,8 +444,6 @@
     <string name="untrusted_extension">Malfidinda kromaĵo</string>
     <string name="charging">Ŝarĝas</string>
     <string name="lock_when_idle">Ŝlosi kiam senokupas</string>
-    <string name="pref_relative_format">Relativaj tempindikoj</string>
-    <string name="pref_category_timestamps">Tempindikoj</string>
     <string name="pref_dark_theme_pure_black">Klara nigra</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_midnightdusk">Meznokta Vesperiĝo</string>
@@ -473,8 +470,6 @@
     <string name="pref_library_update_refresh_trackers">Aŭtomate aktualigi ŝanĝspurilojn</string>
     <string name="pref_update_only_non_completed">Nur ĝisdatigi okazantaj mangaojn</string>
     <string name="restrictions">Limigoj: %s</string>
-    <string name="pref_relative_time_long">Longa (Mallonga+, antaŭ n tagoj)</string>
-    <string name="pref_relative_time_short">Mallonga (Hodiaŭ, Hieraŭ)</string>
     <string name="theme_yotsuba">Jotsuba</string>
     <string name="theme_tealturquoise">Bluverda k verdblua</string>
     <string name="theme_strawberrydaiquiri">Fraga Dajkŭiri</string>

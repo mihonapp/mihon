@@ -21,7 +21,7 @@ import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.presentation.util.collectAsState
+import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.toast
@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
 import org.xmlpull.v1.XmlPullParser
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -48,7 +49,6 @@ object SettingsAppearanceScreen : SearchableSettings {
         return listOf(
             getThemeGroup(context = context, uiPreferences = uiPreferences),
             getDisplayGroup(context = context, uiPreferences = uiPreferences),
-            getTimestampGroup(uiPreferences = uiPreferences),
         )
     }
 
@@ -59,8 +59,11 @@ object SettingsAppearanceScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val themeModePref = uiPreferences.themeMode()
         val themeMode by themeModePref.collectAsState()
+
         val appThemePref = uiPreferences.appTheme()
+
         val amoledPref = uiPreferences.themeDarkAmoled()
+        val amoled by amoledPref.collectAsState()
 
         LaunchedEffect(themeMode) {
             setAppCompatDelegateThemeMode(themeMode)
@@ -91,10 +94,17 @@ object SettingsAppearanceScreen : SearchableSettings {
                         )
                     },
                 ),
-                Preference.PreferenceItem.AppThemePreference(
+                Preference.PreferenceItem.CustomPreference(
                     title = stringResource(R.string.pref_app_theme),
-                    pref = appThemePref,
-                ),
+                ) { item ->
+                    val value by appThemePref.collectAsState()
+                    AppThemePreferenceWidget(
+                        title = item.title,
+                        value = value,
+                        amoled = amoled,
+                        onItemClick = { appThemePref.set(it) },
+                    )
+                },
                 Preference.PreferenceItem.SwitchPreference(
                     pref = amoledPref,
                     title = stringResource(R.string.pref_dark_theme_pure_black),
@@ -111,6 +121,7 @@ object SettingsAppearanceScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         val langs = remember { getLangs(context) }
         var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
+        val now = remember { Date().time }
 
         LaunchedEffect(currentLanguage) {
             val locale = if (currentLanguage.isEmpty()) {
@@ -136,30 +147,11 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.tabletUiMode(),
                     title = stringResource(R.string.pref_tablet_ui_mode),
-                    entries = TabletUiMode.values().associateWith { stringResource(it.titleResId) },
+                    entries = TabletUiMode.entries.associateWith { stringResource(it.titleResId) },
                     onValueChanged = {
                         context.toast(R.string.requires_app_restart)
                         true
                     },
-                ),
-            ),
-        )
-    }
-
-    @Composable
-    private fun getTimestampGroup(uiPreferences: UiPreferences): Preference.PreferenceGroup {
-        val now = remember { Date().time }
-        return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_category_timestamps),
-            preferenceItems = listOf(
-                Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.relativeTime(),
-                    title = stringResource(R.string.pref_relative_format),
-                    entries = mapOf(
-                        0 to stringResource(R.string.off),
-                        2 to stringResource(R.string.pref_relative_time_short),
-                        7 to stringResource(R.string.pref_relative_time_long),
-                    ),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.dateFormat(),
@@ -173,14 +165,13 @@ object SettingsAppearanceScreen : SearchableSettings {
             ),
         )
     }
-
     private fun getLangs(context: Context): Map<String, String> {
         val langs = mutableListOf<Pair<String, String>>()
         val parser = context.resources.getXml(R.xml.locales_config)
         var eventType = parser.eventType
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG && parser.name == "locale") {
-                for (i in 0 until parser.attributeCount) {
+                for (i in 0..<parser.attributeCount) {
                     if (parser.getAttributeName(i) == "name") {
                         val langTag = parser.getAttributeValue(i)
                         val displayName = LocaleHelper.getDisplayName(langTag)

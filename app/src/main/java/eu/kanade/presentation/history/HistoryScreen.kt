@@ -20,7 +20,6 @@ import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.history.components.HistoryItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
-import eu.kanade.tachiyomi.ui.history.HistoryState
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -33,7 +32,7 @@ import java.util.Date
 
 @Composable
 fun HistoryScreen(
-    state: HistoryState,
+    state: HistoryScreenModel.State,
     snackbarHostState: SnackbarHostState,
     onSearchQueryChange: (String?) -> Unit,
     onClickCover: (mangaId: Long) -> Unit,
@@ -99,7 +98,6 @@ private fun HistoryScreenContent(
     onClickDelete: (HistoryWithRelations) -> Unit,
     preferences: UiPreferences = Injekt.get(),
 ) {
-    val relativeTime: Int = remember { preferences.relativeTime().get() }
     val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     FastScrollLazyColumn(
@@ -120,7 +118,6 @@ private fun HistoryScreenContent(
                     RelativeDateHeader(
                         modifier = Modifier.animateItemPlacement(),
                         date = item.date,
-                        relativeTime = relativeTime,
                         dateFormat = dateFormat,
                     )
                 }
@@ -139,7 +136,7 @@ private fun HistoryScreenContent(
     }
 }
 
-sealed class HistoryUiModel {
-    data class Header(val date: Date) : HistoryUiModel()
-    data class Item(val item: HistoryWithRelations) : HistoryUiModel()
+sealed interface HistoryUiModel {
+    data class Header(val date: Date) : HistoryUiModel
+    data class Item(val item: HistoryWithRelations) : HistoryUiModel
 }

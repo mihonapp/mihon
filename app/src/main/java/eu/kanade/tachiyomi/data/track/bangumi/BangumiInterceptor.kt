@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Interceptor
@@ -67,7 +66,7 @@ class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
 
     private fun addToken(token: String, oidFormBody: FormBody): FormBody {
         val newFormBody = FormBody.Builder()
-        for (i in 0 until oidFormBody.size) {
+        for (i in 0..<oidFormBody.size) {
             newFormBody.add(oidFormBody.name(i), oidFormBody.value(i))
         }
         newFormBody.add("access_token", token)

@@ -405,7 +405,6 @@
         <item quantity="many">%1$s restantes</item>
         <item quantity="other">%1$s restantes</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Pesquisar somente nas fontes fixadas na pesquisa global</string>
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
@@ -553,7 +552,7 @@
     <string name="rotation_type">Tipo de orientação</string>
     <string name="pref_grayscale">Nível de cinza</string>
     <string name="notification_incognito_text">Desabilitar o modo anônimo</string>
-    <string name="automatic_background">Automático</string>
+    <string name="automatic_background">Auto</string>
     <string name="cancel_all_for_series">Cancelar todos para esta série</string>
     <string name="error_no_match">Nenhum resultado encontrado</string>
     <string name="source_unsupported">Fonte não suportada</string>
@@ -597,20 +596,15 @@
     <string name="pref_highest">Mais alta</string>
     <string name="pref_hide_threshold">Sensibilidade para ocultar o menu na rolagem</string>
     <string name="pref_inverted_colors">Invertido</string>
-    <string name="pref_relative_time_long">Longo (Curto+, n dias atrás)</string>
-    <string name="pref_relative_time_short">Curto (Hoje, Ontem)</string>
-    <string name="pref_relative_format">Datas relativas</string>
     <plurals name="relative_time">
         <item quantity="one">Ontem</item>
         <item quantity="many">%1$d dias atrás</item>
         <item quantity="other">%1$d dias atrás</item>
     </plurals>
     <string name="relative_time_today">Hoje</string>
-    <string name="recently">Recentemente</string>
     <string name="theme_tealturquoise">Azul-petróleo &amp; Turquesa</string>
     <string name="confirm_lock_change">Autentique-se para confirmar a mudança</string>
     <string name="label_default">Padrão</string>
-    <string name="pref_category_timestamps">Data e hora</string>
     <string name="pref_category_appearance">Aparência</string>
     <string name="action_track">Monitorar</string>
     <string name="getting_started_guide">Guia de introdução</string>
@@ -828,10 +822,29 @@
     <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
     <string name="pref_update_release_grace_period_info">Um intervalo com uma carência pequena é recomendado para minimizar o estresse nas fontes. Quanto mais verificações para um item forem perdidas, maior será o intervalo entre as verificações, com um máximo de 28 dias.</string>
     <string name="manga_display_interval_title">Estimar todo</string>
-    <string name="manga_modify_interval_title">Modificar intervalo</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Remover o monitoramento do %s\?</string>
     <string name="track_delete_text">Isso irá remover o monitoramento localmente.</string>
     <string name="track_delete_remote_text">Também remover do %s</string>
     <string name="delete_downloaded">Deletar os disponíveis offline</string>
+    <plurals name="pref_update_release_leading_days">
+        <item quantity="one">%d dia(s) antes</item>
+        <item quantity="many">%d dias antes</item>
+        <item quantity="other">%d dias antes</item>
+    </plurals>
+    <plurals name="pref_update_release_following_days">
+        <item quantity="one">%d dia(s) depois</item>
+        <item quantity="many">%d dias depois</item>
+        <item quantity="other">%d dias depois</item>
+    </plurals>
+    <string name="has_results">Há resultados</string>
+    <string name="syncing_library">Sincronizando a biblioteca</string>
+    <string name="library_sync_complete">Sincronização da biblioteca finalizada</string>
+    <plurals name="range_interval_day">
+        <item quantity="one">%1$d -%2$d dia(s)</item>
+        <item quantity="many">%1$d -%2$d dias</item>
+        <item quantity="other">%1$d -%2$d dias</item>
+    </plurals>
+    <string name="information_cloudflare_help">Toque aqui para obter ajuda com o Cloudflare</string>
+    <string name="download_cache_invalidated">Índice de downloads invalidado</string>
 </resources>

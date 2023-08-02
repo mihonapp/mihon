@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Ad</string>
-    <string name="categories">Kategoriler</string>
+    <string name="categories">Ulamlar</string>
     <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
@@ -263,7 +263,7 @@
     <string name="information_no_recent">Yeni güncelleme yok</string>
     <string name="information_no_recent_manga">Yakında okunan yok</string>
     <string name="information_empty_library">Kitaplığınız boş</string>
-    <string name="information_empty_category">Kategoriniz yok. Kitaplığınızı düzenlemek için artı düğmesine basarak bir tane oluşturun.</string>
+    <string name="information_empty_category">Ulamınız yok. Kitaplığınızı düzenlemek için artı düğmesine basarak bir tane oluşturun.</string>
     <string name="download_notifier_downloader_title">İndirici</string>
     <string name="download_notifier_title_error">Hata</string>
     <string name="download_notifier_unknown_error">Bölüm, beklenmeyen hata sonucu indirilemedi</string>
@@ -279,7 +279,7 @@
     <string name="transition_no_previous">Önceki bölüm yok</string>
     <string name="transition_pages_loading">Sayfalar yükleniyor…</string>
     <string name="transition_pages_error">Sayfalar yüklenemedi: %1$s</string>
-    <string name="pref_read_with_long_tap">Uzun dokununca göster</string>
+    <string name="pref_read_with_long_tap">Uzun dokununca eylemleri göster</string>
     <string name="action_open_in_web_view">WebView ile Aç</string>
     <string name="pref_true_color">32-bit renk</string>
     <string name="pref_skip_read_chapters">Okundu olarak imli bölümleri atla</string>
@@ -399,7 +399,6 @@
         <item quantity="one">%1$s kaldı</item>
         <item quantity="other">%1$s kaldı</item>
     </plurals>
-    <string name="pref_search_pinned_sources_only">Sabitlenmiş kaynakları yalnızca genel aramada ara</string>
     <string name="gray_background">Gri</string>
     <string name="pref_true_color_summary">Renk şeritlerini azaltır, ancak başarımı etkileyebilir</string>
     <string name="viewer">Okuma kipi</string>
@@ -586,19 +585,14 @@
     <string name="pref_highest">En yüksek</string>
     <string name="pref_hide_threshold">Kaydırmada komut-seçenek dizelgesini gizleme duyarlılığı</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
-    <string name="pref_relative_time_long">Uzun (Kısa+, n gün önce)</string>
-    <string name="pref_relative_time_short">Kısa (Bugün, Dün)</string>
-    <string name="pref_relative_format">Göreceli zaman damgaları</string>
     <plurals name="relative_time">
         <item quantity="one">Dün</item>
         <item quantity="other">%1$d gün önce</item>
     </plurals>
     <string name="relative_time_today">Bugün</string>
-    <string name="recently">Yakınlarda</string>
     <string name="theme_tealturquoise">Deniz kökçesi &amp; Türk kökçesi</string>
     <string name="confirm_lock_change">Değişikliği onaylamak için kimlik doğrula</string>
     <string name="label_default">Varsayılan</string>
-    <string name="pref_category_timestamps">Zaman damgaları</string>
     <string name="pref_category_appearance">Görünüm</string>
     <string name="action_track">İzle</string>
     <string name="getting_started_guide">Başlangıç kılavuzu</string>
@@ -623,7 +617,7 @@
     <string name="update_72hour">3 günde bir</string>
     <string name="ext_update_all">Tümünü güncelle</string>
     <string name="channel_app_updates">Uygulama güncellemeleri</string>
-    <string name="pref_auto_clear_chapter_cache">Uygulama kapatıldığında bölüm önbelleğini temizle</string>
+    <string name="pref_auto_clear_chapter_cache">Uygulama başlatıldığında bölüm önbelleğini temizle</string>
     <string name="clear_database_source_item_count">Veri tabanında %1$d kitaplık dışı girdi</string>
     <string name="database_clean">Temizlenecek bir şey yok</string>
     <string name="extension_api_error">Uzantı dizelgesi alınamadı</string>
@@ -704,7 +698,7 @@
         <item quantity="one">Sonraki okunmayan bölüm</item>
         <item quantity="other">Sonraki %d okunmayan bölüm</item>
     </plurals>
-    <string name="download_ahead_info">Yalnızca kitaplıktaki girdilerde ve geçerli bölüm ile bir sonraki bölüm zaten indirildiyse çalışır</string>
+    <string name="download_ahead_info">Yalnızca geçerli bölüm ile bir sonraki bölüm zaten indirildiyse çalışır.</string>
     <string name="are_you_sure">Emin misiniz\?</string>
     <string name="remove_manga">\"%s\"yi kitaplığınızdan kaldırmak üzeresiniz</string>
     <string name="updates_last_update_info">Kitaplık son güncelleme zamanı: %s</string>
@@ -778,7 +772,7 @@
         <item quantity="other">Sonraki %d bölüm</item>
     </plurals>
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
-    <string name="action_update_category">Kategoriyi güncelle</string>
+    <string name="action_update_category">Ulamı güncelle</string>
     <string name="split_tall_images">Uzun görselleri otomatik böl</string>
     <string name="overlay_header">Kaplama</string>
     <plurals name="missing_chapters">
@@ -814,15 +808,16 @@
         <item quantity="one">%d gün sonra</item>
         <item quantity="other">%d gün sonra</item>
     </plurals>
-    <string name="pref_update_release_grace_period">Beklenen yayınlama süresi</string>
+    <string name="pref_update_release_grace_period">Beklenen yayınlama dönemi</string>
     <string name="action_ok">TAMAM</string>
     <string name="manga_display_interval_title">Hepsini tahmin et</string>
     <string name="track_delete_title">%s izlemesi kaldırılsın mı\?</string>
     <string name="manga_modify_calculated_interval_title">Aralığı özelleştir</string>
     <string name="pref_update_release_grace_period_info">Kaynaklar üzerindeki baskıyı en aza indirgemek için düşük dönem önerilir. Bir girdinin denetimi ne kadar fazla kaçırılırsa, en fazla 28 gün olacak şekilde denetim sürelerinin aralığı o kadar uzar.</string>
-    <string name="manga_modify_interval_title">Aralığı değiştir</string>
     <string name="skipped_reason_not_in_release_period">Atlandı çünkü bugün bir yayın beklenmiyordu</string>
     <string name="track_delete_text">Bu, izlemeyi yerel olarak kaldıracak.</string>
     <string name="track_delete_remote_text">Ayrıca şuradan da kaldır: %s</string>
     <string name="manga_display_modified_interval_title">Güncelleme aralığını ayarla</string>
+    <string name="has_results">Sonuç var</string>
+    <string name="delete_downloaded">İndirilenleri sil</string>
 </resources>

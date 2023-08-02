@@ -158,10 +158,6 @@
     <string name="theme_yinyang">ین و یانگ</string>
     <string name="theme_yotsuba">یۆتسوبا</string>
     <string name="pref_dark_theme_pure_black">دۆخی ڕەشی پوخت</string>
-    <string name="pref_category_timestamps">تۆماری کات</string>
-    <string name="pref_relative_format">تۆماری کاتی ڕێژەیی</string>
-    <string name="pref_relative_time_short">کورت (ئەمڕۆ، دوێنێ)</string>
-    <string name="pref_relative_time_long">درێژ (کورت، + چەند ڕۆژ پێش ئێستا)</string>
     <string name="pref_date_format">ڕێکخستنی بەروار</string>
     <string name="pref_manage_notifications">بەڕێوەبردنی ئاگانامەکان</string>
     <string name="pref_category_security">سازکاری پارێزراوی</string>
@@ -174,7 +170,6 @@
     <string name="secure_screen_summary">سکرین شۆت بلۆکردن و شاردنەوەی ناوەڕۆک، لە کاتی گۆڕین و دەرچوون لە بەرنامە</string>
     <string name="pref_category_nsfw_content">سەرچاوەی سەروو (18) ساڵ</string>
     <string name="pref_show_nsfw_source">پیشاندان لە لیستی سەرچاوە و زیادکراوەکان</string>
-    <string name="recently">لەم دواییانەدا</string>
     <string name="relative_time_today">ئەمڕۆ</string>
     <string name="pref_category_display">شێوازی پیشاندان</string>
     <string name="notification_updating">نوێکردنەوەی تۆماری ڕابردوو…( (%2$d) / (%1$d) )</string>

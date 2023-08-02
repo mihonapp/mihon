@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.domain.chapter.interactor.GetChapter
