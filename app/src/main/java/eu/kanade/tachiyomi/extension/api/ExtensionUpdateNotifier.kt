@@ -5,6 +5,7 @@ import androidx.core.app.NotificationCompat
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notify
 
 class ExtensionUpdateNotifier(private val context: Context) {
@@ -28,5 +29,9 @@ class ExtensionUpdateNotifier(private val context: Context) {
             setContentIntent(NotificationReceiver.openExtensionsPendingActivity(context))
             setAutoCancel(true)
         }
+    }
+
+    fun dismiss() {
+        context.cancelNotification(Notifications.ID_UPDATES_TO_EXTS)
     }
 }

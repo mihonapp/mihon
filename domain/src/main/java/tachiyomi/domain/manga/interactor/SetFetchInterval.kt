@@ -40,7 +40,7 @@ class SetFetchInterval(
     fun getWindow(dateTime: ZonedDateTime): Pair<Long, Long> {
         val today = dateTime.toLocalDate().atStartOfDay(dateTime.zone)
         val lowerBound = today.minusDays(FETCH_INTERVAL_GRACE_PERIOD.toLong())
-        val upperBound = lowerBound.plusDays(FETCH_INTERVAL_GRACE_PERIOD.toLong())
+        val upperBound = today.plusDays(FETCH_INTERVAL_GRACE_PERIOD.toLong())
         return Pair(lowerBound.toEpochSecond() * 1000, upperBound.toEpochSecond() * 1000 - 1)
     }
 
