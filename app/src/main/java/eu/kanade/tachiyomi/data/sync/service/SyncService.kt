@@ -106,39 +106,22 @@ abstract class SyncService(
         localMangaMap.forEach { (key, localManga) ->
             val remoteManga = remoteMangaMap[key]
             if (remoteManga != null) {
-                val localInstant = localManga.lastModifiedAt.let { Instant.ofEpochMilli(it) }
-                val remoteInstant = remoteManga.lastModifiedAt.let { Instant.ofEpochMilli(it) }
-
-                val mergedManga = if ((localInstant ?: Instant.MIN) >= (
-                    remoteInstant
-                        ?: Instant.MIN
-                    )
-                ) {
-                    localManga
+                val localMangaLastModifiedAtInstant = Instant.ofEpochMilli(localManga.lastModifiedAt)
+                val remoteMangaLastModifiedAtInstant = Instant.ofEpochMilli(remoteManga.lastModifiedAt)
+                val mergedChapters = mergeChapters(localManga.chapters, remoteManga.chapters)
+                // Keep the more recent manga
+                if (localMangaLastModifiedAtInstant.isAfter(remoteMangaLastModifiedAtInstant)) {
+                    mergedMangaMap[key] = localManga.copy(chapters = mergedChapters)
                 } else {
-                    remoteManga
+                    mergedMangaMap[key] = remoteManga.copy(chapters = mergedChapters)
                 }
-
-                val localChapters = localManga.chapters
-                val remoteChapters = remoteManga.chapters
-                val mergedChapters = mergeChapters(localChapters, remoteChapters)
-
-                val isFavorite = if ((localInstant ?: Instant.MIN) >= (
-                    remoteInstant
-                        ?: Instant.MIN
-                    )
-                ) {
-                    localManga.favorite
-                } else {
-                    remoteManga.favorite
-                }
-
-                mergedMangaMap[key] = mergedManga.copy(chapters = mergedChapters, favorite = isFavorite)
             } else {
+                // If there is no corresponding remote manga, keep the local one
                 mergedMangaMap[key] = localManga
             }
         }
 
+        // Add any remote manga that doesn't exist locally
         remoteMangaMap.forEach { (key, remoteManga) ->
             if (!mergedMangaMap.containsKey(key)) {
                 mergedMangaMap[key] = remoteManga
@@ -168,7 +151,7 @@ abstract class SyncService(
                 val remoteInstant = remoteChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) }
 
                 val mergedChapter =
-                    if ((localInstant ?: Instant.MIN) >= (remoteInstant ?: Instant.MIN)) {
+                    if (localInstant > remoteInstant) {
                         localChapter
                     } else {
                         remoteChapter
@@ -207,7 +190,7 @@ abstract class SyncService(
             val remoteCategory = remoteCategoriesMap[name]
             if (remoteCategory != null) {
                 // Compare and merge local and remote categories
-                val mergedCategory = if (localCategory.order >= remoteCategory.order) {
+                val mergedCategory = if (localCategory.order > remoteCategory.order) {
                     localCategory
                 } else {
                     remoteCategory
