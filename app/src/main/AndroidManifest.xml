@@ -124,8 +124,8 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.setting.track.AnilistLoginActivity"
-            android:label="Anilist"
+            android:name=".ui.setting.track.TrackLoginActivity"
+            android:label="@string/track_activity_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -133,54 +133,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="anilist-auth"
-                    android:scheme="tachiyomi" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.setting.track.MyAnimeListLoginActivity"
-            android:label="MyAnimeList"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <data android:host="anilist-auth"/>
+                <data android:host="bangumi-auth"/>
+                <data android:host="myanimelist-auth"/>
+                <data android:host="shikimori-auth"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="myanimelist-auth"
-                    android:scheme="tachiyomi" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.setting.track.ShikimoriLoginActivity"
-            android:label="Shikimori"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="shikimori-auth"
-                    android:scheme="tachiyomi" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.setting.track.BangumiLoginActivity"
-            android:label="Bangumi"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="bangumi-auth"
-                    android:scheme="tachiyomi" />
+                <data android:scheme="tachiyomi"/>
             </intent-filter>
         </activity>
 
@@ -210,7 +168,8 @@
             android:name=".data.updater.AppUpdateService"
             android:exported="false" />
 
-        <service android:name=".extension.util.ExtensionInstallService"
+        <service
+            android:name=".extension.util.ExtensionInstallService"
             android:exported="false" />
 
         <service
