@@ -44,11 +44,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tachiyomi">
 
-        <!-- enable profiling by macrobenchmark -->
-        <profileable
-            android:shell="true"
-            tools:targetApi="q" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"
