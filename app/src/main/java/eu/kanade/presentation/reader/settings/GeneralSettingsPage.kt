@@ -42,11 +42,12 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.fullscreen(),
     )
 
-    // TODO: hide if there's no cutout
-    CheckboxItem(
-        label = stringResource(R.string.pref_cutout_short),
-        pref = screenModel.preferences.cutoutShort(),
-    )
+    if (screenModel.hasDisplayCutout) {
+        CheckboxItem(
+            label = stringResource(R.string.pref_cutout_short),
+            pref = screenModel.preferences.cutoutShort(),
+        )
+    }
 
     CheckboxItem(
         label = stringResource(R.string.pref_keep_screen_on),

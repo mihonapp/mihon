@@ -2,7 +2,6 @@
 
 package eu.kanade.tachiyomi.util.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
@@ -15,8 +14,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.compose.material3.LocalContentColor
@@ -27,11 +24,9 @@ import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.forEach
 import com.google.android.material.shape.MaterialShapeDrawable
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.system.getResourceColor
 
 inline fun ComponentActivity.setComposeContent(
     parent: CompositionContext? = null,
@@ -101,46 +96,6 @@ inline fun View.popupMenu(
     if (initMenu != null) {
         popup.menu.initMenu()
     }
-    popup.setOnMenuItemClickListener {
-        it.onMenuItemClick()
-        true
-    }
-
-    popup.show()
-    return popup
-}
-
-/**
- * Shows a popup menu on top of this view.
- *
- * @param items menu item names to inflate the menu with. List of itemId to stringRes pairs.
- * @param selectedItemId optionally show a checkmark beside an item with this itemId.
- * @param onMenuItemClick function to execute when a menu item is clicked.
- */
-@SuppressLint("RestrictedApi")
-inline fun View.popupMenu(
-    items: List<Pair<Int, Int>>,
-    selectedItemId: Int? = null,
-    noinline onMenuItemClick: MenuItem.() -> Unit,
-): PopupMenu {
-    val popup = PopupMenu(context, this, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0)
-    items.forEach { (id, stringRes) ->
-        popup.menu.add(0, id, 0, stringRes)
-    }
-
-    if (selectedItemId != null) {
-        (popup.menu as? MenuBuilder)?.setOptionalIconsVisible(true)
-        val emptyIcon = AppCompatResources.getDrawable(context, R.drawable.ic_blank_24dp)
-        popup.menu.forEach { item ->
-            item.icon = when (item.itemId) {
-                selectedItemId -> AppCompatResources.getDrawable(context, R.drawable.ic_check_24dp)?.mutate()?.apply {
-                    setTint(context.getResourceColor(android.R.attr.textColorPrimary))
-                }
-                else -> emptyIcon
-            }
-        }
-    }
-
     popup.setOnMenuItemClickListener {
         it.onMenuItemClick()
         true
