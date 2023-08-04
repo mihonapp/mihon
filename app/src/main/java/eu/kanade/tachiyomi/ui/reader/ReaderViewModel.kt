@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
+import tachiyomi.core.preference.toggle
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withIOContext
@@ -658,6 +659,15 @@ class ReaderViewModel(
                 eventChannel.send(Event.SetOrientation(getMangaOrientationType()))
                 eventChannel.send(Event.ReloadViewerChapters)
             }
+        }
+    }
+
+    fun toggleCropBorders(): Boolean {
+        val isPagerType = ReadingModeType.isPagerType(getMangaReadingMode())
+        return if (isPagerType) {
+            readerPreferences.cropBorders().toggle()
+        } else {
+            readerPreferences.cropBordersWebtoon().toggle()
         }
     }
 

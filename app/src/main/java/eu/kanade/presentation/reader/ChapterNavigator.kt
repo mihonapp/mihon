@@ -53,6 +53,15 @@ fun ChapterNavigator(
     val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
     val haptic = LocalHapticFeedback.current
 
+    // Match with toolbar background color set in ReaderActivity
+    val backgroundColor = MaterialTheme.colorScheme
+        .surfaceColorAtElevation(3.dp)
+        .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
+    val buttonColor = IconButtonDefaults.filledIconButtonColors(
+        containerColor = backgroundColor,
+        disabledContainerColor = backgroundColor,
+    )
+
     // We explicitly handle direction based on the reader viewer rather than the system direction
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Row(
@@ -61,14 +70,6 @@ fun ChapterNavigator(
                 .padding(horizontal = horizontalPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Match with toolbar background color set in ReaderActivity
-            val backgroundColor = MaterialTheme.colorScheme
-                .surfaceColorAtElevation(3.dp)
-                .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
-            val buttonColor = IconButtonDefaults.filledIconButtonColors(
-                containerColor = backgroundColor,
-                disabledContainerColor = backgroundColor,
-            )
             FilledIconButton(
                 enabled = if (isRtl) enabledNext else enabledPrevious,
                 onClick = if (isRtl) onNextChapter else onPreviousChapter,

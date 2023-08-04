@@ -2,10 +2,8 @@
 
 package eu.kanade.tachiyomi.util.view
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -13,9 +11,7 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.MenuRes
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.TooltipCompat
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +20,6 @@ import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.google.android.material.shape.MaterialShapeDrawable
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 
@@ -61,24 +56,6 @@ fun ComposeView.setComposeContent(
 }
 
 /**
- * Adds a tooltip shown on long press.
- *
- * @param stringRes String resource for tooltip.
- */
-inline fun View.setTooltip(@StringRes stringRes: Int) {
-    setTooltip(context.getString(stringRes))
-}
-
-/**
- * Adds a tooltip shown on long press.
- *
- * @param text Text for tooltip.
- */
-inline fun View.setTooltip(text: String) {
-    TooltipCompat.setTooltipText(this, text)
-}
-
-/**
  * Shows a popup menu on top of this view.
  *
  * @param menuRes menu items to inflate the menu with.
@@ -103,17 +80,6 @@ inline fun View.popupMenu(
 
     popup.show()
     return popup
-}
-
-/**
- * Returns a deep copy of the provided [Drawable]
- */
-inline fun <reified T : Drawable> T.copy(context: Context): T? {
-    return (constantState?.newDrawable()?.mutate() as? T).apply {
-        if (this is MaterialShapeDrawable) {
-            initializeElevationOverlay(context)
-        }
-    }
 }
 
 fun View?.isVisibleOnScreen(): Boolean {
