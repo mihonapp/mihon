@@ -837,16 +837,6 @@
     <string name="action_sort_next_updated">Próxima actualización prevista</string>
     <string name="pref_update_only_in_release_period">Fuera del período de publicación esperado</string>
     <string name="intervals_header">Intervalos</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d día antes</item>
-        <item quantity="many">%d días antes</item>
-        <item quantity="other">%d días antes</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d día después</item>
-        <item quantity="many">%d días después</item>
-        <item quantity="other">%d días después</item>
-    </plurals>
     <string name="action_filter_interval_passed">Ha pasado el período de comprobación</string>
     <string name="manga_display_interval_title">Estimar cada</string>
     <plurals name="day">
@@ -856,8 +846,6 @@
     </plurals>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <string name="action_filter_interval_dropped">¿Abandonado\? Tras más de 20 días y 2 meses</string>
-    <string name="pref_update_release_grace_period">Período de gracia de publicación esperado</string>
-    <string name="pref_update_release_grace_period_info">Se recomienda un período de gracia corto para evitar sobrecargar las páginas de descarga. Cuántas más veces fallen las comprobaciones mayor será el espacio de tiempo hasta un tope de 28 días.</string>
     <string name="manga_display_modified_interval_title">Forzar actualización cada</string>
     <string name="skipped_reason_not_in_release_period">No se ha comprobado ninguna actualización hoy al no esperar ningún cambio</string>
     <string name="action_set_interval">Establecer intervalo</string>
@@ -872,9 +860,6 @@
     <string name="library_sync_complete">La biblioteca se ha sincronizado correctamente</string>
     <string name="syncing_library">Sincronizando la biblioteca</string>
     <string name="information_cloudflare_help">Toca aquí para solucionar problemas de acceso con Cloudflare</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d - %2$d día</item>
-        <item quantity="many">%1$d - %2$d días</item>
-        <item quantity="other">%1$d - %2$d días</item>
-    </plurals>
+    <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
+    <string name="track_activity_name">Inicio de sesión de seguimiento</string>
 </resources>

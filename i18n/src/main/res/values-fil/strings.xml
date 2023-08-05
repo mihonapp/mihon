@@ -733,7 +733,7 @@
     <string name="track_remove_date_conf_title">Tanggalin ang petsa\?</string>
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng kayarian magmula sa %s</string>
-    <string name="pref_invalidate_download_cache">Ipawalang-bisa ang indise ng downloads</string>
+    <string name="pref_invalidate_download_cache">Ipawalang-bisa ang indise ng mga download</string>
     <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download</string>
     <string name="label_completed_titles">Mga natapos na entry</string>
     <string name="label_started">Nasimulan</string>
@@ -794,15 +794,6 @@
     <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
     <string name="action_filter_interval_passed">Lumipas ang check period</string>
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">pagkatapos ng %d araw</item>
-        <item quantity="other">pagkatapos ng %d (mga) araw</item>
-    </plurals>
-    <string name="pref_update_release_grace_period">Inaasahang paglabas sa grace period</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">bago ang %d araw</item>
-        <item quantity="other">bago ang %d (mga) araw</item>
-    </plurals>
     <plurals name="day">
         <item quantity="one">1 araw</item>
         <item quantity="other">% (mga) araw</item>
@@ -811,7 +802,6 @@
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
     <string name="pref_update_only_in_release_period">Sa labas ng inaasahang release period</string>
     <string name="intervals_header">Mga pagitan</string>
-    <string name="pref_update_release_grace_period_info">Ang isang mababang palugit na panahon ay inirerekomenda upang mabawasan ang stress sa mga source. Kung mas maraming tseke para sa isang entry na-miss, mas mahaba ang pagitan sa pagitan ng mga tseke na may maximum na 28 araw.</string>
     <string name="manga_modify_calculated_interval_title">I-customize ang Interval</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
@@ -822,4 +812,6 @@
     <string name="track_delete_remote_text">Tanggalin din mula sa %s</string>
     <string name="syncing_library">Nagsi-sync ang aklatan</string>
     <string name="library_sync_complete">Natapos na ang pag-sync ng aklatan</string>
+    <string name="information_cloudflare_help">I-tap dito para sa tulong sa Cloudflare</string>
+    <string name="download_cache_invalidated">Napawalang-bisa ang indise ng mga download</string>
 </resources>

@@ -790,14 +790,6 @@
     <string name="action_set_interval">Estableix l’interval</string>
     <string name="action_filter_interval_custom">Interval d’obtenció personalitzat</string>
     <string name="action_sort_next_updated">Pròxima actualització prevista</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dia abans</item>
-        <item quantity="other">%d dies abans</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dia després</item>
-        <item quantity="other">%d dies després</item>
-    </plurals>
     <plurals name="day">
         <item quantity="one">1 dia</item>
         <item quantity="other">%d dies</item>
@@ -807,7 +799,6 @@
     <string name="action_filter_interval_dropped">Abandonat\? Endarrerit 20 o més dies i 2 mesos</string>
     <string name="action_ok">D’acord</string>
     <string name="pref_update_only_in_release_period">Fora del període esperat de publicació</string>
-    <string name="pref_update_release_grace_period">Període de gràcia de publicació prevista</string>
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
@@ -817,7 +808,6 @@
     <string name="track_delete_text">Se n’eliminarà el seguiment local.</string>
     <string name="skipped_reason_not_in_release_period">S’ha omès perquè no se n’espera cap publicació avui</string>
     <string name="action_filter_interval_passed">Període de comprovació superat</string>
-    <string name="pref_update_release_grace_period_info">Es recomana un període de gràcia baix per a minimitzar la sobrecàrrega de les fonts. Com més comprovacions fallides es produeixin, més interval hi haurà entre comprovacions, fins a un màxim de 28 dies.</string>
     <string name="delete_downloaded">Suprimeix els baixats</string>
     <string name="has_results">Té resultats</string>
     <string name="syncing_library">S’està sincronitzant la biblioteca</string>

@@ -211,7 +211,7 @@
     <string name="cover_updated">कवर अपडेट किया गया</string>
     <string name="chapter_progress">पृष्ठ: %1$d</string>
     <string name="no_next_chapter">अगले अध्याय नहीं मिला</string>
-    <string name="decode_image_error">छवि को लोड नहीं कर पायें</string>
+    <string name="decode_image_error">छवि को लोड नहीं किया जा सका</string>
     <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें\?</string>
     <string name="download_queue_error">अध्याय डाउनलोड नहीं कर सका। आप डाउनलोड अनुभाग में फिर से कोशिश कर सकते हैं</string>
     <string name="notification_new_chapters">नए अध्याय पाए गए</string>
@@ -279,7 +279,7 @@
     <string name="transition_no_previous">कोई पिछला अध्याय नहीं है</string>
     <string name="transition_pages_loading">पेज लोड हो रहे है …</string>
     <string name="transition_pages_error">पृष्ठों को लोड करने में विफल है: %1$s</string>
-    <string name="pref_read_with_long_tap">संवाद के लिए लंबी प्रेस</string>
+    <string name="pref_read_with_long_tap">लंबे टैप पर क्रियाएँ दिखाएँ</string>
     <string name="action_open_in_web_view">WebView में खोलें</string>
     <string name="pref_true_color">32 बिट रंग</string>
     <string name="pref_skip_read_chapters">पढ़े हुए अध्यायों को छोड़ें</string>
@@ -552,7 +552,7 @@
     <string name="pref_low">कम</string>
     <string name="pref_lowest">निम्नतम</string>
     <string name="restrictions">प्रतिबंध: %s</string>
-    <string name="automatic_background">स्वचालित</string>
+    <string name="automatic_background">ऑटो</string>
     <string name="nav_zone_prev">पिछला</string>
     <string name="nav_zone_next">अगला</string>
     <string name="nav_zone_left">बाएं</string>
@@ -618,7 +618,7 @@
     <string name="update_72hour">हर 3 दिन</string>
     <string name="connected_to_wifi">केवल वाई-फ़ाई पर</string>
     <string name="clear_database_source_item_count">डेटाबेस में %1$d गैर-पुस्तकालय आइटम</string>
-    <string name="pref_auto_clear_chapter_cache">ऐप बंद करते समय चैप्टर कैशे साफ़ करें</string>
+    <string name="pref_auto_clear_chapter_cache">ऐप लॉन्च पर चैप्टर कैशे साफ़ करें</string>
     <string name="database_clean">साफ़ करने के लिए कुछ नहीं है</string>
     <string name="pref_update_only_completely_read">अपठित अध्याय हैं</string>
     <string name="pref_library_update_manga_restriction">शीर्षक अद्यतन न करें</string>
@@ -683,14 +683,14 @@
     <string name="loader_rar5_error">RARv5 प्रारूप समर्थित नहीं है</string>
     <string name="updates_last_update_info">पुस्तकालय पिछली बार अपडेट किया गया: %s</string>
     <string name="appwidget_updates_description">अपनी हाल ही में अपडेट की गई पुस्तकालय एन्ट्री देखें</string>
-    <string name="download_ahead_info">केवल लाइब्रेरी में प्रविष्टियों पर काम करता है। और यदि वर्तमान अध्याय और अगला अध्याय पहले ही डाउनलोड हो चुका है</string>
+    <string name="download_ahead_info">केवल तभी काम करता है जब वर्तमान अध्याय + अगला पहले से ही डाउनलोड किया गया हो।</string>
     <string name="custom_cover">कस्टम कवर</string>
     <string name="pref_user_agent_string">चूक यूजर एजेंट स्ट्रिंग (User agent string)</string>
     <string name="download_ahead">आगे डाउनलोड करें</string>
     <string name="auto_download_while_reading">पढ़ते समय ऑटो डाउनलोड करे</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">अगला अपठित अध्याय</item>
-        <item quantity="other">अगले अपठित अध्याय %d</item>
+        <item quantity="other">अगले %d अपठित अध्याय</item>
     </plurals>
     <string name="action_remove_everything">सब कुछ हटा दें</string>
     <string name="popular">लोकप्रिय</string>
@@ -732,4 +732,26 @@
     <string name="action_filter_interval_long">मासिक प्राप्त करें (28 दिन)</string>
     <string name="action_filter_interval_late">देर से 10+ की जाँच</string>
     <string name="action_filter_interval_dropped">छोड़ा हुआ\? देर से 20+ और 2 महीने</string>
+    <string name="intervals_header">अंतराल</string>
+    <string name="pref_chapter_swipe_end">दाईं ओर स्वाइप करने पर</string>
+    <string name="pref_chapter_swipe">अध्याय स्वाइप</string>
+    <string name="action_sort_next_updated">अगला अपेक्षित अपडेट</string>
+    <string name="pref_debug_info">डीबग जानकारी</string>
+    <string name="pref_advanced_summary">डंप क्रैश लॉग, बैटरी अनुकूलन</string>
+    <string name="pref_update_only_in_release_period">अपेक्षित रिलीज़ अवधि से बाहर</string>
+    <string name="pref_chapter_swipe_start">बाईं ओर स्वाइप करने पर</string>
+    <string name="library_sync_complete">लाइब्रेरी सिंक पूरा</string>
+    <string name="download_cache_invalidated">डाउनलोड अनुक्रमणिका अमान्य</string>
+    <string name="action_ok">ठीक है</string>
+    <string name="pref_invalidate_download_cache">डाउनलोड अनुक्रमणिका अमान्य करें</string>
+    <plurals name="day">
+        <item quantity="one">1 दिन</item>
+        <item quantity="other">%d दिन</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">अगला अध्याय</item>
+        <item quantity="other">अगले %d अध्याय</item>
+    </plurals>
+    <string name="copied_to_clipboard_plain">क्लिपबोर्ड पर कॉपी हो गया है</string>
+    <string name="track_delete_remote_text">%s से भी हटा दें</string>
 </resources>

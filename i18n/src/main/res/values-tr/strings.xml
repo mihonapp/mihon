@@ -787,10 +787,6 @@
     <string name="pref_chapter_swipe_start">Sola kaydırma eylemi</string>
     <string name="pref_double_tap_zoom">Yakınlaştırmak için iki kez dokun</string>
     <string name="pref_library_columns_per_row">Satır başına %d</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d gün önce</item>
-        <item quantity="other">%d gün önce</item>
-    </plurals>
     <string name="action_set_interval">Aralığı ayarlama</string>
     <string name="action_filter_interval_custom">Özelleştirilmiş fetch aralığı</string>
     <string name="action_filter_interval_long">Aylık getir (28 gün)</string>
@@ -804,16 +800,10 @@
         <item quantity="one">1 gün</item>
         <item quantity="other">%d gün</item>
     </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d gün sonra</item>
-        <item quantity="other">%d gün sonra</item>
-    </plurals>
-    <string name="pref_update_release_grace_period">Beklenen yayınlama dönemi</string>
     <string name="action_ok">TAMAM</string>
     <string name="manga_display_interval_title">Hepsini tahmin et</string>
     <string name="track_delete_title">%s izlemesi kaldırılsın mı\?</string>
     <string name="manga_modify_calculated_interval_title">Aralığı özelleştir</string>
-    <string name="pref_update_release_grace_period_info">Kaynaklar üzerindeki baskıyı en aza indirgemek için düşük dönem önerilir. Bir girdinin denetimi ne kadar fazla kaçırılırsa, en fazla 28 gün olacak şekilde denetim sürelerinin aralığı o kadar uzar.</string>
     <string name="skipped_reason_not_in_release_period">Atlandı çünkü bugün bir yayın beklenmiyordu</string>
     <string name="track_delete_text">Bu, izlemeyi yerel olarak kaldıracak.</string>
     <string name="track_delete_remote_text">Ayrıca şuradan da kaldır: %s</string>

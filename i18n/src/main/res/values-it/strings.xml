@@ -822,7 +822,7 @@
     <string name="action_update_category">Aggiorna categoria</string>
     <string name="split_tall_images">Dividi immagini alte</string>
     <string name="overlay_header">Sovrimpressione</string>
-    <string name="pref_page_rotate">Ruota le pagine larghe per adattareaallo schermo</string>
+    <string name="pref_page_rotate">Ruota le pagine larghe per adattarle allo schermo</string>
     <string name="pref_page_rotate_invert">Capovolgi l\'orientamento delle pagine larghe ruotate</string>
     <plurals name="missing_chapters">
         <item quantity="one">Manca %1$s capitolo</item>
@@ -839,17 +839,6 @@
     <string name="action_filter_interval_long">Recupera mensilmente (28 giorni)</string>
     <string name="action_filter_interval_dropped">Abbandonato\? In ritardo tra 20 giorni e 2 mesi</string>
     <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
-    <string name="pref_update_release_grace_period">Periodo di grazia previsto per l\'uscita</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d giorno prima</item>
-        <item quantity="many">%d giorni prima</item>
-        <item quantity="other">%d giorni prima</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d giorno dopo</item>
-        <item quantity="many">%d giorni dopo</item>
-        <item quantity="other">%d giorni dopo</item>
-    </plurals>
     <string name="manga_modify_calculated_interval_title">Personalizza intervallo</string>
     <string name="intervals_header">Intervalli</string>
     <plurals name="day">
@@ -862,7 +851,6 @@
     <string name="action_filter_interval_passed">Periodo di controllo superato</string>
     <string name="action_filter_interval_late">In ritardo di 10+ giorni</string>
     <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
-    <string name="pref_update_release_grace_period_info">Si consiglia un periodo di grazia basso per ridurre al minimo lo stress sulle fonti. Più controlli per una voce vengono persi, più lungo sarà l\'intervallo tra i controlli, con un massimo di 28 giorni.</string>
     <string name="manga_display_modified_interval_title">Imposta l\'aggiornamento ogni</string>
     <string name="skipped_reason_not_in_release_period">Saltato perché oggi non era previsto alcun rilascio</string>
     <string name="track_delete_title">Rimuovere il tracking di %s\?</string>
@@ -874,9 +862,6 @@
     <string name="library_sync_complete">Sincronizzazione libreria completata</string>
     <string name="syncing_library">Sincronizzazione libreria</string>
     <string name="information_cloudflare_help">Tocca qua per assistenza con Cloudflare</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d - %2$d giorni</item>
-        <item quantity="many">%1$d - %2$d giorni</item>
-        <item quantity="other">%1$d - %2$d giorni</item>
-    </plurals>
+    <string name="download_cache_invalidated">Indice dei download invalidato</string>
+    <string name="track_activity_name">Login del tracking</string>
 </resources>

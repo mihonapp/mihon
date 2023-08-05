@@ -821,13 +821,6 @@
     <string name="action_filter_interval_dropped">Покинуто\? Останні 20+ і 2 місяці</string>
     <string name="action_filter_interval_passed">Пройдено період перевірки</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
-    <string name="pref_update_release_grace_period">Очікуваний пільговий період випуску</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d день після</item>
-        <item quantity="few">%d дні після</item>
-        <item quantity="many">%d днів після</item>
-        <item quantity="other">%d днів після</item>
-    </plurals>
     <plurals name="day">
         <item quantity="one">1 день</item>
         <item quantity="few">%d дні</item>
@@ -839,13 +832,6 @@
     <string name="pref_update_only_in_release_period">Поза очікуваним періодом випуску</string>
     <string name="action_sort_next_updated">Наступне очікуване оновлення</string>
     <string name="intervals_header">Інтервали</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d день тому</item>
-        <item quantity="few">%d дні тому</item>
-        <item quantity="many">%d днів тому</item>
-        <item quantity="other">%d днів тому</item>
-    </plurals>
-    <string name="pref_update_release_grace_period_info">Для мінімізації навантаження на джерела рекомендується невеликий пільговий період. Чим більше перевірок запису буде пропущено, тим довшим буде інтервал між перевірками - максимум 28 днів.</string>
     <string name="manga_display_modified_interval_title">Налаштовано на оновлення кожної</string>
     <string name="manga_modify_calculated_interval_title">Налаштувати інтервал</string>
     <string name="skipped_reason_not_in_release_period">Пропущено, оскільки сьогодні не очікується жодного релізу</string>

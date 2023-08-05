@@ -812,24 +812,12 @@
     <string name="manga_display_modified_interval_title">Nastavit aktualizaci každých</string>
     <string name="action_set_interval">Nastavit interval</string>
     <string name="action_filter_interval_dropped">Opuštěný\? Pozdě 20+ a 2 měsíce</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">Před %d dnem</item>
-        <item quantity="few">Před %d dny</item>
-        <item quantity="other">před %d dny</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">po %d dni</item>
-        <item quantity="few">po %d dnech</item>
-        <item quantity="other">po %d dnech</item>
-    </plurals>
     <plurals name="day">
         <item quantity="one">1 den</item>
         <item quantity="few">%d dny</item>
         <item quantity="other">%d dní</item>
     </plurals>
     <string name="pref_update_only_in_release_period">Mimo očekávané období vydání</string>
-    <string name="pref_update_release_grace_period_info">Pro minimalizaci zátěže zdrojů se doporučuje nízká doba odkladu. Čím více kontrol záznamu bude zmeškáno, tím delší bude interval mezi kontrolami, maximálně však 28 dní.</string>
-    <string name="pref_update_release_grace_period">Očekávané období tolerance vydání</string>
     <string name="intervals_header">Intervaly</string>
     <string name="skipped_reason_not_in_release_period">Přeskočeno, protože dnes nebylo očekáváno žádné vydání</string>
     <string name="track_delete_text">Tím se lokálně odstraní sledování.</string>
@@ -840,4 +828,7 @@
     <string name="has_results">Má výsledky</string>
     <string name="syncing_library">Synchronizace knihovny</string>
     <string name="library_sync_complete">Synchronizace knihovny dokončena</string>
+    <string name="track_activity_name">Sledování přihlášení</string>
+    <string name="information_cloudflare_help">Klepněte zde pro pomoc s Cloudflare</string>
+    <string name="download_cache_invalidated">Index stažených zneplatněn</string>
 </resources>

@@ -797,18 +797,8 @@
     <string name="action_filter_interval_long">Monatlich abrufen (28 Tage)</string>
     <string name="action_sort_next_updated">Nächste erwartete Aktualisierung</string>
     <string name="pref_update_only_in_release_period">Außerhalb des erwarteten Veröffentlichungszeitraums</string>
-    <string name="pref_update_release_grace_period">Erwarteter Veröffentlichungstoleranzzeitraum</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">1 Tag davor</item>
-        <item quantity="other">%d Tage davor</item>
-    </plurals>
     <string name="manga_modify_calculated_interval_title">Intervall anpassen</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">1 Tag danach</item>
-        <item quantity="other">%d Tage danach</item>
-    </plurals>
     <string name="skipped_reason_not_in_release_period">Übersprungen, da heute keine Veröffentlichung erwartet wurde</string>
-    <string name="pref_update_release_grace_period_info">Ein niedriger Toleranzzeitraum wird empfohlen, um die Auslastung der Quellen zu minimieren. Je mehr Überprüfungen für einen Eintrag fehlschlagen, desto länger wird das Intervall zwischen den Überprüfungen, mit einem Maximum von 28 Tagen.</string>
     <string name="manga_display_interval_title">Schätzt alle</string>
     <string name="manga_display_modified_interval_title">Aktualisiert alle</string>
     <string name="action_filter_interval_dropped">Abgebrochen\? Um 20+ Tage und 2 Monate verspätet</string>
@@ -823,8 +813,6 @@
     <string name="syncing_library">Bibliothek wird synchronisiert</string>
     <string name="library_sync_complete">Bibliothekssynchronisierung abgeschlossen</string>
     <string name="information_cloudflare_help">Tippe hier, um Hilfe zu Cloudflare zu erhalten</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d ‐ %2$d Tag</item>
-        <item quantity="other">%1$d - %2$d Tage</item>
-    </plurals>
+    <string name="download_cache_invalidated">Index der Downloads invalide</string>
+    <string name="track_activity_name">Tracking-Login</string>
 </resources>

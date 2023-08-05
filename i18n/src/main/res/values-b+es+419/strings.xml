@@ -788,8 +788,6 @@
     <string name="action_copy_to_clipboard">Copiado al portapapeles</string>
     <string name="delete_downloaded">Eliminar descargado</string>
     <string name="pref_update_only_in_release_period">Fuera del período de publicación esperado</string>
-    <string name="pref_update_release_grace_period">Período de gracia de publicación esperado</string>
-    <string name="pref_update_release_grace_period_info">Se recomienda un período de gracia corto para evitar sobrecargar las páginas de descarga. Cuántas más veces fallen las comprobaciones mayor será el espacio de tiempo hasta un tope de 28 días.</string>
     <string name="pref_chapter_swipe_start">Deslizar a la izquierda</string>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <string name="pref_double_tap_zoom">Tocar dos veces para ampliar</string>
@@ -800,11 +798,6 @@
     <string name="pref_library_columns_per_row">%d por fila</string>
     <string name="intervals_header">Intervalos</string>
     <string name="skipped_reason_not_in_release_period">Omitido porque no se espera ninguna actualización hoy</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d día despues</item>
-        <item quantity="many">%d días despues</item>
-        <item quantity="other">%d días despues</item>
-    </plurals>
     <string name="split_tall_images">Dividir imágenes largas</string>
     <string name="pref_page_rotate">Girar las páginas anchas para adaptarlas a la pantalla</string>
     <string name="pref_page_rotate_invert">Girar las páginas anchas en la dirección opuesta</string>
@@ -820,11 +813,6 @@
         <item quantity="one">Falta %1$s capítulo</item>
         <item quantity="many">Faltan %1$s capítulos</item>
         <item quantity="other">Faltan %1$s capítulos</item>
-    </plurals>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d día antes</item>
-        <item quantity="many">%d días antes</item>
-        <item quantity="other">%d días antes</item>
     </plurals>
     <string name="manga_display_interval_title">Estimar cada</string>
     <string name="manga_display_modified_interval_title">Establecer la actualización cada</string>

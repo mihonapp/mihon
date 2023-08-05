@@ -810,7 +810,6 @@
     <string name="action_filter_interval_long">Requisitar mensalmente (28 dias)</string>
     <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
     <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
-    <string name="pref_update_release_grace_period">Intervalo de lançamento com carência</string>
     <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <plurals name="day">
         <item quantity="one">%d dia(s)</item>
@@ -820,31 +819,16 @@
     <string name="skipped_reason_not_in_release_period">Pulado porque nenhum lançamento era esperado hoje</string>
     <string name="intervals_header">Intervalos</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
-    <string name="pref_update_release_grace_period_info">Um intervalo com uma carência pequena é recomendado para minimizar o estresse nas fontes. Quanto mais verificações para um item forem perdidas, maior será o intervalo entre as verificações, com um máximo de 28 dias.</string>
     <string name="manga_display_interval_title">Estimar todo</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Remover o monitoramento do %s\?</string>
     <string name="track_delete_text">Isso irá remover o monitoramento localmente.</string>
     <string name="track_delete_remote_text">Também remover do %s</string>
     <string name="delete_downloaded">Deletar os disponíveis offline</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dia(s) antes</item>
-        <item quantity="many">%d dias antes</item>
-        <item quantity="other">%d dias antes</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dia(s) depois</item>
-        <item quantity="many">%d dias depois</item>
-        <item quantity="other">%d dias depois</item>
-    </plurals>
     <string name="has_results">Há resultados</string>
     <string name="syncing_library">Sincronizando a biblioteca</string>
     <string name="library_sync_complete">Sincronização da biblioteca finalizada</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d -%2$d dia(s)</item>
-        <item quantity="many">%1$d -%2$d dias</item>
-        <item quantity="other">%1$d -%2$d dias</item>
-    </plurals>
     <string name="information_cloudflare_help">Toque aqui para obter ajuda com o Cloudflare</string>
     <string name="download_cache_invalidated">Índice de downloads invalidado</string>
+    <string name="track_activity_name">Login do monitoramento</string>
 </resources>

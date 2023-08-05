@@ -778,12 +778,8 @@
     <string name="action_filter_interval_late">Lewat semak 10+</string>
     <string name="action_filter_interval_dropped">Diabaikan\? Lewat 20+ dan 2 bulan</string>
     <string name="action_sort_next_updated">Kemas kini seterusnya dijangka</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">%d hari selepasnya</item>
-    </plurals>
     <string name="manga_display_modified_interval_title">Tetapkan untuk kemas kini setiap</string>
     <string name="skipped_reason_not_in_release_period">Dilangkau kerana tiada keluaran yang dijangkakan hari ini</string>
-    <string name="pref_update_release_grace_period">Dalam jangkaan tempoh tangguh keluaran</string>
     <string name="intervals_header">Jarak masa</string>
     <plurals name="day">
         <item quantity="other">%d hari</item>
@@ -791,10 +787,6 @@
     <string name="manga_modify_calculated_interval_title">Tersuai Jarak Masa</string>
     <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
-    <string name="pref_update_release_grace_period_info">Tempoh tangguh yang rendah adalah digalakkan untuk meminimumkan tekanan kepada sumber. Lebih banyak semakan pada entri yang terlepas, semakin lama jarak masa akan diambil untuk menyemak dengan 28 hari maksimum.</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d hari sebelumnya</item>
-    </plurals>
     <string name="action_filter_interval_passed">Melepasi tempoh semak</string>
     <string name="track_delete_title">Buang penjejakan %s\?</string>
     <string name="track_delete_text">Ini akan membuang penjejakan secara lokal.</string>

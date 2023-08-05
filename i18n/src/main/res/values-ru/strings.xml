@@ -820,19 +820,6 @@
     <string name="action_filter_interval_custom">Настраиваемый интервал получения</string>
     <string name="action_filter_interval_long">Месячное получение (28 дней)</string>
     <string name="action_filter_interval_dropped">Заброшено\? Прошлые 20+ дней и 2 месяца</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">через %d день</item>
-        <item quantity="few">через %d дня</item>
-        <item quantity="many">через %d дней</item>
-        <item quantity="other">через %d дней</item>
-    </plurals>
-    <string name="pref_update_release_grace_period">Внутри предела ожидаемого периода выпуска</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">за %d день до</item>
-        <item quantity="few">за %d дня до</item>
-        <item quantity="many">за %d дней до</item>
-        <item quantity="other">за %d дней до</item>
-    </plurals>
     <string name="intervals_header">Интервалы</string>
     <string name="manga_display_interval_title">Оценивать каждые</string>
     <string name="manga_modify_calculated_interval_title">Настроить интервал</string>
@@ -842,7 +829,6 @@
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
     <string name="pref_update_only_in_release_period">За пределами ожидаемого периода выпуска</string>
     <string name="manga_display_modified_interval_title">Задать обновления каждые</string>
-    <string name="pref_update_release_grace_period_info">Следует использовать низкий льготный период, чтобы минимизировать нагрузку на источники. Чем больше проверок серий, которые были пропущены, тем длиннее интервал между проверками в сумме 28 дней.</string>
     <plurals name="day">
         <item quantity="one">1 день</item>
         <item quantity="few">%d дня</item>
@@ -859,10 +845,5 @@
     <string name="library_sync_complete">Синхронизация библиотеки завершена</string>
     <string name="syncing_library">Синхронизация библиотеки</string>
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d - %2$d день</item>
-        <item quantity="few">%1$d - %2$d дня</item>
-        <item quantity="many">%1$d - %2$d дней</item>
-        <item quantity="other">%1$d - %2$d дней</item>
-    </plurals>
+    <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
 </resources>

@@ -800,17 +800,7 @@
     <string name="action_filter_interval_late">Verìfica in ritardu de 10+ dies</string>
     <string name="action_filter_interval_passed">Perìodu de controllu coladu</string>
     <string name="manga_modify_calculated_interval_title">Personaliza s\'intervallu</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d die in antis</item>
-        <item quantity="other">%d dies in antis</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d die a pustis</item>
-        <item quantity="other">%d dies a pustis</item>
-    </plurals>
-    <string name="pref_update_release_grace_period_info">Unu perìodu de gràtzia bassu est cussigiadu pro minimare sa pressione subra sas fontes. Prus controllos pro un\'elementu si perdent, prus longu at a èssere s\'intervallu intre sos controllos cun unu màssimu de 28 dies.</string>
     <string name="action_ok">AB</string>
-    <string name="pref_update_release_grace_period">Perìodu de gràtzia prevìdidu pro sa publicatzione</string>
     <string name="track_delete_title">Bogare s\'arrastadore de %s\?</string>
     <string name="track_delete_text">Custu at a bogare s\'arrastamentu locale.</string>
     <string name="track_delete_remote_text">Boga fintzas dae %s</string>
