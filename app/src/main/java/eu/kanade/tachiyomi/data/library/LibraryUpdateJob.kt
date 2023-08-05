@@ -230,8 +230,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
         val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
-
-        val fetchWindow by lazy { setFetchInterval.getWindow(ZonedDateTime.now()) }
+        val fetchWindow = setFetchInterval.getWindow(ZonedDateTime.now())
 
         coroutineScope {
             mangaToUpdate.groupBy { it.manga.source }.values
@@ -265,7 +264,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         MANGA_NON_READ in restrictions && libraryManga.totalChapters > 0L && !libraryManga.hasStarted ->
                                             skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_started))
 
-                                        MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && manga.nextUpdate !in fetchWindow.first.rangeTo(fetchWindow.second) ->
+                                        MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && manga.nextUpdate > fetchWindow.second ->
                                             skippedUpdates.add(manga to context.getString(R.string.skipped_reason_not_in_release_period))
 
                                         else -> {
