@@ -4,10 +4,7 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
-import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.track.interactor.GetTracks
-import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
@@ -31,12 +28,10 @@ object MigrationFlags {
 
     private const val CHAPTERS = 0b00001
     private const val CATEGORIES = 0b00010
-    private const val TRACK = 0b00100
     private const val CUSTOM_COVER = 0b01000
     private const val DELETE_DOWNLOADED = 0b10000
 
     private val coverCache: CoverCache by injectLazy()
-    private val getTracks: GetTracks = Injekt.get()
     private val downloadCache: DownloadCache by injectLazy()
 
     fun hasChapters(value: Int): Boolean {
@@ -45,10 +40,6 @@ object MigrationFlags {
 
     fun hasCategories(value: Int): Boolean {
         return value and CATEGORIES != 0
-    }
-
-    fun hasTracks(value: Int): Boolean {
-        return value and TRACK != 0
     }
 
     fun hasCustomCover(value: Int): Boolean {
@@ -66,9 +57,6 @@ object MigrationFlags {
         flags += MigrationFlag.create(CATEGORIES, defaultSelectedBitMap, R.string.categories)
 
         if (manga != null) {
-            if (runBlocking { getTracks.await(manga.id) }.isNotEmpty()) {
-                flags += MigrationFlag.create(TRACK, defaultSelectedBitMap, R.string.track)
-            }
             if (manga.hasCustomCover(coverCache)) {
                 flags += MigrationFlag.create(CUSTOM_COVER, defaultSelectedBitMap, R.string.custom_cover)
             }

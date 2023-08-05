@@ -222,7 +222,6 @@ internal class MigrateDialogScreenModel(
     ) {
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)
-        val migrateTracks = MigrationFlags.hasTracks(flags)
         val migrateCustomCover = MigrationFlags.hasCustomCover(flags)
         val deleteDownloaded = MigrationFlags.hasDeleteDownloaded(flags)
 
@@ -273,21 +272,20 @@ internal class MigrateDialogScreenModel(
         }
 
         // Update track
-        if (migrateTracks) {
-            val tracks = getTracks.await(oldManga.id).mapNotNull { track ->
-                val updatedTrack = track.copy(mangaId = newManga.id)
+        getTracks.await(oldManga.id).mapNotNull { track ->
+            val updatedTrack = track.copy(mangaId = newManga.id)
 
-                val service = enhancedServices
-                    .firstOrNull { it.isTrackFrom(updatedTrack, oldManga, oldSource) }
+            val service = enhancedServices
+                .firstOrNull { it.isTrackFrom(updatedTrack, oldManga, oldSource) }
 
-                if (service != null) {
-                    service.migrateTrack(updatedTrack, newManga, newSource)
-                } else {
-                    updatedTrack
-                }
+            if (service != null) {
+                service.migrateTrack(updatedTrack, newManga, newSource)
+            } else {
+                updatedTrack
             }
-            insertTrack.awaitAll(tracks)
         }
+            .takeIf { it.isNotEmpty() }
+            ?.let { insertTrack.awaitAll(it) }
 
         // Delete downloaded
         if (deleteDownloaded) {
