@@ -11,6 +11,22 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
+data class MigrationFlag(
+    val flag: Int,
+    val isDefaultSelected: Boolean,
+    val titleId: Int,
+) {
+    companion object {
+        fun create(flag: Int, defaultSelectionMap: Int, titleId: Int): MigrationFlag {
+            return MigrationFlag(
+                flag = flag,
+                isDefaultSelected = defaultSelectionMap and flag != 0,
+                titleId = titleId,
+            )
+        }
+    }
+}
+
 object MigrationFlags {
 
     private const val CHAPTERS = 0b00001
@@ -22,9 +38,6 @@ object MigrationFlags {
     private val coverCache: CoverCache by injectLazy()
     private val getTracks: GetTracks = Injekt.get()
     private val downloadCache: DownloadCache by injectLazy()
-
-    val flags get() = arrayOf(CHAPTERS, CATEGORIES, TRACK, CUSTOM_COVER, DELETE_DOWNLOADED)
-    private var enableFlags = emptyList<Int>().toMutableList()
 
     fun hasChapters(value: Int): Boolean {
         return value and CHAPTERS != 0
@@ -46,34 +59,35 @@ object MigrationFlags {
         return value and DELETE_DOWNLOADED != 0
     }
 
-    fun getEnabledFlagsPositions(value: Int): List<Int> {
-        return flags.mapIndexedNotNull { index, flag -> if (value and flag != 0) index else null }
-    }
+    /** Returns information about applicable flags with default selections. */
+    fun getFlags(manga: Manga?, defaultSelectedBitMap: Int): List<MigrationFlag> {
+        val flags = mutableListOf<MigrationFlag>()
+        flags += MigrationFlag.create(CHAPTERS, defaultSelectedBitMap, R.string.chapters)
+        flags += MigrationFlag.create(CATEGORIES, defaultSelectedBitMap, R.string.categories)
 
-    fun getFlagsFromPositions(positions: Array<Int>): Int {
-        val fold = positions.fold(0) { accumulated, position -> accumulated or enableFlags[position] }
-        enableFlags.clear()
-        return fold
-    }
-
-    fun titles(manga: Manga?): Array<Int> {
-        enableFlags.add(CHAPTERS)
-        enableFlags.add(CATEGORIES)
-        val titles = arrayOf(R.string.chapters, R.string.categories).toMutableList()
         if (manga != null) {
             if (runBlocking { getTracks.await(manga.id) }.isNotEmpty()) {
-                titles.add(R.string.track)
-                enableFlags.add(TRACK)
+                flags += MigrationFlag.create(TRACK, defaultSelectedBitMap, R.string.track)
             }
             if (manga.hasCustomCover(coverCache)) {
-                titles.add(R.string.custom_cover)
-                enableFlags.add(CUSTOM_COVER)
+                flags += MigrationFlag.create(CUSTOM_COVER, defaultSelectedBitMap, R.string.custom_cover)
             }
             if (downloadCache.getDownloadCount(manga) > 0) {
-                titles.add(R.string.delete_downloaded)
-                enableFlags.add(DELETE_DOWNLOADED)
+                flags += MigrationFlag.create(DELETE_DOWNLOADED, defaultSelectedBitMap, R.string.delete_downloaded)
             }
         }
-        return titles.toTypedArray()
+        return flags
+    }
+
+    /** Returns a bit map of selected flags. */
+    fun getSelectedFlagsBitMap(
+        selectedFlags: List<Boolean>,
+        flags: List<MigrationFlag>,
+    ): Int {
+        return selectedFlags
+            .zip(flags)
+            .filter { (isSelected, _) -> isSelected }
+            .map { (_, flag) -> flag.flag }
+            .reduceOrNull { acc, mask -> acc or mask } ?: 0
     }
 }
