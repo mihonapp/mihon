@@ -1,6 +1,5 @@
 package eu.kanade.presentation.browse.components
 
-import android.content.pm.PackageManager
 import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -31,6 +30,7 @@ import eu.kanade.domain.source.model.icon
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
+import eu.kanade.tachiyomi.extension.util.ExtensionLoader
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.domain.source.model.Source
 import tachiyomi.source.local.isLocal
@@ -127,7 +127,7 @@ private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): St
     return produceState<Result<ImageBitmap>>(initialValue = Result.Loading, this) {
         withIOContext {
             value = try {
-                val appInfo = context.packageManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
+                val appInfo = ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo
                 val appResources = context.packageManager.getResourcesForApplication(appInfo)
                 Result.Success(
                     appResources.getDrawableForDensity(appInfo.icon, density, null)!!

@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.HelpOutline
@@ -176,7 +174,8 @@ private fun ExtensionDetails(
                         data = Uri.fromParts("package", extension.pkgName, null)
                         context.startActivity(this)
                     }
-                },
+                    Unit
+                }.takeIf { extension.isShared },
                 onClickAgeRating = {
                     showNsfwWarning = true
                 },
@@ -209,7 +208,7 @@ private fun DetailsHeader(
     extension: Extension,
     onClickAgeRating: () -> Unit,
     onClickUninstall: () -> Unit,
-    onClickAppInfo: () -> Unit,
+    onClickAppInfo: (() -> Unit)?,
 ) {
     val context = LocalContext.current
 
@@ -293,6 +292,7 @@ private fun DetailsHeader(
                 top = MaterialTheme.padding.small,
                 bottom = MaterialTheme.padding.medium,
             ),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             OutlinedButton(
                 modifier = Modifier.weight(1f),
@@ -301,16 +301,16 @@ private fun DetailsHeader(
                 Text(stringResource(R.string.ext_uninstall))
             }
 
-            Spacer(Modifier.width(16.dp))
-
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = onClickAppInfo,
-            ) {
-                Text(
-                    text = stringResource(R.string.ext_app_info),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
+            if (onClickAppInfo != null) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = onClickAppInfo,
+                ) {
+                    Text(
+                        text = stringResource(R.string.ext_app_info),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
         }
 

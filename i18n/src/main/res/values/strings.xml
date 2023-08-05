@@ -314,6 +314,7 @@
     <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_packageinstaller" translatable="false">PackageInstaller</string>
     <string name="ext_installer_shizuku" translatable="false">Shizuku</string>
+    <string name="ext_installer_private" translatable="false">Private</string>
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
 
