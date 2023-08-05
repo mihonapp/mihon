@@ -32,15 +32,19 @@ abstract class ViewerNavigation {
 
     private var constantMenuRegion: RectF = RectF(0f, 0f, 1f, 0.05f)
 
-    abstract var regions: List<Region>
-
     var invertMode: ReaderPreferences.TappingInvertMode = ReaderPreferences.TappingInvertMode.NONE
+
+    protected abstract var regionList: List<Region>
+
+    /** Returns regions with applied inversion. */
+    fun getRegions(): List<Region> {
+        return regionList.map { it.invert(invertMode) }
+    }
 
     fun getAction(pos: PointF): NavigationRegion {
         val x = pos.x
         val y = pos.y
-        val region = regions.map { it.invert(invertMode) }
-            .find { it.rectF.contains(x, y) }
+        val region = getRegions().find { it.rectF.contains(x, y) }
         return when {
             region != null -> region.type
             constantMenuRegion.contains(x, y) -> NavigationRegion.MENU
