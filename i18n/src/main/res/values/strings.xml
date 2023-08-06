@@ -495,6 +495,7 @@
     <string name="creating_backup_error">Backup failed</string>
     <string name="missing_storage_permission">Storage permissions not granted</string>
     <string name="empty_backup_error">No library entries to back up</string>
+    <string name="create_backup_file_error">Couldn\'t create a backup file</string>
     <string name="restore_miui_warning">Backup/restore may not function properly if MIUI Optimization is disabled.</string>
     <string name="restore_in_progress">Restore is already in progress</string>
     <string name="restoring_backup">Restoring backup</string>
@@ -608,6 +609,7 @@
     <string name="no_results_found">No results found</string>
     <!-- Do not translate "WebView" -->
     <string name="http_error_hint">Check website in WebView</string>
+    <string name="licensed_manga_chapters_error">Licensed - No chapters to show</string>
     <string name="local_source">Local source</string>
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>

@@ -106,10 +106,10 @@ class BackupManager(
                     UniFile.fromUri(context, uri)
                 }
                 )
-                ?: throw Exception("Couldn't create backup file")
+                ?: throw Exception(context.getString(R.string.create_backup_file_error))
 
             if (!file.isFile) {
-                throw IllegalStateException("Failed to get handle on file")
+                throw IllegalStateException("Failed to get handle on a backup file")
             }
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup)
