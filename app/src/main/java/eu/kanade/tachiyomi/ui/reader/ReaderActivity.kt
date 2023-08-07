@@ -382,11 +382,14 @@ class ReaderActivity : BaseActivity() {
 
         binding.pageNumber.setComposeContent {
             val state by viewModel.state.collectAsState()
+            val showPageNumber by viewModel.readerPreferences.showPageNumber().collectAsState()
 
-            PageIndicatorText(
-                currentPage = state.currentPage,
-                totalPages = state.totalPages,
-            )
+            if (!state.menuVisible && showPageNumber) {
+                PageIndicatorText(
+                    currentPage = state.currentPage,
+                    totalPages = state.totalPages,
+                )
+            }
         }
 
         binding.dialogRoot.setComposeContent {
@@ -554,10 +557,6 @@ class ReaderActivity : BaseActivity() {
                 bottomAnimation.applySystemAnimatorScale(this)
                 binding.readerMenuBottom.startAnimation(bottomAnimation)
             }
-
-            if (readerPreferences.showPageNumber().get()) {
-                config?.setPageNumberVisibility(false)
-            }
         } else {
             if (readerPreferences.fullscreen().get()) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
@@ -579,10 +578,6 @@ class ReaderActivity : BaseActivity() {
                 val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
                 bottomAnimation.applySystemAnimatorScale(this)
                 binding.readerMenuBottom.startAnimation(bottomAnimation)
-            }
-
-            if (readerPreferences.showPageNumber().get()) {
-                config?.setPageNumberVisibility(true)
             }
         }
     }
@@ -636,9 +631,8 @@ class ReaderActivity : BaseActivity() {
 
     private fun showReadingModeToast(mode: Int) {
         try {
-            val strings = resources.getStringArray(R.array.viewers_selector)
             readingModeToast?.cancel()
-            readingModeToast = toast(strings[mode])
+            readingModeToast = toast(ReadingModeType.fromPreference(mode).stringRes)
         } catch (e: ArrayIndexOutOfBoundsException) {
             logcat(LogPriority.ERROR) { "Unknown reading mode: $mode" }
         }
@@ -892,10 +886,6 @@ class ReaderActivity : BaseActivity() {
                 }
                 .launchIn(lifecycleScope)
 
-            readerPreferences.showPageNumber().changes()
-                .onEach(::setPageNumberVisibility)
-                .launchIn(lifecycleScope)
-
             readerPreferences.trueColor().changes()
                 .onEach(::setTrueColor)
                 .launchIn(lifecycleScope)
@@ -943,13 +933,6 @@ class ReaderActivity : BaseActivity() {
             } else {
                 Color.WHITE
             }
-        }
-
-        /**
-         * Sets the visibility of the bottom page indicator according to [visible].
-         */
-        fun setPageNumberVisibility(visible: Boolean) {
-            binding.pageNumber.isVisible = visible
         }
 
         /**
