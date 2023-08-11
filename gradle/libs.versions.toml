@@ -36,7 +36,7 @@ sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = 
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
 sqlite-android = "com.github.requery:sqlite-android:3.42.0"
 
-preferencektx = "androidx.preference:preference-ktx:1.2.0"
+preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
@@ -65,7 +65,7 @@ swipe = "me.saket.swipe:swipe:1.2.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.11.0"
+acra-http = "ch.acra:acra-http:5.11.1"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
