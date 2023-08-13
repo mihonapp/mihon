@@ -693,7 +693,7 @@
     <string name="ext_info_age_rating">Dobna granica</string>
     <string name="download_ahead">Preuzmi unaprijed</string>
     <string name="multi_lang">Višejezičnost</string>
-    <string name="missing_storage_permission">Nedostaje dozvola za spremanje</string>
+    <string name="missing_storage_permission">Dozvole za spremanje nisu odobrena</string>
     <string name="theme_tidalwave">Tsunami</string>
     <string name="invalid_location">Nevažeća lokacija: %s</string>
     <string name="pref_advanced_summary">Zapisnici iznenadnog gašenja aplikacije, optimizacije baterije</string>
@@ -809,18 +809,8 @@
     <string name="manga_modify_calculated_interval_title">Prilagodi interval</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
     <string name="manga_display_modified_interval_title">Postavi za aktualiziranje svakih</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dan nakon</item>
-        <item quantity="few">%d dana nakon</item>
-        <item quantity="other">%d dana nakon</item>
-    </plurals>
     <string name="action_ok">U redu</string>
     <string name="pref_update_only_in_release_period">Izvan očekivanog razdoblja izdavanja</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dan prije</item>
-        <item quantity="few">%d dana prije</item>
-        <item quantity="other">%d dana prije</item>
-    </plurals>
     <string name="intervals_header">Intervali</string>
     <string name="track_delete_title">Ukloniti praćenje %s\?</string>
     <string name="skipped_reason_not_in_release_period">Preskočeno, jer se danas nije očekivalo izdanje</string>
@@ -829,9 +819,16 @@
         <item quantity="few">%d dana</item>
         <item quantity="other">%d dana</item>
     </plurals>
-    <string name="pref_update_release_grace_period">Očekivano razdoblje odgode izdanja</string>
     <string name="track_delete_text">Ovo će ukloniti lokalno praćenje.</string>
     <string name="track_delete_remote_text">Također ukloni iz %s</string>
     <string name="delete_downloaded">Izbriši preuzete</string>
     <string name="has_results">Ima rezultate</string>
+    <string name="syncing_library">Sinkroniziranje biblioteke</string>
+    <string name="library_sync_complete">Sinkroniziranje biblioteke završeno</string>
+    <string name="information_cloudflare_help">Dodirni ovdje za pomoć s Cloudflareom</string>
+    <string name="action_filter_interval_dropped">Ispušteno\? Zadnjih 20 dana i 2 mjeseca</string>
+    <string name="track_activity_name">Zapis praćenja</string>
+    <string name="action_filter_interval_passed">Prekoraöeno razdoblje provjere</string>
+    <string name="action_filter_interval_late">Provjera zadnjih 10 i više dana</string>
+    <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
 </resources>

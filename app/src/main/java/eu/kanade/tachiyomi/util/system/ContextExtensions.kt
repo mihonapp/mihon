@@ -7,20 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.PermissionChecker
 import androidx.core.content.getSystemService
-import androidx.core.graphics.alpha
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.ui.UiPreferences
@@ -35,7 +28,6 @@ import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
-import kotlin.math.roundToInt
 
 /**
  * Copies a string to clipboard
@@ -68,25 +60,6 @@ fun Context.copyToClipboard(label: String, content: String) {
  * @return true if it has permissions.
  */
 fun Context.hasPermission(permission: String) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
-
-/**
- * Returns the color for the given attribute.
- *
- * @param resource the attribute.
- * @param alphaFactor the alpha number [0,1].
- */
-@ColorInt fun Context.getResourceColor(@AttrRes resource: Int, alphaFactor: Float = 1f): Int {
-    val typedArray = obtainStyledAttributes(intArrayOf(resource))
-    val color = typedArray.getColor(0, 0)
-    typedArray.recycle()
-
-    if (alphaFactor < 1f) {
-        val alpha = (color.alpha * alphaFactor).roundToInt()
-        return Color.argb(alpha, color.red, color.green, color.blue)
-    }
-
-    return color
-}
 
 val Context.powerManager: PowerManager
     get() = getSystemService()!!

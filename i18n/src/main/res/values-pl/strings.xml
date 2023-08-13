@@ -347,7 +347,7 @@
     <string name="add_to_library">Dodaj do biblioteki</string>
     <string name="http_error_hint">Sprawdź stronę w WebView</string>
     <string name="email">Adres e-mail</string>
-    <string name="downloaded_only_summary">Filtruje wszystkie wpisy w twojej bibliotece</string>
+    <string name="downloaded_only_summary">Filtruje wszystkie pozycje w twojej bibliotece</string>
     <string name="label_downloaded_only">Tylko pobrane</string>
     <string name="check_for_updates">Sprawdź aktualizacje</string>
     <string name="licenses">Licencje open source</string>
@@ -641,7 +641,7 @@
     <string name="channel_app_updates">Aktualizacje aplikacji</string>
     <string name="ext_update_all">Zaktualizuj wszystko</string>
     <string name="ext_installer_legacy">Przestarzały</string>
-    <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy wychodzeniu z aplikacji</string>
+    <string name="pref_auto_clear_chapter_cache">Wyczyść cache rozdziałów przy uruchamianiu aplikacji</string>
     <string name="extension_api_error">Nie można uzyskać listy rozszerzeń</string>
     <string name="publishing_finished">Opublikowane w całości</string>
     <string name="database_clean">Nie ma nic do wyczyszczynia</string>
@@ -725,14 +725,14 @@
         <item quantity="other">Następne %d nieprzeczytanych rozdziałów</item>
     </plurals>
     <string name="are_you_sure">Jesteś pewien\?</string>
-    <string name="download_ahead_info">Działa tylko na wpisach w bibliotece oraz jeśli aktualny rozdział i następny są już pobrane</string>
+    <string name="download_ahead_info">Działa tylko, jeśli aktualny i następny rozdział są już pobrane.</string>
     <string name="multi_lang">Wielojęzyczne</string>
     <string name="pref_long_strip_split">Dziel wysokie obrazy (BETA)</string>
     <string name="popular">Popularne</string>
     <string name="updates_last_update_info">Biblioteka ostatnio aktualizowana: %s</string>
     <string name="remove_manga">Zamierzasz usunąć \"%s\" ze swojej biblioteki</string>
     <string name="label_stats">Statystyki</string>
-    <string name="label_started">Początek</string>
+    <string name="label_started">Rozpoczęte</string>
     <string name="label_local">Lokalne</string>
     <string name="label_downloaded">Pobrane</string>
     <string name="pref_invalidate_download_cache_summary">Wymuś ponowne sprawdzenie pobranych rozdziałów przez aplikację</string>
@@ -752,7 +752,7 @@
     <string name="label_titles_in_global_update">W globalnej aktualizacji</string>
     <string name="label_tracker_section">Śledzenie</string>
     <string name="unknown_title">Nieznany tytuł</string>
-    <string name="updates_last_update_info_just_now">Właśnie teraz</string>
+    <string name="updates_last_update_info_just_now">Przed chwilą</string>
     <string name="crash_screen_title">Ups!</string>
     <string name="track_remove_date_conf_title">Usunąć datę\?</string>
     <string name="track_remove_finish_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty zakończenia z %s</string>
@@ -761,24 +761,24 @@
     <string name="action_not_now">Nie teraz</string>
     <string name="label_overview_section">Przegląd</string>
     <string name="label_completed_titles">Zakończone wpisy</string>
-    <string name="label_total_chapters">Całość</string>
+    <string name="label_total_chapters">Razem</string>
     <string name="action_search_hint">Szukaj…</string>
     <string name="action_open_random_manga">Otwórz losową pozycję</string>
     <string name="pref_library_summary">Kategorie, aktualizacja globalna, przesunięcie rozdziału</string>
     <string name="pref_invalidate_download_cache">Unieważnij indeks pobierania</string>
     <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane.
 \nNaciśnij, aby dowiedzieć się więcej.</string>
-    <string name="label_read_chapters">Czytaj</string>
+    <string name="label_read_chapters">Przeczytane</string>
     <string name="pref_downloads_summary">Automatyczne pobieranie, pobierz wstępnie</string>
     <string name="track_remove_start_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty rozpoczęcia z %s</string>
     <string name="pref_library_update_show_tab_badge">Pokaż liczbę nieprzeczytanych na ikonie Aktualizacji</string>
     <string name="not_applicable">N/A</string>
     <string name="day_short">%dd</string>
-    <string name="hour_short">%d godz</string>
+    <string name="hour_short">%d godz.</string>
     <string name="minute_short">%d minut</string>
     <string name="seconds_short">%d sekund</string>
     <string name="label_used">Używane</string>
-    <string name="label_tracked_titles">Śledzone wpisy</string>
+    <string name="label_tracked_titles">Śledzone pozycje</string>
     <string name="label_mean_score">Średnia ocena</string>
     <string name="skipped_reason_not_always_update">Pominięto, ponieważ aktualizacja nie jest wymagana</string>
     <string name="information_no_entries_found">Nie znaleziono wpisów w tej kategorii</string>
@@ -819,23 +819,12 @@
     <string name="pref_chapter_swipe">Przesunięcie rozdziału</string>
     <string name="action_set_interval">Ustaw interwał</string>
     <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dzień po</item>
-        <item quantity="few">%d dni po</item>
-        <item quantity="many">%d dni po</item>
-        <item quantity="other">%d dni po</item>
-    </plurals>
     <string name="manga_display_modified_interval_title">Aktualizuj co</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dzień przed</item>
-        <item quantity="few">%d dni przed</item>
-        <item quantity="many">%d dni przed</item>
-        <item quantity="other">%d dni przed</item>
-    </plurals>
     <plurals name="day">
         <item quantity="one">1 dzień</item>
         <item quantity="few">%d dni</item>
         <item quantity="many">%d dni</item>
         <item quantity="other">%d dni</item>
     </plurals>
+    <string name="syncing_library">Synchronizowanie biblioteki</string>
 </resources>

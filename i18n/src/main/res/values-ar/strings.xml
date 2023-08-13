@@ -855,17 +855,7 @@
     <string name="action_filter_interval_dropped">ربما أُلغيت؟ ٢٠ التماسًا متأخرًا وشهران</string>
     <string name="manga_display_interval_title">قدِّر كلَّ</string>
     <string name="pref_update_only_in_release_period">ليس ضمن مدة الإصدار المتوقعة</string>
-    <string name="pref_update_release_grace_period">مدة سماح الإصدار المتوقعة</string>
-    <string name="pref_update_release_grace_period_info">مدة سماح قصيرة خير من مدة سماح طويلة، وذلك لتخفف الضغط على المصادر. وكلما تُلتمس مدخلة وليس لهذا تحديث تصير مدة الالتماس أطول، وأقصاها ٢٨ يومًا.</string>
     <string name="manga_modify_calculated_interval_title">خصِّص المدة</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="zero">لا يوم بعد</item>
-        <item quantity="one">بعد يوم واحد</item>
-        <item quantity="two">بعد يومين</item>
-        <item quantity="few">بعد %d أيام</item>
-        <item quantity="many">بعد %d يومًا</item>
-        <item quantity="other">بعد %d يوم</item>
-    </plurals>
     <string name="skipped_reason_not_in_release_period">تُخُطِّيت بسبب عدم توقع صدور اليوم</string>
     <string name="manga_display_modified_interval_title">عيِّن التحديث كلَّ</string>
     <plurals name="day">
@@ -875,14 +865,6 @@
         <item quantity="few">%d أيام</item>
         <item quantity="many">%d يومًا</item>
         <item quantity="other">%d يوم</item>
-    </plurals>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="zero">لا يوم قبل</item>
-        <item quantity="one">قبل يوم واحد</item>
-        <item quantity="two">قبل يومين</item>
-        <item quantity="few">قبل %d أيام</item>
-        <item quantity="many">قبل %d يومًا</item>
-        <item quantity="other">قبل %d يوم</item>
     </plurals>
     <string name="intervals_header">المدة</string>
     <string name="action_sort_next_updated">التحديث المتوقع القادم</string>

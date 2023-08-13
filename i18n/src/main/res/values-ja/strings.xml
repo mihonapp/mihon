@@ -776,7 +776,6 @@
     <string name="action_filter_interval_custom">カスタマイズした取得間隔</string>
     <string name="action_filter_interval_long">月一回に取得（28日）</string>
     <string name="action_sort_next_updated">次の更新予定</string>
-    <string name="pref_update_release_grace_period">予想された更新猶予時間</string>
     <string name="pref_update_only_in_release_period">更新予定時間外</string>
     <string name="intervals_header">間隔</string>
     <plurals name="day">
@@ -787,10 +786,6 @@
     <string name="has_results">実績あり</string>
     <string name="track_delete_title">%s の追跡を削除しますか\?</string>
     <string name="manga_display_interval_title">毎に評価</string>
-    <string name="pref_update_release_grace_period_info">ソースの負担を軽減するため、少しの猶予時間を設定しておくことをおすすめします。チェック時に更新が見つからない場合、チェック間の間隔が自動で最大28日まで増えられます。</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d 日前</item>
-    </plurals>
     <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
     <string name="track_delete_text">ローカルの追跡が削除されます。</string>
     <string name="track_delete_remote_text">%s からも削除</string>
@@ -798,10 +793,9 @@
     <string name="action_filter_interval_late">10+チェック後半</string>
     <string name="action_filter_interval_dropped">落とした\? 20歳以上後半と2ヶ月</string>
     <string name="action_filter_interval_passed">チェック期間を過ぎました</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">%d日後</item>
-    </plurals>
     <string name="action_ok">OK</string>
     <string name="syncing_library">ライブラリを同期しています</string>
     <string name="library_sync_complete">ライブラリを同期しました</string>
+    <string name="information_cloudflare_help">Cloudflareに関するヘルプ情報はこちら</string>
+    <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
 </resources>

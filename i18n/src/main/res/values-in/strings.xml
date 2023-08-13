@@ -772,9 +772,6 @@
     <string name="pref_chapter_swipe_start">Geser kekiri</string>
     <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
     <string name="pref_library_columns_per_row">%d per baris</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">%d hari setelahnya</item>
-    </plurals>
     <plurals name="day">
         <item quantity="other">%d hari</item>
     </plurals>
@@ -782,18 +779,13 @@
     <string name="action_filter_interval_custom">Interval pengambilan disesuaikan</string>
     <string name="action_filter_interval_long">Ambil bulanan (28 hari)</string>
     <string name="action_filter_interval_late">Cek 10+ terlambat</string>
-    <string name="pref_update_release_grace_period">Masa tenggang rilis yang diharapkan</string>
     <string name="manga_modify_calculated_interval_title">Sesuaikan Interval</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
     <string name="action_filter_interval_dropped">Berkurang\? Akhir 20+ dan 2 bulan</string>
     <string name="action_filter_interval_passed">Melewati periode pemeriksaan</string>
     <string name="action_sort_next_updated">Pembaruan yang diharapkan berikutnya</string>
-    <string name="pref_update_release_grace_period_info">Masa tenggang rendah disarankan untuk meminimalkan stres pada sumber. Semakin banyak pemeriksaan untuk entri yang terlewatkan, semakin lama interval antar pemeriksaan dengan maksimal 28 hari.</string>
     <string name="intervals_header">Interval</string>
     <string name="pref_update_only_in_release_period">Di luar periode rilis yang diharapkan</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d hari sebelumnya</item>
-    </plurals>
     <string name="manga_display_interval_title">Perkirakan setiap</string>
     <string name="manga_display_modified_interval_title">Atur untuk memperbarui setiap</string>
     <string name="track_delete_title">Hapus %s pelacakan\?</string>
@@ -804,4 +796,7 @@
     <string name="has_results">Memiliki hasil</string>
     <string name="syncing_library">Sinkronisasi pustaka</string>
     <string name="library_sync_complete">Sinkronisasi pustaka selesai</string>
+    <string name="information_cloudflare_help">Ketuk di sini untuk bantuan dengan Cloudflare</string>
+    <string name="download_cache_invalidated">Indeks unduhan tidak valid</string>
+    <string name="track_activity_name">Pelacak login</string>
 </resources>

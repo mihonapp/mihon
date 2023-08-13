@@ -772,15 +772,7 @@
     <string name="pref_chapter_swipe_start">向左滑动操作</string>
     <string name="pref_double_tap_zoom">双击放大</string>
     <string name="pref_library_columns_per_row">每行 %d 个</string>
-    <string name="pref_update_release_grace_period">预计更新时间宽限</string>
     <string name="pref_update_only_in_release_period">未到预计更新时间</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">提前 %d 天</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">延后 %d 天</item>
-    </plurals>
-    <string name="pref_update_release_grace_period_info">建议设置较短的宽限期，这样可以减轻图源的负担。每当检查作品更新发现没有更新时，下次检查的间隔就会变长，但不会超过 28 天。</string>
     <string name="action_ok">确定</string>
     <string name="track_delete_title">要删除 %s 的记录吗？</string>
     <string name="track_delete_remote_text">同时删除 %s 上的数据</string>
@@ -805,4 +797,6 @@
     <string name="syncing_library">正在同步书架</string>
     <string name="library_sync_complete">书架同步完成</string>
     <string name="information_cloudflare_help">点击这里查看 Cloudflare 帮助</string>
+    <string name="download_cache_invalidated">已清除下载索引</string>
+    <string name="track_activity_name">登录进度记录平台</string>
 </resources>

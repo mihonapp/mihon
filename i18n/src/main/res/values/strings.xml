@@ -319,6 +319,7 @@
     <string name="ext_installer_legacy">Legacy</string>
     <string name="ext_installer_packageinstaller" translatable="false">PackageInstaller</string>
     <string name="ext_installer_shizuku" translatable="false">Shizuku</string>
+    <string name="ext_installer_private" translatable="false">Private</string>
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
 
@@ -467,6 +468,7 @@
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Services that provide enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="action_track">Track</string>
+    <string name="track_activity_name">Tracking login</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
@@ -499,6 +501,7 @@
     <string name="creating_backup_error">Backup failed</string>
     <string name="missing_storage_permission">Storage permissions not granted</string>
     <string name="empty_backup_error">No library entries to back up</string>
+    <string name="create_backup_file_error">Couldn\'t create a backup file</string>
     <string name="restore_miui_warning">Backup/restore may not function properly if MIUI Optimization is disabled.</string>
     <string name="restore_in_progress">Restore is already in progress</string>
     <string name="restoring_backup">Restoring backup</string>
@@ -645,6 +648,7 @@
     <string name="no_results_found">No results found</string>
     <!-- Do not translate "WebView" -->
     <string name="http_error_hint">Check website in WebView</string>
+    <string name="licensed_manga_chapters_error">Licensed - No chapters to show</string>
     <string name="local_source">Local source</string>
     <string name="other_source">Other</string>
     <string name="last_used_source">Last used</string>

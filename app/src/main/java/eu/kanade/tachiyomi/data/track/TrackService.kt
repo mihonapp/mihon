@@ -5,7 +5,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
@@ -31,9 +30,9 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 
 abstract class TrackService(val id: Long) {
 
-    val preferences: BasePreferences by injectLazy()
     val trackPreferences: TrackPreferences by injectLazy()
     val networkService: NetworkHelper by injectLazy()
+    private val insertTrack: InsertTrack by injectLazy()
 
     open val client: OkHttpClient
         get() = networkService.client
@@ -112,7 +111,7 @@ abstract class TrackService(val id: Long) {
 
                 var track = item.toDomainTrack(idRequired = false) ?: return@withIOContext
 
-                Injekt.get<InsertTrack>().await(track)
+                insertTrack.await(track)
 
                 // Update chapter progress if newer chapters marked read locally
                 if (hasReadChapters) {
@@ -120,7 +119,7 @@ abstract class TrackService(val id: Long) {
                         .sortedBy { it.chapterNumber }
                         .takeWhile { it.read }
                         .lastOrNull()
-                        ?.chapterNumber?.toDouble() ?: -1.0
+                        ?.chapterNumber ?: -1.0
 
                     if (latestLocalReadChapterNumber > track.lastChapterRead) {
                         track = track.copy(
@@ -169,6 +168,7 @@ abstract class TrackService(val id: Long) {
         track.last_chapter_read = chapterNumber.toFloat()
         if (track.total_chapters != 0 && track.last_chapter_read.toInt() == track.total_chapters) {
             track.status = getCompletionStatus()
+            track.finished_reading_date = System.currentTimeMillis()
         }
         withIOContext { updateRemote(track) }
     }
@@ -193,7 +193,7 @@ abstract class TrackService(val id: Long) {
             try {
                 update(track)
                 track.toDomainTrack(idRequired = false)?.let {
-                    Injekt.get<InsertTrack>().await(it)
+                    insertTrack.await(it)
                 }
             } catch (e: Exception) {
                 logcat(LogPriority.ERROR, e) { "Failed to update remote track data id=$id" }

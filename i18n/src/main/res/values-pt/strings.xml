@@ -832,7 +832,6 @@
     <string name="action_set_interval">Definir intervalo</string>
     <string name="action_filter_interval_long">Buscar mensalmente (28 dias)</string>
     <string name="pref_update_only_in_release_period">Fora do período esperado de lançamento</string>
-    <string name="pref_update_release_grace_period">Período de tolerância de liberação esperado</string>
     <string name="pref_debug_info">Informações de depuração</string>
     <plurals name="day">
         <item quantity="one">Um dia</item>
@@ -848,14 +847,4 @@
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar a cada</string>
     <string name="skipped_reason_not_in_release_period">Pulado, pois nenhum lançamento é esperado para hoje</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dia depois</item>
-        <item quantity="many">%d dias depois</item>
-        <item quantity="other">%d dias depois</item>
-    </plurals>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dia atrás</item>
-        <item quantity="many">%d dias atrás</item>
-        <item quantity="other">%d dias atrás</item>
-    </plurals>
 </resources>

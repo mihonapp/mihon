@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -57,83 +56,11 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize" />
 
-        <LinearLayout
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/reader_menu_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="vertical">
-
-            <androidx.compose.ui.platform.ComposeView
-                android:id="@+id/reader_nav"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layoutDirection="ltr" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/toolbar_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                android:clickable="true"
-                tools:ignore="KeyboardInaccessibleWidget">
-
-                <ImageButton
-                    android:id="@+id/action_reading_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/viewer"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@id/action_crop_borders"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_reader_default_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
-                    android:id="@+id/action_crop_borders"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/pref_crop_borders"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@id/action_rotation"
-                    app:layout_constraintStart_toEndOf="@+id/action_reading_mode"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_crop_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
-                    android:id="@+id/action_rotation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/pref_rotation_type"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:layout_constraintEnd_toStartOf="@id/action_settings"
-                    app:layout_constraintStart_toEndOf="@+id/action_crop_borders"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_screen_rotation_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
-                    android:id="@+id/action_settings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/action_settings"
-                    android:padding="@dimen/screen_edge_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/action_rotation"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_settings_24dp"
-                    app:tint="?attr/colorOnSurface" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
+            android:layout_gravity="bottom" />
 
     </FrameLayout>
 

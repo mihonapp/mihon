@@ -790,18 +790,9 @@
     <string name="action_set_interval">अन्तराल सेट गर्नुहोस्</string>
     <string name="action_filter_interval_custom">कस्टम गरिएको ल्याउने अन्तराल</string>
     <string name="action_filter_interval_long">मासिक ल्याउनुहोस् (२८ दिन)</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d दिन अघि</item>
-        <item quantity="other">%d दिन अघि</item>
-    </plurals>
-    <string name="pref_update_release_grace_period">अपेक्षित रिलीज ग्रेस अवधि</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
     <string name="manga_modify_calculated_interval_title">अन्तराल कस्टम गर्नुहोस्</string>
     <string name="skipped_reason_not_in_release_period">छोडियो किनभने आज कुनै रिलीज अपेक्षित थिएन</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d दिन पछि</item>
-        <item quantity="other">%d दिन पछि</item>
-    </plurals>
     <string name="intervals_header">अन्तरालहरू</string>
     <plurals name="day">
         <item quantity="one">१ दिन</item>
@@ -811,7 +802,6 @@
     <string name="action_filter_interval_passed">जाँच अवधि पार भयो</string>
     <string name="action_sort_next_updated">अर्को अपेक्षित अपडेट</string>
     <string name="pref_update_only_in_release_period">अपेक्षित रिलीज अवधि बाहिर</string>
-    <string name="pref_update_release_grace_period_info">स्रोतहरूमा तनाव कम गर्न छोटो ग्रेस अवधिको साथ अन्तराल सिफारिस गरिन्छ। छुटेको इन्ट्रीको लागि जति धेरै जाँचहरू छन्, जाँचहरू बीचको अन्तर त्यति नै लामो हुन्छ, अधिकतम २८ दिनको साथ।</string>
     <string name="manga_display_interval_title">प्रत्येक अनुमान लगाउनुहोस्</string>
     <string name="action_filter_interval_dropped">छोडियो\? ढिलो २०+ र २ महिना</string>
     <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो\?</string>
@@ -820,4 +810,8 @@
     <string name="action_ok">ठीक छ</string>
     <string name="delete_downloaded">डाउनलोड गरिएको मेट्नुहोस्</string>
     <string name="has_results">परिणामहरू छन्</string>
+    <string name="library_sync_complete">पुस्तकालय सिङ्क सम्पन्न भयो</string>
+    <string name="syncing_library">पुस्तकालय सिङ्क गर्दै</string>
+    <string name="download_cache_invalidated">डाउनलोड इन्डेक्स अवैध भयो</string>
+    <string name="information_cloudflare_help">Cloudflare सम्बन्धित मद्दतको लागि यहाँ ट्याप गर्नुहोस्</string>
 </resources>

@@ -3,7 +3,7 @@
     <string name="categories">類別</string>
     <string name="manga">藏書</string>
     <string name="chapters">章節</string>
-    <string name="history">歷史記錄</string>
+    <string name="history">記錄</string>
     <string name="label_settings">設定</string>
     <string name="label_download_queue">下載佇列</string>
     <string name="label_library">書櫃</string>
@@ -74,8 +74,8 @@
     <string name="update_never">關閉</string>
     <string name="update_6hour">每 6 小時</string>
     <string name="update_12hour">每 12 小時</string>
-    <string name="update_24hour">每日</string>
-    <string name="update_48hour">每 2 日</string>
+    <string name="update_24hour">每天</string>
+    <string name="update_48hour">每 2 天</string>
     <string name="update_weekly">每週</string>
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
@@ -125,7 +125,7 @@
     <string name="restoring_backup">正在還原</string>
     <string name="creating_backup">正在建立備份</string>
     <string name="pref_clear_chapter_cache">清除章節快取</string>
-    <string name="pref_clear_cookies">清除 Cookies</string>
+    <string name="pref_clear_cookies">清除 Cookie</string>
     <string name="pref_clear_database">清除資料庫</string>
     <string name="version">版本</string>
     <string name="pref_enable_acra">傳送錯誤報告</string>
@@ -194,7 +194,7 @@
     <string name="used_cache">已使用：%1$s</string>
     <string name="cache_deleted">已清除快取，%1$d 個檔案已被刪除</string>
     <string name="cache_delete_error">清除時發生錯誤</string>
-    <string name="cookies_cleared">已清除 Cookies</string>
+    <string name="cookies_cleared">已清除 Cookie</string>
     <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感訊息</string>
     <string name="login_title">登入 %1$s</string>
     <string name="username">使用者名稱</string>
@@ -319,7 +319,7 @@
     <string name="lock_when_idle">閒置時鎖定</string>
     <string name="unlock_app">解除鎖定 Tachiyomi</string>
     <string name="lock_with_biometrics">上鎖應用程式</string>
-    <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面</string>
+    <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面。</string>
     <string name="secure_screen">防窺畫面</string>
     <string name="pref_category_security">隱私</string>
     <string name="hide_notification_content">隱藏通知內容</string>
@@ -601,7 +601,7 @@
     <string name="backup_info">你應該在多處保存備份副本。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
-    <string name="update_72hour">每 3 日</string>
+    <string name="update_72hour">每 3 天</string>
     <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">應用程式更新</string>
@@ -784,25 +784,19 @@
     <string name="action_filter_interval_dropped">放棄？延遲 20+ 和 2 個月</string>
     <string name="action_filter_interval_passed">已過檢查期</string>
     <string name="action_sort_next_updated">下次預期更新</string>
-    <string name="intervals_header">間隔</string>
-    <string name="pref_update_release_grace_period">預期發布寬限期</string>
+    <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_release_grace_period_info">建議使用較短的寬限期以減少資源的壓力。錯過越多條目的檢查，檢查之間的間隔時間就會變長，最長為28天。</string>
     <string name="pref_update_only_in_release_period">超出預期發行期間</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d 天前</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">%d 天後</item>
-    </plurals>
     <plurals name="day">
         <item quantity="other">%d 天</item>
     </plurals>
     <string name="manga_display_modified_interval_title">設定為每個</string>
-    <string name="manga_modify_calculated_interval_title">自訂間隔</string>
-    <string name="skipped_reason_not_in_release_period">跳過，因為今天不預期有新章節發佈</string>
+    <string name="manga_modify_calculated_interval_title">自訂刊期</string>
+    <string name="skipped_reason_not_in_release_period">由於非為預期出刊日，因此略過</string>
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
-    <string name="library_sync_complete">書櫃同步完畢</string>
+    <string name="library_sync_complete">書櫃同步完成</string>
     <string name="download_cache_invalidated">已清除下載索引</string>
+    <string name="information_cloudflare_help">查看 Cloudflare 相關說明</string>
+    <string name="track_activity_name">登入歷程平台</string>
 </resources>

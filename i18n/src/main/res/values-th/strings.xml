@@ -780,20 +780,12 @@
     <string name="action_filter_interval_passed">การตรวจสอบที่ผ่านมา</string>
     <string name="action_sort_next_updated">การอัปเดตที่คาดไว้ต่อไป</string>
     <string name="pref_update_only_in_release_period">ระยะเวลาการออกที่คาดไว้จากภายนอก</string>
-    <string name="pref_update_release_grace_period">ระยะเวลาการเลื่อนออกที่คาดไว้</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d วันก่อน</item>
-    </plurals>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">อีก %d วัน</item>
-    </plurals>
     <plurals name="day">
         <item quantity="other">%d วัน</item>
     </plurals>
     <string name="skipped_reason_not_in_release_period">ข้ามไปเนื่องจากคาดว่าจะไม่มีการออกในวันนี้</string>
     <string name="manga_display_interval_title">ประมาณทุกๆ</string>
     <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
-    <string name="pref_update_release_grace_period_info">ขอแนะนำให้ใช้ระยะเวลาเลื่อนเพื่อเพิ่มความรวดเร็วจากแหล่งที่มา ยิ่งมีการตรวจสอบรายการที่ขาดหายไปมากเท่าใด ช่วงเวลาระหว่างการตรวจสอบก็จะนานขึ้นสูงสุด 28 วัน</string>
     <string name="intervals_header">ช่วงเวลา</string>
     <string name="manga_modify_calculated_interval_title">ปรับแต่งช่วงเวลา</string>
     <string name="action_ok">ตกลง</string>
@@ -804,4 +796,6 @@
     <string name="has_results">มีผลลัพธ์</string>
     <string name="syncing_library">กำลังซิงค์คลัง</string>
     <string name="delete_downloaded">ลบการดาวน์โหลด</string>
+    <string name="download_cache_invalidated">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
+    <string name="information_cloudflare_help">แตะที่นี่เพื่อขอความช่วยเหลือเกี่ยวกับ Cloudflare</string>
 </resources>

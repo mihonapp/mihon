@@ -24,5 +24,6 @@ class BasePreferences(
         LEGACY(R.string.ext_installer_legacy),
         PACKAGEINSTALLER(R.string.ext_installer_packageinstaller),
         SHIZUKU(R.string.ext_installer_shizuku),
+        PRIVATE(R.string.ext_installer_private),
     }
 }

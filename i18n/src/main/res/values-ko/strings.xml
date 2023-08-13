@@ -778,20 +778,18 @@
     <string name="action_set_interval">간격 설정</string>
     <string name="action_filter_interval_custom">사용자 지정 가져오기 간격</string>
     <string name="action_filter_interval_long">매월 가져오기 (28일)</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="other">%d일 후</item>
-    </plurals>
     <string name="intervals_header">간격</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="other">%d일 전</item>
-    </plurals>
     <string name="manga_modify_calculated_interval_title">간격 설정</string>
     <string name="delete_downloaded">다운로드 삭제</string>
     <string name="has_results">결과가 있는 것만 보기</string>
     <string name="track_delete_text">이렇게 하면 로컬에서 동기화가 제거됩니다.</string>
     <string name="track_delete_remote_text">%s에서도 제거</string>
-    <string name="pref_update_release_grace_period">예상 업데이트 유예 기간</string>
-    <string name="pref_update_release_grace_period_info">소스에 대한 부하를 최소화하려면 낮은 유예 기간을 권장합니다. 누락된 항목에 대한 확인 횟수가 많을수록 확인 간격이 최대 28일로 길어집니다.</string>
-    <string name="action_ok">오케이</string>
+    <string name="action_ok">OK</string>
     <string name="skipped_reason_not_in_release_period">오늘 연재가 예상되지 않았기 때문에 건너뛰었습니다</string>
+    <string name="track_delete_title">%s 동기화를 삭제 하시겠습니까\?</string>
+    <string name="action_filter_interval_passed">체크 기간이 지났습니다</string>
+    <string name="pref_update_only_in_release_period">연재 예정 기간 제외</string>
+    <string name="download_cache_invalidated">다운로드 인덱스를 제거함</string>
+    <string name="action_sort_next_updated">다음 업데이트 예정</string>
+    <string name="information_cloudflare_help">탭하여 Cloudflare에 관한 도움말 보기</string>
 </resources>

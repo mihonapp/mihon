@@ -798,20 +798,10 @@
     <string name="action_sort_next_updated">Neste forventede oppdatering</string>
     <string name="action_filter_interval_dropped">Droppet\? Sen 20+ og 2 måneder</string>
     <string name="pref_chapter_swipe_end">Sveip til høyre handling</string>
-    <string name="pref_update_release_grace_period">Forventet utgivelsestoleranse</string>
-    <plurals name="pref_update_release_leading_days">
-        <item quantity="one">%d dag før</item>
-        <item quantity="other">%d dager før</item>
-    </plurals>
     <string name="intervals_header">Intervaller</string>
     <string name="manga_display_interval_title">Anslå hver</string>
     <string name="delete_downloaded">Slett nedlastede</string>
     <string name="pref_update_only_in_release_period">Utenfor forventet utgivelsesperiode</string>
-    <plurals name="pref_update_release_following_days">
-        <item quantity="one">%d dag etter</item>
-        <item quantity="other">%d dager etter</item>
-    </plurals>
-    <string name="pref_update_release_grace_period_info">En kort utgivelsestoleranse anbefales for å minimere belastningen på kildene. Jo flere sjekker som går tapt, desto lengre blir intervallet mellom sjekkene, med en maksimal periode på 28 dager.</string>
     <string name="pref_double_tap_zoom">Dobbelttrykk for å zoome</string>
     <string name="pref_chapter_swipe_start">Sveip til venstre handling</string>
     <string name="track_delete_title">Vil du fjerne sporing for %s\?</string>
@@ -822,9 +812,6 @@
     <string name="has_results">Har resultater</string>
     <string name="syncing_library">Synkroniserer biblioteket</string>
     <string name="library_sync_complete">Biblioteksynkronisering fullført</string>
-    <plurals name="range_interval_day">
-        <item quantity="one">%1$d - %2$d dag</item>
-        <item quantity="other">%1$d - %2$d dager</item>
-    </plurals>
     <string name="information_cloudflare_help">Trykk her for å få hjelp med Cloudflare</string>
+    <string name="download_cache_invalidated">Nedlastingsindeksen er ugyldiggjort</string>
 </resources>
