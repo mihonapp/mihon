@@ -10,7 +10,7 @@
     <string name="label_extensions">विस्ताराः</string>
     <string name="label_extension_info">विस्तारस्य विवरणम्</string>
     <string name="label_help">साहाय्यम्</string>
-    <string name="manga">माङ्गा</string>
+    <string name="manga">ग्रन्थालय-प्रविष्ट्यः</string>
     <string name="categories">वर्गाः</string>
     <string name="chapters">अध्यायाः</string>
     <string name="track">अनुप्रज्ञानम्</string>
@@ -633,4 +633,10 @@
     <string name="notification_update_skipped">%1$d नवीकरणानि लङ्घितानि</string>
     <string name="action_move_to_top_all_for_series">धारावाहिकम् अग्रस्थानं चालयतु</string>
     <string name="rotation_reverse_portrait">विपरीतं लम्बदर्शनम्</string>
+    <string name="label_local">स्थानीयम्</string>
+    <string name="label_stats">साङ्ख्यिकी</string>
+    <string name="label_started">आरब्धम्</string>
+    <string name="action_set_interval">अवधिं स्थापयतु</string>
+    <string name="delete_downloaded">अवारोपितं नाशयतु</string>
+    <string name="label_downloaded">अवारोपितम्</string>
 </resources>

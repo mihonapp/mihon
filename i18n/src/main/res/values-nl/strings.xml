@@ -314,7 +314,7 @@
     <string name="theme_system">Volg systeeminstelling</string>
     <string name="pref_manage_notifications">Meldingen beheren</string>
     <string name="pref_category_security">Beveiliging en privacy</string>
-    <string name="lock_with_biometrics">Ontgrendeling vereisen</string>
+    <string name="lock_with_biometrics">Vereis ontgrendeling</string>
     <string name="lock_when_idle">Vergrendelen indien niet in gebruik</string>
     <string name="lock_always">Altijd</string>
     <string name="lock_never">Nooit</string>
@@ -470,8 +470,8 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Dit voorkomt niet dat onofficiële of mogelijk incorrect gemarkeerde extensies NSFW-inhoud (18+) kunnen laten zien in de app.</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d hoofdstuk is overgeslagen, de bron mist het hoofdstuk of is eruit gefilterd</item>
-        <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn eruit gefilterd</item>
+        <item quantity="one">1 hoofdstuk is overgeslagen, de bron mist 1 hoofdstuk of het is uitgefilterd</item>
+        <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn uitgefilterd</item>
     </plurals>
     <string name="no_chapters_error">Geen hoofdstukken gevonden</string>
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
@@ -746,4 +746,5 @@
     </plurals>
     <string name="track_remove_start_date_conf_text">Dit gaat je eerder geselcteerde startdatum %s verwijderen</string>
     <string name="delete_downloaded">Download verwijderen</string>
+    <string name="skipped_reason_not_always_update">Overgeslagen omdat serie geen updates vereist.</string>
 </resources>

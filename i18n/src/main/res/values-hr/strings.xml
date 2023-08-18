@@ -290,7 +290,7 @@
     <string name="set_as_cover">Postavi kao naslovnicu</string>
     <string name="custom_filter">Prilagođeni filtar</string>
     <string name="picture_saved">Slika spremljena</string>
-    <string name="dialog_with_checkbox_reset">Ponovno postavi sva poglavlja za ovaj unos</string>
+    <string name="dialog_with_checkbox_reset">Obnovi sva poglavlja za ovaj unos</string>
     <string name="dialog_with_checkbox_remove_description">Ovo će ukloniti datum čitanja ovog poglavlja. Je li to stvarno želiš\?</string>
     <string name="snack_categories_deleted">Izbrisane kategorije</string>
     <string name="error_category_exists">Kategorija s ovim imenom već postoji!</string>
@@ -700,7 +700,7 @@
     <string name="label_started">Započeto</string>
     <string name="label_local">Lokalno</string>
     <string name="action_search_hint">Traži …</string>
-    <string name="pref_library_summary">Kategorije, globalno ažuriranje, listanje poglavlja</string>
+    <string name="pref_library_summary">Kategorije, globalno ažuriranje, prelistavanje poglavlja</string>
     <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije</string>
     <string name="label_stats">Statistike</string>
     <string name="label_downloaded">Preuzeto</string>
@@ -712,13 +712,13 @@
     <string name="pref_security_summary">Zaključavanje aplikacije, siguran zaslon</string>
     <string name="pref_tracking_summary">Jednosmjerna sinkronizacija napretka, poboljšana sinkronizacija</string>
     <string name="action_open_random_manga">Otvori nasumični unos</string>
-    <string name="pref_reset_user_agent_string">Vraćanje zadanog niza korisničkog agenta na izvorno</string>
+    <string name="pref_reset_user_agent_string">Obnovi standardni izraz korisničkog agenta</string>
     <string name="error_user_agent_string_invalid">Nevažeći niz korisničkog agenta</string>
     <string name="pref_invalidate_download_cache_summary">Prisili aplikaciju da ponovno provjeri preuzeta poglavlja</string>
     <string name="pref_user_agent_string">Zadani niz korisničkog agenta</string>
     <string name="error_user_agent_string_blank">Niz korisničkog agenta ne može biti prazan</string>
     <string name="pref_invalidate_download_cache">Poništi indeks preuzimanja</string>
-    <string name="pref_reset_viewer_flags">Resetiraj postavke čitača po nizu</string>
+    <string name="pref_reset_viewer_flags">Obnovi postavke čitača serija</string>
     <string name="cant_open_last_read_chapter">Nije moguće otvoriti posljednje čitanje poglavlja</string>
     <string name="custom_cover">Prilagođena naslovnica</string>
     <string name="description_placeholder">Nema opisa</string>
@@ -745,13 +745,13 @@
     <string name="minute_short">%dm</string>
     <string name="source_empty_screen">Izvor nije pronađen</string>
     <string name="update_already_running">Ažuriranje je već pokrenuto</string>
-    <string name="pref_reset_viewer_flags_error">Nije moguće vratiti izvorne postavke čitača</string>
-    <string name="pref_reset_viewer_flags_success">Sve postavke čitača ponovno su postavljene na izvorno</string>
+    <string name="pref_reset_viewer_flags_error">Neuspjelo obnavljanje postavki čitača</string>
+    <string name="pref_reset_viewer_flags_success">Sve postavke čitača su obnovljene</string>
     <string name="track_remove_date_conf_title">Ukloniti datum\?</string>
     <string name="track_remove_start_date_conf_text">Time ćete ukloniti prethodno odabrani datum početka iz %s</string>
     <string name="track_remove_finish_date_conf_text">Time ćete ukloniti prethodno odabrani datum završetka iz %s</string>
     <string name="source_filter_empty_screen">Nije pronađen instalirani izvor</string>
-    <string name="pref_reset_viewer_flags_summary">Ponovno postavlja način čitanja i usmjerenje svih serija</string>
+    <string name="pref_reset_viewer_flags_summary">Obnavlja modus čitanja i položaj svih serija</string>
     <string name="error_saving_picture">Pogreška pri spremanju slike</string>
     <string name="crash_screen_restart_application">Ponovno pokretanje aplikacije</string>
     <string name="crash_screen_title">Ups!</string>
@@ -798,10 +798,10 @@
     <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
     <string name="pref_debug_info">Informacije otklanjanja grešaka</string>
     <string name="pref_library_columns_per_row">%d po retku</string>
-    <string name="pref_chapter_swipe_start">Povuci prstom ulijevo</string>
+    <string name="pref_chapter_swipe_start">Prelistaj ulijevo</string>
     <string name="pref_double_tap_zoom">Dodirni dvaput za zumiranje</string>
-    <string name="pref_chapter_swipe">Listanje u poglavljima</string>
-    <string name="pref_chapter_swipe_end">Povuci prstom udesno</string>
+    <string name="pref_chapter_swipe">Prelistaj poglavlja</string>
+    <string name="pref_chapter_swipe_end">Prelistaj udesno</string>
     <string name="action_set_interval">Postavi interval</string>
     <string name="action_filter_interval_custom">Prilagođeni interval dohvaćanja</string>
     <string name="action_filter_interval_long">Mjesečno dohvaćanje (28 dana)</string>
@@ -831,4 +831,6 @@
     <string name="action_filter_interval_passed">Prekoraöeno razdoblje provjere</string>
     <string name="action_filter_interval_late">Provjera zadnjih 10 i više dana</string>
     <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
+    <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
+    <string name="licensed_manga_chapters_error">Licencirano – Nema poglavlja za prikaz</string>
 </resources>

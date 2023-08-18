@@ -80,7 +80,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
-    <string name="pref_update_only_non_completed">已完結的作品</string>
+    <string name="pref_update_only_non_completed">連載已完結</string>
     <string name="default_category">預設類別</string>
     <string name="default_category_summary">總是詢問</string>
     <string name="ext_update">更新</string>
@@ -190,7 +190,7 @@
     <string name="zoom_start_left">左邊</string>
     <string name="zoom_start_right">右邊</string>
     <string name="zoom_start_center">中間</string>
-    <string name="pref_restore_backup_summ">由備份檔案還原書櫃內容</string>
+    <string name="pref_restore_backup_summ">由備份檔還原書櫃內容</string>
     <string name="used_cache">已使用：%1$s</string>
     <string name="cache_deleted">已清除快取，%1$d 個檔案已被刪除</string>
     <string name="cache_delete_error">清除時發生錯誤</string>
@@ -230,7 +230,7 @@
     <string name="track_status">狀態</string>
     <string name="decode_image_error">圖片無法載入</string>
     <string name="notification_first_add_to_library">請先將作品收藏至書櫃</string>
-    <string name="file_select_backup">選擇備份檔案</string>
+    <string name="file_select_backup">選擇備份檔</string>
     <string name="information_empty_category">尚無任何類別，輕觸新增按鈕即可建立類別以組織你的書櫃。</string>
     <string name="download_notifier_downloader_title">下載管理員</string>
     <string name="download_unread">未讀</string>
@@ -333,7 +333,7 @@
     <string name="gray_background">灰色</string>
     <string name="pref_category_display">檢視</string>
     <string name="action_display_comfortable_grid">鬆散格狀</string>
-    <string name="pref_category_for_this_series">適用於這套叢書</string>
+    <string name="pref_category_for_this_series">套用於這部作品</string>
     <string name="pref_category_reading">翻閱</string>
     <string name="pref_category_library_update">全域更新</string>
     <string name="battery_optimization_disabled">已停用電池效能最佳化</string>
@@ -528,7 +528,7 @@
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>
-    <string name="cancel_all_for_series">取消此叢書</string>
+    <string name="cancel_all_for_series">取消此作品</string>
     <string name="automatic_background">自動</string>
     <string name="pref_grayscale">灰階</string>
     <string name="notification_incognito_text">停用無痕模式</string>
@@ -610,7 +610,7 @@
     <string name="database_clean">無須清理</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
-    <string name="pref_update_only_completely_read">有未讀的章節</string>
+    <string name="pref_update_only_completely_read">有未讀章節</string>
     <string name="pref_library_update_manga_restriction">欲略過更新的作品</string>
     <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
@@ -622,16 +622,16 @@
     <string name="pref_landscape_zoom">自動縮放寬頁</string>
     <string name="pref_navigate_pan">導覽寬頁時先平移後翻頁</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
-    <string name="pref_update_only_started">無已讀的章節</string>
-    <string name="skipped_reason_completed">由於叢書連載已完結，因此略過</string>
-    <string name="skipped_reason_not_caught_up">由於尚有未讀的章節，因此略過</string>
-    <string name="skipped_reason_not_started">由於尚無已讀的章節，因此略過</string>
+    <string name="pref_update_only_started">無已讀章節</string>
+    <string name="skipped_reason_completed">由於連載已完結，因此略過</string>
+    <string name="skipped_reason_not_caught_up">由於有未讀章節，因此略過</string>
+    <string name="skipped_reason_not_started">由於無已讀章節，因此略過</string>
     <string name="rotation_reverse_portrait">顛倒直向</string>
     <string name="learn_more">瞭解詳情</string>
     <string name="notification_update_error">%1$d 項更新失敗</string>
     <string name="notification_update_skipped">已略過 %1$d 項更新</string>
     <string name="channel_skipped">略過</string>
-    <string name="action_move_to_top_all_for_series">置頂此叢書</string>
+    <string name="action_move_to_top_all_for_series">置頂此作品</string>
     <string name="disabled_nav">停用</string>
     <string name="empty_backup_error">書櫃中尚無項目可供備份</string>
     <string name="update_check_open">在 GitHub 上檢視</string>
@@ -649,7 +649,7 @@
     <string name="split_tall_images_summary">用以改善閱讀器效能</string>
     <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
     <string name="pref_reset_viewer_flags">重設個別閱讀器設定</string>
-    <string name="pref_reset_viewer_flags_summary">將所有叢書的閱讀模式和螢幕方向恢復為預設值</string>
+    <string name="pref_reset_viewer_flags_summary">將所有作品的閱讀模式和螢幕方向恢復為預設值</string>
     <string name="pref_reset_viewer_flags_success">已重設所有閱讀器設定</string>
     <string name="pref_reset_viewer_flags_error">無法重設閱讀器設定</string>
     <string name="empty_screen">呃…尷尬了</string>
@@ -678,7 +678,7 @@
     <string name="appwidget_unavailable_locked">當需要解鎖才能存取應用程式時，無法使用小工具</string>
     <string name="appwidget_updates_description">查看書櫃中近期更新的作品</string>
     <string name="update_already_running">已在進行更新</string>
-    <string name="error_user_agent_string_blank">使用者代理字串不能為空</string>
+    <string name="error_user_agent_string_blank">使用者代理字串不得為空</string>
     <string name="theme_tidalwave">潮浪</string>
     <string name="download_ahead">預先下載</string>
     <string name="auto_download_while_reading">閱讀時自動下載</string>
@@ -693,7 +693,7 @@
     <string name="updates_last_update_info">書櫃更新於：%s</string>
     <string name="popular">熱門</string>
     <string name="missing_storage_permission">未被授予儲存空間權限</string>
-    <string name="skipped_reason_not_always_update">由於叢書無須更新，因此略過</string>
+    <string name="skipped_reason_not_always_update">由於作品無須更新，因此略過</string>
     <string name="action_search_hint">搜尋…</string>
     <string name="pref_reader_summary">閱讀模式、檢視、導覽</string>
     <string name="pref_appearance_summary">主題、日期格式</string>
@@ -786,17 +786,19 @@
     <string name="action_sort_next_updated">下次預期更新</string>
     <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_only_in_release_period">超出預期發行期間</string>
+    <string name="pref_update_only_in_release_period">未臨出刊日</string>
     <plurals name="day">
         <item quantity="other">%d 天</item>
     </plurals>
     <string name="manga_display_modified_interval_title">設定為每個</string>
     <string name="manga_modify_calculated_interval_title">自訂刊期</string>
-    <string name="skipped_reason_not_in_release_period">由於非為預期出刊日，因此略過</string>
+    <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
     <string name="library_sync_complete">書櫃同步完成</string>
     <string name="download_cache_invalidated">已清除下載索引</string>
     <string name="information_cloudflare_help">查看 Cloudflare 相關說明</string>
     <string name="track_activity_name">登入歷程平台</string>
+    <string name="create_backup_file_error">無法建立備份檔</string>
+    <string name="licensed_manga_chapters_error">已有正版，沒有章節可供顯示</string>
 </resources>

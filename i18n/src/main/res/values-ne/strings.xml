@@ -67,9 +67,9 @@
     <string name="action_remove_bookmark">अध्यायमा पुस्तकचिनो हटाउनुहोस्</string>
     <string name="action_bookmark">अध्यायमा पुस्तकचिनो लगाउनुहोस्</string>
     <string name="action_download">डाउनलोड</string>
-    <string name="action_mark_previous_as_read">अघिल्लोलाई पढिएको चिनो लगाउनुहोस्</string>
-    <string name="action_mark_as_unread">नपढिएको चिनो लगाउनुहोस्</string>
-    <string name="action_mark_as_read">पढिसकेको चिनो लगाउनुहोस्</string>
+    <string name="action_mark_previous_as_read">अघिल्लोलाई पढिएको चिन्ह लगाउनुहोस्</string>
+    <string name="action_mark_as_unread">नपढिएको चिन्ह लगाउनुहोस्</string>
+    <string name="action_mark_as_read">पढिसकेको चिन्ह लगाउनुहोस्</string>
     <string name="action_select_all">सबै चयन गर्नुहोस्</string>
     <string name="action_global_search">ग्लोबल खोज</string>
     <string name="action_search_settings">सेटिङमा खोज्नुहोस्</string>
@@ -217,7 +217,7 @@
     <string name="pref_true_color_summary">ब्यान्डिङ घटाउँछ, तर कार्यसम्पादनलाई असर गर्न सक्छ</string>
     <string name="on">अन</string>
     <string name="pref_custom_brightness">कस्टम चमक</string>
-    <string name="pref_skip_read_chapters">पढिएको चिनो लगाइएका अध्यायहरू छोड्नुहोस्</string>
+    <string name="pref_skip_read_chapters">पढिएको चिन्ह लगाइएका अध्यायहरू छोड्नुहोस्</string>
     <string name="pref_reader_navigation">नेभिगेसन</string>
     <string name="pref_read_with_volume_keys">भोल्युम कीहरू</string>
     <string name="tapping_inverted_vertical">ठाडो</string>
@@ -373,7 +373,7 @@
     <string name="pref_lowest">सबैभन्दा कम</string>
     <string name="pref_category_delete_chapters">अध्यायहरू हटाउनुहोस्</string>
     <string name="custom_dir">कस्टम स्थान</string>
-    <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिनो लगाइएपछि</string>
+    <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिन्ह लगाइएपछि</string>
     <string name="pref_remove_after_read">पढिसकेपछि स्वचालित रूपमा हटाउनुहोस्</string>
     <string name="save_chapter_as_cbz">CBZ अभिलेख को रूपमा सेभ गर्नुहोस्</string>
     <string name="fourth_to_last">अन्तिम पढिएको अध्याय भन्दा ३ अध्याय अघि</string>
@@ -482,8 +482,8 @@
     <string name="pref_clear_database">डेटाबेस खाली गर्नुहोस्</string>
     <string name="pref_verbose_logging">वर्बोज लगिङ</string>
     <string name="username">युजरनेम</string>
-    <string name="login">लग-इन</string>
-    <string name="login_success">लग-इन हुनुहुन्छ</string>
+    <string name="login">लगइन</string>
+    <string name="login_success">लगइन हुनुहुन्छ</string>
     <string name="logout_title">%1$s बाट लग-आउट गर्ने हो\?</string>
     <string name="logout">लग-आउट</string>
     <string name="logout_success">तपाई अब लग-आउट हुनुभएको छ</string>
@@ -809,9 +809,12 @@
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
     <string name="action_ok">ठीक छ</string>
     <string name="delete_downloaded">डाउनलोड गरिएको मेट्नुहोस्</string>
-    <string name="has_results">परिणामहरू छन्</string>
+    <string name="has_results">परिणामहरू भएको</string>
     <string name="library_sync_complete">पुस्तकालय सिङ्क सम्पन्न भयो</string>
     <string name="syncing_library">पुस्तकालय सिङ्क गर्दै</string>
     <string name="download_cache_invalidated">डाउनलोड इन्डेक्स अवैध भयो</string>
     <string name="information_cloudflare_help">Cloudflare सम्बन्धित मद्दतको लागि यहाँ ट्याप गर्नुहोस्</string>
+    <string name="track_activity_name">ट्र्याकिङ लगइन</string>
+    <string name="create_backup_file_error">ब्याकअप फाइल सिर्जना गर्न असफल भयो</string>
+    <string name="licensed_manga_chapters_error">लाइसेन्स प्राप्त - देखाउन को लागि कुनै अध्याय छैन</string>
 </resources>

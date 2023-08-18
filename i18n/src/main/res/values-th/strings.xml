@@ -798,4 +798,7 @@
     <string name="delete_downloaded">ลบการดาวน์โหลด</string>
     <string name="download_cache_invalidated">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
     <string name="information_cloudflare_help">แตะที่นี่เพื่อขอความช่วยเหลือเกี่ยวกับ Cloudflare</string>
+    <string name="create_backup_file_error">ไม่สามารถสร้างไฟล์สำรองข้อมูล</string>
+    <string name="licensed_manga_chapters_error">มีลิขสิทธิ์แล้ว - ไม่มีตอนให้แสดง</string>
+    <string name="track_activity_name">เข้าสู่ระบบการติดตาม</string>
 </resources>

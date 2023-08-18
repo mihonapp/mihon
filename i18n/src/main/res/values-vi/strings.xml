@@ -806,4 +806,18 @@
     <string name="pref_chapter_swipe_end">Thao tác vuốt sang phải</string>
     <string name="pref_chapter_swipe_start">Thao tác vuốt sang trái</string>
     <string name="pref_debug_info">Thông tin Debug</string>
+    <string name="create_backup_file_error">Không thể tạo tệp sao lưu</string>
+    <string name="action_set_interval">Đặt khoảng thời gian</string>
+    <string name="action_ok">OK</string>
+    <string name="syncing_library">Đồng bộ thư viện</string>
+    <string name="library_sync_complete">Hoàn tất đồng bộ hóa thư viện</string>
+    <string name="delete_downloaded">Xóa các chương đã tải xuống</string>
+    <string name="action_filter_interval_custom">Khoảng thời gian cập nhật tùy chỉnh</string>
+    <string name="action_filter_interval_long">Cập nhật hàng tháng (28 ngày)</string>
+    <string name="action_filter_interval_late">Kiểm tra sau +10</string>
+    <string name="action_filter_interval_dropped">Bỏ cuộc\? Trì hoãn 20+ và 2 tháng</string>
+    <string name="action_filter_interval_passed">Thời hạn kiểm tra đã qua</string>
+    <string name="action_sort_next_updated">Cập nhật dự kiến tiếp theo</string>
+    <string name="information_cloudflare_help">Nhấn vào đây để được trợ giúp về Cloudflare</string>
+    <string name="pref_update_only_in_release_period">Chưa công bố</string>
 </resources>

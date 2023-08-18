@@ -796,7 +796,7 @@
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <plurals name="day">
         <item quantity="one">1 araw</item>
-        <item quantity="other">% (mga) araw</item>
+        <item quantity="other">%d (mga) araw</item>
     </plurals>
     <string name="manga_display_interval_title">Tantyahin bawat</string>
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
@@ -814,4 +814,7 @@
     <string name="library_sync_complete">Natapos na ang pag-sync ng aklatan</string>
     <string name="information_cloudflare_help">I-tap dito para sa tulong sa Cloudflare</string>
     <string name="download_cache_invalidated">Napawalang-bisa ang indise ng mga download</string>
+    <string name="create_backup_file_error">Hindi makalikha ng backup file</string>
+    <string name="track_activity_name">Pag-login sa tracking</string>
+    <string name="licensed_manga_chapters_error">Lisensyado - Walang mapakitang kabanata</string>
 </resources>

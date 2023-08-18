@@ -812,4 +812,9 @@
     <string name="has_results">Té resultats</string>
     <string name="syncing_library">S’està sincronitzant la biblioteca</string>
     <string name="library_sync_complete">S’ha completat la sincronització de la biblioteca</string>
+    <string name="create_backup_file_error">No s’ha pogut crear un fitxer de còpia de seguretat</string>
+    <string name="licensed_manga_chapters_error">Llicenciat: no hi ha capítols a mostrar</string>
+    <string name="track_activity_name">Inici de sessió al seguiment</string>
+    <string name="download_cache_invalidated">S’ha invalidat l\'índex de baixades</string>
+    <string name="information_cloudflare_help">Premeu aquí per a obtenir ajuda amb el Cloudflare</string>
 </resources>
