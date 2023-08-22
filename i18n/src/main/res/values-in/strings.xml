@@ -799,4 +799,6 @@
     <string name="information_cloudflare_help">Ketuk di sini untuk bantuan dengan Cloudflare</string>
     <string name="download_cache_invalidated">Indeks unduhan tidak valid</string>
     <string name="track_activity_name">Pelacak login</string>
+    <string name="create_backup_file_error">Tidak dapat membuat file cadangan</string>
+    <string name="licensed_manga_chapters_error">Lisensi - Tidak ada chapter untuk ditampilkan</string>
 </resources>

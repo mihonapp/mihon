@@ -643,4 +643,15 @@
     <string name="battery_not_low">Bateria baxu ez dagoenean</string>
     <string name="ext_info_language">Hizkuntza</string>
     <string name="action_search_hint">Bilatu…</string>
+    <string name="delete_category_confirmation">\"%s\" kategoria ezabatu nahi duzu\?</string>
+    <string name="action_remove_everything">Guztia kendu</string>
+    <string name="label_stats">Estatistikak</string>
+    <string name="label_started">Hasia</string>
+    <string name="label_local">Lokala</string>
+    <string name="label_downloaded">Deskargatuak</string>
+    <string name="action_filter_interval_long">Jaso hilabetero (28 egun)</string>
+    <string name="action_copy_to_clipboard">Kopiatu arbelera</string>
+    <string name="action_not_now">Orain ez</string>
+    <string name="delete_downloaded">Ezabatu deskargatuak</string>
+    <string name="pref_library_columns_per_row">%d ilara bakoitzeko</string>
 </resources>

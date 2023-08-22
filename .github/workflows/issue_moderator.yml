@@ -33,6 +33,13 @@ jobs:
                 "regex": "^(?!.*myanimelist.*).*(aniyomi|anime).*$",
                 "ignoreCase": true,
                 "message": "Tachiyomi does not support anime, and has no plans to support anime. In addition Tachiyomi is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
+              },
+              {
+                "type": "both",
+                "regex": ".*(?:fail(?:ed|ure|s)?|can\\s*(?:no|')?t|(?:not|un).*able|(?<!n[o']?t )blocked by|error) (?:to )?(?:get past|by ?pass|penetrate)?.*cloud ?fl?are.*",
+                "ignoreCase": true,
+                "labels": ["Cloudflare protected"],
+                "message": "Refer to the **Solving Cloudflare issues** section at https://tachiyomi.org/help/guides/troubleshooting/#solving-cloudflare-issues. If it doesn't work, migrate to other sources or wait until they lower their protection."
               }
             ]
           auto-close-ignore-label: do-not-autoclose

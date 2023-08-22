@@ -221,7 +221,7 @@
     <string name="confirm_delete_chapters">Sigur doriți să ștergeți capitolele selectate\?</string>
     <string name="manga_tracking_tab">Urmărite</string>
     <string name="reading">Citind</string>
-    <string name="completed">Terminată</string>
+    <string name="completed">Completată</string>
     <string name="dropped">Abandonată</string>
     <string name="on_hold">În așteptare</string>
     <string name="plan_to_read">Planificat pentru citit</string>
@@ -242,7 +242,7 @@
     <string name="cover_updated">Copertă actualizată</string>
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Capitolul următor nu a fost găsit</string>
-    <string name="decode_image_error">Imaginea nu a putut fi încărcată</string>
+    <string name="decode_image_error">Imaginea nu a putut să se încarce</string>
     <string name="confirm_set_image_as_cover">Folosiți această imagine ca și copertă\?</string>
     <string name="transition_finished">Terminat:</string>
     <string name="transition_current">Actual:</string>
@@ -313,7 +313,7 @@
     <string name="theme_system">Tema sistemului</string>
     <string name="pref_manage_notifications">Gestionați notificările</string>
     <string name="pref_category_security">Securitate</string>
-    <string name="lock_with_biometrics">Deblocarea este obligatorie</string>
+    <string name="lock_with_biometrics">Necesită deblocare</string>
     <string name="unlock_app">Deblochează Tachiyomi</string>
     <string name="action_sort_latest_chapter">Ultimul capitol</string>
     <string name="lock_when_idle">Blocați când este inactiv</string>
@@ -481,9 +481,9 @@
     <string name="no_pinned_sources">Nu aveți surse fixate</string>
     <string name="no_chapters_error">Nu a fost găsit niciun capitol</string>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Sărind capitolul %d, fie că sursa lipsește, fie că acesta a fost filtrat</item>
-        <item quantity="few">Sărirea a %d capitole, fie că sursa le lipsește, fie că au fost filtrate</item>
-        <item quantity="other">Se trece peste capitolele %d, fie sursa nu le are, fie au fost filtrate</item>
+        <item quantity="one">Omiterea %d capitol, fie că sursa lipsește, fie că a fost filtrată</item>
+        <item quantity="few">Omiterea a %d capitole, fie că sursa nu le are, fie că au fost filtrate</item>
+        <item quantity="other">Omiterea a %d capitole, fie că sursa nu le are, fie că au fost filtrate</item>
     </plurals>
     <string name="chapter_settings_updated">S-au actualizat setările implicite ale capitolului</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
@@ -567,10 +567,10 @@
     <string name="theme_strawberrydaiquiri">Daiquiri de căpșuni</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_yinyang">Yin și Yang</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">Yoțuba</string>
     <string name="publishing_finished">Editare finalizată</string>
     <string name="cancelled">Anulat</string>
-    <string name="on_hiatus">În pauză</string>
+    <string name="on_hiatus">În hiatus</string>
     <string name="notification_update_skipped">%1$d actualizari sarite</string>
     <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
     <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
@@ -675,7 +675,7 @@
     <string name="pref_create_folder_per_manga">Salvează pagini în dosare separate</string>
     <string name="description_placeholder">Fără descriere</string>
     <string name="notification_incognito_text">Dezactivează modul incognito</string>
-    <string name="download_ahead_info">Funcționează numai pentru intrările din bibliotecă și dacă capitolul curent și următorul sunt deja descărcate</string>
+    <string name="download_ahead_info">Funcționează numai dacă capitolul curent + următorul sunt deja descărcate.</string>
     <string name="library_errors_help">Pentru ajutor în cum se repară erori de actualizări de bibliotecă, vezi %1$s</string>
     <string name="pref_grayscale">Alb-negru</string>
     <string name="rotation_landscape">Peisaj</string>
@@ -734,7 +734,7 @@
     <string name="pref_advanced_summary">Golirea registrelor de eroare, optimizări ale bateriei</string>
     <string name="pref_user_agent_string">Șirul implicit de agent al utilizatorului</string>
     <string name="error_user_agent_string_blank">Șirul agentului de utilizator nu poate fi gol</string>
-    <string name="crash_screen_title">A avut loc o eroare neașteptată</string>
+    <string name="crash_screen_title">Ups!</string>
     <string name="crash_screen_restart_application">Reporniți aplicația</string>
     <string name="pref_navigate_pan">Panoramare a imaginii la scară largă la atingere</string>
     <string name="action_display_show_continue_reading_button">Afișați butonul de continuare a cititului</string>

@@ -799,4 +799,5 @@
     <string name="information_cloudflare_help">点击这里查看 Cloudflare 帮助</string>
     <string name="download_cache_invalidated">已清除下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
+    <string name="create_backup_file_error">无法创建备份文件</string>
 </resources>

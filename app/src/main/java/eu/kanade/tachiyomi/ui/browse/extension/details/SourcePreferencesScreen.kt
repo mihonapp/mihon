@@ -147,7 +147,7 @@ class SourcePreferencesFragment : PreferenceFragmentCompat() {
         sourceScreen.forEach { pref ->
             pref.isIconSpaceReserved = false
             pref.isSingleLineTitle = false
-            if (pref is DialogPreference) {
+            if (pref is DialogPreference && pref.dialogTitle.isNullOrEmpty()) {
                 pref.dialogTitle = pref.title
             }
 

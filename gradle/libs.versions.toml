@@ -58,7 +58,7 @@ flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.4"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.6"
 compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
 swipe = "me.saket.swipe:swipe:1.2.0"
@@ -85,7 +85,7 @@ sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref 
 
 junit = "org.junit.jupiter:junit-jupiter:5.10.0"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
-mockk = "io.mockk:mockk:1.13.5"
+mockk = "io.mockk:mockk:1.13.7"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }

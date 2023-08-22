@@ -831,4 +831,6 @@
     <string name="information_cloudflare_help">Toque aqui para obter ajuda com o Cloudflare</string>
     <string name="download_cache_invalidated">Índice de downloads invalidado</string>
     <string name="track_activity_name">Login do monitoramento</string>
+    <string name="create_backup_file_error">Não foi possível criar o arquivo do backup</string>
+    <string name="licensed_manga_chapters_error">Licenciado - Nenhum capítulo para mostrar</string>
 </resources>

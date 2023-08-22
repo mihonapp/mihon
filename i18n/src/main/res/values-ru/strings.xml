@@ -846,4 +846,7 @@
     <string name="syncing_library">Синхронизация библиотеки</string>
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
     <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
+    <string name="create_backup_file_error">Не удалось создать файл резервной копии</string>
+    <string name="licensed_manga_chapters_error">Лицензировано - Нет глав для показа</string>
+    <string name="track_activity_name">Вход в сервис отслеживания</string>
 </resources>

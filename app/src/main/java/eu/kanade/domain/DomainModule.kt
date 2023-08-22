@@ -124,7 +124,7 @@ class DomainModule : InjektModule {
         addFactory { UpdateChapter(get()) }
         addFactory { SetReadStatus(get(), get(), get(), get()) }
         addFactory { ShouldUpdateDbChapter() }
-        addFactory { SyncChaptersWithSource(get(), get(), get(), get()) }
+        addFactory { SyncChaptersWithSource(get(), get(), get(), get(), get(), get(), get()) }
         addFactory { SyncChaptersWithTrackServiceTwoWay(get(), get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }

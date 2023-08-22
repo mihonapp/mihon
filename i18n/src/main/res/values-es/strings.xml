@@ -862,4 +862,6 @@
     <string name="information_cloudflare_help">Toca aquí para solucionar problemas de acceso con Cloudflare</string>
     <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
     <string name="track_activity_name">Inicio de sesión de seguimiento</string>
+    <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
+    <string name="licensed_manga_chapters_error">Con licencia oficial, sin capítulos que mostrar</string>
 </resources>
