@@ -1,7 +1,6 @@
 package eu.kanade.core.util
 
 import androidx.compose.ui.util.fastForEach
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -18,15 +17,6 @@ fun <T : R, R : Any> List<T>.insertSeparators(
         separator?.let(newList::add)
     }
     return newList
-}
-
-/**
- * Returns a new map containing only the key entries of [transform] that are not null.
- */
-inline fun <K, V, R> Map<out K, V>.mapNotNullKeys(transform: (Map.Entry<K?, V>) -> R?): ConcurrentHashMap<R, V> {
-    val mutableMap = ConcurrentHashMap<R, V>()
-    forEach { element -> transform(element)?.let { mutableMap[it] = element.value } }
-    return mutableMap
 }
 
 fun <E> HashSet<E>.addOrRemove(value: E, shouldAdd: Boolean) {
