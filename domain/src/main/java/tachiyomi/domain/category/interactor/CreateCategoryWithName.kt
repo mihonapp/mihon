@@ -14,7 +14,7 @@ class CreateCategoryWithName(
 
     private val initialFlags: Long
         get() {
-            val sort = preferences.librarySortingMode().get()
+            val sort = preferences.sortingMode().get()
             return sort.type.flag or sort.direction.flag
         }
 

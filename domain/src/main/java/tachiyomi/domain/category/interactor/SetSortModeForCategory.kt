@@ -23,7 +23,7 @@ class SetSortModeForCategory(
                 ),
             )
         } else {
-            preferences.librarySortingMode().set(LibrarySort(type, direction))
+            preferences.sortingMode().set(LibrarySort(type, direction))
             categoryRepository.updateAllFlags(flags)
         }
     }
