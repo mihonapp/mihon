@@ -6,20 +6,19 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import rx.Observable
 
-@Suppress("OverridingDeprecatedMember")
 class StubSource(
     override val id: Long,
     override val lang: String,
     override val name: String,
 ) : Source {
 
-    val isInvalid: Boolean = name.isBlank() || lang.isBlank()
+    private val isInvalid: Boolean = name.isBlank() || lang.isBlank()
 
     override suspend fun getMangaDetails(manga: SManga): SManga {
         throw SourceNotInstalledException()
     }
 
-    @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getMangaDetails"))
+    @Deprecated("Use the non-RxJava API instead", replaceWith = ReplaceWith("getMangaDetails"))
     override fun fetchMangaDetails(manga: SManga): Observable<SManga> {
         return Observable.error(SourceNotInstalledException())
     }
@@ -28,7 +27,7 @@ class StubSource(
         throw SourceNotInstalledException()
     }
 
-    @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getChapterList"))
+    @Deprecated("Use the non-RxJava API instead", replaceWith = ReplaceWith("getChapterList"))
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         return Observable.error(SourceNotInstalledException())
     }
@@ -37,7 +36,7 @@ class StubSource(
         throw SourceNotInstalledException()
     }
 
-    @Deprecated("Use the 1.x API instead", replaceWith = ReplaceWith("getPageList"))
+    @Deprecated("Use the non-RxJava API instead", replaceWith = ReplaceWith("getPageList"))
     override fun fetchPageList(chapter: SChapter): Observable<List<Page>> {
         return Observable.error(SourceNotInstalledException())
     }
