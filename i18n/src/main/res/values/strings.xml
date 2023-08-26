@@ -606,8 +606,6 @@
     <!-- missing prompt after Compose rewrite #7901 -->
     <string name="no_more_results">No more results</string>
     <string name="no_results_found">No results found</string>
-    <!-- Do not translate "WebView" -->
-    <string name="http_error_hint">Check website in WebView</string>
     <string name="licensed_manga_chapters_error">Licensed - No chapters to show</string>
     <string name="local_source">Local source</string>
     <string name="other_source">Other</string>
@@ -947,4 +945,10 @@
     <string name="appwidget_updates_description">See your recently updated library entries</string>
     <string name="appwidget_unavailable_locked">Widget not available when app lock is enabled</string>
     <string name="remove_manga">You are about to remove \"%s\" from your library</string>
+
+    <!-- Common exceptions -->
+    <!-- Do not translate "WebView" -->
+    <string name="exception_http">HTTP %d, check website in WebView</string>
+    <string name="exception_offline">No Internet connection</string>
+    <string name="exception_unknown_host">Couldn\'t reach %s</string>
 </resources>
