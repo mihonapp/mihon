@@ -65,10 +65,10 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.main.DeepLinkActivity"
+            android:name=".ui.deeplink.DeepLinkActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.NoDisplay"
-            android:label="@string/action_global_search"
+            android:label="@string/action_search"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
