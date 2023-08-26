@@ -24,33 +24,31 @@ class TrackChapter(
     suspend fun await(context: Context, mangaId: Long, chapterNumber: Double) = coroutineScope {
         launchNonCancellable {
             val tracks = getTracks.await(mangaId)
-
             if (tracks.isEmpty()) return@launchNonCancellable
 
             tracks.mapNotNull { track ->
                 val service = trackManager.getService(track.syncId)
-                if (service != null && service.isLogged && chapterNumber > track.lastChapterRead) {
-                    val updatedTrack = track.copy(lastChapterRead = chapterNumber)
+                if (service == null || !service.isLoggedIn || chapterNumber <= track.lastChapterRead) {
+                    return@mapNotNull null
+                }
 
-                    async {
-                        runCatching {
-                            try {
-                                service.update(updatedTrack.toDbTrack(), true)
-                                insertTrack.await(updatedTrack)
-                            } catch (e: Exception) {
-                                delayedTrackingStore.addItem(updatedTrack)
-                                DelayedTrackingUpdateJob.setupTask(context)
-                                throw e
-                            }
+                val updatedTrack = track.copy(lastChapterRead = chapterNumber)
+                async {
+                    runCatching {
+                        try {
+                            service.update(updatedTrack.toDbTrack(), true)
+                            insertTrack.await(updatedTrack)
+                        } catch (e: Exception) {
+                            delayedTrackingStore.addItem(updatedTrack)
+                            DelayedTrackingUpdateJob.setupTask(context)
+                            throw e
                         }
                     }
-                } else {
-                    null
                 }
             }
                 .awaitAll()
                 .mapNotNull { it.exceptionOrNull() }
-                .forEach { logcat(LogPriority.INFO, it) }
+                .forEach { logcat(LogPriority.WARN, it) }
         }
     }
 }

@@ -48,7 +48,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                 .forEach { track ->
                     try {
                         val service = trackManager.getService(track.syncId)
-                        if (service != null && service.isLogged) {
+                        if (service != null && service.isLoggedIn) {
                             logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.id}, last chapter read: ${track.lastChapterRead}" }
                             service.update(track.toDbTrack(), true)
                             insertTrack.await(track)

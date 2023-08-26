@@ -135,7 +135,7 @@ object Migrations {
                 // Force MAL log out due to login flow change
                 // v52: switched from scraping to WebView
                 // v53: switched from WebView to OAuth
-                if (trackManager.myAnimeList.isLogged) {
+                if (trackManager.myAnimeList.isLoggedIn) {
                     trackManager.myAnimeList.logout()
                     context.toast(R.string.myanimelist_relogin)
                 }

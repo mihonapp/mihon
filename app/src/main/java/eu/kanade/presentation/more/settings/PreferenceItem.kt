@@ -164,7 +164,7 @@ internal fun PreferenceItem(
                     TrackingPreferenceWidget(
                         service = this,
                         checked = uName.isNotEmpty(),
-                        onClick = { if (isLogged) item.logout() else item.login() },
+                        onClick = { if (isLoggedIn) item.logout() else item.login() },
                     )
                 }
             }
