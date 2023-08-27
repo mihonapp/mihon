@@ -39,9 +39,8 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
+import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.model.toDbTrack
-import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.track.TrackChapterSelector
 import eu.kanade.presentation.track.TrackDateSelector
@@ -74,7 +73,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
-import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
@@ -208,7 +206,7 @@ data class TrackInfoDialogHomeScreen(
                 val manga = Injekt.get<GetManga>().await(mangaId) ?: return@launchNonCancellable
                 try {
                     val matchResult = item.service.match(manga) ?: throw Exception()
-                    item.service.registerTracking(matchResult, mangaId)
+                    item.service.register(matchResult, mangaId)
                 } catch (e: Exception) {
                     withUIContext { Injekt.get<Application>().toast(R.string.error_no_match) }
                 }
@@ -216,38 +214,25 @@ data class TrackInfoDialogHomeScreen(
         }
 
         private suspend fun refreshTrackers() {
-            val insertTrack = Injekt.get<InsertTrack>()
-            val syncChaptersWithTrackServiceTwoWay = Injekt.get<SyncChaptersWithTrackServiceTwoWay>()
+            val refreshTracks = Injekt.get<RefreshTracks>()
             val context = Injekt.get<Application>()
 
-            try {
-                val trackItems = getTracks.await(mangaId).mapToTrackItem()
-                for (trackItem in trackItems) {
-                    try {
-                        val track = trackItem.track ?: continue
-                        val domainTrack = trackItem.service.refresh(track.toDbTrack()).toDomainTrack() ?: continue
-                        insertTrack.await(domainTrack)
-                        syncChaptersWithTrackServiceTwoWay.await(mangaId, domainTrack, trackItem.service)
-                    } catch (e: Exception) {
-                        logcat(
-                            LogPriority.ERROR,
-                            e,
-                        ) { "Failed to refresh track data mangaId=$mangaId for service ${trackItem.service.id}" }
-                        withUIContext {
-                            context.toast(
-                                context.getString(
-                                    R.string.track_error,
-                                    context.getString(trackItem.service.nameRes()),
-                                    e.message,
-                                ),
-                            )
-                        }
+            refreshTracks.await(mangaId)
+                .filter { it.first != null }
+                .forEach { (track, e) ->
+                    logcat(LogPriority.ERROR, e) {
+                        "Failed to refresh track data mangaId=$mangaId for service ${track!!.id}"
+                    }
+                    withUIContext {
+                        context.toast(
+                            context.getString(
+                                R.string.track_error,
+                                track!!.name,
+                                e.message,
+                            ),
+                        )
                     }
                 }
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR, e) { "Failed to refresh track data mangaId=$mangaId" }
-                withUIContext { context.toast(e.message) }
-            }
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
@@ -581,7 +566,7 @@ private data class TrackDateRemoverScreen(
                 )
             },
             text = {
-                val serviceName = stringResource(sm.getServiceNameRes())
+                val serviceName = sm.getServiceName()
                 Text(
                     text = if (start) {
                         stringResource(R.string.track_remove_start_date_conf_text, serviceName)
@@ -618,7 +603,7 @@ private data class TrackDateRemoverScreen(
         private val start: Boolean,
     ) : ScreenModel {
 
-        fun getServiceNameRes() = service.nameRes()
+        fun getServiceName() = service.name
 
         fun removeDate() {
             coroutineScope.launchNonCancellable {
@@ -703,7 +688,7 @@ data class TrackServiceSearchScreen(
         }
 
         fun registerTracking(item: TrackSearch) {
-            coroutineScope.launchNonCancellable { service.registerTracking(item, mangaId) }
+            coroutineScope.launchNonCancellable { service.register(item, mangaId) }
         }
 
         fun updateSelection(selected: TrackSearch) {
@@ -734,7 +719,7 @@ private data class TrackServiceRemoveScreen(
                 service = Injekt.get<TrackManager>().getService(serviceId)!!,
             )
         }
-        val serviceName = stringResource(sm.getServiceNameRes())
+        val serviceName = sm.getServiceName()
         var removeRemoteTrack by remember { mutableStateOf(false) }
         AlertDialogContent(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
@@ -799,7 +784,7 @@ private data class TrackServiceRemoveScreen(
         private val deleteTrack: DeleteTrack = Injekt.get(),
     ) : ScreenModel {
 
-        fun getServiceNameRes() = service.nameRes()
+        fun getServiceName() = service.name
 
         fun isServiceDeletable() = service is DeletableTrackService
 

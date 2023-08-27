@@ -11,12 +11,9 @@ import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.manga.model.Manga as DomainManga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Suwayomi(id: Long) : TrackService(id), EnhancedTrackService {
+class Suwayomi(id: Long) : TrackService(id, "Suwayomi"), EnhancedTrackService {
 
     val api by lazy { TachideskApi() }
-
-    @StringRes
-    override fun nameRes() = R.string.tracker_suwayomi
 
     override fun getLogo() = R.drawable.ic_tracker_suwayomi
 

@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.data.track.mangaupdates.dto.copyTo
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.toTrackSearch
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 
-class MangaUpdates(id: Long) : TrackService(id), DeletableTrackService {
+class MangaUpdates(id: Long) : TrackService(id, "MangaUpdates"), DeletableTrackService {
 
     companion object {
         const val READING_LIST = 0
@@ -23,9 +23,6 @@ class MangaUpdates(id: Long) : TrackService(id), DeletableTrackService {
     private val interceptor by lazy { MangaUpdatesInterceptor(this) }
 
     private val api by lazy { MangaUpdatesApi(interceptor, client) }
-
-    @StringRes
-    override fun nameRes(): Int = R.string.tracker_manga_updates
 
     override fun getLogo(): Int = R.drawable.ic_manga_updates
 

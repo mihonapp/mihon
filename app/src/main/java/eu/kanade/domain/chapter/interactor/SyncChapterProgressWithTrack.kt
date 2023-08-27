@@ -11,7 +11,7 @@ import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
 
-class SyncChaptersWithTrackServiceTwoWay(
+class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
     private val insertTrack: InsertTrack,
     private val getChapterByMangaId: GetChapterByMangaId,
