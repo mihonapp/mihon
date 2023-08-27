@@ -152,7 +152,9 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
 class GoogleDriveService(private val context: Context) {
     var googleDriveService: Drive? = null
-    private val redirectUri = "eu.kanade.google.oauth:/oauth2redirect"
+        companion object {
+        const val REDIRECT_URI = "eu.kanade.google.oauth:/oauth2redirect"
+    }
     private val syncPreferences = Injekt.get<SyncPreferences>()
 
     init {
@@ -210,7 +212,7 @@ class GoogleDriveService(private val context: Context) {
         ).setAccessType("offline").build()
 
         return flow.newAuthorizationUrl()
-            .setRedirectUri(redirectUri)
+            .setRedirectUri(REDIRECT_URI)
             .setApprovalPrompt("force")
             .build()
     }
@@ -313,7 +315,7 @@ class GoogleDriveService(private val context: Context) {
             secrets.installed.clientId,
             secrets.installed.clientSecret,
             authorizationCode,
-            redirectUri,
+            REDIRECT_URI,
         ).setGrantType("authorization_code").execute()
 
         try {
