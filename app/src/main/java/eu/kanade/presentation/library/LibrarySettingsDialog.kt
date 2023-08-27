@@ -127,7 +127,7 @@ private fun ColumnScope.FilterPage(
             trackServices.map { service ->
                 val filterTracker by screenModel.libraryPreferences.filterTracking(service.id.toInt()).collectAsState()
                 TriStateItem(
-                    label = stringResource(service.nameRes()),
+                    label = service.name,
                     state = filterTracker,
                     onClick = { screenModel.toggleTracker(service.id.toInt()) },
                 )

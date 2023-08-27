@@ -17,7 +17,7 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 
-const val READLIST_API = "/api/v1/readlists"
+private const val READLIST_API = "/api/v1/readlists"
 
 class KomgaApi(private val client: OkHttpClient) {
 

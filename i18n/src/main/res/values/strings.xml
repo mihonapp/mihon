@@ -736,15 +736,6 @@
     <string name="are_you_sure">Are you sure?</string>
 
     <!-- Tracking Screen -->
-    <string name="tracker_anilist" translatable="false">AniList</string>
-    <string name="tracker_myanimelist" translatable="false">MyAnimeList</string>
-    <string name="tracker_kitsu" translatable="false">Kitsu</string>
-    <string name="tracker_komga" translatable="false">Komga</string>
-    <string name="tracker_bangumi" translatable="false">Bangumi</string>
-    <string name="tracker_shikimori" translatable="false">Shikimori</string>
-    <string name="tracker_manga_updates" translatable="false">MangaUpdates</string>
-    <string name="tracker_kavita" translatable="false">Kavita</string>
-    <string name="tracker_suwayomi" translatable="false">Suwayomi</string>
     <string name="manga_tracking_tab">Tracking</string>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>

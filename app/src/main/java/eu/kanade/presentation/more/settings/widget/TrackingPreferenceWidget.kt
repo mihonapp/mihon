@@ -40,7 +40,7 @@ fun TrackingPreferenceWidget(
         ) {
             TrackLogoIcon(service)
             Text(
-                text = stringResource(service.nameRes()),
+                text = service.name,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),

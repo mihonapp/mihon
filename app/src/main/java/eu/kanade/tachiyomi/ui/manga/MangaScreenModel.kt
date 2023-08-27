@@ -323,7 +323,7 @@ class MangaScreenModel(
                         launchIO {
                             try {
                                 service.match(manga)?.let { track ->
-                                    (service as TrackService).registerTracking(track, mangaId)
+                                    (service as TrackService).register(track, mangaId)
                                 }
                             } catch (e: Exception) {
                                 logcat(LogPriority.WARN, e) {
