@@ -489,10 +489,10 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                     showPurgeDialog.value = false
                     scope.launch {
                         val result = googleDriveSync.deleteSyncDataFromGoogleDrive()
-                        if (result) {
-                            context.toast(R.string.google_drive_sync_data_purged)
-                        } else {
-                            context.toast(R.string.google_drive_sync_data_not_found)
+                        when (result) {
+                            GoogleDriveSyncService.DeleteSyncDataStatus.NOT_INITIALIZED -> context.toast(R.string.google_drive_not_signed_in)
+                            GoogleDriveSyncService.DeleteSyncDataStatus.NO_FILES -> context.toast(R.string.google_drive_sync_data_not_found)
+                            GoogleDriveSyncService.DeleteSyncDataStatus.SUCCESS -> context.toast(R.string.google_drive_sync_data_purged)
                         }
                     }
                 },

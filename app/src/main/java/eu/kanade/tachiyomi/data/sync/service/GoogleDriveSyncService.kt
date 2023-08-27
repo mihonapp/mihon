@@ -46,6 +46,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         Injekt.get<SyncPreferences>(),
     )
 
+    enum class DeleteSyncDataStatus {
+        NOT_INITIALIZED,
+        NO_FILES,
+        SUCCESS,
+    }
+
     private val remoteFileName = "tachiyomi_sync_data.gz"
 
     private val googleDriveService = GoogleDriveService(context)
@@ -124,12 +130,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         return fileList
     }
 
-    suspend fun deleteSyncDataFromGoogleDrive(): Boolean {
+    suspend fun deleteSyncDataFromGoogleDrive(): DeleteSyncDataStatus {
         val drive = googleDriveService.googleDriveService
 
         if (drive == null) {
             logcat(LogPriority.ERROR) { "Google Drive service not initialized" }
-            return false
+            return DeleteSyncDataStatus.NOT_INITIALIZED
         }
         googleDriveService.refreshToken()
 
@@ -139,12 +145,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
             if (fileList.isNullOrEmpty()) {
                 logcat(LogPriority.DEBUG) { "No sync data file found in Google Drive" }
-                false
+                DeleteSyncDataStatus.NO_FILES
             } else {
                 val fileId = fileList[0].id
                 drive.files().delete(fileId).execute()
                 logcat(LogPriority.DEBUG) { "Deleted sync data file in Google Drive with file ID: $fileId" }
-                true
+                DeleteSyncDataStatus.SUCCESS
             }
         }
     }
