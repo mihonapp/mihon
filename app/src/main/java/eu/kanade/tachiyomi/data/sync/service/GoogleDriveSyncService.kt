@@ -18,6 +18,7 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.sync.models.SyncData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -57,7 +58,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         // Check if the Google Drive service is initialized
         if (drive == null) {
             logcat(LogPriority.ERROR) { "Google Drive service not initialized" }
-            return null
+            throw Exception(context.getString(R.string.google_drive_not_signed_in))
         }
 
         val fileList = getFileList(drive)
@@ -85,7 +86,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         // Check if the Google Drive service is initialized
         if (drive == null) {
             logcat(LogPriority.ERROR) { "Google Drive service not initialized" }
-            return
+            throw Exception(context.getString(R.string.google_drive_not_signed_in))
         }
 
         // delete file if exists
@@ -151,6 +152,9 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
 class GoogleDriveService(private val context: Context) {
     var googleDriveService: Drive? = null
+    companion object {
+        const val REDIRECT_URI = "eu.kanade.google.oauth:/oauth2redirect"
+    }
     private val syncPreferences = Injekt.get<SyncPreferences>()
 
     init {
@@ -208,7 +212,7 @@ class GoogleDriveService(private val context: Context) {
         ).setAccessType("offline").build()
 
         return flow.newAuthorizationUrl()
-            .setRedirectUri("eu.kanade.google.oauth:/oauth2redirect")
+            .setRedirectUri(REDIRECT_URI)
             .setApprovalPrompt("force")
             .build()
     }
@@ -224,6 +228,10 @@ class GoogleDriveService(private val context: Context) {
             .setTransport(NetHttpTransport())
             .setClientSecrets(secrets)
             .build()
+
+        if (syncPreferences.getGoogleDriveRefreshToken() == "") {
+            throw Exception(context.getString(R.string.google_drive_not_signed_in))
+        }
 
         credential.refreshToken = syncPreferences.getGoogleDriveRefreshToken()
 
@@ -246,11 +254,13 @@ class GoogleDriveService(private val context: Context) {
                 // Token refresh failed; handle this situation
                 logcat(LogPriority.ERROR) { "Failed to refresh access token ${e.message}" }
                 logcat(LogPriority.ERROR) { "Google Drive sync will be disabled" }
+                throw e.message?.let { Exception(it) } ?: Exception("Unknown error")
             }
         } catch (e: IOException) {
             // Token refresh failed; handle this situation
             logcat(LogPriority.ERROR) { "Failed to refresh access token ${e.message}" }
             logcat(LogPriority.ERROR) { "Google Drive sync will be disabled" }
+            throw e.message?.let { Exception(it) } ?: Exception("Unknown error")
         }
     }
 
@@ -305,7 +315,7 @@ class GoogleDriveService(private val context: Context) {
             secrets.installed.clientId,
             secrets.installed.clientSecret,
             authorizationCode,
-            "eu.kanade.google.oauth:/oauth2redirect",
+            REDIRECT_URI,
         ).setGrantType("authorization_code").execute()
 
         try {
