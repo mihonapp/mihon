@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : TrackService(id), DeletableTrackService {
+class Anilist(id: Long) : TrackService(id, "AniList"), DeletableTrackService {
 
     companion object {
         const val READING = 1
@@ -48,9 +48,6 @@ class Anilist(id: Long) : TrackService(id), DeletableTrackService {
             scorePreference.delete()
         }
     }
-
-    @StringRes
-    override fun nameRes() = R.string.tracker_anilist
 
     override fun getLogo() = R.drawable.ic_tracker_anilist
 

@@ -114,9 +114,7 @@ object SettingsTrackingScreen : SearchableSettings {
         if (enhancedTrackers.second.isNotEmpty()) {
             val missingSourcesInfo = stringResource(
                 R.string.enhanced_services_not_installed,
-                enhancedTrackers.second
-                    .map { stringResource(it.nameRes()) }
-                    .joinToString(),
+                enhancedTrackers.second.joinToString { it.name },
             )
             enhancedTrackerInfo += "\n\n$missingSourcesInfo"
         }
@@ -130,37 +128,37 @@ object SettingsTrackingScreen : SearchableSettings {
                 title = stringResource(R.string.services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.myAnimeList.nameRes()),
+                        title = trackManager.myAnimeList.name,
                         service = trackManager.myAnimeList,
                         login = { context.openInBrowser(MyAnimeListApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.myAnimeList) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.aniList.nameRes()),
+                        title = trackManager.aniList.name,
                         service = trackManager.aniList,
                         login = { context.openInBrowser(AnilistApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.aniList) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.kitsu.nameRes()),
+                        title = trackManager.kitsu.name,
                         service = trackManager.kitsu,
                         login = { dialog = LoginDialog(trackManager.kitsu, R.string.email) },
                         logout = { dialog = LogoutDialog(trackManager.kitsu) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.mangaUpdates.nameRes()),
+                        title = trackManager.mangaUpdates.name,
                         service = trackManager.mangaUpdates,
                         login = { dialog = LoginDialog(trackManager.mangaUpdates, R.string.username) },
                         logout = { dialog = LogoutDialog(trackManager.mangaUpdates) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.shikimori.nameRes()),
+                        title = trackManager.shikimori.name,
                         service = trackManager.shikimori,
                         login = { context.openInBrowser(ShikimoriApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.shikimori) },
                     ),
                     Preference.PreferenceItem.TrackingPreference(
-                        title = stringResource(trackManager.bangumi.nameRes()),
+                        title = trackManager.bangumi.name,
                         service = trackManager.bangumi,
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackManager.bangumi) },
@@ -173,7 +171,7 @@ object SettingsTrackingScreen : SearchableSettings {
                 preferenceItems = enhancedTrackers.first
                     .map { service ->
                         Preference.PreferenceItem.TrackingPreference(
-                            title = stringResource(service.nameRes()),
+                            title = service.name,
                             service = service,
                             login = { (service as EnhancedTrackService).loginNoop() },
                             logout = service::logout,
@@ -202,7 +200,7 @@ object SettingsTrackingScreen : SearchableSettings {
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = stringResource(R.string.login_title, stringResource(service.nameRes())),
+                        text = stringResource(R.string.login_title, service.name),
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = onDismissRequest) {
@@ -310,7 +308,7 @@ object SettingsTrackingScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = {
                 Text(
-                    text = stringResource(R.string.logout_title, stringResource(service.nameRes())),
+                    text = stringResource(R.string.logout_title, service.name),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )

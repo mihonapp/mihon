@@ -283,7 +283,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                     }
 
                                     if (libraryPreferences.autoUpdateTrackers().get()) {
-                                        refreshTracks.await(manga.id)
+                                        refreshTracks(manga.id)
                                     }
                                 }
                             }
@@ -409,10 +409,17 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
                 val manga = libraryManga.manga
                 notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
-                refreshTracks.await(manga.id)
+                refreshTracks(manga.id)
             }
 
             notifier.cancelProgressNotification()
+        }
+    }
+
+    private suspend fun refreshTracks(mangaId: Long) {
+        refreshTracks.await(mangaId).forEach { (_, e) ->
+            // Ignore errors and continue
+            logcat(LogPriority.ERROR, e)
         }
     }
 

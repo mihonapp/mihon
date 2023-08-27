@@ -30,7 +30,7 @@ class TrackManager(context: Context) {
     val kitsu = Kitsu(KITSU)
     val shikimori = Shikimori(SHIKIMORI)
     val bangumi = Bangumi(BANGUMI)
-    val komga = Komga(context, KOMGA)
+    val komga = Komga(KOMGA)
     val mangaUpdates = MangaUpdates(MANGA_UPDATES)
     val kavita = Kavita(context, KAVITA)
     val suwayomi = Suwayomi(SUWAYOMI)

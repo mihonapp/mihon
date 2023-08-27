@@ -10,16 +10,13 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Bangumi(id: Long) : TrackService(id) {
+class Bangumi(id: Long) : TrackService(id, "Bangumi") {
 
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { BangumiInterceptor(this) }
 
     private val api by lazy { BangumiApi(client, interceptor) }
-
-    @StringRes
-    override fun nameRes() = R.string.tracker_bangumi
 
     override fun getScoreList(): List<String> {
         return IntRange(0, 10).map(Int::toString)

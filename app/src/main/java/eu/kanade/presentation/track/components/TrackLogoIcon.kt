@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.data.track.TrackService
 import tachiyomi.presentation.core.util.clickableNoIndication
@@ -36,7 +35,7 @@ fun TrackLogoIcon(
     ) {
         Image(
             painter = painterResource(service.getLogo()),
-            contentDescription = stringResource(service.nameRes()),
+            contentDescription = service.name,
         )
     }
 }

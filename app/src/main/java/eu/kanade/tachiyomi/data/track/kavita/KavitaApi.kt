@@ -115,8 +115,8 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
     }
 
     private fun getLatestChapterRead(url: String): Float {
-        val serieId = getIdFromUrl(url)
-        val requestUrl = "${getApiFromUrl(url)}/Tachiyomi/latest-chapter?seriesId=$serieId"
+        val seriesId = getIdFromUrl(url)
+        val requestUrl = "${getApiFromUrl(url)}/Tachiyomi/latest-chapter?seriesId=$seriesId"
         try {
             with(json) {
                 authClient.newCall(GET(requestUrl)).execute().use {
@@ -137,21 +137,21 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
 
     suspend fun getTrackSearch(url: String): TrackSearch = withIOContext {
         try {
-            val serieDto: SeriesDto = with(json) {
+            val seriesDto: SeriesDto = with(json) {
                 authClient.newCall(GET(url))
                     .awaitSuccess()
                     .parseAs()
             }
 
-            val track = serieDto.toTrack()
+            val track = seriesDto.toTrack()
             track.apply {
-                cover_url = serieDto.thumbnail_url.toString()
+                cover_url = seriesDto.thumbnail_url.toString()
                 tracking_url = url
                 total_chapters = getTotalChapters(url)
 
-                title = serieDto.name
-                status = when (serieDto.pagesRead) {
-                    serieDto.pages -> Kavita.COMPLETED
+                title = seriesDto.name
+                status = when (seriesDto.pagesRead) {
+                    seriesDto.pages -> Kavita.COMPLETED
                     0 -> Kavita.UNREAD
                     else -> Kavita.READING
                 }
