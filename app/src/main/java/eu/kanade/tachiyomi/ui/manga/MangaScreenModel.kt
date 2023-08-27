@@ -105,7 +105,7 @@ class MangaScreenModel(
     private val successState: State.Success?
         get() = state.value as? State.Success
 
-    private val loggedServices by lazy { trackManager.services.filter { it.isLogged } }
+    private val loggedServices by lazy { trackManager.services.filter { it.isLoggedIn } }
 
     val manga: Manga?
         get() = successState?.manga
@@ -128,7 +128,7 @@ class MangaScreenModel(
     val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
     private val skipFiltered by readerPreferences.skipFiltered().asState(coroutineScope)
 
-    val isUpdateIntervalEnabled = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.libraryUpdateMangaRestriction().get()
+    val isUpdateIntervalEnabled = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions().get()
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()

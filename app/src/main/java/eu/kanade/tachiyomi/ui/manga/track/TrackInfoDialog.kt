@@ -71,7 +71,6 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
-import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
@@ -218,8 +217,7 @@ data class TrackInfoDialogHomeScreen(
 
         private suspend fun refreshTrackers() {
             val insertTrack = Injekt.get<InsertTrack>()
-            val getMangaWithChapters = Injekt.get<GetMangaWithChapters>()
-            val syncTwoWayService = Injekt.get<SyncChaptersWithTrackServiceTwoWay>()
+            val syncChaptersWithTrackServiceTwoWay = Injekt.get<SyncChaptersWithTrackServiceTwoWay>()
             val context = Injekt.get<Application>()
 
             try {
@@ -229,11 +227,7 @@ data class TrackInfoDialogHomeScreen(
                         val track = trackItem.track ?: continue
                         val domainTrack = trackItem.service.refresh(track.toDbTrack()).toDomainTrack() ?: continue
                         insertTrack.await(domainTrack)
-
-                        if (trackItem.service is EnhancedTrackService) {
-                            val allChapters = getMangaWithChapters.awaitChapters(mangaId)
-                            syncTwoWayService.await(allChapters, domainTrack, trackItem.service)
-                        }
+                        syncChaptersWithTrackServiceTwoWay.await(mangaId, domainTrack, trackItem.service)
                     } catch (e: Exception) {
                         logcat(
                             LogPriority.ERROR,
@@ -257,7 +251,7 @@ data class TrackInfoDialogHomeScreen(
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
-            val loggedServices = Injekt.get<TrackManager>().services.filter { it.isLogged }
+            val loggedServices = Injekt.get<TrackManager>().services.filter { it.isLoggedIn }
             val source = Injekt.get<SourceManager>().getOrStub(sourceId)
             return loggedServices
                 // Map to TrackItem

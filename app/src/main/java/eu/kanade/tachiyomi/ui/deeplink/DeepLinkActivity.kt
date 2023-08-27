@@ -1,8 +1,9 @@
-package eu.kanade.tachiyomi.ui.main
+package eu.kanade.tachiyomi.ui.deeplink
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import eu.kanade.tachiyomi.ui.main.MainActivity
 
 class DeepLinkActivity : Activity() {
 

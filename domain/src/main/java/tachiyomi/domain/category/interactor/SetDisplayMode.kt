@@ -8,6 +8,6 @@ class SetDisplayMode(
 ) {
 
     fun await(display: LibraryDisplayMode) {
-        preferences.libraryDisplayMode().set(display)
+        preferences.displayMode().set(display)
     }
 }

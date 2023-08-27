@@ -26,7 +26,7 @@ class LibrarySettingsScreenModel(
 ) : ScreenModel {
 
     val trackServices
-        get() = trackManager.services.filter { it.isLogged }
+        get() = trackManager.services.filter { it.isLoggedIn }
 
     fun toggleFilter(preference: (LibraryPreferences) -> Preference<TriState>) {
         preference(libraryPreferences).getAndSet {

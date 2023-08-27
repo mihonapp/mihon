@@ -11,24 +11,24 @@ class LibraryPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun libraryDisplayMode() = preferenceStore.getObject("pref_display_mode_library", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
+    fun displayMode() = preferenceStore.getObject("pref_display_mode_library", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
 
-    fun librarySortingMode() = preferenceStore.getObject("library_sorting_mode", LibrarySort.default, LibrarySort.Serializer::serialize, LibrarySort.Serializer::deserialize)
+    fun sortingMode() = preferenceStore.getObject("library_sorting_mode", LibrarySort.default, LibrarySort.Serializer::serialize, LibrarySort.Serializer::deserialize)
 
     fun portraitColumns() = preferenceStore.getInt("pref_library_columns_portrait_key", 0)
 
     fun landscapeColumns() = preferenceStore.getInt("pref_library_columns_landscape_key", 0)
 
-    fun libraryUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
-    fun libraryUpdateLastTimestamp() = preferenceStore.getLong("library_update_last_timestamp", 0L)
+    fun lastUpdatedTimestamp() = preferenceStore.getLong("library_update_last_timestamp", 0L)
+    fun autoUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
 
-    fun libraryUpdateDeviceRestriction() = preferenceStore.getStringSet(
+    fun autoUpdateDeviceRestrictions() = preferenceStore.getStringSet(
         "library_update_restriction",
         setOf(
             DEVICE_ONLY_ON_WIFI,
         ),
     )
-    fun libraryUpdateMangaRestriction() = preferenceStore.getStringSet(
+    fun autoUpdateMangaRestrictions() = preferenceStore.getStringSet(
         "library_update_manga_restriction",
         setOf(
             MANGA_HAS_UNREAD,
@@ -95,9 +95,9 @@ class LibraryPreferences(
 
     fun categorizedDisplaySettings() = preferenceStore.getBoolean("categorized_display", false)
 
-    fun libraryUpdateCategories() = preferenceStore.getStringSet("library_update_categories", emptySet())
+    fun updateCategories() = preferenceStore.getStringSet("library_update_categories", emptySet())
 
-    fun libraryUpdateCategoriesExclude() = preferenceStore.getStringSet("library_update_categories_exclude", emptySet())
+    fun updateCategoriesExclude() = preferenceStore.getStringSet("library_update_categories_exclude", emptySet())
 
     // endregion
 
@@ -148,7 +148,6 @@ class LibraryPreferences(
         const val DEVICE_ONLY_ON_WIFI = "wifi"
         const val DEVICE_NETWORK_NOT_METERED = "network_not_metered"
         const val DEVICE_CHARGING = "ac"
-        const val DEVICE_BATTERY_NOT_LOW = "battery_not_low"
 
         const val MANGA_NON_COMPLETED = "manga_ongoing"
         const val MANGA_HAS_UNREAD = "manga_fully_read"

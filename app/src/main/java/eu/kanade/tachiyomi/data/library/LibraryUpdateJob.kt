@@ -15,19 +15,14 @@ import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
-import eu.kanade.domain.chapter.interactor.SyncChaptersWithTrackServiceTwoWay
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.copyFrom
 import eu.kanade.domain.manga.model.toSManga
-import eu.kanade.domain.track.model.toDbTrack
-import eu.kanade.domain.track.model.toDomainTrack
+import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
@@ -44,7 +39,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
@@ -53,13 +47,11 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_BATTERY_NOT_LOW
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_NETWORK_NOT_METERED
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_ONLY_ON_WIFI
@@ -74,8 +66,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.domain.track.interactor.GetTracks
-import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -93,17 +83,13 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val downloadPreferences: DownloadPreferences = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val downloadManager: DownloadManager = Injekt.get()
-    private val trackManager: TrackManager = Injekt.get()
     private val coverCache: CoverCache = Injekt.get()
     private val getLibraryManga: GetLibraryManga = Injekt.get()
     private val getManga: GetManga = Injekt.get()
     private val updateManga: UpdateManga = Injekt.get()
-    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get()
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
-    private val getTracks: GetTracks = Injekt.get()
-    private val insertTrack: InsertTrack = Injekt.get()
-    private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get()
+    private val refreshTracks: RefreshTracks = Injekt.get()
     private val setFetchInterval: SetFetchInterval = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
@@ -113,7 +99,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     override suspend fun doWork(): Result {
         if (tags.contains(WORK_NAME_AUTO)) {
             val preferences = Injekt.get<LibraryPreferences>()
-            val restrictions = preferences.libraryUpdateDeviceRestriction().get()
+            val restrictions = preferences.autoUpdateDeviceRestrictions().get()
             if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
                 return Result.retry()
             }
@@ -134,7 +120,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         // If this is a chapter update, set the last update time to now
         if (target == Target.CHAPTERS) {
-            libraryPreferences.libraryUpdateLastTimestamp().set(Date().time)
+            libraryPreferences.lastUpdatedTimestamp().set(Date().time)
         }
 
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
@@ -181,14 +167,14 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val listToUpdate = if (categoryId != -1L) {
             libraryManga.filter { it.category == categoryId }
         } else {
-            val categoriesToUpdate = libraryPreferences.libraryUpdateCategories().get().map { it.toLong() }
+            val categoriesToUpdate = libraryPreferences.updateCategories().get().map { it.toLong() }
             val includedManga = if (categoriesToUpdate.isNotEmpty()) {
                 libraryManga.filter { it.category in categoriesToUpdate }
             } else {
                 libraryManga
             }
 
-            val categoriesToExclude = libraryPreferences.libraryUpdateCategoriesExclude().get().map { it.toLong() }
+            val categoriesToExclude = libraryPreferences.updateCategoriesExclude().get().map { it.toLong() }
             val excludedMangaIds = if (categoriesToExclude.isNotEmpty()) {
                 libraryManga.filter { it.category in categoriesToExclude }.map { it.manga.id }
             } else {
@@ -229,7 +215,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val skippedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val failedUpdates = CopyOnWriteArrayList<Pair<Manga, String?>>()
         val hasDownloads = AtomicBoolean(false)
-        val restrictions = libraryPreferences.libraryUpdateMangaRestriction().get()
+        val restrictions = libraryPreferences.autoUpdateMangaRestrictions().get()
         val fetchWindow = setFetchInterval.getWindow(ZonedDateTime.now())
 
         coroutineScope {
@@ -297,8 +283,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                     }
 
                                     if (libraryPreferences.autoUpdateTrackers().get()) {
-                                        val loggedServices = trackManager.services.filter { it.isLogged }
-                                        updateTrackings(manga, loggedServices)
+                                        refreshTracks.await(manga.id)
                                     }
                                 }
                             }
@@ -418,47 +403,17 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private suspend fun updateTrackings() {
         coroutineScope {
             var progressCount = 0
-            val loggedServices = trackManager.services.filter { it.isLogged }
 
             mangaToUpdate.forEach { libraryManga ->
-                val manga = libraryManga.manga
-
                 ensureActive()
 
+                val manga = libraryManga.manga
                 notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
-
-                // Update the tracking details.
-                updateTrackings(manga, loggedServices)
+                refreshTracks.await(manga.id)
             }
 
             notifier.cancelProgressNotification()
         }
-    }
-
-    private suspend fun updateTrackings(manga: Manga, loggedServices: List<TrackService>) {
-        getTracks.await(manga.id)
-            .map { track ->
-                supervisorScope {
-                    async {
-                        val service = trackManager.getService(track.syncId)
-                        if (service != null && service in loggedServices) {
-                            try {
-                                val updatedTrack = service.refresh(track.toDbTrack())
-                                insertTrack.await(updatedTrack.toDomainTrack()!!)
-
-                                if (service is EnhancedTrackService) {
-                                    val chapters = getChapterByMangaId.await(manga.id)
-                                    syncChaptersWithTrackServiceTwoWay.await(chapters, track, service)
-                                }
-                            } catch (e: Throwable) {
-                                // Ignore errors and continue
-                                logcat(LogPriority.ERROR, e)
-                            }
-                        }
-                    }
-                }
-            }
-            .awaitAll()
     }
 
     private suspend fun withUpdateNotification(
@@ -558,13 +513,13 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             prefInterval: Int? = null,
         ) {
             val preferences = Injekt.get<LibraryPreferences>()
-            val interval = prefInterval ?: preferences.libraryUpdateInterval().get()
+            val interval = prefInterval ?: preferences.autoUpdateInterval().get()
             if (interval > 0) {
-                val restrictions = preferences.libraryUpdateDeviceRestriction().get()
+                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
                 val constraints = Constraints(
                     requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) { NetworkType.UNMETERED } else { NetworkType.CONNECTED },
                     requiresCharging = DEVICE_CHARGING in restrictions,
-                    requiresBatteryNotLow = DEVICE_BATTERY_NOT_LOW in restrictions,
+                    requiresBatteryNotLow = true,
                 )
 
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(

@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import eu.kanade.core.util.mapNotNullKeys
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.CancellationException
@@ -327,14 +326,16 @@ class DownloadCache(
                 }
             }
 
+            val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
+
             rootDownloadsDirLock.withLock {
                 val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
-                    .associate { it.name to SourceDirectory(it) }
-                    .mapNotNullKeys { entry ->
-                        sources.find {
-                            provider.getSourceDirName(it).equals(entry.key, ignoreCase = true)
-                        }?.id
+                    .filter { it.isDirectory && !it.name.isNullOrBlank() }
+                    .mapNotNull { dir ->
+                        val sourceId = sourceMap[dir.name!!.lowercase()]
+                        sourceId?.let { it to SourceDirectory(dir) }
                     }
+                    .toMap()
 
                 rootDownloadsDir.sourceDirs = sourceDirs
 
@@ -342,7 +343,7 @@ class DownloadCache(
                     .map { sourceDir ->
                         async {
                             sourceDir.mangaDirs = sourceDir.dir.listFiles().orEmpty()
-                                .filterNot { it.name.isNullOrBlank() }
+                                .filter { it.isDirectory && !it.name.isNullOrBlank() }
                                 .associate { it.name!! to MangaDirectory(it) }
 
                             sourceDir.mangaDirs.values.forEach { mangaDir ->

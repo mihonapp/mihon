@@ -51,7 +51,7 @@ fun MigrateSourceScreen(
 ) {
     val context = LocalContext.current
     when {
-        state.isLoading -> LoadingScreen(modifier = Modifier.padding(contentPadding))
+        state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
         state.isEmpty -> EmptyScreen(
             textResource = R.string.information_empty_library,
             modifier = Modifier.padding(contentPadding),

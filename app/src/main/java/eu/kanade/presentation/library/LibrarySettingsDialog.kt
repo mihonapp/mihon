@@ -180,7 +180,7 @@ private val displayModes = listOf(
 private fun ColumnScope.DisplayPage(
     screenModel: LibrarySettingsScreenModel,
 ) {
-    val displayMode by screenModel.libraryPreferences.libraryDisplayMode().collectAsState()
+    val displayMode by screenModel.libraryPreferences.displayMode().collectAsState()
     SettingsChipRow(R.string.action_display_mode) {
         displayModes.map { (titleRes, mode) ->
             FilterChip(

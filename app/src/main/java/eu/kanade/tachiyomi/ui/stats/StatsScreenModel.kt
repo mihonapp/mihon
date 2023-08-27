@@ -36,7 +36,7 @@ class StatsScreenModel(
     private val trackManager: TrackManager = Injekt.get(),
 ) : StateScreenModel<StatsScreenState>(StatsScreenState.Loading) {
 
-    private val loggedServices by lazy { trackManager.services.fastFilter { it.isLogged } }
+    private val loggedServices by lazy { trackManager.services.fastFilter { it.isLoggedIn } }
 
     init {
         coroutineScope.launchIO {
@@ -87,14 +87,14 @@ class StatsScreenModel(
     }
 
     private fun getGlobalUpdateItemCount(libraryManga: List<LibraryManga>): Int {
-        val includedCategories = preferences.libraryUpdateCategories().get().map { it.toLong() }
+        val includedCategories = preferences.updateCategories().get().map { it.toLong() }
         val includedManga = if (includedCategories.isNotEmpty()) {
             libraryManga.filter { it.category in includedCategories }
         } else {
             libraryManga
         }
 
-        val excludedCategories = preferences.libraryUpdateCategoriesExclude().get().map { it.toLong() }
+        val excludedCategories = preferences.updateCategoriesExclude().get().map { it.toLong() }
         val excludedMangaIds = if (excludedCategories.isNotEmpty()) {
             libraryManga.fastMapNotNull { manga ->
                 manga.id.takeIf { manga.category in excludedCategories }
@@ -103,7 +103,7 @@ class StatsScreenModel(
             emptyList()
         }
 
-        val updateRestrictions = preferences.libraryUpdateMangaRestriction().get()
+        val updateRestrictions = preferences.autoUpdateMangaRestrictions().get()
         return includedManga
             .fastFilterNot { it.manga.id in excludedMangaIds }
             .fastDistinctBy { it.manga.id }

@@ -20,6 +20,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.TriState
+import tachiyomi.core.preference.getAndSet
 import tachiyomi.core.preference.getEnum
 import tachiyomi.core.preference.minusAssign
 import tachiyomi.core.preference.plusAssign
@@ -101,11 +102,11 @@ object Migrations {
             }
             if (oldVersion < 44) {
                 // Reset sorting preference if using removed sort by source
-                val oldSortingMode = prefs.getInt(libraryPreferences.librarySortingMode().key(), 0)
+                val oldSortingMode = prefs.getInt(libraryPreferences.sortingMode().key(), 0)
 
                 if (oldSortingMode == 5) { // SOURCE = 5
                     prefs.edit {
-                        putInt(libraryPreferences.librarySortingMode().key(), 0) // ALPHABETICAL = 0
+                        putInt(libraryPreferences.sortingMode().key(), 0) // ALPHABETICAL = 0
                     }
                 }
             }
@@ -134,7 +135,7 @@ object Migrations {
                 // Force MAL log out due to login flow change
                 // v52: switched from scraping to WebView
                 // v53: switched from WebView to OAuth
-                if (trackManager.myAnimeList.isLogged) {
+                if (trackManager.myAnimeList.isLoggedIn) {
                     trackManager.myAnimeList.logout()
                     context.toast(R.string.myanimelist_relogin)
                 }
@@ -180,14 +181,14 @@ object Migrations {
             }
             if (oldVersion < 61) {
                 // Handle removed every 1 or 2 hour library updates
-                val updateInterval = libraryPreferences.libraryUpdateInterval().get()
+                val updateInterval = libraryPreferences.autoUpdateInterval().get()
                 if (updateInterval == 1 || updateInterval == 2) {
-                    libraryPreferences.libraryUpdateInterval().set(3)
+                    libraryPreferences.autoUpdateInterval().set(3)
                     LibraryUpdateJob.setupTask(context, 3)
                 }
             }
             if (oldVersion < 64) {
-                val oldSortingMode = prefs.getInt(libraryPreferences.librarySortingMode().key(), 0)
+                val oldSortingMode = prefs.getInt(libraryPreferences.sortingMode().key(), 0)
                 val oldSortingDirection = prefs.getBoolean("library_sorting_ascending", true)
 
                 val newSortingMode = when (oldSortingMode) {
@@ -208,12 +209,12 @@ object Migrations {
                 }
 
                 prefs.edit(commit = true) {
-                    remove(libraryPreferences.librarySortingMode().key())
+                    remove(libraryPreferences.sortingMode().key())
                     remove("library_sorting_ascending")
                 }
 
                 prefs.edit {
-                    putString(libraryPreferences.librarySortingMode().key(), newSortingMode)
+                    putString(libraryPreferences.sortingMode().key(), newSortingMode)
                     putString("library_sorting_ascending", newSortingDirection)
                 }
             }
@@ -224,16 +225,16 @@ object Migrations {
             }
             if (oldVersion < 71) {
                 // Handle removed every 3, 4, 6, and 8 hour library updates
-                val updateInterval = libraryPreferences.libraryUpdateInterval().get()
+                val updateInterval = libraryPreferences.autoUpdateInterval().get()
                 if (updateInterval in listOf(3, 4, 6, 8)) {
-                    libraryPreferences.libraryUpdateInterval().set(12)
+                    libraryPreferences.autoUpdateInterval().set(12)
                     LibraryUpdateJob.setupTask(context, 12)
                 }
             }
             if (oldVersion < 72) {
                 val oldUpdateOngoingOnly = prefs.getBoolean("pref_update_only_non_completed_key", true)
                 if (!oldUpdateOngoingOnly) {
-                    libraryPreferences.libraryUpdateMangaRestriction() -= MANGA_NON_COMPLETED
+                    libraryPreferences.autoUpdateMangaRestrictions() -= MANGA_NON_COMPLETED
                 }
             }
             if (oldVersion < 75) {
@@ -258,20 +259,20 @@ object Migrations {
             if (oldVersion < 81) {
                 // Handle renamed enum values
                 prefs.edit {
-                    val newSortingMode = when (val oldSortingMode = prefs.getString(libraryPreferences.librarySortingMode().key(), "ALPHABETICAL")) {
+                    val newSortingMode = when (val oldSortingMode = prefs.getString(libraryPreferences.sortingMode().key(), "ALPHABETICAL")) {
                         "LAST_CHECKED" -> "LAST_MANGA_UPDATE"
                         "UNREAD" -> "UNREAD_COUNT"
                         "DATE_FETCHED" -> "CHAPTER_FETCH_DATE"
                         else -> oldSortingMode
                     }
-                    putString(libraryPreferences.librarySortingMode().key(), newSortingMode)
+                    putString(libraryPreferences.sortingMode().key(), newSortingMode)
                 }
             }
             if (oldVersion < 82) {
                 prefs.edit {
-                    val sort = prefs.getString(libraryPreferences.librarySortingMode().key(), null) ?: return@edit
+                    val sort = prefs.getString(libraryPreferences.sortingMode().key(), null) ?: return@edit
                     val direction = prefs.getString("library_sorting_ascending", "ASCENDING")!!
-                    putString(libraryPreferences.librarySortingMode().key(), "$sort,$direction")
+                    putString(libraryPreferences.sortingMode().key(), "$sort,$direction")
                     remove("library_sorting_ascending")
                 }
             }
@@ -366,6 +367,12 @@ object Migrations {
                 // be disabled in release builds.
                 if (isReleaseBuildType) {
                     readerPreferences.longStripSplitWebtoon().set(false)
+                }
+            }
+            if (oldVersion < 105) {
+                val pref = libraryPreferences.autoUpdateDeviceRestrictions()
+                if (pref.isSet() && "battery_not_low" in pref.get()) {
+                    pref.getAndSet { it - "battery_not_low" }
                 }
             }
             return true

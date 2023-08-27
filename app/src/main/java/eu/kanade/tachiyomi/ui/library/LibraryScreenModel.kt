@@ -366,7 +366,7 @@ class LibraryScreenModel(
      * @return map of track id with the filter value
      */
     private fun getTrackingFilterFlow(): Flow<Map<Long, TriState>> {
-        val loggedServices = trackManager.services.filter { it.isLogged }
+        val loggedServices = trackManager.services.filter { it.isLoggedIn }
         return if (loggedServices.isNotEmpty()) {
             val prefFlows = loggedServices
                 .map { libraryPreferences.filterTracking(it.id.toInt()).changes() }
@@ -519,7 +519,7 @@ class LibraryScreenModel(
     }
 
     fun getDisplayMode(): PreferenceMutableState<LibraryDisplayMode> {
-        return libraryPreferences.libraryDisplayMode().asState(coroutineScope)
+        return libraryPreferences.displayMode().asState(coroutineScope)
     }
 
     fun getColumnsPreferenceForCurrentOrientation(isLandscape: Boolean): PreferenceMutableState<Int> {

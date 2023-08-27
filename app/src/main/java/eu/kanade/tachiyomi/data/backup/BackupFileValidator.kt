@@ -51,7 +51,7 @@ class BackupFileValidator(
             .distinct()
         val missingTrackers = trackers
             .mapNotNull { trackManager.getService(it.toLong()) }
-            .filter { !it.isLogged }
+            .filter { !it.isLoggedIn }
             .map { context.getString(it.nameRes()) }
             .sorted()
 

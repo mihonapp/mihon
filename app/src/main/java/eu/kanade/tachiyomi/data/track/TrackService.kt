@@ -33,6 +33,7 @@ abstract class TrackService(val id: Long) {
     val trackPreferences: TrackPreferences by injectLazy()
     val networkService: NetworkHelper by injectLazy()
     private val insertTrack: InsertTrack by injectLazy()
+    private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay by injectLazy()
 
     open val client: OkHttpClient
         get() = networkService.client
@@ -89,7 +90,7 @@ abstract class TrackService(val id: Long) {
         trackPreferences.setTrackCredentials(this, "", "")
     }
 
-    open val isLogged: Boolean
+    open val isLoggedIn: Boolean
         get() = getUsername().isNotEmpty() &&
             getPassword().isNotEmpty()
 
@@ -101,6 +102,7 @@ abstract class TrackService(val id: Long) {
         trackPreferences.setTrackCredentials(this, username, password)
     }
 
+    // TODO: move this to an interactor, and update all trackers based on common data
     suspend fun registerTracking(item: Track, mangaId: Long) {
         item.manga_id = mangaId
         try {
@@ -113,6 +115,7 @@ abstract class TrackService(val id: Long) {
 
                 insertTrack.await(track)
 
+                // TODO: merge into SyncChaptersWithTrackServiceTwoWay?
                 // Update chapter progress if newer chapters marked read locally
                 if (hasReadChapters) {
                     val latestLocalReadChapterNumber = allChapters
@@ -144,9 +147,7 @@ abstract class TrackService(val id: Long) {
                     }
                 }
 
-                if (this is EnhancedTrackService) {
-                    Injekt.get<SyncChaptersWithTrackServiceTwoWay>().await(allChapters, track, this@TrackService)
-                }
+                syncChaptersWithTrackServiceTwoWay.await(mangaId, track, this@TrackService)
             }
         } catch (e: Throwable) {
             withUIContext { Injekt.get<Application>().toast(e.message) }

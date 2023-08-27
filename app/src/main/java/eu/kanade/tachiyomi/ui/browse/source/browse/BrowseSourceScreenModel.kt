@@ -45,7 +45,6 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
@@ -72,7 +71,6 @@ class BrowseSourceScreenModel(
     private val getRemoteManga: GetRemoteManga = Injekt.get(),
     private val getDuplicateLibraryManga: GetDuplicateLibraryManga = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val setMangaDefaultChapterFlags: SetMangaDefaultChapterFlags = Injekt.get(),
     private val getManga: GetManga = Injekt.get(),
@@ -82,7 +80,7 @@ class BrowseSourceScreenModel(
     private val syncChaptersWithTrackServiceTwoWay: SyncChaptersWithTrackServiceTwoWay = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
-    private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLogged } }
+    private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLoggedIn } }
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(coroutineScope)
 
@@ -299,8 +297,7 @@ class BrowseSourceScreenModel(
                         (service as TrackService).bind(track)
                         insertTrack.await(track.toDomainTrack()!!)
 
-                        val chapters = getChapterByMangaId.await(manga.id)
-                        syncChaptersWithTrackServiceTwoWay.await(chapters, track.toDomainTrack()!!, service)
+                        syncChaptersWithTrackServiceTwoWay.await(manga.id, track.toDomainTrack()!!, service)
                     }
                 } catch (e: Exception) {
                     logcat(LogPriority.WARN, e) { "Could not match manga: ${manga.title} with service $service" }
