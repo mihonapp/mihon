@@ -10,7 +10,7 @@ class GetUpdates(
 ) {
 
     suspend fun await(read: Boolean, after: Long): List<UpdatesWithRelations> {
-        return repository.awaitWithRead(read, after)
+        return repository.awaitWithRead(read, after, limit = 500)
     }
 
     fun subscribe(calendar: Calendar): Flow<List<UpdatesWithRelations>> {
@@ -18,6 +18,6 @@ class GetUpdates(
     }
 
     fun subscribe(read: Boolean, after: Long): Flow<List<UpdatesWithRelations>> {
-        return repository.subscribeWithRead(read, after)
+        return repository.subscribeWithRead(read, after, limit = 500)
     }
 }

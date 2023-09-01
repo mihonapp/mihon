@@ -36,14 +36,14 @@ import tachiyomi.presentation.widget.util.appWidgetBackgroundRadius
 import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import uy.kohesive.injekt.injectLazy
 import java.util.Calendar
 import java.util.Date
 
-class UpdatesGridGlanceWidget : GlanceAppWidget() {
-
-    private val app: Application by injectLazy()
-    private val preferences: SecurityPreferences by injectLazy()
+class UpdatesGridGlanceWidget(
+    private val context: Context = Injekt.get<Application>(),
+    private val getUpdates: GetUpdates = Injekt.get(),
+    private val preferences: SecurityPreferences = Injekt.get(),
+) : GlanceAppWidget() {
 
     private var data: List<Pair<Long, Bitmap?>>? = null
 
@@ -63,23 +63,22 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
         }
     }
 
-    private suspend fun loadData(list: List<UpdatesWithRelations>? = null) {
-        withIOContext {
-            val manager = GlanceAppWidgetManager(app)
-            val ids = manager.getGlanceIds(this@UpdatesGridGlanceWidget::class.java)
-            if (ids.isEmpty()) return@withIOContext
+    private suspend fun loadData() {
+        val manager = GlanceAppWidgetManager(context)
+        val ids = manager.getGlanceIds(this@UpdatesGridGlanceWidget::class.java)
+        if (ids.isEmpty()) return
 
-            val processList = list
-                ?: Injekt.get<GetUpdates>().await(
-                    read = false,
-                    after = DateLimit.timeInMillis,
-                )
+        withIOContext {
+            val updates = getUpdates.await(
+                read = false,
+                after = DateLimit.timeInMillis,
+            )
             val (rowCount, columnCount) = ids
                 .flatMap { manager.getAppWidgetSizes(it) }
                 .maxBy { it.height.value * it.width.value }
                 .calculateRowAndColumnCount()
 
-            data = prepareList(processList, rowCount * columnCount)
+            data = prepareList(updates, rowCount * columnCount)
         }
     }
 
@@ -87,12 +86,12 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
         // Resize to cover size
         val widthPx = CoverWidth.value.toInt().dpToPx
         val heightPx = CoverHeight.value.toInt().dpToPx
-        val roundPx = app.resources.getDimension(R.dimen.appwidget_inner_radius)
+        val roundPx = context.resources.getDimension(R.dimen.appwidget_inner_radius)
         return processList
             .distinctBy { it.mangaId }
             .take(take)
             .map { updatesView ->
-                val request = ImageRequest.Builder(app)
+                val request = ImageRequest.Builder(context)
                     .data(
                         MangaCover(
                             mangaId = updatesView.mangaId,
@@ -114,7 +113,7 @@ class UpdatesGridGlanceWidget : GlanceAppWidget() {
                         }
                     }
                     .build()
-                Pair(updatesView.mangaId, app.imageLoader.executeBlocking(request).drawable?.toBitmap())
+                Pair(updatesView.mangaId, context.imageLoader.executeBlocking(request).drawable?.toBitmap())
             }
     }
 
