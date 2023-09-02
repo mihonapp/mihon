@@ -141,20 +141,6 @@
             android:name=".data.notification.NotificationReceiver"
             android:exported="false" />
 
-        <receiver
-            android:name="tachiyomi.presentation.widget.UpdatesGridGlanceReceiver"
-            android:enabled="@bool/glance_appwidget_available"
-            android:exported="false"
-            android:label="@string/label_recent_updates">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/updates_grid_glance_widget_info" />
-        </receiver>
-
         <service
             android:name=".data.download.DownloadService"
             android:exported="false" />

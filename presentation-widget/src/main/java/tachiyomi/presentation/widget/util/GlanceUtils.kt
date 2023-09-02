@@ -2,6 +2,7 @@ package tachiyomi.presentation.widget.util
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
@@ -34,9 +35,13 @@ fun stringResource(@StringRes id: Int): String {
  *
  * @return pair of row and column count
  */
-fun DpSize.calculateRowAndColumnCount(): Pair<Int, Int> {
+fun DpSize.calculateRowAndColumnCount(
+    topPadding: Dp,
+    bottomPadding: Dp,
+): Pair<Int, Int> {
     // Hack: Size provided by Glance manager is not reliable so take at least 1 row and 1 column
     // Set max to 10 children each direction because of Glance limitation
+    val height = this.height - topPadding - bottomPadding
     val rowCount = (height.value / 95).toInt().coerceIn(1, 10)
     val columnCount = (width.value / 64).toInt().coerceIn(1, 10)
     return Pair(rowCount, columnCount)
