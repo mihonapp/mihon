@@ -31,7 +31,7 @@ jobs:
       - name: Build app and run unit tests
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: lintKotlin assembleStandardRelease testReleaseUnitTest
+          arguments: ktlintCheck assembleStandardRelease testReleaseUnitTest
 
       # Sign APK and create release for tags
 
