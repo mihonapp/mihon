@@ -267,7 +267,6 @@
     <string name="backup_restore_missing_sources">Manglande kjelder:</string>
     <string name="backup_restore_missing_trackers">Sporingstenester ikkje logga inn i:</string>
     <string name="about_dont_kill_my_app">Nokre produsentar har ytterlegare appavgrensingar som drep bakgrunnstenester. Denne nettstaden har meir info om korleis det kan fiksast.</string>
-    <string name="http_error_hint">Sjekk nettstad i WebView</string>
     <string name="website">Nettstaden</string>
     <string name="local_filter_order_by">Sorter etter</string>
     <string name="date">Dato</string>

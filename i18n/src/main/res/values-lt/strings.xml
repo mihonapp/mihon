@@ -458,7 +458,6 @@
     <string name="action_remove_everything">Ištrinti viską</string>
     <string name="internal_error">InternalError: Patikrinkite klaidų žurnalus, kad gautumėte daugiau informacijos</string>
     <string name="network_not_metered">Kai duomenys neapmokestinami</string>
-    <string name="battery_not_low">Kai baterija nėra išsikrovusi</string>
     <string name="action_move_to_top_all_for_series">Perkelti seriją į viršų</string>
     <string name="backup_restore_missing_trackers">Sekimo priemonės, neprijungtos prie:</string>
     <string name="split_tall_images_summary">Pagerina skaitytuvo našumą</string>
@@ -609,7 +608,6 @@
     <string name="manga_cover">Viršelis</string>
     <string name="pinned_sources">Prisegtas</string>
     <string name="email">El. pašto adresas</string>
-    <string name="http_error_hint">Patikrinkite svetainę \"WebView\" aplinkoje</string>
     <string name="action_global_search_hint">Pasaulinė paieška…</string>
     <string name="latest">Naujausia</string>
     <string name="local_source_help_guide">Vietos šaltinių vadovas</string>

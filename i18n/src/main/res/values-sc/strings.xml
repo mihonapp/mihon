@@ -363,7 +363,6 @@
         <item quantity="other">B\'ant agiornamentos disponìbiles pro %d estensiones</item>
     </plurals>
     <string name="channel_ext_updates">Agiornamentos de sas estensiones</string>
-    <string name="http_error_hint">Verìfica su situ web cun WebView</string>
     <string name="updating_library">Agiornende sa biblioteca</string>
     <string name="pref_category_reading">Leghende</string>
     <string name="pref_skip_filtered_chapters">Brinca sos capìtulos filtrados</string>
@@ -652,7 +651,6 @@
     <string name="pref_clear_webview_data">Isbòida sos datos de WebView</string>
     <string name="webview_data_deleted">Datos de WebView isboidados</string>
     <string name="action_close">Serra</string>
-    <string name="battery_not_low">Cando sa bateria no est bassa</string>
     <string name="action_sort_last_manga_update">Ùrtimu agiornamentu</string>
     <string name="action_sort_unread_count">Contu de non lèghidos</string>
     <string name="source_empty_screen">Peruna fonte agatada</string>

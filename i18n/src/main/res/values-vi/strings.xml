@@ -313,7 +313,7 @@
     <string name="copy">Sao chép</string>
     <string name="information_empty_category">Không có danh mục. Nhấn vào dấu cộng để tạo một nhóm từ thư viện.</string>
     <string name="channel_common">Thường gặp</string>
-    <string name="pref_read_with_long_tap">Nhấn giữ để mở hộp thoại</string>
+    <string name="pref_read_with_long_tap">Nhấn giữ để mở mục hành động</string>
     <string name="action_open_in_web_view">Mở bằng WebView</string>
     <string name="pref_true_color">Màu 32-bit</string>
     <string name="pref_skip_read_chapters">Bỏ qua chap đã đọc</string>
@@ -339,7 +339,6 @@
     <string name="notification_check_updates">Kiểm tra các chương cập nhật mới</string>
     <string name="updating_library">Đang cập nhật thư viện</string>
     <string name="paused">Đã tạm ngưng</string>
-    <string name="http_error_hint">Kiểm tra trang web bằng WebView</string>
     <string name="logout_success">Bạn đã đăng xuất</string>
     <string name="logout">Đăng xuất tài khoản</string>
     <string name="logout_title">Đăng xuất khỏi %1$s\?</string>
@@ -509,7 +508,7 @@
     <string name="label_data">Dữ liệu</string>
     <string name="pref_dns_over_https">DNS qua HTTPS (DoH)</string>
     <string name="label_network">Mạng</string>
-    <string name="restoring_backup_canceled">Quá trình phục hồi bị huỷ bỏ</string>
+    <string name="restoring_backup_canceled">Quá trình khôi phục đã bị ngắt</string>
     <string name="restoring_backup_error">Khôi phục thất bại</string>
     <string name="restore_in_progress">Đang trong quá trình phục hồi</string>
     <string name="creating_backup_error">Lưu trữ thất bại</string>
@@ -596,7 +595,7 @@
     <string name="theme_yinyang">Chủ đề: Âm &amp; Dương</string>
     <string name="theme_yotsuba">Chủ đề: Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Chế độ đen tuyền</string>
-    <string name="categorized_display_settings">Tùy chỉnh mỗi danh mục cho sắp xếp và hiện thị</string>
+    <string name="categorized_display_settings">Tùy chỉnh mỗi danh mục cho sắp xếp</string>
     <string name="tracking_guide">Hướng dẫn theo dõi</string>
     <string name="enhanced_services">Dịch vụ nâng cao</string>
     <string name="enhanced_tracking_info">Dịch vụ cung cấp các tính năng nâng cao cho các nguồn cụ thể. Truyện sẽ tự động theo dõi khi được thêm vào thư viện của bạn.</string>
@@ -655,7 +654,7 @@
     <string name="pref_update_only_started">Chưa bắt đầu đọc</string>
     <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
     <string name="learn_more">Nhấn để tìm hiểu thêm</string>
-    <string name="pref_landscape_zoom">Phóng ảnh phong cảnh</string>
+    <string name="pref_landscape_zoom">Phóng ảnh phong cảnh tự động</string>
     <string name="action_show_manga">Hiển thị truyện</string>
     <string name="pref_navigate_pan">Xoay ảnh rộng</string>
     <string name="action_display_cover_only_grid">Lưới chỉ mỗi bìa</string>
@@ -670,7 +669,6 @@
     <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
     <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
     <string name="action_close">Đóng</string>
-    <string name="battery_not_low">Khi pin không quá ít</string>
     <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
     <string name="source_empty_screen">Không có nguồn nào được tìm thấy</string>
     <string name="update_check_open">Mở trên GitHub</string>

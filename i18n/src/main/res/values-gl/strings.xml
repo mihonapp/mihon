@@ -368,7 +368,6 @@
     <string name="label_downloaded">Baixados</string>
     <string name="pref_app_language">Idioma da aplicación</string>
     <string name="internal_error">ErroInterno: Revisa o rexistro de erros para máis información</string>
-    <string name="battery_not_low">Cando a batería non estea baixa</string>
     <string name="ext_app_info">Información da aplicación</string>
     <string name="ext_installer_shizuku_stopped">Shizuku non se está executando</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Instala e inicia Shizuku para utilizalo como instalador de extensións.</string>
@@ -720,7 +719,6 @@
     <string name="spen_previous_page">Páxina anterior</string>
     <string name="reading_list">Lista de lectura</string>
     <string name="are_you_sure">Estás seguro\?</string>
-    <string name="http_error_hint">Abrir o sitio web no WebView</string>
     <string name="other_source">Outros</string>
     <string name="unknown_status">Estado descoñecido</string>
     <string name="source_not_installed">Fonte non instalada: %1$s</string>

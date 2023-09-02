@@ -363,7 +363,6 @@
         <item quantity="other">%d Erweiterungsaktualisierungen verfügbar</item>
     </plurals>
     <string name="channel_ext_updates">Erweiterungsaktualisierungen</string>
-    <string name="http_error_hint">Webseite in WebView prüfen</string>
     <string name="updating_library">Bibliothek wird aktualisiert</string>
     <string name="pref_skip_filtered_chapters">Gefilterte Kapitel überspringen</string>
     <string name="pref_category_reading">Beim Lesen</string>
@@ -652,7 +651,6 @@
     <string name="pref_clear_webview_data">WebView-Daten löschen</string>
     <string name="webview_data_deleted">WebView-Daten gelöscht</string>
     <string name="action_close">Schließen</string>
-    <string name="battery_not_low">Wenn der Akkustand nicht niedrig ist</string>
     <string name="source_filter_empty_screen">Keine installierte Quelle gefunden</string>
     <string name="source_empty_screen">Keine Quelle gefunden</string>
     <string name="action_sort_unread_count">Anzahl an Ungelesenem</string>
@@ -817,4 +815,7 @@
     <string name="track_activity_name">Tracking-Login</string>
     <string name="create_backup_file_error">Sicherungsdatei konnte nicht erstellt werden</string>
     <string name="licensed_manga_chapters_error">Lizenziert - Keine Kapitel zu zeigen</string>
+    <string name="exception_http">HTTP %d, überprüfe die Webseite in WebView</string>
+    <string name="exception_offline">Keine Internetverbindung</string>
+    <string name="exception_unknown_host">%s konnte nicht erreicht werden</string>
 </resources>

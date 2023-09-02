@@ -345,7 +345,6 @@
     <string name="pref_category_for_this_series">Dla tej serii</string>
     <string name="manga_info_collapse">Mniej</string>
     <string name="add_to_library">Dodaj do biblioteki</string>
-    <string name="http_error_hint">Sprawdź stronę w WebView</string>
     <string name="email">Adres e-mail</string>
     <string name="downloaded_only_summary">Filtruje wszystkie pozycje w twojej bibliotece</string>
     <string name="label_downloaded_only">Tylko pobrane</string>
@@ -691,7 +690,6 @@
     <string name="source_empty_screen">Nie znaleziono źródła</string>
     <string name="source_filter_empty_screen">Nie znaleziono zainstalowanego źródła</string>
     <string name="empty_screen">Cóż, to troszkę niezręczne</string>
-    <string name="battery_not_low">Kiedy poziom baterii nie jest niski</string>
     <string name="ext_info_language">Język</string>
     <string name="reading_list">Lista czytanych</string>
     <string name="update_check_fdroid_migration_info">Nowa wersja jest dostępna z oficjalnych wydań. Naciśnij, by dowiedzieć się jak przeprowadzić migrację z nieoficjalnych wydań F-Droid.</string>

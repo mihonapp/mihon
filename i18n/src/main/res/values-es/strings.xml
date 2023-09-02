@@ -400,7 +400,6 @@
         <item quantity="other">%d actualizaciones de extensiones disponibles</item>
     </plurals>
     <string name="updating_library">Actualizando biblioteca</string>
-    <string name="http_error_hint">Abrir sitio en WebView</string>
     <string name="channel_ext_updates">Actualizaciones de extensiones</string>
     <string name="pref_skip_filtered_chapters">Saltar capítulos excluidos por filtros</string>
     <string name="pref_category_reading">Lectura</string>
@@ -695,7 +694,6 @@
     <string name="webview_data_deleted">Se han limpiado los datos del WebView</string>
     <string name="pref_clear_webview_data">Limpiar datos del WebView</string>
     <string name="action_close">Cerrar</string>
-    <string name="battery_not_low">Cuando la batería tenga suficiente carga</string>
     <string name="source_filter_empty_screen">Todavía no se ha instalado ninguna fuente</string>
     <string name="source_empty_screen">No se ha encontrado ninguna fuente</string>
     <string name="action_sort_last_manga_update">Última comprobación de actualizaciones</string>
@@ -864,4 +862,7 @@
     <string name="track_activity_name">Inicio de sesión de seguimiento</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
     <string name="licensed_manga_chapters_error">Con licencia oficial, sin capítulos que mostrar</string>
+    <string name="exception_unknown_host">No se ha podido acceder a %s</string>
+    <string name="exception_http">HTTP %d, comprueba la página web en WebView</string>
+    <string name="exception_offline">Sin conexión a Internet</string>
 </resources>

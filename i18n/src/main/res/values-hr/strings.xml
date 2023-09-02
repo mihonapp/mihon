@@ -342,7 +342,6 @@
     <string name="last_used_source">Zadnji korišteni</string>
     <string name="other_source">Drugi</string>
     <string name="local_source">Lokalni izvor</string>
-    <string name="http_error_hint">Provjeri web-stranice pomoću WebView</string>
     <string name="no_results_found">Nema rezultata</string>
     <string name="no_more_results">Nema daljnjih rezultata</string>
     <string name="updating_category">Ažuriranje kategorije</string>
@@ -677,7 +676,6 @@
     <string name="action_sort_last_manga_update">Zadnja provjera aktualiziranja</string>
     <string name="pref_long_strip_split">Rastavi visoke slike (BETA)</string>
     <string name="network_not_metered">Samo na mrežom bez ograničenja</string>
-    <string name="battery_not_low">Kad se baterija nije slaba</string>
     <string name="action_sort_unread_count">Broj nepročitanih</string>
     <string name="delete_category">Izbriši kategoriju</string>
     <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”\?</string>

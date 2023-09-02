@@ -389,7 +389,6 @@
     <string name="last_used_source">Юлашки усӑ курни</string>
     <string name="other_source">Ыттисем</string>
     <string name="local_source">Вырӑнти ҫӑл куҫ</string>
-    <string name="http_error_hint">Эле WebView-ра тӗрӗсле</string>
     <string name="no_results_found">Пӗр тупсӑм та тупӑнман</string>
     <string name="no_more_results">Урӑх тупсӑмсем ҫук</string>
     <string name="tabs_header">Кантӑксем</string>
@@ -567,7 +566,6 @@
     <string name="connected_to_wifi">Wi-Fi урлӑ ҫеҫ</string>
     <string name="action_display_show_continue_reading_button">«Малалла вула» пускӑч</string>
     <string name="pref_security_summary">Апа ҫаклатни, ыкран хӳтӗлевӗ</string>
-    <string name="battery_not_low">Петтерей тулли чух</string>
     <string name="restrictions">Чарусем: %s</string>
     <string name="pref_update_only_completely_read">Вуламан сыпӑк(сем) пур</string>
     <string name="label_started">Пуҫланӑ</string>

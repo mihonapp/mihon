@@ -470,7 +470,6 @@
     <string name="pref_clear_history">清除閱讀記錄</string>
     <string name="pref_incognito_mode_summary">暫停閱讀記錄</string>
     <string name="pref_incognito_mode">無痕模式</string>
-    <string name="http_error_hint">在 WebView 中檢查網站</string>
     <string name="file_picker_error">找不到檔案選擇器</string>
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
     <string name="migration_help_guide">來源遷移說明</string>
@@ -640,7 +639,6 @@
     <string name="pref_clear_webview_data">清除 WebView 資料</string>
     <string name="webview_data_deleted">已清除 WebView 資料</string>
     <string name="action_close">關閉</string>
-    <string name="battery_not_low">電量充足時</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
     <string name="action_sort_last_manga_update">上次檢查更新日期</string>
@@ -801,4 +799,7 @@
     <string name="track_activity_name">登入歷程平台</string>
     <string name="create_backup_file_error">無法建立備份檔</string>
     <string name="licensed_manga_chapters_error">已有正版，沒有章節可供顯示</string>
+    <string name="exception_http">HTTP %d，請在 WebView 中檢查網站</string>
+    <string name="exception_offline">沒有網際網路連線</string>
+    <string name="exception_unknown_host">無法連上 %s</string>
 </resources>

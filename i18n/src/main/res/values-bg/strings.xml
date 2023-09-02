@@ -374,7 +374,6 @@
     <string name="local_source_help_guide">Помощ за локални източници</string>
     <string name="pinned_sources">Закачени</string>
     <string name="last_used_source">Последно използвани</string>
-    <string name="http_error_hint">Виж уебсайта в WebView</string>
     <string name="email">Имейл адрес</string>
     <plurals name="download_queue_summary">
         <item quantity="one">1 оставаща</item>
@@ -668,7 +667,6 @@
     <string name="not_installed">Не е инсталиран</string>
     <string name="channel_skipped">Пропуснати</string>
     <string name="rotation_reverse_portrait">Обърнат портрет</string>
-    <string name="battery_not_low">Когато батерията не е паднала</string>
     <string name="ext_info_language">Език</string>
     <string name="crash_screen_title">Случи се неочаквана грешка</string>
     <string name="auto_download_while_reading">Автоматично изтегляне при четене</string>

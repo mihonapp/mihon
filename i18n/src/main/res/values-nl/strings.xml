@@ -373,7 +373,6 @@
     <string name="local_source_help_guide">Hulp bij lokale bronnen</string>
     <string name="pinned_sources">Vastgepind</string>
     <string name="last_used_source">Laatst gebruikt</string>
-    <string name="http_error_hint">Bekijk website in WebView</string>
     <string name="email">E-mailadres</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s resterend</item>
@@ -668,7 +667,6 @@
     <string name="ext_info_age_rating">Classificatie per leeftijd</string>
     <string name="pref_long_strip_split">Grote afbeeldingen splitsen (BETA)</string>
     <string name="ext_info_version">Versie</string>
-    <string name="battery_not_low">Wanneer de batterij niet leeg is</string>
     <string name="pref_app_language">Taal van de applicatie</string>
     <string name="empty_backup_error">Geen bibliotheek inzendingen om te backuppen</string>
     <string name="action_sort_unread_count">Ongelezen aantal</string>

@@ -260,7 +260,6 @@
     <string name="pref_library_update_refresh_metadata">Nganyari metadata otomatis</string>
     <string name="network_not_metered">Jaringan gak kebates tok</string>
     <string name="pref_library_update_manga_restriction">Lewati updatean judul</string>
-    <string name="battery_not_low">Pas baterai ora titik</string>
     <string name="pref_app_language">Bohoso aplikasi</string>
     <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.
 \n

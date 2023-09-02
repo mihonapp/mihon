@@ -50,7 +50,6 @@
     <string name="action_display_list">Тізім</string>
     <string name="action_display_download_badge">Жүктелген тараулар</string>
     <string name="secure_screen">Қолданба экранын қорғау</string>
-    <string name="battery_not_low">Батарея қуаты аз емес кезінде</string>
     <string name="pref_app_theme">Қолданба кейпі</string>
     <string name="theme_monet">Динамикалық</string>
     <string name="theme_greenapple">Жасыл Алма</string>
@@ -419,7 +418,6 @@
     <string name="email">Электрондық пошта мекенжайы</string>
     <string name="logout">Шығу</string>
     <string name="unknown_error">Белгісіз қателік</string>
-    <string name="http_error_hint">Сайтты WebView-де тексеріңіз</string>
     <string name="pref_clear_database">Дерекқорды тазалау</string>
     <string name="pref_enable_acra">Қателіктер туралы есептерді жіберу</string>
     <string name="no_pinned_sources">Сізде бекітілген дереккөздер жоқ</string>

@@ -128,7 +128,6 @@
     <string name="last_used_source">آخرین استفاده</string>
     <string name="other_source">دیگر</string>
     <string name="local_source">منبع محلی</string>
-    <string name="http_error_hint">وب سایت را در WebView بررسی کنید</string>
     <string name="no_results_found">هیچ نتیجه ای یافت نشد</string>
     <string name="no_more_results">نتیجه بیشتری یافت نشد</string>
     <string name="tabs_header">تب ها</string>
@@ -559,7 +558,6 @@
     </plurals>
     <string name="pref_update_only_completely_read">با قسمت‌(های) خوانده‌نشده</string>
     <string name="pref_library_update_refresh_trackers">ردیاب‌ها را به طور خودکار تازه کن</string>
-    <string name="battery_not_low">هنگامی که باتری کم نیست</string>
     <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>
     <string name="relative_time_today">امروز</string>
     <string name="update_72hour">هر 3 روز</string>

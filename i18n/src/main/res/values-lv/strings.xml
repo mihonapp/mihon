@@ -280,7 +280,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="pref_dark_theme_pure_black">Pilnīgi melns tumšais režīms</string>
     <string name="pref_app_language">Aplikācijas valoda</string>
-    <string name="battery_not_low">Ja akumalators nav zems</string>
     <string name="pref_update_only_completely_read">Ar nelasītu(ām) nodaļu(ām)</string>
     <string name="pref_update_only_started">Kas nav sāktas</string>
     <string name="default_category_summary">Vienmēr jautāt</string>
@@ -482,7 +481,6 @@
     <string name="pager_viewer">Lapaspušu skats</string>
     <string name="logout">Izrakstīties</string>
     <string name="pinned_sources">Piesprausts</string>
-    <string name="http_error_hint">Pārbaudīt tīmekļa vietni šeit: WebView</string>
     <string name="other_source">Citi</string>
     <string name="logout_success">Tagad jūs esat izrakstījies</string>
     <string name="tabs_header">Cilnes</string>

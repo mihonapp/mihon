@@ -473,7 +473,6 @@
     <string name="no_results_found">कुनै परिणाम फेला परेन</string>
     <string name="pinned_sources">पिन गरिएको</string>
     <string name="action_global_search_query">ग्लोबल रूपमा \"%1$s\" खोज्नुहोस्</string>
-    <string name="http_error_hint">WebView मा वेबसाइट जाँच गर्नुहोस्</string>
     <string name="unknown_author">अज्ञात लेखक</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s बाँकी</item>
@@ -661,7 +660,6 @@
     <string name="auto_download_while_reading">पढ्दा स्वत: डाउनलोड गर्नुहोस्</string>
     <string name="pref_backup_summary">म्यानुअल र स्वचालित ब्याकअप</string>
     <string name="pref_security_summary">एप लक, सुरक्षित स्क्रिन</string>
-    <string name="battery_not_low">जब ब्याट्री कम छैन</string>
     <string name="pref_long_strip_split">अग्लो छविहरू विभाजित गर्नुहोस् (BETA)</string>
     <string name="multi_lang">थुप्रै</string>
     <string name="pref_library_update_show_tab_badge">अपडेटहरू आइकनमा नपढिएको गणना देखाउनुहोस्</string>
@@ -817,4 +815,7 @@
     <string name="track_activity_name">ट्र्याकिङ लगइन</string>
     <string name="create_backup_file_error">ब्याकअप फाइल सिर्जना गर्न असफल भयो</string>
     <string name="licensed_manga_chapters_error">लाइसेन्स प्राप्त - देखाउन को लागि कुनै अध्याय छैन</string>
+    <string name="exception_offline">इन्टरनेट जडान छैन</string>
+    <string name="exception_unknown_host">%s मा पुग्न सकिएन</string>
+    <string name="exception_http">HTTP %d, WebView मा वेबसाइट जाँच गर्नुहोस्</string>
 </resources>

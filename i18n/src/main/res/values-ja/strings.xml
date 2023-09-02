@@ -325,7 +325,6 @@
     <string name="action_newest">最新</string>
     <string name="label_sources">ソース</string>
     <string name="local_source">ローカルソース</string>
-    <string name="http_error_hint">WebViewでサイトを開く</string>
     <string name="tabs_header">タブ</string>
     <string name="email">メールアドレス</string>
     <plurals name="download_queue_summary">
@@ -640,7 +639,6 @@
     <string name="action_close">閉じる</string>
     <string name="pref_clear_webview_data">WebViewデータを消去</string>
     <string name="webview_data_deleted">WebViewデータを消去しました</string>
-    <string name="battery_not_low">バッテリー残量が十分な場合</string>
     <string name="source_empty_screen">ソースが見つかりません</string>
     <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
     <string name="action_sort_last_manga_update">前回の更新確認</string>
@@ -783,7 +781,7 @@
     </plurals>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="manga_modify_calculated_interval_title">間隔を設定</string>
-    <string name="has_results">実績あり</string>
+    <string name="has_results">結果あり</string>
     <string name="track_delete_title">%s の追跡を削除しますか\?</string>
     <string name="manga_display_interval_title">毎に評価</string>
     <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
@@ -798,4 +796,10 @@
     <string name="library_sync_complete">ライブラリを同期しました</string>
     <string name="information_cloudflare_help">Cloudflareに関するヘルプ情報はこちら</string>
     <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
+    <string name="create_backup_file_error">バックアップ ファイルを作成できませんでした</string>
+    <string name="track_activity_name">トラッキング サービスにログイン</string>
+    <string name="licensed_manga_chapters_error">ライセンス制限あり—章を表示できません</string>
+    <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
+    <string name="exception_offline">インターネット接続がありません</string>
+    <string name="exception_unknown_host">%sにアクセスできませんでした</string>
 </resources>

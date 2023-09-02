@@ -555,7 +555,6 @@
     <string name="action_global_search_query">\"%1$s\" कृते सार्वत्रिकेण अवेक्षताम्</string>
     <string name="login_title">%1$s प्रति अन्तर्गच्छतु</string>
     <string name="logout_title">%1$s इतः बहिर्गच्छानि किम्</string>
-    <string name="http_error_hint">जालस्थानं वेबव्यू-तन्त्रांशे मार्गतु</string>
     <string name="source_not_installed">मूलं न प्रतिष्ठापितम् - %1$s</string>
     <string name="snack_add_to_library">माङ्गां ग्रन्थालये योजयानि किम्</string>
     <string name="notification_cover_update_failed">मुखचित्रनवीकरणम् अनुत्तीर्णम्</string>

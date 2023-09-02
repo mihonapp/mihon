@@ -460,7 +460,6 @@
     <string name="set_chapter_settings_as_default">Beállítás alapértelmezettként</string>
     <string name="pref_tablet_ui_mode">Tablet mód</string>
     <string name="action_move_to_top_all_for_series">Lista elejére</string>
-    <string name="http_error_hint">Nézze meg a web oldalt WebView-ban</string>
     <string name="action_global_search_query">Globális keresés \"%1$s\"-ra/re</string>
     <string name="no_more_results">Nincs több találat</string>
     <string name="no_results_found">Nincs találat</string>
@@ -614,7 +613,6 @@
     <string name="downloaded_only_summary">Szűri a könyvtár összes tartalmát</string>
     <string name="error_sharing_cover">Hiba a fedlap megosztása közben</string>
     <string name="action_close">Bezár</string>
-    <string name="battery_not_low">Ha nem alacsony az akkumulátor tözöttség</string>
     <string name="rotation_reverse_portrait">Fordított álló</string>
     <string name="paused">Megállítva</string>
     <string name="reading_list">Olvasási lista</string>

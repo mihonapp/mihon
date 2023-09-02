@@ -401,7 +401,6 @@
     <string name="local_source_help_guide">دليل استخدام المصادر المحلية</string>
     <string name="pinned_sources">المثبتة</string>
     <string name="last_used_source">آخر مصدر مُستخدم</string>
-    <string name="http_error_hint">التحقق من الموقع الإلكتروني في WebView</string>
     <string name="logout_success">تم تسجيل الخروج</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="logout_title">تسجيل الخروج من %1$s؟</string>
@@ -700,7 +699,6 @@
     <string name="update_check_open">فتح في GitHub</string>
     <string name="pref_clear_webview_data">احذف بيانات WebView</string>
     <string name="webview_data_deleted">حُذفت بيانات WebView</string>
-    <string name="battery_not_low">عند ارتفاع نسبة الشحن‌</string>
     <string name="source_filter_empty_screen">لا يوجد مصادر مثبته</string>
     <string name="source_empty_screen">لا يوجد مصدر</string>
     <string name="action_sort_unread_count">المانجا الغير مقروءة</string>
@@ -881,4 +879,7 @@
     <string name="track_activity_name">ولوج التتبع</string>
     <string name="download_cache_invalidated">أُفسد فهرس التنزيلات</string>
     <string name="information_cloudflare_help">اضغط هنا تتحرَّ كلاودفلير</string>
+    <string name="exception_offline">لا اتصال بالإنترنت</string>
+    <string name="exception_http">خطأ HTTP %d، انظر في WebView</string>
+    <string name="exception_unknown_host">لم نصل %s</string>
 </resources>

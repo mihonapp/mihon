@@ -427,7 +427,6 @@
     <string name="local_invalid_format">Nevalida ĉapitra formato</string>
     <string name="chapter_not_found">Ĉapitro netrovita</string>
     <string name="local_source">Loka fonta</string>
-    <string name="http_error_hint">Kontroli retejon en WebView</string>
     <string name="updating_category">Ĝisdatigi kategorion</string>
     <string name="check_for_updates">Kontroli por trovi ĝisdatigojn</string>
     <string name="help_translate">Helpu traduki</string>

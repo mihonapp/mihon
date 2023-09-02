@@ -392,7 +392,6 @@
     <string name="last_used_source">Huling ginamit</string>
     <string name="other_source">Iba pa</string>
     <string name="local_source">Lokal na Source</string>
-    <string name="http_error_hint">Bisitahin ang site sa WebView</string>
     <string name="no_results_found">Walang nakitang resulta</string>
     <string name="no_more_results">Wala na\'ng resulta</string>
     <string name="tabs_header">Mga Tab</string>
@@ -652,7 +651,6 @@
     <string name="webview_data_deleted">Nalinis na ang WebView data</string>
     <string name="pref_clear_webview_data">Linisin ang WebView data</string>
     <string name="action_close">Isara</string>
-    <string name="battery_not_low">Kapag di lowbat</string>
     <string name="source_filter_empty_screen">Walang nakitang naka-install na source</string>
     <string name="source_empty_screen">Walang nakitang source</string>
     <string name="action_sort_last_manga_update">Huling pag-update</string>

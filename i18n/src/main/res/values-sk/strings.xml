@@ -453,7 +453,6 @@
     <string name="whats_new">Čo je nové</string>
     <string name="help_translate">Pomôžte s prekladom</string>
     <string name="licenses">Licencia Open Source</string>
-    <string name="http_error_hint">Skontrolujte webovú stránku vo WebView</string>
     <string name="error_sharing_cover">Chyba pri zdieľaní obalu</string>
     <plurals name="num_trackers">
         <item quantity="one">%d sledovač</item>
@@ -612,7 +611,6 @@
         <item quantity="few">Kapitoly %1$s a %2$d ďalšie</item>
         <item quantity="other">Kapitoly %1$s a %2$d ďalších</item>
     </plurals>
-    <string name="battery_not_low">Keď batéria nie je vybitá</string>
     <string name="rotation_type">Typ rotácie</string>
     <string name="action_close">Zatvoriť</string>
     <string name="pref_library_update_categories_details">Záznamy vo vylúčených kategóriách nebudú aktualizované, aj keď sú tiež v zahrnutých kategóriách.</string>

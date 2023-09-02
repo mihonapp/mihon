@@ -363,7 +363,6 @@
         <item quantity="other">%d एक्सटेंशन अपडेट उपलब्ध</item>
     </plurals>
     <string name="channel_ext_updates">एक्सटेंशन अपडेट</string>
-    <string name="http_error_hint">WebView में वेबसाइट देखें</string>
     <string name="updating_library">अद्यतन पुस्तकालय</string>
     <string name="pref_category_reading">पठन</string>
     <string name="pref_skip_filtered_chapters">फ़िल्टर किए गए अध्यायों को छोड़ें</string>
@@ -649,7 +648,6 @@
     <string name="source_filter_empty_screen">कोई स्थापित स्रोत नहीं मिला</string>
     <string name="action_sort_last_manga_update">आखिरी आइटम अद्यतन</string>
     <string name="action_sort_unread_count">अपठित गिनती</string>
-    <string name="battery_not_low">जब बैटरी कम नहीं</string>
     <string name="webview_data_deleted">WebView डेटा साफ हो गया</string>
     <string name="update_check_open">गिटहब में खोलें</string>
     <string name="error_saving_picture">चित्र सहेजने में त्रुटि</string>

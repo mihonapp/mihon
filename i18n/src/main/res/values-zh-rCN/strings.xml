@@ -358,7 +358,6 @@
         <item quantity="other">%d 个插件可更新</item>
     </plurals>
     <string name="channel_ext_updates">插件更新</string>
-    <string name="http_error_hint">在 WebView 中检查网站</string>
     <string name="label_sources">图源</string>
     <string name="updating_library">正在更新书架</string>
     <string name="pref_category_reading">阅读</string>
@@ -639,7 +638,6 @@
     <string name="update_check_open">打开 GitHub 页面</string>
     <string name="webview_data_deleted">已清除 WebView 数据</string>
     <string name="pref_clear_webview_data">清除 WebView 数据</string>
-    <string name="battery_not_low">非低电量时</string>
     <string name="action_close">关闭</string>
     <string name="source_filter_empty_screen">未找到已安装的图源</string>
     <string name="source_empty_screen">未找到图源</string>
@@ -800,4 +798,8 @@
     <string name="download_cache_invalidated">已清除下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
     <string name="create_backup_file_error">无法创建备份文件</string>
+    <string name="licensed_manga_chapters_error">已有正版，没有章节可供显示</string>
+    <string name="exception_offline">未连接网络</string>
+    <string name="exception_http">HTTP %d，请在 WebView 中检查网站</string>
+    <string name="exception_unknown_host">无法连接到 %s</string>
 </resources>

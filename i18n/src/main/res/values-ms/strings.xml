@@ -358,7 +358,6 @@
         <item quantity="other">%d kemas kini sambungan tersedia</item>
     </plurals>
     <string name="channel_ext_updates">Kemas kini sambungan</string>
-    <string name="http_error_hint">Semak laman web dalam WebView</string>
     <string name="updating_library">Mengemas kini pustaka</string>
     <string name="pref_category_reading">Membaca</string>
     <string name="vertical_plus_viewer">Sebaris panjang dengan sela</string>
@@ -404,7 +403,7 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s ralat</item>
     </plurals>
-    <string name="tracking_info">Sinkron satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
+    <string name="tracking_info">Menyelaras satu hala untuk kemas kini bab kemajuan dalam sistem penjejakan. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>
     <string name="sort_by_upload_date">Mengikut tarikh muat naik</string>
     <string name="label_data">Data</string>
@@ -640,7 +639,6 @@
     <string name="pref_clear_webview_data">Hapus data WebView</string>
     <string name="webview_data_deleted">Data WebView dihapuskan</string>
     <string name="action_close">Tutup</string>
-    <string name="battery_not_low">Apabila bateri tidak lemah</string>
     <string name="source_filter_empty_screen">Tiada sumber dipasang ditemui</string>
     <string name="source_empty_screen">Tiada sumber ditemui</string>
     <string name="action_sort_unread_count">Bilangan belum dibaca</string>
@@ -699,7 +697,7 @@
     <string name="pref_library_summary">Kategori, Kemas kini keseluruhan, leret bab</string>
     <string name="pref_reader_summary">Mod membaca, paparan, navigasi</string>
     <string name="pref_downloads_summary">Muat turun automatik, muat turun maju</string>
-    <string name="pref_tracking_summary">Sinkron kemajuan satu hala, pertingkat sinkron</string>
+    <string name="pref_tracking_summary">Menyelaras kemajuan satu hala, pertingkat menyelaras</string>
     <string name="pref_backup_summary">Manual &amp; sandaran automatik</string>
     <string name="pref_advanced_summary">Kumpulan log kerosakan, pengoptimuman bateri</string>
     <string name="pref_security_summary">Kekunci aplikasi, skrin keselamatan</string>
@@ -784,7 +782,7 @@
     <plurals name="day">
         <item quantity="other">%d hari</item>
     </plurals>
-    <string name="manga_modify_calculated_interval_title">Tersuai Jarak Masa</string>
+    <string name="manga_modify_calculated_interval_title">Tersuai jarak masa</string>
     <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
     <string name="action_filter_interval_passed">Melepasi tempoh semak</string>
@@ -794,4 +792,14 @@
     <string name="track_delete_remote_text">Juga buang daripada %s</string>
     <string name="delete_downloaded">Padam dimuat turun</string>
     <string name="has_results">Mempunyai hasil</string>
+    <string name="create_backup_file_error">Tidak boleh menghasilkan fail sandaran</string>
+    <string name="licensed_manga_chapters_error">Berlesen - Tiada bab untuk ditayangkan</string>
+    <string name="exception_unknown_host">Tidak dapat mencapai %s</string>
+    <string name="syncing_library">Menyelaraskan pustaka</string>
+    <string name="library_sync_complete">Pustaka selesai diselaraskan</string>
+    <string name="exception_offline">Tiada sambungan Internet</string>
+    <string name="track_activity_name">Log masuk penjejakan</string>
+    <string name="download_cache_invalidated">Indeks muat turun tidak sah</string>
+    <string name="information_cloudflare_help">Ketik di sini untuk bantuan berkenaan Cloudflare</string>
+    <string name="exception_http">HTTP %d, semak laman web dalam WebView</string>
 </resources>

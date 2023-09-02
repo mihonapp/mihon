@@ -460,7 +460,6 @@
     <string name="local_source_help_guide">স্থানীয় উৎস নির্দেশিকা</string>
     <string name="action_global_search_query">\"%1$s\" সার্বজনীনভাবে খুঁজুন</string>
     <string name="last_used_source">সর্বশেষ ব্যবহৃত</string>
-    <string name="http_error_hint">ওয়েবসাইটটি ওয়েবভিউতে পরীক্ষা করুন</string>
     <string name="tabs_header">ট্যাব গুলি</string>
     <string name="downloaded_chapters">ডাউনলোড করা অধ্যায়</string>
     <string name="manga_from_library">লাইব্রেরীর মাঙ্গা</string>

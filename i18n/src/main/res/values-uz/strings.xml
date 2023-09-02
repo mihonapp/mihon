@@ -271,7 +271,6 @@
     <string name="ext_info_language">Til</string>
     <string name="portrait">Portret</string>
     <string name="update_24hour">Har kun</string>
-    <string name="battery_not_low">Quvvat past bo\'lmaganda</string>
     <string name="pref_library_update_interval">Avtomatik yangilanish</string>
     <string name="update_never">O\'chiq</string>
     <string name="pref_grayscale">Kulrang</string>

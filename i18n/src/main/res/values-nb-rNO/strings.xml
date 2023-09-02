@@ -394,7 +394,6 @@
     <string name="unknown_status">Ukjent status</string>
     <string name="unknown_author">Ukjent forfatter</string>
     <string name="local_source_help_guide">Lokal kildeguide</string>
-    <string name="http_error_hint">Sjekk nettsted i WebView</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s gjenstående</item>
         <item quantity="other">%1$s gjenstående</item>
@@ -652,7 +651,6 @@
     <string name="action_close">Lukk</string>
     <string name="pref_clear_webview_data">Slett WebView data</string>
     <string name="webview_data_deleted">WebView data slettet</string>
-    <string name="battery_not_low">Batteri er ikke lavt</string>
     <string name="empty_screen">Vel, dette er pinlig</string>
     <string name="pref_tracking_summary">Enveis fremdriftssynkronisering, forbedret synkronisering</string>
     <string name="pref_browse_summary">Kilder, utvidelser, globalt søk</string>
@@ -779,7 +777,7 @@
         <item quantity="one">Mangler %1$s kapittel</item>
         <item quantity="other">Mangler %1$s kapitler</item>
     </plurals>
-    <string name="pref_page_rotate_invert">Skift retning på roterte brede sider</string>
+    <string name="pref_page_rotate_invert">Vend orienteringen av roterte brede sider</string>
     <string name="pref_page_rotate">Roter brede sider slik at de passer</string>
     <string name="pref_debug_info">Debug info</string>
     <string name="pref_library_columns_per_row">%d per rad</string>
@@ -814,4 +812,7 @@
     <string name="library_sync_complete">Biblioteksynkronisering fullført</string>
     <string name="information_cloudflare_help">Trykk her for å få hjelp med Cloudflare</string>
     <string name="download_cache_invalidated">Nedlastingsindeksen er ugyldiggjort</string>
+    <string name="create_backup_file_error">Kunne ikke opprette en backup-fil</string>
+    <string name="licensed_manga_chapters_error">Lisensiert - Ingen kapitler å vise</string>
+    <string name="track_activity_name">Sporingsinnlogging</string>
 </resources>

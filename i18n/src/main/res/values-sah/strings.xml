@@ -300,7 +300,6 @@
     <string name="last_used_source">Бүтэһигинэн туттуллубут</string>
     <string name="other_source">Атыттар</string>
     <string name="local_source">Локальнай төрүт</string>
-    <string name="http_error_hint">Үөп сири WebView\'га көрүн</string>
     <string name="no_results_found">Түмүк суох</string>
     <string name="no_more_results">Эбии түмүк суох</string>
     <string name="tabs_header">Кыбытыктар</string>

@@ -244,7 +244,6 @@
     <string name="tabs_header">ჩანართები</string>
     <string name="no_more_results">შედეგების სიის დასასრული</string>
     <string name="no_results_found">შედეგი ვერ მოიძებნა</string>
-    <string name="http_error_hint">ვებსაიტის ნახვა WebView-ში</string>
     <string name="local_source">ლოცალური წყარო</string>
     <string name="other_source">სხვა</string>
     <string name="last_used_source">ბოლოს გამოყენებული</string>

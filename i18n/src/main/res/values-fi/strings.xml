@@ -388,7 +388,6 @@
     <string name="manga_info_collapse">Vähemmän</string>
     <string name="manga_info_expand">Enemmän</string>
     <string name="pinned_sources">Kiinnitetyt</string>
-    <string name="http_error_hint">Katso sivu WebViewissä</string>
     <string name="pref_category_reading">Luettavana</string>
     <string name="check_for_updates">Tarkista päivitykset</string>
     <string name="last_used_source">Viimeksi käytetty</string>
@@ -621,7 +620,6 @@
     <string name="pref_highest">Korkein</string>
     <string name="ext_info_language">Kieli</string>
     <string name="action_search_hint">Haku…</string>
-    <string name="battery_not_low">Kun akku ei ole vähissä</string>
     <string name="theme_lavender">Laventeli</string>
     <string name="pref_app_language">Sovelluksen kieli</string>
     <string name="ext_info_version">Versio</string>

@@ -184,7 +184,6 @@
     <string name="secure_screen_summary">Ekrani i sigurt fsheh përmbajtjen e aplikacionit kur ndërron aplikacionet dhe bllokon screenshots</string>
     <string name="parental_controls_info">Kjo nuk parandalon shtesat jozyrtare ose potencialisht të shënuara gabimisht që të shfaqin përmbajtjen NSFW (18+) brenda aplikacionit.</string>
     <string name="portrait">Portret</string>
-    <string name="battery_not_low">Kur bateria nuk është e ulët</string>
     <string name="restrictions">Kufizimet: %s</string>
     <string name="pref_library_update_interval">Përditësimet automatike</string>
     <string name="update_6hour">Çdo 6 orë</string>
@@ -595,7 +594,6 @@
     <string name="downloaded_chapters">Kapitujt e shkarkuar</string>
     <string name="tabs_header">Skedat</string>
     <string name="no_more_results">Nuk ka më rezultate</string>
-    <string name="http_error_hint">Kontrolloni faqen e internetit në WebView</string>
     <string name="local_source">Burimi lokal</string>
     <string name="other_source">Tjetër</string>
     <string name="pinned_sources">Fiksuar</string>

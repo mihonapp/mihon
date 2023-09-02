@@ -400,7 +400,6 @@
     </plurals>
     <string name="updating_library">Atualizando biblioteca</string>
     <string name="pinned_sources">Fixado</string>
-    <string name="http_error_hint">Verifique o sítio web no WebView</string>
     <string name="pref_webtoon_side_padding">Preenchimento lateral</string>
     <string name="pref_category_reading">Lendo</string>
     <string name="vertical_plus_viewer">Página longa com espaços</string>
@@ -676,7 +675,6 @@
     <string name="disabled_nav">Desativado</string>
     <string name="action_display_cover_only_grid">Grelha apenas de capas</string>
     <string name="action_close">Fechar</string>
-    <string name="battery_not_low">Quando a bateria não está fraca</string>
     <string name="action_move_to_top_all_for_series">Mover séries para o topo</string>
     <string name="skipped_reason_completed">Ignorado porque a séria está completa</string>
     <string name="skipped_reason_not_started">Ignorado porque nenhum capítulo foi lido</string>
@@ -847,4 +845,5 @@
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar a cada</string>
     <string name="skipped_reason_not_in_release_period">Pulado, pois nenhum lançamento é esperado para hoje</string>
+    <string name="delete_downloaded">Deletar dowloand</string>
 </resources>

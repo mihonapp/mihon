@@ -150,7 +150,6 @@
     <string name="update_48hour">Kada 2 ka adlaw</string>
     <string name="update_weekly">Kada semana</string>
     <string name="charging">Sa dihang nag-charge</string>
-    <string name="battery_not_low">Dili ubos ang baterya</string>
     <string name="restrictions">Mga pagdili: %s</string>
     <string name="pref_library_update_manga_restriction">Laktawan ang pag-update sa mga titulo</string>
     <string name="pref_update_only_completely_read">Uban sa wala pa mabasa nga (mga) kapitulo</string>

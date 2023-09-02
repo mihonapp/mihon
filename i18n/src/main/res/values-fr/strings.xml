@@ -402,7 +402,6 @@
         <item quantity="many">%d mises à jour d\'extensions disponibles</item>
         <item quantity="other">%d mises à jour d\'extensions disponibles</item>
     </plurals>
-    <string name="http_error_hint">Consultez le site Web de WebView</string>
     <string name="updating_library">Mise à jour de la bibliothèque</string>
     <string name="label_sources">Sources</string>
     <string name="pref_category_reading">En cours</string>
@@ -698,7 +697,6 @@
     <string name="pref_clear_webview_data">Effacer les données WebView</string>
     <string name="webview_data_deleted">Données WebView effacées</string>
     <string name="action_close">Fermer</string>
-    <string name="battery_not_low">Quand la batterie n\'est pas faible</string>
     <string name="source_filter_empty_screen">Aucune source installée trouvée</string>
     <string name="action_sort_last_manga_update">Dernière verification de mise à jour</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>

@@ -23,7 +23,7 @@
     <string name="action_add_category">Agregar categoría</string>
     <string name="action_add">Agregar</string>
     <string name="action_edit">Editar</string>
-    <string name="action_update_library">Actualizar Biblioteca</string>
+    <string name="action_update_library">Actualizar biblioteca</string>
     <string name="action_delete">Borrar</string>
     <string name="action_download">Descargar</string>
     <string name="action_mark_previous_as_read">Marcar anteriores como leído</string>
@@ -320,7 +320,6 @@
     <string name="last_used_source">Última usada</string>
     <string name="other_source">Otro</string>
     <string name="local_source">Fuente local</string>
-    <string name="http_error_hint">Abrir sitio en WebView</string>
     <string name="no_results_found">No se han encontrado resultados</string>
     <string name="no_more_results">No hay más resultados</string>
     <string name="tabs_header">Pestañas</string>
@@ -398,8 +397,8 @@
     <string name="ongoing">En curso</string>
     <string name="update_check_no_new_updates">No hay nuevas actualizaciones disponibles</string>
     <string name="update_check_confirm">Descargar</string>
-    <string name="file_select_backup">Seleccione el archivo de copia de seguridad</string>
-    <string name="file_select_cover">Seleccione la imagen de portada</string>
+    <string name="file_select_backup">Seleccionar archivo de copia de seguridad</string>
+    <string name="file_select_cover">Seleccionar imagen de portada</string>
     <string name="notification_first_add_to_library">Por favor agregue el manga a la biblioteca antes de hacer esto</string>
     <string name="notification_cover_update_failed">Error al actualizar la portada</string>
     <plurals name="notification_chapters_multiple_and_more">
@@ -663,7 +662,6 @@
     <string name="update_check_fdroid_migration_info">Una nueva versión esta disponible desde los lanzamientos oficiales, Toca para aprender a emigrar de lanzamientos F-droid no oficiales.</string>
     <string name="error_saving_picture">Error al guardar imagen</string>
     <string name="action_close">Cerrar</string>
-    <string name="battery_not_low">Cuando la batería no está baja</string>
     <string name="update_check_open">Abrir en GitHub</string>
     <string name="source_empty_screen">Ninguna fuente encontrada</string>
     <string name="source_filter_empty_screen">No se encontró ninguna fuente instalada</string>
@@ -826,4 +824,14 @@
         <item quantity="other">%d días</item>
     </plurals>
     <string name="has_results">Con resultados</string>
+    <string name="licensed_manga_chapters_error">Licenciado - No hay capítulos para mostrar</string>
+    <string name="exception_http">HTTP %d, comprueba la página web en WebView</string>
+    <string name="exception_offline">Sin conexión a Internet</string>
+    <string name="download_cache_invalidated">Índice de descargas invalidado</string>
+    <string name="create_backup_file_error">No se pudo crear un archivo de respaldo</string>
+    <string name="syncing_library">Sincronizando biblioteca</string>
+    <string name="library_sync_complete">Se completó la sincronización de la biblioteca</string>
+    <string name="information_cloudflare_help">Toque aquí para obtener ayuda con Cloudflare</string>
+    <string name="track_activity_name">Inicio de sesión para seguimiento</string>
+    <string name="exception_unknown_host">No se pudo acceder a %s</string>
 </resources>

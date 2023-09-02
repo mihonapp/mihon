@@ -363,7 +363,6 @@
     <string name="last_used_source">ಕೊನೆಯದಾಗಿ ಉಪಯೋಗಿಸಿದ</string>
     <string name="other_source">ಇತರೆ</string>
     <string name="local_source">ಲೋಕಲ್ ಮೂಲ</string>
-    <string name="http_error_hint">ವೆಬ್‌ವೀಕ್ಷಣೆಯಲ್ಲಿ ವೆಬ್‌ಸೈಟ್ ಪರಿಶೀಲಿಸಿ</string>
     <string name="no_results_found">ಯಾವುದೇ ಫಲಿತಾಂಶಗಳು ಕಂಡುಬರಲಿಲ್ಲ</string>
     <string name="no_more_results">ಹೆಚ್ಚಿನ ಫಲಿತಾಂಶಗಳಿಲ್ಲ</string>
     <string name="updating_category">ವರ್ಗವನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ</string>

@@ -372,7 +372,6 @@
         <item quantity="many">%d наявних оновлень розширень</item>
     </plurals>
     <string name="channel_ext_updates">Оновлення розширень</string>
-    <string name="http_error_hint">Відкрити сайт у WebView</string>
     <string name="pref_category_reading">Читання</string>
     <string name="label_sources">Джерела</string>
     <string name="updating_library">Оновлення бібліотеки</string>
@@ -693,7 +692,6 @@
     <string name="learn_more">Тицьніть задля подробиць</string>
     <string name="cant_open_last_read_chapter">Не вдається відкрити останній прочитаний розділ</string>
     <string name="pref_app_language">Мова застосунку</string>
-    <string name="battery_not_low">Коли батарею заряджено</string>
     <string name="ext_info_version">Версія</string>
     <string name="ext_info_language">Мова</string>
     <string name="ext_info_age_rating">Вікові обмеження</string>
