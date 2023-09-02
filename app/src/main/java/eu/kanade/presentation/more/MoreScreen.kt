@@ -108,11 +108,11 @@ fun MoreScreen(
                                 stringResource(R.string.paused)
                             } else {
                                 "${stringResource(R.string.paused)} • ${
-                                pluralStringResource(
-                                    id = R.plurals.download_queue_summary,
-                                    count = pending,
-                                    pending,
-                                )
+                                    pluralStringResource(
+                                        id = R.plurals.download_queue_summary,
+                                        count = pending,
+                                        pending,
+                                    )
                                 }"
                             }
                         }

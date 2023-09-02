@@ -30,7 +30,9 @@ fun AlertDialogContent(
         title = title,
         content = {
             Column {
-                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                CompositionLocalProvider(
+                    LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant,
+                ) {
                     val textStyle = MaterialTheme.typography.bodyMedium
                     ProvideTextStyle(textStyle) {
                         Box(
@@ -54,7 +56,9 @@ fun AlertDialogContent(
                         )
                         .align(Alignment.End),
                 ) {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.primary) {
+                    CompositionLocalProvider(
+                        LocalContentColor provides MaterialTheme.colorScheme.primary,
+                    ) {
                         val textStyle = MaterialTheme.typography.labelLarge
                         ProvideTextStyle(value = textStyle, content = buttons)
                     }
@@ -86,7 +90,9 @@ fun AlertDialogContent(
                     .fillMaxWidth(),
             ) {
                 icon?.let {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.secondary) {
+                    CompositionLocalProvider(
+                        LocalContentColor provides MaterialTheme.colorScheme.secondary,
+                    ) {
                         Box(
                             Modifier
                                 .padding(IconPadding)
@@ -97,7 +103,9 @@ fun AlertDialogContent(
                     }
                 }
                 title?.let {
-                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+                    CompositionLocalProvider(
+                        LocalContentColor provides MaterialTheme.colorScheme.onSurface,
+                    ) {
                         val textStyle = MaterialTheme.typography.headlineSmall
                         ProvideTextStyle(textStyle) {
                             Box(

@@ -37,9 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
  * By always rotating we give the feedback to the user that the application isn't 'stuck'.
  */
 @Composable
-fun CombinedCircularProgressIndicator(
-    progress: Float,
-) {
+fun CombinedCircularProgressIndicator(progress: Float) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,

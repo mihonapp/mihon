@@ -23,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import tachiyomi.presentation.core.theme.header
 
 @Composable
-fun CollapsibleBox(
-    heading: String,
-    content: @Composable () -> Unit,
-) {
+fun CollapsibleBox(heading: String, content: @Composable () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Column {

@@ -135,7 +135,11 @@ abstract class HttpSource : CatalogueSource {
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+    override fun fetchSearchManga(
+        page: Int,
+        query: String,
+        filters: FilterList,
+    ): Observable<MangasPage> {
         return Observable.defer {
             try {
                 client.newCall(searchMangaRequest(page, query, filters)).asObservableSuccess()
@@ -157,7 +161,11 @@ abstract class HttpSource : CatalogueSource {
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    protected abstract fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request
+    protected abstract fun searchMangaRequest(
+        page: Int,
+        query: String,
+        filters: FilterList,
+    ): Request
 
     /**
      * Parses the response from the site and returns a [MangasPage] object.

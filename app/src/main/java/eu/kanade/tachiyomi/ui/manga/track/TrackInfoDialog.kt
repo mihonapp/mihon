@@ -271,7 +271,10 @@ private data class TrackStatusSelectorScreen(
             selection = state.selection,
             onSelectionChange = sm::setSelection,
             selections = remember { sm.getSelections() },
-            onConfirm = { sm.setStatus(); navigator.pop() },
+            onConfirm = {
+                sm.setStatus()
+                navigator.pop()
+            },
             onDismissRequest = navigator::pop,
         )
     }
@@ -322,7 +325,10 @@ private data class TrackChapterSelectorScreen(
             selection = state.selection,
             onSelectionChange = sm::setSelection,
             range = remember { sm.getRange() },
-            onConfirm = { sm.setChapter(); navigator.pop() },
+            onConfirm = {
+                sm.setChapter()
+                navigator.pop()
+            },
             onDismissRequest = navigator::pop,
         )
     }
@@ -378,7 +384,10 @@ private data class TrackScoreSelectorScreen(
             selection = state.selection,
             onSelectionChange = sm::setSelection,
             selections = remember { sm.getSelections() },
-            onConfirm = { sm.setScore(); navigator.pop() },
+            onConfirm = {
+                sm.setScore()
+                navigator.pop()
+            },
             onDismissRequest = navigator::pop,
         )
     }
@@ -495,7 +504,10 @@ private data class TrackDateSelectorScreen(
             },
             initialSelectedDateMillis = sm.initialSelection,
             selectableDates = selectableDates,
-            onConfirm = { sm.setDate(it); navigator.pop() },
+            onConfirm = {
+                sm.setDate(it)
+                navigator.pop()
+            },
             onRemove = { sm.confirmRemoveDate(navigator) }.takeIf { canRemove },
             onDismissRequest = navigator::pop,
         )
@@ -584,7 +596,10 @@ private data class TrackDateRemoverScreen(
                         Text(text = stringResource(android.R.string.cancel))
                     }
                     FilledTonalButton(
-                        onClick = { sm.removeDate(); navigator.popUntil { it is TrackInfoDialogHomeScreen } },
+                        onClick = {
+                            sm.removeDate()
+                            navigator.popUntil { it is TrackInfoDialogHomeScreen }
+                        },
                         colors = ButtonDefaults.filledTonalButtonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -646,7 +661,10 @@ data class TrackServiceSearchScreen(
             queryResult = state.queryResult,
             selected = state.selected,
             onSelectedChange = sm::updateSelection,
-            onConfirmSelection = { sm.registerTracking(state.selected!!); navigator.pop() },
+            onConfirmSelection = {
+                sm.registerTracking(state.selected!!)
+                navigator.pop()
+            },
             onDismissRequest = navigator::pop,
         )
     }

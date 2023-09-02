@@ -90,7 +90,7 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
-kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
+ktlint = "org.jlleitschuh.gradle:ktlint-gradle:11.5.1"
 
 [bundles]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]

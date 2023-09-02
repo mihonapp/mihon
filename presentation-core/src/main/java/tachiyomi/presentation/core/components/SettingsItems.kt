@@ -51,16 +51,12 @@ object SettingsItemsPaddings {
 }
 
 @Composable
-fun HeadingItem(
-    @StringRes labelRes: Int,
-) {
+fun HeadingItem(@StringRes labelRes: Int) {
     HeadingItem(stringResource(labelRes))
 }
 
 @Composable
-fun HeadingItem(
-    text: String,
-) {
+fun HeadingItem(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.header,
@@ -74,11 +70,7 @@ fun HeadingItem(
 }
 
 @Composable
-fun IconItem(
-    label: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
+fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -93,11 +85,7 @@ fun IconItem(
 }
 
 @Composable
-fun SortItem(
-    label: String,
-    sortDescending: Boolean?,
-    onClick: () -> Unit,
-) {
+fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
     val arrowIcon = when (sortDescending) {
         true -> Icons.Default.ArrowDownward
         false -> Icons.Default.ArrowUpward
@@ -122,10 +110,7 @@ fun SortItem(
 }
 
 @Composable
-fun CheckboxItem(
-    label: String,
-    pref: Preference<Boolean>,
-) {
+fun CheckboxItem(label: String, pref: Preference<Boolean>) {
     val checked by pref.collectAsState()
     CheckboxItem(
         label = label,
@@ -135,11 +120,7 @@ fun CheckboxItem(
 }
 
 @Composable
-fun CheckboxItem(
-    label: String,
-    checked: Boolean,
-    onClick: () -> Unit,
-) {
+fun CheckboxItem(label: String, checked: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -153,11 +134,7 @@ fun CheckboxItem(
 }
 
 @Composable
-fun RadioItem(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-) {
+fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -314,11 +291,7 @@ fun TriStateItem(
 }
 
 @Composable
-fun TextItem(
-    label: String,
-    value: String,
-    onChange: (String) -> Unit,
-) {
+fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,10 +304,7 @@ fun TextItem(
 }
 
 @Composable
-fun SettingsChipRow(
-    @StringRes labelRes: Int,
-    content: @Composable FlowRowScope.() -> Unit,
-) {
+fun SettingsChipRow(@StringRes labelRes: Int, content: @Composable FlowRowScope.() -> Unit) {
     Column {
         HeadingItem(labelRes)
         FlowRow(

@@ -99,7 +99,9 @@ import kotlin.math.max
 @Composable
 fun Scaffold(
     modifier: Modifier = Modifier,
-    topBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState()),
+    topBarScrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
+        rememberTopAppBarState(),
+    ),
     topBar: @Composable (TopAppBarScrollBehavior) -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     startBar: @Composable () -> Unit = {},
@@ -116,7 +118,11 @@ fun Scaffold(
     androidx.compose.material3.Surface(
         modifier = Modifier
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
-            .onConsumedWindowInsetsChanged { remainingWindowInsets.insets = contentWindowInsets.exclude(it) }
+            .onConsumedWindowInsetsChanged {
+                remainingWindowInsets.insets = contentWindowInsets.exclude(
+                    it,
+                )
+            }
             .then(modifier),
         color = containerColor,
         contentColor = contentColor,
@@ -271,7 +277,10 @@ private fun ScaffoldLayout(
                     } else {
                         max(bottomBarHeightPx.toDp(), fabOffsetDp)
                     },
-                    start = max(insets.calculateStartPadding((this@SubcomposeLayout).layoutDirection), startBarWidth.toDp()),
+                    start = max(
+                        insets.calculateStartPadding((this@SubcomposeLayout).layoutDirection),
+                        startBarWidth.toDp(),
+                    ),
                     end = insets.calculateEndPadding((this@SubcomposeLayout).layoutDirection),
                 )
                 content(innerPadding)

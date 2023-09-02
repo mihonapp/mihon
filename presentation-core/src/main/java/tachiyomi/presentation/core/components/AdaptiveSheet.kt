@@ -182,7 +182,10 @@ fun AdaptiveSheet(
                 shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = tonalElevation,
                 content = {
-                    BackHandler(enabled = anchoredDraggableState.targetValue == 0, onBack = internalOnDismissRequest)
+                    BackHandler(
+                        enabled = anchoredDraggableState.targetValue == 0,
+                        onBack = internalOnDismissRequest,
+                    )
                     content()
                 },
             )
@@ -200,49 +203,50 @@ fun AdaptiveSheet(
     }
 }
 
-private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection() = object : NestedScrollConnection {
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.toFloat()
-        return if (delta < 0 && source == NestedScrollSource.Drag) {
-            dispatchRawDelta(delta).toOffset()
-        } else {
-            Offset.Zero
+private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection() =
+    object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            val delta = available.toFloat()
+            return if (delta < 0 && source == NestedScrollSource.Drag) {
+                dispatchRawDelta(delta).toOffset()
+            } else {
+                Offset.Zero
+            }
         }
-    }
 
-    override fun onPostScroll(
-        consumed: Offset,
-        available: Offset,
-        source: NestedScrollSource,
-    ): Offset {
-        return if (source == NestedScrollSource.Drag) {
-            dispatchRawDelta(available.toFloat()).toOffset()
-        } else {
-            Offset.Zero
+        override fun onPostScroll(
+            consumed: Offset,
+            available: Offset,
+            source: NestedScrollSource,
+        ): Offset {
+            return if (source == NestedScrollSource.Drag) {
+                dispatchRawDelta(available.toFloat()).toOffset()
+            } else {
+                Offset.Zero
+            }
         }
-    }
 
-    override suspend fun onPreFling(available: Velocity): Velocity {
-        val toFling = available.toFloat()
-        return if (toFling < 0 && offset > anchors.minAnchor()) {
-            settle(toFling)
-            // since we go to the anchor with tween settling, consume all for the best UX
-            available
-        } else {
-            Velocity.Zero
+        override suspend fun onPreFling(available: Velocity): Velocity {
+            val toFling = available.toFloat()
+            return if (toFling < 0 && offset > anchors.minAnchor()) {
+                settle(toFling)
+                // since we go to the anchor with tween settling, consume all for the best UX
+                available
+            } else {
+                Velocity.Zero
+            }
         }
+
+        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+            settle(velocity = available.toFloat())
+            return available
+        }
+
+        private fun Float.toOffset(): Offset = Offset(0f, this)
+
+        @JvmName("velocityToFloat")
+        private fun Velocity.toFloat() = this.y
+
+        @JvmName("offsetToFloat")
+        private fun Offset.toFloat(): Float = this.y
     }
-
-    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-        settle(velocity = available.toFloat())
-        return available
-    }
-
-    private fun Float.toOffset(): Offset = Offset(0f, this)
-
-    @JvmName("velocityToFloat")
-    private fun Velocity.toFloat() = this.y
-
-    @JvmName("offsetToFloat")
-    private fun Offset.toFloat(): Float = this.y
-}

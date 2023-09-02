@@ -27,7 +27,10 @@ class SetFetchInterval(
             window
         }
         val chapters = getChapterByMangaId.await(manga.id)
-        val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(chapters, dateTime)
+        val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
+            chapters,
+            dateTime,
+        )
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, currentWindow)
 
         return if (manga.nextUpdate == nextUpdate && manga.fetchInterval == interval) {
@@ -46,7 +49,9 @@ class SetFetchInterval(
 
     internal fun calculateInterval(chapters: List<Chapter>, zonedDateTime: ZonedDateTime): Int {
         val sortedChapters = chapters
-            .sortedWith(compareByDescending<Chapter> { it.dateUpload }.thenByDescending { it.dateFetch })
+            .sortedWith(
+                compareByDescending<Chapter> { it.dateUpload }.thenByDescending { it.dateFetch },
+            )
             .take(50)
 
         val uploadDates = sortedChapters
@@ -95,7 +100,10 @@ class SetFetchInterval(
             manga.nextUpdate !in window.first.rangeTo(window.second + 1) ||
             manga.fetchInterval == 0
         ) {
-            val latestDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(manga.lastUpdate), dateTime.zone)
+            val latestDate = ZonedDateTime.ofInstant(
+                Instant.ofEpochMilli(manga.lastUpdate),
+                dateTime.zone,
+            )
                 .toLocalDate()
                 .atStartOfDay()
             val timeSinceLatest = ChronoUnit.DAYS.between(latestDate, dateTime).toInt()

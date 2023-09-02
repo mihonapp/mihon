@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     id("com.android.application")
@@ -104,15 +103,17 @@ android {
     }
 
     packaging {
-        resources.excludes.addAll(listOf(
-            "META-INF/DEPENDENCIES",
-            "LICENSE.txt",
-            "META-INF/LICENSE",
-            "META-INF/LICENSE.txt",
-            "META-INF/README.md",
-            "META-INF/NOTICE",
-            "META-INF/*.kotlin_module",
-        ))
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/DEPENDENCIES",
+                "LICENSE.txt",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/README.md",
+                "META-INF/NOTICE",
+                "META-INF/*.kotlin_module",
+            ),
+        )
     }
 
     dependenciesInfo {
@@ -264,7 +265,9 @@ androidComponents {
     beforeVariants { variantBuilder ->
         // Disables standardBenchmark
         if (variantBuilder.buildType == "benchmark") {
-            variantBuilder.enable = variantBuilder.productFlavors.containsAll(listOf("default" to "dev"))
+            variantBuilder.enable = variantBuilder.productFlavors.containsAll(
+                listOf("default" to "dev"),
+            )
         }
     }
     onVariants(selector().withFlavor("default" to "standard")) {
@@ -275,10 +278,6 @@ androidComponents {
 }
 
 tasks {
-    withType<LintTask>().configureEach {
-        exclude { it.file.path.contains("generated[\\\\/]".toRegex()) }
-    }
-
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
     withType<KotlinCompile> {
         kotlinOptions.freeCompilerArgs += listOf(
@@ -303,12 +302,12 @@ tasks {
             kotlinOptions.freeCompilerArgs += listOf(
                 "-P",
                 "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics"
+                    project.buildDir.absolutePath + "/compose_metrics",
             )
             kotlinOptions.freeCompilerArgs += listOf(
                 "-P",
                 "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics"
+                    project.buildDir.absolutePath + "/compose_metrics",
             )
         }
     }

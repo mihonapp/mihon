@@ -91,7 +91,7 @@ fun SetIntervalDialog(
             TextButton(onClick = {
                 onValueChanged(selectedInterval)
                 onDismissRequest()
-            },) {
+            }) {
                 Text(text = stringResource(R.string.action_ok))
             }
         },
