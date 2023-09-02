@@ -27,7 +27,7 @@ guava = "com.google.guava:guava:32.1.2-android"
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 
-benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.0-beta04"
+benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.0-beta05"
 test-ext = "androidx.test.ext:junit-ktx:1.2.0-alpha01"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-alpha01"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0-alpha04"
