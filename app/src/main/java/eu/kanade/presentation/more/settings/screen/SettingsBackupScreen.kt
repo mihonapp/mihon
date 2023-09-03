@@ -108,7 +108,7 @@ object SettingsBackupScreen : SearchableSettings {
                     showCreateDialog = false
                     flag = it
                     try {
-                        chooseBackupDir.launch(Backup.getBackupFilename())
+                        chooseBackupDir.launch(Backup.getFilename())
                     } catch (e: ActivityNotFoundException) {
                         flag = 0
                         context.toast(R.string.file_picker_error)

@@ -16,7 +16,9 @@ data class Backup(
 ) {
 
     companion object {
-        fun getBackupFilename(): String {
+        val filenameRegex = """tachiyomi_\d+-\d+-\d+_\d+-\d+.proto.gz""".toRegex()
+
+        fun getFilename(): String {
             val date = SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.getDefault()).format(Date())
             return "tachiyomi_$date.proto.gz"
         }
