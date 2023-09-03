@@ -19,7 +19,7 @@ class UnlockActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startAuthentication(
-            getString(R.string.unlock_app),
+            getString(R.string.unlock_app_title, getString(R.string.app_name)),
             confirmationRequired = false,
             callback = object : AuthenticatorUtil.AuthenticationCallback() {
                 override fun onAuthenticationError(
