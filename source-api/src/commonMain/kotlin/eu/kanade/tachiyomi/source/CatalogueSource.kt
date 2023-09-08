@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import rx.Observable
+import tachiyomi.core.util.lang.awaitSingle
 
 interface CatalogueSource : Source {
 
@@ -17,30 +18,63 @@ interface CatalogueSource : Source {
     val supportsLatest: Boolean
 
     /**
-     * Returns an observable containing a page with a list of manga.
+     * Get a page with a list of manga.
      *
+     * @since extensions-lib 1.5
      * @param page the page number to retrieve.
      */
-    fun fetchPopularManga(page: Int): Observable<MangasPage>
+    @Suppress("DEPRECATION")
+    suspend fun getPopularManga(page: Int): MangasPage {
+        return fetchPopularManga(page).awaitSingle()
+    }
 
     /**
-     * Returns an observable containing a page with a list of manga.
+     * Get a page with a list of manga.
      *
+     * @since extensions-lib 1.5
      * @param page the page number to retrieve.
      * @param query the search query.
      * @param filters the list of filters to apply.
      */
-    fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage>
+    @Suppress("DEPRECATION")
+    suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage {
+        return fetchSearchManga(page, query, filters).awaitSingle()
+    }
 
     /**
-     * Returns an observable containing a page with a list of latest manga updates.
+     * Get a page with a list of latest manga updates.
      *
+     * @since extensions-lib 1.5
      * @param page the page number to retrieve.
      */
-    fun fetchLatestUpdates(page: Int): Observable<MangasPage>
+    @Suppress("DEPRECATION")
+    suspend fun getLatestUpdates(page: Int): MangasPage {
+        return fetchLatestUpdates(page).awaitSingle()
+    }
 
     /**
      * Returns the list of filters for the source.
      */
     fun getFilterList(): FilterList
+
+    @Deprecated(
+        "Use the non-RxJava API instead",
+        ReplaceWith("getPopularManga"),
+    )
+    fun fetchPopularManga(page: Int): Observable<MangasPage> =
+        throw IllegalStateException("Not used")
+
+    @Deprecated(
+        "Use the non-RxJava API instead",
+        ReplaceWith("getSearchManga"),
+    )
+    fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> =
+        throw IllegalStateException("Not used")
+
+    @Deprecated(
+        "Use the non-RxJava API instead",
+        ReplaceWith("getLatestUpdates"),
+    )
+    fun fetchLatestUpdates(page: Int): Observable<MangasPage> =
+        throw IllegalStateException("Not used")
 }

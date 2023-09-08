@@ -58,6 +58,15 @@ fun Call.asObservable(): Observable<Response> {
     }
 }
 
+fun Call.asObservableSuccess(): Observable<Response> {
+    return asObservable().doOnNext { response ->
+        if (!response.isSuccessful) {
+            response.close()
+            throw HttpException(response.code)
+        }
+    }
+}
+
 // Based on https://github.com/gildor/kotlin-coroutines-okhttp
 @OptIn(ExperimentalCoroutinesApi::class)
 private suspend fun Call.await(callStack: Array<StackTraceElement>): Response {
@@ -95,6 +104,9 @@ suspend fun Call.await(): Response {
     return await(callStack)
 }
 
+/**
+ * @since extensions-lib 1.5
+ */
 suspend fun Call.awaitSuccess(): Response {
     val callStack = Exception().stackTrace.run { copyOfRange(1, size) }
     val response = await(callStack)
@@ -103,15 +115,6 @@ suspend fun Call.awaitSuccess(): Response {
         throw HttpException(response.code).apply { stackTrace = callStack }
     }
     return response
-}
-
-fun Call.asObservableSuccess(): Observable<Response> {
-    return asObservable().doOnNext { response ->
-        if (!response.isSuccessful) {
-            response.close()
-            throw HttpException(response.code)
-        }
-    }
 }
 
 fun OkHttpClient.newCachelessCallWithProgress(request: Request, listener: ProgressListener): Call {
