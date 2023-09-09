@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.suwayomi
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackManager
@@ -107,7 +108,7 @@ class TachideskApi {
     }
 
     private val preferences: SharedPreferences by lazy {
-        Injekt.get<Application>().getSharedPreferences("source_$tachideskExtensionId", 0x0000)
+        Injekt.get<Application>().getSharedPreferences("source_$tachideskExtensionId", Context.MODE_PRIVATE)
     }
 
     private fun getPrefBaseUrl(): String = preferences.getString(ADDRESS_TITLE, ADDRESS_DEFAULT)!!
