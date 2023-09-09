@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Najnovšia kapitola</string>
     <string name="action_view_chapters">Zobraziť kapitoly</string>
     <string name="action_cancel_all">Zrušiť všetky</string>
-    <string name="unlock_app">Odomknúť Tachiyomi</string>
     <string name="action_menu">Menu</string>
     <string name="action_newest">Najnovšie</string>
     <string name="action_oldest">Najstaršie</string>
@@ -323,7 +322,6 @@
     <string name="action_search_settings">Hľadať v nastaveniach</string>
     <string name="action_sort_date_added">Dátum pridaný</string>
     <string name="action_sort_chapter_fetch_date">Dátum načítania kapitoly</string>
-    <string name="confirm_exit">Stlačte tlačidlo späť znova pre ukončenie</string>
     <string name="confirm_lock_change">Prihlásiť sa pre potvrdenie zmien</string>
     <string name="label_default">Predvolené</string>
     <string name="label_sources">Zdroje</string>

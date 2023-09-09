@@ -165,7 +165,7 @@
     <string name="pref_category_tracking">同期</string>
     <string name="untrusted_extension_message">この拡張機能は信頼できない証明書でサインされているため、有効にされていません。
 \n
-\n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
+\n悪意のある拡張機能は保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
 \n
 \nこれらのリスクを受け入れ、この証明書を信頼しますか？</string>
     <string name="pref_show_page_number">ページ数を表示</string>
@@ -317,7 +317,6 @@
         <item quantity="other">%1$s分後</item>
     </plurals>
     <string name="secure_screen">セキュア画面</string>
-    <string name="unlock_app">Tachiyomiのロックを解除する</string>
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d新しい章</item>
     </plurals>
@@ -365,7 +364,7 @@
     <string name="filter_mode_multiply">乗算</string>
     <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
-    <string name="unofficial_extension_message">この拡張機能はTachiyomiの公式拡張機能リストに含まれていません。</string>
+    <string name="unofficial_extension_message">この拡張機能は公式リストに含まれていません。</string>
     <string name="ext_unofficial">非公式</string>
     <string name="ext_updates_pending">更新あり</string>
     <plurals name="num_categories">
@@ -389,10 +388,9 @@
     <string name="action_enable_all">全て有効にする</string>
     <string name="action_select_inverse">選択を反転</string>
     <string name="action_menu">メニュー</string>
-    <string name="confirm_exit">もう一度押して終了します</string>
     <string name="channel_new_chapters">章の更新</string>
     <string name="information_webview_outdated">WebViewアプリを更新して互換性を向上させてください</string>
-    <string name="information_webview_required">TachiyomiはWebViewを必要としています</string>
+    <string name="information_webview_required">WebViewが必要です</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d件の拡張機能の更新が利用可能</item>
     </plurals>
@@ -802,4 +800,5 @@
     <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
     <string name="exception_offline">インターネット接続がありません</string>
     <string name="exception_unknown_host">%sにアクセスできませんでした</string>
+    <string name="unlock_app_title">%sをアンロック</string>
 </resources>

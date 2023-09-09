@@ -278,7 +278,7 @@
     <string name="untrusted_extension">Estensione non attendibile</string>
     <string name="untrusted_extension_message">Questa estensione è stata firmata con un certificato non attendibile e non è stata attivata.
 \n
-\nUn\'estensione maliziosa potrebbe leggere credenziali di accesso all\'interno di Tachiyomi, o eseguire codice dannoso.
+\nUn\'estensione maliziosa potrebbe leggere credenziali di accesso salvate o eseguire codice dannoso.
 \n
 \nFidandoti di questo certificato accetti questi rischi.</string>
     <string name="pref_double_tap_anim_speed">Velocità animazioni doppio tocco</string>
@@ -362,7 +362,6 @@
     <string name="information_cloudflare_bypass_failure">Impossibile bypassare Cloudflare</string>
     <string name="information_webview_outdated">Per favore aggiorna l\'app WebView per una migliore compatibilità</string>
     <string name="channel_new_chapters">Aggiornamenti capitoli</string>
-    <string name="unlock_app">Sblocca Tachiyomi</string>
     <string name="secure_screen_summary">Schermo sicuro nasconde i contenuti dell\'app quando cambi applicazione e blocca gli screenshot</string>
     <string name="pref_category_display">Visualizzazione</string>
     <string name="channel_ext_updates">Aggiornamenti estensione</string>
@@ -424,9 +423,8 @@
     <string name="restore_in_progress">Ripristino già in corso</string>
     <string name="creating_backup_error">Backup fallito</string>
     <string name="backup_in_progress">Il backup è già in corso</string>
-    <string name="confirm_exit">Premi indietro nuovamente per uscire</string>
     <string name="label_downloaded_only">Solo scaricati</string>
-    <string name="information_webview_required">È necessaria l\'app WebView per Tachiyomi</string>
+    <string name="information_webview_required">WebView è necessaria per il funzionamento dell\'app</string>
     <string name="viewer">Modalità di lettura</string>
     <string name="pref_category_for_this_series">Per questa serie</string>
     <string name="local_source_help_guide">Guida alle fonti locali</string>
@@ -461,7 +459,7 @@
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene alcuna voce di libreria.</string>
     <string name="invalid_backup_file">File di backup invalido</string>
-    <string name="unofficial_extension_message">Questa estensione non è presente nella lista ufficiale delle estensioni di Tachiyomi.</string>
+    <string name="unofficial_extension_message">Questa estensione non è dalla lista ufficiale.</string>
     <string name="ext_unofficial">Non ufficiale</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove copertine e descrizioni durante l\'aggiornamento della libreria</string>
     <string name="pref_library_update_refresh_metadata">Ricarica metadati automaticamente</string>
@@ -867,4 +865,5 @@
     <string name="exception_http">HTTP %d, controlla il sito nella WebView</string>
     <string name="exception_offline">Nessuna connessione ad internet</string>
     <string name="exception_unknown_host">%s non raggiungibile</string>
+    <string name="unlock_app_title">Sblocca %s</string>
 </resources>

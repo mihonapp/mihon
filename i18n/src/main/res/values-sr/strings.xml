@@ -97,11 +97,11 @@
     <string name="ext_untrusted">Неповерљиво</string>
     <string name="ext_uninstall">Обриши</string>
     <string name="untrusted_extension">Неповерљив додатак</string>
-    <string name="untrusted_extension_message">Овај додатак је потписан са неповерљивим сертификатом и није активиран.
+    <string name="untrusted_extension_message">Овај додатак је потписан са непоузданим сертификатом и није активиран.
 \n
-\nЗлонамерни додатак може прочитати све податке за пријаву који су спремљени у програму Тachiyomi или извршити произвољни код.
+\nЗлонамерни додатак може прочитати све податке за пријаву или извршити произвољни код.
 \n
-\nВерујући овом сертификату, прихваташ те ризике.</string>
+\nВерујући овом сертификату прихватате ове ризике.</string>
     <string name="pref_fullscreen">Цео екран</string>
     <string name="pref_page_transitions">Анимације при промени странице</string>
     <string name="pref_double_tap_anim_speed">Брзина анимације двоклика</string>
@@ -257,7 +257,6 @@
     </plurals>
     <string name="secure_screen">Безбедносни екран</string>
     <string name="ext_updates_pending">Ажурирања на чекању</string>
-    <string name="unlock_app">Откључај Tachiyomi</string>
     <string name="pref_category_display">Прикажи</string>
     <string name="hide_notification_content">Сакриј обавештења</string>
     <string name="pref_disable_battery_optimization">Искључи оптимизацију коришћења батерије</string>
@@ -279,7 +278,6 @@
     <string name="action_pin">Закачи</string>
     <string name="action_select_inverse">Изабери обрнуто</string>
     <string name="action_menu">Мени</string>
-    <string name="confirm_exit">Притисните поново назад да бисте изашли</string>
     <string name="label_downloaded_only">Само преузето</string>
     <string name="information_empty_category">Немате категорија. Додирните дугме плус да бисте направили нову категорију за организовање колекције.</string>
     <string name="notification_chapters_multiple">Поглавља %1$s</string>
@@ -364,7 +362,7 @@
     <string name="download_notifier_title_error">Грешка</string>
     <string name="download_notifier_downloader_title">Преузимања</string>
     <string name="information_webview_outdated">Ажурирајте WebView за бољу компатибилност</string>
-    <string name="information_webview_required">За Tachiyomi је потребан WebView</string>
+    <string name="information_webview_required">WebView је потребан како би апликација функционисала</string>
     <string name="information_cloudflare_bypass_failure">Неуспешно заобилажење Cloudflare-а</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Доступно је %d ново ажурирање додатака</item>
@@ -394,7 +392,7 @@
     <string name="pref_show_reading_mode">Прикажи начин читања</string>
     <string name="ext_nsfw_warning">Може садржати садржај за одрасле (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Овај додатак није из званичне листе Таchiyomi додатака.</string>
+    <string name="unofficial_extension_message">Овај додатак није из званичне листе.</string>
     <string name="ext_unofficial">Незванично</string>
     <plurals name="num_categories">
         <item quantity="one">%d категорија</item>
@@ -831,4 +829,8 @@
     <string name="action_sort_next_updated">Следеће очекивано ажурирање</string>
     <string name="syncing_library">Синхронизовање колекције</string>
     <string name="action_filter_interval_long">Месечно преузимање (28 дана)</string>
+    <string name="unlock_app_title">Откључај %s</string>
+    <string name="exception_offline">Нема везе са интернетом</string>
+    <string name="exception_http">HTTP %d, погледај веб сајт у WebView</string>
+    <string name="exception_unknown_host">%s је недоступан</string>
 </resources>

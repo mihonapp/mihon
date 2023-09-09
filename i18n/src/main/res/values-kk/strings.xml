@@ -16,9 +16,7 @@
     <string name="label_migration">Көшу</string>
     <string name="label_default">Әдепкі</string>
     <string name="label_warning">Ескерту</string>
-    <string name="unlock_app">Tachiyomi-ді бұғаттан босату</string>
     <string name="confirm_lock_change">Өзгертуді растау үшін аутентификация өтіңіз</string>
-    <string name="confirm_exit">Шығу үшін қайтадан басыңыз</string>
     <string name="action_menu">Мәзір</string>
     <string name="action_filter">Сүзгі</string>
     <string name="action_filter_bookmarked">Бетбелгіленген</string>

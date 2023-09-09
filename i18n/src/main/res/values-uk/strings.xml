@@ -330,7 +330,6 @@
     <string name="information_cloudflare_bypass_failure">Не вдалось обійти Cloudflare</string>
     <string name="information_webview_outdated">Будь ласка, оновіть WebView для кращої сумісності</string>
     <string name="channel_new_chapters">Оновлення розділів</string>
-    <string name="unlock_app">Розблокувати Tachiyomi</string>
     <string name="secure_screen_summary">Ховати вміст застосунку при перемиканні застосунків та блокувати скріншоти</string>
     <string name="pref_category_display">Відображення</string>
     <plurals name="notification_chapters_generic">
@@ -390,7 +389,6 @@
     <string name="information_webview_required">WebView необхідний для Tachiyomi</string>
     <string name="licenses">Ліцензії з відкритим кодом</string>
     <string name="website">Сторінка</string>
-    <string name="confirm_exit">Натисніть ще раз, щоб вийти</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
     <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>

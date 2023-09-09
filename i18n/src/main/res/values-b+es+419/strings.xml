@@ -5,7 +5,6 @@
     <string name="action_sort_latest_chapter">Capítulo más reciente</string>
     <string name="action_sort_total">Total de capítulos</string>
     <string name="label_extension_info">Información de la extensión</string>
-    <string name="confirm_exit">Pulse Atrás de nuevo para salir</string>
     <string name="label_backup">Copia de seguridad y restauración</string>
     <string name="label_recent_manga">Historial</string>
     <string name="history">Historial</string>
@@ -38,7 +37,6 @@
     <string name="action_filter">Filtrar</string>
     <string name="action_menu">Menú</string>
     <string name="action_settings">Configuración</string>
-    <string name="unlock_app">Desbloquear Tachiyomi</string>
     <string name="chapters">Capítulos</string>
     <string name="manga">Manga</string>
     <string name="categories">Categorías</string>

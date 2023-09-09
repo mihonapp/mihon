@@ -97,7 +97,6 @@
     <string name="filter_mode_lighten">Dodge / Lighten</string>
     <string name="update_12hour">هر ۱۲ ساعت یکبار</string>
     <string name="action_move_category">انتخاب دسته بندی</string>
-    <string name="unlock_app">بازکردن تاچی یومی</string>
     <string name="information_empty_category">هیچ دسته بندی وجود ندارد. با زدن دکمه به علاوه دسته بندی جدیدی بسازید.</string>
     <string name="information_empty_library">کتابخانه شما خالی است</string>
     <string name="information_no_recent_manga">هیچ چیز مانگاای به تازگی خوانده شده</string>
@@ -427,7 +426,6 @@
     <string name="action_filter">فیلتر</string>
     <string name="action_menu">منو</string>
     <string name="action_settings">تنضیمات</string>
-    <string name="confirm_exit">برای بستن دکمه بازگشت را یک بار دیگر بزنید</string>
     <string name="history">تاریخچه</string>
     <string name="chapters">قسمت ها</string>
     <string name="manga">کتابخانه ورودی‌ها</string>

@@ -99,7 +99,7 @@
     <string name="untrusted_extension">Opålitlig extension</string>
     <string name="untrusted_extension_message">Detta tillägg tecknades med ett otillförlitligt certifikat och var inte aktiverat.
 \n
-\nEtt skadligt tillägg kan läsa inloggningsuppgifter som är lagrade i Tachiyomi eller utföra godtycklig kod.
+\nEtt skadligt tillägg kan läsa lagrade inloggningsuppgifter eller utföra godtycklig kod.
 \n
 \nGenom att lita på detta certifikat accepterar du dessa risker.</string>
     <string name="pref_fullscreen">Fullskärm</string>
@@ -328,7 +328,6 @@
     <string name="information_cloudflare_bypass_failure">Det gick inte att kringgå Cloudflare</string>
     <string name="information_webview_outdated">Uppdatera WebView-appen för bättre kompatibilitet</string>
     <string name="channel_new_chapters">Kapiteluppdateringar</string>
-    <string name="unlock_app">Lås upp Tachiyomi</string>
     <string name="secure_screen_summary">Säker skärm döljer appinnehållet när du byter app och blockerar skärmdumpar</string>
     <string name="pref_category_display">Skärmvisning</string>
     <plurals name="notification_chapters_generic">
@@ -378,8 +377,7 @@
     <string name="action_select_inverse">Välj omvänd</string>
     <string name="manga_info_collapse">Mindre</string>
     <string name="manga_info_expand">Mer</string>
-    <string name="confirm_exit">Tryck tillbaka igen för att gå ur</string>
-    <string name="information_webview_required">WebView krävs för Tachiyomi</string>
+    <string name="information_webview_required">WebView krävs för att appen ska fungera</string>
     <string name="recent_manga_time">Kapitel %1$s - %2$s</string>
     <string name="local_source_help_guide">Lokal källa guide</string>
     <string name="last_used_source">Senast använd</string>
@@ -418,7 +416,7 @@
     <string name="backup_restore_missing_sources">Saknade källor:</string>
     <string name="invalid_backup_file_missing_manga">Säkerhetskopian innehåller inga biblioteksposter.</string>
     <string name="invalid_backup_file">Ogiltig säkerhetskopia</string>
-    <string name="unofficial_extension_message">Detta tillägg kommer inte från den officiella Tachiyomi-tilläggslistan.</string>
+    <string name="unofficial_extension_message">Detta tillägg är inte från den officiella listan.</string>
     <string name="ext_unofficial">Inofficiell</string>
     <string name="pref_library_update_refresh_metadata_summary">Sök efter nytt omslag och detaljer när du uppdaterar biblioteket</string>
     <string name="pref_library_update_refresh_metadata">Uppdatera metadata automatiskt</string>
@@ -818,4 +816,5 @@
     <string name="exception_offline">Ingen internet anslutning</string>
     <string name="exception_http">HTTP %d, kolla på webbsida i WebView</string>
     <string name="exception_unknown_host">Kunde inte nå %s</string>
+    <string name="unlock_app_title">Lås upp %s</string>
 </resources>

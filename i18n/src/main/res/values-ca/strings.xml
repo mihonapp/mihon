@@ -99,7 +99,7 @@
     <string name="untrusted_extension">Extensió no fiable</string>
     <string name="untrusted_extension_message">Aquesta extensió s’ha signat amb un certificat que no és de confiança i no s’ha activat.
 \n
-\nUna extensió maliciosa podria llegir qualsevol credencial desada al Tachiyomi o executar codi arbitrari.
+\nUna extensió maliciosa podria llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
 \n
 \nSi confieu en aquest certificat, accepteu aquests riscos.</string>
     <string name="pref_fullscreen">Pantalla completa</string>
@@ -326,9 +326,8 @@
     <string name="ext_updates_pending">Actualitzacions pendents</string>
     <string name="pref_cutout_short">Mostra el contingut a l’àrea de retall</string>
     <string name="information_cloudflare_bypass_failure">No s’ha pogut evitar el Cloudflare</string>
-    <string name="information_webview_outdated">Actualitzeu l’aplicació de WebView per a tenir més bona compatibilitat</string>
+    <string name="information_webview_outdated">Actualitzeu l’aplicació WebView per a tenir més bona compatibilitat</string>
     <string name="channel_new_chapters">Novetats de capítols</string>
-    <string name="unlock_app">Desbloca el Tachiyomi</string>
     <string name="secure_screen_summary">El mode discret amaga el contingut de l’aplicació en canviar entre aplicacions i bloca les captures de pantalla</string>
     <string name="pref_category_display">Visualització</string>
     <plurals name="notification_chapters_generic">
@@ -376,12 +375,11 @@
     <string name="action_unpin">Desfixa</string>
     <string name="in_library">A la biblioteca</string>
     <string name="add_to_library">Afegeix a la biblioteca</string>
-    <string name="information_webview_required">El Tachiyomi requereix el WebView</string>
+    <string name="information_webview_required">La WebView és necessària per al funcionament de l’aplicació</string>
     <string name="manga_info_collapse">Menys</string>
     <string name="manga_info_expand">Més</string>
     <string name="licenses">Llicències de codi obert</string>
     <string name="website">Lloc web</string>
-    <string name="confirm_exit">Torneu a prémer Endarrere per a sortir</string>
     <string name="label_downloaded_only">Només els baixats</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
     <string name="restoring_backup_error">Ha fallat la restauració de la còpia de seguretat</string>
@@ -413,7 +411,7 @@
     </plurals>
     <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment. Configureu el seguiment d’elements individuals al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
-    <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d’extensions oficials del Tachiyomi.</string>
+    <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d’extensions oficials.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
     <string name="label_data">Dades</string>
@@ -648,8 +646,8 @@
     <string name="error_saving_picture">S’ha produït un error en desar la imatge</string>
     <string name="empty_backup_error">No hi ha cap element a la biblioteca del qual fer còpia de seguretat</string>
     <string name="update_check_fdroid_migration_info">Hi ha una nova versió disponible als llançaments oficials. Premeu per a obtenir informació de com migrar a partir dels llançaments no oficials d’F-Droid.</string>
-    <string name="pref_clear_webview_data">Neteja les dades del WebView</string>
-    <string name="webview_data_deleted">S’han netejat les dades del WebView</string>
+    <string name="pref_clear_webview_data">Neteja les dades de la WebView</string>
+    <string name="webview_data_deleted">S’han netejat les dades de la WebView</string>
     <string name="action_close">Tanca</string>
     <string name="source_filter_empty_screen">No s’ha trobat cap font instal·lada</string>
     <string name="source_empty_screen">No s’ha trobat cap font</string>
@@ -815,4 +813,8 @@
     <string name="track_activity_name">Inici de sessió al seguiment</string>
     <string name="download_cache_invalidated">S’ha invalidat l\'índex de baixades</string>
     <string name="information_cloudflare_help">Premeu aquí per a obtenir ajuda amb el Cloudflare</string>
+    <string name="unlock_app_title">Desbloca %s</string>
+    <string name="exception_offline">No hi ha connexió a Internet</string>
+    <string name="exception_http">HTTP %d, comproveu el lloc web en una WebView</string>
+    <string name="exception_unknown_host">No s’ha pogut accedir a %s</string>
 </resources>

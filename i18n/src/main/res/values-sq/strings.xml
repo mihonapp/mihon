@@ -116,11 +116,9 @@
     <string name="action_sort_alpha">Sipas alfabetit</string>
     <string name="action_sort_total">Totali i kapitujve</string>
     <string name="label_warning">Paralajmërim</string>
-    <string name="unlock_app">Zhblloko Tachiyomi</string>
     <string name="action_sort_count">Totali i hyrjeve</string>
     <string name="action_sort_last_read">Leximi i fundit</string>
     <string name="confirm_lock_change">Vërtetoni për të konfirmuar ndryshimin</string>
-    <string name="confirm_exit">Shtypni përsëri për të dalë</string>
     <string name="action_menu">Menuja</string>
     <string name="action_filter">Filtro</string>
     <string name="action_order_by_chapter_number">Sipas numrit të kapitullit</string>

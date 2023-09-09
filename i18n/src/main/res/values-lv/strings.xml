@@ -71,7 +71,7 @@
     <string name="download_notifier_title_error">Kļūda</string>
     <string name="download_notifier_downloader_title">Lejupielādētājs</string>
     <string name="information_webview_outdated">Lai uzlabotu saderību, lūdzu, atjauniniet WebView lietotni</string>
-    <string name="information_webview_required">Tachiyomi ir nepieciešams WebView</string>
+    <string name="information_webview_required">Lai aplikācija strādātu ir nepieciešams WebView</string>
     <string name="restoring_backup_error">Dublējuma atjaunošana neizdevās</string>
     <string name="restoring_backup">Dublējuma atjaunošana</string>
     <string name="restore_in_progress">Atjaunošana jau notiek</string>
@@ -90,7 +90,6 @@
     <string name="invalid_backup_file_missing_manga">Dublējumā nav neviena bibliotēkas ieraksta.</string>
     <string name="label_extension_info">Paplašinājumu informācija</string>
     <string name="label_extensions">Paplašinājumi</string>
-    <string name="unlock_app">Atslēgt Tachijomi</string>
     <string name="tapping_inverted_both">Abi</string>
     <string name="tapping_inverted_vertical">Vertikāls</string>
     <string name="tapping_inverted_horizontal">Horizontāls</string>
@@ -116,7 +115,6 @@
     <string name="action_sort_date_added">Pievienošanas datums</string>
     <string name="action_sort_latest_chapter">Jaunākā nodaļa</string>
     <string name="action_menu">Izvēlne</string>
-    <string name="confirm_exit">Vēlreiz nospiediet atpakaļ, lai izietu</string>
     <string name="information_empty_category">Jums nav nevienas kategorijas. Pieskarieties plus pogai, lai izveidotu kategoriju savas bibliotēkas organizēšanai.</string>
     <string name="information_empty_library">Jūsu bibliotēka ir tukša</string>
     <string name="information_no_recent_manga">Nekas nesen lasīts</string>
@@ -131,7 +129,7 @@
     <string name="update_check_confirm">Lejuplādēt</string>
     <string name="landscape">Ainava</string>
     <string name="portrait">Portrets</string>
-    <string name="pref_library_columns">Vienumi rindā</string>
+    <string name="pref_library_columns">Režģa izmērs</string>
     <string name="pref_category_display">Displejs</string>
     <string name="hide_notification_content">Slēpt paziņojumu saturu</string>
     <string name="secure_screen_summary">Drošs ekrāns paslēpj saturu mainot lietotnes, un bloķē ekrānuzņēmumus</string>
@@ -247,7 +245,7 @@
     <string name="untrusted_extension">Neuzticams paplašinājums</string>
     <string name="untrusted_extension_message">Šis paplašinājums tika parakstīts ar neuzticamu sertifikātu, un tas netika aktivizēts.
 \n
-\nĻaunprātīgs paplašinājums var nolasīt visus pieteikšanās akreditācijas datus, kas saglabāti Tachiyomi, vai izpildīt patvaļīgu kodu.
+\nĻaunprātīgs paplašinājums var nolasīt visus saglabātos pieteikšanās akreditācijas datus vai izpildīt patvaļīgu kodu.
 \n
 \nUzticoties šim sertifikātam, jūs piekrītat šiem riskiem.</string>
     <string name="ext_installer_legacy">Mantots</string>
@@ -283,7 +281,7 @@
     <string name="pref_update_only_completely_read">Ar nelasītu(ām) nodaļu(ām)</string>
     <string name="pref_update_only_started">Kas nav sāktas</string>
     <string name="default_category_summary">Vienmēr jautāt</string>
-    <string name="categorized_display_settings">Kategorijas iestatījumi kārtošanai un rādīšanai</string>
+    <string name="categorized_display_settings">Kategorijas iestatījumi kārtošanai</string>
     <string name="pref_library_update_categories_details">Izslēgto kategoriju ieraksti netiks atjaunināti, pat ja tie ir iekļautajās kategorijās.</string>
     <string name="none">Neviens</string>
     <string name="include">Iekļaut: %s</string>
@@ -294,7 +292,7 @@
     <string name="ext_unofficial">Neoficiāls</string>
     <string name="ext_untrusted">Neuzticams</string>
     <string name="obsolete_extension_message">Šis paplašinājums vairs nav pieejams. Tas var nedarboties pareizi un var radīt problēmas ar lietotni. Ieteicams to atinstalēt.</string>
-    <string name="unofficial_extension_message">Šis paplašinājums nav no oficiālo Tachiyomi paplašinājumu saraksta.</string>
+    <string name="unofficial_extension_message">Šis paplašinājums nav no oficiālā saraksta.</string>
     <string name="pref_dual_page_split">Sadalīt platas lapas</string>
     <string name="pref_dual_page_invert">Apvērst dalītās lapas izvietojumu</string>
     <string name="pref_cutout_short">Rādīt saturu izgriezuma apgabalā</string>
@@ -307,7 +305,7 @@
     <string name="update_48hour">Ik pēc 2 dienam</string>
     <string name="update_72hour">Ik pēc 3 dienām</string>
     <string name="connected_to_wifi">Tikai uz Wi-Fi</string>
-    <string name="automatic_background">Automātisks</string>
+    <string name="automatic_background">Auto</string>
     <string name="pref_keep_screen_on">Turēt ekrānu ieslēgtu</string>
     <string name="zoom_start_center">Centrs</string>
     <string name="rotation_type">Rotācijas tips</string>
@@ -340,7 +338,7 @@
     <string name="gray_background">Pelēks</string>
     <string name="disabled_nav">Atspējots</string>
     <string name="white_background">Balts</string>
-    <string name="vertical_plus_viewer">Nepārtraukta vertikāle</string>
+    <string name="vertical_plus_viewer">Garā strīpā ar pārtraukumu</string>
     <string name="pref_webtoon_side_padding">Sānu platums</string>
     <string name="pref_remove_exclude_categories">Izslēgtās kategorijas</string>
     <string name="action_display_local_badge">Lokālais avots</string>
@@ -352,8 +350,8 @@
     <string name="edge_nav">Mala</string>
     <string name="right_and_left_nav">Pa labi un pa kreisi</string>
     <string name="nav_zone_right">Pa labi</string>
-    <string name="left_to_right_viewer">No kreisās puses uz labo</string>
-    <string name="webtoon_viewer">Webtoon</string>
+    <string name="left_to_right_viewer">Lapaspuses (no kreisās puses uz labo)</string>
+    <string name="webtoon_viewer">Garā strīpā</string>
     <string name="pref_viewer_nav">Skāriena zonas</string>
     <string name="scale_type_stretch">Izstiept</string>
     <string name="scale_type_fit_width">Ietilpt platumā</string>
@@ -363,8 +361,8 @@
     <string name="rotation_portrait">Portrets</string>
     <string name="rotation_force_portrait">Aizslēgts portreta režīmā</string>
     <string name="pref_category_reading_mode">Lasīšanas režīms</string>
-    <string name="right_to_left_viewer">No labās puses uz kreiso</string>
-    <string name="vertical_viewer">Vertikāls</string>
+    <string name="right_to_left_viewer">Lapaspuses (no labās puses uz kreiso)</string>
+    <string name="vertical_viewer">Lapaspuses (vertikāli)</string>
     <string name="manga">Bibliotēkas ieraksti</string>
     <string name="double_tap_anim_speed_fast">Ātrs</string>
     <string name="pref_rotation_type">Noklusējuma rotācijas tips</string>
@@ -379,7 +377,7 @@
     <string name="pref_skip_filtered_chapters">Izlaist filtrētās nodaļas</string>
     <string name="pref_reader_navigation">Navigācija</string>
     <string name="pref_read_with_volume_keys_inverted">Invertēt skaļuma regulēšanas taustiņus</string>
-    <string name="pref_read_with_long_tap">Rādīt ar ilgu pieskārienu</string>
+    <string name="pref_read_with_long_tap">Rādīt darbīūbas ar ilgu pieskārienu</string>
     <string name="pref_create_folder_per_manga_summary">Izveido mapes atbilstoši ieraksta nosaukumam</string>
     <string name="pref_reader_theme">Fona krāsa</string>
     <string name="pref_image_scale_type">Mēroga tips</string>
@@ -408,7 +406,7 @@
     <string name="pref_verbose_logging_summary">Drukāt verbose žurnālus sistēmas žurnālā (samazina programmas veiktspēju)</string>
     <string name="pref_auto_update_manga_sync">Atjaunot progresu pēc lasīšanas</string>
     <string name="tracking_guide">Izsekošanas rokasgrāmata</string>
-    <string name="pref_dump_crash_logs">Saglabā avārijas žurnālu</string>
+    <string name="pref_dump_crash_logs">Dalīties ar avārijas žurnālu</string>
     <string name="pref_dump_crash_logs_summary">Saglabā kļūdu žurnālus failā priekš koplietošanas ar izstrādātājiem</string>
     <string name="pref_clear_chapter_cache">Notīrīt nodaļas kešatmiņu</string>
     <string name="pref_refresh_library_covers">Atsvaidzināt bibliotēkas vākus</string>
@@ -416,7 +414,7 @@
     <string name="empty_backup_error">Nav bibliotēkas ierakstu, ko dublēt</string>
     <string name="restoring_backup_canceled">Atjaunošana atcelta</string>
     <string name="restore_miui_warning">Dublēšana/atjaunošana var nedarboties pareizi, ja ir atspējota MIUI Optimization.</string>
-    <string name="pref_auto_clear_chapter_cache">Notīriet nodaļu kešatmiņu, aizverot lietotni</string>
+    <string name="pref_auto_clear_chapter_cache">Notīriet nodaļu kešatmiņu, atverot lietotni</string>
     <string name="clear_database_source_item_count">%1$d ierakstu, kas nav bibliotēkas, ir datu bāzē</string>
     <string name="label_network">Tīkls</string>
     <string name="label_data">Dati</string>
@@ -630,9 +628,9 @@
     <string name="channel_app_updates">Lietotnes atjauninājumi</string>
     <string name="update_check_notification_update_available">Ir pieejama jauna versija!</string>
     <string name="chapter_settings_updated">Atjaunināti noklusējuma nodaļu iestatījumi</string>
-    <string name="pref_landscape_zoom">Palielināt ainavas attēlu</string>
+    <string name="pref_landscape_zoom">Automātiski tuvināt ainavas attēlus</string>
     <string name="spen_next_page">Nākošā lapa</string>
-    <string name="pref_navigate_pan">Pieskaroties izplest platus attēlus</string>
+    <string name="pref_navigate_pan">Izplest platus attēlus</string>
     <string name="cant_open_last_read_chapter">Nevar atvērt pēdējo lasīto nodaļu</string>
     <string name="repeating">Pārlasīšana</string>
     <string name="delete_downloads_for_manga">Vai dzēst lejupielādētās nodaļas\?</string>
@@ -701,7 +699,7 @@
     <string name="theme_tidalwave">Paisuma vilnis</string>
     <string name="multi_lang">Vairāku</string>
     <string name="download_ahead">Lejupielādēt uz priekšu</string>
-    <string name="download_ahead_info">Darbojas tikai ar ierakstiem bibliotēkā un tad, ja pašreizējā un nākamā nodaļa jau ir lejupielādēta</string>
+    <string name="download_ahead_info">Darbojas tikai ja pašreizējā nodaļa + nākošā nodaļa ir jau lejupielādēta.</string>
     <string name="confirm_add_duplicate_manga">Jūsu bibliotēkā ir ieraksts ar tādu pašu nosaukumu.
 \n
 \nVai joprojām vēlaties turpināt\?</string>
@@ -743,7 +741,7 @@
     <string name="pref_tracking_summary">Vienvirziena progresa sinhronizācija, uzlabota sinhronizācija</string>
     <string name="pref_browse_summary">Avoti, paplašinājumi, globālā meklēšana</string>
     <string name="pref_appearance_summary">Tēma, datuma un laika formāti</string>
-    <string name="pref_library_summary">Kategorijas, globāli atjauninājumi</string>
+    <string name="pref_library_summary">Kategorijas, globāli atjauninājumi, nodaļu vilkšana</string>
     <string name="pref_library_update_show_tab_badge">Rādīt nelasīto skaitu uz atjauninājumu ikonas</string>
     <string name="appwidget_unavailable_locked">Logrīks nav pieejams, ja ir iespējota lietotņu bloķēšana</string>
     <string name="loader_rar5_error">RARv5 formāts netiek atbalstīts</string>
@@ -762,7 +760,7 @@
     </plurals>
     <string name="track_error">%1$s kļūda: %2$s</string>
     <string name="update_already_running">Atjauninājums jau darbojas</string>
-    <string name="crash_screen_description">%s radās neparedzēta kļūda. Mēs iesakām izveidot šo ziņojumu ekrānuzņēmumu, atrast avārijas žurnālu un pēc tam kopīgot to mūsu atbalsta kanālā Discord lietotnē.</string>
+    <string name="crash_screen_description">%s radās neparedzēta kļūda. Mēs iesakām dalīties ar avārijas žurnālu mūsu atbalsta kanālā Discord lietotnē.</string>
     <string name="pref_page_rotate">Pagrieziet platas lapas, lai tās ietilptu</string>
     <string name="pref_page_rotate_invert">Apvērst orientācija pagrieztām platām lapām</string>
     <string name="split_tall_images">Sadalīt augstus attēlus</string>
@@ -794,4 +792,45 @@
     <string name="label_titles_in_global_update">Globālajā atjauninājumā</string>
     <string name="label_total_chapters">Kopā</string>
     <string name="information_required_plain">*obligāti</string>
+    <string name="create_backup_file_error">Nevarēja izveidot dublējuma failu</string>
+    <string name="download_cache_invalidated">Lejupielādes indeks ir nederīgs</string>
+    <string name="licensed_manga_chapters_error">Licencēts - Nav nevienu nodaļu ko parādīt</string>
+    <string name="skipped_reason_not_in_release_period">Izlaists, jo šodien nebija gaidīta jauna nodaļa</string>
+    <string name="pref_chapter_swipe_end">Vilkt uz labās puses darbību</string>
+    <string name="pref_debug_info">Atkļūdošanas informācija</string>
+    <string name="information_cloudflare_help">Pieskarieties šeit, lai iegūtu palīdzību ar Cloudflare</string>
+    <string name="has_results">Ir rezultāti</string>
+    <string name="track_delete_remote_text">Noņemt arī no %s</string>
+    <string name="pref_chapter_swipe_start">Vilkt uz kreisās puses darbību</string>
+    <string name="manga_display_interval_title">Novērtēt katru</string>
+    <string name="action_set_interval">Iestatīt intervālu</string>
+    <string name="action_filter_interval_custom">Pielāgots datu iegūšanas intervāls</string>
+    <string name="action_filter_interval_long">Iegūt katru mēnesi (28 dienas)</string>
+    <string name="action_filter_interval_passed">Nokārtots pārbaudes periods</string>
+    <string name="action_sort_next_updated">Nākamais gaidāmais atjauninājums</string>
+    <string name="track_activity_name">Pieteikšanās izsekošana</string>
+    <string name="syncing_library">Sinhronizē bibliotēku</string>
+    <string name="library_sync_complete">Bibliotēkas sinhronizācija ir pabeigta</string>
+    <string name="intervals_header">Intervāli</string>
+    <plurals name="day">
+        <item quantity="zero">%d dienas</item>
+        <item quantity="one">%d diena</item>
+        <item quantity="other">%d dienas</item>
+    </plurals>
+    <string name="track_delete_text">Šis noņems locālo izsekošanu.</string>
+    <string name="delete_downloaded">Izdzēst lejupielādētos</string>
+    <string name="track_delete_title">Vai noņemt %s izsekošanu\?</string>
+    <string name="action_ok">OK</string>
+    <string name="pref_update_only_in_release_period">Ārpus paredzamā izlaišanas perioda</string>
+    <string name="pref_double_tap_zoom">Dubult-pieskarieties, lai tuvinātu</string>
+    <string name="pref_library_columns_per_row">%d katrā rindā</string>
+    <string name="unlock_app_title">Atbloķēt %s</string>
+    <string name="action_filter_interval_late">Par vēlu +10 pārbaudes</string>
+    <string name="action_filter_interval_dropped">Pametāt\? Par vēlu +20 un 2 mēnešus</string>
+    <string name="pref_chapter_swipe">Vilkt nodaļas</string>
+    <string name="manga_display_modified_interval_title">Atjaunināt katru</string>
+    <string name="manga_modify_calculated_interval_title">Pielāgot intervālu</string>
+    <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
+    <string name="exception_offline">Nav interneta savienojuma</string>
+    <string name="exception_unknown_host">Nevarēja sasniegt %s</string>
 </resources>

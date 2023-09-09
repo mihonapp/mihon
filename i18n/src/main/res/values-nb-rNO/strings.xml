@@ -323,7 +323,6 @@
     </plurals>
     <string name="secure_screen">Sikker skjerm</string>
     <string name="channel_new_chapters">Kapitteloppdateringer</string>
-    <string name="unlock_app">Lås opp Tachiyomi</string>
     <string name="notification_chapters_single">Kapittel %1$s</string>
     <string name="email">E-postadresse</string>
     <string name="in_library">I biblioteket</string>
@@ -351,7 +350,6 @@
     <string name="pref_skip_filtered_chapters">Hopp over filtrerte kapitler</string>
     <string name="hide_notification_content">Skjul merknadsinnhold</string>
     <string name="secure_screen_summary">Sikker skjerm skjuler programinnhold ved bytting av programmer og blokker skjermavbildninger</string>
-    <string name="confirm_exit">Trykk \"Tilbake\" igjen for å avslutte</string>
     <string name="label_downloaded_only">Kun nedlastet</string>
     <string name="ext_unofficial">Uoffisiell</string>
     <string name="viewer">Lesemodus</string>

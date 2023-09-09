@@ -386,7 +386,6 @@
     <string name="action_select_inverse">Đảo ngược lựa chọn</string>
     <string name="action_sort_latest_chapter">Chương mới nhất</string>
     <string name="action_menu">Mục chính</string>
-    <string name="unlock_app">Mở Khoá Tachiyomi</string>
     <string name="label_sources">Nguồn</string>
     <string name="label_more">Thêm</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ nút theo dõi.</string>
@@ -411,7 +410,6 @@
     <string name="action_disable_all">Tắt tất cả</string>
     <string name="action_enable_all">Bật tất cả</string>
     <string name="action_sort_date_added">Ngày thêm</string>
-    <string name="confirm_exit">Nhấn trở lại lần nữa để thoát</string>
     <string name="invalid_backup_file_missing_manga">Bản sao lưu không chứa truyện nào.</string>
     <string name="invalid_backup_file">Tệp sao lưu không hợp lệ</string>
     <string name="add_to_library">Thêm vào thư viện</string>
@@ -818,4 +816,5 @@
     <string name="action_sort_next_updated">Cập nhật dự kiến tiếp theo</string>
     <string name="information_cloudflare_help">Nhấn vào đây để được trợ giúp về Cloudflare</string>
     <string name="pref_update_only_in_release_period">Chưa công bố</string>
+    <string name="unlock_app_title">Mở khoá %s</string>
 </resources>

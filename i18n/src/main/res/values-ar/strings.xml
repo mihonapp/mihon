@@ -251,7 +251,7 @@
     <string name="untrusted_extension">إضافة ذات ريبة</string>
     <string name="untrusted_extension_message">هذه اﻹضافة موقَّعة بشهادة ذات ريبة ولم تفعَّل.
 \n
-\nيمكن لأي إضافة خبيثة قراءة بيانات اعتماد تسجيل الدخول المخزَّنة في Tachiyomi أو تنفيذ تعليمات برمجية عشوائية.
+\nيمكن لأي إضافة خبيثة قراءة بيانات اعتماد تسجيل الدخول المخزَّنة أو تنفيذ تعليمات برمجية عشوائية.
 \n
 \nأنت تقبل هذه المخاطر إن وثقت بالشهادة.</string>
     <string name="pref_double_tap_anim_speed">سرعة مؤثر النقر المزدوج</string>
@@ -297,7 +297,6 @@
     <string name="action_webview_refresh">تحديث</string>
     <string name="pref_category_library">المكتبة</string>
     <string name="label_more">المزيد</string>
-    <string name="unlock_app">افتح Tachiyomi</string>
     <string name="action_move_to_top">نقل إلى الأعلى</string>
     <string name="action_oldest">الأقدم</string>
     <string name="action_newest">الأَحدثْ</string>
@@ -346,11 +345,10 @@
     <string name="action_unpin">إلغاء التثبيت</string>
     <string name="action_pin">تثبيت</string>
     <string name="action_select_inverse">عكس التحديد</string>
-    <string name="confirm_exit">اضغط رجوع مرة أخرى للخروج</string>
     <string name="channel_ext_updates">تحديثات اﻹضافات</string>
     <string name="channel_new_chapters">تحديثات الفصول</string>
     <string name="information_webview_outdated">يرجى تحديث تطبيق WebView لتوافق أفضل</string>
-    <string name="information_webview_required">يتطلب Tachiyomi وجود WebView</string>
+    <string name="information_webview_required">إن وجود WebView لازم ليعمل التطبيق</string>
     <string name="information_cloudflare_bypass_failure">فشل في تجاوز Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="zero">لايوجد تحديث للإضافة</item>
@@ -441,7 +439,7 @@
     <string name="invalid_backup_file_missing_manga">النسخة الإحتياطية لا تحتوي على أيّة إدخالات المكتبة.</string>
     <string name="invalid_backup_file">ملفُّ النسخ الاحتياطيِّ غير صالح</string>
     <string name="tracking_info">مزامنة أحاديّة لتحديث تقدم الفصول في خدمات التتبع. قم بإعداد التتبع الخاص للإدخالات محدّدة من زر التتبع الخاص بها.</string>
-    <string name="unofficial_extension_message">هذه الإضافة ليست من قائمة إضافات Tachiyomi الرسمية.</string>
+    <string name="unofficial_extension_message">ليست هذه الإضافة من القائمة الرسمية.</string>
     <string name="ext_unofficial">غير رسمي</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_metadata">تحديث البيانات الوصفية تلقائياً</string>
@@ -882,4 +880,5 @@
     <string name="exception_offline">لا اتصال بالإنترنت</string>
     <string name="exception_http">خطأ HTTP %d، انظر في WebView</string>
     <string name="exception_unknown_host">لم نصل %s</string>
+    <string name="unlock_app_title">افتح %s</string>
 </resources>

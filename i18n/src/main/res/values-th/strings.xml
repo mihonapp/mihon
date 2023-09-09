@@ -104,7 +104,7 @@
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
     <string name="untrusted_extension_message">ส่วนขยายนี้ลงนามด้วยใบรับรองที่ไม่น่าเชื่อถือและจะไม่ถูกเปิดใช้งาน
 \n
-\nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ใน Tachiyomi หรือเรียกใช้โค้ดโดยอำเภอใจ
+\nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
 \n
 \nการเชื่อถือใบรับรองนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
@@ -325,7 +325,7 @@
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
     <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการส่วนขยายทางการของ Tachiyomi</string>
+    <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการทางการ</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป แอปอาจทำงานไม่ถูกต้องและอาจทำให้เกิดปัญหากับแอปได้ ขอแนะนำให้ถอนการติดตั้งออก</string>
     <string name="ext_unofficial">ไม่เป็นทางการ</string>
     <string name="ext_obsolete">ล้าสมัย</string>
@@ -395,8 +395,6 @@
     <string name="action_sort_latest_chapter">ตอนล่าสุด</string>
     <string name="action_filter_tracked">ติดตามแล้ว</string>
     <string name="action_menu">เมนู</string>
-    <string name="confirm_exit">กดกลับอีกครั้งเพื่อออก</string>
-    <string name="unlock_app">ปลดล็อก Tachiyomi</string>
     <string name="label_sources">แหล่งที่มา</string>
     <string name="label_more">เพิ่มเติม</string>
     <string name="pref_webtoon_side_padding">ช่องว่างด้านข้าง</string>
@@ -525,7 +523,7 @@
     <string name="channel_progress">ความคืบหน้า</string>
     <string name="chapter_settings_updated">อัปเดตการตั้งค่าตอนเริ่มต้นแล้ว</string>
     <string name="information_webview_outdated">โปรดอัปเดตแอพ WebView เพื่อความเข้ากันได้ที่ดีขึ้น</string>
-    <string name="information_webview_required">Tachiyomi จำเป็นต้องใช้ WebView</string>
+    <string name="information_webview_required">แอปจำเป็นต้องใช้ WebView เพื่อให้ทำงานได้</string>
     <string name="information_cloudflare_bypass_failure">ไม่สามารถเลี่ยงผ่าน Cloudflare ได้</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">มีการอัปเดตส่วนขยาย %d รายการพร้อมใช้งาน</item>
@@ -799,4 +797,8 @@
     <string name="create_backup_file_error">ไม่สามารถสร้างไฟล์สำรองข้อมูล</string>
     <string name="licensed_manga_chapters_error">มีลิขสิทธิ์แล้ว - ไม่มีตอนให้แสดง</string>
     <string name="track_activity_name">เข้าสู่ระบบการติดตาม</string>
+    <string name="unlock_app_title">ปลดล็อก %s</string>
+    <string name="exception_offline">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="exception_http">HTTP %d, ดูเว็บไซต์ใน WebView</string>
+    <string name="exception_unknown_host">ไม่สามารถเข้าถึง %s ได้</string>
 </resources>

@@ -324,7 +324,6 @@
     <string name="ext_updates_pending">待更新</string>
     <string name="information_cloudflare_bypass_failure">无法绕过 Cloudflare</string>
     <string name="information_webview_outdated">请更新 WebView 应用以获得更好的兼容性</string>
-    <string name="unlock_app">解锁 Tachiyomi</string>
     <string name="secure_screen_summary">阻止截屏，并在切换后台时隐藏预览图</string>
     <string name="pref_category_display">显示</string>
     <string name="channel_new_chapters">章节更新</string>
@@ -374,7 +373,6 @@
     <string name="manga_info_expand">展开</string>
     <string name="licenses">开源许可证</string>
     <string name="website">官网</string>
-    <string name="confirm_exit">再按一次退出</string>
     <string name="add_to_library">添加到书架</string>
     <string name="in_library">在书架中</string>
     <string name="label_downloaded_only">仅限已下载内容</string>

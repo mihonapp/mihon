@@ -252,7 +252,7 @@
     <string name="untrusted_extension">Extensão não confiável</string>
     <string name="untrusted_extension_message">Esta extensão foi assinada com um certificado não confiável e não foi ativada.
 \n
-\nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas no Tachiyomi ou executar códigos arbitrários.
+\nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
 \n
 \nAo confiar neste certificado, você estará aceitando estes riscos.</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animação do toque duplo</string>
@@ -329,7 +329,6 @@
     <string name="information_cloudflare_bypass_failure">Falha ao contornar o Cloudflare</string>
     <string name="information_webview_outdated">Por favor, atualize o aplicativo de WebView para uma melhor compatibilidade</string>
     <string name="channel_new_chapters">Atualizações de capítulos</string>
-    <string name="unlock_app">Desbloquear o Tachiyomi</string>
     <string name="secure_screen_summary">A tela segura oculta os conteúdos do aplicativo durante a troca de aplicativos e impede capturas de tela</string>
     <string name="pref_category_display">Visualização</string>
     <plurals name="notification_chapters_generic">
@@ -360,7 +359,7 @@
     <string name="action_menu">Menu</string>
     <string name="action_newest">Mais novos</string>
     <string name="action_oldest">Mais antigos</string>
-    <string name="action_move_to_top">Mover para o topo</string>
+    <string name="action_move_to_top">Mover para o começo</string>
     <string name="action_move_to_bottom">Mover para o final</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Atualização de extensão disponível</item>
@@ -383,8 +382,7 @@
     <string name="in_library">Na biblioteca</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="manga_info_expand">Mais</string>
-    <string name="confirm_exit">Pressione voltar novamente para sair</string>
-    <string name="information_webview_required">A WebView é necessária para o Tachiyomi</string>
+    <string name="information_webview_required">A WebView é necessária para o funcionamento do app</string>
     <string name="licenses">Licenças de código aberto</string>
     <string name="website">Site</string>
     <string name="label_downloaded_only">Somente disponíveis offline</string>
@@ -421,7 +419,7 @@
     </plurals>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitoramento. Configure o monitoramento para itens individuais a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
-    <string name="unofficial_extension_message">Esta extensão não é da lista oficial de extensões do Tachiyomi.</string>
+    <string name="unofficial_extension_message">Esta extensão não é da lista oficial.</string>
     <string name="ext_unofficial">Não oficial</string>
     <string name="sort_by_upload_date">Pela data de envio</string>
     <string name="label_data">Dados</string>
@@ -654,7 +652,7 @@
     <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="rotation_reverse_portrait">Retrato invertido</string>
-    <string name="action_move_to_top_all_for_series">Mover série para o topo</string>
+    <string name="action_move_to_top_all_for_series">Mover série para o começo</string>
     <string name="disabled_nav">Desativado</string>
     <string name="update_check_fdroid_migration_info">Uma nova versão está disponível nos releases oficiais. Toque para saber como migrar dos releases não oficiais do F-Droid.</string>
     <string name="error_saving_picture">Erro ao salvar a imagem</string>
@@ -834,4 +832,6 @@
     <string name="exception_http">HTTP %d, verifique o site na WebView</string>
     <string name="exception_offline">Sem conexão de internet</string>
     <string name="exception_unknown_host">Não foi possível resolver %s</string>
+    <string name="unlock_app_title">Desbloquear o %s</string>
+    <string name="action_move_to_bottom_all_for_series">Mover série para o final</string>
 </resources>

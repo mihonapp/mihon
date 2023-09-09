@@ -292,8 +292,6 @@
     <string name="label_help">도움말</string>
     <string name="email">이메일 주소</string>
     <string name="website">웹사이트</string>
-    <string name="unlock_app">Tachiyomi 잠금 해제</string>
-    <string name="confirm_exit">뒤로 가기를 한 번 더 누르면 앱을 종료합니다</string>
     <string name="action_menu">메뉴</string>
     <string name="label_more">더 보기</string>
     <string name="label_sources">소스</string>

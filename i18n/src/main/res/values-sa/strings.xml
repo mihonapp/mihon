@@ -17,12 +17,10 @@
     <string name="history">चरित्रम्</string>
     <string name="label_sources">मूलानि</string>
     <string name="label_default">प्राथमिकम्</string>
-    <string name="unlock_app">ताचियोमिम् उद्घाटयतु</string>
     <string name="label_library">ग्रन्थालयः</string>
     <string name="label_backup">प्रतिलेखनं प्रतिसंस्कारं च</string>
     <string name="label_warning">पूर्वसूचना</string>
     <string name="confirm_lock_change">परिवर्तनं दृढीकर्तुं प्रमाणीकरोतु</string>
-    <string name="confirm_exit">निष्क्रमितुं पृष्ठगण्डं पुनः नोदयतु</string>
     <string name="action_menu">सूचिः</string>
     <string name="action_filter">शोधकम्</string>
     <string name="action_filter_bookmarked">पुटचिह्नं कृतानि</string>

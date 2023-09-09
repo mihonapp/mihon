@@ -230,8 +230,6 @@
     <string name="action_filter">Filtro</string>
     <string name="action_menu">Menú</string>
     <string name="action_settings">Axustes</string>
-    <string name="confirm_exit">Preme atrás novamente para saír</string>
-    <string name="unlock_app">Desbloquea Tachiyomi</string>
     <string name="history">Historial</string>
     <string name="track">Seguimento</string>
     <string name="chapters">Capítulos</string>

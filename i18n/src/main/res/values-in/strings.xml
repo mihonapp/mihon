@@ -248,11 +248,11 @@
     <string name="ext_untrusted">Tidak terpercaya</string>
     <string name="ext_uninstall">Lepas</string>
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
-    <string name="untrusted_extension_message">Ekstensi ini ditanda tangani dengan sertifikat yang tidak terpercaya dan belum diaktifkan.
+    <string name="untrusted_extension_message">Ekstensi ini ditandatangani dengan sertifikat tidak tepercaya dan tidak diaktifkan.
 \n
-\nSebuah ekstensi berbahaya dapat membaca kredensial login Anda yang tersimpan pada Tachiyomi atau mengeksekusi kode berbahaya.
+\nEkstensi berbahaya dapat membaca kredensial login apa pun yang disimpan atau mengeksekusi kode arbitrer.
 \n
-\nDengan mempercayai sertifikat ini Anda menyetujui resiko tersebut.</string>
+\nDengan mempercayai sertifikat ini, Anda menerima risiko ini.</string>
     <string name="pref_double_tap_anim_speed">Kecepatan animasi ketukan dua kali</string>
     <string name="double_tap_anim_speed_0">Tanpa animasi</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -306,7 +306,6 @@
     <string name="theme_system">Ikuti sistem</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
     <string name="pref_category_security">Keamanan dan privasi</string>
-    <string name="unlock_app">Buka Tachiyomi</string>
     <string name="action_menu">Menu</string>
     <string name="action_newest">Terbaru</string>
     <string name="action_oldest">Terlama</string>
@@ -355,7 +354,7 @@
     <string name="label_sources">Sumber</string>
     <string name="channel_ext_updates">Pembaruan ekstensi</string>
     <string name="pref_category_reading">Membaca</string>
-    <string name="information_webview_required">WebView dibutuhkan untuk Tachiyomi</string>
+    <string name="information_webview_required">WebView diperlukan agar aplikasi dapat berfungsi</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">Terdapat %d perbaruan ekstensi</item>
     </plurals>
@@ -374,7 +373,6 @@
     <string name="action_unpin">Hilangkan tanda</string>
     <string name="action_pin">Tandai</string>
     <string name="action_select_inverse">Pilih kebalikan</string>
-    <string name="confirm_exit">Tekan lagi untuk keluar</string>
     <string name="label_downloaded_only">Hanya yang sudah diunduh</string>
     <string name="pinned_sources">Tersemat</string>
     <string name="website">Situs web</string>
@@ -403,7 +401,7 @@
         <item quantity="other">Selesai dalam %1$s dengan %2$s kesalahan</item>
     </plurals>
     <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui kemajuan bab dalam layanan pelacakan. Siapkan pelacakan untuk entri individu dari tombol pelacakan mereka.</string>
-    <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar ekstensi resmi Tachiyomi.</string>
+    <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar resmi.</string>
     <string name="ext_unofficial">Tidak resmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Periksa sampul dan detail baru saat memperbarui pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segarkan metadata secara otomatis</string>
@@ -799,4 +797,8 @@
     <string name="track_activity_name">Pelacak login</string>
     <string name="create_backup_file_error">Tidak dapat membuat file cadangan</string>
     <string name="licensed_manga_chapters_error">Lisensi - Tidak ada chapter untuk ditampilkan</string>
+    <string name="unlock_app_title">Buka kunci %s</string>
+    <string name="exception_offline">Tidak ada koneksi Internet</string>
+    <string name="exception_http">HTTP %d, periksa situs web di WebView</string>
+    <string name="exception_unknown_host">Tidak dapat mencapai %s</string>
 </resources>

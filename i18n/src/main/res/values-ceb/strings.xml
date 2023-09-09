@@ -2,9 +2,7 @@
 <resources>
     <string name="history">Kasaysayan</string>
     <string name="label_recent_updates">Mga update</string>
-    <string name="unlock_app">I-unlock ang Tachiyomi</string>
     <string name="confirm_lock_change">Panghimatuod aron makumpirma ang pagbag-o</string>
-    <string name="confirm_exit">Pindota balik pag-usab aron makagawas</string>
     <string name="action_settings">Mga setting</string>
     <string name="action_menu">Menu</string>
     <string name="action_filter_bookmarked">Gi-bookmark</string>

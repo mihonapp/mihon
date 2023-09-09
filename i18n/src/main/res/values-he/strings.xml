@@ -346,8 +346,6 @@
     <string name="manga">פריטים בספריה</string>
     <string name="categories">קטגוריות</string>
     <string name="name">שם</string>
-    <string name="confirm_exit">לחץ אחורה שוב כדי לסגור</string>
-    <string name="unlock_app">שחרר את Tachiyomi</string>
     <string name="information_no_recent_manga">שום דבר לא נקרא לאחרונה</string>
     <string name="information_no_recent">אין עידכונים אחרונים</string>
     <string name="action_filter_bookmarked">סומן</string>
@@ -568,7 +566,7 @@
         <item quantity="one">הושלם ב %1$s עם שגיאה אחת</item>
         <item quantity="two">הושלם ב %1$s עם שתי שגיאות</item>
         <item quantity="many">הושלם ב %1$s עם %2$s שגיאות</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="label_network">רשת</string>
     <string name="cancelled">בוטל/ה</string>
@@ -712,7 +710,7 @@
         <item quantity="one">מעקב אחד</item>
         <item quantity="two">שני מעקבים</item>
         <item quantity="many">%d מעקבים</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="updates_last_update_info">ספריה עודכנה לאחרונה ב: %s</string>
     <string name="pref_long_strip_split">פצל תמונות מוארכות (בטא)</string>
@@ -810,7 +808,7 @@
         <item quantity="one">הפרק הבא שלא נקרא</item>
         <item quantity="two">שני הפרקים הבאים שלא נקראו</item>
         <item quantity="many">%d הפרקים הבאים שלא נקראו</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_debug_info">מידע דיבוג</string>
     <string name="licenses">רישיונות מקורות פתוחים</string>
@@ -819,13 +817,13 @@
         <item quantity="one">יום אחד</item>
         <item quantity="two">יומיים</item>
         <item quantity="many">%d ימים</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="missing_chapters">
         <item quantity="one">חסר פרק אחד</item>
         <item quantity="two">חסרים שני פרקים</item>
         <item quantity="many">חסרים %1$s פרקים</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="add_tracking">הוסף מעקב</string>
     <string name="about_dont_kill_my_app">לחלק מהיצרנים יש הגבלות אפליקציה שהורגות תהליכים ברקע. באתר הזה יש עוד מידע לגבי איך לתקן את זה.</string>

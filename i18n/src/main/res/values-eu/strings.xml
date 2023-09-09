@@ -482,9 +482,7 @@
     <string name="pref_backup_slots">Gehienezko babeskopiak</string>
     <string name="action_sort_alpha">Alfabetikoki</string>
     <string name="label_warning">Oharra</string>
-    <string name="unlock_app">Desblokeatu Tachiyomi</string>
     <string name="confirm_lock_change">Autentifikatu aldaketa berresteko</string>
-    <string name="confirm_exit">Sakatu atzera berriro irteteko</string>
     <string name="action_settings">Ezarpenak</string>
     <string name="action_menu">Menua</string>
     <string name="action_filter">Iragazi</string>

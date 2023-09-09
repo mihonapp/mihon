@@ -22,7 +22,6 @@
     <string name="label_extensions">ប្រភពម៊េងហ្គា</string>
     <string name="label_help">ជំនួយ</string>
     <string name="label_default">លំនាំដើម</string>
-    <string name="unlock_app">បើកតាឈិយ៉ូមិ</string>
     <string name="action_filter">ហ្វីលធឺ</string>
     <string name="action_filter_bookmarked">បានបញ្ចូលទៅក្នុងបណ្ណាល័យ</string>
     <string name="action_filter_tracked">បានដាក់ការតាមដានការអាន</string>
@@ -76,7 +75,6 @@
     <string name="information_empty_category">អ្នកពុំមានការទម្រៀបម៊េងហ្គាឡើយ។ ចុចប៊ូតុងសញ្ញាបូកដើម្បីទម្រៀបម៊េងហ្គាសម្រាប់បណ្ណាល័យរបស់អ្នក។</string>
     <string name="manga">ម៊េងហ្គា</string>
     <string name="confirm_lock_change">Authenticateដើម្បីបញ្ចាក់ពីការកែប្រែ</string>
-    <string name="confirm_exit">ចុចថយម្ដងទៀតដើម្បីចេញ</string>
     <string name="action_settings">ការកំណត់</string>
     <string name="action_menu">កន្លែងកំណត់</string>
     <string name="action_mark_previous_as_read">បញ្ចាក់ភាគមុនថាបានអាន</string>

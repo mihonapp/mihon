@@ -94,8 +94,6 @@
     <string name="information_no_recent_manga">हालै केहि पढेको छैन</string>
     <string name="information_no_recent">हालैका कुनै अपडेट छैन</string>
     <string name="label_download_queue">डाउनलोड लाम</string>
-    <string name="confirm_exit">बाहिर निस्किन फेरि फिर्ता थिच्नुहोस्</string>
-    <string name="unlock_app">ताचियोमी अनलक गर्नुहोस्</string>
     <string name="information_no_downloads">कुनै डाउनलोडहरू छैन</string>
     <string name="label_help">मद्दत</string>
     <string name="label_extension_info">एक्सटेन्शनको जानकारी</string>

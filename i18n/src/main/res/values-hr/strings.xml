@@ -11,7 +11,7 @@
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno. Možda neće ispravno funkcionirati i može uzrokovati probleme s aplikacijom. Preporučuje se deinstalacija.</string>
     <string name="untrusted_extension_message">Ovo proširenje potpisano je nepovjerljivim certifikatom i nije aktivirano.
 \n
-\nZlonamjerno proširenje može pročitati sve podatke za prijavu koji su spremljeni u programu Tachiyomi ili izvršiti proizvoljni kod.
+\nZlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
 \n
 \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
@@ -152,8 +152,6 @@
     <string name="action_filter">Filtar</string>
     <string name="action_menu">Izbornik</string>
     <string name="action_settings">Postavke</string>
-    <string name="confirm_exit">Za zatvaranje programa ponovo pritisni natrag</string>
-    <string name="unlock_app">Otključaj Tachiyomi</string>
     <string name="history">Povijest</string>
     <string name="track">Praćenje</string>
     <string name="manga">Unosi u biblioteci</string>
@@ -398,7 +396,7 @@
         <item quantity="few">Dostupne su %d nove verzije proširenja</item>
         <item quantity="other">Dostupno je %d novih verzija proširenja</item>
     </plurals>
-    <string name="information_webview_required">Za Tachiyomi je potreban WebView</string>
+    <string name="information_webview_required">Za funkcioniranje programa je potreban WebView</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d novo poglavlje</item>
         <item quantity="few">%1$d nova poglavlja</item>
@@ -426,7 +424,7 @@
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži unose u biblioteci.</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
-    <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
+    <string name="unofficial_extension_message">Ovo proširenje nije iz službenog popisa.</string>
     <string name="ext_unofficial">Neslužbeno</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
@@ -831,4 +829,8 @@
     <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
     <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
     <string name="licensed_manga_chapters_error">Licencirano – Nema poglavlja za prikaz</string>
+    <string name="unlock_app_title">Otključaj %s</string>
+    <string name="exception_offline">Ne postoji veza s internetom</string>
+    <string name="exception_http">HTTP %d, provjeri web stranicu u WebView</string>
+    <string name="exception_unknown_host">Nije bilo moguće povezati se s računalom %s</string>
 </resources>

@@ -63,7 +63,7 @@
     <string name="untrusted_extension">Nedůvěryhodné rozšíření</string>
     <string name="untrusted_extension_message">Toto rozšíření bylo podepsané nedůvěryhodným certifikátem a nebylo aktivované.
 \n
-\nŠkodlivé rozšíření může přečíst přihlašovací údaje uložené v Tachiyomi nebo spustit libovolný kód.
+\nŠkodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód.
 \n
 \nDůvěřováním tomuto certifikátu přijímáte tato rizika.</string>
     <string name="pref_fullscreen">Celá obrazovka</string>
@@ -324,7 +324,6 @@
     <string name="action_newest">Nejnovější</string>
     <string name="action_view_chapters">Zobrazit kapitoly</string>
     <string name="action_sort_latest_chapter">Poslední kapitola</string>
-    <string name="unlock_app">Odemknout Tachiyomi</string>
     <string name="add_tracking">Přidat sledování</string>
     <string name="no_chapters_error">Nebyly nalezeny žádné kapitoly</string>
     <string name="set_chapter_settings_as_default">Nastavit jako výchozí</string>
@@ -408,7 +407,7 @@
     <string name="tapping_inverted_none">Žádné</string>
     <string name="ext_nsfw_warning">Zdroje z tohoto rozšíření mohou obsahovat NSFW (18+) obsah</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Toto rozšíření není z oficiálního seznamu rozšíření pro Tachiyomi.</string>
+    <string name="unofficial_extension_message">Toto rozšíření není z oficiálního seznamu rozšíření.</string>
     <string name="ext_unofficial">Neoficiální</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorie</item>
@@ -444,7 +443,7 @@
     <string name="channel_progress">Postup</string>
     <string name="chapter_settings_updated">Výchozí nastavení kapitol aktualizováno</string>
     <string name="information_webview_outdated">Prosím aktualizujte aplikaci WebView pro lepší kompatibilitu</string>
-    <string name="information_webview_required">Je nutné mít nainstalovanou aplikaci WebView</string>
+    <string name="information_webview_required">Je nutné mít nainstalovanou aplikaci WebView pro správné fungování aplikace</string>
     <string name="information_cloudflare_bypass_failure">Nastala chyba při obcházení služby Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Je dostupná aktualizace rozšíření</item>
@@ -498,7 +497,6 @@
     <string name="action_search_settings">Nastavení vyhledávání</string>
     <string name="action_sort_date_added">Datum přidání</string>
     <string name="action_filter_tracked">Sledováno</string>
-    <string name="confirm_exit">Opětovným stisknutím tlačítka aplikaci opustíte</string>
     <string name="viewer">Režim čtení</string>
     <string name="pref_show_reading_mode">Ukazovat režim čtení</string>
     <string name="pref_category_for_this_series">Pro tuto sérii</string>
@@ -834,4 +832,5 @@
     <string name="exception_offline">Bez připojení k internetu</string>
     <string name="exception_unknown_host">Nelze dosáhnout %s</string>
     <string name="exception_http">HTTP %d, zkontrolovat web v WebView</string>
+    <string name="unlock_app_title">Odemknout %s</string>
 </resources>

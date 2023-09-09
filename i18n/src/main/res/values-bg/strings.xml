@@ -428,8 +428,6 @@
     <string name="action_select_inverse">Избери обратно</string>
     <string name="action_sort_latest_chapter">Последна глава</string>
     <string name="action_menu">Меню</string>
-    <string name="confirm_exit">Натиснете назад още веднъж, за да излезете</string>
-    <string name="unlock_app">Отключете Тачийоми</string>
     <string name="label_sources">Източници</string>
     <string name="label_more">Още</string>
     <string name="viewer">Режим на четене</string>

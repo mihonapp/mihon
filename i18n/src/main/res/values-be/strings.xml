@@ -69,8 +69,6 @@
     <string name="action_filter">Фільтр</string>
     <string name="action_menu">Меню</string>
     <string name="action_settings">Налады</string>
-    <string name="confirm_exit">Націсніце назад яшчэ раз, каб выйсці</string>
-    <string name="unlock_app">Разблакіраваць Tachiyomi</string>
     <string name="label_help">Дапамога</string>
     <string name="label_extension_info">Інфармацыя аб пашырэнні</string>
     <string name="name">Назва</string>

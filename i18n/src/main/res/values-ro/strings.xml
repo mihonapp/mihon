@@ -314,7 +314,6 @@
     <string name="pref_manage_notifications">Gestionați notificările</string>
     <string name="pref_category_security">Securitate</string>
     <string name="lock_with_biometrics">Necesită deblocare</string>
-    <string name="unlock_app">Deblochează Tachiyomi</string>
     <string name="action_sort_latest_chapter">Ultimul capitol</string>
     <string name="lock_when_idle">Blocați când este inactiv</string>
     <string name="lock_always">Întotdeauna</string>
@@ -389,7 +388,6 @@
     <string name="website">Pagină web</string>
     <string name="restoring_backup_error">Restaurarea copiei de rezervă a eșuat</string>
     <string name="creating_backup_error">Crearea copiei de rezervă a eșuat</string>
-    <string name="confirm_exit">Apăsați din nou pentru a ieși</string>
     <string name="label_downloaded_only">Doar descărcate</string>
     <string name="restoring_backup_canceled">Restaurare anulată</string>
     <string name="restore_in_progress">Restaurarea este deja în curs de desfășurare</string>

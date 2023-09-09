@@ -252,7 +252,7 @@
     <string name="untrusted_extension">Sambungan tak dipercayai</string>
     <string name="untrusted_extension_message">Sambungan ini telah ditandatangani dengan sijil tidak dipercayai dan ia tidak diaktifkan.
 \n
-\nSambungan yang berniat jahat kemungkinan membaca sebarang kelayakan log masuk yang di simpan dalam Tachiyomi atau melaksanakan kod sesuka hati.
+\nSambungan yang berniat jahat kemungkinan membaca sebarang kelayakan log masuk yang di simpan atau melaksanakan kod sesuka hati.
 \n
 \nDengan mempercayai sijil ini, anda menerima risiko tersebut.</string>
     <string name="pref_double_tap_anim_speed">Kelajuan animasi ketik dua kali</string>
@@ -327,7 +327,6 @@
     <string name="information_cloudflare_bypass_failure">Gagal untuk memintas Cloudflare</string>
     <string name="information_webview_outdated">Sila kemas kini aplikasi WebView untuk keserasian yang lebih baik</string>
     <string name="channel_new_chapters">Pengemaskinian bab</string>
-    <string name="unlock_app">Buka kunci Tachiyomi</string>
     <string name="secure_screen_summary">Skrin keselamatan menyembunyikan kandungan aplikasi apabila menukar aplikasi dan sekat tangkapan skrin</string>
     <string name="pref_category_display">Paparan</string>
     <plurals name="notification_chapters_generic">
@@ -365,7 +364,7 @@
     <string name="action_select_inverse">Pilih songsang</string>
     <string name="label_sources">Sumber</string>
     <string name="pref_webtoon_side_padding">Tambahan sisi</string>
-    <string name="information_webview_required">WebView diperlukan untuk Tachiyomi</string>
+    <string name="information_webview_required">WebView diperlukan untuk aplikasi berfungsi</string>
     <string name="recent_manga_time">Bab %1$s - %2$s</string>
     <string name="add_tracking">Tambah penjejakan</string>
     <string name="manga_info_collapse">Tutup</string>
@@ -382,7 +381,6 @@
     <string name="backup_in_progress">Sandaran sedang dijalankan</string>
     <string name="action_unpin">Buang sematkan</string>
     <string name="action_pin">Sematkan</string>
-    <string name="confirm_exit">Tekan kembali sekali lagi untuk keluar</string>
     <string name="label_downloaded_only">Dimuat turun sahaja</string>
     <string name="last_used_source">Terakhir digunakan</string>
     <string name="check_for_updates">Semak untuk kemas kini</string>
@@ -410,7 +408,7 @@
     <string name="backup_restore_missing_sources">Tiada sumber:</string>
     <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa entri pustaka.</string>
     <string name="invalid_backup_file">Fail sandaran tidak sah</string>
-    <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai sambungan Tachiyomi yang rasmi.</string>
+    <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai yang rasmi.</string>
     <string name="ext_unofficial">Tidak rasmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Semak muka hadapan dan tentang baharu bila mengemaskini pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segar semula metadata secara automatik</string>
@@ -802,4 +800,5 @@
     <string name="download_cache_invalidated">Indeks muat turun tidak sah</string>
     <string name="information_cloudflare_help">Ketik di sini untuk bantuan berkenaan Cloudflare</string>
     <string name="exception_http">HTTP %d, semak laman web dalam WebView</string>
+    <string name="unlock_app_title">Buka kunci %s</string>
 </resources>

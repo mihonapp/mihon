@@ -328,7 +328,6 @@
     <string name="information_cloudflare_bypass_failure">Isfrancamentu de Cloudflare fallidu</string>
     <string name="information_webview_outdated">Agiorna s\'aplicatzione de WebView pro otènnere una cumpatibilidade prus manna</string>
     <string name="channel_new_chapters">Agiornamentos de sos capìtulos</string>
-    <string name="unlock_app">Isbloca Tachiyomi</string>
     <string name="secure_screen_summary">S\'ischermu seguru cuat sos cuntenutos de s\'aplicatzione cando mudas de aplicatzione e blocat sas ischermadas</string>
     <string name="pref_category_display">Visualizatzione</string>
     <plurals name="notification_chapters_generic">
@@ -381,7 +380,6 @@
     <string name="information_webview_required">Pro Tachiyomi b\'at bisòngiu de WebView</string>
     <string name="licenses">Litzèntzias a còdighe abertu</string>
     <string name="website">Situ web</string>
-    <string name="confirm_exit">Incarca in segus torra pro essire</string>
     <string name="label_downloaded_only">Iscarrigados ebbia</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
     <string name="last_used_source">Ùrtima impreada</string>
