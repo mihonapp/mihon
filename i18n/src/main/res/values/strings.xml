@@ -137,6 +137,7 @@
     <string name="action_move_to_top">Move to top</string>
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
+    <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
