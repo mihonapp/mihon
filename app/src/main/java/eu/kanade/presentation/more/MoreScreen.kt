@@ -62,7 +62,7 @@ fun MoreScreen(
                     WarningBanner(
                         textRes = R.string.fdroid_warning,
                         modifier = Modifier.clickable {
-                            uriHandler.openUri("https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version")
+                            uriHandler.openUri("https://tachiyomi.org/docs/faq/general#migrating-from-f-droid")
                         },
                     )
                 }

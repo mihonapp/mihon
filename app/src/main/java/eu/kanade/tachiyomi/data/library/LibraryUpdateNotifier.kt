@@ -329,11 +329,11 @@ class LibraryUpdateNotifier(private val context: Context) {
     }
 
     companion object {
-        const val HELP_WARNING_URL = "https://tachiyomi.org/help/faq/#why-does-the-app-warn-about-large-bulk-updates-and-downloads"
+        const val HELP_WARNING_URL = "https://tachiyomi.org/docs/faq/application/library#why-am-i-warned-about-large-bulk-updates-and-downloads"
     }
 }
 
 private const val NOTIF_MAX_CHAPTERS = 5
 private const val NOTIF_TITLE_MAX_LEN = 45
 private const val NOTIF_ICON_SIZE = 192
-private const val HELP_SKIPPED_URL = "https://tachiyomi.org/help/faq/#why-does-global-update-skip-some-entries"
+private const val HELP_SKIPPED_URL = "https://tachiyomi.org/docs/faq/application/library#why-does-global-update-skip-certain-entries"

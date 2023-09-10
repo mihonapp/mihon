@@ -31,7 +31,7 @@ fun Screen.migrateSourceTab(): TabContent {
                 title = stringResource(R.string.migration_help_guide),
                 icon = Icons.Outlined.HelpOutline,
                 onClick = {
-                    uriHandler.openUri("https://tachiyomi.org/help/guides/source-migration/")
+                    uriHandler.openUri("https://tachiyomi.org/docs/guides/source-migration")
                 },
             ),
         ),

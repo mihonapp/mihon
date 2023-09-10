@@ -1,7 +1,7 @@
 package tachiyomi.core
 
 object Constants {
-    const val URL_HELP = "https://tachiyomi.org/help/"
+    const val URL_HELP = "https://tachiyomi.org/docs/guides/troubleshooting/"
 
     const val MANGA_EXTRA = "manga"
 
