@@ -348,7 +348,7 @@ actual class LocalSource(
 
     companion object {
         const val ID = 0L
-        const val HELP_URL = "https://tachiyomi.org/docs/guides/local-series/"
+        const val HELP_URL = "https://tachiyomi.org/docs/guides/local-source/"
 
         private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }
