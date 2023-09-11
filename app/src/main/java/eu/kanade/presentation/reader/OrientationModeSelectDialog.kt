@@ -45,7 +45,7 @@ fun OrientationModeSelectDialog(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         imageVector = ImageVector.vectorResource(mode.iconRes),
-                        label = stringResource(stringRes),
+                        title = stringResource(stringRes),
                     )
                 }
             }
