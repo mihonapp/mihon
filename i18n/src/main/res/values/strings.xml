@@ -402,8 +402,8 @@
     <string name="double_tap_anim_speed_0">No animation</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Fast</string>
-    <string name="pref_rotation_type">Default rotation type</string>
-    <string name="rotation_type">Rotation type</string>
+    <string name="pref_rotation_type">Default rotation</string>
+    <string name="rotation_type">Rotation</string>
     <string name="rotation_free">Free</string>
     <string name="rotation_portrait">Portrait</string>
     <string name="rotation_reverse_portrait">Reverse portrait</string>
