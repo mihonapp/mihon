@@ -5,14 +5,12 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.absoluteValue
 
-const val MAX_FETCH_INTERVAL = 28
-private const val FETCH_INTERVAL_GRACE_PERIOD = 1
-
-class SetFetchInterval(
+class FetchInterval(
     private val getChapterByMangaId: GetChapterByMangaId,
 ) {
 
@@ -29,7 +27,7 @@ class SetFetchInterval(
         val chapters = getChapterByMangaId.await(manga.id)
         val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
             chapters,
-            dateTime,
+            dateTime.zone,
         )
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, currentWindow)
 
@@ -42,33 +40,34 @@ class SetFetchInterval(
 
     fun getWindow(dateTime: ZonedDateTime): Pair<Long, Long> {
         val today = dateTime.toLocalDate().atStartOfDay(dateTime.zone)
-        val lowerBound = today.minusDays(FETCH_INTERVAL_GRACE_PERIOD.toLong())
-        val upperBound = today.plusDays(FETCH_INTERVAL_GRACE_PERIOD.toLong())
+        val lowerBound = today.minusDays(GRACE_PERIOD)
+        val upperBound = today.plusDays(GRACE_PERIOD)
         return Pair(lowerBound.toEpochSecond() * 1000, upperBound.toEpochSecond() * 1000 - 1)
     }
 
-    internal fun calculateInterval(chapters: List<Chapter>, zonedDateTime: ZonedDateTime): Int {
-        val sortedChapters = chapters
-            .sortedWith(
-                compareByDescending<Chapter> { it.dateUpload }.thenByDescending { it.dateFetch },
-            )
-            .take(50)
-
-        val uploadDates = sortedChapters
+    internal fun calculateInterval(chapters: List<Chapter>, zone: ZoneId): Int {
+        val uploadDates = chapters.asSequence()
             .filter { it.dateUpload > 0L }
+            .sortedByDescending { it.dateUpload }
             .map {
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateUpload), zonedDateTime.zone)
+                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateUpload), zone)
                     .toLocalDate()
                     .atStartOfDay()
             }
             .distinct()
-        val fetchDates = sortedChapters
+            .take(10)
+            .toList()
+
+        val fetchDates = chapters.asSequence()
+            .sortedByDescending { it.dateFetch }
             .map {
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateFetch), zonedDateTime.zone)
+                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.dateFetch), zone)
                     .toLocalDate()
                     .atStartOfDay()
             }
             .distinct()
+            .take(10)
+            .toList()
 
         val interval = when {
             // Enough upload date from source
@@ -87,7 +86,7 @@ class SetFetchInterval(
             else -> 7
         }
 
-        return interval.coerceIn(1, MAX_FETCH_INTERVAL)
+        return interval.coerceIn(1, MAX_INTERVAL)
     }
 
     private fun calculateNextUpdate(
@@ -118,7 +117,7 @@ class SetFetchInterval(
     }
 
     private fun doubleInterval(delta: Int, timeSinceLatest: Int, doubleWhenOver: Int): Int {
-        if (delta >= MAX_FETCH_INTERVAL) return MAX_FETCH_INTERVAL
+        if (delta >= MAX_INTERVAL) return MAX_INTERVAL
 
         // double delta again if missed more than 9 check in new delta
         val cycle = timeSinceLatest.floorDiv(delta) + 1
@@ -127,5 +126,11 @@ class SetFetchInterval(
         } else {
             delta
         }
+    }
+
+    companion object {
+        const val MAX_INTERVAL = 28
+
+        private const val GRACE_PERIOD = 1L
     }
 }
