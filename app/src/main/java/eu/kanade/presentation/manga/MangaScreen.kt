@@ -63,7 +63,6 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterItem
 import eu.kanade.tachiyomi.ui.manga.MangaScreenModel
-import eu.kanade.tachiyomi.util.lang.toRelativeString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.service.missingChaptersCount
@@ -740,7 +739,7 @@ private fun LazyListScope.sharedChapterItems(
             date = chapterItem.chapter.dateUpload
                 .takeIf { it > 0L }
                 ?.let {
-                    Date(it).toRelativeString(context, dateFormat)
+                    dateFormat.format(Date(it))
                 },
             readProgress = chapterItem.chapter.lastPageRead
                 .takeIf { !chapterItem.chapter.read && it > 0L }

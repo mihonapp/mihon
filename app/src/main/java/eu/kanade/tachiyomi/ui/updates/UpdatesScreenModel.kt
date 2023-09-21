@@ -20,7 +20,6 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.util.lang.toDateKey
-import eu.kanade.tachiyomi.util.lang.toRelativeString
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -384,7 +383,7 @@ class UpdatesScreenModel(
                     val afterDate = after?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
                     when {
                         beforeDate.time != afterDate.time && afterDate.time != 0L -> {
-                            val text = afterDate.toRelativeString(context, dateFormat)
+                            val text = dateFormat.format(afterDate)
                             UpdatesUiModel.Header(text)
                         }
                         // Return null to avoid adding a separator between two items.
