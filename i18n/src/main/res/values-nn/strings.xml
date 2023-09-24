@@ -106,11 +106,6 @@
         <item quantity="other">Etter %1$s minuttar</item>
     </plurals>
     <string name="pref_category_nsfw_content">NSFW (18+) kjeder</string>
-    <string name="relative_time_today">I dag</string>
-    <plurals name="relative_time">
-        <item quantity="one">I går</item>
-        <item quantity="other">%1$d dagar sidan</item>
-    </plurals>
     <string name="pref_category_display">Skjerm</string>
     <string name="pref_library_columns">Element per rad</string>
     <string name="pref_library_update_interval">Automatisk oppdateringar</string>

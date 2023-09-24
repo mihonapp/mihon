@@ -571,10 +571,6 @@
     <string name="pref_hide_threshold">Sensitiviti menyembunyikan menu apabila skrol</string>
     <string name="label_background_activity">Aktiviti latar belakang</string>
     <string name="pref_inverted_colors">Songsang</string>
-    <plurals name="relative_time">
-        <item quantity="other">%1$d hari lalu</item>
-    </plurals>
-    <string name="relative_time_today">Hari ini</string>
     <string name="theme_tealturquoise">Teal &amp; Turquoise</string>
     <string name="confirm_lock_change">Sahkan untuk mengesahkan perubahan</string>
     <string name="label_default">Lalai</string>

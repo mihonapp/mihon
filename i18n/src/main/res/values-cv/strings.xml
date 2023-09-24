@@ -252,7 +252,7 @@
     <string name="obsolete_extension_message">Ҫак хушмана урӑх кӗме май ҫук. Вӑл тӗрӗс мар ӗҫлеме тата апа йӑнӑшлаттарма пултарать. Ӑна катертме сӗнетпӗр.</string>
     <string name="untrusted_extension_message">Ку хушмана шанчӑклӑ мар ӗнентерӳ хучӗпе алӑ пуснӑ тата ӑна пуҫарман.
 \n
-\nСийенлӗ хушма Tachiyomi-ри упранакан кирек мӗнле шут пӗлӗмӗсене шута илме йе хӑй ирӗклӗ йума пурнӑҫлама пултарать.
+\nСийенлӗ хушма упранакан кирек мӗнле шут пӗлӗмӗсене шута илме йе хӑй ирӗклӗ йума пурнӑҫлама пултарать.
 \n
 \nҪак ӗнентерӳ хутне шаннипе есӗ ҫав теветкеле йышӑнатӑн.</string>
     <plurals name="restore_completed_message">
@@ -571,17 +571,12 @@
     <string name="label_downloaded">Тийесе илнӗ</string>
     <string name="theme_tidalwave">Шыв хӑпарнин хумӗ</string>
     <string name="pref_app_theme">Ап темми</string>
-    <string name="relative_time_today">Пайан</string>
     <string name="theme_lavender">Лавантӑ</string>
     <string name="theme_yinyang">Ин тата Йан</string>
     <string name="pref_browse_summary">Ҫӑл куҫсем, хушмасем, пӗтӗмӗшле шырав</string>
     <string name="theme_greenapple">Симӗс пан улми</string>
     <string name="theme_yotsuba">Йутсупа</string>
     <string name="pref_library_update_manga_restriction">Серилӗхсене ҫӗнетнине сиктер</string>
-    <plurals name="relative_time">
-        <item quantity="one">Ӗнер</item>
-        <item quantity="other">%1$d кун кайалла</item>
-    </plurals>
     <string name="network_not_metered">Чараксӑр тетел урлӑ ҫеҫ</string>
     <string name="pref_update_only_started">Серилӗхе пуҫламан</string>
     <string name="theme_tako">Такку</string>
@@ -635,4 +630,7 @@
     <string name="ext_installer_legacy">Малтанхилле</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizuku-н хушма ларткӑча усӑ курма Shizuku ларт тата ҫут.</string>
     <string name="action_ok">Йурӗ</string>
+    <string name="unlock_app_title">%s уҫ</string>
+    <string name="action_move_to_bottom_all_for_series">Серилӗхе вӗҫе куҫар</string>
+    <string name="pref_library_update_categories_details">Кӗртнӗ пухмӑшсенче пулнӑ пулсан та кӑларса пӑрахнӑ пухмӑшсенче пулнӑ серилӗхсем ҫӗнелмӗҫ.</string>
 </resources>

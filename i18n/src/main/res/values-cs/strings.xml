@@ -76,7 +76,7 @@
     <string name="black_background">Černá</string>
     <string name="left_to_right_viewer">Stránkované (zleva doprava)</string>
     <string name="right_to_left_viewer">Stránkované (zprava doleva)</string>
-    <string name="pref_rotation_type">Výchozí typ otáčení</string>
+    <string name="pref_rotation_type">Výchozí otáčení</string>
     <string name="rotation_free">Volné</string>
     <string name="rotation_force_portrait">Zamknuto na výšku</string>
     <string name="rotation_force_landscape">Zamknuto na šířku</string>
@@ -538,7 +538,7 @@
     <string name="action_sort_chapter_fetch_date">Datum načtení kapitoly</string>
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
-    <string name="rotation_type">Typ otočení</string>
+    <string name="rotation_type">Otáčení</string>
     <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
     <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
@@ -593,12 +593,6 @@
     <string name="getting_started_guide">Příručka Začínáme</string>
     <string name="pref_tablet_ui_mode">Uživatelské rozhraní tabletu</string>
     <string name="action_track">Sledovat</string>
-    <plurals name="relative_time">
-        <item quantity="one">Včera</item>
-        <item quantity="few">Před %1$d dny</item>
-        <item quantity="other">Před %1$d dny</item>
-    </plurals>
-    <string name="relative_time_today">Dnes</string>
     <string name="theme_tealturquoise">Modrozelená a Tyrkysová</string>
     <string name="pref_category_appearance">Vzhled</string>
     <string name="confirm_lock_change">Potvrďte změnu ověřením</string>
@@ -833,4 +827,5 @@
     <string name="exception_unknown_host">Nelze dosáhnout %s</string>
     <string name="exception_http">HTTP %d, zkontrolovat web v WebView</string>
     <string name="unlock_app_title">Odemknout %s</string>
+    <string name="action_move_to_bottom_all_for_series">Přesunout sérii na konec</string>
 </resources>

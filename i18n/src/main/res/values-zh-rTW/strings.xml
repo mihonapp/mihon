@@ -574,10 +574,6 @@
     <string name="theme_tealturquoise">綠松色</string>
     <string name="confirm_lock_change">驗證以確認變更</string>
     <string name="pref_category_appearance">外觀</string>
-    <string name="relative_time_today">今天</string>
-    <plurals name="relative_time">
-        <item quantity="other">%1$d 天前</item>
-    </plurals>
     <string name="label_default">預設</string>
     <string name="pref_tablet_ui_mode">平板電腦介面</string>
     <string name="getting_started_guide">入門指南</string>
@@ -801,4 +797,5 @@
     <string name="exception_offline">沒有網際網路連線</string>
     <string name="exception_unknown_host">無法連上 %s</string>
     <string name="unlock_app_title">解鎖 %s</string>
+    <string name="action_move_to_bottom_all_for_series">將系列移至底部</string>
 </resources>

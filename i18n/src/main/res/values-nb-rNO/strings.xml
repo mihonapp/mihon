@@ -132,7 +132,7 @@
     <string name="double_tap_anim_speed_0">Ingen animasjon</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Rask</string>
-    <string name="pref_rotation_type">Standard rotasjonstype</string>
+    <string name="pref_rotation_type">Standard rotasjon</string>
     <string name="rotation_free">Fri</string>
     <string name="rotation_force_portrait">Låst stående</string>
     <string name="rotation_force_landscape">Låst liggende</string>
@@ -259,9 +259,9 @@
     <string name="pref_library_columns">Rutenettstørrelse</string>
     <string name="untrusted_extension_message">Denne utvidelsen ble signert med et usikkert sertifikat, og ble dermed ikke aktivert
 \n
-\nEn skadelig utvidelse kan lese innloggingsdetaljer lagret i Tachiyomi, eller kjøre ukjent kode.
+\nEn skadelig utvidelse kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode.
 \n
-\nVed å godta dette sertifikatet aksepterer du overstående risikoer.</string>
+\nVed å godta dette sertifikatet aksepterer du disse risikoene.</string>
     <string name="pref_double_tap_anim_speed">Animasjonshastighet ved dobbelklikk</string>
     <string name="pager_viewer">Sider</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag\?</string>
@@ -337,7 +337,7 @@
     <string name="action_menu">Meny</string>
     <string name="label_sources">Kilder</string>
     <string name="channel_ext_updates">Utvidelsesoppdateringer</string>
-    <string name="information_webview_required">Tachiyomi krever WebView</string>
+    <string name="information_webview_required">Appen fungerer ikke uten WebView</string>
     <string name="add_tracking">Legg til sporing</string>
     <string name="manga_info_collapse">Mindre</string>
     <string name="manga_info_expand">Mer</string>
@@ -411,7 +411,7 @@
         <item quantity="other">Gjort på %1$s med %2$s feil</item>
     </plurals>
     <string name="pref_show_reading_mode">Vis lesemodus</string>
-    <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle Tachiyomi-utvidelseslisten.</string>
+    <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle listen.</string>
     <string name="action_disable">deaktivere</string>
     <string name="action_disable_all">deaktiver alle</string>
     <string name="action_enable_all">aktiver alle</string>
@@ -532,7 +532,7 @@
     <string name="update_check_eol">Denne Android-versjonen støttes ikke lenger</string>
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
-    <string name="rotation_type">Rotasjonstype</string>
+    <string name="rotation_type">Rotasjon</string>
     <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til oppføringenes tittel</string>
     <string name="pref_create_folder_per_manga">Lagre sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>
@@ -566,11 +566,6 @@
     <string name="off">Av</string>
     <string name="on">På</string>
     <string name="restrictions">Begrensninger: %s</string>
-    <plurals name="relative_time">
-        <item quantity="one">I går</item>
-        <item quantity="other">%1$d dager siden</item>
-    </plurals>
-    <string name="relative_time_today">I dag</string>
     <string name="theme_monet">Dynamisk</string>
     <string name="pref_app_theme">Programdrakt</string>
     <string name="pref_category_appearance">Utseende</string>
@@ -813,4 +808,9 @@
     <string name="create_backup_file_error">Kunne ikke opprette en backup-fil</string>
     <string name="licensed_manga_chapters_error">Lisensiert - Ingen kapitler å vise</string>
     <string name="track_activity_name">Sporingsinnlogging</string>
+    <string name="unlock_app_title">Lås opp %s</string>
+    <string name="action_move_to_bottom_all_for_series">Flytt serien til bunnen</string>
+    <string name="exception_offline">Ingen internettforbindelse</string>
+    <string name="exception_http">HTTP %d, sjekk nettsiden i WebView</string>
+    <string name="exception_unknown_host">Kunne ikke nå %s</string>
 </resources>

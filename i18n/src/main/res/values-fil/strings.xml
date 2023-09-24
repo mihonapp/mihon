@@ -582,11 +582,6 @@
     <string name="pref_highest">Pinakamataas</string>
     <string name="pref_hide_threshold">Sensitivity para sa pagtatago ng menu sa scroll</string>
     <string name="pref_inverted_colors">Baligtad</string>
-    <plurals name="relative_time">
-        <item quantity="one">Kahapon</item>
-        <item quantity="other">%1$d araw na ang makalipas</item>
-    </plurals>
-    <string name="relative_time_today">Ngayon</string>
     <string name="theme_tealturquoise">Teal at Turquoise</string>
     <string name="pref_category_appearance">Hitsura</string>
     <string name="confirm_lock_change">Patotohanan para makumpirma ang pagbabago</string>
@@ -817,4 +812,5 @@
     <string name="exception_offline">Walang koneksyon sa Internet</string>
     <string name="exception_http">HTTP %d, tignan ang website sa WebView</string>
     <string name="exception_unknown_host">Hindi maabot ang %s</string>
+    <string name="action_move_to_bottom_all_for_series">Ilagay sa ibaba ang serye</string>
 </resources>

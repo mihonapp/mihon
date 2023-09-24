@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Animasyon yok</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Hızlı</string>
-    <string name="pref_rotation_type">Ön tanımlı döndürme türü</string>
+    <string name="pref_rotation_type">Ön tanımlı döndürme</string>
     <string name="rotation_free">Bağımsız</string>
     <string name="rotation_force_portrait">Kilitli dikey</string>
     <string name="rotation_force_landscape">Kilitli yatay</string>
@@ -532,7 +532,7 @@
     <string name="clipboard_copy_error">Panoya kopyalanamadı</string>
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
-    <string name="rotation_type">Döndürme türü</string>
+    <string name="rotation_type">Döndürme</string>
     <string name="pref_create_folder_per_manga_summary">Girdilerin başlığına göre sıralaç oluşturur</string>
     <string name="pref_create_folder_per_manga">Sayfaları ayrı sıralaçlara kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
@@ -582,11 +582,6 @@
     <string name="pref_highest">En yüksek</string>
     <string name="pref_hide_threshold">Kaydırmada komut-seçenek dizelgesini gizleme duyarlılığı</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
-    <plurals name="relative_time">
-        <item quantity="one">Dün</item>
-        <item quantity="other">%1$d gün önce</item>
-    </plurals>
-    <string name="relative_time_today">Bugün</string>
     <string name="theme_tealturquoise">Deniz kökçesi &amp; Türk kökçesi</string>
     <string name="confirm_lock_change">Değişikliği onaylamak için kimlik doğrula</string>
     <string name="label_default">Varsayılan</string>
@@ -630,7 +625,7 @@
     <string name="action_faq_and_guides">SSS ve Kılavuzlar</string>
     <string name="pref_update_only_completely_read">Okunmayan bölümü olan</string>
     <string name="pref_update_only_started">Bu başlamadı</string>
-    <string name="skipped_reason_completed">Manga bitirildiği için atlandı</string>
+    <string name="skipped_reason_completed">Dizi bitirildiği için atlandı</string>
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
     <string name="pref_navigate_pan">Geniş görüntüleri kaydır</string>
@@ -817,4 +812,5 @@
     <string name="exception_offline">Genel ağ bağlantısı yok</string>
     <string name="syncing_library">Kitaplık eşleştiriliyor</string>
     <string name="unlock_app_title">Aç: %s</string>
+    <string name="action_move_to_bottom_all_for_series">Diziyi en alta taşı</string>
 </resources>

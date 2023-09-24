@@ -222,17 +222,11 @@
     </plurals>
     <string name="action_display_language_badge">Valoda</string>
     <string name="action_sort_chapter_fetch_date">Nodaļas ieneses datums</string>
-    <plurals name="relative_time">
-        <item quantity="zero">Šodien</item>
-        <item quantity="one">Vakar</item>
-        <item quantity="other">Pirms %1$d dienām</item>
-    </plurals>
     <string name="pref_library_update_manga_restriction">Izlaist ierakstu atjaunināšanu</string>
     <string name="action_faq_and_guides">Biežāk uzdotie jautājumi un rokasgrāmatas</string>
     <string name="action_close">Aizvērt</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
     <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>
-    <string name="relative_time_today">Šodien</string>
     <string name="pref_library_update_interval">Automātiskie atjauninājumi</string>
     <string name="update_weekly">Katru nedēļu</string>
     <string name="pref_library_update_restriction">Automātiskās atjaunināšanas ierīču ierobežojumi</string>

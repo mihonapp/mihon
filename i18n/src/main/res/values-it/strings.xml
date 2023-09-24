@@ -101,7 +101,7 @@
     <string name="zoom_start_left">Sinistra</string>
     <string name="zoom_start_right">Destra</string>
     <string name="zoom_start_center">Centro</string>
-    <string name="pref_rotation_type">Orientamento predefinito</string>
+    <string name="pref_rotation_type">Rotazione predefinita</string>
     <string name="rotation_free">Libero</string>
     <string name="rotation_force_portrait">Bloccato verticale</string>
     <string name="rotation_force_landscape">Bloccato orizzontale</string>
@@ -574,7 +574,7 @@
     <string name="action_show_errors">Tocca per vedere i dettagli</string>
     <string name="update_check_eol">Questa versione di Android non è più supportata</string>
     <string name="clipboard_copy_error">Impossibile copiare negli appunti</string>
-    <string name="rotation_type">Orientamento</string>
+    <string name="rotation_type">Rotazione</string>
     <string name="notification_incognito_text">Disabilita modalità incognito</string>
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
@@ -613,12 +613,6 @@
     <string name="pref_highest">Più alto</string>
     <string name="pref_hide_threshold">Sensibilità per nascondere il menù allo scorrimento</string>
     <string name="pref_inverted_colors">Inversa</string>
-    <plurals name="relative_time">
-        <item quantity="one">Ieri</item>
-        <item quantity="many">%1$d giorni fa</item>
-        <item quantity="other">%1$d giorni fa</item>
-    </plurals>
-    <string name="relative_time_today">Oggi</string>
     <string name="pref_dark_theme_pure_black">Modalità scura con nero puro</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin e Yang</string>
@@ -866,4 +860,5 @@
     <string name="exception_offline">Nessuna connessione ad internet</string>
     <string name="exception_unknown_host">%s non raggiungibile</string>
     <string name="unlock_app_title">Sblocca %s</string>
+    <string name="action_move_to_bottom_all_for_series">Spostare la serie in fondo</string>
 </resources>

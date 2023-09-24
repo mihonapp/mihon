@@ -110,7 +110,7 @@
     <string name="zoom_start_left">Links</string>
     <string name="zoom_start_right">Rechts</string>
     <string name="zoom_start_center">Mitte</string>
-    <string name="pref_rotation_type">Standard-Ausrichtungstyp</string>
+    <string name="pref_rotation_type">Standardausrichtung</string>
     <string name="rotation_free">Frei</string>
     <string name="rotation_force_portrait">Hochformat erzwingen</string>
     <string name="rotation_force_landscape">Querformat erzwingen</string>
@@ -534,7 +534,7 @@
     <string name="rotation_portrait">Hochformat</string>
     <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach dem Titel der Einträge</string>
     <string name="pref_create_folder_per_manga">Speichere Seiten in separate Ordner</string>
-    <string name="rotation_type">Ausrichtungstyp</string>
+    <string name="rotation_type">Ausrichtung</string>
     <string name="pref_reader_actions">Aktionen</string>
     <string name="pref_grayscale">Graustufen</string>
     <string name="notification_incognito_text">Inkognito-Modus deaktivieren</string>
@@ -582,11 +582,6 @@
     <string name="pref_highest">Höchste</string>
     <string name="pref_hide_threshold">Empfindlichkeit für das Menü-Ausblenden beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
-    <plurals name="relative_time">
-        <item quantity="one">Gestern</item>
-        <item quantity="other">Vor %1$d Tagen</item>
-    </plurals>
-    <string name="relative_time_today">Heute</string>
     <string name="theme_tealturquoise">Blaugrün &amp; Türkis</string>
     <string name="pref_category_appearance">Erscheinungsbild</string>
     <string name="confirm_lock_change">Authentifiziere dich, um die Änderungen zu bestätigen</string>
@@ -817,4 +812,5 @@
     <string name="exception_offline">Keine Internetverbindung</string>
     <string name="exception_unknown_host">%s konnte nicht erreicht werden</string>
     <string name="unlock_app_title">%s entsperren</string>
+    <string name="action_move_to_bottom_all_for_series">Serie nach unten verschieben</string>
 </resources>

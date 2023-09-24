@@ -617,12 +617,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
     <string name="getting_started_guide">Guia de introdução</string>
     <string name="theme_tealturquoise">Azul-petróleo e Turquesa</string>
-    <plurals name="relative_time">
-        <item quantity="one">Ontem</item>
-        <item quantity="many">Há %1$d dias</item>
-        <item quantity="other">Há %1$d dias</item>
-    </plurals>
-    <string name="relative_time_today">Hoje</string>
     <string name="theme_monet">Dinâmico</string>
     <string name="label_warning">Aviso</string>
     <string name="confirm_lock_change">Autentifique-se para confirmar a mudança</string>

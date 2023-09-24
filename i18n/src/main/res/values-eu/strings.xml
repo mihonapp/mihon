@@ -193,10 +193,6 @@
     <string name="transition_no_previous">Ez dago aurreko kapitulurik</string>
     <string name="copy">Kopiatu</string>
     <string name="update_check_eol">Android bertsio hau jada ez da onartzen</string>
-    <plurals name="relative_time">
-        <item quantity="one">Atzo</item>
-        <item quantity="other">Duela %1$d egun</item>
-    </plurals>
     <string name="ext_obsolete">Zaharkitua</string>
     <string name="ext_uninstall">Desinstalatu</string>
     <string name="pref_show_page_number">Erakutsi orrialdearen zenbakia</string>
@@ -435,7 +431,6 @@
     <string name="pref_category_nsfw_content">NSFW (18+) iturriak</string>
     <string name="pref_show_nsfw_source">Erakutsi iturrien eta luzapenen zerrendetan</string>
     <string name="parental_controls_info">Honek ez du eragozten ofizialak ez diren edo oker markatutako luzapenek NSFW (18+) edukia aplikazioan erakustea.</string>
-    <string name="relative_time_today">Gaur</string>
     <string name="pref_category_display">Bistaratu</string>
     <string name="pref_library_columns">Errenkada bakoitzeko elementu kopurua</string>
     <string name="pref_category_library_update">Eguneraketa globalak</string>

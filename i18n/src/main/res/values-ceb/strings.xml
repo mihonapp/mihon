@@ -135,7 +135,6 @@
     <string name="hide_notification_content">Tagoa ang sulod sa pahibalo</string>
     <string name="secure_screen">Lig-on nga screen</string>
     <string name="pref_category_nsfw_content">NSFW (18+) Mga Tinubdan</string>
-    <string name="relative_time_today">Karon</string>
     <string name="pref_category_display">Pagpakita</string>
     <string name="pref_library_columns">Mga butang kada laray</string>
     <string name="portrait">Hulagway</string>
@@ -157,10 +156,6 @@
     <plurals name="lock_after_mins">
         <item quantity="one">Human sa %1$s ka minuto</item>
         <item quantity="other">Human sa %1$s ka minuto</item>
-    </plurals>
-    <plurals name="relative_time">
-        <item quantity="one">Kagahapon</item>
-        <item quantity="other">%1$d ka adlaw ang milabay</item>
     </plurals>
     <string name="action_desc">Nagpaubos</string>
     <string name="action_order_by_upload_date">Pinaagi sa petsa sa pag-upload</string>

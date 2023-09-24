@@ -627,12 +627,6 @@
     <string name="pref_highest">Más alta</string>
     <string name="pref_hide_threshold">Sensibilidad para ocultar automáticamente el menú al desplazarse</string>
     <string name="pref_inverted_colors">Invertido</string>
-    <plurals name="relative_time">
-        <item quantity="one">Ayer</item>
-        <item quantity="many">Hace %1$d días</item>
-        <item quantity="other">Hace %1$d días</item>
-    </plurals>
-    <string name="relative_time_today">Hoy</string>
     <string name="theme_tealturquoise">Azul marino y turquesa</string>
     <string name="pref_category_appearance">Apariencia</string>
     <string name="confirm_lock_change">Identifícate para confirmar el cambio</string>

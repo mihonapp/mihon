@@ -49,11 +49,6 @@
     <string name="secure_screen">Ekran i sigurt</string>
     <string name="pref_category_nsfw_content">Burimet NSFW (18+)</string>
     <string name="pref_show_nsfw_source">Shfaq në listat e burimeve dhe shtesave</string>
-    <string name="relative_time_today">Sot</string>
-    <plurals name="relative_time">
-        <item quantity="one">Dje</item>
-        <item quantity="other">%1$d ditë më parë</item>
-    </plurals>
     <string name="pref_category_display">Shfaqja</string>
     <string name="pref_library_columns">Artikuj për rresht</string>
     <string name="pref_category_library_update">Përditësim global</string>

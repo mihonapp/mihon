@@ -141,10 +141,6 @@
     <string name="secure_screen">ការពារអេក្រង់</string>
     <string name="pref_category_nsfw_content">ប្រភពមិនល្អ(១៨+)</string>
     <string name="pref_show_nsfw_source">បង្ហាញនៅក្នុងបញ្ចីប្រភព</string>
-    <string name="relative_time_today">ថ្ងៃនេះ</string>
-    <plurals name="relative_time">
-        <item quantity="other">%1$d ថ្ងៃមុន</item>
-    </plurals>
     <string name="pref_category_display">ការបង្ហាញ</string>
     <string name="pref_library_columns">ធាតុក្នុងមួយជួ</string>
     <string name="portrait">បញ្ឈរ</string>

@@ -431,11 +431,6 @@
     <string name="pref_dark_theme_pure_black">Потпуно црна тема</string>
     <string name="pref_category_nsfw_content">NSFW - извори за одрасле (18+)</string>
     <string name="pref_show_nsfw_source">Показати у листи за изворе и додатке</string>
-    <plurals name="relative_time">
-        <item quantity="one">Pre %1$d dan</item>
-        <item quantity="few">Pre %1$d dana</item>
-        <item quantity="other">Pre %1$d dana</item>
-    </plurals>
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Инсталер</string>
     <plurals name="missing_chapters_warning">
@@ -566,7 +561,6 @@
     </plurals>
     <string name="channel_errors">Грешке</string>
     <string name="chapter_settings">Подешавања поглавља</string>
-    <string name="relative_time_today">Данас</string>
     <string name="nav_zone_left">Лево</string>
     <string name="information_empty_category_dialog">Још немате категорија.</string>
     <string name="ext_app_info">Информације о апликацији</string>

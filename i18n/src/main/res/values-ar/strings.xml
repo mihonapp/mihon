@@ -112,7 +112,7 @@
     <string name="zoom_start_left">اليسار</string>
     <string name="zoom_start_right">اليمين</string>
     <string name="zoom_start_center">المركز</string>
-    <string name="pref_rotation_type">نوع التدوير الافتراضي</string>
+    <string name="pref_rotation_type">التدوير الافتراضي</string>
     <string name="rotation_free">حر</string>
     <string name="rotation_force_portrait">الوضع الرأسي اﻹجباري</string>
     <string name="rotation_force_landscape">الوضع الأفقي الإجباري</string>
@@ -567,7 +567,7 @@
     <string name="action_sort_chapter_fetch_date">تاريخ الرفع</string>
     <string name="rotation_landscape">افقي</string>
     <string name="rotation_portrait">رأسي</string>
-    <string name="rotation_type">نوع التدوير</string>
+    <string name="rotation_type">التدوير</string>
     <string name="automatic_background">تلقائيًّا</string>
     <string name="pref_create_folder_per_manga_summary">إنشاء مجلدات وفقا لعنوان الإدخالات</string>
     <string name="pref_create_folder_per_manga">حفظ الصفحات في مجلدات منفصلة</string>
@@ -624,18 +624,9 @@
     <string name="restore_miui_warning">قد لا يعمل النسخ الاحتياطيُّ أو الاستعادة إن عطِّلت أمثَلَة MIUI.</string>
     <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. الإدخالات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
     <string name="enhanced_services">خدمات محسَّنة</string>
-    <string name="relative_time_today">اليوم</string>
     <string name="confirm_lock_change">المصادقة لتأكيد التغيير</string>
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
-    <plurals name="relative_time">
-        <item quantity="zero">الأمس</item>
-        <item quantity="one">منذ %1$d أيام</item>
-        <item quantity="two">منذ %1$d أيام</item>
-        <item quantity="few">منذ %1$d أيام</item>
-        <item quantity="many">منذ %1$d أيام</item>
-        <item quantity="other">منذ %1$d أيام</item>
-    </plurals>
     <string name="action_track">تتبع</string>
     <string name="pref_inverted_colors">معكوس</string>
     <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>
@@ -643,7 +634,7 @@
     <string name="getting_started_guide">دليل البدء</string>
     <string name="help_translate">ساعد بالترجمة</string>
     <string name="pref_tablet_ui_mode">واجهة مستخدم الجهاز اللوحي</string>
-    <string name="pref_remove_exclude_categories">فئات المستثناة</string>
+    <string name="pref_remove_exclude_categories">الفئات المستثناة</string>
     <string name="ext_installer_pref">المثبت</string>
     <string name="action_sort_count">إجمالي الإدخالات</string>
     <string name="label_warning">تحذير</string>
@@ -881,4 +872,5 @@
     <string name="exception_http">خطأ HTTP %d، انظر في WebView</string>
     <string name="exception_unknown_host">لم نصل %s</string>
     <string name="unlock_app_title">افتح %s</string>
+    <string name="action_move_to_bottom_all_for_series">انقل السلسلة للقعر</string>
 </resources>

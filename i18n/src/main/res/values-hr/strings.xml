@@ -279,7 +279,7 @@
     <string name="transition_current">Trenutačno:</string>
     <string name="transition_finished">Završeno:</string>
     <string name="viewer">Modus čitanja</string>
-    <string name="pref_category_for_this_series">Za ovaj serijal</string>
+    <string name="pref_category_for_this_series">Za ovu seriju</string>
     <string name="confirm_set_image_as_cover">Ovu sliku koristiti kao naslovnicu\?</string>
     <string name="decode_image_error">Nije bilo moguće učitati sliku</string>
     <string name="no_next_chapter">Sljedeće poglavlje nije pronađeno</string>
@@ -581,12 +581,6 @@
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Jin i Jang</string>
     <string name="pref_inverted_colors">Invertirano</string>
-    <plurals name="relative_time">
-        <item quantity="one">Prije %1$d dan</item>
-        <item quantity="few">Prije %1$d dana</item>
-        <item quantity="other">Prije %1$d dana</item>
-    </plurals>
-    <string name="relative_time_today">Danas</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="pref_category_appearance">Izgled</string>
@@ -652,7 +646,7 @@
     <string name="channel_skipped">Preskočeno</string>
     <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
-    <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
+    <string name="action_move_to_top_all_for_series">Pomakni seriju na vrh</string>
     <string name="disabled_nav">Deaktivirano</string>
     <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
     <string name="split_tall_images_summary">Poboljšava performanse čitača</string>
@@ -833,4 +827,5 @@
     <string name="exception_offline">Ne postoji veza s internetom</string>
     <string name="exception_http">HTTP %d, provjeri web stranicu u WebView</string>
     <string name="exception_unknown_host">Nije bilo moguće povezati se s računalom %s</string>
+    <string name="action_move_to_bottom_all_for_series">Pomakni seriju na kraj</string>
 </resources>
