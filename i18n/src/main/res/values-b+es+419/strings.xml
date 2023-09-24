@@ -591,6 +591,12 @@
     <string name="pref_library_update_refresh_trackers_summary">Actualizar rastreadores cuando se actualice la biblioteca</string>
     <string name="pref_library_update_refresh_trackers">Actualizar rastreadores automáticamente</string>
     <string name="restrictions">Restricciones: %s</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ayer</item>
+        <item quantity="many">Hace %1$d dias</item>
+        <item quantity="other">Hace %1$d dias</item>
+    </plurals>
+    <string name="relative_time_today">Hoy</string>
     <string name="pref_dark_theme_pure_black">Modo oscuro con negro puro</string>
     <string name="theme_yotsuba">Tema Yotsuba</string>
     <string name="theme_yinyang">Yin y Yang</string>

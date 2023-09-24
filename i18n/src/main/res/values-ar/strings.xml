@@ -624,9 +624,18 @@
     <string name="restore_miui_warning">قد لا يعمل النسخ الاحتياطيُّ أو الاستعادة إن عطِّلت أمثَلَة MIUI.</string>
     <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. الإدخالات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
     <string name="enhanced_services">خدمات محسَّنة</string>
+    <string name="relative_time_today">اليوم</string>
     <string name="confirm_lock_change">المصادقة لتأكيد التغيير</string>
     <string name="label_default">الافتراضي</string>
     <string name="label_background_activity">الأنشطة التي تعمل في الخلفية</string>
+    <plurals name="relative_time">
+        <item quantity="zero">الأمس</item>
+        <item quantity="one">منذ %1$d أيام</item>
+        <item quantity="two">منذ %1$d أيام</item>
+        <item quantity="few">منذ %1$d أيام</item>
+        <item quantity="many">منذ %1$d أيام</item>
+        <item quantity="other">منذ %1$d أيام</item>
+    </plurals>
     <string name="action_track">تتبع</string>
     <string name="pref_inverted_colors">معكوس</string>
     <string name="theme_tealturquoise">ازرق مخضر و فيروز</string>

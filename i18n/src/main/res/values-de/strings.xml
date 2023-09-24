@@ -582,6 +582,11 @@
     <string name="pref_highest">Höchste</string>
     <string name="pref_hide_threshold">Empfindlichkeit für das Menü-Ausblenden beim Scrollen</string>
     <string name="pref_inverted_colors">Invertiert</string>
+    <plurals name="relative_time">
+        <item quantity="one">Gestern</item>
+        <item quantity="other">Vor %1$d Tagen</item>
+    </plurals>
+    <string name="relative_time_today">Heute</string>
     <string name="theme_tealturquoise">Blaugrün &amp; Türkis</string>
     <string name="pref_category_appearance">Erscheinungsbild</string>
     <string name="confirm_lock_change">Authentifiziere dich, um die Änderungen zu bestätigen</string>

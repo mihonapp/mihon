@@ -581,7 +581,12 @@
     <string name="pref_highest">Ύψιστη</string>
     <string name="pref_high">Υψηλή</string>
     <string name="pref_hide_threshold">Ευαισθησία για την απόκρυψη του μενού κατά την κύλιση</string>
+    <plurals name="relative_time">
+        <item quantity="one">Εχθές</item>
+        <item quantity="other">%1$d μέρες πριν</item>
+    </plurals>
     <string name="pref_inverted_colors">Αντεστραμμένο</string>
+    <string name="relative_time_today">Σήμερα</string>
     <string name="theme_tealturquoise">Teal &amp; Τιρκουάζ</string>
     <string name="confirm_lock_change">Έλεγχος ταυτότητας για επιβεβαίωση αλλαγής</string>
     <string name="label_default">Προεπιλογή</string>

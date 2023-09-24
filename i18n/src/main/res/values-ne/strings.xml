@@ -132,6 +132,11 @@
     <string name="landscape">ल्याण्डस्केप</string>
     <string name="pref_library_columns">ग्रिड साइज</string>
     <string name="pref_category_display">प्रदर्शन</string>
+    <plurals name="relative_time">
+        <item quantity="one">हिजो</item>
+        <item quantity="other">%1$d दिन अघि</item>
+    </plurals>
+    <string name="relative_time_today">आज</string>
     <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
     <string name="pref_category_nsfw_content">NSFW (१८+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>

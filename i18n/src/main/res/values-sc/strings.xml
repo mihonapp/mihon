@@ -582,6 +582,11 @@
     <string name="pref_hide_threshold">Sensibilidade pro cuare su menù cun s\'iscurrimentu</string>
     <string name="label_background_activity">Atividade in s\'isfundu</string>
     <string name="pref_inverted_colors">Furriada</string>
+    <plurals name="relative_time">
+        <item quantity="one">Eris</item>
+        <item quantity="other">%1$d dies a oe</item>
+    </plurals>
+    <string name="relative_time_today">Oe</string>
     <string name="theme_tealturquoise">Birde abba e turchesu</string>
     <string name="confirm_lock_change">Autèntica·ti pro cunfirmare sa modìfica</string>
     <string name="label_default">Predefinida</string>

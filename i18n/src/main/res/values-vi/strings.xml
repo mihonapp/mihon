@@ -613,6 +613,10 @@
     <string name="pref_high">Cao</string>
     <string name="pref_highest">Cao nhất</string>
     <string name="pref_inverted_colors">Đảo màu</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d ngày trước</item>
+    </plurals>
+    <string name="relative_time_today">Hôm nay</string>
     <string name="help_translate">Hỗ trợ dịch thuật</string>
     <string name="ext_app_info">Thông tin ứng dụng</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Cài và chạy Shizuku để sử dụng Shizuku như một trình cài đặt tiện ích mở rộng.</string>

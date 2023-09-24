@@ -593,6 +593,12 @@
     <string name="getting_started_guide">Příručka Začínáme</string>
     <string name="pref_tablet_ui_mode">Uživatelské rozhraní tabletu</string>
     <string name="action_track">Sledovat</string>
+    <plurals name="relative_time">
+        <item quantity="one">Včera</item>
+        <item quantity="few">Před %1$d dny</item>
+        <item quantity="other">Před %1$d dny</item>
+    </plurals>
+    <string name="relative_time_today">Dnes</string>
     <string name="theme_tealturquoise">Modrozelená a Tyrkysová</string>
     <string name="pref_category_appearance">Vzhled</string>
     <string name="confirm_lock_change">Potvrďte změnu ověřením</string>

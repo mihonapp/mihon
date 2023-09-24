@@ -593,6 +593,12 @@
     <string name="pref_highest">Mais alta</string>
     <string name="pref_hide_threshold">Sensibilidade para ocultar o menu na rolagem</string>
     <string name="pref_inverted_colors">Invertido</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ontem</item>
+        <item quantity="many">%1$d dias atrás</item>
+        <item quantity="other">%1$d dias atrás</item>
+    </plurals>
+    <string name="relative_time_today">Hoje</string>
     <string name="theme_tealturquoise">Azul-petróleo &amp; Turquesa</string>
     <string name="confirm_lock_change">Autentique-se para confirmar a mudança</string>
     <string name="label_default">Padrão</string>

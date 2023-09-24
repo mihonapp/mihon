@@ -387,6 +387,9 @@
     <string name="pref_category_for_this_series">현재 만화에만 적용</string>
     <string name="viewer">읽기 모드</string>
     <string name="downloaded_only_summary">서재의 모든 항목에 적용됩니다</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d일 전</item>
+    </plurals>
     <string name="pref_webtoon_side_padding">모서리 여백</string>
     <string name="ext_app_info">앱 정보</string>
     <string name="getting_started_guide">초기 설정 도움말</string>
@@ -412,6 +415,7 @@
     <string name="secure_screen">화면 보안</string>
     <string name="lock_with_biometrics">잠금 해제 필요</string>
     <string name="pref_category_appearance">모양</string>
+    <string name="relative_time_today">오늘</string>
     <string name="pref_category_library_update">전역 업데이트</string>
     <string name="pref_category_security">보안 및 개인정보 보호</string>
     <plurals name="lock_after_mins">

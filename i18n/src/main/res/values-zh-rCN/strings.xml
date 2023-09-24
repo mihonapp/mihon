@@ -571,6 +571,10 @@
     <string name="pref_highest">最高</string>
     <string name="pref_hide_threshold">滑动时隐藏菜单的灵敏度</string>
     <string name="pref_inverted_colors">反色</string>
+    <string name="relative_time_today">今天</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
     <string name="theme_tealturquoise">青色与绿松色</string>
     <string name="confirm_lock_change">验证以确认更改</string>
     <string name="label_default">默认</string>

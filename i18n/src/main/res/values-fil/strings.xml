@@ -582,6 +582,11 @@
     <string name="pref_highest">Pinakamataas</string>
     <string name="pref_hide_threshold">Sensitivity para sa pagtatago ng menu sa scroll</string>
     <string name="pref_inverted_colors">Baligtad</string>
+    <plurals name="relative_time">
+        <item quantity="one">Kahapon</item>
+        <item quantity="other">%1$d araw na ang makalipas</item>
+    </plurals>
+    <string name="relative_time_today">Ngayon</string>
     <string name="theme_tealturquoise">Teal at Turquoise</string>
     <string name="pref_category_appearance">Hitsura</string>
     <string name="confirm_lock_change">Patotohanan para makumpirma ang pagbabago</string>

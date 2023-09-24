@@ -602,6 +602,7 @@
     <string name="backup_info">Ar trebui să păstrați copii ale backupurilor și în alte locuri.</string>
     <string name="split_tall_images_summary">Îmbunătățește performanța cititorului</string>
     <string name="action_close">Închide</string>
+    <string name="relative_time_today">Azi</string>
     <string name="reading_list">Listă de citit</string>
     <string name="wish_list">Lista de dorințe</string>
     <string name="complete_list">Lista completă</string>
@@ -648,6 +649,11 @@
     <string name="extension_api_error">Nu s-a putut obține lista de extensii</string>
     <string name="ext_install_service_notif">Se instalează extensia…</string>
     <string name="ext_installer_pref">Program instalare</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ieri</item>
+        <item quantity="few">Acum %1$d zile</item>
+        <item quantity="other">Acum %1$d zile</item>
+    </plurals>
     <string name="pref_create_folder_per_manga_summary">Creează dosare în funcție de titlul intrărilor</string>
     <string name="automatic_background">Automat</string>
     <string name="on">Pornit</string>

@@ -582,6 +582,11 @@
     <string name="pref_highest">Högsta</string>
     <string name="pref_hide_threshold">Känslighet för att dölja menyn vid rullning</string>
     <string name="pref_inverted_colors">Omvänd</string>
+    <plurals name="relative_time">
+        <item quantity="one">Igår</item>
+        <item quantity="other">För %1$d dagar sedan</item>
+    </plurals>
+    <string name="relative_time_today">Idag</string>
     <string name="theme_tealturquoise">Teal och turkos</string>
     <string name="pref_category_appearance">Utseende</string>
     <string name="confirm_lock_change">Autentisera för att bekräfta ändringen</string>

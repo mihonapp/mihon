@@ -595,6 +595,12 @@
     <string name="theme_strawberrydaiquiri">Truskawkowe daiquiri</string>
     <string name="pref_hide_threshold">Czułość ukrywania dolnego paska podczas przewijania</string>
     <string name="theme_tako">Tako</string>
+    <plurals name="relative_time">
+        <item quantity="one">Wczoraj</item>
+        <item quantity="few">%1$d dni temu</item>
+        <item quantity="many">%1$d dni temu</item>
+        <item quantity="other">%1$d dni temu</item>
+    </plurals>
     <string name="label_background_activity">Aktywność w tle</string>
     <string name="action_track">Śledź</string>
     <string name="pref_category_appearance">Wygląd</string>
@@ -610,6 +616,7 @@
     <string name="pref_highest">Najwyższy</string>
     <string name="pref_inverted_colors">Odwrócone</string>
     <string name="ext_app_info">Informacje o aplikacji</string>
+    <string name="relative_time_today">Dzisiaj</string>
     <string name="theme_tealturquoise">Błękitny &amp; Turkusowy</string>
     <string name="theme_midnightdusk">Zmierzch północy</string>
     <string name="notification_size_warning">Ostrzeżenie: duże aktualizacje biblioteki mogą prowadzić do zwiększonego zużycia baterii oraz spowolnienia działania źródeł. Kliknij, by dowiedzieć się więcej.</string>

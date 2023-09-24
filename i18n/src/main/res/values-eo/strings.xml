@@ -384,6 +384,11 @@
     <string name="off">Malŝaltita</string>
     <string name="on">Ŝaltita</string>
     <string name="pref_library_columns">Elementoj vice</string>
+    <plurals name="relative_time">
+        <item quantity="one">Hieraŭ</item>
+        <item quantity="other">Antaŭ %1$d tagoj</item>
+    </plurals>
+    <string name="relative_time_today">Hodiaŭ</string>
     <string name="theme_yinyang">Jino kaj Jango</string>
     <string name="theme_greenapple">Verda pomo</string>
     <string name="pref_app_theme">Apa etoso</string>

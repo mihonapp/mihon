@@ -530,6 +530,7 @@
     </plurals>
     <string name="information_empty_category_dialog">คุณยังไม่มีหมวดหมู่</string>
     <string name="confirm_lock_change">ยืนยันการเปลี่ยนแปลง</string>
+    <string name="relative_time_today">วันนี้</string>
     <string name="pref_update_only_completely_read">มีตอนที่ยังไม่ได้อ่าน</string>
     <string name="off">ปิด</string>
     <string name="on">เปิด</string>
@@ -562,6 +563,9 @@
     <string name="pref_library_update_refresh_trackers">โหลดตัวติดตามใหม่โดยอัตโนมัติ</string>
     <string name="pref_library_update_refresh_trackers_summary">อัปเดตตัวติดตามเมื่ออัปเดตคลัง</string>
     <string name="action_start_downloading_now">เริ่มดาวน์โหลดเลย</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d วันที่ผ่านมา</item>
+    </plurals>
     <string name="enhanced_services">บริการขั้นสูง</string>
     <string name="backup_info">ควรเก็บสำเนาของข้อมูลสำรองไว้ที่อื่นด้วยเช่นกัน</string>
     <string name="pref_verbose_logging_summary">บันทึกบันทึกอย่างละเอียดไปยังบันทึกของระบบ (ลดประสิทธิภาพของแอป)</string>

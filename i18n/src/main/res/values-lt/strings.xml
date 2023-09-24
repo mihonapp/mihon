@@ -48,6 +48,12 @@
     <string name="portrait">Portretas</string>
     <string name="pref_library_columns">Elementai eilutėje</string>
     <string name="pref_category_display">Rodinys</string>
+    <plurals name="relative_time">
+        <item quantity="one">Vakar</item>
+        <item quantity="few">Prieš %1$d dienas</item>
+        <item quantity="other">Prieš %1$d dienų</item>
+    </plurals>
+    <string name="relative_time_today">Šiandien</string>
     <string name="parental_controls_info">Tai nesustabdo neoficialių ar potencialiai neteisingai pažymėtų plėtinių nuo N18+ turinio rodymo programoje.</string>
     <string name="pref_show_nsfw_source">Rodyti šaltiniuose ir plėtinių sąrašuose</string>
     <string name="pref_category_nsfw_content">N18+ šaltiniai</string>

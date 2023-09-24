@@ -603,6 +603,13 @@
     <string name="pref_app_theme">Тема застосунку</string>
     <string name="action_start_downloading_now">Розпочати завантаження зараз</string>
     <string name="pref_inverted_colors">Інвертовано</string>
+    <plurals name="relative_time">
+        <item quantity="one">Учора</item>
+        <item quantity="few">%1$d днів тому</item>
+        <item quantity="many">%1$d днів тому</item>
+        <item quantity="other">%1$d днів тому</item>
+    </plurals>
+    <string name="relative_time_today">Сьогодні</string>
     <string name="theme_tealturquoise">Бірюзова</string>
     <string name="confirm_lock_change">Виконайте автентифікацію, щоб підтвердити зміну</string>
     <string name="label_default">Типово</string>

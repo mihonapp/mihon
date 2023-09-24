@@ -278,6 +278,13 @@
     <string name="scale_type_fit_screen">Змясціць у экран</string>
     <string name="pref_image_scale_type">Маштабаванне</string>
     <string name="pref_inverted_colors">Колеры наадварот</string>
+    <plurals name="relative_time">
+        <item quantity="one">Учора</item>
+        <item quantity="few">%1$d дні таму</item>
+        <item quantity="many">%1$d дзён таму</item>
+        <item quantity="other">%1$d дзён таму</item>
+    </plurals>
+    <string name="relative_time_today">Сёння</string>
     <string name="theme_tealturquoise">Бірузовы</string>
     <string name="pref_category_appearance">Знешнасць</string>
     <string name="confirm_lock_change">Аўтэнтыфікацыя для пацверджання змяненняў</string>

@@ -571,12 +571,17 @@
     <string name="label_downloaded">Тийесе илнӗ</string>
     <string name="theme_tidalwave">Шыв хӑпарнин хумӗ</string>
     <string name="pref_app_theme">Ап темми</string>
+    <string name="relative_time_today">Пайан</string>
     <string name="theme_lavender">Лавантӑ</string>
     <string name="theme_yinyang">Ин тата Йан</string>
     <string name="pref_browse_summary">Ҫӑл куҫсем, хушмасем, пӗтӗмӗшле шырав</string>
     <string name="theme_greenapple">Симӗс пан улми</string>
     <string name="theme_yotsuba">Йутсупа</string>
     <string name="pref_library_update_manga_restriction">Серилӗхсене ҫӗнетнине сиктер</string>
+    <plurals name="relative_time">
+        <item quantity="one">Ӗнер</item>
+        <item quantity="other">%1$d кун кайалла</item>
+    </plurals>
     <string name="network_not_metered">Чараксӑр тетел урлӑ ҫеҫ</string>
     <string name="pref_update_only_started">Серилӗхе пуҫламан</string>
     <string name="theme_tako">Такку</string>

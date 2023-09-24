@@ -152,6 +152,11 @@
     <string name="secure_screen_summary">अभिरक्षणपटलम् अनुप्रयोगाणां परिवर्तने अनुप्रयोगवस्तु वृणोति पटलप्रतिकृतीनां च सृष्टिं निवारयति॥</string>
     <string name="pref_category_nsfw_content">प्रौढानां कृते एव (१८+) वस्तुमूलानि</string>
     <string name="pref_show_nsfw_source">मूलानां विस्ताराणां च सूचीषु दर्शयतु</string>
+    <string name="relative_time_today">अद्य</string>
+    <plurals name="relative_time">
+        <item quantity="one">ह्यः</item>
+        <item quantity="other">द्विदिनपूर्वम्</item>
+    </plurals>
     <string name="pref_library_columns">प्रतिपङ्क्तौ वस्तूनि</string>
     <string name="landscape">अनुप्रस्थम्</string>
     <string name="pref_category_display">प्रदर्शनम्</string>

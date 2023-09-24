@@ -261,6 +261,7 @@
     <string name="pref_browse_summary">Fontes, extensións, procura global</string>
     <string name="pref_advanced_summary">Baixar os rexistros de erros, optimizacións de batería</string>
     <string name="theme_tidalwave">Maremoto</string>
+    <string name="relative_time_today">Hoxe</string>
     <string name="pref_update_only_completely_read">Con capítulos sin ler</string>
     <string name="pref_library_update_categories_details">Os elementos das categorías excluídas non se actualizarán aínda se están tamén nas categorías incluídas.</string>
     <string name="ext_info_version">Versión</string>
@@ -508,6 +509,10 @@
     <string name="cancel_all_for_series">Cancelar todo para esta serie</string>
     <string name="action_order_by_upload_date">Por data de subida</string>
     <string name="action_show_errors">Preme para ver os detalles do erro</string>
+    <plurals name="relative_time">
+        <item quantity="one">Onte</item>
+        <item quantity="other">Fai %1$d días</item>
+    </plurals>
     <string name="pref_library_update_manga_restriction">Omitir actualizacións</string>
     <string name="restrictions">Restricións: %s</string>
     <string name="categorized_display_settings">Opcións de ordenación e visualización por categoría</string>

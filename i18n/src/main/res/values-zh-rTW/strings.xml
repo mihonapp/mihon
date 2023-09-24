@@ -574,6 +574,10 @@
     <string name="theme_tealturquoise">綠松色</string>
     <string name="confirm_lock_change">驗證以確認變更</string>
     <string name="pref_category_appearance">外觀</string>
+    <string name="relative_time_today">今天</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
     <string name="label_default">預設</string>
     <string name="pref_tablet_ui_mode">平板電腦介面</string>
     <string name="getting_started_guide">入門指南</string>

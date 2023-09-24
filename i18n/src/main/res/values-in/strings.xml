@@ -569,6 +569,10 @@
     <string name="pref_high">Tinggi</string>
     <string name="pref_highest">Tertinggi</string>
     <string name="pref_inverted_colors">Terbalik</string>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d hari yang lalu</item>
+    </plurals>
+    <string name="relative_time_today">Hari Ini</string>
     <string name="getting_started_guide">Panduan awal mulai</string>
     <string name="action_track">Lacak</string>
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
