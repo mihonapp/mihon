@@ -28,6 +28,8 @@ class UiPreferences(
 
     fun themeDarkAmoled() = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
 
+    fun relativeTime() = preferenceStore.getBoolean("relative_time_v2", true)
+
     fun dateFormat() = preferenceStore.getString("app_date_format", "")
 
     fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)

@@ -375,6 +375,12 @@ object Migrations {
                     pref.getAndSet { it - "battery_not_low" }
                 }
             }
+            if (oldVersion < 106) {
+                val pref = preferenceStore.getInt("relative_time", 7)
+                if (pref.get() == 0) {
+                    uiPreferences.relativeTime().set(false)
+                }
+            }
             return true
         }
 
