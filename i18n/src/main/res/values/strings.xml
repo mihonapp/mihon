@@ -39,9 +39,8 @@
     <string name="label_local">Local</string>
     <string name="label_downloaded">Downloaded</string>
 
-    <string name="unlock_app">Unlock Tachiyomi</string>
+    <string name="unlock_app_title">Unlock %s</string>
     <string name="confirm_lock_change">Authenticate to confirm change</string>
-    <string name="confirm_exit">Press back again to exit</string>
 
     <!-- Actions -->
     <string name="action_settings">Settings</string>
@@ -140,6 +139,7 @@
     <string name="action_move_to_top">Move to top</string>
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
+    <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -225,12 +225,6 @@
     <string name="pref_show_nsfw_source">Show in sources and extensions lists</string>
     <string name="parental_controls_info">This does not prevent unofficial or potentially incorrectly flagged extensions from surfacing NSFW (18+) content within the app.</string>
 
-    <string name="relative_time_today">Today</string>
-    <plurals name="relative_time">
-        <item quantity="one">Yesterday</item>
-        <item quantity="other">%1$d days ago</item>
-    </plurals>
-
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
     <string name="pref_library_columns">Grid size</string>
@@ -304,9 +298,9 @@
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>
-    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any login credentials stored in Tachiyomi or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
+    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any stored login credentials or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available. It may not function properly and can cause issues with the app. Uninstalling it is recommended.</string>
-    <string name="unofficial_extension_message">This extension is not from the official Tachiyomi extensions list.</string>
+    <string name="unofficial_extension_message">This extension is not from the official list.</string>
     <string name="extension_api_error">Failed to get extensions list</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Language</string>
@@ -407,8 +401,8 @@
     <string name="double_tap_anim_speed_0">No animation</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Fast</string>
-    <string name="pref_rotation_type">Default rotation type</string>
-    <string name="rotation_type">Rotation type</string>
+    <string name="pref_rotation_type">Default rotation</string>
+    <string name="rotation_type">Rotation</string>
     <string name="rotation_free">Free</string>
     <string name="rotation_portrait">Portrait</string>
     <string name="rotation_reverse_portrait">Reverse portrait</string>
@@ -941,7 +935,7 @@
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>
     <string name="information_required_plain">*required</string>
     <!-- Do not translate "WebView" -->
-    <string name="information_webview_required">WebView is required for Tachiyomi</string>
+    <string name="information_webview_required">WebView is required for the app to function</string>
     <!-- Do not translate "WebView" -->
     <string name="information_webview_outdated">Please update the WebView app for better compatibility</string>
     <string name="chapter_settings_updated">Updated default chapter settings</string>

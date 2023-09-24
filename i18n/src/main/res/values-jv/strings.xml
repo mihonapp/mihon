@@ -81,7 +81,6 @@
     <string name="action_filter_unread">Durung kewoco</string>
     <string name="action_filter">Saringan</string>
     <string name="action_settings">Pengaturan</string>
-    <string name="unlock_app">Mbukak Tachiyomi</string>
     <string name="history">Sejarah</string>
     <string name="categories">Kategori</string>
     <string name="information_no_recent">Ora ono updetan anyar</string>
@@ -120,7 +119,6 @@
     <string name="action_filter_tracked">Kelacak</string>
     <string name="action_filter_bookmarked">Diwenehi tandha</string>
     <string name="action_menu">Menu</string>
-    <string name="confirm_exit">Pencet bali maneh kanggo metu</string>
     <string name="track">Ngelacak</string>
     <string name="chapters">Bab</string>
     <string name="information_empty_category">Sampeyan ora duwe kategori. Dhemok tombol tambah kanggo nggawe siji kategori kanggo ngatur perpustakaane sampeyan.</string>
@@ -260,7 +258,6 @@
     <string name="pref_library_update_refresh_metadata">Nganyari metadata otomatis</string>
     <string name="network_not_metered">Jaringan gak kebates tok</string>
     <string name="pref_library_update_manga_restriction">Lewati updatean judul</string>
-    <string name="battery_not_low">Pas baterai ora titik</string>
     <string name="pref_app_language">Bohoso aplikasi</string>
     <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.
 \n

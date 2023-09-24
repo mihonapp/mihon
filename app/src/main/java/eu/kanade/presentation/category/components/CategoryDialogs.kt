@@ -162,7 +162,7 @@ fun CategoryDeleteDialog(
             TextButton(onClick = {
                 onDelete()
                 onDismissRequest()
-            },) {
+            }) {
                 Text(text = stringResource(R.string.action_ok))
             }
         },
@@ -217,7 +217,7 @@ fun ChangeCategoryDialog(
                 tachiyomi.presentation.core.components.material.TextButton(onClick = {
                     onDismissRequest()
                     onEditCategories()
-                },) {
+                }) {
                     Text(text = stringResource(R.string.action_edit))
                 }
                 Spacer(modifier = Modifier.weight(1f))

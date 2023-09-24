@@ -5,25 +5,26 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.core.util.lang.awaitSingle
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.domain.source.repository.SourcePagingSourceType
 
-class SourceSearchPagingSource(source: CatalogueSource, val query: String, val filters: FilterList) : SourcePagingSource(source) {
+class SourceSearchPagingSource(source: CatalogueSource, val query: String, val filters: FilterList) : SourcePagingSource(
+    source,
+) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.fetchSearchManga(currentPage, query, filters).awaitSingle()
+        return source.getSearchManga(currentPage, query, filters)
     }
 }
 
 class SourcePopularPagingSource(source: CatalogueSource) : SourcePagingSource(source) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.fetchPopularManga(currentPage).awaitSingle()
+        return source.getPopularManga(currentPage)
     }
 }
 
 class SourceLatestPagingSource(source: CatalogueSource) : SourcePagingSource(source) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.fetchLatestUpdates(currentPage).awaitSingle()
+        return source.getLatestUpdates(currentPage)
     }
 }
 

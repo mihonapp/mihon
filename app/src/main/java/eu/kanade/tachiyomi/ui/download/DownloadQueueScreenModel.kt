@@ -84,13 +84,17 @@ class DownloadQueueScreenModel(
                         }
                         reorder(newDownloads)
                     }
-                    R.id.move_to_top_series -> {
+                    R.id.move_to_top_series, R.id.move_to_bottom_series -> {
                         val (selectedSeries, otherSeries) = adapter?.currentItems
                             ?.filterIsInstance<DownloadItem>()
                             ?.map(DownloadItem::download)
                             ?.partition { item.download.manga.id == it.manga.id }
                             ?: Pair(emptyList(), emptyList())
-                        reorder(selectedSeries + otherSeries)
+                        if (menuItem.itemId == R.id.move_to_top_series) {
+                            reorder(selectedSeries + otherSeries)
+                        } else {
+                            reorder(otherSeries + selectedSeries)
+                        }
                     }
                     R.id.cancel_download -> {
                         cancel(listOf(item.download))
@@ -258,6 +262,6 @@ class DownloadQueueScreenModel(
      * @return the holder of the download or null if it's not bound.
      */
     private fun getHolder(download: Download): DownloadHolder? {
-        return controllerBinding.recycler.findViewHolderForItemId(download.chapter.id) as? DownloadHolder
+        return controllerBinding.root.findViewHolderForItemId(download.chapter.id) as? DownloadHolder
     }
 }

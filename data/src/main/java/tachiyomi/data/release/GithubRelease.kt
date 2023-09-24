@@ -32,7 +32,9 @@ data class GitHubAssets(@SerialName("browser_download_url") val downloadLink: St
  * Reference: https://stackoverflow.com/a/30281147
  */
 val gitHubUsernameMentionRegex =
-    """\B@([a-z0-9](?:-(?=[a-z0-9])|[a-z0-9]){0,38}(?<=[a-z0-9]))""".toRegex(RegexOption.IGNORE_CASE)
+    """\B@([a-z0-9](?:-(?=[a-z0-9])|[a-z0-9]){0,38}(?<=[a-z0-9]))""".toRegex(
+        RegexOption.IGNORE_CASE,
+    )
 
 val releaseMapper: (GithubRelease) -> Release = {
     Release(

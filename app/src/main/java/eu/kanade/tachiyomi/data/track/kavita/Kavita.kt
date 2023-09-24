@@ -119,7 +119,7 @@ class Kavita(private val context: Context, id: Long) : TrackService(id, "Kavita"
                     .reduce(Long::or) and Long.MAX_VALUE
             }
             val preferences: SharedPreferences by lazy {
-                context.getSharedPreferences("source_$sourceSuffixID", 0x0000)
+                context.getSharedPreferences("source_$sourceSuffixID", Context.MODE_PRIVATE)
             }
             val prefApiUrl = preferences.getString("APIURL", "")!!
             if (prefApiUrl.isEmpty()) {

@@ -47,7 +47,6 @@
     <string name="action_filter">Filtrilo</string>
     <string name="action_menu">Menuo</string>
     <string name="action_settings">Agordoj</string>
-    <string name="unlock_app">Malŝlosi Tachiyomi-n</string>
     <string name="history">Historio</string>
     <string name="chapters">Ĉapitroj</string>
     <string name="manga">Biblioteka kontribuoj</string>
@@ -427,7 +426,6 @@
     <string name="local_invalid_format">Nevalida ĉapitra formato</string>
     <string name="chapter_not_found">Ĉapitro netrovita</string>
     <string name="local_source">Loka fonta</string>
-    <string name="http_error_hint">Kontroli retejon en WebView</string>
     <string name="updating_category">Ĝisdatigi kategorion</string>
     <string name="check_for_updates">Kontroli por trovi ĝisdatigojn</string>
     <string name="help_translate">Helpu traduki</string>
@@ -449,7 +447,6 @@
     <string name="theme_midnightdusk">Meznokta Vesperiĝo</string>
     <string name="loading">Ŝargas…</string>
     <string name="cancel_all_for_series">Nuligi ĉiujn por ĉi tiu serio</string>
-    <string name="confirm_exit">Premi «reen» denove por eliri</string>
     <string name="confirm_lock_change">Aŭtentigi por konfirmi ŝanĝon</string>
     <string name="restoring_backup_canceled">Rezignita restaŭro</string>
     <string name="restoring_backup_error">Restaŭro fiaskis</string>

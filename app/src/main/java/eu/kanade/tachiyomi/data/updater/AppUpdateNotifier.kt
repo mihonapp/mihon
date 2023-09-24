@@ -143,7 +143,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             setContentTitle(context.getString(R.string.update_check_notification_update_available))
             setContentText(context.getString(R.string.update_check_fdroid_migration_info))
             setSmallIcon(R.drawable.ic_tachi)
-            setContentIntent(NotificationHandler.openUrl(context, "https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version"))
+            setContentIntent(NotificationHandler.openUrl(context, "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds"))
         }
         notificationBuilder.show(Notifications.ID_APP_UPDATE_PROMPT)
     }

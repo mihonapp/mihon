@@ -97,9 +97,9 @@
     <string name="ext_untrusted">Μη αξιόπιστο</string>
     <string name="ext_uninstall">Απεγκατάσταση</string>
     <string name="untrusted_extension">Μη αξιόπιστη επέκταση</string>
-    <string name="untrusted_extension_message">Αυτή η επέκταση υπογράφηκε με μη αξιόπιστο πιστοποιητικό και δεν ενεργοποιήθηκε.
+    <string name="untrusted_extension_message">Αυτή η επέκταση υπογράφηκε με αναξιόπιστο πιστοποιητικό και δεν ενεργοποιήθηκε.
 \n
-\nΜια κακόβουλη επέκταση θα μπορούσε να διαβάσει τα διαπιστευτήρια σύνδεσης που είναι αποθηκευμένα στο Tachiyomi ή να εκτελέσει αυθαίρετο κώδικα.
+\nΜια κακόβουλη επέκταση θα μπορούσε να διαβάσει τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσει αυθαίρετο κώδικα.
 \n
 \nΕμπιστεύοντας αυτό το πιστοποιητικό αποδέχεστε αυτούς τους κινδύνους.</string>
     <string name="pref_fullscreen">Πλήρης οθόνη</string>
@@ -302,13 +302,12 @@
     <string name="last_used_source">Χρησιμοποιήθηκε τελευταία</string>
     <string name="add_tracking">Προσθήκη tracking</string>
     <string name="pinned_sources">Καρφιτσωμένα</string>
-    <string name="confirm_exit">Πατήστε ξανά για έξοδο</string>
     <string name="restore_duration">%02d λεπτά, %02d δευτερόλεπτα</string>
     <string name="action_select_inverse">Επιλογή αντίστροφου</string>
     <string name="channel_ext_updates">Ενημερώσεις επεκτάσεων</string>
     <string name="channel_new_chapters">Ενημερώσεις κεφαλαίων</string>
     <string name="information_webview_outdated">Παρακαλώ ενημερώστε την εφαρμογή WebView για καλύτερη συμβατότητα</string>
-    <string name="information_webview_required">Το WebView απαιτείται για το Tachiyomi</string>
+    <string name="information_webview_required">Το WebView απαιτείται για τη λειτουργία της εφαρμογής</string>
     <string name="notification_chapters_single_and_more">Κεφάλαιο %1$s και %2$d ακόμη</string>
     <string name="notification_chapters_multiple">Κεφάλαια %1$s</string>
     <string name="notification_chapters_single">Κεφάλαιο %1$s</string>
@@ -334,7 +333,6 @@
         <item quantity="one">Διαθέσιμη ενημέρωση επέκτασης</item>
         <item quantity="other">%d διαθέσιμες ενημερώσεις επεκτάσεων</item>
     </plurals>
-    <string name="http_error_hint">Ελέγξτε τον ιστότοπο στο WebView</string>
     <string name="logout_success">Έχετε αποσυνδεθεί</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="logout_title">Αποσύνδεση από %1$s;</string>
@@ -385,7 +383,6 @@
     <string name="action_view_chapters">Προβολή κεφαλαίων</string>
     <string name="action_sort_latest_chapter">Νεότερο κεφάλαιο</string>
     <string name="action_menu">Μενού</string>
-    <string name="unlock_app">Ξεκλειδώστε το Tachiyomi</string>
     <string name="label_downloaded_only">Ληφθέντα μόνο</string>
     <string name="label_sources">Πηγές</string>
     <string name="action_oldest">Παλαιότερο</string>
@@ -414,7 +411,7 @@
     </plurals>
     <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων βιβλιοθήκης</string>
-    <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα επεκτάσεων Tachiyomi.</string>
+    <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα.</string>
     <string name="ext_unofficial">Ανεπίσημη</string>
     <string name="sort_by_upload_date">Από ημερομηνία μεταφόρτωσης</string>
     <string name="label_data">Δεδομένα</string>
@@ -652,7 +649,6 @@
     <string name="webview_data_deleted">Τα δεδομένα WebView διαγράφηκαν</string>
     <string name="pref_clear_webview_data">Διαγραφή δεδομένων WebView</string>
     <string name="action_close">Κλείσιμο</string>
-    <string name="battery_not_low">Όταν η μπαταρία δεν είναι χαμηλή</string>
     <string name="source_filter_empty_screen">Δε βρέθηκε εγκατεστημένη πηγή</string>
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
     <string name="action_sort_last_manga_update">Τελευταίος έλεγχος ενημέρωσης</string>
@@ -817,4 +813,8 @@
     <string name="track_activity_name">Σύνδεση παρακολούθησης</string>
     <string name="create_backup_file_error">Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας</string>
     <string name="licensed_manga_chapters_error">Αδειοδοτημένο - Δεν υπάρχουν κεφάλαια προς εμφάνιση</string>
+    <string name="exception_unknown_host">Δεν μπορούσε να φτάσει το %s</string>
+    <string name="exception_http">HTTP %d, ελέγξτε την ιστοσελίδα στο WebView</string>
+    <string name="exception_offline">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
+    <string name="unlock_app_title">Ξεκλείδωμα %s</string>
 </resources>

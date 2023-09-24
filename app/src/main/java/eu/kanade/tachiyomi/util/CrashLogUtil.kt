@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.util.storage.getUriCompat
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
@@ -35,6 +36,7 @@ class CrashLogUtil(private val context: Context) {
             Device name: ${Build.DEVICE}
             Device model: ${Build.MODEL}
             Device product name: ${Build.PRODUCT}
+            WebView user agent: ${WebViewUtil.getInferredUserAgent(context)}
         """.trimIndent()
     }
 }

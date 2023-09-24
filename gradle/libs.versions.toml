@@ -1,17 +1,17 @@
 [versions]
-aboutlib_version = "10.8.3"
+aboutlib_version = "10.9.0"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
 sqlite = "2.3.1"
 sqldelight = "2.0.0"
 leakcanary = "2.12"
-voyager = "1.0.0-rc06"
+voyager = "1.0.0-rc07"
 richtext = "0.17.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
-google-services-gradle = "com.google.gms:google-services:4.3.15"
+google-services-gradle = "com.google.gms:google-services:4.4.0"
 
 rxjava = "io.reactivex:rxjava:1.3.8"
 flowreactivenetwork = "ru.beryukhov:flowreactivenetwork:1.0.4"
@@ -33,7 +33,7 @@ junrar = "com.github.junrar:junrar:7.5.5"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
-sqlite-android = "com.github.requery:sqlite-android:3.42.0"
+sqlite-android = "com.github.requery:sqlite-android:3.43.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
@@ -57,14 +57,14 @@ flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.0.6"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.1.0"
 compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
 swipe = "me.saket.swipe:swipe:1.2.0"
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.11.1"
+acra-http = "ch.acra:acra-http:5.11.2"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
@@ -83,17 +83,16 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
 junit = "org.junit.jupiter:junit-jupiter:5.10.0"
-kotest-assertions = "io.kotest:kotest-assertions-core:5.6.2"
-mockk = "io.mockk:mockk:1.13.7"
+kotest-assertions = "io.kotest:kotest-assertions-core:5.7.2"
+mockk = "io.mockk:mockk:1.13.8"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
+ktlint = "org.jlleitschuh.gradle:ktlint-gradle:11.6.0"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev197-1.25.0"
 google-api-client-oauth = "com.google.oauth-client:google-oauth-client:1.34.1"
-
-kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
 [bundles]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-dnsoverhttps"]

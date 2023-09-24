@@ -28,7 +28,11 @@ class SetSortModeForCategory(
         }
     }
 
-    suspend fun await(category: Category?, type: LibrarySort.Type, direction: LibrarySort.Direction) {
+    suspend fun await(
+        category: Category?,
+        type: LibrarySort.Type,
+        direction: LibrarySort.Direction,
+    ) {
         await(category?.id, type, direction)
     }
 }

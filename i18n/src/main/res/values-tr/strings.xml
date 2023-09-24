@@ -99,7 +99,7 @@
     <string name="untrusted_extension">Güvenilmeyen uzantı</string>
     <string name="untrusted_extension_message">Bu uzantı güvenilmeyen bir sertifika ile imzalanmış ve etkinleştirilmedi.
 \n
-\nKötü niyetli bir uzantı, Tachiyomi\'de saklanan her giriş kimlik bilgisini okuyabilir veya rastgele kod yürütebilir.
+\nKötü niyetli bir uzantı, saklanan her giriş kimlik bilgisini okuyabilir veya rastgele kod yürütebilir.
 \n
 \nBu sertifikaya güvenerek bu riskleri kabul etmiş oluyorsunuz.</string>
     <string name="pref_fullscreen">Tam Ekran</string>
@@ -328,7 +328,6 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare baypas edilemedi</string>
     <string name="information_webview_outdated">Daha iyi uyumluluk için lütfen WebView\'i güncelleyin</string>
     <string name="channel_new_chapters">Bölüm güncellemeleri</string>
-    <string name="unlock_app">Tachiyomi\'nin kilidi aç</string>
     <string name="secure_screen_summary">Güvenli ekran, uygulamalar arasında geçiş yaparken uygulama içeriğini gizler ve ekran görüntüsü alınmasını engeller</string>
     <string name="pref_category_display">Ekran</string>
     <plurals name="notification_chapters_generic">
@@ -362,7 +361,6 @@
         <item quantity="one">Uzantı güncellemesi var</item>
         <item quantity="other">%d uzantı güncellemesi var</item>
     </plurals>
-    <string name="http_error_hint">Web sitesini WebView\'de görüntüle</string>
     <string name="channel_ext_updates">Uzantı güncellemeleri</string>
     <string name="updating_library">Kitaplık güncelleniyor</string>
     <string name="pref_category_reading">Okunan</string>
@@ -380,9 +378,8 @@
     <string name="manga_info_collapse">Daha az</string>
     <string name="manga_info_expand">Daha fazla</string>
     <string name="website">Web sitesi</string>
-    <string name="information_webview_required">WebView, Tachiyomi için gereklidir</string>
+    <string name="information_webview_required">Web Görünümü, uygulamanın işlevselliği için gereklidir</string>
     <string name="licenses">Açık kaynak lisansları</string>
-    <string name="confirm_exit">Çıkmak için yeniden geriye basın</string>
     <string name="label_downloaded_only">Yalnızca indirilen</string>
     <string name="recent_manga_time">Böl. %1$s - %2$s</string>
     <string name="restoring_backup_error">Yedek geri yüklenemedi</string>
@@ -414,7 +411,7 @@
     </plurals>
     <string name="tracking_info">Bölüm ilerlemesini, izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden, izlemeyi ayarlayın.</string>
     <string name="pref_refresh_library_covers">Kitaplıktakilerin kapaklarını yenile</string>
-    <string name="unofficial_extension_message">Bu uzantı resmi Tachiyomi uzantıları dizelgesinden değil.</string>
+    <string name="unofficial_extension_message">Bu uzantı resmi dizelgeden değil.</string>
     <string name="ext_unofficial">Resmi olmayan</string>
     <string name="sort_by_upload_date">Yükleme tarihine göre</string>
     <string name="label_data">Veri</string>
@@ -652,7 +649,6 @@
     <string name="webview_data_deleted">WebView verileri temizlendi</string>
     <string name="pref_clear_webview_data">WebView verilerini temizle</string>
     <string name="action_close">Kapat</string>
-    <string name="battery_not_low">Pil düşük olmadığında</string>
     <string name="source_filter_empty_screen">Kurulu kaynak bulunamadı</string>
     <string name="source_empty_screen">Kaynak bulunamadı</string>
     <string name="action_sort_last_manga_update">Son güncelleme denetimi</string>
@@ -810,4 +806,15 @@
     <string name="manga_display_modified_interval_title">Güncelleme aralığını ayarla</string>
     <string name="has_results">Sonuç var</string>
     <string name="delete_downloaded">İndirilenleri sil</string>
+    <string name="create_backup_file_error">Yedekleme dosyası oluşturulamadı</string>
+    <string name="licensed_manga_chapters_error">Lisanslı - Gösterilecek bölüm yok</string>
+    <string name="download_cache_invalidated">İndirilenler dizini geçersiz kılındı</string>
+    <string name="information_cloudflare_help">Cloudflare\'le ilgili yardım için tıklayın</string>
+    <string name="exception_unknown_host">%s verisine erişilemedi</string>
+    <string name="track_activity_name">İzleme girişi</string>
+    <string name="library_sync_complete">Kitaplık eşleşmesi tamamlandı</string>
+    <string name="exception_http">HTTP %d, siteyi Web Görünümünde denetle</string>
+    <string name="exception_offline">Genel ağ bağlantısı yok</string>
+    <string name="syncing_library">Kitaplık eşleştiriliyor</string>
+    <string name="unlock_app_title">Aç: %s</string>
 </resources>

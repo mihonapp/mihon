@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -30,7 +31,6 @@ import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -113,25 +113,20 @@ class BrowseSourceScreenModel(
     /**
      * Flow of Pager flow tied to [State.listing]
      */
+    private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
     val mangaPagerFlowFlow = state.map { it.listing }
         .distinctUntilChanged()
         .map { listing ->
-            Pager(
-                PagingConfig(pageSize = 25),
-            ) {
+            Pager(PagingConfig(pageSize = 25)) {
                 getRemoteManga.subscribe(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
                 pagingData.map {
                     networkToLocalManga.await(it.toDomainManga(sourceId))
-                        .let { localManga ->
-                            getManga.subscribe(localManga.url, localManga.source)
-                        }
+                        .let { localManga -> getManga.subscribe(localManga.url, localManga.source) }
                         .filterNotNull()
-                        .filter { localManga ->
-                            !sourcePreferences.hideInLibraryItems().get() || !localManga.favorite
-                        }
                         .stateIn(ioCoroutineScope)
                 }
+                    .filter { !hideInLibraryItems || !it.value.favorite }
             }
                 .cachedIn(ioCoroutineScope)
         }

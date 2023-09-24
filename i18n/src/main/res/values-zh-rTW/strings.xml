@@ -262,11 +262,11 @@
     <string name="ext_trust">信任</string>
     <string name="ext_untrusted">不信任</string>
     <string name="untrusted_extension">不信任的擴充套件</string>
-    <string name="untrusted_extension_message">這個擴充套件的憑證並不可靠，且尚未被啟用。
+    <string name="untrusted_extension_message">此擴充功能使用未受信任的憑證簽署，並未啟用。
 \n
-\n惡意的擴充套件可能存取任何儲存於 Tachiyomi 中的登錄憑證，或執行任意的程式碼。
+\n惡意擴充功能可能會讀取任何已儲存的登入憑證或執行任意程式碼。
 \n
-\n信任這個憑證，即表示你願意承擔上述風險。</string>
+\n通過信任此憑證，您接受這些風險。</string>
     <string name="last_read_chapter">最後閱畢的章節</string>
     <string name="pref_backup_slots">最大備份保留數</string>
     <string name="clear_database_confirmation">不在書櫃中的作品閱讀進度將被清除，你確定嗎？</string>
@@ -303,7 +303,6 @@
     <string name="pref_theme_mode">深色模式</string>
     <string name="theme_dark">開啟</string>
     <string name="pref_date_format">日期格式</string>
-    <string name="confirm_exit">再按一次以離開</string>
     <string name="downloaded_only_summary">將套用至你書櫃中的作品</string>
     <string name="label_downloaded_only">僅限下載內容</string>
     <string name="licenses">開放原始碼授權</string>
@@ -317,7 +316,6 @@
     <string name="lock_never">永不</string>
     <string name="lock_always">立即</string>
     <string name="lock_when_idle">閒置時鎖定</string>
-    <string name="unlock_app">解除鎖定 Tachiyomi</string>
     <string name="lock_with_biometrics">上鎖應用程式</string>
     <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面。</string>
     <string name="secure_screen">防窺畫面</string>
@@ -347,7 +345,7 @@
     <string name="last_used_source">最近使用</string>
     <string name="local_source_help_guide">本機來源入門指南</string>
     <string name="information_webview_outdated">請更新 WebView 以獲得更佳的相容性</string>
-    <string name="information_webview_required">WebView 為 Tachiyomi 的必要元件</string>
+    <string name="information_webview_required">應用程式運作需要 WebView</string>
     <string name="action_select_inverse">反向選擇</string>
     <string name="pref_library_update_refresh_metadata">自動重新整理中繼資料</string>
     <string name="pref_library_update_refresh_metadata_summary">更新書櫃時一併檢查封面與簡介是否有更動</string>
@@ -417,7 +415,7 @@
         <item quantity="other">歷時 %1$s，出現 %2$s 個錯誤</item>
     </plurals>
     <string name="restore_duration">%02d 分 %02d 秒</string>
-    <string name="unofficial_extension_message">這個擴充套件不是由 Tachiyomi 所提供。</string>
+    <string name="unofficial_extension_message">此擴充功能不在官方清單中。</string>
     <string name="ext_unofficial">非官方</string>
     <string name="recent_manga_time">第 %1$s 章 - %2$s</string>
     <plurals name="notification_chapters_generic">
@@ -470,7 +468,6 @@
     <string name="pref_clear_history">清除閱讀記錄</string>
     <string name="pref_incognito_mode_summary">暫停閱讀記錄</string>
     <string name="pref_incognito_mode">無痕模式</string>
-    <string name="http_error_hint">在 WebView 中檢查網站</string>
     <string name="file_picker_error">找不到檔案選擇器</string>
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
     <string name="migration_help_guide">來源遷移說明</string>
@@ -640,7 +637,6 @@
     <string name="pref_clear_webview_data">清除 WebView 資料</string>
     <string name="webview_data_deleted">已清除 WebView 資料</string>
     <string name="action_close">關閉</string>
-    <string name="battery_not_low">電量充足時</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
     <string name="action_sort_last_manga_update">上次檢查更新日期</string>
@@ -801,4 +797,8 @@
     <string name="track_activity_name">登入歷程平台</string>
     <string name="create_backup_file_error">無法建立備份檔</string>
     <string name="licensed_manga_chapters_error">已有正版，沒有章節可供顯示</string>
+    <string name="exception_http">HTTP %d，請在 WebView 中檢查網站</string>
+    <string name="exception_offline">沒有網際網路連線</string>
+    <string name="exception_unknown_host">無法連上 %s</string>
+    <string name="unlock_app_title">解鎖 %s</string>
 </resources>

@@ -8,7 +8,7 @@
     <string name="label_download_queue">Kolejka pobierania</string>
     <string name="label_recent_manga">Historia</string>
     <string name="action_settings">Ustawienia</string>
-    <string name="action_filter">Filtrowanie</string>
+    <string name="action_filter">Filtry</string>
     <string name="action_filter_unread">Nieprzeczytane</string>
     <string name="action_search">Szukaj</string>
     <string name="action_select_all">Zaznacz wszystko</string>
@@ -16,7 +16,7 @@
     <string name="label_recent_updates">Aktualizacje</string>
     <string name="label_backup">Kopia zapasowa i przywracanie</string>
     <string name="action_filter_bookmarked">Zakładki</string>
-    <string name="action_filter_empty">Usuń filtrowanie</string>
+    <string name="action_filter_empty">Usuń filtr</string>
     <string name="action_sort_last_read">Ostatnio czytane</string>
     <string name="action_mark_as_read">Oznacz jako przeczytane</string>
     <string name="action_mark_as_unread">Oznacz jako nieprzeczytane</string>
@@ -138,7 +138,7 @@
     <string name="left_to_right_viewer">Od lewej do prawej</string>
     <string name="right_to_left_viewer">Od prawej do lewej</string>
     <string name="vertical_viewer">Pionowy</string>
-    <string name="webtoon_viewer">Web-komiks</string>
+    <string name="webtoon_viewer">Długi pasek</string>
     <string name="pref_viewer_type">Domyślny styl czytania</string>
     <string name="scale_type_fit_screen">Dopasuj do ekranu</string>
     <string name="scale_type_stretch">Rozciągnij</string>
@@ -261,7 +261,7 @@
     <string name="untrusted_extension">Niezaufane rozszerzenie</string>
     <string name="untrusted_extension_message">To rozszerzenie było podpisane niezaufanym certyfikatem i nie zostało aktywowane.
 \n
-\nZłośliwe rozszerzenie może odczytać dane logowania przechowywane w Tachiyomi albo uruchomić złośliwy kod.
+\nZłośliwe rozszerzenie może odczytać dane logowania albo uruchomić złośliwy kod.
 \n
 \nUfając temu rozszerzeniu akceptujesz to zagrożenie.</string>
     <string name="migration_dialog_what_to_include">Zaznacz dane do zawarcia</string>
@@ -282,7 +282,7 @@
     <string name="action_open_in_web_view">Otwórz używając WebView</string>
     <string name="pref_true_color">Kolor 32-bitowy</string>
     <string name="pref_skip_read_chapters">Pomiń rozdziały ozn. jako przeczytane</string>
-    <string name="pref_read_with_long_tap">Pokaż po przytrzymaniu</string>
+    <string name="pref_read_with_long_tap">Pokaż akcje po przytrzymaniu</string>
     <string name="pref_color_filter_mode">Tryb mieszania kolorów</string>
     <string name="filter_mode_overlay">Nakładka</string>
     <string name="filter_mode_multiply">Pomnożenie</string>
@@ -338,14 +338,12 @@
     <string name="action_select_inverse">Odwróć zaznaczenie</string>
     <string name="action_sort_latest_chapter">Ostatni rozdział</string>
     <string name="action_menu">Menu</string>
-    <string name="unlock_app">Odblokuj Tachiyomi</string>
     <string name="label_sources">Źródła</string>
     <string name="notification_chapters_single">Rozdział %1$s</string>
     <string name="updating_library">Aktualizowanie biblioteki</string>
     <string name="pref_category_for_this_series">Dla tej serii</string>
     <string name="manga_info_collapse">Mniej</string>
     <string name="add_to_library">Dodaj do biblioteki</string>
-    <string name="http_error_hint">Sprawdź stronę w WebView</string>
     <string name="email">Adres e-mail</string>
     <string name="downloaded_only_summary">Filtruje wszystkie pozycje w twojej bibliotece</string>
     <string name="label_downloaded_only">Tylko pobrane</string>
@@ -372,7 +370,6 @@
     <string name="secure_screen">Ukryj ekran</string>
     <string name="action_unpin">Odepnij</string>
     <string name="action_pin">Przypnij</string>
-    <string name="confirm_exit">Wciśnij wstecz ponownie, aby wyjść</string>
     <string name="manga_info_expand">Więcej</string>
     <string name="recent_manga_time">Rozdz. %1$s - %2$s</string>
     <string name="in_library">W bibliotece</string>
@@ -380,7 +377,7 @@
     <string name="last_used_source">Ostatnio używane</string>
     <string name="tracking_info">Przesyłanie postępu czytania do zewnętrznego serwisu. Ustaw śledzenie guzikiem \"Śledzenie\" w wybranych tytułach.</string>
     <string name="channel_ext_updates">Aktualizacje rozszerzeń</string>
-    <string name="information_webview_required">WebView jest wymagany do poprawnego działania Tachiyomi</string>
+    <string name="information_webview_required">WebView jest wymagany do poprawnego działania aplikacji</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Dostępna aktualizacja rozszerzenia</item>
         <item quantity="few">Dostępne %d aktualizacje rozszerzeń</item>
@@ -430,7 +427,7 @@
         <item quantity="other">Wykonano w %1$s z %2$s błędami</item>
     </plurals>
     <string name="pref_category_reading">Czytane</string>
-    <string name="unofficial_extension_message">Te rozszerzenie nie jest na liście oficjalnych rozszerzeń Tachiyomi.</string>
+    <string name="unofficial_extension_message">Te rozszerzenie nie jest na liście oficjalnych rozszerzeń.</string>
     <string name="ext_unofficial">Nieoficjalne</string>
     <string name="sort_by_upload_date">Po dacie dodania</string>
     <string name="label_data">Dane</string>
@@ -562,7 +559,7 @@
     <string name="source_unsupported">Źródło nie jest wspierane</string>
     <string name="unread">Nieprzeczytane</string>
     <string name="rotation_type">Orientacja ekranu</string>
-    <string name="automatic_background">Automatyczne</string>
+    <string name="automatic_background">Automatycznie</string>
     <string name="pref_create_folder_per_manga_summary">Utwórz foldery względem tytułu</string>
     <string name="pref_create_folder_per_manga">Zapisz strony do osobnych folderów</string>
     <string name="pref_reader_actions">Akcje</string>
@@ -655,7 +652,7 @@
     <string name="pref_update_only_completely_read">Posiada nieprzeczytane rozdziały</string>
     <string name="action_faq_and_guides">FAQ i poradniki</string>
     <string name="pref_update_only_started">Brak przeczytanych rozdziałów</string>
-    <string name="pref_landscape_zoom">Przybliżaj poziome obrazy</string>
+    <string name="pref_landscape_zoom">Automatycznie przybliżaj poziome obrazy</string>
     <string name="action_show_manga">Pokaż</string>
     <string name="pref_navigate_pan">Przesuń szeroki obraz</string>
     <string name="action_display_cover_only_grid">Siatka z samych okładek</string>
@@ -691,7 +688,6 @@
     <string name="source_empty_screen">Nie znaleziono źródła</string>
     <string name="source_filter_empty_screen">Nie znaleziono zainstalowanego źródła</string>
     <string name="empty_screen">Cóż, to troszkę niezręczne</string>
-    <string name="battery_not_low">Kiedy poziom baterii nie jest niski</string>
     <string name="ext_info_language">Język</string>
     <string name="reading_list">Lista czytanych</string>
     <string name="update_check_fdroid_migration_info">Nowa wersja jest dostępna z oficjalnych wydań. Naciśnij, by dowiedzieć się jak przeprowadzić migrację z nieoficjalnych wydań F-Droid.</string>
@@ -827,4 +823,20 @@
         <item quantity="other">%d dni</item>
     </plurals>
     <string name="syncing_library">Synchronizowanie biblioteki</string>
+    <string name="create_backup_file_error">Nie można wykonać kopi zapasowej</string>
+    <string name="intervals_header">Interwały</string>
+    <string name="track_delete_remote_text">Usuń też z %s</string>
+    <string name="exception_http">HTTP %d, otwórz w WebView</string>
+    <string name="exception_offline">Brak połączenia z internetem</string>
+    <string name="exception_unknown_host">Nie można połączyć się z %s</string>
+    <string name="track_delete_title">Przestań śledzić %s\?</string>
+    <string name="delete_downloaded">Usuń pobrane</string>
+    <string name="library_sync_complete">Synchronizacja biblioteki zakończona</string>
+    <string name="download_cache_invalidated">Indeksy pobrań unieważnione</string>
+    <string name="information_cloudflare_help">Naciśnij tutaj aby uzyskać pomoc dotyczącą Cloudflare</string>
+    <string name="unlock_app_title">Odblokuj %s</string>
+    <string name="action_filter_interval_custom">Dostosowany interwał aktualizacji</string>
+    <string name="action_filter_interval_long">W miesiącu (28 dni)</string>
+    <string name="action_ok">OK</string>
+    <string name="track_delete_text">To usunie śledzenie lokalne.</string>
 </resources>

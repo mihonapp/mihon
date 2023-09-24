@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.ui.download
 
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
-import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -243,6 +242,7 @@ object DownloadQueueScreen : Screen() {
                 )
                 return@Scaffold
             }
+
             val density = LocalDensity.current
             val layoutDirection = LocalLayoutDirection.current
             val left = with(density) { contentPadding.calculateLeftPadding(layoutDirection).toPx().roundToInt() }
@@ -252,13 +252,13 @@ object DownloadQueueScreen : Screen() {
 
             Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
                 AndroidView(
+                    modifier = Modifier.fillMaxWidth(),
                     factory = { context ->
                         screenModel.controllerBinding = DownloadListBinding.inflate(LayoutInflater.from(context))
                         screenModel.adapter = DownloadAdapter(screenModel.listener)
-                        screenModel.controllerBinding.recycler.adapter = screenModel.adapter
+                        screenModel.controllerBinding.root.adapter = screenModel.adapter
                         screenModel.adapter?.isHandleDragEnabled = true
-                        screenModel.adapter?.fastScroller = screenModel.controllerBinding.fastScroller
-                        screenModel.controllerBinding.recycler.layoutManager = LinearLayoutManager(context)
+                        screenModel.controllerBinding.root.layoutManager = LinearLayoutManager(context)
 
                         ViewCompat.setNestedScrollingEnabled(screenModel.controllerBinding.root, true)
 
@@ -274,21 +274,13 @@ object DownloadQueueScreen : Screen() {
                         screenModel.controllerBinding.root
                     },
                     update = {
-                        screenModel.controllerBinding.recycler
+                        screenModel.controllerBinding.root
                             .updatePadding(
                                 left = left,
                                 top = top,
                                 right = right,
                                 bottom = bottom,
                             )
-
-                        screenModel.controllerBinding.fastScroller
-                            .updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                                leftMargin = left
-                                topMargin = top
-                                rightMargin = right
-                                bottomMargin = bottom
-                            }
 
                         screenModel.adapter?.updateDataSet(downloadList)
                     },

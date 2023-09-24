@@ -39,7 +39,9 @@ class NetworkHelper(
             builder.addNetworkInterceptor(httpLoggingInterceptor)
         }
 
-        builder.addInterceptor(CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider))
+        builder.addInterceptor(
+            CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
+        )
 
         when (preferences.dohProvider().get()) {
             PREF_DOH_CLOUDFLARE -> builder.dohCloudflare()

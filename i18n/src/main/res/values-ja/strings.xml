@@ -165,7 +165,7 @@
     <string name="pref_category_tracking">同期</string>
     <string name="untrusted_extension_message">この拡張機能は信頼できない証明書でサインされているため、有効にされていません。
 \n
-\n悪意のある拡張機能はTachiyomiに保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
+\n悪意のある拡張機能は保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
 \n
 \nこれらのリスクを受け入れ、この証明書を信頼しますか？</string>
     <string name="pref_show_page_number">ページ数を表示</string>
@@ -317,7 +317,6 @@
         <item quantity="other">%1$s分後</item>
     </plurals>
     <string name="secure_screen">セキュア画面</string>
-    <string name="unlock_app">Tachiyomiのロックを解除する</string>
     <plurals name="notification_chapters_generic">
         <item quantity="other">%1$d新しい章</item>
     </plurals>
@@ -325,7 +324,6 @@
     <string name="action_newest">最新</string>
     <string name="label_sources">ソース</string>
     <string name="local_source">ローカルソース</string>
-    <string name="http_error_hint">WebViewでサイトを開く</string>
     <string name="tabs_header">タブ</string>
     <string name="email">メールアドレス</string>
     <plurals name="download_queue_summary">
@@ -366,7 +364,7 @@
     <string name="filter_mode_multiply">乗算</string>
     <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
-    <string name="unofficial_extension_message">この拡張機能はTachiyomiの公式拡張機能リストに含まれていません。</string>
+    <string name="unofficial_extension_message">この拡張機能は公式リストに含まれていません。</string>
     <string name="ext_unofficial">非公式</string>
     <string name="ext_updates_pending">更新あり</string>
     <plurals name="num_categories">
@@ -390,10 +388,9 @@
     <string name="action_enable_all">全て有効にする</string>
     <string name="action_select_inverse">選択を反転</string>
     <string name="action_menu">メニュー</string>
-    <string name="confirm_exit">もう一度押して終了します</string>
     <string name="channel_new_chapters">章の更新</string>
     <string name="information_webview_outdated">WebViewアプリを更新して互換性を向上させてください</string>
-    <string name="information_webview_required">TachiyomiはWebViewを必要としています</string>
+    <string name="information_webview_required">WebViewが必要です</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">%d件の拡張機能の更新が利用可能</item>
     </plurals>
@@ -640,7 +637,6 @@
     <string name="action_close">閉じる</string>
     <string name="pref_clear_webview_data">WebViewデータを消去</string>
     <string name="webview_data_deleted">WebViewデータを消去しました</string>
-    <string name="battery_not_low">バッテリー残量が十分な場合</string>
     <string name="source_empty_screen">ソースが見つかりません</string>
     <string name="source_filter_empty_screen">インストール済みのソースが見つかりません</string>
     <string name="action_sort_last_manga_update">前回の更新確認</string>
@@ -783,7 +779,7 @@
     </plurals>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="manga_modify_calculated_interval_title">間隔を設定</string>
-    <string name="has_results">実績あり</string>
+    <string name="has_results">結果あり</string>
     <string name="track_delete_title">%s の追跡を削除しますか\?</string>
     <string name="manga_display_interval_title">毎に評価</string>
     <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
@@ -798,4 +794,11 @@
     <string name="library_sync_complete">ライブラリを同期しました</string>
     <string name="information_cloudflare_help">Cloudflareに関するヘルプ情報はこちら</string>
     <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
+    <string name="create_backup_file_error">バックアップ ファイルを作成できませんでした</string>
+    <string name="track_activity_name">トラッキング サービスにログイン</string>
+    <string name="licensed_manga_chapters_error">ライセンス制限あり—章を表示できません</string>
+    <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
+    <string name="exception_offline">インターネット接続がありません</string>
+    <string name="exception_unknown_host">%sにアクセスできませんでした</string>
+    <string name="unlock_app_title">%sをアンロック</string>
 </resources>

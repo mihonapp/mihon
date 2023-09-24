@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import eu.kanade.presentation.more.settings.Preference.PreferenceItem
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.TrackService
 import tachiyomi.core.preference.Preference as PreferenceData

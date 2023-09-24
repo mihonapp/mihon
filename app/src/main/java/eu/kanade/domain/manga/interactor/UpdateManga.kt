@@ -3,7 +3,7 @@ package eu.kanade.domain.manga.interactor
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.domain.manga.interactor.SetFetchInterval
+import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
@@ -15,7 +15,7 @@ import java.util.Date
 
 class UpdateManga(
     private val mangaRepository: MangaRepository,
-    private val setFetchInterval: SetFetchInterval,
+    private val fetchInterval: FetchInterval,
 ) {
 
     suspend fun await(mangaUpdate: MangaUpdate): Boolean {
@@ -79,9 +79,9 @@ class UpdateManga(
     suspend fun awaitUpdateFetchInterval(
         manga: Manga,
         dateTime: ZonedDateTime = ZonedDateTime.now(),
-        window: Pair<Long, Long> = setFetchInterval.getWindow(dateTime),
+        window: Pair<Long, Long> = fetchInterval.getWindow(dateTime),
     ): Boolean {
-        return setFetchInterval.toMangaUpdateOrNull(manga, dateTime, window)
+        return fetchInterval.toMangaUpdateOrNull(manga, dateTime, window)
             ?.let { mangaRepository.update(it) }
             ?: false
     }

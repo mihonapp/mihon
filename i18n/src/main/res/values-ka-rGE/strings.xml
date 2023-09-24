@@ -244,7 +244,6 @@
     <string name="tabs_header">ჩანართები</string>
     <string name="no_more_results">შედეგების სიის დასასრული</string>
     <string name="no_results_found">შედეგი ვერ მოიძებნა</string>
-    <string name="http_error_hint">ვებსაიტის ნახვა WebView-ში</string>
     <string name="local_source">ლოცალური წყარო</string>
     <string name="other_source">სხვა</string>
     <string name="last_used_source">ბოლოს გამოყენებული</string>
@@ -347,8 +346,6 @@
     <string name="label_backup">რეზერვი</string>
     <string name="label_extensions">გავრცობები</string>
     <string name="label_extension_info">გავრცობის შესახებ</string>
-    <string name="unlock_app">Tachiyomi-ს განბლოკვა</string>
-    <string name="confirm_exit">გასასვლელად დააჭირეთ ისევ უკან</string>
     <string name="action_global_search">გლობალური ძებნა</string>
     <string name="action_move_category">კატეგორიების მინიჭება</string>
     <string name="action_edit_cover">ყდის რედაქტირება</string>

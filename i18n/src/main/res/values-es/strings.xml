@@ -60,7 +60,7 @@
     <string name="update_48hour">Cada 2 días</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
-    <string name="pref_update_only_non_completed">Series completadas</string>
+    <string name="pref_update_only_non_completed">Marcadas como completadas</string>
     <string name="pref_auto_update_manga_sync">Actualizar progreso al terminar un capítulo</string>
     <!-- Reader section -->
     <string name="pref_fullscreen">Pantalla completa</string>
@@ -292,7 +292,7 @@
     <string name="copy">Copiar</string>
     <string name="untrusted_extension_message">Esta extensión está firmada por una fuente sin certificar y por lo tanto no se ha activado.
 \n
-\nUna extensión maliciosa puede leer credenciales de inicio guardadas en Tachiyomi o ejecutar cualquier tipo de código en tu dispositivo.
+\nUna extensión maliciosa puede leer credenciales de inicio guardadas o ejecutar cualquier tipo de código en tu dispositivo.
 \n
 \nAl confiar en este certificado aceptas estos riesgos.</string>
     <string name="double_tap_anim_speed_0">Sin animación</string>
@@ -361,7 +361,6 @@
     <string name="information_cloudflare_bypass_failure">Fallo al evitar Cloudflare</string>
     <string name="information_webview_outdated">Actualiza la aplicación WebView para mejorar la compatibilidad</string>
     <string name="channel_new_chapters">Nuevos capítulos</string>
-    <string name="unlock_app">Desbloquear Tachiyomi</string>
     <string name="secure_screen_summary">Pantalla segura oculta el contenido al cambiar de aplicación y bloquea las capturas de pantalla</string>
     <string name="pref_category_display">Visualización</string>
     <plurals name="notification_chapters_generic">
@@ -400,7 +399,6 @@
         <item quantity="other">%d actualizaciones de extensiones disponibles</item>
     </plurals>
     <string name="updating_library">Actualizando biblioteca</string>
-    <string name="http_error_hint">Abrir sitio en WebView</string>
     <string name="channel_ext_updates">Actualizaciones de extensiones</string>
     <string name="pref_skip_filtered_chapters">Saltar capítulos excluidos por filtros</string>
     <string name="pref_category_reading">Lectura</string>
@@ -414,12 +412,11 @@
     <string name="add_tracking">Añadir seguimiento</string>
     <string name="in_library">En biblioteca</string>
     <string name="add_to_library">Añadir a biblioteca</string>
-    <string name="information_webview_required">Tachiyomi necesita WebView</string>
+    <string name="information_webview_required">Primero instala WebView para poder ver contenido de la aplicación</string>
     <string name="manga_info_collapse">Menos</string>
     <string name="manga_info_expand">Más</string>
     <string name="licenses">Licencias de código abierto</string>
     <string name="website">Página web</string>
-    <string name="confirm_exit">Pulsa atrás de nuevo para salir</string>
     <string name="label_downloaded_only">Sólo ya descargados</string>
     <string name="recent_manga_time">Caps. %1$s-%2$s</string>
     <string name="restoring_backup_canceled">Se ha cancelado la restauración</string>
@@ -454,7 +451,7 @@
         <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada elemento en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
-    <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones de Tachiyomi.</string>
+    <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones.</string>
     <string name="ext_unofficial">No oficial</string>
     <string name="label_data">Datos</string>
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
@@ -677,8 +674,8 @@
     <string name="pref_navigate_pan">Desplazarse por el resto de la página antes de cambiar</string>
     <string name="action_display_cover_only_grid">Cuadrícula sólo de portadas</string>
     <string name="pref_landscape_zoom">Acercar la vista en horizontal</string>
-    <string name="pref_update_only_started">Series sin empezar</string>
-    <string name="skipped_reason_completed">Omitido porque la serie está completa</string>
+    <string name="pref_update_only_started">Sin empezar</string>
+    <string name="skipped_reason_completed">Omitido, ya que su publicación ha terminado</string>
     <string name="skipped_reason_not_caught_up">Omitido porque hay capítulos sin leer</string>
     <string name="skipped_reason_not_started">Omitido porque no hay capítulos leídos</string>
     <string name="learn_more">Ver más detalles</string>
@@ -695,7 +692,6 @@
     <string name="webview_data_deleted">Se han limpiado los datos del WebView</string>
     <string name="pref_clear_webview_data">Limpiar datos del WebView</string>
     <string name="action_close">Cerrar</string>
-    <string name="battery_not_low">Cuando la batería tenga suficiente carga</string>
     <string name="source_filter_empty_screen">Todavía no se ha instalado ninguna fuente</string>
     <string name="source_empty_screen">No se ha encontrado ninguna fuente</string>
     <string name="action_sort_last_manga_update">Última comprobación de actualizaciones</string>
@@ -750,7 +746,7 @@
     <string name="popular">Populares</string>
     <string name="multi_lang">Varios idiomas</string>
     <string name="missing_storage_permission">No se han concedido los permisos de almacenamiento</string>
-    <string name="skipped_reason_not_always_update">Saltando, porque este manga no necesita actualizarse</string>
+    <string name="skipped_reason_not_always_update">Omitido, ya que no es necesario actualizarse</string>
     <string name="action_search_hint">Buscar…</string>
     <string name="pref_tracking_summary">Sincroniza tu progreso de lectura; unidireccional o mejorada</string>
     <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
@@ -864,4 +860,9 @@
     <string name="track_activity_name">Inicio de sesión de seguimiento</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
     <string name="licensed_manga_chapters_error">Con licencia oficial, sin capítulos que mostrar</string>
+    <string name="exception_unknown_host">No se ha podido acceder a %s</string>
+    <string name="exception_http">HTTP %d, comprueba la página web en WebView</string>
+    <string name="exception_offline">Sin conexión a Internet</string>
+    <string name="unlock_app_title">Desbloquear %s</string>
+    <string name="action_move_to_bottom_all_for_series">Mover al último puesto</string>
 </resources>

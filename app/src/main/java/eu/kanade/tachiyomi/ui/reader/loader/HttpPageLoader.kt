@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.suspendCancellableCoroutine
-import tachiyomi.core.util.lang.awaitSingle
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
@@ -170,7 +169,7 @@ internal class HttpPageLoader(
         try {
             if (page.imageUrl.isNullOrEmpty()) {
                 page.status = Page.State.LOAD_PAGE
-                page.imageUrl = source.fetchImageUrl(page).awaitSingle()
+                page.imageUrl = source.getImageUrl(page)
             }
             val imageUrl = page.imageUrl!!
 

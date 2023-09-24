@@ -223,6 +223,7 @@ private fun SearchResultItem(
     val borderColor = if (selected) MaterialTheme.colorScheme.outline else Color.Transparent
     Box(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .clip(shape)
             .background(MaterialTheme.colorScheme.surface)

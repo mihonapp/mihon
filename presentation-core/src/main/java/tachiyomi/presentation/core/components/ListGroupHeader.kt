@@ -9,10 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
-fun ListGroupHeader(
-    modifier: Modifier = Modifier,
-    text: String,
-) {
+fun ListGroupHeader(modifier: Modifier = Modifier, text: String) {
     Text(
         text = text,
         modifier = modifier

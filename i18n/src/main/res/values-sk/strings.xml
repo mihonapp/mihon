@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Najnovšia kapitola</string>
     <string name="action_view_chapters">Zobraziť kapitoly</string>
     <string name="action_cancel_all">Zrušiť všetky</string>
-    <string name="unlock_app">Odomknúť Tachiyomi</string>
     <string name="action_menu">Menu</string>
     <string name="action_newest">Najnovšie</string>
     <string name="action_oldest">Najstaršie</string>
@@ -323,7 +322,6 @@
     <string name="action_search_settings">Hľadať v nastaveniach</string>
     <string name="action_sort_date_added">Dátum pridaný</string>
     <string name="action_sort_chapter_fetch_date">Dátum načítania kapitoly</string>
-    <string name="confirm_exit">Stlačte tlačidlo späť znova pre ukončenie</string>
     <string name="confirm_lock_change">Prihlásiť sa pre potvrdenie zmien</string>
     <string name="label_default">Predvolené</string>
     <string name="label_sources">Zdroje</string>
@@ -453,7 +451,6 @@
     <string name="whats_new">Čo je nové</string>
     <string name="help_translate">Pomôžte s prekladom</string>
     <string name="licenses">Licencia Open Source</string>
-    <string name="http_error_hint">Skontrolujte webovú stránku vo WebView</string>
     <string name="error_sharing_cover">Chyba pri zdieľaní obalu</string>
     <plurals name="num_trackers">
         <item quantity="one">%d sledovač</item>
@@ -612,7 +609,6 @@
         <item quantity="few">Kapitoly %1$s a %2$d ďalšie</item>
         <item quantity="other">Kapitoly %1$s a %2$d ďalších</item>
     </plurals>
-    <string name="battery_not_low">Keď batéria nie je vybitá</string>
     <string name="rotation_type">Typ rotácie</string>
     <string name="action_close">Zatvoriť</string>
     <string name="pref_library_update_categories_details">Záznamy vo vylúčených kategóriách nebudú aktualizované, aj keď sú tiež v zahrnutých kategóriách.</string>

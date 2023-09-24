@@ -282,7 +282,7 @@
     <string name="untrusted_extension">Extension non reconnue</string>
     <string name="untrusted_extension_message">Cette extension a été signée avec un certificat non fiable et n\'a pas été activée.
 \n
-\nUne extension malveillante pourrait lire n\'importe quel identifiant de connexion stocké dans Tachiyomi ou exécuter un code arbitraire.
+\nUne extension malveillante pourrait lire n\'importe quel identifiant de connexion stocké ou exécuter un code arbitraire.
 \n
 \nEn faisant confiance à ce certificat, vous acceptez ces risques.</string>
     <string name="pref_double_tap_anim_speed">Vitesse d\'animation du double-clic</string>
@@ -313,7 +313,7 @@
     <string name="transition_pages_error">Échec du chargement des pages : %1$s</string>
     <string name="migrate">Déplacer</string>
     <string name="copy">Copier</string>
-    <string name="pref_read_with_long_tap">Afficher en cas d\'appui long</string>
+    <string name="pref_read_with_long_tap">Afficher les actions en appuyant longuement</string>
     <string name="action_open_in_web_view">Ouvrir dans WebView</string>
     <string name="pref_true_color">Couleurs à 32 bits</string>
     <string name="pref_skip_read_chapters">Passer les chapitres marqués comme lus</string>
@@ -363,7 +363,6 @@
     <string name="information_cloudflare_bypass_failure">Impossible de contourner Cloudflare</string>
     <string name="information_webview_outdated">Veuillez mettre à jour l\'application WebView pour une meilleure compatibilité</string>
     <string name="channel_new_chapters">Mises à jour des chapitres</string>
-    <string name="unlock_app">Débloquer Tachiyomi</string>
     <string name="secure_screen_summary">L\'écran sécurisé cache le contenu lors du changement d\'application et bloque les captures d\'écran</string>
     <string name="pref_category_display">Affichage</string>
     <plurals name="notification_chapters_generic">
@@ -402,7 +401,6 @@
         <item quantity="many">%d mises à jour d\'extensions disponibles</item>
         <item quantity="other">%d mises à jour d\'extensions disponibles</item>
     </plurals>
-    <string name="http_error_hint">Consultez le site Web de WebView</string>
     <string name="updating_library">Mise à jour de la bibliothèque</string>
     <string name="label_sources">Sources</string>
     <string name="pref_category_reading">En cours</string>
@@ -427,11 +425,10 @@
     <string name="website">Site web</string>
     <string name="recent_manga_time">Ch. %1$s – %2$s</string>
     <string name="licenses">Licences à code source ouvert</string>
-    <string name="confirm_exit">Appuyer à nouveau pour quitter</string>
     <string name="last_used_source">Dernière utilisée</string>
     <string name="check_for_updates">Rechercher des mises à jour</string>
     <string name="restore_duration">%02d min, %02d s</string>
-    <string name="information_webview_required">WebView est requis par Tachiyomi</string>
+    <string name="information_webview_required">WebView est requis pour le fonctionnement l\'application</string>
     <string name="local_source_help_guide">Guide des sources locales</string>
     <plurals name="download_queue_summary">
         <item quantity="one">%1$s restant</item>
@@ -456,7 +453,7 @@
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures de la bibliothèque</string>
     <string name="tracking_info">Synchronisation à sens unique pour mettre à jour la progression du chapitre dans les services de suivi. Configurez le suivi des entrées individuelles à partir de leur bouton de suivi.</string>
-    <string name="unofficial_extension_message">Cette extension ne fait pas partie de la liste des extensions officielles de Tachiyomi.</string>
+    <string name="unofficial_extension_message">Cette extension ne fait pas partie de la liste officielle.</string>
     <string name="ext_unofficial">Non officiel</string>
     <string name="pref_library_update_refresh_metadata_summary">Vérifier s\'il y a une nouvelle couverture ou synopsis lors des mises à jour de la bibliothèque</string>
     <string name="sort_by_upload_date">Par date de téléversement</string>
@@ -593,7 +590,7 @@
     <string name="local_invalid_format">Format de chapitre invalide</string>
     <string name="chapter_not_found">Chapitre non trouvé</string>
     <string name="rotation_type">Mode de rotation</string>
-    <string name="automatic_background">Automatique</string>
+    <string name="automatic_background">Auto</string>
     <string name="pref_library_update_refresh_trackers_summary">Mettre à jour les services de suivi lors de la mise à jour de la bibliothèque</string>
     <string name="pref_library_update_refresh_trackers">Actualiser automatiquement les services de suivi</string>
     <string name="restrictions">Restrictions : %s</string>
@@ -606,7 +603,7 @@
     <string name="tracking_guide">Manuel de suivi</string>
     <string name="off">Désactivé</string>
     <string name="on">Activé</string>
-    <string name="categorized_display_settings">Rendre les réglages de tri et d\'affichage propres à chaque catégorie</string>
+    <string name="categorized_display_settings">Rendre les réglages de tri propres à chaque catégorie</string>
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
     <string name="action_start_downloading_now">Commencer à télécharger</string>
     <string name="notification_updating">Mise à jour de la bibliothèque… (%1$d/%2$d)</string>
@@ -663,7 +660,7 @@
     <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Tachiyomi. Appuyez pour en savoir plus.</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
-    <string name="pref_auto_clear_chapter_cache">Effacer le cache du chapitre à la fermeture de l\'application</string>
+    <string name="pref_auto_clear_chapter_cache">Vider le cache de chapitre au lancement de l\'application</string>
     <string name="clear_database_source_item_count">%1$d entrées qui ne sont pas dans la bibliothèque dans la base de données</string>
     <string name="database_clean">Rien à effacer</string>
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
@@ -679,7 +676,7 @@
     <string name="action_show_manga">Afficher le titre</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
     <string name="pref_navigate_pan">Panoramique des images larges</string>
-    <string name="pref_landscape_zoom">Agrandir les images en paysage</string>
+    <string name="pref_landscape_zoom">Zoom automatique dans les images larges</string>
     <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
     <string name="skipped_reason_completed">Sauté car la série est terminée</string>
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
@@ -698,7 +695,6 @@
     <string name="pref_clear_webview_data">Effacer les données WebView</string>
     <string name="webview_data_deleted">Données WebView effacées</string>
     <string name="action_close">Fermer</string>
-    <string name="battery_not_low">Quand la batterie n\'est pas faible</string>
     <string name="source_filter_empty_screen">Aucune source installée trouvée</string>
     <string name="action_sort_last_manga_update">Dernière verification de mise à jour</string>
     <string name="action_sort_unread_count">Nombre de non-lus</string>
@@ -745,7 +741,7 @@
         <item quantity="many">Les %d suivants non lus</item>
         <item quantity="other">Les %d suivants non lus</item>
     </plurals>
-    <string name="download_ahead_info">Fonctionne seulement sur les entrées de la bibliothèque et si le chapitre actuel et le suivant sont déjà téléchargés</string>
+    <string name="download_ahead_info">Fonctionne seulement si le chapitre actuel et le suivant sont déjà téléchargés.</string>
     <string name="are_you_sure">Êtes-vous sûr(e) \?</string>
     <string name="popular">Populaire</string>
     <string name="pref_long_strip_split">Diviser les grandes images (BETA)</string>
@@ -838,11 +834,28 @@
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
     <string name="action_filter_interval_long">Recherche mensuelle (28 jours)</string>
     <string name="action_filter_interval_late">Vérification tardive 10+</string>
-    <string name="action_filter_interval_dropped">Abandonné \? Fin 20+ et 2 mois</string>
+    <string name="action_filter_interval_dropped">Abandonné \? En retard de 20+ et 2 mois</string>
     <string name="action_filter_interval_passed">Période de contrôle réussie</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
     <string name="pref_update_only_in_release_period">Période de diffusion prévue</string>
     <string name="action_set_interval">Définir l\'intervalle</string>
     <string name="action_ok">Valider</string>
     <string name="action_filter_interval_custom">Intervalle de recherche personnalisé</string>
+    <string name="information_cloudflare_help">Appuyez ici pour de l\'aide sur Cloudflare</string>
+    <string name="unlock_app_title">Débloquer %s</string>
+    <string name="syncing_library">Synchronisation de la bibliothèque</string>
+    <string name="intervals_header">Intervals</string>
+    <string name="library_sync_complete">Synchronisation de la bibliothèque complété</string>
+    <string name="licensed_manga_chapters_error">Licenciés - Aucun chapitres à montrer</string>
+    <string name="exception_offline">Aucune connexion internet</string>
+    <string name="download_cache_invalidated">Indice de téléchargement invalidé</string>
+    <string name="skipped_reason_not_in_release_period">Ignoré car aucune sortie n\'était attendue aujourd\'hui</string>
+    <string name="has_results">A des résultats</string>
+    <string name="manga_display_interval_title">Estimer chaque</string>
+    <string name="exception_http">HTTP %d, consulter le site Web dans WebView</string>
+    <plurals name="day">
+        <item quantity="one">1 jour</item>
+        <item quantity="many">%d jours</item>
+        <item quantity="other">%d jours</item>
+    </plurals>
 </resources>

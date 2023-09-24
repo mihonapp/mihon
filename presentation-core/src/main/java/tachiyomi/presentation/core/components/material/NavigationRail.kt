@@ -48,7 +48,10 @@ fun NavigationRail(
                 .padding(vertical = MaterialTheme.padding.tiny)
                 .selectableGroup(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny, alignment = Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.padding.tiny,
+                alignment = Alignment.CenterVertically,
+            ),
         ) {
             if (header != null) {
                 header()
