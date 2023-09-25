@@ -3,7 +3,7 @@
     <string name="theme_dark">अन</string>
     <string name="theme_light">अफ</string>
     <string name="pref_theme_mode">अँध्यारो मोड</string>
-    <string name="pref_category_theme">थिम</string>
+    <string name="pref_category_theme">थीम</string>
     <string name="pref_category_about">बारेमा</string>
     <string name="pref_category_advanced">उन्नत सेटिङहरू</string>
     <string name="pref_category_tracking">ट्र्याकिङ</string>
@@ -162,7 +162,7 @@
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
     <string name="theme_greenapple">हरियो स्याउ</string>
     <string name="theme_monet">गतिशील</string>
-    <string name="pref_app_theme">एपको थिम</string>
+    <string name="pref_app_theme">एपको थीम</string>
     <string name="theme_system">सिस्टम पालना गर्नुहोस्</string>
     <string name="pref_category_appearance">रूप</string>
     <string name="action_start_downloading_now">अहिले डाउनलोड गर्न सुरु गर्नुहोस्</string>
@@ -170,7 +170,7 @@
     <string name="action_sort">क्रमबद्ध</string>
     <string name="cancel_all_for_series">यी श्रृङ्खलाका सबै रद्द गर्नुहोस्</string>
     <string name="action_display_local_badge">लोकल स्रोत</string>
-    <string name="action_open_in_web_view">WebViewमा खोल्नुहोस्</string>
+    <string name="action_open_in_web_view">WebView मा खोल्नुहोस्</string>
     <string name="confirm_lock_change">परिवर्तन पुष्टि गर्न प्रमाणित गर्नुहोस्</string>
     <string name="label_default">पूर्वनिर्धारित</string>
     <string name="pref_tablet_ui_mode">ट्याब्लेट UI</string>
@@ -200,7 +200,7 @@
     <string name="ext_installed">स्थापना गरियो</string>
     <string name="ext_trust">विश्वास</string>
     <string name="obsolete_extension_message">यो एक्सटेन्शन अब उपलब्ध छैन। यसले राम्ररी काम नगर्न सक्छ र एपमा समस्या ल्याउन सक्छ। यसलाई अनइन्स्टल गर्न सिफारिस गरिन्छ।</string>
-    <string name="unofficial_extension_message">यो एक्सटेन्शन आधिकारिक ताचियोमीको एक्सटेन्शन सूचीबाट होइन।</string>
+    <string name="unofficial_extension_message">यो एक्सटेन्शन आधिकारिक सूचीबाट होइन।</string>
     <string name="ext_nsfw_warning">यस एक्सटेन्शनको स्रोतहरूमा NSFW (१८+) सामग्री समावेश हुन सक्छ</string>
     <string name="ext_install_service_notif">एक्सटेन्शन स्थापना गर्दै…</string>
     <string name="ext_installer_shizuku_stopped">Shizuku चलिरहेको छैन</string>
@@ -263,9 +263,9 @@
     <string name="untrusted_extension">अविश्वसनीय एक्सटेन्शन</string>
     <string name="exclude">समावेश नगर्नुहोस्: %s</string>
     <string name="ext_installer_pref">इंस्टलर</string>
-    <string name="untrusted_extension_message">यो एक्सटेन्शन एक अविश्वसनीय प्रमाणपत्र संग हस्ताक्षर गरिएको थियो र सक्रिय गरिएको थिएन।
+    <string name="untrusted_extension_message">यो एक्सटेन्शन अविश्वसनीय प्रमाणपत्र सँग हस्ताक्षर गरिएको थियो र सक्रिय गरिएको थिएन।
 \n
-\nएउटा खराब एक्सटेन्शनले ताचियोमीमा भण्डारण गरिएका कुनै पनि लगइन प्रमाणहरू पढ्न वा स्वेच्छाचारी कोड कार्यान्वयन गर्न सक्छ।
+\nएक खराब एक्सटेन्शनले कुनै पनि भण्डारण लगइन प्रमाणहरू पढ्न वा मनमानी कोड कार्यान्वयन गर्न सक्छ।
 \n
 \nयस प्रमाणपत्रमा विश्वास गरेर तपाईंले यी जोखिमहरू स्वीकार गर्नुहुन्छ।</string>
     <string name="pref_fullscreen">पूर्ण स्क्रिन</string>
@@ -300,8 +300,8 @@
     <string name="double_tap_anim_speed_normal">सामान्य</string>
     <string name="double_tap_anim_speed_0">कुनै एनिमेसन छैन</string>
     <string name="double_tap_anim_speed_fast">छिटो</string>
-    <string name="pref_rotation_type">पूर्वनिर्धारित रोटेशन प्रकार</string>
-    <string name="rotation_type">रोटेशन प्रकार</string>
+    <string name="pref_rotation_type">पूर्वनिर्धारित रोटेशन</string>
+    <string name="rotation_type">रोटेशन</string>
     <string name="rotation_free">फ्री</string>
     <string name="rotation_landscape">ल्याण्डस्केप</string>
     <string name="rotation_force_landscape">लक गरिएको ल्याण्डस्केप</string>
@@ -626,7 +626,7 @@
     <string name="channel_errors">त्रुटिहरू</string>
     <string name="skipped_reason_not_started">कुनै अध्याय नपढेकाले छोडियो</string>
     <string name="notification_size_warning">ठूला अपडेटहरूले स्रोतहरूलाई हानि पुर्‍याउँछ र यसले ढिलो अपडेटहरू निम्त्याउन सक्छ र ब्याट्रीको प्रयोग पनि बढाउँछ। थप जान्न ट्याप गर्नुहोस्।</string>
-    <string name="information_webview_required">ताचियोमी को लागि WebView आवश्यक छ</string>
+    <string name="information_webview_required">एप काम गर्नका लागि WebView आवश्यक छ</string>
     <string name="action_move_to_top_all_for_series">श्रृङ्खलालाई शीर्षमा सर्नुहोस्</string>
     <string name="rotation_reverse_portrait">पोर्ट्रेट उल्ट्याउनु</string>
     <string name="skipped_reason_not_caught_up">नपढिएका अध्यायहरू भएका कारण छोडियो</string>
@@ -669,7 +669,7 @@
     <string name="label_downloaded">डाउनलोड गरिएको</string>
     <string name="network_not_metered">मापन नगरिएको नेटवर्कमा मात्र</string>
     <string name="download_ahead">अगाडि डाउनलोड गर्नुहोस्</string>
-    <string name="pref_appearance_summary">थिम, मिति र समय ढाँचा</string>
+    <string name="pref_appearance_summary">थीम, मिति र समय ढाँचा</string>
     <string name="download_ahead_info">हालको अध्याय + अर्को पहिले नै डाउनलोड गरिएमा मात्र काम गर्दछ।</string>
     <string name="theme_tidalwave">समुन्द्री लहर</string>
     <string name="ext_info_version">संस्करण</string>
@@ -816,4 +816,6 @@
     <string name="exception_offline">इन्टरनेट जडान छैन</string>
     <string name="exception_unknown_host">%s मा पुग्न सकिएन</string>
     <string name="exception_http">HTTP %d, WebView मा वेबसाइट जाँच गर्नुहोस्</string>
+    <string name="unlock_app_title">अनलक %s</string>
+    <string name="action_move_to_bottom_all_for_series">श्रृङ्खलालाई तल सार्नुहोस्</string>
 </resources>

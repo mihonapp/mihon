@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Ingen animering</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Snabb</string>
-    <string name="pref_rotation_type">Standardrotationstyp</string>
+    <string name="pref_rotation_type">Standard rotation</string>
     <string name="rotation_free">Upplåst</string>
     <string name="rotation_force_portrait">Låst porträtt</string>
     <string name="rotation_force_landscape">Låst liggande</string>
@@ -532,7 +532,7 @@
     <string name="clipboard_copy_error">Kunde inte kopiera till urklipp</string>
     <string name="rotation_landscape">Liggande</string>
     <string name="rotation_portrait">Porträtt</string>
-    <string name="rotation_type">Rotationstyp</string>
+    <string name="rotation_type">Rotation</string>
     <string name="pref_create_folder_per_manga_summary">Skapa mappar enligt posternas titel</string>
     <string name="pref_create_folder_per_manga">Spara sidor i separata mappar</string>
     <string name="pref_reader_actions">Åtgärder</string>
@@ -817,4 +817,5 @@
     <string name="exception_http">HTTP %d, kolla på webbsida i WebView</string>
     <string name="exception_unknown_host">Kunde inte nå %s</string>
     <string name="unlock_app_title">Lås upp %s</string>
+    <string name="action_move_to_bottom_all_for_series">Flytta serien till botten</string>
 </resources>

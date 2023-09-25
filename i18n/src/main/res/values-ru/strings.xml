@@ -849,4 +849,5 @@
     <string name="exception_offline">Нет подключения к интернету</string>
     <string name="exception_unknown_host">Не удалось достичь %s</string>
     <string name="unlock_app_title">Разблокировать %s</string>
+    <string name="action_move_to_bottom_all_for_series">Переместить серию в конец</string>
 </resources>

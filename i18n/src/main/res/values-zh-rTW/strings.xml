@@ -801,4 +801,5 @@
     <string name="exception_offline">沒有網際網路連線</string>
     <string name="exception_unknown_host">無法連上 %s</string>
     <string name="unlock_app_title">解鎖 %s</string>
+    <string name="action_move_to_bottom_all_for_series">將系列移至底部</string>
 </resources>

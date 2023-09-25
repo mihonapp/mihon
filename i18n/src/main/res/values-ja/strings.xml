@@ -118,7 +118,7 @@
     <string name="zoom_start_center">中央</string>
     <string name="double_tap_anim_speed_normal">通常</string>
     <string name="double_tap_anim_speed_fast">速い</string>
-    <string name="pref_rotation_type">既定の回転モード</string>
+    <string name="pref_rotation_type">既定の画面向き</string>
     <string name="rotation_free">自動回転</string>
     <string name="rotation_force_portrait">縦向き画面を強制</string>
     <string name="color_filter_r_value">R</string>
@@ -533,7 +533,7 @@
     <string name="chapter_not_found">章が見つかりませんでした</string>
     <string name="notification_incognito_text">シークレットモードを無効にする</string>
     <string name="tracking_guide">追跡ガイド</string>
-    <string name="rotation_type">回転モード</string>
+    <string name="rotation_type">画面向き</string>
     <string name="automatic_background">自動</string>
     <string name="pref_create_folder_per_manga_summary">項目のタイトルに基づいてフォルダを作成</string>
     <string name="pref_create_folder_per_manga">別々のフォルダにページを保存</string>
@@ -801,4 +801,5 @@
     <string name="exception_offline">インターネット接続がありません</string>
     <string name="exception_unknown_host">%sにアクセスできませんでした</string>
     <string name="unlock_app_title">%sをアンロック</string>
+    <string name="action_move_to_bottom_all_for_series">シリーズを底に移動</string>
 </resources>

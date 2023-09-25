@@ -770,13 +770,13 @@
     <string name="manga_modify_calculated_interval_title">Interval aanpassen</string>
     <string name="download_cache_invalidated">Download Index geïnvalideerd</string>
     <plurals name="day">
-        <item quantity="one"></item>
-        <item quantity="other"></item>
+        <item quantity="one"/>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_invalidate_download_cache">Maak de downloadindex ongeldig</string>
     <plurals name="missing_chapters">
-        <item quantity="one"></item>
-        <item quantity="other"></item>
+        <item quantity="one"/>
+        <item quantity="other"/>
     </plurals>
     <string name="action_ok">OK</string>
     <string name="pref_chapter_swipe_start">Swipe naar de linker actie</string>

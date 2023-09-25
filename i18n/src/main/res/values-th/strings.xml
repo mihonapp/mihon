@@ -138,7 +138,7 @@
     <string name="double_tap_anim_speed_0">ไม่มีแอนิเมชั่น</string>
     <string name="double_tap_anim_speed_normal">ปกติ</string>
     <string name="double_tap_anim_speed_fast">เร็ว</string>
-    <string name="pref_rotation_type">ประเภทการหมุนเริ่มต้น</string>
+    <string name="pref_rotation_type">การหมุนเริ่มต้น</string>
     <string name="rotation_free">อิสระ</string>
     <string name="rotation_force_portrait">ล็อกแนวตั้ง</string>
     <string name="rotation_force_landscape">ล็อกแนวนอน</string>
@@ -400,7 +400,7 @@
     <string name="pref_webtoon_side_padding">ช่องว่างด้านข้าง</string>
     <string name="pref_category_reading">การอ่าน</string>
     <string name="pref_category_reading_mode">โหมดการอ่าน</string>
-    <string name="rotation_type">ประเภทการหมุน</string>
+    <string name="rotation_type">การหมุน</string>
     <string name="pref_viewer_nav">โซนการแตะ</string>
     <string name="vertical_plus_viewer">หน้ายาวแยกช่องว่าง</string>
     <string name="nav_zone_right">ขวา</string>
@@ -801,4 +801,5 @@
     <string name="exception_offline">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
     <string name="exception_http">HTTP %d, ดูเว็บไซต์ใน WebView</string>
     <string name="exception_unknown_host">ไม่สามารถเข้าถึง %s ได้</string>
+    <string name="action_move_to_bottom_all_for_series">ย้ายเรื่องไปด้านล่าง</string>
 </resources>

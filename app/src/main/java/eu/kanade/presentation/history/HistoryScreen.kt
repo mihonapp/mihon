@@ -27,7 +27,6 @@ import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.text.DateFormat
 import java.util.Date
 
 @Composable
@@ -98,7 +97,8 @@ private fun HistoryScreenContent(
     onClickDelete: (HistoryWithRelations) -> Unit,
     preferences: UiPreferences = Injekt.get(),
 ) {
-    val dateFormat: DateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
+    val relativeTime = remember { preferences.relativeTime().get() }
+    val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     FastScrollLazyColumn(
         contentPadding = contentPadding,
@@ -118,6 +118,7 @@ private fun HistoryScreenContent(
                     RelativeDateHeader(
                         modifier = Modifier.animateItemPlacement(),
                         date = item.date,
+                        relativeTime = relativeTime,
                         dateFormat = dateFormat,
                     )
                 }

@@ -99,7 +99,7 @@
     <string name="untrusted_extension">Ненадійне розширення</string>
     <string name="untrusted_extension_message">Це розширення було підписано ненадійним сертифікатом та не було активовано.
 \n
-\nЗловмисне розширення может зчитувати будь-які облікові дані для входу, що зберігаються в Tachiyomi, або виконувати довільний код.
+\nШкідливе розширення може зчитувати будь-які збережені облікові дані для входу або виконати довільний код.
 \n
 \nДовіряючи цьому сертифікату, ви приймаєте ці ризики.</string>
     <string name="pref_fullscreen">Повноекранний режим</string>
@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Без анімації</string>
     <string name="double_tap_anim_speed_normal">Нормальна</string>
     <string name="double_tap_anim_speed_fast">Швидка</string>
-    <string name="pref_rotation_type">Тип основної орієнтації</string>
+    <string name="pref_rotation_type">Орієнтація за замовчуванням</string>
     <string name="rotation_free">Вільна</string>
     <string name="rotation_force_portrait">Заблокована портретна</string>
     <string name="rotation_force_landscape">Заблокована альбомна</string>
@@ -386,13 +386,13 @@
     <string name="add_to_library">Додати до бібліотеки</string>
     <string name="manga_info_collapse">Менше</string>
     <string name="manga_info_expand">Більше</string>
-    <string name="information_webview_required">WebView необхідний для Tachiyomi</string>
+    <string name="information_webview_required">WebView необхідний для роботи застосунку</string>
     <string name="licenses">Ліцензії з відкритим кодом</string>
     <string name="website">Сторінка</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
     <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>
-    <string name="unofficial_extension_message">Це розширення не входить до переліку офіційних розширень Tachiyomi.</string>
+    <string name="unofficial_extension_message">Це розширення не з офіційного списку.</string>
     <string name="ext_unofficial">Неофіційне</string>
     <plurals name="num_categories">
         <item quantity="one">%d категорія</item>
@@ -553,7 +553,7 @@
     <string name="clipboard_copy_error">Не вдалось скопіювати до буферу обміну</string>
     <string name="rotation_landscape">Альбомна</string>
     <string name="rotation_portrait">Портретна</string>
-    <string name="rotation_type">Тип орієнтації</string>
+    <string name="rotation_type">Орієнтація</string>
     <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви записів</string>
     <string name="pref_create_folder_per_manga">Зберігати сторінки до окремих тек</string>
     <string name="pref_reader_actions">Дії</string>
@@ -844,4 +844,9 @@
     <string name="information_cloudflare_help">Натисніть тут, щоб отримати допомогу з Cloudflare</string>
     <string name="create_backup_file_error">Не вдалося створити файл резервної копії</string>
     <string name="licensed_manga_chapters_error">Ліцензовано - немає розділів для показу</string>
+    <string name="unlock_app_title">Розблокувати %s</string>
+    <string name="action_move_to_bottom_all_for_series">Перемістити серію вниз</string>
+    <string name="exception_offline">Немає Інтернет-з\'єднання</string>
+    <string name="exception_http">Http %d, перевірте вебсайт у WebView</string>
+    <string name="exception_unknown_host">Не вдалося досягти %s</string>
 </resources>

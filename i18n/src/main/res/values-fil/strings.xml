@@ -817,4 +817,5 @@
     <string name="exception_offline">Walang koneksyon sa Internet</string>
     <string name="exception_http">HTTP %d, tignan ang website sa WebView</string>
     <string name="exception_unknown_host">Hindi maabot ang %s</string>
+    <string name="action_move_to_bottom_all_for_series">Ilagay sa ibaba ang serye</string>
 </resources>

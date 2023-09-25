@@ -123,6 +123,11 @@ object SettingsAppearanceScreen : SearchableSettings {
         var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
         val now = remember { Date().time }
 
+        val dateFormat by uiPreferences.dateFormat().collectAsState()
+        val formattedNow = remember(dateFormat) {
+            UiPreferences.dateFormat(dateFormat).format(now)
+        }
+
         LaunchedEffect(currentLanguage) {
             val locale = if (currentLanguage.isEmpty()) {
                 LocaleListCompat.getEmptyLocaleList()
@@ -161,6 +166,15 @@ object SettingsAppearanceScreen : SearchableSettings {
                             val formattedDate = UiPreferences.dateFormat(it).format(now)
                             "${it.ifEmpty { stringResource(R.string.label_default) }} ($formattedDate)"
                         },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = uiPreferences.relativeTime(),
+                    title = stringResource(R.string.pref_relative_format),
+                    subtitle = stringResource(
+                        R.string.pref_relative_format_summary,
+                        stringResource(R.string.relative_time_today),
+                        formattedNow,
+                    ),
                 ),
             ),
         )

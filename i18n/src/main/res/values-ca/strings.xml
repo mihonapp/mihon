@@ -136,7 +136,7 @@
     <string name="double_tap_anim_speed_0">Sense animació</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
     <string name="double_tap_anim_speed_fast">Ràpida</string>
-    <string name="pref_rotation_type">Tipus de rotació per defecte</string>
+    <string name="pref_rotation_type">Rotació per defecte</string>
     <string name="rotation_free">Lliure</string>
     <string name="rotation_force_portrait">Vertical forçada</string>
     <string name="rotation_force_landscape">Horitzontal forçada</string>
@@ -525,7 +525,7 @@
     <string name="pref_category_auto_download">Baixada automàtica</string>
     <string name="rotation_landscape">Horitzontal</string>
     <string name="rotation_portrait">Vertical</string>
-    <string name="rotation_type">Tipus de rotació</string>
+    <string name="rotation_type">Rotació</string>
     <string name="nav_zone_right">Dreta</string>
     <string name="nav_zone_left">Esquerra</string>
     <string name="nav_zone_next">Següent</string>
@@ -817,4 +817,5 @@
     <string name="exception_offline">No hi ha connexió a Internet</string>
     <string name="exception_http">HTTP %d, comproveu el lloc web en una WebView</string>
     <string name="exception_unknown_host">No s’ha pogut accedir a %s</string>
+    <string name="action_move_to_bottom_all_for_series">Mou la sèrie a baix de tot</string>
 </resources>

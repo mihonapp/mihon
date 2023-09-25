@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Χωρίς κίνηση</string>
     <string name="double_tap_anim_speed_normal">Κανονική</string>
     <string name="double_tap_anim_speed_fast">Γρήγορη</string>
-    <string name="pref_rotation_type">Προεπιλεγμένος τύπος περιστροφής</string>
+    <string name="pref_rotation_type">Προεπιλεγμένη περιστροφή</string>
     <string name="rotation_free">Ελεύθερο</string>
     <string name="rotation_force_portrait">Κλειδωμένο κατακόρυφα</string>
     <string name="rotation_force_landscape">Κλειδωμένο οριζόντια</string>
@@ -535,7 +535,7 @@
     <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
     <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
-    <string name="rotation_type">Τύπος περιστροφής</string>
+    <string name="rotation_type">Περιστροφή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>
     <string name="notification_incognito_text">Απενεργοποίηση λειτουργίας ανώνυμης περιήγησης</string>
     <string name="automatic_background">Αυτόματο</string>
@@ -640,7 +640,7 @@
     <string name="channel_skipped">Παραλήφθηκαν</string>
     <string name="notification_update_skipped">%1$d ενημέρωση(εις) παραλείφθηκε(-αν)</string>
     <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
-    <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς στην κορυφή</string>
+    <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς προς τα πάνω</string>
     <string name="disabled_nav">Απενεργοποιημένο</string>
     <string name="update_check_fdroid_migration_info">Μια νέα έκδοση είναι διαθέσιμη από τις επίσημες κυκλοφορίες. Πατήστε για να μάθετε πώς να μεταβείτε από ανεπίσημες κυκλοφορίες του F-Droid.</string>
     <string name="error_saving_picture">Σφάλμα κατά την αποθήκευση της εικόνας</string>
@@ -817,4 +817,5 @@
     <string name="exception_http">HTTP %d, ελέγξτε την ιστοσελίδα στο WebView</string>
     <string name="exception_offline">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="unlock_app_title">Ξεκλείδωμα %s</string>
+    <string name="action_move_to_bottom_all_for_series">Μετακίνηση σειράς προς τα κάτω</string>
 </resources>
