@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.track.myanimelist
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
@@ -32,7 +31,11 @@ import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListInterceptor) {
+class MyAnimeListApi(
+    private val trackId: Long,
+    private val client: OkHttpClient,
+    interceptor: MyAnimeListInterceptor,
+) {
 
     private val json: Json by injectLazy()
 
@@ -106,7 +109,7 @@ class MyAnimeListApi(private val client: OkHttpClient, interceptor: MyAnimeListI
                     .parseAs<JsonObject>()
                     .let {
                         val obj = it.jsonObject
-                        TrackSearch.create(TrackManager.MYANIMELIST).apply {
+                        TrackSearch.create(trackId).apply {
                             media_id = obj["id"]!!.jsonPrimitive.long
                             title = obj["title"]!!.jsonPrimitive.content
                             summary = obj["synopsis"]?.jsonPrimitive?.content ?: ""

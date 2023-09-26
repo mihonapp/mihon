@@ -156,13 +156,13 @@ internal fun PreferenceItem(
                     },
                 )
             }
-            is Preference.PreferenceItem.TrackingPreference -> {
+            is Preference.PreferenceItem.TrackerPreference -> {
                 val uName by Injekt.get<PreferenceStore>()
-                    .getString(TrackPreferences.trackUsername(item.service.id))
+                    .getString(TrackPreferences.trackUsername(item.tracker.id))
                     .collectAsState()
-                item.service.run {
+                item.tracker.run {
                     TrackingPreferenceWidget(
-                        service = this,
+                        tracker = this,
                         checked = uName.isNotEmpty(),
                         onClick = { if (isLoggedIn) item.logout() else item.login() },
                     )

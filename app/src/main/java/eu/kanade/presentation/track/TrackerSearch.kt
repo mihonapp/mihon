@@ -70,7 +70,7 @@ import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
-fun TrackServiceSearch(
+fun TrackerSearch(
     query: TextFieldValue,
     onQueryChange: (TextFieldValue) -> Unit,
     onDispatchQuery: () -> Unit,

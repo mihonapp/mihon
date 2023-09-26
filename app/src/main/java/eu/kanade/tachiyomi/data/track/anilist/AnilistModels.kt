@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.Serializable
 import uy.kohesive.injekt.injectLazy
@@ -20,7 +20,7 @@ data class ALManga(
     val total_chapters: Int,
 ) {
 
-    fun toTrack() = TrackSearch.create(TrackManager.ANILIST).apply {
+    fun toTrack() = TrackSearch.create(TrackerManager.ANILIST).apply {
         media_id = this@ALManga.media_id
         title = title_user_pref
         total_chapters = this@ALManga.total_chapters
@@ -50,7 +50,7 @@ data class ALUserManga(
     val manga: ALManga,
 ) {
 
-    fun toTrack() = Track.create(TrackManager.ANILIST).apply {
+    fun toTrack() = Track.create(TrackerManager.ANILIST).apply {
         media_id = manga.media_id
         title = manga.title_user_pref
         status = toTrackStatus()
@@ -62,7 +62,7 @@ data class ALUserManga(
         total_chapters = manga.total_chapters
     }
 
-    fun toTrackStatus() = when (list_status) {
+    private fun toTrackStatus() = when (list_status) {
         "CURRENT" -> Anilist.READING
         "COMPLETED" -> Anilist.COMPLETED
         "PAUSED" -> Anilist.ON_HOLD

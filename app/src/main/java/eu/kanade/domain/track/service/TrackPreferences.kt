@@ -1,6 +1,6 @@
 package eu.kanade.domain.track.service
 
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import tachiyomi.core.preference.PreferenceStore
 
@@ -8,16 +8,16 @@ class TrackPreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun trackUsername(sync: TrackService) = preferenceStore.getString(trackUsername(sync.id), "")
+    fun trackUsername(sync: Tracker) = preferenceStore.getString(trackUsername(sync.id), "")
 
-    fun trackPassword(sync: TrackService) = preferenceStore.getString(trackPassword(sync.id), "")
+    fun trackPassword(sync: Tracker) = preferenceStore.getString(trackPassword(sync.id), "")
 
-    fun setTrackCredentials(sync: TrackService, username: String, password: String) {
+    fun setCredentials(sync: Tracker, username: String, password: String) {
         trackUsername(sync).set(username)
         trackPassword(sync).set(password)
     }
 
-    fun trackToken(sync: TrackService) = preferenceStore.getString(trackToken(sync.id), "")
+    fun trackToken(sync: Tracker) = preferenceStore.getString(trackToken(sync.id), "")
 
     fun anilistScoreType() = preferenceStore.getString("anilist_score_type", Anilist.POINT_10)
 

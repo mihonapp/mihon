@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.Tracker
 import tachiyomi.core.preference.Preference as PreferenceData
 
 sealed class Preference {
@@ -132,10 +132,10 @@ sealed class Preference {
         ) : PreferenceItem<String>()
 
         /**
-         * A [PreferenceItem] for individual tracking service.
+         * A [PreferenceItem] for individual tracker.
          */
-        data class TrackingPreference(
-            val service: TrackService,
+        data class TrackerPreference(
+            val tracker: Tracker,
             override val title: String,
             val login: () -> Unit,
             val logout: () -> Unit,

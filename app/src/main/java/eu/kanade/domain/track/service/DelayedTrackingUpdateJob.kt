@@ -10,7 +10,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.store.DelayedTrackingStore
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.util.lang.withIOContext
@@ -33,7 +33,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
         val getTracks = Injekt.get<GetTracks>()
         val insertTrack = Injekt.get<InsertTrack>()
 
-        val trackManager = Injekt.get<TrackManager>()
+        val trackerManager = Injekt.get<TrackerManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
         withIOContext {
@@ -47,7 +47,7 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                 }
                 .forEach { track ->
                     try {
-                        val service = trackManager.getService(track.syncId)
+                        val service = trackerManager.get(track.syncId)
                         if (service != null && service.isLoggedIn) {
                             logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.id}, last chapter read: ${track.lastChapterRead}" }
                             service.update(track.toDbTrack(), true)

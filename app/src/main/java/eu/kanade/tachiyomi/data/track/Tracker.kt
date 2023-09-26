@@ -5,7 +5,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import eu.kanade.domain.chapter.interactor.SyncChapterProgressWithTrack
+import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.track.service.TrackPreferences
@@ -28,7 +28,7 @@ import uy.kohesive.injekt.injectLazy
 import java.time.ZoneOffset
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-abstract class TrackService(val id: Long, val name: String) {
+abstract class Tracker(val id: Long, val name: String) {
 
     val trackPreferences: TrackPreferences by injectLazy()
     val networkService: NetworkHelper by injectLazy()
@@ -83,7 +83,7 @@ abstract class TrackService(val id: Long, val name: String) {
 
     @CallSuper
     open fun logout() {
-        trackPreferences.setTrackCredentials(this, "", "")
+        trackPreferences.setCredentials(this, "", "")
     }
 
     open val isLoggedIn: Boolean
@@ -95,7 +95,7 @@ abstract class TrackService(val id: Long, val name: String) {
     fun getPassword() = trackPreferences.trackPassword(this).get()
 
     fun saveCredentials(username: String, password: String) {
-        trackPreferences.setTrackCredentials(this, username, password)
+        trackPreferences.setCredentials(this, username, password)
     }
 
     // TODO: move this to an interactor, and update all trackers based on common data
@@ -111,7 +111,7 @@ abstract class TrackService(val id: Long, val name: String) {
 
                 insertTrack.await(track)
 
-                // TODO: merge into SyncChaptersWithTrackServiceTwoWay?
+                // TODO: merge into [SyncChapterProgressWithTrack]?
                 // Update chapter progress if newer chapters marked read locally
                 if (hasReadChapters) {
                     val latestLocalReadChapterNumber = allChapters
@@ -143,7 +143,7 @@ abstract class TrackService(val id: Long, val name: String) {
                     }
                 }
 
-                syncChapterProgressWithTrack.await(mangaId, track, this@TrackService)
+                syncChapterProgressWithTrack.await(mangaId, track, this@Tracker)
             }
         } catch (e: Throwable) {
             withUIContext { Injekt.get<Application>().toast(e.message) }

@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.track.bangumi
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
@@ -26,7 +25,11 @@ import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-class BangumiApi(private val client: OkHttpClient, interceptor: BangumiInterceptor) {
+class BangumiApi(
+    private val trackId: Long,
+    private val client: OkHttpClient,
+    interceptor: BangumiInterceptor,
+) {
 
     private val json: Json by injectLazy()
 
@@ -105,7 +108,7 @@ class BangumiApi(private val client: OkHttpClient, interceptor: BangumiIntercept
         } else {
             0
         }
-        return TrackSearch.create(TrackManager.BANGUMI).apply {
+        return TrackSearch.create(trackId).apply {
             media_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name_cn"]!!.jsonPrimitive.content
             cover_url = coverUrl

@@ -1,8 +1,8 @@
-package eu.kanade.domain.chapter.interactor
+package eu.kanade.domain.track.interactor
 
 import eu.kanade.domain.track.model.toDbTrack
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.Tracker
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
@@ -20,9 +20,9 @@ class SyncChapterProgressWithTrack(
     suspend fun await(
         mangaId: Long,
         remoteTrack: Track,
-        service: TrackService,
+        tracker: Tracker,
     ) {
-        if (service !is EnhancedTrackService) {
+        if (tracker !is EnhancedTracker) {
             return
         }
 
@@ -39,7 +39,7 @@ class SyncChapterProgressWithTrack(
         val updatedTrack = remoteTrack.copy(lastChapterRead = localLastRead.toDouble())
 
         try {
-            service.update(updatedTrack.toDbTrack())
+            tracker.update(updatedTrack.toDbTrack())
             updateChapter.awaitAll(chapterUpdates)
             insertTrack.await(updatedTrack)
         } catch (e: Throwable) {
