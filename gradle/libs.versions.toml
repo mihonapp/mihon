@@ -44,8 +44,8 @@ coil-core = { module = "io.coil-kt:coil" }
 coil-gif = { module = "io.coil-kt:coil-gif" }
 coil-compose = { module = "io.coil-kt:coil-compose" }
 
-subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:a51fd97"
-image-decoder = "com.github.tachiyomiorg:image-decoder:1388669a6a"
+subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:7e57335"
+image-decoder = "com.github.tachiyomiorg:image-decoder:fbd6601290"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
