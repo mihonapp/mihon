@@ -58,7 +58,6 @@ photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.1.0"
-compose-simpleicons = "br.com.devsrsouza.compose.icons.android:simple-icons:1.0.0"
 
 swipe = "me.saket.swipe:swipe:1.2.0"
 

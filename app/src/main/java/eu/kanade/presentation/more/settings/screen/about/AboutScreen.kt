@@ -23,12 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import compose.icons.SimpleIcons
-import compose.icons.simpleicons.Discord
-import compose.icons.simpleicons.Facebook
-import compose.icons.simpleicons.Github
-import compose.icons.simpleicons.Reddit
-import compose.icons.simpleicons.Twitter
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.LogoHeader
@@ -53,6 +47,12 @@ import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.presentation.core.components.LinkIcon
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.icons.CustomIcons
+import tachiyomi.presentation.core.icons.Discord
+import tachiyomi.presentation.core.icons.Facebook
+import tachiyomi.presentation.core.icons.Github
+import tachiyomi.presentation.core.icons.Reddit
+import tachiyomi.presentation.core.icons.X
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.text.DateFormat
@@ -181,27 +181,27 @@ object AboutScreen : Screen() {
                         )
                         LinkIcon(
                             label = "Discord",
-                            icon = SimpleIcons.Discord,
+                            icon = CustomIcons.Discord,
                             url = "https://discord.gg/tachiyomi",
                         )
                         LinkIcon(
-                            label = "Twitter",
-                            icon = SimpleIcons.Twitter,
-                            url = "https://twitter.com/tachiyomiorg",
+                            label = "X",
+                            icon = CustomIcons.X,
+                            url = "https://x.com/tachiyomiorg",
                         )
                         LinkIcon(
                             label = "Facebook",
-                            icon = SimpleIcons.Facebook,
+                            icon = CustomIcons.Facebook,
                             url = "https://facebook.com/tachiyomiorg",
                         )
                         LinkIcon(
                             label = "Reddit",
-                            icon = SimpleIcons.Reddit,
+                            icon = CustomIcons.Reddit,
                             url = "https://www.reddit.com/r/Tachiyomi",
                         )
                         LinkIcon(
                             label = "GitHub",
-                            icon = SimpleIcons.Github,
+                            icon = CustomIcons.Github,
                             url = "https://github.com/tachiyomiorg",
                         )
                     }
