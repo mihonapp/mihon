@@ -1,5 +1,5 @@
 [versions]
-agp_version = "8.1.1"
+agp_version = "8.1.2"
 lifecycle_version = "2.6.2"
 paging_version = "3.2.1"
 
