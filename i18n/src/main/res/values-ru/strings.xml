@@ -160,7 +160,7 @@
     <string name="scale_type_stretch">Растянуть</string>
     <string name="score">Оценка</string>
     <string name="second_to_last">Предпоследняя прочитанная глава</string>
-    <string name="services">Сервисы</string>
+    <string name="services">Сервисы отслеживания</string>
     <string name="set_as_cover">Установить как обложку</string>
     <string name="show_chapter_number">Номер главы</string>
     <string name="show_title">Название источника</string>
@@ -426,7 +426,7 @@
         <item quantity="many">Выполнено за %1$s с %2$s ошибками</item>
         <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
     </plurals>
-    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
+    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сторонних сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
     <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений.</string>
     <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата добавления</string>
@@ -594,8 +594,8 @@
     <string name="notification_updating">Обновление библиотеки… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">У некоторых производителей есть дополнительные ограничения для приложений, которые убивают фоновые службы. На этом сайте есть более подробная информация о том, как это исправить.</string>
     <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена «Оптимизация MIUI».</string>
-    <string name="enhanced_tracking_info">Сервисы, предоставляющие расширенные возможности для определённых источников. Серии будут автоматически отслеживаться при добавлении в библиотеку.</string>
-    <string name="enhanced_services">Расширенные сервисы</string>
+    <string name="enhanced_tracking_info">Предоставляет расширенные возможности для определённых источников. Серии будут автоматически отслеживаться при добавлении в библиотеку.</string>
+    <string name="enhanced_services">Расширенные сервисы отслеживания</string>
     <string name="theme_monet">Динамическая</string>
     <string name="label_background_activity">Фоновая активность</string>
     <string name="pref_lowest">Самая низкая</string>
@@ -850,4 +850,6 @@
     <string name="exception_unknown_host">Не удалось достичь %s</string>
     <string name="unlock_app_title">Разблокировать %s</string>
     <string name="action_move_to_bottom_all_for_series">Переместить серию в конец</string>
+    <string name="pref_relative_format">Относительные временные метки</string>
+    <string name="pref_relative_format_summary">\"%1$s\" вместо \"%2$s\"</string>
 </resources>

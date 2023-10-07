@@ -156,7 +156,7 @@
     <string name="fourth_to_last">Προ-προ-προτελευταίο αναγνωσμένο κεφάλαιο</string>
     <string name="fifth_to_last">Προ-προ-προ-προτελευταίο αναγνωσμένο κεφάλαιο</string>
     <string name="pref_download_new">Λήψη νέων κεφαλαίων</string>
-    <string name="services">Υπηρεσίες</string>
+    <string name="services">Ιχνηλάτες</string>
     <string name="pref_create_backup">Δημιουργία αντιγράφου ασφαλείας</string>
     <string name="pref_create_backup_summ">Μπορεί να χρησιμοποιηθεί για επαναφορά τρέχουσας βιβλιοθήκης</string>
     <string name="pref_restore_backup">Επαναφορά αντιγράφου ασφαλείας</string>
@@ -409,7 +409,7 @@
         <item quantity="one">Έγινε σε %1$s με %2$s σφάλμα</item>
         <item quantity="other">Έγινε σε %1$s με %2$s σφάλματα</item>
     </plurals>
-    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
+    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών εξωτερικής παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων βιβλιοθήκης</string>
     <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα.</string>
     <string name="ext_unofficial">Ανεπίσημη</string>
@@ -572,8 +572,8 @@
     <string name="theme_yinyang">Γιν και Γιανγκ</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Φράουλα Daiquiri</string>
-    <string name="enhanced_tracking_info">Υπηρεσίες που παρέχουν βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
-    <string name="enhanced_services">Βελτιωμένες υπηρεσίες</string>
+    <string name="enhanced_tracking_info">Παρέχει βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
+    <string name="enhanced_services">Ενισχυμένοι trackers</string>
     <string name="theme_monet">Δυναμικό</string>
     <string name="label_background_activity">Δραστηριότητα παρασκηνίου</string>
     <string name="pref_lowest">Χαμηλότερη</string>
@@ -818,4 +818,6 @@
     <string name="exception_offline">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="unlock_app_title">Ξεκλείδωμα %s</string>
     <string name="action_move_to_bottom_all_for_series">Μετακίνηση σειράς προς τα κάτω</string>
+    <string name="pref_relative_format">Σχετικές χρονικές σημάνσεις</string>
+    <string name="pref_relative_format_summary">\"%1$s\" αντί του \"%2$s\"</string>
 </resources>

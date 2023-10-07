@@ -101,7 +101,7 @@
     <string name="custom_dir">Ubicación personalizada</string>
     <!-- Sources section -->
     <!-- Sync section -->
-    <string name="services">Servicios</string>
+    <string name="services">Servicios de seguimiento</string>
     <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Vaciar la caché de capítulos</string>
     <string name="used_cache">Usado: %1$s</string>
@@ -608,8 +608,8 @@
     <string name="local_invalid_format">El formato del capítulo no es correcto</string>
     <string name="chapter_not_found">No se ha encontrado el capítulo</string>
     <string name="notification_incognito_text">Desactivar el modo incógnito</string>
-    <string name="enhanced_tracking_info">Servicios que ofrecen funciones mejoradas para ciertas fuentes. Se hace un seguimiento automático de los elementos al añadirlos a la biblioteca.</string>
-    <string name="enhanced_services">Servicios mejorados</string>
+    <string name="enhanced_tracking_info">Ofrece funciones mejoradas para ciertas fuentes. Se hace un seguimiento automático de los elementos al añadirlos a la biblioteca.</string>
+    <string name="enhanced_services">Servicios de seguimiento mejorados</string>
     <string name="tracking_guide">Guía de seguimiento</string>
     <string name="automatic_background">Automático</string>
     <string name="off">No</string>
@@ -857,7 +857,7 @@
     <string name="syncing_library">Sincronizando la biblioteca</string>
     <string name="information_cloudflare_help">Toca aquí para solucionar problemas de acceso con Cloudflare</string>
     <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
-    <string name="track_activity_name">Inicio de sesión de seguimiento</string>
+    <string name="track_activity_name">Iniciar sesión en el servicio</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
     <string name="licensed_manga_chapters_error">Con licencia oficial, sin capítulos que mostrar</string>
     <string name="exception_unknown_host">No se ha podido acceder a %s</string>
@@ -865,4 +865,6 @@
     <string name="exception_offline">Sin conexión a Internet</string>
     <string name="unlock_app_title">Desbloquear %s</string>
     <string name="action_move_to_bottom_all_for_series">Mover al último puesto</string>
+    <string name="pref_relative_format">Marcas de tiempo relativas</string>
+    <string name="pref_relative_format_summary">«%1$s» en vez de «%2$s»</string>
 </resources>

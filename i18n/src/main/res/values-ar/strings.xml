@@ -127,7 +127,7 @@
     <string name="fourth_to_last">من الفصل الرابع قبل اﻷخير</string>
     <string name="fifth_to_last">من الفصل الخامس قبل اﻷخير</string>
     <string name="pref_download_new">تنزيل الفصول الجديدة</string>
-    <string name="services">الخدمات</string>
+    <string name="services">المتتبِّعات</string>
     <string name="pref_create_backup">إنشاء نسخة إحتياطية</string>
     <string name="pref_create_backup_summ">يمكن استخدامها لإستعادة المكتبة الحالية</string>
     <string name="pref_restore_backup">إستعادة النسخة الإحتياطية</string>
@@ -438,7 +438,7 @@
     <string name="backup_restore_missing_sources">المصادر المفقودة:</string>
     <string name="invalid_backup_file_missing_manga">النسخة الإحتياطية لا تحتوي على أيّة إدخالات المكتبة.</string>
     <string name="invalid_backup_file">ملفُّ النسخ الاحتياطيِّ غير صالح</string>
-    <string name="tracking_info">مزامنة أحاديّة لتحديث تقدم الفصول في خدمات التتبع. قم بإعداد التتبع الخاص للإدخالات محدّدة من زر التتبع الخاص بها.</string>
+    <string name="tracking_info">مزامنة أحادية تُحدِّث قراءة الفصول في المتتبعات الخارجية، ولك تعيين التتبِّع لكلِّ مدخلة على حدى، وذلك من زرِّ التتبع فيهم.</string>
     <string name="unofficial_extension_message">ليست هذه الإضافة من القائمة الرسمية.</string>
     <string name="ext_unofficial">غير رسمي</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
@@ -622,8 +622,8 @@
     <string name="notification_updating">جار تحديث المكتبة…( (%2$d) / (%1$d) )</string>
     <string name="about_dont_kill_my_app">تقوم بعض الشركات المصنعة بوضع قيود إضافية على التطبيقات التي قد تقضي على الخدمات التي تعمل في الخلفية. يحتوي هذا الموقع على مزيد من المعلومات حول كيفية إصلاحه.</string>
     <string name="restore_miui_warning">قد لا يعمل النسخ الاحتياطيُّ أو الاستعادة إن عطِّلت أمثَلَة MIUI.</string>
-    <string name="enhanced_tracking_info">الخدمات التي تقدم ميزات محسنة لأجل مصادر معينه. الإدخالات سوف يتم تتبعها عندما يتم إضافتها الي المكتبة.</string>
-    <string name="enhanced_services">خدمات محسَّنة</string>
+    <string name="enhanced_tracking_info">يُحسِّن مصادر معينة، وتُتابَع المدخلات حال إضافتها للمكتبة.</string>
+    <string name="enhanced_services">المتتبِّعات المحسَّنة</string>
     <string name="relative_time_today">اليوم</string>
     <string name="confirm_lock_change">المصادقة لتأكيد التغيير</string>
     <string name="label_default">الافتراضي</string>
@@ -644,7 +644,7 @@
     <string name="help_translate">ساعد بالترجمة</string>
     <string name="pref_tablet_ui_mode">واجهة مستخدم الجهاز اللوحي</string>
     <string name="pref_remove_exclude_categories">الفئات المستثناة</string>
-    <string name="ext_installer_pref">المثبت</string>
+    <string name="ext_installer_pref">المثبِّت</string>
     <string name="action_sort_count">إجمالي الإدخالات</string>
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
@@ -874,7 +874,7 @@
     <string name="has_results">وُجدت نتائج</string>
     <string name="create_backup_file_error">تعذَّر إنشاء ملفِّ نسخ احتياطيِّ</string>
     <string name="licensed_manga_chapters_error">مرخَّصة - لا فصول</string>
-    <string name="track_activity_name">ولوج التتبع</string>
+    <string name="track_activity_name">ولوج المتتبِّع</string>
     <string name="download_cache_invalidated">أُفسد فهرس التنزيلات</string>
     <string name="information_cloudflare_help">اضغط هنا تتحرَّ كلاودفلير</string>
     <string name="exception_offline">لا اتصال بالإنترنت</string>
@@ -882,4 +882,6 @@
     <string name="exception_unknown_host">لم نصل %s</string>
     <string name="unlock_app_title">افتح %s</string>
     <string name="action_move_to_bottom_all_for_series">انقل السلسلة للقعر</string>
+    <string name="pref_relative_format">التوقيت النسبي</string>
+    <string name="pref_relative_format_summary">«%1$s» بدلًا عن «%2$s»</string>
 </resources>

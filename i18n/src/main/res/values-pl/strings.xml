@@ -305,7 +305,7 @@
     <string name="logout_success">Wylogowano</string>
     <string name="paused">Wstrzymane</string>
     <string name="pref_always_show_chapter_transition">Zawsze pokazuj przejścia rozdziałów</string>
-    <string name="vertical_plus_viewer">Pionowo bez przerw</string>
+    <string name="vertical_plus_viewer">Pionowo z przerwami</string>
     <string name="pref_skip_filtered_chapters">Pomijaj odfiltrowane rozdziały</string>
     <string name="pref_category_display">Wyświetlanie</string>
     <string name="hide_notification_content">Ukryj zawartość powiadomienia</string>

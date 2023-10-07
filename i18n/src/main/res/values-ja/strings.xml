@@ -35,7 +35,7 @@
     <string name="action_mark_as_read">既読にする</string>
     <string name="action_mark_as_unread">未読にする</string>
     <string name="action_delete">削除する</string>
-    <string name="action_update_library">ライブラリを更新する</string>
+    <string name="action_update_library">ライブラリを更新</string>
     <string name="action_edit">編集</string>
     <string name="action_add_category">カテゴリを追加</string>
     <string name="action_edit_categories">カテゴリを編集</string>
@@ -177,7 +177,7 @@
     <string name="third_to_last">最後に読んだ章の3番目</string>
     <string name="fourth_to_last">最後に読んだ章の4番目</string>
     <string name="fifth_to_last">最後に読んだ章の5番目</string>
-    <string name="services">サービス</string>
+    <string name="services">トラッカー</string>
     <string name="restore_completed">復元が完了しました</string>
     <string name="backup_choice">バックアップしたいのは？</string>
     <string name="restoring_backup">バックアップを復元中</string>
@@ -352,7 +352,7 @@
     <string name="backup_restore_missing_sources">ソースがありません：</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはライブラリの項目が含まれません。</string>
     <string name="invalid_backup_file">バックアップファイルは無効です</string>
-    <string name="tracking_info">一方同期の追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
+    <string name="tracking_info">一方同期の外部追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
     <string name="pref_always_show_chapter_transition">章の間の遷移ページを常に表示</string>
@@ -589,8 +589,8 @@
     <string name="ext_installer_shizuku_stopped">Shizukuは実行中ではありません</string>
     <string name="action_sort_count">項目数</string>
     <string name="ext_install_service_notif">拡張機能をインストール中…</string>
-    <string name="enhanced_services">高度なサービス</string>
-    <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供するサービスです。項目はライブラリに追加される時、自動で追跡され始めます。</string>
+    <string name="enhanced_services">高度な追跡サービス</string>
+    <string name="enhanced_tracking_info">特定ソース専用の高度な機能を提供します。項目はライブラリに追加される時、自動で追跡され始めます。</string>
     <string name="backup_info">ほかの場所にもバックアップのコピーを保管してください。</string>
     <string name="pref_verbose_logging_summary">システムログにverboseログを出力（アプリのパフォーマンスが低下します）</string>
     <string name="notification_size_warning">大規模のアップデートはソースに有害で、ソースを遅くし、電池の消耗を増加する可能性があります。詳しくはタップでご覧ください。</string>
@@ -795,11 +795,13 @@
     <string name="information_cloudflare_help">Cloudflareに関するヘルプ情報はこちら</string>
     <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
     <string name="create_backup_file_error">バックアップ ファイルを作成できませんでした</string>
-    <string name="track_activity_name">トラッキング サービスにログイン</string>
+    <string name="track_activity_name">追跡サービスにログイン</string>
     <string name="licensed_manga_chapters_error">ライセンス制限あり—章を表示できません</string>
     <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
     <string name="exception_offline">インターネット接続がありません</string>
     <string name="exception_unknown_host">%sにアクセスできませんでした</string>
     <string name="unlock_app_title">%sをアンロック</string>
     <string name="action_move_to_bottom_all_for_series">シリーズを底に移動</string>
+    <string name="pref_relative_format">相対的なタイムスタンプ</string>
+    <string name="pref_relative_format_summary">「%2$s」の代わりに「%1$s」を使用</string>
 </resources>

@@ -156,7 +156,7 @@
     <string name="fourth_to_last">Четвертий від останнього прочитаного розділу</string>
     <string name="fifth_to_last">П\'ятий від останнього прочитаного розділу</string>
     <string name="pref_download_new">Завантажувати нові розділи</string>
-    <string name="services">Сервіси</string>
+    <string name="services">Трекери</string>
     <string name="pref_create_backup">Створити резервну копію</string>
     <string name="pref_create_backup_summ">Можна використовувати для відновлення поточної бібліотеки</string>
     <string name="pref_restore_backup">Відновити резервну копію</string>
@@ -433,7 +433,7 @@
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодних записів бібліотеки.</string>
     <string name="invalid_backup_file">Невірний файл резервної копії</string>
-    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу розділу в службах стеження. Налаштуйте для окремих записів з допомогою кнопки \"Стежити\".</string>
+    <string name="tracking_info">Одностороння синхронізація для оновлення прогресу розділу у зовнішніх сервісах стеження. Налаштуйте відстеження окремих записів за допомогою кнопки відстеження.</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
     <string name="recent_manga_time">Розд. %1$s - %2$s</string>
@@ -585,8 +585,8 @@
     <string name="about_dont_kill_my_app">У деяких виробників є додаткові обмеження застосунків, котрі вбивають фонові сервіси. На цьому сайті більше інформації з приводу того, як це виправити.</string>
     <string name="label_background_activity">Фонова активність</string>
     <string name="restore_miui_warning">Резервування/Відновлення можуть не працювати належним чином, у випадку, якщо вимкнено Оптимізацію MIUI.</string>
-    <string name="enhanced_tracking_info">Сервіси, які надають розширені можливості для певних джерел. Записи будуть автоматично відстежуватись при додаванні до бібліотеки.</string>
-    <string name="enhanced_services">Розширені сервіси</string>
+    <string name="enhanced_tracking_info">Надає розширені функції для конкретних джерел. Записи автоматично відстежуються при додаванні до бібліотеки.</string>
+    <string name="enhanced_services">Розширені трекери</string>
     <string name="pref_lowest">Найнижча</string>
     <string name="pref_low">Низька</string>
     <string name="pref_high">Висока</string>
@@ -839,7 +839,7 @@
     <string name="has_results">Має результати</string>
     <string name="library_sync_complete">Синхронізацію бібліотеки завершено</string>
     <string name="syncing_library">Синхронізація бібліотеки</string>
-    <string name="track_activity_name">Відстеження входу</string>
+    <string name="track_activity_name">Логін трекера</string>
     <string name="download_cache_invalidated">Індекс завантажень недійсний</string>
     <string name="information_cloudflare_help">Натисніть тут, щоб отримати допомогу з Cloudflare</string>
     <string name="create_backup_file_error">Не вдалося створити файл резервної копії</string>
@@ -849,4 +849,6 @@
     <string name="exception_offline">Немає Інтернет-з\'єднання</string>
     <string name="exception_http">Http %d, перевірте вебсайт у WebView</string>
     <string name="exception_unknown_host">Не вдалося досягти %s</string>
+    <string name="pref_relative_format">Відносні позначки часу</string>
+    <string name="pref_relative_format_summary">\"%1$s\" замість \"%2$s\"</string>
 </resources>

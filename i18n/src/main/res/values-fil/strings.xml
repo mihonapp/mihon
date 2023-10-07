@@ -818,4 +818,6 @@
     <string name="exception_http">HTTP %d, tignan ang website sa WebView</string>
     <string name="exception_unknown_host">Hindi maabot ang %s</string>
     <string name="action_move_to_bottom_all_for_series">Ilagay sa ibaba ang serye</string>
+    <string name="pref_relative_format">Mga relatibong timestamp</string>
+    <string name="pref_relative_format_summary">\"%1$s\" sa halip na \"%2$s\"</string>
 </resources>

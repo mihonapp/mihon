@@ -480,7 +480,7 @@
     <string name="on_hold_list">Zoznam pozastavených položiek</string>
     <string name="download_ahead">Stiahnuť dopredu</string>
     <string name="auto_download_while_reading">Automatické sťahovanie počas čítania</string>
-    <string name="download_ahead_info">Funguje iba na položkách v knižnici a ak je aktuálna kapitola a nasledujúca kapitola už stiahnutá</string>
+    <string name="download_ahead_info">Funguje iba na položkách v knižnici a ak je aktuálna kapitola a nasledujúca kapitola už stiahnutá.</string>
     <string name="unknown_status">Neznámy stav</string>
     <string name="on_hiatus">Prestávka</string>
     <string name="add_tracking">Pridať sledovanie</string>
@@ -574,7 +574,7 @@
     <string name="ext_install_service_notif">Inštaluje sa rozšírenie…</string>
     <string name="pref_read_with_tapping_inverted">Invertovať oblasti dotyku</string>
     <string name="pref_create_folder_per_manga">Uloženie stránok do samostatných priečinkov</string>
-    <string name="gray_background">Sivá</string>
+    <string name="gray_background">Šedivá</string>
     <string name="rotation_landscape">Na šírku</string>
     <string name="restore_in_progress">Obnovenie už prebieha</string>
     <string name="pref_dump_crash_logs_summary">Uložiť logy o chybách do súboru na zdieľanie s vývojármi</string>
@@ -658,7 +658,7 @@
     <plurals name="missing_chapters_warning">
         <item quantity="one">Preskočenie %d kapitoly, buď zdroj chýba, alebo bol odfiltrovaný</item>
         <item quantity="few">Preskočenie %d kapitol, buď zdroj chýba, alebo bol odfiltrovaný</item>
-        <item quantity="other">Preskočenie %d kapitol, buď zdroj chýba, alebo bol odfiltrovaný</item>
+        <item quantity="other">Zložky %d kapitoly, buď zdroj chýba, alebo boli filtrované</item>
     </plurals>
     <string name="error_saving_picture">Chyba pri ukladaní obrázka</string>
     <string name="channel_app_updates">Aktualizácie aplikácie</string>

@@ -122,7 +122,7 @@
     <string name="fifth_to_last">Quintultimo capitolo letto</string>
     <string name="pref_download_new">Scarica nuovi capitoli</string>
     <!-- Sync section -->
-    <string name="services">Servizi</string>
+    <string name="services">Servizi di tracking</string>
     <!-- Advanced section -->
     <string name="pref_clear_chapter_cache">Cancella cache capitoli</string>
     <string name="used_cache">Usati: %1$s</string>
@@ -444,7 +444,7 @@
         <item quantity="other">Completato in %1$s con %2$s errori</item>
     </plurals>
     <string name="restore_duration">%02d min, %02d sec</string>
-    <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento del capitolo sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
+    <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento dei capitoli sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
@@ -633,8 +633,8 @@
     <string name="label_default">Predefinita</string>
     <string name="label_background_activity">Attività in secondo piano</string>
     <string name="restore_miui_warning">Le funzioni di backup e ripristino potrebbero non funzionare correttamente se le ottimizzazioni MIUI sono disabilitate.</string>
-    <string name="enhanced_tracking_info">Servizi che offrono funzioni migliorate per fonti specifiche. Le voci sono tracciate automaticamente quando aggiunte alla libreria.</string>
-    <string name="enhanced_services">Servizi migliorati</string>
+    <string name="enhanced_tracking_info">Offrono funzioni migliorate per fonti specifiche. Le voci sono tracciate automaticamente quando aggiunte alla libreria.</string>
+    <string name="enhanced_services">Servizi di tracking migliorati</string>
     <string name="pref_category_appearance">Aspetto</string>
     <string name="action_track">Traccia</string>
     <string name="getting_started_guide">Guida introduttiva</string>
@@ -859,7 +859,7 @@
     <string name="syncing_library">Sincronizzazione libreria</string>
     <string name="information_cloudflare_help">Tocca qua per assistenza con Cloudflare</string>
     <string name="download_cache_invalidated">Indice dei download invalidato</string>
-    <string name="track_activity_name">Login del tracking</string>
+    <string name="track_activity_name">Login del trakcer</string>
     <string name="create_backup_file_error">Non è stato possibile creare un file di backup</string>
     <string name="licensed_manga_chapters_error">Licenziato - Nessun capitolo da mostrare</string>
     <string name="exception_http">HTTP %d, controlla il sito nella WebView</string>
@@ -867,4 +867,6 @@
     <string name="exception_unknown_host">%s non raggiungibile</string>
     <string name="unlock_app_title">Sblocca %s</string>
     <string name="action_move_to_bottom_all_for_series">Spostare la serie in fondo</string>
+    <string name="pref_relative_format">Timestamp relativi</string>
+    <string name="pref_relative_format_summary">«%1$s» invece di «%2$s»</string>
 </resources>

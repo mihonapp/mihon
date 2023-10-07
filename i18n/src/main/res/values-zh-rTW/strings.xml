@@ -113,7 +113,7 @@
     <string name="custom_dir">自訂位置</string>
     <string name="disabled">已停用</string>
     <string name="pref_download_new">自動下載新章節</string>
-    <string name="services">服務</string>
+    <string name="services">歷程平台</string>
     <string name="pref_create_backup">建立備份</string>
     <string name="pref_restore_backup">還原備份</string>
     <string name="pref_backup_directory">備份位置</string>
@@ -398,7 +398,7 @@
     <plurals name="manga_num_chapters">
         <item quantity="other">共 %1$s 章</item>
     </plurals>
-    <string name="tracking_info">將章節進度單向同步至閱讀歷程平台，請逕行前往個別作品的「歷程」專區以設置。</string>
+    <string name="tracking_info">將閱讀進度單向同步至外部歷程平台。請逕行前往個別作品的「歷程」專區以設置。</string>
     <plurals name="num_categories">
         <item quantity="other">%d 個類別</item>
     </plurals>
@@ -552,8 +552,8 @@
     <string name="about_dont_kill_my_app">部分裝置製造商設有額外的應用程式限制來終止背景服務。此網站提供了修復這項問題的詳細資訊。</string>
     <string name="label_background_activity">背景活動</string>
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
-    <string name="enhanced_tracking_info">為特定來源提供增強功能的服務。當作品被加入書櫃時，將自動登錄閱讀歷程。</string>
-    <string name="enhanced_services">增強服務</string>
+    <string name="enhanced_tracking_info">為特定來源提供增強功能。當作品被加入書櫃時，將自動登錄閱讀歷程。</string>
+    <string name="enhanced_services">增強式歷程平台</string>
     <string name="tracking_guide">歷程平台說明</string>
     <string name="categorized_display_settings">獨立各類別的排序方式</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
@@ -583,7 +583,7 @@
     <string name="getting_started_guide">入門指南</string>
     <string name="action_track">新增</string>
     <string name="help_translate">協助翻譯</string>
-    <string name="pref_remove_exclude_categories">排除的類別</string>
+    <string name="pref_remove_exclude_categories">不包括的漫畫類別</string>
     <string name="ext_app_info">程式資訊</string>
     <string name="ext_installer_shizuku_unavailable_dialog">若要使用 Shizuku 來安裝擴充套件，請先安裝 Shizuku 並開啟之。</string>
     <string name="ext_installer_legacy">傳統</string>
@@ -801,5 +801,7 @@
     <string name="exception_offline">沒有網際網路連線</string>
     <string name="exception_unknown_host">無法連上 %s</string>
     <string name="unlock_app_title">解鎖 %s</string>
-    <string name="action_move_to_bottom_all_for_series">將系列移至底部</string>
+    <string name="action_move_to_bottom_all_for_series">置底此作品</string>
+    <string name="pref_relative_format">相對時間戳記</string>
+    <string name="pref_relative_format_summary">以「%1$s」表示「%2$s」</string>
 </resources>

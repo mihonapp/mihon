@@ -818,4 +818,6 @@
     <string name="exception_http">HTTP %d, comproveu el lloc web en una WebView</string>
     <string name="exception_unknown_host">No s’ha pogut accedir a %s</string>
     <string name="action_move_to_bottom_all_for_series">Mou la sèrie a baix de tot</string>
+    <string name="pref_relative_format">Marques de temps relatives</string>
+    <string name="pref_relative_format_summary">«%1$s» en comptes de «%2$s»</string>
 </resources>
