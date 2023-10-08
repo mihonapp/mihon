@@ -39,6 +39,7 @@ import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.DatabaseHandler
@@ -235,19 +236,21 @@ class BackupManager(
     private fun backupAppPreferences(flags: Int): List<BackupPreference> {
         if (flags and BACKUP_APP_PREFS_MASK != BACKUP_APP_PREFS) return emptyList()
 
-        return preferenceStore.getAll().mapNotNull { (key, value) ->
-            when (value) {
-                is Int -> BackupPreference(key, IntPreferenceValue(value))
-                is Long -> BackupPreference(key, LongPreferenceValue(value))
-                is Float -> BackupPreference(key, FloatPreferenceValue(value))
-                is String -> BackupPreference(key, StringPreferenceValue(value))
-                is Boolean -> BackupPreference(key, BooleanPreferenceValue(value))
-                is Set<*> -> (value as? Set<String>)?.let {
-                    BackupPreference(key, StringSetPreferenceValue(it))
+        return preferenceStore.getAll()
+            .filterKeys { !Preference.isPrivate(it) }
+            .mapNotNull { (key, value) ->
+                when (value) {
+                    is Int -> BackupPreference(key, IntPreferenceValue(value))
+                    is Long -> BackupPreference(key, LongPreferenceValue(value))
+                    is Float -> BackupPreference(key, FloatPreferenceValue(value))
+                    is String -> BackupPreference(key, StringPreferenceValue(value))
+                    is Boolean -> BackupPreference(key, BooleanPreferenceValue(value))
+                    is Set<*> -> (value as? Set<String>)?.let {
+                        BackupPreference(key, StringSetPreferenceValue(it))
+                    }
+                    else -> null
                 }
-                else -> null
             }
-        }
     }
 
     internal suspend fun restoreExistingManga(manga: Manga, dbManga: Mangas): Manga {

@@ -18,6 +18,7 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.getAndSet
@@ -380,6 +381,19 @@ object Migrations {
                 if (pref.get() == 0) {
                     uiPreferences.relativeTime().set(false)
                 }
+            }
+            if (oldVersion < 107) {
+                preferenceStore.getAll()
+                    .filter { it.key.startsWith("pref_mangasync_") || it.key.startsWith("track_token_") }
+                    .forEach { (key, value) ->
+                        if (value is String) {
+                            preferenceStore
+                                .getString(Preference.privateKey(key))
+                                .set(value)
+
+                            preferenceStore.getString(key).delete()
+                        }
+                    }
             }
             return true
         }

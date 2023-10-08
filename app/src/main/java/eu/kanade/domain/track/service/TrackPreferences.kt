@@ -2,6 +2,7 @@ package eu.kanade.domain.track.service
 
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 
 class TrackPreferences(
@@ -24,10 +25,10 @@ class TrackPreferences(
     fun autoUpdateTrack() = preferenceStore.getBoolean("pref_auto_update_manga_sync_key", true)
 
     companion object {
-        fun trackUsername(syncId: Long) = "pref_mangasync_username_$syncId"
+        fun trackUsername(syncId: Long) = Preference.privateKey("pref_mangasync_username_$syncId")
 
-        private fun trackPassword(syncId: Long) = "pref_mangasync_password_$syncId"
+        private fun trackPassword(syncId: Long) = Preference.privateKey("pref_mangasync_password_$syncId")
 
-        private fun trackToken(syncId: Long) = "track_token_$syncId"
+        private fun trackToken(syncId: Long) = Preference.privateKey("track_token_$syncId")
     }
 }

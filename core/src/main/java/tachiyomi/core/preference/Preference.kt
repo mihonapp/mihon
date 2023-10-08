@@ -21,6 +21,24 @@ interface Preference<T> {
     fun changes(): Flow<T>
 
     fun stateIn(scope: CoroutineScope): StateFlow<T>
+
+    val isPrivate: Boolean
+        get() = key().startsWith(PRIVATE_PREFIX)
+
+    companion object {
+        /**
+         * A preference that should not be exposed in places like backups.
+         */
+        fun isPrivate(key: String): Boolean {
+            return key.startsWith(PRIVATE_PREFIX)
+        }
+
+        fun privateKey(key: String): String {
+            return "${PRIVATE_PREFIX}$key"
+        }
+
+        private const val PRIVATE_PREFIX = "__PRIVATE_"
+    }
 }
 
 inline fun <reified T, R : T> Preference<T>.getAndSet(crossinline block: (T) -> R) = set(
