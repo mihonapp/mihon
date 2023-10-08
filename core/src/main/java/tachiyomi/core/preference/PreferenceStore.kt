@@ -20,6 +20,8 @@ interface PreferenceStore {
         serializer: (T) -> String,
         deserializer: (String) -> T,
     ): Preference<T>
+
+    fun getAll(): Map<String, *>
 }
 
 inline fun <reified T : Enum<T>> PreferenceStore.getEnum(

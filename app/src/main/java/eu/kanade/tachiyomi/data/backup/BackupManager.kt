@@ -6,6 +6,8 @@ import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.domain.chapter.model.copyFrom
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_APP_PREFS
+import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_APP_PREFS_MASK
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CATEGORY_MASK
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_CHAPTER
@@ -18,8 +20,15 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.FloatPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.IntPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.LongPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.backupCategoryMapper
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
@@ -30,6 +39,7 @@ import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
+import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.Manga_sync
@@ -61,6 +71,7 @@ class BackupManager(
     private val getCategories: GetCategories = Injekt.get()
     private val getFavorites: GetFavorites = Injekt.get()
     private val getHistory: GetHistory = Injekt.get()
+    private val preferenceStore: PreferenceStore = Injekt.get()
 
     internal val parser = ProtoBuf
 
@@ -81,6 +92,7 @@ class BackupManager(
             backupCategories(flags),
             emptyList(),
             prepExtensionInfoForSync(databaseManga),
+            backupAppPreferences(flags),
         )
 
         var file: UniFile? = null
@@ -133,7 +145,7 @@ class BackupManager(
         }
     }
 
-    fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
+    private fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -148,7 +160,7 @@ class BackupManager(
      *
      * @return list of [BackupCategory] to be backed up
      */
-    suspend fun backupCategories(options: Int): List<BackupCategory> {
+    private suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
             getCategories.await()
@@ -159,7 +171,7 @@ class BackupManager(
         }
     }
 
-    suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
+    private suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
         return mangas.map {
             backupManga(it, flags)
         }
@@ -217,6 +229,25 @@ class BackupManager(
         }
 
         return mangaObject
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun backupAppPreferences(flags: Int): List<BackupPreference> {
+        if (flags and BACKUP_APP_PREFS_MASK != BACKUP_APP_PREFS) return emptyList()
+
+        return preferenceStore.getAll().mapNotNull { (key, value) ->
+            when (value) {
+                is Int -> BackupPreference(key, IntPreferenceValue(value))
+                is Long -> BackupPreference(key, LongPreferenceValue(value))
+                is Float -> BackupPreference(key, FloatPreferenceValue(value))
+                is String -> BackupPreference(key, StringPreferenceValue(value))
+                is Boolean -> BackupPreference(key, BooleanPreferenceValue(value))
+                is Set<*> -> (value as? Set<String>)?.let {
+                    BackupPreference(key, StringSetPreferenceValue(it))
+                }
+                else -> null
+            }
+        }
     }
 
     internal suspend fun restoreExistingManga(manga: Manga, dbManga: Mangas): Manga {

@@ -7,13 +7,20 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.FloatPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.IntPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.LongPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
+import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
+import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track
@@ -30,8 +37,8 @@ class BackupRestorer(
     private val notifier: BackupNotifier,
 ) {
     private val updateManga: UpdateManga = Injekt.get()
-    private val chapterRepository: ChapterRepository = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
+    private val preferenceStore: PreferenceStore = Injekt.get()
 
     private var now = ZonedDateTime.now()
     private var currentFetchWindow = fetchInterval.getWindow(now)
@@ -106,6 +113,8 @@ class BackupRestorer(
         currentFetchWindow = fetchInterval.getWindow(now)
 
         return coroutineScope {
+            restoreAppPreferences(backup.backupPreferences)
+
             // Restore individual manga
             backup.backupManga.forEach {
                 if (!isActive) {
@@ -115,6 +124,7 @@ class BackupRestorer(
                 restoreManga(it, backup.backupCategories, sync)
             }
             // TODO: optionally trigger online library + tracker update
+
             true
         }
     }
@@ -198,6 +208,45 @@ class BackupRestorer(
         backupManager.restoreCategories(manga, categories, backupCategories)
         backupManager.restoreHistory(history)
         backupManager.restoreTracking(manga, tracks)
+    }
+
+    private fun restoreAppPreferences(preferences: List<BackupPreference>) {
+        val prefs = preferenceStore.getAll()
+
+        preferences.forEach { (key, value) ->
+            when (value) {
+                is IntPreferenceValue -> {
+                    if (prefs[key] is Int?) {
+                        preferenceStore.getInt(key).set(value.value)
+                    }
+                }
+                is LongPreferenceValue -> {
+                    if (prefs[key] is Long?) {
+                        preferenceStore.getLong(key).set(value.value)
+                    }
+                }
+                is FloatPreferenceValue -> {
+                    if (prefs[key] is Float?) {
+                        preferenceStore.getFloat(key).set(value.value)
+                    }
+                }
+                is StringPreferenceValue -> {
+                    if (prefs[key] is String?) {
+                        preferenceStore.getString(key).set(value.value)
+                    }
+                }
+                is BooleanPreferenceValue -> {
+                    if (prefs[key] is Boolean?) {
+                        preferenceStore.getBoolean(key).set(value.value)
+                    }
+                }
+                is StringSetPreferenceValue -> {
+                    if (prefs[key] is Set<*>?) {
+                        preferenceStore.getStringSet(key).set(value.value)
+                    }
+                }
+            }
+        }
     }
 
     /**

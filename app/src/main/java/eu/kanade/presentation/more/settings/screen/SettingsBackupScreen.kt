@@ -147,6 +147,7 @@ object SettingsBackupScreen : SearchableSettings {
                 BackupConst.BACKUP_CHAPTER to R.string.chapters,
                 BackupConst.BACKUP_TRACK to R.string.track,
                 BackupConst.BACKUP_HISTORY to R.string.history,
+                BackupConst.BACKUP_APP_PREFS to R.string.app_settings,
             )
         }
         val flags = remember { choices.keys.toMutableStateList() }

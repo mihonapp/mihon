@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import tachiyomi.core.util.system.logcat
 
 sealed class AndroidPreference<T>(
     private val preferences: SharedPreferences,
@@ -29,7 +30,13 @@ sealed class AndroidPreference<T>(
     }
 
     override fun get(): T {
-        return read(preferences, key, defaultValue)
+        return try {
+            read(preferences, key, defaultValue)
+        } catch (e: ClassCastException) {
+            logcat { "Invalid value for $key; deleting" }
+            delete()
+            defaultValue
+        }
     }
 
     override fun set(value: T) {

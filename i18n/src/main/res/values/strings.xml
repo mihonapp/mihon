@@ -493,6 +493,7 @@
     </plurals>
     <string name="backup_in_progress">Backup is already in progress</string>
     <string name="backup_choice">What do you want to backup?</string>
+    <string name="app_settings">App settings</string>
     <string name="creating_backup">Creating backup</string>
     <string name="creating_backup_error">Backup failed</string>
     <string name="missing_storage_permission">Storage permissions not granted</string>

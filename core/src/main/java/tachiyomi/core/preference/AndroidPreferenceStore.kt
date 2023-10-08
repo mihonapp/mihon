@@ -60,6 +60,10 @@ class AndroidPreferenceStore(
             deserializer = deserializer,
         )
     }
+
+    override fun getAll(): Map<String, *> {
+        return sharedPreferences.all ?: emptyMap<String, Any>()
+    }
 }
 
 private val SharedPreferences.keyFlow
