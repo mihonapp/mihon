@@ -837,7 +837,7 @@
 
     <!-- Library update service notifications -->
     <string name="notification_check_updates">Checking for new chapters</string>
-    <string name="notification_updating">Updating library… (%1$d/%2$d)</string>
+    <string name="notification_updating_progress">Updating library… (%s)</string>
     <string name="notification_size_warning">Large updates harm sources and may lead to slower updates and also increased battery usage. Tap to learn more.</string>
     <string name="notification_new_chapters">New chapters found</string>
     <plurals name="notification_new_chapters_summary">
