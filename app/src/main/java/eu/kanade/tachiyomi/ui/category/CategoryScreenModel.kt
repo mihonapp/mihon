@@ -61,6 +61,15 @@ class CategoryScreenModel(
         }
     }
 
+    fun sortAlphabetically() {
+        coroutineScope.launch {
+            when (reorderCategory.sortAlphabetically()) {
+                is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
+                else -> {}
+            }
+        }
+    }
+
     fun moveUp(category: Category) {
         coroutineScope.launch {
             when (reorderCategory.moveUp(category)) {
@@ -109,6 +118,7 @@ class CategoryScreenModel(
 
 sealed interface CategoryDialog {
     data object Create : CategoryDialog
+    data object SortAlphabetically : CategoryDialog
     data class Rename(val category: Category) : CategoryDialog
     data class Delete(val category: Category) : CategoryDialog
 }
