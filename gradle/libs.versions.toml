@@ -52,7 +52,7 @@ natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
 
-material = "com.google.android.material:material:1.9.0"
+material = "com.google.android.material:material:1.10.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
