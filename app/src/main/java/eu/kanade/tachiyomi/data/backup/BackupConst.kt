@@ -17,5 +17,8 @@ internal object BackupConst {
     const val BACKUP_APP_PREFS = 0x10
     const val BACKUP_APP_PREFS_MASK = 0x10
 
-    const val BACKUP_ALL = 0x1F
+    const val BACKUP_SOURCE_PREFS = 0x20
+    const val BACKUP_SOURCE_PREFS_MASK = 0x20
+
+    const val BACKUP_ALL = 0x3F
 }

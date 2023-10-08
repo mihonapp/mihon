@@ -14,6 +14,7 @@ data class Backup(
     @ProtoNumber(100) var backupBrokenSources: List<BrokenBackupSource> = emptyList(),
     @ProtoNumber(101) var backupSources: List<BackupSource> = emptyList(),
     @ProtoNumber(104) var backupPreferences: List<BackupPreference> = emptyList(),
+    @ProtoNumber(105) var backupSourcePreferences: List<BackupSourcePreferences> = emptyList(),
 ) {
 
     companion object {

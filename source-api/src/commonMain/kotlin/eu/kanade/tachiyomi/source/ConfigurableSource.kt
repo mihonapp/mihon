@@ -19,8 +19,11 @@ interface ConfigurableSource : Source {
     fun setupPreferenceScreen(screen: PreferenceScreen)
 }
 
-private fun ConfigurableSource.preferenceKey(): String = "source_$id"
+fun ConfigurableSource.preferenceKey(): String = "source_$id"
 
 // TODO: use getSourcePreferences once all extensions are on ext-lib 1.5
 fun ConfigurableSource.sourcePreferences(): SharedPreferences =
     Injekt.get<Application>().getSharedPreferences(preferenceKey(), Context.MODE_PRIVATE)
+
+fun sourcePreferences(key: String): SharedPreferences =
+    Injekt.get<Application>().getSharedPreferences(key, Context.MODE_PRIVATE)

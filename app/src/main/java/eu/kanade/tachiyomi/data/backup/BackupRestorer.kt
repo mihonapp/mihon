@@ -9,16 +9,19 @@ import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.FloatPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.IntPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.LongPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
+import eu.kanade.tachiyomi.source.sourcePreferences
 import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
+import tachiyomi.core.preference.AndroidPreferenceStore
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -114,6 +117,7 @@ class BackupRestorer(
 
         return coroutineScope {
             restoreAppPreferences(backup.backupPreferences)
+            restoreSourcePreferences(backup.backupSourcePreferences)
 
             // Restore individual manga
             backup.backupManga.forEach {
@@ -211,9 +215,22 @@ class BackupRestorer(
     }
 
     private fun restoreAppPreferences(preferences: List<BackupPreference>) {
-        val prefs = preferenceStore.getAll()
+        restorePreferences(preferences, preferenceStore)
+    }
 
-        preferences.forEach { (key, value) ->
+    private fun restoreSourcePreferences(preferences: List<BackupSourcePreferences>) {
+        preferences.forEach {
+            val sourcePrefs = AndroidPreferenceStore(context, sourcePreferences(it.sourceKey))
+            restorePreferences(it.prefs, sourcePrefs)
+        }
+    }
+
+    private fun restorePreferences(
+        toRestore: List<BackupPreference>,
+        preferenceStore: PreferenceStore,
+    ) {
+        val prefs = preferenceStore.getAll()
+        toRestore.forEach { (key, value) ->
             when (value) {
                 is IntPreferenceValue -> {
                     if (prefs[key] is Int?) {
@@ -249,13 +266,6 @@ class BackupRestorer(
         }
     }
 
-    /**
-     * Called to update dialog in [BackupConst]
-     *
-     * @param progress restore progress
-     * @param amount total restoreAmount of manga
-     * @param title title of restored manga
-     */
     private fun showRestoreProgress(progress: Int, amount: Int, title: String, contentTitle: String) {
         notifier.showRestoreProgress(title, contentTitle, progress, amount)
     }

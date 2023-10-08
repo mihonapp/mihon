@@ -15,9 +15,8 @@ import tachiyomi.core.preference.AndroidPreference.StringSetPrimitive
 
 class AndroidPreferenceStore(
     context: Context,
+    private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
 ) : PreferenceStore {
-
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     private val keyFlow = sharedPreferences.keyFlow
 

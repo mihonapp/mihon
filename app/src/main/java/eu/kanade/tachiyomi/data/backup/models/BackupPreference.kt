@@ -10,6 +10,12 @@ data class BackupPreference(
 )
 
 @Serializable
+data class BackupSourcePreferences(
+    @ProtoNumber(1) val sourceKey: String,
+    @ProtoNumber(2) val prefs: List<BackupPreference>,
+)
+
+@Serializable
 sealed class PreferenceValue
 
 @Serializable
