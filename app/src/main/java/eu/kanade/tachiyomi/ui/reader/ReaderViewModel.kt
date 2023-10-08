@@ -740,17 +740,14 @@ class ReaderViewModel @JvmOverloads constructor(
 
         val filename = generateFilename(manga, page)
 
-        // Pictures directory.
-        val relativePath = if (readerPreferences.folderPerManga().get()) DiskUtil.buildValidFilename(manga.title) else ""
-
-        // Copy file in background.
+        // Copy file in background
         viewModelScope.launchNonCancellable {
             try {
                 val uri = imageSaver.save(
                     image = Image.Page(
                         inputStream = page.stream!!,
                         name = filename,
-                        location = Location.Pictures.create(relativePath),
+                        location = Location.Pictures(DiskUtil.buildValidFilename(manga.title)),
                     ),
                 )
                 withUIContext {

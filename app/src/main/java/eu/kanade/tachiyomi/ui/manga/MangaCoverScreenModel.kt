@@ -102,8 +102,8 @@ class MangaCoverScreenModel(
             imageSaver.save(
                 Image.Cover(
                     bitmap = bitmap,
-                    name = manga.title,
-                    location = if (temp) Location.Cache else Location.Pictures.create(),
+                    name = "cover",
+                    location = if (temp) Location.Cache else Location.Pictures(manga.title),
                 ),
             )
         }
