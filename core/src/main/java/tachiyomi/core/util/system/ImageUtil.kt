@@ -273,48 +273,6 @@ object ImageUtil {
 
     private fun splitImageName(filenamePrefix: String, index: Int) = "${filenamePrefix}__${"%03d".format(index + 1)}.jpg"
 
-    /**
-     * Check whether the image is a long Strip that needs splitting
-     * @return true if the image is not animated and it's height is greater than image width and screen height
-     */
-    fun isStripSplitNeeded(imageStream: BufferedInputStream): Boolean {
-        if (isAnimatedAndSupported(imageStream)) return false
-
-        val options = extractImageOptions(imageStream)
-        val imageHeightIsBiggerThanWidth = options.outHeight > options.outWidth
-        val imageHeightBiggerThanScreenHeight = options.outHeight > optimalImageHeight
-        return imageHeightIsBiggerThanWidth && imageHeightBiggerThanScreenHeight
-    }
-
-    /**
-     * Split the imageStream according to the provided splitData
-     */
-    fun splitStrip(splitData: SplitData, streamFn: () -> InputStream): InputStream {
-        val bitmapRegionDecoder = getBitmapRegionDecoder(streamFn())
-            ?: throw Exception("Failed to create new instance of BitmapRegionDecoder")
-
-        logcat {
-            "WebtoonSplit #${splitData.index} with topOffset=${splitData.topOffset} " +
-                "splitHeight=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
-        }
-
-        try {
-            val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
-            val splitBitmap = bitmapRegionDecoder.decodeRegion(region, null)
-            val outputStream = ByteArrayOutputStream()
-            splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            return ByteArrayInputStream(outputStream.toByteArray())
-        } catch (e: Throwable) {
-            throw e
-        } finally {
-            bitmapRegionDecoder.recycle()
-        }
-    }
-
-    fun getSplitDataForStream(imageStream: InputStream): List<SplitData> {
-        return extractImageOptions(imageStream).splitData
-    }
-
     private val BitmapFactory.Options.splitData
         get(): List<SplitData> {
             val imageHeight = outHeight

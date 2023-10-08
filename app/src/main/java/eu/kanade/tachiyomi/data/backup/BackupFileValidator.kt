@@ -58,5 +58,8 @@ class BackupFileValidator(
         return Results(missingSources, missingTrackers)
     }
 
-    data class Results(val missingSources: List<String>, val missingTrackers: List<String>)
+    data class Results(
+        val missingSources: List<String>,
+        val missingTrackers: List<String>,
+    )
 }

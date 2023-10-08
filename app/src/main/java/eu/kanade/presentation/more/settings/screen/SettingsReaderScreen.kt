@@ -13,7 +13,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
-import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -304,12 +303,6 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(R.string.pref_dual_page_invert),
                     subtitle = stringResource(R.string.pref_dual_page_invert_summary),
                     enabled = dualPageSplit,
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    pref = readerPreferences.longStripSplitWebtoon(),
-                    title = stringResource(R.string.pref_long_strip_split),
-                    subtitle = stringResource(R.string.split_tall_images_summary),
-                    enabled = !isReleaseBuildType, // TODO: Show in release build when the feature is stable
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.webtoonDoubleTapZoomEnabled(),
