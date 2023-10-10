@@ -24,6 +24,10 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -249,7 +253,7 @@ class ReaderActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.restartReadTimer()
-        setMenuVisibility(viewModel.state.value.menuVisible, animate = false)
+        setMenuVisibility(viewModel.state.value.menuVisible)
     }
 
     /**
@@ -259,7 +263,7 @@ class ReaderActivity : BaseActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            setMenuVisibility(viewModel.state.value.menuVisible, animate = false)
+            setMenuVisibility(viewModel.state.value.menuVisible)
         }
     }
 
@@ -473,43 +477,55 @@ class ReaderActivity : BaseActivity() {
             val isPagerType = ReadingModeType.isPagerType(viewModel.getMangaReadingMode())
             val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+            AnimatedVisibility(
+                visible = state.menuVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(200),
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(200),
+                ),
             ) {
-                ChapterNavigator(
-                    isRtl = isRtl,
-                    onNextChapter = ::loadNextChapter,
-                    enabledNext = state.viewerChapters?.nextChapter != null,
-                    onPreviousChapter = ::loadPreviousChapter,
-                    enabledPrevious = state.viewerChapters?.prevChapter != null,
-                    currentPage = state.currentPage,
-                    totalPages = state.totalPages,
-                    onSliderValueChange = {
-                        isScrollingThroughPages = true
-                        moveToPageIndex(it)
-                    },
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    ChapterNavigator(
+                        isRtl = isRtl,
+                        onNextChapter = ::loadNextChapter,
+                        enabledNext = state.viewerChapters?.nextChapter != null,
+                        onPreviousChapter = ::loadPreviousChapter,
+                        enabledPrevious = state.viewerChapters?.prevChapter != null,
+                        currentPage = state.currentPage,
+                        totalPages = state.totalPages,
+                        onSliderValueChange = {
+                            isScrollingThroughPages = true
+                            moveToPageIndex(it)
+                        },
+                    )
 
-                BottomReaderBar(
-                    readingMode = ReadingModeType.fromPreference(viewModel.getMangaReadingMode(resolveDefault = false)),
-                    onClickReadingMode = viewModel::openReadingModeSelectDialog,
-                    orientationMode = OrientationType.fromPreference(viewModel.getMangaOrientationType(resolveDefault = false)),
-                    onClickOrientationMode = viewModel::openOrientationModeSelectDialog,
-                    cropEnabled = cropEnabled,
-                    onClickCropBorder = {
-                        val enabled = viewModel.toggleCropBorders()
+                    BottomReaderBar(
+                        readingMode = ReadingModeType.fromPreference(viewModel.getMangaReadingMode(resolveDefault = false)),
+                        onClickReadingMode = viewModel::openReadingModeSelectDialog,
+                        orientationMode = OrientationType.fromPreference(viewModel.getMangaOrientationType(resolveDefault = false)),
+                        onClickOrientationMode = viewModel::openOrientationModeSelectDialog,
+                        cropEnabled = cropEnabled,
+                        onClickCropBorder = {
+                            val enabled = viewModel.toggleCropBorders()
 
-                        menuToggleToast?.cancel()
-                        menuToggleToast = toast(
-                            if (enabled) {
-                                R.string.on
-                            } else {
-                                R.string.off
-                            },
-                        )
-                    },
-                    onClickSettings = viewModel::openSettingsDialog,
-                )
+                            menuToggleToast?.cancel()
+                            menuToggleToast = toast(
+                                if (enabled) {
+                                    R.string.on
+                                } else {
+                                    R.string.off
+                                },
+                            )
+                        },
+                        onClickSettings = viewModel::openSettingsDialog,
+                    )
+                }
             }
         }
 
@@ -531,54 +547,41 @@ class ReaderActivity : BaseActivity() {
     }
 
     /**
-     * Sets the visibility of the menu according to [visible] and with an optional parameter to
-     * [animate] the views.
+     * Sets the visibility of the menu according to [visible].
      */
-    private fun setMenuVisibility(visible: Boolean, animate: Boolean = true) {
+    private fun setMenuVisibility(visible: Boolean) {
         viewModel.showMenus(visible)
         if (visible) {
             windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             binding.readerMenu.isVisible = true
 
-            if (animate) {
-                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
-                toolbarAnimation.applySystemAnimatorScale(this)
-                toolbarAnimation.setAnimationListener(
-                    object : SimpleAnimationListener() {
-                        override fun onAnimationStart(animation: Animation) {
-                            // Fix status bar being translucent the first time it's opened.
-                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                        }
-                    },
-                )
-                binding.toolbar.startAnimation(toolbarAnimation)
-
-                val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_bottom)
-                bottomAnimation.applySystemAnimatorScale(this)
-                binding.readerMenuBottom.startAnimation(bottomAnimation)
-            }
+            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.enter_from_top)
+            toolbarAnimation.applySystemAnimatorScale(this)
+            toolbarAnimation.setAnimationListener(
+                object : SimpleAnimationListener() {
+                    override fun onAnimationStart(animation: Animation) {
+                        // Fix status bar being translucent the first time it's opened.
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                    }
+                },
+            )
+            binding.toolbar.startAnimation(toolbarAnimation)
         } else {
             if (readerPreferences.fullscreen().get()) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
                 windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
 
-            if (animate) {
-                val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
-                toolbarAnimation.applySystemAnimatorScale(this)
-                toolbarAnimation.setAnimationListener(
-                    object : SimpleAnimationListener() {
-                        override fun onAnimationEnd(animation: Animation) {
-                            binding.readerMenu.isVisible = false
-                        }
-                    },
-                )
-                binding.toolbar.startAnimation(toolbarAnimation)
-
-                val bottomAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_bottom)
-                bottomAnimation.applySystemAnimatorScale(this)
-                binding.readerMenuBottom.startAnimation(bottomAnimation)
-            }
+            val toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.exit_to_top)
+            toolbarAnimation.applySystemAnimatorScale(this)
+            toolbarAnimation.setAnimationListener(
+                object : SimpleAnimationListener() {
+                    override fun onAnimationEnd(animation: Animation) {
+                        binding.readerMenu.isVisible = false
+                    }
+                },
+            )
+            binding.toolbar.startAnimation(toolbarAnimation)
         }
     }
 
