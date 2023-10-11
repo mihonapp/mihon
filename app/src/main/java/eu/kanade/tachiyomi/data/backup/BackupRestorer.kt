@@ -292,8 +292,8 @@ class BackupRestorer(
             if (dbChapter != null) {
                 updatedChapter = updatedChapter.copy(id = dbChapter._id)
                 updatedChapter = updatedChapter.copyFrom(dbChapter)
-                if (dbChapter.read && !updatedChapter.read) {
-                    updatedChapter = updatedChapter.copy(read = true, lastPageRead = dbChapter.last_page_read)
+                if (dbChapter.read != chapter.read) {
+                    updatedChapter = updatedChapter.copy(read = chapter.read, lastPageRead = chapter.lastPageRead)
                 } else if (updatedChapter.lastPageRead == 0L && dbChapter.last_page_read != 0L) {
                     updatedChapter = updatedChapter.copy(lastPageRead = dbChapter.last_page_read)
                 }
