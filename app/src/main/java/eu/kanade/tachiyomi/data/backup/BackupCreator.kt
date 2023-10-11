@@ -143,7 +143,7 @@ class BackupCreator(
         }
     }
 
-    private fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
+     fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -158,7 +158,7 @@ class BackupCreator(
      *
      * @return list of [BackupCategory] to be backed up
      */
-    private suspend fun backupCategories(options: Int): List<BackupCategory> {
+     suspend fun backupCategories(options: Int): List<BackupCategory> {
         // Check if user wants category information in backup
         return if (options and BACKUP_CATEGORY_MASK == BACKUP_CATEGORY) {
             getCategories.await()
@@ -169,7 +169,7 @@ class BackupCreator(
         }
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
+    suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
         return mangas.map {
             backupManga(it, flags)
         }
@@ -229,13 +229,13 @@ class BackupCreator(
         return mangaObject
     }
 
-    private fun backupAppPreferences(flags: Int): List<BackupPreference> {
+     fun backupAppPreferences(flags: Int): List<BackupPreference> {
         if (flags and BACKUP_APP_PREFS_MASK != BACKUP_APP_PREFS) return emptyList()
 
         return preferenceStore.getAll().toBackupPreferences()
     }
 
-    private fun backupSourcePreferences(flags: Int): List<BackupSourcePreferences> {
+     fun backupSourcePreferences(flags: Int): List<BackupSourcePreferences> {
         if (flags and BACKUP_SOURCE_PREFS_MASK != BACKUP_SOURCE_PREFS) return emptyList()
 
         return sourceManager.getOnlineSources()
