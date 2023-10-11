@@ -4,9 +4,10 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_ALL
-import eu.kanade.tachiyomi.data.backup.BackupManager
+import eu.kanade.tachiyomi.data.backup.BackupCreator
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.BackupRestorer
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
@@ -50,9 +51,10 @@ class SyncManager(
     private val getFavorites: GetFavorites = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
 ) {
-    private val backupManager: BackupManager = BackupManager(context)
+    private val backupCreator: BackupCreator = BackupCreator(context)
     private val notifier: SyncNotifier = SyncNotifier(context)
     private val backupNotify: BackupNotifier = BackupNotifier(context)
+    private val backupRestorer: BackupRestorer = BackupRestorer(context, backupNotify)
 
     enum class SyncService(val value: Int) {
         NONE(0),
@@ -74,10 +76,12 @@ class SyncManager(
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
         val backup = Backup(
-            backupManager.backupMangas(databaseManga, BACKUP_ALL),
-            backupManager.backupCategories(BACKUP_ALL),
+            backupCreator.backupMangas(databaseManga, BACKUP_ALL),
+            backupCreator.backupCategories(BACKUP_ALL),
             emptyList(),
-            backupManager.prepExtensionInfoForSync(databaseManga),
+            backupCreator.prepExtensionInfoForSync(databaseManga),
+            backupCreator.backupAppPreferences(BACKUP_ALL),
+            backupCreator.backupSourcePreferences(BACKUP_ALL),
         )
 
         // Create the SyncStatus object
@@ -265,7 +269,7 @@ class SyncManager(
             localMangaMap[nonFavorite.url]?.let { localManga ->
                 if (localManga.favorite != nonFavorite.favorite) {
                     val updatedManga = localManga.copy(favorite = nonFavorite.favorite)
-                    backupManager.updateManga(updatedManga)
+                    backupRestorer.updateManga(updatedManga)
                 }
             }
         }
