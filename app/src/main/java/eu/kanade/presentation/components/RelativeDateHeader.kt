@@ -13,13 +13,18 @@ import java.util.Date
 fun RelativeDateHeader(
     modifier: Modifier = Modifier,
     date: Date,
+    relativeTime: Boolean,
     dateFormat: DateFormat,
 ) {
     val context = LocalContext.current
     ListGroupHeader(
         modifier = modifier,
         text = remember {
-            date.toRelativeString(context, dateFormat)
+            date.toRelativeString(
+                context,
+                relativeTime,
+                dateFormat,
+            )
         },
     )
 }

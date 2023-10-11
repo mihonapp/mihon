@@ -162,7 +162,7 @@ fun CategoryDeleteDialog(
             TextButton(onClick = {
                 onDelete()
                 onDismissRequest()
-            },) {
+            }) {
                 Text(text = stringResource(R.string.action_ok))
             }
         },
@@ -176,6 +176,35 @@ fun CategoryDeleteDialog(
         },
         text = {
             Text(text = stringResource(R.string.delete_category_confirmation, category.name))
+        },
+    )
+}
+
+@Composable
+fun CategorySortAlphabeticallyDialog(
+    onDismissRequest: () -> Unit,
+    onSort: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(onClick = {
+                onSort()
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(R.string.action_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(R.string.action_cancel))
+            }
+        },
+        title = {
+            Text(text = stringResource(R.string.action_sort_category))
+        },
+        text = {
+            Text(text = stringResource(R.string.sort_category_confirmation))
         },
     )
 }
@@ -217,7 +246,7 @@ fun ChangeCategoryDialog(
                 tachiyomi.presentation.core.components.material.TextButton(onClick = {
                     onDismissRequest()
                     onEditCategories()
-                },) {
+                }) {
                     Text(text = stringResource(R.string.action_edit))
                 }
                 Spacer(modifier = Modifier.weight(1f))

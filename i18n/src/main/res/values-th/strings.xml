@@ -104,7 +104,7 @@
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
     <string name="untrusted_extension_message">ส่วนขยายนี้ลงนามด้วยใบรับรองที่ไม่น่าเชื่อถือและจะไม่ถูกเปิดใช้งาน
 \n
-\nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ใน Tachiyomi หรือเรียกใช้โค้ดโดยอำเภอใจ
+\nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
 \n
 \nการเชื่อถือใบรับรองนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
@@ -138,7 +138,7 @@
     <string name="double_tap_anim_speed_0">ไม่มีแอนิเมชั่น</string>
     <string name="double_tap_anim_speed_normal">ปกติ</string>
     <string name="double_tap_anim_speed_fast">เร็ว</string>
-    <string name="pref_rotation_type">ประเภทการหมุนเริ่มต้น</string>
+    <string name="pref_rotation_type">การหมุนเริ่มต้น</string>
     <string name="rotation_free">อิสระ</string>
     <string name="rotation_force_portrait">ล็อกแนวตั้ง</string>
     <string name="rotation_force_landscape">ล็อกแนวนอน</string>
@@ -157,7 +157,7 @@
     <string name="fourth_to_last">ตอนที่สี่ก่อนตอนที่อ่านล่าสุด</string>
     <string name="fifth_to_last">ตอนที่ห้าก่อนตอนที่อ่านล่าสุด</string>
     <string name="pref_download_new">ดาวน์โหลดตอนใหม่</string>
-    <string name="services">บริการ</string>
+    <string name="services">ตัวติดตาม</string>
     <string name="pref_create_backup">สำรองข้อมูล</string>
     <string name="pref_create_backup_summ">สามารถใช้ในการเรียกคืนค่าคลังปัจจุบัน</string>
     <string name="pref_restore_backup">เรียกคืนค่าการสำรองข้อมูล</string>
@@ -325,7 +325,7 @@
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
     <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการส่วนขยายทางการของ Tachiyomi</string>
+    <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการทางการ</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป แอปอาจทำงานไม่ถูกต้องและอาจทำให้เกิดปัญหากับแอปได้ ขอแนะนำให้ถอนการติดตั้งออก</string>
     <string name="ext_unofficial">ไม่เป็นทางการ</string>
     <string name="ext_obsolete">ล้าสมัย</string>
@@ -395,14 +395,12 @@
     <string name="action_sort_latest_chapter">ตอนล่าสุด</string>
     <string name="action_filter_tracked">ติดตามแล้ว</string>
     <string name="action_menu">เมนู</string>
-    <string name="confirm_exit">กดกลับอีกครั้งเพื่อออก</string>
-    <string name="unlock_app">ปลดล็อก Tachiyomi</string>
     <string name="label_sources">แหล่งที่มา</string>
     <string name="label_more">เพิ่มเติม</string>
     <string name="pref_webtoon_side_padding">ช่องว่างด้านข้าง</string>
     <string name="pref_category_reading">การอ่าน</string>
     <string name="pref_category_reading_mode">โหมดการอ่าน</string>
-    <string name="rotation_type">ประเภทการหมุน</string>
+    <string name="rotation_type">การหมุน</string>
     <string name="pref_viewer_nav">โซนการแตะ</string>
     <string name="vertical_plus_viewer">หน้ายาวแยกช่องว่าง</string>
     <string name="nav_zone_right">ขวา</string>
@@ -451,7 +449,6 @@
     <string name="action_global_search_query">ค้นหา \"%1$s\" ในทั้งหมด</string>
     <string name="pinned_sources">ที่ตรึงไว้</string>
     <string name="last_used_source">ใช้ล่าสุด</string>
-    <string name="http_error_hint">ตรวจสอบเว็บไซต์ใน WebView</string>
     <string name="tabs_header">แท็บ</string>
     <string name="downloaded_chapters">ตอนที่ดาวน์โหลดแล้ว</string>
     <string name="manga_from_library">จากคลัง</string>
@@ -499,7 +496,7 @@
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
     <string name="invalid_backup_file_missing_manga">แฟ้มสํารองข้อมูลไม่มีรายการคลังใด ๆ</string>
     <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง</string>
-    <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับบริการการติดตาม ตั้งค่าการติดตามรายการในแต่ละรายการได้จากปุ่มติดตาม</string>
+    <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับตัวติดตามภายนอก ตั้งค่าการติดตามรายการในแต่ละรายการได้จากปุ่มติดตาม</string>
     <string name="pref_download_new_categories_details">รายการในหมวดหมู่ที่ยกเว้นไว้จะไม่ถูกดาวน์โหลดแม้ว่าจะอยู่ในหมวดหมู่ที่รวมอยู่ด้วยก็ตาม</string>
     <string name="pref_category_auto_download">ดาวน์โหลดอัตโนมัติ</string>
     <string name="notification_check_updates">กำลังตรวจสอบตอนหาใหม่</string>
@@ -526,7 +523,7 @@
     <string name="channel_progress">ความคืบหน้า</string>
     <string name="chapter_settings_updated">อัปเดตการตั้งค่าตอนเริ่มต้นแล้ว</string>
     <string name="information_webview_outdated">โปรดอัปเดตแอพ WebView เพื่อความเข้ากันได้ที่ดีขึ้น</string>
-    <string name="information_webview_required">Tachiyomi จำเป็นต้องใช้ WebView</string>
+    <string name="information_webview_required">แอปจำเป็นต้องใช้ WebView เพื่อให้ทำงานได้</string>
     <string name="information_cloudflare_bypass_failure">ไม่สามารถเลี่ยงผ่าน Cloudflare ได้</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">มีการอัปเดตส่วนขยาย %d รายการพร้อมใช้งาน</item>
@@ -569,7 +566,7 @@
     <plurals name="relative_time">
         <item quantity="other">%1$d วันที่ผ่านมา</item>
     </plurals>
-    <string name="enhanced_services">บริการขั้นสูง</string>
+    <string name="enhanced_services">ตัวติดตามขั้นสูง</string>
     <string name="backup_info">ควรเก็บสำเนาของข้อมูลสำรองไว้ที่อื่นด้วยเช่นกัน</string>
     <string name="pref_verbose_logging_summary">บันทึกบันทึกอย่างละเอียดไปยังบันทึกของระบบ (ลดประสิทธิภาพของแอป)</string>
     <string name="help_translate">ช่วยแปล</string>
@@ -594,8 +591,8 @@
     <string name="pref_highest">เร็วที่สุด</string>
     <string name="pref_high">เร็ว</string>
     <string name="tracking_guide">คู่มือการติดตาม</string>
-    <string name="pref_remove_exclude_categories">หมวดหมู่ที่ยกเว้น</string>
-    <string name="enhanced_tracking_info">บริการที่มีคุณลักษณะขั้นสูงสำหรับแหล่งที่มาเฉพาะ รายการจะถูกติดตามโดยอัตโนมัติเมื่อเพิ่มลงในคลัง</string>
+    <string name="pref_remove_exclude_categories">หมวดหมู่ที่ยกเว้นไว้</string>
+    <string name="enhanced_tracking_info">ใช้สำหรับเฉพาะบางแหล่งที่มา รายการจะถูกติดตามโดยอัตโนมัติเมื่อเพิ่มลงในคลัง</string>
     <string name="ext_app_info">ข้อมูลแอพ</string>
     <string name="extension_api_error">เกิดข้อผิดพลาดในการรับรายการส่วนขยาย</string>
     <string name="pref_auto_clear_chapter_cache">ล้างแคชตอนในเมื่อเปิดแอพ</string>
@@ -640,7 +637,6 @@
     <string name="action_close">ปิด</string>
     <string name="pref_clear_webview_data">ล้างข้อมูล WebView</string>
     <string name="webview_data_deleted">ล้างข้อมูล WebView แล้ว</string>
-    <string name="battery_not_low">ขณะแบตเตอรี่ยังไม่ต่ำ</string>
     <string name="source_filter_empty_screen">ไม่พบแหล่งที่มาที่ติดตั้งแล้ว</string>
     <string name="source_empty_screen">ไม่พบแหล่งที่มาใด ๆ</string>
     <string name="action_sort_unread_count">จำนวนตอนที่ยังไม่ได้อ่าน</string>
@@ -800,5 +796,12 @@
     <string name="information_cloudflare_help">แตะที่นี่เพื่อขอความช่วยเหลือเกี่ยวกับ Cloudflare</string>
     <string name="create_backup_file_error">ไม่สามารถสร้างไฟล์สำรองข้อมูล</string>
     <string name="licensed_manga_chapters_error">มีลิขสิทธิ์แล้ว - ไม่มีตอนให้แสดง</string>
-    <string name="track_activity_name">เข้าสู่ระบบการติดตาม</string>
+    <string name="track_activity_name">เข้าสู่ระบบตัวติดตาม</string>
+    <string name="unlock_app_title">ปลดล็อก %s</string>
+    <string name="exception_offline">ไม่มีการเชื่อมต่ออินเทอร์เน็ต</string>
+    <string name="exception_http">HTTP %d, ดูเว็บไซต์ใน WebView</string>
+    <string name="exception_unknown_host">ไม่สามารถเข้าถึง %s ได้</string>
+    <string name="action_move_to_bottom_all_for_series">ย้ายเรื่องไปด้านล่าง</string>
+    <string name="pref_relative_format">ประทับเวลาแบบสัมพันธ์กัน</string>
+    <string name="pref_relative_format_summary">แสดง \"%1$s\" แทน \"%2$s\"</string>
 </resources>

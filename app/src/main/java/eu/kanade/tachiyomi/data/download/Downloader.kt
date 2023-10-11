@@ -43,7 +43,6 @@ import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
-import tachiyomi.core.util.lang.awaitSingle
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNow
 import tachiyomi.core.util.lang.withIOContext
@@ -363,7 +362,7 @@ class Downloader(
                         if (page.imageUrl.isNullOrEmpty()) {
                             page.status = Page.State.LOAD_PAGE
                             try {
-                                page.imageUrl = download.source.fetchImageUrl(page).awaitSingle()
+                                page.imageUrl = download.source.getImageUrl(page)
                             } catch (e: Throwable) {
                                 page.status = Page.State.ERROR
                             }

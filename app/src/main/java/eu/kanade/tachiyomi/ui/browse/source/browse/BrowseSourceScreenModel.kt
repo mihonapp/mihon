@@ -9,39 +9,33 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.chapter.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toDomainManga
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.domain.track.model.toDomainTrack
+import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.data.track.TrackService
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import logcat.LogPriority
 import tachiyomi.core.preference.CheckboxState
 import tachiyomi.core.preference.mapAsCheckboxState
 import tachiyomi.core.util.lang.launchIO
-import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -54,7 +48,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.source.interactor.GetRemoteManga
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -76,11 +69,8 @@ class BrowseSourceScreenModel(
     private val getManga: GetManga = Injekt.get(),
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
-    private val insertTrack: InsertTrack = Injekt.get(),
-    private val syncChapterProgressWithTrack: SyncChapterProgressWithTrack = Injekt.get(),
+    private val addTracks: AddTracks = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
-
-    private val loggedServices by lazy { Injekt.get<TrackManager>().services.filter { it.isLoggedIn } }
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(coroutineScope)
 
@@ -113,25 +103,20 @@ class BrowseSourceScreenModel(
     /**
      * Flow of Pager flow tied to [State.listing]
      */
+    private val hideInLibraryItems = sourcePreferences.hideInLibraryItems().get()
     val mangaPagerFlowFlow = state.map { it.listing }
         .distinctUntilChanged()
         .map { listing ->
-            Pager(
-                PagingConfig(pageSize = 25),
-            ) {
+            Pager(PagingConfig(pageSize = 25)) {
                 getRemoteManga.subscribe(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
                 pagingData.map {
                     networkToLocalManga.await(it.toDomainManga(sourceId))
-                        .let { localManga ->
-                            getManga.subscribe(localManga.url, localManga.source)
-                        }
+                        .let { localManga -> getManga.subscribe(localManga.url, localManga.source) }
                         .filterNotNull()
-                        .filter { localManga ->
-                            !sourcePreferences.hideInLibraryItems().get() || !localManga.favorite
-                        }
                         .stateIn(ioCoroutineScope)
                 }
+                    .filter { !hideInLibraryItems || !it.value.favorite }
             }
                 .cachedIn(ioCoroutineScope)
         }
@@ -248,8 +233,7 @@ class BrowseSourceScreenModel(
                 new = new.removeCovers(coverCache)
             } else {
                 setMangaDefaultChapterFlags.await(manga)
-
-                autoAddTrack(manga)
+                addTracks.bindEnhancedTracks(manga, source)
             }
 
             updateManga.await(new.toMangaUpdate())
@@ -284,25 +268,6 @@ class BrowseSourceScreenModel(
                 }
             }
         }
-    }
-
-    private suspend fun autoAddTrack(manga: Manga) {
-        loggedServices
-            .filterIsInstance<EnhancedTrackService>()
-            .filter { it.accept(source) }
-            .forEach { service ->
-                try {
-                    service.match(manga)?.let { track ->
-                        track.manga_id = manga.id
-                        (service as TrackService).bind(track)
-                        insertTrack.await(track.toDomainTrack()!!)
-
-                        syncChapterProgressWithTrack.await(manga.id, track.toDomainTrack()!!, service)
-                    }
-                } catch (e: Exception) {
-                    logcat(LogPriority.WARN, e) { "Could not match manga: ${manga.title} with service $service" }
-                }
-            }
     }
 
     /**

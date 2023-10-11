@@ -69,8 +69,6 @@
     <string name="action_filter">Pansala</string>
     <string name="action_menu">Menu</string>
     <string name="action_settings">Mga setting</string>
-    <string name="confirm_exit">Pindutin muli para umalis</string>
-    <string name="unlock_app">Buksan ang Tachiyomi</string>
     <string name="history">Nakaraan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
@@ -124,7 +122,7 @@
     <string name="custom_dir">Pinili kong lugar</string>
     <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
     <string name="pref_remove_after_read">Pagkatapos basahin, kusang burahin</string>
-    <string name="pref_download_directory">Lugar ng paglalagyan</string>
+    <string name="pref_download_directory">Lokasyon sa pag-download</string>
     <string name="pref_webtoon_side_padding">Kapal ng gilid</string>
     <string name="pref_category_reading">Pagbabasa</string>
     <string name="pref_always_show_chapter_transition">Ipakita palagi ang paglipat-kabanata</string>
@@ -187,11 +185,11 @@
     <string name="pref_page_transitions">I-animate ang paglipat-pahina</string>
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
-    <string name="unofficial_extension_message">Wala sa opisyal na listahan ng mga extension ng Tachiyomi ang extension na ito.</string>
+    <string name="unofficial_extension_message">Wala sa opisyal na listahan ang extension na ito.</string>
     <string name="obsolete_extension_message">Hindi na available ang extension na ito. Maaaring hindi ito gumana nang maayos at maaaring magdulot ng mga isyu sa app. Inirerekomenda ang pag-uninstall nito.</string>
     <string name="untrusted_extension_message">Pinirmahan ang extension na ito gamit ang isang kaduda-dudang certificate at hindi muna pinagana.
 \n
-\nMaaaring mabasa ng isang kaduda-dudang extension ang kahit anong credentials sa pag-login na nakatago sa Tachiyomi o di kaya nama\'y magsimula ng delikadong code.
+\nMaaaring mabasa ng isang kaduda-dudang extension ang kahit anong nakatagong credentials sa pag-login o di kaya nama\'y magsimula ng delikadong code.
 \n
 \nTinatanggap mo ang mga bantang ito sa pagtiwala sa certificate na ito.</string>
     <string name="untrusted_extension">Kaduda-dudang extension</string>
@@ -271,7 +269,7 @@
     <string name="download_notifier_title_error">Nagka-error</string>
     <string name="download_notifier_downloader_title">Taga-download</string>
     <string name="information_webview_outdated">Paki-update po ang WebView app para sa mas maayos na paggana</string>
-    <string name="information_webview_required">Kailangan ng Tachiyomi ang WebView</string>
+    <string name="information_webview_required">Kinakailangan ng app ang WebView upang gumana ito</string>
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Ang extension ay available upang i-update</item>
@@ -392,7 +390,6 @@
     <string name="last_used_source">Huling ginamit</string>
     <string name="other_source">Iba pa</string>
     <string name="local_source">Lokal na Source</string>
-    <string name="http_error_hint">Bisitahin ang site sa WebView</string>
     <string name="no_results_found">Walang nakitang resulta</string>
     <string name="no_more_results">Wala na\'ng resulta</string>
     <string name="tabs_header">Mga Tab</string>
@@ -652,7 +649,6 @@
     <string name="webview_data_deleted">Nalinis na ang WebView data</string>
     <string name="pref_clear_webview_data">Linisin ang WebView data</string>
     <string name="action_close">Isara</string>
-    <string name="battery_not_low">Kapag di lowbat</string>
     <string name="source_filter_empty_screen">Walang nakitang naka-install na source</string>
     <string name="source_empty_screen">Walang nakitang source</string>
     <string name="action_sort_last_manga_update">Huling pag-update</string>
@@ -698,7 +694,7 @@
     <string name="are_you_sure">Sigurado ka ba\?</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">Susunod na hindi pa nababasa na kabanata</item>
-        <item quantity="other">Susunod na ang %d na hindi pa nababasa na kabanata</item>
+        <item quantity="other">Susunod na %d di pa nababasa na kabanata</item>
     </plurals>
     <string name="multi_lang">Marami</string>
     <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa aklatan mo</string>
@@ -802,7 +798,7 @@
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
     <string name="pref_update_only_in_release_period">Sa labas ng inaasahang release period</string>
     <string name="intervals_header">Mga pagitan</string>
-    <string name="manga_modify_calculated_interval_title">I-customize ang Interval</string>
+    <string name="manga_modify_calculated_interval_title">Ayusin ang interval</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
     <string name="delete_downloaded">Tanggalin ang na-download</string>
@@ -817,4 +813,11 @@
     <string name="create_backup_file_error">Hindi makalikha ng backup file</string>
     <string name="track_activity_name">Pag-login sa tracking</string>
     <string name="licensed_manga_chapters_error">Lisensyado - Walang mapakitang kabanata</string>
+    <string name="unlock_app_title">I-unlock ang %s</string>
+    <string name="exception_offline">Walang koneksyon sa Internet</string>
+    <string name="exception_http">HTTP %d, tignan ang website sa WebView</string>
+    <string name="exception_unknown_host">Hindi maabot ang %s</string>
+    <string name="action_move_to_bottom_all_for_series">Ilagay sa ibaba ang serye</string>
+    <string name="pref_relative_format">Mga relatibong timestamp</string>
+    <string name="pref_relative_format_summary">\"%1$s\" sa halip na \"%2$s\"</string>
 </resources>

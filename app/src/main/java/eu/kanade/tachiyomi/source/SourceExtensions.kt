@@ -10,8 +10,6 @@ import uy.kohesive.injekt.api.get
 
 fun Source.icon(): Drawable? = Injekt.get<ExtensionManager>().getAppIconForSource(this.id)
 
-fun Source.getPreferenceKey(): String = "source_$id"
-
 fun Source.toStubSource(): StubSource = StubSource(id = id, lang = lang, name = name)
 
 fun Source.getNameForMangaInfo(): String {

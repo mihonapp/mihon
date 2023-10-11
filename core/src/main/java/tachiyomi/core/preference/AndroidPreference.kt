@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import tachiyomi.core.util.system.logcat
 
 sealed class AndroidPreference<T>(
     private val preferences: SharedPreferences,
@@ -29,7 +30,13 @@ sealed class AndroidPreference<T>(
     }
 
     override fun get(): T {
-        return read(preferences, key, defaultValue)
+        return try {
+            read(preferences, key, defaultValue)
+        } catch (e: ClassCastException) {
+            logcat { "Invalid value for $key; deleting" }
+            delete()
+            defaultValue
+        }
     }
 
     override fun set(value: T) {
@@ -68,7 +75,11 @@ sealed class AndroidPreference<T>(
         key: String,
         defaultValue: String,
     ) : AndroidPreference<String>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: String): String {
+        override fun read(
+            preferences: SharedPreferences,
+            key: String,
+            defaultValue: String,
+        ): String {
             return preferences.getString(key, defaultValue) ?: defaultValue
         }
 
@@ -128,7 +139,11 @@ sealed class AndroidPreference<T>(
         key: String,
         defaultValue: Boolean,
     ) : AndroidPreference<Boolean>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Boolean): Boolean {
+        override fun read(
+            preferences: SharedPreferences,
+            key: String,
+            defaultValue: Boolean,
+        ): Boolean {
             return preferences.getBoolean(key, defaultValue)
         }
 
@@ -143,7 +158,11 @@ sealed class AndroidPreference<T>(
         key: String,
         defaultValue: Set<String>,
     ) : AndroidPreference<Set<String>>(preferences, keyFlow, key, defaultValue) {
-        override fun read(preferences: SharedPreferences, key: String, defaultValue: Set<String>): Set<String> {
+        override fun read(
+            preferences: SharedPreferences,
+            key: String,
+            defaultValue: Set<String>,
+        ): Set<String> {
             return preferences.getStringSet(key, defaultValue) ?: defaultValue
         }
 

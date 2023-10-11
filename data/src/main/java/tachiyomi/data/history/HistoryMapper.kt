@@ -14,7 +14,19 @@ val historyMapper: (Long, Long, Date?, Long) -> History = { id, chapterId, readA
     )
 }
 
-val historyWithRelationsMapper: (Long, Long, Long, String, String?, Long, Boolean, Long, Double, Date?, Long) -> HistoryWithRelations = {
+val historyWithRelationsMapper: (
+    Long,
+    Long,
+    Long,
+    String,
+    String?,
+    Long,
+    Boolean,
+    Long,
+    Double,
+    Date?,
+    Long,
+) -> HistoryWithRelations = {
         historyId, mangaId, chapterId, title, thumbnailUrl, sourceId, isFavorite, coverLastModified, chapterNumber, readAt, readDuration ->
     HistoryWithRelations(
         id = historyId,

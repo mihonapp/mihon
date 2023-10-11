@@ -15,6 +15,7 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.manga.DownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
@@ -23,9 +24,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.TrackManager
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
@@ -84,7 +84,7 @@ class MangaScreenModel(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
     readerPreferences: ReaderPreferences = Injekt.get(),
     uiPreferences: UiPreferences = Injekt.get(),
-    private val trackManager: TrackManager = Injekt.get(),
+    private val trackerManager: TrackerManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val downloadCache: DownloadCache = Injekt.get(),
     private val getMangaAndChapters: GetMangaWithChapters = Injekt.get(),
@@ -97,6 +97,7 @@ class MangaScreenModel(
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
+    private val addTracks: AddTracks = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
@@ -105,7 +106,7 @@ class MangaScreenModel(
     private val successState: State.Success?
         get() = state.value as? State.Success
 
-    private val loggedServices by lazy { trackManager.services.filter { it.isLoggedIn } }
+    private val loggedInTrackers by lazy { trackerManager.trackers.filter { it.isLoggedIn } }
 
     val manga: Manga?
         get() = successState?.manga
@@ -125,6 +126,7 @@ class MangaScreenModel(
     val chapterSwipeStartAction = libraryPreferences.swipeToEndAction().get()
     val chapterSwipeEndAction = libraryPreferences.swipeToStartAction().get()
 
+    val relativeTime by uiPreferences.relativeTime().asState(coroutineScope)
     val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
     private val skipFiltered by readerPreferences.skipFiltered().asState(coroutineScope)
 
@@ -314,24 +316,7 @@ class MangaScreenModel(
                 }
 
                 // Finally match with enhanced tracking when available
-                val source = state.source
-                state.trackItems
-                    .map { it.service }
-                    .filterIsInstance<EnhancedTrackService>()
-                    .filter { it.accept(source) }
-                    .forEach { service ->
-                        launchIO {
-                            try {
-                                service.match(manga)?.let { track ->
-                                    (service as TrackService).register(track, mangaId)
-                                }
-                            } catch (e: Exception) {
-                                logcat(LogPriority.WARN, e) {
-                                    "Could not match manga: ${manga.title} with service $service"
-                                }
-                            }
-                        }
-                    }
+                addTracks.bindEnhancedTracks(manga, state.source)
             }
         }
     }
@@ -948,11 +933,11 @@ class MangaScreenModel(
             getTracks.subscribe(manga.id)
                 .catch { logcat(LogPriority.ERROR, it) }
                 .map { tracks ->
-                    loggedServices
+                    loggedInTrackers
                         // Map to TrackItem
                         .map { service -> TrackItem(tracks.find { it.syncId == service.id }, service) }
                         // Show only if the service supports this manga's source
-                        .filter { (it.service as? EnhancedTrackService)?.accept(source!!) ?: true }
+                        .filter { (it.tracker as? EnhancedTracker)?.accept(source!!) ?: true }
                 }
                 .distinctUntilChanged()
                 .collectLatest { trackItems ->

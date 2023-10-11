@@ -13,7 +13,6 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import eu.kanade.tachiyomi.databinding.ReaderErrorBinding
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
@@ -24,12 +23,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.suspendCancellableCoroutine
-import logcat.LogPriority
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.ImageUtil
-import tachiyomi.core.util.system.logcat
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -221,38 +218,7 @@ class WebtoonPageHolder(
             }
         }
 
-        if (viewer.config.longStripSplit) {
-            if (page is StencilPage) {
-                return imageStream
-            }
-            val isStripSplitNeeded = ImageUtil.isStripSplitNeeded(imageStream)
-            if (isStripSplitNeeded) {
-                return onStripSplit(imageStream)
-            }
-        }
-
         return imageStream
-    }
-
-    private fun onStripSplit(imageStream: BufferedInputStream): InputStream {
-        try {
-            // If we have reached this point [page] and its stream shouldn't be null
-            val page = page!!
-            val stream = page.stream!!
-            val splitData = ImageUtil.getSplitDataForStream(imageStream).toMutableList()
-            val currentSplitData = splitData.removeFirst()
-            val newPages = splitData.map {
-                StencilPage(page) { ImageUtil.splitStrip(it, stream) }
-            }
-            return ImageUtil.splitStrip(currentSplitData) { imageStream }
-                .also {
-                    // Running [onLongStripSplit] first results in issues with splitting
-                    viewer.onLongStripSplit(page, newPages)
-                }
-        } catch (e: Exception) {
-            logcat(LogPriority.ERROR, e) { "Failed to split image" }
-            return imageStream
-        }
     }
 
     /**

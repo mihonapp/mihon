@@ -328,7 +328,6 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare को बायपास करने में विफल</string>
     <string name="information_webview_outdated">बेहतर संगतता के लिए कृपया WebView ऐप को अपडेट करें</string>
     <string name="channel_new_chapters">अध्याय अद्यतन</string>
-    <string name="unlock_app">अनलॉक Tachiyomi</string>
     <string name="secure_screen_summary">सुरक्षित स्क्रीन एप्लिकेशन स्विच करते समय एप्लिकेशन सामग्री छिपाता हैं और स्क्रीनशॉट ब्लॉक करता हैं</string>
     <string name="pref_category_display">प्रदर्शन</string>
     <plurals name="notification_chapters_generic">
@@ -363,7 +362,6 @@
         <item quantity="other">%d एक्सटेंशन अपडेट उपलब्ध</item>
     </plurals>
     <string name="channel_ext_updates">एक्सटेंशन अपडेट</string>
-    <string name="http_error_hint">WebView में वेबसाइट देखें</string>
     <string name="updating_library">अद्यतन पुस्तकालय</string>
     <string name="pref_category_reading">पठन</string>
     <string name="pref_skip_filtered_chapters">फ़िल्टर किए गए अध्यायों को छोड़ें</string>
@@ -382,7 +380,6 @@
     <string name="information_webview_required">ताचियोमी के लिए WebView आवश्यक है</string>
     <string name="licenses">ओपन सोर्स लाइसेंस</string>
     <string name="website">वेबसाइट</string>
-    <string name="confirm_exit">बाहर निकलने के लिए फिर से वापस दबाएं</string>
     <string name="label_downloaded_only">केवल डाउनलोड किए गए</string>
     <string name="recent_manga_time">अध्याय %1$s – %2$s</string>
     <string name="restoring_backup_error">बैकअप बहाल करने में विफल रहा</string>
@@ -649,7 +646,6 @@
     <string name="source_filter_empty_screen">कोई स्थापित स्रोत नहीं मिला</string>
     <string name="action_sort_last_manga_update">आखिरी आइटम अद्यतन</string>
     <string name="action_sort_unread_count">अपठित गिनती</string>
-    <string name="battery_not_low">जब बैटरी कम नहीं</string>
     <string name="webview_data_deleted">WebView डेटा साफ हो गया</string>
     <string name="update_check_open">गिटहब में खोलें</string>
     <string name="error_saving_picture">चित्र सहेजने में त्रुटि</string>

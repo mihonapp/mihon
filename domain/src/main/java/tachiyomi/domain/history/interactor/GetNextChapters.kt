@@ -30,7 +30,11 @@ class GetNextChapters(
         }
     }
 
-    suspend fun await(mangaId: Long, fromChapterId: Long, onlyUnread: Boolean = true): List<Chapter> {
+    suspend fun await(
+        mangaId: Long,
+        fromChapterId: Long,
+        onlyUnread: Boolean = true,
+    ): List<Chapter> {
         val chapters = await(mangaId, onlyUnread)
         val currChapterIndex = chapters.indexOfFirst { it.id == fromChapterId }
         val nextChapters = chapters.subList(max(0, currChapterIndex), chapters.size)

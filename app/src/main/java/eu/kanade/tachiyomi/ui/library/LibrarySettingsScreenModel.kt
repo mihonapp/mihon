@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.library
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.getAndSet
@@ -22,11 +22,11 @@ class LibrarySettingsScreenModel(
     val libraryPreferences: LibraryPreferences = Injekt.get(),
     private val setDisplayMode: SetDisplayMode = Injekt.get(),
     private val setSortModeForCategory: SetSortModeForCategory = Injekt.get(),
-    private val trackManager: TrackManager = Injekt.get(),
+    private val trackerManager: TrackerManager = Injekt.get(),
 ) : ScreenModel {
 
-    val trackServices
-        get() = trackManager.services.filter { it.isLoggedIn }
+    val trackers
+        get() = trackerManager.trackers.filter { it.isLoggedIn }
 
     fun toggleFilter(preference: (LibraryPreferences) -> Preference<TriState>) {
         preference(libraryPreferences).getAndSet {

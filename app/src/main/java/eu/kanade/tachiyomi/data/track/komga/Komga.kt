@@ -4,8 +4,8 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.EnhancedTrackService
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Komga(id: Long) : TrackService(id, "Komga"), EnhancedTrackService {
+class Komga(id: Long) : Tracker(id, "Komga"), EnhancedTracker {
 
     companion object {
         const val UNREAD = 1
@@ -26,7 +26,7 @@ class Komga(id: Long) : TrackService(id, "Komga"), EnhancedTrackService {
             .dns(Dns.SYSTEM) // don't use DNS over HTTPS as it breaks IP addressing
             .build()
 
-    val api by lazy { KomgaApi(client) }
+    val api by lazy { KomgaApi(id, client) }
 
     override fun getLogo() = R.drawable.ic_tracker_komga
 
@@ -85,7 +85,7 @@ class Komga(id: Long) : TrackService(id, "Komga"), EnhancedTrackService {
         saveCredentials("user", "pass")
     }
 
-    // TrackService.isLogged works by checking that credentials are saved.
+    // [Tracker].isLogged works by checking that credentials are saved.
     // By saving dummy, unused credentials, we can activate the tracker simply by login/logout
     override fun loginNoop() {
         saveCredentials("user", "pass")

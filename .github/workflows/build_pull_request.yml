@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -36,4 +36,4 @@ jobs:
       - name: Build app and run unit tests
         uses: gradle/gradle-command-action@v2
         with:
-          arguments: lintKotlin assembleStandardRelease testReleaseUnitTest
+          arguments: ktlintCheck assembleStandardRelease testReleaseUnitTest

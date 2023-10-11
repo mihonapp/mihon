@@ -314,7 +314,6 @@
     <string name="pref_manage_notifications">Gestionați notificările</string>
     <string name="pref_category_security">Securitate</string>
     <string name="lock_with_biometrics">Necesită deblocare</string>
-    <string name="unlock_app">Deblochează Tachiyomi</string>
     <string name="action_sort_latest_chapter">Ultimul capitol</string>
     <string name="lock_when_idle">Blocați când este inactiv</string>
     <string name="lock_always">Întotdeauna</string>
@@ -368,7 +367,6 @@
         <item quantity="few">%d actualizări de extensii sunt disponibile</item>
         <item quantity="other">%d actualizări de extensii sunt disponibile</item>
     </plurals>
-    <string name="http_error_hint">Verificați site-ul în WebView</string>
     <string name="updating_library">Se actualizează biblioteca</string>
     <string name="pref_category_reading">Citind</string>
     <string name="pref_skip_filtered_chapters">Săriți peste capitolele filtrate</string>
@@ -390,7 +388,6 @@
     <string name="website">Pagină web</string>
     <string name="restoring_backup_error">Restaurarea copiei de rezervă a eșuat</string>
     <string name="creating_backup_error">Crearea copiei de rezervă a eșuat</string>
-    <string name="confirm_exit">Apăsați din nou pentru a ieși</string>
     <string name="label_downloaded_only">Doar descărcate</string>
     <string name="restoring_backup_canceled">Restaurare anulată</string>
     <string name="restore_in_progress">Restaurarea este deja în curs de desfășurare</string>
@@ -605,7 +602,6 @@
     <string name="backup_info">Ar trebui să păstrați copii ale backupurilor și în alte locuri.</string>
     <string name="split_tall_images_summary">Îmbunătățește performanța cititorului</string>
     <string name="action_close">Închide</string>
-    <string name="battery_not_low">Când bateria nu este scăzută</string>
     <string name="relative_time_today">Azi</string>
     <string name="reading_list">Listă de citit</string>
     <string name="wish_list">Lista de dorințe</string>

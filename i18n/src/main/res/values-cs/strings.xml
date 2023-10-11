@@ -63,7 +63,7 @@
     <string name="untrusted_extension">Nedůvěryhodné rozšíření</string>
     <string name="untrusted_extension_message">Toto rozšíření bylo podepsané nedůvěryhodným certifikátem a nebylo aktivované.
 \n
-\nŠkodlivé rozšíření může přečíst přihlašovací údaje uložené v Tachiyomi nebo spustit libovolný kód.
+\nŠkodlivé rozšíření může přečíst jakékoliv uložené přihlašovací údaje nebo spustit libovolný kód.
 \n
 \nDůvěřováním tomuto certifikátu přijímáte tato rizika.</string>
     <string name="pref_fullscreen">Celá obrazovka</string>
@@ -76,7 +76,7 @@
     <string name="black_background">Černá</string>
     <string name="left_to_right_viewer">Stránkované (zleva doprava)</string>
     <string name="right_to_left_viewer">Stránkované (zprava doleva)</string>
-    <string name="pref_rotation_type">Výchozí typ otáčení</string>
+    <string name="pref_rotation_type">Výchozí otáčení</string>
     <string name="rotation_free">Volné</string>
     <string name="rotation_force_portrait">Zamknuto na výšku</string>
     <string name="rotation_force_landscape">Zamknuto na šířku</string>
@@ -204,7 +204,7 @@
     <string name="double_tap_anim_speed_0">Bez animace</string>
     <string name="double_tap_anim_speed_normal">Normální</string>
     <string name="double_tap_anim_speed_fast">Rychle</string>
-    <string name="services">Služby</string>
+    <string name="services">Sledovače</string>
     <string name="pref_create_backup">Vytvořit zálohu</string>
     <string name="pref_restore_backup">Obnovit zálohu</string>
     <string name="pref_backup_directory">Místo zálohy</string>
@@ -324,7 +324,6 @@
     <string name="action_newest">Nejnovější</string>
     <string name="action_view_chapters">Zobrazit kapitoly</string>
     <string name="action_sort_latest_chapter">Poslední kapitola</string>
-    <string name="unlock_app">Odemknout Tachiyomi</string>
     <string name="add_tracking">Přidat sledování</string>
     <string name="no_chapters_error">Nebyly nalezeny žádné kapitoly</string>
     <string name="set_chapter_settings_as_default">Nastavit jako výchozí</string>
@@ -347,7 +346,6 @@
     <string name="action_global_search_query">Hledat \"%1$s\" globálně</string>
     <string name="pinned_sources">Připnuté</string>
     <string name="last_used_source">Naposledy použitý</string>
-    <string name="http_error_hint">Zobrazit stránku ve WebView</string>
     <string name="tabs_header">Karty</string>
     <string name="downloaded_chapters">Stažené kapitoly</string>
     <string name="manga_from_library">Z knihovny</string>
@@ -394,7 +392,7 @@
     <string name="backup_restore_missing_sources">Chybějící zdroje:</string>
     <string name="invalid_backup_file_missing_manga">Záloha neobsahuje žádné položky knihovny.</string>
     <string name="invalid_backup_file">Neplatný soubor se zálohou</string>
-    <string name="tracking_info">Jednosměrná synchronizace pro aktualizaci počtu přečtených kapitol ve sledovacích službách. Nastavení sledování pro každou položku je možné z jejich tlačítka sledování.</string>
+    <string name="tracking_info">Jednosměrná synchronizace pro aktualizaci počtu přečtených kapitol v externích sledovacích službách. Nastavení sledování pro každou položku je možné z jejich tlačítka sledování.</string>
     <string name="pref_remove_bookmarked_chapters">Povolení mazání kapitol se záložkami</string>
     <string name="pref_category_delete_chapters">Smazat kapitoly</string>
     <string name="pref_category_reading_mode">Režim čtení</string>
@@ -409,7 +407,7 @@
     <string name="tapping_inverted_none">Žádné</string>
     <string name="ext_nsfw_warning">Zdroje z tohoto rozšíření mohou obsahovat NSFW (18+) obsah</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Toto rozšíření není z oficiálního seznamu rozšíření pro Tachiyomi.</string>
+    <string name="unofficial_extension_message">Toto rozšíření není z oficiálního seznamu rozšíření.</string>
     <string name="ext_unofficial">Neoficiální</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategorie</item>
@@ -445,7 +443,7 @@
     <string name="channel_progress">Postup</string>
     <string name="chapter_settings_updated">Výchozí nastavení kapitol aktualizováno</string>
     <string name="information_webview_outdated">Prosím aktualizujte aplikaci WebView pro lepší kompatibilitu</string>
-    <string name="information_webview_required">Je nutné mít nainstalovanou aplikaci WebView</string>
+    <string name="information_webview_required">Je nutné mít nainstalovanou aplikaci WebView pro správné fungování aplikace</string>
     <string name="information_cloudflare_bypass_failure">Nastala chyba při obcházení služby Cloudflare</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Je dostupná aktualizace rozšíření</item>
@@ -499,7 +497,6 @@
     <string name="action_search_settings">Nastavení vyhledávání</string>
     <string name="action_sort_date_added">Datum přidání</string>
     <string name="action_filter_tracked">Sledováno</string>
-    <string name="confirm_exit">Opětovným stisknutím tlačítka aplikaci opustíte</string>
     <string name="viewer">Režim čtení</string>
     <string name="pref_show_reading_mode">Ukazovat režim čtení</string>
     <string name="pref_category_for_this_series">Pro tuto sérii</string>
@@ -541,7 +538,7 @@
     <string name="action_sort_chapter_fetch_date">Datum načtení kapitoly</string>
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
-    <string name="rotation_type">Typ otočení</string>
+    <string name="rotation_type">Otáčení</string>
     <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
     <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
@@ -575,8 +572,8 @@
     <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
     <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to opravit.</string>
     <string name="restore_miui_warning">Pokud je MIUI optimalizace vypnutá, zálohování/obnovování nemusí fungovat správně.</string>
-    <string name="enhanced_tracking_info">Služby, které poskytují rozšířené funkce pro konkrétní zdroje. Záznamy jsou po přidání do knihovny automaticky sledovány.</string>
-    <string name="enhanced_services">Rozšířené služby</string>
+    <string name="enhanced_tracking_info">Poskytují rozšířené funkce pro konkrétní zdroje. Záznamy jsou po přidání do knihovny automaticky sledovány.</string>
+    <string name="enhanced_services">Vylepšené sledovače</string>
     <string name="tracking_guide">Návod ke sledování</string>
     <string name="pref_dark_theme_pure_black">Čistě černý tmavý režim</string>
     <string name="theme_yotsuba">Jotsuba</string>
@@ -685,7 +682,6 @@
     <string name="pref_navigate_pan">Posunutí širokých snímků</string>
     <string name="action_sort_unread_count">Počet nepřečtených</string>
     <string name="action_sort_last_manga_update">Poslední kontrola aktualizace</string>
-    <string name="battery_not_low">Když baterie není vybitá</string>
     <string name="cant_open_last_read_chapter">Nelze otevřít poslední přečtenou kapitolu</string>
     <string name="custom_cover">Vlastní obal</string>
     <string name="not_installed">Nenainstalováno</string>
@@ -828,9 +824,16 @@
     <string name="has_results">Má výsledky</string>
     <string name="syncing_library">Synchronizace knihovny</string>
     <string name="library_sync_complete">Synchronizace knihovny dokončena</string>
-    <string name="track_activity_name">Sledování přihlášení</string>
+    <string name="track_activity_name">Přihlášení sledovače</string>
     <string name="information_cloudflare_help">Klepněte zde pro pomoc s Cloudflare</string>
     <string name="download_cache_invalidated">Index stažených zneplatněn</string>
     <string name="create_backup_file_error">Nelze vytvořit soubor zálohy</string>
     <string name="licensed_manga_chapters_error">Licencováno - Žádné kapitoly k zobrazení</string>
+    <string name="exception_offline">Bez připojení k internetu</string>
+    <string name="exception_unknown_host">Nelze dosáhnout %s</string>
+    <string name="exception_http">HTTP %d, zkontrolovat web v WebView</string>
+    <string name="unlock_app_title">Odemknout %s</string>
+    <string name="action_move_to_bottom_all_for_series">Přesunout sérii na konec</string>
+    <string name="pref_relative_format">Relativní časová razítka</string>
+    <string name="pref_relative_format_summary">\"%1$s\" namísto \"%2$s\"</string>
 </resources>

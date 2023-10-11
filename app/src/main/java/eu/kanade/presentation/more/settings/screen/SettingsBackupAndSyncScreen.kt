@@ -211,7 +211,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                     showCreateDialog = false
                     flag = it
                     try {
-                        chooseBackupDir.launch(Backup.getBackupFilename())
+                        chooseBackupDir.launch(Backup.getFilename())
                     } catch (e: ActivityNotFoundException) {
                         flag = 0
                         context.toast(R.string.file_picker_error)
@@ -250,6 +250,8 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                 BackupConst.BACKUP_CHAPTER to R.string.chapters,
                 BackupConst.BACKUP_TRACK to R.string.track,
                 BackupConst.BACKUP_HISTORY to R.string.history,
+                BackupConst.BACKUP_APP_PREFS to R.string.app_settings,
+                BackupConst.BACKUP_SOURCE_PREFS to R.string.source_settings,
             )
         }
         val flags = remember { choices.keys.toMutableStateList() }

@@ -307,8 +307,6 @@
     <string name="action_sort_date_added">তারিখে যোগকৃত</string>
     <string name="action_sort_latest_chapter">সর্বশেষ অধ্যায়</string>
     <string name="action_menu">তালিকা</string>
-    <string name="confirm_exit">প্রস্থান করতে আবার ব্যাক চাপুন</string>
-    <string name="unlock_app">তাচিওমি খুলুন</string>
     <string name="label_sources">উৎস সমূহ</string>
     <string name="label_more">আরও</string>
     <string name="pref_category_display">প্রদর্শন</string>
@@ -460,7 +458,6 @@
     <string name="local_source_help_guide">স্থানীয় উৎস নির্দেশিকা</string>
     <string name="action_global_search_query">\"%1$s\" সার্বজনীনভাবে খুঁজুন</string>
     <string name="last_used_source">সর্বশেষ ব্যবহৃত</string>
-    <string name="http_error_hint">ওয়েবসাইটটি ওয়েবভিউতে পরীক্ষা করুন</string>
     <string name="tabs_header">ট্যাব গুলি</string>
     <string name="downloaded_chapters">ডাউনলোড করা অধ্যায়</string>
     <string name="manga_from_library">লাইব্রেরীর মাঙ্গা</string>

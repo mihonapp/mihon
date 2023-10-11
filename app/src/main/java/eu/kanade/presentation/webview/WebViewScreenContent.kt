@@ -175,7 +175,7 @@ fun WebViewScreenContent(
                 WarningBanner(
                     textRes = R.string.information_cloudflare_help,
                     modifier = Modifier.clickable {
-                        uriHandler.openUri("https://tachiyomi.org/help/guides/troubleshooting/#solving-cloudflare-issues")
+                        uriHandler.openUri("https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare")
                     },
                 )
             }

@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.util.BackupUtil
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
@@ -11,7 +11,7 @@ import uy.kohesive.injekt.api.get
 
 class BackupFileValidator(
     private val sourceManager: SourceManager = Injekt.get(),
-    private val trackManager: TrackManager = Injekt.get(),
+    private val trackerManager: TrackerManager = Injekt.get(),
 ) {
 
     /**
@@ -50,7 +50,7 @@ class BackupFileValidator(
             .map { it.syncId }
             .distinct()
         val missingTrackers = trackers
-            .mapNotNull { trackManager.getService(it.toLong()) }
+            .mapNotNull { trackerManager.get(it.toLong()) }
             .filter { !it.isLoggedIn }
             .map { it.name }
             .sorted()
@@ -58,5 +58,8 @@ class BackupFileValidator(
         return Results(missingSources, missingTrackers)
     }
 
-    data class Results(val missingSources: List<String>, val missingTrackers: List<String>)
+    data class Results(
+        val missingSources: List<String>,
+        val missingTrackers: List<String>,
+    )
 }

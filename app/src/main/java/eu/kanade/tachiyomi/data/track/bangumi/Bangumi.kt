@@ -4,19 +4,19 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Bangumi(id: Long) : TrackService(id, "Bangumi") {
+class Bangumi(id: Long) : Tracker(id, "Bangumi") {
 
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { BangumiInterceptor(this) }
 
-    private val api by lazy { BangumiApi(client, interceptor) }
+    private val api by lazy { BangumiApi(id, client, interceptor) }
 
     override fun getScoreList(): List<String> {
         return IntRange(0, 10).map(Int::toString)

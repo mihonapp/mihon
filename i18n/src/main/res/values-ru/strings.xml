@@ -160,7 +160,7 @@
     <string name="scale_type_stretch">Растянуть</string>
     <string name="score">Оценка</string>
     <string name="second_to_last">Предпоследняя прочитанная глава</string>
-    <string name="services">Сервисы</string>
+    <string name="services">Сервисы отслеживания</string>
     <string name="set_as_cover">Установить как обложку</string>
     <string name="show_chapter_number">Номер главы</string>
     <string name="show_title">Название источника</string>
@@ -251,7 +251,7 @@
     <string name="untrusted_extension">Ненадёжное расширение</string>
     <string name="untrusted_extension_message">Это расширение было подписано ненадёжным сертификатом и не было активировано.
 \n
-\nВредоносное расширение может считывать любые учетные данные для входа, хранящиеся в Tachiyomi, или выполнять произвольный код.
+\nВредоносное расширение может считывать и хранить любые учётные данные для входа или выполнять произвольный код.
 \n
 \nДоверяя этому сертификату, вы принимаете эти риски.</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
@@ -354,7 +354,6 @@
     </plurals>
     <string name="notification_check_updates">Проверка наличия новых глав</string>
     <string name="updating_library">Обновление библиотеки</string>
-    <string name="http_error_hint">Проверить сайт в WebView</string>
     <string name="battery_optimization_disabled">Оптимизация батареи уже выключена</string>
     <string name="pref_disable_battery_optimization_summary">Помогает с обновлением библиотеки и резервной копией в фоне</string>
     <string name="pref_disable_battery_optimization">Отключить оптимизацию батареи</string>
@@ -373,7 +372,6 @@
     <string name="action_move_to_top">В начало</string>
     <string name="action_move_to_bottom">В конец</string>
     <string name="channel_ext_updates">Обновления расширений</string>
-    <string name="unlock_app">Разблокировать Tachiyomi</string>
     <string name="action_menu">Меню</string>
     <string name="label_sources">Источники</string>
     <string name="pref_category_reading">Чтение</string>
@@ -385,9 +383,8 @@
     <string name="action_unpin">Открепить</string>
     <string name="action_pin">Закрепить</string>
     <string name="add_tracking">Добавить отслеживание</string>
-    <string name="confirm_exit">Нажмите ещё раз, чтобы выйти</string>
     <string name="label_downloaded_only">Только загруженные главы</string>
-    <string name="information_webview_required">Для Tachiyomi необходим WebView</string>
+    <string name="information_webview_required">Для работы приложения необходимо WebView</string>
     <string name="manga_info_collapse">Меньше</string>
     <string name="manga_info_expand">Больше</string>
     <string name="in_library">В библиотеке</string>
@@ -429,8 +426,8 @@
         <item quantity="many">Выполнено за %1$s с %2$s ошибками</item>
         <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
     </plurals>
-    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
-    <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений Tachiyomi.</string>
+    <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сторонних сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
+    <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений.</string>
     <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата добавления</string>
     <string name="label_data">Данные</string>
@@ -597,8 +594,8 @@
     <string name="notification_updating">Обновление библиотеки… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">У некоторых производителей есть дополнительные ограничения для приложений, которые убивают фоновые службы. На этом сайте есть более подробная информация о том, как это исправить.</string>
     <string name="restore_miui_warning">Резервная копия/Восстановление может не работать должным образом, если отключена «Оптимизация MIUI».</string>
-    <string name="enhanced_tracking_info">Сервисы, предоставляющие расширенные возможности для определённых источников. Серии будут автоматически отслеживаться при добавлении в библиотеку.</string>
-    <string name="enhanced_services">Расширенные сервисы</string>
+    <string name="enhanced_tracking_info">Предоставляет расширенные возможности для определённых источников. Серии будут автоматически отслеживаться при добавлении в библиотеку.</string>
+    <string name="enhanced_services">Расширенные сервисы отслеживания</string>
     <string name="theme_monet">Динамическая</string>
     <string name="label_background_activity">Фоновая активность</string>
     <string name="pref_lowest">Самая низкая</string>
@@ -676,7 +673,6 @@
     <string name="webview_data_deleted">Данные WebView очищены</string>
     <string name="pref_clear_webview_data">Очистить данные WebView</string>
     <string name="action_close">Закрыть</string>
-    <string name="battery_not_low">Когда батарея заряжена</string>
     <string name="source_filter_empty_screen">Не найдено установленных источников</string>
     <string name="source_empty_screen">Не найдено источников</string>
     <string name="action_sort_last_manga_update">Последняя проверка обновления</string>
@@ -825,7 +821,7 @@
     <string name="manga_modify_calculated_interval_title">Настроить интервал</string>
     <string name="action_set_interval">Задать интервал</string>
     <string name="action_filter_interval_late">Проверка поздних 10+ дней</string>
-    <string name="action_filter_interval_passed">Прошедшая проверка периода</string>
+    <string name="action_filter_interval_passed">Срок проверки истёк</string>
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
     <string name="pref_update_only_in_release_period">За пределами ожидаемого периода выпуска</string>
     <string name="manga_display_modified_interval_title">Задать обновления каждые</string>
@@ -837,7 +833,7 @@
     </plurals>
     <string name="skipped_reason_not_in_release_period">Пропущено, т.к сегодня не ожидается выпуска</string>
     <string name="track_delete_title">Удалить отслеживание %s\?</string>
-    <string name="track_delete_text">Это удалит отслеживание локально.</string>
+    <string name="track_delete_text">Это удалит отслеживание в приложении.</string>
     <string name="track_delete_remote_text">Также удалить из %s</string>
     <string name="action_ok">ОК</string>
     <string name="delete_downloaded">Удалить загруженное</string>
@@ -847,6 +843,13 @@
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
     <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
     <string name="create_backup_file_error">Не удалось создать файл резервной копии</string>
-    <string name="licensed_manga_chapters_error">Лицензировано - Нет глав для показа</string>
+    <string name="licensed_manga_chapters_error">Лицензировано - Нет глав</string>
     <string name="track_activity_name">Вход в сервис отслеживания</string>
+    <string name="exception_http">HTTP %d, проверьте сайт в WebView</string>
+    <string name="exception_offline">Нет подключения к интернету</string>
+    <string name="exception_unknown_host">Не удалось достичь %s</string>
+    <string name="unlock_app_title">Разблокировать %s</string>
+    <string name="action_move_to_bottom_all_for_series">Переместить серию в конец</string>
+    <string name="pref_relative_format">Относительные временные метки</string>
+    <string name="pref_relative_format_summary">\"%1$s\" вместо \"%2$s\"</string>
 </resources>

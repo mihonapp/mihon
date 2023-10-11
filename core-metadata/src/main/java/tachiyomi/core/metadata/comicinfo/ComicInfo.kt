@@ -8,6 +8,27 @@ import nl.adaptivity.xmlutil.serialization.XmlValue
 
 const val COMIC_INFO_FILE = "ComicInfo.xml"
 
+fun SManga.getComicInfo() = ComicInfo(
+    series = ComicInfo.Series(title),
+    summary = description?.let { ComicInfo.Summary(it) },
+    writer = author?.let { ComicInfo.Writer(it) },
+    penciller = artist?.let { ComicInfo.Penciller(it) },
+    genre = genre?.let { ComicInfo.Genre(it) },
+    publishingStatus = ComicInfo.PublishingStatusTachiyomi(
+        ComicInfoPublishingStatus.toComicInfoValue(status.toLong()),
+    ),
+    title = null,
+    number = null,
+    web = null,
+    translator = null,
+    inker = null,
+    colorist = null,
+    letterer = null,
+    coverArtist = null,
+    tags = null,
+    categories = null,
+)
+
 fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
     comicInfo.series?.let { title = it.value }
     comicInfo.writer?.let { author = it.value }
@@ -39,6 +60,8 @@ fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
     status = ComicInfoPublishingStatus.toSMangaValue(comicInfo.publishingStatus?.value)
 }
 
+// https://anansi-project.github.io/docs/comicinfo/schemas/v2.0
+@Suppress("UNUSED")
 @Serializable
 @XmlSerialName("ComicInfo", "", "")
 data class ComicInfo(
@@ -59,12 +82,10 @@ data class ComicInfo(
     val publishingStatus: PublishingStatusTachiyomi?,
     val categories: CategoriesTachiyomi?,
 ) {
-    @Suppress("UNUSED")
     @XmlElement(false)
     @XmlSerialName("xmlns:xsd", "", "")
     val xmlSchema: String = "http://www.w3.org/2001/XMLSchema"
 
-    @Suppress("UNUSED")
     @XmlElement(false)
     @XmlSerialName("xmlns:xsi", "", "")
     val xmlSchemaInstance: String = "http://www.w3.org/2001/XMLSchema-instance"

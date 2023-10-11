@@ -264,7 +264,7 @@ internal class ExtensionInstaller(private val context: Context) {
             isRegistered = true
 
             val filter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-            context.registerReceiver(this, filter)
+            ContextCompat.registerReceiver(context, this, filter, ContextCompat.RECEIVER_EXPORTED)
         }
 
         /**

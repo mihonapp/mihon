@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.saver
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
@@ -28,30 +27,59 @@ class ImageSaver(
     val context: Context,
 ) {
 
-    @SuppressLint("InlinedApi")
     fun save(image: Image): Uri {
         val data = image.data
 
-        val type = ImageUtil.findImageType(data) ?: throw Exception("Not an image")
+        val type = ImageUtil.findImageType(data) ?: throw IllegalArgumentException("Not an image")
         val filename = DiskUtil.buildValidFilename("${image.name}.${type.extension}")
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || image.location !is Location.Pictures) {
             return save(data(), image.location.directory(context), filename)
         }
 
+        return saveApi29(image, type, filename, data)
+    }
+
+    private fun save(inputStream: InputStream, directory: File, filename: String): Uri {
+        directory.mkdirs()
+
+        val destFile = File(directory, filename)
+
+        inputStream.use { input ->
+            destFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        DiskUtil.scanMedia(context, destFile.toUri())
+
+        return destFile.getUriCompat(context)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveApi29(
+        image: Image,
+        type: ImageUtil.ImageType,
+        filename: String,
+        data: () -> InputStream,
+    ): Uri {
         val pictureDir =
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
-        val folderRelativePath = "${Environment.DIRECTORY_PICTURES}/${context.getString(R.string.app_name)}/"
         val imageLocation = (image.location as Location.Pictures).relativePath
+        val relativePath = listOf(
+            Environment.DIRECTORY_PICTURES,
+            context.getString(R.string.app_name),
+            imageLocation,
+        ).joinToString(File.separator)
 
         val contentValues = contentValuesOf(
+            MediaStore.Images.Media.RELATIVE_PATH to relativePath,
             MediaStore.Images.Media.DISPLAY_NAME to image.name,
             MediaStore.Images.Media.MIME_TYPE to type.mime,
-            MediaStore.Images.Media.RELATIVE_PATH to folderRelativePath + imageLocation,
         )
 
-        val picture = findUriOrDefault(folderRelativePath, "$imageLocation$filename") {
+        val picture = findUriOrDefault(relativePath, filename) {
             context.contentResolver.insert(
                 pictureDir,
                 contentValues,
@@ -74,49 +102,34 @@ class ImageSaver(
         return picture
     }
 
-    private fun save(inputStream: InputStream, directory: File, filename: String): Uri {
-        directory.mkdirs()
-
-        val destFile = File(directory, filename)
-
-        inputStream.use { input ->
-            destFile.outputStream().use { output ->
-                input.copyTo(output)
-            }
-        }
-
-        DiskUtil.scanMedia(context, destFile.toUri())
-
-        return destFile.getUriCompat(context)
-    }
-
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun findUriOrDefault(relativePath: String, imagePath: String, default: () -> Uri): Uri {
+    private fun findUriOrDefault(path: String, filename: String, default: () -> Uri): Uri {
         val projection = arrayOf(
             MediaStore.MediaColumns._ID,
             MediaStore.MediaColumns.DISPLAY_NAME,
-            MediaStore.Images.Media.MIME_TYPE,
             MediaStore.MediaColumns.RELATIVE_PATH,
-            MediaStore.MediaColumns.DATE_MODIFIED,
         )
 
         val selection = "${MediaStore.MediaColumns.RELATIVE_PATH}=? AND ${MediaStore.MediaColumns.DISPLAY_NAME}=?"
+
+        // Need to make sure it ends with the separator
+        val normalizedPath = "${path.removeSuffix(File.separator)}${File.separator}"
 
         context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
             selection,
-            arrayOf(relativePath, imagePath),
+            arrayOf(normalizedPath, filename),
             null,
         ).use { cursor ->
             if (cursor != null && cursor.count >= 1) {
-                cursor.moveToFirst().let {
+                if (cursor.moveToFirst()) {
                     val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
-
                     return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
                 }
             }
         }
+
         return default()
     }
 }
@@ -153,19 +166,12 @@ sealed class Image(
 }
 
 sealed interface Location {
-    data class Pictures private constructor(val relativePath: String) : Location {
-        companion object {
-            fun create(relativePath: String = ""): Pictures {
-                return Pictures(relativePath)
-            }
-        }
-    }
+    data class Pictures(val relativePath: String) : Location
 
     data object Cache : Location
 
     fun directory(context: Context): File {
         return when (this) {
-            Cache -> context.cacheImageDir
             is Pictures -> {
                 val file = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -179,6 +185,7 @@ sealed interface Location {
                 }
                 file
             }
+            Cache -> context.cacheImageDir
         }
     }
 }

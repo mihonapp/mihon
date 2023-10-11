@@ -324,7 +324,6 @@
     <string name="ext_updates_pending">待更新</string>
     <string name="information_cloudflare_bypass_failure">无法绕过 Cloudflare</string>
     <string name="information_webview_outdated">请更新 WebView 应用以获得更好的兼容性</string>
-    <string name="unlock_app">解锁 Tachiyomi</string>
     <string name="secure_screen_summary">阻止截屏，并在切换后台时隐藏预览图</string>
     <string name="pref_category_display">显示</string>
     <string name="channel_new_chapters">章节更新</string>
@@ -358,7 +357,6 @@
         <item quantity="other">%d 个插件可更新</item>
     </plurals>
     <string name="channel_ext_updates">插件更新</string>
-    <string name="http_error_hint">在 WebView 中检查网站</string>
     <string name="label_sources">图源</string>
     <string name="updating_library">正在更新书架</string>
     <string name="pref_category_reading">阅读</string>
@@ -375,7 +373,6 @@
     <string name="manga_info_expand">展开</string>
     <string name="licenses">开源许可证</string>
     <string name="website">官网</string>
-    <string name="confirm_exit">再按一次退出</string>
     <string name="add_to_library">添加到书架</string>
     <string name="in_library">在书架中</string>
     <string name="label_downloaded_only">仅限已下载内容</string>
@@ -639,7 +636,6 @@
     <string name="update_check_open">打开 GitHub 页面</string>
     <string name="webview_data_deleted">已清除 WebView 数据</string>
     <string name="pref_clear_webview_data">清除 WebView 数据</string>
-    <string name="battery_not_low">非低电量时</string>
     <string name="action_close">关闭</string>
     <string name="source_filter_empty_screen">未找到已安装的图源</string>
     <string name="source_empty_screen">未找到图源</string>
@@ -800,4 +796,8 @@
     <string name="download_cache_invalidated">已清除下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
     <string name="create_backup_file_error">无法创建备份文件</string>
+    <string name="licensed_manga_chapters_error">已有正版，没有章节可供显示</string>
+    <string name="exception_offline">未连接网络</string>
+    <string name="exception_http">HTTP %d，请在 WebView 中检查网站</string>
+    <string name="exception_unknown_host">无法连接到 %s</string>
 </resources>

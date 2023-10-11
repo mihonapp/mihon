@@ -11,12 +11,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LinkIcon(
-    modifier: Modifier = Modifier,
-    label: String,
-    icon: ImageVector,
-    url: String,
-) {
+fun LinkIcon(modifier: Modifier = Modifier, label: String, icon: ImageVector, url: String) {
     val uriHandler = LocalUriHandler.current
     IconButton(
         modifier = modifier.padding(4.dp),

@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.Tracker
 
 @Composable
 fun TrackingPreferenceWidget(
     modifier: Modifier = Modifier,
-    service: TrackService,
+    tracker: Tracker,
     checked: Boolean,
     onClick: (() -> Unit)? = null,
 ) {
@@ -38,9 +38,9 @@ fun TrackingPreferenceWidget(
                 .padding(horizontal = PrefsHorizontalPadding, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TrackLogoIcon(service)
+            TrackLogoIcon(tracker)
             Text(
-                text = service.name,
+                text = tracker.name,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),

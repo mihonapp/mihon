@@ -116,7 +116,7 @@ object HistoryTab : Tab {
         }
     }
 
-    suspend fun openChapter(context: Context, chapter: Chapter?) {
+    private suspend fun openChapter(context: Context, chapter: Chapter?) {
         if (chapter != null) {
             val intent = ReaderActivity.newIntent(context, chapter.mangaId, chapter.id)
             context.startActivity(intent)

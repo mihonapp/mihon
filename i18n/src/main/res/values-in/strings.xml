@@ -110,7 +110,7 @@
     <string name="zoom_start_left">Kiri</string>
     <string name="zoom_start_right">Kanan</string>
     <string name="zoom_start_center">Tengah</string>
-    <string name="pref_rotation_type">Tipe rotasi bawaan</string>
+    <string name="pref_rotation_type">rotasi bawaan</string>
     <string name="rotation_free">Bebas</string>
     <string name="rotation_force_portrait">Terkunci tegak</string>
     <string name="rotation_force_landscape">Terkunci mendatar</string>
@@ -129,7 +129,7 @@
     <string name="fourth_to_last">Bab keempat dari terakhir dibaca</string>
     <string name="fifth_to_last">Bab kelima dari terakhir dibaca</string>
     <string name="pref_download_new">Unduh bab baru</string>
-    <string name="services">Layanan</string>
+    <string name="services">Pelacakan</string>
     <string name="pref_create_backup">Buat cadangan</string>
     <string name="pref_create_backup_summ">Dapat digunakan untuk memulihkan isi pustaka saat ini</string>
     <string name="pref_restore_backup">Pulihkan cadangan</string>
@@ -248,11 +248,11 @@
     <string name="ext_untrusted">Tidak terpercaya</string>
     <string name="ext_uninstall">Lepas</string>
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
-    <string name="untrusted_extension_message">Ekstensi ini ditanda tangani dengan sertifikat yang tidak terpercaya dan belum diaktifkan.
+    <string name="untrusted_extension_message">Ekstensi ini ditandatangani dengan sertifikat tidak tepercaya dan tidak diaktifkan.
 \n
-\nSebuah ekstensi berbahaya dapat membaca kredensial login Anda yang tersimpan pada Tachiyomi atau mengeksekusi kode berbahaya.
+\nEkstensi berbahaya dapat membaca kredensial login apa pun yang disimpan atau mengeksekusi kode arbitrer.
 \n
-\nDengan mempercayai sertifikat ini Anda menyetujui resiko tersebut.</string>
+\nDengan mempercayai sertifikat ini, Anda menerima risiko ini.</string>
     <string name="pref_double_tap_anim_speed">Kecepatan animasi ketukan dua kali</string>
     <string name="double_tap_anim_speed_0">Tanpa animasi</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -306,7 +306,6 @@
     <string name="theme_system">Ikuti sistem</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
     <string name="pref_category_security">Keamanan dan privasi</string>
-    <string name="unlock_app">Buka Tachiyomi</string>
     <string name="action_menu">Menu</string>
     <string name="action_newest">Terbaru</string>
     <string name="action_oldest">Terlama</string>
@@ -355,7 +354,7 @@
     <string name="label_sources">Sumber</string>
     <string name="channel_ext_updates">Pembaruan ekstensi</string>
     <string name="pref_category_reading">Membaca</string>
-    <string name="information_webview_required">WebView dibutuhkan untuk Tachiyomi</string>
+    <string name="information_webview_required">WebView diperlukan agar aplikasi dapat berfungsi</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="other">Terdapat %d perbaruan ekstensi</item>
     </plurals>
@@ -366,7 +365,6 @@
     <string name="manga_info_expand">Selengkapnya</string>
     <string name="in_library">Di pustaka</string>
     <string name="add_to_library">Tambahkan ke pustaka</string>
-    <string name="http_error_hint">Cek dalam WebView</string>
     <string name="licenses">Lisensi terbuka</string>
     <string name="restoring_backup_error">Gagal memulihkan data dari cadangan</string>
     <string name="creating_backup_error">Pencadangan data gagal</string>
@@ -375,7 +373,6 @@
     <string name="action_unpin">Hilangkan tanda</string>
     <string name="action_pin">Tandai</string>
     <string name="action_select_inverse">Pilih kebalikan</string>
-    <string name="confirm_exit">Tekan lagi untuk keluar</string>
     <string name="label_downloaded_only">Hanya yang sudah diunduh</string>
     <string name="pinned_sources">Tersemat</string>
     <string name="website">Situs web</string>
@@ -403,8 +400,8 @@
     <plurals name="restore_completed_message">
         <item quantity="other">Selesai dalam %1$s dengan %2$s kesalahan</item>
     </plurals>
-    <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui kemajuan bab dalam layanan pelacakan. Siapkan pelacakan untuk entri individu dari tombol pelacakan mereka.</string>
-    <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar ekstensi resmi Tachiyomi.</string>
+    <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui kemajuan bab di layanan pelacak eksternal. Siapkan pelacakan untuk setiap entri dari tombol pelacaknya.</string>
+    <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar resmi.</string>
     <string name="ext_unofficial">Tidak resmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Periksa sampul dan detail baru saat memperbarui pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segarkan metadata secara otomatis</string>
@@ -526,7 +523,7 @@
     <string name="rotation_landscape">Layar mendatar</string>
     <string name="rotation_portrait">Layar Tegak</string>
     <string name="pref_download_new_categories_details">Entri dalam kategori yang dikecualikan tidak akan diunduh meskipun mereka juga termasuk dalam kategori yang disertakan.</string>
-    <string name="rotation_type">Jenis rotasi</string>
+    <string name="rotation_type">Rotasi</string>
     <string name="pref_grayscale">Skala abu-abu</string>
     <string name="pref_show_navigation_mode">Tampilkan zona ketukan</string>
     <string name="pref_library_update_categories_details">Entri dalam kategori yang dikecualikan tidak akan diperbarui meskipun mereka juga termasuk dalam kategori yang disertakan.</string>
@@ -554,8 +551,8 @@
     <string name="about_dont_kill_my_app">Beberapa pabrikan mempunyai batasan aplikasi tambahan yang mematikan layanan latar belakang. Website ini memiliki info lebih lanjut untuk memperbaikinya.</string>
     <string name="notification_updating">Memperbarui pustaka... (%1$d/%2$d)</string>
     <string name="restore_miui_warning">Pencadangan/pemulihan mungkin tidak berfungsi jika Optimisasi MIUI dimatikan.</string>
-    <string name="enhanced_tracking_info">Layanan yang menyediakan fitur yang ditingkatan untuk sumber tertentu. Entri dilacak secara otomatis ketika ditambahkan ke pustaka Anda.</string>
-    <string name="enhanced_services">Layanan yang ditingkatkan</string>
+    <string name="enhanced_tracking_info">Menyediakan fitur yang disempurnakan untuk sumber tertentu. Entri secara otomatis dilacak ketika ditambahkan ke perpustakaan Anda.</string>
+    <string name="enhanced_services">Pelacak yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
     <string name="theme_yotsuba">yotsuba</string>
     <string name="theme_yinyang">Yin dan Yang</string>
@@ -640,7 +637,6 @@
     <string name="pref_clear_webview_data">Membersihkan data WebView</string>
     <string name="webview_data_deleted">Data WebView telah dibersihkan</string>
     <string name="action_close">Tutup</string>
-    <string name="battery_not_low">Saat baterai tidak lemah</string>
     <string name="source_filter_empty_screen">Sumber yang diinstal tidak ditemukan</string>
     <string name="source_empty_screen">Tidak ada sumber yang ditemukan</string>
     <string name="action_sort_last_manga_update">Pembaruan terakhir</string>
@@ -801,4 +797,11 @@
     <string name="track_activity_name">Pelacak login</string>
     <string name="create_backup_file_error">Tidak dapat membuat file cadangan</string>
     <string name="licensed_manga_chapters_error">Lisensi - Tidak ada chapter untuk ditampilkan</string>
+    <string name="unlock_app_title">Buka kunci %s</string>
+    <string name="exception_offline">Tidak ada koneksi Internet</string>
+    <string name="exception_http">HTTP %d, periksa situs web di WebView</string>
+    <string name="exception_unknown_host">Tidak dapat mencapai %s</string>
+    <string name="action_move_to_bottom_all_for_series">Pindahkan seri ke bawah</string>
+    <string name="pref_relative_format">Penanda waktu</string>
+    <string name="pref_relative_format_summary">\"%1$s\" seharusnya \"%2$s\"</string>
 </resources>

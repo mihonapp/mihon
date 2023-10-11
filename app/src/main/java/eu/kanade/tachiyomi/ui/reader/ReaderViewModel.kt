@@ -27,7 +27,6 @@ import eu.kanade.tachiyomi.ui.reader.loader.DownloadPageLoader
 import eu.kanade.tachiyomi.ui.reader.model.InsertPage
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
-import eu.kanade.tachiyomi.ui.reader.model.StencilPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
@@ -405,8 +404,8 @@ class ReaderViewModel @JvmOverloads constructor(
      * [page]'s chapter is different from the currently active.
      */
     fun onPageSelected(page: ReaderPage) {
-        // InsertPage and StencilPage doesn't change page progress
-        if (page is InsertPage || page is StencilPage) {
+        // InsertPage doesn't change page progress
+        if (page is InsertPage) {
             return
         }
 
@@ -741,17 +740,14 @@ class ReaderViewModel @JvmOverloads constructor(
 
         val filename = generateFilename(manga, page)
 
-        // Pictures directory.
-        val relativePath = if (readerPreferences.folderPerManga().get()) DiskUtil.buildValidFilename(manga.title) else ""
-
-        // Copy file in background.
+        // Copy file in background
         viewModelScope.launchNonCancellable {
             try {
                 val uri = imageSaver.save(
                     image = Image.Page(
                         inputStream = page.stream!!,
                         name = filename,
-                        location = Location.Pictures.create(relativePath),
+                        location = Location.Pictures(DiskUtil.buildValidFilename(manga.title)),
                     ),
                 )
                 withUIContext {

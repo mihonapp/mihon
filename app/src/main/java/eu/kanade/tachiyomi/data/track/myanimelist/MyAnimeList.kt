@@ -4,14 +4,14 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.DeletableTrackService
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class MyAnimeList(id: Long) : TrackService(id, "MyAnimeList"), DeletableTrackService {
+class MyAnimeList(id: Long) : Tracker(id, "MyAnimeList"), DeletableTracker {
 
     companion object {
         const val READING = 1
@@ -28,7 +28,7 @@ class MyAnimeList(id: Long) : TrackService(id, "MyAnimeList"), DeletableTrackSer
     private val json: Json by injectLazy()
 
     private val interceptor by lazy { MyAnimeListInterceptor(this, getPassword()) }
-    private val api by lazy { MyAnimeListApi(client, interceptor) }
+    private val api by lazy { MyAnimeListApi(id, client, interceptor) }
 
     override val supportsReadingDates: Boolean = true
 

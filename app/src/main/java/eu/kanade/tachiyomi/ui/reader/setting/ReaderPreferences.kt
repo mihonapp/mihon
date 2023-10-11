@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.reader.setting
 
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
 
@@ -33,9 +32,6 @@ class ReaderPreferences(
 
     fun defaultOrientationType() = preferenceStore.getInt("pref_default_orientation_type_key", OrientationType.FREE.flagValue)
 
-    // TODO: Enable in release build when the feature is stable
-    fun longStripSplitWebtoon() = preferenceStore.getBoolean("pref_long_strip_split_webtoon", !isReleaseBuildType)
-
     fun webtoonDoubleTapZoomEnabled() = preferenceStore.getBoolean("pref_enable_double_tap_zoom_webtoon", true)
 
     fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
@@ -57,8 +53,6 @@ class ReaderPreferences(
     fun webtoonSidePadding() = preferenceStore.getInt("webtoon_side_padding", WEBTOON_PADDING_MIN)
 
     fun readerHideThreshold() = preferenceStore.getEnum("reader_hide_threshold", ReaderHideThreshold.LOW)
-
-    fun folderPerManga() = preferenceStore.getBoolean("create_folder_per_manga", false)
 
     fun skipRead() = preferenceStore.getBoolean("skip_read", false)
 

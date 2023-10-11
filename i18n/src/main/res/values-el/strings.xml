@@ -97,9 +97,9 @@
     <string name="ext_untrusted">Μη αξιόπιστο</string>
     <string name="ext_uninstall">Απεγκατάσταση</string>
     <string name="untrusted_extension">Μη αξιόπιστη επέκταση</string>
-    <string name="untrusted_extension_message">Αυτή η επέκταση υπογράφηκε με μη αξιόπιστο πιστοποιητικό και δεν ενεργοποιήθηκε.
+    <string name="untrusted_extension_message">Αυτή η επέκταση υπογράφηκε με αναξιόπιστο πιστοποιητικό και δεν ενεργοποιήθηκε.
 \n
-\nΜια κακόβουλη επέκταση θα μπορούσε να διαβάσει τα διαπιστευτήρια σύνδεσης που είναι αποθηκευμένα στο Tachiyomi ή να εκτελέσει αυθαίρετο κώδικα.
+\nΜια κακόβουλη επέκταση θα μπορούσε να διαβάσει τυχόν αποθηκευμένα διαπιστευτήρια σύνδεσης ή να εκτελέσει αυθαίρετο κώδικα.
 \n
 \nΕμπιστεύοντας αυτό το πιστοποιητικό αποδέχεστε αυτούς τους κινδύνους.</string>
     <string name="pref_fullscreen">Πλήρης οθόνη</string>
@@ -137,7 +137,7 @@
     <string name="double_tap_anim_speed_0">Χωρίς κίνηση</string>
     <string name="double_tap_anim_speed_normal">Κανονική</string>
     <string name="double_tap_anim_speed_fast">Γρήγορη</string>
-    <string name="pref_rotation_type">Προεπιλεγμένος τύπος περιστροφής</string>
+    <string name="pref_rotation_type">Προεπιλεγμένη περιστροφή</string>
     <string name="rotation_free">Ελεύθερο</string>
     <string name="rotation_force_portrait">Κλειδωμένο κατακόρυφα</string>
     <string name="rotation_force_landscape">Κλειδωμένο οριζόντια</string>
@@ -156,7 +156,7 @@
     <string name="fourth_to_last">Προ-προ-προτελευταίο αναγνωσμένο κεφάλαιο</string>
     <string name="fifth_to_last">Προ-προ-προ-προτελευταίο αναγνωσμένο κεφάλαιο</string>
     <string name="pref_download_new">Λήψη νέων κεφαλαίων</string>
-    <string name="services">Υπηρεσίες</string>
+    <string name="services">Ιχνηλάτες</string>
     <string name="pref_create_backup">Δημιουργία αντιγράφου ασφαλείας</string>
     <string name="pref_create_backup_summ">Μπορεί να χρησιμοποιηθεί για επαναφορά τρέχουσας βιβλιοθήκης</string>
     <string name="pref_restore_backup">Επαναφορά αντιγράφου ασφαλείας</string>
@@ -302,13 +302,12 @@
     <string name="last_used_source">Χρησιμοποιήθηκε τελευταία</string>
     <string name="add_tracking">Προσθήκη tracking</string>
     <string name="pinned_sources">Καρφιτσωμένα</string>
-    <string name="confirm_exit">Πατήστε ξανά για έξοδο</string>
     <string name="restore_duration">%02d λεπτά, %02d δευτερόλεπτα</string>
     <string name="action_select_inverse">Επιλογή αντίστροφου</string>
     <string name="channel_ext_updates">Ενημερώσεις επεκτάσεων</string>
     <string name="channel_new_chapters">Ενημερώσεις κεφαλαίων</string>
     <string name="information_webview_outdated">Παρακαλώ ενημερώστε την εφαρμογή WebView για καλύτερη συμβατότητα</string>
-    <string name="information_webview_required">Το WebView απαιτείται για το Tachiyomi</string>
+    <string name="information_webview_required">Το WebView απαιτείται για τη λειτουργία της εφαρμογής</string>
     <string name="notification_chapters_single_and_more">Κεφάλαιο %1$s και %2$d ακόμη</string>
     <string name="notification_chapters_multiple">Κεφάλαια %1$s</string>
     <string name="notification_chapters_single">Κεφάλαιο %1$s</string>
@@ -334,7 +333,6 @@
         <item quantity="one">Διαθέσιμη ενημέρωση επέκτασης</item>
         <item quantity="other">%d διαθέσιμες ενημερώσεις επεκτάσεων</item>
     </plurals>
-    <string name="http_error_hint">Ελέγξτε τον ιστότοπο στο WebView</string>
     <string name="logout_success">Έχετε αποσυνδεθεί</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="logout_title">Αποσύνδεση από %1$s;</string>
@@ -385,7 +383,6 @@
     <string name="action_view_chapters">Προβολή κεφαλαίων</string>
     <string name="action_sort_latest_chapter">Νεότερο κεφάλαιο</string>
     <string name="action_menu">Μενού</string>
-    <string name="unlock_app">Ξεκλειδώστε το Tachiyomi</string>
     <string name="label_downloaded_only">Ληφθέντα μόνο</string>
     <string name="label_sources">Πηγές</string>
     <string name="action_oldest">Παλαιότερο</string>
@@ -412,9 +409,9 @@
         <item quantity="one">Έγινε σε %1$s με %2$s σφάλμα</item>
         <item quantity="other">Έγινε σε %1$s με %2$s σφάλματα</item>
     </plurals>
-    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
+    <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών εξωτερικής παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων βιβλιοθήκης</string>
-    <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα επεκτάσεων Tachiyomi.</string>
+    <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα.</string>
     <string name="ext_unofficial">Ανεπίσημη</string>
     <string name="sort_by_upload_date">Από ημερομηνία μεταφόρτωσης</string>
     <string name="label_data">Δεδομένα</string>
@@ -538,7 +535,7 @@
     <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
     <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
-    <string name="rotation_type">Τύπος περιστροφής</string>
+    <string name="rotation_type">Περιστροφή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>
     <string name="notification_incognito_text">Απενεργοποίηση λειτουργίας ανώνυμης περιήγησης</string>
     <string name="automatic_background">Αυτόματο</string>
@@ -575,8 +572,8 @@
     <string name="theme_yinyang">Γιν και Γιανγκ</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Φράουλα Daiquiri</string>
-    <string name="enhanced_tracking_info">Υπηρεσίες που παρέχουν βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
-    <string name="enhanced_services">Βελτιωμένες υπηρεσίες</string>
+    <string name="enhanced_tracking_info">Παρέχει βελτιωμένες δυνατότητες για συγκεκριμένες πηγές. Οι καταχωρήσεις παρακολουθούνται αυτόματα όταν προστίθενται στη βιβλιοθήκη σας.</string>
+    <string name="enhanced_services">Ενισχυμένοι trackers</string>
     <string name="theme_monet">Δυναμικό</string>
     <string name="label_background_activity">Δραστηριότητα παρασκηνίου</string>
     <string name="pref_lowest">Χαμηλότερη</string>
@@ -643,7 +640,7 @@
     <string name="channel_skipped">Παραλήφθηκαν</string>
     <string name="notification_update_skipped">%1$d ενημέρωση(εις) παραλείφθηκε(-αν)</string>
     <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
-    <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς στην κορυφή</string>
+    <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς προς τα πάνω</string>
     <string name="disabled_nav">Απενεργοποιημένο</string>
     <string name="update_check_fdroid_migration_info">Μια νέα έκδοση είναι διαθέσιμη από τις επίσημες κυκλοφορίες. Πατήστε για να μάθετε πώς να μεταβείτε από ανεπίσημες κυκλοφορίες του F-Droid.</string>
     <string name="error_saving_picture">Σφάλμα κατά την αποθήκευση της εικόνας</string>
@@ -652,7 +649,6 @@
     <string name="webview_data_deleted">Τα δεδομένα WebView διαγράφηκαν</string>
     <string name="pref_clear_webview_data">Διαγραφή δεδομένων WebView</string>
     <string name="action_close">Κλείσιμο</string>
-    <string name="battery_not_low">Όταν η μπαταρία δεν είναι χαμηλή</string>
     <string name="source_filter_empty_screen">Δε βρέθηκε εγκατεστημένη πηγή</string>
     <string name="action_sort_unread_count">Αριθμός μη αναγνωσμένων</string>
     <string name="action_sort_last_manga_update">Τελευταίος έλεγχος ενημέρωσης</string>
@@ -817,4 +813,11 @@
     <string name="track_activity_name">Σύνδεση παρακολούθησης</string>
     <string name="create_backup_file_error">Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας</string>
     <string name="licensed_manga_chapters_error">Αδειοδοτημένο - Δεν υπάρχουν κεφάλαια προς εμφάνιση</string>
+    <string name="exception_unknown_host">Δεν μπορούσε να φτάσει το %s</string>
+    <string name="exception_http">HTTP %d, ελέγξτε την ιστοσελίδα στο WebView</string>
+    <string name="exception_offline">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
+    <string name="unlock_app_title">Ξεκλείδωμα %s</string>
+    <string name="action_move_to_bottom_all_for_series">Μετακίνηση σειράς προς τα κάτω</string>
+    <string name="pref_relative_format">Σχετικές χρονικές σημάνσεις</string>
+    <string name="pref_relative_format_summary">\"%1$s\" αντί του \"%2$s\"</string>
 </resources>

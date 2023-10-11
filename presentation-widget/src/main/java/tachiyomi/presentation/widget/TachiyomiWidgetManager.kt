@@ -19,7 +19,7 @@ class TachiyomiWidgetManager(
 
     fun Context.init(scope: LifecycleCoroutineScope) {
         combine(
-            getUpdates.subscribe(read = false, after = UpdatesGridGlanceWidget.DateLimit.timeInMillis),
+            getUpdates.subscribe(read = false, after = BaseUpdatesGridGlanceWidget.DateLimit.timeInMillis),
             securityPreferences.useAuthenticator().changes(),
             transform = { a, _ -> a },
         )
@@ -27,6 +27,7 @@ class TachiyomiWidgetManager(
             .onEach {
                 try {
                     UpdatesGridGlanceWidget().updateAll(this)
+                    UpdatesGridCoverScreenGlanceWidget().updateAll(this)
                 } catch (e: Exception) {
                     logcat(LogPriority.ERROR, e) { "Failed to update widget" }
                 }

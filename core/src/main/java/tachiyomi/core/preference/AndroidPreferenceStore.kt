@@ -15,9 +15,8 @@ import tachiyomi.core.preference.AndroidPreference.StringSetPrimitive
 
 class AndroidPreferenceStore(
     context: Context,
+    private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context),
 ) : PreferenceStore {
-
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     private val keyFlow = sharedPreferences.keyFlow
 
@@ -60,11 +59,19 @@ class AndroidPreferenceStore(
             deserializer = deserializer,
         )
     }
+
+    override fun getAll(): Map<String, *> {
+        return sharedPreferences.all ?: emptyMap<String, Any>()
+    }
 }
 
 private val SharedPreferences.keyFlow
     get() = callbackFlow {
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key: String? -> trySend(key) }
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key: String? ->
+            trySend(
+                key,
+            )
+        }
         registerOnSharedPreferenceChangeListener(listener)
         awaitClose {
             unregisterOnSharedPreferenceChangeListener(listener)

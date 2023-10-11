@@ -9,15 +9,15 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
 import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.DeviceUtil
-import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.system.workManager
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.getAndSet
@@ -47,7 +47,7 @@ object Migrations {
         libraryPreferences: LibraryPreferences,
         readerPreferences: ReaderPreferences,
         backupPreferences: BackupPreferences,
-        trackManager: TrackManager,
+        trackerManager: TrackerManager,
     ): Boolean {
         val lastVersionCode = preferenceStore.getInt("last_version_code", 0)
         val oldVersion = lastVersionCode.get()
@@ -135,8 +135,8 @@ object Migrations {
                 // Force MAL log out due to login flow change
                 // v52: switched from scraping to WebView
                 // v53: switched from WebView to OAuth
-                if (trackManager.myAnimeList.isLoggedIn) {
-                    trackManager.myAnimeList.logout()
+                if (trackerManager.myAnimeList.isLoggedIn) {
+                    trackerManager.myAnimeList.logout()
                     context.toast(R.string.myanimelist_relogin)
                 }
             }
@@ -342,7 +342,7 @@ object Migrations {
                     "pref_filter_library_started",
                     "pref_filter_library_bookmarked",
                     "pref_filter_library_completed",
-                ) + trackManager.services.map { "pref_filter_library_tracked_${it.id}" }
+                ) + trackerManager.trackers.map { "pref_filter_library_tracked_${it.id}" }
 
                 prefKeys.forEach { key ->
                     val pref = preferenceStore.getInt(key, 0)
@@ -362,18 +362,30 @@ object Migrations {
             if (oldVersion < 100) {
                 BackupCreateJob.setupTask(context)
             }
-            if (oldVersion < 102) {
-                // This was accidentally visible from the reader settings sheet, but should always
-                // be disabled in release builds.
-                if (isReleaseBuildType) {
-                    readerPreferences.longStripSplitWebtoon().set(false)
-                }
-            }
             if (oldVersion < 105) {
                 val pref = libraryPreferences.autoUpdateDeviceRestrictions()
                 if (pref.isSet() && "battery_not_low" in pref.get()) {
                     pref.getAndSet { it - "battery_not_low" }
                 }
+            }
+            if (oldVersion < 106) {
+                val pref = preferenceStore.getInt("relative_time", 7)
+                if (pref.get() == 0) {
+                    uiPreferences.relativeTime().set(false)
+                }
+            }
+            if (oldVersion < 107) {
+                preferenceStore.getAll()
+                    .filter { it.key.startsWith("pref_mangasync_") || it.key.startsWith("track_token_") }
+                    .forEach { (key, value) ->
+                        if (value is String) {
+                            preferenceStore
+                                .getString(Preference.privateKey(key))
+                                .set(value)
+
+                            preferenceStore.getString(key).delete()
+                        }
+                    }
             }
             return true
         }

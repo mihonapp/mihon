@@ -34,7 +34,10 @@ class LibraryFlagsTest {
 
     @Test
     fun `Test Flag plus operator with old flag as base`() {
-        val currentSort = LibrarySort(LibrarySort.Type.UnreadCount, LibrarySort.Direction.Descending)
+        val currentSort = LibrarySort(
+            LibrarySort.Type.UnreadCount,
+            LibrarySort.Direction.Descending,
+        )
         currentSort.flag shouldBe 0b00001100
 
         val sort = LibrarySort(LibrarySort.Type.DateAdded, LibrarySort.Direction.Ascending)

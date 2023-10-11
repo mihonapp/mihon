@@ -18,7 +18,7 @@ actual class LocalCoverManager(
 
     actual fun find(mangaUrl: String): File? {
         return fileSystem.getFilesInMangaDirectory(mangaUrl)
-            // Get all file whose names start with 'cover'
+            // Get all file whose names start with "cover"
             .filter { it.isFile && it.nameWithoutExtension.equals("cover", ignoreCase = true) }
             // Get the first actual image
             .firstOrNull {

@@ -32,11 +32,6 @@ class WebtoonConfig(
     var sidePadding = 0
         private set
 
-    var longStripSplit = false
-        private set
-
-    var longStripSplitChangedListener: ((Boolean) -> Unit)? = null
-
     var doubleTapZoom = true
         private set
 
@@ -66,15 +61,6 @@ class WebtoonConfig(
 
         readerPreferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
-
-        readerPreferences.longStripSplitWebtoon()
-            .register(
-                { longStripSplit = it },
-                {
-                    imagePropertyChangedListener?.invoke()
-                    longStripSplitChangedListener?.invoke(it)
-                },
-            )
 
         readerPreferences.webtoonDoubleTapZoomEnabled()
             .register(

@@ -138,7 +138,7 @@ class MainActivity : BaseActivity() {
                 libraryPreferences = libraryPreferences,
                 readerPreferences = Injekt.get(),
                 backupPreferences = Injekt.get(),
-                trackManager = Injekt.get(),
+                trackerManager = Injekt.get(),
             )
         } else {
             false
@@ -151,6 +151,7 @@ class MainActivity : BaseActivity() {
         }
 
         // Draw edge-to-edge
+        // TODO: replace with ComponentActivity#enableEdgeToEdge
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setComposeContent {

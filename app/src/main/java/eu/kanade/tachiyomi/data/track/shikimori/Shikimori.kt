@@ -4,14 +4,14 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.DeletableTrackService
-import eu.kanade.tachiyomi.data.track.TrackService
+import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Shikimori(id: Long) : TrackService(id, "Shikimori"), DeletableTrackService {
+class Shikimori(id: Long) : Tracker(id, "Shikimori"), DeletableTracker {
 
     companion object {
         const val READING = 1
@@ -26,7 +26,7 @@ class Shikimori(id: Long) : TrackService(id, "Shikimori"), DeletableTrackService
 
     private val interceptor by lazy { ShikimoriInterceptor(this) }
 
-    private val api by lazy { ShikimoriApi(client, interceptor) }
+    private val api by lazy { ShikimoriApi(id, client, interceptor) }
 
     override fun getScoreList(): List<String> {
         return IntRange(0, 10).map(Int::toString)

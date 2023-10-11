@@ -33,7 +33,9 @@ fun OkHttpClient.Builder.rateLimitHost(
     permits: Int,
     period: Long = 1,
     unit: TimeUnit = TimeUnit.SECONDS,
-) = addInterceptor(RateLimitInterceptor(httpUrl.host, permits, period.toDuration(unit.toDurationUnit())))
+) = addInterceptor(
+    RateLimitInterceptor(httpUrl.host, permits, period.toDuration(unit.toDurationUnit())),
+)
 
 /**
  * An OkHttp interceptor that handles given url host's rate limiting.
@@ -69,8 +71,5 @@ fun OkHttpClient.Builder.rateLimitHost(
  * @param permits [Int]     Number of requests allowed within a period of units.
  * @param period [Duration] The limiting duration. Defaults to 1.seconds.
  */
-fun OkHttpClient.Builder.rateLimitHost(
-    url: String,
-    permits: Int,
-    period: Duration = 1.seconds,
-) = addInterceptor(RateLimitInterceptor(url.toHttpUrlOrNull()?.host, permits, period))
+fun OkHttpClient.Builder.rateLimitHost(url: String, permits: Int, period: Duration = 1.seconds) =
+    addInterceptor(RateLimitInterceptor(url.toHttpUrlOrNull()?.host, permits, period))

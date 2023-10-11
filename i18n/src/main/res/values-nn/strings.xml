@@ -12,7 +12,6 @@
     <string name="history">Historikk</string>
     <string name="label_default">Standard</string>
     <string name="label_warning">Åtvaring</string>
-    <string name="unlock_app">Lås opp Tachiyomi</string>
     <string name="confirm_lock_change">Autentiser for å stadfesta endring</string>
     <string name="action_filter">Filter</string>
     <string name="action_filter_bookmarked">Bokmerket</string>
@@ -87,7 +86,6 @@
     <string name="information_no_recent">Ingen nylege oppdateringar</string>
     <string name="label_library">Bibliotek</string>
     <string name="label_sources">Kjelder</string>
-    <string name="confirm_exit">Trykk tilbake igjen for å avslutta</string>
     <string name="action_settings">Innstillingar</string>
     <string name="action_menu">Meny</string>
     <string name="action_move_category">Sett kategoriar</string>
@@ -267,7 +265,6 @@
     <string name="backup_restore_missing_sources">Manglande kjelder:</string>
     <string name="backup_restore_missing_trackers">Sporingstenester ikkje logga inn i:</string>
     <string name="about_dont_kill_my_app">Nokre produsentar har ytterlegare appavgrensingar som drep bakgrunnstenester. Denne nettstaden har meir info om korleis det kan fiksast.</string>
-    <string name="http_error_hint">Sjekk nettstad i WebView</string>
     <string name="website">Nettstaden</string>
     <string name="local_filter_order_by">Sorter etter</string>
     <string name="date">Dato</string>

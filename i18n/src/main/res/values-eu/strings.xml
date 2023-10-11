@@ -443,7 +443,6 @@
     <string name="pref_update_only_completely_read">Irakurri gabeko kapituluak ditu</string>
     <string name="include">Sartu: %s</string>
     <string name="color_filter_r_value">G</string>
-    <string name="http_error_hint">Ikusi webgunea WebView-n</string>
     <string name="other_source">Besteak</string>
     <string name="action_global_search_hint">Bilaketa globala…</string>
     <string name="clear_history_completed">Historia ezabatu da</string>
@@ -483,9 +482,7 @@
     <string name="pref_backup_slots">Gehienezko babeskopiak</string>
     <string name="action_sort_alpha">Alfabetikoki</string>
     <string name="label_warning">Oharra</string>
-    <string name="unlock_app">Desblokeatu Tachiyomi</string>
     <string name="confirm_lock_change">Autentifikatu aldaketa berresteko</string>
-    <string name="confirm_exit">Sakatu atzera berriro irteteko</string>
     <string name="action_settings">Ezarpenak</string>
     <string name="action_menu">Menua</string>
     <string name="action_filter">Iragazi</string>
@@ -640,7 +637,6 @@
     <string name="delete_category">Ezabatu kategoria</string>
     <string name="action_close">Itxi</string>
     <string name="pref_app_language">App hizkuntza</string>
-    <string name="battery_not_low">Bateria baxu ez dagoenean</string>
     <string name="ext_info_language">Hizkuntza</string>
     <string name="action_search_hint">Bilatu…</string>
     <string name="delete_category_confirmation">\"%s\" kategoria ezabatu nahi duzu\?</string>

@@ -64,20 +64,19 @@ fun TextButton(
     ),
     contentPadding: PaddingValues = M3ButtonDefaults.TextButtonContentPadding,
     content: @Composable RowScope.() -> Unit,
-) =
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        onLongClick = onLongClick,
-        enabled = enabled,
-        interactionSource = interactionSource,
-        elevation = elevation,
-        shape = shape,
-        border = border,
-        colors = colors,
-        contentPadding = contentPadding,
-        content = content,
-    )
+) = Button(
+    onClick = onClick,
+    modifier = modifier,
+    onLongClick = onLongClick,
+    enabled = enabled,
+    interactionSource = interactionSource,
+    elevation = elevation,
+    shape = shape,
+    border = border,
+    colors = colors,
+    contentPadding = contentPadding,
+    content = content,
+)
 
 /**
  * Button with additional onLongClick functionality.

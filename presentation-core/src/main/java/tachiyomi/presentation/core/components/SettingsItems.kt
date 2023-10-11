@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.toggle
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -51,16 +55,12 @@ object SettingsItemsPaddings {
 }
 
 @Composable
-fun HeadingItem(
-    @StringRes labelRes: Int,
-) {
+fun HeadingItem(@StringRes labelRes: Int) {
     HeadingItem(stringResource(labelRes))
 }
 
 @Composable
-fun HeadingItem(
-    text: String,
-) {
+fun HeadingItem(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.header,
@@ -74,11 +74,7 @@ fun HeadingItem(
 }
 
 @Composable
-fun IconItem(
-    label: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
+fun IconItem(label: String, icon: ImageVector, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -93,11 +89,7 @@ fun IconItem(
 }
 
 @Composable
-fun SortItem(
-    label: String,
-    sortDescending: Boolean?,
-    onClick: () -> Unit,
-) {
+fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
     val arrowIcon = when (sortDescending) {
         true -> Icons.Default.ArrowDownward
         false -> Icons.Default.ArrowUpward
@@ -122,10 +114,7 @@ fun SortItem(
 }
 
 @Composable
-fun CheckboxItem(
-    label: String,
-    pref: Preference<Boolean>,
-) {
+fun CheckboxItem(label: String, pref: Preference<Boolean>) {
     val checked by pref.collectAsState()
     CheckboxItem(
         label = label,
@@ -135,11 +124,7 @@ fun CheckboxItem(
 }
 
 @Composable
-fun CheckboxItem(
-    label: String,
-    checked: Boolean,
-    onClick: () -> Unit,
-) {
+fun CheckboxItem(label: String, checked: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -153,11 +138,7 @@ fun CheckboxItem(
 }
 
 @Composable
-fun RadioItem(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-) {
+fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
@@ -285,7 +266,7 @@ fun TriStateItem(
                 vertical = SettingsItemsPaddings.Vertical,
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large),
     ) {
         val stateAlpha = if (enabled && onClick != null) 1f else ContentAlpha.disabled
 
@@ -314,11 +295,7 @@ fun TriStateItem(
 }
 
 @Composable
-fun TextItem(
-    label: String,
-    value: String,
-    onChange: (String) -> Unit,
-) {
+fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,10 +308,7 @@ fun TextItem(
 }
 
 @Composable
-fun SettingsChipRow(
-    @StringRes labelRes: Int,
-    content: @Composable FlowRowScope.() -> Unit,
-) {
+fun SettingsChipRow(@StringRes labelRes: Int, content: @Composable FlowRowScope.() -> Unit) {
     Column {
         HeadingItem(labelRes)
         FlowRow(
@@ -344,7 +318,25 @@ fun SettingsChipRow(
                 end = SettingsItemsPaddings.Horizontal,
                 bottom = SettingsItemsPaddings.Vertical,
             ),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            content = content,
+        )
+    }
+}
+
+@Composable
+fun SettingsIconGrid(@StringRes labelRes: Int, content: LazyGridScope.() -> Unit) {
+    Column {
+        HeadingItem(labelRes)
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(128.dp),
+            modifier = Modifier.padding(
+                start = SettingsItemsPaddings.Horizontal,
+                end = SettingsItemsPaddings.Horizontal,
+                bottom = SettingsItemsPaddings.Vertical,
+            ),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             content = content,
         )
     }

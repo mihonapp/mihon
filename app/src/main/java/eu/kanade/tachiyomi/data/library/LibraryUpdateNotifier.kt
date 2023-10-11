@@ -30,10 +30,14 @@ import tachiyomi.core.util.lang.launchUI
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.injectLazy
+import java.text.NumberFormat
 
 class LibraryUpdateNotifier(private val context: Context) {
 
     private val preferences: SecurityPreferences by injectLazy()
+    private val percentFormatter = NumberFormat.getPercentInstance().apply {
+        maximumFractionDigits = 0
+    }
 
     /**
      * Pending intent of action that cancels the library update
@@ -78,7 +82,7 @@ class LibraryUpdateNotifier(private val context: Context) {
         } else {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
             progressNotificationBuilder
-                .setContentTitle(context.getString(R.string.notification_updating, current, total))
+                .setContentTitle(context.getString(R.string.notification_updating_progress, percentFormatter.format(current.toFloat() / total)))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
 
@@ -329,11 +333,11 @@ class LibraryUpdateNotifier(private val context: Context) {
     }
 
     companion object {
-        const val HELP_WARNING_URL = "https://tachiyomi.org/help/faq/#why-does-the-app-warn-about-large-bulk-updates-and-downloads"
+        const val HELP_WARNING_URL = "https://tachiyomi.org/docs/faq/library#why-am-i-warned-about-large-bulk-updates-and-downloads"
     }
 }
 
 private const val NOTIF_MAX_CHAPTERS = 5
 private const val NOTIF_TITLE_MAX_LEN = 45
 private const val NOTIF_ICON_SIZE = 192
-private const val HELP_SKIPPED_URL = "https://tachiyomi.org/help/faq/#why-does-global-update-skip-some-entries"
+private const val HELP_SKIPPED_URL = "https://tachiyomi.org/docs/faq/library#why-is-global-update-skipping-entries"

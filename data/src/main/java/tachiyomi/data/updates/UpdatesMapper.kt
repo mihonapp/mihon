@@ -3,7 +3,22 @@ package tachiyomi.data.updates
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 
-val updateWithRelationMapper: (Long, String, Long, String, String?, Boolean, Boolean, Long, Long, Boolean, String?, Long, Long, Long) -> UpdatesWithRelations = {
+val updateWithRelationMapper: (
+    Long,
+    String,
+    Long,
+    String,
+    String?,
+    Boolean,
+    Boolean,
+    Long,
+    Long,
+    Boolean,
+    String?,
+    Long,
+    Long,
+    Long,
+) -> UpdatesWithRelations = {
         mangaId, mangaTitle, chapterId, chapterName, scanlator, read, bookmark, lastPageRead, sourceId, favorite, thumbnailUrl, coverLastModified, _, dateFetch ->
     UpdatesWithRelations(
         mangaId = mangaId,

@@ -11,7 +11,7 @@
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno. Možda neće ispravno funkcionirati i može uzrokovati probleme s aplikacijom. Preporučuje se deinstalacija.</string>
     <string name="untrusted_extension_message">Ovo proširenje potpisano je nepovjerljivim certifikatom i nije aktivirano.
 \n
-\nZlonamjerno proširenje može pročitati sve podatke za prijavu koji su spremljeni u programu Tachiyomi ili izvršiti proizvoljni kod.
+\nZlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
 \n
 \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
@@ -152,8 +152,6 @@
     <string name="action_filter">Filtar</string>
     <string name="action_menu">Izbornik</string>
     <string name="action_settings">Postavke</string>
-    <string name="confirm_exit">Za zatvaranje programa ponovo pritisni natrag</string>
-    <string name="unlock_app">Otključaj Tachiyomi</string>
     <string name="history">Povijest</string>
     <string name="track">Praćenje</string>
     <string name="manga">Unosi u biblioteci</string>
@@ -168,7 +166,7 @@
     <string name="pref_restore_backup">Obnovi sigurnosnu kopiju</string>
     <string name="pref_create_backup_summ">Može se koristiti za obnavljanje trenutačne biblioteke</string>
     <string name="pref_create_backup">Stvori sigurnosnu kopiju</string>
-    <string name="services">Usluge</string>
+    <string name="services">Usluge praćenja</string>
     <string name="pref_auto_update_manga_sync">Ažuriraj napredak nakon čitanja</string>
     <string name="pref_download_new">Preuzmi nova poglavlja</string>
     <string name="fifth_to_last">Peto prije zadnjeg pročitanog poglavlja</string>
@@ -281,7 +279,7 @@
     <string name="transition_current">Trenutačno:</string>
     <string name="transition_finished">Završeno:</string>
     <string name="viewer">Modus čitanja</string>
-    <string name="pref_category_for_this_series">Za ovaj serijal</string>
+    <string name="pref_category_for_this_series">Za ovu seriju</string>
     <string name="confirm_set_image_as_cover">Ovu sliku koristiti kao naslovnicu\?</string>
     <string name="decode_image_error">Nije bilo moguće učitati sliku</string>
     <string name="no_next_chapter">Sljedeće poglavlje nije pronađeno</string>
@@ -342,7 +340,6 @@
     <string name="last_used_source">Zadnji korišteni</string>
     <string name="other_source">Drugi</string>
     <string name="local_source">Lokalni izvor</string>
-    <string name="http_error_hint">Provjeri web-stranice pomoću WebView</string>
     <string name="no_results_found">Nema rezultata</string>
     <string name="no_more_results">Nema daljnjih rezultata</string>
     <string name="updating_category">Ažuriranje kategorije</string>
@@ -399,7 +396,7 @@
         <item quantity="few">Dostupne su %d nove verzije proširenja</item>
         <item quantity="other">Dostupno je %d novih verzija proširenja</item>
     </plurals>
-    <string name="information_webview_required">Za Tachiyomi je potreban WebView</string>
+    <string name="information_webview_required">Za funkcioniranje programa je potreban WebView</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d novo poglavlje</item>
         <item quantity="few">%1$d nova poglavlja</item>
@@ -426,8 +423,8 @@
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži unose u biblioteci.</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
-    <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
-    <string name="unofficial_extension_message">Ovo proširenje nije sa službenog popisa Tachiyomi proširenja.</string>
+    <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u eksternoj usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
+    <string name="unofficial_extension_message">Ovo proširenje nije iz službenog popisa.</string>
     <string name="ext_unofficial">Neslužbeno</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
@@ -465,9 +462,9 @@
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Datum dodavanja</string>
     <plurals name="num_trackers">
-        <item quantity="one">%d praćenje</item>
-        <item quantity="few">%d praćenja</item>
-        <item quantity="other">%d praćenja</item>
+        <item quantity="one">%d usluga praćenja</item>
+        <item quantity="few">%d usluge praćenja</item>
+        <item quantity="other">%d usluga praćenja</item>
     </plurals>
     <string name="no_pinned_sources">Nemaš označenih izvora</string>
     <string name="channel_complete">Gotovo</string>
@@ -477,7 +474,7 @@
     <string name="pref_category_delete_chapters">Izbriši poglavlja</string>
     <string name="ext_nsfw_warning">Izvori ovog proširenja mogu sadržavati neprikladan sadržaj (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="backup_restore_missing_trackers">Praćenja bez prijave:</string>
+    <string name="backup_restore_missing_trackers">Usluge praćenja bez prijave:</string>
     <string name="parental_controls_info">To ne sprečava neslužbene ili potencijalno krivo označena proširenja prikazati neprikladan sadržaj (18+) unutar aplikacije.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Preskače se %d poglavlje. Ne postoji u izvoru ili je filtrirano</item>
@@ -571,8 +568,8 @@
     <string name="off">Isključeno</string>
     <string name="on">Uključeno</string>
     <string name="categorized_display_settings">Postavke kategorija za sortiranje</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aktualiziraj pratioce prilikom aktualiziranja biblioteke</string>
-    <string name="pref_library_update_refresh_trackers">Automatski osvježi pratioce</string>
+    <string name="pref_library_update_refresh_trackers_summary">Aktualiziraj usluge praćenja prilikom aktualiziranja biblioteke</string>
+    <string name="pref_library_update_refresh_trackers">Automatski aktualiziraj usluge praćenja</string>
     <string name="restrictions">Ograničenja: %s</string>
     <string name="action_start_downloading_now">Pokreni preuzimanje sada</string>
     <string name="about_dont_kill_my_app">Neki proizvođači imaju dodatna programska ograničenja koja onemogućuju pozadinske usluge. Ova web-stranica sadrži daljnje informacije o tome kako to popraviti.</string>
@@ -624,8 +621,8 @@
     <string name="channel_app_updates">Ažuriranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
     <string name="pref_update_only_completely_read">S nepročitanim poglavljima</string>
-    <string name="enhanced_services">Poboljšane usluge</string>
-    <string name="enhanced_tracking_info">Usluge koje pružaju poboljšane značajke za određene izvore. Unosi se automatski prate kada se dodaju u biblioteku.</string>
+    <string name="enhanced_services">Poboljšane usluge praćenja</string>
+    <string name="enhanced_tracking_info">Pruža poboljšane značajke za određene izvore. Unosi se automatski prate kada se dodaju u biblioteku.</string>
     <string name="action_track">Prati</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="pref_library_update_manga_restriction">Preskoči ažuriranje unosa</string>
@@ -655,7 +652,7 @@
     <string name="channel_skipped">Preskočeno</string>
     <string name="notification_update_skipped">Preskočena aktualiziranja: %1$d</string>
     <string name="rotation_reverse_portrait">Preokrenuto uspravno</string>
-    <string name="action_move_to_top_all_for_series">Pomakni serijal na vrh</string>
+    <string name="action_move_to_top_all_for_series">Pomakni seriju na vrh</string>
     <string name="disabled_nav">Deaktivirano</string>
     <string name="empty_backup_error">Nema unosa u biblioteci za spremanje u sigurnosnu kopiju</string>
     <string name="split_tall_images_summary">Poboljšava performanse čitača</string>
@@ -677,7 +674,6 @@
     <string name="action_sort_last_manga_update">Zadnja provjera aktualiziranja</string>
     <string name="pref_long_strip_split">Rastavi visoke slike (BETA)</string>
     <string name="network_not_metered">Samo na mrežom bez ograničenja</string>
-    <string name="battery_not_low">Kad se baterija nije slaba</string>
     <string name="action_sort_unread_count">Broj nepročitanih</string>
     <string name="delete_category">Izbriši kategoriju</string>
     <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”\?</string>
@@ -724,7 +720,7 @@
     <string name="description_placeholder">Nema opisa</string>
     <string name="label_titles_section">Unosi</string>
     <string name="label_titles_in_global_update">Globalno aktualiziranje</string>
-    <string name="label_tracker_section">Pratitelji</string>
+    <string name="label_tracker_section">Usluge praćenja</string>
     <string name="label_mean_score">Srednja ocjena</string>
     <string name="label_used">Korišteno</string>
     <string name="day_short">%dd</string>
@@ -827,10 +823,17 @@
     <string name="library_sync_complete">Sinkroniziranje biblioteke završeno</string>
     <string name="information_cloudflare_help">Dodirni ovdje za pomoć s Cloudflareom</string>
     <string name="action_filter_interval_dropped">Ispušteno\? Zadnjih 20 dana i 2 mjeseca</string>
-    <string name="track_activity_name">Zapis praćenja</string>
+    <string name="track_activity_name">Prijava za uslugu praćenja</string>
     <string name="action_filter_interval_passed">Prekoraöeno razdoblje provjere</string>
     <string name="action_filter_interval_late">Provjera zadnjih 10 i više dana</string>
     <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
     <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
     <string name="licensed_manga_chapters_error">Licencirano – Nema poglavlja za prikaz</string>
+    <string name="unlock_app_title">Otključaj %s</string>
+    <string name="exception_offline">Ne postoji veza s internetom</string>
+    <string name="exception_http">HTTP %d, provjeri web stranicu u WebView</string>
+    <string name="exception_unknown_host">Nije bilo moguće povezati se s računalom %s</string>
+    <string name="action_move_to_bottom_all_for_series">Pomakni seriju na kraj</string>
+    <string name="pref_relative_format">Relativne vremenske oznake</string>
+    <string name="pref_relative_format_summary">„%1$s” umjesto „%2$s”</string>
 </resources>

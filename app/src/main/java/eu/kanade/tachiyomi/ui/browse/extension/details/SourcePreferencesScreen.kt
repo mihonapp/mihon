@@ -39,7 +39,7 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.preference.SharedPreferencesDataStore
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.source.getPreferenceKey
+import eu.kanade.tachiyomi.source.sourcePreferences
 import eu.kanade.tachiyomi.widget.TachiyomiTextInputEditText.Companion.setIncognito
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -134,12 +134,9 @@ class SourcePreferencesFragment : PreferenceFragmentCompat() {
 
     private fun populateScreen(): PreferenceScreen {
         val sourceId = requireArguments().getLong(SOURCE_ID)
-        val source = Injekt.get<SourceManager>().get(sourceId)!!
+        val source = Injekt.get<SourceManager>().get(sourceId)!! as ConfigurableSource
 
-        check(source is ConfigurableSource)
-
-        val sharedPreferences = requireContext().getSharedPreferences(source.getPreferenceKey(), Context.MODE_PRIVATE)
-        val dataStore = SharedPreferencesDataStore(sharedPreferences)
+        val dataStore = SharedPreferencesDataStore(source.sourcePreferences())
         preferenceManager.preferenceDataStore = dataStore
 
         val sourceScreen = preferenceManager.createPreferenceScreen(requireContext())

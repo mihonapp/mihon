@@ -16,7 +16,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
-import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -182,13 +181,6 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
         CheckboxItem(
             label = stringResource(R.string.pref_dual_page_invert),
             pref = screenModel.preferences.dualPageInvertWebtoon(),
-        )
-    }
-
-    if (!isReleaseBuildType) {
-        CheckboxItem(
-            label = stringResource(R.string.pref_long_strip_split),
-            pref = screenModel.preferences.longStripSplitWebtoon(),
         )
     }
 

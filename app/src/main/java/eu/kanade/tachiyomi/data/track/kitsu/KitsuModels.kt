@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 
 import androidx.annotation.CallSuper
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.TrackManager
+import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
@@ -35,7 +35,7 @@ class KitsuSearchManga(obj: JsonObject) {
     private val endDate = obj["endDate"]?.jsonPrimitive?.contentOrNull
 
     @CallSuper
-    fun toTrack() = TrackSearch.create(TrackManager.KITSU).apply {
+    fun toTrack() = TrackSearch.create(TrackerManager.KITSU).apply {
         media_id = this@KitsuSearchManga.id
         title = canonicalTitle
         total_chapters = chapterCount ?: 0
@@ -67,7 +67,7 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
     private val ratingTwenty = obj["attributes"]!!.jsonObject["ratingTwenty"]?.jsonPrimitive?.contentOrNull
     val progress = obj["attributes"]!!.jsonObject["progress"]!!.jsonPrimitive.int
 
-    fun toTrack() = TrackSearch.create(TrackManager.KITSU).apply {
+    fun toTrack() = TrackSearch.create(TrackerManager.KITSU).apply {
         media_id = libraryId
         title = canonicalTitle
         total_chapters = chapterCount ?: 0

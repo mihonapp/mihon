@@ -143,8 +143,6 @@
     <string name="action_filter">ማጣሪያ</string>
     <string name="action_menu">ምናሌ</string>
     <string name="action_settings">ማስተካከያዎች</string>
-    <string name="confirm_exit">ለመውጣት እንደገና ተመልሰው ይጫኑ</string>
-    <string name="unlock_app">ታቺዮሚን ይክፈቱ</string>
     <string name="label_extensions">ኢክስቴንሽኖች</string>
     <string name="history">ታሪክ</string>
     <string name="track">መከታተል</string>

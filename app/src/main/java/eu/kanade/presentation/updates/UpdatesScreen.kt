@@ -43,6 +43,7 @@ fun UpdateScreen(
     state: UpdatesScreenModel.State,
     snackbarHostState: SnackbarHostState,
     lastUpdated: Long,
+    relativeTime: Boolean,
     onClickCover: (UpdatesItem) -> Unit,
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
@@ -113,7 +114,7 @@ fun UpdateScreen(
                         }
 
                         updatesUiItems(
-                            uiModels = state.getUiModel(context),
+                            uiModels = state.getUiModel(context, relativeTime),
                             selectionMode = state.selectionMode,
                             onUpdateSelected = onUpdateSelected,
                             onClickCover = onClickCover,

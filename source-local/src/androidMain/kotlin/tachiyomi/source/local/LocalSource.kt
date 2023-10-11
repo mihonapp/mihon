@@ -1,6 +1,7 @@
 package tachiyomi.source.local
 
 import android.content.Context
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
@@ -10,16 +11,15 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.EpubFile
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
-import rx.Observable
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
+import tachiyomi.core.metadata.comicinfo.getComicInfo
 import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.ImageUtil
@@ -66,11 +66,11 @@ actual class LocalSource(
     override val supportsLatest: Boolean = true
 
     // Browse related
-    override fun fetchPopularManga(page: Int) = fetchSearchManga(page, "", POPULAR_FILTERS)
+    override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", POPULAR_FILTERS)
 
-    override fun fetchLatestUpdates(page: Int) = fetchSearchManga(page, "", LATEST_FILTERS)
+    override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LATEST_FILTERS)
 
-    override fun fetchSearchManga(page: Int, query: String, filters: FilterList): Observable<MangasPage> {
+    override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage {
         val baseDirsFiles = fileSystem.getFilesInBaseDirectories()
         val lastModifiedLimit by lazy { if (filters === LATEST_FILTERS) System.currentTimeMillis() - LATEST_THRESHOLD else 0L }
         var mangaDirs = baseDirsFiles
@@ -123,27 +123,25 @@ actual class LocalSource(
 
         // Fetch chapters of all the manga
         mangas.forEach { manga ->
-            runBlocking {
-                val chapters = getChapterList(manga)
-                if (chapters.isNotEmpty()) {
-                    val chapter = chapters.last()
-                    val format = getFormat(chapter)
+            val chapters = getChapterList(manga)
+            if (chapters.isNotEmpty()) {
+                val chapter = chapters.last()
+                val format = getFormat(chapter)
 
-                    if (format is Format.Epub) {
-                        EpubFile(format.file).use { epub ->
-                            epub.fillMangaMetadata(manga)
-                        }
+                if (format is Format.Epub) {
+                    EpubFile(format.file).use { epub ->
+                        epub.fillMangaMetadata(manga)
                     }
+                }
 
-                    // Copy the cover from the first chapter found if not available
-                    if (manga.thumbnail_url == null) {
-                        updateCover(chapter, manga)
-                    }
+                // Copy the cover from the first chapter found if not available
+                if (manga.thumbnail_url == null) {
+                    updateCover(chapter, manga)
                 }
             }
         }
 
-        return Observable.just(MangasPage(mangas.toList(), false))
+        return MangasPage(mangas.toList(), false)
     }
 
     // Manga details related
@@ -154,6 +152,7 @@ actual class LocalSource(
 
         // Augment manga details based on metadata files
         try {
+            val mangaDir = fileSystem.getMangaDirectory(manga.url)
             val mangaDirFiles = fileSystem.getFilesInMangaDirectory(manga.url).toList()
 
             val comicInfoFile = mangaDirFiles
@@ -170,7 +169,8 @@ actual class LocalSource(
                     setMangaDetailsFromComicInfoFile(comicInfoFile.inputStream(), manga)
                 }
 
-                // TODO: automatically convert these to ComicInfo.xml
+                // Old custom JSON format
+                // TODO: remove support for this entirely after a while
                 legacyJsonDetailsFile != null -> {
                     json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.inputStream()).run {
                         title?.let { manga.title = it }
@@ -180,6 +180,16 @@ actual class LocalSource(
                         genre?.let { manga.genre = it.joinToString() }
                         status?.let { manga.status = it }
                     }
+                    // Replace with ComicInfo.xml file
+                    val comicInfo = manga.getComicInfo()
+                    UniFile.fromFile(mangaDir)
+                        ?.createFile(COMIC_INFO_FILE)
+                        ?.openOutputStream()
+                        ?.use {
+                            val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
+                            it.write(comicInfoString.toByteArray())
+                            legacyJsonDetailsFile.delete()
+                        }
                 }
 
                 // Copy ComicInfo.xml from chapter archive to top level if found
@@ -188,7 +198,6 @@ actual class LocalSource(
                         .filter(Archive::isSupported)
                         .toList()
 
-                    val mangaDir = fileSystem.getMangaDirectory(manga.url)
                     val folderPath = mangaDir?.absolutePath
 
                     val copiedFile = copyComicInfoFileFromArchive(chapterArchives, folderPath)
@@ -349,7 +358,7 @@ actual class LocalSource(
 
     companion object {
         const val ID = 0L
-        const val HELP_URL = "https://tachiyomi.org/help/guides/local-manga/"
+        const val HELP_URL = "https://tachiyomi.org/docs/guides/local-source/"
 
         private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }

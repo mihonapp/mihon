@@ -62,7 +62,7 @@ fun MoreScreen(
                     WarningBanner(
                         textRes = R.string.fdroid_warning,
                         modifier = Modifier.clickable {
-                            uriHandler.openUri("https://tachiyomi.org/help/faq/#how-do-i-migrate-from-the-f-droid-version")
+                            uriHandler.openUri("https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds")
                         },
                     )
                 }
@@ -108,11 +108,11 @@ fun MoreScreen(
                                 stringResource(R.string.paused)
                             } else {
                                 "${stringResource(R.string.paused)} • ${
-                                pluralStringResource(
-                                    id = R.plurals.download_queue_summary,
-                                    count = pending,
-                                    pending,
-                                )
+                                    pluralStringResource(
+                                        id = R.plurals.download_queue_summary,
+                                        count = pending,
+                                        pending,
+                                    )
                                 }"
                             }
                         }
