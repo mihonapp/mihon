@@ -41,13 +41,13 @@ open class GestureDetectorWithLongTap(
                 // This is the key difference with the built-in detector. We have to ignore the
                 // event if the last up and current down are too close in time (double tap).
                 if (ev.downTime - lastUp > doubleTapTime) {
-                    downX = ev.rawX
-                    downY = ev.rawY
+                    downX = ev.x
+                    downY = ev.y
                     handler.postDelayed(longTapFn, longTapTime)
                 }
             }
             MotionEvent.ACTION_MOVE -> {
-                if (abs(ev.rawX - downX) > slop || abs(ev.rawY - downY) > slop) {
+                if (abs(ev.x - downX) > slop || abs(ev.y - downY) > slop) {
                     handler.removeCallbacks(longTapFn)
                 }
             }

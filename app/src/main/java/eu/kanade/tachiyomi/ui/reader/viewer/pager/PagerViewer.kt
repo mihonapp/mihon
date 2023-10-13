@@ -102,7 +102,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             },
         )
         pager.tapListener = { event ->
-            val pos = PointF(event.rawX / pager.width, event.rawY / pager.height)
+            val pos = PointF(event.x / pager.width, event.y / pager.height)
             when (config.navigator.getAction(pos)) {
                 NavigationRegion.MENU -> activity.toggleMenu()
                 NavigationRegion.NEXT -> moveToNext()
