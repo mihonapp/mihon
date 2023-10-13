@@ -238,7 +238,7 @@ class BackupCreator(
     private fun backupSourcePreferences(flags: Int): List<BackupSourcePreferences> {
         if (flags and BACKUP_SOURCE_PREFS_MASK != BACKUP_SOURCE_PREFS) return emptyList()
 
-        return sourceManager.getOnlineSources()
+        return sourceManager.getCatalogueSources()
             .filterIsInstance<ConfigurableSource>()
             .map {
                 BackupSourcePreferences(

@@ -89,6 +89,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
+import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
@@ -279,7 +280,9 @@ class MainActivity : BaseActivity() {
         setSplashScreenExitAnimation(splashScreen)
 
         if (isLaunch && libraryPreferences.autoClearChapterCache().get()) {
-            chapterCache.clear()
+            lifecycleScope.launchIO {
+                chapterCache.clear()
+            }
         }
     }
 
@@ -436,13 +439,13 @@ class MainActivity : BaseActivity() {
     }
 
     companion object {
-        // Splash screen
-        private const val SPLASH_MIN_DURATION = 500 // ms
-        private const val SPLASH_MAX_DURATION = 5000 // ms
-        private const val SPLASH_EXIT_ANIM_DURATION = 400L // ms
-
         const val INTENT_SEARCH = "eu.kanade.tachiyomi.SEARCH"
         const val INTENT_SEARCH_QUERY = "query"
         const val INTENT_SEARCH_FILTER = "filter"
     }
 }
+
+// Splash screen
+private const val SPLASH_MIN_DURATION = 500 // ms
+private const val SPLASH_MAX_DURATION = 5000 // ms
+private const val SPLASH_EXIT_ANIM_DURATION = 400L // ms
