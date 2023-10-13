@@ -56,12 +56,6 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize" />
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/reader_menu_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom" />
-
     </FrameLayout>
 
     <androidx.compose.ui.platform.ComposeView
