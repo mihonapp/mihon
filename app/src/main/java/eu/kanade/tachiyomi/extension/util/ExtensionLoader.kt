@@ -14,6 +14,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
+import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -97,7 +98,8 @@ internal object ExtensionLoader {
 
         val target = File(getPrivateExtensionDir(context), "${extension.packageName}.$PRIVATE_EXTENSION_EXTENSION")
         return try {
-            file.copyTo(target, overwrite = true)
+            file.delete()
+            file.copyAndSetReadOnlyTo(target, overwrite = true)
             if (currentExtension != null) {
                 ExtensionInstallReceiver.notifyReplaced(context, extension.packageName)
             } else {
