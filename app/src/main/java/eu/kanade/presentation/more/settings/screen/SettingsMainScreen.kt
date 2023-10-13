@@ -78,7 +78,7 @@ object SettingsMainScreen : Screen() {
         val backPress = LocalBackPress.currentOrThrow
         val containerColor = if (twoPane) getPalerSurface() else MaterialTheme.colorScheme.surface
         val topBarState = rememberTopAppBarState()
-        
+
         Scaffold(
             topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState),
             topBar = { scrollBehavior ->
