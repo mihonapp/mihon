@@ -1,5 +1,6 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -60,6 +61,7 @@ const val SEARCH_DEBOUNCE_MILLIS = 250L
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
+    backgroundColor: Color? = null,
     // Text
     title: String?,
     subtitle: String? = null,
@@ -81,6 +83,7 @@ fun AppBar(
 
     AppBar(
         modifier = modifier,
+        backgroundColor = backgroundColor,
         titleContent = {
             if (isActionMode) {
                 AppBarTitle(actionModeCounter.toString())
@@ -106,6 +109,7 @@ fun AppBar(
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
+    backgroundColor: Color? = null,
     // Title
     titleContent: @Composable () -> Unit,
     // Up button
@@ -142,7 +146,7 @@ fun AppBar(
             title = titleContent,
             actions = actions,
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                containerColor = backgroundColor ?: MaterialTheme.colorScheme.surfaceColorAtElevation(
                     elevation = if (isActionMode) 3.dp else 0.dp,
                 ),
             ),
@@ -170,6 +174,9 @@ fun AppBarTitle(
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.basicMarquee(
+                    delayMillis = 2_000,
+                ),
             )
         }
     }
