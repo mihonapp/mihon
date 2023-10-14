@@ -171,7 +171,7 @@ fun TrackDateSelector(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                     TextButton(onClick = onDismissRequest) {
-                        Text(text = stringResource(android.R.string.cancel))
+                        Text(text = stringResource(R.string.action_cancel))
                     }
                     TextButton(onClick = { onConfirm(pickerState.selectedDateMillis!!) }) {
                         Text(text = stringResource(R.string.action_ok))
@@ -209,7 +209,7 @@ private fun BaseSelector(
                     Spacer(modifier = Modifier.weight(1f))
                 }
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(android.R.string.cancel))
+                    Text(text = stringResource(R.string.action_cancel))
                 }
                 TextButton(onClick = onConfirm) {
                     Text(text = stringResource(R.string.action_ok))

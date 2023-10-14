@@ -593,7 +593,7 @@ private data class TrackDateRemoverScreen(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = stringResource(android.R.string.cancel))
+                        Text(text = stringResource(R.string.action_cancel))
                     }
                     FilledTonalButton(
                         onClick = {
