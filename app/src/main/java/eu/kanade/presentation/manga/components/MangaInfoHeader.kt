@@ -48,7 +48,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -63,9 +62,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -589,67 +587,70 @@ private fun MangaSummary(
     expanded: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    var expandedHeight by remember { mutableIntStateOf(0) }
-    var shrunkHeight by remember { mutableIntStateOf(0) }
-    val heightDelta = remember(expandedHeight, shrunkHeight) { expandedHeight - shrunkHeight }
     val animProgress by animateFloatAsState(if (expanded) 1f else 0f)
-    val scrimHeight = with(LocalDensity.current) { remember { 24.sp.roundToPx() } }
-
-    SubcomposeLayout(modifier = modifier.clipToBounds()) { constraints ->
-        val shrunkPlaceable = subcompose("description-s") {
-            Text(
-                text = "\n\n", // Shows at least 3 lines
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }.map { it.measure(constraints) }
-        shrunkHeight = shrunkPlaceable.maxByOrNull { it.height }?.height ?: 0
-
-        val expandedPlaceable = subcompose("description-l") {
-            Text(
-                text = expandedDescription,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }.map { it.measure(constraints) }
-        expandedHeight = expandedPlaceable.maxByOrNull { it.height }?.height?.coerceAtLeast(shrunkHeight) ?: 0
-
-        val actualPlaceable = subcompose("description") {
-            SelectionContainer {
+    Layout(
+        modifier = modifier.clipToBounds(),
+        contents = listOf(
+            {
                 Text(
-                    text = if (expanded) expandedDescription else shrunkDescription,
-                    maxLines = Int.MAX_VALUE,
+                    text = "\n\n", // Shows at least 3 lines
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.secondaryItemAlpha(),
                 )
-            }
-        }.map { it.measure(constraints) }
+            },
+            {
+                Text(
+                    text = expandedDescription,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
+            {
+                SelectionContainer {
+                    Text(
+                        text = if (expanded) expandedDescription else shrunkDescription,
+                        maxLines = Int.MAX_VALUE,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.secondaryItemAlpha(),
+                    )
+                }
+            },
+            {
+                val colors = listOf(Color.Transparent, MaterialTheme.colorScheme.background)
+                Box(
+                    modifier = Modifier.background(Brush.verticalGradient(colors = colors)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_caret_down)
+                    Icon(
+                        painter = rememberAnimatedVectorPainter(image, !expanded),
+                        contentDescription = stringResource(if (expanded) R.string.manga_info_collapse else R.string.manga_info_expand),
+                        tint = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.background(Brush.radialGradient(colors = colors.asReversed())),
+                    )
+                }
+            },
+        ),
+    ) { (shrunk, expanded, actual, scrim), constraints ->
+        val shrunkHeight = shrunk.single()
+            .measure(constraints)
+            .height
+        val expandedHeight = expanded.single()
+            .measure(constraints)
+            .height
+        val heightDelta = expandedHeight - shrunkHeight
+        val scrimHeight = 24.dp.roundToPx()
 
-        val scrimPlaceable = subcompose("scrim") {
-            val colors = listOf(Color.Transparent, MaterialTheme.colorScheme.background)
-            Box(
-                modifier = Modifier.background(Brush.verticalGradient(colors = colors)),
-                contentAlignment = Alignment.Center,
-            ) {
-                val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_caret_down)
-                Icon(
-                    painter = rememberAnimatedVectorPainter(image, !expanded),
-                    contentDescription = stringResource(if (expanded) R.string.manga_info_collapse else R.string.manga_info_expand),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.background(Brush.radialGradient(colors = colors.asReversed())),
-                )
-            }
-        }.map { it.measure(Constraints.fixed(width = constraints.maxWidth, height = scrimHeight)) }
+        val actualPlaceable = actual.single()
+            .measure(constraints)
+        val scrimPlaceable = scrim.single()
+            .measure(Constraints.fixed(width = constraints.maxWidth, height = scrimHeight))
 
         val currentHeight = shrunkHeight + ((heightDelta + scrimHeight) * animProgress).roundToInt()
         layout(constraints.maxWidth, currentHeight) {
-            actualPlaceable.forEach {
-                it.place(0, 0)
-            }
+            actualPlaceable.place(0, 0)
 
             val scrimY = currentHeight - scrimHeight
-            scrimPlaceable.forEach {
-                it.place(0, scrimY)
-            }
+            scrimPlaceable.place(0, scrimY)
         }
     }
 }
