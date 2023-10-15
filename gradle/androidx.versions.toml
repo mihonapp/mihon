@@ -21,8 +21,7 @@ lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref
 lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle_version" }
 lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
 
-work-runtime = "androidx.work:work-runtime-ktx:2.8.1"
-guava = "com.google.guava:guava:32.1.2-android"
+workmanager = "androidx.work:work-runtime-ktx:2.8.1"
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
@@ -34,4 +33,3 @@ test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0-alpha04"
 
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]
-workmanager = ["work-runtime", "guava"]
