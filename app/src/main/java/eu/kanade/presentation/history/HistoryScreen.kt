@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
@@ -18,13 +19,16 @@ import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.RelativeDateHeader
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.history.components.HistoryItem
+import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
+import tachiyomi.core.preference.InMemoryPreferenceStore
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.ThemePreviews
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -37,6 +41,7 @@ fun HistoryScreen(
     onClickCover: (mangaId: Long) -> Unit,
     onClickResume: (mangaId: Long, chapterId: Long) -> Unit,
     onDialogChange: (HistoryScreenModel.Dialog?) -> Unit,
+    preferences: UiPreferences = Injekt.get(),
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
@@ -82,6 +87,7 @@ fun HistoryScreen(
                     onClickCover = { history -> onClickCover(history.mangaId) },
                     onClickResume = { history -> onClickResume(history.mangaId, history.chapterId) },
                     onClickDelete = { item -> onDialogChange(HistoryScreenModel.Dialog.Delete(item)) },
+                    preferences = preferences,
                 )
             }
         }
@@ -95,7 +101,7 @@ private fun HistoryScreenContent(
     onClickCover: (HistoryWithRelations) -> Unit,
     onClickResume: (HistoryWithRelations) -> Unit,
     onClickDelete: (HistoryWithRelations) -> Unit,
-    preferences: UiPreferences = Injekt.get(),
+    preferences: UiPreferences,
 ) {
     val relativeTime = remember { preferences.relativeTime().get() }
     val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
@@ -140,4 +146,33 @@ private fun HistoryScreenContent(
 sealed interface HistoryUiModel {
     data class Header(val date: Date) : HistoryUiModel
     data class Item(val item: HistoryWithRelations) : HistoryUiModel
+}
+
+@ThemePreviews
+@Composable
+internal fun HistoryScreenPreviews(
+    @PreviewParameter(HistoryScreenModelStateProvider::class)
+    historyState: HistoryScreenModel.State,
+) {
+    TachiyomiTheme {
+        HistoryScreen(
+            state = historyState,
+            snackbarHostState = SnackbarHostState(),
+            onSearchQueryChange = {},
+            onClickCover = {},
+            onClickResume = { _, _ -> run {} },
+            onDialogChange = {},
+            preferences = UiPreferences(
+                InMemoryPreferenceStore(
+                    sequenceOf(
+                        InMemoryPreferenceStore.InMemoryPreference(
+                            key = "relative_time_v2",
+                            data = false,
+                            defaultValue = false,
+                        ),
+                    ),
+                ),
+            ),
+        )
+    }
 }

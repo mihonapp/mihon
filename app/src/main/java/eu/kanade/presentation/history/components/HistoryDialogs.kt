@@ -18,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
+import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun HistoryDeleteDialog(
@@ -100,4 +102,15 @@ fun HistoryDeleteAllDialog(
             }
         },
     )
+}
+
+@ThemePreviews
+@Composable
+internal fun HistoryDeleteDialogPreview() {
+    TachiyomiTheme {
+        HistoryDeleteDialog(
+            onDismissRequest = {},
+            onDelete = { _ -> run {} },
+        )
+    }
 }
