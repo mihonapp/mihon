@@ -30,7 +30,7 @@ import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.ThemePreviews
 
-private val HISTORY_ITEM_HEIGHT = 96.dp
+private val HistoryItemHeight = 96.dp
 
 @Composable
 fun HistoryItem(
@@ -43,7 +43,7 @@ fun HistoryItem(
     Row(
         modifier = modifier
             .clickable(onClick = onClickResume)
-            .height(HISTORY_ITEM_HEIGHT)
+            .height(HistoryItemHeight)
             .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -93,7 +93,7 @@ fun HistoryItem(
 
 @ThemePreviews
 @Composable
-internal fun HistoryItemPreviews(
+private fun HistoryItemPreviews(
     @PreviewParameter(HistoryWithRelationsProvider::class)
     historyWithRelations: HistoryWithRelations,
 ) {

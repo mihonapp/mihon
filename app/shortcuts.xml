@@ -1,5 +1,4 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-
     <shortcut
         android:enabled="true"
         android:icon="@drawable/sc_collections_bookmark_48dp"

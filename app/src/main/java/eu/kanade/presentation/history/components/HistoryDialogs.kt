@@ -106,11 +106,11 @@ fun HistoryDeleteAllDialog(
 
 @ThemePreviews
 @Composable
-internal fun HistoryDeleteDialogPreview() {
+private fun HistoryDeleteDialogPreview() {
     TachiyomiTheme {
         HistoryDeleteDialog(
             onDismissRequest = {},
-            onDelete = { _ -> run {} },
+            onDelete = {},
         )
     }
 }

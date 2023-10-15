@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
@@ -362,15 +361,11 @@ class ReaderActivity : BaseActivity() {
                 },
 
                 readingMode = ReadingModeType.fromPreference(
-                    viewModel.getMangaReadingMode(
-                        resolveDefault = false,
-                    ),
+                    viewModel.getMangaReadingMode(resolveDefault = false),
                 ),
                 onClickReadingMode = viewModel::openReadingModeSelectDialog,
                 orientationMode = OrientationType.fromPreference(
-                    viewModel.getMangaOrientationType(
-                        resolveDefault = false,
-                    ),
+                    viewModel.getMangaOrientationType(resolveDefault = false),
                 ),
                 onClickOrientationMode = viewModel::openOrientationModeSelectDialog,
                 cropEnabled = cropEnabled,
@@ -786,11 +781,9 @@ class ReaderActivity : BaseActivity() {
                 .onEach(::setTrueColor)
                 .launchIn(lifecycleScope)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                readerPreferences.cutoutShort().changes()
-                    .onEach(::setCutoutShort)
-                    .launchIn(lifecycleScope)
-            }
+            readerPreferences.cutoutShort().changes()
+                .onEach(::setCutoutShort)
+                .launchIn(lifecycleScope)
 
             readerPreferences.keepScreenOn().changes()
                 .onEach(::setKeepScreenOn)
@@ -842,8 +835,9 @@ class ReaderActivity : BaseActivity() {
             }
         }
 
-        @TargetApi(Build.VERSION_CODES.P)
         private fun setCutoutShort(enabled: Boolean) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+
             window.attributes.layoutInDisplayCutoutMode = when (enabled) {
                 true -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
                 false -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
