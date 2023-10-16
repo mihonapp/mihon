@@ -98,7 +98,7 @@ internal object ExtensionLoader {
 
         val target = File(getPrivateExtensionDir(context), "${extension.packageName}.$PRIVATE_EXTENSION_EXTENSION")
         return try {
-            file.delete()
+            target.delete()
             file.copyAndSetReadOnlyTo(target, overwrite = true)
             if (currentExtension != null) {
                 ExtensionInstallReceiver.notifyReplaced(context, extension.packageName)
