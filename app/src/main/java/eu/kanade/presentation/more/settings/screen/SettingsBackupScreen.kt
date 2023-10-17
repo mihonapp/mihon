@@ -238,7 +238,7 @@ object SettingsBackupScreen : SearchableSettings {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
                         title = { Text(text = stringResource(R.string.invalid_backup_file)) },
-                        text = { Text(text = "${err.uri}\n\n${err.message}") },
+                        text = { Text(text = listOfNotNull(err.uri, err.message).joinToString("\n\n")) },
                         dismissButton = {
                             TextButton(
                                 onClick = {
@@ -310,21 +310,24 @@ object SettingsBackupScreen : SearchableSettings {
                 }
             },
         ) {
-            if (it != null) {
-                val results = try {
-                    BackupFileValidator().validate(context, it)
-                } catch (e: Exception) {
-                    error = InvalidRestore(it, e.message.toString())
-                    return@rememberLauncherForActivityResult
-                }
-
-                if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
-                    BackupRestoreJob.start(context, it)
-                    return@rememberLauncherForActivityResult
-                }
-
-                error = MissingRestoreComponents(it, results.missingSources, results.missingTrackers)
+            if (it == null) {
+                error = InvalidRestore(message = context.getString(R.string.file_null_uri_error))
+                return@rememberLauncherForActivityResult
             }
+
+            val results = try {
+                BackupFileValidator().validate(context, it)
+            } catch (e: Exception) {
+                error = InvalidRestore(it, e.message.toString())
+                return@rememberLauncherForActivityResult
+            }
+
+            if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
+                BackupRestoreJob.start(context, it)
+                return@rememberLauncherForActivityResult
+            }
+
+            error = MissingRestoreComponents(it, results.missingSources, results.missingTrackers)
         }
 
         return Preference.PreferenceItem.TextPreference(
@@ -421,6 +424,6 @@ private data class MissingRestoreComponents(
 )
 
 private data class InvalidRestore(
-    val uri: Uri,
+    val uri: Uri? = null,
     val message: String,
 )
