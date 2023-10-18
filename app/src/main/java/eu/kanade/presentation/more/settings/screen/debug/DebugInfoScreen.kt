@@ -1,7 +1,6 @@
 package eu.kanade.presentation.more.settings.screen.debug
 
 import android.os.Build
-import android.webkit.WebView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
@@ -16,6 +15,7 @@ import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import kotlinx.coroutines.guava.await
 
 class DebugInfoScreen : Screen() {
@@ -68,15 +68,7 @@ class DebugInfoScreen : Screen() {
     @Composable
     @ReadOnlyComposable
     private fun getWebViewVersion(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val webView = WebView.getCurrentWebViewPackage() ?: return "how did you get here?"
-            val pm = LocalContext.current.packageManager
-            val label = webView.applicationInfo.loadLabel(pm)
-            val version = webView.versionName
-            return "$label $version"
-        } else {
-            return "Unknown"
-        }
+        return WebViewUtil.getVersion(LocalContext.current)
     }
 
     @Composable
