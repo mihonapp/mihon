@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.manga.track
 
 import android.app.Application
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -759,8 +760,14 @@ private data class TrackerRemoveScreen(
                         text = stringResource(R.string.track_delete_text, serviceName),
                     )
                     if (sm.isDeletable()) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(checked = removeRemoteTrack, onCheckedChange = { removeRemoteTrack = it })
+                        val onChange = { removeRemoteTrack = !removeRemoteTrack }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(onClick = onChange),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(checked = removeRemoteTrack, onCheckedChange = { onChange() })
                             Text(text = stringResource(R.string.track_delete_remote_text, serviceName))
                         }
                     }
