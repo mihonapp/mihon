@@ -2,7 +2,7 @@
 aboutlib_version = "10.9.1"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
-sqlite = "2.3.1"
+sqlite = "2.4.0"
 sqldelight = "2.0.0"
 leakcanary = "2.12"
 voyager = "1.0.0-rc07"
@@ -64,7 +64,7 @@ swipe = "me.saket.swipe:swipe:1.2.0"
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.11.2"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.3.0"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.4.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlib_version" }
