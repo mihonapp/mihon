@@ -7,7 +7,7 @@
     <string name="label_network">Тетел</string>
     <string name="restore_duration">%02d минут та %02d ҫеккунт</string>
     <string name="services">Сервиссем</string>
-    <string name="pref_download_new">Ҫӗнӗ сыпӑксене тиесе илмелле</string>
+    <string name="pref_download_new">Ҫӗнӗ сыпӑксене тийесе илмелле</string>
     <string name="last_read_chapter">Юлашки вуланӑ сыпăк</string>
     <string name="disabled">Сӳнтернӗ</string>
     <string name="pref_remove_after_read">Вуланӑ хыҫҫӑн</string>
@@ -278,7 +278,7 @@
     <string name="channel_new_chapters">Сыпӑксен ҫӗнетӗвӗсем</string>
     <string name="channel_common">Яланхи</string>
     <string name="download_notifier_download_paused">Тийеве вӑхӑтлӑха чарнӑ</string>
-    <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тиесе илеймест</string>
+    <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тийесе илеймест</string>
     <string name="download_notifier_downloader_title">Тийевҫӗ</string>
     <string name="information_webview_required">Tachiyomi валли WebView кирлӗ</string>
     <plurals name="update_check_notification_ext_updates">
@@ -306,7 +306,7 @@
         <item quantity="other">Ҫӗнӗ сыпӑксем %d хайлав валли тупӑннӑ</item>
     </plurals>
     <string name="notification_check_updates">Ҫӗнӗ сыпӑксен пуррине тӗрӗслени</string>
-    <string name="download_queue_error">Сыпӑксене тиесе илес ҫук. Тийевсем пайӗнче ҫӗнӗрен хӑтланса пӑхма пултаратӑн</string>
+    <string name="download_queue_error">Сыпӑксене тийесе илме пулмасть. Тийевсем пайӗнче ҫӗнӗрен хӑтланса пӑхма пултаратӑн</string>
     <string name="copy">Ӑтавла</string>
     <string name="migrate">Куҫар</string>
     <string name="migration_selection_prompt">Куҫарма ҫӑл куҫ суйла</string>
@@ -503,7 +503,7 @@
     <string name="action_order_by_upload_date">Тийесе илни вӑхӑчӗпе</string>
     <string name="action_filter_tracked">Йӗрленет</string>
     <string name="pref_dump_crash_logs_summary">Файлсенчи йӑнӑшсен логсене хатерлевҫӗсем патне яма упрать</string>
-    <string name="pref_dump_crash_logs">Тухса кайни инчен логсене тиесе яни</string>
+    <string name="pref_dump_crash_logs">Йӑнӑш кӗнекине тийесе йар</string>
     <string name="pref_viewer_nav">Куҫӑм палли</string>
     <string name="right_and_left_nav">Сылтӑмран сулахаялла</string>
     <string name="pref_dual_page_invert_summary">Анлӑ елсене пайлани вулав майлӑ мар пулсан</string>
@@ -515,7 +515,7 @@
     <string name="nav_zone_next">Малалли</string>
     <string name="nav_zone_prev">Унченхи</string>
     <string name="pref_dns_over_https">HTTPS урлӑ DNS</string>
-    <string name="pref_category_auto_download">Хӑй хальлӗн тиени</string>
+    <string name="pref_category_auto_download">Хӑй хальлӗн тийени</string>
     <string name="exclude">Кӑлар: %s</string>
     <string name="include">Кӗрт: %s</string>
     <string name="none">Ҫук</string>
@@ -525,8 +525,6 @@
     <string name="rotation_landscape">Тӑрӑх</string>
     <string name="rotation_portrait">Урлӑ</string>
     <string name="rotation_type">Урлӑ-тӑрӑх тӗсӗ</string>
-    <string name="pref_create_folder_per_manga_summary">Папкӑсене сери ячӗпе туни</string>
-    <string name="pref_create_folder_per_manga">Елсене уйрӑм папкӑсенче упрамалла</string>
     <string name="pref_reader_actions">Тӑвӑмсем</string>
     <string name="pref_show_navigation_mode_summary">Пусма вырӑнсене вулӑш уҫӑ чухне кӑтартмалла</string>
     <string name="action_show_errors">Йӑнӑшсене кӑтарт</string>
@@ -603,7 +601,6 @@
     <string name="disabled_nav">Сӳнтернӗ</string>
     <string name="extension_api_error">Хушмасен йат-йышне илесси пулаймарӗ</string>
     <string name="pref_library_update_refresh_trackers_summary">Вулавӑша ҫӗнетнӗ май йӗрлеве те ҫӗнетни</string>
-    <string name="pref_long_strip_split">Вӑрӑм сӑнсене пайлани (ПЕТТӖ)</string>
     <string name="categorized_display_settings">Кашни пухмӑшӑн хӑйӗн ала ӗнерӗвӗсем</string>
     <string name="ext_app_info">Ап ҫинчен</string>
     <string name="split_tall_images_summary">Вулӑшӑн тухӑҫа лайӑхлатать</string>

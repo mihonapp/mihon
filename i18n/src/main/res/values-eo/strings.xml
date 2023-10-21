@@ -409,7 +409,6 @@
     <string name="channel_ext_updates">Kromaĵaj ĝisdatigoj</string>
     <string name="download_notifier_download_paused">Elŝutito paŭzigita</string>
     <string name="download_notifier_downloader_title">Elŝutilo</string>
-    <string name="notification_updating">Ĝisdatigas bibliotekon... (%1$d/%2$d)</string>
     <string name="notification_check_updates">Kontrolas por trovi novajn ĉapitrojn</string>
     <string name="pref_category_for_this_series">Por ĉi-serion</string>
     <string name="custom_filter">Propra filtrilo</string>
@@ -457,7 +456,6 @@
     <string name="pref_restore_backup">Restaŭri savkopion</string>
     <string name="action_track">Ŝanĝspuri</string>
     <string name="services">Servoj</string>
-    <string name="pref_create_folder_per_manga_summary">Kreas dosierujojn laŭ mangaaj titoloj</string>
     <string name="pref_read_with_volume_keys_inverted">Inversigi laŭtec-butonojn</string>
     <string name="pref_inverted_colors">Inversigita</string>
     <string name="pref_dual_page_split">Du-paĝa divido</string>

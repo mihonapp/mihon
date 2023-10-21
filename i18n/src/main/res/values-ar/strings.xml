@@ -154,7 +154,7 @@
     <string name="cookies_cleared">تم محو ملفات تعريف الارتباط</string>
     <string name="pref_clear_database">محو قاعدة البيانات</string>
     <string name="pref_clear_database_summary">مسح سجلّ الإدخالات التي ليست محفوظة في مكتبتك</string>
-    <string name="clear_database_confirmation">هل أنت متأكد؟ الفصول المقروءة ومستوى التقدم للإدخالات الغير الموجودة في مكتبتك سيتم فقده</string>
+    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ خسرتَ الفصول المقروءة وسير القراءة</string>
     <string name="clear_database_completed">تم حذف المدخلات</string>
     <string name="pref_refresh_library_tracking">تحديث بيانات التتبع</string>
     <string name="pref_refresh_library_tracking_summary">تحديث الحالة، والتقييم، وآخر فصل: عن طريق خدمات التتبع</string>
@@ -569,8 +569,6 @@
     <string name="rotation_portrait">رأسي</string>
     <string name="rotation_type">التدوير</string>
     <string name="automatic_background">تلقائيًّا</string>
-    <string name="pref_create_folder_per_manga_summary">إنشاء مجلدات وفقا لعنوان الإدخالات</string>
-    <string name="pref_create_folder_per_manga">حفظ الصفحات في مجلدات منفصلة</string>
     <string name="pref_reader_actions">الإجراءات</string>
     <string name="pref_grayscale">تدرج رمادي</string>
     <string name="exclude">إستثناء: %s</string>
@@ -619,7 +617,6 @@
     <string name="theme_yinyang">ين &amp; يانغ</string>
     <string name="theme_tako">تاكو</string>
     <string name="theme_monet">ديناميك</string>
-    <string name="notification_updating">جار تحديث المكتبة…( (%2$d) / (%1$d) )</string>
     <string name="about_dont_kill_my_app">تقوم بعض الشركات المصنعة بوضع قيود إضافية على التطبيقات التي قد تقضي على الخدمات التي تعمل في الخلفية. يحتوي هذا الموقع على مزيد من المعلومات حول كيفية إصلاحه.</string>
     <string name="restore_miui_warning">قد لا يعمل النسخ الاحتياطيُّ أو الاستعادة إن عطِّلت أمثَلَة MIUI.</string>
     <string name="enhanced_tracking_info">يُحسِّن مصادر معينة، وتُتابَع المدخلات حال إضافتها للمكتبة.</string>
@@ -648,7 +645,7 @@
     <string name="action_sort_count">إجمالي الإدخالات</string>
     <string name="label_warning">تحذير</string>
     <string name="action_display_language_badge">اللغة</string>
-    <string name="backup_info">يجب عليك الإحتفاظ بنُسخ في أماكن أخرى أيضًا.</string>
+    <string name="backup_info">زد على ذلك حفظ الاحتياط في غير هذا المكان، وتنبَّه لوجود الخطير فيها ككلمات السر، وتحفَّظ من مشاركتها.</string>
     <string name="notification_size_warning">التحديثات الكبيرة تضر بالمصادر، وتؤدي لتحديثات أبطأ، وقد تسبب زيادة في استهلاك البطارية۔ اضغط لمعرفة المزيد۔</string>
     <string name="pref_verbose_logging">التسجيل المطول</string>
     <string name="ext_app_info">معلومات التطبيق</string>
@@ -670,7 +667,7 @@
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند فتح التطبيق</string>
     <string name="database_clean">لا شئ للتنظيف</string>
-    <string name="clear_database_source_item_count">%1$d عدد الإدخالات غير المتواجدة بقاعدة بيانات المكتبه</string>
+    <string name="clear_database_source_item_count">%1$d مدخلةً في قاعدة البيانات وليست في المكتبة</string>
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">ثبِّت «شيزوكو» وشغِّله لتستخدمه مثبِّت إضافات.</string>
     <string name="download_queue_size_warning">تحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر Tachiyomi منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
@@ -735,7 +732,6 @@
     <string name="loader_rar5_error">تنسيق RARv5 ليس مدعومًا</string>
     <string name="theme_tidalwave">موجة مد و جزر</string>
     <string name="multi_lang">متعدد</string>
-    <string name="pref_long_strip_split">إنقسام الصور الطويلة (بيتا)</string>
     <string name="update_already_running">هنالك تحديث جارٍ بالفعل</string>
     <string name="download_ahead">التنزيل المسبق</string>
     <string name="download_ahead_info">ينفع حين كون الفصل الحاليِّ والذي يليه منزَّلين.</string>
@@ -884,4 +880,10 @@
     <string name="action_move_to_bottom_all_for_series">انقل السلسلة للقعر</string>
     <string name="pref_relative_format">التوقيت النسبي</string>
     <string name="pref_relative_format_summary">«%1$s» بدلًا عن «%2$s»</string>
+    <string name="action_sort_category">رتِّب الفئات</string>
+    <string name="notification_updating_progress">تُنعَش المكتبة… (%s)</string>
+    <string name="sort_category_confirmation">أتريد ترتيب الفئات حسب الحروف؟</string>
+    <string name="source_settings">إعدادات المصادر</string>
+    <string name="app_settings">إعدادات التطبيق</string>
+    <string name="file_null_uri_error">ما استطاع محدِّد الملفات من إدخال الملف في التطبيق</string>
 </resources>

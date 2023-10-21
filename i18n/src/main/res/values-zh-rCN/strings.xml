@@ -521,8 +521,6 @@
     <string name="clipboard_copy_error">无法复制到剪贴板</string>
     <string name="rotation_landscape">横屏</string>
     <string name="rotation_portrait">竖屏</string>
-    <string name="pref_create_folder_per_manga_summary">根据作品标题创建文件夹</string>
-    <string name="pref_create_folder_per_manga">将图片保存到单独文件夹</string>
     <string name="pref_reader_actions">操作菜单</string>
     <string name="rotation_type">屏幕方向</string>
     <string name="pref_grayscale">灰度</string>
@@ -550,7 +548,6 @@
     <string name="tracking_guide">进度记录指南</string>
     <string name="information_empty_category_dialog">你还没有任何分类。</string>
     <string name="action_start_downloading_now">立即开始下载</string>
-    <string name="notification_updating">正在更新书架… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">部分制造商会设置额外的应用限制来杀死后台服务。此网站提供了更多有关修复此问题的信息。</string>
     <string name="restore_miui_warning">如果 MIUI 优化被关闭，备份/还原可能无法正常工作。</string>
     <string name="pref_dark_theme_pure_black">纯黑深色模式</string>
@@ -683,7 +680,6 @@
     </plurals>
     <string name="download_ahead_info">要求当前章节和下一章节都已下载。</string>
     <string name="are_you_sure">你确定吗？</string>
-    <string name="pref_long_strip_split">分割长图 (测试版)</string>
     <string name="multi_lang">多语言</string>
     <string name="updates_last_update_info">书架更新于：%s</string>
     <string name="remove_manga">即将从书架中删除“%s”。</string>
@@ -800,4 +796,6 @@
     <string name="exception_offline">未连接网络</string>
     <string name="exception_http">HTTP %d，请在 WebView 中检查网站</string>
     <string name="exception_unknown_host">无法连接到 %s</string>
+    <string name="source_settings">图源设置</string>
+    <string name="app_settings">应用设置</string>
 </resources>

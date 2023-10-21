@@ -345,7 +345,7 @@
     <string name="notification_check_updates">Überprüfe auf neue Kapitel</string>
     <string name="pref_disable_battery_optimization">Akkuverbrauch-Optimierung deaktivieren</string>
     <string name="pref_disable_battery_optimization_summary">Hilft bei Bibliotheksaktualisierungen und -sicherungen im Hintergrund</string>
-    <string name="battery_optimization_disabled">Optimierung des Akkuverbrauchs ist schon deaktiviert</string>
+    <string name="battery_optimization_disabled">Akkuverbrauch-Optimierung ist bereits deaktiviert</string>
     <string name="email">E-Mail-Adresse</string>
     <string name="pref_always_show_chapter_transition">Kapitelübergang immer anzeigen</string>
     <plurals name="notification_new_chapters_summary">
@@ -436,7 +436,7 @@
         <item quantity="one">%1$s Kapitel</item>
         <item quantity="other">%1$s Kapitel</item>
     </plurals>
-    <string name="requires_app_restart">Erfordert einen Neustart der Anwendung, um wirksam zu werden</string>
+    <string name="requires_app_restart">Erfordert einen Neustart der App, um wirksam zu werden</string>
     <string name="label_network">Netzwerk</string>
     <string name="pref_read_with_tapping_inverted">Tippzonen umkehren</string>
     <string name="tapping_inverted_both">Beide</string>
@@ -532,8 +532,6 @@
     <string name="clipboard_copy_error">Kopieren in die Zwischenablage fehlgeschlagen</string>
     <string name="rotation_landscape">Querformat</string>
     <string name="rotation_portrait">Hochformat</string>
-    <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach dem Titel der Einträge</string>
-    <string name="pref_create_folder_per_manga">Speichere Seiten in separate Ordner</string>
     <string name="rotation_type">Ausrichtung</string>
     <string name="pref_reader_actions">Aktionen</string>
     <string name="pref_grayscale">Graustufen</string>
@@ -561,8 +559,7 @@
     <string name="tracking_guide">Tracking-Anleitung</string>
     <string name="information_empty_category_dialog">Du hast noch keine Kategorien.</string>
     <string name="action_start_downloading_now">Download jetzt starten</string>
-    <string name="notification_updating">Aktualisiere Bibliothek… (%1$d/%2$d)</string>
-    <string name="about_dont_kill_my_app">Einige Hersteller haben zusätzliche Anwendungsbeschränkungen, die Hintergrunddienste stoppen. Diese Webseite hat mehr Informationen darüber, wie man dies beheben kann.</string>
+    <string name="about_dont_kill_my_app">Einige Hersteller haben zusätzliche App-Beschränkungen, die Hintergrunddienste stoppen. Diese Webseite hat mehr Informationen darüber, wie man dies beheben kann.</string>
     <string name="restore_miui_warning">Die Sicherung/Wiederherstellung funktioniert möglicherweise nicht richtig, wenn die MIUI-Optimierung deaktiviert ist.</string>
     <string name="pref_dark_theme_pure_black">Tiefschwarzer Dunkelmodus</string>
     <string name="theme_yotsuba">Yotsuba</string>
@@ -596,7 +593,7 @@
     <string name="pref_tablet_ui_mode">Tablet-Benutzeroberfläche</string>
     <string name="pref_remove_exclude_categories">Ausgeschlossene Kategorien</string>
     <string name="help_translate">Beim Übersetzen mithelfen</string>
-    <string name="ext_app_info">Anwendungsinfos</string>
+    <string name="ext_app_info">App-Informationen</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installiere und starte Shizuku, um Shizuku als Installationsprogramm für Erweiterungen zu verwenden.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku läuft nicht</string>
     <string name="ext_installer_legacy">Legacy</string>
@@ -604,16 +601,16 @@
     <string name="ext_install_service_notif">Erweiterung wird installiert…</string>
     <string name="action_sort_count">Einträge insgesamt</string>
     <string name="pref_verbose_logging">Ausführliche Protokollierung</string>
-    <string name="pref_verbose_logging_summary">Ausführliche Protokolle im Systemprotokoll ausgeben (verringert die Anwendungsleistung)</string>
+    <string name="pref_verbose_logging_summary">Ausführliche Protokolle im Systemprotokoll ausgeben (verringert die App-Leistung)</string>
     <string name="action_display_language_badge">Sprache</string>
     <string name="label_warning">Warnung</string>
     <string name="notification_size_warning">Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen. Tippe, um mehr zu erfahren.</string>
-    <string name="backup_info">Du solltest auch Kopien der Sicherungen an anderen Orten aufbewahren.</string>
+    <string name="backup_info">Du solltest auch Kopien der Sicherungen an anderen Orten aufbewahren. Sicherungen beinhalten möglicherweise sensible Daten, einschließlich jeglicher gespeicherten Passwörter. Vorsicht beim Teilen.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren. Tippe, um mehr zu erfahren.</string>
     <string name="ext_update_all">Alle aktualisieren</string>
-    <string name="channel_app_updates">Anwendungsaktualisierungen</string>
+    <string name="channel_app_updates">App-Aktualisierungen</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Öffnen der App löschen</string>
     <string name="clear_database_source_item_count">%1$d Nicht-Bibliothekseinträge in der Datenbank</string>
     <string name="database_clean">Nichts zu bereinigen</string>
@@ -684,7 +681,7 @@
     <string name="action_remove_everything">Alles entfernen</string>
     <string name="loader_rar5_error">Das RARv5-Format wird nicht unterstützt</string>
     <string name="appwidget_updates_description">Deine kürzlich aktualisierten Bibliothekseinträge ansehen</string>
-    <string name="appwidget_unavailable_locked">Widget nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
+    <string name="appwidget_unavailable_locked">Widget ist nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
     <string name="update_already_running">Eine Aktualisierung ist bereits im Gange</string>
     <string name="error_user_agent_string_blank">User-Agent-Text darf nicht leer sein</string>
     <string name="theme_tidalwave">Flutwelle</string>
@@ -696,7 +693,6 @@
     </plurals>
     <string name="download_ahead_info">Funktioniert nur, wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind.</string>
     <string name="are_you_sure">Bist du dir sicher\?</string>
-    <string name="pref_long_strip_split">Hohe Bilder aufteilen (BETA)</string>
     <string name="remove_manga">Du bist gerade dabei, „%s“ aus deiner Bibliothek zu entfernen</string>
     <string name="multi_lang">Mehrere Sprachen</string>
     <string name="updates_last_update_info">Bibliothek zuletzt aktualisiert: %s</string>
@@ -708,7 +704,7 @@
     <string name="pref_reader_summary">Lesemodus, Anzeige, Navigation</string>
     <string name="pref_downloads_summary">Automatische Downloads, im Voraus herunterladen</string>
     <string name="pref_library_summary">Kategorien, globale Aktualisierungen, Kapitelaktionen</string>
-    <string name="crash_screen_restart_application">Anwendung neustarten</string>
+    <string name="crash_screen_restart_application">App neustarten</string>
     <string name="pref_tracking_summary">Einweg-Synchronisation, erweiterte Synchronisation</string>
     <string name="pref_browse_summary">Quellen, Erweiterungen, globale Suche</string>
     <string name="crash_screen_title">Ups!</string>
@@ -820,4 +816,9 @@
     <string name="action_move_to_bottom_all_for_series">Serie nach unten verschieben</string>
     <string name="pref_relative_format">Relative Zeitstempel</string>
     <string name="pref_relative_format_summary">„%1$s“ anstelle von „%2$s“</string>
+    <string name="app_settings">App-Einstellungen</string>
+    <string name="source_settings">Quelleneinstellungen</string>
+    <string name="notification_updating_progress">Bibliothek wird aktualisiert… (%s)</string>
+    <string name="action_sort_category">Kategorien sortieren</string>
+    <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren\?</string>
 </resources>

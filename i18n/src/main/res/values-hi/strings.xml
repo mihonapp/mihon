@@ -566,7 +566,6 @@
     <string name="ext_installer_shizuku_stopped">शिज़ुकु नहीं चल रहा है</string>
     <string name="pref_inverted_colors">उल्टी</string>
     <string name="pref_grayscale">काला और सफेद</string>
-    <string name="pref_create_folder_per_manga_summary">आइटम के शीर्षक अनुसार फोल्डर बनाता है</string>
     <string name="tracking_guide">ट्रैकिंग गाइड</string>
     <string name="enhanced_services">उन्नत सेवाएं</string>
     <string name="restore_miui_warning">MIUI ऑप्टिमाइज़ेशन अक्षम होने पर बैकअप/पुनर्स्थापना ठीक से काम नहीं कर सकता है।</string>
@@ -582,7 +581,6 @@
     <string name="error_saving_cover">कवर पेज सहेजने में त्रुटि</string>
     <string name="unread">अपठित</string>
     <string name="error_no_match">कोई मेल नहीं मिला</string>
-    <string name="notification_updating">पुस्तकालय अपडेट हो रही है… (%1$d/%2$d)</string>
     <string name="information_empty_category_dialog">आपके पास अभी तक कोई श्रेणी नहीं है।</string>
     <string name="confirm_lock_change">परिवर्तन की पुष्टि करने के लिए प्रमाणित करें</string>
     <string name="action_sort_chapter_fetch_date">अध्याय लाई की तिथि</string>
@@ -591,7 +589,6 @@
     <string name="help_translate">अनुवाद में मदद करें</string>
     <string name="date">दिनांक</string>
     <string name="manga_cover">कवर पृष्ठ</string>
-    <string name="pref_create_folder_per_manga">पृष्ठों को अलग-अलग फ़ोल्डरों में सहेजें</string>
     <string name="pref_download_new_categories_details">बहिष्कृत श्रेणियों की आइटम डाउनलोड नहीं की जाएंगी, भले ही वे शामिल श्रेणियों में भी हों।</string>
     <string name="pref_verbose_logging_summary">सिस्टम लॉग में वर्बोज़ लॉग प्रिंट करें (ऐप प्रदर्शन को कम करता है)</string>
     <string name="enhanced_tracking_info">ऐसी सेवाएँ जो विशिष्ट स्रोतों के लिए उन्नत सुविधाएँ प्रदान करती हैं। आपकी पुस्तकालय में जोड़े जाने पर आइटम को स्वचालित रूप से ट्रैक किया जाता है।</string>
@@ -690,7 +687,6 @@
     </plurals>
     <string name="action_remove_everything">सब कुछ हटा दें</string>
     <string name="popular">लोकप्रिय</string>
-    <string name="pref_long_strip_split">लंबी इमेज को विभाजित करें (BETA)</string>
     <string name="theme_tidalwave">टाइडल वेव्ह</string>
     <string name="error_user_agent_string_blank">यूजर एजेंट स्ट्रिंग (User Agent String) खाली नहीं रखा जा सकता</string>
     <string name="multi_lang">मल्टी</string>

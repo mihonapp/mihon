@@ -546,8 +546,6 @@
     <string name="nav_zone_next">পরবর্তী</string>
     <string name="nav_zone_prev">পূর্ববর্তী</string>
     <string name="automatic_background">স্বয়ংক্রিয়</string>
-    <string name="pref_create_folder_per_manga_summary">মাঙ্গা শিরোনাম অনুযায়ী ফোল্ডার তৈরি করে</string>
-    <string name="pref_create_folder_per_manga">পৃষ্ঠাগুলি পৃথক ফোল্ডারে সংরক্ষণ করুন</string>
     <string name="pref_reader_actions">ক্রিয়া</string>
     <string name="pref_inverted_colors">উল্টানো</string>
     <string name="pref_grayscale">ধূসর স্কেল</string>
@@ -612,7 +610,6 @@
     <string name="update_72hour">প্রতি ৩ দিন</string>
     <string name="connected_to_wifi">সুধু মাত্র ওয়িফি তে</string>
     <string name="notification_size_warning">সতর্কতা: বড় আপডেটগুলি উত্সের ক্ষতি করে এবং ধীরগতির আপডেটের দিকে নিয়ে যেতে পারে এবং ব্যাটারি ব্যবহারও বাড়িয়ে দিতে পারে</string>
-    <string name="notification_updating">লাইব্রেরি আপডেট করা হচ্ছে... (%1$d/%2$d)</string>
     <string name="download_queue_size_warning">সতর্কতা: বড় আকারের ডাউনলোডের ফলে উৎসগুলি মন্থর হয়ে যেতে পারে এবং/অথবা তাচিওমি ব্লক হয়ে যেতে পারে। আরও জানতে এখানে ট্যাপ করুন।</string>
     <string name="pref_auto_clear_chapter_cache">অ্যাপ বন্দ্ধ করার সময় অধ্যায়ের ক্যাশে পরিষ্কার করুন</string>
     <string name="database_clean">তথ্যশালা পরিষ্কার</string>

@@ -170,13 +170,11 @@
     <string name="pref_show_nsfw_source">پیشاندان لە لیستی سەرچاوە و زیادکراوەکان</string>
     <string name="relative_time_today">ئەمڕۆ</string>
     <string name="pref_category_display">شێوازی پیشاندان</string>
-    <string name="notification_updating">نوێکردنەوەی تۆماری ڕابردوو…( (%2$d) / (%1$d) )</string>
     <string name="pref_read_with_tapping_inverted">نەرمە لێدانی پێچەوانە</string>
     <string name="tapping_inverted_none">هیچ</string>
     <string name="tapping_inverted_vertical">ستوونی</string>
     <string name="tapping_inverted_both">هەردووکیان</string>
     <string name="pref_reader_actions">کردارەکان</string>
-    <string name="pref_create_folder_per_manga">خەزێنە کردنی لاپەڕەکان لە فۆڵدەری جیاوزدا</string>
     <string name="white_background">سپی</string>
     <string name="pref_grayscale">خۆڵەمێشی پلە پلە</string>
     <string name="pref_inverted_colors">پێچەوانەکراو</string>
@@ -214,7 +212,6 @@
     <string name="pref_image_scale_type">دەوروبەری لاپەڕە</string>
     <string name="scale_type_fit_screen">گونجاو بە شاشە</string>
     <string name="rotation_free">ئازاد</string>
-    <string name="pref_create_folder_per_manga_summary">درووستکردنی فۆڵدەر بە پێی تایتڵی مانگا</string>
     <string name="pref_reader_theme">ڕەنگی باکگراوند</string>
     <string name="edge_nav">سووچ</string>
     <string name="right_and_left_nav">ڕاست و چەپ</string>

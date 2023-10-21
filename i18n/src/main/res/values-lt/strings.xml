@@ -246,8 +246,6 @@
     <string name="tapping_inverted_vertical">Vertikalus</string>
     <string name="pref_reader_actions">Veiksmai</string>
     <string name="pref_read_with_long_tap">Parodyti ilgiau paspaudus</string>
-    <string name="pref_create_folder_per_manga">Išsaugoti puslapius atskiruose aplankuose</string>
-    <string name="pref_create_folder_per_manga_summary">Sukuria aplankus pagal įrašo pavadinimą</string>
     <string name="pref_reader_theme">Fono spalva</string>
     <string name="nav_zone_prev">Ankstesnis</string>
     <string name="gray_background">Pilka</string>
@@ -387,7 +385,6 @@
     <string name="transition_finished">Baigta:</string>
     <string name="transition_current">Dabartinis:</string>
     <string name="notification_check_updates">Ieškoma naujų skyrių</string>
-    <string name="notification_updating">Atnaujinama biblioteka... (%1$d/%2$d)</string>
     <string name="notification_update_error">Nepavyko atnaujinti %1$d</string>
     <string name="notification_first_add_to_library">Prieš atlikdami šį veiksmą, pridėkite įrašą į savo biblioteką</string>
     <string name="skipped_reason_not_started">Praleista, nes nėra perskaitytų skyrių</string>
@@ -704,7 +701,6 @@
         <item quantity="few">Kiti %d neskaityti skyriai</item>
         <item quantity="other">Kiti %d neskaitytų skyrių</item>
     </plurals>
-    <string name="pref_long_strip_split">Perskirti aukštus paveikslėlius (BETA versija)</string>
     <string name="error_user_agent_string_blank">Vartotojo agento eilutė negali būti tuščia</string>
     <string name="update_already_running">Atnaujinimas jau vykdomas</string>
     <string name="updates_last_update_info">Biblioteka paskutinį kartą atnaujinta: %s</string>

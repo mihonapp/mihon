@@ -459,7 +459,6 @@
     </plurals>
     <string name="loader_not_implemented_error">Zdroj sa nenašiel</string>
     <string name="empty_screen">No, toto je trápne</string>
-    <string name="notification_updating">Aktualizácia knižnice... (%1$d/%2$d)</string>
     <string name="information_webview_required">WebView je potrebné pre Tachiyomi</string>
     <string name="popular">Populárne</string>
     <string name="reading_list">Zoznam čítania</string>
@@ -510,7 +509,6 @@
     <string name="delete_category">Odstrániť kategóriu</string>
     <string name="none">Žiadne</string>
     <string name="include">Zahrnúť: %s</string>
-    <string name="pref_create_folder_per_manga_summary">Vytvára priečinky podľa názvu mangy</string>
     <string name="edge_nav">Okraj</string>
     <string name="right_and_left_nav">Vpravo a vľavo</string>
     <string name="nav_zone_left">Vľavo</string>
@@ -573,7 +571,6 @@
     <string name="extension_api_error">Nepodarilo sa získať zoznam rozšírení</string>
     <string name="ext_install_service_notif">Inštaluje sa rozšírenie…</string>
     <string name="pref_read_with_tapping_inverted">Invertovať oblasti dotyku</string>
-    <string name="pref_create_folder_per_manga">Uloženie stránok do samostatných priečinkov</string>
     <string name="gray_background">Šedivá</string>
     <string name="rotation_landscape">Na šírku</string>
     <string name="restore_in_progress">Obnovenie už prebieha</string>
@@ -591,7 +588,6 @@
     <string name="no_chapters_error">Nenašli sa žiadne kapitoly</string>
     <string name="ext_app_info">Informácie o aplikácii</string>
     <string name="ext_info_version">Verzia</string>
-    <string name="pref_long_strip_split">Rozdelenie vysokých obrázkov (BETA)</string>
     <string name="pref_cutout_short">Zobraziť obsah v oblasti výrezu</string>
     <string name="tapping_inverted_horizontal">Horizontálne</string>
     <string name="disabled_nav">Zakázané</string>

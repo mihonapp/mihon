@@ -532,8 +532,6 @@
     <string name="clipboard_copy_error">Kopiointi leikepöydälle epäonnistui</string>
     <string name="rotation_landscape">Vaakatasossa</string>
     <string name="rotation_portrait">Pystysuunnassa</string>
-    <string name="pref_create_folder_per_manga_summary">Luo kansioita manga-otsikon mukaan</string>
-    <string name="pref_create_folder_per_manga">Tallenna sivut erillisiin kansioihin</string>
     <string name="pref_reader_actions">Toiminnot</string>
     <string name="rotation_type">Kierron tyyppi</string>
     <string name="pref_grayscale">Harmaasävy</string>
@@ -611,7 +609,6 @@
     <string name="pref_lowest">Alhaisin</string>
     <string name="empty_backup_error">Ei varmuuskopioitavia sarjoja kirjastossa</string>
     <string name="multi_lang">Useampi</string>
-    <string name="pref_long_strip_split">Jaa korkeat kuvat (BETA)</string>
     <string name="pref_navigate_pan">Panoroi leveitä kuvia napauttamalla</string>
     <string name="save_chapter_as_cbz">Tallenna CBZ-arkistona</string>
     <string name="pref_landscape_zoom">Zoomaa vaakasuuntaisiin kuviin</string>
@@ -667,7 +664,6 @@
     <string name="local_filter_order_by">Järjestä</string>
     <string name="manga_cover">Kansikuva</string>
     <string name="error_sharing_cover">Virhe jakaessa kansikuvaa</string>
-    <string name="notification_updating">Päivitetään kirjastoa… (%1$d/%2$d)</string>
     <string name="learn_more">Napauta saadaksesi lisätietoja</string>
     <string name="ext_info_age_rating">Ikäluokitus</string>
     <string name="tracking_guide">Seurantaopas</string>

@@ -299,7 +299,7 @@
     <string name="ext_obsolete">Przestarzałe</string>
     <string name="obsolete_extension_message">To rozszerzenie nie jest już dostępne i może nie funkcjonować prawidłowo, powodując problemy z aplikacją. Zalecamy odinstalowanie go.</string>
     <string name="pref_date_format">Format daty</string>
-    <string name="pref_category_library_update">Aktualizacje</string>
+    <string name="pref_category_library_update">Globalna aktualizacja</string>
     <string name="logout_title">Wylogować z %1$s\?</string>
     <string name="logout">Wyloguj</string>
     <string name="logout_success">Wylogowano</string>
@@ -560,8 +560,6 @@
     <string name="unread">Nieprzeczytane</string>
     <string name="rotation_type">Orientacja ekranu</string>
     <string name="automatic_background">Automatycznie</string>
-    <string name="pref_create_folder_per_manga_summary">Utwórz foldery względem tytułu</string>
-    <string name="pref_create_folder_per_manga">Zapisz strony do osobnych folderów</string>
     <string name="pref_reader_actions">Akcje</string>
     <string name="pref_grayscale">Odcienie szarości</string>
     <string name="cancel_all_for_series">Anuluj wszystko dla tego tytułu</string>
@@ -584,7 +582,6 @@
     <string name="restrictions">Ograniczenia: %s</string>
     <string name="about_dont_kill_my_app">Niektórzy producenci mają dodatkowe ograniczenia, które zabijają usługi działające w tle. Ta strona zawiera więcej informacji na ten temat.</string>
     <string name="action_start_downloading_now">Zacznij pobierać teraz</string>
-    <string name="notification_updating">Aktualizowanie biblioteki… (%1$d/%2$d)</string>
     <string name="theme_greenapple">Zielone jabłko</string>
     <string name="theme_monet">Dynamiczny</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
@@ -723,7 +720,6 @@
     <string name="are_you_sure">Jesteś pewien\?</string>
     <string name="download_ahead_info">Działa tylko, jeśli aktualny i następny rozdział są już pobrane.</string>
     <string name="multi_lang">Wielojęzyczne</string>
-    <string name="pref_long_strip_split">Dziel wysokie obrazy (BETA)</string>
     <string name="popular">Popularne</string>
     <string name="updates_last_update_info">Biblioteka ostatnio aktualizowana: %s</string>
     <string name="remove_manga">Zamierzasz usunąć \"%s\" ze swojej biblioteki</string>

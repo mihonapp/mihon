@@ -406,7 +406,6 @@
     <plurals name="restore_completed_message">
         <item quantity="other">소요 시간: %1$s, 발생한 오류: %2$s</item>
     </plurals>
-    <string name="notification_updating">서재 업데이트 중… (%1$d/%2$d)</string>
     <string name="pref_library_update_manga_restriction">항목 업데이트 건너뛰기</string>
     <string name="secure_screen_summary">화면 보안을 켜면 앱을 전환할 때 내용이 숨겨지며 스크린샷을 찍을 수 없습니다</string>
     <string name="in_library">서재에 추가됨</string>
@@ -595,7 +594,6 @@
     </plurals>
     <string name="skipped_reason_not_caught_up">읽지 않은 회차가 있는 만화를 건너 뛰었습니다</string>
     <string name="information_empty_category_dialog">등록된 카테고리가 없습니다.</string>
-    <string name="pref_create_folder_per_manga_summary">항목 제목에 따라 폴더 생성</string>
     <string name="migration_help_guide">소스 이전 설명서</string>
     <string name="migration_selection_prompt">원본 소스를 선택하세요</string>
     <string name="action_display_local_badge">로컬 소스</string>
@@ -606,7 +604,6 @@
     <string name="action_cancel_all">모두 취소</string>
     <string name="cancel_all_for_series">이 만화의 항목을 모두 취소</string>
     <string name="action_webview_forward">앞으로</string>
-    <string name="pref_create_folder_per_manga">각각의 폴더에 페이지 저장</string>
     <string name="action_faq_and_guides">FAQ 및 설명서</string>
     <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">이 시리즈를 맨 위로 이동</string>
@@ -678,7 +675,6 @@
     <string name="error_user_agent_string_blank">사용자 에이전트 문자열은 비워 둘 수 없습니다</string>
     <string name="download_ahead">미리 다운로드</string>
     <string name="multi_lang">다언어</string>
-    <string name="pref_long_strip_split">긴 이미지 분할 (BETA)</string>
     <string name="remove_manga">서재에서 \"%s\"을(를) 제거하려고 합니다</string>
     <string name="missing_storage_permission">저장공간 사용 권한이 없음</string>
     <plurals name="next_unread_chapters">

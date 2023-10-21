@@ -543,8 +543,6 @@
     <string name="clipboard_copy_error">Erro ao copiar para a área de transferência</string>
     <string name="rotation_landscape">Paisagem</string>
     <string name="rotation_portrait">Retrato</string>
-    <string name="pref_create_folder_per_manga_summary">Cria as pastas usando os títulos dos itens</string>
-    <string name="pref_create_folder_per_manga">Salvar as páginas em pastas separadas</string>
     <string name="pref_reader_actions">Ações</string>
     <string name="rotation_type">Orientação</string>
     <string name="pref_grayscale">Nível de cinza</string>
@@ -572,7 +570,6 @@
     <string name="tracking_guide">Guia sobre o monitoramento</string>
     <string name="information_empty_category_dialog">Você não tem categorias ainda.</string>
     <string name="action_start_downloading_now">Começar o download agora</string>
-    <string name="notification_updating">Atualizando a biblioteca... (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Algumas fabricantes possuem restrições adicionais de aplicativos que encerram os serviços em segundo plano. Este site possui mais informações sobre como corrigir este problema.</string>
     <string name="restore_miui_warning">O backup e restauração podem não funcionar corretamente se a Otimização da MIUI estiver desabilitada.</string>
     <string name="pref_dark_theme_pure_black">Modo noturno com preto absoluto</string>
@@ -620,7 +617,7 @@
     <string name="action_display_language_badge">Idioma</string>
     <string name="notification_size_warning">Atualizações com muitos itens prejudicam as fontes e podem deixar as atualizações lentas e aumentar o uso da bateria. Toque para saber mais.</string>
     <string name="label_warning">Aviso</string>
-    <string name="backup_info">Você deve manter cópias em outros locais também.</string>
+    <string name="backup_info">Você deve manter cópias em outros locais também. Backups podem ter informações sensíveis incluindo senhas salvas; tenha cuidado se compartilhar.</string>
     <string name="connected_to_wifi">Somente no Wi-Fi</string>
     <string name="update_72hour">A cada 3 dias</string>
     <string name="download_queue_size_warning">Aviso: grandes downloads em massa podem levar as fontes a ficarem lentas e/ou começarem a bloquear o Tachiyomi. Toque para saber mais.</string>
@@ -710,7 +707,6 @@
     </plurals>
     <string name="are_you_sure">Você tem certeza\?</string>
     <string name="multi_lang">Múltiplos</string>
-    <string name="pref_long_strip_split">Dividir imagens compridas (BETA)</string>
     <string name="updates_last_update_info">Última atualização da biblioteca: %s</string>
     <string name="remove_manga">Você está prestes a remover \"%s\" de sua biblioteca</string>
     <string name="popular">Popular</string>
@@ -836,4 +832,10 @@
     <string name="action_move_to_bottom_all_for_series">Mover série para o final</string>
     <string name="pref_relative_format">Datas relativas</string>
     <string name="pref_relative_format_summary">\"%1$s\" ao invés de \"%2$s\"</string>
+    <string name="app_settings">Configurações do aplicativo</string>
+    <string name="notification_updating_progress">Atualizando a biblioteca… (%s)</string>
+    <string name="source_settings">Configurações das fontes</string>
+    <string name="action_sort_category">Ordenar as categorias</string>
+    <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente\?</string>
+    <string name="file_null_uri_error">O seletor de arquivos não retornou o arquivo para o aplicativo</string>
 </resources>

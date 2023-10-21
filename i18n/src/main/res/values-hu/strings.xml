@@ -408,8 +408,6 @@
     <string name="vertical_plus_viewer">Hosszú szalag lyukakkal</string>
     <string name="automatic_background">Automatikus</string>
     <string name="gray_background">Szürke</string>
-    <string name="pref_create_folder_per_manga_summary">Mappák létrehozása bejegyzések címe szerint</string>
-    <string name="pref_create_folder_per_manga">Mentse a lapokat külön mappákba</string>
     <string name="pref_read_with_long_tap">Cselekmények mutatása hosszú koppintáskor</string>
     <string name="pref_reader_actions">Műveletek</string>
     <string name="tapping_inverted_none">Egyik sem</string>
@@ -490,7 +488,6 @@
     <string name="cache_deleted">Gyorsítótár törölve: %1$d fájl lett törölve</string>
     <string name="cache_delete_error">Hiba történt törlés közben</string>
     <string name="clear_database_confirmation">Biztos benne\? Nem könyvtári elemek olvasott fejezetei elvesznek</string>
-    <string name="notification_updating">Könyvtár frissítése...(%1$d/%2$d)</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">%d-nak/nek</item>
         <item quantity="other">%d-nak/nek</item>
@@ -708,7 +705,6 @@
     <string name="pref_advanced_summary">Összeomlás naplók kiírása, akkumulátor optimalizálások</string>
     <string name="invalid_location">Hibás hely: %s</string>
     <string name="download_ahead_info">Csak akkor működik, ha az aktuális és a következő fejezet már letöltött.</string>
-    <string name="pref_long_strip_split">Magas képek felosztása (BÉTA)</string>
     <string name="download_ahead">Letöltés előre</string>
     <string name="pref_reader_summary">Olvasó mód, kijelző, navigáció</string>
     <string name="theme_tidalwave">Szökőár</string>

@@ -534,8 +534,6 @@
     <string name="right_and_left_nav">Phải và trái</string>
     <string name="automatic_background">Tự động</string>
     <string name="gray_background">Xám</string>
-    <string name="pref_create_folder_per_manga_summary">Tạo thư mục dựa theo tên truyện</string>
-    <string name="pref_create_folder_per_manga">Lưu lại trang trong thư mục riêng</string>
     <string name="pref_reader_actions">Hành động</string>
     <string name="tapping_inverted_both">Cả hai</string>
     <string name="tapping_inverted_vertical">Dọc</string>
@@ -580,7 +578,6 @@
     <string name="pref_library_update_refresh_trackers_summary">Cập nhật theo dõi khi cập nhật thư viện</string>
     <string name="pref_library_update_refresh_trackers">Tự động làm mới theo dõi</string>
     <string name="restrictions">Hạn chế: %s</string>
-    <string name="notification_updating">Cập nhật thư viện… (%1$d/%2$d)</string>
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
     <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc sao lưu/khôi phục hoạt động tốt.</string>
     <string name="theme_greenapple">Chủ đề: Táo Xanh</string>
@@ -721,7 +718,6 @@
     <string name="updates_last_update_info">Thư viện lần cuối được cập nhật:%s</string>
     <string name="download_ahead">Tải Trước</string>
     <string name="download_ahead_info">Tải trước chỉ áp dụng cho các mục ở trong thư viện và nếu chương cuối cùng đã được tải rồi</string>
-    <string name="pref_long_strip_split">Tách các ảnh cao (BETA)</string>
     <string name="multi_lang">Đa Ngôn Ngữ</string>
     <string name="skipped_reason_not_always_update">Bỏ qua vì loạt truyện không cần cập nhật</string>
     <string name="action_search_hint">Tìm kiếm…</string>
@@ -817,4 +813,6 @@
     <string name="information_cloudflare_help">Nhấn vào đây để được trợ giúp về Cloudflare</string>
     <string name="pref_update_only_in_release_period">Chưa công bố</string>
     <string name="unlock_app_title">Mở khoá %s</string>
+    <string name="source_settings">Cài đặt nguồn</string>
+    <string name="app_settings">Cài đặt ứng dụng</string>
 </resources>

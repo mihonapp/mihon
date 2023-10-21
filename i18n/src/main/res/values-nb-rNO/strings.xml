@@ -151,7 +151,7 @@
     <string name="fourth_to_last">Fjerde sist leste kapittel</string>
     <string name="fifth_to_last">Femte sist leste kapittel</string>
     <string name="pref_download_new">Last ned nye kapitler</string>
-    <string name="services">Tjenester</string>
+    <string name="services">Sporere</string>
     <string name="pref_create_backup">Opprett sikkerhetskopi</string>
     <string name="pref_create_backup_summ">Kan brukes til å gjenopprette nåværende bibliotek</string>
     <string name="pref_restore_backup">Gjenopprett sikkerhetskopi</string>
@@ -475,7 +475,7 @@
     <string name="pref_refresh_library_covers">Gjenoppfrisk mangaomslag i biblioteket</string>
     <string name="backup_restore_missing_trackers">Sporingstjenester ikke logget inn i:</string>
     <string name="invalid_backup_file_missing_manga">Sikkerhetskopi inneholder ingen bibliotekoppføringer.</string>
-    <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift i sporingstjenester. Sett opp sporing for individuelle oppføringer med sporingsknappen.</string>
+    <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift i eksterne sporetjenester. Sett opp sporing for individuelle oppføringer med sporingsknappen.</string>
     <string name="pref_true_color_summary">Reduserer sjattering, men koster ytelse</string>
     <string name="pref_webtoon_side_padding">Sidepolstring</string>
     <string name="spen_next_page">Neste side</string>
@@ -533,14 +533,11 @@
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
     <string name="rotation_type">Rotasjon</string>
-    <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til oppføringenes tittel</string>
-    <string name="pref_create_folder_per_manga">Lagre sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>
     <string name="pref_library_update_refresh_trackers">Oppdater trackere automatisk</string>
     <string name="pref_dark_theme_pure_black">Helt svart</string>
     <string name="getting_started_guide">Oppstartsveiledning</string>
     <string name="information_empty_category_dialog">Du har ingen kategorier enda.</string>
-    <string name="notification_updating">Oppdaterer bibliotek … (%1$d/%2$d)</string>
     <string name="source_unsupported">Kilde støttes ikke</string>
     <string name="unread">Ulest</string>
     <string name="error_sharing_cover">Klarte ikke å dele omslag</string>
@@ -553,7 +550,7 @@
     <string name="chapter_not_found">Fant ikke kapittelet</string>
     <string name="label_background_activity">Bakgrunnsaktivitet</string>
     <string name="action_track">Spor</string>
-    <string name="enhanced_services">Forbedrede tjenester</string>
+    <string name="enhanced_services">Forbedret sporere</string>
     <string name="tracking_guide">Sporingsveiledning</string>
     <string name="pref_remove_exclude_categories">Utelukkede kategorier</string>
     <string name="pref_lowest">Laveste</string>
@@ -580,7 +577,7 @@
     <string name="label_default">Standard</string>
     <string name="about_dont_kill_my_app">Noen produsenter har ytterligere appbegrensninger som dreper bakgrunnstjenester. Denne nettsiden har mer info om hvordan det kan fikses.</string>
     <string name="restore_miui_warning">Sikkerhetskopier/gjenoppretting kan krangle hvis MIUI-optimalisering er avskrudd.</string>
-    <string name="enhanced_tracking_info">Tjenester som gir forbedredet funksjoner for spesifikke kilder. Det holdes automatisk øye med oppføringer når de legges til i biblioteket ditt.</string>
+    <string name="enhanced_tracking_info">Gir forbedredet funksjoner for spesifikke kilder. Det holdes automatisk øye med oppføringer når de legges til i biblioteket ditt.</string>
     <string name="pref_tablet_ui_mode">Nettbrettsgrensesnitt</string>
     <string name="pref_hide_threshold">Følsomhet for å skjule menyen når du ruller</string>
     <string name="categorized_display_settings">Innstillinger per kategori for sortering</string>
@@ -608,7 +605,7 @@
     <string name="pref_verbose_logging_summary">Skriv utfyllende logg til systemloggen (reduserer programytelse)</string>
     <string name="label_warning">Advarsel</string>
     <string name="notification_size_warning">Store oppdateringer skader kilder og kan føre til tregere oppdateringer samt økt batteribruk. Trykk for å lære mer.</string>
-    <string name="backup_info">Du bør oppbevare ekstra kopier av sikkershetskopier andre steder også.</string>
+    <string name="backup_info">Du bør oppbevare ekstra kopier av sikkershetskopier andre steder også. Sikkerhetskopier kan inneholde sensitiv data, inkludert eventuelle lagrede passord. Vær forsiktig ved deling.</string>
     <string name="channel_app_updates">Appoppdateringer</string>
     <string name="update_72hour">Hver 3. dag</string>
     <string name="connected_to_wifi">Bare på Wi-Fi</string>
@@ -656,7 +653,6 @@
     <string name="theme_lavender">Lavendel</string>
     <string name="network_not_metered">Bare på nettverk uten datamåling</string>
     <string name="ext_info_language">Språk</string>
-    <string name="pref_long_strip_split">Del høye bilder (BETA)</string>
     <string name="pref_reset_viewer_flags_success">Alle leserinnstillinger tilbakestilt</string>
     <string name="unknown_title">Ukjent tittel</string>
     <string name="invalid_location">Ugyldig plassering: %s</string>
@@ -812,10 +808,17 @@
     <string name="download_cache_invalidated">Nedlastingsindeksen er ugyldiggjort</string>
     <string name="create_backup_file_error">Kunne ikke opprette en backup-fil</string>
     <string name="licensed_manga_chapters_error">Lisensiert - Ingen kapitler å vise</string>
-    <string name="track_activity_name">Sporingsinnlogging</string>
+    <string name="track_activity_name">Sporerinnlogging</string>
     <string name="unlock_app_title">Lås opp %s</string>
     <string name="action_move_to_bottom_all_for_series">Flytt serien til bunnen</string>
     <string name="exception_offline">Ingen internettforbindelse</string>
     <string name="exception_http">HTTP %d, sjekk nettsiden i WebView</string>
     <string name="exception_unknown_host">Kunne ikke nå %s</string>
+    <string name="action_sort_category">Sorter kategorier</string>
+    <string name="notification_updating_progress">Oppdaterer bibliotek… (%s)</string>
+    <string name="sort_category_confirmation">Vil du sortere kategoriene i alfabetisk rekkefølge\?</string>
+    <string name="source_settings">Kildeinnstillinger</string>
+    <string name="app_settings">Programinnstillinger</string>
+    <string name="pref_relative_format">Relative tidsstempler</string>
+    <string name="pref_relative_format_summary">\"%1$s\" istedenfor \"%2$s\"</string>
 </resources>

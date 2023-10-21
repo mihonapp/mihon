@@ -539,8 +539,6 @@
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="rotation_type">Otáčení</string>
-    <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
-    <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
     <string name="nav_zone_right">Vpravo</string>
     <string name="nav_zone_left">Vlevo</string>
@@ -569,7 +567,6 @@
     <string name="categorized_display_settings">Nastavení řazení pro jednotlivé kategorie</string>
     <string name="information_empty_category_dialog">Nemáte žádné kategorie.</string>
     <string name="action_start_downloading_now">Začít stahovat nyní</string>
-    <string name="notification_updating">Aktualizuji knihovnu… (%1$d / %2$d)</string>
     <string name="about_dont_kill_my_app">Někteří výrobci používají další omezení aplikací, která vypíná služby na pozadí. Na této webové stránce najdete další informace o tom, jak to opravit.</string>
     <string name="restore_miui_warning">Pokud je MIUI optimalizace vypnutá, zálohování/obnovování nemusí fungovat správně.</string>
     <string name="enhanced_tracking_info">Poskytují rozšířené funkce pro konkrétní zdroje. Záznamy jsou po přidání do knihovny automaticky sledovány.</string>
@@ -613,7 +610,7 @@
     <string name="ext_app_info">Info o Aplikaci</string>
     <string name="pref_inverted_colors">Invertované</string>
     <string name="label_warning">Varování</string>
-    <string name="backup_info">Kopie záloh by jste také měli uchovat na více místech.</string>
+    <string name="backup_info">Kopie záloh by jste také měli uchovat na více místech. Zálohy mohou obsahovat citlivé informace včetně jakýchkoliv uložených hesel; buďte opatrní při sdílení.</string>
     <string name="action_sort_count">Celkem položek</string>
     <string name="action_select_inverse">Vybrat obráceně</string>
     <string name="action_display_language_badge">Jazyk</string>
@@ -711,7 +708,6 @@
     <string name="are_you_sure">Jste si jistí\?</string>
     <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
     <string name="multi_lang">Více</string>
-    <string name="pref_long_strip_split">Rozdělit vysoké obrázky (BETA)</string>
     <string name="updates_last_update_info">Poslední aktualizace knihovny: %s</string>
     <string name="popular">Populární</string>
     <string name="missing_storage_permission">Nebyla udělena oprávnění k úložišti</string>
@@ -836,4 +832,9 @@
     <string name="action_move_to_bottom_all_for_series">Přesunout sérii na konec</string>
     <string name="pref_relative_format">Relativní časová razítka</string>
     <string name="pref_relative_format_summary">\"%1$s\" namísto \"%2$s\"</string>
+    <string name="app_settings">Nastavení aplikace</string>
+    <string name="source_settings">Nastavení zdroje</string>
+    <string name="notification_updating_progress">Aktualizace knihovny... (%s)</string>
+    <string name="action_sort_category">Seřadit kategorie</string>
+    <string name="sort_category_confirmation">Chtěli by jste seřadit kategorie abecedně\?</string>
 </resources>
