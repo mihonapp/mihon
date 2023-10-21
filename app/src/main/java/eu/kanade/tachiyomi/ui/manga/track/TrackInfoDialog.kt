@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.ui.manga.track
 
 import android.app.Application
 import android.content.Context
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -75,6 +74,7 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.model.Track
+import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
 import uy.kohesive.injekt.Injekt
@@ -94,10 +94,10 @@ data class TrackInfoDialogHomeScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
-        val sm = rememberScreenModel { Model(mangaId, sourceId) }
+        val screenModel = rememberScreenModel { Model(mangaId, sourceId) }
 
         val dateFormat = remember { UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat().get()) }
-        val state by sm.state.collectAsState()
+        val state by screenModel.state.collectAsState()
 
         TrackInfoDialogHome(
             trackItems = state.trackItems,
@@ -146,7 +146,7 @@ data class TrackInfoDialogHomeScreen(
             },
             onNewSearch = {
                 if (it.tracker is EnhancedTracker) {
-                    sm.registerEnhancedTracking(it)
+                    screenModel.registerEnhancedTracking(it)
                 } else {
                     navigator.push(
                         TrackerSearchScreen(
@@ -261,19 +261,19 @@ private data class TrackStatusSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
             )
         }
-        val state by sm.state.collectAsState()
+        val state by screenModel.state.collectAsState()
         TrackStatusSelector(
             selection = state.selection,
-            onSelectionChange = sm::setSelection,
-            selections = remember { sm.getSelections() },
+            onSelectionChange = screenModel::setSelection,
+            selections = remember { screenModel.getSelections() },
             onConfirm = {
-                sm.setStatus()
+                screenModel.setStatus()
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
@@ -314,20 +314,20 @@ private data class TrackChapterSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
             )
         }
-        val state by sm.state.collectAsState()
+        val state by screenModel.state.collectAsState()
 
         TrackChapterSelector(
             selection = state.selection,
-            onSelectionChange = sm::setSelection,
-            range = remember { sm.getRange() },
+            onSelectionChange = screenModel::setSelection,
+            range = remember { screenModel.getRange() },
             onConfirm = {
-                sm.setChapter()
+                screenModel.setChapter()
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
@@ -373,20 +373,20 @@ private data class TrackScoreSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
             )
         }
-        val state by sm.state.collectAsState()
+        val state by screenModel.state.collectAsState()
 
         TrackScoreSelector(
             selection = state.selection,
-            onSelectionChange = sm::setSelection,
-            selections = remember { sm.getSelections() },
+            onSelectionChange = screenModel::setSelection,
+            selections = remember { screenModel.getSelections() },
             onConfirm = {
-                sm.setScore()
+                screenModel.setScore()
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
@@ -484,7 +484,7 @@ private data class TrackDateSelectorScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
@@ -503,13 +503,13 @@ private data class TrackDateSelectorScreen(
             } else {
                 stringResource(R.string.track_finished_reading_date)
             },
-            initialSelectedDateMillis = sm.initialSelection,
+            initialSelectedDateMillis = screenModel.initialSelection,
             selectableDates = selectableDates,
             onConfirm = {
-                sm.setDate(it)
+                screenModel.setDate(it)
                 navigator.pop()
             },
-            onRemove = { sm.confirmRemoveDate(navigator) }.takeIf { canRemove },
+            onRemove = { screenModel.confirmRemoveDate(navigator) }.takeIf { canRemove },
             onDismissRequest = navigator::pop,
         )
     }
@@ -557,7 +557,7 @@ private data class TrackDateRemoverScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
@@ -579,7 +579,7 @@ private data class TrackDateRemoverScreen(
                 )
             },
             text = {
-                val serviceName = sm.getServiceName()
+                val serviceName = screenModel.getServiceName()
                 Text(
                     text = if (start) {
                         stringResource(R.string.track_remove_start_date_conf_text, serviceName)
@@ -598,7 +598,7 @@ private data class TrackDateRemoverScreen(
                     }
                     FilledTonalButton(
                         onClick = {
-                            sm.removeDate()
+                            screenModel.removeDate()
                             navigator.popUntil { it is TrackInfoDialogHomeScreen }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(
@@ -643,7 +643,7 @@ data class TrackerSearchScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 mangaId = mangaId,
                 currentUrl = currentUrl,
@@ -652,18 +652,18 @@ data class TrackerSearchScreen(
             )
         }
 
-        val state by sm.state.collectAsState()
+        val state by screenModel.state.collectAsState()
 
         var textFieldValue by remember { mutableStateOf(TextFieldValue(initialQuery)) }
         TrackerSearch(
             query = textFieldValue,
             onQueryChange = { textFieldValue = it },
-            onDispatchQuery = { sm.trackingSearch(textFieldValue.text) },
+            onDispatchQuery = { screenModel.trackingSearch(textFieldValue.text) },
             queryResult = state.queryResult,
             selected = state.selected,
-            onSelectedChange = sm::updateSelection,
+            onSelectedChange = screenModel::updateSelection,
             onConfirmSelection = {
-                sm.registerTracking(state.selected!!)
+                screenModel.registerTracking(state.selected!!)
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
@@ -731,14 +731,14 @@ private data class TrackerRemoveScreen(
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val sm = rememberScreenModel {
+        val screenModel = rememberScreenModel {
             Model(
                 mangaId = mangaId,
                 track = track,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
             )
         }
-        val serviceName = sm.getName()
+        val serviceName = screenModel.getName()
         var removeRemoteTrack by remember { mutableStateOf(false) }
         AlertDialogContent(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
@@ -755,21 +755,19 @@ private data class TrackerRemoveScreen(
                 )
             },
             text = {
-                Column {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     Text(
                         text = stringResource(R.string.track_delete_text, serviceName),
                     )
-                    if (sm.isDeletable()) {
-                        val onChange = { removeRemoteTrack = !removeRemoteTrack }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(onClick = onChange),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Checkbox(checked = removeRemoteTrack, onCheckedChange = { onChange() })
-                            Text(text = stringResource(R.string.track_delete_remote_text, serviceName))
-                        }
+
+                    if (screenModel.isDeletable()) {
+                        LabeledCheckbox(
+                            label = stringResource(R.string.track_delete_remote_text, serviceName),
+                            checked = removeRemoteTrack,
+                            onCheckedChange = { removeRemoteTrack = it },
+                        )
                     }
                 }
             },
@@ -786,8 +784,8 @@ private data class TrackerRemoveScreen(
                     }
                     FilledTonalButton(
                         onClick = {
-                            sm.unregisterTracking(serviceId)
-                            if (removeRemoteTrack) sm.deleteMangaFromService()
+                            screenModel.unregisterTracking(serviceId)
+                            if (removeRemoteTrack) screenModel.deleteMangaFromService()
                             navigator.pop()
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(

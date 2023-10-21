@@ -8,20 +8,13 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.extensions.RequestStoragePermission
@@ -55,6 +47,7 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.isScrolledToEnd
@@ -160,22 +153,23 @@ object SettingsBackupScreen : SearchableSettings {
                     val state = rememberLazyListState()
                     ScrollbarLazyColumn(state = state) {
                         item {
-                            CreateBackupDialogItem(
-                                isSelected = true,
-                                title = stringResource(R.string.manga),
+                            LabeledCheckbox(
+                                label = stringResource(R.string.manga),
+                                checked = true,
+                                onCheckedChange = {},
                             )
                         }
                         choices.forEach { (k, v) ->
                             item {
                                 val isSelected = flags.contains(k)
-                                CreateBackupDialogItem(
-                                    isSelected = isSelected,
-                                    title = stringResource(v),
-                                    modifier = Modifier.clickable {
-                                        if (isSelected) {
-                                            flags.remove(k)
-                                        } else {
+                                LabeledCheckbox(
+                                    label = stringResource(v),
+                                    checked = isSelected,
+                                    onCheckedChange = {
+                                        if (it) {
                                             flags.add(k)
+                                        } else {
+                                            flags.remove(k)
                                         }
                                     },
                                 )
@@ -202,29 +196,6 @@ object SettingsBackupScreen : SearchableSettings {
                 }
             },
         )
-    }
-
-    @Composable
-    private fun CreateBackupDialogItem(
-        modifier: Modifier = Modifier,
-        isSelected: Boolean,
-        title: String,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            Checkbox(
-                modifier = Modifier.heightIn(min = 48.dp),
-                checked = isSelected,
-                onCheckedChange = null,
-            )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium.merge(),
-                modifier = Modifier.padding(start = 24.dp),
-            )
-        }
     }
 
     @Composable
