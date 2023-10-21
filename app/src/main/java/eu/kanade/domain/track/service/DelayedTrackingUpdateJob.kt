@@ -8,21 +8,19 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
-import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.store.DelayedTrackingStore
-import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
-import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
-class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters) :
+class DelayedTrackingUpdateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -31,9 +29,8 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
         }
 
         val getTracks = Injekt.get<GetTracks>()
-        val insertTrack = Injekt.get<InsertTrack>()
+        val trackChapter = Injekt.get<TrackChapter>()
 
-        val trackerManager = Injekt.get<TrackerManager>()
         val delayedTrackingStore = Injekt.get<DelayedTrackingStore>()
 
         withIOContext {
@@ -46,17 +43,8 @@ class DelayedTrackingUpdateJob(context: Context, workerParams: WorkerParameters)
                     track?.copy(lastChapterRead = it.lastChapterRead.toDouble())
                 }
                 .forEach { track ->
-                    try {
-                        val service = trackerManager.get(track.syncId)
-                        if (service != null && service.isLoggedIn) {
-                            logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.id}, last chapter read: ${track.lastChapterRead}" }
-                            service.update(track.toDbTrack(), true)
-                            insertTrack.await(track)
-                        }
-                        delayedTrackingStore.remove(track.id)
-                    } catch (e: Exception) {
-                        logcat(LogPriority.ERROR, e)
-                    }
+                    logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.mangaId}, last chapter read: ${track.lastChapterRead}" }
+                    trackChapter.await(context, track.mangaId, track.lastChapterRead)
                 }
         }
 

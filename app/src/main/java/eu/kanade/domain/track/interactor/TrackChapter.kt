@@ -2,6 +2,7 @@ package eu.kanade.domain.track.interactor
 
 import android.content.Context
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.model.toDomainTrack
 import eu.kanade.domain.track.service.DelayedTrackingUpdateJob
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.data.track.TrackerManager
@@ -31,14 +32,17 @@ class TrackChapter(
                     return@mapNotNull null
                 }
 
-                val updatedTrack = track.copy(lastChapterRead = chapterNumber)
                 async {
                     runCatching {
                         try {
+                            val updatedTrack = service.refresh(track.toDbTrack())
+                                .toDomainTrack(idRequired = true)!!
+                                .copy(lastChapterRead = chapterNumber)
                             service.update(updatedTrack.toDbTrack(), true)
                             insertTrack.await(updatedTrack)
+                            delayedTrackingStore.remove(track.id)
                         } catch (e: Exception) {
-                            delayedTrackingStore.addItem(updatedTrack)
+                            delayedTrackingStore.add(track.id, chapterNumber)
                             DelayedTrackingUpdateJob.setupTask(context)
                             throw e
                         }
