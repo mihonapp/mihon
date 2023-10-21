@@ -3,8 +3,7 @@ package eu.kanade.presentation.components
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowLeft
-import androidx.compose.material.icons.outlined.ArrowRight
+import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.DropdownMenuItem
@@ -16,10 +15,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import eu.kanade.tachiyomi.R
@@ -77,14 +74,13 @@ fun NestedMenuItem(
 ) {
     var nestedExpanded by remember { mutableStateOf(false) }
     val closeMenu = { nestedExpanded = false }
-    val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
 
     DropdownMenuItem(
         text = text,
         onClick = { nestedExpanded = true },
         trailingIcon = {
             Icon(
-                imageVector = if (isLtr) Icons.Outlined.ArrowRight else Icons.Outlined.ArrowLeft,
+                imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
                 contentDescription = null,
             )
         },

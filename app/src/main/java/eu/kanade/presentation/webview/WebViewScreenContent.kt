@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Close
@@ -119,7 +121,7 @@ fun WebViewScreenContent(
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_webview_back),
-                                        icon = Icons.Outlined.ArrowBack,
+                                        icon = Icons.AutoMirrored.Outlined.ArrowBack,
                                         onClick = {
                                             if (navigator.canGoBack) {
                                                 navigator.navigateBack()
@@ -129,7 +131,7 @@ fun WebViewScreenContent(
                                     ),
                                     AppBar.Action(
                                         title = stringResource(R.string.action_webview_forward),
-                                        icon = Icons.Outlined.ArrowForward,
+                                        icon = Icons.AutoMirrored.Outlined.ArrowForward,
                                         onClick = {
                                             if (navigator.canGoForward) {
                                                 navigator.navigateForward()
@@ -180,7 +182,7 @@ fun WebViewScreenContent(
                             .align(Alignment.BottomCenter),
                     )
                     is LoadingState.Loading -> LinearProgressIndicator(
-                        progress = (loadingState as? LoadingState.Loading)?.progress ?: 1f,
+                        progress = { (loadingState as? LoadingState.Loading)?.progress ?: 1f },
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter),
