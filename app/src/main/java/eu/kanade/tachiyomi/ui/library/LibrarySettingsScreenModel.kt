@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.ui.library
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import tachiyomi.core.preference.Preference
@@ -43,7 +43,7 @@ class LibrarySettingsScreenModel(
     }
 
     fun setSort(category: Category?, mode: LibrarySort.Type, direction: LibrarySort.Direction) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             setSortModeForCategory.await(category, mode, direction)
         }
     }

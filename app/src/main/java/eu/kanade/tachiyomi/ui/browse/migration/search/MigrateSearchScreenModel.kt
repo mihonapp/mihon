@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.migration.search
 
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SearchScreenModel
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
@@ -16,7 +16,7 @@ class MigrateSearchScreenModel(
 ) : SearchScreenModel() {
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val manga = getManga.await(mangaId)!!
             mutableState.update {
                 it.copy(

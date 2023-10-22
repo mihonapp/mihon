@@ -7,7 +7,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.preference.asState
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.domain.chapter.interactor.SetReadStatus
@@ -126,9 +126,9 @@ class MangaScreenModel(
     val chapterSwipeStartAction = libraryPreferences.swipeToEndAction().get()
     val chapterSwipeEndAction = libraryPreferences.swipeToStartAction().get()
 
-    val relativeTime by uiPreferences.relativeTime().asState(coroutineScope)
+    val relativeTime by uiPreferences.relativeTime().asState(screenModelScope)
     val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
-    private val skipFiltered by readerPreferences.skipFiltered().asState(coroutineScope)
+    private val skipFiltered by readerPreferences.skipFiltered().asState(screenModelScope)
 
     val isUpdateIntervalEnabled = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions().get()
 
@@ -148,7 +148,7 @@ class MangaScreenModel(
     }
 
     init {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             combine(
                 getMangaAndChapters.subscribe(mangaId).distinctUntilChanged(),
                 downloadCache.changes,
@@ -166,7 +166,7 @@ class MangaScreenModel(
 
         observeDownloads()
 
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             val manga = getMangaAndChapters.awaitManga(mangaId)
             val chapters = getMangaAndChapters.awaitChapters(mangaId)
                 .toChapterItems(manga)
@@ -194,7 +194,7 @@ class MangaScreenModel(
             observeTrackers()
 
             // Fetch info-chapters when needed
-            if (coroutineScope.isActive) {
+            if (screenModelScope.isActive) {
                 val fetchFromSourceTasks = listOf(
                     async { if (needRefreshInfo) fetchMangaFromSource() },
                     async { if (needRefreshChapter) fetchChaptersFromSource() },
@@ -208,7 +208,7 @@ class MangaScreenModel(
     }
 
     fun fetchAllFromSource(manualFetch: Boolean = true) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             updateSuccessState { it.copy(isRefreshingData = true) }
             val fetchFromSourceTasks = listOf(
                 async { fetchMangaFromSource(manualFetch) },
@@ -236,7 +236,7 @@ class MangaScreenModel(
             if (e is HttpException && e.code == 103) return
 
             logcat(LogPriority.ERROR, e)
-            coroutineScope.launch {
+            screenModelScope.launch {
                 snackbarHostState.showSnackbar(message = with(context) { e.formattedMessage })
             }
         }
@@ -245,7 +245,7 @@ class MangaScreenModel(
     fun toggleFavorite() {
         toggleFavorite(
             onRemoved = {
-                coroutineScope.launch {
+                screenModelScope.launch {
                     if (!hasDownloads()) return@launch
                     val result = snackbarHostState.showSnackbar(
                         message = context.getString(R.string.delete_downloads_for_manga),
@@ -268,7 +268,7 @@ class MangaScreenModel(
         checkDuplicate: Boolean = true,
     ) {
         val state = successState ?: return
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             val manga = state.manga
 
             if (isFavorited) {
@@ -323,7 +323,7 @@ class MangaScreenModel(
 
     fun showChangeCategoryDialog() {
         val manga = successState?.manga ?: return
-        coroutineScope.launch {
+        screenModelScope.launch {
             val categories = getCategories()
             val selection = getMangaCategoryIds(manga)
             updateSuccessState { successState ->
@@ -345,7 +345,7 @@ class MangaScreenModel(
     }
 
     fun setFetchInterval(manga: Manga, interval: Int) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             updateManga.awaitUpdateFetchInterval(
                 // Custom intervals are negative
                 manga.copy(fetchInterval = -interval),
@@ -395,7 +395,7 @@ class MangaScreenModel(
         moveMangaToCategory(categories)
         if (manga.favorite) return
 
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             updateManga.awaitUpdateFavorite(manga.id, true)
         }
     }
@@ -411,7 +411,7 @@ class MangaScreenModel(
     }
 
     private fun moveMangaToCategory(categoryIds: List<Long>) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             setMangaCategories.await(mangaId, categoryIds)
         }
     }
@@ -430,7 +430,7 @@ class MangaScreenModel(
     // Chapters list - start
 
     private fun observeDownloads() {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             downloadManager.statusFlow()
                 .filter { it.manga.id == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
@@ -441,7 +441,7 @@ class MangaScreenModel(
                 }
         }
 
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             downloadManager.progressFlow()
                 .filter { it.manga.id == successState?.manga?.id }
                 .catch { error -> logcat(LogPriority.ERROR, error) }
@@ -523,7 +523,7 @@ class MangaScreenModel(
                 with(context) { e.formattedMessage }
             }
 
-            coroutineScope.launch {
+            screenModelScope.launch {
                 snackbarHostState.showSnackbar(message = message)
             }
             val newManga = mangaRepository.getMangaById(mangaId)
@@ -535,7 +535,7 @@ class MangaScreenModel(
      * @throws IllegalStateException if the swipe action is [LibraryPreferences.ChapterSwipeAction.Disabled]
      */
     fun chapterSwipe(chapterItem: ChapterItem, swipeAction: LibraryPreferences.ChapterSwipeAction) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             executeChapterSwipeAction(chapterItem, swipeAction)
         }
     }
@@ -612,7 +612,7 @@ class MangaScreenModel(
             updateSuccessState { state ->
                 state.copy(hasPromptedToAddBefore = true)
             }
-            coroutineScope.launch {
+            screenModelScope.launch {
                 val result = snackbarHostState.showSnackbar(
                     message = context.getString(R.string.snack_add_to_library),
                     actionLabel = context.getString(R.string.action_add),
@@ -683,7 +683,7 @@ class MangaScreenModel(
      * @param read whether to mark chapters as read or unread.
      */
     fun markChaptersRead(chapters: List<Chapter>, read: Boolean) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             setReadStatus.await(
                 read = read,
                 chapters = chapters.toTypedArray(),
@@ -707,7 +707,7 @@ class MangaScreenModel(
      * @param chapters the list of chapters to bookmark.
      */
     fun bookmarkChapters(chapters: List<Chapter>, bookmarked: Boolean) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             chapters
                 .filterNot { it.bookmark == bookmarked }
                 .map { ChapterUpdate(id = it.id, bookmark = bookmarked) }
@@ -722,7 +722,7 @@ class MangaScreenModel(
      * @param chapters the list of chapters to delete.
      */
     fun deleteChapters(chapters: List<Chapter>) {
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             try {
                 successState?.let { state ->
                     downloadManager.deleteChapters(
@@ -738,7 +738,7 @@ class MangaScreenModel(
     }
 
     private fun downloadNewChapters(chapters: List<Chapter>) {
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             val manga = successState?.manga ?: return@launchNonCancellable
             val categories = getCategories.await(manga.id).map { it.id }
             if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, downloadPreferences)) return@launchNonCancellable
@@ -758,7 +758,7 @@ class MangaScreenModel(
             TriState.ENABLED_IS -> Manga.CHAPTER_SHOW_UNREAD
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_READ
         }
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetUnreadFilter(manga, flag)
         }
     }
@@ -776,7 +776,7 @@ class MangaScreenModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_DOWNLOADED
         }
 
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetDownloadedFilter(manga, flag)
         }
     }
@@ -794,7 +794,7 @@ class MangaScreenModel(
             TriState.ENABLED_NOT -> Manga.CHAPTER_SHOW_NOT_BOOKMARKED
         }
 
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetBookmarkFilter(manga, flag)
         }
     }
@@ -806,7 +806,7 @@ class MangaScreenModel(
     fun setDisplayMode(mode: Long) {
         val manga = successState?.manga ?: return
 
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetDisplayMode(manga, mode)
         }
     }
@@ -818,14 +818,14 @@ class MangaScreenModel(
     fun setSorting(sort: Long) {
         val manga = successState?.manga ?: return
 
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             setMangaChapterFlags.awaitSetSortingModeOrFlipOrder(manga, sort)
         }
     }
 
     fun setCurrentSettingsAsDefault(applyToExisting: Boolean) {
         val manga = successState?.manga ?: return
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             libraryPreferences.setChapterSettingsDefault(manga)
             if (applyToExisting) {
                 setMangaDefaultChapterFlags.awaitAll()
@@ -929,7 +929,7 @@ class MangaScreenModel(
     private fun observeTrackers() {
         val manga = successState?.manga ?: return
 
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             getTracks.subscribe(manga.id)
                 .catch { logcat(LogPriority.ERROR, it) }
                 .map { tracks ->

@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.migration.manga
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ class MigrateMangaScreenModel(
     val events: Flow<MigrationMangaEvent> = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             mutableState.update { state ->
                 state.copy(source = sourceManager.getOrStub(sourceId))
             }

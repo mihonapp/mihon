@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.extension
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.service.SourcePreferences
@@ -29,7 +29,7 @@ class ExtensionFilterScreenModel(
     val events: Flow<ExtensionFilterEvent> = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             combine(
                 getExtensionLanguages.subscribe(),
                 preferences.enabledLanguages().changes(),

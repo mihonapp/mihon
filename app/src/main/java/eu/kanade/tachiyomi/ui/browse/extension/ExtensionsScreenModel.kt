@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
@@ -74,7 +74,7 @@ class ExtensionsScreenModel(
             }
         }
 
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             combine(
                 state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS),
                 _currentDownloads,
@@ -118,11 +118,11 @@ class ExtensionsScreenModel(
                 }
         }
 
-        coroutineScope.launchIO { findAvailableExtensions() }
+        screenModelScope.launchIO { findAvailableExtensions() }
 
         preferences.extensionUpdatesCount().changes()
             .onEach { mutableState.update { state -> state.copy(updates = it) } }
-            .launchIn(coroutineScope)
+            .launchIn(screenModelScope)
     }
 
     fun search(query: String?) {
@@ -132,7 +132,7 @@ class ExtensionsScreenModel(
     }
 
     fun updateAllExtensions() {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             state.value.items.values.flatten()
                 .map { it.extension }
                 .filterIsInstance<Extension.Installed>()
@@ -142,13 +142,13 @@ class ExtensionsScreenModel(
     }
 
     fun installExtension(extension: Extension.Available) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             extensionManager.installExtension(extension).collectToInstallUpdate(extension)
         }
     }
 
     fun updateExtension(extension: Extension.Installed) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             extensionManager.updateExtension(extension).collectToInstallUpdate(extension)
         }
     }
@@ -176,7 +176,7 @@ class ExtensionsScreenModel(
     }
 
     fun findAvailableExtensions() {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             mutableState.update { it.copy(isRefreshing = true) }
 
             extensionManager.findAvailableExtensions()
