@@ -12,26 +12,26 @@ class CategoryRepositoryImpl(
 ) : CategoryRepository {
 
     override suspend fun get(id: Long): Category? {
-        return handler.awaitOneOrNull { categoriesQueries.getCategory(id, categoryMapper) }
+        return handler.awaitOneOrNull { categoriesQueries.getCategory(id, ::mapCategory) }
     }
 
     override suspend fun getAll(): List<Category> {
-        return handler.awaitList { categoriesQueries.getCategories(categoryMapper) }
+        return handler.awaitList { categoriesQueries.getCategories(::mapCategory) }
     }
 
     override fun getAllAsFlow(): Flow<List<Category>> {
-        return handler.subscribeToList { categoriesQueries.getCategories(categoryMapper) }
+        return handler.subscribeToList { categoriesQueries.getCategories(::mapCategory) }
     }
 
     override suspend fun getCategoriesByMangaId(mangaId: Long): List<Category> {
         return handler.awaitList {
-            categoriesQueries.getCategoriesByMangaId(mangaId, categoryMapper)
+            categoriesQueries.getCategoriesByMangaId(mangaId, ::mapCategory)
         }
     }
 
     override fun getCategoriesByMangaIdAsFlow(mangaId: Long): Flow<List<Category>> {
         return handler.subscribeToList {
-            categoriesQueries.getCategoriesByMangaId(mangaId, categoryMapper)
+            categoriesQueries.getCategoriesByMangaId(mangaId, ::mapCategory)
         }
     }
 
@@ -80,5 +80,19 @@ class CategoryRepositoryImpl(
                 categoryId = categoryId,
             )
         }
+    }
+
+    private fun mapCategory(
+        id: Long,
+        name: String,
+        order: Long,
+        flags: Long,
+    ): Category {
+        return Category(
+            id = id,
+            name = name,
+            order = order,
+            flags = flags,
+        )
     }
 }
