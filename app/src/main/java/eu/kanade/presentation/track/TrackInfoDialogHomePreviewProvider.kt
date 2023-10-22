@@ -1,0 +1,81 @@
+package eu.kanade.presentation.track
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import eu.kanade.tachiyomi.dev.preview.DummyTracker
+import eu.kanade.tachiyomi.ui.manga.track.TrackItem
+import tachiyomi.domain.track.model.Track
+import java.text.DateFormat
+
+internal class TrackInfoDialogHomePreviewProvider :
+    PreviewParameterProvider<@Composable () -> Unit> {
+
+    private val aTrack = Track(
+        id = 1L,
+        mangaId = 2L,
+        syncId = 3L,
+        remoteId = 4L,
+        libraryId = null,
+        title = "Manage Name On Tracker Site",
+        lastChapterRead = 2.0,
+        totalChapters = 12L,
+        status = 1L,
+        score = 2.0,
+        remoteUrl = "https://example.com",
+        startDate = 0L,
+        finishDate = 0L,
+    )
+    private val trackItemWithoutTrack = TrackItem(
+        track = null,
+        tracker = DummyTracker(
+            id = 1L,
+            name = "Example Tracker",
+        ),
+    )
+    private val trackItemWithTrack = TrackItem(
+        track = aTrack,
+        tracker = DummyTracker(
+            id = 2L,
+            name = "Example Tracker 2",
+        ),
+    )
+
+    private val trackersWithAndWithoutTrack = @Composable {
+        TrackInfoDialogHome(
+            trackItems = listOf(
+                trackItemWithoutTrack,
+                trackItemWithTrack,
+            ),
+            dateFormat = DateFormat.getDateInstance(),
+            onStatusClick = {},
+            onChapterClick = {},
+            onScoreClick = {},
+            onStartDateEdit = {},
+            onEndDateEdit = {},
+            onNewSearch = {},
+            onOpenInBrowser = {},
+            onRemoved = {},
+        )
+    }
+
+    private val noTrackers = @Composable {
+        TrackInfoDialogHome(
+            trackItems = listOf(),
+            dateFormat = DateFormat.getDateInstance(),
+            onStatusClick = {},
+            onChapterClick = {},
+            onScoreClick = {},
+            onStartDateEdit = {},
+            onEndDateEdit = {},
+            onNewSearch = {},
+            onOpenInBrowser = {},
+            onRemoved = {},
+        )
+    }
+
+    override val values: Sequence<@Composable () -> Unit>
+        get() = sequenceOf(
+            trackersWithAndWithoutTrack,
+            noTrackers,
+        )
+}

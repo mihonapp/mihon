@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.track.Tracker
+import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.clickableNoIndication
 
 @Composable
@@ -36,6 +39,20 @@ fun TrackLogoIcon(
         Image(
             painter = painterResource(tracker.getLogo()),
             contentDescription = tracker.name,
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun TrackLogoIconPreviews(
+    @PreviewParameter(TrackLogoIconPreviewProvider::class)
+    tracker: Tracker,
+) {
+    TachiyomiTheme {
+        TrackLogoIcon(
+            tracker = tracker,
+            onClick = null,
         )
     }
 }
