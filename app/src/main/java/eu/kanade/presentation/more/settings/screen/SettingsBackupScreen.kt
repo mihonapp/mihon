@@ -33,15 +33,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import eu.kanade.presentation.extensions.RequestStoragePermission
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.permissions.PermissionRequestHelper
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
-import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
@@ -66,7 +65,7 @@ object SettingsBackupScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val backupPreferences = Injekt.get<BackupPreferences>()
 
-        DiskUtil.RequestStoragePermission()
+        PermissionRequestHelper.requestStoragePermission()
 
         return listOf(
             getCreateBackupPref(),
