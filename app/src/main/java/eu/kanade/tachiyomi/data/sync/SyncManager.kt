@@ -22,7 +22,7 @@ import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 import tachiyomi.data.Chapters
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.data.manga.mangaMapper
+import tachiyomi.data.manga.MangaMapper.mapManga
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
@@ -172,7 +172,7 @@ class SyncManager(
      * @return a list of all manga stored in the database
      */
     private suspend fun getAllMangaFromDB(): List<Manga> {
-        return handler.awaitList { mangasQueries.getAllManga(mangaMapper) }
+        return handler.awaitList { mangasQueries.getAllManga(::mapManga) }
     }
 
     /**
