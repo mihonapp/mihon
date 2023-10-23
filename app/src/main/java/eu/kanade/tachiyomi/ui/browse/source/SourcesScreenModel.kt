@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.source
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
@@ -31,7 +31,7 @@ class SourcesScreenModel(
     val events = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             getEnabledSources.subscribe()
                 .catch {
                     logcat(LogPriority.ERROR, it)

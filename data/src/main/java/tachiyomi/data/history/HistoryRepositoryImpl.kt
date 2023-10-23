@@ -15,13 +15,13 @@ class HistoryRepositoryImpl(
 
     override fun getHistory(query: String): Flow<List<HistoryWithRelations>> {
         return handler.subscribeToList {
-            historyViewQueries.history(query, historyWithRelationsMapper)
+            historyViewQueries.history(query, HistoryMapper::mapHistoryWithRelations)
         }
     }
 
     override suspend fun getLastHistory(): HistoryWithRelations? {
         return handler.awaitOneOrNull {
-            historyViewQueries.getLatestHistory(historyWithRelationsMapper)
+            historyViewQueries.getLatestHistory(HistoryMapper::mapHistoryWithRelations)
         }
     }
 
@@ -30,7 +30,7 @@ class HistoryRepositoryImpl(
     }
 
     override suspend fun getHistoryByMangaId(mangaId: Long): List<History> {
-        return handler.awaitList { historyQueries.getHistoryByMangaId(mangaId, historyMapper) }
+        return handler.awaitList { historyQueries.getHistoryByMangaId(mangaId, HistoryMapper::mapHistory) }
     }
 
     override suspend fun resetHistory(historyId: Long) {

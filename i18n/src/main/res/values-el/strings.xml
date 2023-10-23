@@ -532,8 +532,6 @@
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
     <string name="rotation_portrait">Κατακόρυφα</string>
-    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
-    <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Περιστροφή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>
@@ -564,7 +562,6 @@
     <string name="theme_midnightdusk">Midnight Dusk</string>
     <string name="theme_greenapple">Πράσινο Μήλο</string>
     <string name="pref_app_theme">Θέμα εφαρμογής</string>
-    <string name="notification_updating">Ενημέρωση βιβλιοθήκης… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Ορισμένοι κατασκευαστές έχουν πρόσθετους περιορισμούς εφαρμογών που εξουδετερώνουν τις υπηρεσίες παρασκηνίου. Αυτός ο ιστότοπος έχει περισσότερες πληροφορίες για το πώς να το διορθώσετε.</string>
     <string name="restore_miui_warning">Η δημιουργία αντιγράφων ασφαλείας/επαναφορά ενδέχεται να μη λειτουργεί σωστά εάν είναι απενεργοποιημένη η Βελτιστοποίηση MIUI.</string>
     <string name="pref_dark_theme_pure_black">Απόλυτα μαύρη σκοτεινή λειτουργία</string>
@@ -607,7 +604,7 @@
     <string name="pref_verbose_logging_summary">Εκτύπωση λεπτομερών αρχείων καταγραφής στο αρχείο καταγραφής συστήματος (μειώνει την απόδοση της εφαρμογής)</string>
     <string name="action_display_language_badge">Γλώσσα</string>
     <string name="label_warning">Προειδοποίηση</string>
-    <string name="backup_info">Θα πρέπει να διατηρείτε αντίγραφα αντιγράφων ασφαλείας και σε άλλα μέρη.</string>
+    <string name="backup_info">Θα πρέπει να κρατάτε αντίγραφα αντιγράφων ασφαλείας και σε άλλα μέρη. Τα αντίγραφα ασφαλείας ενδέχεται να περιέχουν ευαίσθητα δεδομένα, συμπεριλαμβανομένων τυχόν αποθηκευμένων κωδικών πρόσβασης, να είστε προσεκτικοί αν τα μοιράζεστε.</string>
     <string name="notification_size_warning">Οι μεγάλες ενημερώσεις βλάπτουν τις πηγές και μπορεί να οδηγήσουν σε πιο αργές ενημερώσεις και σε αυξημένη χρήση της μπαταρίας. Πατήστε για να μάθετε περισσότερα.</string>
     <string name="connected_to_wifi">Μόνο σε Wi-Fi</string>
     <string name="update_72hour">Κάθε 3 ημέρες</string>
@@ -696,7 +693,6 @@
     </plurals>
     <string name="download_ahead_info">Λειτουργεί μόνο εάν το τρέχον κεφάλαιο + το επόμενο έχουν ήδη ληφθεί.</string>
     <string name="are_you_sure">Είστε σίγουροι;</string>
-    <string name="pref_long_strip_split">Διαχωρισμός ψηλών εικόνων (BETA)</string>
     <string name="multi_lang">Πολλαπλό</string>
     <string name="popular">Δημοφιλή</string>
     <string name="updates_last_update_info">Τελευταία ενημέρωση βιβλιοθήκης: %s</string>
@@ -820,4 +816,9 @@
     <string name="action_move_to_bottom_all_for_series">Μετακίνηση σειράς προς τα κάτω</string>
     <string name="pref_relative_format">Σχετικές χρονικές σημάνσεις</string>
     <string name="pref_relative_format_summary">\"%1$s\" αντί του \"%2$s\"</string>
+    <string name="app_settings">Ρυθμίσεις εφαρμογής</string>
+    <string name="action_sort_category">Ταξινόμηση κατηγοριών</string>
+    <string name="notification_updating_progress">Ενημέρωση βιβλιοθήκης… (%s)</string>
+    <string name="sort_category_confirmation">Θέλετε να ταξινομήσετε τις κατηγορίες αλφαβητικά;</string>
+    <string name="source_settings">Ρυθμίσεις πηγών</string>
 </resources>

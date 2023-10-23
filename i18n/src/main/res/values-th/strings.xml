@@ -304,8 +304,6 @@
     <string name="l_nav">รูปตัว L</string>
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
-    <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่อง</string>
-    <string name="pref_create_folder_per_manga">บันทึกหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
     <string name="pref_reader_actions">การกระทำ</string>
     <string name="tapping_inverted_both">ทั้งสอง</string>
     <string name="tapping_inverted_vertical">แนวตั้ง</string>
@@ -567,7 +565,7 @@
         <item quantity="other">%1$d วันที่ผ่านมา</item>
     </plurals>
     <string name="enhanced_services">ตัวติดตามขั้นสูง</string>
-    <string name="backup_info">ควรเก็บสำเนาของข้อมูลสำรองไว้ที่อื่นด้วยเช่นกัน</string>
+    <string name="backup_info">ควรเก็บสำเนาของข้อมูลสำรองไว้ที่อื่นด้วยเช่นกัน การสำรองข้อมูลอาจมีข้อมูลที่ละเอียดอ่อนรวมถึงรหัสผ่านที่เก็บไว้ ควรระวังหากแบ่งปันสำเนา</string>
     <string name="pref_verbose_logging_summary">บันทึกบันทึกอย่างละเอียดไปยังบันทึกของระบบ (ลดประสิทธิภาพของแอป)</string>
     <string name="help_translate">ช่วยแปล</string>
     <string name="local_invalid_format">รูปแบบตอนไม่ถูกต้อง</string>
@@ -609,7 +607,6 @@
     <string name="restrictions">ข้อจำกัด: %s</string>
     <string name="connected_to_wifi">เฉพาะขณะเชื่อมต่อ Wi-Fi</string>
     <string name="download_queue_size_warning">คำเตือน: การดาวน์โหลดจำนวนมากอาจทำให้แหล่งที่มาทำงานช้าลงและ/หรือปิดกั้น Tachiyomi แตะเพื่อเรียนรู้เพิ่มเติม</string>
-    <string name="notification_updating">กำลังอัปเดตคลัง… (%1$d/%2$d)</string>
     <string name="notification_size_warning">การอัปเดตจำนวนมากเป็นอันตรายต่อแหล่งที่มาและอาจทำให้การอัปเดตช้าลงและใช้งานแบตเตอรี่เพิ่มขึ้น แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
     <string name="cancelled">ถูกยกเลิก</string>
@@ -684,7 +681,6 @@
     </plurals>
     <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่\?</string>
     <string name="multi_lang">หลายภาษา</string>
-    <string name="pref_long_strip_split">แบ่งภาพสูงยาว (เบตา)</string>
     <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %s</string>
     <string name="remove_manga">คุณกำลังจะนำ \"%s\" ออกจากคลัง</string>
     <string name="popular">ยอดนิยม</string>
@@ -804,4 +800,9 @@
     <string name="action_move_to_bottom_all_for_series">ย้ายเรื่องไปด้านล่าง</string>
     <string name="pref_relative_format">ประทับเวลาแบบสัมพันธ์กัน</string>
     <string name="pref_relative_format_summary">แสดง \"%1$s\" แทน \"%2$s\"</string>
+    <string name="action_sort_category">จัดเรียงหมวดหมู่</string>
+    <string name="notification_updating_progress">กำลังอัปเดตคลัง... (%s)</string>
+    <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่\?</string>
+    <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
+    <string name="app_settings">การตั้งค่าแอป</string>
 </resources>

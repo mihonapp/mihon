@@ -18,7 +18,6 @@ import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.copyFrom
 import eu.kanade.domain.manga.model.toSManga
-import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -89,7 +88,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val updateManga: UpdateManga = Injekt.get()
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
-    private val refreshTracks: RefreshTracks = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
@@ -131,7 +129,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 when (target) {
                     Target.CHAPTERS -> updateChapterList()
                     Target.COVERS -> updateCovers()
-                    Target.TRACKING -> updateTrackings()
                 }
                 Result.success()
             } catch (e: Exception) {
@@ -304,10 +301,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         }
                                         failedUpdates.add(manga to errorMessage)
                                     }
-
-                                    if (libraryPreferences.autoUpdateTrackers().get()) {
-                                        refreshTracks(manga.id)
-                                    }
                                 }
                             }
                         }
@@ -409,33 +402,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         notifier.cancelProgressNotification()
     }
 
-    /**
-     * Method that updates the metadata of the connected tracking services. It's called in a
-     * background thread, so it's safe to do heavy operations or network calls here.
-     */
-    private suspend fun updateTrackings() {
-        coroutineScope {
-            var progressCount = 0
-
-            mangaToUpdate.forEach { libraryManga ->
-                ensureActive()
-
-                val manga = libraryManga.manga
-                notifier.showProgressNotification(listOf(manga), progressCount++, mangaToUpdate.size)
-                refreshTracks(manga.id)
-            }
-
-            notifier.cancelProgressNotification()
-        }
-    }
-
-    private suspend fun refreshTracks(mangaId: Long) {
-        refreshTracks.await(mangaId).forEach { (_, e) ->
-            // Ignore errors and continue
-            logcat(LogPriority.ERROR, e)
-        }
-    }
-
     private suspend fun withUpdateNotification(
         updatingManga: CopyOnWriteArrayList<Manga>,
         completed: AtomicInteger,
@@ -500,7 +466,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     enum class Target {
         CHAPTERS, // Manga chapters
         COVERS, // Manga covers
-        TRACKING, // Tracking metadata
     }
 
     companion object {

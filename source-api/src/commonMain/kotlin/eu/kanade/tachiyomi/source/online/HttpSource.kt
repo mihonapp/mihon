@@ -290,6 +290,13 @@ abstract class HttpSource : CatalogueSource {
     protected abstract fun chapterListParse(response: Response): List<SChapter>
 
     /**
+     * Parses the response from the site and returns a SChapter Object.
+     *
+     * @param response the response from the site.
+     */
+    protected abstract fun chapterPageParse(response: Response): SChapter
+
+    /**
      * Get the list of pages a chapter has. Pages should be returned
      * in the expected order; the index is ignored.
      *

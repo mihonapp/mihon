@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.shikimori
 
+import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -37,12 +38,12 @@ class ShikimoriApi(
 
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
-    suspend fun addLibManga(track: Track, user_id: String): Track {
+    suspend fun addLibManga(track: Track, userId: String): Track {
         return withIOContext {
             with(json) {
                 val payload = buildJsonObject {
                     putJsonObject("user_rate") {
-                        put("user_id", user_id)
+                        put("user_id", userId)
                         put("target_id", track.media_id)
                         put("target_type", "Manga")
                         put("chapters", track.last_chapter_read.toInt())
@@ -65,7 +66,7 @@ class ShikimoriApi(
         }
     }
 
-    suspend fun updateLibManga(track: Track, user_id: String): Track = addLibManga(track, user_id)
+    suspend fun updateLibManga(track: Track, userId: String): Track = addLibManga(track, userId)
 
     suspend fun deleteLibManga(track: Track): Track {
         return withIOContext {
@@ -194,14 +195,14 @@ class ShikimoriApi(
         private const val clientId = "1aaf4cf232372708e98b5abc813d795b539c5a916dbbfe9ac61bf02a360832cc"
         private const val clientSecret = "229942c742dd4cde803125d17d64501d91c0b12e14cb1e5120184d77d67024c0"
 
-        private const val baseUrl = "https://shikimori.me"
+        private const val baseUrl = "https://shikimori.one"
         private const val apiUrl = "$baseUrl/api"
         private const val oauthUrl = "$baseUrl/oauth/token"
         private const val loginUrl = "$baseUrl/oauth/authorize"
 
         private const val redirectUrl = "tachiyomi://shikimori-auth"
 
-        fun authUrl() = loginUrl.toUri().buildUpon()
+        fun authUrl(): Uri = loginUrl.toUri().buildUpon()
             .appendQueryParameter("client_id", clientId)
             .appendQueryParameter("redirect_uri", redirectUrl)
             .appendQueryParameter("response_type", "code")

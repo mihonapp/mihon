@@ -4,14 +4,14 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
-import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
 
-class Shikimori(id: Long) : Tracker(id, "Shikimori"), DeletableTracker {
+class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     companion object {
         const val READING = 1

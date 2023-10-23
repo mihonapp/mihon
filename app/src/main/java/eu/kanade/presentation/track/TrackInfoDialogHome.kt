@@ -44,14 +44,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.presentation.components.DropdownMenu
+import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import tachiyomi.presentation.core.util.ThemePreviews
 import java.text.DateFormat
 
 private const val UnsetStatusTextAlpha = 0.5F
@@ -168,6 +171,7 @@ private fun TrackInfoItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
             VerticalDivider()
@@ -254,6 +258,7 @@ private fun TrackDetailsItem(
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }
@@ -311,4 +316,13 @@ private fun TrackInfoItemMenu(
             )
         }
     }
+}
+
+@ThemePreviews
+@Composable
+private fun TrackInfoDialogHomePreviews(
+    @PreviewParameter(TrackInfoDialogHomePreviewProvider::class)
+    content: @Composable () -> Unit,
+) {
+    TachiyomiTheme { content() }
 }

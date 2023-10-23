@@ -4,14 +4,14 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
-import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import tachiyomi.domain.manga.model.Manga as DomainManga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Suwayomi(id: Long) : Tracker(id, "Suwayomi"), EnhancedTracker {
+class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
 
     val api by lazy { SuwayomiApi(id) }
 

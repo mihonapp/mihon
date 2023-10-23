@@ -502,8 +502,6 @@
     <string name="nav_zone_next">Lanjut</string>
     <string name="nav_zone_prev">Sblm</string>
     <string name="automatic_background">Otomatis</string>
-    <string name="pref_create_folder_per_manga">Simpan halaman di folder terpisah</string>
-    <string name="pref_create_folder_per_manga_summary">Membuat folder sesuai dengan judul entri</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Termasuk: %s</string>
     <string name="pref_dual_page_split">Membagi halaman lebar</string>
@@ -549,7 +547,6 @@
     <string name="information_empty_category_dialog">Anda belum memiliki kategori apapun.</string>
     <string name="action_start_downloading_now">Mulai mengunduh sekarang</string>
     <string name="about_dont_kill_my_app">Beberapa pabrikan mempunyai batasan aplikasi tambahan yang mematikan layanan latar belakang. Website ini memiliki info lebih lanjut untuk memperbaikinya.</string>
-    <string name="notification_updating">Memperbarui pustaka... (%1$d/%2$d)</string>
     <string name="restore_miui_warning">Pencadangan/pemulihan mungkin tidak berfungsi jika Optimisasi MIUI dimatikan.</string>
     <string name="enhanced_tracking_info">Menyediakan fitur yang disempurnakan untuk sumber tertentu. Entri secara otomatis dilacak ketika ditambahkan ke perpustakaan Anda.</string>
     <string name="enhanced_services">Pelacak yang ditingkatkan</string>
@@ -685,7 +682,6 @@
     <string name="remove_manga">Kamu akan menghapus \"%s\" dari pustaka</string>
     <string name="updates_last_update_info">Pustaka terakhir diperbarui: %s</string>
     <string name="multi_lang">banyak</string>
-    <string name="pref_long_strip_split">Potong gambar panjang (BETA)</string>
     <string name="are_you_sure">Apa kamu yakin\?</string>
     <string name="popular">Populer</string>
     <string name="missing_storage_permission">Izin penyimpanan tidak diberikan</string>

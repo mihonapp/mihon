@@ -1,7 +1,7 @@
 package eu.kanade.presentation.browse.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -56,7 +56,7 @@ fun BrowseSourceToolbar(
                 actions = listOfNotNull(
                     AppBar.Action(
                         title = stringResource(R.string.action_display_mode),
-                        icon = if (displayMode == LibraryDisplayMode.List) Icons.Filled.ViewList else Icons.Filled.ViewModule,
+                        icon = if (displayMode == LibraryDisplayMode.List) Icons.AutoMirrored.Filled.ViewList else Icons.Filled.ViewModule,
                         onClick = { selectingDisplayMode = true },
                     ),
                     if (isLocalSource) {

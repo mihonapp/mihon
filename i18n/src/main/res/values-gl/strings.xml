@@ -272,8 +272,6 @@
     <string name="pref_inverted_colors">Invertido</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Ambos</string>
-    <string name="pref_create_folder_per_manga">Gardar as páxinas en carpetas separadas</string>
-    <string name="pref_create_folder_per_manga_summary">Crea carpetas segundo o título dos elementos</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_landscape">Horizontal</string>
     <string name="split_tall_images_summary">Mellora o rendemento do lector</string>
@@ -390,7 +388,6 @@
     <string name="error_sharing_cover">Error ao compartir a portada</string>
     <string name="cache_delete_error">Produciuse un erro ao borrar</string>
     <string name="multi_lang">Varios idiomas</string>
-    <string name="pref_long_strip_split">Separar as imaxes altas (BETA)</string>
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="nav_zone_left">Esquerda</string>
     <string name="pref_landscape_zoom">Ampliar a imaxe en horizontal</string>
@@ -650,7 +647,6 @@
     <string name="transition_no_next">Non hai ningún capítulo máis</string>
     <string name="transition_pages_error">Non se puideron cargar as páxinas: %1$s</string>
     <string name="loader_not_implemented_error">Non se atopou a fonte</string>
-    <string name="notification_updating">Actualizando biblioteca… (%1$d/%2$d)</string>
     <string name="label_used">En uso</string>
     <string name="day_short">%dd</string>
     <string name="library_errors_help">Se necesitas axuda para arranxar os erros de actualización da biblioteca, consulta %1$s</string>

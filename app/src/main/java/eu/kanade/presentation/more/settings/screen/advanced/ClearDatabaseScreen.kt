@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.components.SourceIcon
@@ -210,7 +210,7 @@ private class ClearDatabaseScreenModel : StateScreenModel<ClearDatabaseScreenMod
     private val database: Database = Injekt.get()
 
     init {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             getSourcesWithNonLibraryManga.subscribe()
                 .collectLatest { list ->
                     mutableState.update { old ->

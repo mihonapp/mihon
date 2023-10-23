@@ -255,7 +255,6 @@
     <string name="tapping_inverted_vertical">ऊर्ध्वम्</string>
     <string name="pref_reader_actions">कार्याणि</string>
     <string name="pref_read_with_long_tap">दीर्घस्पर्शने दर्शयतु</string>
-    <string name="pref_create_folder_per_manga">पुटानि भिन्नसञ्चयेषु रक्षतु</string>
     <string name="pref_reader_theme">पृष्ठभूमिवर्णः</string>
     <string name="white_background">श्वेतः</string>
     <string name="gray_background">धूसरः</string>
@@ -280,7 +279,6 @@
     <string name="pref_skip_read_chapters">पठितम् इति चिह्नितान् अध्यायान् लङ्घयतु</string>
     <string name="filter_mode_lighten">प्रकाशयति</string>
     <string name="tapping_inverted_both">द्वयम्</string>
-    <string name="pref_create_folder_per_manga_summary">माङ्गाशीर्षकम् अनुसृत्य सञ्चयान् स्रक्ष्यति</string>
     <string name="pager_viewer">पृष्ठीकृतम्</string>
     <string name="scale_type_stretch">विस्तारणम्</string>
     <string name="scale_type_fit_width">विस्तृतिं समुचितं कुरु</string>
@@ -549,7 +547,6 @@
     <string name="pref_incognito_mode_summary">पठनचरित्रं विरमिष्यति</string>
     <string name="error_no_match">समः न लभ्यः</string>
     <string name="migration_help_guide">मूलस्य सङ्क्रमणमार्गदर्शनम्</string>
-    <string name="notification_updating">ग्रन्थालयं नवीकरोमि… (%1$d/%2$d)</string>
     <string name="action_global_search_query">\"%1$s\" कृते सार्वत्रिकेण अवेक्षताम्</string>
     <string name="login_title">%1$s प्रति अन्तर्गच्छतु</string>
     <string name="logout_title">%1$s इतः बहिर्गच्छानि किम्</string>

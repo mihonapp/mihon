@@ -274,7 +274,6 @@
     <string name="pref_dual_page_split">Ndani faqet e gjera</string>
     <string name="pref_dual_page_invert">Inverto vendosjen e faqeve të ndara</string>
     <string name="pref_dual_page_invert_summary">Nëse vendosja e faqeve të ndara gjerësisht nuk përputhet me drejtimin e leximit</string>
-    <string name="pref_long_strip_split">Ndarja e imazheve të gjata (BETA)</string>
     <string name="pref_cutout_short">Shfaq përmbajtjen në zonën e prerjes</string>
     <string name="pref_double_tap_anim_speed">Prekni dy herë shpejtësia e animacionit</string>
     <string name="pref_show_page_number">Shfaq numrin e faqes</string>
@@ -322,7 +321,6 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instaloni dhe filloni Shizuku për të përdorur Shizuku si instalues shtesë.</string>
     <string name="pref_page_transitions">Animoni tranzicionet e faqeve</string>
     <string name="pref_show_reading_mode_summary">Trego shkurtimisht modalitetin aktual kur hapet lexuesi</string>
-    <string name="pref_create_folder_per_manga">Ruani faqet në dosje të veçanta</string>
     <string name="pref_reader_theme">Ngjyra e sfondit</string>
     <string name="white_background">E bardhë</string>
     <string name="gray_background">Gri</string>
@@ -375,7 +373,6 @@
         <item quantity="other">%d kapitujt e ardhshëm të palexuar</item>
     </plurals>
     <string name="transition_no_next">Nuk ka kapitull tjetër</string>
-    <string name="pref_create_folder_per_manga_summary">Krijon dosje sipas titullit të hyrjeve</string>
     <string name="black_background">E zezë</string>
     <string name="pref_viewer_type">Modaliteti i parazgjedhur i leximit</string>
     <string name="l_nav">Në formë L</string>
@@ -521,7 +518,6 @@
     <string name="empty_screen">Epo, kjo është e sikletshme</string>
     <string name="not_installed">Nuk është instaluar</string>
     <string name="copy">Kopjo</string>
-    <string name="notification_updating">Biblioteka po përditësohet… (%1$d/%2$d)</string>
     <string name="notification_chapters_single_and_more">Kapitulli %1$s dhe %2$d më shumë</string>
     <string name="notification_chapters_multiple">Kapitujt %1$s</string>
     <string name="notification_chapters_single">Kapitulli %1$s</string>

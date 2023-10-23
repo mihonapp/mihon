@@ -9,20 +9,13 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,11 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import eu.kanade.presentation.extensions.RequestStoragePermission
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.permissions.PermissionRequestHelper
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
@@ -54,12 +46,12 @@ import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.data.sync.SyncManager
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveService
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
-import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.util.collectAsState
@@ -79,7 +71,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val backupPreferences = Injekt.get<BackupPreferences>()
 
-        DiskUtil.RequestStoragePermission()
+        PermissionRequestHelper.requestStoragePermission()
         val syncPreferences = remember { Injekt.get<SyncPreferences>() }
         val syncService by syncPreferences.syncService().collectAsState()
 
@@ -263,22 +255,23 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                     val state = rememberLazyListState()
                     ScrollbarLazyColumn(state = state) {
                         item {
-                            CreateBackupDialogItem(
-                                isSelected = true,
-                                title = stringResource(R.string.manga),
+                            LabeledCheckbox(
+                                label = stringResource(R.string.manga),
+                                checked = true,
+                                onCheckedChange = {},
                             )
                         }
                         choices.forEach { (k, v) ->
                             item {
                                 val isSelected = flags.contains(k)
-                                CreateBackupDialogItem(
-                                    isSelected = isSelected,
-                                    title = stringResource(v),
-                                    modifier = Modifier.clickable {
-                                        if (isSelected) {
-                                            flags.remove(k)
-                                        } else {
+                                LabeledCheckbox(
+                                    label = stringResource(v),
+                                    checked = isSelected,
+                                    onCheckedChange = {
+                                        if (it) {
                                             flags.add(k)
+                                        } else {
+                                            flags.remove(k)
                                         }
                                     },
                                 )
@@ -308,29 +301,6 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
     }
 
     @Composable
-    private fun CreateBackupDialogItem(
-        modifier: Modifier = Modifier,
-        isSelected: Boolean,
-        title: String,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            Checkbox(
-                modifier = Modifier.heightIn(min = 48.dp),
-                checked = isSelected,
-                onCheckedChange = null,
-            )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium.merge(),
-                modifier = Modifier.padding(start = 24.dp),
-            )
-        }
-    }
-
-    @Composable
     private fun getRestoreBackupPref(): Preference.PreferenceItem.TextPreference {
         val context = LocalContext.current
         var error by remember { mutableStateOf<Any?>(null) }
@@ -341,7 +311,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
                         title = { Text(text = stringResource(R.string.invalid_backup_file)) },
-                        text = { Text(text = "${err.uri}\n\n${err.message}") },
+                        text = { Text(text = listOfNotNull(err.uri, err.message).joinToString("\n\n")) },
                         dismissButton = {
                             TextButton(
                                 onClick = {
@@ -349,7 +319,7 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(android.R.string.copy))
+                                Text(text = stringResource(R.string.action_copy_to_clipboard))
                             }
                         },
                         confirmButton = {
@@ -413,21 +383,24 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                 }
             },
         ) {
-            if (it != null) {
-                val results = try {
-                    BackupFileValidator().validate(context, it)
-                } catch (e: Exception) {
-                    error = InvalidRestore(it, e.message.toString())
-                    return@rememberLauncherForActivityResult
-                }
-
-                if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
-                    BackupRestoreJob.start(context, it)
-                    return@rememberLauncherForActivityResult
-                }
-
-                error = MissingRestoreComponents(it, results.missingSources, results.missingTrackers)
+            if (it == null) {
+                error = InvalidRestore(message = context.getString(R.string.file_null_uri_error))
+                return@rememberLauncherForActivityResult
             }
+
+            val results = try {
+                BackupFileValidator().validate(context, it)
+            } catch (e: Exception) {
+                error = InvalidRestore(it, e.message.toString())
+                return@rememberLauncherForActivityResult
+            }
+
+            if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
+                BackupRestoreJob.start(context, it)
+                return@rememberLauncherForActivityResult
+            }
+
+            error = MissingRestoreComponents(it, results.missingSources, results.missingTrackers)
         }
 
         return Preference.PreferenceItem.TextPreference(
@@ -649,6 +622,6 @@ private data class MissingRestoreComponents(
 )
 
 private data class InvalidRestore(
-    val uri: Uri,
+    val uri: Uri? = null,
     val message: String,
 )

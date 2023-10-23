@@ -304,7 +304,6 @@
     <string name="sort_by_upload_date">Igoera dataren arabera</string>
     <string name="confirm_set_image_as_cover">Irudi hau azaleko arte gisa erabili\?</string>
     <string name="download_insufficient_space">Ezin izan dira kapituluak deskargatu memorian leku gutxi dagoelako</string>
-    <string name="notification_updating">Liburutegia eguneratzen… (%1$d/%2$d)</string>
     <string name="notification_size_warning">Eguneratze handiek bateriaren erabilera areagotzea eta iturriak motelagoak izatea eragin dezakete</string>
     <string name="download_notifier_download_paused">Deskarga pausatu da</string>
     <string name="pref_low">Baxua</string>
@@ -357,8 +356,6 @@
     <string name="notification_chapters_multiple">%1$s Kapituluak</string>
     <string name="pref_keep_screen_on">Mantendu pantaila piztuta</string>
     <string name="pref_skip_read_chapters">Saltatu irakurriak bezala markatutako kapituluak</string>
-    <string name="pref_create_folder_per_manga">Gorde orrialdeak karpeta ezberdinetan</string>
-    <string name="pref_create_folder_per_manga_summary">Sortu karpetak manga izenburuaren arabera</string>
     <string name="pref_high">Altua</string>
     <string name="pref_skip_filtered_chapters">Saltatu iragazitako kapituluak</string>
     <string name="pref_read_with_volume_keys">Bolumen-teklak</string>

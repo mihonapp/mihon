@@ -298,7 +298,10 @@ class ReaderViewModel @JvmOverloads constructor(
                 it.viewerChapters?.unref()
 
                 chapterToDownload = cancelQueuedDownloads(newChapters.currChapter)
-                it.copy(viewerChapters = newChapters)
+                it.copy(
+                    viewerChapters = newChapters,
+                    bookmarked = newChapters.currChapter.chapter.bookmark,
+                )
             }
         }
         return newChapters
@@ -567,8 +570,8 @@ class ReaderViewModel @JvmOverloads constructor(
     /**
      * Returns the currently active chapter.
      */
-    fun getCurrentChapter(): ReaderChapter? {
-        return state.value.viewerChapters?.currChapter
+    private fun getCurrentChapter(): ReaderChapter? {
+        return state.value.currentChapter
     }
 
     fun getSource() = manga?.source?.let { sourceManager.getOrStub(it) } as? HttpSource
@@ -588,15 +591,23 @@ class ReaderViewModel @JvmOverloads constructor(
     /**
      * Bookmarks the currently active chapter.
      */
-    fun bookmarkCurrentChapter(bookmarked: Boolean) {
+    fun toggleChapterBookmark() {
         val chapter = getCurrentChapter()?.chapter ?: return
-        chapter.bookmark = bookmarked // Otherwise the bookmark icon doesn't update
+        val bookmarked = !chapter.bookmark
+        chapter.bookmark = bookmarked
+
         viewModelScope.launchNonCancellable {
             updateChapter.await(
                 ChapterUpdate(
                     id = chapter.id!!.toLong(),
                     bookmark = bookmarked,
                 ),
+            )
+        }
+
+        mutableState.update {
+            it.copy(
+                bookmarked = bookmarked,
             )
         }
     }
@@ -873,6 +884,7 @@ class ReaderViewModel @JvmOverloads constructor(
     data class State(
         val manga: Manga? = null,
         val viewerChapters: ViewerChapters? = null,
+        val bookmarked: Boolean = false,
         val isLoadingAdjacentChapter: Boolean = false,
         val currentPage: Int = -1,
 
@@ -883,8 +895,11 @@ class ReaderViewModel @JvmOverloads constructor(
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
     ) {
+        val currentChapter: ReaderChapter?
+            get() = viewerChapters?.currChapter
+
         val totalPages: Int
-            get() = viewerChapters?.currChapter?.pages?.size ?: -1
+            get() = currentChapter?.pages?.size ?: -1
     }
 
     sealed interface Dialog {

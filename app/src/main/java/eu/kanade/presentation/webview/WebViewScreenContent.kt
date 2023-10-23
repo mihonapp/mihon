@@ -7,13 +7,18 @@ import android.webkit.WebView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +27,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
@@ -72,7 +79,7 @@ fun WebViewScreenContent(
                 super.onPageFinished(view, url)
                 scope.launch {
                     val html = view.getHtml()
-                    showCloudflareHelp = "window._cf_chl_opt" in html
+                    showCloudflareHelp = "window._cf_chl_opt" in html || "Ray ID is" in html
                 }
             }
 
@@ -103,54 +110,71 @@ fun WebViewScreenContent(
     Scaffold(
         topBar = {
             Box {
-                AppBar(
-                    title = state.pageTitle ?: initialTitle,
-                    subtitle = currentUrl,
-                    navigateUp = onNavigateUp,
-                    navigationIcon = Icons.Outlined.Close,
-                    actions = {
-                        AppBarActions(
-                            listOf(
-                                AppBar.Action(
-                                    title = stringResource(R.string.action_webview_back),
-                                    icon = Icons.Outlined.ArrowBack,
-                                    onClick = {
-                                        if (navigator.canGoBack) {
-                                            navigator.navigateBack()
-                                        }
+                Column {
+                    AppBar(
+                        title = state.pageTitle ?: initialTitle,
+                        subtitle = currentUrl,
+                        navigateUp = onNavigateUp,
+                        navigationIcon = Icons.Outlined.Close,
+                        actions = {
+                            AppBarActions(
+                                listOf(
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_webview_back),
+                                        icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                                        onClick = {
+                                            if (navigator.canGoBack) {
+                                                navigator.navigateBack()
+                                            }
+                                        },
+                                        enabled = navigator.canGoBack,
+                                    ),
+                                    AppBar.Action(
+                                        title = stringResource(R.string.action_webview_forward),
+                                        icon = Icons.AutoMirrored.Outlined.ArrowForward,
+                                        onClick = {
+                                            if (navigator.canGoForward) {
+                                                navigator.navigateForward()
+                                            }
+                                        },
+                                        enabled = navigator.canGoForward,
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_webview_refresh),
+                                        onClick = { navigator.reload() },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_share),
+                                        onClick = { onShare(currentUrl) },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.action_open_in_browser),
+                                        onClick = { onOpenInBrowser(currentUrl) },
+                                    ),
+                                    AppBar.OverflowAction(
+                                        title = stringResource(R.string.pref_clear_cookies),
+                                        onClick = { onClearCookies(currentUrl) },
+                                    ),
+                                ),
+                            )
+                        },
+                    )
+
+                    if (showCloudflareHelp) {
+                        Surface(
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            WarningBanner(
+                                textRes = R.string.information_cloudflare_help,
+                                modifier = Modifier
+                                    .clip(MaterialTheme.shapes.small)
+                                    .clickable {
+                                        uriHandler.openUri("https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare")
                                     },
-                                    enabled = navigator.canGoBack,
-                                ),
-                                AppBar.Action(
-                                    title = stringResource(R.string.action_webview_forward),
-                                    icon = Icons.Outlined.ArrowForward,
-                                    onClick = {
-                                        if (navigator.canGoForward) {
-                                            navigator.navigateForward()
-                                        }
-                                    },
-                                    enabled = navigator.canGoForward,
-                                ),
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.action_webview_refresh),
-                                    onClick = { navigator.reload() },
-                                ),
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.action_share),
-                                    onClick = { onShare(currentUrl) },
-                                ),
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.action_open_in_browser),
-                                    onClick = { onOpenInBrowser(currentUrl) },
-                                ),
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.pref_clear_cookies),
-                                    onClick = { onClearCookies(currentUrl) },
-                                ),
-                            ),
-                        )
-                    },
-                )
+                            )
+                        }
+                    }
+                }
                 when (val loadingState = state.loadingState) {
                     is LoadingState.Initializing -> LinearProgressIndicator(
                         modifier = Modifier
@@ -158,7 +182,7 @@ fun WebViewScreenContent(
                             .align(Alignment.BottomCenter),
                     )
                     is LoadingState.Loading -> LinearProgressIndicator(
-                        progress = (loadingState as? LoadingState.Loading)?.progress ?: 1f,
+                        progress = { (loadingState as? LoadingState.Loading)?.progress ?: 1f },
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter),
@@ -168,38 +192,27 @@ fun WebViewScreenContent(
             }
         },
     ) { contentPadding ->
-        Column(
-            modifier = Modifier.padding(contentPadding),
-        ) {
-            if (showCloudflareHelp) {
-                WarningBanner(
-                    textRes = R.string.information_cloudflare_help,
-                    modifier = Modifier.clickable {
-                        uriHandler.openUri("https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare")
-                    },
-                )
-            }
+        WebView(
+            state = state,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+            navigator = navigator,
+            onCreated = { webView ->
+                webView.setDefaultSettings()
 
-            WebView(
-                state = state,
-                modifier = Modifier.weight(1f),
-                navigator = navigator,
-                onCreated = { webView ->
-                    webView.setDefaultSettings()
+                // Debug mode (chrome://inspect/#devices)
+                if (BuildConfig.DEBUG &&
+                    0 != webView.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
+                ) {
+                    WebView.setWebContentsDebuggingEnabled(true)
+                }
 
-                    // Debug mode (chrome://inspect/#devices)
-                    if (BuildConfig.DEBUG &&
-                        0 != webView.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
-                    ) {
-                        WebView.setWebContentsDebuggingEnabled(true)
-                    }
-
-                    headers["user-agent"]?.let {
-                        webView.settings.userAgentString = it
-                    }
-                },
-                client = webClient,
-            )
-        }
+                headers["user-agent"]?.let {
+                    webView.settings.userAgentString = it
+                }
+            },
+            client = webClient,
+        )
     }
 }

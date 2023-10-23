@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.material3.SnackbarHostState
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Size
@@ -40,14 +40,14 @@ class MangaCoverScreenModel(
 ) : StateScreenModel<Manga?>(null) {
 
     init {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             getManga.subscribe(mangaId)
                 .collect { newManga -> mutableState.update { newManga } }
         }
     }
 
     fun saveCover(context: Context) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 saveCoverInternal(context, temp = false)
                 snackbarHostState.showSnackbar(
@@ -65,7 +65,7 @@ class MangaCoverScreenModel(
     }
 
     fun shareCover(context: Context) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 val uri = saveCoverInternal(context, temp = true) ?: return@launch
                 withUIContext {
@@ -117,7 +117,7 @@ class MangaCoverScreenModel(
      */
     fun editCover(context: Context, data: Uri) {
         val manga = state.value ?: return
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             context.contentResolver.openInputStream(data)?.use {
                 try {
                     manga.editCover(Injekt.get(), it, updateManga, coverCache)
@@ -131,7 +131,7 @@ class MangaCoverScreenModel(
 
     fun deleteCustomCover(context: Context) {
         val mangaId = state.value?.id ?: return
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             try {
                 coverCache.deleteCustomCover(mangaId)
                 updateManga.awaitUpdateCoverLastModified(mangaId)
@@ -143,7 +143,7 @@ class MangaCoverScreenModel(
     }
 
     private fun notifyCoverUpdated(context: Context) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             snackbarHostState.showSnackbar(
                 context.getString(R.string.cover_updated),
                 withDismissAction = true,
@@ -152,7 +152,7 @@ class MangaCoverScreenModel(
     }
 
     private fun notifyFailedCoverUpdate(context: Context, e: Throwable) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             snackbarHostState.showSnackbar(
                 context.getString(R.string.notification_cover_update_failed),
                 withDismissAction = true,

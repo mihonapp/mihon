@@ -533,8 +533,6 @@
     <string name="rotation_landscape">Orizontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="rotation_type">Rotatzione</string>
-    <string name="pref_create_folder_per_manga_summary">Creat cartellas in base a su tìtulu de sos elementos</string>
-    <string name="pref_create_folder_per_manga">Sarva sas pàginas in cartellas separadas</string>
     <string name="pref_reader_actions">Atziones</string>
     <string name="pref_grayscale">Iscala de murros</string>
     <string name="notification_incognito_text">Disabìlita sa modalidade anònima</string>
@@ -562,7 +560,6 @@
     <string name="information_empty_category_dialog">Non tenes galu peruna categoria.</string>
     <string name="action_start_downloading_now">Incumintza a iscarrigare como</string>
     <string name="theme_tako">Tako</string>
-    <string name="notification_updating">Agiornende sa biblioteca… (%1$d/%2$d)</string>
     <string name="restore_miui_warning">Sa còpia de seguresa e su riprìstinu diant pòdere non funtzionare comente si tocat si s\'otimizatzione MIUI est disabilitada.</string>
     <string name="enhanced_tracking_info">Frunit funtzionalidades avantzadas pro fontes ispetzìficas. Sos elementos benint arrastados in manera automàtica cando los annanghes a sa biblioteca tua.</string>
     <string name="enhanced_services">Arrastadores avantzados</string>
@@ -698,7 +695,6 @@
     <string name="are_you_sure">Seguru ses\?</string>
     <string name="remove_manga">As a bogare \"%s\" dae sa biblioteca tua</string>
     <string name="multi_lang">Mùltiplas</string>
-    <string name="pref_long_strip_split">Partzi sas immàgines artas (BETA)</string>
     <string name="updates_last_update_info">Ùrtimu agiornamentu de sa biblioteca: %s</string>
     <string name="popular">Populare</string>
     <string name="missing_storage_permission">Permissu de archiviatzione non cuntzessu</string>

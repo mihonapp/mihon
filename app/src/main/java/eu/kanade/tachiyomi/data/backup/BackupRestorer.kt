@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.data.backup.models.IntPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.LongPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
+import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.source.model.copyFrom
 import eu.kanade.tachiyomi.source.sourcePreferences
 import eu.kanade.tachiyomi.util.BackupUtil
@@ -588,6 +589,9 @@ class BackupRestorer(
 
     private fun restoreAppPreferences(preferences: List<BackupPreference>) {
         restorePreferences(preferences, preferenceStore)
+
+        LibraryUpdateJob.setupTask(context)
+        BackupCreateJob.setupTask(context)
 
         restoreProgress += 1
         showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.app_settings), context.getString(R.string.restoring_backup))

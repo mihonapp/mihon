@@ -6,11 +6,6 @@
   "schedule": ["every sunday"],
   "packageRules": [
     {
-      "managers": ["maven"],
-      "packageNames": ["com.google.guava:guava"],
-      "versionScheme": "docker"
-    },
-    {
       // Compiler plugins are tightly coupled to Kotlin version
       "groupName": "Kotlin",
       "matchPackagePrefixes": [

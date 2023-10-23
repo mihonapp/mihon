@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.browse.extension.details
 import android.content.Context
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.source.interactor.ToggleSource
@@ -44,7 +44,7 @@ class ExtensionDetailsScreenModel(
     val events: Flow<ExtensionDetailsEvent> = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             launch {
                 extensionManager.installedExtensionsFlow
                     .map { it.firstOrNull { extension -> extension.pkgName == pkgName } }

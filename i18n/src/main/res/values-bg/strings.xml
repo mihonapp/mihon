@@ -535,12 +535,10 @@
     <string name="rotation_landscape">Пейзаж</string>
     <string name="label_background_activity">Работа на заден план</string>
     <string name="notification_incognito_text">Изключи инкогнито</string>
-    <string name="notification_updating">Обновяване на библиотеката… (%1$d/%2$d)</string>
     <string name="pref_category_appearance">Облик</string>
     <string name="on">Да</string>
     <string name="l_nav">L-образно</string>
     <string name="kindlish_nav">Kindle-подобно</string>
-    <string name="pref_create_folder_per_manga_summary">Създава папки според заглавието на мангата</string>
     <string name="automatic_background">Автоматично</string>
     <string name="pref_library_update_refresh_trackers_summary">Обновявай тракерите при обновявания на библиотеката</string>
     <string name="pref_viewer_nav">Схема на навигацията</string>
@@ -590,7 +588,6 @@
     <string name="pref_grayscale">Черно-бяло</string>
     <string name="pref_read_with_tapping_inverted">Инвертирай докосване</string>
     <string name="pref_reader_actions">Действия</string>
-    <string name="pref_create_folder_per_manga">Запазвай страниците в отделни папки</string>
     <string name="right_and_left_nav">Дясно и Ляво</string>
     <string name="rotation_type">Ориентация</string>
     <string name="rotation_portrait">Портрет</string>
@@ -670,7 +667,6 @@
     <string name="auto_download_while_reading">Автоматично изтегляне при четене</string>
     <string name="description_placeholder">Няма описание</string>
     <string name="empty_backup_error">Няма заглавия в библиотеката за резервно копие</string>
-    <string name="pref_long_strip_split">Разделяй високите изображения (БЕТА)</string>
     <string name="pref_reset_viewer_flags_summary">Нулирай режима на четене и ориентацията на всички поредици</string>
     <string name="are_you_sure">Сигурни ли сте\?</string>
     <string name="popular">Популярни</string>

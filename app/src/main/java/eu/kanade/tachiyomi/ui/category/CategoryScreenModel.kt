@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.category
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +31,7 @@ class CategoryScreenModel(
     val events = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             getCategories.subscribe()
                 .collectLatest { categories ->
                     mutableState.update {
@@ -44,7 +44,7 @@ class CategoryScreenModel(
     }
 
     fun createCategory(name: String) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (createCategoryWithName.await(name)) {
                 is CreateCategoryWithName.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
@@ -53,7 +53,7 @@ class CategoryScreenModel(
     }
 
     fun deleteCategory(categoryId: Long) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (deleteCategory.await(categoryId = categoryId)) {
                 is DeleteCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
@@ -62,7 +62,7 @@ class CategoryScreenModel(
     }
 
     fun sortAlphabetically() {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (reorderCategory.sortAlphabetically()) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
@@ -71,7 +71,7 @@ class CategoryScreenModel(
     }
 
     fun moveUp(category: Category) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (reorderCategory.moveUp(category)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
@@ -80,7 +80,7 @@ class CategoryScreenModel(
     }
 
     fun moveDown(category: Category) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (reorderCategory.moveDown(category)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
@@ -89,7 +89,7 @@ class CategoryScreenModel(
     }
 
     fun renameCategory(category: Category, name: String) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             when (renameCategory.await(category, name)) {
                 is RenameCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}

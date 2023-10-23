@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.history
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.util.lang.toDateKey
@@ -40,7 +40,7 @@ class HistoryScreenModel(
     val events: Flow<Event> = _events.receiveAsFlow()
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             state.map { it.searchQuery }
                 .distinctUntilChanged()
                 .flatMapLatest { query ->
@@ -75,7 +75,7 @@ class HistoryScreenModel(
     }
 
     fun getNextChapterForManga(mangaId: Long, chapterId: Long) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             sendNextChapterEvent(getNextChapters.await(mangaId, chapterId, onlyUnread = false))
         }
     }
@@ -86,19 +86,19 @@ class HistoryScreenModel(
     }
 
     fun removeFromHistory(history: HistoryWithRelations) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             removeHistory.await(history)
         }
     }
 
     fun removeAllFromHistory(mangaId: Long) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             removeHistory.await(mangaId)
         }
     }
 
     fun removeAllHistory() {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             val result = removeHistory.awaitAll()
             if (!result) return@launchIO
             _events.send(Event.HistoryCleared)

@@ -36,7 +36,7 @@ class CrashLogUtil(private val context: Context) {
             Device name: ${Build.DEVICE}
             Device model: ${Build.MODEL}
             Device product name: ${Build.PRODUCT}
-            WebView user agent: ${WebViewUtil.getInferredUserAgent(context)}
+            WebView: ${WebViewUtil.getVersion(context)}
         """.trimIndent()
     }
 }

@@ -4,8 +4,8 @@ import android.graphics.Color
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
-import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import okhttp3.Dns
@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Komga(id: Long) : Tracker(id, "Komga"), EnhancedTracker {
+class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
 
     companion object {
         const val UNREAD = 1

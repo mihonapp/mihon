@@ -12,7 +12,7 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.preference.asState
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -72,7 +72,7 @@ class BrowseSourceScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
-    var displayMode by sourcePreferences.sourceDisplayMode().asState(coroutineScope)
+    var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
 
     val source = sourceManager.getOrStub(sourceId)
 
@@ -220,7 +220,7 @@ class BrowseSourceScreenModel(
      * @param manga the manga to update.
      */
     fun changeMangaFavorite(manga: Manga) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
@@ -241,7 +241,7 @@ class BrowseSourceScreenModel(
     }
 
     fun addFavorite(manga: Manga) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val categories = getCategories()
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
@@ -291,7 +291,7 @@ class BrowseSourceScreenModel(
     }
 
     fun moveMangaToCategories(manga: Manga, categoryIds: List<Long>) {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             setMangaCategories.await(
                 mangaId = manga.id,
                 categoryIds = categoryIds.toList(),

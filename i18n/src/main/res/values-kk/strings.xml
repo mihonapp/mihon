@@ -292,7 +292,6 @@
     <string name="scale_type_fit_width">Ені бойынша</string>
     <string name="scale_type_original_size">Бастапқы мөлшері</string>
     <string name="rotation_reverse_portrait">Кері портрет</string>
-    <string name="pref_create_folder_per_manga_summary">Бумаларды жазбалар атауына сәйкес жасау</string>
     <string name="rotation_landscape">Көлденең</string>
     <string name="pref_webtoon_side_padding">Бүйірлік шегініс</string>
     <string name="color_filter_r_value">Қ</string>
@@ -347,7 +346,6 @@
     <string name="fourth_to_last">Соңғы оқылғаннан төртінші тарау</string>
     <string name="services">Қызметтер</string>
     <string name="pref_create_backup">Сақтық көшірме жасау</string>
-    <string name="pref_create_folder_per_manga">Беттерді бөлек бумаларға сақтау</string>
     <string name="pref_reader_theme">Түсқағаз</string>
     <string name="nav_zone_prev">Алдыңғ</string>
     <string name="scale_type_fit_height">Биіктігі бойынша</string>
@@ -372,7 +370,6 @@
     <string name="pref_read_with_tapping_inverted">Басу аймағын терістету</string>
     <string name="tapping_inverted_vertical">Тік</string>
     <string name="kindlish_nav">Kindle тәріздес</string>
-    <string name="pref_long_strip_split">Қос үлкен суреттер (Бета)</string>
     <string name="download_ahead_info">Кітапханадағы жазбаларда ғана жұмыс істейді, сондай-ақ ағымдағы және келесі тарау әлдеқашан жүктелген болса</string>
     <string name="edge_nav">Шеті</string>
     <string name="pref_read_with_volume_keys">Дыбыс пернелері</string>
@@ -677,7 +674,6 @@
     <string name="migration_selection_prompt">Қай жерден көшетін деректі таңдаңыз</string>
     <string name="copy">Көшіру</string>
     <string name="empty_screen">Қателік пайда болды</string>
-    <string name="notification_updating">Кітапхананы жаңартып жатырмыз… (%1$d/%2$d)</string>
     <string name="download_notifier_downloader_title">Жүктеуіш</string>
     <string name="file_picker_error">Файл таңдайтын қолданба табылмады</string>
     <string name="update_check_fdroid_migration_info">Жаңа нұсқа Tachiyomi сайтында қолжетімді. F-Droid қолданбасының бейресми нұсқасынан көшуді білу үшін басыңыз.</string>

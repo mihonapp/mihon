@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.ui.browse.migration.search
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetManga
@@ -16,7 +16,7 @@ class MigrateSearchScreenDialogScreenModel(
 ) : StateScreenModel<MigrateSearchScreenDialogScreenModel.State>(State()) {
 
     init {
-        coroutineScope.launch {
+        screenModelScope.launch {
             val manga = getManga.await(mangaId)!!
 
             mutableState.update {

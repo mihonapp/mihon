@@ -373,8 +373,8 @@
     <string name="pref_refresh_library_tracking_summary">Aktualizira stanje, ocjenu i zadnje pročitano poglavlje iz usluga za praćenje</string>
     <string name="pref_refresh_library_tracking">Aktualiziraj praćenje</string>
     <string name="clear_database_completed">Unosi su izbrisani</string>
-    <string name="clear_database_confirmation">Jesi siguran\? Izgubit će se čitanje poglavlja i tijek unosa koji nisu u biblioteci</string>
-    <string name="pref_clear_database_summary">Brisanje povijesti za unose koji nisu spremljeni u biblioteci</string>
+    <string name="clear_database_confirmation">Sigurno\? Pročitana poglavlja i tijek unosa koji nisu u biblioteci će se izgubiti</string>
+    <string name="pref_clear_database_summary">Izbriši povijest za unose koji nisu spremljeni u biblioteci</string>
     <string name="pref_clear_database">Isprazni bazu podataka</string>
     <string name="cookies_cleared">Kolačići su izbrisani</string>
     <string name="pref_clear_cookies">Ukloni kolačiće</string>
@@ -547,8 +547,6 @@
     <string name="notification_incognito_text">Deaktiviraj anonimni modus</string>
     <string name="rotation_type">Okretanje</string>
     <string name="automatic_background">Automatski</string>
-    <string name="pref_create_folder_per_manga_summary">Stvara mape prema naslovu unosa</string>
-    <string name="pref_create_folder_per_manga">Spremi stranice u zasebne mape</string>
     <string name="pref_reader_actions">Radnje</string>
     <string name="cancel_all_for_series">Prekini sve za ovu seriju</string>
     <string name="chapter_not_found">Poglavlje nije pronađeno</string>
@@ -610,8 +608,7 @@
     <string name="clear_database_source_item_count">Broj unosa u bazi odataka koje nisu u zbirci: %1$d</string>
     <string name="pref_verbose_logging">Opširno zapisivanje</string>
     <string name="pref_verbose_logging_summary">Ispiši opširan zapis u zapisnik sustava (smanjuje performanse aplikacije)</string>
-    <string name="notification_updating">Aktualiziranje zbirke … (%1$d/%2$d)</string>
-    <string name="backup_info">Čuvaj sigurnosne kopije i na drugim mjestima.</string>
+    <string name="backup_info">Čuvaj sigurnosne kopije i na drugim mjestima. Sigurnosne kopije mogu sadržati osjetljive podatke uključujući sve spremljene lozinke; oprez pri dijeljenju podataka.</string>
     <string name="pref_tablet_ui_mode">Korisničko sučelje tableta</string>
     <string name="notification_size_warning">Velika aktualiziranja štete izvorima i mogu usporiti aktualiziranja i povećati potrošnju baterije. Dodirni i saznaj više.</string>
     <string name="pref_low">Niska</string>
@@ -627,7 +624,7 @@
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="pref_library_update_manga_restriction">Preskoči ažuriranje unosa</string>
     <string name="extension_api_error">Neuspjelo preuzimanje popisa proširenja</string>
-    <string name="ext_installer_pref">Instaler</string>
+    <string name="ext_installer_pref">Instalacijski program</string>
     <string name="ext_installer_legacy">Stari način</string>
     <string name="pref_highest">Najviša</string>
     <string name="pref_remove_exclude_categories">Isključene kategorije</string>
@@ -672,7 +669,6 @@
         <item quantity="other">Sljedećih %d nepročitanih poglavlja</item>
     </plurals>
     <string name="action_sort_last_manga_update">Zadnja provjera aktualiziranja</string>
-    <string name="pref_long_strip_split">Rastavi visoke slike (BETA)</string>
     <string name="network_not_metered">Samo na mrežom bez ograničenja</string>
     <string name="action_sort_unread_count">Broj nepročitanih</string>
     <string name="delete_category">Izbriši kategoriju</string>
@@ -836,4 +832,10 @@
     <string name="action_move_to_bottom_all_for_series">Pomakni seriju na kraj</string>
     <string name="pref_relative_format">Relativne vremenske oznake</string>
     <string name="pref_relative_format_summary">„%1$s” umjesto „%2$s”</string>
+    <string name="action_sort_category">Razvrstaj kategorije</string>
+    <string name="notification_updating_progress">Aktualiziranje biblioteke … (%s)</string>
+    <string name="sort_category_confirmation">Želiš li razvrstati kategorije po abecedi\?</string>
+    <string name="file_null_uri_error">Program za biranje datoteka nije uspio vratiti datoteku u aplikaciju</string>
+    <string name="source_settings">Postavke izvora</string>
+    <string name="app_settings">Postavke aplikacije</string>
 </resources>

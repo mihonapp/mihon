@@ -578,8 +578,6 @@
     <string name="rotation_landscape">Paysage</string>
     <string name="rotation_portrait">Portrait</string>
     <string name="notification_incognito_text">Désactiver le mode incognito</string>
-    <string name="pref_create_folder_per_manga_summary">Crée des dossiers en fonction du titre des entrées</string>
-    <string name="pref_create_folder_per_manga">Enregistrer les pages dans des dossiers séparés</string>
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_grayscale">Niveaux de gris</string>
     <string name="error_no_match">Aucune correspondance trouvée</string>
@@ -606,7 +604,6 @@
     <string name="categorized_display_settings">Rendre les réglages de tri propres à chaque catégorie</string>
     <string name="information_empty_category_dialog">Vous n\'avez pas encore de catégories.</string>
     <string name="action_start_downloading_now">Commencer à télécharger</string>
-    <string name="notification_updating">Mise à jour de la bibliothèque… (%1$d/%2$d)</string>
     <string name="restore_miui_warning">La sauvegarde/restauration peut ne pas fonctionner correctement si l\'optimisation MIUI est désactivée.</string>
     <string name="enhanced_tracking_info">Services qui fournissent des fonctionnalités améliorées pour des sources spécifiques. Les entrées sont automatiquement suivies lorsqu\'elles sont ajoutées à votre bibliothèque.</string>
     <string name="enhanced_services">Services avancés</string>
@@ -744,7 +741,6 @@
     <string name="download_ahead_info">Fonctionne seulement si le chapitre actuel et le suivant sont déjà téléchargés.</string>
     <string name="are_you_sure">Êtes-vous sûr(e) \?</string>
     <string name="popular">Populaire</string>
-    <string name="pref_long_strip_split">Diviser les grandes images (BETA)</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Dernière mise à jour de la bibliothèque le : %s</string>
     <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque</string>

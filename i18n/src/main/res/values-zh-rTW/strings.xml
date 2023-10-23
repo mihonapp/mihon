@@ -262,14 +262,14 @@
     <string name="ext_trust">信任</string>
     <string name="ext_untrusted">不信任</string>
     <string name="untrusted_extension">不信任的擴充套件</string>
-    <string name="untrusted_extension_message">此擴充功能使用未受信任的憑證簽署，並未啟用。
+    <string name="untrusted_extension_message">簽署此擴充套件的憑證並不可靠，因此尚未被啟用。
 \n
-\n惡意擴充功能可能會讀取任何已儲存的登入憑證或執行任意程式碼。
+\n惡意的擴充套件可能會讀取任何已儲存的登入憑證或執行任意的程式碼。
 \n
-\n通過信任此憑證，您接受這些風險。</string>
+\n若選擇信任該憑證，即表示你願意承擔上述風險。</string>
     <string name="last_read_chapter">最後閱畢的章節</string>
     <string name="pref_backup_slots">最大備份保留數</string>
-    <string name="clear_database_confirmation">不在書櫃中的作品閱讀進度將被清除，你確定嗎？</string>
+    <string name="clear_database_confirmation">您確定要這樣做嗎？未收藏的漫畫的閱讀進度和章節會被刪除</string>
     <string name="pref_refresh_library_tracking">更新閱讀歷程</string>
     <string name="pref_refresh_library_tracking_summary">與歷程平台同步處理閱讀狀態、評分以及進度</string>
     <string name="latest">新上架</string>
@@ -520,8 +520,6 @@
 \n
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
-    <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
-    <string name="pref_create_folder_per_manga_summary">根據作品標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>
@@ -548,7 +546,6 @@
     <string name="cover_saved">已儲存封面</string>
     <string name="manga_cover">封面</string>
     <string name="action_start_downloading_now">立刻開始下載</string>
-    <string name="notification_updating">正在更新書櫃… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">部分裝置製造商設有額外的應用程式限制來終止背景服務。此網站提供了修復這項問題的詳細資訊。</string>
     <string name="label_background_activity">背景活動</string>
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
@@ -583,7 +580,7 @@
     <string name="getting_started_guide">入門指南</string>
     <string name="action_track">新增</string>
     <string name="help_translate">協助翻譯</string>
-    <string name="pref_remove_exclude_categories">不包括的漫畫類別</string>
+    <string name="pref_remove_exclude_categories">排除的類別</string>
     <string name="ext_app_info">程式資訊</string>
     <string name="ext_installer_shizuku_unavailable_dialog">若要使用 Shizuku 來安裝擴充套件，請先安裝 Shizuku 並開啟之。</string>
     <string name="ext_installer_legacy">傳統</string>
@@ -595,7 +592,7 @@
     <string name="label_warning">警告</string>
     <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加。輕觸以瞭解詳情。</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
-    <string name="backup_info">你應該在多處保存備份副本。</string>
+    <string name="backup_info">你應該在多處保存備份副本。備份檔可能含有敏感資料 (包括任何已儲存的密碼)，分享時請留意。</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 天</string>
@@ -603,7 +600,7 @@
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">應用程式更新</string>
     <string name="pref_auto_clear_chapter_cache">啟動應用程式時清除章節快取</string>
-    <string name="clear_database_source_item_count">資料庫中有 %1$d 部作品不屬於藏書</string>
+    <string name="clear_database_source_item_count">資料庫中有 %1$d 個非收藏項目</string>
     <string name="database_clean">無須清理</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
@@ -683,7 +680,6 @@
     </plurals>
     <string name="download_ahead_info">僅於目前章節及下一章節皆已下載時生效。</string>
     <string name="are_you_sure">你確定嗎？</string>
-    <string name="pref_long_strip_split">分割過高的圖片 (BETA)</string>
     <string name="multi_lang">多語</string>
     <string name="remove_manga">即將從書櫃中移除《%s》</string>
     <string name="updates_last_update_info">書櫃更新於：%s</string>
@@ -804,4 +800,10 @@
     <string name="action_move_to_bottom_all_for_series">置底此作品</string>
     <string name="pref_relative_format">相對時間戳記</string>
     <string name="pref_relative_format_summary">以「%1$s」表示「%2$s」</string>
+    <string name="app_settings">應用程式設定</string>
+    <string name="action_sort_category">排序類別</string>
+    <string name="notification_updating_progress">正在更新書櫃… (%s)</string>
+    <string name="sort_category_confirmation">欲依照字母順序排列類別嗎？</string>
+    <string name="source_settings">來源設定</string>
+    <string name="file_null_uri_error">無法將選定的檔案傳回給應用程式</string>
 </resources>

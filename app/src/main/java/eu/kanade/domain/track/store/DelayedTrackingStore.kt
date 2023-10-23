@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.core.content.edit
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.track.model.Track
 
 class DelayedTrackingStore(context: Context) {
 
@@ -13,13 +12,12 @@ class DelayedTrackingStore(context: Context) {
      */
     private val preferences = context.getSharedPreferences("tracking_queue", Context.MODE_PRIVATE)
 
-    fun addItem(track: Track) {
-        val trackId = track.id.toString()
-        val lastChapterRead = preferences.getFloat(trackId, 0f)
-        if (track.lastChapterRead > lastChapterRead) {
-            logcat(LogPriority.DEBUG) { "Queuing track item: $trackId, last chapter read: ${track.lastChapterRead}" }
+    fun add(trackId: Long, lastChapterRead: Double) {
+        val previousLastChapterRead = preferences.getFloat(trackId.toString(), 0f)
+        if (lastChapterRead > previousLastChapterRead) {
+            logcat(LogPriority.DEBUG) { "Queuing track item: $trackId, last chapter read: $lastChapterRead" }
             preferences.edit {
-                putFloat(trackId, track.lastChapterRead.toFloat())
+                putFloat(trackId.toString(), lastChapterRead.toFloat())
             }
         }
     }

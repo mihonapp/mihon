@@ -579,9 +579,7 @@
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="automatic_background">Auto</string>
-    <string name="pref_create_folder_per_manga_summary">Crea cartelle in base al titolo delle voci</string>
     <string name="cancel_all_for_series">Annulla tutti per questa serie</string>
-    <string name="pref_create_folder_per_manga">Salva pagine in cartelle separate</string>
     <string name="pref_reader_actions">Azioni</string>
     <string name="pref_grayscale">Scala di grigi</string>
     <string name="error_no_match">Nessun risultato trovato</string>
@@ -606,7 +604,6 @@
     <string name="pref_library_update_refresh_trackers">Aggiorna automaticamente i tracker</string>
     <string name="action_start_downloading_now">Inizia a scaricare ora</string>
     <string name="about_dont_kill_my_app">Alcuni produttori hanno restrizioni aggiuntive per le app che chiudono i servizi in secondo piano. Questo sito ha più informazioni su come risolvere il problema.</string>
-    <string name="notification_updating">Aggiornando libreria... (%1$d/%2$d)</string>
     <string name="pref_lowest">Più basso</string>
     <string name="pref_low">Basso</string>
     <string name="pref_high">Alto</string>
@@ -652,7 +649,7 @@
     <string name="pref_verbose_logging">Registrazione dettagliata</string>
     <string name="action_display_language_badge">Lingua</string>
     <string name="label_warning">Attenzione</string>
-    <string name="backup_info">Dovresti tenere delle copie dei backup anche in altri posti.</string>
+    <string name="backup_info">Dovresti tenere delle copie dei backup anche in altri posti. I backup possono contenere dati sensibili comprese le password memorizzate; fate attenzione al condividerli.</string>
     <string name="notification_size_warning">Grossi aggiornamenti danneggiano le fonti, possono rallentare gli aggiornamenti e aumentare il consumo di batteria. Tocca per saperne di più.</string>
     <string name="connected_to_wifi">Solo su Wi-Fi</string>
     <string name="update_72hour">Ogni 3 giorni</string>
@@ -744,7 +741,6 @@
     <string name="are_you_sure">Sei sicuro\?</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Ultimo aggiornamento libreria: %s</string>
-    <string name="pref_long_strip_split">Dividi immagini alte (BETA)</string>
     <string name="remove_manga">Stai per rimuovere «%s» dalla tua libreria</string>
     <string name="popular">Popolare</string>
     <string name="missing_storage_permission">Autorizzazioni per l\'archiviazione non concesse</string>
@@ -869,4 +865,9 @@
     <string name="action_move_to_bottom_all_for_series">Spostare la serie in fondo</string>
     <string name="pref_relative_format">Timestamp relativi</string>
     <string name="pref_relative_format_summary">«%1$s» invece di «%2$s»</string>
+    <string name="app_settings">Impostazioni app</string>
+    <string name="source_settings">Impostazioni delle fonti</string>
+    <string name="notification_updating_progress">Aggiornando libreria... (%s)</string>
+    <string name="action_sort_category">Ordinamento categorie</string>
+    <string name="sort_category_confirmation">Vuoi ordinare le categorie alfabeticamente\?</string>
 </resources>

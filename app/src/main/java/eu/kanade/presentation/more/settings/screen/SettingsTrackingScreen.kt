@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Close
@@ -72,7 +73,7 @@ object SettingsTrackingScreen : SearchableSettings {
         val uriHandler = LocalUriHandler.current
         IconButton(onClick = { uriHandler.openUri("https://tachiyomi.org/docs/guides/tracking") }) {
             Icon(
-                imageVector = Icons.Outlined.HelpOutline,
+                imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
                 contentDescription = stringResource(R.string.tracking_guide),
             )
         }

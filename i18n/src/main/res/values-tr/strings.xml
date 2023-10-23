@@ -533,8 +533,6 @@
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
     <string name="rotation_type">Döndürme</string>
-    <string name="pref_create_folder_per_manga_summary">Girdilerin başlığına göre sıralaç oluşturur</string>
-    <string name="pref_create_folder_per_manga">Sayfaları ayrı sıralaçlara kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
     <string name="pref_grayscale">Boz tonlama</string>
     <string name="notification_incognito_text">Gizli kipi devre dışı bırak</string>
@@ -561,7 +559,6 @@
     <string name="tracking_guide">İzleme kılavuzu</string>
     <string name="information_empty_category_dialog">Henüz bir kategoriniz yok.</string>
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
-    <string name="notification_updating">Kitaplık güncelleniyor… (%1$d/%2$d)</string>
     <string name="about_dont_kill_my_app">Bazı üreticilerin arka plan hizmetlerini durduran ek uygulama kısıtlamaları vardır. Bu web sitesinde durumun nasıl düzeltileceği hakkında daha fazla bilgi var.</string>
     <string name="restore_miui_warning">Yedekleme/geri yükleme, MIUI iyileştirmesi devre dışıysa düzgün çalışmayabilir.</string>
     <string name="enhanced_tracking_info">Belirli kaynaklar için gelişmiş özellikler sağlayan hizmetler. Girdiler, kitaplığınıza eklendiğinde kendiliğinden izlenir.</string>
@@ -699,7 +696,6 @@
     <string name="remove_manga">\"%s\"yi kitaplığınızdan kaldırmak üzeresiniz</string>
     <string name="updates_last_update_info">Kitaplık son güncelleme zamanı: %s</string>
     <string name="multi_lang">Çoklu</string>
-    <string name="pref_long_strip_split">Uzun görselleri böl (BETA)</string>
     <string name="popular">Popüler</string>
     <string name="missing_storage_permission">Depolama izinleri verilmedi</string>
     <string name="skipped_reason_not_always_update">Dizi güncelleme gerektirmediği için atlandı</string>
