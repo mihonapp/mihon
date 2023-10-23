@@ -14,7 +14,7 @@ class SyncPreferences(
 
     fun deviceName() = preferenceStore.getString("device_name", android.os.Build.MANUFACTURER + android.os.Build.PRODUCT)
 
-    fun syncService() = preferenceStore.getInt("sync_service", 0)
+    fun syncService() = preferenceStore.getInt("sync_service", 1)
 
     private fun googleDriveAccessToken() = preferenceStore.getString("google_drive_access_token", "")
 

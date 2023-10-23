@@ -57,13 +57,12 @@ class SyncManager(
     private val backupRestorer: BackupRestorer = BackupRestorer(context, backupNotify)
 
     enum class SyncService(val value: Int) {
-        NONE(0),
-        SYNCYOMI(1),
-        GOOGLE_DRIVE(2),
+        GOOGLE_DRIVE(1),
+        SYNCYOMI(2),
         ;
 
         companion object {
-            fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: NONE
+            fun fromInt(value: Int) = entries.firstOrNull { it.value == value } ?: 1
         }
     }
 

@@ -86,9 +86,8 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
                         pref = syncPreferences.syncService(),
                         title = stringResource(R.string.pref_sync_service),
                         entries = mapOf(
-                            SyncManager.SyncService.NONE.value to stringResource(R.string.off),
-                            SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
                             SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(R.string.google_drive),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
                         ),
                         onValueChanged = { true },
                     ),
@@ -424,15 +423,12 @@ object SettingsBackupAndSyncScreen : SearchableSettings {
     private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
         val syncServiceType = SyncManager.SyncService.fromInt(syncService)
         return when (syncServiceType) {
-            SyncManager.SyncService.NONE -> emptyList()
             SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
             SyncManager.SyncService.GOOGLE_DRIVE -> getGoogleDrivePreferences()
-        } +
-            if (syncServiceType == SyncManager.SyncService.NONE) {
+            else -> {
                 emptyList()
-            } else {
-                listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
             }
+        } + listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
     }
 
     @Composable
