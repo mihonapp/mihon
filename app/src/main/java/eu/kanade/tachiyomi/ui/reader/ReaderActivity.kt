@@ -92,7 +92,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import kotlin.math.abs
 
 class ReaderActivity : BaseActivity() {
 
@@ -299,12 +298,6 @@ class ReaderActivity : BaseActivity() {
      * Initializes the reader menu. It sets up click listeners and the initial visibility.
      */
     private fun initializeMenu() {
-        binding.dialogRoot.applyInsetter {
-            type(navigationBars = true) {
-                margin(vertical = true, horizontal = true)
-            }
-        }
-
         binding.pageNumber.setComposeContent {
             val state by viewModel.state.collectAsState()
             val showPageNumber by viewModel.readerPreferences.showPageNumber().collectAsState()

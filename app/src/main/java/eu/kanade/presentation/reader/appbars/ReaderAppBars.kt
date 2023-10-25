@@ -67,7 +67,7 @@ fun ReaderAppBars(
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
 
-    val appBarModifier = if (fullscreen) {
+    val modifierWithInsetsPadding = if (fullscreen) {
         Modifier.systemBarsPadding()
     } else {
         Modifier
@@ -89,7 +89,7 @@ fun ReaderAppBars(
             ),
         ) {
             AppBar(
-                modifier = appBarModifier
+                modifier = modifierWithInsetsPadding
                     .clickable(onClick = onClickTopAppBar),
                 backgroundColor = backgroundColor,
                 title = mangaTitle,
@@ -135,6 +135,7 @@ fun ReaderAppBars(
             ),
         ) {
             Column(
+                modifier = modifierWithInsetsPadding,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 ChapterNavigator(

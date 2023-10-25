@@ -19,7 +19,7 @@ fun BrightnessOverlay(
             .fillMaxSize()
             .graphicsLayer {
                 alpha = abs(value) / 100f
-            }
+            },
     ) {
         drawRect(Color.Black)
     }
