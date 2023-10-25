@@ -736,6 +736,10 @@ class ReaderViewModel @JvmOverloads constructor(
         mutableState.update { it.copy(dialog = null) }
     }
 
+    fun setBrightnessOverlayValue(value: Int) {
+        mutableState.update { it.copy(brightnessOverlayValue = value) }
+    }
+
     /**
      * Saves the image of the selected page on the pictures directory and notifies the UI of the result.
      * There's also a notification to allow sharing the image somewhere else or deleting it.
@@ -894,6 +898,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
+        val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
