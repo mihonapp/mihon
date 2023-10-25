@@ -156,7 +156,7 @@ object LibraryTab : Tab {
                             EmptyScreenAction(
                                 stringResId = R.string.getting_started_guide,
                                 icon = Icons.Outlined.HelpOutline,
-                                onClick = { handler.openUri("https://tachiyomi.org/help/guides/getting-started") },
+                                onClick = { handler.openUri("https://tachiyomi.org/docs/guides/getting-started") },
                             ),
                         ),
                     )

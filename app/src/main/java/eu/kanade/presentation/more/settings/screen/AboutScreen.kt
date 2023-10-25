@@ -118,7 +118,7 @@ object AboutScreen : Screen {
                 item {
                     TextPreferenceWidget(
                         title = stringResource(R.string.help_translate),
-                        onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/help/contribution/#translation") },
+                        onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/docs/contribute#translation") },
                     )
                 }
 
