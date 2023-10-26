@@ -12,8 +12,8 @@ import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -26,7 +26,7 @@ import uy.kohesive.injekt.api.get
  */
 class DownloadProvider(
     private val context: Context,
-    downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val storagePreferences: StoragePreferences = Injekt.get(),
 ) {
 
     private val scope = MainScope()
@@ -34,16 +34,22 @@ class DownloadProvider(
     /**
      * The root directory for downloads.
      */
-    private var downloadsDir = downloadPreferences.downloadsDirectory().get().let {
-        val dir = UniFile.fromUri(context, it.toUri())
-        DiskUtil.createNoMediaFile(dir, context)
-        dir
-    }
+    private var downloadsDir = setDownloadsLocation()
 
     init {
-        downloadPreferences.downloadsDirectory().changes()
-            .onEach { downloadsDir = UniFile.fromUri(context, it.toUri()) }
+        storagePreferences.baseStorageDirectory().changes()
+            .onEach { downloadsDir = setDownloadsLocation() }
             .launchIn(scope)
+    }
+
+    private fun setDownloadsLocation(): UniFile {
+        return storagePreferences.baseStorageDirectory().get().let {
+            val dir = UniFile.fromUri(context, it.toUri())
+                .createDirectory(StoragePreferences.DOWNLOADS_DIR)
+            DiskUtil.createNoMediaFile(dir, context)
+            logcat { "downloadsDir: ${dir.filePath}" }
+            dir
+        }
     }
 
     /**
