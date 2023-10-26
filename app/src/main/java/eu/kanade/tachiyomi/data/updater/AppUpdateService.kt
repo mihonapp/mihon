@@ -127,6 +127,7 @@ class AppUpdateService : Service() {
                 response.close()
                 throw Exception("Unsuccessful response")
             }
+            notifier.cancel()
             notifier.promptInstall(apkFile.getUriCompat(this))
         } catch (e: Exception) {
             val shouldCancel = e is CancellationException ||
