@@ -47,7 +47,6 @@ class DownloadProvider(
             val dir = UniFile.fromUri(context, it.toUri())
                 .createDirectory(StoragePreferences.DOWNLOADS_DIR)
             DiskUtil.createNoMediaFile(dir, context)
-            logcat { "downloadsDir: ${dir.filePath}" }
             dir
         }
     }

@@ -11,6 +11,7 @@ class StoragePreferences(
     fun baseStorageDirectory() = preferenceStore.getString("storage_dir", folderProvider.path())
 
     companion object {
+        const val BACKUP_DIR = "backup"
         const val DOWNLOADS_DIR = "downloads"
     }
 }

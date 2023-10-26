@@ -11,7 +11,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import tachiyomi.core.preference.AndroidPreferenceStore
 import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.provider.AndroidBackupFolderProvider
 import tachiyomi.core.provider.AndroidStorageFolderProvider
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -53,13 +52,7 @@ class PreferenceModule(val app: Application) : InjektModule {
             DownloadPreferences(get())
         }
         addSingletonFactory {
-            AndroidBackupFolderProvider(app)
-        }
-        addSingletonFactory {
-            BackupPreferences(
-                folderProvider = get<AndroidBackupFolderProvider>(),
-                preferenceStore = get(),
-            )
+            BackupPreferences(get())
         }
         addSingletonFactory {
             AndroidStorageFolderProvider(app)
