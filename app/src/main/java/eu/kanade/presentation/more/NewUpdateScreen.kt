@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material3.Icon
@@ -61,7 +60,7 @@ fun NewUpdateScreen(
             ) {
                 Text(text = stringResource(R.string.update_check_open))
                 Spacer(modifier = Modifier.width(MaterialTheme.padding.tiny))
-                Icon(imageVector = Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null)
+                Icon(imageVector = Icons.Default.OpenInNew, contentDescription = null)
             }
         }
     }

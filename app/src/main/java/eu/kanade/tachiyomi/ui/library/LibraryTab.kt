@@ -6,7 +6,6 @@ import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -158,7 +157,7 @@ object LibraryTab : Tab {
                         actions = listOf(
                             EmptyScreenAction(
                                 stringResId = R.string.getting_started_guide,
-                                icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                                icon = Icons.Outlined.HelpOutline,
                                 onClick = { handler.openUri("https://tachiyomi.org/docs/guides/getting-started") },
                             ),
                         ),
