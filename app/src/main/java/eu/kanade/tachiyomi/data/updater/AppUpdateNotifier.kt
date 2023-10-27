@@ -34,11 +34,11 @@ internal class AppUpdateNotifier(private val context: Context) {
 
     @SuppressLint("LaunchActivityFromNotification")
     fun promptUpdate(release: Release) {
-        val updateIntent = Intent(context, AppUpdateService::class.java).run {
-            putExtra(AppUpdateService.EXTRA_DOWNLOAD_URL, release.getDownloadLink())
-            putExtra(AppUpdateService.EXTRA_DOWNLOAD_TITLE, release.version)
-            PendingIntent.getService(context, 0, this, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        }
+        val updateIntent = NotificationReceiver.downloadAppUpdatePendingBroadcast(
+            context,
+            release.getDownloadLink(),
+            release.version,
+        )
 
         val releaseIntent = Intent(Intent.ACTION_VIEW, release.releaseLink.toUri()).run {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -82,7 +82,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_close_24dp,
                 context.getString(R.string.action_cancel),
-                NotificationReceiver.cancelUpdateDownloadPendingBroadcast(context),
+                NotificationReceiver.cancelDownloadAppUpdatePendingBroadcast(context),
             )
         }
         notificationBuilder.show()
@@ -164,7 +164,7 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_refresh_24dp,
                 context.getString(R.string.action_retry),
-                AppUpdateService.downloadApkPendingService(context, url),
+                NotificationReceiver.downloadAppUpdatePendingBroadcast(context, url),
             )
             addAction(
                 R.drawable.ic_close_24dp,

@@ -146,10 +146,6 @@
             android:exported="false" />
 
         <service
-            android:name=".data.updater.AppUpdateService"
-            android:exported="false" />
-
-        <service
             android:name=".extension.util.ExtensionInstallService"
             android:exported="false" />
 

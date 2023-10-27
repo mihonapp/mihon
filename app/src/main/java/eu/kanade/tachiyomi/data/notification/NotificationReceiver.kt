@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.data.updater.AppUpdateService
+import eu.kanade.tachiyomi.data.updater.AppUpdateDownloadJob
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.storage.DiskUtil
@@ -85,6 +85,8 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_CANCEL_RESTORE -> cancelRestore(context)
             // Cancel library update and dismiss notification
             ACTION_CANCEL_LIBRARY_UPDATE -> cancelLibraryUpdate(context)
+            // Start downloading app update
+            ACTION_START_APP_UPDATE -> startDownloadAppUpdate(context, intent)
             // Cancel downloading app update
             ACTION_CANCEL_APP_UPDATE_DOWNLOAD -> cancelDownloadAppUpdate(context)
             // Open reader activity
@@ -209,8 +211,13 @@ class NotificationReceiver : BroadcastReceiver() {
         LibraryUpdateJob.stop(context)
     }
 
+    private fun startDownloadAppUpdate(context: Context, intent: Intent) {
+        val url = intent.getStringExtra(AppUpdateDownloadJob.EXTRA_DOWNLOAD_URL) ?: return
+        AppUpdateDownloadJob.start(context, url)
+    }
+
     private fun cancelDownloadAppUpdate(context: Context) {
-        AppUpdateService.stop(context)
+        AppUpdateDownloadJob.stop(context)
     }
 
     /**
@@ -268,6 +275,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         private const val ACTION_CANCEL_LIBRARY_UPDATE = "$ID.$NAME.CANCEL_LIBRARY_UPDATE"
 
+        private const val ACTION_START_APP_UPDATE = "$ID.$NAME.ACTION_START_APP_UPDATE"
         private const val ACTION_CANCEL_APP_UPDATE_DOWNLOAD = "$ID.$NAME.CANCEL_APP_UPDATE_DOWNLOAD"
 
         private const val ACTION_MARK_AS_READ = "$ID.$NAME.MARK_AS_READ"
@@ -500,9 +508,24 @@ class NotificationReceiver : BroadcastReceiver() {
         }
 
         /**
+         * Returns [PendingIntent] that starts the [AppUpdateDownloadJob] to download an app update.
+         *
+         * @param context context of application
+         * @return [PendingIntent]
+         */
+        internal fun downloadAppUpdatePendingBroadcast(context: Context, url: String, title: String? = null): PendingIntent {
+            return Intent(context, NotificationReceiver::class.java).run {
+                action = ACTION_START_APP_UPDATE
+                putExtra(AppUpdateDownloadJob.EXTRA_DOWNLOAD_URL, url)
+                title?.let { putExtra(AppUpdateDownloadJob.EXTRA_DOWNLOAD_TITLE, it) }
+                PendingIntent.getBroadcast(context, 0, this, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            }
+        }
+
+        /**
          *
          */
-        internal fun cancelUpdateDownloadPendingBroadcast(context: Context): PendingIntent {
+        internal fun cancelDownloadAppUpdatePendingBroadcast(context: Context): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_CANCEL_APP_UPDATE_DOWNLOAD
             }
