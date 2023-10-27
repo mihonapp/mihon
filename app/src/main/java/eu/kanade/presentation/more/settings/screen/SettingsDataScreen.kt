@@ -31,8 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toUri
-import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.permissions.PermissionRequestHelper
 import eu.kanade.tachiyomi.R
@@ -41,11 +39,17 @@ import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.launch
+import logcat.LogPriority
+import tachiyomi.core.util.lang.launchNonCancellable
+import tachiyomi.core.util.lang.withUIContext
+import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
+import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.util.collectAsState
@@ -54,12 +58,12 @@ import tachiyomi.presentation.core.util.isScrolledToStart
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-object SettingsBackupScreen : SearchableSettings {
+object SettingsDataScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
     @StringRes
-    override fun getTitleRes() = R.string.label_backup
+    override fun getTitleRes() = R.string.label_data_storage
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -68,9 +72,49 @@ object SettingsBackupScreen : SearchableSettings {
         PermissionRequestHelper.requestStoragePermission()
 
         return listOf(
-            getCreateBackupPref(),
-            getRestoreBackupPref(),
-            getAutomaticBackupGroup(backupPreferences = backupPreferences),
+            getBackupAndRestoreGroup(backupPreferences = backupPreferences),
+            getDataGroup(),
+        )
+    }
+
+    @Composable
+    private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val backupIntervalPref = backupPreferences.backupInterval()
+        val backupInterval by backupIntervalPref.collectAsState()
+
+        return Preference.PreferenceGroup(
+            title = stringResource(R.string.label_backup),
+            preferenceItems = listOf(
+                // Manual actions
+                getCreateBackupPref(),
+                getRestoreBackupPref(),
+
+                // Automatic backups
+                Preference.PreferenceItem.ListPreference(
+                    pref = backupIntervalPref,
+                    title = stringResource(R.string.pref_backup_interval),
+                    entries = mapOf(
+                        0 to stringResource(R.string.off),
+                        6 to stringResource(R.string.update_6hour),
+                        12 to stringResource(R.string.update_12hour),
+                        24 to stringResource(R.string.update_24hour),
+                        48 to stringResource(R.string.update_48hour),
+                        168 to stringResource(R.string.update_weekly),
+                    ),
+                    onValueChanged = {
+                        BackupCreateJob.setupTask(context, it)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = backupPreferences.numberOfBackups(),
+                    enabled = backupInterval != 0,
+                    title = stringResource(R.string.pref_backup_slots),
+                    entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
+                ),
+                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
+            ),
         )
     }
 
@@ -318,70 +362,40 @@ object SettingsBackupScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getAutomaticBackupGroup(
-        backupPreferences: BackupPreferences,
-    ): Preference.PreferenceGroup {
+    private fun getDataGroup(): Preference.PreferenceGroup {
+        val scope = rememberCoroutineScope()
         val context = LocalContext.current
-        val backupIntervalPref = backupPreferences.backupInterval()
-        val backupInterval by backupIntervalPref.collectAsState()
-        val backupDirPref = backupPreferences.backupsDirectory()
-        val backupDir by backupDirPref.collectAsState()
-        val pickBackupLocation = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.OpenDocumentTree(),
-        ) { uri ->
-            if (uri != null) {
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
 
-                context.contentResolver.takePersistableUriPermission(uri, flags)
-
-                val file = UniFile.fromUri(context, uri)
-                backupDirPref.set(file.uri.toString())
-            }
-        }
+        val chapterCache = remember { Injekt.get<ChapterCache>() }
+        var readableSizeSema by remember { mutableIntStateOf(0) }
+        val readableSize = remember(readableSizeSema) { chapterCache.readableSize }
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.pref_backup_service_category),
+            title = stringResource(R.string.label_data),
             preferenceItems = listOf(
-                Preference.PreferenceItem.ListPreference(
-                    pref = backupIntervalPref,
-                    title = stringResource(R.string.pref_backup_interval),
-                    entries = mapOf(
-                        0 to stringResource(R.string.off),
-                        6 to stringResource(R.string.update_6hour),
-                        12 to stringResource(R.string.update_12hour),
-                        24 to stringResource(R.string.update_24hour),
-                        48 to stringResource(R.string.update_48hour),
-                        168 to stringResource(R.string.update_weekly),
-                    ),
-                    onValueChanged = {
-                        BackupCreateJob.setupTask(context, it)
-                        true
-                    },
-                ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_backup_directory),
-                    enabled = backupInterval != 0,
-                    subtitle = remember(backupDir) {
-                        (UniFile.fromUri(context, backupDir.toUri())?.filePath)?.let {
-                            "$it/automatic"
-                        }
-                    } ?: stringResource(R.string.invalid_location, backupDir),
+                    title = stringResource(R.string.pref_clear_chapter_cache),
+                    subtitle = stringResource(R.string.used_cache, readableSize),
                     onClick = {
-                        try {
-                            pickBackupLocation.launch(null)
-                        } catch (e: ActivityNotFoundException) {
-                            context.toast(R.string.file_picker_error)
+                        scope.launchNonCancellable {
+                            try {
+                                val deletedFiles = chapterCache.clear()
+                                withUIContext {
+                                    context.toast(context.getString(R.string.cache_deleted, deletedFiles))
+                                    readableSizeSema++
+                                }
+                            } catch (e: Throwable) {
+                                logcat(LogPriority.ERROR, e)
+                                withUIContext { context.toast(R.string.cache_delete_error) }
+                            }
                         }
                     },
                 ),
-                Preference.PreferenceItem.ListPreference(
-                    pref = backupPreferences.numberOfBackups(),
-                    enabled = backupInterval != 0,
-                    title = stringResource(R.string.pref_backup_slots),
-                    entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = libraryPreferences.autoClearChapterCache(),
+                    title = stringResource(R.string.pref_auto_clear_chapter_cache),
                 ),
-                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
             ),
         )
     }
