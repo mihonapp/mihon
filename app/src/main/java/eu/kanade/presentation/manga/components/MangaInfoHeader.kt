@@ -24,8 +24,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HourglassEmpty
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Block
@@ -459,6 +461,7 @@ private fun MangaAndSourceTitlesSmall(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, top = appBarPadding + 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Book(
@@ -469,7 +472,9 @@ private fun MangaAndSourceTitlesSmall(
             contentDescription = stringResource(R.string.manga_cover),
             onClick = onCoverClick,
         )
-        Column(modifier = Modifier.padding(start = 16.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
             Text(
                 text = title.ifBlank { stringResource(R.string.unknown_title) },
                 style = MaterialTheme.typography.titleLarge,
@@ -485,40 +490,63 @@ private fun MangaAndSourceTitlesSmall(
                     onClick = { if (title.isNotBlank()) doSearch(title, true) },
                 ),
             )
+
             Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = author?.takeIf { it.isNotBlank() }
-                    ?: stringResource(R.string.unknown_author),
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .secondaryItemAlpha()
-                    .padding(top = 2.dp)
-                    .clickableNoIndication(
-                        onLongClick = {
-                            if (!author.isNullOrBlank()) {
-                                context.copyToClipboard(
-                                    author,
-                                    author,
-                                )
-                            }
-                        },
-                        onClick = { if (!author.isNullOrBlank()) doSearch(author, true) },
-                    ),
-            )
-            if (!artist.isNullOrBlank() && author != artist) {
+
+            Row(
+                modifier = Modifier.secondaryItemAlpha(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PersonOutline,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                )
                 Text(
-                    text = artist,
+                    text = author?.takeIf { it.isNotBlank() }
+                        ?: stringResource(R.string.unknown_author),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier
-                        .secondaryItemAlpha()
-                        .padding(top = 2.dp)
                         .clickableNoIndication(
-                            onLongClick = { context.copyToClipboard(artist, artist) },
-                            onClick = { doSearch(artist, true) },
+                            onLongClick = {
+                                if (!author.isNullOrBlank()) {
+                                    context.copyToClipboard(
+                                        author,
+                                        author,
+                                    )
+                                }
+                            },
+                            onClick = { if (!author.isNullOrBlank()) doSearch(author, true) },
                         ),
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
+
+            if (!artist.isNullOrBlank() && author != artist) {
+                Row(
+                    modifier = Modifier.secondaryItemAlpha(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Brush,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Text(
+                        text = artist,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier
+                            .clickableNoIndication(
+                                onLongClick = { context.copyToClipboard(artist, artist) },
+                                onClick = { doSearch(artist, true) },
+                            ),
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
             Row(
                 modifier = Modifier.secondaryItemAlpha(),
                 verticalAlignment = Alignment.CenterVertically,
