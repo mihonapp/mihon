@@ -1,5 +1,6 @@
 package eu.kanade.presentation.reader
 
+import androidx.annotation.IntRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -10,7 +11,7 @@ import kotlin.math.abs
 
 @Composable
 fun BrightnessOverlay(
-    value: Int,
+    @IntRange(from = -100, to = 100) value: Int,
 ) {
     if (value >= 0) return
 

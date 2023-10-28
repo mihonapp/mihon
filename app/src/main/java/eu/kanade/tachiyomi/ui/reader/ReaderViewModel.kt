@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.ui.reader
 
 import android.app.Application
 import android.net.Uri
+import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -900,7 +901,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val viewer: Viewer? = null,
         val dialog: Dialog? = null,
         val menuVisible: Boolean = false,
-        val brightnessOverlayValue: Int = 0,
+        @IntRange(from = -100, to = 100) val brightnessOverlayValue: Int = 0,
     ) {
         val currentChapter: ReaderChapter?
             get() = viewerChapters?.currChapter
