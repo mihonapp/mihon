@@ -834,6 +834,13 @@ class MangaScreenModel(
         }
     }
 
+    fun resetToDefaultSettings() {
+        val manga = successState?.manga ?: return
+        screenModelScope.launchNonCancellable {
+            setMangaDefaultChapterFlags.await(manga)
+        }
+    }
+
     fun toggleSelection(
         item: ChapterItem,
         selected: Boolean,

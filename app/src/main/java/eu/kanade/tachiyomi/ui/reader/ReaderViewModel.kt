@@ -630,7 +630,7 @@ class ReaderViewModel @JvmOverloads constructor(
     fun setMangaReadingMode(readingModeType: ReadingModeType) {
         val manga = manga ?: return
         runBlocking(Dispatchers.IO) {
-            setMangaViewerFlags.awaitSetMangaReadingMode(manga.id, readingModeType.flagValue.toLong())
+            setMangaViewerFlags.awaitSetReadingMode(manga.id, readingModeType.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page
@@ -666,7 +666,7 @@ class ReaderViewModel @JvmOverloads constructor(
     fun setMangaOrientationType(rotationType: OrientationType) {
         val manga = manga ?: return
         viewModelScope.launchIO {
-            setMangaViewerFlags.awaitSetOrientationType(manga.id, rotationType.flagValue.toLong())
+            setMangaViewerFlags.awaitSetOrientation(manga.id, rotationType.flagValue.toLong())
             val currChapters = state.value.viewerChapters
             if (currChapters != null) {
                 // Save current page

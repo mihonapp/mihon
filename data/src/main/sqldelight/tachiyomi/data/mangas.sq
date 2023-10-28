@@ -57,7 +57,8 @@ WHERE _id = :id;
 getMangaByUrlAndSource:
 SELECT *
 FROM mangas
-WHERE url = :url AND source = :source
+WHERE url = :url
+AND source = :source
 LIMIT 1;
 
 getFavorites:
@@ -107,7 +108,8 @@ GROUP BY source;
 
 deleteMangasNotInLibraryBySourceIds:
 DELETE FROM mangas
-WHERE favorite = 0 AND source IN :sourceIds;
+WHERE favorite = 0
+AND source IN :sourceIds;
 
 insert:
 INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at)
