@@ -206,7 +206,6 @@
     <string name="services">Palvelut</string>
     <string name="pref_create_backup_summ">Voidaan käyttää nykyisen kirjaston palauttamiseen</string>
     <string name="pref_restore_backup_summ">Palauta kirjasto varmuuskopiointi-tiedostosta</string>
-    <string name="pref_backup_service_category">Automaattiset varmuuskopiot</string>
     <string name="pref_backup_interval">Varmuuskopioinnin tiheys</string>
     <string name="pref_backup_slots">Varmuuskopioiden enimmäismäärä</string>
     <string name="backup_created">Varmuuskopio luotu</string>
@@ -224,8 +223,6 @@
     <string name="pref_clear_database_summary">Poista mangan historia, jota ei ole tallennettu kirjastoosi</string>
     <string name="clear_database_confirmation">Oletko varma\? Luetut luvut ja eteneminen poistetaan muista kun kirjastossa olevista sarjoista</string>
     <string name="clear_database_completed">Tiedot poistettu</string>
-    <string name="pref_refresh_library_tracking">Päivitä seuranta</string>
-    <string name="pref_refresh_library_tracking_summary">Päivittää tilan, arvosanan ja viimeksi luetun luvun seurantapalveluista</string>
     <string name="version">Versio</string>
     <string name="pref_enable_acra">Lähetä kaatumisilmoituksia</string>
     <string name="pref_acra_summary">Auttaa korjaamaan bugeja. Arkaluonteista tietoa ei lähetetä</string>
@@ -549,7 +546,6 @@
     <string name="on">Päällä</string>
     <string name="getting_started_guide">Aloitusopas</string>
     <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Tachiyomin käytön. Napauta saadaksesi lisätietoja.</string>
-    <string name="pref_library_update_refresh_trackers_summary">Päivitä seurantapalvelimet kirjaston päivityksen yhteydessä</string>
     <plurals name="relative_time">
         <item quantity="one">Eilen</item>
         <item quantity="other">%1$d päivää sitten</item>
@@ -560,7 +556,6 @@
     <string name="theme_greenapple">Vihreä omena</string>
     <string name="label_default">Oletus</string>
     <string name="action_display_local_badge">Laitteelle tallennettu manga</string>
-    <string name="pref_library_update_refresh_trackers">Päivitä seurantapalvelimet automaattisesti</string>
     <string name="action_sort_count">Yhteenlaskettu manga</string>
     <string name="action_start_downloading_now">Aloita lataaminen nyt</string>
     <string name="theme_yinyang">Ying ja Yang</string>

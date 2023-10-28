@@ -163,7 +163,6 @@
     <string name="pref_restore_backup">Riprìstina una còpia de seguresa</string>
     <string name="pref_restore_backup_summ">Riprìstina sa biblioteca dae una còpia de seguresa</string>
     <string name="pref_backup_directory">Cartella de sa còpia de seguresa</string>
-    <string name="pref_backup_service_category">Còpias de seguresa automàticas</string>
     <string name="pref_backup_interval">Frecuèntzia de sarvatàgiu de sas còpias de seguresa</string>
     <string name="pref_backup_slots">Màssimu de còpias de seguresa</string>
     <string name="backup_created">Còpia de seguresa creada</string>
@@ -181,8 +180,6 @@
     <string name="pref_clear_database_summary">Iscantzella sa cronologia pro sos elementos chi non sunt sarvados in sa biblioteca tua</string>
     <string name="clear_database_confirmation">Seguru ses\? Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
     <string name="clear_database_completed">Boghes iscantzelladas</string>
-    <string name="pref_refresh_library_tracking">Annoa s\'arrastamentu</string>
-    <string name="pref_refresh_library_tracking_summary">Agiornat s\'istadu, su votu e s\'ùrtimu capìtulu lèghidu dae sos servìtzios de arrastamentu</string>
     <string name="version">Versione</string>
     <string name="pref_enable_acra">Imbia raportos a pitzu de sos arrestos anòmalos</string>
     <string name="pref_acra_summary">Agiudat a acontzare cale si siat faddina. Perunu datu sensìbile at a èssere imbiadu</string>
@@ -545,8 +542,6 @@
     <string name="local_filter_order_by">Òrdina pro</string>
     <string name="local_invalid_format">Formadu de su capìtulu non vàlidu</string>
     <string name="chapter_not_found">Capìtulu no agatadu</string>
-    <string name="pref_library_update_refresh_trackers_summary">Agiorna sos arrastadores cando agiornas sa biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Annoa sos arrastadores automaticamente</string>
     <string name="off">Istudadu</string>
     <string name="on">Allutu</string>
     <string name="restrictions">Restritziones: %s</string>

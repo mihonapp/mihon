@@ -239,8 +239,7 @@
     <string name="backup_created">Nai-backup na</string>
     <string name="pref_backup_slots">Dami ng backup</string>
     <string name="pref_backup_interval">Dalas ng pag-backup</string>
-    <string name="pref_backup_service_category">Kusang mag-backup</string>
-    <string name="pref_backup_directory">Lugar ng backup</string>
+    <string name="pref_backup_directory">Lokasyon ng backup</string>
     <string name="pref_restore_backup_summ">I-restore ang Aklatan mula sa backup</string>
     <string name="pref_restore_backup">I-restore ang backup</string>
     <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang Aklatan</string>
@@ -422,8 +421,6 @@
     <string name="battery_optimization_disabled">Nakapatay na ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization">Patayin ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
-    <string name="pref_refresh_library_tracking_summary">Inia-update ang estado, iskor, at huling nabasang kabanata mula sa mga tracker</string>
-    <string name="pref_refresh_library_tracking">Sariwain ang pagta-track</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga cover sa aklatan</string>
     <string name="clear_database_completed">Binura na</string>
     <string name="clear_database_confirmation">Sigurado ka ba\? Ang mga nabasang kabanata at pag-unlad ng mga wala sa aklatan ay mawawala</string>
@@ -538,8 +535,6 @@
     <string name="notification_incognito_text">Isara ang incognito</string>
     <string name="automatic_background">Kusa</string>
     <string name="cancel_all_for_series">Ikansela lahat para sa seryeng ito</string>
-    <string name="pref_library_update_refresh_trackers_summary">I-update ang tracker tuwing nag-a-update ang Aklatan</string>
-    <string name="pref_library_update_refresh_trackers">Kusang sariwain ang tracker</string>
     <string name="local_filter_order_by">Ayusin ayon sa</string>
     <string name="restrictions">Restriksyon: %s</string>
     <string name="error_no_match">Walang nahanap na kapares</string>
@@ -822,4 +817,5 @@
     <string name="source_settings">Mga setting ng source</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
+    <string name="label_data_storage">Data at storage</string>
 </resources>

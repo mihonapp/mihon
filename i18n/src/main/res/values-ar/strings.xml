@@ -133,9 +133,8 @@
     <string name="pref_restore_backup">إستعادة النسخة الإحتياطية</string>
     <string name="pref_restore_backup_summ">إستعادة مكتبة من ملف نسخة إحتياطية</string>
     <string name="pref_backup_directory">موقع النسخ الإحتياطي</string>
-    <string name="pref_backup_service_category">النسخ الاحتياطيّة التلقائيّة</string>
-    <string name="pref_backup_interval">معدل النسخ الإحتياطي</string>
-    <string name="pref_backup_slots">أقصى عدد للنسخ الاحتياطيّة</string>
+    <string name="pref_backup_interval">معدل النسخ الاحتياطي التلقائي</string>
+    <string name="pref_backup_slots">أقصى عدد للنسخ الاحتياطية التلقائية</string>
     <string name="backup_created">أُنشئت نسخة احتياطية</string>
     <string name="restore_completed">اكتملت الاستعادة</string>
     <string name="backup_choice">ما الذي تريد نسخه احتياطيّاً؟</string>
@@ -154,10 +153,8 @@
     <string name="cookies_cleared">تم محو ملفات تعريف الارتباط</string>
     <string name="pref_clear_database">محو قاعدة البيانات</string>
     <string name="pref_clear_database_summary">مسح سجلّ الإدخالات التي ليست محفوظة في مكتبتك</string>
-    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ خسرتَ الفصول المقروءة وسير القراءة</string>
+    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ خسرتَ الفصول المقروءة و التقدم فى العنوانين الغير محفوظة فى المكتبة</string>
     <string name="clear_database_completed">تم حذف المدخلات</string>
-    <string name="pref_refresh_library_tracking">تحديث بيانات التتبع</string>
-    <string name="pref_refresh_library_tracking_summary">تحديث الحالة، والتقييم، وآخر فصل: عن طريق خدمات التتبع</string>
     <string name="version">اﻹصدار</string>
     <string name="pref_enable_acra">إرسال تقارير الأعطال</string>
     <string name="pref_acra_summary">هذا يساعد فى حل أي مشاكل. لن يتم إرسال أيّة بيانات حساسة</string>
@@ -234,7 +231,7 @@
     <string name="download_notifier_text_only_wifi">لا يتوفر اتصال واي فاي</string>
     <string name="download_notifier_no_network">لا يتوفر اتصال بالشبكة</string>
     <string name="download_notifier_download_paused">توقفت التنزيلات</string>
-    <string name="channel_common">عامٌّ</string>
+    <string name="channel_common">عام</string>
     <string name="label_migration">نقل</string>
     <string name="label_extensions">الإضافات</string>
     <string name="label_extension_info">معلومات الإضافة</string>
@@ -467,7 +464,7 @@
     <string name="action_sort_date_added">تاريخ الإضافة</string>
     <string name="whats_new">ما الجديد</string>
     <string name="requires_app_restart">يتطلب إعادة تشغيل التطبيق ليتم تفعيله</string>
-    <string name="label_network">شبكة الاتصال</string>
+    <string name="label_network">التشبيك</string>
     <string name="backup_restore_missing_trackers">أجهزة التتبع التي لم يتم تسجيل الدخول إليها:</string>
     <string name="pref_remove_bookmarked_chapters">حذف الفصول ذات العلامة المرجعية</string>
     <string name="pref_category_delete_chapters">حذف الفصول</string>
@@ -530,7 +527,7 @@
     <string name="pref_incognito_mode">الوضع المخفي</string>
     <string name="pref_clear_history">مسح السجل</string>
     <string name="spen_next_page">الصفحة التالية</string>
-    <string name="spen_previous_page">الصفحة سابقة</string>
+    <string name="spen_previous_page">الصفحة السابقة</string>
     <string name="migration_help_guide">دليل ترحيل المصدر</string>
     <string name="pref_category_nsfw_content">محتوى +18</string>
     <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
@@ -597,8 +594,6 @@
     <string name="local_invalid_format">تنسيق الفصل غير صالح</string>
     <string name="tracking_guide">تعليمات التعقب</string>
     <string name="categorized_display_settings">إعدادات فرز كل صنف</string>
-    <string name="pref_library_update_refresh_trackers_summary">تحديث المتعقبات عند تحديث المكتبة</string>
-    <string name="pref_library_update_refresh_trackers">تحديث المتعقبات تلقائياً</string>
     <string name="cancel_all_for_series">إلغاء الكل لهذه السلسلة</string>
     <string name="action_display_local_badge">مصدر محلّي</string>
     <string name="information_empty_category_dialog">ليس لديك اي قوائم بعد.</string>
@@ -687,7 +682,7 @@
     <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
     <string name="notification_update_skipped">تُخُطِّي %1$d تحديث أو تحديثات</string>
     <string name="learn_more">اضغط لقراءة المزيد</string>
-    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية الهجرة من إصدارات F-Droid غير الرسمية.</string>
+    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية التحويل من إصدارات F-Droid غير الرسمية.</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
     <string name="action_close">اغلاق</string>
@@ -761,7 +756,7 @@
     <string name="pref_downloads_summary">التحميل التلقائي، التحميل مقدما</string>
     <string name="pref_tracking_summary">تزامن التقدم أحادي الاتجاه، مزامنة محسّنة</string>
     <string name="pref_browse_summary">المصادر، الامتدادات، البحث العالمي</string>
-    <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي</string>
+    <string name="pref_backup_summary">النسخ الاحتياطي اليدوي والآلي وحيِّز التخزين</string>
     <string name="pref_security_summary">قفل التطبيق، شاشة آمنة</string>
     <string name="pref_advanced_summary">تفريغ سجلات الأعطال وتحسينات البطارية</string>
     <string name="fdroid_warning">لا يتم دعم إصدارات F-Droid رسميا.
@@ -872,10 +867,10 @@
     <string name="licensed_manga_chapters_error">مرخَّصة - لا فصول</string>
     <string name="track_activity_name">ولوج المتتبِّع</string>
     <string name="download_cache_invalidated">أُفسد فهرس التنزيلات</string>
-    <string name="information_cloudflare_help">اضغط هنا تتحرَّ كلاودفلير</string>
+    <string name="information_cloudflare_help">اضغط هنا للمساعدة فى Cloudflare</string>
     <string name="exception_offline">لا اتصال بالإنترنت</string>
     <string name="exception_http">خطأ HTTP %d، انظر في WebView</string>
-    <string name="exception_unknown_host">لم نصل %s</string>
+    <string name="exception_unknown_host">لا يمكن الوصول إلى %s</string>
     <string name="unlock_app_title">افتح %s</string>
     <string name="action_move_to_bottom_all_for_series">انقل السلسلة للقعر</string>
     <string name="pref_relative_format">التوقيت النسبي</string>
@@ -886,4 +881,5 @@
     <string name="source_settings">إعدادات المصادر</string>
     <string name="app_settings">إعدادات التطبيق</string>
     <string name="file_null_uri_error">ما استطاع محدِّد الملفات من إدخال الملف في التطبيق</string>
+    <string name="label_data_storage">البيانات والتخزين</string>
 </resources>

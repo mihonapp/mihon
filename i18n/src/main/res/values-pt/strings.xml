@@ -246,7 +246,6 @@
     <string name="pref_create_backup_summ">Pode ser usado para restaurar a biblioteca atual</string>
     <string name="pref_restore_backup">Restaurar cópia de segurança</string>
     <string name="pref_restore_backup_summ">Restaurar biblioteca a partir de cópia de segurança</string>
-    <string name="pref_backup_service_category">Cópias de segurança automáticas</string>
     <string name="pref_backup_interval">Frequência de cópia de segurança</string>
     <string name="restoring_backup">Restaurando cópia de segurança</string>
     <string name="creating_backup">Criando cópia de segurança</string>
@@ -269,8 +268,6 @@
     <string name="action_open_in_web_view">Abrir em WebView</string>
     <string name="pref_true_color">Cores 32-bit</string>
     <string name="pref_skip_read_chapters">Ignorar capítulos marcados como lido</string>
-    <string name="pref_refresh_library_tracking">Atualizar monitorização</string>
-    <string name="pref_refresh_library_tracking_summary">Atualiza estado, avaliações e últimos capítulos lidos dos serviços de monitorização</string>
     <string name="no_more_results">Sem mais resultados</string>
     <string name="local_source">Fonte local</string>
     <string name="other_source">Outras</string>
@@ -610,8 +607,6 @@
     <string name="source_unsupported">Fonte não é suportada</string>
     <string name="enhanced_tracking_info">Serviços que oferecem recursos aprimorados para fontes específicas. Os itens são automaticamente monitorados quando adicionados na sua biblioteca.</string>
     <string name="enhanced_services">Serviços melhorados</string>
-    <string name="pref_library_update_refresh_trackers">Atualizar monitorizadores automaticamente</string>
-    <string name="pref_library_update_refresh_trackers_summary">Atualizar monitorizadores ao atualizar biblioteca</string>
     <string name="getting_started_guide">Guia de introdução</string>
     <string name="theme_tealturquoise">Azul-petróleo e Turquesa</string>
     <plurals name="relative_time">

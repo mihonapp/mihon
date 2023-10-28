@@ -317,7 +317,6 @@
     <string name="error_user_agent_string_blank">O axente de usuario non pode estar vacío</string>
     <string name="used_cache">Usado: %1$s</string>
     <string name="pref_auto_clear_chapter_cache">Borrar a caché dos capítulos ao pechar a aplicación</string>
-    <string name="pref_refresh_library_tracking_summary">Actualizar o estado, as puntuacións e os últimos capítulos lidos dende os servizos de seguemento</string>
     <string name="battery_optimization_setting_activity_not_found">Non se puideron abrir os axustes do dispositivo</string>
     <string name="pref_enable_acra">Enviar informes de erros</string>
     <string name="tabs_header">Lapelas</string>
@@ -382,7 +381,6 @@
     <string name="enhanced_services">Servizos mellorados</string>
     <string name="enhanced_tracking_info">Estes servizos proporcionan funcións melloradas para fontes concretas. Faise un seguemento automático dos elementos ao engadilos á biblioteca.</string>
     <string name="pref_backup_directory">Localización da copia de seguridade</string>
-    <string name="pref_backup_service_category">Copias de seguridade automáticas</string>
     <string name="backup_in_progress">Xa se está facendo unha copia de seguridade</string>
     <string name="pref_dump_crash_logs">Compartir os rexistros de erros</string>
     <string name="error_sharing_cover">Error ao compartir a portada</string>
@@ -422,7 +420,6 @@
     <string name="database_clean">Non hai nada que borrar</string>
     <string name="pref_clear_webview_data">Borrar os datos do WebView</string>
     <string name="pref_reset_viewer_flags_summary">Restablecer o modo de lectura e a orientación de tódalas series</string>
-    <string name="pref_refresh_library_tracking">Actualizar o seguemento</string>
     <string name="action_sort_unread_count">Número de non lidos</string>
     <string name="action_show_manga">Mostrar o elemento</string>
     <string name="action_sort_chapter_fetch_date">Data de obtención dos capítulos</string>
@@ -450,8 +447,6 @@
     <string name="theme_tealturquoise">Azul mariño e turquesa</string>
     <string name="theme_yinyang">Yin e Yang</string>
     <string name="pref_dark_theme_pure_black">Modo negro puro</string>
-    <string name="pref_library_update_refresh_trackers">Actualizar automaticamente os servizos de seguemento</string>
-    <string name="pref_library_update_refresh_trackers_summary">Actualizar os servizos de seguemento ao actualizar a biblioteca</string>
     <string name="include">Incluír: %s</string>
     <string name="extension_api_error">Non se puido baixar a listaxe de extensións</string>
     <string name="pref_clear_database">Borrar a base de datos</string>

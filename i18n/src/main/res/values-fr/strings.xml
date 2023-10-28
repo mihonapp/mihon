@@ -243,7 +243,6 @@
     <string name="action_open_log">Ouvrir le fichier</string>
     <string name="action_restore">Restaurer</string>
     <string name="pref_backup_directory">Dossier de sauvegarde</string>
-    <string name="pref_backup_service_category">Sauvegardes automatiques</string>
     <string name="restore_completed">Restauration terminée</string>
     <string name="backup_choice">Que voulez-vous sauvegarder \?</string>
     <string name="delete_downloads_for_manga">Supprimer les chapitres téléchargés ?</string>
@@ -258,8 +257,6 @@
     <string name="backup_created">Sauvegarde créée</string>
     <string name="restoring_backup">Restauration de sauvegarde en cours</string>
     <string name="creating_backup">Création de sauvegarde en cours</string>
-    <string name="pref_refresh_library_tracking">Actualiser les métadonnées de suivi</string>
-    <string name="pref_refresh_library_tracking_summary">Actualise le statut, la note et le dernier chapitre lu depuis les services de suivi</string>
     <string name="default_category_summary">Toujours demander</string>
     <string name="pref_read_with_volume_keys_inverted">Inverser les boutons de volume</string>
     <string name="pref_crop_borders">Rogner les bordures</string>
@@ -589,8 +586,6 @@
     <string name="chapter_not_found">Chapitre non trouvé</string>
     <string name="rotation_type">Rotation</string>
     <string name="automatic_background">Auto</string>
-    <string name="pref_library_update_refresh_trackers_summary">Mettre à jour les services de suivi lors de la mise à jour de la bibliothèque</string>
-    <string name="pref_library_update_refresh_trackers">Actualiser automatiquement les services de suivi</string>
     <string name="restrictions">Restrictions : %s</string>
     <string name="cancel_all_for_series">Tout annuler pour cette série</string>
     <string name="action_display_local_badge">Source locale</string>

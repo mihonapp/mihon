@@ -113,7 +113,6 @@
     <string name="pref_restore_backup">Back-up herstellen</string>
     <string name="pref_restore_backup_summ">Herstellen van back-up bestand</string>
     <string name="pref_backup_directory">Back-uplocatie</string>
-    <string name="pref_backup_service_category">Automatische backups</string>
     <string name="pref_backup_interval">Back-upfrequentie</string>
     <string name="pref_backup_slots">Maximaal aantal back-ups</string>
     <string name="backup_created">Back-up gemaakt</string>
@@ -124,7 +123,6 @@
     <string name="used_cache">Gebruikt: %1$s</string>
     <string name="pref_clear_cookies">Verwijder cookies</string>
     <string name="cookies_cleared">Cookies verwijdered</string>
-    <string name="pref_refresh_library_tracking_summary">Update status, score en laatst gelezen hoofdstuk van de trackingdiensten</string>
     <string name="version">Versie</string>
     <string name="login_title">Log in op %1$s</string>
     <string name="username">Gebruikersnaam</string>
@@ -204,7 +202,6 @@
     <string name="cache_delete_error">Fout opgetreden tijdens het wissen</string>
     <string name="pref_clear_database">Database leegmaken</string>
     <string name="pref_clear_database_summary">Verwijder geschiedenis voor items die niet in je bibliotheek zijn opgeslagen</string>
-    <string name="pref_refresh_library_tracking">Tracking bijwerken</string>
     <string name="pref_enable_acra">Rapporteer bugs</string>
     <string name="pref_acra_summary">Helpt bij het oplossen van bugs. Er wordt geen gevoelige data verzonden</string>
     <string name="information_no_recent_manga">Niks recent gelezen</string>
@@ -554,8 +551,6 @@
     <string name="off">Uit</string>
     <string name="on">Aan</string>
     <string name="categorized_display_settings">Instellingen per categorie voor sorteren en weergeven</string>
-    <string name="pref_library_update_refresh_trackers_summary">Trackers bijwerken bij het bijwerken van de bibliotheek</string>
-    <string name="pref_library_update_refresh_trackers">Trackers automatisch vernieuwen</string>
     <string name="action_display_local_badge">Lokale bron</string>
     <string name="information_empty_category_dialog">Er zijn nog geen categorieën.</string>
     <string name="action_start_downloading_now">Begin nu met downloaden</string>

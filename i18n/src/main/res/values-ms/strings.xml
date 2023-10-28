@@ -138,7 +138,6 @@
     <string name="pref_restore_backup">Pulihkan sandaran</string>
     <string name="pref_restore_backup_summ">Pulihkan pustaka daripada fail sandaran</string>
     <string name="pref_backup_directory">Lokasi sandaran</string>
-    <string name="pref_backup_service_category">Sandaran automatik</string>
     <string name="pref_backup_interval">Kekerapan sandaran</string>
     <string name="pref_backup_slots">Sandaran maksimum</string>
     <string name="backup_created">Sandaran dicipta</string>
@@ -156,8 +155,6 @@
     <string name="pref_clear_database_summary">Hapus sejarah entri yang tidak disimpan di dalam pustaka</string>
     <string name="clear_database_confirmation">Adakah anda pasti\? Bab dibaca dan kemajuan entri bukan-pustaka akan hilang</string>
     <string name="clear_database_completed">Entri dihapuskan</string>
-    <string name="pref_refresh_library_tracking">Segar semula penjejakan</string>
-    <string name="pref_refresh_library_tracking_summary">Kemas kini status, skor dan bab terakhir dibaca dari perkhidmatan penjejakan</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Hantar laporan ranap</string>
     <string name="pref_acra_summary">Bantu membaiki aplikasi. Tiada data sensitif dihantar</string>
@@ -534,8 +531,6 @@
     <string name="local_filter_order_by">Susun mengikut</string>
     <string name="local_invalid_format">Format bab tidak sah</string>
     <string name="chapter_not_found">Bab tidak dijumpai</string>
-    <string name="pref_library_update_refresh_trackers_summary">Kemas kini penjejak ketika mengemaskini pustaka</string>
-    <string name="pref_library_update_refresh_trackers">Segar semula penjejak secara automatik</string>
     <string name="restrictions">Sekatan: %s</string>
     <string name="action_display_local_badge">Sumber setempat</string>
     <string name="off">Mati</string>

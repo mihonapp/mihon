@@ -192,8 +192,6 @@
     <string name="pref_library_update_restriction">Awtomatikong pag-update sa mga pagdili sa device</string>
     <string name="connected_to_wifi">Sa Wi-Fi lang</string>
     <string name="pref_update_only_non_completed">Uban sa \"Nakumpleto\" nga kahimtang</string>
-    <string name="pref_library_update_refresh_trackers_summary">Pag-update sa mga tracker kung nag-update sa librarya</string>
-    <string name="pref_library_update_refresh_trackers">Awtomatikong i-refresh ang mga tracker</string>
     <string name="default_category">Default nga kategorya</string>
     <string name="update_72hour">Kada 3 ka adlaw</string>
     <string name="pref_library_update_refresh_metadata_summary">Susiha ang bag-ong hapin ug mga detalye kung mag-update sa librarya</string>
@@ -387,7 +385,6 @@
 \nKinahanglan nimo nga i-install ang bisan unsang nawala nga mga extension ug mag-log in sa mga serbisyo sa pagsubay pagkahuman aron magamit kini.</string>
     <string name="restore_completed">Nakompleto ang pag-uli</string>
     <string name="creating_backup">Paghimo og backup</string>
-    <string name="pref_backup_service_category">Awtomatikong pag-backup</string>
     <string name="backup_restore_missing_trackers">Ang mga tracker wala naka-log in:</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Nabuhat sa %1$s nga adunay %2$s nga sayup</item>
@@ -408,7 +405,6 @@
     <string name="used_cache">Gigamit: %1$s</string>
     <string name="database_clean">Limpyo ang database</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga hapin sa librarya</string>
-    <string name="pref_refresh_library_tracking_summary">Mga update sa status, score ug katapusang kapitulo nga gibasa gikan sa mga serbisyo sa pagsubay</string>
     <string name="pref_dump_crash_logs">Dump crash logs</string>
     <string name="pref_verbose_logging_summary">I-print ang verbose logs ngadto sa system log (gipamenos ang performance sa app)</string>
     <string name="about_dont_kill_my_app">Ang ubang mga tiggama adunay dugang nga mga pagdili sa app nga nagpatay sa mga serbisyo sa background. Kini nga website adunay dugang nga impormasyon kon unsaon kini pag-ayo.</string>
@@ -430,7 +426,6 @@
     <string name="clear_database_completed">Gitangtang ang mga entry</string>
     <string name="pref_clear_webview_data">Tin-aw ang datos sa WebView</string>
     <string name="webview_data_deleted">Ang datos sa WebView gitangtang</string>
-    <string name="pref_refresh_library_tracking">I-refresh ang pagsubay</string>
     <string name="pref_reset_viewer_flags">I-reset ang mga setting sa matag-serye nga magbabasa</string>
     <string name="pref_reset_viewer_flags_summary">I-reset ang mode sa pagbasa ug oryentasyon sa tanan nga serye</string>
     <string name="pref_reset_viewer_flags_success">Ang tanan nga mga setting sa magbabasa gi-reset</string>

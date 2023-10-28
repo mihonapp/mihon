@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">Återställ säkerhetskopia</string>
     <string name="pref_restore_backup_summ">Återställ biblioteket från en säkerhetskopia</string>
     <string name="pref_backup_directory">Säkerhetskopieringsplats</string>
-    <string name="pref_backup_service_category">Automatiska säkerhetskopior</string>
     <string name="pref_backup_interval">Säkerhetskopieringsfrekvens</string>
     <string name="pref_backup_slots">Maximala säkerhetskopior</string>
     <string name="backup_created">Säkerhetskopia skapad</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Ta bort historik för inlägg som inte finns i ditt bibliotek</string>
     <string name="clear_database_confirmation">Är du säker på det\? Lästa kapitel och framsteg för poster som inte finns i biblioteket kommer att gå förlorade</string>
     <string name="clear_database_completed">Inlägg raderade</string>
-    <string name="pref_refresh_library_tracking">Uppdatera spårning</string>
-    <string name="pref_refresh_library_tracking_summary">Uppdaterar status, betyg och senaste kapitel läst från spårningstjänsterna</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Skicka kraschrapporter</string>
     <string name="pref_acra_summary">Hjälper till att fixa eventuella buggar. Inga känsliga uppgifter skickas</string>
@@ -545,8 +542,6 @@
     <string name="local_filter_order_by">Sortera efter</string>
     <string name="local_invalid_format">Ogiltigt kapitelformat</string>
     <string name="chapter_not_found">Kapitlet hittades inte</string>
-    <string name="pref_library_update_refresh_trackers_summary">Uppdatera spårare när du uppdaterar biblioteket</string>
-    <string name="pref_library_update_refresh_trackers">Uppdatera spårare automatiskt</string>
     <string name="restrictions">Begränsningar: %s</string>
     <string name="action_display_local_badge">Lokal källa</string>
     <string name="off">Av</string>

@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">还原备份</string>
     <string name="pref_restore_backup_summ">从备份文件中还原</string>
     <string name="pref_backup_directory">备份路径</string>
-    <string name="pref_backup_service_category">自动备份</string>
     <string name="pref_backup_interval">备份频率</string>
     <string name="pref_backup_slots">最大备份数</string>
     <string name="backup_created">已创建备份</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">删除未添加到书架的作品记录</string>
     <string name="clear_database_confirmation">你确定吗？不在书架中的作品的已读章节和进度将会丢失</string>
     <string name="clear_database_completed">数据已删除</string>
-    <string name="pref_refresh_library_tracking">更新进度记录</string>
-    <string name="pref_refresh_library_tracking_summary">从记录平台更新阅读状态、评分和进度</string>
     <string name="version">版本</string>
     <string name="pref_enable_acra">发送错误报告</string>
     <string name="pref_acra_summary">协助我们修复错误，发送的错误报告不包含个人敏感信息</string>
@@ -534,8 +531,6 @@
     <string name="local_filter_order_by">排序依据</string>
     <string name="local_invalid_format">无效的章节格式</string>
     <string name="chapter_not_found">未找到章节</string>
-    <string name="pref_library_update_refresh_trackers_summary">更新书架时一并更新进度记录平台</string>
-    <string name="pref_library_update_refresh_trackers">自动更新进度记录</string>
     <string name="restrictions">限制：%s</string>
     <string name="action_display_local_badge">本地图源</string>
     <string name="off">关闭</string>
@@ -649,11 +644,11 @@
     <string name="ext_info_age_rating">年龄分级</string>
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">语言</string>
-    <string name="reading_list">阅读列表</string>
-    <string name="wish_list">想读列表</string>
-    <string name="complete_list">读完列表</string>
-    <string name="unfinished_list">未读完列表</string>
-    <string name="on_hold_list">稍后读列表</string>
+    <string name="reading_list">阅读中</string>
+    <string name="wish_list">计划读</string>
+    <string name="complete_list">已完结</string>
+    <string name="unfinished_list">已放弃</string>
+    <string name="on_hold_list">搁置中</string>
     <string name="network_not_metered">仅在不按流量计费网络中</string>
     <string name="cant_open_last_read_chapter">打不开最后阅读章节</string>
     <string name="custom_cover">自定义封面</string>
@@ -798,4 +793,12 @@
     <string name="exception_unknown_host">无法连接到 %s</string>
     <string name="source_settings">图源设置</string>
     <string name="app_settings">应用设置</string>
+    <string name="unlock_app_title">解锁 %s</string>
+    <string name="action_sort_category">分类排序</string>
+    <string name="action_move_to_bottom_all_for_series">将作品移到底部</string>
+    <string name="notification_updating_progress">书架更新中…(%s)</string>
+    <string name="sort_category_confirmation">是否按字母顺序对分类进行排序？</string>
+    <string name="file_null_uri_error">文件选择器无法将文件恢复至应用</string>
+    <string name="pref_relative_format">相对时间戳</string>
+    <string name="pref_relative_format_summary">以\"%1$s\" 表示 \"%2$s\"</string>
 </resources>

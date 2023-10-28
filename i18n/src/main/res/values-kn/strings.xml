@@ -125,7 +125,6 @@
     <string name="backup_created">ಬ್ಯಾಕಪ್ ರಚಿಸಲಾಗಿದೆ</string>
     <string name="pref_backup_slots">ಗರಿಷ್ಠ ಬ್ಯಾಕಪ್‌ಗಳು</string>
     <string name="pref_backup_interval">ಬ್ಯಾಕಪ್ ಆವರ್ತನ</string>
-    <string name="pref_backup_service_category">ಸ್ವಯಂಚಾಲಿತ ಬ್ಯಾಕಪ್</string>
     <string name="pref_backup_directory">ಬ್ಯಾಕಪ್ ಸ್ಥಳ</string>
     <string name="pref_restore_backup_summ">ಬ್ಯಾಕಪ್ ಫೈಲ್‌ನಿಂದ ಗ್ರಂಥಾಲಯವನ್ನು ಮರುಸ್ಥಾಪಿಸಿ</string>
     <string name="pref_restore_backup">ಬ್ಯಾಕಪ್ ಮರುಸ್ಥಾಪಿಸಿ</string>
@@ -390,8 +389,6 @@
     <string name="battery_optimization_disabled">ಬ್ಯಾಟರಿ ಆಪ್ಟಿಮೈಸೇಶನ್ ಅನ್ನು ಈಗಾಗಲೇ ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ</string>
     <string name="pref_disable_battery_optimization_summary">ಹಿನ್ನೆಲೆ ಗ್ರಂಥಾಲಯದ ನವೀಕರಣಗಳು ಮತ್ತು ಬ್ಯಾಕಪ್‌ಗಳೊಂದಿಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ</string>
     <string name="pref_disable_battery_optimization">ಬ್ಯಾಟರಿ ಆಪ್ಟಿಮೈಸೇಶನ್ ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
-    <string name="pref_refresh_library_tracking_summary">ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇವೆಗಳಿಂದ ಓದಿದ ಸ್ಥಿತಿ, ಸ್ಕೋರ್ ಮತ್ತು ಕೊನೆಯ ಅಧ್ಯಾಯವನ್ನು ನವೀಕರಿಸಿ</string>
-    <string name="pref_refresh_library_tracking">ಟ್ರ್ಯಾಕಿಂಗ್ ಅನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="pref_refresh_library_covers">ಗ್ರಂಥಾಲಯದ ಮಾಂಗಾ ಕವರ್‌ಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="clear_database_completed">ನಮೂದುಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="clear_database_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ\? ಅಧ್ಯಾಯಗಳು ಗ್ರಂಥಾಲಯೇತರ ಮಾಂಗಾದ ಓದು ಮತ್ತು ಪ್ರಗತಿ ಕಳೆದುಹೋಗುತ್ತದೆ</string>
@@ -555,8 +552,6 @@
     <string name="off">ಆಫ</string>
     <string name="on">ಆನ್</string>
     <string name="categorized_display_settings">ಪ್ರತಿ ವರ್ಗದ ವಿಂಗಡಣೆ ಮತ್ತು ಪ್ರದರ್ಶನಕ್ಕಾಗಿ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
-    <string name="pref_library_update_refresh_trackers_summary">ಲೈಬ್ರರಿಯನ್ನು ನವೀಕರಿಸುವಾಗ ಟ್ರ್ಯಾಕರ್‌ಗಳನ್ನು ನವೀಕರಿಸಿ</string>
-    <string name="pref_library_update_refresh_trackers">ಟ್ರ್ಯಾಕರ್‌ಗಳನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="restrictions">ನಿರ್ಬಂಧಗಳು: %s</string>
     <string name="action_start_downloading_now">ಈಗಲೇ ಡೌನ್‌ಲೋಡ್ ಪ್ರಾರಂಭಿಸಿ</string>
 </resources>

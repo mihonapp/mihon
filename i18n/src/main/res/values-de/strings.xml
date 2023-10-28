@@ -135,7 +135,6 @@
     <string name="pref_restore_backup">Datensicherung wiederherstellen</string>
     <string name="pref_restore_backup_summ">Bibliothek mit Hilfe einer Datensicherung wiederherstellen</string>
     <string name="pref_backup_directory">Sicherungsspeicherort</string>
-    <string name="pref_backup_service_category">Automatische Datensicherungen</string>
     <string name="pref_backup_interval">Datensicherungshäufigkeit</string>
     <string name="pref_backup_slots">Maximale Datensicherungen</string>
     <string name="backup_created">Datensicherung erstellt</string>
@@ -153,8 +152,6 @@
     <string name="pref_clear_database_summary">Verlauf für Einträge löschen, die nicht in deiner Bibliothek gespeichert sind</string>
     <string name="clear_database_confirmation">Bist du dir sicher\? Die gelesenen Kapitel und Fortschritte von Einträgen, die nicht in deiner Bibliothek sind, werden gelöscht</string>
     <string name="clear_database_completed">Einträge gelöscht</string>
-    <string name="pref_refresh_library_tracking">Tracking aktualisieren</string>
-    <string name="pref_refresh_library_tracking_summary">Synchronisiert den Lesestatus, die Bewertung und das zuletzt gelesene Kapitel mit den angemeldeten Trackinganbietern</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Fehlerberichte senden</string>
     <string name="pref_acra_summary">Hilft bei der Behebung von Fehlern. Keine sensiblen Daten werden gesendet</string>
@@ -545,8 +542,6 @@
     <string name="local_filter_order_by">Sortiere nach</string>
     <string name="local_invalid_format">Ungültiges Kapitelformat</string>
     <string name="chapter_not_found">Kapitel nicht gefunden</string>
-    <string name="pref_library_update_refresh_trackers_summary">Tracker aktualisieren, wenn die Bibliothek aktualisiert wird</string>
-    <string name="pref_library_update_refresh_trackers">Tracker automatisch aktualisieren</string>
     <string name="restrictions">Einschränkungen: %s</string>
     <string name="action_display_local_badge">Lokale Quelle</string>
     <string name="off">Aus</string>
@@ -605,7 +600,7 @@
     <string name="action_display_language_badge">Sprache</string>
     <string name="label_warning">Warnung</string>
     <string name="notification_size_warning">Große Aktualisierungen schaden Quellen und könnten zu langsameren Aktualisierungen sowie höherem Akkuverbrauch führen. Tippe, um mehr zu erfahren.</string>
-    <string name="backup_info">Du solltest auch Kopien der Sicherungen an anderen Orten aufbewahren. Sicherungen beinhalten möglicherweise sensible Daten, einschließlich jeglicher gespeicherten Passwörter. Vorsicht beim Teilen.</string>
+    <string name="backup_info">Du solltest Kopien der Sicherungen auch an anderen Orten aufbewahren. Sicherungen beinhalten möglicherweise sensible Daten, einschließlich gespeicherter Passwörter. Sei vorsichtig beim Teilen.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Tachiyomi blockieren. Tippe, um mehr zu erfahren.</string>
@@ -821,4 +816,5 @@
     <string name="notification_updating_progress">Bibliothek wird aktualisiert… (%s)</string>
     <string name="action_sort_category">Kategorien sortieren</string>
     <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren\?</string>
+    <string name="file_null_uri_error">Dateiauswahl konnte keine Datei an die App zurückgeben</string>
 </resources>

@@ -137,9 +137,8 @@
     <string name="pref_restore_backup">Restaurar backup</string>
     <string name="pref_restore_backup_summ">Restaura a biblioteca de um arquivo de backup</string>
     <string name="pref_backup_directory">Local de backup</string>
-    <string name="pref_backup_service_category">Backups automáticos</string>
-    <string name="pref_backup_interval">Frequência de backup</string>
-    <string name="pref_backup_slots">Máximo de backups</string>
+    <string name="pref_backup_interval">Frequência de backup automático</string>
+    <string name="pref_backup_slots">Máximo de backups automáticos</string>
     <string name="backup_created">Backup criado</string>
     <string name="restore_completed">Restauração concluída</string>
     <string name="backup_choice">Do que você deseja fazer backup\?</string>
@@ -155,8 +154,6 @@
     <string name="pref_clear_database_summary">Exclui o histórico de itens que não estão salvos em sua biblioteca</string>
     <string name="clear_database_confirmation">Tem certeza\? Os capítulos lidos e o progresso em itens que não estão na sua biblioteca serão perdidos</string>
     <string name="clear_database_completed">Entradas excluídas</string>
-    <string name="pref_refresh_library_tracking">Atualizar o monitoramento</string>
-    <string name="pref_refresh_library_tracking_summary">Atualiza os estados, as avaliações e os últimos capítulos lidos dos serviços de monitoramento</string>
     <string name="version">Versão</string>
     <string name="pref_enable_acra">Enviar relatórios de erro</string>
     <string name="pref_acra_summary">Ajuda a corrigir eventuais erros. Nenhum dado sensível será enviado</string>
@@ -556,8 +553,6 @@
     <string name="local_filter_order_by">Ordenar por</string>
     <string name="local_invalid_format">Formato de capítulo inválido</string>
     <string name="chapter_not_found">Capítulo não encontrado</string>
-    <string name="pref_library_update_refresh_trackers_summary">Atualizar os monitoradores durante a atualização da biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Atualizar os monitoradores automaticamente</string>
     <string name="restrictions">Restrições: %s</string>
     <string name="action_display_local_badge">Fonte local</string>
     <string name="off">Desligado</string>
@@ -719,7 +714,7 @@
     <string name="pref_downloads_summary">Download automático, download a frente</string>
     <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
     <string name="pref_browse_summary">Fontes, extensões, pesquisa global</string>
-    <string name="pref_backup_summary">Backups manuais e automáticos</string>
+    <string name="pref_backup_summary">Backups manuais e automáticos, espaço de armazenamento</string>
     <string name="pref_security_summary">Bloqueio do aplicativo, tela segura</string>
     <string name="pref_advanced_summary">Exportar registros de travamento, otimizações de bateria</string>
     <string name="crash_screen_title">Ooops!</string>
@@ -838,4 +833,5 @@
     <string name="action_sort_category">Ordenar as categorias</string>
     <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente\?</string>
     <string name="file_null_uri_error">O seletor de arquivos não retornou o arquivo para o aplicativo</string>
+    <string name="label_data_storage">Dados e armazenamento</string>
 </resources>

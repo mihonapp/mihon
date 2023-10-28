@@ -159,8 +159,7 @@
     <string name="restore_completed">Obnavljanje je završeno</string>
     <string name="backup_created">Sigurnosna kopija je stvorena</string>
     <string name="pref_backup_slots">Maksimalni broj sigurnosnih kopija</string>
-    <string name="pref_backup_interval">Učestalost spremanja sigurnosnih kopija</string>
-    <string name="pref_backup_service_category">Automatsko spremanje sigurnosnih kopija</string>
+    <string name="pref_backup_interval">Učestalost automatskog spremanja sigurnosnih kopija</string>
     <string name="pref_backup_directory">Mjesto spremanja sigurnosnih kopija</string>
     <string name="pref_restore_backup_summ">Obnovi biblioteku iz sigurnosne kopije</string>
     <string name="pref_restore_backup">Obnovi sigurnosnu kopiju</string>
@@ -370,8 +369,6 @@
     <string name="battery_optimization_disabled">Optimiranje baterije je već isključeno</string>
     <string name="pref_disable_battery_optimization_summary">Pomaže pri ažuriranju biblioteke u pozadini i spremanju sigurnosnih kopija</string>
     <string name="pref_disable_battery_optimization">Deaktiviraj optimiranje baterije</string>
-    <string name="pref_refresh_library_tracking_summary">Aktualizira stanje, ocjenu i zadnje pročitano poglavlje iz usluga za praćenje</string>
-    <string name="pref_refresh_library_tracking">Aktualiziraj praćenje</string>
     <string name="clear_database_completed">Unosi su izbrisani</string>
     <string name="clear_database_confirmation">Sigurno\? Pročitana poglavlja i tijek unosa koji nisu u biblioteci će se izgubiti</string>
     <string name="pref_clear_database_summary">Izbriši povijest za unose koji nisu spremljeni u biblioteci</string>
@@ -446,7 +443,7 @@
         <item quantity="other">%1$s poglavlja</item>
     </plurals>
     <string name="requires_app_restart">Zahtijeva ponovno pokretanje programa</string>
-    <string name="label_network">Mreža</string>
+    <string name="label_network">Umreženi rad</string>
     <string name="tapping_inverted_both">Oboje</string>
     <string name="tapping_inverted_vertical">Okomito</string>
     <string name="tapping_inverted_horizontal">Vodoravno</string>
@@ -566,8 +563,6 @@
     <string name="off">Isključeno</string>
     <string name="on">Uključeno</string>
     <string name="categorized_display_settings">Postavke kategorija za sortiranje</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aktualiziraj usluge praćenja prilikom aktualiziranja biblioteke</string>
-    <string name="pref_library_update_refresh_trackers">Automatski aktualiziraj usluge praćenja</string>
     <string name="restrictions">Ograničenja: %s</string>
     <string name="action_start_downloading_now">Pokreni preuzimanje sada</string>
     <string name="about_dont_kill_my_app">Neki proizvođači imaju dodatna programska ograničenja koja onemogućuju pozadinske usluge. Ova web-stranica sadrži daljnje informacije o tome kako to popraviti.</string>
@@ -693,7 +688,7 @@
     <string name="label_local">Lokalno</string>
     <string name="action_search_hint">Traži …</string>
     <string name="pref_library_summary">Kategorije, globalno ažuriranje, prelistavanje poglavlja</string>
-    <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije</string>
+    <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije, memorija</string>
     <string name="label_stats">Statistike</string>
     <string name="label_downloaded">Preuzeto</string>
     <string name="action_display_show_continue_reading_button">Gumb za nastavljanje čitanja</string>
@@ -788,7 +783,7 @@
     </plurals>
     <string name="pref_page_rotate">Prilagodi prikaz širokih stranica okretanjem</string>
     <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
-    <string name="pref_debug_info">Informacije otklanjanja grešaka</string>
+    <string name="pref_debug_info">Informacije o otklanjanju grešaka</string>
     <string name="pref_library_columns_per_row">%d po retku</string>
     <string name="pref_chapter_swipe_start">Prelistaj ulijevo</string>
     <string name="pref_double_tap_zoom">Dodirni dvaput za zumiranje</string>
@@ -838,4 +833,5 @@
     <string name="file_null_uri_error">Program za biranje datoteka nije uspio vratiti datoteku u aplikaciju</string>
     <string name="source_settings">Postavke izvora</string>
     <string name="app_settings">Postavke aplikacije</string>
+    <string name="label_data_storage">Podaci i spremište</string>
 </resources>

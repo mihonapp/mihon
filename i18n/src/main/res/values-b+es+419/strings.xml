@@ -293,7 +293,6 @@
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="pref_backup_slots">Máximo de copias de seguridad</string>
     <string name="pref_backup_interval">Frecuencia de respaldo</string>
-    <string name="pref_backup_service_category">Copias de seguridad automáticas</string>
     <string name="pref_backup_directory">Directorio de copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar biblioteca desde archivo de copia de seguridad</string>
     <string name="cache_deleted">Caché borrada. %1$d archivos se han eliminado</string>
@@ -305,8 +304,6 @@
     <string name="battery_optimization_disabled">La optimización de la batería ya está desactivada</string>
     <string name="pref_disable_battery_optimization_summary">Ayuda con las actualizaciones y las copias de seguridad de biblioteca en segundo plano</string>
     <string name="pref_disable_battery_optimization">Desactivar optimización de batería</string>
-    <string name="pref_refresh_library_tracking_summary">Actualizar estado, puntuación y último capítulo leído en los servicios de seguimiento</string>
-    <string name="pref_refresh_library_tracking">Refrescar seguimiento</string>
     <string name="pref_refresh_library_covers">Actualizar portadas de la biblioteca</string>
     <string name="clear_database_completed">Entradas eliminadas</string>
     <string name="clear_database_confirmation">¿Estas seguro\? Los capítulos leídos y el progreso del manga que no estén en la biblioteca se perderán</string>
@@ -585,8 +582,6 @@
     <string name="off">Desactivado</string>
     <string name="on">Activado</string>
     <string name="pref_dual_page_invert_summary">Si la partición de la página ancha no coincide con la dirección de lectura</string>
-    <string name="pref_library_update_refresh_trackers_summary">Actualizar rastreadores al actualizar la biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Actualizar rastreadores automáticamente</string>
     <string name="restrictions">Restricciones: %s</string>
     <plurals name="relative_time">
         <item quantity="one">Ayer</item>
@@ -623,7 +618,7 @@
     <string name="ext_update_all">Actualizar todo</string>
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="privacy_policy">Política de privacidad</string>
-    <string name="backup_info">Deberías tener copias de seguridad guardadas en otros sitios también.</string>
+    <string name="backup_info">Deberías tener copias de seguridad guardadas en otros sitios también. Las copias de seguridad pueden contener datos sensibles incluyendo contraseñas guardadas; tenga cuidado si lo comparte.</string>
     <string name="publishing_finished">Publicación terminada</string>
     <string name="cancelled">Cancelado</string>
     <string name="on_hiatus">En hiatus</string>
@@ -834,7 +829,8 @@
     <string name="pref_relative_format_summary">\"%1$s\" en lugar de \"%2$s\"</string>
     <string name="action_sort_category">Ordenar categorías</string>
     <string name="notification_updating_progress">Actualizando biblioteca… (%s)</string>
-    <string name="sort_category_confirmation">Categorías</string>
+    <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
     <string name="source_settings">Configuraciónes de fuente</string>
     <string name="app_settings">Configuraciones</string>
+    <string name="file_null_uri_error">El selector de archivos no pudo devolver el archivo a la aplicación</string>
 </resources>

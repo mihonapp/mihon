@@ -364,7 +364,6 @@
     </plurals>
     <string name="restore_duration">%02d min, %02d sek</string>
     <string name="backup_restore_missing_sources">Mankantaj fontoj:</string>
-    <string name="pref_backup_service_category">Aŭtomataj savkopioj</string>
     <string name="pref_category_auto_download">Aŭtomata elŝuto</string>
     <string name="last_read_chapter">Laste legita ĉapitro</string>
     <string name="rotation_type">Orientiĝa speco</string>
@@ -461,8 +460,6 @@
     <string name="pref_dual_page_split">Du-paĝa divido</string>
     <string name="unofficial_extension_message">Ĉi tiu kromaĵo ne estas de la oficiala Tachiyomi kromaĵlisto.</string>
     <string name="ext_pending">Atendantaj</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aktualigi ŝanĝspurilojn kiam ĝisdatigi bibliotekon</string>
-    <string name="pref_library_update_refresh_trackers">Aŭtomate aktualigi ŝanĝspurilojn</string>
     <string name="pref_update_only_non_completed">Nur ĝisdatigi okazantaj mangaojn</string>
     <string name="restrictions">Limigoj: %s</string>
     <string name="theme_yotsuba">Jotsuba</string>
@@ -477,7 +474,6 @@
     <string name="pref_library_update_restriction">Aktualigi limigojn</string>
     <string name="track_finished_reading_date">Findato</string>
     <string name="track_started_reading_date">Komencdato</string>
-    <string name="pref_refresh_library_tracking">Aktualigi ŝanĝspuradon</string>
     <string name="backup_restore_missing_trackers">Ŝanĝspuriloj ne ensalutintaj al:</string>
     <string name="action_filter_tracked">Ŝanĝspurata</string>
     <string name="pref_page_transitions">Animi transpaso de paĝoj</string>

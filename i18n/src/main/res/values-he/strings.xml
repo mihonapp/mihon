@@ -221,7 +221,6 @@
     <string name="battery_optimization_disabled">אופטימיזציית סוללה כבר מושבתת</string>
     <string name="pref_disable_battery_optimization_summary">עוזר בעדכוני ספריות רקע וגיבויים</string>
     <string name="pref_disable_battery_optimization">השבתת האופטימיזציה של הסוללה</string>
-    <string name="pref_refresh_library_tracking_summary">עדכן סטטוס, ציון ופרק אחרון שנקרא משירותי המעקב</string>
     <string name="clear_database_completed">הרשומות נמחקו</string>
     <string name="clear_database_confirmation">האם אתה בטוח\? פרקים שנקראו וההתקדמות של פריטים שאינם בספרייה יאבדו</string>
     <string name="pref_clear_database_summary">מחק את היסטוריית הפריטים שאינם שמורים בספריה שלך</string>
@@ -239,7 +238,6 @@
     <string name="backup_created">גיבוי נוצר</string>
     <string name="pref_backup_slots">מספר גיבויים מקסימלי</string>
     <string name="pref_backup_interval">תדירות גיבוי</string>
-    <string name="pref_backup_service_category">גיבויים אוטומטיים</string>
     <string name="pref_backup_directory">מיקום גיבוי</string>
     <string name="pref_restore_backup_summ">שחזר ספרייה מקובץ גיבוי</string>
     <string name="pref_restore_backup">שחזור גיבוי</string>
@@ -349,7 +347,6 @@
     <string name="information_no_recent_manga">שום דבר לא נקרא לאחרונה</string>
     <string name="information_no_recent">אין עידכונים אחרונים</string>
     <string name="action_filter_bookmarked">סומן</string>
-    <string name="pref_library_update_refresh_trackers">רענון עוקבים אוטומטית</string>
     <string name="label_default">ברירת המחדל</string>
     <string name="pref_app_theme">ערכת הנושא של האפליקציה</string>
     <string name="action_start_downloading_now">התחל להוריד עכשיו</string>
@@ -381,7 +378,6 @@
     <string name="parental_controls_info">זה לא מונע תוספים לא רשמיים או תוספים שעלולים לסמן באופן שגוי מלהציג תוכן NSFW (18+) בתוך האפליקציה.</string>
     <string name="relative_time_today">היום</string>
     <string name="pref_category_display">תצוגה</string>
-    <string name="pref_library_update_refresh_trackers_summary">עדכן עוקבים בעת עדכון הספרייה</string>
     <string name="action_enable_all">אפשר הכל</string>
     <string name="action_disable_all">השבת הכל</string>
     <string name="action_start">התחל</string>
@@ -779,7 +775,6 @@
     <string name="also_set_chapter_settings_for_library">קבע גם עבור כל הפריטים בספריה</string>
     <string name="network_not_metered">רק ברשת בלתי מוגבלת</string>
     <string name="pref_dump_crash_logs">שתף יומני קריסה</string>
-    <string name="pref_refresh_library_tracking">רענן מעקבים</string>
     <string name="track_remove_start_date_conf_text">פעולה זו תסיר את תאריך ההתחלה הקודם שלך מ-%s</string>
     <string name="reading_list">רשימת קריאה</string>
     <string name="wish_list">רשימת תכנונים</string>

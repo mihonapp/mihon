@@ -74,8 +74,8 @@
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Sentido de lectura normal</string>
-    <string name="left_to_right_viewer">Por páginas, de izquierda a derecha</string>
-    <string name="right_to_left_viewer">Páginas (de derecha a izquierda)</string>
+    <string name="left_to_right_viewer">Por páginas (de izquierda a derecha)</string>
+    <string name="right_to_left_viewer">Por páginas (de derecha a izquierda)</string>
     <string name="vertical_viewer">Por páginas, de arriba abajo</string>
     <string name="webtoon_viewer">Tira vertical continua</string>
     <string name="pref_image_scale_type">Método de ampliación</string>
@@ -237,7 +237,6 @@
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar la biblioteca a partir de una copia de seguridad</string>
     <string name="pref_backup_directory">Ubicación de la copia de respaldo</string>
-    <string name="pref_backup_service_category">Copias de seguridad automáticas</string>
     <string name="pref_backup_interval">Frecuencia de respaldo</string>
     <string name="pref_backup_slots">Copias de seguridad máximas</string>
     <string name="backup_created">Copia de seguridad creada</string>
@@ -245,8 +244,6 @@
     <string name="backup_choice">¿De qué quieres hacer una copia de seguridad\?</string>
     <string name="restoring_backup">Restaurando copia de seguridad</string>
     <string name="creating_backup">Creando copia de seguridad</string>
-    <string name="pref_refresh_library_tracking">Descargar datos actualizados de seguimiento</string>
-    <string name="pref_refresh_library_tracking_summary">Actualiza estados, puntuaciones y últimos capítulos leídos desde tus servicios de seguimiento</string>
     <string name="no_more_results">No hay más resultados</string>
     <string name="local_source">Fuente local</string>
     <string name="delete_downloads_for_manga">¿Eliminar los capítulos descargados\?</string>
@@ -612,8 +609,6 @@
     <string name="off">No</string>
     <string name="on">Sí</string>
     <string name="categorized_display_settings">Establecer el tipo de orden para cada categoría</string>
-    <string name="pref_library_update_refresh_trackers_summary">También intenta actualizar el historial de lectura al actualizar la biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Sincronizar automáticamente los datos en servicios de seguimiento</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Seguir</string>
     <string name="getting_started_guide">Guía de introducción</string>
@@ -819,7 +814,7 @@
     </plurals>
     <string name="pref_page_rotate">Girar las páginas anchas para adaptarlas a la pantalla</string>
     <string name="pref_page_rotate_invert">Girar las páginas anchas en la dirección opuesta</string>
-    <string name="pref_debug_info">Información de depuración</string>
+    <string name="pref_debug_info">Información sobre la depuración</string>
     <string name="pref_chapter_swipe">Deslizamiento de dedo en capítulos</string>
     <string name="pref_chapter_swipe_start">Deslizar a la izquierda</string>
     <string name="pref_chapter_swipe_end">Deslizar a la derecha</string>
@@ -868,4 +863,5 @@
     <string name="app_settings">Ajustes de la aplicación</string>
     <string name="action_sort_category">Ordenar categorías</string>
     <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
+    <string name="file_null_uri_error">La pantalla de selección de archivos no ha devuelto ningún archivo</string>
 </resources>

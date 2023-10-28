@@ -113,8 +113,6 @@
     <string name="action_sort_date_added">राखिएको मिती</string>
     <string name="action_sort_chapter_fetch_date">अध्याय ल्याएको मिति</string>
     <string name="action_sort_latest_chapter">सबैभन्दा नयाँ अध्याय</string>
-    <string name="pref_library_update_refresh_trackers_summary">पुस्तकालय अपडेट गर्दा ट्र्याकरहरू अपडेट गर्नुहोस्</string>
-    <string name="pref_library_update_refresh_trackers">ट्र्याकरहरू स्वचालित रूपमा रिफ्रेस गर्नुहोस्</string>
     <string name="pref_library_update_refresh_metadata_summary">पुस्तकालय अपडेट गर्दा नयाँ आवरण र विवरणहरूको लागि जाँच गर्नुहोस्</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा स्वतः रिफ्रेस गर्नुहोस्</string>
     <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको</string>
@@ -421,7 +419,6 @@
     <string name="zoom_start_right">दायाँ</string>
     <string name="pref_restore_backup">ब्याकअप रिस्टोर गर्नुहोस्</string>
     <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय रिस्टोर गर्नुहोस्</string>
-    <string name="pref_backup_service_category">स्वचालित ब्याकअपहरू</string>
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
     <string name="pref_backup_directory">ब्याकअप स्थान</string>
     <string name="pref_backup_interval">ब्याकअप फ्रिक्वेन्सी</string>
@@ -493,8 +490,6 @@
     <string name="pref_clear_database_summary">पुस्तकालयमा नभएका इन्ट्रीको इतिहास हटाउनुहोस्</string>
     <string name="clear_database_confirmation">के तपाईँ निश्चित हुनुहुन्छ\? तपाईंले पढ्नुभएको अध्यायहरू र गैर-पुस्तकालय इन्ट्रीहरूको प्रगति हराउनेछ</string>
     <string name="database_clean">सफा गर्न केही छैन</string>
-    <string name="pref_refresh_library_tracking">ट्र्याकिङ रिफ्रेस गर्नुहोस्</string>
-    <string name="pref_refresh_library_tracking_summary">ट्र्याकिङ सेवाहरूबाट स्थिति, स्कोर र अन्तिम पढिएको अध्याय अपडेट गर्दछ</string>
     <string name="version">संस्करण</string>
     <string name="website">वेबसाइट</string>
     <string name="help_translate">अनुवाद गर्न मद्दत गर्नुहोस्</string>

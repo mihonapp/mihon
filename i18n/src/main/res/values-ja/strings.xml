@@ -137,7 +137,6 @@
     <string name="pref_restore_backup">バックアップを復元</string>
     <string name="pref_restore_backup_summ">バックアップファイルからライブラリを復元する</string>
     <string name="pref_backup_directory">バックアップディレクトリ</string>
-    <string name="pref_backup_service_category">自動バックアップ</string>
     <string name="pref_backup_interval">バックアップ頻度</string>
     <string name="pref_backup_slots">最大バックアップ数</string>
     <string name="backup_created">バックアップが作成されました</string>
@@ -188,8 +187,6 @@
     <string name="cookies_cleared">Cookiesを削除しました</string>
     <string name="clear_database_confirmation">データベースをクリアしてもよろしいですか？ライブラリにない項目の読んだ章と読書進捗はすべて失われます</string>
     <string name="clear_database_completed">エントリーを削除しました</string>
-    <string name="pref_refresh_library_tracking">追跡情報を更新</string>
-    <string name="pref_refresh_library_tracking_summary">同期サービスでステータス、評価と最後に読んだ章を更新</string>
     <string name="pref_acra_summary">バグの修正などに役立ちます。個人情報を送信しません</string>
     <string name="unknown_error">不明なエラー</string>
     <string name="updating_category">カテゴリーを更新中</string>
@@ -540,8 +537,6 @@
     <string name="off">OFF</string>
     <string name="on">ON</string>
     <string name="categorized_display_settings">カテゴリ別のソート設定</string>
-    <string name="pref_library_update_refresh_trackers_summary">ライブラリを更新時、トラッカーも更新する</string>
-    <string name="pref_library_update_refresh_trackers">トラッカーを自動でリロード</string>
     <string name="restrictions">制限：%s</string>
     <string name="cancel_all_for_series">このシリーズの全項目をキャンセル</string>
     <string name="action_display_local_badge">ローカル ソース</string>
@@ -558,7 +553,7 @@
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="theme_monet">ダイナミック</string>
     <string name="about_dont_kill_my_app">一部のスマホメーカーはバックグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
-    <string name="label_background_activity">バックアップアクティビティ</string>
+    <string name="label_background_activity">背景活動</string>
     <string name="restore_miui_warning">MIUI最適化が有効な場合はバックアップ・復元が正常に機能しない恐れがあります。</string>
     <string name="pref_lowest">最低</string>
     <string name="pref_low">低い</string>

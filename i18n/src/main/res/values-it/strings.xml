@@ -247,12 +247,9 @@
     <string name="pref_backup_slots">Massimo numero di backup</string>
     <string name="backup_created">Backup creato</string>
     <string name="restore_completed">Ripristino completato</string>
-    <string name="pref_backup_service_category">Backup automatici</string>
     <string name="backup_choice">Di cosa vuoi fare il backup\?</string>
     <string name="restoring_backup">Ripristino backup</string>
     <string name="creating_backup">Creazione backup</string>
-    <string name="pref_refresh_library_tracking">Aggiorna tracking</string>
-    <string name="pref_refresh_library_tracking_summary">Aggiorna stato, voto e ultimo capitolo letto dal servizio di tracking</string>
     <string name="no_more_results">Nessun altro risultato</string>
     <string name="local_source">Fonte locale</string>
     <string name="delete_downloads_for_manga">Eliminare i capitoli scaricati?</string>
@@ -600,8 +597,6 @@
     <string name="manga_cover">Copertina</string>
     <string name="local_invalid_format">Formato capitolo non valido</string>
     <string name="tracking_guide">Guida al tracking</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aggiorna i tracker all\'aggiornarsi della libreria</string>
-    <string name="pref_library_update_refresh_trackers">Aggiorna automaticamente i tracker</string>
     <string name="action_start_downloading_now">Inizia a scaricare ora</string>
     <string name="about_dont_kill_my_app">Alcuni produttori hanno restrizioni aggiuntive per le app che chiudono i servizi in secondo piano. Questo sito ha più informazioni su come risolvere il problema.</string>
     <string name="pref_lowest">Più basso</string>
@@ -628,7 +623,7 @@
     <string name="pref_app_theme">Tema applicazione</string>
     <string name="confirm_lock_change">Autenticarsi per confermare le modifiche</string>
     <string name="label_default">Predefinita</string>
-    <string name="label_background_activity">Attività in secondo piano</string>
+    <string name="label_background_activity">Attività in background</string>
     <string name="restore_miui_warning">Le funzioni di backup e ripristino potrebbero non funzionare correttamente se le ottimizzazioni MIUI sono disabilitate.</string>
     <string name="enhanced_tracking_info">Offrono funzioni migliorate per fonti specifiche. Le voci sono tracciate automaticamente quando aggiunte alla libreria.</string>
     <string name="enhanced_services">Servizi di tracking migliorati</string>
@@ -870,4 +865,5 @@
     <string name="notification_updating_progress">Aggiornando libreria... (%s)</string>
     <string name="action_sort_category">Ordinamento categorie</string>
     <string name="sort_category_confirmation">Vuoi ordinare le categorie alfabeticamente\?</string>
+    <string name="file_null_uri_error">Il File picker non è riuscito a restituire il file all\'app</string>
 </resources>

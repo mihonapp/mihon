@@ -163,7 +163,6 @@
     <string name="pref_restore_backup">เรียกคืนค่าการสำรองข้อมูล</string>
     <string name="pref_restore_backup_summ">เรียกคืนค่าคลังจากแฟ้มข้อมูลสำรอง</string>
     <string name="pref_backup_directory">ตําแหน่งที่ตั้งข้อมูลสํารอง</string>
-    <string name="pref_backup_service_category">สํารองข้อมูลอัตโนมัติ</string>
     <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูล</string>
     <string name="pref_backup_slots">จำนวนการสำรองข้อมูลสูงสุด</string>
     <string name="backup_created">สร้างการสำรองข้อมูลแล้ว</string>
@@ -181,8 +180,6 @@
     <string name="pref_clear_database_summary">ลบประวัติรายการที่ไม่ได้บันทึกไว้ในคลัง</string>
     <string name="clear_database_confirmation">แน่ใจไหม\? ข้อมูลการอ่านของรายการที่ไม่ได้อยู่ในคลังจะหายไป</string>
     <string name="clear_database_completed">ลบรายการแล้ว</string>
-    <string name="pref_refresh_library_tracking">โหลดข้อมูลการติดตามใหม่</string>
-    <string name="pref_refresh_library_tracking_summary">อัปเดตสถานะคะแนนและตอนสุดท้ายที่อ่านจากบริการติดตาม</string>
     <string name="version">เวอร์ชัน</string>
     <string name="pref_enable_acra">ส่งรายงานความผิดพลาด</string>
     <string name="pref_acra_summary">ช่วยแก้ไขจุดบกพร่องต่างๆ จะไม่มีการส่งข้อมูลที่สำคัญ</string>
@@ -558,8 +555,6 @@
     <string name="channel_app_updates">แอพอัปเดต</string>
     <string name="label_default">ค่าเริ่มต้น</string>
     <string name="error_sharing_cover">ผิดพลาดในการแบ่งปันปก</string>
-    <string name="pref_library_update_refresh_trackers">โหลดตัวติดตามใหม่โดยอัตโนมัติ</string>
-    <string name="pref_library_update_refresh_trackers_summary">อัปเดตตัวติดตามเมื่ออัปเดตคลัง</string>
     <string name="action_start_downloading_now">เริ่มดาวน์โหลดเลย</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d วันที่ผ่านมา</item>
@@ -805,4 +800,5 @@
     <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่\?</string>
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
+    <string name="file_null_uri_error">เครื่องมือเลือกไฟล์ไม่สามารถส่งต่อไฟล์ไปยังแอปได้</string>
 </resources>
