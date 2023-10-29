@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.permissions.PermissionRequestHelper
+import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupConst
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
@@ -82,6 +83,7 @@ object SettingsDataScreen : SearchableSettings {
         val context = LocalContext.current
         val backupIntervalPref = backupPreferences.backupInterval()
         val backupInterval by backupIntervalPref.collectAsState()
+        val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.label_backup),
@@ -113,7 +115,10 @@ object SettingsDataScreen : SearchableSettings {
                     title = stringResource(R.string.pref_backup_slots),
                     entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
-                Preference.PreferenceItem.InfoPreference(stringResource(R.string.backup_info)),
+                Preference.PreferenceItem.InfoPreference(
+                    stringResource(R.string.backup_info) + "\n\n" +
+                        stringResource(R.string.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
+                ),
             ),
         )
     }

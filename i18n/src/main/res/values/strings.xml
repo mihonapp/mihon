@@ -505,6 +505,7 @@
     <string name="restoring_backup_error">Restoring backup failed</string>
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well. Backups may contain sensitive data including any stored passwords; be careful if sharing.</string>
+    <string name="last_auto_backup_info">Last automatically backed up: %s</string>
 
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>

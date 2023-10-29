@@ -13,4 +13,7 @@ class BackupPreferences(
     fun numberOfBackups() = preferenceStore.getInt("backup_slots", 2)
 
     fun backupInterval() = preferenceStore.getInt("backup_interval", 12)
+
+    // TODO: move this and other "app state" preferences elsewhere and exclude from backups
+    fun lastAutoBackupTimestamp() = preferenceStore.getLong("__APP_STATE_last_auto_backup_timestamp", 0L)
 }
