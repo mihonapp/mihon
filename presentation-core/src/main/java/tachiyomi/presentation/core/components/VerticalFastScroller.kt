@@ -350,7 +350,6 @@ fun VerticalGridFastScroller(
                         },
                     )
                     .height(ThumbLength)
-                    .padding(horizontal = 8.dp)
                     .padding(end = endContentPadding)
                     .width(ThumbThickness)
                     .alpha(alpha.value)
@@ -427,7 +426,7 @@ object Scroller {
 }
 
 private val ThumbLength = 48.dp
-private val ThumbThickness = 8.dp
+private val ThumbThickness = 12.dp
 private val ThumbShape = RoundedCornerShape(ThumbThickness / 2)
 private val FadeOutAnimationSpec = tween<Float>(
     durationMillis = ViewConfiguration.getScrollBarFadeDuration(),
