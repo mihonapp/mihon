@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 
 class BasePreferences(
@@ -12,9 +13,12 @@ class BasePreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun downloadedOnly() = preferenceStore.getBoolean("pref_downloaded_only", false)
+    fun downloadedOnly() = preferenceStore.getBoolean(
+        Preference.appStateKey("pref_downloaded_only"),
+        false,
+    )
 
-    fun incognitoMode() = preferenceStore.getBoolean("incognito_mode", false)
+    fun incognitoMode() = preferenceStore.getBoolean(Preference.appStateKey("incognito_mode"), false)
 
     fun extensionInstaller() = ExtensionInstallerPreference(context, preferenceStore)
 

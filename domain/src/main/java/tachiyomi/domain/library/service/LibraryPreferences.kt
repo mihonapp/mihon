@@ -1,5 +1,6 @@
 package tachiyomi.domain.library.service
 
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.getEnum
@@ -29,7 +30,7 @@ class LibraryPreferences(
 
     fun landscapeColumns() = preferenceStore.getInt("pref_library_columns_landscape_key", 0)
 
-    fun lastUpdatedTimestamp() = preferenceStore.getLong("library_update_last_timestamp", 0L)
+    fun lastUpdatedTimestamp() = preferenceStore.getLong(Preference.appStateKey("library_update_last_timestamp"), 0L)
     fun autoUpdateInterval() = preferenceStore.getInt("pref_library_update_interval_key", 0)
 
     fun autoUpdateDeviceRestrictions() = preferenceStore.getStringSet(
@@ -120,7 +121,7 @@ class LibraryPreferences(
     fun languageBadge() = preferenceStore.getBoolean("display_language_badge", false)
 
     fun newShowUpdatesCount() = preferenceStore.getBoolean("library_show_updates_count", true)
-    fun newUpdatesCount() = preferenceStore.getInt("library_unseen_updates_count", 0)
+    fun newUpdatesCount() = preferenceStore.getInt(Preference.appStateKey("library_unseen_updates_count"), 0)
 
     // endregion
 
@@ -128,7 +129,7 @@ class LibraryPreferences(
 
     fun defaultCategory() = preferenceStore.getInt("default_category", -1)
 
-    fun lastUsedCategory() = preferenceStore.getInt("last_used_category", 0)
+    fun lastUsedCategory() = preferenceStore.getInt(Preference.appStateKey("last_used_category"), 0)
 
     fun categoryTabs() = preferenceStore.getBoolean("display_category_tabs", true)
 

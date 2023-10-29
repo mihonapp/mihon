@@ -375,21 +375,70 @@ object Migrations {
                 }
             }
             if (oldVersion < 107) {
-                preferenceStore.getAll()
-                    .filter { it.key.startsWith("pref_mangasync_") || it.key.startsWith("track_token_") }
-                    .forEach { (key, value) ->
-                        if (value is String) {
-                            preferenceStore
-                                .getString(Preference.privateKey(key))
-                                .set(value)
-
-                            preferenceStore.getString(key).delete()
-                        }
-                    }
+                replacePreferences(
+                    preferenceStore = preferenceStore,
+                    filterPredicate = { it.key.startsWith("pref_mangasync_") || it.key.startsWith("track_token_") },
+                    newKey = { Preference.privateKey(it) },
+                )
+            }
+            if (oldVersion < 108) {
+                val prefsToReplace = listOf(
+                    "pref_download_only",
+                    "incognito_mode",
+                    "last_catalogue_source",
+                    "trusted_signatures",
+                    "last_app_closed",
+                    "library_update_last_timestamp",
+                    "library_unseen_updates_count",
+                    "last_used_category",
+                )
+                replacePreferences(
+                    preferenceStore = preferenceStore,
+                    filterPredicate = { it.key in prefsToReplace },
+                    newKey = { Preference.appStateKey(it) },
+                )
             }
             return true
         }
 
         return false
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+private fun replacePreferences(
+    preferenceStore: PreferenceStore,
+    filterPredicate: (Map.Entry<String, Any?>) -> Boolean,
+    newKey: (String) -> String,
+) {
+    preferenceStore.getAll()
+        .filter(filterPredicate)
+        .forEach { (key, value) ->
+            when (value) {
+                is Int -> {
+                    preferenceStore.getInt(newKey(key)).set(value)
+                    preferenceStore.getInt(key).delete()
+                }
+                is Long -> {
+                    preferenceStore.getLong(newKey(key)).set(value)
+                    preferenceStore.getLong(key).delete()
+                }
+                is Float -> {
+                    preferenceStore.getFloat(newKey(key)).set(value)
+                    preferenceStore.getFloat(key).delete()
+                }
+                is String -> {
+                    preferenceStore.getString(newKey(key)).set(value)
+                    preferenceStore.getString(key).delete()
+                }
+                is Boolean -> {
+                    preferenceStore.getBoolean(newKey(key)).set(value)
+                    preferenceStore.getBoolean(key).delete()
+                }
+                is Set<*> -> (value as? Set<String>)?.let {
+                    preferenceStore.getStringSet(newKey(key)).set(value)
+                    preferenceStore.getStringSet(key).delete()
+                }
+            }
+        }
 }

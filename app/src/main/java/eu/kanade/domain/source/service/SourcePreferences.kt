@@ -2,6 +2,7 @@ package eu.kanade.domain.source.service
 
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
 import tachiyomi.domain.library.model.LibraryDisplayMode
@@ -18,7 +19,10 @@ class SourcePreferences(
 
     fun pinnedSources() = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
-    fun lastUsedSource() = preferenceStore.getLong("last_catalogue_source", -1)
+    fun lastUsedSource() = preferenceStore.getLong(
+        Preference.appStateKey("last_catalogue_source"),
+        -1,
+    )
 
     fun showNsfwSource() = preferenceStore.getBoolean("show_nsfw_source", true)
 
@@ -28,7 +32,7 @@ class SourcePreferences(
 
     fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
 
-    fun trustedSignatures() = preferenceStore.getStringSet("trusted_signatures", emptySet())
+    fun trustedSignatures() = preferenceStore.getStringSet(Preference.appStateKey("trusted_signatures"), emptySet())
 
     fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
 }

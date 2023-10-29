@@ -1,5 +1,6 @@
 package tachiyomi.domain.backup.service
 
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.provider.FolderProvider
 
@@ -14,6 +15,5 @@ class BackupPreferences(
 
     fun backupInterval() = preferenceStore.getInt("backup_interval", 12)
 
-    // TODO: move this and other "app state" preferences elsewhere and exclude from backups
-    fun lastAutoBackupTimestamp() = preferenceStore.getLong("__APP_STATE_last_auto_backup_timestamp", 0L)
+    fun lastAutoBackupTimestamp() = preferenceStore.getLong(Preference.appStateKey("last_auto_backup_timestamp"), 0L)
 }
