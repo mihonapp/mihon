@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.domain.chapter.model.copyFrom
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
@@ -31,6 +30,7 @@ import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -54,6 +54,7 @@ class BackupRestorer(
     private val handler: DatabaseHandler = Injekt.get()
     private val updateManga: UpdateManga = Injekt.get()
     private val getCategories: GetCategories = Injekt.get()
+    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
 
     private val preferenceStore: PreferenceStore = Injekt.get()
@@ -285,30 +286,39 @@ class BackupRestorer(
     }
 
     private suspend fun restoreChapters(manga: Manga, chapters: List<Chapter>) {
-        val dbChapters = handler.awaitList { chaptersQueries.getChaptersByMangaId(manga.id) }
+        val dbChaptersByUrl = getChaptersByMangaId.await(manga.id)
+            .associateBy { it.url }
 
         val processed = chapters.map { chapter ->
             var updatedChapter = chapter
-            val dbChapter = dbChapters.find { it.url == updatedChapter.url }
+
+            val dbChapter = dbChaptersByUrl[updatedChapter.url]
             if (dbChapter != null) {
-                updatedChapter = updatedChapter.copy(id = dbChapter._id)
-                updatedChapter = updatedChapter.copyFrom(dbChapter)
+                updatedChapter = updatedChapter
+                    .copyFrom(dbChapter)
+                    .copy(
+                        id = dbChapter.id,
+                        mangaId = manga.id,
+                        bookmark = updatedChapter.bookmark || dbChapter.bookmark,
+                    )
                 if (dbChapter.read && !updatedChapter.read) {
-                    updatedChapter = updatedChapter.copy(read = true, lastPageRead = dbChapter.last_page_read)
-                } else if (updatedChapter.lastPageRead == 0L && dbChapter.last_page_read != 0L) {
-                    updatedChapter = updatedChapter.copy(lastPageRead = dbChapter.last_page_read)
-                }
-                if (!updatedChapter.bookmark && dbChapter.bookmark) {
-                    updatedChapter = updatedChapter.copy(bookmark = true)
+                    updatedChapter = updatedChapter.copy(
+                        read = true,
+                        lastPageRead = dbChapter.lastPageRead,
+                    )
+                } else if (updatedChapter.lastPageRead == 0L && dbChapter.lastPageRead != 0L) {
+                    updatedChapter = updatedChapter.copy(
+                        lastPageRead = dbChapter.lastPageRead,
+                    )
                 }
             }
 
-            updatedChapter.copy(mangaId = manga.id)
+            updatedChapter
         }
 
-        val newChapters = processed.groupBy { it.id > 0 }
-        newChapters[true]?.let { updateKnownChapters(it) }
-        newChapters[false]?.let { insertChapters(it) }
+        val (existingChapters, newChapters) = processed.partition { it.id > 0 }
+        updateKnownChapters(existingChapters)
+        insertChapters(newChapters)
     }
 
     /**

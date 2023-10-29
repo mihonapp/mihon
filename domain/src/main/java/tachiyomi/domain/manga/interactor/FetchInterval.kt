@@ -1,6 +1,6 @@
 package tachiyomi.domain.manga.interactor
 
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit
 import kotlin.math.absoluteValue
 
 class FetchInterval(
-    private val getChapterByMangaId: GetChapterByMangaId,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
 ) {
 
     suspend fun toMangaUpdateOrNull(
@@ -24,7 +24,7 @@ class FetchInterval(
         } else {
             window
         }
-        val chapters = getChapterByMangaId.await(manga.id)
+        val chapters = getChaptersByMangaId.await(manga.id)
         val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
             chapters,
             dateTime.zone,

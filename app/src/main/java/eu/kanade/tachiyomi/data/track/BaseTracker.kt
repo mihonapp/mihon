@@ -15,7 +15,7 @@ import okhttp3.OkHttpClient
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.track.interactor.InsertTrack
 import uy.kohesive.injekt.Injekt
@@ -71,7 +71,7 @@ abstract class BaseTracker(
         item.manga_id = mangaId
         try {
             withIOContext {
-                val allChapters = Injekt.get<GetChapterByMangaId>().await(mangaId)
+                val allChapters = Injekt.get<GetChaptersByMangaId>().await(mangaId)
                 val hasReadChapters = allChapters.any { it.read }
                 bind(item, hasReadChapters)
 
