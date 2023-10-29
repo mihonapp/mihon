@@ -35,7 +35,7 @@ interface Preference<T> {
 
         /**
          * A preference used for internal app state that isn't really a user preference
-         * and therefore should not be inplaces like backips.
+         * and therefore should not be in places like backups.
          */
         fun isAppState(key: String): Boolean {
             return key.startsWith(APP_STATE_PREFIX)

@@ -506,6 +506,13 @@
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well. Backups may contain sensitive data including any stored passwords; be careful if sharing.</string>
     <string name="last_auto_backup_info">Last automatically backed up: %s</string>
+    <string name="label_data">Data</string>
+    <string name="pref_storage_usage">Storage usage</string>
+    <string name="pref_clear_chapter_cache">Clear chapter cache</string>
+    <string name="used_cache">Used: %1$s</string>
+    <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
+    <string name="cache_delete_error">Error occurred while clearing</string>
+    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
 
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
@@ -521,12 +528,6 @@
     <string name="pref_reset_user_agent_string">Reset default user agent string</string>
     <string name="requires_app_restart">Requires app restart to take effect</string>
     <string name="cookies_cleared">Cookies cleared</string>
-    <string name="label_data">Data</string>
-    <string name="pref_clear_chapter_cache">Clear chapter cache</string>
-    <string name="used_cache">Used: %1$s</string>
-    <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
-    <string name="cache_delete_error">Error occurred while clearing</string>
-    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="pref_invalidate_download_cache">Invalidate downloads index</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
     <string name="download_cache_invalidated">Downloads index invalidated</string>
