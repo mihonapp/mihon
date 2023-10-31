@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.OfflinePin
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -244,7 +244,7 @@ private fun ChapterText(
                     ),
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.OfflinePin,
+                        imageVector = Icons.Filled.CheckCircle,
                         contentDescription = stringResource(R.string.label_downloaded),
                     )
                 },
