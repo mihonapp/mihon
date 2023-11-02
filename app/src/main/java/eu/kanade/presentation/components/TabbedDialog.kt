@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +31,7 @@ import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.TabIndicator
+import tachiyomi.presentation.core.components.material.TabText
 
 object TabbedDialogPaddings {
     val Horizontal = 24.dp
@@ -61,21 +61,12 @@ fun TabbedDialog(
                     indicator = { TabIndicator(it[pagerState.currentPage], pagerState.currentPageOffsetFraction) },
                     divider = {},
                 ) {
-                    tabTitles.fastForEachIndexed { i, tab ->
-                        val selected = pagerState.currentPage == i
+                    tabTitles.fastForEachIndexed { index, tab ->
                         Tab(
-                            selected = selected,
-                            onClick = { scope.launch { pagerState.animateScrollToPage(i) } },
-                            text = {
-                                Text(
-                                    text = tab,
-                                    color = if (selected) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                    },
-                                )
-                            },
+                            selected = pagerState.currentPage == index,
+                            onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                            text = { TabText(text = tab) },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }

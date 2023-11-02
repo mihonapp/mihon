@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,7 +63,11 @@ fun TabText(text: String, badgeCount: Int? = null) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = text)
+        Text(
+            text = text,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
         if (badgeCount != null) {
             Pill(
                 text = "$badgeCount",
