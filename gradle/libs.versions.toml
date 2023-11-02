@@ -65,7 +65,7 @@ swipe = "me.saket.swipe:swipe:1.2.0"
 logcat = "com.squareup.logcat:logcat:0.1"
 
 acra-http = "ch.acra:acra-http:5.11.3"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.4.0"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.5.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlib_version" }
