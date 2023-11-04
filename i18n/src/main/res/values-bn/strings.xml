@@ -543,6 +543,8 @@
     <string name="nav_zone_next">পরবর্তী</string>
     <string name="nav_zone_prev">পূর্ববর্তী</string>
     <string name="automatic_background">স্বয়ংক্রিয়</string>
+    <string name="pref_create_folder_per_manga_summary">মাঙ্গা শিরোনাম অনুযায়ী ফোল্ডার তৈরি করে</string>
+    <string name="pref_create_folder_per_manga">পৃষ্ঠাগুলি পৃথক ফোল্ডারে সংরক্ষণ করুন</string>
     <string name="pref_reader_actions">ক্রিয়া</string>
     <string name="pref_inverted_colors">উল্টানো</string>
     <string name="pref_grayscale">ধূসর স্কেল</string>

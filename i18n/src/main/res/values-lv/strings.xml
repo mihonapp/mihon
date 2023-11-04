@@ -340,6 +340,7 @@
     <string name="pref_webtoon_side_padding">Sānu platums</string>
     <string name="pref_remove_exclude_categories">Izslēgtās kategorijas</string>
     <string name="action_display_local_badge">Lokālais avots</string>
+    <string name="pref_create_folder_per_manga">Saglabāt lappuses atsevišķās mapēs</string>
     <string name="nav_zone_prev">Iepriekšējais</string>
     <string name="pref_viewer_type">Noklusējuma lasīšanas režīms</string>
     <string name="kindlish_nav">Kindle-ish</string>
@@ -375,6 +376,7 @@
     <string name="pref_reader_navigation">Navigācija</string>
     <string name="pref_read_with_volume_keys_inverted">Invertēt skaļuma regulēšanas taustiņus</string>
     <string name="pref_read_with_long_tap">Rādīt darbīūbas ar ilgu pieskārienu</string>
+    <string name="pref_create_folder_per_manga_summary">Izveido mapes atbilstoši ieraksta nosaukumam</string>
     <string name="pref_reader_theme">Fona krāsa</string>
     <string name="pref_image_scale_type">Mēroga tips</string>
     <string name="scale_type_fit_screen">Ietilpt ekrānā</string>

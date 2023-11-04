@@ -530,6 +530,8 @@
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
     <string name="rotation_type">Döndürme</string>
+    <string name="pref_create_folder_per_manga_summary">Girdilerin başlığına göre sıralaç oluşturur</string>
+    <string name="pref_create_folder_per_manga">Sayfaları ayrı sıralaçlara kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
     <string name="pref_grayscale">Boz tonlama</string>
     <string name="notification_incognito_text">Gizli kipi devre dışı bırak</string>

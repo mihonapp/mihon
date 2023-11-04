@@ -455,6 +455,7 @@
     <string name="pref_restore_backup">Restaŭri savkopion</string>
     <string name="action_track">Ŝanĝspuri</string>
     <string name="services">Servoj</string>
+    <string name="pref_create_folder_per_manga_summary">Kreas dosierujojn laŭ mangaaj titoloj</string>
     <string name="pref_read_with_volume_keys_inverted">Inversigi laŭtec-butonojn</string>
     <string name="pref_inverted_colors">Inversigita</string>
     <string name="pref_dual_page_split">Du-paĝa divido</string>

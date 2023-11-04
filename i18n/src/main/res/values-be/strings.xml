@@ -227,6 +227,8 @@
     <string name="gray_background">Шэры</string>
     <string name="white_background">Белы</string>
     <string name="pref_reader_theme">Колер фону</string>
+    <string name="pref_create_folder_per_manga_summary">Ствараць тэчкі ў адпаведнасці з назвай мангі</string>
+    <string name="pref_create_folder_per_manga">Захоўваць старонкі ў асобныя тэчкі</string>
     <string name="pref_read_with_long_tap">Паказаць пры доўгім націску</string>
     <string name="pref_reader_actions">Дзеяння</string>
     <string name="tapping_inverted_both">Абодва</string>

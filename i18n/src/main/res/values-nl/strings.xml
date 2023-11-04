@@ -532,6 +532,8 @@
     <string name="rotation_portrait">Staand</string>
     <string name="rotation_type">Oriëntatie</string>
     <string name="automatic_background">Automatisch</string>
+    <string name="pref_create_folder_per_manga_summary">Mappen aanmaken op basis van titel</string>
+    <string name="pref_create_folder_per_manga">Pagina\'s opslaan in aparte mappen</string>
     <string name="pref_reader_actions">Acties</string>
     <string name="pref_grayscale">Grijstinten</string>
     <string name="cancel_all_for_series">Alles annuleren voor deze serie</string>

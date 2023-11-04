@@ -301,6 +301,8 @@
     <string name="l_nav">รูปตัว L</string>
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
+    <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่อง</string>
+    <string name="pref_create_folder_per_manga">บันทึกหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
     <string name="pref_reader_actions">การกระทำ</string>
     <string name="tapping_inverted_both">ทั้งสอง</string>
     <string name="tapping_inverted_vertical">แนวตั้ง</string>

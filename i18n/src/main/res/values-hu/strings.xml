@@ -406,6 +406,8 @@
     <string name="vertical_plus_viewer">Hosszú szalag lyukakkal</string>
     <string name="automatic_background">Automatikus</string>
     <string name="gray_background">Szürke</string>
+    <string name="pref_create_folder_per_manga_summary">Mappák létrehozása bejegyzések címe szerint</string>
+    <string name="pref_create_folder_per_manga">Mentse a lapokat külön mappákba</string>
     <string name="pref_read_with_long_tap">Cselekmények mutatása hosszú koppintáskor</string>
     <string name="pref_reader_actions">Műveletek</string>
     <string name="tapping_inverted_none">Egyik sem</string>

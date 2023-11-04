@@ -529,6 +529,8 @@
     <string name="clipboard_copy_error">Kopiointi leikepöydälle epäonnistui</string>
     <string name="rotation_landscape">Vaakatasossa</string>
     <string name="rotation_portrait">Pystysuunnassa</string>
+    <string name="pref_create_folder_per_manga_summary">Luo kansioita manga-otsikon mukaan</string>
+    <string name="pref_create_folder_per_manga">Tallenna sivut erillisiin kansioihin</string>
     <string name="pref_reader_actions">Toiminnot</string>
     <string name="rotation_type">Kierron tyyppi</string>
     <string name="pref_grayscale">Harmaasävy</string>

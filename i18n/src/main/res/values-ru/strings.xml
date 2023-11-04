@@ -551,6 +551,8 @@
     <string name="clipboard_copy_error">Не удалось скопировать в буфер обмена</string>
     <string name="rotation_landscape">Альбомная</string>
     <string name="rotation_portrait">Портретная</string>
+    <string name="pref_create_folder_per_manga_summary">Создавать папки в соответствии с названием серии</string>
+    <string name="pref_create_folder_per_manga">Сохранять страницы в отдельные папки</string>
     <string name="pref_reader_actions">Действия</string>
     <string name="rotation_type">Ориентация</string>
     <string name="pref_grayscale">Оттенки серого</string>

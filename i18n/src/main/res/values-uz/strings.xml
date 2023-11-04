@@ -291,6 +291,7 @@
     </plurals>
     <string name="pref_library_update_restriction">Uskuna uchun avtomatik yangilanishlarni cheklash</string>
     <string name="pref_skip_dupe_chapters">Takrorlanuvchi boblarni o\'tkazib yuborish</string>
+    <string name="pref_create_folder_per_manga">Sahifalarni alohida papkalarga saqlash</string>
     <string name="tapping_inverted_horizontal">Gorizontal</string>
     <string name="tapping_inverted_vertical">Vertikal</string>
     <string name="tapping_inverted_both">Ikkala taraf</string>
@@ -313,6 +314,7 @@
     <string name="pager_viewer">Sahifabay</string>
     <string name="white_background">Oq</string>
     <string name="tapping_inverted_none">Yo\'q</string>
+    <string name="pref_create_folder_per_manga_summary">Qism nomiga asoslanib papka yaratish</string>
     <string name="nav_zone_next">Keyingi</string>
     <string name="left_to_right_viewer">Chapdan o\'ngga</string>
     <string name="pref_read_with_volume_keys">Ovoz tugmalari</string>

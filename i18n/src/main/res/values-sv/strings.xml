@@ -530,6 +530,8 @@
     <string name="rotation_landscape">Liggande</string>
     <string name="rotation_portrait">Porträtt</string>
     <string name="rotation_type">Rotation</string>
+    <string name="pref_create_folder_per_manga_summary">Skapa mappar enligt posternas titel</string>
+    <string name="pref_create_folder_per_manga">Spara sidor i separata mappar</string>
     <string name="pref_reader_actions">Åtgärder</string>
     <string name="pref_grayscale">Gråskala</string>
     <string name="automatic_background">Automatisk</string>

@@ -551,6 +551,8 @@
     <string name="rotation_landscape">Альбомна</string>
     <string name="rotation_portrait">Портретна</string>
     <string name="rotation_type">Орієнтація</string>
+    <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви записів</string>
+    <string name="pref_create_folder_per_manga">Зберігати сторінки до окремих тек</string>
     <string name="pref_reader_actions">Дії</string>
     <string name="pref_grayscale">Відтінки сірого</string>
     <string name="notification_incognito_text">Вимкнути режим інкогніто</string>

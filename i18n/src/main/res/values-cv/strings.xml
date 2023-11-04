@@ -522,6 +522,8 @@
     <string name="rotation_landscape">Тӑрӑх</string>
     <string name="rotation_portrait">Урлӑ</string>
     <string name="rotation_type">Урлӑ-тӑрӑх тӗсӗ</string>
+    <string name="pref_create_folder_per_manga_summary">Папкӑсене сери ячӗпе туни</string>
+    <string name="pref_create_folder_per_manga">Елсене уйрӑм папкӑсенче упрамалла</string>
     <string name="pref_reader_actions">Тӑвӑмсем</string>
     <string name="pref_show_navigation_mode_summary">Пусма вырӑнсене вулӑш уҫӑ чухне кӑтартмалла</string>
     <string name="action_show_errors">Йӑнӑшсене кӑтарт</string>

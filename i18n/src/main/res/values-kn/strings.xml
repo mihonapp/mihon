@@ -547,6 +547,8 @@
     <string name="rotation_portrait">ಉದ್ದವಾದ ಪುಟ</string>
     <string name="rotation_type">ತಿರುಗುವಿಕೆಯ ಪ್ರಕಾರ</string>
     <string name="automatic_background">ಸ್ವಯಂಚಾಲಿತ</string>
+    <string name="pref_create_folder_per_manga_summary">ಮಾಂಗಾ ಶೀರ್ಷಿಕೆಗೆ ಅನುಗುಣವಾಗಿ ಫೋಲ್ಡರ್ ಗಳನ್ನು ರಚಿಸುತ್ತದೆ</string>
+    <string name="pref_create_folder_per_manga">ಪ್ರತ್ಯೇಕ ಫೋಲ್ಡರ್ ಗಳಲ್ಲಿ ಪುಟಗಳನ್ನು ಉಳಿಸಿ</string>
     <string name="pref_reader_actions">ಕ್ರಿಯೆಗಳು</string>
     <string name="pref_grayscale">ಗ್ರೇಸ್ಕೇಲ್</string>
     <string name="off">ಆಫ</string>

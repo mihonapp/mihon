@@ -523,6 +523,7 @@
     <string name="rotation_type">Rotación</string>
     <string name="nav_zone_right">Derecha</string>
     <string name="nav_zone_left">Izquierda</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
     <string name="pref_grayscale">Escala de grises</string>
     <string name="update_check_eol">Está versión de Android ya no está soportada</string>
     <string name="clipboard_copy_error">Falló al copiar en el portapapeles</string>
@@ -533,6 +534,7 @@
 \nNecesitarás instalar cualquier extensión que falte e iniciar sesión en los servicios de seguimiento para utilizarlos.</string>
     <string name="nav_zone_prev">Anterior</string>
     <string name="nav_zone_next">Siguiente</string>
+    <string name="pref_create_folder_per_manga">Guardar páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_dual_page_split">Partir en dos las páginas anchas</string>
     <string name="pref_show_navigation_mode_summary">Mostrar brevemente cuando se abre el lector</string>

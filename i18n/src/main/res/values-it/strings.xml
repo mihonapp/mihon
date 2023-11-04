@@ -576,7 +576,9 @@
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="automatic_background">Auto</string>
+    <string name="pref_create_folder_per_manga_summary">Crea cartelle in base al titolo delle voci</string>
     <string name="cancel_all_for_series">Annulla tutti per questa serie</string>
+    <string name="pref_create_folder_per_manga">Salva pagine in cartelle separate</string>
     <string name="pref_reader_actions">Azioni</string>
     <string name="pref_grayscale">Scala di grigi</string>
     <string name="error_no_match">Nessun risultato trovato</string>

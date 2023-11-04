@@ -571,6 +571,8 @@
     <string name="rotation_landscape">Horizontal</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_type">Tipo de rotação</string>
+    <string name="pref_create_folder_per_manga_summary">Cria as pastas usando os títulos dos itens</string>
+    <string name="pref_create_folder_per_manga">Guarda páginas em pastas separadas</string>
     <string name="pref_reader_actions">Ações</string>
     <string name="pref_grayscale">Tons de cinzento</string>
     <string name="date">Data</string>

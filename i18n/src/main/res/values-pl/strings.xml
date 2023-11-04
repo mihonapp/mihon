@@ -557,6 +557,8 @@
     <string name="unread">Nieprzeczytane</string>
     <string name="rotation_type">Orientacja ekranu</string>
     <string name="automatic_background">Automatycznie</string>
+    <string name="pref_create_folder_per_manga_summary">Utwórz foldery względem tytułu</string>
+    <string name="pref_create_folder_per_manga">Zapisz strony do osobnych folderów</string>
     <string name="pref_reader_actions">Akcje</string>
     <string name="pref_grayscale">Odcienie szarości</string>
     <string name="cancel_all_for_series">Anuluj wszystko dla tego tytułu</string>

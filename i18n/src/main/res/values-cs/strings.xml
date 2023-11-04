@@ -536,6 +536,8 @@
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="rotation_type">Otáčení</string>
+    <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
+    <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
     <string name="nav_zone_right">Vpravo</string>
     <string name="nav_zone_left">Vlevo</string>

@@ -540,6 +540,8 @@
     <string name="clipboard_copy_error">Erro ao copiar para a área de transferência</string>
     <string name="rotation_landscape">Paisagem</string>
     <string name="rotation_portrait">Retrato</string>
+    <string name="pref_create_folder_per_manga_summary">Cria as pastas usando os títulos dos itens</string>
+    <string name="pref_create_folder_per_manga">Salvar as páginas em pastas separadas</string>
     <string name="pref_reader_actions">Ações</string>
     <string name="rotation_type">Orientação</string>
     <string name="pref_grayscale">Nível de cinza</string>

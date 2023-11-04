@@ -529,6 +529,8 @@
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
     <string name="rotation_portrait">Κατακόρυφα</string>
+    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
+    <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Περιστροφή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>

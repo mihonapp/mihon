@@ -355,6 +355,8 @@
     <string name="notification_chapters_multiple">%1$s Kapituluak</string>
     <string name="pref_keep_screen_on">Mantendu pantaila piztuta</string>
     <string name="pref_skip_read_chapters">Saltatu irakurriak bezala markatutako kapituluak</string>
+    <string name="pref_create_folder_per_manga">Gorde orrialdeak karpeta ezberdinetan</string>
+    <string name="pref_create_folder_per_manga_summary">Sortu karpetak manga izenburuaren arabera</string>
     <string name="pref_high">Altua</string>
     <string name="pref_skip_filtered_chapters">Saltatu iragazitako kapituluak</string>
     <string name="pref_read_with_volume_keys">Bolumen-teklak</string>

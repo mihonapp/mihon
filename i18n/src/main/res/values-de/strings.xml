@@ -529,6 +529,8 @@
     <string name="clipboard_copy_error">Kopieren in die Zwischenablage fehlgeschlagen</string>
     <string name="rotation_landscape">Querformat</string>
     <string name="rotation_portrait">Hochformat</string>
+    <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach dem Titel der Einträge</string>
+    <string name="pref_create_folder_per_manga">Speichere Seiten in separate Ordner</string>
     <string name="rotation_type">Ausrichtung</string>
     <string name="pref_reader_actions">Aktionen</string>
     <string name="pref_grayscale">Graustufen</string>

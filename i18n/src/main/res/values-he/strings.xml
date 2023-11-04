@@ -469,6 +469,7 @@
     <string name="vertical_plus_viewer">רצועה מוארכת עם רווחים</string>
     <string name="pager_viewer">סידור עמודים</string>
     <string name="rotation_reverse_portrait">מאונך הפוך</string>
+    <string name="pref_create_folder_per_manga">שמור דפים בתיקיות נפרדות</string>
     <string name="tapping_inverted_vertical">אנכי</string>
     <string name="tapping_inverted_both">שניהם</string>
     <string name="pref_reader_actions">פעולות</string>
@@ -476,6 +477,7 @@
     <string name="automatic_background">אוטומטי</string>
     <string name="pref_remove_bookmarked_chapters">אפשר מחיקת פרקים שסומנו</string>
     <string name="disabled">מנוע</string>
+    <string name="pref_create_folder_per_manga_summary">צור תיקיות בהתאם לכותרת הפריטים</string>
     <string name="enhanced_tracking_info">שירותים המספקים שירותים משופרים למקורות ספציפיים. פריטים יהיו במעקב אוטומטי אחרי הוספה לספרייה שלך.</string>
     <string name="backup_restore_missing_sources">מקורות חסרים:</string>
     <string name="invalid_backup_file">קובץ גיבוי לא תקין</string>

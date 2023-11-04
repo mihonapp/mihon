@@ -290,6 +290,7 @@
     <string name="scale_type_fit_width">Ені бойынша</string>
     <string name="scale_type_original_size">Бастапқы мөлшері</string>
     <string name="rotation_reverse_portrait">Кері портрет</string>
+    <string name="pref_create_folder_per_manga_summary">Бумаларды жазбалар атауына сәйкес жасау</string>
     <string name="rotation_landscape">Көлденең</string>
     <string name="pref_webtoon_side_padding">Бүйірлік шегініс</string>
     <string name="color_filter_r_value">Қ</string>
@@ -344,6 +345,7 @@
     <string name="fourth_to_last">Соңғы оқылғаннан төртінші тарау</string>
     <string name="services">Қызметтер</string>
     <string name="pref_create_backup">Сақтық көшірме жасау</string>
+    <string name="pref_create_folder_per_manga">Беттерді бөлек бумаларға сақтау</string>
     <string name="pref_reader_theme">Түсқағаз</string>
     <string name="nav_zone_prev">Алдыңғ</string>
     <string name="scale_type_fit_height">Биіктігі бойынша</string>

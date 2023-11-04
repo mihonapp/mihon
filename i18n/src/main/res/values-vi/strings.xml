@@ -531,6 +531,8 @@
     <string name="right_and_left_nav">Phải và trái</string>
     <string name="automatic_background">Tự động</string>
     <string name="gray_background">Xám</string>
+    <string name="pref_create_folder_per_manga_summary">Tạo thư mục dựa theo tên truyện</string>
+    <string name="pref_create_folder_per_manga">Lưu lại trang trong thư mục riêng</string>
     <string name="pref_reader_actions">Hành động</string>
     <string name="tapping_inverted_both">Cả hai</string>
     <string name="tapping_inverted_vertical">Dọc</string>

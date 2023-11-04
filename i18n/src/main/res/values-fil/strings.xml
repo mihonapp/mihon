@@ -529,6 +529,8 @@
     <string name="clipboard_copy_error">Bigong makopya sa clipboard</string>
     <string name="rotation_landscape">Pahiga</string>
     <string name="rotation_portrait">Patayo</string>
+    <string name="pref_create_folder_per_manga_summary">Gumagawa ng mga folder ayon sa pamagat ng entry</string>
+    <string name="pref_create_folder_per_manga">I-save ang mga pahina sa folder nila</string>
     <string name="pref_reader_actions">Gawain</string>
     <string name="rotation_type">Pag-ikot</string>
     <string name="pref_grayscale">Maabo</string>

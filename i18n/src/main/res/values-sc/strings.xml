@@ -530,6 +530,8 @@
     <string name="rotation_landscape">Orizontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="rotation_type">Rotatzione</string>
+    <string name="pref_create_folder_per_manga_summary">Creat cartellas in base a su tìtulu de sos elementos</string>
+    <string name="pref_create_folder_per_manga">Sarva sas pàginas in cartellas separadas</string>
     <string name="pref_reader_actions">Atziones</string>
     <string name="pref_grayscale">Iscala de murros</string>
     <string name="notification_incognito_text">Disabìlita sa modalidade anònima</string>

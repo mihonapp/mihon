@@ -566,6 +566,8 @@
     <string name="rotation_portrait">رأسي</string>
     <string name="rotation_type">التدوير</string>
     <string name="automatic_background">تلقائيًّا</string>
+    <string name="pref_create_folder_per_manga_summary">إنشاء مجلدات وفقا لعنوان الإدخالات</string>
+    <string name="pref_create_folder_per_manga">حفظ الصفحات في مجلدات منفصلة</string>
     <string name="pref_reader_actions">الإجراءات</string>
     <string name="pref_grayscale">تدرج رمادي</string>
     <string name="exclude">إستثناء: %s</string>

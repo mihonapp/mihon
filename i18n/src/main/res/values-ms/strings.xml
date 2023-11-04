@@ -519,6 +519,8 @@
     <string name="rotation_landscape">Landskap</string>
     <string name="rotation_portrait">Potret</string>
     <string name="pref_reader_actions">Tindakan</string>
+    <string name="pref_create_folder_per_manga_summary">Mencipta folder mengikut tajuk entri</string>
+    <string name="pref_create_folder_per_manga">Simpan muka surat ke folder berasingan</string>
     <string name="rotation_type">Jenis putaran skrin</string>
     <string name="pref_grayscale">Skala kelabu</string>
     <string name="notification_incognito_text">Nyahdaya mod inkognito</string>

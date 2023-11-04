@@ -319,6 +319,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instaloni dhe filloni Shizuku për të përdorur Shizuku si instalues shtesë.</string>
     <string name="pref_page_transitions">Animoni tranzicionet e faqeve</string>
     <string name="pref_show_reading_mode_summary">Trego shkurtimisht modalitetin aktual kur hapet lexuesi</string>
+    <string name="pref_create_folder_per_manga">Ruani faqet në dosje të veçanta</string>
     <string name="pref_reader_theme">Ngjyra e sfondit</string>
     <string name="white_background">E bardhë</string>
     <string name="gray_background">Gri</string>
@@ -371,6 +372,7 @@
         <item quantity="other">%d kapitujt e ardhshëm të palexuar</item>
     </plurals>
     <string name="transition_no_next">Nuk ka kapitull tjetër</string>
+    <string name="pref_create_folder_per_manga_summary">Krijon dosje sipas titullit të hyrjeve</string>
     <string name="black_background">E zezë</string>
     <string name="pref_viewer_type">Modaliteti i parazgjedhur i leximit</string>
     <string name="l_nav">Në formë L</string>

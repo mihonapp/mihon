@@ -572,6 +572,8 @@
     <string name="action_display_show_number_of_items">Mostrar el número de elementos</string>
     <string name="action_sort_chapter_fetch_date">Fecha de obtención del capítulo</string>
     <string name="rotation_type">Tipo de rotación</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título de los elementos</string>
+    <string name="pref_create_folder_per_manga">Guardar páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_grayscale">Escala de grises</string>
     <string name="restore_miui_warning">Es posible que las funciones de copia de respaldo y restauración no funcionen correctamente si la opción «Optimización de MIUI» está desactivada.</string>

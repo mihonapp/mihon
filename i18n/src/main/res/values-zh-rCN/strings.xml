@@ -518,6 +518,8 @@
     <string name="clipboard_copy_error">无法复制到剪贴板</string>
     <string name="rotation_landscape">横屏</string>
     <string name="rotation_portrait">竖屏</string>
+    <string name="pref_create_folder_per_manga_summary">根据作品标题创建文件夹</string>
+    <string name="pref_create_folder_per_manga">将图片保存到单独文件夹</string>
     <string name="pref_reader_actions">操作菜单</string>
     <string name="rotation_type">屏幕方向</string>
     <string name="pref_grayscale">灰度</string>

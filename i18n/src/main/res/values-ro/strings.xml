@@ -649,6 +649,7 @@
         <item quantity="few">Acum %1$d zile</item>
         <item quantity="other">Acum %1$d zile</item>
     </plurals>
+    <string name="pref_create_folder_per_manga_summary">Creează dosare în funcție de titlul intrărilor</string>
     <string name="automatic_background">Automat</string>
     <string name="on">Pornit</string>
     <plurals name="next_unread_chapters">
@@ -662,6 +663,7 @@
     <string name="disabled_nav">Deactivat</string>
     <string name="action_remove_everything">Șterge tot</string>
     <string name="pref_reader_actions">Acțiuni</string>
+    <string name="pref_create_folder_per_manga">Salvează pagini în dosare separate</string>
     <string name="description_placeholder">Fără descriere</string>
     <string name="notification_incognito_text">Dezactivează modul incognito</string>
     <string name="download_ahead_info">Funcționează numai dacă capitolul curent + următorul sunt deja descărcate.</string>

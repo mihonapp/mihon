@@ -240,6 +240,8 @@
     <string name="tapping_inverted_horizontal">Pahigda</string>
     <string name="tapping_inverted_both">Ang duha</string>
     <string name="pref_reader_actions">Mga aksyon</string>
+    <string name="pref_create_folder_per_manga">I-save ang mga panid sa lainlaing mga folder</string>
+    <string name="pref_create_folder_per_manga_summary">Naghimo ug mga folder sumala sa titulo sa manga</string>
     <string name="white_background">Puti</string>
     <string name="gray_background">Gray</string>
     <string name="black_background">Itom</string>

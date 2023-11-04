@@ -589,6 +589,7 @@
     </plurals>
     <string name="skipped_reason_not_caught_up">읽지 않은 회차가 있는 만화를 건너 뛰었습니다</string>
     <string name="information_empty_category_dialog">등록된 카테고리가 없습니다.</string>
+    <string name="pref_create_folder_per_manga_summary">항목 제목에 따라 폴더 생성</string>
     <string name="migration_help_guide">소스 이전 설명서</string>
     <string name="migration_selection_prompt">원본 소스를 선택하세요</string>
     <string name="action_display_local_badge">로컬 소스</string>
@@ -599,6 +600,7 @@
     <string name="action_cancel_all">모두 취소</string>
     <string name="cancel_all_for_series">이 만화의 항목을 모두 취소</string>
     <string name="action_webview_forward">앞으로</string>
+    <string name="pref_create_folder_per_manga">각각의 폴더에 페이지 저장</string>
     <string name="action_faq_and_guides">FAQ 및 설명서</string>
     <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">이 시리즈를 맨 위로 이동</string>

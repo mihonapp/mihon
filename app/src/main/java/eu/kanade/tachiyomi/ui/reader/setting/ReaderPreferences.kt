@@ -56,6 +56,8 @@ class ReaderPreferences(
 
     fun readerHideThreshold() = preferenceStore.getEnum("reader_hide_threshold", ReaderHideThreshold.LOW)
 
+    fun folderPerManga() = preferenceStore.getBoolean("create_folder_per_manga", false)
+
     fun skipRead() = preferenceStore.getBoolean("skip_read", false)
 
     fun skipFiltered() = preferenceStore.getBoolean("skip_filtered", true)

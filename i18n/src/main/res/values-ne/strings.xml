@@ -242,7 +242,9 @@
     <string name="filter_mode_screen">स्क्रिन</string>
     <string name="filter_mode_lighten">डज / चम्किलो</string>
     <string name="filter_mode_darken">जलाउनु / अँध्यारो गर्नु</string>
+    <string name="pref_create_folder_per_manga">फरक फोल्डरमा पृष्ठहरू सेभ गर्नुहोस्</string>
     <string name="pref_keep_screen_on">स्क्रिन अन राख्नुहोस्</string>
+    <string name="pref_create_folder_per_manga_summary">इन्ट्रीहरूको शीर्षक अनुसार फोल्डरहरू सिर्जना गर्दछ</string>
     <string name="action_sort_count">कुल इन्ट्रीहरू</string>
     <plurals name="num_categories">
         <item quantity="one">%d वर्ग</item>

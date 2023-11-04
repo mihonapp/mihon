@@ -536,6 +536,7 @@
     <string name="on">Да</string>
     <string name="l_nav">L-образно</string>
     <string name="kindlish_nav">Kindle-подобно</string>
+    <string name="pref_create_folder_per_manga_summary">Създава папки според заглавието на мангата</string>
     <string name="automatic_background">Автоматично</string>
     <string name="pref_viewer_nav">Схема на навигацията</string>
     <string name="nav_zone_prev">Преди</string>
@@ -583,6 +584,7 @@
     <string name="pref_grayscale">Черно-бяло</string>
     <string name="pref_read_with_tapping_inverted">Инвертирай докосване</string>
     <string name="pref_reader_actions">Действия</string>
+    <string name="pref_create_folder_per_manga">Запазвай страниците в отделни папки</string>
     <string name="right_and_left_nav">Дясно и Ляво</string>
     <string name="rotation_type">Ориентация</string>
     <string name="rotation_portrait">Портрет</string>

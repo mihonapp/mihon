@@ -575,6 +575,8 @@
     <string name="rotation_landscape">Paysage</string>
     <string name="rotation_portrait">Portrait</string>
     <string name="notification_incognito_text">Désactiver le mode incognito</string>
+    <string name="pref_create_folder_per_manga_summary">Crée des dossiers en fonction du titre des entrées</string>
+    <string name="pref_create_folder_per_manga">Enregistrer les pages dans des dossiers séparés</string>
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_grayscale">Niveaux de gris</string>
     <string name="error_no_match">Aucune correspondance trouvée</string>

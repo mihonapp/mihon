@@ -517,6 +517,8 @@
 \n
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
+    <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
+    <string name="pref_create_folder_per_manga_summary">根據作品標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>

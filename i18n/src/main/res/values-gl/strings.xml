@@ -272,6 +272,8 @@
     <string name="pref_inverted_colors">Invertido</string>
     <string name="tapping_inverted_vertical">Vertical</string>
     <string name="tapping_inverted_both">Ambos</string>
+    <string name="pref_create_folder_per_manga">Gardar as páxinas en carpetas separadas</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetas segundo o título dos elementos</string>
     <string name="rotation_portrait">Vertical</string>
     <string name="rotation_landscape">Horizontal</string>
     <string name="split_tall_images_summary">Mellora o rendemento do lector</string>

@@ -532,6 +532,8 @@
     <string name="tracking_guide">追跡ガイド</string>
     <string name="rotation_type">画面向き</string>
     <string name="automatic_background">自動</string>
+    <string name="pref_create_folder_per_manga_summary">項目のタイトルに基づいてフォルダを作成</string>
+    <string name="pref_create_folder_per_manga">別々のフォルダにページを保存</string>
     <string name="pref_reader_actions">操作</string>
     <string name="pref_grayscale">グレースケール</string>
     <string name="off">オフ</string>

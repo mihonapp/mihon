@@ -530,6 +530,8 @@
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
     <string name="rotation_type">Rotasjon</string>
+    <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til oppføringenes tittel</string>
+    <string name="pref_create_folder_per_manga">Lagre sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>
     <string name="pref_dark_theme_pure_black">Helt svart</string>
     <string name="getting_started_guide">Oppstartsveiledning</string>
