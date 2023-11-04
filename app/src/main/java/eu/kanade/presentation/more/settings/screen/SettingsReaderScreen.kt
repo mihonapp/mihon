@@ -58,6 +58,7 @@ object SettingsReaderScreen : SearchableSettings {
                 pref = readerPref.trueColor(),
                 title = stringResource(R.string.pref_true_color),
                 subtitle = stringResource(R.string.pref_true_color_summary),
+                enabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O,
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = readerPref.pageTransitions(),

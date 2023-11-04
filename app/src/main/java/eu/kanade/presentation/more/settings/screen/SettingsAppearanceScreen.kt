@@ -2,6 +2,7 @@ package eu.kanade.presentation.more.settings.screen
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
@@ -80,11 +81,18 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = themeModePref,
                     title = stringResource(R.string.pref_theme_mode),
-                    entries = mapOf(
-                        ThemeMode.SYSTEM to stringResource(R.string.theme_system),
-                        ThemeMode.LIGHT to stringResource(R.string.theme_light),
-                        ThemeMode.DARK to stringResource(R.string.theme_dark),
-                    ),
+                    entries = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        mapOf(
+                            ThemeMode.SYSTEM to stringResource(R.string.theme_system),
+                            ThemeMode.LIGHT to stringResource(R.string.theme_light),
+                            ThemeMode.DARK to stringResource(R.string.theme_dark),
+                        )
+                    } else {
+                        mapOf(
+                            ThemeMode.LIGHT to stringResource(R.string.theme_light),
+                            ThemeMode.DARK to stringResource(R.string.theme_dark),
+                        )
+                    },
                 ),
                 Preference.PreferenceItem.CustomPreference(
                     title = stringResource(R.string.pref_app_theme),

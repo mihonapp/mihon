@@ -18,7 +18,8 @@ fun Context.isOnline(): Boolean {
     val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
     val maxTransport = when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 -> NetworkCapabilities.TRANSPORT_LOWPAN
-        else -> NetworkCapabilities.TRANSPORT_WIFI_AWARE
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> NetworkCapabilities.TRANSPORT_WIFI_AWARE
+        else -> NetworkCapabilities.TRANSPORT_VPN
     }
     return (NetworkCapabilities.TRANSPORT_CELLULAR..maxTransport).any(networkCapabilities::hasTransport)
 }
