@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import tachiyomi.core.preference.CheckboxState
 import tachiyomi.core.preference.TriState
+import tachiyomi.core.util.lang.compareToWithCollator
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withIOContext
@@ -65,9 +66,7 @@ import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.text.Collator
 import java.util.Collections
-import java.util.Locale
 
 /**
  * Typealias for the library manga, using the category as keys, and list of manga as values.
@@ -243,12 +242,8 @@ class LibraryScreenModel(
         // Map<MangaId, List<Track>>
         trackMap: Map<Long, List<Track>>,
     ): LibraryMap {
-        val locale = Locale.getDefault()
-        val collator = Collator.getInstance(locale).apply {
-            strength = Collator.PRIMARY
-        }
         val sortAlphabetically: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
-            collator.compare(i1.libraryManga.manga.title.lowercase(locale), i2.libraryManga.manga.title.lowercase(locale))
+            i1.libraryManga.manga.title.lowercase().compareToWithCollator(i2.libraryManga.manga.title.lowercase())
         }
 
         val defaultTrackerScoreSortValue = -1.0

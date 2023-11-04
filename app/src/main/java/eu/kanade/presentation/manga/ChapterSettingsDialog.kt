@@ -144,6 +144,7 @@ private fun ColumnScope.SortPage(
         R.string.sort_by_source to Manga.CHAPTER_SORTING_SOURCE,
         R.string.sort_by_number to Manga.CHAPTER_SORTING_NUMBER,
         R.string.sort_by_upload_date to Manga.CHAPTER_SORTING_UPLOAD_DATE,
+        R.string.action_sort_alpha to Manga.CHAPTER_SORTING_ALPHABET,
     ).map { (titleRes, mode) ->
         SortItem(
             label = stringResource(titleRes),
