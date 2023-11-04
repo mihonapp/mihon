@@ -79,6 +79,7 @@ fun ScreenTransition(
         targetState = navigator.lastItem,
         transitionSpec = transition,
         modifier = modifier,
+        label = "ScreenTransition",
     ) { screen ->
         navigator.saveableState("transition", screen) {
             content(screen)
