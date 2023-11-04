@@ -118,7 +118,7 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<TrackRepository> { TrackRepositoryImpl(get()) }
         addFactory { TrackChapter(get(), get(), get(), get()) }
-        addFactory { AddTracks(get(), get(), get()) }
+        addFactory { AddTracks(get(), get(), get(), get()) }
         addFactory { RefreshTracks(get(), get(), get(), get()) }
         addFactory { DeleteTrack(get()) }
         addFactory { GetTracksPerManga(get()) }

@@ -319,7 +319,7 @@ class MangaScreenModel(
                 }
 
                 // Finally match with enhanced tracking when available
-                addTracks.bindEnhancedTracks(manga, state.source)
+                addTracks.bindEnhancedTrackers(manga, state.source)
             }
         }
     }

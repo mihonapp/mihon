@@ -233,7 +233,7 @@ class BrowseSourceScreenModel(
                 new = new.removeCovers(coverCache)
             } else {
                 setMangaDefaultChapterFlags.await(manga)
-                addTracks.bindEnhancedTracks(manga, source)
+                addTracks.bindEnhancedTrackers(manga, source)
             }
 
             updateManga.await(new.toMangaUpdate())
