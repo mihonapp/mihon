@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "10.9.1"
+aboutlib_version = "10.9.2"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
 sqlite = "2.4.0"
@@ -9,7 +9,7 @@ voyager = "1.0.0-rc08"
 richtext = "0.17.0"
 
 [libraries]
-desugar = "com.android.tools:desugar_jdk_libs:2.0.3"
+desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
 google-services-gradle = "com.google.gms:google-services:4.4.0"
 
@@ -83,7 +83,7 @@ sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", 
 sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
 junit = "org.junit.jupiter:junit-jupiter:5.10.0"
-kotest-assertions = "io.kotest:kotest-assertions-core:5.7.2"
+kotest-assertions = "io.kotest:kotest-assertions-core:5.8.0"
 mockk = "io.mockk:mockk:1.13.8"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
