@@ -834,4 +834,6 @@
     <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente\?</string>
     <string name="file_null_uri_error">O seletor de arquivos não retornou o arquivo para o aplicativo</string>
     <string name="label_data_storage">Dados e armazenamento</string>
+    <string name="pref_flash_page_summ">Reduz o efeito fantasma em telas e-ink</string>
+    <string name="pref_flash_page">Flash branco ao mudar de página</string>
 </resources>

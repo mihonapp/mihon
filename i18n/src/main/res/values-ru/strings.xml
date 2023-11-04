@@ -210,8 +210,8 @@
     <string name="manga">Серии библиотеки</string>
     <string name="no_more_results">Больше нет результатов</string>
     <string name="pref_backup_directory">Папка резервной копии</string>
-    <string name="pref_backup_interval">Частота резервных копий</string>
-    <string name="pref_backup_slots">Количество резервных копий</string>
+    <string name="pref_backup_interval">Частота автоматических резервных копий</string>
+    <string name="pref_backup_slots">Количество автоматических резервных копий</string>
     <string name="pref_create_backup">Создать резервную копию</string>
     <string name="pref_create_backup_summ">Можно использовать для восстановления текущей библиотеки</string>
     <string name="pref_crop_borders">Обрезать поля</string>
@@ -728,7 +728,7 @@
     <string name="pref_downloads_summary">Автоматическая загрузка, загрузка наперёд</string>
     <string name="pref_tracking_summary">Односторонняя синхронизация прогресса, расширенная синхронизация</string>
     <string name="pref_browse_summary">Источники, расширения, глобальный поиск</string>
-    <string name="pref_backup_summary">Ручные и автоматические резервные копий</string>
+    <string name="pref_backup_summary">Ручные и автоматические резервные копий, хранилище</string>
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
     <string name="pref_advanced_summary">Выгрузка журнала с ошибками, оптимизация батареи</string>
     <string name="crash_screen_title">Ой, ошибочка вышла!</string>
@@ -805,13 +805,13 @@
     <string name="pref_double_tap_zoom">Двойное нажатие для увеличения</string>
     <string name="pref_library_columns_per_row">%d в ряд</string>
     <string name="action_filter_interval_custom">Настраиваемый интервал получения</string>
-    <string name="action_filter_interval_long">Месячное получение (28 дней)</string>
-    <string name="action_filter_interval_dropped">Заброшено\? Прошлые 20+ дней и 2 месяца</string>
+    <string name="action_filter_interval_long">Месячная проверка (28 дней)</string>
+    <string name="action_filter_interval_dropped">Заброшено\? Прошедшие 20+ дней и 2 месяца</string>
     <string name="intervals_header">Интервалы</string>
     <string name="manga_display_interval_title">Оценивать каждые</string>
     <string name="manga_modify_calculated_interval_title">Настроить интервал</string>
     <string name="action_set_interval">Задать интервал</string>
-    <string name="action_filter_interval_late">Проверка поздних 10+ дней</string>
+    <string name="action_filter_interval_late">Проверка прошедших 10+ дней</string>
     <string name="action_filter_interval_passed">Срок проверки истёк</string>
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
     <string name="pref_update_only_in_release_period">За пределами ожидаемого периода выпуска</string>
@@ -849,4 +849,10 @@
     <string name="action_sort_category">Сортировать категории</string>
     <string name="sort_category_confirmation">Хотите ли вы сортировать категории по алфавиту\?</string>
     <string name="file_null_uri_error">Приложению для выбора файлов не удалось вернуть путь файла в Tachiyomi</string>
+    <string name="label_data_storage">Данные и хранение</string>
+    <string name="relative_time_span_never">Никогда</string>
+    <string name="pref_flash_page_summ">Уменьшает артефакты у экранов e-ink</string>
+    <string name="last_auto_backup_info">Последнее автоматическое резервное копирование: %s</string>
+    <string name="pref_flash_page">Мигать экраном при смене страницы</string>
+    <string name="pref_storage_usage">Использование хранилища</string>
 </resources>

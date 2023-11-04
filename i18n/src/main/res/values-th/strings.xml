@@ -163,8 +163,8 @@
     <string name="pref_restore_backup">เรียกคืนค่าการสำรองข้อมูล</string>
     <string name="pref_restore_backup_summ">เรียกคืนค่าคลังจากแฟ้มข้อมูลสำรอง</string>
     <string name="pref_backup_directory">ตําแหน่งที่ตั้งข้อมูลสํารอง</string>
-    <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูล</string>
-    <string name="pref_backup_slots">จำนวนการสำรองข้อมูลสูงสุด</string>
+    <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูลอัตโนมัติ</string>
+    <string name="pref_backup_slots">จำนวนการสำรองข้อมูลอัตโนมัติสูงสุด</string>
     <string name="backup_created">สร้างการสำรองข้อมูลแล้ว</string>
     <string name="restore_completed">คืนค่าเสร็จสมบูรณ์</string>
     <string name="backup_choice">ต้องการสำรองข้อมูลใดบ้าง\?</string>
@@ -688,7 +688,7 @@
     <string name="pref_downloads_summary">การดาวน์โหลดอัตโนมัติ, การดาวน์โหลดล่วงหน้า</string>
     <string name="pref_tracking_summary">การประมวลผลซิงก์ทางเดียง, เสริมการวิงก์</string>
     <string name="pref_browse_summary">แหล่งที่มา, ส่วนขยาย, การค้นหาทั้งหมด</string>
-    <string name="pref_backup_summary">การสำรองข้อมูลด้วยตนเองและอัตโนมัติ</string>
+    <string name="pref_backup_summary">การสำรองข้อมูลและพื้นที่เก็บข้อมูลด้วยตนเองและอัตโนมัติ</string>
     <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
     <string name="pref_advanced_summary">ดัมพ์บันทึกข้อขัดข้อง, การเพิ่มประสิทธิภาพแบตเตอรี่</string>
     <string name="crash_screen_title">เกิดความผิดพลาด!</string>
@@ -801,4 +801,10 @@
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
     <string name="file_null_uri_error">เครื่องมือเลือกไฟล์ไม่สามารถส่งต่อไฟล์ไปยังแอปได้</string>
+    <string name="relative_time_span_never">ไม่เลย</string>
+    <string name="pref_flash_page_summ">ลดภาพซ้อนบนจอแสดงผล E-Ink</string>
+    <string name="last_auto_backup_info">สำรองข้อมูลอัตโนมัติครั้งล่าสุด: %s</string>
+    <string name="pref_flash_page">แฟลชสีขาวเมื่อเปลี่ยนหน้า</string>
+    <string name="pref_storage_usage">การใช้พื้นที่เก็บข้อมูล</string>
+    <string name="label_data_storage">ข้อมูลและการจัดเก็บข้อมูล</string>
 </resources>

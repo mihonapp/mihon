@@ -237,8 +237,8 @@
     <string name="invalid_backup_file_missing_manga">Hindi naglalaman ang backup ng kahit anong mga entry sa Aklatan.</string>
     <string name="invalid_backup_file">Invalid na backup</string>
     <string name="backup_created">Nai-backup na</string>
-    <string name="pref_backup_slots">Dami ng backup</string>
-    <string name="pref_backup_interval">Dalas ng pag-backup</string>
+    <string name="pref_backup_slots">Pinakamarami na awtomatikong pag-backup</string>
+    <string name="pref_backup_interval">Awtomatikong dalas ng pag-backup</string>
     <string name="pref_backup_directory">Lokasyon ng backup</string>
     <string name="pref_restore_backup_summ">I-restore ang Aklatan mula sa backup</string>
     <string name="pref_restore_backup">I-restore ang backup</string>
@@ -434,7 +434,7 @@
     <string name="cookies_cleared">Nalinis na ang mga cookie</string>
     <string name="requires_app_restart">Nangangailangang buksan muli ang app para gumana</string>
     <string name="pref_clear_cookies">Linisin ang mga cookie</string>
-    <string name="label_network">Network</string>
+    <string name="label_network">Networking</string>
     <string name="restoring_backup_error">Bigong ma-restore ang backup</string>
     <string name="restoring_backup_canceled">Kinansela ang pag-restore</string>
     <string name="restore_in_progress">Inire-restore na</string>
@@ -756,7 +756,7 @@
     <string name="action_copy_to_clipboard">Kopyahin sa clipboard</string>
     <string name="pref_hide_in_library_items">Itago ang mga entry na nasa aklatan na</string>
     <plurals name="download_amount">
-        <item quantity="one">Susunod na kabanata</item>
+        <item quantity="one">Sunod na kabanata</item>
         <item quantity="other">Susunod na %d kabanata</item>
     </plurals>
     <string name="action_update_category">I-update ang kategorya</string>
@@ -814,8 +814,13 @@
     <string name="action_sort_category">Mag-ayos ng kategorya</string>
     <string name="notification_updating_progress">Nag-a-update ang aklatan... (%s)</string>
     <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto\?</string>
-    <string name="source_settings">Mga setting ng source</string>
+    <string name="source_settings">Mga setting ng pinagmula</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
     <string name="label_data_storage">Data at storage</string>
+    <string name="pref_flash_page_summ">Binabawasan ang ghosting sa mga e-ink na display</string>
+    <string name="pref_flash_page">Mag-flash ng puti kada pagbabago ng pahina</string>
+    <string name="relative_time_span_never">Hindi kailanman</string>
+    <string name="last_auto_backup_info">Huling awtomatikong na-back up: %s</string>
+    <string name="pref_storage_usage">Paggamit ng storage</string>
 </resources>

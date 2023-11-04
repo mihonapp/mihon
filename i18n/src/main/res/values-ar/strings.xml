@@ -882,4 +882,9 @@
     <string name="app_settings">إعدادات التطبيق</string>
     <string name="file_null_uri_error">ما استطاع محدِّد الملفات من إدخال الملف في التطبيق</string>
     <string name="label_data_storage">البيانات والتخزين</string>
+    <string name="relative_time_span_never">أبدًا</string>
+    <string name="pref_flash_page_summ">يخفِّف الحرق في شاشات الحبر</string>
+    <string name="last_auto_backup_info">آخر احتياط تلقائي: %s</string>
+    <string name="pref_flash_page">أشرق الشاشة بِيضًا إذا تغيرت الصفحة</string>
+    <string name="pref_storage_usage">التخزين</string>
 </resources>

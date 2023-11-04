@@ -834,4 +834,8 @@
     <string name="source_settings">Postavke izvora</string>
     <string name="app_settings">Postavke aplikacije</string>
     <string name="label_data_storage">Podaci i spremište</string>
+    <string name="relative_time_span_never">Nikada</string>
+    <string name="pref_flash_page_summ">Smanjuje artefakte na ekranima s e-tintom</string>
+    <string name="last_auto_backup_info">Zadnja automatska sigurnosna kopija: %s</string>
+    <string name="pref_flash_page">Zabljesni prilikom mijenjanja stranice</string>
 </resources>

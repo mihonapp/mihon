@@ -340,7 +340,7 @@
 \n
 \nतपाईंले कुनै पनि छुटेको एक्सटेन्शनहरू स्थापना गर्न र तिनीहरूलाई प्रयोग गर्न पछि ट्र्याकिङ सेवाहरूमा लगइन गर्न आवश्यक हुनेछ।</string>
     <string name="restore_in_progress">रिस्टोर पहिले नै प्रगतिमा छ</string>
-    <string name="label_network">नेटवर्क</string>
+    <string name="label_network">नेटवर्किङ</string>
     <string name="restoring_backup_error">ब्याकअप रिस्टोर असफल भयो</string>
     <string name="backup_info">तपाईंले ब्याकअपको प्रतिलिपिहरू अन्य ठाउँहरूमा पनि राख्नु पर्छ। ब्याकअपहरूमा कुनै पनि भण्डारण गरिएका पासवर्डहरू सहित संवेदनशील डेटा समावेश हुन सक्छ; साझा गर्दा होसियार ।</string>
     <string name="notification_new_chapters">नयाँ अध्यायहरू फेला पर्यो</string>
@@ -421,8 +421,8 @@
     <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय रिस्टोर गर्नुहोस्</string>
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
     <string name="pref_backup_directory">ब्याकअप स्थान</string>
-    <string name="pref_backup_interval">ब्याकअप फ्रिक्वेन्सी</string>
-    <string name="pref_backup_slots">अधिकतम ब्याकअपहरू</string>
+    <string name="pref_backup_interval">स्वचालित ब्याकअप फ्रिक्वेन्सी</string>
+    <string name="pref_backup_slots">अधिकतम स्वचालित ब्याकअपहरू</string>
     <string name="used_cache">प्रयोग गरिएको: %1$s</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">%d इन्ट्रीको लागि</item>
@@ -648,7 +648,7 @@
     <string name="theme_lavender">ल्याभेन्डर</string>
     <string name="pref_app_language">एप को भाषा</string>
     <string name="auto_download_while_reading">पढ्दा स्वत: डाउनलोड गर्नुहोस्</string>
-    <string name="pref_backup_summary">म्यानुअल र स्वचालित ब्याकअप</string>
+    <string name="pref_backup_summary">म्यानुअल र स्वचालित ब्याकअप, भण्डारण स्पेस</string>
     <string name="pref_security_summary">एप लक, सुरक्षित स्क्रिन</string>
     <string name="multi_lang">थुप्रै</string>
     <string name="pref_library_update_show_tab_badge">अपडेटहरू आइकनमा नपढिएको गणना देखाउनुहोस्</string>
@@ -816,4 +816,10 @@
     <string name="app_settings">एप सेटिङहरू</string>
     <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्पहरू</string>
     <string name="pref_relative_format_summary">\"%2$s\" को सट्टा \"%1$s\"</string>
+    <string name="relative_time_span_never">कहिले पनि होइन</string>
+    <string name="pref_flash_page_summ">ई-इंक स्क्रिनहरूमा गोस्टिङ घटाउँछ</string>
+    <string name="last_auto_backup_info">पछिल्लो पटक स्वचालित ब्याकअप गरिएको: %s</string>
+    <string name="pref_flash_page">पृष्ठ बदलिँदा स्क्रिनमा सेतो फ्ल्यास हुन्छ</string>
+    <string name="label_data_storage">डेटा र भण्डारण</string>
+    <string name="file_null_uri_error">फाइल पिकर एपमा फाइल फर्काउन असफल भयो</string>
 </resources>

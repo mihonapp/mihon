@@ -842,4 +842,6 @@
     <string name="exception_unknown_host">Не вдалося досягти %s</string>
     <string name="pref_relative_format">Відносні позначки часу</string>
     <string name="pref_relative_format_summary">\"%1$s\" замість \"%2$s\"</string>
+    <string name="source_settings">Налаштування джерела</string>
+    <string name="app_settings">Налаштування застосунку</string>
 </resources>

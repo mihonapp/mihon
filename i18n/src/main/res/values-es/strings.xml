@@ -237,8 +237,8 @@
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar la biblioteca a partir de una copia de seguridad</string>
     <string name="pref_backup_directory">Ubicación de la copia de respaldo</string>
-    <string name="pref_backup_interval">Frecuencia de respaldo</string>
-    <string name="pref_backup_slots">Copias de seguridad máximas</string>
+    <string name="pref_backup_interval">Frecuencia de la copia de seguridad automática</string>
+    <string name="pref_backup_slots">Copias de seguridad automáticas máximas</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="backup_choice">¿De qué quieres hacer una copia de seguridad\?</string>
@@ -474,7 +474,7 @@
     </plurals>
     <string name="action_disable">Desactivar</string>
     <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surja efecto</string>
-    <string name="label_network">Red</string>
+    <string name="label_network">Networking</string>
     <string name="unknown_status">Estado desconocido</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -747,7 +747,7 @@
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
     <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>
     <string name="pref_security_summary">Pantalla segura y desbloqueo biométrico</string>
-    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas</string>
+    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas, y el espacio de almacenamiento</string>
     <string name="pref_browse_summary">Fuentes, extensiones y búsqueda global</string>
     <string name="crash_screen_title">¡Vaya!</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
@@ -864,4 +864,10 @@
     <string name="action_sort_category">Ordenar categorías</string>
     <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
     <string name="file_null_uri_error">La pantalla de selección de archivos no ha devuelto ningún archivo</string>
+    <string name="relative_time_span_never">Nunca</string>
+    <string name="pref_flash_page_summ">Reducir el ghosting en las pantallas de tinta electrónica</string>
+    <string name="last_auto_backup_info">Última copia de seguridad automática: %s</string>
+    <string name="pref_flash_page">Parpadeo en blanco al cambiar de página</string>
+    <string name="label_data_storage">Datos y almacenamiento</string>
+    <string name="pref_storage_usage">Almacenamiento utilizado</string>
 </resources>
