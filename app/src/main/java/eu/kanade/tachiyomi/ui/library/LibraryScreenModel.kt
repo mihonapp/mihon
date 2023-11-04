@@ -61,6 +61,7 @@ import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracksPerManga
+import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -104,7 +105,7 @@ class LibraryScreenModel(
             ) { searchQuery, library, tracks, loggedInTrackers, _ ->
                 library
                     .applyFilters(tracks, loggedInTrackers)
-                    .applySort()
+                    .applySort(tracks)
                     .mapValues { (_, value) ->
                         if (searchQuery != null) {
                             // Filter query
@@ -168,7 +169,7 @@ class LibraryScreenModel(
      * Applies library filters to the given map of manga.
      */
     private suspend fun LibraryMap.applyFilters(
-        trackMap: Map<Long, List<Long>>,
+        trackMap: Map<Long, List<Track>>,
         loggedInTrackers: Map<Long, TriState>,
     ): LibraryMap {
         val prefs = getLibraryItemPreferencesFlow().first()
@@ -213,7 +214,9 @@ class LibraryScreenModel(
         val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->
             if (isNotLoggedInAnyTrack || trackFiltersIsIgnored) return@tracking true
 
-            val mangaTracks = trackMap[item.libraryManga.id].orEmpty()
+            val mangaTracks = trackMap
+                .mapValues { entry -> entry.value.map { it.syncId } }[item.libraryManga.id]
+                .orEmpty()
 
             val isExcluded = excludedTracks.isNotEmpty() && mangaTracks.fastAny { it in excludedTracks }
             val isIncluded = includedTracks.isEmpty() || mangaTracks.fastAny { it in includedTracks }
@@ -236,13 +239,30 @@ class LibraryScreenModel(
     /**
      * Applies library sorting to the given map of manga.
      */
-    private fun LibraryMap.applySort(): LibraryMap {
+    private fun LibraryMap.applySort(
+        // Map<MangaId, List<Track>>
+        trackMap: Map<Long, List<Track>>,
+    ): LibraryMap {
         val locale = Locale.getDefault()
         val collator = Collator.getInstance(locale).apply {
             strength = Collator.PRIMARY
         }
         val sortAlphabetically: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
             collator.compare(i1.libraryManga.manga.title.lowercase(locale), i2.libraryManga.manga.title.lowercase(locale))
+        }
+
+        val defaultTrackerScoreSortValue = -1.0
+        val trackerScores by lazy {
+            val trackerMap = trackerManager.loggedInTrackers().associateBy { e -> e.id }
+            trackMap.mapValues { entry ->
+                when {
+                    entry.value.isEmpty() -> null
+                    else ->
+                        entry.value
+                            .mapNotNull { trackerMap[it.syncId]?.get10PointScore(it) }
+                            .average()
+                }
+            }
         }
 
         val sortFn: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
@@ -275,6 +295,11 @@ class LibraryScreenModel(
                 }
                 LibrarySort.Type.DateAdded -> {
                     i1.libraryManga.manga.dateAdded.compareTo(i2.libraryManga.manga.dateAdded)
+                }
+                LibrarySort.Type.TrackerMean -> {
+                    val item1Score = trackerScores[i1.libraryManga.id] ?: defaultTrackerScoreSortValue
+                    val item2Score = trackerScores[i2.libraryManga.id] ?: defaultTrackerScoreSortValue
+                    item1Score.compareTo(item2Score)
                 }
             }
         }
@@ -366,7 +391,7 @@ class LibraryScreenModel(
      * @return map of track id with the filter value
      */
     private fun getTrackingFilterFlow(): Flow<Map<Long, TriState>> {
-        val loggedInTrackers = trackerManager.trackers.filter { it.isLoggedIn }
+        val loggedInTrackers = trackerManager.loggedInTrackers()
         return if (loggedInTrackers.isNotEmpty()) {
             val prefFlows = loggedInTrackers
                 .map { libraryPreferences.filterTracking(it.id.toInt()).changes() }
