@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.updater
 
 import android.content.Context
-import android.os.Build
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.util.system.isInstalledFromFDroid
 import tachiyomi.core.util.lang.withIOContext
@@ -13,10 +12,10 @@ class AppUpdateChecker {
     private val getApplicationRelease: GetApplicationRelease by injectLazy()
 
     suspend fun checkForUpdate(context: Context, forceCheck: Boolean = false): GetApplicationRelease.Result {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return GetApplicationRelease.Result.OsTooOld
-        }
         // Disable app update checks for older Android versions that we're going to drop support for
+        // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        //     return GetApplicationRelease.Result.OsTooOld
+        // }
 
         return withIOContext {
             val result = getApplicationRelease.await(
