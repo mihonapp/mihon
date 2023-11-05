@@ -41,7 +41,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         val backupPreferences = Injekt.get<BackupPreferences>()
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: backupPreferences.backupsDirectory().get().toUri()
-        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupConst.BACKUP_ALL)
+        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
 
         try {
             setForeground(getForegroundInfo())

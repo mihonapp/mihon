@@ -484,6 +484,7 @@
     <string name="pref_backup_directory">Backup location</string>
     <string name="pref_backup_interval">Automatic backup frequency</string>
     <string name="pref_backup_slots">Maximum automatic backups</string>
+    <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
     <string name="invalid_backup_file">Invalid backup file</string>
     <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
@@ -880,7 +881,7 @@
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
     <string name="file_picker_error">No file picker app found</string>
-    <string name="file_null_uri_error">File picker failed to return file to app</string>
+    <string name="file_null_uri_error">No file selected</string>
 
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>
