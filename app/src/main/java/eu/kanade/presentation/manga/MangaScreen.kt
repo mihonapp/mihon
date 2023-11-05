@@ -48,7 +48,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
-import eu.kanade.domain.manga.model.chaptersFiltered
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterHeader
 import eu.kanade.presentation.manga.components.ExpandableMangaDescription
@@ -308,7 +307,7 @@ private fun MangaScreenSmallImpl(
                 title = state.manga.title,
                 titleAlphaProvider = { animatedTitleAlpha },
                 backgroundAlphaProvider = { animatedBgAlpha },
-                hasFilters = state.manga.chaptersFiltered(),
+                hasFilters = state.filterActive,
                 onBackClicked = internalOnBackPressed,
                 onClickFilter = onFilterClicked,
                 onClickShare = onShareClicked,
@@ -561,7 +560,7 @@ fun MangaScreenLargeImpl(
                     title = state.manga.title,
                     titleAlphaProvider = { if (isAnySelected) 1f else 0f },
                     backgroundAlphaProvider = { 1f },
-                    hasFilters = state.manga.chaptersFiltered(),
+                    hasFilters = state.filterActive,
                     onBackClicked = internalOnBackPressed,
                     onClickFilter = onFilterButtonClicked,
                     onClickShare = onShareClicked,

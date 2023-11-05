@@ -36,7 +36,19 @@ FROM chapters
 WHERE _id = :id;
 
 getChaptersByMangaId:
-SELECT *
+SELECT C.*
+FROM chapters C
+LEFT JOIN excluded_scanlators ES
+ON C.manga_id = ES.manga_id
+AND C.scanlator = ES.scanlator
+WHERE C.manga_id = :mangaId
+AND (
+    :applyScanlatorFilter = 0
+    OR ES.scanlator IS NULL
+);
+
+getScanlatorsByMangaId:
+SELECT scanlator
 FROM chapters
 WHERE manga_id = :mangaId;
 

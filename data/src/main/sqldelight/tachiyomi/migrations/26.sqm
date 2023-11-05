@@ -1,3 +1,14 @@
+CREATE TABLE excluded_scanlators(
+    manga_id INTEGER NOT NULL,
+    scanlator TEXT NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX excluded_scanlators_manga_id_index ON excluded_scanlators(manga_id);
+
+DROP VIEW IF EXISTS libraryView;
+
 CREATE VIEW libraryView AS
 SELECT
     M.*,
@@ -31,7 +42,3 @@ ON M._id = C.manga_id
 LEFT JOIN mangas_categories AS MC
 ON MC.manga_id = M._id
 WHERE M.favorite = 1;
-
-library:
-SELECT *
-FROM libraryView;

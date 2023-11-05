@@ -9,9 +9,9 @@ class GetChaptersByMangaId(
     private val chapterRepository: ChapterRepository,
 ) {
 
-    suspend fun await(mangaId: Long): List<Chapter> {
+    suspend fun await(mangaId: Long, applyScanlatorFilter: Boolean = false): List<Chapter> {
         return try {
-            chapterRepository.getChapterByMangaId(mangaId)
+            chapterRepository.getChapterByMangaId(mangaId, applyScanlatorFilter)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             emptyList()

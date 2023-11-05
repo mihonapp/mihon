@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_TRACK
 import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_TRACK_MASK
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
@@ -189,10 +190,15 @@ class BackupCreator(
         // Check if user wants chapter information in backup
         if (options and BACKUP_CHAPTER_MASK == BACKUP_CHAPTER) {
             // Backup all the chapters
-            val chapters = handler.awaitList { chaptersQueries.getChaptersByMangaId(manga.id, backupChapterMapper) }
-            if (chapters.isNotEmpty()) {
-                mangaObject.chapters = chapters
+            handler.awaitList {
+                chaptersQueries.getChaptersByMangaId(
+                    mangaId = manga.id,
+                    applyScanlatorFilter = 0, // false
+                    mapper = backupChapterMapper,
+                )
             }
+                .takeUnless(List<BackupChapter>::isEmpty)
+                ?.let { mangaObject.chapters = it }
         }
 
         // Check if user wants category information in backup
