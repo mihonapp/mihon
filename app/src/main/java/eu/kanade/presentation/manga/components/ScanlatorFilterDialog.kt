@@ -106,27 +106,27 @@ fun ScanlatorFilterDialog(
             usePlatformDefaultWidth = true,
         ),
         confirmButton = {
-            FlowRow {
-                if (sortedAvailableScanlators.isEmpty()) {
-                    TextButton(onClick = onDismissRequest) {
-                        Text(text = stringResource(R.string.action_cancel))
-                    }
-                    return@FlowRow
-                }
-                TextButton(onClick = mutableExcludedScanlators::clear) {
-                    Text(text = stringResource(R.string.action_reset))
-                }
-                Spacer(modifier = Modifier.weight(1f))
+            if (sortedAvailableScanlators.isEmpty()) {
                 TextButton(onClick = onDismissRequest) {
                     Text(text = stringResource(R.string.action_cancel))
                 }
-                TextButton(
-                    onClick = {
-                        onConfirm(mutableExcludedScanlators.toSet())
-                        onDismissRequest()
-                    },
-                ) {
-                    Text(text = stringResource(R.string.action_ok))
+            } else {
+                FlowRow {
+                    TextButton(onClick = mutableExcludedScanlators::clear) {
+                        Text(text = stringResource(R.string.action_reset))
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(onClick = onDismissRequest) {
+                        Text(text = stringResource(R.string.action_cancel))
+                    }
+                    TextButton(
+                        onClick = {
+                            onConfirm(mutableExcludedScanlators.toSet())
+                            onDismissRequest()
+                        },
+                    ) {
+                        Text(text = stringResource(R.string.action_ok))
+                    }
                 }
             }
         },
