@@ -22,7 +22,7 @@ fun Chapter.copyFromSChapter(sChapter: SChapter): Chapter {
         url = sChapter.url,
         dateUpload = sChapter.date_upload,
         chapterNumber = sChapter.chapter_number.toDouble(),
-        scanlator = sChapter.scanlator?.ifBlank { null },
+        scanlator = sChapter.scanlator?.ifBlank { null }?.trim(),
     )
 }
 
