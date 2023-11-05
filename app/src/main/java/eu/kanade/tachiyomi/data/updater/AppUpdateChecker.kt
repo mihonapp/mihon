@@ -15,7 +15,7 @@ class AppUpdateChecker {
     suspend fun checkForUpdate(context: Context, forceCheck: Boolean = false): GetApplicationRelease.Result {
         // Disabling app update checks for older Android versions that we're going to drop support for
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return GetApplicationRelease.Result.NoNewUpdate
+            return GetApplicationRelease.Result.OsTooOld
         }
 
         return withIOContext {
