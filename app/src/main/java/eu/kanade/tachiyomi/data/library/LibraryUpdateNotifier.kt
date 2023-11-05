@@ -336,7 +336,9 @@ class LibraryUpdateNotifier(private val context: Context) {
                 if (shouldTruncate) {
                     // "Chapters 1, 2.5, 3, 4, 5 and 10 more"
                     val remaining = displayableChapterNumbers.size - NOTIF_MAX_CHAPTERS
-                    val joinedChapterNumbers = displayableChapterNumbers.take(NOTIF_MAX_CHAPTERS).joinToString(", ")
+                    val joinedChapterNumbers = displayableChapterNumbers
+                        .take(NOTIF_MAX_CHAPTERS)
+                        .joinToString(", ")
                     context.resources.getQuantityString(
                         R.plurals.notification_chapters_multiple_and_more,
                         remaining,
@@ -371,7 +373,8 @@ class LibraryUpdateNotifier(private val context: Context) {
     }
 
     companion object {
-        const val HELP_WARNING_URL = "https://tachiyomi.org/docs/faq/library#why-am-i-warned-about-large-bulk-updates-and-downloads"
+        const val HELP_WARNING_URL =
+            "https://tachiyomi.org/docs/faq/library#why-am-i-warned-about-large-bulk-updates-and-downloads"
     }
 }
 

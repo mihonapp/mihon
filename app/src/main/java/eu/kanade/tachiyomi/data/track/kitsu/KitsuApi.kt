@@ -278,7 +278,9 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             "https://AWQO5J657S-dsn.algolia.net/1/indexes/production_media/query/"
         private const val algoliaAppId = "AWQO5J657S"
         private const val algoliaFilter =
-            "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=%5B%22synopsis%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
+            "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=" +
+                "%5B%22synopsis%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22" +
+                "posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
 
         fun mangaUrl(remoteId: Long): String {
             return baseMangaUrl + remoteId

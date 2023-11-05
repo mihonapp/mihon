@@ -74,7 +74,11 @@ fun CategoryCreateDialog(
                 onValueChange = { name = it },
                 label = { Text(text = stringResource(R.string.name)) },
                 supportingText = {
-                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) R.string.error_category_exists else R.string.information_required_plain
+                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
+                        R.string.error_category_exists
+                    } else {
+                        R.string.information_required_plain
+                    }
                     Text(text = stringResource(msgRes))
                 },
                 isError = name.isNotEmpty() && nameAlreadyExists,
@@ -134,7 +138,11 @@ fun CategoryRenameDialog(
                 },
                 label = { Text(text = stringResource(R.string.name)) },
                 supportingText = {
-                    val msgRes = if (valueHasChanged && nameAlreadyExists) R.string.error_category_exists else R.string.information_required_plain
+                    val msgRes = if (valueHasChanged && nameAlreadyExists) {
+                        R.string.error_category_exists
+                    } else {
+                        R.string.information_required_plain
+                    }
                     Text(text = stringResource(msgRes))
                 },
                 isError = valueHasChanged && nameAlreadyExists,
@@ -257,8 +265,12 @@ fun ChangeCategoryDialog(
                     onClick = {
                         onDismissRequest()
                         onConfirm(
-                            selection.filter { it is CheckboxState.State.Checked || it is CheckboxState.TriState.Include }.map { it.value.id },
-                            selection.filter { it is CheckboxState.State.None || it is CheckboxState.TriState.None }.map { it.value.id },
+                            selection
+                                .filter { it is CheckboxState.State.Checked || it is CheckboxState.TriState.Include }
+                                .map { it.value.id },
+                            selection
+                                .filter { it is CheckboxState.State.None || it is CheckboxState.TriState.None }
+                                .map { it.value.id },
                         )
                     },
                 ) {

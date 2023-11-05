@@ -100,7 +100,8 @@ class ExtensionsScreenModel(
                     .groupBy { it.lang }
                     .toSortedMap(LocaleHelper.comparator)
                     .map { (lang, exts) ->
-                        ExtensionUiModel.Header.Text(LocaleHelper.getSourceDisplayName(lang, context)) to exts.map(extensionMapper(downloads))
+                        ExtensionUiModel.Header.Text(LocaleHelper.getSourceDisplayName(lang, context)) to
+                            exts.map(extensionMapper(downloads))
                     }
                 if (languagesWithExtensions.isNotEmpty()) {
                     itemsGroups.putAll(languagesWithExtensions)

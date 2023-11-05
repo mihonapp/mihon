@@ -83,7 +83,8 @@ fun ChapterSettingsDialog(
                 0 -> {
                     FilterPage(
                         downloadFilter = manga?.downloadedFilter ?: TriState.DISABLED,
-                        onDownloadFilterChanged = onDownloadFilterChanged.takeUnless { manga?.forceDownloaded() == true },
+                        onDownloadFilterChanged = onDownloadFilterChanged
+                            .takeUnless { manga?.forceDownloaded() == true },
                         unreadFilter = manga?.unreadFilter ?: TriState.DISABLED,
                         onUnreadFilterChanged = onUnreadFilterChanged,
                         bookmarkedFilter = manga?.bookmarkedFilter ?: TriState.DISABLED,

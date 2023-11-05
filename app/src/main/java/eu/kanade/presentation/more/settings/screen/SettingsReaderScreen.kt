@@ -174,12 +174,12 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.pagerNavInverted(),
                     title = stringResource(R.string.pref_read_with_tapping_inverted),
-                    entries = mapOf(
-                        ReaderPreferences.TappingInvertMode.NONE to stringResource(R.string.none),
-                        ReaderPreferences.TappingInvertMode.HORIZONTAL to stringResource(R.string.tapping_inverted_horizontal),
-                        ReaderPreferences.TappingInvertMode.VERTICAL to stringResource(R.string.tapping_inverted_vertical),
-                        ReaderPreferences.TappingInvertMode.BOTH to stringResource(R.string.tapping_inverted_both),
-                    ),
+                    entries = listOf(
+                        ReaderPreferences.TappingInvertMode.NONE,
+                        ReaderPreferences.TappingInvertMode.HORIZONTAL,
+                        ReaderPreferences.TappingInvertMode.VERTICAL,
+                        ReaderPreferences.TappingInvertMode.BOTH,
+                    ).associateWith { stringResource(it.titleResId) },
                     enabled = navMode != 5,
                 ),
                 Preference.PreferenceItem.ListPreference(
@@ -266,12 +266,12 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.webtoonNavInverted(),
                     title = stringResource(R.string.pref_read_with_tapping_inverted),
-                    entries = mapOf(
-                        ReaderPreferences.TappingInvertMode.NONE to stringResource(R.string.none),
-                        ReaderPreferences.TappingInvertMode.HORIZONTAL to stringResource(R.string.tapping_inverted_horizontal),
-                        ReaderPreferences.TappingInvertMode.VERTICAL to stringResource(R.string.tapping_inverted_vertical),
-                        ReaderPreferences.TappingInvertMode.BOTH to stringResource(R.string.tapping_inverted_both),
-                    ),
+                    entries = listOf(
+                        ReaderPreferences.TappingInvertMode.NONE,
+                        ReaderPreferences.TappingInvertMode.HORIZONTAL,
+                        ReaderPreferences.TappingInvertMode.VERTICAL,
+                        ReaderPreferences.TappingInvertMode.BOTH,
+                    ).associateWith { stringResource(it.titleResId) },
                     enabled = navMode != 5,
                 ),
                 Preference.PreferenceItem.SliderPreference(

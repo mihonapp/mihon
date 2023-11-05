@@ -71,7 +71,10 @@ internal class ExtensionGithubApi {
         }
     }
 
-    suspend fun checkForUpdates(context: Context, fromAvailableExtensionList: Boolean = false): List<Extension.Installed>? {
+    suspend fun checkForUpdates(
+        context: Context,
+        fromAvailableExtensionList: Boolean = false,
+    ): List<Extension.Installed>? {
         // Limit checks to once a day at most
         if (!fromAvailableExtensionList && Date().time < lastExtCheck.get() + 1.days.inWholeMilliseconds) {
             return null

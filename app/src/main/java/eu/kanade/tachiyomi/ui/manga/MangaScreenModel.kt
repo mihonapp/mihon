@@ -133,7 +133,8 @@ class MangaScreenModel(
     val dateFormat by mutableStateOf(UiPreferences.dateFormat(uiPreferences.dateFormat().get()))
     private val skipFiltered by readerPreferences.skipFiltered().asState(screenModelScope)
 
-    val isUpdateIntervalEnabled = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions().get()
+    val isUpdateIntervalEnabled =
+        LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in libraryPreferences.autoUpdateMangaRestrictions().get()
 
     private val selectedPositions: Array<Int> = arrayOf(-1, -1) // first and last selected index in list
     private val selectedChapterIds: HashSet<Long> = HashSet()
@@ -744,7 +745,13 @@ class MangaScreenModel(
         screenModelScope.launchNonCancellable {
             val manga = successState?.manga ?: return@launchNonCancellable
             val categories = getCategories.await(manga.id).map { it.id }
-            if (chapters.isEmpty() || !manga.shouldDownloadNewChapters(categories, downloadPreferences)) return@launchNonCancellable
+            if (
+                chapters.isEmpty() ||
+                !manga.shouldDownloadNewChapters(categories, downloadPreferences)
+            ) {
+                return@launchNonCancellable
+            }
+
             downloadChapters(chapters)
         }
     }

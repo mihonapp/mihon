@@ -446,7 +446,13 @@ class BackupRestorer(
         return backupManga
     }
 
-    private suspend fun restoreExtras(manga: Manga, categories: List<Int>, history: List<BackupHistory>, tracks: List<Track>, backupCategories: List<BackupCategory>) {
+    private suspend fun restoreExtras(
+        manga: Manga,
+        categories: List<Int>,
+        history: List<BackupHistory>,
+        tracks: List<Track>,
+        backupCategories: List<BackupCategory>,
+    ) {
         restoreCategories(manga, categories, backupCategories)
         restoreHistory(history)
         restoreTracking(manga, tracks)

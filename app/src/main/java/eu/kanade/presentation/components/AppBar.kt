@@ -370,7 +370,11 @@ fun SearchToolbar(
 @Composable
 fun UpIcon(navigationIcon: ImageVector? = null) {
     val icon = navigationIcon
-        ?: if (LocalLayoutDirection.current == LayoutDirection.Ltr) Icons.Outlined.ArrowBack else Icons.Outlined.ArrowForward
+        ?: if (LocalLayoutDirection.current == LayoutDirection.Ltr) {
+            Icons.Outlined.ArrowBack
+        } else {
+            Icons.Outlined.ArrowForward
+        }
     Icon(
         imageVector = icon,
         contentDescription = stringResource(R.string.abc_action_bar_up_description),
