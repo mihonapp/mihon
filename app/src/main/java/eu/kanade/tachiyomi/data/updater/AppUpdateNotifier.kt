@@ -42,7 +42,12 @@ internal class AppUpdateNotifier(private val context: Context) {
 
         val releaseIntent = Intent(Intent.ACTION_VIEW, release.releaseLink.toUri()).run {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            PendingIntent.getActivity(context, release.hashCode(), this, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getActivity(
+                context,
+                release.hashCode(),
+                this,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
         }
 
         with(notificationBuilder) {
@@ -143,7 +148,12 @@ internal class AppUpdateNotifier(private val context: Context) {
             setContentTitle(context.getString(R.string.update_check_notification_update_available))
             setContentText(context.getString(R.string.update_check_fdroid_migration_info))
             setSmallIcon(R.drawable.ic_tachi)
-            setContentIntent(NotificationHandler.openUrl(context, "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds"))
+            setContentIntent(
+                NotificationHandler.openUrl(
+                    context,
+                    "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
+                ),
+            )
         }
         notificationBuilder.show(Notifications.ID_APP_UPDATE_PROMPT)
     }

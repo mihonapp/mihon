@@ -82,7 +82,12 @@ class LibraryUpdateNotifier(private val context: Context) {
         } else {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
             progressNotificationBuilder
-                .setContentTitle(context.getString(R.string.notification_updating_progress, percentFormatter.format(current.toFloat() / total)))
+                .setContentTitle(
+                    context.getString(
+                        R.string.notification_updating_progress,
+                        percentFormatter.format(current.toFloat() / total),
+                    ),
+                )
                 .setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
 
@@ -166,7 +171,13 @@ class LibraryUpdateNotifier(private val context: Context) {
             if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
                 setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
             } else {
-                setContentText(context.resources.getQuantityString(R.plurals.notification_new_chapters_summary, updates.size, updates.size))
+                setContentText(
+                    context.resources.getQuantityString(
+                        R.plurals.notification_new_chapters_summary,
+                        updates.size,
+                        updates.size,
+                    ),
+                )
 
                 if (!preferences.hideNotificationContent().get()) {
                     setStyle(
@@ -196,7 +207,10 @@ class LibraryUpdateNotifier(private val context: Context) {
             launchUI {
                 context.notify(
                     updates.map { (manga, chapters) ->
-                        NotificationManagerCompat.NotificationWithIdAndTag(manga.id.hashCode(), createNewChaptersNotification(manga, chapters))
+                        NotificationManagerCompat.NotificationWithIdAndTag(
+                            manga.id.hashCode(),
+                            createNewChaptersNotification(manga, chapters),
+                        )
                     },
                 )
             }
@@ -292,17 +306,28 @@ class LibraryUpdateNotifier(private val context: Context) {
             // No sensible chapter numbers to show (i.e. no chapters have parsed chapter number)
             0 -> {
                 // "1 new chapter" or "5 new chapters"
-                context.resources.getQuantityString(R.plurals.notification_chapters_generic, chapters.size, chapters.size)
+                context.resources.getQuantityString(
+                    R.plurals.notification_chapters_generic,
+                    chapters.size,
+                    chapters.size,
+                )
             }
             // Only 1 chapter has a parsed chapter number
             1 -> {
                 val remaining = chapters.size - displayableChapterNumbers.size
                 if (remaining == 0) {
                     // "Chapter 2.5"
-                    context.resources.getString(R.string.notification_chapters_single, displayableChapterNumbers.first())
+                    context.resources.getString(
+                        R.string.notification_chapters_single,
+                        displayableChapterNumbers.first(),
+                    )
                 } else {
                     // "Chapter 2.5 and 10 more"
-                    context.resources.getString(R.string.notification_chapters_single_and_more, displayableChapterNumbers.first(), remaining)
+                    context.resources.getString(
+                        R.string.notification_chapters_single_and_more,
+                        displayableChapterNumbers.first(),
+                        remaining,
+                    )
                 }
             }
             // Everything else (i.e. multiple parsed chapter numbers)
@@ -312,10 +337,18 @@ class LibraryUpdateNotifier(private val context: Context) {
                     // "Chapters 1, 2.5, 3, 4, 5 and 10 more"
                     val remaining = displayableChapterNumbers.size - NOTIF_MAX_CHAPTERS
                     val joinedChapterNumbers = displayableChapterNumbers.take(NOTIF_MAX_CHAPTERS).joinToString(", ")
-                    context.resources.getQuantityString(R.plurals.notification_chapters_multiple_and_more, remaining, joinedChapterNumbers, remaining)
+                    context.resources.getQuantityString(
+                        R.plurals.notification_chapters_multiple_and_more,
+                        remaining,
+                        joinedChapterNumbers,
+                        remaining,
+                    )
                 } else {
                     // "Chapters 1, 2.5, 3"
-                    context.resources.getString(R.string.notification_chapters_multiple, displayableChapterNumbers.joinToString(", "))
+                    context.resources.getString(
+                        R.string.notification_chapters_multiple,
+                        displayableChapterNumbers.joinToString(", "),
+                    )
                 }
             }
         }
@@ -329,7 +362,12 @@ class LibraryUpdateNotifier(private val context: Context) {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             action = Constants.SHORTCUT_UPDATES
         }
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 
     companion object {

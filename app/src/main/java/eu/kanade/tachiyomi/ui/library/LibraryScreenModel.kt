@@ -543,7 +543,8 @@ class LibraryScreenModel(
     }
 
     fun getColumnsPreferenceForCurrentOrientation(isLandscape: Boolean): PreferenceMutableState<Int> {
-        return (if (isLandscape) libraryPreferences.landscapeColumns() else libraryPreferences.portraitColumns()).asState(screenModelScope)
+        return (if (isLandscape) libraryPreferences.landscapeColumns() else libraryPreferences.portraitColumns())
+            .asState(screenModelScope)
     }
 
     suspend fun getRandomLibraryItemForCurrentCategory(): LibraryItem? {

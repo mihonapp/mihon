@@ -91,6 +91,7 @@ fun View?.isVisibleOnScreen(): Boolean {
     }
     val actualPosition = Rect()
     this.getGlobalVisibleRect(actualPosition)
-    val screen = Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
+    val screen =
+        Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
     return actualPosition.intersect(screen)
 }

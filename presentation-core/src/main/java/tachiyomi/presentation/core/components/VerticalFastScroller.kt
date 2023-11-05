@@ -95,7 +95,10 @@ fun VerticalFastScroller(
             }
 
             val thumbBottomPadding = with(LocalDensity.current) { bottomContentPadding.toPx() }
-            val heightPx = contentHeight.toFloat() - thumbTopPadding - thumbBottomPadding - listState.layoutInfo.afterContentPadding
+            val heightPx = contentHeight.toFloat() -
+                thumbTopPadding -
+                thumbBottomPadding -
+                listState.layoutInfo.afterContentPadding
             val thumbHeightPx = with(LocalDensity.current) { ThumbLength.toPx() }
             val trackHeightPx = heightPx - thumbHeightPx
 
@@ -261,7 +264,10 @@ fun VerticalGridFastScroller(
             }
 
             val thumbBottomPadding = with(LocalDensity.current) { bottomContentPadding.toPx() }
-            val heightPx = contentHeight.toFloat() - thumbTopPadding - thumbBottomPadding - state.layoutInfo.afterContentPadding
+            val heightPx = contentHeight.toFloat() -
+                thumbTopPadding -
+                thumbBottomPadding -
+                state.layoutInfo.afterContentPadding
             val thumbHeightPx = with(LocalDensity.current) { ThumbLength.toPx() }
             val trackHeightPx = heightPx - thumbHeightPx
 

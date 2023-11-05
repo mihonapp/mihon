@@ -36,9 +36,17 @@ fun File.copyAndSetReadOnlyTo(target: File, overwrite: Boolean = false, bufferSi
 
     if (target.exists()) {
         if (!overwrite) {
-            throw FileAlreadyExistsException(file = this, other = target, reason = "The destination file already exists.")
+            throw FileAlreadyExistsException(
+                file = this,
+                other = target,
+                reason = "The destination file already exists.",
+            )
         } else if (!target.delete()) {
-            throw FileAlreadyExistsException(file = this, other = target, reason = "Tried to overwrite the destination, but failed to delete it.")
+            throw FileAlreadyExistsException(
+                file = this,
+                other = target,
+                reason = "Tried to overwrite the destination, but failed to delete it.",
+            )
         }
     }
 

@@ -43,7 +43,9 @@ class DelayedTrackingUpdateJob(private val context: Context, workerParams: Worke
                     track?.copy(lastChapterRead = it.lastChapterRead.toDouble())
                 }
                 .forEach { track ->
-                    logcat(LogPriority.DEBUG) { "Updating delayed track item: ${track.mangaId}, last chapter read: ${track.lastChapterRead}" }
+                    logcat(LogPriority.DEBUG) {
+                        "Updating delayed track item: ${track.mangaId}, last chapter read: ${track.lastChapterRead}"
+                    }
                     trackChapter.await(context, track.mangaId, track.lastChapterRead)
                 }
         }

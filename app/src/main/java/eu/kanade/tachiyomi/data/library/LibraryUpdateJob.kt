@@ -296,7 +296,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> context.getString(R.string.no_chapters_error)
                                             // failedUpdates will already have the source, don't need to copy it into the message
-                                            is SourceNotInstalledException -> context.getString(R.string.loader_not_implemented_error)
+                                            is SourceNotInstalledException -> context.getString(
+                                                R.string.loader_not_implemented_error,
+                                            )
                                             else -> e.message
                                         }
                                         failedUpdates.add(manga to errorMessage)
@@ -500,7 +502,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             if (interval > 0) {
                 val restrictions = preferences.autoUpdateDeviceRestrictions().get()
                 val constraints = Constraints(
-                    requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) { NetworkType.UNMETERED } else { NetworkType.CONNECTED },
+                    requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                        NetworkType.UNMETERED
+                    } else { NetworkType.CONNECTED },
                     requiresCharging = DEVICE_CHARGING in restrictions,
                     requiresBatteryNotLow = true,
                 )
@@ -517,7 +521,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
                     .build()
 
-                context.workManager.enqueueUniquePeriodicWork(WORK_NAME_AUTO, ExistingPeriodicWorkPolicy.UPDATE, request)
+                context.workManager.enqueueUniquePeriodicWork(
+                    WORK_NAME_AUTO,
+                    ExistingPeriodicWorkPolicy.UPDATE,
+                    request,
+                )
             } else {
                 context.workManager.cancelUniqueWork(WORK_NAME_AUTO)
             }

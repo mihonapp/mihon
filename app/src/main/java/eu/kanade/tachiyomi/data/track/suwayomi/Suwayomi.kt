@@ -91,7 +91,9 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
             null
         }
 
-    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean = source?.let { accept(it) } == true
+    override fun isTrackFrom(track: DomainTrack, manga: DomainManga, source: Source?): Boolean = source?.let {
+        accept(it)
+    } == true
 
     override fun migrateTrack(track: DomainTrack, manga: DomainManga, newSource: Source): DomainTrack? =
         if (accept(newSource)) {

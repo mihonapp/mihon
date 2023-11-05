@@ -173,7 +173,9 @@ fun WebViewScreenContent(
                                 modifier = Modifier
                                     .clip(MaterialTheme.shapes.small)
                                     .clickable {
-                                        uriHandler.openUri("https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare")
+                                        uriHandler.openUri(
+                                            "https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare",
+                                        )
                                     },
                             )
                         }

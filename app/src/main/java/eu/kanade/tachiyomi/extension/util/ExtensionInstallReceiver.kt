@@ -108,7 +108,9 @@ internal class ExtensionInstallReceiver(private val listener: Listener) :
             logcat(LogPriority.WARN) { "Package name not found" }
             return LoadResult.Error
         }
-        return GlobalScope.async(Dispatchers.Default, CoroutineStart.DEFAULT) { ExtensionLoader.loadExtensionFromPkgName(context, pkgName) }.await()
+        return GlobalScope.async(Dispatchers.Default, CoroutineStart.DEFAULT) {
+            ExtensionLoader.loadExtensionFromPkgName(context, pkgName)
+        }.await()
     }
 
     /**

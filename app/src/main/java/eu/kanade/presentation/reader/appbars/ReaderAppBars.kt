@@ -99,7 +99,9 @@ fun ReaderAppBars(
                     AppBarActions(
                         listOfNotNull(
                             AppBar.Action(
-                                title = stringResource(if (bookmarked) R.string.action_remove_bookmark else R.string.action_bookmark),
+                                title = stringResource(
+                                    if (bookmarked) R.string.action_remove_bookmark else R.string.action_bookmark,
+                                ),
                                 icon = if (bookmarked) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
                                 onClick = onToggleBookmarked,
                             ),

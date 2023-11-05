@@ -121,13 +121,22 @@ object Migrations {
                     }
                 }
                 prefs.edit {
-                    putInt(libraryPreferences.filterDownloaded().key(), convertBooleanPrefToTriState("pref_filter_downloaded_key"))
+                    putInt(
+                        libraryPreferences.filterDownloaded().key(),
+                        convertBooleanPrefToTriState("pref_filter_downloaded_key"),
+                    )
                     remove("pref_filter_downloaded_key")
 
-                    putInt(libraryPreferences.filterUnread().key(), convertBooleanPrefToTriState("pref_filter_unread_key"))
+                    putInt(
+                        libraryPreferences.filterUnread().key(),
+                        convertBooleanPrefToTriState("pref_filter_unread_key"),
+                    )
                     remove("pref_filter_unread_key")
 
-                    putInt(libraryPreferences.filterCompleted().key(), convertBooleanPrefToTriState("pref_filter_completed_key"))
+                    putInt(
+                        libraryPreferences.filterCompleted().key(),
+                        convertBooleanPrefToTriState("pref_filter_completed_key"),
+                    )
                     remove("pref_filter_completed_key")
                 }
             }
@@ -242,7 +251,10 @@ object Migrations {
                 if (oldSecureScreen) {
                     securityPreferences.secureScreen().set(SecurityPreferences.SecureScreenMode.ALWAYS)
                 }
-                if (DeviceUtil.isMiui && basePreferences.extensionInstaller().get() == BasePreferences.ExtensionInstaller.PACKAGEINSTALLER) {
+                if (
+                    DeviceUtil.isMiui &&
+                    basePreferences.extensionInstaller().get() == BasePreferences.ExtensionInstaller.PACKAGEINSTALLER
+                ) {
                     basePreferences.extensionInstaller().set(BasePreferences.ExtensionInstaller.LEGACY)
                 }
             }
@@ -259,7 +271,12 @@ object Migrations {
             if (oldVersion < 81) {
                 // Handle renamed enum values
                 prefs.edit {
-                    val newSortingMode = when (val oldSortingMode = prefs.getString(libraryPreferences.sortingMode().key(), "ALPHABETICAL")) {
+                    val newSortingMode = when (
+                        val oldSortingMode = prefs.getString(
+                            libraryPreferences.sortingMode().key(),
+                            "ALPHABETICAL",
+                        )
+                    ) {
                         "LAST_CHECKED" -> "LAST_MANGA_UPDATE"
                         "UNREAD" -> "UNREAD_COUNT"
                         "DATE_FETCHED" -> "CHAPTER_FETCH_DATE"

@@ -223,7 +223,12 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
         fun register() {
             if (!registered) {
-                ContextCompat.registerReceiver(this@App, this, IntentFilter(ACTION_DISABLE_INCOGNITO_MODE), ContextCompat.RECEIVER_NOT_EXPORTED)
+                ContextCompat.registerReceiver(
+                    this@App,
+                    this,
+                    IntentFilter(ACTION_DISABLE_INCOGNITO_MODE),
+                    ContextCompat.RECEIVER_NOT_EXPORTED,
+                )
                 registered = true
             }
         }

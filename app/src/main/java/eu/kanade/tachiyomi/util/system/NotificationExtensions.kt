@@ -49,7 +49,10 @@ fun Context.cancelNotification(id: Int) {
  * @param block the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null): NotificationCompat.Builder {
+fun Context.notificationBuilder(
+    channelId: String,
+    block: (NotificationCompat.Builder.() -> Unit)? = null,
+): NotificationCompat.Builder {
     val builder = NotificationCompat.Builder(this, channelId)
         .setColor(getColor(R.color.accent_blue))
     if (block != null) {

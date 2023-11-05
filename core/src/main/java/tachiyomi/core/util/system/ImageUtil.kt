@@ -271,7 +271,9 @@ object ImageUtil {
         }
     }
 
-    private fun splitImageName(filenamePrefix: String, index: Int) = "${filenamePrefix}__${"%03d".format(index + 1)}.jpg"
+    private fun splitImageName(filenamePrefix: String, index: Int) = "${filenamePrefix}__${"%03d".format(
+        index + 1,
+    )}.jpg"
 
     private val BitmapFactory.Options.splitData
         get(): List<SplitData> {
@@ -356,10 +358,12 @@ object ImageUtil {
         val botLeftIsDark = botLeftPixel.isDark()
         val botRightIsDark = botRightPixel.isDark()
 
-        var darkBG = (topLeftIsDark && (botLeftIsDark || botRightIsDark || topRightIsDark || midLeftIsDark || topMidIsDark)) ||
-            (topRightIsDark && (botRightIsDark || botLeftIsDark || midRightIsDark || topMidIsDark))
+        var darkBG =
+            (topLeftIsDark && (botLeftIsDark || botRightIsDark || topRightIsDark || midLeftIsDark || topMidIsDark)) ||
+                (topRightIsDark && (botRightIsDark || botLeftIsDark || midRightIsDark || topMidIsDark))
 
-        val topAndBotPixels = listOf(topLeftPixel, topCenterPixel, topRightPixel, botRightPixel, bottomCenterPixel, botLeftPixel)
+        val topAndBotPixels =
+            listOf(topLeftPixel, topCenterPixel, topRightPixel, botRightPixel, bottomCenterPixel, botLeftPixel)
         val isNotWhiteAndCloseTo = topAndBotPixels.mapIndexed { index, color ->
             val other = topAndBotPixels[(index + 1) % topAndBotPixels.size]
             !color.isWhite() && color.isCloseTo(other)
@@ -504,10 +508,16 @@ object ImageUtil {
             darkBG -> {
                 return ColorDrawable(blackColor)
             }
-            topIsBlackStreak || (topCornersIsDark && topOffsetCornersIsDark && (topMidIsDark || overallBlackPixels > 9)) -> {
+            topIsBlackStreak || (
+                topCornersIsDark && topOffsetCornersIsDark &&
+                    (topMidIsDark || overallBlackPixels > 9)
+                ) -> {
                 intArrayOf(blackColor, blackColor, whiteColor, whiteColor)
             }
-            bottomIsBlackStreak || (botCornersIsDark && botOffsetCornersIsDark && (bottomCenterPixel.isDark() || overallBlackPixels > 9)) -> {
+            bottomIsBlackStreak || (
+                botCornersIsDark && botOffsetCornersIsDark &&
+                    (bottomCenterPixel.isDark() || overallBlackPixels > 9)
+                ) -> {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
             else -> {

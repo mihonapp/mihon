@@ -88,7 +88,13 @@ class BackupRestorer(
         val logFile = writeErrorLog()
 
         if (sync) {
-            notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name, contentTitle = context.getString(R.string.library_sync_complete))
+            notifier.showRestoreComplete(
+                time,
+                errors.size,
+                logFile.parent,
+                logFile.name,
+                contentTitle = context.getString(R.string.library_sync_complete),
+            )
         } else {
             notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
         }
@@ -183,7 +189,12 @@ class BackupRestorer(
         )
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.categories), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.categories),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private suspend fun restoreManga(backupManga: BackupManga, backupCategories: List<BackupCategory>, sync: Boolean) {
@@ -214,9 +225,19 @@ class BackupRestorer(
 
         restoreProgress += 1
         if (sync) {
-            showRestoreProgress(restoreProgress, restoreAmount, manga.title, context.getString(R.string.syncing_library))
+            showRestoreProgress(
+                restoreProgress,
+                restoreAmount,
+                manga.title,
+                context.getString(R.string.syncing_library),
+            )
         } else {
-            showRestoreProgress(restoreProgress, restoreAmount, manga.title, context.getString(R.string.restoring_backup))
+            showRestoreProgress(
+                restoreProgress,
+                restoreAmount,
+                manga.title,
+                context.getString(R.string.restoring_backup),
+            )
         }
     }
 
@@ -603,7 +624,12 @@ class BackupRestorer(
         BackupCreateJob.setupTask(context)
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.app_settings), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.app_settings),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private fun restoreSourcePreferences(preferences: List<BackupSourcePreferences>) {
@@ -613,7 +639,12 @@ class BackupRestorer(
         }
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.source_settings), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.source_settings),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private fun restorePreferences(

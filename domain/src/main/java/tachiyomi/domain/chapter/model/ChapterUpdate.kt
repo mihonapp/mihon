@@ -16,5 +16,18 @@ data class ChapterUpdate(
 )
 
 fun Chapter.toChapterUpdate(): ChapterUpdate {
-    return ChapterUpdate(id, mangaId, read, bookmark, lastPageRead, dateFetch, sourceOrder, url, name, dateUpload, chapterNumber, scanlator)
+    return ChapterUpdate(
+        id,
+        mangaId,
+        read,
+        bookmark,
+        lastPageRead,
+        dateFetch,
+        sourceOrder,
+        url,
+        name,
+        dateUpload,
+        chapterNumber,
+        scanlator,
+    )
 }

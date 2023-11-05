@@ -614,7 +614,9 @@ fun MangaScreenLargeImpl(
                             val isReading = remember(state.chapters) {
                                 state.chapters.fastAny { it.chapter.read }
                             }
-                            Text(text = stringResource(if (isReading) R.string.action_resume else R.string.action_start))
+                            Text(
+                                text = stringResource(if (isReading) R.string.action_resume else R.string.action_start),
+                            )
                         },
                         icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                         onClick = onContinueReading,

@@ -178,7 +178,9 @@ object LibraryTab : Tab {
                             scope.launchIO {
                                 val chapter = screenModel.getNextUnreadChapter(it.manga)
                                 if (chapter != null) {
-                                    context.startActivity(ReaderActivity.newIntent(context, chapter.mangaId, chapter.id))
+                                    context.startActivity(
+                                        ReaderActivity.newIntent(context, chapter.mangaId, chapter.id),
+                                    )
                                 } else {
                                     snackbarHostState.showSnackbar(context.getString(R.string.no_next_chapter))
                                 }

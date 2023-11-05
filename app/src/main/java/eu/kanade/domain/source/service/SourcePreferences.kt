@@ -11,7 +11,12 @@ class SourcePreferences(
     private val preferenceStore: PreferenceStore,
 ) {
 
-    fun sourceDisplayMode() = preferenceStore.getObject("pref_display_mode_catalogue", LibraryDisplayMode.default, LibraryDisplayMode.Serializer::serialize, LibraryDisplayMode.Serializer::deserialize)
+    fun sourceDisplayMode() = preferenceStore.getObject(
+        "pref_display_mode_catalogue",
+        LibraryDisplayMode.default,
+        LibraryDisplayMode.Serializer::serialize,
+        LibraryDisplayMode.Serializer::deserialize,
+    )
 
     fun enabledLanguages() = preferenceStore.getStringSet("source_languages", LocaleHelper.getDefaultEnabledLanguages())
 
@@ -28,7 +33,10 @@ class SourcePreferences(
 
     fun migrationSortingMode() = preferenceStore.getEnum("pref_migration_sorting", SetMigrateSorting.Mode.ALPHABETICAL)
 
-    fun migrationSortingDirection() = preferenceStore.getEnum("pref_migration_direction", SetMigrateSorting.Direction.ASCENDING)
+    fun migrationSortingDirection() = preferenceStore.getEnum(
+        "pref_migration_direction",
+        SetMigrateSorting.Direction.ASCENDING,
+    )
 
     fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
 

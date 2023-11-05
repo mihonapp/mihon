@@ -59,7 +59,9 @@ fun Context.copyToClipboard(label: String, content: String) {
  * @param permission the permission to check.
  * @return true if it has permissions.
  */
-fun Context.hasPermission(permission: String) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
+fun Context.hasPermission(
+    permission: String,
+) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
 
 val Context.powerManager: PowerManager
     get() = getSystemService()!!
@@ -105,7 +107,10 @@ fun Context.openInBrowser(uri: Uri, forceDefaultBrowser: Boolean = false) {
 private fun Context.defaultBrowserPackageName(): String? {
     val browserIntent = Intent(Intent.ACTION_VIEW, "http://".toUri())
     val resolveInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        packageManager.resolveActivity(browserIntent, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
+        packageManager.resolveActivity(
+            browserIntent,
+            PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()),
+        )
     } else {
         packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
     }
