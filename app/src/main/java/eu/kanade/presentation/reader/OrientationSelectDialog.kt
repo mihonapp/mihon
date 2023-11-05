@@ -13,28 +13,28 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.domain.manga.model.orientationType
+import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
 import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
-fun OrientationModeSelectDialog(
+fun OrientationSelectDialog(
     onDismissRequest: () -> Unit,
     screenModel: ReaderSettingsScreenModel,
     onChange: (Int) -> Unit,
 ) {
     val manga by screenModel.mangaFlow.collectAsState()
-    val orientationType = remember(manga) { OrientationType.fromPreference(manga?.orientationType?.toInt()) }
+    val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         DialogContent(
-            orientationType = orientationType,
+            orientation = orientation,
             onChangeOrientation = {
                 screenModel.onChangeOrientation(it)
                 onChange(it.stringRes)
@@ -46,14 +46,14 @@ fun OrientationModeSelectDialog(
 
 @Composable
 private fun DialogContent(
-    orientationType: OrientationType,
-    onChangeOrientation: (OrientationType) -> Unit,
+    orientation: ReaderOrientation,
+    onChangeOrientation: (ReaderOrientation) -> Unit,
 ) {
     Box(modifier = Modifier.padding(vertical = 16.dp)) {
         SettingsIconGrid(R.string.rotation_type) {
-            items(OrientationType.entries) { mode ->
+            items(ReaderOrientation.entries) { mode ->
                 IconToggleButton(
-                    checked = mode == orientationType,
+                    checked = mode == orientation,
                     onCheckedChange = {
                         onChangeOrientation(mode)
                     },
@@ -71,7 +71,7 @@ private fun DialogContent(
 private fun DialogContentPreview() {
     TachiyomiTheme {
         DialogContent(
-            orientationType = OrientationType.DEFAULT,
+            orientation = ReaderOrientation.DEFAULT,
             onChangeOrientation = {},
         )
     }

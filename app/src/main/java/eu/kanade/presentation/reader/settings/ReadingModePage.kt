@@ -8,13 +8,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import eu.kanade.domain.manga.model.orientationType
-import eu.kanade.domain.manga.model.readingModeType
+import eu.kanade.domain.manga.model.readerOrientation
+import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
@@ -23,33 +23,29 @@ import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.util.collectAsState
 import java.text.NumberFormat
 
-private val readingModeOptions = ReadingModeType.entries.map { it.stringRes to it }
-private val orientationTypeOptions = OrientationType.entries.map { it.stringRes to it }
-private val tappingInvertModeOptions = ReaderPreferences.TappingInvertMode.entries.map { it.titleResId to it }
-
 @Composable
 internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel) {
     HeadingItem(R.string.pref_category_for_this_series)
     val manga by screenModel.mangaFlow.collectAsState()
 
-    val readingMode = remember(manga) { ReadingModeType.fromPreference(manga?.readingModeType?.toInt()) }
+    val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
     SettingsChipRow(R.string.pref_category_reading_mode) {
-        readingModeOptions.map { (stringRes, it) ->
+        ReadingMode.entries.map {
             FilterChip(
                 selected = it == readingMode,
                 onClick = { screenModel.onChangeReadingMode(it) },
-                label = { Text(stringResource(stringRes)) },
+                label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
 
-    val orientationType = remember(manga) { OrientationType.fromPreference(manga?.orientationType?.toInt()) }
+    val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
     SettingsChipRow(R.string.rotation_type) {
-        orientationTypeOptions.map { (stringRes, it) ->
+        ReaderOrientation.entries.map {
             FilterChip(
-                selected = it == orientationType,
+                selected = it == orientation,
                 onClick = { screenModel.onChangeOrientation(it) },
-                label = { Text(stringResource(stringRes)) },
+                label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
@@ -209,11 +205,11 @@ private fun ColumnScope.TapZonesItems(
 
     if (selected != 5) {
         SettingsChipRow(R.string.pref_read_with_tapping_inverted) {
-            tappingInvertModeOptions.map { (stringRes, mode) ->
+            ReaderPreferences.TappingInvertMode.entries.map {
                 FilterChip(
-                    selected = mode == invertMode,
-                    onClick = { onSelectInvertMode(mode) },
-                    label = { Text(stringResource(stringRes)) },
+                    selected = it == invertMode,
+                    onClick = { onSelectInvertMode(it) },
+                    label = { Text(stringResource(it.titleResId)) },
                 )
             }
         }

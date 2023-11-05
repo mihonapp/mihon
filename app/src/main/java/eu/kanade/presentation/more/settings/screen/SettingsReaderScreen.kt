@@ -10,9 +10,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -32,7 +32,7 @@ object SettingsReaderScreen : SearchableSettings {
             Preference.PreferenceItem.ListPreference(
                 pref = readerPref.defaultReadingMode(),
                 title = stringResource(R.string.pref_viewer_type),
-                entries = ReadingModeType.entries.drop(1)
+                entries = ReadingMode.entries.drop(1)
                     .associate { it.flagValue to stringResource(it.stringRes) },
             ),
             Preference.PreferenceItem.ListPreference(
@@ -88,7 +88,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = readerPreferences.defaultOrientationType(),
                     title = stringResource(R.string.pref_rotation_type),
-                    entries = OrientationType.entries.drop(1)
+                    entries = ReaderOrientation.entries.drop(1)
                         .associate { it.flagValue to stringResource(it.stringRes) },
                 ),
                 Preference.PreferenceItem.ListPreference(

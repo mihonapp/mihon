@@ -12,7 +12,7 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_CLOUDFLARE
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
@@ -170,12 +170,12 @@ object Migrations {
             if (oldVersion < 60) {
                 // Migrate Rotation and Viewer values to default values for viewer_flags
                 val newOrientation = when (prefs.getInt("pref_rotation_type_key", 1)) {
-                    1 -> OrientationType.FREE.flagValue
-                    2 -> OrientationType.PORTRAIT.flagValue
-                    3 -> OrientationType.LANDSCAPE.flagValue
-                    4 -> OrientationType.LOCKED_PORTRAIT.flagValue
-                    5 -> OrientationType.LOCKED_LANDSCAPE.flagValue
-                    else -> OrientationType.FREE.flagValue
+                    1 -> ReaderOrientation.FREE.flagValue
+                    2 -> ReaderOrientation.PORTRAIT.flagValue
+                    3 -> ReaderOrientation.LANDSCAPE.flagValue
+                    4 -> ReaderOrientation.LOCKED_PORTRAIT.flagValue
+                    5 -> ReaderOrientation.LOCKED_LANDSCAPE.flagValue
+                    else -> ReaderOrientation.FREE.flagValue
                 }
 
                 // Reading mode flag and prefValue is the same value

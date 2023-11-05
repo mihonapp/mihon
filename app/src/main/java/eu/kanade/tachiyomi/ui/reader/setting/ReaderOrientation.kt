@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.R
 
-enum class OrientationType(
+enum class ReaderOrientation(
     val flag: Int,
     @StringRes val stringRes: Int,
     @DrawableRes val iconRes: Int,
@@ -58,6 +58,6 @@ enum class OrientationType(
     companion object {
         const val MASK = 0x00000038
 
-        fun fromPreference(preference: Int?): OrientationType = entries.find { it.flagValue == preference } ?: DEFAULT
+        fun fromPreference(preference: Int?): ReaderOrientation = entries.find { it.flagValue == preference } ?: DEFAULT
     }
 }

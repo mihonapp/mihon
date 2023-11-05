@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import eu.kanade.domain.manga.model.readingModeType
+import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
 import tachiyomi.presentation.core.components.material.padding
@@ -31,7 +31,7 @@ fun ReadingModeSelectDialog(
     onChange: (Int) -> Unit,
 ) {
     val manga by screenModel.mangaFlow.collectAsState()
-    val readingMode = remember(manga) { ReadingModeType.fromPreference(manga?.readingModeType?.toInt()) }
+    val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
 
     AdaptiveSheet(onDismissRequest = onDismissRequest) {
         DialogContent(
@@ -47,12 +47,12 @@ fun ReadingModeSelectDialog(
 
 @Composable
 private fun DialogContent(
-    readingMode: ReadingModeType,
-    onChangeReadingMode: (ReadingModeType) -> Unit,
+    readingMode: ReadingMode,
+    onChangeReadingMode: (ReadingMode) -> Unit,
 ) {
     Box(modifier = Modifier.padding(vertical = MaterialTheme.padding.medium)) {
         SettingsIconGrid(R.string.pref_category_reading_mode) {
-            items(ReadingModeType.entries) { mode ->
+            items(ReadingMode.entries) { mode ->
                 IconToggleButton(
                     checked = mode == readingMode,
                     onCheckedChange = {
@@ -72,7 +72,7 @@ private fun DialogContent(
 private fun DialogContentPreview() {
     TachiyomiTheme {
         DialogContent(
-            readingMode = ReadingModeType.DEFAULT,
+            readingMode = ReadingMode.DEFAULT,
             onChangeReadingMode = {},
         )
     }
