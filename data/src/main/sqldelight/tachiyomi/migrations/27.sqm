@@ -1,0 +1,3 @@
+UPDATE chapters
+SET scanlator = trim(scanlator)
+WHERE scanlator IS NOT NULL;
