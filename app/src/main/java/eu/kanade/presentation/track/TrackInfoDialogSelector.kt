@@ -20,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
@@ -37,7 +39,6 @@ import tachiyomi.presentation.core.components.WheelNumberPicker
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 
@@ -221,24 +222,26 @@ private fun BaseSelector(
     )
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TrackStatusSelectorPreviews() {
     TachiyomiTheme {
-        TrackStatusSelector(
-            selection = 1,
-            onSelectionChange = {},
-            selections = mapOf(
-                // Anilist values
-                1 to R.string.reading,
-                2 to R.string.plan_to_read,
-                3 to R.string.completed,
-                4 to R.string.on_hold,
-                5 to R.string.dropped,
-                6 to R.string.repeating,
-            ),
-            onConfirm = {},
-            onDismissRequest = {},
-        )
+        Surface {
+            TrackStatusSelector(
+                selection = 1,
+                onSelectionChange = {},
+                selections = mapOf(
+                    // Anilist values
+                    1 to R.string.reading,
+                    2 to R.string.plan_to_read,
+                    3 to R.string.completed,
+                    4 to R.string.on_hold,
+                    5 to R.string.dropped,
+                    6 to R.string.repeating,
+                ),
+                onConfirm = {},
+                onDismissRequest = {},
+            )
+        }
     }
 }

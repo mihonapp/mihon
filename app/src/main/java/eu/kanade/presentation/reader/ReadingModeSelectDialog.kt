@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.theme.TachiyomiTheme
@@ -22,7 +24,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun ReadingModeSelectDialog(
@@ -67,13 +68,15 @@ private fun DialogContent(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun DialogContentPreview() {
     TachiyomiTheme {
-        DialogContent(
-            readingMode = ReadingMode.DEFAULT,
-            onChangeReadingMode = {},
-        )
+        Surface {
+            DialogContent(
+                readingMode = ReadingMode.DEFAULT,
+                onChangeReadingMode = {},
+            )
+        }
     }
 }

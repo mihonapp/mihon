@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.screens.InfoScreen
-import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun CrashScreen(
@@ -60,7 +60,7 @@ fun CrashScreen(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun CrashScreenPreview() {
     TachiyomiTheme {

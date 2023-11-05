@@ -12,10 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -40,7 +40,7 @@ internal fun InfoWidget(text: String) {
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun InfoWidgetPreview() {
     TachiyomiTheme {

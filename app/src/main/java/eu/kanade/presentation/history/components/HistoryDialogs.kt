@@ -11,11 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.LabeledCheckbox
-import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun HistoryDeleteDialog(
@@ -87,7 +87,7 @@ fun HistoryDeleteAllDialog(
     )
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun HistoryDeleteDialogPreview() {
     TachiyomiTheme {

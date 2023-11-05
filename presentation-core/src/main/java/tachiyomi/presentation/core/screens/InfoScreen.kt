@@ -23,12 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -121,7 +121,7 @@ fun InfoScreen(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun InfoScaffoldPreview() {
     InfoScreen(

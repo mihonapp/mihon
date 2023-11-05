@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.manga.components.MangaCover
@@ -46,7 +47,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -249,15 +249,17 @@ fun AppThemePreviewItem(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun AppThemesListPreview() {
     var appTheme by remember { mutableStateOf(AppTheme.DEFAULT) }
     TachiyomiTheme {
-        AppThemesList(
-            currentTheme = appTheme,
-            amoled = false,
-            onItemClick = { appTheme = it },
-        )
+        Surface {
+            AppThemesList(
+                currentTheme = appTheme,
+                amoled = false,
+                onItemClick = { appTheme = it },
+            )
+        }
     }
 }

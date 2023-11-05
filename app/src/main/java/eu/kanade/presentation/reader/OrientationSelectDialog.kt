@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.presentation.components.AdaptiveSheet
@@ -21,7 +23,6 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
-import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 fun OrientationSelectDialog(
@@ -66,13 +67,15 @@ private fun DialogContent(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun DialogContentPreview() {
     TachiyomiTheme {
-        DialogContent(
-            orientation = ReaderOrientation.DEFAULT,
-            onChangeOrientation = {},
-        )
+        Surface {
+            DialogContent(
+                orientation = ReaderOrientation.DEFAULT,
+                onChangeOrientation = {},
+            )
+        }
     }
 }

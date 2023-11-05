@@ -5,9 +5,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.presentation.core.components.Badge
-import tachiyomi.presentation.core.util.ThemePreviews
 
 @Composable
 internal fun DownloadsBadge(count: Long) {
@@ -47,7 +47,7 @@ internal fun LanguageBadge(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun BadgePreview() {
     TachiyomiTheme {

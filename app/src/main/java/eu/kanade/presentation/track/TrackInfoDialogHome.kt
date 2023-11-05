@@ -28,6 +28,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
@@ -44,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.track.model.toDbTrack
@@ -54,7 +56,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.system.copyToClipboard
-import tachiyomi.presentation.core.util.ThemePreviews
 import java.text.DateFormat
 
 private const val UnsetStatusTextAlpha = 0.5F
@@ -318,11 +319,15 @@ private fun TrackInfoItemMenu(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TrackInfoDialogHomePreviews(
     @PreviewParameter(TrackInfoDialogHomePreviewProvider::class)
     content: @Composable () -> Unit,
 ) {
-    TachiyomiTheme { content() }
+    TachiyomiTheme {
+        Surface {
+            content()
+        }
+    }
 }
