@@ -128,6 +128,7 @@
     <string name="action_disable">Disable</string>
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
+    <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel_all">Cancel all</string>
@@ -147,6 +148,7 @@
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
+    <string name="action_revert_to_default">Revert to default</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>

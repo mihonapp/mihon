@@ -1,4 +1,4 @@
-package eu.kanade.presentation.reader.appbars
+package eu.kanade.presentation.reader.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
