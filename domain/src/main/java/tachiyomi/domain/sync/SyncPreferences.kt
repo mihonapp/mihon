@@ -14,7 +14,7 @@ class SyncPreferences(
 
     fun deviceName() = preferenceStore.getString(
         "device_name",
-        android.os.Build.MANUFACTURER + android.os.Build.PRODUCT
+        android.os.Build.MANUFACTURER + android.os.Build.PRODUCT,
     )
 
     fun syncService() = preferenceStore.getInt("sync_service", 0)
