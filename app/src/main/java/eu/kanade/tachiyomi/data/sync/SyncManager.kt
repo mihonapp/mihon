@@ -77,7 +77,7 @@ class SyncManager(
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
         val backup = Backup(
-            backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults ),
+            backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults),
             backupCreator.backupCategories(BackupCreateFlags.AutomaticDefaults),
             emptyList(),
             backupCreator.prepExtensionInfoForSync(databaseManga),

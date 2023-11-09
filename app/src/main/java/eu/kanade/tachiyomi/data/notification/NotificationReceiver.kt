@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.data.updater.AppUpdateDownloadJob
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -37,7 +38,6 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
-import eu.kanade.tachiyomi.data.sync.SyncDataJob
 
 /**
  * Global [BroadcastReceiver] that runs on UI thread
@@ -704,7 +704,12 @@ class NotificationReceiver : BroadcastReceiver() {
                 action = ACTION_CANCEL_SYNC
                 putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            return PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
         }
     }
 }

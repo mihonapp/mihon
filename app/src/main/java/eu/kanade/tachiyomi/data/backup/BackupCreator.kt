@@ -138,7 +138,7 @@ class BackupCreator(
         }
     }
 
-     fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
+    fun prepExtensionInfoForSync(mangas: List<Manga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(Manga::source)
@@ -177,7 +177,7 @@ class BackupCreator(
      * @param options options for the backup
      * @return [BackupManga] containing manga in a serializable form
      */
-     suspend fun backupManga(manga: Manga, options: Int): BackupManga {
+    suspend fun backupManga(manga: Manga, options: Int): BackupManga {
         // Entry for this manga
         val mangaObject = BackupManga.copyFrom(manga)
 

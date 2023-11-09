@@ -68,7 +68,8 @@ abstract class SyncService(
      */
     fun mergeSyncData(localSyncData: SyncData, remoteSyncData: SyncData): SyncData {
         val mergedMangaList = mergeMangaLists(localSyncData.backup?.backupManga, remoteSyncData.backup?.backupManga)
-        val mergedCategoriesList = mergeCategoriesLists(localSyncData.backup?.backupCategories, remoteSyncData.backup?.backupCategories)
+        val mergedCategoriesList =
+            mergeCategoriesLists(localSyncData.backup?.backupCategories, remoteSyncData.backup?.backupCategories)
 
         // Create the merged Backup object
         val mergedBackup = Backup(
@@ -94,7 +95,10 @@ abstract class SyncService(
      * @param remoteMangaList The list of remote SyncManga objects.
      * @return The merged list of SyncManga objects.
      */
-    private fun mergeMangaLists(localMangaList: List<BackupManga>?, remoteMangaList: List<BackupManga>?): List<BackupManga> {
+    private fun mergeMangaLists(
+        localMangaList: List<BackupManga>?,
+        remoteMangaList: List<BackupManga>?,
+    ): List<BackupManga> {
         if (localMangaList == null) return remoteMangaList ?: emptyList()
         if (remoteMangaList == null) return localMangaList
 
@@ -139,7 +143,10 @@ abstract class SyncService(
      * @param remoteChapters The list of remote SyncChapter objects.
      * @return The merged list of SyncChapter objects.
      */
-    private fun mergeChapters(localChapters: List<BackupChapter>, remoteChapters: List<BackupChapter>): List<BackupChapter> {
+    private fun mergeChapters(
+        localChapters: List<BackupChapter>,
+        remoteChapters: List<BackupChapter>,
+    ): List<BackupChapter> {
         val localChapterMap = localChapters.associateBy { it.url }
         val remoteChapterMap = remoteChapters.associateBy { it.url }
         val mergedChapterMap = mutableMapOf<String, BackupChapter>()
@@ -178,7 +185,10 @@ abstract class SyncService(
      * @param remoteCategoriesList The list of remote SyncCategory objects.
      * @return The merged list of SyncCategory objects.
      */
-    private fun mergeCategoriesLists(localCategoriesList: List<BackupCategory>?, remoteCategoriesList: List<BackupCategory>?): List<BackupCategory> {
+    private fun mergeCategoriesLists(
+        localCategoriesList: List<BackupCategory>?,
+        remoteCategoriesList: List<BackupCategory>?,
+    ): List<BackupCategory> {
         if (localCategoriesList == null) return remoteCategoriesList ?: emptyList()
         if (remoteCategoriesList == null) return localCategoriesList
         val localCategoriesMap = localCategoriesList.associateBy { it.name }

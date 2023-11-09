@@ -257,7 +257,7 @@ class BackupRestorer(
         return updatedManga
     }
 
-     suspend fun updateManga(manga: Manga): Long {
+    suspend fun updateManga(manga: Manga): Long {
         handler.await(true) {
             mangasQueries.update(
                 source = manga.source,
@@ -326,7 +326,11 @@ class BackupRestorer(
                 // Update lastPageRead if the chapter is marked as read
                 if (updatedChapter.read) {
                     updatedChapter = updatedChapter.copy(
-                        lastPageRead = if (updatedChapter.lastPageRead > 0) updatedChapter.lastPageRead else dbChapter.lastPageRead,
+                        lastPageRead = if (updatedChapter.lastPageRead > 0) {
+                            updatedChapter.lastPageRead
+                        } else {
+                            dbChapter.lastPageRead
+                        },
                     )
                 }
             }
@@ -338,7 +342,6 @@ class BackupRestorer(
         updateKnownChapters(existingChapters)
         insertChapters(newChapters)
     }
-
 
     /**
      * Inserts list of chapters

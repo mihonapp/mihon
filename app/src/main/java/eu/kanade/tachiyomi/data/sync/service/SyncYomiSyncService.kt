@@ -55,7 +55,10 @@ class SyncYomiSyncService(
 
         val client = OkHttpClient()
 
-        val headers = Headers.Builder().add("Content-Type", "application/gzip").add("Content-Encoding", "gzip").add("X-API-Token", apiKey).build()
+        val headers = Headers.Builder().add(
+            "Content-Type",
+            "application/gzip",
+        ).add("Content-Encoding", "gzip").add("X-API-Token", apiKey).build()
 
         val mediaType = "application/gzip".toMediaTypeOrNull()
 

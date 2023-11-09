@@ -16,7 +16,9 @@ class SyncNotifier(private val context: Context) {
 
     private val preferences: SecurityPreferences by injectLazy()
 
-    private val progressNotificationBuilder = context.notificationBuilder(Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS) {
+    private val progressNotificationBuilder = context.notificationBuilder(
+        Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS,
+    ) {
         setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
         setSmallIcon(R.drawable.ic_tachi)
         setAutoCancel(false)
@@ -24,7 +26,9 @@ class SyncNotifier(private val context: Context) {
         setOnlyAlertOnce(true)
     }
 
-    private val completeNotificationBuilder = context.notificationBuilder(Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS) {
+    private val completeNotificationBuilder = context.notificationBuilder(
+        Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS,
+    ) {
         setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
         setSmallIcon(R.drawable.ic_tachi)
         setAutoCancel(false)

@@ -80,23 +80,24 @@ object SettingsDataScreen : SearchableSettings {
 
         return listOf(
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
-            getDataGroup()) + listOf(
-                Preference.PreferenceGroup(
-                    title = stringResource(R.string.label_sync),
-                    preferenceItems = listOf(
-                        Preference.PreferenceItem.ListPreference(
-                            pref = syncPreferences.syncService(),
-                            title = stringResource(R.string.pref_sync_service),
-                            entries = mapOf(
-                                SyncManager.SyncService.NONE.value to stringResource(R.string.off),
-                                SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
-                                SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(R.string.google_drive),
-                            ),
-                            onValueChanged = { true },
+            getDataGroup(),
+        ) + listOf(
+            Preference.PreferenceGroup(
+                title = stringResource(R.string.label_sync),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.ListPreference(
+                        pref = syncPreferences.syncService(),
+                        title = stringResource(R.string.pref_sync_service),
+                        entries = mapOf(
+                            SyncManager.SyncService.NONE.value to stringResource(R.string.off),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
+                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(R.string.google_drive),
                         ),
+                        onValueChanged = { true },
                     ),
                 ),
-            ) + getSyncServicePreferences(syncPreferences, syncService)
+            ),
+        ) + getSyncServicePreferences(syncPreferences, syncService)
     }
 
     @Composable
@@ -388,9 +389,15 @@ private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
                 scope.launch {
                     val result = googleDriveSync.deleteSyncDataFromGoogleDrive()
                     when (result) {
-                        GoogleDriveSyncService.DeleteSyncDataStatus.NOT_INITIALIZED -> context.toast(R.string.google_drive_not_signed_in)
-                        GoogleDriveSyncService.DeleteSyncDataStatus.NO_FILES -> context.toast(R.string.google_drive_sync_data_not_found)
-                        GoogleDriveSyncService.DeleteSyncDataStatus.SUCCESS -> context.toast(R.string.google_drive_sync_data_purged)
+                        GoogleDriveSyncService.DeleteSyncDataStatus.NOT_INITIALIZED -> context.toast(
+                            R.string.google_drive_not_signed_in,
+                        )
+                        GoogleDriveSyncService.DeleteSyncDataStatus.NO_FILES -> context.toast(
+                            R.string.google_drive_sync_data_not_found,
+                        )
+                        GoogleDriveSyncService.DeleteSyncDataStatus.SUCCESS -> context.toast(
+                            R.string.google_drive_sync_data_purged,
+                        )
                     }
                 }
             },
@@ -486,7 +493,11 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
     val context = LocalContext.current
     val syncIntervalPref = syncPreferences.syncInterval()
     val lastSync by syncPreferences.syncLastSync().collectAsState()
-    val formattedLastSync = DateUtils.getRelativeTimeSpanString(lastSync.toEpochMilli(), System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+    val formattedLastSync = DateUtils.getRelativeTimeSpanString(
+        lastSync.toEpochMilli(),
+        System.currentTimeMillis(),
+        DateUtils.MINUTE_IN_MILLIS,
+    )
 
     return Preference.PreferenceGroup(
         title = stringResource(R.string.pref_sync_service_category),

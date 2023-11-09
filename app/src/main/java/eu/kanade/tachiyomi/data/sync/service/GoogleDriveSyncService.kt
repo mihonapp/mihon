@@ -36,7 +36,11 @@ import java.io.InputStreamReader
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: SyncPreferences) : SyncService(context, json, syncPreferences) {
+class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: SyncPreferences) : SyncService(
+    context,
+    json,
+    syncPreferences,
+) {
     constructor(context: Context) : this(
         context,
         Json {
@@ -308,7 +312,12 @@ class GoogleDriveService(private val context: Context) {
      * @param onSuccess A callback function to be called on successful authorization.
      * @param onFailure A callback function to be called on authorization failure.
      */
-    fun handleAuthorizationCode(authorizationCode: String, activity: Activity, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun handleAuthorizationCode(
+        authorizationCode: String,
+        activity: Activity,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit,
+    ) {
         val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
         val secrets = GoogleClientSecrets.load(
             jsonFactory,
