@@ -163,9 +163,8 @@
     <string name="pref_restore_backup">เรียกคืนค่าการสำรองข้อมูล</string>
     <string name="pref_restore_backup_summ">เรียกคืนค่าคลังจากแฟ้มข้อมูลสำรอง</string>
     <string name="pref_backup_directory">ตําแหน่งที่ตั้งข้อมูลสํารอง</string>
-    <string name="pref_backup_service_category">สํารองข้อมูลอัตโนมัติ</string>
-    <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูล</string>
-    <string name="pref_backup_slots">จำนวนการสำรองข้อมูลสูงสุด</string>
+    <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูลอัตโนมัติ</string>
+    <string name="pref_backup_slots">จำนวนการสำรองข้อมูลอัตโนมัติสูงสุด</string>
     <string name="backup_created">สร้างการสำรองข้อมูลแล้ว</string>
     <string name="restore_completed">คืนค่าเสร็จสมบูรณ์</string>
     <string name="backup_choice">ต้องการสำรองข้อมูลใดบ้าง\?</string>
@@ -181,8 +180,6 @@
     <string name="pref_clear_database_summary">ลบประวัติรายการที่ไม่ได้บันทึกไว้ในคลัง</string>
     <string name="clear_database_confirmation">แน่ใจไหม\? ข้อมูลการอ่านของรายการที่ไม่ได้อยู่ในคลังจะหายไป</string>
     <string name="clear_database_completed">ลบรายการแล้ว</string>
-    <string name="pref_refresh_library_tracking">โหลดข้อมูลการติดตามใหม่</string>
-    <string name="pref_refresh_library_tracking_summary">อัปเดตสถานะคะแนนและตอนสุดท้ายที่อ่านจากบริการติดตาม</string>
     <string name="version">เวอร์ชัน</string>
     <string name="pref_enable_acra">ส่งรายงานความผิดพลาด</string>
     <string name="pref_acra_summary">ช่วยแก้ไขจุดบกพร่องต่างๆ จะไม่มีการส่งข้อมูลที่สำคัญ</string>
@@ -304,6 +301,8 @@
     <string name="l_nav">รูปตัว L</string>
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
+    <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่อง</string>
+    <string name="pref_create_folder_per_manga">บันทึกหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
     <string name="pref_reader_actions">การกระทำ</string>
     <string name="tapping_inverted_both">ทั้งสอง</string>
     <string name="tapping_inverted_vertical">แนวตั้ง</string>
@@ -558,8 +557,6 @@
     <string name="channel_app_updates">แอพอัปเดต</string>
     <string name="label_default">ค่าเริ่มต้น</string>
     <string name="error_sharing_cover">ผิดพลาดในการแบ่งปันปก</string>
-    <string name="pref_library_update_refresh_trackers">โหลดตัวติดตามใหม่โดยอัตโนมัติ</string>
-    <string name="pref_library_update_refresh_trackers_summary">อัปเดตตัวติดตามเมื่ออัปเดตคลัง</string>
     <string name="action_start_downloading_now">เริ่มดาวน์โหลดเลย</string>
     <plurals name="relative_time">
         <item quantity="other">%1$d วันที่ผ่านมา</item>
@@ -693,7 +690,7 @@
     <string name="pref_downloads_summary">การดาวน์โหลดอัตโนมัติ, การดาวน์โหลดล่วงหน้า</string>
     <string name="pref_tracking_summary">การประมวลผลซิงก์ทางเดียง, เสริมการวิงก์</string>
     <string name="pref_browse_summary">แหล่งที่มา, ส่วนขยาย, การค้นหาทั้งหมด</string>
-    <string name="pref_backup_summary">การสำรองข้อมูลด้วยตนเองและอัตโนมัติ</string>
+    <string name="pref_backup_summary">การสำรองข้อมูลและพื้นที่เก็บข้อมูลด้วยตนเองและอัตโนมัติ</string>
     <string name="pref_security_summary">การล็อกแอป, หน้าจอความปลอดภัย</string>
     <string name="pref_advanced_summary">ดัมพ์บันทึกข้อขัดข้อง, การเพิ่มประสิทธิภาพแบตเตอรี่</string>
     <string name="crash_screen_title">เกิดความผิดพลาด!</string>
@@ -805,4 +802,11 @@
     <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่\?</string>
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
+    <string name="file_null_uri_error">เครื่องมือเลือกไฟล์ไม่สามารถส่งต่อไฟล์ไปยังแอปได้</string>
+    <string name="relative_time_span_never">ไม่เลย</string>
+    <string name="pref_flash_page_summ">ลดภาพซ้อนบนจอแสดงผล E-Ink</string>
+    <string name="last_auto_backup_info">สำรองข้อมูลอัตโนมัติครั้งล่าสุด: %s</string>
+    <string name="pref_flash_page">แฟลชสีขาวเมื่อเปลี่ยนหน้า</string>
+    <string name="pref_storage_usage">การใช้พื้นที่เก็บข้อมูล</string>
+    <string name="label_data_storage">ข้อมูลและการจัดเก็บข้อมูล</string>
 </resources>

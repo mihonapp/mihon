@@ -74,8 +74,8 @@
     <string name="white_background">Blanco</string>
     <string name="black_background">Negro</string>
     <string name="pref_viewer_type">Sentido de lectura normal</string>
-    <string name="left_to_right_viewer">Por páginas, de izquierda a derecha</string>
-    <string name="right_to_left_viewer">Páginas (de derecha a izquierda)</string>
+    <string name="left_to_right_viewer">Por páginas (de izquierda a derecha)</string>
+    <string name="right_to_left_viewer">Por páginas (de derecha a izquierda)</string>
     <string name="vertical_viewer">Por páginas, de arriba abajo</string>
     <string name="webtoon_viewer">Tira vertical continua</string>
     <string name="pref_image_scale_type">Método de ampliación</string>
@@ -237,16 +237,13 @@
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar la biblioteca a partir de una copia de seguridad</string>
     <string name="pref_backup_directory">Ubicación de la copia de respaldo</string>
-    <string name="pref_backup_service_category">Copias de seguridad automáticas</string>
-    <string name="pref_backup_interval">Frecuencia de respaldo</string>
-    <string name="pref_backup_slots">Copias de seguridad máximas</string>
+    <string name="pref_backup_interval">Frecuencia de la copia de seguridad automática</string>
+    <string name="pref_backup_slots">Copias de seguridad automáticas máximas</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="backup_choice">¿De qué quieres hacer una copia de seguridad\?</string>
     <string name="restoring_backup">Restaurando copia de seguridad</string>
     <string name="creating_backup">Creando copia de seguridad</string>
-    <string name="pref_refresh_library_tracking">Descargar datos actualizados de seguimiento</string>
-    <string name="pref_refresh_library_tracking_summary">Actualiza estados, puntuaciones y últimos capítulos leídos desde tus servicios de seguimiento</string>
     <string name="no_more_results">No hay más resultados</string>
     <string name="local_source">Fuente local</string>
     <string name="delete_downloads_for_manga">¿Eliminar los capítulos descargados\?</string>
@@ -477,7 +474,7 @@
     </plurals>
     <string name="action_disable">Desactivar</string>
     <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surja efecto</string>
-    <string name="label_network">Red</string>
+    <string name="label_network">Networking</string>
     <string name="unknown_status">Estado desconocido</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -575,6 +572,8 @@
     <string name="action_display_show_number_of_items">Mostrar el número de elementos</string>
     <string name="action_sort_chapter_fetch_date">Fecha de obtención del capítulo</string>
     <string name="rotation_type">Tipo de rotación</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título de los elementos</string>
+    <string name="pref_create_folder_per_manga">Guardar páginas en carpetas separadas</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_grayscale">Escala de grises</string>
     <string name="restore_miui_warning">Es posible que las funciones de copia de respaldo y restauración no funcionen correctamente si la opción «Optimización de MIUI» está desactivada.</string>
@@ -612,8 +611,6 @@
     <string name="off">No</string>
     <string name="on">Sí</string>
     <string name="categorized_display_settings">Establecer el tipo de orden para cada categoría</string>
-    <string name="pref_library_update_refresh_trackers_summary">También intenta actualizar el historial de lectura al actualizar la biblioteca</string>
-    <string name="pref_library_update_refresh_trackers">Sincronizar automáticamente los datos en servicios de seguimiento</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Seguir</string>
     <string name="getting_started_guide">Guía de introducción</string>
@@ -752,7 +749,7 @@
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
     <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>
     <string name="pref_security_summary">Pantalla segura y desbloqueo biométrico</string>
-    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas</string>
+    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas, y el espacio de almacenamiento</string>
     <string name="pref_browse_summary">Fuentes, extensiones y búsqueda global</string>
     <string name="crash_screen_title">¡Vaya!</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
@@ -819,7 +816,7 @@
     </plurals>
     <string name="pref_page_rotate">Girar las páginas anchas para adaptarlas a la pantalla</string>
     <string name="pref_page_rotate_invert">Girar las páginas anchas en la dirección opuesta</string>
-    <string name="pref_debug_info">Información de depuración</string>
+    <string name="pref_debug_info">Información sobre la depuración</string>
     <string name="pref_chapter_swipe">Deslizamiento de dedo en capítulos</string>
     <string name="pref_chapter_swipe_start">Deslizar a la izquierda</string>
     <string name="pref_chapter_swipe_end">Deslizar a la derecha</string>
@@ -868,4 +865,11 @@
     <string name="app_settings">Ajustes de la aplicación</string>
     <string name="action_sort_category">Ordenar categorías</string>
     <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
+    <string name="file_null_uri_error">La pantalla de selección de archivos no ha devuelto ningún archivo</string>
+    <string name="relative_time_span_never">Nunca</string>
+    <string name="pref_flash_page_summ">Reducir el ghosting en las pantallas de tinta electrónica</string>
+    <string name="last_auto_backup_info">Última copia de seguridad automática: %s</string>
+    <string name="pref_flash_page">Parpadeo en blanco al cambiar de página</string>
+    <string name="label_data_storage">Datos y almacenamiento</string>
+    <string name="pref_storage_usage">Almacenamiento utilizado</string>
 </resources>

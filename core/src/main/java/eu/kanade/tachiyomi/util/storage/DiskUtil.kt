@@ -29,6 +29,30 @@ object DiskUtil {
     }
 
     /**
+     * Gets the total space for the disk that a file path points to, in bytes.
+     */
+    fun getTotalStorageSpace(file: File): Long {
+        return try {
+            val stat = StatFs(file.absolutePath)
+            stat.blockCountLong * stat.blockSizeLong
+        } catch (_: Exception) {
+            -1L
+        }
+    }
+
+    /**
+     * Gets the available space for the disk that a file path points to, in bytes.
+     */
+    fun getAvailableStorageSpace(file: File): Long {
+        return try {
+            val stat = StatFs(file.absolutePath)
+            stat.availableBlocksLong * stat.blockSizeLong
+        } catch (_: Exception) {
+            -1L
+        }
+    }
+
+    /**
      * Gets the available space for the disk that a file path points to, in bytes.
      */
     fun getAvailableStorageSpace(f: UniFile): Long {

@@ -18,6 +18,16 @@ data class Chapter(
     val isRecognizedNumber: Boolean
         get() = chapterNumber >= 0f
 
+    fun copyFrom(other: Chapter): Chapter {
+        return copy(
+            name = other.name,
+            url = other.url,
+            dateUpload = other.dateUpload,
+            chapterNumber = other.chapterNumber,
+            scanlator = other.scanlator?.ifBlank { null },
+        )
+    }
+
     companion object {
         fun create() = Chapter(
             id = -1,

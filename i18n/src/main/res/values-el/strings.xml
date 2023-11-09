@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">Επαναφορά αντιγράφου ασφαλείας</string>
     <string name="pref_restore_backup_summ">Επαναφορά βιβλιοθήκης από αρχείο αντιγράφου ασφαλείας</string>
     <string name="pref_backup_directory">Τοποθεσία αντιγράφων ασφαλείας</string>
-    <string name="pref_backup_service_category">Αυτόματα αντίγραφα ασφαλείας</string>
     <string name="pref_backup_interval">Συχνότητα αντίγραφου ασφάλειας</string>
     <string name="pref_backup_slots">Μέγιστα αντίγραφα ασφαλείας</string>
     <string name="backup_created">Δημιουργήθηκε αντίγραφο ασφαλείας</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Διαγραφή ιστορικού για καταχωρήσεις που δεν έχουν αποθηκευτεί στη βιβλιοθήκη σας</string>
     <string name="clear_database_confirmation">Είστε σίγουροι; Τα διαβασμένα κεφάλαια και η πρόοδος των καταχωρήσεων εκτός βιβλιοθήκης θα χαθούν</string>
     <string name="clear_database_completed">Οι καταχωρίσεις διαγράφηκαν</string>
-    <string name="pref_refresh_library_tracking">Ανανέωση tracking</string>
-    <string name="pref_refresh_library_tracking_summary">Ενημερώνει κατάσταση, βαθμολογία και τελευταίο αναγνωσμένο κεφάλαιο από τις υπηρεσίες παρακολούθησης</string>
     <string name="version">Έκδοση</string>
     <string name="pref_enable_acra">Αποστολή αναφορών σφαλμάτων</string>
     <string name="pref_acra_summary">Βοηθά στην επιδιόρθωση τυχόν σφαλμάτων. Δεν θα αποστέλλονται ευαίσθητα δεδομένα</string>
@@ -532,6 +529,8 @@
     <string name="clipboard_copy_error">Απέτυχε η αντιγραφή στο πρόχειρο</string>
     <string name="rotation_landscape">Οριζόντια</string>
     <string name="rotation_portrait">Κατακόρυφα</string>
+    <string name="pref_create_folder_per_manga_summary">Δημιουργεί φακέλους σύμφωνα με τον τίτλο των καταχωρήσεων</string>
+    <string name="pref_create_folder_per_manga">Αποθήκευση σελίδων σε ξεχωριστούς φακέλους</string>
     <string name="pref_reader_actions">Ενέργειες</string>
     <string name="rotation_type">Περιστροφή</string>
     <string name="pref_grayscale">Κλίμακα του γκρι</string>
@@ -543,8 +542,6 @@
     <string name="unread">Αδιάβαστα</string>
     <string name="date">Ημερομηνία</string>
     <string name="local_filter_order_by">Ταξινόμηση κατά</string>
-    <string name="pref_library_update_refresh_trackers_summary">Ενημέρωση των trackers κατά την ενημέρωση της βιβλιοθήκης</string>
-    <string name="pref_library_update_refresh_trackers">Αυτόματη ανανέωση των trackers</string>
     <string name="local_invalid_format">Μη έγκυρη μορφή κεφαλαίου</string>
     <string name="chapter_not_found">Το κεφάλαιο δε βρέθηκε</string>
     <string name="restrictions">Περιορισμοί: %s</string>
@@ -821,4 +818,5 @@
     <string name="notification_updating_progress">Ενημέρωση βιβλιοθήκης… (%s)</string>
     <string name="sort_category_confirmation">Θέλετε να ταξινομήσετε τις κατηγορίες αλφαβητικά;</string>
     <string name="source_settings">Ρυθμίσεις πηγών</string>
+    <string name="file_null_uri_error">Το πρόγραμμα επιλογής αρχείων απέτυχε να επιστρέψει το αρχείο στην εφαρμογή</string>
 </resources>

@@ -14,7 +14,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,7 +30,6 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -61,8 +59,7 @@ import okhttp3.Headers
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.manga.repository.MangaRepository
+import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -183,40 +180,12 @@ object SettingsAdvancedScreen : SearchableSettings {
 
     @Composable
     private fun getDataGroup(): Preference.PreferenceGroup {
-        val scope = rememberCoroutineScope()
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
-
-        val chapterCache = remember { Injekt.get<ChapterCache>() }
-        var readableSizeSema by remember { mutableIntStateOf(0) }
-        val readableSize = remember(readableSizeSema) { chapterCache.readableSize }
 
         return Preference.PreferenceGroup(
             title = stringResource(R.string.label_data),
             preferenceItems = listOf(
-                Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_clear_chapter_cache),
-                    subtitle = stringResource(R.string.used_cache, readableSize),
-                    onClick = {
-                        scope.launchNonCancellable {
-                            try {
-                                val deletedFiles = chapterCache.clear()
-                                withUIContext {
-                                    context.toast(context.getString(R.string.cache_deleted, deletedFiles))
-                                    readableSizeSema++
-                                }
-                            } catch (e: Throwable) {
-                                logcat(LogPriority.ERROR, e)
-                                withUIContext { context.toast(R.string.cache_delete_error) }
-                            }
-                        }
-                    },
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    pref = libraryPreferences.autoClearChapterCache(),
-                    title = stringResource(R.string.pref_auto_clear_chapter_cache),
-                ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(R.string.pref_invalidate_download_cache),
                     subtitle = stringResource(R.string.pref_invalidate_download_cache_summary),
@@ -340,7 +309,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitle = stringResource(R.string.pref_reset_viewer_flags_summary),
                     onClick = {
                         scope.launchNonCancellable {
-                            val success = Injekt.get<MangaRepository>().resetViewerFlags()
+                            val success = Injekt.get<ResetViewerFlags>().await()
                             withUIContext {
                                 val message = if (success) {
                                     R.string.pref_reset_viewer_flags_success

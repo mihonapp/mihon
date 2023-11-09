@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.HelpOutline
@@ -18,7 +16,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.SettingsBackupRestore
+import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,7 +45,7 @@ fun MoreScreen(
     onClickDownloadQueue: () -> Unit,
     onClickCategories: () -> Unit,
     onClickStats: () -> Unit,
-    onClickBackupAndRestore: () -> Unit,
+    onClickDataAndStorage: () -> Unit,
     onClickSettings: () -> Unit,
     onClickAbout: () -> Unit,
 ) {
@@ -64,7 +62,9 @@ fun MoreScreen(
                     WarningBanner(
                         textRes = R.string.fdroid_warning,
                         modifier = Modifier.clickable {
-                            uriHandler.openUri("https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds")
+                            uriHandler.openUri(
+                                "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
+                            )
                         },
                     )
                 }
@@ -130,7 +130,7 @@ fun MoreScreen(
             item {
                 TextPreferenceWidget(
                     title = stringResource(R.string.categories),
-                    icon = Icons.AutoMirrored.Outlined.Label,
+                    icon = Icons.Outlined.Label,
                     onPreferenceClick = onClickCategories,
                 )
             }
@@ -144,8 +144,8 @@ fun MoreScreen(
             item {
                 TextPreferenceWidget(
                     title = stringResource(R.string.label_backup_and_sync),
-                    icon = Icons.Outlined.SettingsBackupRestore,
-                    onPreferenceClick = onClickBackupAndRestore,
+                    icon = Icons.Outlined.Storage,
+                    onPreferenceClick = onClickDataAndStorage,
                 )
             }
 
@@ -168,7 +168,7 @@ fun MoreScreen(
             item {
                 TextPreferenceWidget(
                     title = stringResource(R.string.label_help),
-                    icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                    icon = Icons.Outlined.HelpOutline,
                     onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
                 )
             }

@@ -101,7 +101,10 @@ class MyAnimeListApi(
         return withIOContext {
             val url = "$baseApiUrl/manga".toUri().buildUpon()
                 .appendPath(id.toString())
-                .appendQueryParameter("fields", "id,title,synopsis,num_chapters,main_picture,status,media_type,start_date")
+                .appendQueryParameter(
+                    "fields",
+                    "id,title,synopsis,num_chapters,main_picture,status,media_type,start_date",
+                )
                 .build()
             with(json) {
                 authClient.newCall(GET(url.toString()))

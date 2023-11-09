@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.brotli.BrotliInterceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -29,6 +30,7 @@ class NetworkHelper(
                     maxSize = 5L * 1024 * 1024, // 5 MiB
                 ),
             )
+            .addInterceptor(BrotliInterceptor)
             .addInterceptor(UncaughtExceptionInterceptor())
             .addInterceptor(UserAgentInterceptor(::defaultUserAgentProvider))
 

@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.track.interactor.InsertTrack
@@ -14,7 +14,7 @@ import tachiyomi.domain.track.model.Track
 class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
     private val insertTrack: InsertTrack,
-    private val getChapterByMangaId: GetChapterByMangaId,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
 ) {
 
     suspend fun await(
@@ -26,7 +26,7 @@ class SyncChapterProgressWithTrack(
             return
         }
 
-        val sortedChapters = getChapterByMangaId.await(mangaId)
+        val sortedChapters = getChaptersByMangaId.await(mangaId)
             .sortedBy { it.chapterNumber }
             .filter { it.isRecognizedNumber }
 

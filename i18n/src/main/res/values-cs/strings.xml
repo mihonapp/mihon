@@ -208,7 +208,6 @@
     <string name="pref_create_backup">Vytvořit zálohu</string>
     <string name="pref_restore_backup">Obnovit zálohu</string>
     <string name="pref_backup_directory">Místo zálohy</string>
-    <string name="pref_backup_service_category">Automatické zálohy</string>
     <string name="pref_backup_interval">Frekvence zálohy</string>
     <string name="backup_created">Záloha vytvořena</string>
     <string name="restore_completed">Obnova dokončena</string>
@@ -225,8 +224,6 @@
     <string name="pref_clear_database_summary">Smazat historii položek, které nejsou uloženy ve vaší knihovně</string>
     <string name="clear_database_confirmation">Jste si jistí\? Přečtené kapitoly a postup v položkách mimo knihovnu bude ztracen</string>
     <string name="clear_database_completed">Položky byly smazány</string>
-    <string name="pref_refresh_library_tracking">Obnovit sledování</string>
-    <string name="pref_refresh_library_tracking_summary">Aktualizuje status, skóre a poslední přečtenou kapitolu ze sledovacích služeb</string>
     <string name="version">Verze</string>
     <string name="pref_enable_acra">Odesílat hlášení o pádu</string>
     <string name="pref_acra_summary">Pomáhá opravit chyby. Nebudou odeslány žádné citlivé údaje</string>
@@ -539,6 +536,8 @@
     <string name="rotation_landscape">Na šířku</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="rotation_type">Otáčení</string>
+    <string name="pref_create_folder_per_manga_summary">Vytváří složky podle názvu položky</string>
+    <string name="pref_create_folder_per_manga">Uložit stránky do samostatných složek</string>
     <string name="pref_reader_actions">Akce</string>
     <string name="nav_zone_right">Vpravo</string>
     <string name="nav_zone_left">Vlevo</string>
@@ -554,8 +553,6 @@
     <string name="local_filter_order_by">Seřadit podle</string>
     <string name="local_invalid_format">Neplatný formát kapitoly</string>
     <string name="chapter_not_found">Kapitola nenalezena</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aktualizovat sledovače při aktualizaci knihovny</string>
-    <string name="pref_library_update_refresh_trackers">Automaticky aktualizovat sledovače</string>
     <string name="restrictions">Omezení: %s</string>
     <string name="action_display_local_badge">Lokální zdroj</string>
     <string name="error_sharing_cover">Při sdílení přebalu došlo k chybě</string>

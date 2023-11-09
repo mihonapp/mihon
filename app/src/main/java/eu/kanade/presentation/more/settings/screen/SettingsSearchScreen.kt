@@ -202,7 +202,11 @@ private fun SearchResult(
                         SearchResultItem(
                             route = settingsData.route,
                             title = p.title,
-                            breadcrumbs = getLocalizedBreadcrumb(path = settingsData.title, node = categoryTitle, isLtr = isLtr),
+                            breadcrumbs = getLocalizedBreadcrumb(
+                                path = settingsData.title,
+                                node = categoryTitle,
+                                isLtr = isLtr,
+                            ),
                             highlightKey = p.title,
                         )
                     }
@@ -291,7 +295,7 @@ private val settingScreens = listOf(
     SettingsDownloadScreen,
     SettingsTrackingScreen,
     SettingsBrowseScreen,
-    SettingsBackupAndSyncScreen,
+    SettingsDataScreen,
     SettingsSecurityScreen,
     SettingsAdvancedScreen,
 )

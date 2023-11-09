@@ -42,7 +42,9 @@ import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import dev.chrisbanes.insetter.applyInsetter
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.presentation.reader.OrientationModeSelectDialog
+import eu.kanade.presentation.reader.BrightnessOverlay
+import eu.kanade.presentation.reader.DisplayRefreshHost
+import eu.kanade.presentation.reader.OrientationSelectDialog
 import eu.kanade.presentation.reader.PageIndicatorText
 import eu.kanade.presentation.reader.ReaderPageActionsDialog
 import eu.kanade.presentation.reader.ReadingModeSelectDialog
@@ -61,10 +63,10 @@ import eu.kanade.tachiyomi.ui.reader.ReaderViewModel.SetAsCoverResult.Success
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
@@ -91,7 +93,6 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import kotlin.math.abs
 
 class ReaderActivity : BaseActivity() {
 
@@ -122,6 +123,7 @@ class ReaderActivity : BaseActivity() {
 
     private var menuToggleToast: Toast? = null
     private var readingModeToast: Toast? = null
+    private val displayRefreshHost = DisplayRefreshHost()
 
     private val windowInsetsController by lazy { WindowInsetsControllerCompat(window, binding.root) }
 
@@ -196,6 +198,9 @@ class ReaderActivity : BaseActivity() {
                 when (event) {
                     ReaderViewModel.Event.ReloadViewerChapters -> {
                         viewModel.state.value.viewerChapters?.let(::setChapters)
+                    }
+                    ReaderViewModel.Event.PageChanged -> {
+                        displayRefreshHost.flash()
                     }
                     is ReaderViewModel.Event.SetOrientation -> {
                         setOrientation(event.orientation)
@@ -298,12 +303,6 @@ class ReaderActivity : BaseActivity() {
      * Initializes the reader menu. It sets up click listeners and the initial visibility.
      */
     private fun initializeMenu() {
-        binding.dialogRoot.applyInsetter {
-            type(navigationBars = true) {
-                margin(vertical = true, horizontal = true)
-            }
-        }
-
         binding.pageNumber.setComposeContent {
             val state by viewModel.state.collectAsState()
             val showPageNumber by viewModel.readerPreferences.showPageNumber().collectAsState()
@@ -329,10 +328,11 @@ class ReaderActivity : BaseActivity() {
 
             val isHttpSource = viewModel.getSource() is HttpSource
             val isFullscreen by readerPreferences.fullscreen().collectAsState()
+            val flashOnPageChange by readerPreferences.flashOnPageChange().collectAsState()
 
             val cropBorderPaged by readerPreferences.cropBorders().collectAsState()
             val cropBorderWebtoon by readerPreferences.cropBordersWebtoon().collectAsState()
-            val isPagerType = ReadingModeType.isPagerType(viewModel.getMangaReadingMode())
+            val isPagerType = ReadingMode.isPagerType(viewModel.getMangaReadingMode())
             val cropEnabled = if (isPagerType) cropBorderPaged else cropBorderWebtoon
 
             ReaderAppBars(
@@ -360,14 +360,14 @@ class ReaderActivity : BaseActivity() {
                     moveToPageIndex(it)
                 },
 
-                readingMode = ReadingModeType.fromPreference(
+                readingMode = ReadingMode.fromPreference(
                     viewModel.getMangaReadingMode(resolveDefault = false),
                 ),
                 onClickReadingMode = viewModel::openReadingModeSelectDialog,
-                orientationMode = OrientationType.fromPreference(
-                    viewModel.getMangaOrientationType(resolveDefault = false),
+                orientation = ReaderOrientation.fromPreference(
+                    viewModel.getMangaOrientation(resolveDefault = false),
                 ),
-                onClickOrientationMode = viewModel::openOrientationModeSelectDialog,
+                onClickOrientation = viewModel::openOrientationModeSelectDialog,
                 cropEnabled = cropEnabled,
                 onClickCropBorder = {
                     val enabled = viewModel.toggleCropBorders()
@@ -376,6 +376,16 @@ class ReaderActivity : BaseActivity() {
                 },
                 onClickSettings = viewModel::openSettingsDialog,
             )
+
+            BrightnessOverlay(
+                value = state.brightnessOverlayValue,
+            )
+
+            if (flashOnPageChange) {
+                DisplayRefreshHost(
+                    hostState = displayRefreshHost,
+                )
+            }
 
             val onDismissRequest = viewModel::closeDialog
             when (state.dialog) {
@@ -415,7 +425,7 @@ class ReaderActivity : BaseActivity() {
                     )
                 }
                 is ReaderViewModel.Dialog.OrientationModeSelect -> {
-                    OrientationModeSelectDialog(
+                    OrientationSelectDialog(
                         onDismissRequest = onDismissRequest,
                         screenModel = settingsScreenModel,
                         onChange = { stringRes ->
@@ -460,7 +470,8 @@ class ReaderActivity : BaseActivity() {
         } else {
             if (readerPreferences.fullscreen().get()) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-                windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                windowInsetsController.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
         }
     }
@@ -471,15 +482,15 @@ class ReaderActivity : BaseActivity() {
      */
     private fun setManga(manga: Manga) {
         val prevViewer = viewModel.state.value.viewer
-        val newViewer = ReadingModeType.toViewer(viewModel.getMangaReadingMode(), this)
+        val newViewer = ReadingMode.toViewer(viewModel.getMangaReadingMode(), this)
 
         if (window.sharedElementEnterTransition is MaterialContainerTransform) {
             // Wait until transition is complete to avoid crash on API 26
             window.sharedElementEnterTransition.doOnEnd {
-                setOrientation(viewModel.getMangaOrientationType())
+                setOrientation(viewModel.getMangaOrientation())
             }
         } else {
-            setOrientation(viewModel.getMangaOrientationType())
+            setOrientation(viewModel.getMangaOrientation())
         }
 
         // Destroy previous viewer if there was one
@@ -532,7 +543,7 @@ class ReaderActivity : BaseActivity() {
     private fun showReadingModeToast(mode: Int) {
         try {
             readingModeToast?.cancel()
-            readingModeToast = toast(ReadingModeType.fromPreference(mode).stringRes)
+            readingModeToast = toast(ReadingMode.fromPreference(mode).stringRes)
         } catch (e: ArrayIndexOutOfBoundsException) {
             logcat(LogPriority.ERROR) { "Unknown reading mode: $mode" }
         }
@@ -710,7 +721,7 @@ class ReaderActivity : BaseActivity() {
      * Forces the user preferred [orientation] on the activity.
      */
     private fun setOrientation(orientation: Int) {
-        val newOrientation = OrientationType.fromPreference(orientation)
+        val newOrientation = ReaderOrientation.fromPreference(orientation)
         if (newOrientation.flag != requestedOrientation) {
             requestedOrientation = newOrientation.flag
         }
@@ -903,17 +914,9 @@ class ReaderActivity : BaseActivity() {
                 }
                 else -> WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
             }
-
             window.attributes = window.attributes.apply { screenBrightness = readerBrightness }
 
-            // Set black overlay visibility.
-            if (value < 0) {
-                binding.brightnessOverlay.isVisible = true
-                val alpha = (abs(value) * 2.56).toInt()
-                binding.brightnessOverlay.setBackgroundColor(Color.argb(alpha, 0, 0, 0))
-            } else {
-                binding.brightnessOverlay.isVisible = false
-            }
+            viewModel.setBrightnessOverlayValue(value)
         }
 
         /**

@@ -248,7 +248,6 @@
     <string name="backup_created">Хаппаас куопуйа оҥоһуллунна</string>
     <string name="pref_backup_slots">Муҥутугар дылы хаппаас куопуйалар</string>
     <string name="pref_backup_interval">Хаппаас куопуйа оҥоһуутун түргэнэ</string>
-    <string name="pref_backup_service_category">Автоматическай Хаппаас куопуйалар</string>
     <string name="pref_backup_directory">Хаппаас куопуйа сурунаала</string>
     <string name="pref_restore_backup_summ">Бэбэлэтиэкэни хаппаас куопуйа билэтиттэн төнүҥнэрии</string>
     <string name="pref_restore_backup">Хаппаас куопуйаны куолутунан туруоруу</string>
@@ -279,8 +278,6 @@
     <string name="pref_clear_database_summary">Эн бэбэлэтиэкэҕэр суох маанга остуоруйатын сотторуу</string>
     <string name="pref_clear_database">Билим олоҕо ыраастааһына</string>
     <string name="pref_disable_battery_optimization">Батарея тупсарыытын араарыы</string>
-    <string name="pref_refresh_library_tracking_summary">Туругу, ахсааны уонна бүтэһик ааҕыллыбыт түһүмэҕи кэтээн көрөр өҥөлөртөн саҥардыы</string>
-    <string name="pref_refresh_library_tracking">Кэтээһини чэбдигирии</string>
     <string name="pref_refresh_library_covers">Бэбэлэтиэкэҕэ баар маанга таһын чэбдигирии</string>
     <string name="clear_database_completed">Дааннайдар сотуллубуттар</string>
     <string name="pref_disable_battery_optimization_summary">Бэбэлэтиэкэ уонна хаппаас куопуйатыгар кэннинээҕи саҥардыытыгар көмөлөһөр</string>

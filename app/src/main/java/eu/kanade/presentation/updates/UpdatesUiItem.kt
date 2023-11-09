@@ -1,6 +1,5 @@
 package eu.kanade.presentation.updates
 
-import android.text.format.DateUtils
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -39,6 +37,7 @@ import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadIndicator
 import eu.kanade.presentation.manga.components.DotSeparatorText
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
@@ -47,33 +46,18 @@ import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.material.ReadItemAlpha
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.selectedBackground
-import java.util.Date
-import kotlin.time.Duration.Companion.minutes
 
 internal fun LazyListScope.updatesLastUpdatedItem(
     lastUpdated: Long,
 ) {
     item(key = "updates-lastUpdated") {
-        val time = remember(lastUpdated) {
-            val now = Date().time
-            if (now - lastUpdated < 1.minutes.inWholeMilliseconds) {
-                null
-            } else {
-                DateUtils.getRelativeTimeSpanString(lastUpdated, now, DateUtils.MINUTE_IN_MILLIS)
-            }
-        }
-
         Box(
             modifier = Modifier
                 .animateItemPlacement()
                 .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         ) {
             Text(
-                text = if (time.isNullOrEmpty()) {
-                    stringResource(R.string.updates_last_update_info, stringResource(R.string.updates_last_update_info_just_now))
-                } else {
-                    stringResource(R.string.updates_last_update_info, time)
-                },
+                text = stringResource(R.string.updates_last_update_info, relativeTimeSpanString(lastUpdated)),
                 fontStyle = FontStyle.Italic,
             )
         }

@@ -9,10 +9,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -25,9 +23,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
+import eu.kanade.presentation.reader.components.ChapterNavigator
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 
@@ -56,10 +55,10 @@ fun ReaderAppBars(
     totalPages: Int,
     onSliderValueChange: (Int) -> Unit,
 
-    readingMode: ReadingModeType,
+    readingMode: ReadingMode,
     onClickReadingMode: () -> Unit,
-    orientationMode: OrientationType,
-    onClickOrientationMode: () -> Unit,
+    orientation: ReaderOrientation,
+    onClickOrientation: () -> Unit,
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
@@ -69,8 +68,8 @@ fun ReaderAppBars(
         .surfaceColorAtElevation(3.dp)
         .copy(alpha = if (isSystemInDarkTheme()) 0.9f else 0.95f)
 
-    val appBarModifier = if (fullscreen) {
-        Modifier.windowInsetsPadding(WindowInsets.systemBars)
+    val modifierWithInsetsPadding = if (fullscreen) {
+        Modifier.systemBarsPadding()
     } else {
         Modifier
     }
@@ -91,7 +90,7 @@ fun ReaderAppBars(
             ),
         ) {
             AppBar(
-                modifier = appBarModifier
+                modifier = modifierWithInsetsPadding
                     .clickable(onClick = onClickTopAppBar),
                 backgroundColor = backgroundColor,
                 title = mangaTitle,
@@ -101,7 +100,9 @@ fun ReaderAppBars(
                     AppBarActions(
                         listOfNotNull(
                             AppBar.Action(
-                                title = stringResource(if (bookmarked) R.string.action_remove_bookmark else R.string.action_bookmark),
+                                title = stringResource(
+                                    if (bookmarked) R.string.action_remove_bookmark else R.string.action_bookmark,
+                                ),
                                 icon = if (bookmarked) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
                                 onClick = onToggleBookmarked,
                             ),
@@ -137,6 +138,7 @@ fun ReaderAppBars(
             ),
         ) {
             Column(
+                modifier = modifierWithInsetsPadding,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 ChapterNavigator(
@@ -154,8 +156,8 @@ fun ReaderAppBars(
                     backgroundColor = backgroundColor,
                     readingMode = readingMode,
                     onClickReadingMode = onClickReadingMode,
-                    orientationMode = orientationMode,
-                    onClickOrientationMode = onClickOrientationMode,
+                    orientation = orientation,
+                    onClickOrientation = onClickOrientation,
                     cropEnabled = cropEnabled,
                     onClickCropBorder = onClickCropBorder,
                     onClickSettings = onClickSettings,

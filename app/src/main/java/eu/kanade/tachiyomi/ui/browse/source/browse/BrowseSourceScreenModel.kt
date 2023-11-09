@@ -233,7 +233,7 @@ class BrowseSourceScreenModel(
                 new = new.removeCovers(coverCache)
             } else {
                 setMangaDefaultChapterFlags.await(manga)
-                addTracks.bindEnhancedTracks(manga, source)
+                addTracks.bindEnhancedTrackers(manga, source)
             }
 
             updateManga.await(new.toMangaUpdate())
@@ -264,7 +264,9 @@ class BrowseSourceScreenModel(
                 // Choose a category
                 else -> {
                     val preselectedIds = getCategories.await(manga.id).map { it.id }
-                    setDialog(Dialog.ChangeMangaCategory(manga, categories.mapAsCheckboxState { it.id in preselectedIds }))
+                    setDialog(
+                        Dialog.ChangeMangaCategory(manga, categories.mapAsCheckboxState { it.id in preselectedIds }),
+                    )
                 }
             }
         }
@@ -314,7 +316,10 @@ class BrowseSourceScreenModel(
     sealed class Listing(open val query: String?, open val filters: FilterList) {
         data object Popular : Listing(query = GetRemoteManga.QUERY_POPULAR, filters = FilterList())
         data object Latest : Listing(query = GetRemoteManga.QUERY_LATEST, filters = FilterList())
-        data class Search(override val query: String?, override val filters: FilterList) : Listing(query = query, filters = filters)
+        data class Search(
+            override val query: String?,
+            override val filters: FilterList,
+        ) : Listing(query = query, filters = filters)
 
         companion object {
             fun valueOf(query: String?): Listing {

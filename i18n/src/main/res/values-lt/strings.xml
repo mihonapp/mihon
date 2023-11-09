@@ -28,8 +28,6 @@
     <string name="name">Vardas</string>
     <string name="default_category_summary">Visada klausti</string>
     <string name="default_category">Numatyta kategorija</string>
-    <string name="pref_library_update_refresh_trackers_summary">Naujinti seklius kai biblioteka naujinama</string>
-    <string name="pref_library_update_refresh_trackers">Automatiškai naujinti seklius</string>
     <string name="pref_library_update_refresh_metadata_summary">Tikrinti naujus viršelius ir informaciją kai biblioteka naujinama</string>
     <string name="pref_library_update_refresh_metadata">Automatiškai naujinti metaduomenis</string>
     <string name="pref_update_only_non_completed">Kai yra \"Perskaityta\" statusas</string>
@@ -246,6 +244,8 @@
     <string name="tapping_inverted_vertical">Vertikalus</string>
     <string name="pref_reader_actions">Veiksmai</string>
     <string name="pref_read_with_long_tap">Parodyti ilgiau paspaudus</string>
+    <string name="pref_create_folder_per_manga">Išsaugoti puslapius atskiruose aplankuose</string>
+    <string name="pref_create_folder_per_manga_summary">Sukuria aplankus pagal įrašo pavadinimą</string>
     <string name="pref_reader_theme">Fono spalva</string>
     <string name="nav_zone_prev">Ankstesnis</string>
     <string name="gray_background">Pilka</string>
@@ -335,7 +335,6 @@
     <string name="pref_remove_bookmarked_chapters">Leisti naikinti žymėtus skyrius</string>
     <string name="fifth_to_last">Penktas nuo paskutinio skaityto</string>
     <string name="pref_category_auto_download">Automatinis atsisiuntimas</string>
-    <string name="pref_backup_service_category">Automatinės atsarginės kopijos</string>
     <string name="pref_backup_slots">Maksimalus atsarginių kopijų skaičius</string>
     <string name="backup_created">Sukurta atsarginė kopija</string>
     <string name="pref_high">aukštas</string>
@@ -511,7 +510,6 @@
     <string name="restore_in_progress">Atkūrimas jau vyksta</string>
     <string name="restoring_backup">Atkuriama atsarginė kopija</string>
     <string name="requires_app_restart">Kad įsigaliotų, reikia iš naujo paleisti programą</string>
-    <string name="pref_refresh_library_tracking_summary">Atnaujina būseną, įvertinimą ir paskutinį perskaitytą skyrių iš sekimo paslaugų</string>
     <string name="pref_reset_viewer_flags">Iš naujo nustatyti kiekvienos serijos skaitytuvo nustatymus</string>
     <string name="pref_dump_crash_logs">Išmeskite strigčių žurnalus</string>
     <string name="download_queue_error">Nepavyko atsisiųsti skyrių. Galite pabandyti dar kartą atsisiųsti</string>
@@ -558,7 +556,6 @@
     <string name="pref_reset_user_agent_string">Iš naujo nustatyti numatytąją vartotojo agento eilutę</string>
     <string name="pref_clear_webview_data">Išvalyti \"WebView\" duomenis</string>
     <string name="pref_refresh_library_covers">Atnaujinti bibliotekos viršelius</string>
-    <string name="pref_refresh_library_tracking">Atnaujinti stebėjimą</string>
     <string name="pref_reset_viewer_flags_summary">Iš naujo nustatyti visų serijų skaitymo režimą ir orientaciją</string>
     <string name="pref_reset_viewer_flags_success">Visų skaitytuvo nustatymų nustatymas iš naujo</string>
     <string name="pref_reset_viewer_flags_error">Nepavyko atstatyti skaitytuvo nustatymų</string>

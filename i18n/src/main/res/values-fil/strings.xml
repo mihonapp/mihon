@@ -237,10 +237,9 @@
     <string name="invalid_backup_file_missing_manga">Hindi naglalaman ang backup ng kahit anong mga entry sa Aklatan.</string>
     <string name="invalid_backup_file">Invalid na backup</string>
     <string name="backup_created">Nai-backup na</string>
-    <string name="pref_backup_slots">Dami ng backup</string>
-    <string name="pref_backup_interval">Dalas ng pag-backup</string>
-    <string name="pref_backup_service_category">Kusang mag-backup</string>
-    <string name="pref_backup_directory">Lugar ng backup</string>
+    <string name="pref_backup_slots">Pinakamarami na awtomatikong pag-backup</string>
+    <string name="pref_backup_interval">Awtomatikong dalas ng pag-backup</string>
+    <string name="pref_backup_directory">Lokasyon ng backup</string>
     <string name="pref_restore_backup_summ">I-restore ang Aklatan mula sa backup</string>
     <string name="pref_restore_backup">I-restore ang backup</string>
     <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang Aklatan</string>
@@ -422,8 +421,6 @@
     <string name="battery_optimization_disabled">Nakapatay na ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization">Patayin ang pag-o-optimisa sa baterya</string>
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
-    <string name="pref_refresh_library_tracking_summary">Inia-update ang estado, iskor, at huling nabasang kabanata mula sa mga tracker</string>
-    <string name="pref_refresh_library_tracking">Sariwain ang pagta-track</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga cover sa aklatan</string>
     <string name="clear_database_completed">Binura na</string>
     <string name="clear_database_confirmation">Sigurado ka ba\? Ang mga nabasang kabanata at pag-unlad ng mga wala sa aklatan ay mawawala</string>
@@ -437,7 +434,7 @@
     <string name="cookies_cleared">Nalinis na ang mga cookie</string>
     <string name="requires_app_restart">Nangangailangang buksan muli ang app para gumana</string>
     <string name="pref_clear_cookies">Linisin ang mga cookie</string>
-    <string name="label_network">Network</string>
+    <string name="label_network">Networking</string>
     <string name="restoring_backup_error">Bigong ma-restore ang backup</string>
     <string name="restoring_backup_canceled">Kinansela ang pag-restore</string>
     <string name="restore_in_progress">Inire-restore na</string>
@@ -532,14 +529,14 @@
     <string name="clipboard_copy_error">Bigong makopya sa clipboard</string>
     <string name="rotation_landscape">Pahiga</string>
     <string name="rotation_portrait">Patayo</string>
+    <string name="pref_create_folder_per_manga_summary">Gumagawa ng mga folder ayon sa pamagat ng entry</string>
+    <string name="pref_create_folder_per_manga">I-save ang mga pahina sa folder nila</string>
     <string name="pref_reader_actions">Gawain</string>
     <string name="rotation_type">Pag-ikot</string>
     <string name="pref_grayscale">Maabo</string>
     <string name="notification_incognito_text">Isara ang incognito</string>
     <string name="automatic_background">Kusa</string>
     <string name="cancel_all_for_series">Ikansela lahat para sa seryeng ito</string>
-    <string name="pref_library_update_refresh_trackers_summary">I-update ang tracker tuwing nag-a-update ang Aklatan</string>
-    <string name="pref_library_update_refresh_trackers">Kusang sariwain ang tracker</string>
     <string name="local_filter_order_by">Ayusin ayon sa</string>
     <string name="restrictions">Restriksyon: %s</string>
     <string name="error_no_match">Walang nahanap na kapares</string>
@@ -761,7 +758,7 @@
     <string name="action_copy_to_clipboard">Kopyahin sa clipboard</string>
     <string name="pref_hide_in_library_items">Itago ang mga entry na nasa aklatan na</string>
     <plurals name="download_amount">
-        <item quantity="one">Susunod na kabanata</item>
+        <item quantity="one">Sunod na kabanata</item>
         <item quantity="other">Susunod na %d kabanata</item>
     </plurals>
     <string name="action_update_category">I-update ang kategorya</string>
@@ -819,7 +816,13 @@
     <string name="action_sort_category">Mag-ayos ng kategorya</string>
     <string name="notification_updating_progress">Nag-a-update ang aklatan... (%s)</string>
     <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto\?</string>
-    <string name="source_settings">Mga setting ng source</string>
+    <string name="source_settings">Mga setting ng pinagmula</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
+    <string name="label_data_storage">Data at storage</string>
+    <string name="pref_flash_page_summ">Binabawasan ang ghosting sa mga e-ink na display</string>
+    <string name="pref_flash_page">Mag-flash ng puti kada pagbabago ng pahina</string>
+    <string name="relative_time_span_never">Hindi kailanman</string>
+    <string name="last_auto_backup_info">Huling awtomatikong na-back up: %s</string>
+    <string name="pref_storage_usage">Paggamit ng storage</string>
 </resources>

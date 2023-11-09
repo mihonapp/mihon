@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.OfflinePin
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -32,6 +32,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.theme.TachiyomiTheme
@@ -42,7 +43,6 @@ import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import tachiyomi.domain.chapter.service.calculateChapterGap
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -244,7 +244,7 @@ private fun ChapterText(
                     ),
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.OfflinePin,
+                        imageVector = Icons.Filled.CheckCircle,
                         contentDescription = stringResource(R.string.label_downloaded),
                     )
                 },
@@ -304,7 +304,7 @@ private val FakeChapterLongTitle = previewChapter(
     chapterNumber = 1f,
 )
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TransitionTextPreview() {
     TachiyomiTheme {
@@ -318,7 +318,7 @@ private fun TransitionTextPreview() {
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TransitionTextLongTitlePreview() {
     TachiyomiTheme {
@@ -332,7 +332,7 @@ private fun TransitionTextLongTitlePreview() {
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TransitionTextWithGapPreview() {
     TachiyomiTheme {
@@ -346,7 +346,7 @@ private fun TransitionTextWithGapPreview() {
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TransitionTextNoNextPreview() {
     TachiyomiTheme {
@@ -360,7 +360,7 @@ private fun TransitionTextNoNextPreview() {
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TransitionTextNoPreviousPreview() {
     TachiyomiTheme {

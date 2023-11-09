@@ -181,7 +181,6 @@ class WebtoonPageHolder(
      */
     private suspend fun setImage() {
         progressIndicator.setProgress(0)
-        removeErrorLayout()
 
         val streamFn = page?.stream ?: return
 
@@ -202,6 +201,7 @@ class WebtoonPageHolder(
                     cropBorders = viewer.config.imageCropBorders,
                 ),
             )
+            removeErrorLayout()
         }
         // Suspend the coroutine to close the input stream only when the WebtoonPageHolder is recycled
         suspendCancellableCoroutine<Nothing> { continuation ->
@@ -234,6 +234,7 @@ class WebtoonPageHolder(
      */
     private fun onImageDecoded() {
         progressContainer.isVisible = false
+        removeErrorLayout()
     }
 
     /**

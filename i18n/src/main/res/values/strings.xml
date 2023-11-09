@@ -14,6 +14,7 @@
     <string name="track">Tracking</string>
     <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
+    <string name="scanlator">Scanlator</string>
 
     <!-- Screen titles -->
     <string name="label_more">More</string>
@@ -23,6 +24,7 @@
     <string name="label_recent_updates">Updates</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
+    <string name="label_data_storage">Data and storage</string>
     <string name="label_backup">Backup</string>
     <string name="label_backup_and_sync">Backup and Sync</string>
     <string name="label_sync">Sync</string>
@@ -67,6 +69,7 @@
     <string name="action_sort_latest_chapter">Latest chapter</string>
     <string name="action_sort_chapter_fetch_date">Chapter fetch date</string>
     <string name="action_sort_date_added">Date added</string>
+    <string name="action_sort_tracker_score">Tracker score</string>
     <string name="action_search">Search</string>
     <string name="action_search_hint">Search…</string>
     <string name="action_search_settings">Search settings</string>
@@ -127,6 +130,7 @@
     <string name="action_disable">Disable</string>
     <string name="action_pin">Pin</string>
     <string name="action_unpin">Unpin</string>
+    <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel_all">Cancel all</string>
@@ -146,6 +150,7 @@
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
     <string name="action_reset">Reset</string>
+    <string name="action_revert_to_default">Revert to default</string>
     <!-- missing undo feature after Compose rewrite #7454 -->
     <string name="action_undo">Undo</string>
     <string name="action_close">Close</string>
@@ -183,6 +188,7 @@
     <string name="pref_downloads_summary">Automatic download, download ahead</string>
     <string name="pref_tracking_summary">One-way progress sync, enhanced sync</string>
     <string name="pref_browse_summary">Sources, extensions, global search</string>
+    <string name="pref_backup_summary">Manual &amp; automatic backups, storage space</string>
     <string name="pref_backup_and_sync_summary">Manual &amp; automatic backups and sync</string>
     <string name="pref_security_summary">App lock, secure screen</string>
     <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
@@ -337,6 +343,8 @@
     <string name="pref_double_tap_zoom">Double tap to zoom</string>
     <string name="pref_cutout_short">Show content in cutout area</string>
     <string name="pref_page_transitions">Animate page transitions</string>
+    <string name="pref_flash_page">Flash white on page change</string>
+    <string name="pref_flash_page_summ">Reduces ghosting on e-ink displays</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
@@ -368,6 +376,8 @@
     <string name="tapping_inverted_both">Both</string>
     <string name="pref_reader_actions">Actions</string>
     <string name="pref_read_with_long_tap">Show actions on long tap</string>
+    <string name="pref_create_folder_per_manga">Save pages into separate folders</string>
+    <string name="pref_create_folder_per_manga_summary">Creates folders according to entries\' title</string>
     <string name="pref_reader_theme">Background color</string>
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
@@ -472,16 +482,15 @@
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
 
-      <!-- Backup section -->
+      <!-- Data and storage section -->
     <string name="pref_create_backup">Create backup</string>
     <string name="pref_create_backup_summ">Can be used to restore current library</string>
     <string name="pref_restore_backup">Restore backup</string>
     <string name="pref_restore_backup_summ">Restore library from backup file</string>
     <string name="pref_backup_directory">Backup location</string>
-    <string name="pref_backup_service_category">Automatic backups</string>
-    <string name="pref_backup_manual_category">Manual backups</string>
-    <string name="pref_backup_interval">Backup frequency</string>
-    <string name="pref_backup_slots">Maximum backups</string>
+    <string name="pref_backup_interval">Automatic backup frequency</string>
+    <string name="pref_backup_slots">Maximum automatic backups</string>
+    <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
     <string name="invalid_backup_file">Invalid backup file</string>
     <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
@@ -509,6 +518,14 @@
     <string name="restoring_backup_error">Restoring backup failed</string>
     <string name="restoring_backup_canceled">Canceled restore</string>
     <string name="backup_info">You should keep copies of backups in other places as well. Backups may contain sensitive data including any stored passwords; be careful if sharing.</string>
+    <string name="last_auto_backup_info">Last automatically backed up: %s</string>
+    <string name="label_data">Data</string>
+    <string name="pref_storage_usage">Storage usage</string>
+    <string name="pref_clear_chapter_cache">Clear chapter cache</string>
+    <string name="used_cache">Used: %1$s</string>
+    <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
+    <string name="cache_delete_error">Error occurred while clearing</string>
+    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
 
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
@@ -547,8 +564,8 @@
     <string name="pref_purge_confirmation_message">Purging sync data will delete all your sync data from Google Drive. Are you sure you want to continue?</string>
 
 
-    <!-- Advanced section -->
-    <string name="label_network">Network</string>
+      <!-- Advanced section -->
+    <string name="label_network">Networking</string>
     <string name="pref_clear_cookies">Clear cookies</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_user_agent_string">Default user agent string</string>
@@ -557,12 +574,6 @@
     <string name="pref_reset_user_agent_string">Reset default user agent string</string>
     <string name="requires_app_restart">Requires app restart to take effect</string>
     <string name="cookies_cleared">Cookies cleared</string>
-    <string name="label_data">Data</string>
-    <string name="pref_clear_chapter_cache">Clear chapter cache</string>
-    <string name="used_cache">Used: %1$s</string>
-    <string name="cache_deleted">Cache cleared. %1$d files have been deleted</string>
-    <string name="cache_delete_error">Error occurred while clearing</string>
-    <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="pref_invalidate_download_cache">Invalidate downloads index</string>
     <string name="pref_invalidate_download_cache_summary">Force app to recheck downloaded chapters</string>
     <string name="download_cache_invalidated">Downloads index invalidated</string>
@@ -734,6 +745,8 @@
     <string name="set_chapter_settings_as_default">Set as default</string>
     <string name="no_chapters_error">No chapters found</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="exclude_scanlators">Exclude scanlators</string>
+    <string name="no_scanlators_found">No scanlators found</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
@@ -819,6 +832,7 @@
     <string name="cant_open_last_read_chapter">Unable to open last read chapter</string>
     <string name="updates_last_update_info">Library last updated: %s</string>
     <string name="updates_last_update_info_just_now">Just now</string>
+    <string name="relative_time_span_never">Never</string>
 
     <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
@@ -906,7 +920,7 @@
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
     <string name="file_picker_error">No file picker app found</string>
-    <string name="file_null_uri_error">File picker failed to return file to app</string>
+    <string name="file_null_uri_error">No file selected</string>
 
     <!--UpdateCheck-->
     <string name="update_check_confirm">Download</string>

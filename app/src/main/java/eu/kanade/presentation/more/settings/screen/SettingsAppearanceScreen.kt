@@ -120,7 +120,9 @@ object SettingsAppearanceScreen : SearchableSettings {
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
         val langs = remember { getLangs(context) }
-        var currentLanguage by remember { mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "") }
+        var currentLanguage by remember {
+            mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "")
+        }
         val now = remember { Date().time }
 
         val dateFormat by uiPreferences.dateFormat().collectAsState()

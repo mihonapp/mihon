@@ -28,7 +28,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -57,6 +56,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.manga.components.MangaCover
@@ -68,7 +68,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import tachiyomi.presentation.core.util.ThemePreviews
 import tachiyomi.presentation.core.util.plus
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -98,7 +97,7 @@ fun TrackerSearch(
                     navigationIcon = {
                         IconButton(onClick = onDismissRequest) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                                imageVector = Icons.Default.ArrowBack,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -241,7 +240,7 @@ private fun SearchResultItem(
     ) {
         if (selected) {
             Icon(
-                imageVector = Icons.Default.CheckCircle,
+                imageVector = Icons.Filled.CheckCircle,
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.TopEnd),
                 tint = MaterialTheme.colorScheme.primary,
@@ -320,7 +319,7 @@ private fun SearchResultItemDetails(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun TrackerSearchPreviews(
     @PreviewParameter(TrackerSearchPreviewProvider::class)

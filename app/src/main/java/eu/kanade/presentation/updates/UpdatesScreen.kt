@@ -109,9 +109,7 @@ fun UpdateScreen(
                     FastScrollLazyColumn(
                         contentPadding = contentPadding,
                     ) {
-                        if (lastUpdated > 0L) {
-                            updatesLastUpdatedItem(lastUpdated)
-                        }
+                        updatesLastUpdatedItem(lastUpdated)
 
                         updatesUiItems(
                             uiModels = state.getUiModel(context, relativeTime),

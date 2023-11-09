@@ -23,7 +23,13 @@ fun Context.notify(id: Int, channelId: String, block: (NotificationCompat.Builde
 }
 
 fun Context.notify(id: Int, notification: Notification) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        PermissionChecker.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS,
+        ) != PermissionChecker.PERMISSION_GRANTED
+    ) {
         return
     }
 
@@ -31,7 +37,13 @@ fun Context.notify(id: Int, notification: Notification) {
 }
 
 fun Context.notify(notificationWithIdAndTags: List<NotificationWithIdAndTag>) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PermissionChecker.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PermissionChecker.PERMISSION_GRANTED) {
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        PermissionChecker.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS,
+        ) != PermissionChecker.PERMISSION_GRANTED
+    ) {
         return
     }
 
@@ -49,7 +61,10 @@ fun Context.cancelNotification(id: Int) {
  * @param block the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null): NotificationCompat.Builder {
+fun Context.notificationBuilder(
+    channelId: String,
+    block: (NotificationCompat.Builder.() -> Unit)? = null,
+): NotificationCompat.Builder {
     val builder = NotificationCompat.Builder(this, channelId)
         .setColor(getColor(R.color.accent_blue))
     if (block != null) {

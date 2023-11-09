@@ -115,8 +115,16 @@ fun <T> TriStateListDialog(
                         }
                     }
 
-                    if (!listState.isScrolledToStart()) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
-                    if (!listState.isScrolledToEnd()) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
+                    if (!listState.isScrolledToStart()) {
+                        HorizontalDivider(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                        )
+                    }
+                    if (!listState.isScrolledToEnd()) {
+                        HorizontalDivider(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                        )
+                    }
                 }
             }
         },

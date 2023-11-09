@@ -228,6 +228,9 @@ object AboutScreen : Screen() {
                     is GetApplicationRelease.Result.NoNewUpdate -> {
                         context.toast(R.string.update_check_no_new_updates)
                     }
+                    is GetApplicationRelease.Result.OsTooOld -> {
+                        context.toast(R.string.update_check_eol)
+                    }
                     else -> {}
                 }
             } catch (e: Exception) {

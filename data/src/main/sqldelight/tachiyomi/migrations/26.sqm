@@ -1,0 +1,44 @@
+CREATE TABLE excluded_scanlators(
+    manga_id INTEGER NOT NULL,
+    scanlator TEXT NOT NULL,
+    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    ON DELETE CASCADE
+);
+
+CREATE INDEX excluded_scanlators_manga_id_index ON excluded_scanlators(manga_id);
+
+DROP VIEW IF EXISTS libraryView;
+
+CREATE VIEW libraryView AS
+SELECT
+    M.*,
+    coalesce(C.total, 0) AS totalCount,
+    coalesce(C.readCount, 0) AS readCount,
+    coalesce(C.latestUpload, 0) AS latestUpload,
+    coalesce(C.fetchedAt, 0) AS chapterFetchedAt,
+    coalesce(C.lastRead, 0) AS lastRead,
+    coalesce(C.bookmarkCount, 0) AS bookmarkCount,
+    coalesce(MC.category_id, 0) AS category
+FROM mangas M
+LEFT JOIN(
+    SELECT
+        chapters.manga_id,
+        count(*) AS total,
+        sum(read) AS readCount,
+        coalesce(max(chapters.date_upload), 0) AS latestUpload,
+        coalesce(max(history.last_read), 0) AS lastRead,
+        coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
+        sum(chapters.bookmark) AS bookmarkCount
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    LEFT JOIN history
+    ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
+    GROUP BY chapters.manga_id
+) AS C
+ON M._id = C.manga_id
+LEFT JOIN mangas_categories AS MC
+ON MC.manga_id = M._id
+WHERE M.favorite = 1;

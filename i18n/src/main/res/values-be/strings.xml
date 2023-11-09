@@ -113,8 +113,6 @@
     <string name="categorized_display_settings">Налады для кожнай катэгорыі для сартавання і адлюстравання</string>
     <string name="default_category_summary">Заўсёды пытацца</string>
     <string name="default_category">Катэгорыя па змаўчанні</string>
-    <string name="pref_library_update_refresh_trackers_summary">Абнаўляць адсочванне пры абнаўленні бібліятэкі</string>
-    <string name="pref_library_update_refresh_trackers">Аўтаматычна абнаўляць адсочванне</string>
     <string name="pref_library_update_refresh_metadata_summary">Правераць наяўнасць новай вокладкі і дэталяў пры абнаўленні бібліятэкі</string>
     <string name="pref_library_update_refresh_metadata">Аўтаматычнае абнаўленне метададзеных</string>
     <string name="pref_update_only_non_completed">Абнаўляць толькі незавершаную мангу</string>
@@ -229,6 +227,8 @@
     <string name="gray_background">Шэры</string>
     <string name="white_background">Белы</string>
     <string name="pref_reader_theme">Колер фону</string>
+    <string name="pref_create_folder_per_manga_summary">Ствараць тэчкі ў адпаведнасці з назвай мангі</string>
+    <string name="pref_create_folder_per_manga">Захоўваць старонкі ў асобныя тэчкі</string>
     <string name="pref_read_with_long_tap">Паказаць пры доўгім націску</string>
     <string name="pref_reader_actions">Дзеяння</string>
     <string name="tapping_inverted_both">Абодва</string>

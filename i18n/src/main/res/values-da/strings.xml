@@ -191,7 +191,6 @@
     <string name="default_category">Standard kategori</string>
     <string name="action_sort_last_manga_update">Nyeste manga opdateringer</string>
     <string name="action_sort_unread_count">Antal ulæst</string>
-    <string name="pref_library_update_refresh_trackers">Opdater automatisk trackere</string>
     <string name="delete_category">Slet kategori</string>
     <plurals name="num_categories">
         <item quantity="one">%d kategori</item>
@@ -199,7 +198,6 @@
     </plurals>
     <string name="exclude">Ekskluder: %s</string>
     <string name="theme_lavender">Lavendel</string>
-    <string name="pref_library_update_refresh_trackers_summary">Opdater trackere når biblioteket opdateres</string>
     <string name="default_category_summary">Spørg altid</string>
     <string name="pref_library_update_categories_details">Manga i ekskluderede kategorier vil ikke blive opdateret selv hvis de også er i inkluderede kategorier.</string>
     <string name="all">Alle</string>

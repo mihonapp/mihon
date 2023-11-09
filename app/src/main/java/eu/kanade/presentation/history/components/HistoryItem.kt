@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.manga.components.MangaCover
@@ -28,7 +30,6 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.util.ThemePreviews
 
 private val HistoryItemHeight = 96.dp
 
@@ -91,18 +92,20 @@ fun HistoryItem(
     }
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 private fun HistoryItemPreviews(
     @PreviewParameter(HistoryWithRelationsProvider::class)
     historyWithRelations: HistoryWithRelations,
 ) {
     TachiyomiTheme {
-        HistoryItem(
-            history = historyWithRelations,
-            onClickCover = {},
-            onClickResume = {},
-            onClickDelete = {},
-        )
+        Surface {
+            HistoryItem(
+                history = historyWithRelations,
+                onClickCover = {},
+                onClickResume = {},
+                onClickDelete = {},
+            )
+        }
     }
 }

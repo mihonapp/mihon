@@ -277,8 +277,6 @@
     <string name="pref_show_navigation_mode_summary">Tampilake kanthi ringkes nalika maca dibukak</string>
     <string name="pref_dual_page_split">Pamisahan kaca kaping pindho</string>
     <string name="pref_library_update_restriction">Nganyari otomatis watesan piranti</string>
-    <string name="pref_library_update_refresh_trackers">Nganyari jejak otomatis</string>
-    <string name="pref_library_update_refresh_trackers_summary">Nganyari pelacak nalika nganyari perpustakaan</string>
     <string name="categorized_display_settings">Setelan saben kategori kanggo ngurutake lan tampilan</string>
     <string name="delete_category_confirmation">Apa sampeyan pengin mbusak kategori \"%s\"\?</string>
     <string name="delete_category">Busak kategori</string>
@@ -296,6 +294,7 @@
     <string name="pref_double_tap_anim_speed">Kacepetan animasi tutul kaping pindho</string>
     <string name="pref_read_with_tapping_inverted">Walik zona tutul</string>
     <string name="tapping_inverted_horizontal">Horisontal</string>
+    <string name="pref_create_folder_per_manga_summary">Nggawe folder miturut judhul manga</string>
     <string name="filter_mode_overlay">Numpuki</string>
     <string name="filter_mode_screen">Layar</string>
     <string name="pref_reader_navigation">Pandhu arah</string>
@@ -316,6 +315,7 @@
     <string name="pref_keep_screen_on">Layar urip terus</string>
     <string name="pref_reader_actions">Aksi</string>
     <string name="pref_read_with_long_tap">Tampilake ing tunyuk dawa</string>
+    <string name="pref_create_folder_per_manga">Simpen kaca menyang folder sing kapisah</string>
     <string name="label_stats">Statistik</string>
     <string name="label_local">Lokal</string>
     <string name="label_started">Diwiwiti</string>

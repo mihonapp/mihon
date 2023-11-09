@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.core.security
 
 import eu.kanade.tachiyomi.core.R
+import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
 
@@ -20,7 +21,10 @@ class SecurityPreferences(
      * For app lock. Will be set when there is a pending timed lock.
      * Otherwise this pref should be deleted.
      */
-    fun lastAppClosed() = preferenceStore.getLong("last_app_closed", 0)
+    fun lastAppClosed() = preferenceStore.getLong(
+        Preference.appStateKey("last_app_closed"),
+        0,
+    )
 
     enum class SecureScreenMode(val titleResId: Int) {
         ALWAYS(R.string.lock_always),

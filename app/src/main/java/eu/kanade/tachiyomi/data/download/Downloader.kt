@@ -324,7 +324,11 @@ class Downloader(
         val availSpace = DiskUtil.getAvailableStorageSpace(mangaDir)
         if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
             download.status = Download.State.ERROR
-            notifier.onError(context.getString(R.string.download_insufficient_space), download.chapter.name, download.manga.title)
+            notifier.onError(
+                context.getString(R.string.download_insufficient_space),
+                download.chapter.name,
+                download.manga.title,
+            )
             return
         }
 
@@ -432,13 +436,17 @@ class Downloader(
         tmpFile?.delete()
 
         // Try to find the image file
-        val imageFile = tmpDir.listFiles()?.firstOrNull { it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001") }
+        val imageFile = tmpDir.listFiles()?.firstOrNull {
+            it.name!!.startsWith("$filename.") || it.name!!.startsWith("${filename}__001")
+        }
 
         try {
             // If the image is already downloaded, do nothing. Otherwise download from network
             val file = when {
                 imageFile != null -> imageFile
-                chapterCache.isImageInCache(page.imageUrl!!) -> copyImageFromCache(chapterCache.getImageFile(page.imageUrl!!), tmpDir, filename)
+                chapterCache.isImageInCache(
+                    page.imageUrl!!,
+                ) -> copyImageFromCache(chapterCache.getImageFile(page.imageUrl!!), tmpDir, filename)
                 else -> downloadImage(page, download.source, tmpDir, filename)
             }
 

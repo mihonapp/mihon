@@ -17,16 +17,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 
 @Composable
 fun BottomReaderBar(
     backgroundColor: Color,
-    readingMode: ReadingModeType,
+    readingMode: ReadingMode,
     onClickReadingMode: () -> Unit,
-    orientationMode: OrientationType,
-    onClickOrientationMode: () -> Unit,
+    orientation: ReaderOrientation,
+    onClickOrientation: () -> Unit,
     cropEnabled: Boolean,
     onClickCropBorder: () -> Unit,
     onClickSettings: () -> Unit,
@@ -46,17 +46,17 @@ fun BottomReaderBar(
             )
         }
 
+        IconButton(onClick = onClickOrientation) {
+            Icon(
+                painter = painterResource(orientation.iconRes),
+                contentDescription = stringResource(R.string.rotation_type),
+            )
+        }
+
         IconButton(onClick = onClickCropBorder) {
             Icon(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
                 contentDescription = stringResource(R.string.pref_crop_borders),
-            )
-        }
-
-        IconButton(onClick = onClickOrientationMode) {
-            Icon(
-                painter = painterResource(orientationMode.iconRes),
-                contentDescription = stringResource(R.string.pref_rotation_type),
             )
         }
 

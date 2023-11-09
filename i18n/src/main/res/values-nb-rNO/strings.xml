@@ -157,7 +157,6 @@
     <string name="pref_restore_backup">Gjenopprett sikkerhetskopi</string>
     <string name="pref_restore_backup_summ">Gjenopprett bibliotek fra sikkerhetskopifil</string>
     <string name="pref_backup_directory">Sikkerhetskopi-mappe</string>
-    <string name="pref_backup_service_category">Automatisk sikkerhetskopi</string>
     <string name="pref_backup_interval">Sikkerhetskopieringsfrekvens</string>
     <string name="pref_backup_slots">Maks antall sikkerhetskopier</string>
     <string name="backup_created">Sikkerhetskopi opprettet</string>
@@ -175,8 +174,6 @@
     <string name="pref_clear_database_summary">Slett historikk for oppføringer som ikke er lagret i biblioteket ditt</string>
     <string name="clear_database_confirmation">Er du sikker\? Leste kapitler og framdrift for oppføringer som ikke er i biblioteket vil gå tapt</string>
     <string name="clear_database_completed">Oppføringer slettet</string>
-    <string name="pref_refresh_library_tracking">Oppdater sporing</string>
-    <string name="pref_refresh_library_tracking_summary">Oppdaterer status, poengsum og sist leste kapittel fra sporingstjenestene</string>
     <string name="version">Versjon</string>
     <string name="pref_enable_acra">Send krasjrapporter</string>
     <string name="pref_acra_summary">Hjelper til med fiksing av feil. Ingen sensitiv data vil bli sendt</string>
@@ -533,8 +530,9 @@
     <string name="rotation_landscape">Liggende</string>
     <string name="rotation_portrait">Stående</string>
     <string name="rotation_type">Rotasjon</string>
+    <string name="pref_create_folder_per_manga_summary">Oppretter mapper i henhold til oppføringenes tittel</string>
+    <string name="pref_create_folder_per_manga">Lagre sider i egne mapper</string>
     <string name="pref_reader_actions">Handlinger</string>
-    <string name="pref_library_update_refresh_trackers">Oppdater trackere automatisk</string>
     <string name="pref_dark_theme_pure_black">Helt svart</string>
     <string name="getting_started_guide">Oppstartsveiledning</string>
     <string name="information_empty_category_dialog">Du har ingen kategorier enda.</string>
@@ -591,7 +589,6 @@
     <string name="error_no_match">Ingen treff funnet</string>
     <string name="notification_incognito_text">Skru av inkognito-modus</string>
     <string name="help_translate">Bistå oversettelsen</string>
-    <string name="pref_library_update_refresh_trackers_summary">Oppdater trackere ved oppdatering av bibliotek</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installer og start Shizuku for å bruke det som utvidelsesinstallatør.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku kjører ikke</string>

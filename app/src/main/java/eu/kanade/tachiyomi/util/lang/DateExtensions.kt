@@ -56,7 +56,8 @@ fun Date.toRelativeString(
         return dateFormat.format(this)
     }
     val now = Date()
-    val difference = now.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY) - this.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY)
+    val difference = now.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY) -
+        this.timeWithOffset.floorNearest(MILLISECONDS_IN_DAY)
     val days = difference.floorDiv(MILLISECONDS_IN_DAY).toInt()
     return when {
         difference < 0 -> dateFormat.format(this)

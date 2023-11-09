@@ -23,6 +23,7 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
@@ -40,7 +41,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         val backupPreferences = Injekt.get<BackupPreferences>()
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: backupPreferences.backupsDirectory().get().toUri()
-        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupConst.BACKUP_ALL)
+        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
 
         try {
             setForeground(getForegroundInfo())
@@ -50,7 +51,11 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         return try {
             val location = BackupCreator(context).createBackup(uri, flags, isAutoBackup)
-            if (!isAutoBackup) notifier.showBackupComplete(UniFile.fromUri(context, location.toUri()))
+            if (isAutoBackup) {
+                backupPreferences.lastAutoBackupTimestamp().set(Date().time)
+            } else {
+                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri()))
+            }
             Result.success()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)

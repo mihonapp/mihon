@@ -144,6 +144,13 @@ private fun ColumnScope.SortPage(
     val sortingMode = category.sort.type
     val sortDescending = !category.sort.isAscending
 
+    val trackerSortOption =
+        if (screenModel.trackers.isEmpty()) {
+            emptyList()
+        } else {
+            listOf(R.string.action_sort_tracker_score to LibrarySort.Type.TrackerMean)
+        }
+
     listOf(
         R.string.action_sort_alpha to LibrarySort.Type.Alphabetical,
         R.string.action_sort_total to LibrarySort.Type.TotalChapters,
@@ -153,15 +160,23 @@ private fun ColumnScope.SortPage(
         R.string.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
         R.string.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
         R.string.action_sort_date_added to LibrarySort.Type.DateAdded,
-    ).map { (titleRes, mode) ->
+    ).plus(trackerSortOption).map { (titleRes, mode) ->
         SortItem(
             label = stringResource(titleRes),
             sortDescending = sortDescending.takeIf { sortingMode == mode },
             onClick = {
                 val isTogglingDirection = sortingMode == mode
                 val direction = when {
-                    isTogglingDirection -> if (sortDescending) LibrarySort.Direction.Ascending else LibrarySort.Direction.Descending
-                    else -> if (sortDescending) LibrarySort.Direction.Descending else LibrarySort.Direction.Ascending
+                    isTogglingDirection -> if (sortDescending) {
+                        LibrarySort.Direction.Ascending
+                    } else {
+                        LibrarySort.Direction.Descending
+                    }
+                    else -> if (sortDescending) {
+                        LibrarySort.Direction.Descending
+                    } else {
+                        LibrarySort.Direction.Ascending
+                    }
                 }
                 screenModel.setSort(category, mode, direction)
             },

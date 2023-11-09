@@ -3,8 +3,8 @@ package eu.kanade.domain.manga.model
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.ui.reader.setting.OrientationType
-import eu.kanade.tachiyomi.ui.reader.setting.ReadingModeType
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.ComicInfoPublishingStatus
 import tachiyomi.core.preference.TriState
@@ -14,11 +14,11 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 // TODO: move these into the domain model
-val Manga.readingModeType: Long
-    get() = viewerFlags and ReadingModeType.MASK.toLong()
+val Manga.readingMode: Long
+    get() = viewerFlags and ReadingMode.MASK.toLong()
 
-val Manga.orientationType: Long
-    get() = viewerFlags and OrientationType.MASK.toLong()
+val Manga.readerOrientation: Long
+    get() = viewerFlags and ReaderOrientation.MASK.toLong()
 
 val Manga.downloadedFilter: TriState
     get() {

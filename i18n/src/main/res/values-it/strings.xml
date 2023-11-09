@@ -243,16 +243,13 @@
     <string name="pref_restore_backup">Ripristina backup</string>
     <string name="pref_restore_backup_summ">Ripristina la libreria da un file di backup</string>
     <string name="pref_backup_directory">Posizione dei backup</string>
-    <string name="pref_backup_interval">Frequenza dei backup</string>
-    <string name="pref_backup_slots">Massimo numero di backup</string>
+    <string name="pref_backup_interval">Frequenza dei backup automatici</string>
+    <string name="pref_backup_slots">Massimo numero di backup automatici</string>
     <string name="backup_created">Backup creato</string>
     <string name="restore_completed">Ripristino completato</string>
-    <string name="pref_backup_service_category">Backup automatici</string>
     <string name="backup_choice">Di cosa vuoi fare il backup\?</string>
     <string name="restoring_backup">Ripristino backup</string>
     <string name="creating_backup">Creazione backup</string>
-    <string name="pref_refresh_library_tracking">Aggiorna tracking</string>
-    <string name="pref_refresh_library_tracking_summary">Aggiorna stato, voto e ultimo capitolo letto dal servizio di tracking</string>
     <string name="no_more_results">Nessun altro risultato</string>
     <string name="local_source">Fonte locale</string>
     <string name="delete_downloads_for_manga">Eliminare i capitoli scaricati?</string>
@@ -579,7 +576,9 @@
     <string name="rotation_landscape">Orizzontale</string>
     <string name="rotation_portrait">Verticale</string>
     <string name="automatic_background">Auto</string>
+    <string name="pref_create_folder_per_manga_summary">Crea cartelle in base al titolo delle voci</string>
     <string name="cancel_all_for_series">Annulla tutti per questa serie</string>
+    <string name="pref_create_folder_per_manga">Salva pagine in cartelle separate</string>
     <string name="pref_reader_actions">Azioni</string>
     <string name="pref_grayscale">Scala di grigi</string>
     <string name="error_no_match">Nessun risultato trovato</string>
@@ -600,8 +599,6 @@
     <string name="manga_cover">Copertina</string>
     <string name="local_invalid_format">Formato capitolo non valido</string>
     <string name="tracking_guide">Guida al tracking</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aggiorna i tracker all\'aggiornarsi della libreria</string>
-    <string name="pref_library_update_refresh_trackers">Aggiorna automaticamente i tracker</string>
     <string name="action_start_downloading_now">Inizia a scaricare ora</string>
     <string name="about_dont_kill_my_app">Alcuni produttori hanno restrizioni aggiuntive per le app che chiudono i servizi in secondo piano. Questo sito ha più informazioni su come risolvere il problema.</string>
     <string name="pref_lowest">Più basso</string>
@@ -753,7 +750,7 @@
     <string name="pref_browse_summary">Fonti, estensioni, ricerca globale</string>
     <string name="pref_reader_summary">Modalità di lettura, aspetto, navigazione</string>
     <string name="pref_tracking_summary">Sincronizzazione unidirezionale avanzamenti, sincronizzazione migliorata</string>
-    <string name="pref_backup_summary">Backup manuali e automatici</string>
+    <string name="pref_backup_summary">Backup manuali e automatici, spazio di archiviazione</string>
     <string name="pref_security_summary">Blocco app, schermo protetto</string>
     <string name="pref_advanced_summary">Registro arresti anomali, ottimizzazioni batteria</string>
     <string name="crash_screen_title">Ops!</string>
@@ -870,4 +867,6 @@
     <string name="notification_updating_progress">Aggiornando libreria... (%s)</string>
     <string name="action_sort_category">Ordinamento categorie</string>
     <string name="sort_category_confirmation">Vuoi ordinare le categorie alfabeticamente\?</string>
+    <string name="file_null_uri_error">Il selettore di file ha restituito file all\'app</string>
+    <string name="label_data_storage">Dati e archiviazione</string>
 </resources>

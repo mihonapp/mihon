@@ -148,7 +148,10 @@ class DownloadCache(
         if (sourceDir != null) {
             val mangaDir = sourceDir.mangaDirs[provider.getMangaDirName(mangaTitle)]
             if (mangaDir != null) {
-                return provider.getValidChapterDirNames(chapterName, chapterScanlator).any { it in mangaDir.chapterDirs }
+                return provider.getValidChapterDirNames(
+                    chapterName,
+                    chapterScanlator,
+                ).any { it in mangaDir.chapterDirs }
             }
         }
         return false
@@ -355,9 +358,8 @@ class DownloadCache(
                                             // Folder of images
                                             it.isDirectory -> it.name
                                             // CBZ files
-                                            it.isFile && it.name?.endsWith(".cbz") == true -> it.name!!.substringBeforeLast(
-                                                ".cbz",
-                                            )
+                                            it.isFile && it.name?.endsWith(".cbz") == true ->
+                                                it.name!!.substringBeforeLast(".cbz")
                                             // Anything else is irrelevant
                                             else -> null
                                         }

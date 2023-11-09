@@ -117,8 +117,7 @@
     <string name="pref_create_backup">建立備份</string>
     <string name="pref_restore_backup">還原備份</string>
     <string name="pref_backup_directory">備份位置</string>
-    <string name="pref_backup_service_category">自動備份</string>
-    <string name="pref_backup_interval">備份頻率</string>
+    <string name="pref_backup_interval">自動備份頻率</string>
     <string name="backup_created">已建立備份</string>
     <string name="restore_completed">還原成功</string>
     <string name="backup_choice">哪些項目需要備份？</string>
@@ -268,10 +267,8 @@
 \n
 \n若選擇信任該憑證，即表示你願意承擔上述風險。</string>
     <string name="last_read_chapter">最後閱畢的章節</string>
-    <string name="pref_backup_slots">最大備份保留數</string>
+    <string name="pref_backup_slots">最大自動備份數量</string>
     <string name="clear_database_confirmation">您確定要這樣做嗎？未收藏的漫畫的閱讀進度和章節會被刪除</string>
-    <string name="pref_refresh_library_tracking">更新閱讀歷程</string>
-    <string name="pref_refresh_library_tracking_summary">與歷程平台同步處理閱讀狀態、評分以及進度</string>
     <string name="latest">新上架</string>
     <string name="manga_tracking_tab">歷程</string>
     <string name="reading">閱讀中</string>
@@ -403,7 +400,7 @@
         <item quantity="other">%d 個類別</item>
     </plurals>
     <string name="requires_app_restart">需要重新啟動應用程式以套用</string>
-    <string name="label_network">網路</string>
+    <string name="label_network">網路設定</string>
     <string name="tapping_inverted_both">全部</string>
     <string name="tapping_inverted_vertical">垂直</string>
     <string name="tapping_inverted_horizontal">水平</string>
@@ -520,6 +517,8 @@
 \n
 \n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
+    <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
+    <string name="pref_create_folder_per_manga_summary">根據作品標題建立資料夾</string>
     <string name="pref_show_navigation_mode_summary">開始閱讀時，短暫浮現輕觸區域</string>
     <string name="pref_show_navigation_mode">輕觸區域提示</string>
     <string name="pref_library_update_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動更新。</string>
@@ -534,8 +533,6 @@
     <string name="chapter_not_found">未找到章節</string>
     <string name="off">關閉</string>
     <string name="on">開啟</string>
-    <string name="pref_library_update_refresh_trackers_summary">更新書櫃時一併更新歷程平台</string>
-    <string name="pref_library_update_refresh_trackers">自動重新整理歷程平台</string>
     <string name="restrictions">限制：%s</string>
     <string name="local_filter_order_by">排序</string>
     <string name="local_invalid_format">無效的章節格式</string>
@@ -691,7 +688,7 @@
     <string name="pref_appearance_summary">主題、日期格式</string>
     <string name="pref_downloads_summary">自動下載、預先下載</string>
     <string name="pref_tracking_summary">單向進度同步、增強式同步</string>
-    <string name="pref_backup_summary">手動備份、自動備份</string>
+    <string name="pref_backup_summary">手動與自動備份，儲存空間</string>
     <string name="pref_security_summary">上鎖應用程式、防窺畫面</string>
     <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
@@ -806,4 +803,10 @@
     <string name="sort_category_confirmation">欲依照字母順序排列類別嗎？</string>
     <string name="source_settings">來源設定</string>
     <string name="file_null_uri_error">無法將選定的檔案傳回給應用程式</string>
+    <string name="relative_time_span_never">永不</string>
+    <string name="pref_flash_page_summ">減少電子墨水螢幕上的殘影</string>
+    <string name="last_auto_backup_info">最後一次自動備份：%s</string>
+    <string name="pref_flash_page">頁面轉換時閃白</string>
+    <string name="label_data_storage">資料與儲存空間</string>
+    <string name="pref_storage_usage">儲存空間佔用</string>
 </resources>

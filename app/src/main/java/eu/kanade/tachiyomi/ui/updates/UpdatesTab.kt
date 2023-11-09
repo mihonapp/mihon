@@ -87,7 +87,9 @@ object UpdatesTab : Tab {
         LaunchedEffect(Unit) {
             screenModel.events.collectLatest { event ->
                 when (event) {
-                    Event.InternalError -> screenModel.snackbarHostState.showSnackbar(context.getString(R.string.internal_error))
+                    Event.InternalError -> screenModel.snackbarHostState.showSnackbar(
+                        context.getString(R.string.internal_error),
+                    )
                     is Event.LibraryUpdateTriggered -> {
                         val msg = if (event.started) {
                             R.string.updating_library

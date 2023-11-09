@@ -139,7 +139,6 @@
     <string name="pref_restore_backup">ব্যাকআপ পুনরুদ্ধার</string>
     <string name="pref_restore_backup_summ">ব্যাকআপ ফাইল থেকে সংগ্রহশালা পুনরুদ্ধার করুন</string>
     <string name="pref_backup_directory">ব্যাকআপের স্থান</string>
-    <string name="pref_backup_service_category">স্বয়ংক্রিয় ব্যাকআপ</string>
     <string name="pref_backup_interval">ব্যাকআপ ফ্রিকোয়েন্সি</string>
     <string name="pref_backup_slots">সর্বোচ্চ ব্যাকআপ</string>
     <string name="backup_created">ব্যাকআপ তৈরী হয়েছে</string>
@@ -157,8 +156,6 @@
     <string name="pref_clear_database_summary">আপনার সংগ্রহশালাতে যেসব মাংগা সংরক্ষিত নেই সেগুলোর ইতিহাস মুছে ফেলুন</string>
     <string name="clear_database_confirmation">আপনি কি নিশ্চিত\? পঠিত অধ্যায় এবং সংগ্রহশালাতে অনুপস্থিত মাংগার অগ্রগতি মুছে যাবে</string>
     <string name="clear_database_completed">এন্ট্রিগুলো মুছে ফেলা হয়েছে</string>
-    <string name="pref_refresh_library_tracking">ট্র্যাকিং হালনাগাদ করুন</string>
-    <string name="pref_refresh_library_tracking_summary">ট্র্যাকিং পরিষেবাগুলি অবস্থা, স্কোর এবং শেষ পড়া অধ্যায় হালনাগাদ করে</string>
     <string name="version">সংস্করণ</string>
     <string name="pref_enable_acra">ক্র‍্যাশের প্রতিবেদন পাঠান</string>
     <string name="pref_acra_summary">বাগ ঠিক করার জন্য সাহায্য করুন। কোন সংবেদনশীল তথ্য পাঠানো হবে না</string>
@@ -546,6 +543,8 @@
     <string name="nav_zone_next">পরবর্তী</string>
     <string name="nav_zone_prev">পূর্ববর্তী</string>
     <string name="automatic_background">স্বয়ংক্রিয়</string>
+    <string name="pref_create_folder_per_manga_summary">মাঙ্গা শিরোনাম অনুযায়ী ফোল্ডার তৈরি করে</string>
+    <string name="pref_create_folder_per_manga">পৃষ্ঠাগুলি পৃথক ফোল্ডারে সংরক্ষণ করুন</string>
     <string name="pref_reader_actions">ক্রিয়া</string>
     <string name="pref_inverted_colors">উল্টানো</string>
     <string name="pref_grayscale">ধূসর স্কেল</string>
@@ -561,8 +560,6 @@
     <string name="none">শূন্য</string>
     <string name="pref_library_update_categories_details">বাদ দেওয়া ক্যাটাগরিতে মঙ্গা আপডেট করা হবে না যদিও সেগুলি অন্তর্ভুক্ত ক্যাটাগরিতেও থাকে।</string>
     <string name="categorized_display_settings">সাজানোর এবং প্রদর্শনের জন্য প্রতি শ্রেণীর সেটিংস</string>
-    <string name="pref_library_update_refresh_trackers_summary">লাইব্রেরি আপডেট করার সময় ট্র্যাকার আপডেট করুন</string>
-    <string name="pref_library_update_refresh_trackers">স্বয়ংক্রিয়ভাবে রিফ্রেশ ট্র্যাকার</string>
     <string name="restrictions">বিধিনিষেধ: %s</string>
     <plurals name="relative_time">
         <item quantity="one">গতকাল</item>

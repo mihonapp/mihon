@@ -1,11 +1,14 @@
 package eu.kanade.domain
 
+import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.download.interactor.DeleteDownload
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
+import eu.kanade.domain.manga.interactor.GetExcludedScanlators
+import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetEnabledSources
@@ -40,8 +43,8 @@ import tachiyomi.domain.category.interactor.SetSortModeForCategory
 import tachiyomi.domain.category.interactor.UpdateCategory
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.chapter.interactor.GetChapter
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
 import tachiyomi.domain.chapter.interactor.GetChapterByUrlAndMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.SetMangaDefaultChapterFlags
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
@@ -112,13 +115,15 @@ class DomainModule : InjektModule {
         addFactory { NetworkToLocalManga(get()) }
         addFactory { UpdateManga(get(), get()) }
         addFactory { SetMangaCategories(get()) }
+        addFactory { GetExcludedScanlators(get()) }
+        addFactory { SetExcludedScanlators(get()) }
 
         addSingletonFactory<ReleaseService> { ReleaseServiceImpl(get(), get()) }
         addFactory { GetApplicationRelease(get(), get()) }
 
         addSingletonFactory<TrackRepository> { TrackRepositoryImpl(get()) }
         addFactory { TrackChapter(get(), get(), get(), get()) }
-        addFactory { AddTracks(get(), get(), get()) }
+        addFactory { AddTracks(get(), get(), get(), get()) }
         addFactory { RefreshTracks(get(), get(), get(), get()) }
         addFactory { DeleteTrack(get()) }
         addFactory { GetTracksPerManga(get()) }
@@ -128,12 +133,13 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<ChapterRepository> { ChapterRepositoryImpl(get()) }
         addFactory { GetChapter(get()) }
-        addFactory { GetChapterByMangaId(get()) }
+        addFactory { GetChaptersByMangaId(get()) }
         addFactory { GetChapterByUrlAndMangaId(get()) }
         addFactory { UpdateChapter(get()) }
         addFactory { SetReadStatus(get(), get(), get(), get()) }
         addFactory { ShouldUpdateDbChapter() }
-        addFactory { SyncChaptersWithSource(get(), get(), get(), get(), get(), get(), get()) }
+        addFactory { SyncChaptersWithSource(get(), get(), get(), get(), get(), get(), get(), get()) }
+        addFactory { GetAvailableScanlators(get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { GetHistory(get()) }

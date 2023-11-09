@@ -41,7 +41,7 @@ import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.manga.model.Manga
@@ -150,7 +150,7 @@ internal class MigrateDialogScreenModel(
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadManager: DownloadManager = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
-    private val getChapterByMangaId: GetChapterByMangaId = Injekt.get(),
+    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
@@ -222,8 +222,8 @@ internal class MigrateDialogScreenModel(
 
         // Update chapters read, bookmark and dateFetch
         if (migrateChapters) {
-            val prevMangaChapters = getChapterByMangaId.await(oldManga.id)
-            val mangaChapters = getChapterByMangaId.await(newManga.id)
+            val prevMangaChapters = getChaptersByMangaId.await(oldManga.id)
+            val mangaChapters = getChaptersByMangaId.await(newManga.id)
 
             val maxChapterRead = prevMangaChapters
                 .filter { it.read }

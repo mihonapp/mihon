@@ -191,7 +191,6 @@
     <string name="pref_restore_backup">რეზერვის აღდგენა</string>
     <string name="pref_restore_backup_summ">ბიბლიოთეკის აღდგენა რეზერვიდან</string>
     <string name="pref_backup_directory">რეზერვის ლოკაცია</string>
-    <string name="pref_backup_service_category">ავტომატურად რეზერვის შექმნა</string>
     <string name="pref_backup_interval">რეზერვის შექმნის სიხშირე</string>
     <string name="pref_backup_slots">მაქსიმალური რეზერვი</string>
     <string name="backup_created">რეზერვი შექმნილია</string>
@@ -220,7 +219,6 @@
     <string name="clear_database_confirmation">დარწმუნებული ბრძანდებით\? წაკითხული თავები და ბიბლიოთეკაში არ არსებული ჩანაწერების პროგრესი დაიკარგება</string>
     <string name="clear_database_completed">ჩანაწერები წაშლილია</string>
     <string name="pref_refresh_library_covers">ბიბლიოთეკის მანგების ყდის ცვლილება</string>
-    <string name="pref_refresh_library_tracking">თვალყურის დევნების განახლება</string>
     <string name="battery_optimization_disabled">ელემენტის ოპტიმიზაცუა უკვე გამორთულია</string>
     <string name="battery_optimization_setting_activity_not_found">ვერ მოხერხდა მოწყობილობის პარამეტრების გახსნა</string>
     <string name="website">ვებსაიტი</string>
@@ -394,7 +392,6 @@
 \n
 \nამ სერტიფიკატის ნდობით თქვენ თქვენს თავზე იღებთ რისკებს და პასუხისმგებლობას.</string>
     <string name="tracking_info">ცალმხრივი სინქრონიზაცია თვალყურის სადევნებელ სერვისებში თავების პროგრესის განსაახლებლად. მიადევნე თვალყური ინდივიდუალურ ჩანაწერებს მათი ჩანართებიდან.</string>
-    <string name="pref_refresh_library_tracking_summary">ანახლებს სტატუსს, შეფასებას და ბოლო თავს წაკითხულს თვალყურის სადევნებელ სერვისებიდან</string>
     <string name="filter_mode_overlay">გადაფარება</string>
     <string name="information_cloudflare_bypass_failure">ვერ მოხერხდა CloudFlare-ს შემოვლა</string>
     <string name="tapping_inverted_both">ორივე</string>

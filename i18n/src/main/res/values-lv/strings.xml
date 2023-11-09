@@ -189,7 +189,6 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="confirm_lock_change">Autentificējaties, lai apstriprinātu izmaiņas</string>
     <string name="pref_update_only_non_completed">Ar \'\'Pabeigts\'\' statusu</string>
-    <string name="pref_library_update_refresh_trackers">Automātiski atsvaidzina izsekotājus</string>
     <string name="action_start_downloading_now">Sākt lejupielādi tūlīt</string>
     <string name="extension_api_error">Neizdevās iegūt paplašinājumu sarakstu</string>
     <string name="pref_show_navigation_mode_summary">Īsi parādīt, kad ir atvērts lasītājs</string>
@@ -236,7 +235,6 @@
     <string name="pref_library_update_interval">Automātiskie atjauninājumi</string>
     <string name="update_weekly">Katru nedēļu</string>
     <string name="pref_library_update_restriction">Automātiskās atjaunināšanas ierīču ierobežojumi</string>
-    <string name="pref_library_update_refresh_trackers_summary">Atjaunināt izsekotājus, atjauninot bibliotēku</string>
     <string name="exclude">Izslēgt: %s</string>
     <string name="ext_obsolete">Novecojis</string>
     <string name="ext_install">Instalēt</string>
@@ -342,6 +340,7 @@
     <string name="pref_webtoon_side_padding">Sānu platums</string>
     <string name="pref_remove_exclude_categories">Izslēgtās kategorijas</string>
     <string name="action_display_local_badge">Lokālais avots</string>
+    <string name="pref_create_folder_per_manga">Saglabāt lappuses atsevišķās mapēs</string>
     <string name="nav_zone_prev">Iepriekšējais</string>
     <string name="pref_viewer_type">Noklusējuma lasīšanas režīms</string>
     <string name="kindlish_nav">Kindle-ish</string>
@@ -377,6 +376,7 @@
     <string name="pref_reader_navigation">Navigācija</string>
     <string name="pref_read_with_volume_keys_inverted">Invertēt skaļuma regulēšanas taustiņus</string>
     <string name="pref_read_with_long_tap">Rādīt darbīūbas ar ilgu pieskārienu</string>
+    <string name="pref_create_folder_per_manga_summary">Izveido mapes atbilstoši ieraksta nosaukumam</string>
     <string name="pref_reader_theme">Fona krāsa</string>
     <string name="pref_image_scale_type">Mēroga tips</string>
     <string name="scale_type_fit_screen">Ietilpt ekrānā</string>
@@ -394,7 +394,6 @@
     <string name="pref_create_backup">Izveidot dublējumu</string>
     <string name="pref_backup_directory">Dublējuma atrašanās vieta</string>
     <string name="invalid_backup_file">Nederīgs dublējuma fails</string>
-    <string name="pref_backup_service_category">Automātiskā dublēšana</string>
     <string name="pref_backup_interval">Dublējumu biežums</string>
     <string name="backup_info">Kopijas vajadzētu glabāt arī citās vietās.</string>
     <string name="about_dont_kill_my_app">Dažiem ražotājiem ir papildu lietojumprogrammu ierobežojumi, kas iznīcina fona pakalpojumus. Šajā vietnē ir vairāk informācijas par to, kā to izlabot.</string>
@@ -428,7 +427,6 @@
     <string name="cache_delete_error">Tīrīšanas laikā radās kļūda</string>
     <string name="pref_clear_database">Notīrīt datu bāzi</string>
     <string name="pref_clear_database_summary">Dzēst vēsturi ierakstiem, kas nav saglabāti jūsu bibliotēkā</string>
-    <string name="pref_refresh_library_tracking_summary">Atjaunina statusu, vērtējumu un pēdējo izlasīto nodaļu no izsekošanas servisa</string>
     <string name="pref_reset_viewer_flags">Atiestatīt atsevišķu sēriju lasītāja iestatījumus</string>
     <string name="pref_reset_viewer_flags_summary">Atiestatīt katras sērijas lasīšanas režīmu un orientāciju</string>
     <string name="pref_tablet_ui_mode">Planšetdatora lietotāja interfeiss</string>
@@ -445,7 +443,6 @@
     <string name="battery_optimization_setting_activity_not_found">Nevarēja atvērt ierīces iestatījumus</string>
     <string name="services">Serviss</string>
     <string name="backup_created">Dublējums izveidots</string>
-    <string name="pref_refresh_library_tracking">Atsvaidzināt izsekošanu</string>
     <string name="pref_reset_viewer_flags_success">Visi lasītāja iestatījumi atiestatīti</string>
     <string name="pref_reset_viewer_flags_error">Nevarēja atiestatīt lasītāja iestatījumus</string>
     <string name="requires_app_restart">Lai stātos spēkā, ir nepieciešama lietotnes restartēšana</string>

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.AppBar
@@ -28,7 +29,6 @@ import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import tachiyomi.presentation.core.util.ThemePreviews
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -148,7 +148,7 @@ sealed interface HistoryUiModel {
     data class Item(val item: HistoryWithRelations) : HistoryUiModel
 }
 
-@ThemePreviews
+@PreviewLightDark
 @Composable
 internal fun HistoryScreenPreviews(
     @PreviewParameter(HistoryScreenModelStateProvider::class)

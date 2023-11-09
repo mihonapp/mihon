@@ -173,7 +173,6 @@
     <string name="pref_restore_backup">Obnoviť zálohu</string>
     <string name="pref_restore_backup_summ">Obnoviť knižnicu zo záložného súboru</string>
     <string name="pref_backup_directory">Adresár na zálohy</string>
-    <string name="pref_backup_service_category">Automatické zálohovanie</string>
     <string name="pref_backup_interval">Frekvencia zálohovania</string>
     <string name="pref_backup_slots">Maximálny počet záloh</string>
     <string name="backup_created">Záloha bola vytvorená</string>
@@ -197,8 +196,6 @@
     <string name="ext_obsolete">Zastaraný</string>
     <string name="obsolete_extension_message">Toto rozšírenie už nie je k dispozícii.</string>
     <string name="clear_database_completed">Záznamy boli odstránené</string>
-    <string name="pref_refresh_library_tracking">Obnoviť sledovanie</string>
-    <string name="pref_refresh_library_tracking_summary">Aktualizuje stav, skóre a poslednú čítanú kapitolu zo sledovacích služieb</string>
     <string name="version">Verzia</string>
     <string name="pref_enable_acra">Odosielať správy o zlyhaní</string>
     <string name="pref_acra_summary">Pomáha opraviť akékoľvek chyby. Nebudú odoslané žiadne citlivé údaje</string>
@@ -409,8 +406,6 @@
     <string name="pref_category_library_update">Globálna aktualizácia</string>
     <string name="pref_library_update_refresh_metadata">Automatický obnoviť metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Pri aktualizácii knižnice skontrolujte nový obal a podrobnosti</string>
-    <string name="pref_library_update_refresh_trackers">Automaticky obnovovať sledovače</string>
-    <string name="pref_library_update_refresh_trackers_summary">Aktualizujte sledovače pri aktualizácii knižnice</string>
     <string name="pref_category_display">Zobraziť</string>
     <string name="update_72hour">Každé 3 dni</string>
     <string name="update_already_running">Aktualizácia už prebieha</string>
@@ -509,6 +504,7 @@
     <string name="delete_category">Odstrániť kategóriu</string>
     <string name="none">Žiadne</string>
     <string name="include">Zahrnúť: %s</string>
+    <string name="pref_create_folder_per_manga_summary">Vytvára priečinky podľa názvu mangy</string>
     <string name="edge_nav">Okraj</string>
     <string name="right_and_left_nav">Vpravo a vľavo</string>
     <string name="nav_zone_left">Vľavo</string>
@@ -571,6 +567,7 @@
     <string name="extension_api_error">Nepodarilo sa získať zoznam rozšírení</string>
     <string name="ext_install_service_notif">Inštaluje sa rozšírenie…</string>
     <string name="pref_read_with_tapping_inverted">Invertovať oblasti dotyku</string>
+    <string name="pref_create_folder_per_manga">Uloženie stránok do samostatných priečinkov</string>
     <string name="gray_background">Šedivá</string>
     <string name="rotation_landscape">Na šírku</string>
     <string name="restore_in_progress">Obnovenie už prebieha</string>

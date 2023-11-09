@@ -102,14 +102,26 @@ private fun MigrateSourceList(
 
                 IconButton(onClick = onToggleSortingMode) {
                     when (sortingMode) {
-                        SetMigrateSorting.Mode.ALPHABETICAL -> Icon(Icons.Outlined.SortByAlpha, contentDescription = stringResource(R.string.action_sort_alpha))
-                        SetMigrateSorting.Mode.TOTAL -> Icon(Icons.Outlined.Numbers, contentDescription = stringResource(R.string.action_sort_count))
+                        SetMigrateSorting.Mode.ALPHABETICAL -> Icon(
+                            Icons.Outlined.SortByAlpha,
+                            contentDescription = stringResource(R.string.action_sort_alpha),
+                        )
+                        SetMigrateSorting.Mode.TOTAL -> Icon(
+                            Icons.Outlined.Numbers,
+                            contentDescription = stringResource(R.string.action_sort_count),
+                        )
                     }
                 }
                 IconButton(onClick = onToggleSortingDirection) {
                     when (sortingDirection) {
-                        SetMigrateSorting.Direction.ASCENDING -> Icon(Icons.Outlined.ArrowUpward, contentDescription = stringResource(R.string.action_asc))
-                        SetMigrateSorting.Direction.DESCENDING -> Icon(Icons.Outlined.ArrowDownward, contentDescription = stringResource(R.string.action_desc))
+                        SetMigrateSorting.Direction.ASCENDING -> Icon(
+                            Icons.Outlined.ArrowUpward,
+                            contentDescription = stringResource(R.string.action_asc),
+                        )
+                        SetMigrateSorting.Direction.DESCENDING -> Icon(
+                            Icons.Outlined.ArrowDownward,
+                            contentDescription = stringResource(R.string.action_desc),
+                        )
                     }
                 }
             }

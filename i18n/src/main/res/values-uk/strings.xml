@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">Відновити резервну копію</string>
     <string name="pref_restore_backup_summ">Відновити бібліотеку з резервної копії</string>
     <string name="pref_backup_directory">Директорія резервної копії</string>
-    <string name="pref_backup_service_category">Автоматичне резервування</string>
     <string name="pref_backup_interval">Частота створення резервної копії</string>
     <string name="pref_backup_slots">Максимальна кількість резервних копій</string>
     <string name="backup_created">Резервна копія створена</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
     <string name="clear_database_confirmation">Ви впевнені\? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
     <string name="clear_database_completed">Дані видалено</string>
-    <string name="pref_refresh_library_tracking">Оновити відстеження</string>
-    <string name="pref_refresh_library_tracking_summary">Оновити стан, рахунок та останній розділ з каталогів, що відстежуються</string>
     <string name="version">Версія</string>
     <string name="pref_enable_acra">Надсилати звіти про падіння</string>
     <string name="pref_acra_summary">Допомагає виправляти будь-які баги. Особисті дані не передаються</string>
@@ -554,6 +551,8 @@
     <string name="rotation_landscape">Альбомна</string>
     <string name="rotation_portrait">Портретна</string>
     <string name="rotation_type">Орієнтація</string>
+    <string name="pref_create_folder_per_manga_summary">Створювати теки в відповідності до назви записів</string>
+    <string name="pref_create_folder_per_manga">Зберігати сторінки до окремих тек</string>
     <string name="pref_reader_actions">Дії</string>
     <string name="pref_grayscale">Відтінки сірого</string>
     <string name="notification_incognito_text">Вимкнути режим інкогніто</string>
@@ -574,8 +573,6 @@
     <string name="off">Вимкнено</string>
     <string name="on">Увімкнено</string>
     <string name="categorized_display_settings">Налаштування сортування для кожної категорії</string>
-    <string name="pref_library_update_refresh_trackers_summary">Оновлювати відстежуване при оновлені бібліотеки</string>
-    <string name="pref_library_update_refresh_trackers">Автоматично оновлювати відстежуване</string>
     <string name="restrictions">Обмеження %s</string>
     <string name="action_display_local_badge">Локальне джерело</string>
     <string name="information_empty_category_dialog">У вашій бібліотеці ще немає категорій.</string>
@@ -847,4 +844,6 @@
     <string name="exception_unknown_host">Не вдалося досягти %s</string>
     <string name="pref_relative_format">Відносні позначки часу</string>
     <string name="pref_relative_format_summary">\"%1$s\" замість \"%2$s\"</string>
+    <string name="source_settings">Налаштування джерела</string>
+    <string name="app_settings">Налаштування застосунку</string>
 </resources>

@@ -19,8 +19,12 @@ LEFT JOIN(
         coalesce(max(chapters.date_fetch), 0) AS fetchedAt,
         sum(chapters.bookmark) AS bookmarkCount
     FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
     LEFT JOIN history
     ON chapters._id = history.chapter_id
+    WHERE excluded_scanlators.scanlator IS NULL
     GROUP BY chapters.manga_id
 ) AS C
 ON M._id = C.manga_id

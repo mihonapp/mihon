@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.ChromeReaderMode
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.CollectionsBookmark
@@ -19,7 +18,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
-import androidx.compose.material.icons.outlined.SettingsBackupRestore
+import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -187,7 +186,7 @@ object SettingsMainScreen : Screen() {
         Item(
             titleRes = R.string.pref_category_reader,
             subtitleRes = R.string.pref_reader_summary,
-            icon = Icons.AutoMirrored.Outlined.ChromeReaderMode,
+            icon = Icons.Outlined.ChromeReaderMode,
             screen = SettingsReaderScreen,
         ),
         Item(
@@ -210,9 +209,9 @@ object SettingsMainScreen : Screen() {
         ),
         Item(
             titleRes = R.string.label_backup_and_sync,
-            subtitleRes = R.string.pref_backup_and_sync_summary,
-            icon = Icons.Outlined.SettingsBackupRestore,
-            screen = SettingsBackupAndSyncScreen,
+            subtitleRes = R.string.pref_backup_summary,
+            icon = Icons.Outlined.Storage,
+            screen = SettingsDataScreen,
         ),
         Item(
             titleRes = R.string.pref_category_security,

@@ -135,7 +135,6 @@
     <string name="pref_restore_backup">Pulihkan cadangan</string>
     <string name="pref_restore_backup_summ">Pulihkan isi pustaka dari berkas cadangan</string>
     <string name="pref_backup_directory">Tempat pencadangan</string>
-    <string name="pref_backup_service_category">Pencadangan otomatis</string>
     <string name="pref_backup_interval">Frekuensi cadangan dibuat</string>
     <string name="pref_backup_slots">Jumlah maksimum cadangan</string>
     <string name="backup_created">Cadangan dibuat</string>
@@ -151,10 +150,8 @@
     <string name="cookies_cleared">Cookies dihapus</string>
     <string name="pref_clear_database">Hapus database</string>
     <string name="pref_clear_database_summary">Hapus riwayat untuk entri yang tidak disimpan di perpustakaan Anda</string>
-    <string name="clear_database_confirmation">Apa kamu yakin\? Baca bab dan kemajuan entri non-perpustakaan akan hilang</string>
+    <string name="clear_database_confirmation">Apakah Anda yakin\? Bab yang sudah dibaca dan kemajuan entri non-perpustakaan akan hilang</string>
     <string name="clear_database_completed">Entri dihapus</string>
-    <string name="pref_refresh_library_tracking">Segarkan pelacakan metadata</string>
-    <string name="pref_refresh_library_tracking_summary">Perbarui status, nilai dan bab terakhir yang dibaca dari layanan pelacakan</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Kirim laporan kerusakan</string>
     <string name="pref_acra_summary">Bantu memperbaiki bug. Tidak ada data sensitif yang akan dikirim</string>
@@ -502,6 +499,8 @@
     <string name="nav_zone_next">Lanjut</string>
     <string name="nav_zone_prev">Sblm</string>
     <string name="automatic_background">Otomatis</string>
+    <string name="pref_create_folder_per_manga">Simpan halaman di folder terpisah</string>
+    <string name="pref_create_folder_per_manga_summary">Membuat folder sesuai dengan judul entri</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Termasuk: %s</string>
     <string name="pref_dual_page_split">Membagi halaman lebar</string>
@@ -532,8 +531,6 @@
     <string name="pref_dual_page_invert_summary">Jika penempatan halaman lebar terpisah tidak sesuai dengan arah membaca</string>
     <string name="pref_dual_page_invert">Balikkan penempatan halaman pemisah</string>
     <string name="pref_show_navigation_mode_summary">Tunjukkan secara singkat saat pembaca dibuka</string>
-    <string name="pref_library_update_refresh_trackers_summary">Perbarui pelacak ketika memperbarui pustaka</string>
-    <string name="pref_library_update_refresh_trackers">Segarkan pelacak secara otomatis</string>
     <string name="restrictions">Batasan: %s</string>
     <string name="action_display_local_badge">Sumber lokal</string>
     <string name="error_sharing_cover">Gagal berbagi sampul</string>
@@ -559,7 +556,7 @@
     <string name="theme_greenapple">Hijau Apel</string>
     <string name="theme_monet">Dinamis</string>
     <string name="pref_app_theme">Tema aplikasi</string>
-    <string name="label_background_activity">Aktivitas dibelakang layar</string>
+    <string name="label_background_activity">Aktivitas latar belakang</string>
     <string name="pref_lowest">Terendah</string>
     <string name="pref_low">Rendah</string>
     <string name="pref_hide_threshold">Sensitivitas untuk menyembunyikan menu dalam gulir</string>
@@ -590,7 +587,7 @@
     <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi. Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
-    <string name="backup_info">Anda juga harus menyimpan salinan cadangan di tempat lain.</string>
+    <string name="backup_info">Anda juga harus menyimpan salinan cadangan di tempat lain. Cadangan mungkin berisi data sensitif termasuk kata sandi yang tersimpan; berhati-hatilah jika berbagi.</string>
     <string name="pref_verbose_logging">Pencatatan berlebihan</string>
     <string name="pref_custom_color_filter">Filter warna kustom</string>
     <string name="pref_custom_brightness">Atur kecerahan</string>
@@ -800,4 +797,10 @@
     <string name="action_move_to_bottom_all_for_series">Pindahkan seri ke bawah</string>
     <string name="pref_relative_format">Penanda waktu</string>
     <string name="pref_relative_format_summary">\"%1$s\" seharusnya \"%2$s\"</string>
+    <string name="action_sort_category">Mengurutkan kategori</string>
+    <string name="notification_updating_progress">Memperbarui pustaka... (%s)</string>
+    <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad\?</string>
+    <string name="file_null_uri_error">Pemilih file gagal mengembalikan file ke aplikasi</string>
+    <string name="source_settings">Pengaturan sumber</string>
+    <string name="app_settings">Pengaturan aplikasi</string>
 </resources>

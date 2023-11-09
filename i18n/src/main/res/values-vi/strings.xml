@@ -276,7 +276,6 @@
     <string name="pref_restore_backup">Khôi phục sao lưu</string>
     <string name="pref_restore_backup_summ">Khôi phục thư viện từ tập tin sao lưu</string>
     <string name="pref_backup_directory">Nơi lưu trữ</string>
-    <string name="pref_backup_service_category">Tự động sao lưu</string>
     <string name="pref_backup_interval">Lịch sao lưu</string>
     <string name="pref_backup_slots">Số sao lưu tối đa</string>
     <string name="backup_created">Sao lưu đã được tạo</string>
@@ -284,8 +283,6 @@
     <string name="backup_choice">Bạn có muốn sao lưu không\?</string>
     <string name="restoring_backup">Khôi phục sao lưu</string>
     <string name="creating_backup">Đang tạo bản sao lưu</string>
-    <string name="pref_refresh_library_tracking">Làm mới theo dõi</string>
-    <string name="pref_refresh_library_tracking_summary">Cập nhật trạng thái, điểm số và chương cuối đã đọc từ dịch vụ theo dõi</string>
     <string name="local_source">Nguồn cục bộ</string>
     <string name="other_source">Khác</string>
     <string name="action_global_search_hint">Tìm kiếm toàn bộ…</string>
@@ -534,6 +531,8 @@
     <string name="right_and_left_nav">Phải và trái</string>
     <string name="automatic_background">Tự động</string>
     <string name="gray_background">Xám</string>
+    <string name="pref_create_folder_per_manga_summary">Tạo thư mục dựa theo tên truyện</string>
+    <string name="pref_create_folder_per_manga">Lưu lại trang trong thư mục riêng</string>
     <string name="pref_reader_actions">Hành động</string>
     <string name="tapping_inverted_both">Cả hai</string>
     <string name="tapping_inverted_vertical">Dọc</string>
@@ -575,8 +574,6 @@
     <string name="chapter_not_found">Không tìm thấy chương</string>
     <string name="on">Bật</string>
     <string name="off">Tắt</string>
-    <string name="pref_library_update_refresh_trackers_summary">Cập nhật theo dõi khi cập nhật thư viện</string>
-    <string name="pref_library_update_refresh_trackers">Tự động làm mới theo dõi</string>
     <string name="restrictions">Hạn chế: %s</string>
     <string name="information_empty_category_dialog">Người dùng chưa có danh mục.</string>
     <string name="restore_miui_warning">Tính năng tối ưu hóa của MIUI phải được bật lên để việc sao lưu/khôi phục hoạt động tốt.</string>

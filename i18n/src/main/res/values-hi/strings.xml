@@ -139,7 +139,6 @@
     <string name="pref_restore_backup">बैकअप पुनर्स्थापित करे</string>
     <string name="pref_restore_backup_summ">बैकअप फ़ाइल से लाइब्रेरी पुनर्स्थापित करें</string>
     <string name="pref_backup_directory">बैकअप निर्देशिका</string>
-    <string name="pref_backup_service_category">स्वचालित बैकअप</string>
     <string name="pref_backup_interval">बैकअप फ़्रीक्वेंसी</string>
     <string name="pref_backup_slots">अधिकतम बैकअप</string>
     <string name="backup_created">बैकअप बनाया गया है</string>
@@ -157,8 +156,6 @@
     <string name="pref_clear_database_summary">उन आइटम का इतिहास हटाएं जो आपकी पुस्तकालय में सहेजी नहीं गई हैं</string>
     <string name="clear_database_confirmation">क्या आपको यकीन है\? आपके द्वारा पढ़े गए अध्याय और गैर-पुस्तकालय आइटम की प्रगति खो जाएगी</string>
     <string name="clear_database_completed">प्रविष्टियां हटाई गईं</string>
-    <string name="pref_refresh_library_tracking">रिफ्रेश ट्रैकिंग</string>
-    <string name="pref_refresh_library_tracking_summary">अपडेट की स्थिति, स्कोर और अंतिम अध्याय ट्रैकिंग सेवाओं से पढ़ें</string>
     <string name="version">संस्करण</string>
     <string name="pref_enable_acra">क्रैश रिपोर्ट भेजें</string>
     <string name="pref_acra_summary">किसी भी बग को ठीक करने में मदद करता है कोई संवेदनशील डेटा नहीं भेजा जाएगा</string>
@@ -528,7 +525,6 @@
     <string name="theme_yinyang">यीन और यैंन्ग</string>
     <string name="theme_tealturquoise">टील</string>
     <string name="pref_category_appearance">रूप</string>
-    <string name="pref_library_update_refresh_trackers">ट्रैकर्स को स्वचालित रूप से रीफ्रेश करें</string>
     <string name="none">कोई नहीं</string>
     <string name="exclude">बहिष्कृत करें: %s</string>
     <string name="off">बंद</string>
@@ -560,12 +556,12 @@
     <string name="action_sort_count">कुल आइटम</string>
     <string name="theme_midnightdusk">मिडनाइट डस्क</string>
     <string name="relative_time_today">आज</string>
-    <string name="pref_library_update_refresh_trackers_summary">पुस्तकालय अपडेट करते समय ट्रैकर्स को अपडेट करें</string>
     <string name="include">शामिल करें: %s</string>
     <string name="ext_app_info">ऐप की जानकारी</string>
     <string name="ext_installer_shizuku_stopped">शिज़ुकु नहीं चल रहा है</string>
     <string name="pref_inverted_colors">उल्टी</string>
     <string name="pref_grayscale">काला और सफेद</string>
+    <string name="pref_create_folder_per_manga_summary">आइटम के शीर्षक अनुसार फोल्डर बनाता है</string>
     <string name="tracking_guide">ट्रैकिंग गाइड</string>
     <string name="enhanced_services">उन्नत सेवाएं</string>
     <string name="restore_miui_warning">MIUI ऑप्टिमाइज़ेशन अक्षम होने पर बैकअप/पुनर्स्थापना ठीक से काम नहीं कर सकता है।</string>
@@ -589,6 +585,7 @@
     <string name="help_translate">अनुवाद में मदद करें</string>
     <string name="date">दिनांक</string>
     <string name="manga_cover">कवर पृष्ठ</string>
+    <string name="pref_create_folder_per_manga">पृष्ठों को अलग-अलग फ़ोल्डरों में सहेजें</string>
     <string name="pref_download_new_categories_details">बहिष्कृत श्रेणियों की आइटम डाउनलोड नहीं की जाएंगी, भले ही वे शामिल श्रेणियों में भी हों।</string>
     <string name="pref_verbose_logging_summary">सिस्टम लॉग में वर्बोज़ लॉग प्रिंट करें (ऐप प्रदर्शन को कम करता है)</string>
     <string name="enhanced_tracking_info">ऐसी सेवाएँ जो विशिष्ट स्रोतों के लिए उन्नत सुविधाएँ प्रदान करती हैं। आपकी पुस्तकालय में जोड़े जाने पर आइटम को स्वचालित रूप से ट्रैक किया जाता है।</string>

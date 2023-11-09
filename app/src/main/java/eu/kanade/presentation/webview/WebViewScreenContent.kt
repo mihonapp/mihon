@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Close
@@ -100,6 +98,12 @@ fun WebViewScreenContent(
                 request: WebResourceRequest?,
             ): Boolean {
                 request?.let {
+                    // Don't attempt to open blobs as webpages
+                    if (it.url.toString().startsWith("blob:http")) {
+                        return false
+                    }
+
+                    // Continue with request, but with custom headers
                     view?.loadUrl(it.url.toString(), headers)
                 }
                 return super.shouldOverrideUrlLoading(view, request)
@@ -121,7 +125,7 @@ fun WebViewScreenContent(
                                 listOf(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_webview_back),
-                                        icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                                        icon = Icons.Outlined.ArrowBack,
                                         onClick = {
                                             if (navigator.canGoBack) {
                                                 navigator.navigateBack()
@@ -131,7 +135,7 @@ fun WebViewScreenContent(
                                     ),
                                     AppBar.Action(
                                         title = stringResource(R.string.action_webview_forward),
-                                        icon = Icons.AutoMirrored.Outlined.ArrowForward,
+                                        icon = Icons.Outlined.ArrowForward,
                                         onClick = {
                                             if (navigator.canGoForward) {
                                                 navigator.navigateForward()
@@ -169,7 +173,9 @@ fun WebViewScreenContent(
                                 modifier = Modifier
                                     .clip(MaterialTheme.shapes.small)
                                     .clickable {
-                                        uriHandler.openUri("https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare")
+                                        uriHandler.openUri(
+                                            "https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare",
+                                        )
                                     },
                             )
                         }
@@ -182,7 +188,7 @@ fun WebViewScreenContent(
                             .align(Alignment.BottomCenter),
                     )
                     is LoadingState.Loading -> LinearProgressIndicator(
-                        progress = { (loadingState as? LoadingState.Loading)?.progress ?: 1f },
+                        progress = (loadingState as? LoadingState.Loading)?.progress ?: 1f,
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter),

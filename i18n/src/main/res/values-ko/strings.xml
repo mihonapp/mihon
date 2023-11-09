@@ -133,12 +133,11 @@
     <string name="disabled">끄기</string>
     <string name="last_read_chapter">마지막 회차</string>
     <string name="pref_download_new">새로운 화 다운로드</string>
-    <string name="services">서비스</string>
+    <string name="services">트래킹 서비스</string>
     <string name="pref_create_backup">백업 생성</string>
     <string name="pref_restore_backup">백업 복원</string>
     <string name="pref_restore_backup_summ">백업 파일에서 서재 복원</string>
     <string name="pref_backup_directory">백업 위치</string>
-    <string name="pref_backup_service_category">자동 백업</string>
     <string name="pref_backup_interval">백업 주기</string>
     <string name="pref_backup_slots">최대 백업</string>
     <string name="backup_created">백업 생성됨</string>
@@ -154,8 +153,6 @@
     <string name="pref_clear_database">데이터베이스 삭제</string>
     <string name="pref_clear_database_summary">서재에 추가되지 않은 항목의 기록을 삭제합니다</string>
     <string name="clear_database_confirmation">확실합니까\? 서재에 없는 항목의 읽은 기록이 삭제됩니다</string>
-    <string name="pref_refresh_library_tracking">트래커 동기화 새로고침</string>
-    <string name="pref_refresh_library_tracking_summary">상태 및 평점, 마지막으로 읽은 회차를 동기화 서비스로부터 업데이트합니다</string>
     <string name="version">버전</string>
     <string name="pref_enable_acra">오류 보고서 전송</string>
     <string name="pref_acra_summary">버그를 수정하는데 도움이 됩니다. 개인 정보는 전송되지 않습니다</string>
@@ -383,7 +380,6 @@
     <string name="help_translate">번역에 참여하기</string>
     <string name="rotation_type">회전 설정</string>
     <string name="pref_library_update_refresh_metadata">메타데이터 자동 갱신</string>
-    <string name="pref_library_update_refresh_trackers">트래커 자동 갱신</string>
     <string name="pref_category_for_this_series">현재 만화에만 적용</string>
     <string name="viewer">읽기 모드</string>
     <string name="downloaded_only_summary">서재의 모든 항목에 적용됩니다</string>
@@ -567,18 +563,17 @@
     <string name="theme_tealturquoise">옥색</string>
     <string name="theme_strawberrydaiquiri">딸기 칵테일</string>
     <string name="extension_api_error">확장 앱 목록 가져오기 실패</string>
-    <string name="pref_library_update_refresh_trackers_summary">서재 업데이트 시 트래커 갱신</string>
     <string name="exclude">제외: %s</string>
     <string name="unofficial_extension_message">이 확장앱은 공식 확장앱이 아닙니다.</string>
-    <string name="tracking_info">트래커 서비스에 항목 진행 상황을 동기화합니다. 트래킹 버튼을 이용하여 각각의 항목 별로 트래킹을 설정하세요.</string>
+    <string name="tracking_info">트래킹 서비스에 항목 진행 상황을 업데이트합니다. 트래킹 버튼을 이용하여 각각의 항목 별로 트래킹을 설정하세요.</string>
     <string name="tracking_guide">트래커 가이드</string>
-    <string name="enhanced_services">향상된 서비스</string>
+    <string name="enhanced_services">향상된 트래킹 서비스</string>
     <string name="pref_download_new_categories_details">카테고리가 다운로드에서 제외된 경우 다른 카테고리에 포함되어 있어도 다운로드 되지 않습니다.</string>
-    <string name="enhanced_tracking_info">특정 소스에 향상된 서비스를 제공합니다. 서재에 항목이 추가될 시 자동으로 트래킹 됩니다.</string>
+    <string name="enhanced_tracking_info">특정 소스에 대해 향상된 기능을 제공합니다. 서재에 항목이 추가될 시 자동으로 트래킹 됩니다.</string>
     <string name="backup_restore_content_full">백업 파일에서 데이터가 복구됩니다.
 \n
 \n복구 완료 후 없어진 소스를 다시 설치하고 트래킹 서비스에 로그인 해야 합니다.</string>
-    <string name="backup_info">백업 파일은 복사하여 다른 장소에 나눠 보관하세요.</string>
+    <string name="backup_info">백업 파일은 복사하여 다른 장소에 나눠 보관하세요. 백업 파일에는 비밀번호 등의 민감한 정보가 포함될 수 있습니다. 백업 파일 공유시 주의하세요.</string>
     <string name="pref_disable_battery_optimization_summary">백그라운드 서재 업데이트와 라이브러리 업데이트를 도울 수 있습니다</string>
     <string name="pref_verbose_logging">자세한 로그</string>
     <string name="pref_verbose_logging_summary">자세한 로그를 시스템 로그에 기록 (성능이 하락할 수 있습니다)</string>
@@ -594,6 +589,7 @@
     </plurals>
     <string name="skipped_reason_not_caught_up">읽지 않은 회차가 있는 만화를 건너 뛰었습니다</string>
     <string name="information_empty_category_dialog">등록된 카테고리가 없습니다.</string>
+    <string name="pref_create_folder_per_manga_summary">항목 제목에 따라 폴더 생성</string>
     <string name="migration_help_guide">소스 이전 설명서</string>
     <string name="migration_selection_prompt">원본 소스를 선택하세요</string>
     <string name="action_display_local_badge">로컬 소스</string>
@@ -604,6 +600,7 @@
     <string name="action_cancel_all">모두 취소</string>
     <string name="cancel_all_for_series">이 만화의 항목을 모두 취소</string>
     <string name="action_webview_forward">앞으로</string>
+    <string name="pref_create_folder_per_manga">각각의 폴더에 페이지 저장</string>
     <string name="action_faq_and_guides">FAQ 및 설명서</string>
     <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">이 시리즈를 맨 위로 이동</string>
@@ -795,7 +792,12 @@
     <string name="exception_offline">인터넷에 연결되지 않음</string>
     <string name="action_filter_interval_dropped">포기했나요\? 20일 ~ 2달 이내</string>
     <string name="manga_display_interval_title">항상 평가하기</string>
-    <string name="track_activity_name">트랙킹 서비스 로그인</string>
+    <string name="track_activity_name">트래킹 서비스 로그인</string>
     <string name="exception_http">HTTP %d, WebView의 웹 사이트를 확인해 주세요</string>
     <string name="exception_unknown_host">%s에 연결할 수 없습니다</string>
+    <string name="action_sort_category">카테고리 정렬</string>
+    <string name="notification_updating_progress">서재 업데이트 중...(%s)</string>
+    <string name="sort_category_confirmation">카테고리를 알파벳 순으로 정렬하시겠습니까\?</string>
+    <string name="source_settings">소스 설정</string>
+    <string name="app_settings">앱 설정</string>
 </resources>

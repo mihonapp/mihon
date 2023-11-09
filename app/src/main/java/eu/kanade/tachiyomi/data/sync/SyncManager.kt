@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.sync
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.backup.BackupConst.BACKUP_ALL
+import eu.kanade.tachiyomi.data.backup.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.BackupCreator
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.data.backup.BackupRestorer
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.sync.models.SyncData
 import eu.kanade.tachiyomi.data.sync.models.SyncDevice
 import eu.kanade.tachiyomi.data.sync.models.SyncStatus
@@ -76,12 +77,12 @@ class SyncManager(
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
         val backup = Backup(
-            backupCreator.backupMangas(databaseManga, BACKUP_ALL),
-            backupCreator.backupCategories(BACKUP_ALL),
+            backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults ),
+            backupCreator.backupCategories(BackupCreateFlags.AutomaticDefaults),
             emptyList(),
             backupCreator.prepExtensionInfoForSync(databaseManga),
-            backupCreator.backupAppPreferences(BACKUP_ALL),
-            backupCreator.backupSourcePreferences(BACKUP_ALL),
+            backupCreator.backupAppPreferences(BackupCreateFlags.AutomaticDefaults),
+            backupCreator.backupSourcePreferences(BackupCreateFlags.AutomaticDefaults),
         )
 
         // Create the SyncStatus object
@@ -157,7 +158,7 @@ class SyncManager(
         val file = File(context.filesDir, "tachiyomi_sync_data.proto.gz")
         return try {
             FileOutputStream(file).use { output ->
-                output.write(ProtoBuf.encodeToByteArray(Backup.serializer(), backup))
+                output.write(ProtoBuf.encodeToByteArray(BackupSerializer, backup))
                 Uri.fromFile(file)
             }
         } catch (e: IOException) {
@@ -182,7 +183,7 @@ class SyncManager(
      * @return true if the Manga objects are different, otherwise false.
      */
     private suspend fun isMangaDifferent(localManga: Manga, remoteManga: BackupManga): Boolean {
-        val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id).executeAsList() }
+        val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id, 0).executeAsList() }
         val localCategories = getCategories.await(localManga.id).map { it.order }
 
         return localManga.source != remoteManga.source ||

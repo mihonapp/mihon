@@ -200,7 +200,6 @@
     <string name="ext_obsolete">Zaharkitua</string>
     <string name="ext_uninstall">Desinstalatu</string>
     <string name="pref_show_page_number">Erakutsi orrialdearen zenbakia</string>
-    <string name="pref_refresh_library_tracking">Freskatu jarraipena</string>
     <string name="in_library">Liburutegian</string>
     <string name="manga_info_expand">Gehiago</string>
     <string name="display_mode_chapter">%1$s Kapitulua</string>
@@ -356,6 +355,8 @@
     <string name="notification_chapters_multiple">%1$s Kapituluak</string>
     <string name="pref_keep_screen_on">Mantendu pantaila piztuta</string>
     <string name="pref_skip_read_chapters">Saltatu irakurriak bezala markatutako kapituluak</string>
+    <string name="pref_create_folder_per_manga">Gorde orrialdeak karpeta ezberdinetan</string>
+    <string name="pref_create_folder_per_manga_summary">Sortu karpetak manga izenburuaren arabera</string>
     <string name="pref_high">Altua</string>
     <string name="pref_skip_filtered_chapters">Saltatu iragazitako kapituluak</string>
     <string name="pref_read_with_volume_keys">Bolumen-teklak</string>
@@ -474,7 +475,6 @@
     <string name="pref_restore_backup">Babeskopia erabili</string>
     <string name="pref_restore_backup_summ">Berreskuratu liburutegia babeskopia fitxategitik</string>
     <string name="pref_backup_directory">Babeskopiaren kokapena</string>
-    <string name="pref_backup_service_category">Babeskopia automatikoak</string>
     <string name="pref_backup_interval">Babeskopien maiztasuna</string>
     <string name="pref_backup_slots">Gehienezko babeskopiak</string>
     <string name="action_sort_alpha">Alfabetikoki</string>
@@ -543,8 +543,6 @@
     <string name="restrictions">Mugaketak: %s</string>
     <string name="pref_update_only_non_completed">Argitalpen bukatua al da</string>
     <string name="pref_library_update_refresh_metadata">Freskatu metadatuak automatikoki</string>
-    <string name="pref_library_update_refresh_trackers">Freskatu jarraitzaileak automatikoki</string>
-    <string name="pref_library_update_refresh_trackers_summary">Eguneratu jarraitzaileak liburutegia eguneratzean</string>
     <string name="invalid_backup_file_missing_manga">Babeskopiak ez du mangarik.</string>
     <string name="manga_tracking_tab">Jarraipena</string>
     <string name="repeating">Berrirakurtzen</string>
@@ -606,7 +604,6 @@
     <string name="cancelled">Bertan behera utzia</string>
     <string name="on_hiatus">Etenaldian</string>
     <string name="library_errors_help">Liburutegi eguneraketen akatsak nola konpondu jakiteko, ikusi %1$s</string>
-    <string name="pref_refresh_library_tracking_summary">Egoera, puntuaketa eta azken kapitulu irakurria eguneratzen ditu jarraipen-zerbitzuetatik</string>
     <string name="action_display_local_badge">Manga lokala</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">%1$s kapituluak eta bat gehiago</item>

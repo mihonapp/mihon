@@ -190,9 +190,7 @@
     <string name="pref_update_only_non_completed">Me statusin \"Përfunduar\"</string>
     <string name="pref_update_only_started">Kjo nuk ka filluar</string>
     <string name="update_48hour">Çdo 2 ditë</string>
-    <string name="pref_library_update_refresh_trackers">Rifresko automatikisht gjurmuesit</string>
     <string name="pref_library_update_refresh_metadata">Rifresko automatikisht të dhënat meta</string>
-    <string name="pref_library_update_refresh_trackers_summary">Përditësoni gjurmuesit kur përditësoni bibliotekën</string>
     <string name="default_category_summary">Gjithmonë pyesni</string>
     <string name="ext_install">Instaloni</string>
     <string name="categorized_display_settings">Cilësimet sipas kategorisë për renditjen dhe shfaqjen</string>
@@ -321,6 +319,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instaloni dhe filloni Shizuku për të përdorur Shizuku si instalues shtesë.</string>
     <string name="pref_page_transitions">Animoni tranzicionet e faqeve</string>
     <string name="pref_show_reading_mode_summary">Trego shkurtimisht modalitetin aktual kur hapet lexuesi</string>
+    <string name="pref_create_folder_per_manga">Ruani faqet në dosje të veçanta</string>
     <string name="pref_reader_theme">Ngjyra e sfondit</string>
     <string name="white_background">E bardhë</string>
     <string name="gray_background">Gri</string>
@@ -373,6 +372,7 @@
         <item quantity="other">%d kapitujt e ardhshëm të palexuar</item>
     </plurals>
     <string name="transition_no_next">Nuk ka kapitull tjetër</string>
+    <string name="pref_create_folder_per_manga_summary">Krijon dosje sipas titullit të hyrjeve</string>
     <string name="black_background">E zezë</string>
     <string name="pref_viewer_type">Modaliteti i parazgjedhur i leximit</string>
     <string name="l_nav">Në formë L</string>
@@ -416,7 +416,6 @@
     <string name="kindlish_nav">Kindle-ish</string>
     <string name="enhanced_tracking_info">Shërbime që ofrojnë veçori të përmirësuara për burime specifike. Regjistrimet gjurmohen automatikisht kur shtohen në bibliotekën tuaj.</string>
     <string name="action_track">Pista</string>
-    <string name="pref_backup_service_category">Rezervime automatike</string>
     <string name="pref_backup_interval">Frekuenca rezervë</string>
     <string name="pref_backup_slots">Rezervimet maksimale</string>
     <string name="backup_restore_missing_trackers">Gjurmuesit nuk kanë hyrë në:</string>
@@ -559,8 +558,6 @@
     <string name="clear_database_source_item_count">%1$d hyrje jashtë bibliotekës në bazën e të dhënave</string>
     <string name="pref_clear_webview_data">Pastro të dhënat e WebView</string>
     <string name="pref_refresh_library_covers">Rifresko kopertinat e bibliotekës</string>
-    <string name="pref_refresh_library_tracking">Rifresko gjurmimin</string>
-    <string name="pref_refresh_library_tracking_summary">Përditëson statusin, rezultatin dhe kapitullin e fundit të lexuar nga shërbimet e gjurmimit</string>
     <string name="pref_reset_viewer_flags">Rivendos cilësimet e lexuesit për seri</string>
     <string name="pref_reset_viewer_flags_summary">Rivendos modalitetin e leximit dhe orientimin e të gjitha serive</string>
     <string name="pref_reset_viewer_flags_error">Cilësimet e lexuesit nuk mund të rivendoseshin</string>

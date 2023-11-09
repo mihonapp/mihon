@@ -2,6 +2,7 @@ package eu.kanade.domain.chapter.interactor
 
 import eu.kanade.domain.chapter.model.copyFromSChapter
 import eu.kanade.domain.chapter.model.toSChapter
+import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.download.DownloadManager
@@ -10,7 +11,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
 import tachiyomi.data.chapter.ChapterSanitizer
-import tachiyomi.domain.chapter.interactor.GetChapterByMangaId
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
 import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.Chapter
@@ -32,7 +33,8 @@ class SyncChaptersWithSource(
     private val shouldUpdateDbChapter: ShouldUpdateDbChapter,
     private val updateManga: UpdateManga,
     private val updateChapter: UpdateChapter,
-    private val getChapterByMangaId: GetChapterByMangaId,
+    private val getChaptersByMangaId: GetChaptersByMangaId,
+    private val getExcludedScanlators: GetExcludedScanlators,
 ) {
 
     /**
@@ -66,7 +68,7 @@ class SyncChaptersWithSource(
             }
 
         // Chapters from db.
-        val dbChapters = getChapterByMangaId.await(manga.id)
+        val dbChapters = getChaptersByMangaId.await(manga.id)
 
         // Chapters from the source not in db.
         val toAdd = mutableListOf<Chapter>()
@@ -116,7 +118,9 @@ class SyncChaptersWithSource(
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
                     val shouldRenameChapter = downloadProvider.isChapterDirNameChanged(dbChapter, chapter) &&
-                        downloadManager.isChapterDownloaded(dbChapter.name, dbChapter.scanlator, manga.title, manga.source)
+                        downloadManager.isChapterDownloaded(
+                            dbChapter.name, dbChapter.scanlator, manga.title, manga.source,
+                        )
 
                     if (shouldRenameChapter) {
                         downloadManager.renameChapter(source, manga, dbChapter, chapter)
@@ -206,6 +210,10 @@ class SyncChaptersWithSource(
 
         val reAddedUrls = reAdded.map { it.url }.toHashSet()
 
-        return updatedToAdd.filterNot { it.url in reAddedUrls }
+        val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
+
+        return updatedToAdd.filterNot {
+            it.url in reAddedUrls || it.scanlator in excludedScanlators
+        }
     }
 }

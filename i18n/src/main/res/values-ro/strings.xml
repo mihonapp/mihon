@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">Restaurează copia de rezervă</string>
     <string name="pref_restore_backup_summ">Restaurează biblioteca din fișierul copiei de rezervă</string>
     <string name="pref_backup_directory">Locația copiei de rezervă</string>
-    <string name="pref_backup_service_category">Copii de rezervă create automat</string>
     <string name="pref_backup_interval">Frecventă de creere a copiilor de rezervă</string>
     <string name="pref_backup_slots">Numărul maxim de copii de rezervă</string>
     <string name="backup_created">Backup creat</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Ștergeți istoricul pentru intrările care nu sunt salvate în bibliotecă</string>
     <string name="clear_database_confirmation">Ești sigur\? Capitolele citite și progresul intrărilor din afara bibliotecii vor fi pierdute</string>
     <string name="clear_database_completed">Înregistrări șterse</string>
-    <string name="pref_refresh_library_tracking">Reîncărca urmărirea</string>
-    <string name="pref_refresh_library_tracking_summary">Actualizează starea, scorul și ultimul capitol citit de la serviciile de urmărire</string>
     <string name="version">Versiune</string>
     <string name="pref_enable_acra">Trimite rapoarte pt. eșuări</string>
     <string name="pref_acra_summary">Ajută la rezolvarea bug-urilor. Informațiile sensibile nu vor fi trimise</string>
@@ -613,7 +610,6 @@
     <string name="ext_installer_shizuku_stopped">Shizuku nu rulează</string>
     <string name="pref_app_language">Limba aplicației</string>
     <string name="restrictions">Restricții: %s</string>
-    <string name="pref_library_update_refresh_trackers">Reîmprospătați automat trackerele</string>
     <string name="pref_highest">Cel mai înalt</string>
     <string name="pref_high">Înalt</string>
     <string name="pref_low">Scăzut</string>
@@ -626,7 +622,6 @@
     <string name="restore_miui_warning">Este posibil să nu funcționeze corect backup/restaurare dacă MIUI Optimization este dezactivată.</string>
     <string name="update_72hour">La fiecare 3 zile</string>
     <string name="connected_to_wifi">Doar prin Wi Fi</string>
-    <string name="pref_library_update_refresh_trackers_summary">Actualizeaza trackerele la actualizarea bibliotecii</string>
     <string name="loader_rar5_error">Formatul RARv5 nu este acceptat</string>
     <string name="off">Oprit</string>
     <string name="ext_app_info">Informații despre aplicație</string>
@@ -654,6 +649,7 @@
         <item quantity="few">Acum %1$d zile</item>
         <item quantity="other">Acum %1$d zile</item>
     </plurals>
+    <string name="pref_create_folder_per_manga_summary">Creează dosare în funcție de titlul intrărilor</string>
     <string name="automatic_background">Automat</string>
     <string name="on">Pornit</string>
     <plurals name="next_unread_chapters">
@@ -667,6 +663,7 @@
     <string name="disabled_nav">Deactivat</string>
     <string name="action_remove_everything">Șterge tot</string>
     <string name="pref_reader_actions">Acțiuni</string>
+    <string name="pref_create_folder_per_manga">Salvează pagini în dosare separate</string>
     <string name="description_placeholder">Fără descriere</string>
     <string name="notification_incognito_text">Dezactivează modul incognito</string>
     <string name="download_ahead_info">Funcționează numai dacă capitolul curent + următorul sunt deja descărcate.</string>
@@ -770,4 +767,6 @@
     <string name="track_error">%1$s eroare: %2$s</string>
     <string name="information_required_plain">*necesar</string>
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>
+    <string name="unlock_app_title">Deblochează %s</string>
+    <string name="delete_downloaded">Șterge descărcările</string>
 </resources>

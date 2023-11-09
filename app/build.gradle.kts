@@ -22,8 +22,8 @@ android {
     defaultConfig {
         applicationId = "eu.kanade.tachiyomi"
 
-        versionCode = 107
-        versionName = "0.14.6"
+        versionCode = 109
+        versionName = "0.14.7"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -304,12 +304,12 @@ tasks {
             kotlinOptions.freeCompilerArgs += listOf(
                 "-P",
                 "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
+                    project.layout.buildDirectory.dir("compose_metrics").get().asFile.absolutePath,
             )
             kotlinOptions.freeCompilerArgs += listOf(
                 "-P",
                 "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    project.buildDir.absolutePath + "/compose_metrics",
+                    project.layout.buildDirectory.dir("compose_metrics").get().asFile.absolutePath,
             )
         }
     }

@@ -144,7 +144,13 @@ private fun SourcePinButton(
     onClick: () -> Unit,
 ) {
     val icon = if (isPinned) Icons.Filled.PushPin else Icons.Outlined.PushPin
-    val tint = if (isPinned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(alpha = SecondaryItemAlpha)
+    val tint = if (isPinned) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.onBackground.copy(
+            alpha = SecondaryItemAlpha,
+        )
+    }
     val description = if (isPinned) R.string.action_unpin else R.string.action_pin
     IconButton(onClick = onClick) {
         Icon(

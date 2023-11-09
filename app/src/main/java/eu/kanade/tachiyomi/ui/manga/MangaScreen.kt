@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +32,7 @@ import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.presentation.manga.MangaScreen
 import eu.kanade.presentation.manga.components.DeleteChaptersDialog
 import eu.kanade.presentation.manga.components.MangaCoverDialog
+import eu.kanade.presentation.manga.components.ScanlatorFilterDialog
 import eu.kanade.presentation.manga.components.SetIntervalDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
@@ -112,8 +115,20 @@ class MangaScreen(
                 screenModel.toggleFavorite()
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             },
-            onWebViewClicked = { openMangaInWebView(navigator, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
-            onWebViewLongClicked = { copyMangaUrl(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
+            onWebViewClicked = {
+                openMangaInWebView(
+                    navigator,
+                    screenModel.manga,
+                    screenModel.source,
+                )
+            }.takeIf { isHttpSource },
+            onWebViewLongClicked = {
+                copyMangaUrl(
+                    context,
+                    screenModel.manga,
+                    screenModel.source,
+                )
+            }.takeIf { isHttpSource },
             onTrackingClicked = screenModel::showTrackDialog.takeIf { successState.trackingAvailable },
             onTagSearch = { scope.launch { performGenreSearch(navigator, it, screenModel.source!!) } },
             onFilterButtonClicked = screenModel::showSettingsDialog,
@@ -124,8 +139,12 @@ class MangaScreen(
             onShareClicked = { shareManga(context, screenModel.manga, screenModel.source) }.takeIf { isHttpSource },
             onDownloadActionClicked = screenModel::runDownloadAction.takeIf { !successState.source.isLocalOrStub() },
             onEditCategoryClicked = screenModel::showChangeCategoryDialog.takeIf { successState.manga.favorite },
-            onEditFetchIntervalClicked = screenModel::showSetFetchIntervalDialog.takeIf { screenModel.isUpdateIntervalEnabled && successState.manga.favorite },
-            onMigrateClicked = { navigator.push(MigrateSearchScreen(successState.manga.id)) }.takeIf { successState.manga.favorite },
+            onEditFetchIntervalClicked = screenModel::showSetFetchIntervalDialog.takeIf {
+                screenModel.isUpdateIntervalEnabled && successState.manga.favorite
+            },
+            onMigrateClicked = {
+                navigator.push(MigrateSearchScreen(successState.manga.id))
+            }.takeIf { successState.manga.favorite },
             onMultiBookmarkClicked = screenModel::bookmarkChapters,
             onMultiMarkAsReadClicked = screenModel::markChaptersRead,
             onMarkPreviousAsReadClicked = screenModel::markPreviousChapterRead,
@@ -135,6 +154,8 @@ class MangaScreen(
             onAllChapterSelected = screenModel::toggleAllSelection,
             onInvertSelection = screenModel::invertSelection,
         )
+
+        var showScanlatorsDialog by remember { mutableStateOf(false) }
 
         val onDismissRequest = { screenModel.dismissDialog() }
         when (val dialog = successState.dialog) {
@@ -172,6 +193,9 @@ class MangaScreen(
                 onSortModeChanged = screenModel::setSorting,
                 onDisplayModeChanged = screenModel::setDisplayMode,
                 onSetAsDefault = screenModel::setCurrentSettingsAsDefault,
+                onResetToDefault = screenModel::resetToDefaultSettings,
+                scanlatorFilterActive = successState.scanlatorFilterActive,
+                onScanlatorFilterClicked = { showScanlatorsDialog = true },
             )
             MangaScreenModel.Dialog.TrackSheet -> {
                 NavigatorAdaptiveSheet(
@@ -217,6 +241,15 @@ class MangaScreen(
                     onValueChanged = { screenModel.setFetchInterval(dialog.manga, it) },
                 )
             }
+        }
+
+        if (showScanlatorsDialog) {
+            ScanlatorFilterDialog(
+                availableScanlators = successState.availableScanlators,
+                excludedScanlators = successState.excludedScanlators,
+                onDismissRequest = { showScanlatorsDialog = false },
+                onConfirm = screenModel::setExcludedScanlators,
+            )
         }
     }
 

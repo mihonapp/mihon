@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.icons.outlined.Delete
@@ -50,7 +49,7 @@ fun CategoryListItem(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = "")
+            Icon(imageVector = Icons.Outlined.Label, contentDescription = "")
             Text(
                 text = category.name,
                 modifier = Modifier
@@ -72,7 +71,10 @@ fun CategoryListItem(
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onRename) {
-                Icon(imageVector = Icons.Outlined.Edit, contentDescription = stringResource(R.string.action_rename_category))
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = stringResource(R.string.action_rename_category),
+                )
             }
             IconButton(onClick = onDelete) {
                 Icon(imageVector = Icons.Outlined.Delete, contentDescription = stringResource(R.string.action_delete))

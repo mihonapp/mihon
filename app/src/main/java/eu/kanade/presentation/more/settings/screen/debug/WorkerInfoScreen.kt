@@ -115,7 +115,9 @@ class WorkerInfoScreen : Screen() {
         private val workManager = context.workManager
 
         val finished = workManager
-            .getWorkInfosLiveData(WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED))
+            .getWorkInfosLiveData(
+                WorkQuery.fromStates(WorkInfo.State.SUCCEEDED, WorkInfo.State.FAILED, WorkInfo.State.CANCELLED),
+            )
             .asFlow()
             .map(::constructString)
             .stateIn(ioCoroutineScope, SharingStarted.WhileSubscribed(), "")

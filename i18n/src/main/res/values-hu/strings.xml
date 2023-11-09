@@ -334,8 +334,6 @@
     <string name="pref_show_navigation_mode">Érintési zónák átfedésének mutatása</string>
     <string name="ext_app_info">Alkalmazás információ</string>
     <string name="categorized_display_settings">Kategóriakénti beállítások rendezéshez</string>
-    <string name="pref_library_update_refresh_trackers_summary">Követők frissítése könyvtár frissítésekor</string>
-    <string name="pref_library_update_refresh_trackers">Követők automatikus frissítése</string>
     <string name="theme_tako">Polip</string>
     <string name="theme_strawberrydaiquiri">Eper koktél</string>
     <plurals name="relative_time">
@@ -408,6 +406,8 @@
     <string name="vertical_plus_viewer">Hosszú szalag lyukakkal</string>
     <string name="automatic_background">Automatikus</string>
     <string name="gray_background">Szürke</string>
+    <string name="pref_create_folder_per_manga_summary">Mappák létrehozása bejegyzések címe szerint</string>
+    <string name="pref_create_folder_per_manga">Mentse a lapokat külön mappákba</string>
     <string name="pref_read_with_long_tap">Cselekmények mutatása hosszú koppintáskor</string>
     <string name="pref_reader_actions">Műveletek</string>
     <string name="tapping_inverted_none">Egyik sem</string>
@@ -503,7 +503,6 @@
 \nEzek után telepíteni kell a hiányzó bővítményeket és be kell jelentkezni a tracking szolgáltatásokba, hogy újra használhassa őket.</string>
     <string name="pref_refresh_library_covers">Könyvtár fedők frissítése</string>
     <string name="pref_dump_crash_logs">Hibaüzenetetek törlése</string>
-    <string name="pref_refresh_library_tracking_summary">Frissíti az állapotot, értékelést és az utolsó olvasott fejezetet a tracking szolgáltatás által</string>
     <string name="pref_reset_viewer_flags">Sorozat beállításainak visszaállítása</string>
     <string name="about_dont_kill_my_app">Néhány gyártónak extra korlátozása van arra, hogy kikapcsolja a háttér folyamatokat. Ezen a web oldalon több információt találsz, hogy hogyan oldható meg.</string>
     <string name="pref_incognito_mode_summary">Olvasási előzmények megállítása</string>
@@ -513,7 +512,6 @@
     <string name="file_select_cover">Válasszon képet a fedlapnak</string>
     <string name="update_check_no_new_updates">Nem található új frissítés</string>
     <string name="channel_skipped">Kihagyott</string>
-    <string name="pref_refresh_library_tracking">Tracking frissítése</string>
     <string name="ext_info_version">Verzió</string>
     <string name="ext_info_language">Nyelv</string>
     <string name="ext_info_age_rating">Korhatár</string>
@@ -639,7 +637,6 @@
     <string name="pref_create_backup_summ">Felhasználható az aktuális könyvtár visszaállítására</string>
     <string name="pref_restore_backup">Biztonsági mentés visszaállítása</string>
     <string name="pref_restore_backup_summ">Könyvtár visszaállítása biztonsági mentésről</string>
-    <string name="pref_backup_service_category">Automatikus biztonsági mentések</string>
     <string name="pref_backup_interval">Biztonsági mentések gyakorisága</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Befejezve %1$s alatt, %2$s hibával</item>

@@ -89,8 +89,6 @@
     <string name="manga_added_library">به کتابخانه اضافه شد</string>
     <string name="remove_from_library">حذف از کتابخانه</string>
     <string name="in_library">در کتابخانه</string>
-    <string name="pref_refresh_library_tracking_summary">وضعیت خواندن، امتیاز و آخرین قسمت خوانده شده را از سایت خدمات ردیابی آپدیت می‌کند</string>
-    <string name="pref_refresh_library_tracking">تازه کردن ردیابی</string>
     <string name="tracking_info">برای به روز رسانی وضعیت پیشرفت قسمت ها، در سایت های خدمات ردیابی، همگام سازی یک طرفه انجام دهید. برای ردیابی هر داده از تب ردیابی اقدام کنید.</string>
     <string name="webtoon_viewer">وب تون(Webtoon)</string>
     <string name="filter_mode_darken">Burn / Darken</string>
@@ -132,7 +130,6 @@
     <string name="tabs_header">تب ها</string>
     <string name="pref_backup_slots">حداکثر تعداد نسخه‌های پشتیبان</string>
     <string name="pref_backup_interval">زمان پشتیبان گیری</string>
-    <string name="pref_backup_service_category">پشتیبان گیری خودکار</string>
     <string name="pref_backup_directory">محل پشتیبان گیری</string>
     <string name="pref_restore_backup_summ">بازگرداندن کتابخانه از فایل پشتیبان</string>
     <string name="pref_restore_backup">برگرداندن نسخه پشتیبان</string>
@@ -496,11 +493,13 @@
     <string name="nav_zone_right">راست</string>
     <string name="ext_installer_legacy">قدیمی</string>
     <string name="ext_installer_pref">نصب کننده</string>
+    <string name="pref_create_folder_per_manga_summary">ساخت پوشه بر اساس عنوان ورودی</string>
     <string name="ext_update_all">آپدیت همگی</string>
     <string name="label_background_activity">فعالیت در پس زمینه</string>
     <string name="action_sort_count">مجموع ورودی ها</string>
     <string name="label_default">پیش فرض</string>
     <string name="action_filter_tracked">دنبال شده</string>
+    <string name="pref_create_folder_per_manga">ذخیره صفحات در پوشه های جداگانه</string>
     <string name="error_no_match">هیچ مورد مشابهی پیدا نشد</string>
     <string name="ext_install_service_notif">در حال نصب کردن افزونه …</string>
     <string name="extension_api_error">دریافت لیست افزونه ها ناموفق بود</string>
@@ -553,12 +552,10 @@
         <item quantity="other">%1$d روز پیش</item>
     </plurals>
     <string name="pref_update_only_completely_read">با قسمت‌(های) خوانده‌نشده</string>
-    <string name="pref_library_update_refresh_trackers">ردیاب‌ها را به طور خودکار تازه کن</string>
     <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>
     <string name="relative_time_today">امروز</string>
     <string name="update_72hour">هر 3 روز</string>
     <string name="connected_to_wifi">فقط روی Wi-Fi</string>
-    <string name="pref_library_update_refresh_trackers_summary">به‌روزرسانی ردیاب‌ها هنگام به‌روزرسانی کتابخانه</string>
     <string name="categorized_display_settings">تنظیمات بر اساس دسته‌بندی برای ترتیب و نمایش</string>
     <string name="ext_app_info">اطلاعات برنامه</string>
     <string name="pref_dual_page_invert">معکوس کردن جای دو صفحه‌ی تقسیم شده</string>

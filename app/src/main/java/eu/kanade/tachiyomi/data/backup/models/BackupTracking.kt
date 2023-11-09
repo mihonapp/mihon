@@ -54,7 +54,20 @@ data class BackupTracking(
 }
 
 val backupTrackMapper = {
-        _: Long, _: Long, syncId: Long, mediaId: Long, libraryId: Long?, title: String, lastChapterRead: Double, totalChapters: Long, status: Long, score: Double, remoteUrl: String, startDate: Long, finishDate: Long ->
+        _: Long,
+        _: Long,
+        syncId: Long,
+        mediaId: Long,
+        libraryId: Long?,
+        title: String,
+        lastChapterRead: Double,
+        totalChapters: Long,
+        status: Long,
+        score: Double,
+        remoteUrl: String,
+        startDate: Long,
+        finishDate: Long,
+    ->
     BackupTracking(
         syncId = syncId.toInt(),
         mediaId = mediaId,

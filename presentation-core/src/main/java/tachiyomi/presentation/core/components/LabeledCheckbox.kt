@@ -21,6 +21,7 @@ fun LabeledCheckbox(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true,
 ) {
     Row(
         modifier = modifier
@@ -37,6 +38,7 @@ fun LabeledCheckbox(
         Checkbox(
             checked = checked,
             onCheckedChange = null,
+            enabled = enabled,
         )
 
         Text(text = label)

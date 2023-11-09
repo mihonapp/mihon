@@ -162,7 +162,6 @@
     <string name="pref_restore_backup">Врати се на резервну копију</string>
     <string name="pref_restore_backup_summ">Врати се на колекцију из резервне копије</string>
     <string name="pref_backup_directory">Локација резервних копија</string>
-    <string name="pref_backup_service_category">Аутоматско прављење резервних копија</string>
     <string name="pref_backup_interval">Учесталост прављења резервних копија</string>
     <string name="pref_backup_slots">Максималан број резервних копија</string>
     <string name="backup_created">Направљена је резервна копија</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Обриши историју за наслове који нису сачувани у твојој колекцији</string>
     <string name="clear_database_confirmation">Да ли сте сигурни\? Изгубићете прочитана поглавља и статус наслова који нису у колекцији</string>
     <string name="clear_database_completed">Уноси избрисани</string>
-    <string name="pref_refresh_library_tracking">Освежи праћење</string>
-    <string name="pref_refresh_library_tracking_summary">Ажурирај статус, оцену и последње прочитано поглавље из трекера</string>
     <string name="version">Верзија</string>
     <string name="pref_enable_acra">Пошаљи извештаје грешака</string>
     <string name="pref_acra_summary">Помози у поправљању кварова. Ниједан осетљив податак неће бити послат</string>
@@ -553,8 +550,6 @@
     <string name="pref_dual_page_split">Раздели широке странице</string>
     <string name="none">Ништа</string>
     <string name="pref_true_color_summary">Смањује оштре прелазе међу нијансама, али утиче на перформансе</string>
-    <string name="pref_library_update_refresh_trackers">Аутоматски освежи пратиоце</string>
-    <string name="pref_library_update_refresh_trackers_summary">Ажурирај пратиоце при ажурирању колекције</string>
     <string name="date">Датум</string>
     <string name="pref_viewer_nav">Начин навигације</string>
     <string name="unknown_author">Непознат аутор</string>
@@ -594,6 +589,8 @@
     <string name="tapping_inverted_vertical">Вертикално</string>
     <string name="tapping_inverted_both">Оба</string>
     <string name="pref_reader_actions">Радње</string>
+    <string name="pref_create_folder_per_manga">Сачувај странице у засебне фолдере</string>
+    <string name="pref_create_folder_per_manga_summary">Прави датотеке по имену наслова</string>
     <string name="l_nav">У облику слова L</string>
     <string name="rotation_type">Оријентација</string>
     <string name="rotation_portrait">Усправно</string>

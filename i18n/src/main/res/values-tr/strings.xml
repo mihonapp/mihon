@@ -156,13 +156,12 @@
     <string name="fourth_to_last">Okunan sondan dördüncü bölüm</string>
     <string name="fifth_to_last">Okunan sondan beşinci bölüm</string>
     <string name="pref_download_new">Yeni bölümleri indir</string>
-    <string name="services">Hizmetler</string>
+    <string name="services">İzleyiciler</string>
     <string name="pref_create_backup">Yedek oluştur</string>
     <string name="pref_create_backup_summ">Şu anki kitaplığı geri yüklemek için kullanılabilir</string>
     <string name="pref_restore_backup">Yedeği geri yükle</string>
     <string name="pref_restore_backup_summ">Kitaplığı yedek dosyasından geri yükle</string>
     <string name="pref_backup_directory">Yedekleme konumu</string>
-    <string name="pref_backup_service_category">Kendiliğinden yedekleme</string>
     <string name="pref_backup_interval">Yedekleme sıklığı</string>
     <string name="pref_backup_slots">Maksimum yedek</string>
     <string name="backup_created">Yedek oluşturuldu</string>
@@ -180,8 +179,6 @@
     <string name="pref_clear_database_summary">Kitaplığına kaydedilmeyen girdilerin geçmiş bilgisini sil</string>
     <string name="clear_database_confirmation">Emin misin\? Kitaplıkta olmayan girdilerin okunan bölümleri ve ilerlemesi kaybolacak</string>
     <string name="clear_database_completed">Girdiler silindi</string>
-    <string name="pref_refresh_library_tracking">İzlemeyi yenile</string>
-    <string name="pref_refresh_library_tracking_summary">İzleme hizmetlerinden durumu, puanı ve son okunan bölümü günceller</string>
     <string name="version">Sürüm</string>
     <string name="pref_enable_acra">Çökme bildirimi gönder</string>
     <string name="pref_acra_summary">Hataların düzeltilmesine yardımcı olur. Hiçbir duyarlı veri gönderilmez</string>
@@ -409,7 +406,7 @@
         <item quantity="one">%1$s içinde %2$s hatayla tamamlandı</item>
         <item quantity="other">%1$s içinde %2$s hatayla tamamlandı</item>
     </plurals>
-    <string name="tracking_info">Bölüm ilerlemesini, izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden, izlemeyi ayarlayın.</string>
+    <string name="tracking_info">Bölüm ilerlemesini, harici izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden, izlemeyi ayarlayın.</string>
     <string name="pref_refresh_library_covers">Kitaplıktakilerin kapaklarını yenile</string>
     <string name="unofficial_extension_message">Bu uzantı resmi dizelgeden değil.</string>
     <string name="ext_unofficial">Resmi olmayan</string>
@@ -533,6 +530,8 @@
     <string name="rotation_landscape">Yatay</string>
     <string name="rotation_portrait">Dikey</string>
     <string name="rotation_type">Döndürme</string>
+    <string name="pref_create_folder_per_manga_summary">Girdilerin başlığına göre sıralaç oluşturur</string>
+    <string name="pref_create_folder_per_manga">Sayfaları ayrı sıralaçlara kaydet</string>
     <string name="pref_reader_actions">Eylemler</string>
     <string name="pref_grayscale">Boz tonlama</string>
     <string name="notification_incognito_text">Gizli kipi devre dışı bırak</string>
@@ -545,8 +544,6 @@
     <string name="local_filter_order_by">Sıralama ölçütü</string>
     <string name="local_invalid_format">Geçersiz bölüm biçimi</string>
     <string name="chapter_not_found">Bölüm bulunamadı</string>
-    <string name="pref_library_update_refresh_trackers_summary">Kitaplığı güncellerken izleyicileri güncelle</string>
-    <string name="pref_library_update_refresh_trackers">İzleyicileri kendiliğinden yenile</string>
     <string name="restrictions">Kısıtlamalar: %s</string>
     <string name="action_display_local_badge">Yerel kaynak</string>
     <string name="on">Açık</string>
@@ -561,8 +558,8 @@
     <string name="action_start_downloading_now">Şimdi indirmeye başla</string>
     <string name="about_dont_kill_my_app">Bazı üreticilerin arka plan hizmetlerini durduran ek uygulama kısıtlamaları vardır. Bu web sitesinde durumun nasıl düzeltileceği hakkında daha fazla bilgi var.</string>
     <string name="restore_miui_warning">Yedekleme/geri yükleme, MIUI iyileştirmesi devre dışıysa düzgün çalışmayabilir.</string>
-    <string name="enhanced_tracking_info">Belirli kaynaklar için gelişmiş özellikler sağlayan hizmetler. Girdiler, kitaplığınıza eklendiğinde kendiliğinden izlenir.</string>
-    <string name="enhanced_services">Gelişmiş hizmetler</string>
+    <string name="enhanced_tracking_info">Belirli kaynaklar için gelişmiş özellikler sağlar. Girdiler, kitaplığınıza eklendiğinde kendiliğinden izlenir.</string>
+    <string name="enhanced_services">Gelişmiş izleyiciler</string>
     <string name="pref_dark_theme_pure_black">Arı kara karanlık kip</string>
     <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin &amp; Yang</string>
@@ -602,7 +599,7 @@
     <string name="action_sort_count">Toplam girdi</string>
     <string name="label_warning">Uyarı</string>
     <string name="action_display_language_badge">Dil</string>
-    <string name="backup_info">Yedeklerin kopyalarını başka yerlerde de tutmalısınız.</string>
+    <string name="backup_info">Yedeklerin kopyalarını başka yerlerde de tutmalısınız. Yedekler, depolanan şifreler dahil olmak üzere hassas verileri içerebilirler; paylaşırken dikkat edin.</string>
     <string name="notification_size_warning">Büyük güncellemeler kaynaklara dokunca verir ve daha yavaş güncellemelere ve ayrıca pil kullanımının artmasına neden olabilir. Daha fazlasını öğrenmek için dokunun.</string>
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
@@ -807,11 +804,19 @@
     <string name="download_cache_invalidated">İndirilenler dizini geçersiz kılındı</string>
     <string name="information_cloudflare_help">Cloudflare\'le ilgili yardım için tıklayın</string>
     <string name="exception_unknown_host">%s verisine erişilemedi</string>
-    <string name="track_activity_name">İzleme girişi</string>
+    <string name="track_activity_name">İzleyici girişi</string>
     <string name="library_sync_complete">Kitaplık eşleşmesi tamamlandı</string>
     <string name="exception_http">HTTP %d, siteyi Web Görünümünde denetle</string>
     <string name="exception_offline">Genel ağ bağlantısı yok</string>
     <string name="syncing_library">Kitaplık eşleştiriliyor</string>
     <string name="unlock_app_title">Aç: %s</string>
     <string name="action_move_to_bottom_all_for_series">Diziyi en alta taşı</string>
+    <string name="action_sort_category">Ulamları sırala</string>
+    <string name="notification_updating_progress">Kitaplık güncelleniyor… (%s)</string>
+    <string name="sort_category_confirmation">Ulamları alfabetik sıralamak ister misiniz\?</string>
+    <string name="file_null_uri_error">Dosya seçici dosyayı uygulamaya getirmekte başarısız oldu</string>
+    <string name="source_settings">Kaynak ayarları</string>
+    <string name="app_settings">Uygulama ayarları</string>
+    <string name="pref_relative_format">Göreli zaman damgaları</string>
+    <string name="pref_relative_format_summary">\"%1$s\" yerine \"%2$s</string>
 </resources>

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.domain.chapter.model.copyFrom
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
@@ -31,6 +30,7 @@ import tachiyomi.data.Manga_sync
 import tachiyomi.data.Mangas
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -54,6 +54,7 @@ class BackupRestorer(
     private val handler: DatabaseHandler = Injekt.get()
     private val updateManga: UpdateManga = Injekt.get()
     private val getCategories: GetCategories = Injekt.get()
+    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
 
     private val preferenceStore: PreferenceStore = Injekt.get()
@@ -87,7 +88,13 @@ class BackupRestorer(
         val logFile = writeErrorLog()
 
         if (sync) {
-            notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name, contentTitle = context.getString(R.string.library_sync_complete))
+            notifier.showRestoreComplete(
+                time,
+                errors.size,
+                logFile.parent,
+                logFile.name,
+                contentTitle = context.getString(R.string.library_sync_complete),
+            )
         } else {
             notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
         }
@@ -182,7 +189,12 @@ class BackupRestorer(
         )
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.categories), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.categories),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private suspend fun restoreManga(backupManga: BackupManga, backupCategories: List<BackupCategory>, sync: Boolean) {
@@ -213,9 +225,19 @@ class BackupRestorer(
 
         restoreProgress += 1
         if (sync) {
-            showRestoreProgress(restoreProgress, restoreAmount, manga.title, context.getString(R.string.syncing_library))
+            showRestoreProgress(
+                restoreProgress,
+                restoreAmount,
+                manga.title,
+                context.getString(R.string.syncing_library),
+            )
         } else {
-            showRestoreProgress(restoreProgress, restoreAmount, manga.title, context.getString(R.string.restoring_backup))
+            showRestoreProgress(
+                restoreProgress,
+                restoreAmount,
+                manga.title,
+                context.getString(R.string.restoring_backup),
+            )
         }
     }
 
@@ -285,31 +307,38 @@ class BackupRestorer(
     }
 
     private suspend fun restoreChapters(manga: Manga, chapters: List<Chapter>) {
-        val dbChapters = handler.awaitList { chaptersQueries.getChaptersByMangaId(manga.id) }
+        val dbChaptersByUrl = getChaptersByMangaId.await(manga.id)
+            .associateBy { it.url }
 
         val processed = chapters.map { chapter ->
             var updatedChapter = chapter
-            val dbChapter = dbChapters.find { it.url == updatedChapter.url }
+
+            val dbChapter = dbChaptersByUrl[updatedChapter.url]
             if (dbChapter != null) {
-                updatedChapter = updatedChapter.copy(id = dbChapter._id)
-                updatedChapter = updatedChapter.copyFrom(dbChapter)
-                if (dbChapter.read != chapter.read) {
-                    updatedChapter = updatedChapter.copy(read = chapter.read, lastPageRead = chapter.lastPageRead)
-                } else if (updatedChapter.lastPageRead == 0L && dbChapter.last_page_read != 0L) {
-                    updatedChapter = updatedChapter.copy(lastPageRead = dbChapter.last_page_read)
-                }
-                if (!updatedChapter.bookmark && dbChapter.bookmark) {
-                    updatedChapter = updatedChapter.copy(bookmark = true)
+                updatedChapter = updatedChapter
+                    .copyFrom(dbChapter)
+                    .copy(
+                        id = dbChapter.id,
+                        bookmark = updatedChapter.bookmark || dbChapter.bookmark,
+                        // Overwrite read status with the backup's status
+                        read = updatedChapter.read,
+                    )
+                // Update lastPageRead if the chapter is marked as read
+                if (updatedChapter.read) {
+                    updatedChapter = updatedChapter.copy(
+                        lastPageRead = if (updatedChapter.lastPageRead > 0) updatedChapter.lastPageRead else dbChapter.lastPageRead,
+                    )
                 }
             }
 
             updatedChapter.copy(mangaId = manga.id)
         }
 
-        val newChapters = processed.groupBy { it.id > 0 }
-        newChapters[true]?.let { updateKnownChapters(it) }
-        newChapters[false]?.let { insertChapters(it) }
+        val (existingChapters, newChapters) = processed.partition { it.id > 0 }
+        updateKnownChapters(existingChapters)
+        insertChapters(newChapters)
     }
+
 
     /**
      * Inserts list of chapters
@@ -416,7 +445,13 @@ class BackupRestorer(
         return backupManga
     }
 
-    private suspend fun restoreExtras(manga: Manga, categories: List<Int>, history: List<BackupHistory>, tracks: List<Track>, backupCategories: List<BackupCategory>) {
+    private suspend fun restoreExtras(
+        manga: Manga,
+        categories: List<Int>,
+        history: List<BackupHistory>,
+        tracks: List<Track>,
+        backupCategories: List<BackupCategory>,
+    ) {
         restoreCategories(manga, categories, backupCategories)
         restoreHistory(history)
         restoreTracking(manga, tracks)
@@ -594,7 +629,12 @@ class BackupRestorer(
         BackupCreateJob.setupTask(context)
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.app_settings), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.app_settings),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private fun restoreSourcePreferences(preferences: List<BackupSourcePreferences>) {
@@ -604,7 +644,12 @@ class BackupRestorer(
         }
 
         restoreProgress += 1
-        showRestoreProgress(restoreProgress, restoreAmount, context.getString(R.string.source_settings), context.getString(R.string.restoring_backup))
+        showRestoreProgress(
+            restoreProgress,
+            restoreAmount,
+            context.getString(R.string.source_settings),
+            context.getString(R.string.restoring_backup),
+        )
     }
 
     private fun restorePreferences(

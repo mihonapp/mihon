@@ -256,7 +256,6 @@
     <string name="backup_created">ምትኬ ተፈጥሯል</string>
     <string name="pref_backup_slots">ከፍተኛ መጠባበቂያዎች</string>
     <string name="pref_backup_interval">የመጠባበቂያ ድግግሞሽ</string>
-    <string name="pref_backup_service_category">ራስ-ሰር መጠባበቂያዎች</string>
     <string name="pref_backup_directory">የመጠባበቂያ ቦታ</string>
     <string name="pref_restore_backup_summ">ቤተ-መጽሐፍት ከመጠባበቂያ ፋይል ይመልሱ</string>
     <string name="pref_restore_backup">ምትኬ ወደነበረበት</string>

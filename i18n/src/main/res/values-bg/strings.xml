@@ -249,7 +249,6 @@
     <string name="pref_restore_backup">Възстанови резервно копие</string>
     <string name="pref_restore_backup_summ">Възстанови библиотеката от резервно копие</string>
     <string name="pref_backup_directory">Директория за резервното копие</string>
-    <string name="pref_backup_service_category">Автоматично запазване</string>
     <string name="pref_backup_interval">Честота на запазване</string>
     <string name="pref_backup_slots">Максимален брой копия</string>
     <string name="backup_created">Резервно копие създадено</string>
@@ -257,8 +256,6 @@
     <string name="backup_choice">Какво искате да запазите?</string>
     <string name="restoring_backup">Възстановяване на копие</string>
     <string name="creating_backup">Създаване на резервно копие</string>
-    <string name="pref_refresh_library_tracking">Обнови проследяването</string>
-    <string name="pref_refresh_library_tracking_summary">Обновява статус, оценка и последно прочетена глава от услугите за проследяване</string>
     <string name="local_source">Локални</string>
     <string name="delete_downloads_for_manga">Да се изтрият ли изтеглените глави?</string>
     <string name="chapter_paused">На пауза</string>
@@ -539,8 +536,8 @@
     <string name="on">Да</string>
     <string name="l_nav">L-образно</string>
     <string name="kindlish_nav">Kindle-подобно</string>
+    <string name="pref_create_folder_per_manga_summary">Създава папки според заглавието на мангата</string>
     <string name="automatic_background">Автоматично</string>
-    <string name="pref_library_update_refresh_trackers_summary">Обновявай тракерите при обновявания на библиотеката</string>
     <string name="pref_viewer_nav">Схема на навигацията</string>
     <string name="nav_zone_prev">Преди</string>
     <string name="nav_zone_next">След</string>
@@ -574,7 +571,6 @@
     <string name="theme_yinyang">Ин и Янг</string>
     <string name="theme_yotsuba">Йоцуба</string>
     <string name="restrictions">Ограничения: %s</string>
-    <string name="pref_library_update_refresh_trackers">Автоматично обновявай тракерите</string>
     <string name="categorized_display_settings">Различно сортиране и показване за всяка категоря</string>
     <string name="pref_library_update_categories_details">Манга в изключените категории няма да бъде обновявана дори ако се намира във включените категории.</string>
     <string name="none">Никоя</string>
@@ -588,6 +584,7 @@
     <string name="pref_grayscale">Черно-бяло</string>
     <string name="pref_read_with_tapping_inverted">Инвертирай докосване</string>
     <string name="pref_reader_actions">Действия</string>
+    <string name="pref_create_folder_per_manga">Запазвай страниците в отделни папки</string>
     <string name="right_and_left_nav">Дясно и Ляво</string>
     <string name="rotation_type">Ориентация</string>
     <string name="rotation_portrait">Портрет</string>
