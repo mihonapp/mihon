@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.dev.preview
+package eu.kanade.test
 
 import android.graphics.Color
 import eu.kanade.tachiyomi.R

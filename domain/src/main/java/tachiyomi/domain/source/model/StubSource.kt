@@ -23,6 +23,12 @@ class StubSource(
 
     override fun toString(): String =
         if (isInvalid.not()) "$name (${lang.uppercase()})" else id.toString()
+
+    companion object {
+        fun from(source: Source): StubSource {
+            return StubSource(id = source.id, lang = source.lang, name = source.name)
+        }
+    }
 }
 
 class SourceNotInstalledException : Exception()
