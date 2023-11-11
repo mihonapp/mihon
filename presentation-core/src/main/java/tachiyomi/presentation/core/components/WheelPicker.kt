@@ -54,9 +54,9 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun WheelNumberPicker(
+    items: List<Number>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
-    items: List<Number>,
     size: DpSize = DpSize(128.dp, 128.dp),
     onSelectionChanged: (index: Int) -> Unit = {},
     backgroundContent: (@Composable (size: DpSize) -> Unit)? = {
@@ -78,9 +78,9 @@ fun WheelNumberPicker(
 
 @Composable
 fun WheelTextPicker(
+    items: List<String>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
-    items: List<String>,
     size: DpSize = DpSize(128.dp, 128.dp),
     onSelectionChanged: (index: Int) -> Unit = {},
     backgroundContent: (@Composable (size: DpSize) -> Unit)? = {
@@ -101,9 +101,9 @@ fun WheelTextPicker(
 
 @Composable
 private fun <T> WheelPicker(
+    items: List<T>,
     modifier: Modifier = Modifier,
     startIndex: Int = 0,
-    items: List<T>,
     size: DpSize = DpSize(128.dp, 128.dp),
     onSelectionChanged: (index: Int) -> Unit = {},
     manualInputType: KeyboardType? = null,

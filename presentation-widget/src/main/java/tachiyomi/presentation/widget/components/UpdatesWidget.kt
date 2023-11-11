@@ -29,10 +29,10 @@ import tachiyomi.presentation.widget.util.stringResource
 @Composable
 fun UpdatesWidget(
     data: List<Pair<Long, Bitmap?>>?,
-    modifier: GlanceModifier = GlanceModifier,
     contentColor: ColorProvider,
     topPadding: Dp,
     bottomPadding: Dp,
+    modifier: GlanceModifier = GlanceModifier,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -83,8 +83,8 @@ fun UpdatesWidget(
                                         addCategory(mangaId.toString())
                                     }
                                     UpdatesMangaCover(
-                                        modifier = GlanceModifier.clickable(actionStartActivity(intent)),
                                         cover = cover,
+                                        modifier = GlanceModifier.clickable(actionStartActivity(intent)),
                                     )
                                 }
                             }

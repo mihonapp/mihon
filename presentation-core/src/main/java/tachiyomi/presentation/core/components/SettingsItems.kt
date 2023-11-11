@@ -156,11 +156,11 @@ fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
 @Composable
 fun SliderItem(
     label: String,
-    min: Int = 0,
-    max: Int,
     value: Int,
     valueText: String,
     onChange: (Int) -> Unit,
+    max: Int,
+    min: Int = 0,
 ) {
     val haptic = LocalHapticFeedback.current
 

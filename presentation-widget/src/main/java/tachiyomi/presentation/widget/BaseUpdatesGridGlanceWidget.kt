@@ -95,10 +95,10 @@ abstract class BaseUpdatesGridGlanceWidget(
             val data by flow.collectAsState(initial = null)
             UpdatesWidget(
                 data = data,
-                modifier = containerModifier,
                 contentColor = foreground,
                 topPadding = topPadding,
                 bottomPadding = bottomPadding,
+                modifier = containerModifier,
             )
         }
     }

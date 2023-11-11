@@ -102,9 +102,9 @@ fun TrackChapterSelector(
         title = stringResource(R.string.chapters),
         content = {
             WheelNumberPicker(
+                items = range.toList(),
                 modifier = Modifier.align(Alignment.Center),
                 startIndex = selection,
-                items = range.toList(),
                 onSelectionChanged = { onSelectionChange(it) },
             )
         },
@@ -125,9 +125,9 @@ fun TrackScoreSelector(
         title = stringResource(R.string.score),
         content = {
             WheelTextPicker(
+                items = selections,
                 modifier = Modifier.align(Alignment.Center),
                 startIndex = selections.indexOf(selection).takeIf { it > 0 } ?: (selections.size / 2),
-                items = selections,
                 onSelectionChanged = { onSelectionChange(selections[it]) },
             )
         },

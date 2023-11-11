@@ -46,7 +46,10 @@ fun ExtendedFloatingActionButton(
     contentColor: Color = contentColorFor(containerColor),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
 ) {
-    val minWidth by animateDpAsState(if (expanded) ExtendedFabMinimumWidth else FabContainerWidth)
+    val minWidth by animateDpAsState(
+        targetValue = if (expanded) ExtendedFabMinimumWidth else FabContainerWidth,
+        label = "minWidth",
+    )
     FloatingActionButton(
         modifier = modifier.sizeIn(minWidth = minWidth),
         onClick = onClick,
@@ -56,8 +59,14 @@ fun ExtendedFloatingActionButton(
         contentColor = contentColor,
         elevation = elevation,
     ) {
-        val startPadding by animateDpAsState(if (expanded) ExtendedFabIconSize / 2 else 0.dp)
-        val endPadding by animateDpAsState(if (expanded) ExtendedFabTextPadding else 0.dp)
+        val startPadding by animateDpAsState(
+            targetValue = if (expanded) ExtendedFabIconSize / 2 else 0.dp,
+            label = "startPadding",
+        )
+        val endPadding by animateDpAsState(
+            targetValue = if (expanded) ExtendedFabTextPadding else 0.dp,
+            label = "endPadding",
+        )
 
         Row(
             modifier = Modifier.padding(start = startPadding, end = endPadding),

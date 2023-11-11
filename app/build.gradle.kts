@@ -167,6 +167,7 @@ dependencies {
     implementation(compose.accompanist.permissions)
     implementation(compose.accompanist.themeadapter)
     implementation(compose.accompanist.systemuicontroller)
+    lintChecks(compose.lintchecks)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
