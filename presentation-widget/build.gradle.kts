@@ -28,6 +28,8 @@ dependencies {
     implementation(compose.glance)
     lintChecks(compose.lintchecks)
 
+    implementation(kotlinx.immutables)
+
     implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)
 

@@ -12,7 +12,7 @@ import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.updates.interactor.GetUpdates
 
-class TachiyomiWidgetManager(
+class WidgetManager(
     private val getUpdates: GetUpdates,
     private val securityPreferences: SecurityPreferences,
 ) {
