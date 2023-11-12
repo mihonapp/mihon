@@ -175,6 +175,7 @@ dependencies {
     implementation(libs.bundles.sqlite)
 
     implementation(kotlinx.reflect)
+    implementation(kotlinx.immutables)
 
     implementation(platform(kotlinx.coroutines.bom))
     implementation(kotlinx.bundles.coroutines)

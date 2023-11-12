@@ -80,7 +80,7 @@ class EpubFile(file: File) : Closeable {
     /**
      * Returns all the pages from the epub.
      */
-    fun getPagesFromDocument(document: Document): List<String> {
+    private fun getPagesFromDocument(document: Document): List<String> {
         val pages = document.select("manifest > item")
             .filter { node -> "application/xhtml+xml" == node.attr("media-type") }
             .associateBy { it.attr("id") }
@@ -102,10 +102,9 @@ class EpubFile(file: File) : Closeable {
             val imageBasePath = getParentDirectory(entryPath)
 
             document.allElements.forEach {
-                if (it.tagName() == "img") {
-                    result.add(resolveZipPath(imageBasePath, it.attr("src")))
-                } else if (it.tagName() == "image") {
-                    result.add(resolveZipPath(imageBasePath, it.attr("xlink:href")))
+                when (it.tagName()) {
+                    "img" -> result.add(resolveZipPath(imageBasePath, it.attr("src")))
+                    "image" -> result.add(resolveZipPath(imageBasePath, it.attr("xlink:href")))
                 }
             }
         }

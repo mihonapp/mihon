@@ -4,6 +4,8 @@ import android.graphics.Color
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import okhttp3.OkHttpClient
 import tachiyomi.domain.track.model.Track
 
@@ -18,7 +20,7 @@ data class DummyTracker(
     val valReadingStatus: Int = 1,
     val valRereadingStatus: Int = 1,
     val valCompletionStatus: Int = 2,
-    val valScoreList: List<String> = (0..10).map(Int::toString),
+    val valScoreList: ImmutableList<String> = (0..10).map(Int::toString).toImmutableList(),
     val val10PointScore: Double = 5.4,
     val valSearchResults: List<TrackSearch> = listOf(),
 ) : Tracker {
@@ -48,7 +50,7 @@ data class DummyTracker(
 
     override fun getCompletionStatus(): Int = valCompletionStatus
 
-    override fun getScoreList(): List<String> = valScoreList
+    override fun getScoreList(): ImmutableList<String> = valScoreList
 
     override fun get10PointScore(track: Track): Double = val10PointScore
 

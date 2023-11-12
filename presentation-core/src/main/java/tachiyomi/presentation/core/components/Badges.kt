@@ -36,13 +36,14 @@ fun BadgeGroup(
 @Composable
 fun Badge(
     text: String,
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondary,
     textColor: Color = MaterialTheme.colorScheme.onSecondary,
     shape: Shape = RectangleShape,
 ) {
     Text(
         text = text,
-        modifier = Modifier
+        modifier = modifier
             .clip(shape)
             .background(color)
             .padding(horizontal = 3.dp, vertical = 1.dp),
@@ -56,6 +57,7 @@ fun Badge(
 @Composable
 fun Badge(
     imageVector: ImageVector,
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondary,
     iconColor: Color = MaterialTheme.colorScheme.onSecondary,
     shape: Shape = RectangleShape,
@@ -86,7 +88,7 @@ fun Badge(
     Text(
         text = text,
         inlineContent = inlineContent,
-        modifier = Modifier
+        modifier = modifier
             .clip(shape)
             .background(color)
             .padding(horizontal = 3.dp, vertical = 1.dp),

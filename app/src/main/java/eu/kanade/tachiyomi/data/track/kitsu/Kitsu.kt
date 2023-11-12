@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
@@ -54,9 +56,9 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     override fun getCompletionStatus(): Int = COMPLETED
 
-    override fun getScoreList(): List<String> {
+    override fun getScoreList(): ImmutableList<String> {
         val df = DecimalFormat("0.#")
-        return listOf("0") + IntRange(2, 20).map { df.format(it / 2f) }
+        return (listOf("0") + IntRange(2, 20).map { df.format(it / 2f) }).toImmutableList()
     }
 
     override fun indexToScore(index: Int): Float {

@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.copyTo
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.toTrackSearch
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
 
@@ -18,6 +20,12 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         const val COMPLETE_LIST = 2
         const val UNFINISHED_LIST = 3
         const val ON_HOLD_LIST = 4
+
+        private val SCORE_LIST = (
+            (0..9)
+                .flatMap { i -> (0..9).map { j -> "$i.$j" } } + listOf("10.0")
+            )
+            .toImmutableList()
     }
 
     private val interceptor by lazy { MangaUpdatesInterceptor(this) }
@@ -48,11 +56,9 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     override fun getCompletionStatus(): Int = COMPLETE_LIST
 
-    private val _scoreList = (0..9).flatMap { i -> (0..9).map { j -> "$i.$j" } } + listOf("10.0")
+    override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
-    override fun getScoreList(): List<String> = _scoreList
-
-    override fun indexToScore(index: Int): Float = _scoreList[index].toFloat()
+    override fun indexToScore(index: Int): Float = SCORE_LIST[index].toFloat()
 
     override fun displayScore(track: Track): String = track.score.toString()
 

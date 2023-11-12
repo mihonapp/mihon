@@ -28,6 +28,9 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -562,16 +565,16 @@ class LibraryScreenModel(
     }
 
     fun clearSelection() {
-        mutableState.update { it.copy(selection = emptyList()) }
+        mutableState.update { it.copy(selection = persistentListOf()) }
     }
 
     fun toggleSelection(manga: LibraryManga) {
         mutableState.update { state ->
-            val newSelection = state.selection.toMutableList().apply {
-                if (fastAny { it.id == manga.id }) {
-                    removeAll { it.id == manga.id }
+            val newSelection = state.selection.mutate { list ->
+                if (list.fastAny { it.id == manga.id }) {
+                    list.removeAll { it.id == manga.id }
                 } else {
-                    add(manga)
+                    list.add(manga)
                 }
             }
             state.copy(selection = newSelection)
@@ -584,11 +587,11 @@ class LibraryScreenModel(
      */
     fun toggleRangeSelection(manga: LibraryManga) {
         mutableState.update { state ->
-            val newSelection = state.selection.toMutableList().apply {
-                val lastSelected = lastOrNull()
+            val newSelection = state.selection.mutate { list ->
+                val lastSelected = list.lastOrNull()
                 if (lastSelected?.category != manga.category) {
-                    add(manga)
-                    return@apply
+                    list.add(manga)
+                    return@mutate
                 }
 
                 val items = state.getLibraryItemsByCategoryId(manga.category)
@@ -596,17 +599,17 @@ class LibraryScreenModel(
                 val lastMangaIndex = items.indexOf(lastSelected)
                 val curMangaIndex = items.indexOf(manga)
 
-                val selectedIds = fastMap { it.id }
+                val selectedIds = list.fastMap { it.id }
                 val selectionRange = when {
                     lastMangaIndex < curMangaIndex -> IntRange(lastMangaIndex, curMangaIndex)
                     curMangaIndex < lastMangaIndex -> IntRange(curMangaIndex, lastMangaIndex)
                     // We shouldn't reach this point
-                    else -> return@apply
+                    else -> return@mutate
                 }
                 val newSelections = selectionRange.mapNotNull { index ->
                     items[index].takeUnless { it.id in selectedIds }
                 }
-                addAll(newSelections)
+                list.addAll(newSelections)
             }
             state.copy(selection = newSelection)
         }
@@ -614,14 +617,14 @@ class LibraryScreenModel(
 
     fun selectAll(index: Int) {
         mutableState.update { state ->
-            val newSelection = state.selection.toMutableList().apply {
+            val newSelection = state.selection.mutate { list ->
                 val categoryId = state.categories.getOrNull(index)?.id ?: -1
-                val selectedIds = fastMap { it.id }
+                val selectedIds = list.fastMap { it.id }
                 state.getLibraryItemsByCategoryId(categoryId)
                     ?.fastMapNotNull { item ->
                         item.libraryManga.takeUnless { it.id in selectedIds }
                     }
-                    ?.let { addAll(it) }
+                    ?.let { list.addAll(it) }
             }
             state.copy(selection = newSelection)
         }
@@ -629,14 +632,14 @@ class LibraryScreenModel(
 
     fun invertSelection(index: Int) {
         mutableState.update { state ->
-            val newSelection = state.selection.toMutableList().apply {
+            val newSelection = state.selection.mutate { list ->
                 val categoryId = state.categories[index].id
                 val items = state.getLibraryItemsByCategoryId(categoryId)?.fastMap { it.libraryManga }.orEmpty()
-                val selectedIds = fastMap { it.id }
+                val selectedIds = list.fastMap { it.id }
                 val (toRemove, toAdd) = items.fastPartition { it.id in selectedIds }
                 val toRemoveIds = toRemove.fastMap { it.id }
-                removeAll { it.id in toRemoveIds }
-                addAll(toAdd)
+                list.removeAll { it.id in toRemoveIds }
+                list.addAll(toAdd)
             }
             state.copy(selection = newSelection)
         }
@@ -703,7 +706,7 @@ class LibraryScreenModel(
         val isLoading: Boolean = true,
         val library: LibraryMap = emptyMap(),
         val searchQuery: String? = null,
-        val selection: List<LibraryManga> = emptyList(),
+        val selection: PersistentList<LibraryManga> = persistentListOf(),
         val hasActiveFilters: Boolean = false,
         val showCategoryTabs: Boolean = false,
         val showMangaCount: Boolean = false,

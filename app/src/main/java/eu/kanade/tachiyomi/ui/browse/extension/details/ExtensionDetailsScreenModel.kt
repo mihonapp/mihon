@@ -12,6 +12,9 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -75,10 +78,10 @@ class ExtensionDetailsScreenModel(
                         }
                         .catch { throwable ->
                             logcat(LogPriority.ERROR, throwable)
-                            mutableState.update { it.copy(_sources = emptyList()) }
+                            mutableState.update { it.copy(_sources = persistentListOf()) }
                         }
                         .collectLatest { sources ->
-                            mutableState.update { it.copy(_sources = sources) }
+                            mutableState.update { it.copy(_sources = sources.toImmutableList()) }
                         }
                 }
             }
@@ -164,11 +167,11 @@ class ExtensionDetailsScreenModel(
     @Immutable
     data class State(
         val extension: Extension.Installed? = null,
-        private val _sources: List<ExtensionSourceItem>? = null,
+        private val _sources: ImmutableList<ExtensionSourceItem>? = null,
     ) {
 
-        val sources: List<ExtensionSourceItem>
-            get() = _sources.orEmpty()
+        val sources: ImmutableList<ExtensionSourceItem>
+            get() = _sources ?: persistentListOf()
 
         val isLoading: Boolean
             get() = extension == null || _sources == null

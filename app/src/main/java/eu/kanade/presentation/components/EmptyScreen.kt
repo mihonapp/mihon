@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 
@@ -30,7 +31,7 @@ private fun WithActionPreview() {
         Surface {
             EmptyScreen(
                 textResource = R.string.empty_screen,
-                actions = listOf(
+                actions = persistentListOf(
                     EmptyScreenAction(
                         stringResId = R.string.action_retry,
                         icon = Icons.Outlined.Refresh,

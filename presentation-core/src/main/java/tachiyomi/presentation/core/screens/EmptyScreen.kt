@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -38,7 +39,7 @@ data class EmptyScreenAction(
 fun EmptyScreen(
     @StringRes textResource: Int,
     modifier: Modifier = Modifier,
-    actions: List<EmptyScreenAction>? = null,
+    actions: ImmutableList<EmptyScreenAction>? = null,
 ) {
     EmptyScreen(
         message = stringResource(textResource),
@@ -51,7 +52,7 @@ fun EmptyScreen(
 fun EmptyScreen(
     message: String,
     modifier: Modifier = Modifier,
-    actions: List<EmptyScreenAction>? = null,
+    actions: ImmutableList<EmptyScreenAction>? = null,
 ) {
     val face = remember { getRandomErrorFace() }
     Column(
@@ -98,7 +99,7 @@ fun EmptyScreen(
     }
 }
 
-private val ERROR_FACES = listOf(
+private val ErrorFaces = listOf(
     "(･o･;)",
     "Σ(ಠ_ಠ)",
     "ಥ_ಥ",
@@ -108,5 +109,5 @@ private val ERROR_FACES = listOf(
 )
 
 private fun getRandomErrorFace(): String {
-    return ERROR_FACES[Random.nextInt(ERROR_FACES.size)]
+    return ErrorFaces[Random.nextInt(ErrorFaces.size)]
 }
