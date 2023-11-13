@@ -834,8 +834,18 @@
     <string name="source_settings">Configurações das fontes</string>
     <string name="action_sort_category">Ordenar as categorias</string>
     <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente\?</string>
-    <string name="file_null_uri_error">O seletor de arquivos não retornou o arquivo para o aplicativo</string>
+    <string name="file_null_uri_error">Nenhum arquivo selecionado</string>
     <string name="label_data_storage">Dados e armazenamento</string>
     <string name="pref_flash_page_summ">Reduz o efeito fantasma em telas e-ink</string>
     <string name="pref_flash_page">Flash branco ao mudar de página</string>
+    <string name="action_sort_tracker_score">Avaliação no monitorador</string>
+    <string name="relative_time_span_never">Nunca</string>
+    <string name="last_auto_backup_info">Último backup automático feito em: %s</string>
+    <string name="pref_storage_usage">Uso de armazenamento</string>
+    <string name="action_apply">Aplicar</string>
+    <string name="action_revert_to_default">Reverter para o padrão</string>
+    <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="exclude_scanlators">Excluir scanlators</string>
+    <string name="action_create">Criar</string>
 </resources>

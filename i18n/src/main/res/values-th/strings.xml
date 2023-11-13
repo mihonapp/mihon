@@ -301,8 +301,8 @@
     <string name="l_nav">รูปตัว L</string>
     <string name="automatic_background">อัตโนมัติ</string>
     <string name="gray_background">เทา</string>
-    <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่อง</string>
-    <string name="pref_create_folder_per_manga">บันทึกหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
+    <string name="pref_create_folder_per_manga_summary">สร้างโฟลเดอร์ตามชื่อเรื่องของรายการ</string>
+    <string name="pref_create_folder_per_manga">บันทึกแต่ละหน้าลงในโฟลเดอร์ที่แยกต่างหาก</string>
     <string name="pref_reader_actions">การกระทำ</string>
     <string name="tapping_inverted_both">ทั้งสอง</string>
     <string name="tapping_inverted_vertical">แนวตั้ง</string>
@@ -564,7 +564,7 @@
     <string name="enhanced_services">ตัวติดตามขั้นสูง</string>
     <string name="backup_info">ควรเก็บสำเนาของข้อมูลสำรองไว้ที่อื่นด้วยเช่นกัน การสำรองข้อมูลอาจมีข้อมูลที่ละเอียดอ่อนรวมถึงรหัสผ่านที่เก็บไว้ ควรระวังหากแบ่งปันสำเนา</string>
     <string name="pref_verbose_logging_summary">บันทึกบันทึกอย่างละเอียดไปยังบันทึกของระบบ (ลดประสิทธิภาพของแอป)</string>
-    <string name="help_translate">ช่วยแปล</string>
+    <string name="help_translate">แปลเป็นภาษาไทยโดย altqx</string>
     <string name="local_invalid_format">รูปแบบตอนไม่ถูกต้อง</string>
     <string name="manga_cover">ปก</string>
     <string name="unread">ยังไม่ได้อ่าน</string>
@@ -802,11 +802,18 @@
     <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่\?</string>
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
-    <string name="file_null_uri_error">เครื่องมือเลือกไฟล์ไม่สามารถส่งต่อไฟล์ไปยังแอปได้</string>
+    <string name="file_null_uri_error">ไม่มีไฟล์ถูกเลือกไว้</string>
     <string name="relative_time_span_never">ไม่เลย</string>
     <string name="pref_flash_page_summ">ลดภาพซ้อนบนจอแสดงผล E-Ink</string>
     <string name="last_auto_backup_info">สำรองข้อมูลอัตโนมัติครั้งล่าสุด: %s</string>
     <string name="pref_flash_page">แฟลชสีขาวเมื่อเปลี่ยนหน้า</string>
     <string name="pref_storage_usage">การใช้พื้นที่เก็บข้อมูล</string>
     <string name="label_data_storage">ข้อมูลและการจัดเก็บข้อมูล</string>
+    <string name="action_create">สร้าง</string>
+    <string name="action_apply">นำไปใช้</string>
+    <string name="action_revert_to_default">ย้อนกลับไปเป็นค่าเริ่มต้น</string>
+    <string name="no_scanlators_found">ไม่พบผู้แปล</string>
+    <string name="scanlator">ผู้แปล</string>
+    <string name="action_sort_tracker_score">คะแนนจากตัวติดตาม</string>
+    <string name="exclude_scanlators">ผู้แปลที่เว้นไว้</string>
 </resources>

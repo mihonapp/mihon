@@ -162,8 +162,8 @@
     <string name="pref_restore_backup">Επαναφορά αντιγράφου ασφαλείας</string>
     <string name="pref_restore_backup_summ">Επαναφορά βιβλιοθήκης από αρχείο αντιγράφου ασφαλείας</string>
     <string name="pref_backup_directory">Τοποθεσία αντιγράφων ασφαλείας</string>
-    <string name="pref_backup_interval">Συχνότητα αντίγραφου ασφάλειας</string>
-    <string name="pref_backup_slots">Μέγιστα αντίγραφα ασφαλείας</string>
+    <string name="pref_backup_interval">Συχνότητα αυτόματων αντιγράφων ασφαλείας</string>
+    <string name="pref_backup_slots">Μέγιστα αυτόματα αντίγραφα ασφαλείας</string>
     <string name="backup_created">Δημιουργήθηκε αντίγραφο ασφαλείας</string>
     <string name="restore_completed">Η επαναφορά ολοκληρώθηκε</string>
     <string name="backup_choice">Τι αντίγραφο ασφαλείας θέλετε να δημιουργήσετε;</string>
@@ -703,7 +703,7 @@
     <string name="pref_library_summary">Κατηγορίες, καθολική ενημέρωση, σύρσιμο κεφαλαίου</string>
     <string name="pref_reader_summary">Λειτουργία ανάγνωσης, οθόνη, πλοήγηση</string>
     <string name="pref_tracking_summary">Μονόδρομος συγχρονισμός προόδου, ενισχυμένος συγχρονισμός</string>
-    <string name="pref_backup_summary">Χειροκίνητα &amp; αυτόματα αντίγραφα ασφαλείας</string>
+    <string name="pref_backup_summary">Χειροκίνητα &amp; αυτόματα αντίγραφα ασφαλείας, χώρος αποθήκευσης</string>
     <string name="pref_security_summary">Κλείδωμα εφαρμογής, ασφαλής οθόνη</string>
     <string name="crash_screen_restart_application">Επανεκκίνηση της εφαρμογής</string>
     <string name="pref_downloads_summary">Αυτόματη λήψη, λήψη εκ των προτέρων</string>
@@ -818,5 +818,18 @@
     <string name="notification_updating_progress">Ενημέρωση βιβλιοθήκης… (%s)</string>
     <string name="sort_category_confirmation">Θέλετε να ταξινομήσετε τις κατηγορίες αλφαβητικά;</string>
     <string name="source_settings">Ρυθμίσεις πηγών</string>
-    <string name="file_null_uri_error">Το πρόγραμμα επιλογής αρχείων απέτυχε να επιστρέψει το αρχείο στην εφαρμογή</string>
+    <string name="file_null_uri_error">Δεν έχει επιλεγεί αρχείο</string>
+    <string name="relative_time_span_never">Ποτέ</string>
+    <string name="pref_flash_page_summ">Μειώνει το ghosting σε οθόνες e-ink</string>
+    <string name="last_auto_backup_info">Τελευταία αυτόματη δημιουργία αντιγράφων ασφαλείας: %s</string>
+    <string name="pref_flash_page">Λευκό φλας κατά την αλλαγή σελίδας</string>
+    <string name="pref_storage_usage">Χρήση αποθηκευτικού χώρου</string>
+    <string name="action_sort_tracker_score">Σκορ tracker</string>
+    <string name="label_data_storage">Δεδομένα και χώρος αποθήκευσης</string>
+    <string name="action_create">Δημιουργία</string>
+    <string name="action_apply">Υποβολή</string>
+    <string name="action_revert_to_default">Επαναφορά προεπιλογής</string>
+    <string name="no_scanlators_found">Δε βρέθηκαν scanlators</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="exclude_scanlators">Εξαίρεση scanlator</string>
 </resources>

@@ -544,7 +544,7 @@
     <string name="notification_incognito_text">Deaktiviraj anonimni modus</string>
     <string name="rotation_type">Okretanje</string>
     <string name="automatic_background">Automatski</string>
-    <string name="pref_create_folder_per_manga_summary">Stvara mape prema naslovu unosa</string>
+    <string name="pref_create_folder_per_manga_summary">Stvara mape na osnovi naslova unosa</string>
     <string name="pref_create_folder_per_manga">Spremi stranice u zasebne mape</string>
     <string name="pref_reader_actions">Radnje</string>
     <string name="cancel_all_for_series">Prekini sve za ovu seriju</string>
@@ -832,7 +832,7 @@
     <string name="action_sort_category">Razvrstaj kategorije</string>
     <string name="notification_updating_progress">Aktualiziranje biblioteke … (%s)</string>
     <string name="sort_category_confirmation">Želiš li razvrstati kategorije po abecedi\?</string>
-    <string name="file_null_uri_error">Program za biranje datoteka nije uspio vratiti datoteku u aplikaciju</string>
+    <string name="file_null_uri_error">Nije odabrana nijedna datoteka</string>
     <string name="source_settings">Postavke izvora</string>
     <string name="app_settings">Postavke aplikacije</string>
     <string name="label_data_storage">Podaci i spremište</string>
@@ -840,4 +840,12 @@
     <string name="pref_flash_page_summ">Smanjuje artefakte na ekranima s e-tintom</string>
     <string name="last_auto_backup_info">Zadnja automatska sigurnosna kopija: %s</string>
     <string name="pref_flash_page">Zabljesni prilikom mijenjanja stranice</string>
+    <string name="action_create">Stvori</string>
+    <string name="action_apply">Primijeni</string>
+    <string name="action_revert_to_default">Obnovi standardne vrijednosti</string>
+    <string name="no_scanlators_found">Nije pronađen nijedan amaterski prevoditelj</string>
+    <string name="scanlator">Amaterski prevoditelj</string>
+    <string name="pref_storage_usage">Korištenje memorije</string>
+    <string name="action_sort_tracker_score">Rezultat tragača</string>
+    <string name="exclude_scanlators">Isključi amaterske prevoditelje</string>
 </resources>

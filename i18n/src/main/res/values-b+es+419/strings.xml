@@ -271,7 +271,7 @@
     <string name="action_start">Iniciar</string>
     <string name="action_retry">Reintentar</string>
     <string name="pref_clear_cookies">Borrar cookies</string>
-    <string name="label_network">Red</string>
+    <string name="label_network">Redes</string>
     <string name="restoring_backup_canceled">Se canceló la restauración</string>
     <string name="restoring_backup_error">La restauración de la copia de seguridad falló</string>
     <string name="restoring_backup">Restaurando copia de seguridad</string>
@@ -291,8 +291,8 @@
     <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningún manga.</string>
     <string name="invalid_backup_file">Archivo de copia de seguridad invalido</string>
     <string name="backup_created">Copia de seguridad creada</string>
-    <string name="pref_backup_slots">Máximo de copias de seguridad</string>
-    <string name="pref_backup_interval">Frecuencia de respaldo</string>
+    <string name="pref_backup_slots">Máximo de copias de seguridad automáticas</string>
+    <string name="pref_backup_interval">Frecuencia de respaldo automático</string>
     <string name="pref_backup_directory">Directorio de copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar biblioteca desde archivo de copia de seguridad</string>
     <string name="cache_deleted">Caché borrada. %1$d archivos se han eliminado</string>
@@ -523,7 +523,7 @@
     <string name="rotation_type">Rotación</string>
     <string name="nav_zone_right">Derecha</string>
     <string name="nav_zone_left">Izquierda</string>
-    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título del manga</string>
+    <string name="pref_create_folder_per_manga_summary">Crear carpetas según el título del manga</string>
     <string name="pref_grayscale">Escala de grises</string>
     <string name="update_check_eol">Está versión de Android ya no está soportada</string>
     <string name="clipboard_copy_error">Falló al copiar en el portapapeles</string>
@@ -708,7 +708,7 @@
     <string name="pref_reader_summary">Modo lectura, apariencia, navegación</string>
     <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
     <string name="pref_browse_summary">Fuentes, extensiones, búsqueda global</string>
-    <string name="pref_backup_summary">Respaldo manual y automático</string>
+    <string name="pref_backup_summary">Respaldo manual y automático, espacio de almacenamiento</string>
     <string name="pref_security_summary">Bloqueo de aplicación, pantalla de seguridad</string>
     <string name="pref_advanced_summary">Guardar registros de fallo, optimizaciones de bateria</string>
     <string name="pref_tracking_summary">Sincronización de progreso unidireccional, sincronización mejorada</string>
@@ -747,7 +747,7 @@
     <string name="unknown_title">Título desconocido</string>
     <string name="download_notifier_cache_renewal">Comprobando descargas</string>
     <string name="invalid_location">Ubicación incorrecta: %s</string>
-    <string name="pref_reset_user_agent_string">Reestablecer el nombre del navegador</string>
+    <string name="pref_reset_user_agent_string">Restablecer el nombre del navegador</string>
     <string name="update_already_running">Una actualización está actualmente en curso</string>
     <string name="are_you_sure">¿Estás seguro\?</string>
     <string name="label_titles_section">Manga</string>
@@ -834,5 +834,18 @@
     <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
     <string name="source_settings">Configuraciónes de fuente</string>
     <string name="app_settings">Configuraciones</string>
-    <string name="file_null_uri_error">El selector de archivos no pudo devolver el archivo a la aplicación</string>
+    <string name="file_null_uri_error">Ningún archivo seleccionado</string>
+    <string name="action_create">Crear</string>
+    <string name="relative_time_span_never">Nunca</string>
+    <string name="pref_flash_page_summ">Reducir el ghosting en pantallas de tinta electrónica</string>
+    <string name="action_apply">Aplicar</string>
+    <string name="action_revert_to_default">Restablecer configuración predeterminada</string>
+    <string name="last_auto_backup_info">Última copia de seguridad automática: %s</string>
+    <string name="no_scanlators_found">No se encontraron scanlators</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="pref_flash_page">Destello blanco al cambiar de página</string>
+    <string name="pref_storage_usage">Uso de almacenamiento</string>
+    <string name="action_sort_tracker_score">Puntuación del rastreador</string>
+    <string name="label_data_storage">Datos y almacenamiento</string>
+    <string name="exclude_scanlators">Excluir scanlators</string>
 </resources>

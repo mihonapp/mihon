@@ -162,8 +162,8 @@
     <string name="pref_restore_backup">Restaura una còpia de seguretat</string>
     <string name="pref_restore_backup_summ">Restaura la biblioteca del fitxer de còpia de seguretat</string>
     <string name="pref_backup_directory">Ubicació de la còpia de seguretat</string>
-    <string name="pref_backup_interval">Freqüència de la còpia de seguretat</string>
-    <string name="pref_backup_slots">Màxim de còpies de seguretat</string>
+    <string name="pref_backup_interval">Freqüència de la còpia de seguretat automàtica</string>
+    <string name="pref_backup_slots">Màxim de còpies de seguretat automàtiques</string>
     <string name="backup_created">S’ha creat la còpia de seguretat</string>
     <string name="restore_completed">S’ha completat la restauració</string>
     <string name="backup_choice">De què voleu fer una còpia de seguretat\?</string>
@@ -696,7 +696,7 @@
     </plurals>
     <string name="missing_storage_permission">No s’han concedit permisos d’emmagatzematge</string>
     <string name="popular">Populars</string>
-    <string name="pref_backup_summary">Còpies de seguretat automàtiques i manuals</string>
+    <string name="pref_backup_summary">Còpies de seguretat automàtiques i manuals i espai d’emmagatzematge</string>
     <string name="pref_reader_summary">Mode de lectura, visualització i navegació</string>
     <string name="pref_downloads_summary">Baixades automàtiques i per avançat</string>
     <string name="multi_lang">Múltiples</string>
@@ -818,5 +818,18 @@
     <string name="sort_category_confirmation">Voleu ordenar les categories alfabèticament\?</string>
     <string name="source_settings">Configuració de la font</string>
     <string name="app_settings">Configuració de l’aplicació</string>
-    <string name="file_null_uri_error">El selector de fitxers no ha retornat cap fitxer a l’aplicació</string>
+    <string name="file_null_uri_error">No s’ha seleccionat cap fitxer</string>
+    <string name="action_create">Crea</string>
+    <string name="relative_time_span_never">Mai</string>
+    <string name="pref_flash_page_summ">Redueix l’efecte fantasma en pantalles de tinta electrònica</string>
+    <string name="action_apply">Aplica</string>
+    <string name="action_revert_to_default">Torna a la configuració per defecte</string>
+    <string name="last_auto_backup_info">Darrera còpia de seguretat automàtica: %s</string>
+    <string name="no_scanlators_found">No s’ha trobat cap scanlator</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="pref_flash_page">Centelleig blanc en canviar de pàgina</string>
+    <string name="pref_storage_usage">Ús de l’emmagatzematge</string>
+    <string name="action_sort_tracker_score">Puntuació del servei de seguiment</string>
+    <string name="label_data_storage">Dades i emmagatzematge</string>
+    <string name="exclude_scanlators">Exclou scanlators</string>
 </resources>

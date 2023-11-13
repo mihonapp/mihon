@@ -802,11 +802,18 @@
     <string name="sort_category_confirmation">カテゴリをアルファベット順で並べ替えますか？</string>
     <string name="source_settings">ソース設定</string>
     <string name="app_settings">アプリ設定</string>
-    <string name="file_null_uri_error">ファイルピッカーはアプリにファイルを返せませんでした</string>
+    <string name="file_null_uri_error">選択したファイルがありません</string>
     <string name="relative_time_span_never">なし</string>
     <string name="pref_flash_page_summ">Eインク画面の焼き付きを軽減</string>
     <string name="last_auto_backup_info">前回の自動バックアップ: %s</string>
     <string name="pref_flash_page">ページめくりの時、画面を点滅させる</string>
     <string name="pref_storage_usage">使用中のストレージ領域</string>
     <string name="label_data_storage">データとストレージ</string>
+    <string name="action_sort_tracker_score">トラッカーの評価点数</string>
+    <string name="action_create">作成</string>
+    <string name="action_apply">適用</string>
+    <string name="action_revert_to_default">デフォルトに戻す</string>
+    <string name="no_scanlators_found">スキャンレーターが見つかりませんでした</string>
+    <string name="scanlator">スキャンレーター</string>
+    <string name="exclude_scanlators">スキャンレーターを除外</string>
 </resources>
