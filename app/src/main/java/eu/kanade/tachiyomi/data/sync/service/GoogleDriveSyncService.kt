@@ -19,7 +19,6 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import eu.kanade.tachiyomi.R
-import eu.kanade.tachiyomi.data.sync.models.SyncData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
