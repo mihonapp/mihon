@@ -34,6 +34,8 @@ import eu.kanade.tachiyomi.data.coil.MangaCoverKeyer
 import eu.kanade.tachiyomi.data.coil.MangaKeyer
 import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.di.AppModule
+import eu.kanade.tachiyomi.di.PreferenceModule
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
@@ -54,7 +56,7 @@ import org.acra.ktx.initAcra
 import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
 import tachiyomi.core.util.system.logcat
-import tachiyomi.presentation.widget.TachiyomiWidgetManager
+import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -125,7 +127,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         setAppCompatDelegateThemeMode(Injekt.get<UiPreferences>().themeMode().get())
 
         // Updates widget update
-        with(TachiyomiWidgetManager(Injekt.get(), Injekt.get())) {
+        with(WidgetManager(Injekt.get(), Injekt.get())) {
             init(ProcessLifecycleOwner.get().lifecycleScope)
         }
 

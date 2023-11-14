@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 fun IconToggleButton(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     title: String,
+    modifier: Modifier = Modifier,
 ) {
     FilledIconToggleButton(
         checked = checked,

@@ -36,10 +36,12 @@ private fun Modifier.tabIndicatorOffset(
         val currentTabWidth by animateDpAsState(
             targetValue = currentTabPosition.width,
             animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "currentTabWidth",
         )
         val offset by animateDpAsState(
             targetValue = currentTabPosition.left + (currentTabWidth * currentPageOffsetFraction),
             animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "offset",
         )
         Modifier
             .offset { IntOffset(x = offset.roundToPx(), y = 0) }

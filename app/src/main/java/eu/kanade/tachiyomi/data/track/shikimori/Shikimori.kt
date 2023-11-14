@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
@@ -20,6 +22,10 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
         const val DROPPED = 4
         const val PLAN_TO_READ = 5
         const val REREADING = 6
+
+        private val SCORE_LIST = IntRange(0, 10)
+            .map(Int::toString)
+            .toImmutableList()
     }
 
     private val json: Json by injectLazy()
@@ -28,9 +34,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     private val api by lazy { ShikimoriApi(id, client, interceptor) }
 
-    override fun getScoreList(): List<String> {
-        return IntRange(0, 10).map(Int::toString)
-    }
+    override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
     override fun displayScore(track: Track): String {
         return track.score.toInt().toString()

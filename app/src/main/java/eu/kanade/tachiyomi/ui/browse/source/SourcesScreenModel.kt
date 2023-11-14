@@ -7,6 +7,9 @@ import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
 import eu.kanade.presentation.browse.SourceUiModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -65,14 +68,16 @@ class SourcesScreenModel(
 
             state.copy(
                 isLoading = false,
-                items = byLang.flatMap {
-                    listOf(
-                        SourceUiModel.Header(it.key),
-                        *it.value.map { source ->
-                            SourceUiModel.Item(source)
-                        }.toTypedArray(),
-                    )
-                },
+                items = byLang
+                    .flatMap {
+                        listOf(
+                            SourceUiModel.Header(it.key),
+                            *it.value.map { source ->
+                                SourceUiModel.Item(source)
+                            }.toTypedArray(),
+                        )
+                    }
+                    .toImmutableList(),
             )
         }
     }
@@ -103,7 +108,7 @@ class SourcesScreenModel(
     data class State(
         val dialog: Dialog? = null,
         val isLoading: Boolean = true,
-        val items: List<SourceUiModel> = emptyList(),
+        val items: ImmutableList<SourceUiModel> = persistentListOf(),
     ) {
         val isEmpty = items.isEmpty()
     }

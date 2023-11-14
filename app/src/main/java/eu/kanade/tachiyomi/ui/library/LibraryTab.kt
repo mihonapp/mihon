@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.ui.home.HomeScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -154,7 +155,7 @@ object LibraryTab : Tab {
                     EmptyScreen(
                         textResource = R.string.information_empty_library,
                         modifier = Modifier.padding(contentPadding),
-                        actions = listOf(
+                        actions = persistentListOf(
                             EmptyScreenAction(
                                 stringResId = R.string.getting_started_guide,
                                 icon = Icons.Outlined.HelpOutline,

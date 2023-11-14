@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ActionButton(
-    modifier: Modifier = Modifier,
     title: String,
     icon: ImageVector,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     TextButton(
         modifier = modifier,

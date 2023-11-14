@@ -400,7 +400,7 @@
         <item quantity="other">%d 個類別</item>
     </plurals>
     <string name="requires_app_restart">需要重新啟動應用程式以套用</string>
-    <string name="label_network">網路設定</string>
+    <string name="label_network">網路</string>
     <string name="tapping_inverted_both">全部</string>
     <string name="tapping_inverted_vertical">垂直</string>
     <string name="tapping_inverted_horizontal">水平</string>
@@ -639,7 +639,7 @@
     <string name="split_tall_images_summary">用以改善閱讀器效能</string>
     <string name="download_notifier_split_page_path_not_found">找不到第 %d 頁的檔案路徑</string>
     <string name="pref_reset_viewer_flags">重設個別閱讀器設定</string>
-    <string name="pref_reset_viewer_flags_summary">將所有作品的閱讀模式和螢幕方向恢復為預設值</string>
+    <string name="pref_reset_viewer_flags_summary">將所有作品的閱讀模式和螢幕方向還原為預設值</string>
     <string name="pref_reset_viewer_flags_success">已重設所有閱讀器設定</string>
     <string name="pref_reset_viewer_flags_error">無法重設閱讀器設定</string>
     <string name="empty_screen">呃…尷尬了</string>
@@ -802,11 +802,18 @@
     <string name="notification_updating_progress">正在更新書櫃… (%s)</string>
     <string name="sort_category_confirmation">欲依照字母順序排列類別嗎？</string>
     <string name="source_settings">來源設定</string>
-    <string name="file_null_uri_error">無法將選定的檔案傳回給應用程式</string>
+    <string name="file_null_uri_error">未選擇檔案</string>
     <string name="relative_time_span_never">永不</string>
     <string name="pref_flash_page_summ">減少電子墨水螢幕上的殘影</string>
     <string name="last_auto_backup_info">最後一次自動備份：%s</string>
     <string name="pref_flash_page">頁面轉換時閃白</string>
     <string name="label_data_storage">資料與儲存空間</string>
-    <string name="pref_storage_usage">儲存空間佔用</string>
+    <string name="pref_storage_usage">儲存空間使用情形</string>
+    <string name="action_sort_tracker_score">歷程平台評分</string>
+    <string name="action_apply">套用</string>
+    <string name="action_revert_to_default">還原為預設值</string>
+    <string name="no_scanlators_found">沒有掃譯者</string>
+    <string name="scanlator">掃譯者</string>
+    <string name="exclude_scanlators">排除掃譯者</string>
+    <string name="action_create">建立</string>
 </resources>

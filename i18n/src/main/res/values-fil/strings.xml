@@ -15,8 +15,8 @@
     <string name="action_oldest">Pinakaluma</string>
     <string name="action_newest">Pinakabago</string>
     <string name="action_sort">Ayusin</string>
-    <string name="action_cancel_all">Ikansela lahat</string>
-    <string name="action_cancel">Ikansela</string>
+    <string name="action_cancel_all">Kanselahin lahat</string>
+    <string name="action_cancel">Kanselahin</string>
     <string name="action_unpin">I-unpin</string>
     <string name="action_pin">I-pin</string>
     <string name="action_disable">Isara</string>
@@ -380,7 +380,7 @@
     <string name="unknown_author">Di alam ang may-akda</string>
     <string name="unknown">Di alam</string>
     <string name="ongoing">Patuloy</string>
-    <string name="local_source_help_guide">Gabay sa Lokal na Source</string>
+    <string name="local_source_help_guide">Gabay sa Lokal na source</string>
     <string name="browse">Maghanap</string>
     <string name="latest">Pinakabago</string>
     <string name="action_global_search_query">Hinanap ang \"%1$s\" sa lahat</string>
@@ -388,7 +388,7 @@
     <string name="pinned_sources">Naka-pin</string>
     <string name="last_used_source">Huling ginamit</string>
     <string name="other_source">Iba pa</string>
-    <string name="local_source">Lokal na Source</string>
+    <string name="local_source">Lokal na source</string>
     <string name="no_results_found">Walang nakitang resulta</string>
     <string name="no_more_results">Wala na\'ng resulta</string>
     <string name="tabs_header">Mga Tab</string>
@@ -453,7 +453,7 @@
         <item quantity="one">%d tracker</item>
         <item quantity="other">%d na mga tracker</item>
     </plurals>
-    <string name="no_pinned_sources">Wala kang naka-pin na pinagkukunan</string>
+    <string name="no_pinned_sources">Wala kang naka-pin na source</string>
     <string name="channel_complete">Tapos na</string>
     <string name="channel_errors">Mga error</string>
     <string name="channel_progress">Takbo</string>
@@ -482,11 +482,11 @@
     <string name="pref_clear_history">Linisin ang nakaraan</string>
     <string name="clear_history_completed">Nalinis na ang nakaraan</string>
     <string name="clear_history_confirmation">Sigurado ka ba talaga\? Mawawala ang buong nakaraan.</string>
-    <string name="migration_help_guide">Gabay sa Paglipat ng Source</string>
+    <string name="migration_help_guide">Gabay sa Paglipat ng source</string>
     <string name="spen_next_page">Abante</string>
     <string name="spen_previous_page">Balik</string>
     <string name="file_picker_error">Walang nakitang app para makapili</string>
-    <string name="pref_show_nsfw_source">Ipakita sa mga source at extension</string>
+    <string name="pref_show_nsfw_source">Ipakita sa mga listahan ng source at extension</string>
     <string name="pref_category_nsfw_content">Mga source na NSFW (18+)</string>
     <string name="myanimelist_relogin">Mag-login muli po sa MAL</string>
     <string name="track_finished_reading_date">Natapos basahin</string>
@@ -504,7 +504,7 @@
     <string name="action_filter_tracked">Sinundan</string>
     <string name="right_and_left_nav">Kaliwa at Kanan</string>
     <string name="pref_dual_page_split">Hatiin ang mga malalapad na pahina</string>
-    <string name="action_display_show_number_of_items">Ipakita ang dami</string>
+    <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga item</string>
     <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto sa direksyon ng pagbabasa ang paghahati sa malalapad na pahina</string>
     <string name="pref_dual_page_invert">Baligtarin ang paghahati sa pahina</string>
     <string name="backup_restore_content_full">Ire-restore ang mga datos mula sa backup file.
@@ -535,8 +535,8 @@
     <string name="rotation_type">Pag-ikot</string>
     <string name="pref_grayscale">Maabo</string>
     <string name="notification_incognito_text">Isara ang incognito</string>
-    <string name="automatic_background">Kusa</string>
-    <string name="cancel_all_for_series">Ikansela lahat para sa seryeng ito</string>
+    <string name="automatic_background">Awto</string>
+    <string name="cancel_all_for_series">Kanselahin lahat para sa seryeng ito</string>
     <string name="local_filter_order_by">Ayusin ayon sa</string>
     <string name="restrictions">Restriksyon: %s</string>
     <string name="error_no_match">Walang nahanap na kapares</string>
@@ -608,7 +608,7 @@
     <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal at/o pagharang ng mga source sa Tachiyomi ang mga malalaking maramihang pag-download. I-tap para matuto pa.</string>
     <string name="channel_app_updates">Mga update sa app</string>
     <string name="ext_update_all">I-update lahat</string>
-    <string name="clear_database_source_item_count">%1$d na entry sa database na wala sa Aklatan</string>
+    <string name="clear_database_source_item_count">%1$d na entry sa database na wala sa aklatan</string>
     <string name="pref_auto_clear_chapter_cache">Linisin ang cache ng kabanata sa paglulunsad ng app</string>
     <string name="database_clean">Walang malilinis</string>
     <string name="extension_api_error">Bigong makuha ang listahan ng mga extension</string>
@@ -780,7 +780,7 @@
     <string name="action_filter_interval_custom">Ipasadya ang fetch interval</string>
     <string name="action_filter_interval_late">Huling 10+ pagsusuri</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
-    <string name="action_filter_interval_dropped">Nawala\? or Nahulog\? (depending on the context, \"Nahulog\" means dropped or dropped something, and \"Nawala\" means Gone/Vanished) Nahuling 20+ at 2 buwan</string>
+    <string name="action_filter_interval_dropped">Itinigil\? Huli ng 20+ at 2 buwan</string>
     <string name="action_filter_interval_passed">Lumipas ang check period</string>
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <plurals name="day">
@@ -816,7 +816,7 @@
     <string name="action_sort_category">Mag-ayos ng kategorya</string>
     <string name="notification_updating_progress">Nag-a-update ang aklatan... (%s)</string>
     <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto\?</string>
-    <string name="source_settings">Mga setting ng pinagmula</string>
+    <string name="source_settings">Mga setting ng source</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
     <string name="label_data_storage">Data at storage</string>
@@ -825,4 +825,11 @@
     <string name="relative_time_span_never">Hindi kailanman</string>
     <string name="last_auto_backup_info">Huling awtomatikong na-back up: %s</string>
     <string name="pref_storage_usage">Paggamit ng storage</string>
+    <string name="action_sort_tracker_score">Iskor sa tracker</string>
+    <string name="action_apply">Gamitin</string>
+    <string name="action_revert_to_default">Ibalik sa default</string>
+    <string name="no_scanlators_found">Walang scanlator ang nahanap</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="exclude_scanlators">Ibukod ang mga scanlator</string>
+    <string name="action_create">Lumikha</string>
 </resources>

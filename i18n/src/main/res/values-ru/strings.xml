@@ -850,11 +850,18 @@
     <string name="notification_updating_progress">Обновление библиотеки... (%s)</string>
     <string name="action_sort_category">Сортировать категории</string>
     <string name="sort_category_confirmation">Хотите ли вы сортировать категории по алфавиту\?</string>
-    <string name="file_null_uri_error">Приложению для выбора файлов не удалось вернуть путь файла в Tachiyomi</string>
+    <string name="file_null_uri_error">Файл не выбран</string>
     <string name="label_data_storage">Данные и хранение</string>
     <string name="relative_time_span_never">Никогда</string>
     <string name="pref_flash_page_summ">Уменьшает артефакты у экранов e-ink</string>
     <string name="last_auto_backup_info">Последнее автоматическое резервное копирование: %s</string>
     <string name="pref_flash_page">Мигать экраном при смене страницы</string>
     <string name="pref_storage_usage">Использование хранилища</string>
+    <string name="action_sort_tracker_score">Оценка сервиса отслеживания</string>
+    <string name="action_create">Создать</string>
+    <string name="action_apply">Применить</string>
+    <string name="action_revert_to_default">Сбросить настройки</string>
+    <string name="no_scanlators_found">Переводчики не найдены</string>
+    <string name="scanlator">Переводчик</string>
+    <string name="exclude_scanlators">Исключить переводчиков</string>
 </resources>

@@ -5,7 +5,7 @@ shizuku_version = "12.2.0"
 sqlite = "2.4.0"
 sqldelight = "2.0.0"
 leakcanary = "2.12"
-voyager = "1.0.0-rc09"
+voyager = "1.0.0-rc10"
 richtext = "0.17.0"
 
 [libraries]

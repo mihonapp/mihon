@@ -162,8 +162,8 @@
     <string name="pref_restore_backup">Yedeği geri yükle</string>
     <string name="pref_restore_backup_summ">Kitaplığı yedek dosyasından geri yükle</string>
     <string name="pref_backup_directory">Yedekleme konumu</string>
-    <string name="pref_backup_interval">Yedekleme sıklığı</string>
-    <string name="pref_backup_slots">Maksimum yedek</string>
+    <string name="pref_backup_interval">Kendiliğinden yedekleme sıklığı</string>
+    <string name="pref_backup_slots">En fazla kendiliğinden yedek</string>
     <string name="backup_created">Yedek oluşturuldu</string>
     <string name="restore_completed">Geri yükleme tamamlandı</string>
     <string name="backup_choice">Neyi yedeklemek istiyorsunuz?</string>
@@ -375,7 +375,7 @@
     <string name="manga_info_collapse">Daha az</string>
     <string name="manga_info_expand">Daha fazla</string>
     <string name="website">Web sitesi</string>
-    <string name="information_webview_required">Web Görünümü, uygulamanın işlevselliği için gereklidir</string>
+    <string name="information_webview_required">WebView, uygulamanın işlevselliği için gereklidir</string>
     <string name="licenses">Açık kaynak lisansları</string>
     <string name="label_downloaded_only">Yalnızca indirilen</string>
     <string name="recent_manga_time">Böl. %1$s - %2$s</string>
@@ -434,7 +434,7 @@
         <item quantity="other">%1$s bölüm</item>
     </plurals>
     <string name="requires_app_restart">Etkili olması için uygulamanın yeniden başlatılmasını gerektirir</string>
-    <string name="label_network">Ağ</string>
+    <string name="label_network">Ağ oluşturma</string>
     <string name="tapping_inverted_none">Yok</string>
     <string name="pref_read_with_tapping_inverted">Dokunma bölgelerini ters çevir</string>
     <string name="tapping_inverted_both">İkisi de</string>
@@ -697,7 +697,7 @@
     <string name="missing_storage_permission">Depolama izinleri verilmedi</string>
     <string name="skipped_reason_not_always_update">Dizi güncelleme gerektirmediği için atlandı</string>
     <string name="action_search_hint">Ara…</string>
-    <string name="pref_backup_summary">Elle ve kendiliğinden yedeklemeler</string>
+    <string name="pref_backup_summary">Elle ve kendiliğinden yedeklemeler, depolama alanı</string>
     <string name="pref_security_summary">Uygulama kilidi, güvenli ekran</string>
     <string name="pref_advanced_summary">Çökme günlükleri dökümü, pil iyileştirmeleri</string>
     <string name="pref_library_summary">Kategoriler, genel güncelleme, bölüm kaydırma</string>
@@ -806,7 +806,7 @@
     <string name="exception_unknown_host">%s verisine erişilemedi</string>
     <string name="track_activity_name">İzleyici girişi</string>
     <string name="library_sync_complete">Kitaplık eşleşmesi tamamlandı</string>
-    <string name="exception_http">HTTP %d, siteyi Web Görünümünde denetle</string>
+    <string name="exception_http">HTTP %d, siteyi WebView\'de denetle</string>
     <string name="exception_offline">Genel ağ bağlantısı yok</string>
     <string name="syncing_library">Kitaplık eşleştiriliyor</string>
     <string name="unlock_app_title">Aç: %s</string>
@@ -819,4 +819,16 @@
     <string name="app_settings">Uygulama ayarları</string>
     <string name="pref_relative_format">Göreli zaman damgaları</string>
     <string name="pref_relative_format_summary">\"%1$s\" yerine \"%2$s</string>
+    <string name="relative_time_span_never">Asla</string>
+    <string name="pref_flash_page_summ">E-ink görüntülerinde gölgelenmeyi azaltır</string>
+    <string name="action_apply">Uygula</string>
+    <string name="action_revert_to_default">Varsayılana dön</string>
+    <string name="last_auto_backup_info">En son şu tarihte kendi yedekledi: %s</string>
+    <string name="no_scanlators_found">Tareviriler bulunamadı</string>
+    <string name="scanlator">Tareviri</string>
+    <string name="pref_flash_page">Sayfa değişiminde beyaz ışık çak</string>
+    <string name="pref_storage_usage">Depolama kullanımı</string>
+    <string name="action_sort_tracker_score">İzleyici notu</string>
+    <string name="label_data_storage">Veri ve depolama</string>
+    <string name="exclude_scanlators">Tarevirileri hariç tut</string>
 </resources>

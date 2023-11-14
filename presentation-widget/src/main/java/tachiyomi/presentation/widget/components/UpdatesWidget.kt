@@ -21,6 +21,7 @@ import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.core.Constants
 import tachiyomi.presentation.widget.R
 import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
@@ -28,11 +29,11 @@ import tachiyomi.presentation.widget.util.stringResource
 
 @Composable
 fun UpdatesWidget(
-    data: List<Pair<Long, Bitmap?>>?,
-    modifier: GlanceModifier = GlanceModifier,
+    data: ImmutableList<Pair<Long, Bitmap?>>?,
     contentColor: ColorProvider,
     topPadding: Dp,
     bottomPadding: Dp,
+    modifier: GlanceModifier = GlanceModifier,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -83,8 +84,8 @@ fun UpdatesWidget(
                                         addCategory(mangaId.toString())
                                     }
                                     UpdatesMangaCover(
-                                        modifier = GlanceModifier.clickable(actionStartActivity(intent)),
                                         cover = cover,
+                                        modifier = GlanceModifier.clickable(actionStartActivity(intent)),
                                     )
                                 }
                             }

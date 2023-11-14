@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
 
 interface Tracker {
@@ -36,7 +37,7 @@ interface Tracker {
 
     fun getCompletionStatus(): Int
 
-    fun getScoreList(): List<String>
+    fun getScoreList(): ImmutableList<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
     fun get10PointScore(track: tachiyomi.domain.track.model.Track): Double

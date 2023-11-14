@@ -135,8 +135,8 @@
     <string name="pref_restore_backup">Pulihkan cadangan</string>
     <string name="pref_restore_backup_summ">Pulihkan isi pustaka dari berkas cadangan</string>
     <string name="pref_backup_directory">Tempat pencadangan</string>
-    <string name="pref_backup_interval">Frekuensi cadangan dibuat</string>
-    <string name="pref_backup_slots">Jumlah maksimum cadangan</string>
+    <string name="pref_backup_interval">Frekuensi pencadangan otomatis</string>
+    <string name="pref_backup_slots">Jumlah maksimum pencadangan otomatis</string>
     <string name="backup_created">Cadangan dibuat</string>
     <string name="restore_completed">Pemulihan selesai</string>
     <string name="backup_choice">Apa saja yang ingin Anda cadangkan\?</string>
@@ -499,8 +499,8 @@
     <string name="nav_zone_next">Lanjut</string>
     <string name="nav_zone_prev">Sblm</string>
     <string name="automatic_background">Otomatis</string>
-    <string name="pref_create_folder_per_manga">Simpan halaman di folder terpisah</string>
-    <string name="pref_create_folder_per_manga_summary">Membuat folder sesuai dengan judul entri</string>
+    <string name="pref_create_folder_per_manga">Menyimpan halaman ke dalam folder terpisah</string>
+    <string name="pref_create_folder_per_manga_summary">Membuat folder menurut judul entri</string>
     <string name="exclude">Kecuali: %s</string>
     <string name="include">Termasuk: %s</string>
     <string name="pref_dual_page_split">Membagi halaman lebar</string>
@@ -692,7 +692,7 @@
     <string name="pref_security_summary">Kunci aplikasi, layar aman</string>
     <string name="pref_appearance_summary">Tema, format tanggal &amp; waktu</string>
     <string name="pref_library_summary">Kategori, pembaruan global, geser chapter</string>
-    <string name="pref_backup_summary">Pencadangan manual &amp; otomatis</string>
+    <string name="pref_backup_summary">Pencadangan manual &amp; otomatis, ruang penyimpanan</string>
     <string name="pref_advanced_summary">Buat log kerusakan, pengoptimalan baterai</string>
     <string name="crash_screen_title">Aduh!</string>
     <string name="crash_screen_restart_application">Mulai ulang aplikasi</string>
@@ -800,7 +800,20 @@
     <string name="action_sort_category">Mengurutkan kategori</string>
     <string name="notification_updating_progress">Memperbarui pustaka... (%s)</string>
     <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad\?</string>
-    <string name="file_null_uri_error">Pemilih file gagal mengembalikan file ke aplikasi</string>
+    <string name="file_null_uri_error">Tidak ada file yang dipilih</string>
     <string name="source_settings">Pengaturan sumber</string>
     <string name="app_settings">Pengaturan aplikasi</string>
+    <string name="action_create">Buat</string>
+    <string name="relative_time_span_never">Tidak pernah</string>
+    <string name="pref_flash_page_summ">Mengurangi ghosting pada tampilan e-ink</string>
+    <string name="action_apply">Terapkan</string>
+    <string name="action_revert_to_default">Kembalikan ke default</string>
+    <string name="last_auto_backup_info">Terakhir dicadangkan secara otomatis: %s</string>
+    <string name="no_scanlators_found">Tidak ditemukan pemindai</string>
+    <string name="scanlator">Pemindai</string>
+    <string name="pref_flash_page">Berkedip putih pada perubahan halaman</string>
+    <string name="pref_storage_usage">Penggunaan penyimpanan</string>
+    <string name="action_sort_tracker_score">Skor pelacak</string>
+    <string name="label_data_storage">Data dan penyimpanan</string>
+    <string name="exclude_scanlators">Kecualikan pemindai</string>
 </resources>

@@ -17,7 +17,10 @@ val CoverWidth = 58.dp
 val CoverHeight = 87.dp
 
 @Composable
-fun UpdatesMangaCover(modifier: GlanceModifier = GlanceModifier, cover: Bitmap?) {
+fun UpdatesMangaCover(
+    cover: Bitmap?,
+    modifier: GlanceModifier = GlanceModifier,
+) {
     Box(
         modifier = modifier
             .size(width = CoverWidth, height = CoverHeight)

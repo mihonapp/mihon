@@ -85,12 +85,11 @@ fun PreferenceScreen(
 private fun List<Preference>.findHighlightedIndex(highlightKey: String): Int {
     return flatMap {
         if (it is Preference.PreferenceGroup) {
-            mutableListOf<String?>()
-                .apply {
-                    add(null) // Header
-                    addAll(it.preferenceItems.map { groupItem -> groupItem.title })
-                    add(null) // Spacer
-                }
+            buildList<String?> {
+                add(null) // Header
+                addAll(it.preferenceItems.map { groupItem -> groupItem.title })
+                add(null) // Spacer
+            }
         } else {
             listOf(it.title)
         }

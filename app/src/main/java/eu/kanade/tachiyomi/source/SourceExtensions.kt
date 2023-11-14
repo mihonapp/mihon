@@ -1,16 +1,10 @@
 package eu.kanade.tachiyomi.source
 
-import android.graphics.drawable.Drawable
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.tachiyomi.extension.ExtensionManager
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-
-fun Source.icon(): Drawable? = Injekt.get<ExtensionManager>().getAppIconForSource(this.id)
-
-fun Source.toStubSource(): StubSource = StubSource(id = id, lang = lang, name = name)
 
 fun Source.getNameForMangaInfo(): String {
     val preferences = Injekt.get<SourcePreferences>()

@@ -25,7 +25,10 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":presentation-core"))
 
-    implementation(androidx.glance)
+    implementation(compose.glance)
+    lintChecks(compose.lintchecks)
+
+    implementation(kotlinx.immutables)
 
     implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)

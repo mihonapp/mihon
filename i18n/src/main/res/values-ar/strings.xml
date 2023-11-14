@@ -566,8 +566,8 @@
     <string name="rotation_portrait">رأسي</string>
     <string name="rotation_type">التدوير</string>
     <string name="automatic_background">تلقائيًّا</string>
-    <string name="pref_create_folder_per_manga_summary">إنشاء مجلدات وفقا لعنوان الإدخالات</string>
-    <string name="pref_create_folder_per_manga">حفظ الصفحات في مجلدات منفصلة</string>
+    <string name="pref_create_folder_per_manga_summary">يُنشِئ مجلدات وفقًا لعناوين المدخلات</string>
+    <string name="pref_create_folder_per_manga">احفظ الصفحات في مجلدات منفصلة</string>
     <string name="pref_reader_actions">الإجراءات</string>
     <string name="pref_grayscale">تدرج رمادي</string>
     <string name="exclude">إستثناء: %s</string>
@@ -882,11 +882,18 @@
     <string name="sort_category_confirmation">أتريد ترتيب الفئات حسب الحروف؟</string>
     <string name="source_settings">إعدادات المصادر</string>
     <string name="app_settings">إعدادات التطبيق</string>
-    <string name="file_null_uri_error">ما استطاع محدِّد الملفات من إدخال الملف في التطبيق</string>
+    <string name="file_null_uri_error">لا ملفات حُدِّدت</string>
     <string name="label_data_storage">البيانات والتخزين</string>
     <string name="relative_time_span_never">أبدًا</string>
     <string name="pref_flash_page_summ">يخفِّف الحرق في شاشات الحبر</string>
     <string name="last_auto_backup_info">آخر احتياط تلقائي: %s</string>
     <string name="pref_flash_page">أشرق الشاشة بِيضًا إذا تغيرت الصفحة</string>
     <string name="pref_storage_usage">التخزين</string>
+    <string name="action_sort_tracker_score">نقاط المتتبع</string>
+    <string name="action_create">أنشئ</string>
+    <string name="action_apply">نفِّذ</string>
+    <string name="action_revert_to_default">صفِّر</string>
+    <string name="no_scanlators_found">لم يُعثَر على مترجمين</string>
+    <string name="scanlator">المترجم</string>
+    <string name="exclude_scanlators">احجب بعض المترجمين</string>
 </resources>

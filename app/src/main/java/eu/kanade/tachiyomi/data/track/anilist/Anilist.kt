@@ -7,6 +7,9 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import uy.kohesive.injekt.injectLazy
@@ -74,18 +77,18 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override fun getCompletionStatus(): Int = COMPLETED
 
-    override fun getScoreList(): List<String> {
+    override fun getScoreList(): ImmutableList<String> {
         return when (scorePreference.get()) {
             // 10 point
-            POINT_10 -> IntRange(0, 10).map(Int::toString)
+            POINT_10 -> IntRange(0, 10).map(Int::toString).toImmutableList()
             // 100 point
-            POINT_100 -> IntRange(0, 100).map(Int::toString)
+            POINT_100 -> IntRange(0, 100).map(Int::toString).toImmutableList()
             // 5 stars
-            POINT_5 -> IntRange(0, 5).map { "$it ★" }
+            POINT_5 -> IntRange(0, 5).map { "$it ★" }.toImmutableList()
             // Smiley
-            POINT_3 -> listOf("-", "😦", "😐", "😊")
+            POINT_3 -> persistentListOf("-", "😦", "😐", "😊")
             // 10 point decimal
-            POINT_10_DECIMAL -> IntRange(0, 100).map { (it / 10f).toString() }
+            POINT_10_DECIMAL -> IntRange(0, 100).map { (it / 10f).toString() }.toImmutableList()
             else -> throw Exception("Unknown score type")
         }
     }

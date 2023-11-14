@@ -156,14 +156,14 @@
     <string name="fourth_to_last">倒数第四已读章节</string>
     <string name="fifth_to_last">倒数第五已读章节</string>
     <string name="pref_download_new">自动下载新章节</string>
-    <string name="services">平台</string>
+    <string name="services">记录平台</string>
     <string name="pref_create_backup">创建备份</string>
     <string name="pref_create_backup_summ">可用于还原当前书架数据</string>
     <string name="pref_restore_backup">还原备份</string>
     <string name="pref_restore_backup_summ">从备份文件中还原</string>
     <string name="pref_backup_directory">备份路径</string>
-    <string name="pref_backup_interval">备份频率</string>
-    <string name="pref_backup_slots">最大备份数</string>
+    <string name="pref_backup_interval">自动备份频率</string>
+    <string name="pref_backup_slots">最大自动备份数</string>
     <string name="backup_created">已创建备份</string>
     <string name="restore_completed">还原完毕</string>
     <string name="backup_choice">需要备份什么？</string>
@@ -365,7 +365,7 @@
     <string name="vertical_plus_viewer">条漫（页间有空隙）</string>
     <string name="action_select_inverse">反选</string>
     <string name="add_tracking">添加进度记录</string>
-    <string name="information_webview_required">Tachiyomi 依赖于 WebView</string>
+    <string name="information_webview_required">app依赖WebView实现其功能</string>
     <string name="manga_info_collapse">收起</string>
     <string name="manga_info_expand">展开</string>
     <string name="licenses">开源许可证</string>
@@ -556,7 +556,7 @@
     <string name="theme_greenapple">青苹果</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="enhanced_tracking_info">为特定图源提供增强功能。作品在添加到书架时会自动同步进度。</string>
-    <string name="enhanced_services">增强平台</string>
+    <string name="enhanced_services">增强型记录平台</string>
     <string name="theme_monet">动态</string>
     <string name="label_background_activity">后台活动</string>
     <string name="pref_lowest">最低</string>
@@ -589,7 +589,7 @@
     <string name="pref_verbose_logging">详细日志记录</string>
     <string name="label_warning">警告</string>
     <string name="action_display_language_badge">语言</string>
-    <string name="backup_info">你应该将备份数据保存到多个地方。</string>
+    <string name="backup_info">你应该将备份数据保存到多个地方。备份可能存有包括所有已存储密码在内的敏感数据；请谨慎分享。</string>
     <string name="notification_size_warning">大量更新会损害图源，并可能导致更新变慢、耗电增加。点击了解详情。</string>
     <string name="connected_to_wifi">仅连接至 Wi-Fi 时</string>
     <string name="update_72hour">每 3 天</string>
@@ -769,7 +769,7 @@
     <string name="delete_downloaded">删除已下载章节</string>
     <string name="action_filter_interval_custom">自定义更新间隔</string>
     <string name="action_set_interval">设定间隔</string>
-    <string name="action_filter_interval_dropped">放弃\? 延迟 20+ 和 2个月</string>
+    <string name="action_filter_interval_dropped">放弃？延迟 20+ 和 2个月</string>
     <string name="action_filter_interval_passed">通过检查期</string>
     <string name="action_sort_next_updated">下次预期更新</string>
     <string name="action_filter_interval_long">每月更新（28天）</string>
@@ -781,7 +781,7 @@
     <string name="manga_display_interval_title">估计每个</string>
     <string name="manga_display_modified_interval_title">设定更新为每</string>
     <string name="manga_modify_calculated_interval_title">自定义间隔</string>
-    <string name="skipped_reason_not_in_release_period">跳过、今天预期没有新发布</string>
+    <string name="skipped_reason_not_in_release_period">跳过，因为预计今天没有新发布</string>
     <string name="has_results">有结果</string>
     <string name="syncing_library">正在同步书架</string>
     <string name="library_sync_complete">书架同步完成</string>
@@ -800,7 +800,7 @@
     <string name="action_move_to_bottom_all_for_series">将作品移到底部</string>
     <string name="notification_updating_progress">书架更新中…(%s)</string>
     <string name="sort_category_confirmation">是否按字母顺序对分类进行排序？</string>
-    <string name="file_null_uri_error">文件选择器无法将文件恢复至应用</string>
+    <string name="file_null_uri_error">没有文件被选中</string>
     <string name="pref_relative_format">相对时间戳</string>
     <string name="pref_relative_format_summary">以\"%1$s\" 表示 \"%2$s\"</string>
     <string name="relative_time_span_never">从不</string>
@@ -809,4 +809,11 @@
     <string name="pref_flash_page">切页时闪烁白屏</string>
     <string name="label_data_storage">数据与存储</string>
     <string name="pref_storage_usage">存储占用</string>
+    <string name="action_create">创建</string>
+    <string name="action_apply">应用</string>
+    <string name="action_revert_to_default">恢复默认</string>
+    <string name="no_scanlators_found">未找到扫译者</string>
+    <string name="scanlator">扫译者</string>
+    <string name="action_sort_tracker_score">记录平台评分</string>
+    <string name="exclude_scanlators">排除的扫译者</string>
 </resources>

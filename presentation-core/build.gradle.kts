@@ -35,6 +35,9 @@ dependencies {
     debugImplementation(compose.ui.tooling)
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
+    lintChecks(compose.lintchecks)
+
+    implementation(kotlinx.immutables)
 }
 
 tasks {

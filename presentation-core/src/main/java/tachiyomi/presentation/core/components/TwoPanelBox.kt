@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TwoPanelBox(
-    modifier: Modifier = Modifier,
-    contentWindowInsets: WindowInsets = WindowInsets(0),
     startContent: @Composable BoxScope.() -> Unit,
     endContent: @Composable BoxScope.() -> Unit,
+    modifier: Modifier = Modifier,
+    contentWindowInsets: WindowInsets = WindowInsets(0),
 ) {
     val direction = LocalLayoutDirection.current
     val padding = contentWindowInsets.asPaddingValues()

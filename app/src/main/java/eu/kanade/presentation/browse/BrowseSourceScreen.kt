@@ -24,6 +24,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.Source
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.StateFlow
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.manga.model.Manga
@@ -76,7 +77,7 @@ fun BrowseSourceContent(
             modifier = Modifier.padding(contentPadding),
             message = getErrorMessage(errorState),
             actions = if (source is LocalSource) {
-                listOf(
+                persistentListOf(
                     EmptyScreenAction(
                         stringResId = R.string.local_source_help_guide,
                         icon = Icons.Outlined.HelpOutline,
@@ -84,7 +85,7 @@ fun BrowseSourceContent(
                     ),
                 )
             } else {
-                listOf(
+                persistentListOf(
                     EmptyScreenAction(
                         stringResId = R.string.action_retry,
                         icon = Icons.Outlined.Refresh,

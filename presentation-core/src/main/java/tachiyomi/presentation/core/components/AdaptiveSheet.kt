@@ -56,11 +56,11 @@ private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 
 @Composable
 fun AdaptiveSheet(
-    modifier: Modifier = Modifier,
     isTabletUi: Boolean,
     tonalElevation: Dp,
     enableSwipeDismiss: Boolean,
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     val density = LocalDensity.current

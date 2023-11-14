@@ -846,4 +846,11 @@
     <string name="pref_relative_format_summary">\"%1$s\" замість \"%2$s\"</string>
     <string name="source_settings">Налаштування джерела</string>
     <string name="app_settings">Налаштування застосунку</string>
+    <string name="action_apply">Застосувати</string>
+    <string name="action_revert_to_default">Повернути за замовчуванням</string>
+    <string name="action_sort_category">Сортувати категорії</string>
+    <string name="scanlator">Сканлейтор</string>
+    <string name="action_sort_tracker_score">Оцінка трекера</string>
+    <string name="label_data_storage">Дані та сховище</string>
+    <string name="sort_category_confirmation">Ви хочете сортувати категорії алфавітно?</string>
 </resources>
