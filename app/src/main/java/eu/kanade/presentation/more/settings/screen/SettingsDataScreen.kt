@@ -436,11 +436,6 @@ fun PurgeConfirmationDialog(
 private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Preference> {
     return listOf(
         Preference.PreferenceItem.EditTextPreference(
-            title = stringResource(R.string.pref_sync_device_name),
-            subtitle = stringResource(R.string.pref_sync_device_name_summ),
-            pref = syncPreferences.deviceName(),
-        ),
-        Preference.PreferenceItem.EditTextPreference(
             title = stringResource(R.string.pref_sync_host),
             subtitle = stringResource(R.string.pref_sync_host_summ),
             pref = syncPreferences.syncHost(),

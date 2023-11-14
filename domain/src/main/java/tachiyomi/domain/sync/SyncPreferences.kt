@@ -12,11 +12,6 @@ class SyncPreferences(
 
     fun syncInterval() = preferenceStore.getInt("sync_interval", 0)
 
-    fun deviceName() = preferenceStore.getString(
-        Preference.appStateKey("device_name"),
-        android.os.Build.MANUFACTURER + android.os.Build.PRODUCT,
-    )
-
     fun syncService() = preferenceStore.getInt("sync_service", 0)
 
     private fun googleDriveAccessToken() = preferenceStore.getString(

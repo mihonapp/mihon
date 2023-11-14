@@ -533,8 +533,6 @@
     <string name="sync_error">Syncing library failed</string>
     <string name="sync_complete">Syncing library complete</string>
     <string name="sync_in_progress">Sync is already in progress</string>
-    <string name="pref_sync_device_name">Device name</string>
-    <string name="pref_sync_device_name_summ">Enter a name for this device</string>
     <string name="pref_sync_host">Host</string>
     <string name="pref_sync_host_summ">Enter the host address for synchronizing your library</string>
     <string name="pref_sync_api_key">API key</string>

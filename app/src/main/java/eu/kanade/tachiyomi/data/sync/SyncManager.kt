@@ -12,8 +12,6 @@ import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.sync.models.SyncData
-import eu.kanade.tachiyomi.data.sync.models.SyncDevice
-import eu.kanade.tachiyomi.data.sync.models.SyncStatus
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
 import kotlinx.serialization.json.Json
@@ -32,7 +30,6 @@ import uy.kohesive.injekt.api.get
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.time.Instant
 import java.util.Date
 
 /**
@@ -85,22 +82,9 @@ class SyncManager(
             backupCreator.backupSourcePreferences(BackupCreateFlags.AutomaticDefaults),
         )
 
-        // Create the SyncStatus object
-        val syncStatus = SyncStatus(
-            lastSynced = Instant.now().toString(),
-            status = "completed",
-        )
-
-        // Create the Device object
-        val device = SyncDevice(
-            name = syncPreferences.deviceName().get(),
-        )
-
         // Create the SyncData object
         val syncData = SyncData(
-            sync = syncStatus,
             backup = backup,
-            device = device,
         )
 
         // Handle sync based on the selected service
