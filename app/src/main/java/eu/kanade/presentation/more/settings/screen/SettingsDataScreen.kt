@@ -492,7 +492,7 @@ private fun getSyncNowPref(): Preference.PreferenceGroup {
 private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.PreferenceGroup {
     val context = LocalContext.current
     val syncIntervalPref = syncPreferences.syncInterval()
-    val lastSync by syncPreferences.syncLastSync().collectAsState()
+    val lastSync by syncPreferences.lastSyncTimestamp().collectAsState()
 
     return Preference.PreferenceGroup(
         title = stringResource(R.string.pref_sync_service_category),
@@ -516,7 +516,7 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
                     true
                 },
             ),
-            Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization, relativeTimeSpanString(lastSync.toEpochMilli()))),
+            Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization, relativeTimeSpanString(lastSync))),
         ),
     )
 }

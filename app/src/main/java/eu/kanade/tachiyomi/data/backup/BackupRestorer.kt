@@ -36,6 +36,7 @@ import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.domain.track.model.Track
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -59,6 +60,7 @@ class BackupRestorer(
 
     private val preferenceStore: PreferenceStore = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
+    private val syncPreferences: SyncPreferences = Injekt.get()
 
     private var now = ZonedDateTime.now()
     private var currentFetchWindow = fetchInterval.getWindow(now)
@@ -88,13 +90,7 @@ class BackupRestorer(
         val logFile = writeErrorLog()
 
         if (sync) {
-            notifier.showRestoreComplete(
-                time,
-                errors.size,
-                logFile.parent,
-                logFile.name,
-                contentTitle = context.getString(R.string.library_sync_complete),
-            )
+            syncPreferences.lastSyncTimestamp().set(Date().time)
         } else {
             notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
         }

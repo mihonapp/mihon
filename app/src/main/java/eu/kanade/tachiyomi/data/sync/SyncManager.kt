@@ -34,6 +34,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.Instant
+import java.util.Date
 
 /**
  * A manager to handle synchronization tasks in the app, such as updating
@@ -139,7 +140,8 @@ class SyncManager(
 
             // It's local sync no need to restore data. (just update remote data)
             if (filteredFavorites.isEmpty()) {
-                backupNotify.showRestoreComplete(0, 0, "", "", contentTitle = context.getString(R.string.sync_complete))
+                // update the sync timestamp
+                syncPreferences.lastSyncTimestamp().set(Date().time)
                 return
             }
 
@@ -147,7 +149,6 @@ class SyncManager(
             logcat(LogPriority.DEBUG) { "Got Backup Uri: $backupUri" }
             if (backupUri != null) {
                 BackupRestoreJob.start(context, backupUri, sync = true)
-                syncPreferences.syncLastSync().set(Instant.now())
             } else {
                 logcat(LogPriority.ERROR) { "Failed to write sync data to file" }
             }
