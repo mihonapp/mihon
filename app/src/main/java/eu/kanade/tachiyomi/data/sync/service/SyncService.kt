@@ -5,10 +5,15 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
-import eu.kanade.tachiyomi.data.sync.models.SyncData
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import tachiyomi.domain.sync.SyncPreferences
 import java.time.Instant
+
+@Serializable
+data class SyncData(
+    val backup: Backup? = null,
+)
 
 abstract class SyncService(
     val context: Context,
