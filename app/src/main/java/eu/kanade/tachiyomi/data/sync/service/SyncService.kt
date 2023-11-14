@@ -34,17 +34,6 @@ abstract class SyncService(
     }
 
     /**
-     * Decodes the given sync data string into a Backup object.
-     *
-     * @param data The sync data string to be decoded.
-     * @return The decoded Backup object.
-     */
-    protected fun decodeSyncBackup(data: String): Backup {
-        val syncData = json.decodeFromString(SyncData.serializer(), data)
-        return syncData.backup!!
-    }
-
-    /**
      * For refreshing tokens and other possible operations before connecting to the remote storage
      */
     open suspend fun beforeSync() {}
@@ -81,9 +70,7 @@ abstract class SyncService(
 
         // Create the merged SData object
         return SyncData(
-            sync = localSyncData.sync, // always use the local sync info
             backup = mergedBackup,
-            device = localSyncData.device, // always use the local device info
         )
     }
 
