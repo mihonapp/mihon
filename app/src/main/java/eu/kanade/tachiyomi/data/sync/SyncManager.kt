@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.BackupCreator
 import eu.kanade.tachiyomi.data.backup.BackupNotifier

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.text.format.DateUtils
 import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -516,7 +515,9 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
                     true
                 },
             ),
-            Preference.PreferenceItem.InfoPreference(stringResource(R.string.last_synchronization, relativeTimeSpanString(lastSync))),
+            Preference.PreferenceItem.InfoPreference(
+                stringResource(R.string.last_synchronization, relativeTimeSpanString(lastSync)),
+            ),
         ),
     )
 }
