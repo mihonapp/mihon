@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.components.material.TabIndicator
 import tachiyomi.presentation.core.components.material.TabText
 
 @Composable
@@ -69,7 +68,6 @@ fun TabbedScreen(
         ) {
             PrimaryTabRow(
                 selectedTabIndex = state.currentPage,
-                indicator = { TabIndicator(it[state.currentPage], state.currentPageOffsetFraction) },
             ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
