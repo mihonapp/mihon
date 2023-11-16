@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
@@ -92,7 +92,7 @@ fun ExtensionDetailsScreen(
                                 add(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_faq_and_guides),
-                                        icon = Icons.Outlined.HelpOutline,
+                                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
                                         onClick = onClickReadme,
                                     ),
                                 )

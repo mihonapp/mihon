@@ -33,11 +33,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.tachiyomi.R
 import tachiyomi.presentation.core.components.BadgeGroup
 import tachiyomi.presentation.core.util.selectedBackground
 
@@ -376,7 +378,7 @@ private fun ContinueReadingButton(
         ) {
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "",
+                contentDescription = stringResource(R.string.action_resume),
                 modifier = Modifier.size(16.dp),
             )
         }

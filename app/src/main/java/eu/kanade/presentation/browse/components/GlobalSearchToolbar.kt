@@ -58,7 +58,7 @@ fun GlobalSearchToolbar(
             )
             if (progress in 1..<total) {
                 LinearProgressIndicator(
-                    progress = progress / total.toFloat(),
+                    progress = { progress / total.toFloat() },
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .fillMaxWidth(),

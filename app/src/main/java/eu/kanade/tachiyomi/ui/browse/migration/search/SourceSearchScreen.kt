@@ -67,7 +67,7 @@ data class SourceSearchScreen(
                 AnimatedVisibility(visible = state.filters.isNotEmpty()) {
                     ExtendedFloatingActionButton(
                         text = { Text(text = stringResource(R.string.action_filter)) },
-                        icon = { Icon(Icons.Outlined.FilterList, contentDescription = "") },
+                        icon = { Icon(Icons.Outlined.FilterList, contentDescription = null) },
                         onClick = screenModel::openFilterSheet,
                     )
                 }
