@@ -14,8 +14,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +30,6 @@ import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
-import tachiyomi.presentation.core.components.material.TabIndicator
 import tachiyomi.presentation.core.components.material.TabText
 
 object TabbedDialogPaddings {
@@ -55,10 +54,9 @@ fun TabbedDialog(
 
         Column {
             Row {
-                TabRow(
+                PrimaryTabRow(
                     modifier = Modifier.weight(1f),
                     selectedTabIndex = pagerState.currentPage,
-                    indicator = { TabIndicator(it[pagerState.currentPage], pagerState.currentPageOffsetFraction) },
                     divider = {},
                 ) {
                     tabTitles.fastForEachIndexed { index, tab ->

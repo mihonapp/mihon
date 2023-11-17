@@ -19,7 +19,7 @@ fun CategoryFloatingActionButton(
 ) {
     ExtendedFloatingActionButton(
         text = { Text(text = stringResource(R.string.action_add)) },
-        icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = "") },
+        icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = null) },
         onClick = onCreate,
         expanded = lazyListState.isScrollingUp() || lazyListState.isScrolledToEnd(),
     )

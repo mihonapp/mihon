@@ -144,7 +144,7 @@ data class BrowseSourceScreen(
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Outlined.Favorite,
-                                    contentDescription = "",
+                                    contentDescription = null,
                                     modifier = Modifier
                                         .size(FilterChipDefaults.IconSize),
                                 )
@@ -163,7 +163,7 @@ data class BrowseSourceScreen(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.NewReleases,
-                                        contentDescription = "",
+                                        contentDescription = null,
                                         modifier = Modifier
                                             .size(FilterChipDefaults.IconSize),
                                     )
@@ -180,7 +180,7 @@ data class BrowseSourceScreen(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Outlined.FilterList,
-                                        contentDescription = "",
+                                        contentDescription = null,
                                         modifier = Modifier
                                             .size(FilterChipDefaults.IconSize),
                                     )
