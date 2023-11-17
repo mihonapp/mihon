@@ -19,6 +19,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.category.CategoryScreenState
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.category.model.Category
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -45,7 +46,7 @@ fun CategoryScreen(
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
-                        listOf(
+                        persistentListOf(
                             AppBar.Action(
                                 title = stringResource(R.string.action_sort),
                                 icon = Icons.Outlined.SortByAlpha,

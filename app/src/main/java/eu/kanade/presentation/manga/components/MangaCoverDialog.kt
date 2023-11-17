@@ -49,6 +49,7 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.EditCoverAction
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.viewer.ReaderPageImageView
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.util.clickableNoIndication
@@ -91,22 +92,18 @@ fun MangaCoverDialog(
                     Spacer(modifier = Modifier.weight(1f))
                     ActionsPill {
                         AppBarActions(
-                            actions = buildList {
-                                add(
-                                    AppBar.Action(
-                                        title = stringResource(R.string.action_share),
-                                        icon = Icons.Outlined.Share,
-                                        onClick = onShareClick,
-                                    ),
-                                )
-                                add(
-                                    AppBar.Action(
-                                        title = stringResource(R.string.action_save),
-                                        icon = Icons.Outlined.Save,
-                                        onClick = onSaveClick,
-                                    ),
-                                )
-                            },
+                            actions = persistentListOf(
+                                AppBar.Action(
+                                    title = stringResource(R.string.action_share),
+                                    icon = Icons.Outlined.Share,
+                                    onClick = onShareClick,
+                                ),
+                                AppBar.Action(
+                                    title = stringResource(R.string.action_save),
+                                    icon = Icons.Outlined.Save,
+                                    onClick = onSaveClick,
+                                ),
+                            ),
                         )
                         if (onEditClick != null) {
                             Box {

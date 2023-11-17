@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.TabText
@@ -39,9 +40,9 @@ object TabbedDialogPaddings {
 
 @Composable
 fun TabbedDialog(
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    tabTitles: List<String>,
+    tabTitles: ImmutableList<String>,
+    modifier: Modifier = Modifier,
     tabOverflowMenuContent: (@Composable ColumnScope.(() -> Unit) -> Unit)? = null,
     pagerState: PagerState = rememberPagerState { tabTitles.size },
     content: @Composable (Int) -> Unit,

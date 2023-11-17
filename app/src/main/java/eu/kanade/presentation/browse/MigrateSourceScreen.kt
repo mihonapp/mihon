@@ -144,11 +144,11 @@ private fun MigrateSourceList(
 
 @Composable
 private fun MigrateSourceItem(
-    modifier: Modifier = Modifier,
     source: Source,
     count: Long,
     onClickItem: () -> Unit,
     onLongClickItem: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BaseSourceItem(
         modifier = modifier,

@@ -70,10 +70,10 @@ private fun MigrateMangaContent(
 
 @Composable
 private fun MigrateMangaItem(
-    modifier: Modifier = Modifier,
     manga: Manga,
     onClickItem: (Manga) -> Unit,
     onClickCover: (Manga) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BaseMangaListItem(
         modifier = modifier,

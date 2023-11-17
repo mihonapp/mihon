@@ -16,8 +16,8 @@ import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
 fun BaseSourceItem(
-    modifier: Modifier = Modifier,
     source: Source,
+    modifier: Modifier = Modifier,
     showLanguageInContent: Boolean = true,
     onClickItem: () -> Unit = {},
     onLongClickItem: () -> Unit = {},

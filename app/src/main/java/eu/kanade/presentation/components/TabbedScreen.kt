@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -29,7 +31,7 @@ import tachiyomi.presentation.core.components.material.TabText
 @Composable
 fun TabbedScreen(
     @StringRes titleRes: Int,
-    tabs: List<TabContent>,
+    tabs: ImmutableList<TabContent>,
     startIndex: Int? = null,
     searchQuery: String? = null,
     onChangeSearchQuery: (String?) -> Unit = {},
@@ -97,6 +99,6 @@ data class TabContent(
     @StringRes val titleRes: Int,
     val badgeNumber: Int? = null,
     val searchEnabled: Boolean = false,
-    val actions: List<AppBar.Action> = emptyList(),
+    val actions: ImmutableList<AppBar.Action> = persistentListOf(),
     val content: @Composable (contentPadding: PaddingValues, snackbarHostState: SnackbarHostState) -> Unit,
 )

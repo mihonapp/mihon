@@ -47,6 +47,7 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.presentation.core.components.material.Scaffold
 import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
 
@@ -88,7 +89,7 @@ object SettingsMainScreen : Screen() {
                     navigateUp = backPress::invoke,
                     actions = {
                         AppBarActions(
-                            listOf(
+                            persistentListOf(
                                 AppBar.Action(
                                     title = stringResource(R.string.action_search),
                                     icon = Icons.Outlined.Search,

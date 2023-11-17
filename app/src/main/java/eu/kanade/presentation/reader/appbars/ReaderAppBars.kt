@@ -29,6 +29,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
+import kotlinx.collections.immutable.persistentListOf
 
 private val animationSpec = tween<IntOffset>(200)
 
@@ -98,27 +99,43 @@ fun ReaderAppBars(
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
-                        listOfNotNull(
-                            AppBar.Action(
-                                title = stringResource(
-                                    if (bookmarked) R.string.action_remove_bookmark else R.string.action_bookmark,
-                                ),
-                                icon = if (bookmarked) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
-                                onClick = onToggleBookmarked,
-                            ),
-                            onOpenInWebView?.let {
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.action_open_in_web_view),
-                                    onClick = it,
+                        actions = persistentListOf<AppBar.AppBarAction>().builder()
+                            .apply {
+                                add(
+                                    AppBar.Action(
+                                        title = stringResource(
+                                            if (bookmarked) {
+                                                R.string.action_remove_bookmark
+                                            } else {
+                                                R.string.action_bookmark
+                                            },
+                                        ),
+                                        icon = if (bookmarked) {
+                                            Icons.Outlined.Bookmark
+                                        } else {
+                                            Icons.Outlined.BookmarkBorder
+                                        },
+                                        onClick = onToggleBookmarked,
+                                    ),
                                 )
-                            },
-                            onShare?.let {
-                                AppBar.OverflowAction(
-                                    title = stringResource(R.string.action_share),
-                                    onClick = it,
-                                )
-                            },
-                        ),
+                                onOpenInWebView?.let {
+                                    add(
+                                        AppBar.OverflowAction(
+                                            title = stringResource(R.string.action_open_in_web_view),
+                                            onClick = it,
+                                        ),
+                                    )
+                                }
+                                onShare?.let {
+                                    add(
+                                        AppBar.OverflowAction(
+                                            title = stringResource(R.string.action_share),
+                                            onClick = it,
+                                        ),
+                                    )
+                                }
+                            }
+                            .build(),
                     )
                 },
             )

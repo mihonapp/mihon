@@ -17,6 +17,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.migration.manga.MigrateMangaScreen
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun Screen.migrateSourceTab(): TabContent {
@@ -27,7 +28,7 @@ fun Screen.migrateSourceTab(): TabContent {
 
     return TabContent(
         titleRes = R.string.label_migration,
-        actions = listOf(
+        actions = persistentListOf(
             AppBar.Action(
                 title = stringResource(R.string.migration_help_guide),
                 icon = Icons.AutoMirrored.Outlined.HelpOutline,

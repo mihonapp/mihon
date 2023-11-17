@@ -32,6 +32,7 @@ import eu.kanade.domain.manga.model.forceDownloaded
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.preference.TriState
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -64,7 +65,7 @@ fun ChapterSettingsDialog(
 
     TabbedDialog(
         onDismissRequest = onDismissRequest,
-        tabTitles = listOf(
+        tabTitles = persistentListOf(
             stringResource(R.string.action_filter),
             stringResource(R.string.action_sort),
             stringResource(R.string.action_display),

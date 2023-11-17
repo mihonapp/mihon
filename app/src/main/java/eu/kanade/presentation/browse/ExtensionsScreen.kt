@@ -214,12 +214,12 @@ private fun ExtensionContent(
 
 @Composable
 private fun ExtensionItem(
-    modifier: Modifier = Modifier,
     item: ExtensionUiModel.Item,
     onClickItem: (Extension) -> Unit,
     onLongClickItem: (Extension) -> Unit,
     onClickItemCancel: (Extension) -> Unit,
     onClickItemAction: (Extension) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val (extension, installStep) = item
     BaseBrowseItem(
