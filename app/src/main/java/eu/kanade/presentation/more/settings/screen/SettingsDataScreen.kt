@@ -434,11 +434,21 @@ fun PurgeConfirmationDialog(
 
 @Composable
 private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Preference> {
+    val scope = rememberCoroutineScope()
     return listOf(
         Preference.PreferenceItem.EditTextPreference(
             title = stringResource(R.string.pref_sync_host),
             subtitle = stringResource(R.string.pref_sync_host_summ),
             pref = syncPreferences.syncHost(),
+            onValueChanged = { newValue ->
+                scope.launch {
+                    // Trim spaces at the beginning and end, then remove trailing slash if present
+                    val trimmedValue = newValue.trim()
+                    val modifiedValue = trimmedValue.trimEnd { it == '/' }
+                    syncPreferences.syncHost().set(modifiedValue)
+                }
+                true
+            },
         ),
         Preference.PreferenceItem.EditTextPreference(
             title = stringResource(R.string.pref_sync_api_key),
