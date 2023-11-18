@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
@@ -29,8 +28,9 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DownloadDropdownMenu
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.manga.DownloadAction
-import eu.kanade.tachiyomi.R
 import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.theme.active
 
 @Composable
@@ -75,12 +75,12 @@ fun MangaToolbar(
                     AppBarActions(
                         persistentListOf(
                             AppBar.Action(
-                                title = stringResource(R.string.action_select_all),
+                                title = localize(MR.strings.action_select_all),
                                 icon = Icons.Outlined.SelectAll,
                                 onClick = onSelectAll,
                             ),
                             AppBar.Action(
-                                title = stringResource(R.string.action_select_inverse),
+                                title = localize(MR.strings.action_select_inverse),
                                 icon = Icons.Outlined.FlipToBack,
                                 onClick = onInvertSelection,
                             ),
@@ -104,7 +104,7 @@ fun MangaToolbar(
                                 if (onClickDownload != null) {
                                     add(
                                         AppBar.Action(
-                                            title = stringResource(R.string.manga_download),
+                                            title = localize(MR.strings.manga_download),
                                             icon = Icons.Outlined.Download,
                                             onClick = { downloadExpanded = !downloadExpanded },
                                         ),
@@ -112,7 +112,7 @@ fun MangaToolbar(
                                 }
                                 add(
                                     AppBar.Action(
-                                        title = stringResource(R.string.action_filter),
+                                        title = localize(MR.strings.action_filter),
                                         icon = Icons.Outlined.FilterList,
                                         iconTint = filterTint,
                                         onClick = onClickFilter,
@@ -120,14 +120,14 @@ fun MangaToolbar(
                                 )
                                 add(
                                     AppBar.OverflowAction(
-                                        title = stringResource(R.string.action_webview_refresh),
+                                        title = localize(MR.strings.action_webview_refresh),
                                         onClick = onClickRefresh,
                                     ),
                                 )
                                 if (onClickEditCategory != null) {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = stringResource(R.string.action_edit_categories),
+                                            title = localize(MR.strings.action_edit_categories),
                                             onClick = onClickEditCategory,
                                         ),
                                     )
@@ -135,7 +135,7 @@ fun MangaToolbar(
                                 if (onClickMigrate != null) {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = stringResource(R.string.action_migrate),
+                                            title = localize(MR.strings.action_migrate),
                                             onClick = onClickMigrate,
                                         ),
                                     )
@@ -143,7 +143,7 @@ fun MangaToolbar(
                                 if (onClickShare != null) {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = stringResource(R.string.action_share),
+                                            title = localize(MR.strings.action_share),
                                             onClick = onClickShare,
                                         ),
                                     )

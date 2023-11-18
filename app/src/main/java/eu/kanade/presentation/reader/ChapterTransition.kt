@@ -26,8 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,13 +34,15 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.ChapterImpl
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import tachiyomi.domain.chapter.service.calculateChapterGap
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.localizePlural
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -58,25 +58,25 @@ fun ChapterTransition(
         when (transition) {
             is ChapterTransition.Prev -> {
                 TransitionText(
-                    topLabel = stringResource(R.string.transition_previous),
+                    topLabel = localize(MR.strings.transition_previous),
                     topChapter = goingToChapter,
                     topChapterDownloaded = goingToChapterDownloaded,
-                    bottomLabel = stringResource(R.string.transition_current),
+                    bottomLabel = localize(MR.strings.transition_current),
                     bottomChapter = currChapter,
                     bottomChapterDownloaded = currChapterDownloaded,
-                    fallbackLabel = stringResource(R.string.transition_no_previous),
+                    fallbackLabel = localize(MR.strings.transition_no_previous),
                     chapterGap = calculateChapterGap(currChapter.toDomainChapter(), goingToChapter?.toDomainChapter()),
                 )
             }
             is ChapterTransition.Next -> {
                 TransitionText(
-                    topLabel = stringResource(R.string.transition_finished),
+                    topLabel = localize(MR.strings.transition_finished),
                     topChapter = currChapter,
                     topChapterDownloaded = currChapterDownloaded,
-                    bottomLabel = stringResource(R.string.transition_next),
+                    bottomLabel = localize(MR.strings.transition_next),
                     bottomChapter = goingToChapter,
                     bottomChapterDownloaded = goingToChapterDownloaded,
-                    fallbackLabel = stringResource(R.string.transition_no_next),
+                    fallbackLabel = localize(MR.strings.transition_no_next),
                     chapterGap = calculateChapterGap(goingToChapter?.toDomainChapter(), currChapter.toDomainChapter()),
                 )
             }
@@ -191,7 +191,7 @@ private fun ChapterGapWarning(
             )
 
             Text(
-                text = pluralStringResource(R.plurals.missing_chapters_warning, count = gapCount, gapCount),
+                text = localizePlural(MR.plurals.missing_chapters_warning, count = gapCount, gapCount),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
@@ -245,7 +245,7 @@ private fun ChapterText(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = stringResource(R.string.label_downloaded),
+                        contentDescription = localize(MR.strings.label_downloaded),
                     )
                 },
             ),

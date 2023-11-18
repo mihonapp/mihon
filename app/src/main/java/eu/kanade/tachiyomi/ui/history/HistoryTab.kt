@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -28,7 +27,10 @@ import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import tachiyomi.core.i18n.localize
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 
 object HistoryTab : Tab {
 
@@ -43,7 +45,7 @@ object HistoryTab : Tab {
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_history_enter)
             return TabOptions(
                 index = 2u,
-                title = stringResource(R.string.label_recent_manga),
+                title = localize(MR.strings.label_recent_manga),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
         }
@@ -101,9 +103,9 @@ object HistoryTab : Tab {
             screenModel.events.collectLatest { e ->
                 when (e) {
                     HistoryScreenModel.Event.InternalError ->
-                        snackbarHostState.showSnackbar(context.getString(R.string.internal_error))
+                        snackbarHostState.showSnackbar(context.localize(MR.strings.internal_error))
                     HistoryScreenModel.Event.HistoryCleared ->
-                        snackbarHostState.showSnackbar(context.getString(R.string.clear_history_completed))
+                        snackbarHostState.showSnackbar(context.localize(MR.strings.clear_history_completed))
                     is HistoryScreenModel.Event.OpenChapter -> openChapter(context, e.chapter)
                 }
             }
@@ -121,7 +123,7 @@ object HistoryTab : Tab {
             val intent = ReaderActivity.newIntent(context, chapter.mangaId, chapter.id)
             context.startActivity(intent)
         } else {
-            snackbarHostState.showSnackbar(context.getString(R.string.no_next_chapter))
+            snackbarHostState.showSnackbar(context.localize(MR.strings.no_next_chapter))
         }
     }
 }

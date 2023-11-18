@@ -1,19 +1,19 @@
 package eu.kanade.presentation.more.settings.screen
 
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
+import tachiyomi.core.i18n.localize
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.localizePlural
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -22,8 +22,7 @@ object SettingsSecurityScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    @StringRes
-    override fun getTitleRes() = R.string.pref_category_security
+    override fun getTitleRes() = MR.strings.pref_category_security
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -37,43 +36,43 @@ object SettingsSecurityScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = useAuthPref,
-                title = stringResource(R.string.lock_with_biometrics),
+                title = localize(MR.strings.lock_with_biometrics),
                 enabled = authSupported,
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
-                        title = context.getString(R.string.lock_with_biometrics),
+                        title = context.localize(MR.strings.lock_with_biometrics),
                     )
                 },
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.lockAppAfter(),
-                title = stringResource(R.string.lock_when_idle),
+                title = localize(MR.strings.lock_when_idle),
                 enabled = authSupported && useAuth,
                 entries = LockAfterValues
                     .associateWith {
                         when (it) {
-                            -1 -> stringResource(R.string.lock_never)
-                            0 -> stringResource(R.string.lock_always)
-                            else -> pluralStringResource(id = R.plurals.lock_after_mins, count = it, it)
+                            -1 -> localize(MR.strings.lock_never)
+                            0 -> localize(MR.strings.lock_always)
+                            else -> localizePlural(MR.plurals.lock_after_mins, count = it, it)
                         }
                     },
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
-                        title = context.getString(R.string.lock_when_idle),
+                        title = context.localize(MR.strings.lock_when_idle),
                     )
                 },
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
-                title = stringResource(R.string.hide_notification_content),
+                title = localize(MR.strings.hide_notification_content),
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.secureScreen(),
-                title = stringResource(R.string.secure_screen),
+                title = localize(MR.strings.secure_screen),
                 entries = SecurityPreferences.SecureScreenMode.entries
-                    .associateWith { stringResource(it.titleResId) },
+                    .associateWith { localize(it.titleRes) },
             ),
-            Preference.PreferenceItem.InfoPreference(stringResource(R.string.secure_screen_summary)),
+            Preference.PreferenceItem.InfoPreference(localize(MR.strings.secure_screen_summary)),
         )
     }
 }

@@ -26,11 +26,11 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.components.SearchToolbar
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun GlobalSearchToolbar(
@@ -85,7 +85,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = stringResource(id = R.string.pinned_sources))
+                    Text(text = localize(MR.strings.pinned_sources))
                 },
             )
             FilterChip(
@@ -100,7 +100,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = stringResource(id = R.string.all))
+                    Text(text = localize(MR.strings.all))
                 },
             )
 
@@ -118,7 +118,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = stringResource(id = R.string.has_results))
+                    Text(text = localize(MR.strings.has_results))
                 },
             )
         }

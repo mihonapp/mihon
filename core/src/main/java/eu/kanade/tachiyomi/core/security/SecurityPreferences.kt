@@ -1,9 +1,10 @@
 package eu.kanade.tachiyomi.core.security
 
-import eu.kanade.tachiyomi.core.R
+import dev.icerock.moko.resources.StringResource
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.preference.getEnum
+import tachiyomi.i18n.MR
 
 class SecurityPreferences(
     private val preferenceStore: PreferenceStore,
@@ -26,9 +27,9 @@ class SecurityPreferences(
         0,
     )
 
-    enum class SecureScreenMode(val titleResId: Int) {
-        ALWAYS(R.string.lock_always),
-        INCOGNITO(R.string.pref_incognito_mode),
-        NEVER(R.string.lock_never),
+    enum class SecureScreenMode(val titleRes: StringResource) {
+        ALWAYS(MR.strings.lock_always),
+        INCOGNITO(MR.strings.pref_incognito_mode),
+        NEVER(MR.strings.lock_never),
     }
 }

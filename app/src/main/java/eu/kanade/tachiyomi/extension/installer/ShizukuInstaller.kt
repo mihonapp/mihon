@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.extension.installer
 import android.app.Service
 import android.content.pm.PackageManager
 import android.os.Build
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.getUriSize
 import eu.kanade.tachiyomi.util.system.toast
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
 import logcat.LogPriority
 import rikka.shizuku.Shizuku
 import tachiyomi.core.util.system.logcat
+import tachiyomi.i18n.MR
 import java.io.BufferedReader
 import java.io.InputStream
 
@@ -116,7 +116,7 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             }
         } else {
             logcat(LogPriority.ERROR) { "Shizuku is not ready to use" }
-            service.toast(R.string.ext_installer_shizuku_stopped)
+            service.toast(MR.strings.ext_installer_shizuku_stopped)
             service.stopSelf()
             false
         }

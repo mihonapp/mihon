@@ -5,16 +5,16 @@ import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun extensionsTab(
@@ -24,12 +24,12 @@ fun extensionsTab(
     val state by extensionsScreenModel.state.collectAsState()
 
     return TabContent(
-        titleRes = R.string.label_extensions,
+        titleRes = MR.strings.label_extensions,
         badgeNumber = state.updates.takeIf { it > 0 },
         searchEnabled = true,
         actions = persistentListOf(
             AppBar.Action(
-                title = stringResource(R.string.action_filter),
+                title = localize(MR.strings.action_filter),
                 icon = Icons.Outlined.Translate,
                 onClick = { navigator.push(ExtensionFilterScreen()) },
             ),

@@ -9,6 +9,7 @@ buildscript {
         classpath(libs.google.services.gradle)
         classpath(libs.aboutLibraries.gradle)
         classpath(libs.sqldelight.gradle)
+        classpath(libs.moko.gradle)
     }
 }
 
@@ -32,6 +33,7 @@ subprojects {
 
     plugins.withType<BasePlugin> {
         plugins.apply("tachiyomi.lint")
+
         configure<BaseExtension> {
             compileSdkVersion(AndroidConfig.compileSdk)
             defaultConfig {

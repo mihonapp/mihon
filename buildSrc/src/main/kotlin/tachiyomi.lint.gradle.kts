@@ -10,5 +10,13 @@ extensions.configure<KtlintExtension>("ktlint") {
 
     filter {
         exclude("**/generated/**")
+
+        // For some reason this is needed for Kotlin MPP
+        exclude { tree ->
+            val path = tree.file.path
+            listOf("/generated/").any {
+                path.contains(it)
+            }
+        }
     }
 }

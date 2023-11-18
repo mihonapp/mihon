@@ -19,14 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.StateScreenModel
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
@@ -49,7 +47,9 @@ import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.LoadingScreen
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -79,7 +79,7 @@ internal fun MigrateDialog(
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = {
-                Text(text = stringResource(R.string.migration_dialog_what_to_include))
+                Text(text = localize(MR.strings.migration_dialog_what_to_include))
             },
             text = {
                 Column(
@@ -87,7 +87,7 @@ internal fun MigrateDialog(
                 ) {
                     flags.forEachIndexed { index, flag ->
                         LabeledCheckbox(
-                            label = stringResource(flag.titleId),
+                            label = localize(flag.titleId),
                             checked = selectedFlags[index],
                             onCheckedChange = { selectedFlags[index] = it },
                         )
@@ -104,7 +104,7 @@ internal fun MigrateDialog(
                             onClickTitle()
                         },
                     ) {
-                        Text(text = stringResource(R.string.action_show_manga))
+                        Text(text = localize(MR.strings.action_show_manga))
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -122,7 +122,7 @@ internal fun MigrateDialog(
                             }
                         },
                     ) {
-                        Text(text = stringResource(R.string.copy))
+                        Text(text = localize(MR.strings.copy))
                     }
                     TextButton(
                         onClick = {
@@ -138,7 +138,7 @@ internal fun MigrateDialog(
                             }
                         },
                     ) {
-                        Text(text = stringResource(R.string.migrate))
+                        Text(text = localize(MR.strings.migrate))
                     }
                 }
             },

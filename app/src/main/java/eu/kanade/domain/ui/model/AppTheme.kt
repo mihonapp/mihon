@@ -1,19 +1,20 @@
 package eu.kanade.domain.ui.model
 
-import eu.kanade.tachiyomi.R
+import dev.icerock.moko.resources.StringResource
+import tachiyomi.i18n.MR
 
-enum class AppTheme(val titleResId: Int?) {
-    DEFAULT(R.string.label_default),
-    MONET(R.string.theme_monet),
-    GREEN_APPLE(R.string.theme_greenapple),
-    LAVENDER(R.string.theme_lavender),
-    MIDNIGHT_DUSK(R.string.theme_midnightdusk),
-    STRAWBERRY_DAIQUIRI(R.string.theme_strawberrydaiquiri),
-    TAKO(R.string.theme_tako),
-    TEALTURQUOISE(R.string.theme_tealturquoise),
-    TIDAL_WAVE(R.string.theme_tidalwave),
-    YINYANG(R.string.theme_yinyang),
-    YOTSUBA(R.string.theme_yotsuba),
+enum class AppTheme(val titleRes: StringResource?) {
+    DEFAULT(MR.strings.label_default),
+    MONET(MR.strings.theme_monet),
+    GREEN_APPLE(MR.strings.theme_greenapple),
+    LAVENDER(MR.strings.theme_lavender),
+    MIDNIGHT_DUSK(MR.strings.theme_midnightdusk),
+    STRAWBERRY_DAIQUIRI(MR.strings.theme_strawberrydaiquiri),
+    TAKO(MR.strings.theme_tako),
+    TEALTURQUOISE(MR.strings.theme_tealturquoise),
+    TIDAL_WAVE(MR.strings.theme_tidalwave),
+    YINYANG(MR.strings.theme_yinyang),
+    YOTSUBA(MR.strings.theme_yotsuba),
 
     // Deprecated
     DARK_BLUE(null),

@@ -52,6 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.tachiyomi.R
 import kotlinx.collections.immutable.ImmutableList
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.util.clearFocusOnSoftKeyboardHide
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -133,7 +135,7 @@ fun AppBar(
                     IconButton(onClick = onCancelActionMode) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = stringResource(R.string.action_cancel),
+                            contentDescription = localize(MR.strings.action_cancel),
                         )
                     }
                 } else {
@@ -253,7 +255,7 @@ fun AppBarActions(
 /**
  * @param searchEnabled Set to false if you don't want to show search action.
  * @param searchQuery If null, use normal toolbar.
- * @param placeholderText If null, [R.string.action_search_hint] is used.
+ * @param placeholderText If null, [MR.strings.action_search_hint] is used.
  */
 @Composable
 fun SearchToolbar(
@@ -317,7 +319,7 @@ fun SearchToolbar(
                         placeholder = {
                             Text(
                                 modifier = Modifier.secondaryItemAlpha(),
-                                text = (placeholderText ?: stringResource(R.string.action_search_hint)),
+                                text = (placeholderText ?: localize(MR.strings.action_search_hint)),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.titleMedium.copy(
@@ -342,7 +344,7 @@ fun SearchToolbar(
                         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
                         tooltip = {
                             PlainTooltip {
-                                Text(stringResource(R.string.action_search))
+                                Text(localize(MR.strings.action_search))
                             }
                         },
                         state = rememberTooltipState(),
@@ -352,7 +354,7 @@ fun SearchToolbar(
                         ) {
                             Icon(
                                 Icons.Outlined.Search,
-                                contentDescription = stringResource(R.string.action_search),
+                                contentDescription = localize(MR.strings.action_search),
                             )
                         }
                     }
@@ -361,7 +363,7 @@ fun SearchToolbar(
                         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
                         tooltip = {
                             PlainTooltip {
-                                Text(stringResource(R.string.action_reset))
+                                Text(localize(MR.strings.action_reset))
                             }
                         },
                         state = rememberTooltipState(),
@@ -374,7 +376,7 @@ fun SearchToolbar(
                         ) {
                             Icon(
                                 Icons.Outlined.Close,
-                                contentDescription = stringResource(R.string.action_reset),
+                                contentDescription = localize(MR.strings.action_reset),
                             )
                         }
                     }

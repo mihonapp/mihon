@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -53,8 +52,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
@@ -118,7 +118,7 @@ class SettingsSearchScreen : Screen() {
                                 decorationBox = {
                                     if (textFieldValue.text.isEmpty()) {
                                         Text(
-                                            text = stringResource(R.string.action_search_settings),
+                                            text = localize(MR.strings.action_search_settings),
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             style = MaterialTheme.typography.bodyLarge,
                                         )
@@ -222,7 +222,7 @@ private fun SearchResult(
         when {
             it == null -> {}
             it.isEmpty() -> {
-                EmptyScreen(stringResource(R.string.no_results_found))
+                EmptyScreen(localize(MR.strings.no_results_found))
             }
             else -> {
                 LazyColumn(
@@ -268,7 +268,7 @@ private fun SearchResult(
 private fun getIndex() = settingScreens
     .map { screen ->
         SettingsData(
-            title = stringResource(screen.getTitleRes()),
+            title = localize(screen.getTitleRes()),
             route = screen,
             contents = screen.getPreferences(),
         )

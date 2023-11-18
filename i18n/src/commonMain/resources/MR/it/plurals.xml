@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Dopo %1$s minuto</item>
+        <item quantity="many">Dopo %1$s minuti</item>
+        <item quantity="other">Dopo %1$s minuti</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Aggiornamento estensione disponibile</item>
+        <item quantity="many">%d estensioni hanno aggiornamenti disponibili</item>
+        <item quantity="other">%d estensioni hanno aggiornamenti disponibili</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Capitoli %1$s e un altro</item>
+        <item quantity="many">Capitoli %1$s e altri %2$d</item>
+        <item quantity="other">Capitoli %1$s e altri %2$d</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d nuovo capitolo</item>
+        <item quantity="many">%1$d nuovi capitoli</item>
+        <item quantity="other">%1$d nuovi capitoli</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Per %d voce</item>
+        <item quantity="many">Per %d voci</item>
+        <item quantity="other">Per %d voci</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s rimanente</item>
+        <item quantity="many">%1$s rimanenti</item>
+        <item quantity="other">%1$s rimanenti</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Completato in %1$s con %2$s errore</item>
+        <item quantity="many">Completato in %1$s con %2$s errori</item>
+        <item quantity="other">Completato in %1$s con %2$s errori</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d categoria</item>
+        <item quantity="many">%d categorie</item>
+        <item quantity="other">%d categorie</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s capitolo</item>
+        <item quantity="many">%1$s capitoli</item>
+        <item quantity="other">%1$s capitoli</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d tracker</item>
+        <item quantity="many">%d trackers</item>
+        <item quantity="other">%d trackers</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">%d capitolo saltato, la fonte non ce l\'ha o è stato filtrato</item>
+        <item quantity="many">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
+        <item quantity="other">%d capitoli saltati, la fonte non li ha o sono stati filtrati</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Ieri</item>
+        <item quantity="many">%1$d giorni fa</item>
+        <item quantity="other">%1$d giorni fa</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Il prossimo capitolo non letto</item>
+        <item quantity="many">I prossimi %d capitoli non letti</item>
+        <item quantity="other">I prossimi %d capitoli non letti</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Prossimo capitolo</item>
+        <item quantity="many">Prossimo %d capitoli</item>
+        <item quantity="other">Prossimo %d capitoli</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Manca %1$s capitolo</item>
+        <item quantity="many">Mancano %1$s capitoli</item>
+        <item quantity="other">Mancano %1$s capitoli</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">Un giorno</item>
+        <item quantity="many">%d giorni</item>
+        <item quantity="other">%d giorni</item>
+    </plurals>
+</resources>

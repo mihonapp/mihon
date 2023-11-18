@@ -7,7 +7,6 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -21,7 +20,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAll
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -49,11 +47,14 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import tachiyomi.core.i18n.localize
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -68,7 +69,7 @@ object LibraryTab : Tab {
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_library_enter)
             return TabOptions(
                 index = 0u,
-                title = stringResource(R.string.label_library),
+                title = localize(MR.strings.label_library),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
         }
@@ -94,11 +95,11 @@ object LibraryTab : Tab {
             val started = LibraryUpdateJob.startNow(context, category)
             scope.launch {
                 val msgRes = when {
-                    !started -> R.string.update_already_running
-                    category != null -> R.string.updating_category
-                    else -> R.string.updating_library
+                    !started -> MR.strings.update_already_running
+                    category != null -> MR.strings.updating_category
+                    else -> MR.strings.updating_library
                 }
-                snackbarHostState.showSnackbar(context.getString(msgRes))
+                snackbarHostState.showSnackbar(context.localize(msgRes))
             }
             started
         }
@@ -106,8 +107,8 @@ object LibraryTab : Tab {
         Scaffold(
             topBar = { scrollBehavior ->
                 val title = state.getToolbarTitle(
-                    defaultTitle = stringResource(R.string.label_library),
-                    defaultCategoryTitle = stringResource(R.string.label_default),
+                    defaultTitle = localize(MR.strings.label_library),
+                    defaultCategoryTitle = localize(MR.strings.label_default),
                     page = screenModel.activeCategoryIndex,
                 )
                 val tabVisible = state.showCategoryTabs && state.categories.size > 1
@@ -127,7 +128,9 @@ object LibraryTab : Tab {
                             if (randomItem != null) {
                                 navigator.push(MangaScreen(randomItem.libraryManga.manga.id))
                             } else {
-                                snackbarHostState.showSnackbar(context.getString(R.string.information_no_entries_found))
+                                snackbarHostState.showSnackbar(
+                                    context.localize(MR.strings.information_no_entries_found),
+                                )
                             }
                         }
                     },
@@ -154,11 +157,11 @@ object LibraryTab : Tab {
                 state.searchQuery.isNullOrEmpty() && !state.hasActiveFilters && state.isLibraryEmpty -> {
                     val handler = LocalUriHandler.current
                     EmptyScreen(
-                        textResource = R.string.information_empty_library,
+                        stringRes = MR.strings.information_empty_library,
                         modifier = Modifier.padding(contentPadding),
                         actions = persistentListOf(
                             EmptyScreenAction(
-                                stringResId = R.string.getting_started_guide,
+                                stringRes = MR.strings.getting_started_guide,
                                 icon = Icons.AutoMirrored.Outlined.HelpOutline,
                                 onClick = { handler.openUri("https://tachiyomi.org/docs/guides/getting-started") },
                             ),
@@ -184,7 +187,7 @@ object LibraryTab : Tab {
                                         ReaderActivity.newIntent(context, chapter.mangaId, chapter.id),
                                     )
                                 } else {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.no_next_chapter))
+                                    snackbarHostState.showSnackbar(context.localize(MR.strings.no_next_chapter))
                                 }
                             }
                             Unit

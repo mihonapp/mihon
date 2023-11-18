@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
@@ -23,6 +22,7 @@ import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.isActive
+import tachiyomi.core.i18n.localize
 import tachiyomi.core.preference.AndroidPreferenceStore
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.data.DatabaseHandler
@@ -37,6 +37,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.track.model.Track
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -93,7 +94,7 @@ class BackupRestorer(
                 errors.size,
                 logFile.parent,
                 logFile.name,
-                contentTitle = context.getString(R.string.library_sync_complete),
+                contentTitle = context.localize(MR.strings.library_sync_complete),
             )
         } else {
             notifier.showRestoreComplete(time, errors.size, logFile.parent, logFile.name)
@@ -192,8 +193,8 @@ class BackupRestorer(
         showRestoreProgress(
             restoreProgress,
             restoreAmount,
-            context.getString(R.string.categories),
-            context.getString(R.string.restoring_backup),
+            context.localize(MR.strings.categories),
+            context.localize(MR.strings.restoring_backup),
         )
     }
 
@@ -229,14 +230,14 @@ class BackupRestorer(
                 restoreProgress,
                 restoreAmount,
                 manga.title,
-                context.getString(R.string.syncing_library),
+                context.localize(MR.strings.syncing_library),
             )
         } else {
             showRestoreProgress(
                 restoreProgress,
                 restoreAmount,
                 manga.title,
-                context.getString(R.string.restoring_backup),
+                context.localize(MR.strings.restoring_backup),
             )
         }
     }
@@ -633,8 +634,8 @@ class BackupRestorer(
         showRestoreProgress(
             restoreProgress,
             restoreAmount,
-            context.getString(R.string.app_settings),
-            context.getString(R.string.restoring_backup),
+            context.localize(MR.strings.app_settings),
+            context.localize(MR.strings.restoring_backup),
         )
     }
 
@@ -648,8 +649,8 @@ class BackupRestorer(
         showRestoreProgress(
             restoreProgress,
             restoreAmount,
-            context.getString(R.string.source_settings),
-            context.getString(R.string.restoring_backup),
+            context.localize(MR.strings.source_settings),
+            context.localize(MR.strings.restoring_backup),
         )
     }
 

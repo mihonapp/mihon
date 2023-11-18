@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.track
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
@@ -28,8 +28,7 @@ interface Tracker {
 
     fun getStatusList(): List<Int>
 
-    @StringRes
-    fun getStatus(status: Int): Int?
+    fun getStatus(status: Int): StringResource?
 
     fun getReadingStatus(): Int
 

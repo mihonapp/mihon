@@ -24,7 +24,7 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun getMangaByUrlAndSourceId(url: String, sourceId: Long): Manga? {
-        return handler.awaitOneOrNull(inTransaction = true) {
+        return handler.awaitOneOrNull {
             mangasQueries.getMangaByUrlAndSource(
                 url,
                 sourceId,

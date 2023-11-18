@@ -14,6 +14,8 @@ import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import tachiyomi.core.i18n.localize
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.util.regex.Pattern
 
@@ -78,13 +80,13 @@ internal class DownloadNotifier(private val context: Context) {
                 // Pause action
                 addAction(
                     R.drawable.ic_pause_24dp,
-                    context.getString(R.string.action_pause),
+                    context.localize(MR.strings.action_pause),
                     NotificationReceiver.pauseDownloadsPendingBroadcast(context),
                 )
             }
 
-            val downloadingProgressText = context.getString(
-                R.string.chapter_downloading_progress,
+            val downloadingProgressText = context.localize(
+                MR.strings.chapter_downloading_progress,
                 download.downloadedImages,
                 download.pages!!.size,
             )
@@ -115,8 +117,8 @@ internal class DownloadNotifier(private val context: Context) {
      */
     fun onPaused() {
         with(progressNotificationBuilder) {
-            setContentTitle(context.getString(R.string.chapter_paused))
-            setContentText(context.getString(R.string.download_notifier_download_paused))
+            setContentTitle(context.localize(MR.strings.chapter_paused))
+            setContentText(context.localize(MR.strings.download_notifier_download_paused))
             setSmallIcon(R.drawable.ic_pause_24dp)
             setProgress(0, 0, false)
             setOngoing(false)
@@ -126,13 +128,13 @@ internal class DownloadNotifier(private val context: Context) {
             // Resume action
             addAction(
                 R.drawable.ic_play_arrow_24dp,
-                context.getString(R.string.action_resume),
+                context.localize(MR.strings.action_resume),
                 NotificationReceiver.resumeDownloadsPendingBroadcast(context),
             )
             // Clear action
             addAction(
                 R.drawable.ic_close_24dp,
-                context.getString(R.string.action_cancel_all),
+                context.localize(MR.strings.action_cancel_all),
                 NotificationReceiver.clearDownloadsPendingBroadcast(context),
             )
 
@@ -162,7 +164,7 @@ internal class DownloadNotifier(private val context: Context) {
      */
     fun onWarning(reason: String, timeout: Long? = null, contentIntent: PendingIntent? = null) {
         with(errorNotificationBuilder) {
-            setContentTitle(context.getString(R.string.download_notifier_downloader_title))
+            setContentTitle(context.localize(MR.strings.download_notifier_downloader_title))
             setStyle(NotificationCompat.BigTextStyle().bigText(reason))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             setAutoCancel(true)
@@ -190,9 +192,9 @@ internal class DownloadNotifier(private val context: Context) {
         // Create notification
         with(errorNotificationBuilder) {
             setContentTitle(
-                mangaTitle?.plus(": $chapter") ?: context.getString(R.string.download_notifier_downloader_title),
+                mangaTitle?.plus(": $chapter") ?: context.localize(MR.strings.download_notifier_downloader_title),
             )
-            setContentText(error ?: context.getString(R.string.download_notifier_unknown_error))
+            setContentText(error ?: context.localize(MR.strings.download_notifier_unknown_error))
             setSmallIcon(R.drawable.ic_warning_white_24dp)
             clearActions()
             setContentIntent(NotificationHandler.openDownloadManagerPendingActivity(context))

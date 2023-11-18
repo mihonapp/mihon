@@ -42,23 +42,22 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.ViewConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import me.saket.swipe.SwipeableActionsBox
 import me.saket.swipe.rememberSwipeableActionsState
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.ReadItemAlpha
 import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.util.selectedBackground
 import kotlin.math.absoluteValue
 
 @Composable
 fun MangaChapterListItem(
-    modifier: Modifier = Modifier,
     title: String,
     date: String?,
     readProgress: String?,
@@ -75,6 +74,7 @@ fun MangaChapterListItem(
     onClick: () -> Unit,
     onDownloadClick: ((ChapterDownloadAction) -> Unit)?,
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val haptic = LocalHapticFeedback.current
     val density = LocalDensity.current
@@ -143,7 +143,7 @@ fun MangaChapterListItem(
                         if (!read) {
                             Icon(
                                 imageVector = Icons.Filled.Circle,
-                                contentDescription = stringResource(R.string.unread),
+                                contentDescription = localize(MR.strings.unread),
                                 modifier = Modifier
                                     .height(8.dp)
                                     .padding(end = 4.dp),
@@ -153,7 +153,7 @@ fun MangaChapterListItem(
                         if (bookmark) {
                             Icon(
                                 imageVector = Icons.Filled.Bookmark,
-                                contentDescription = stringResource(R.string.action_filter_bookmarked),
+                                contentDescription = localize(MR.strings.action_filter_bookmarked),
                                 modifier = Modifier
                                     .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
                                 tint = MaterialTheme.colorScheme.primary,

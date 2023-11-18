@@ -8,7 +8,6 @@ import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.Preference
@@ -36,7 +34,6 @@ import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.permissions.PermissionRequestHelper
 import eu.kanade.presentation.util.relativeTimeSpanString
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
@@ -46,11 +43,14 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
+import tachiyomi.core.i18n.localize
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -59,8 +59,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    @StringRes
-    override fun getTitleRes() = R.string.label_data_storage
+    override fun getTitleRes() = MR.strings.label_data_storage
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -82,7 +81,7 @@ object SettingsDataScreen : SearchableSettings {
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_backup),
+            title = localize(MR.strings.label_backup),
             preferenceItems = listOf(
                 // Manual actions
                 getCreateBackupPref(),
@@ -91,14 +90,14 @@ object SettingsDataScreen : SearchableSettings {
                 // Automatic backups
                 Preference.PreferenceItem.ListPreference(
                     pref = backupIntervalPref,
-                    title = stringResource(R.string.pref_backup_interval),
+                    title = localize(MR.strings.pref_backup_interval),
                     entries = mapOf(
-                        0 to stringResource(R.string.off),
-                        6 to stringResource(R.string.update_6hour),
-                        12 to stringResource(R.string.update_12hour),
-                        24 to stringResource(R.string.update_24hour),
-                        48 to stringResource(R.string.update_48hour),
-                        168 to stringResource(R.string.update_weekly),
+                        0 to localize(MR.strings.off),
+                        6 to localize(MR.strings.update_6hour),
+                        12 to localize(MR.strings.update_12hour),
+                        24 to localize(MR.strings.update_24hour),
+                        48 to localize(MR.strings.update_48hour),
+                        168 to localize(MR.strings.update_weekly),
                     ),
                     onValueChanged = {
                         BackupCreateJob.setupTask(context, it)
@@ -108,12 +107,12 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.numberOfBackups(),
                     enabled = backupInterval != 0,
-                    title = stringResource(R.string.pref_backup_slots),
+                    title = localize(MR.strings.pref_backup_slots),
                     entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
                 Preference.PreferenceItem.InfoPreference(
-                    stringResource(R.string.backup_info) + "\n\n" +
-                        stringResource(R.string.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
+                    localize(MR.strings.backup_info) + "\n\n" +
+                        localize(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
                 ),
             ),
         )
@@ -123,8 +122,8 @@ object SettingsDataScreen : SearchableSettings {
     private fun getCreateBackupPref(): Preference.PreferenceItem.TextPreference {
         val navigator = LocalNavigator.currentOrThrow
         return Preference.PreferenceItem.TextPreference(
-            title = stringResource(R.string.pref_create_backup),
-            subtitle = stringResource(R.string.pref_create_backup_summ),
+            title = localize(MR.strings.pref_create_backup),
+            subtitle = localize(MR.strings.pref_create_backup_summ),
             onClick = { navigator.push(CreateBackupScreen()) },
         )
     }
@@ -139,7 +138,7 @@ object SettingsDataScreen : SearchableSettings {
                 is InvalidRestore -> {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(R.string.invalid_backup_file)) },
+                        title = { Text(text = localize(MR.strings.invalid_backup_file)) },
                         text = { Text(text = listOfNotNull(err.uri, err.message).joinToString("\n\n")) },
                         dismissButton = {
                             TextButton(
@@ -148,12 +147,12 @@ object SettingsDataScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(R.string.action_copy_to_clipboard))
+                                Text(text = localize(MR.strings.action_copy_to_clipboard))
                             }
                         },
                         confirmButton = {
                             TextButton(onClick = onDismissRequest) {
-                                Text(text = stringResource(R.string.action_ok))
+                                Text(text = localize(MR.strings.action_ok))
                             }
                         },
                     )
@@ -161,15 +160,15 @@ object SettingsDataScreen : SearchableSettings {
                 is MissingRestoreComponents -> {
                     AlertDialog(
                         onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(R.string.pref_restore_backup)) },
+                        title = { Text(text = localize(MR.strings.pref_restore_backup)) },
                         text = {
                             Column(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
                             ) {
                                 val msg = buildString {
-                                    append(stringResource(R.string.backup_restore_content_full))
+                                    append(localize(MR.strings.backup_restore_content_full))
                                     if (err.sources.isNotEmpty()) {
-                                        append("\n\n").append(stringResource(R.string.backup_restore_missing_sources))
+                                        append("\n\n").append(localize(MR.strings.backup_restore_missing_sources))
                                         err.sources.joinTo(
                                             this,
                                             separator = "\n- ",
@@ -177,7 +176,7 @@ object SettingsDataScreen : SearchableSettings {
                                         )
                                     }
                                     if (err.trackers.isNotEmpty()) {
-                                        append("\n\n").append(stringResource(R.string.backup_restore_missing_trackers))
+                                        append("\n\n").append(localize(MR.strings.backup_restore_missing_trackers))
                                         err.trackers.joinTo(
                                             this,
                                             separator = "\n- ",
@@ -195,7 +194,7 @@ object SettingsDataScreen : SearchableSettings {
                                     onDismissRequest()
                                 },
                             ) {
-                                Text(text = stringResource(R.string.action_restore))
+                                Text(text = localize(MR.strings.action_restore))
                             }
                         },
                     )
@@ -208,12 +207,12 @@ object SettingsDataScreen : SearchableSettings {
             object : ActivityResultContracts.GetContent() {
                 override fun createIntent(context: Context, input: String): Intent {
                     val intent = super.createIntent(context, input)
-                    return Intent.createChooser(intent, context.getString(R.string.file_select_backup))
+                    return Intent.createChooser(intent, context.localize(MR.strings.file_select_backup))
                 }
             },
         ) {
             if (it == null) {
-                context.toast(R.string.file_null_uri_error)
+                context.toast(MR.strings.file_null_uri_error)
                 return@rememberLauncherForActivityResult
             }
 
@@ -233,17 +232,17 @@ object SettingsDataScreen : SearchableSettings {
         }
 
         return Preference.PreferenceItem.TextPreference(
-            title = stringResource(R.string.pref_restore_backup),
-            subtitle = stringResource(R.string.pref_restore_backup_summ),
+            title = localize(MR.strings.pref_restore_backup),
+            subtitle = localize(MR.strings.pref_restore_backup_summ),
             onClick = {
                 if (!BackupRestoreJob.isRunning(context)) {
                     if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                        context.toast(R.string.restore_miui_warning, Toast.LENGTH_LONG)
+                        context.toast(MR.strings.restore_miui_warning, Toast.LENGTH_LONG)
                     }
                     // no need to catch because it's wrapped with a chooser
                     chooseBackup.launch("*/*")
                 } else {
-                    context.toast(R.string.restore_in_progress)
+                    context.toast(MR.strings.restore_in_progress)
                 }
             },
         )
@@ -260,31 +259,31 @@ object SettingsDataScreen : SearchableSettings {
         val cacheReadableSize = remember(cacheReadableSizeSema) { chapterCache.readableSize }
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_data),
+            title = localize(MR.strings.label_data),
             preferenceItems = listOf(
                 getStorageInfoPref(cacheReadableSize),
 
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_clear_chapter_cache),
-                    subtitle = stringResource(R.string.used_cache, cacheReadableSize),
+                    title = localize(MR.strings.pref_clear_chapter_cache),
+                    subtitle = localize(MR.strings.used_cache, cacheReadableSize),
                     onClick = {
                         scope.launchNonCancellable {
                             try {
                                 val deletedFiles = chapterCache.clear()
                                 withUIContext {
-                                    context.toast(context.getString(R.string.cache_deleted, deletedFiles))
+                                    context.toast(context.localize(MR.strings.cache_deleted, deletedFiles))
                                     cacheReadableSizeSema++
                                 }
                             } catch (e: Throwable) {
                                 logcat(LogPriority.ERROR, e)
-                                withUIContext { context.toast(R.string.cache_delete_error) }
+                                withUIContext { context.toast(MR.strings.cache_delete_error) }
                             }
                         }
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.autoClearChapterCache(),
-                    title = stringResource(R.string.pref_auto_clear_chapter_cache),
+                    title = localize(MR.strings.pref_auto_clear_chapter_cache),
                 ),
             ),
         )
@@ -303,10 +302,10 @@ object SettingsDataScreen : SearchableSettings {
         }
 
         return Preference.PreferenceItem.CustomPreference(
-            title = stringResource(R.string.pref_storage_usage),
+            title = localize(MR.strings.pref_storage_usage),
         ) {
             BasePreferenceWidget(
-                title = stringResource(R.string.pref_storage_usage),
+                title = localize(MR.strings.pref_storage_usage),
                 subcomponent = {
                     // TODO: downloads, SD cards, bar representation?, i18n
                     Box(modifier = Modifier.padding(horizontal = PrefsHorizontalPadding)) {

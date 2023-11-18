@@ -11,13 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogWindowProvider
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun ReaderSettingsDialog(
@@ -27,9 +27,9 @@ fun ReaderSettingsDialog(
     screenModel: ReaderSettingsScreenModel,
 ) {
     val tabTitles = persistentListOf(
-        stringResource(R.string.pref_category_reading_mode),
-        stringResource(R.string.pref_category_general),
-        stringResource(R.string.custom_filter),
+        localize(MR.strings.pref_category_reading_mode),
+        localize(MR.strings.pref_category_general),
+        localize(MR.strings.custom_filter),
     )
     val pagerState = rememberPagerState { tabTitles.size }
 

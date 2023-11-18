@@ -1,15 +1,15 @@
 package eu.kanade.presentation.more.settings
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun PreferenceScaffold(
-    @StringRes titleRes: Int,
+    titleRes: StringResource,
     actions: @Composable RowScope.() -> Unit = {},
     onBackPressed: (() -> Unit)? = null,
     itemsProvider: @Composable () -> List<Preference>,
@@ -17,7 +17,7 @@ fun PreferenceScaffold(
     Scaffold(
         topBar = {
             AppBar(
-                title = stringResource(titleRes),
+                title = localize(titleRes),
                 navigateUp = onBackPressed,
                 actions = actions,
                 scrollBehavior = it,

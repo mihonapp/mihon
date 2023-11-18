@@ -27,6 +27,7 @@ import tachiyomi.core.preference.plusAssign
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
+import tachiyomi.i18n.MR
 import java.io.File
 
 object Migrations {
@@ -146,7 +147,7 @@ object Migrations {
                 // v53: switched from WebView to OAuth
                 if (trackerManager.myAnimeList.isLoggedIn) {
                     trackerManager.myAnimeList.logout()
-                    context.toast(R.string.myanimelist_relogin)
+                    context.toast(MR.strings.myanimelist_relogin)
                 }
             }
             if (oldVersion < 57) {

@@ -10,12 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun HistoryDeleteDialog(
@@ -26,16 +26,16 @@ fun HistoryDeleteDialog(
 
     AlertDialog(
         title = {
-            Text(text = stringResource(R.string.action_remove))
+            Text(text = localize(MR.strings.action_remove))
         },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(text = stringResource(R.string.dialog_with_checkbox_remove_description))
+                Text(text = localize(MR.strings.dialog_with_checkbox_remove_description))
 
                 LabeledCheckbox(
-                    label = stringResource(R.string.dialog_with_checkbox_reset),
+                    label = localize(MR.strings.dialog_with_checkbox_reset),
                     checked = removeEverything,
                     onCheckedChange = { removeEverything = it },
                 )
@@ -47,12 +47,12 @@ fun HistoryDeleteDialog(
                 onDelete(removeEverything)
                 onDismissRequest()
             }) {
-                Text(text = stringResource(R.string.action_remove))
+                Text(text = localize(MR.strings.action_remove))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(R.string.action_cancel))
+                Text(text = localize(MR.strings.action_cancel))
             }
         },
     )
@@ -65,10 +65,10 @@ fun HistoryDeleteAllDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = stringResource(R.string.action_remove_everything))
+            Text(text = localize(MR.strings.action_remove_everything))
         },
         text = {
-            Text(text = stringResource(R.string.clear_history_confirmation))
+            Text(text = localize(MR.strings.clear_history_confirmation))
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
@@ -76,12 +76,12 @@ fun HistoryDeleteAllDialog(
                 onDelete()
                 onDismissRequest()
             }) {
-                Text(text = stringResource(R.string.action_ok))
+                Text(text = localize(MR.strings.action_ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(R.string.action_cancel))
+                Text(text = localize(MR.strings.action_cancel))
             }
         },
     )

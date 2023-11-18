@@ -8,9 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.localize
 
 @Composable
 fun DuplicateMangaDialog(
@@ -21,10 +21,10 @@ fun DuplicateMangaDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = stringResource(R.string.are_you_sure))
+            Text(text = localize(MR.strings.are_you_sure))
         },
         text = {
-            Text(text = stringResource(R.string.confirm_add_duplicate_manga))
+            Text(text = localize(MR.strings.confirm_add_duplicate_manga))
         },
         confirmButton = {
             FlowRow(
@@ -36,13 +36,13 @@ fun DuplicateMangaDialog(
                         onOpenManga()
                     },
                 ) {
-                    Text(text = stringResource(R.string.action_show_manga))
+                    Text(text = localize(MR.strings.action_show_manga))
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(R.string.action_cancel))
+                    Text(text = localize(MR.strings.action_cancel))
                 }
                 TextButton(
                     onClick = {
@@ -50,7 +50,7 @@ fun DuplicateMangaDialog(
                         onConfirm()
                     },
                 ) {
-                    Text(text = stringResource(R.string.action_add))
+                    Text(text = localize(MR.strings.action_add))
                 }
             }
         },

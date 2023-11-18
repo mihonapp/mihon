@@ -12,18 +12,18 @@ import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryListItem
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.category.CategoryScreenState
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.category.model.Category
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.util.plus
 
@@ -42,13 +42,13 @@ fun CategoryScreen(
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
-                title = stringResource(R.string.action_edit_categories),
+                title = localize(MR.strings.action_edit_categories),
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
                         persistentListOf(
                             AppBar.Action(
-                                title = stringResource(R.string.action_sort),
+                                title = localize(MR.strings.action_sort),
                                 icon = Icons.Outlined.SortByAlpha,
                                 onClick = onClickSortAlphabetically,
                             ),
@@ -67,7 +67,7 @@ fun CategoryScreen(
     ) { paddingValues ->
         if (state.isEmpty) {
             EmptyScreen(
-                textResource = R.string.information_empty_category,
+                stringRes = MR.strings.information_empty_category,
                 modifier = Modifier.padding(paddingValues),
             )
             return@Scaffold

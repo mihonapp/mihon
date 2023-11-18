@@ -29,13 +29,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.IconButtonTokens
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 enum class ChapterDownloadAction {
@@ -98,7 +99,7 @@ private fun NotDownloadedIndicator(
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_download_chapter_24dp),
-            contentDescription = stringResource(R.string.manga_download),
+            contentDescription = localize(MR.strings.manga_download),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -156,14 +157,14 @@ private fun DownloadingIndicator(
         }
         DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.action_start_downloading_now)) },
+                text = { Text(text = localize(MR.strings.action_start_downloading_now)) },
                 onClick = {
                     onClick(ChapterDownloadAction.START_NOW)
                     isMenuExpanded = false
                 },
             )
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.action_cancel)) },
+                text = { Text(text = localize(MR.strings.action_cancel)) },
                 onClick = {
                     onClick(ChapterDownloadAction.CANCEL)
                     isMenuExpanded = false
@@ -204,7 +205,7 @@ private fun DownloadedIndicator(
         )
         DropdownMenu(expanded = isMenuExpanded, onDismissRequest = { isMenuExpanded = false }) {
             DropdownMenuItem(
-                text = { Text(text = stringResource(R.string.action_delete)) },
+                text = { Text(text = localize(MR.strings.action_delete)) },
                 onClick = {
                     onClick(ChapterDownloadAction.DELETE)
                     isMenuExpanded = false
@@ -232,7 +233,7 @@ private fun ErrorIndicator(
     ) {
         Icon(
             imageVector = Icons.Outlined.ErrorOutline,
-            contentDescription = stringResource(R.string.chapter_error),
+            contentDescription = localize(MR.strings.chapter_error),
             modifier = Modifier.size(IndicatorSize),
             tint = MaterialTheme.colorScheme.error,
         )

@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +38,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.domain.ui.UiPreferences
@@ -49,7 +49,6 @@ import eu.kanade.presentation.track.TrackScoreSelector
 import eu.kanade.presentation.track.TrackStatusSelector
 import eu.kanade.presentation.track.TrackerSearch
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
@@ -66,6 +65,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
+import tachiyomi.core.i18n.localize
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
@@ -75,9 +75,11 @@ import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.model.Track
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.localize
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
@@ -210,7 +212,7 @@ data class TrackInfoDialogHomeScreen(
                     val matchResult = item.tracker.match(manga) ?: throw Exception()
                     item.tracker.register(matchResult, mangaId)
                 } catch (e: Exception) {
-                    withUIContext { Injekt.get<Application>().toast(R.string.error_no_match) }
+                    withUIContext { Injekt.get<Application>().toast(MR.strings.error_no_match) }
                 }
             }
         }
@@ -227,10 +229,10 @@ data class TrackInfoDialogHomeScreen(
                     }
                     withUIContext {
                         context.toast(
-                            context.getString(
-                                R.string.track_error,
+                            context.localize(
+                                MR.strings.track_error,
                                 track!!.name,
-                                e.message,
+                                e.message ?: "",
                             ),
                         )
                     }
@@ -286,7 +288,7 @@ private data class TrackStatusSelectorScreen(
         private val tracker: Tracker,
     ) : StateScreenModel<Model.State>(State(track.status.toInt())) {
 
-        fun getSelections(): Map<Int, Int?> {
+        fun getSelections(): Map<Int, StringResource?> {
             return tracker.getStatusList().associateWith { tracker.getStatus(it) }
         }
 
@@ -500,9 +502,9 @@ private data class TrackDateSelectorScreen(
         }
         TrackDateSelector(
             title = if (start) {
-                stringResource(R.string.track_started_reading_date)
+                localize(MR.strings.track_started_reading_date)
             } else {
-                stringResource(R.string.track_finished_reading_date)
+                localize(MR.strings.track_finished_reading_date)
             },
             initialSelectedDateMillis = screenModel.initialSelection,
             selectableDates = selectableDates,
@@ -575,7 +577,7 @@ private data class TrackDateRemoverScreen(
             },
             title = {
                 Text(
-                    text = stringResource(R.string.track_remove_date_conf_title),
+                    text = localize(MR.strings.track_remove_date_conf_title),
                     textAlign = TextAlign.Center,
                 )
             },
@@ -583,9 +585,9 @@ private data class TrackDateRemoverScreen(
                 val serviceName = screenModel.getServiceName()
                 Text(
                     text = if (start) {
-                        stringResource(R.string.track_remove_start_date_conf_text, serviceName)
+                        localize(MR.strings.track_remove_start_date_conf_text, serviceName)
                     } else {
-                        stringResource(R.string.track_remove_finish_date_conf_text, serviceName)
+                        localize(MR.strings.track_remove_finish_date_conf_text, serviceName)
                     },
                 )
             },
@@ -595,7 +597,7 @@ private data class TrackDateRemoverScreen(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = stringResource(R.string.action_cancel))
+                        Text(text = localize(MR.strings.action_cancel))
                     }
                     FilledTonalButton(
                         onClick = {
@@ -607,7 +609,7 @@ private data class TrackDateRemoverScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         ),
                     ) {
-                        Text(text = stringResource(R.string.action_remove))
+                        Text(text = localize(MR.strings.action_remove))
                     }
                 }
             },
@@ -751,7 +753,7 @@ private data class TrackerRemoveScreen(
             },
             title = {
                 Text(
-                    text = stringResource(R.string.track_delete_title, serviceName),
+                    text = localize(MR.strings.track_delete_title, serviceName),
                     textAlign = TextAlign.Center,
                 )
             },
@@ -760,12 +762,12 @@ private data class TrackerRemoveScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.track_delete_text, serviceName),
+                        text = localize(MR.strings.track_delete_text, serviceName),
                     )
 
                     if (screenModel.isDeletable()) {
                         LabeledCheckbox(
-                            label = stringResource(R.string.track_delete_remote_text, serviceName),
+                            label = localize(MR.strings.track_delete_remote_text, serviceName),
                             checked = removeRemoteTrack,
                             onCheckedChange = { removeRemoteTrack = it },
                         )
@@ -781,7 +783,7 @@ private data class TrackerRemoveScreen(
                     ),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = stringResource(R.string.action_cancel))
+                        Text(text = localize(MR.strings.action_cancel))
                     }
                     FilledTonalButton(
                         onClick = {
@@ -794,7 +796,7 @@ private data class TrackerRemoveScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         ),
                     ) {
-                        Text(text = stringResource(R.string.action_ok))
+                        Text(text = localize(MR.strings.action_ok))
                     }
                 }
             },

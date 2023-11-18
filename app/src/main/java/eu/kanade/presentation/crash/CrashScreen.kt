@@ -13,13 +13,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.InfoScreen
 
 @Composable
@@ -32,15 +32,15 @@ fun CrashScreen(
 
     InfoScreen(
         icon = Icons.Outlined.BugReport,
-        headingText = stringResource(R.string.crash_screen_title),
-        subtitleText = stringResource(R.string.crash_screen_description, stringResource(R.string.app_name)),
-        acceptText = stringResource(R.string.pref_dump_crash_logs),
+        headingText = localize(MR.strings.crash_screen_title),
+        subtitleText = localize(MR.strings.crash_screen_description, localize(MR.strings.app_name)),
+        acceptText = localize(MR.strings.pref_dump_crash_logs),
         onAcceptClick = {
             scope.launch {
                 CrashLogUtil(context).dumpLogs()
             }
         },
-        rejectText = stringResource(R.string.crash_screen_restart_application),
+        rejectText = localize(MR.strings.crash_screen_restart_application),
         onRejectClick = onRestartClick,
     ) {
         Box(

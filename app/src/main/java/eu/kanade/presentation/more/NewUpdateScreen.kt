@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.halilibo.richtext.markdown.Markdown
@@ -22,8 +21,9 @@ import com.halilibo.richtext.ui.RichTextStyle
 import com.halilibo.richtext.ui.material3.Material3RichText
 import com.halilibo.richtext.ui.string.RichTextStringStyle
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.localize
 import tachiyomi.presentation.core.screens.InfoScreen
 
 @Composable
@@ -36,11 +36,11 @@ fun NewUpdateScreen(
 ) {
     InfoScreen(
         icon = Icons.Outlined.NewReleases,
-        headingText = stringResource(R.string.update_check_notification_update_available),
+        headingText = localize(MR.strings.update_check_notification_update_available),
         subtitleText = versionName,
-        acceptText = stringResource(R.string.update_check_confirm),
+        acceptText = localize(MR.strings.update_check_confirm),
         onAcceptClick = onAcceptUpdate,
-        rejectText = stringResource(R.string.action_not_now),
+        rejectText = localize(MR.strings.action_not_now),
         onRejectClick = onRejectUpdate,
     ) {
         Material3RichText(
@@ -59,7 +59,7 @@ fun NewUpdateScreen(
                 onClick = onOpenInBrowser,
                 modifier = Modifier.padding(top = MaterialTheme.padding.small),
             ) {
-                Text(text = stringResource(R.string.update_check_open))
+                Text(text = localize(MR.strings.update_check_open))
                 Spacer(modifier = Modifier.width(MaterialTheme.padding.tiny))
                 Icon(imageVector = Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null)
             }

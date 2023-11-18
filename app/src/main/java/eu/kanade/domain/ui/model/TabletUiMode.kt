@@ -1,10 +1,11 @@
 package eu.kanade.domain.ui.model
 
-import eu.kanade.tachiyomi.R
+import dev.icerock.moko.resources.StringResource
+import tachiyomi.i18n.MR
 
-enum class TabletUiMode(val titleResId: Int) {
-    AUTOMATIC(R.string.automatic_background),
-    ALWAYS(R.string.lock_always),
-    LANDSCAPE(R.string.landscape),
-    NEVER(R.string.lock_never),
+enum class TabletUiMode(val titleRes: StringResource) {
+    AUTOMATIC(MR.strings.automatic_background),
+    ALWAYS(MR.strings.lock_always),
+    LANDSCAPE(MR.strings.landscape),
+    NEVER(MR.strings.lock_never),
 }

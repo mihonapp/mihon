@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Pre %d titul</item>
+        <item quantity="few">Pre %d tituly</item>
+        <item quantity="other">Pre %d titulov</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Dostupná aktualizácia rozšírenia</item>
+        <item quantity="few">%d dostupných aktualizácii rozšírenia</item>
+        <item quantity="other">%d dostupné aktualizácie rozšírenia</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d nová kapitola</item>
+        <item quantity="few">%1$d nové kapitoly</item>
+        <item quantity="other">%1$d nových kapitol</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Po %1$s minute</item>
+        <item quantity="few">Po %1$s minútach</item>
+        <item quantity="other">Po %1$s minútach</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Včera</item>
+        <item quantity="few">Pred %1$d dňami</item>
+        <item quantity="other">Pred %1$d dňami</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d sledovač</item>
+        <item quantity="few">%d sledovače</item>
+        <item quantity="other">%d sledovačov</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Ďalšia neprečítaná kapitola</item>
+        <item quantity="few">Ďalšie %d neprečítané kapitoly</item>
+        <item quantity="other">Ďalších %d neprečítaných kapitol</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s zostáva</item>
+        <item quantity="few">%1$s zostávajúce</item>
+        <item quantity="other">%1$s zostávajúcich</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Kapitoly %1$s a 1 ďalšia</item>
+        <item quantity="few">Kapitoly %1$s a %2$d ďalšie</item>
+        <item quantity="other">Kapitoly %1$s a %2$d ďalších</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s kapitola</item>
+        <item quantity="few">%1$s kapitoly</item>
+        <item quantity="other">%1$s kapitol</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Preskočenie %d kapitoly, buď zdroj chýba, alebo bol odfiltrovaný</item>
+        <item quantity="few">Preskočenie %d kapitol, buď zdroj chýba, alebo bol odfiltrovaný</item>
+        <item quantity="other">Zložky %d kapitoly, buď zdroj chýba, alebo boli filtrované</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Dokončené za %1$s s %2$s chybou</item>
+        <item quantity="few">Dokončené za %1$s s %2$s chybami</item>
+        <item quantity="other">Dokončené za %1$s s %2$s chybami</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategória</item>
+        <item quantity="few">%d kategórie</item>
+        <item quantity="other">%d kegórií</item>
+    </plurals>
+</resources>

@@ -9,7 +9,6 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -22,8 +21,10 @@ import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import okhttp3.internal.http2.ErrorCode
 import okhttp3.internal.http2.StreamResetException
+import tachiyomi.core.i18n.localize
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.io.File
 import kotlin.coroutines.cancellation.CancellationException
@@ -36,7 +37,7 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
 
     override suspend fun doWork(): Result {
         val url = inputData.getString(EXTRA_DOWNLOAD_URL)
-        val title = inputData.getString(EXTRA_DOWNLOAD_TITLE) ?: context.getString(R.string.app_name)
+        val title = inputData.getString(EXTRA_DOWNLOAD_TITLE) ?: context.localize(MR.strings.app_name)
 
         if (url.isNullOrEmpty()) {
             return Result.failure()

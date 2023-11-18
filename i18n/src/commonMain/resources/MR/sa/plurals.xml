@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">एकनिमेषानन्तरम्</item>
+        <item quantity="other">द्विनिमेषानन्तरम्</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">ह्यः</item>
+        <item quantity="other">द्विदिनपूर्वम्</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d वर्गः</item>
+        <item quantity="other">%d वर्गौ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%1$s समये %2$s दोषेण कृतम्</item>
+        <item quantity="other">%1$s समये %2$s दोषाभ्यां कृतम्</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">१ अध्यायः</item>
+        <item quantity="other">२ अध्यायौ</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">१ ट्राकर्तन्त्रांशः</item>
+        <item quantity="other">२ ट्राकर्तन्त्रांशौ</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">१ शेषम्</item>
+        <item quantity="other">२ शेषे</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">विस्तारनवीकरणम् उपलभ्यम्</item>
+        <item quantity="other">द्वे विस्तारनवीकरणे उपलभ्ये</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">एकः नूतनाध्यायः</item>
+        <item quantity="other">द्वौ नूतनाध्यायौ</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">एकाय शीर्षकाय</item>
+        <item quantity="other">द्वाभ्यां शीर्षकाभ्याम्</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">अध्यायाः %1$s च इतोऽपि १ च</item>
+        <item quantity="other">अध्यायाः %1$s च इतोऽपि २ च</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">१ अध्यायं लङ्घयति यतः मूले सः अनुपस्थितः अस्ति उत सः बहिः सम्मृष्टः कृतः</item>
+        <item quantity="other">२ अध्यायौ लङ्घयति यतः मूले तौ अनुपस्थितौ स्तः उत तौ बहिः सम्मृष्टौ कृतौ</item>
+    </plurals>
+</resources>
