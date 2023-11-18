@@ -123,7 +123,6 @@ private fun HistoryScreenContent(
             when (item) {
                 is HistoryUiModel.Header -> {
                     RelativeDateHeader(
-                        modifier = Modifier.animateItemPlacement(),
                         date = item.date,
                         relativeTime = relativeTime,
                         dateFormat = dateFormat,
@@ -132,7 +131,6 @@ private fun HistoryScreenContent(
                 is HistoryUiModel.Item -> {
                     val value = item.item
                     HistoryItem(
-                        modifier = Modifier.animateItemPlacement(),
                         history = value,
                         onClickCover = { onClickCover(value) },
                         onClickResume = { onClickResume(value) },

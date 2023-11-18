@@ -58,7 +58,6 @@ private fun ExtensionFilterContent(
     ) {
         items(state.languages) { language ->
             SwitchPreferenceWidget(
-                modifier = Modifier.animateItemPlacement(),
                 title = LocaleHelper.getSourceDisplayName(language, context),
                 checked = language in state.enabledLanguages,
                 onCheckedChanged = { onClickLang(language) },

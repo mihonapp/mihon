@@ -190,7 +190,6 @@ private fun ExtensionDetails(
             key = { it.source.id },
         ) { source ->
             SourceSwitchPreference(
-                modifier = Modifier.animateItemPlacement(),
                 source = source,
                 onClickSourcePreferences = onClickSourcePreferences,
                 onClickSource = onClickSource,

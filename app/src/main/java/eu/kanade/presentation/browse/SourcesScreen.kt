@@ -74,12 +74,10 @@ fun SourcesScreen(
                     when (model) {
                         is SourceUiModel.Header -> {
                             SourceHeader(
-                                modifier = Modifier.animateItemPlacement(),
                                 language = model.language,
                             )
                         }
                         is SourceUiModel.Item -> SourceItem(
-                            modifier = Modifier.animateItemPlacement(),
                             source = model.source,
                             onClickItem = onClickItem,
                             onLongClickItem = onLongClickItem,
