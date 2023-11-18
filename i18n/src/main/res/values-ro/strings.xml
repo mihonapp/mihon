@@ -565,7 +565,7 @@
     <string name="publishing_finished">Editare finalizată</string>
     <string name="cancelled">Anulat</string>
     <string name="on_hiatus">În hiatus</string>
-    <string name="notification_update_skipped">%1$d actualizari sarite</string>
+    <string name="notification_update_skipped">%1$d actualizări omise</string>
     <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
     <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
     <string name="local_invalid_format">Format de capitol invalid</string>
@@ -769,4 +769,13 @@
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>
     <string name="unlock_app_title">Deblochează %s</string>
     <string name="delete_downloaded">Șterge descărcările</string>
+    <string name="action_filter_interval_late">Verificare întârziată (10+)</string>
+    <string name="action_set_interval">Setează intervalul</string>
+    <string name="action_filter_interval_passed">Perioada de control a trecut</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="label_data_storage">Date și stocare</string>
+    <string name="action_filter_interval_dropped">Abandonat? Întârziat (20+ și 2 luni)</string>
+    <string name="action_sort_next_updated">Următoarea actualizare așteptată</string>
+    <string name="action_filter_interval_long">Fetch lunar (28 de zile)</string>
+    <string name="action_filter_interval_custom">Interval de preluare personalizat</string>
 </resources>

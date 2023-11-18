@@ -162,8 +162,8 @@
     <string name="pref_restore_backup">Відновити резервну копію</string>
     <string name="pref_restore_backup_summ">Відновити бібліотеку з резервної копії</string>
     <string name="pref_backup_directory">Директорія резервної копії</string>
-    <string name="pref_backup_interval">Частота створення резервної копії</string>
-    <string name="pref_backup_slots">Максимальна кількість резервних копій</string>
+    <string name="pref_backup_interval">Частота автоматичних бекапів</string>
+    <string name="pref_backup_slots">Максимальна кількість автоматичних бекапів</string>
     <string name="backup_created">Резервна копія створена</string>
     <string name="restore_completed">Відновлення завершено</string>
     <string name="backup_choice">Що ви хочете зберегти до резервної копії\?</string>
@@ -626,14 +626,14 @@
     <string name="channel_app_updates">Оновлення застосунку</string>
     <string name="download_queue_size_warning">Попередження: великий об\'єм завантажень може призвести до сповільнення роботи джерел та/або блокуванню Tachiyomi.</string>
     <string name="ext_update_all">Оновити все</string>
-    <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях.</string>
+    <string name="backup_info">Ви повинні зберігати декілька резервних копій в інших місцях. Резервні копії можуть містити конфіденційні дані, включно зі збереженими паролями; будьте обережні, якщо ділитеся ними.</string>
     <string name="label_warning">Попередження</string>
     <string name="action_display_language_badge">Мова</string>
     <string name="update_72hour">Що 3 дні</string>
     <string name="connected_to_wifi">Тільки через Wi-Fi</string>
     <string name="extension_api_error">Не вдалося отримати список розширень</string>
     <string name="pref_auto_clear_chapter_cache">Очищати кеш розділів під час запуску застосунку</string>
-    <string name="clear_database_source_item_count">%1$d небібліотечний записів у базі даних</string>
+    <string name="clear_database_source_item_count">%1$d небібліотечних записів у базі даних</string>
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
     <string name="pref_library_update_manga_restriction">Пропускати оновлення записів</string>
@@ -727,7 +727,7 @@
     <string name="pref_downloads_summary">Автоматичне завантаження, завантаження наперед</string>
     <string name="pref_tracking_summary">Одностороння синхронізація прогресу, розширена синхронізація</string>
     <string name="pref_browse_summary">Джерела, розширення, глобальний пошук</string>
-    <string name="pref_backup_summary">Ручне та автоматичне резервування</string>
+    <string name="pref_backup_summary">Ручне та автоматичне резервування, сховище</string>
     <string name="pref_security_summary">Блокування застосунку, захист екрану</string>
     <string name="pref_advanced_summary">Вивантаження журнала з помилками, оптимізація батареї</string>
     <string name="crash_screen_title">Ой!</string>
@@ -799,7 +799,7 @@
         <item quantity="many">Відсутні %1$s розділів</item>
         <item quantity="other">Відсутні %1$s розділів</item>
     </plurals>
-    <string name="pref_debug_info">Інформація про налагодження</string>
+    <string name="pref_debug_info">Інформація для відлагодження</string>
     <string name="pref_chapter_swipe">Гортання розділів</string>
     <string name="pref_chapter_swipe_end">Проведіть пальцем праворуч</string>
     <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
@@ -853,4 +853,14 @@
     <string name="action_sort_tracker_score">Оцінка трекера</string>
     <string name="label_data_storage">Дані та сховище</string>
     <string name="sort_category_confirmation">Ви хочете сортувати категорії алфавітно?</string>
+    <string name="action_create">Створити</string>
+    <string name="relative_time_span_never">Ніколи</string>
+    <string name="pref_flash_page_summ">Зменшує гостинг на e-ink екранах</string>
+    <string name="last_auto_backup_info">Востаннє автоматично зарезервовано: %s</string>
+    <string name="no_scanlators_found">Перекладачів не знайдено</string>
+    <string name="pref_flash_page">Блимати екраном при зміні сторінки</string>
+    <string name="pref_storage_usage">Використання сховища</string>
+    <string name="notification_updating_progress">Оновлення бібліотеки... (%s)</string>
+    <string name="file_null_uri_error">Файл не вибрано</string>
+    <string name="exclude_scanlators">Виключити перекладачів</string>
 </resources>

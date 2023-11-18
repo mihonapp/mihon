@@ -826,4 +826,7 @@
     <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
     <string name="exception_offline">Nav interneta savienojuma</string>
     <string name="exception_unknown_host">Nevarēja sasniegt %s</string>
+    <string name="action_sort_category">Kārtot kategorijas</string>
+    <string name="action_sort_tracker_score">Izsekošanas rezultāts</string>
+    <string name="label_data_storage">Dati un uzglabāšana</string>
 </resources>

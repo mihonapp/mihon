@@ -208,7 +208,7 @@
     <string name="pref_create_backup">Vytvořit zálohu</string>
     <string name="pref_restore_backup">Obnovit zálohu</string>
     <string name="pref_backup_directory">Místo zálohy</string>
-    <string name="pref_backup_interval">Frekvence zálohy</string>
+    <string name="pref_backup_interval">Frekvence automatických záloh</string>
     <string name="backup_created">Záloha vytvořena</string>
     <string name="restore_completed">Obnova dokončena</string>
     <string name="backup_choice">Co chcete zálohovat\?</string>
@@ -258,7 +258,7 @@
     <string name="fifth_to_last">Pátá předposlední přečtená kapitola</string>
     <string name="pref_create_backup_summ">Lze použít k obnovení aktuální knihovny</string>
     <string name="pref_restore_backup_summ">Obnovit knihovnu ze záložního souboru</string>
-    <string name="pref_backup_slots">Maximum záloh</string>
+    <string name="pref_backup_slots">Maximum automatických záloh</string>
     <string name="login_title">Přihlásit se do %1$s</string>
     <string name="show_title">Název zdroje</string>
     <string name="show_chapter_number">Číslo kapitoly</string>
@@ -607,7 +607,7 @@
     <string name="ext_app_info">Info o Aplikaci</string>
     <string name="pref_inverted_colors">Invertované</string>
     <string name="label_warning">Varování</string>
-    <string name="backup_info">Kopie záloh by jste také měli uchovat na více místech. Zálohy mohou obsahovat citlivé informace včetně jakýchkoliv uložených hesel; buďte opatrní při sdílení.</string>
+    <string name="backup_info">Kopie záloh byste také měli uchovat na více místech. Zálohy mohou obsahovat citlivé informace, včetně jakýchkoliv uložených hesel; při sdílení buďte opatrní.</string>
     <string name="action_sort_count">Celkem položek</string>
     <string name="action_select_inverse">Vybrat obráceně</string>
     <string name="action_display_language_badge">Jazyk</string>
@@ -720,7 +720,7 @@
     <string name="pref_advanced_summary">Výpis protokolů selhání, optimalizace baterie</string>
     <string name="crash_screen_description">%s narazil na neočekávanou chybu. Doporučujeme vám sdílet protokoly o selhání a poté je sdílet v našem kanálu podpory na Discordu.</string>
     <string name="crash_screen_restart_application">Restartujte aplikaci</string>
-    <string name="pref_backup_summary">Ruční a automatické zálohování</string>
+    <string name="pref_backup_summary">Ruční a automatické zálohování, místo v úložišti</string>
     <string name="crash_screen_title">Ups!</string>
     <string name="invalid_location">Neplatné umístění: %s</string>
     <string name="unknown_title">Neznámý titul</string>
@@ -833,5 +833,18 @@
     <string name="source_settings">Nastavení zdroje</string>
     <string name="notification_updating_progress">Aktualizace knihovny... (%s)</string>
     <string name="action_sort_category">Seřadit kategorie</string>
-    <string name="sort_category_confirmation">Chtěli by jste seřadit kategorie abecedně\?</string>
+    <string name="sort_category_confirmation">Chtěli byste seřadit kategorie abecedně?</string>
+    <string name="action_create">Vytvořit</string>
+    <string name="relative_time_span_never">Nikdy</string>
+    <string name="pref_flash_page_summ">Snižuje vytváření artefaktů na e-ink displejích</string>
+    <string name="action_apply">Použít</string>
+    <string name="action_revert_to_default">Vrátit na výchozí</string>
+    <string name="last_auto_backup_info">Poslední automatická záloha: %s</string>
+    <string name="no_scanlators_found">Žádní překladatelé nenalezeni</string>
+    <string name="scanlator">Překladatel</string>
+    <string name="pref_flash_page">Ukázat bílo při změně stránky</string>
+    <string name="pref_storage_usage">Využití úložiště</string>
+    <string name="label_data_storage">Data a úložiště</string>
+    <string name="file_null_uri_error">Nevybrán žádný soubor</string>
+    <string name="exclude_scanlators">Vynechat překladatele</string>
 </resources>

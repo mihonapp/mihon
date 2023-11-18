@@ -529,8 +529,8 @@
     <string name="clipboard_copy_error">Kopieren in die Zwischenablage fehlgeschlagen</string>
     <string name="rotation_landscape">Querformat</string>
     <string name="rotation_portrait">Hochformat</string>
-    <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach dem Titel der Einträge</string>
-    <string name="pref_create_folder_per_manga">Speichere Seiten in separate Ordner</string>
+    <string name="pref_create_folder_per_manga_summary">Erstellt Ordner nach den Titeln der Einträge</string>
+    <string name="pref_create_folder_per_manga">Seiten in separaten Ordnern speichern</string>
     <string name="rotation_type">Ausrichtung</string>
     <string name="pref_reader_actions">Aktionen</string>
     <string name="pref_grayscale">Graustufen</string>
@@ -818,10 +818,18 @@
     <string name="notification_updating_progress">Bibliothek wird aktualisiert… (%s)</string>
     <string name="action_sort_category">Kategorien sortieren</string>
     <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren\?</string>
-    <string name="file_null_uri_error">Dateiauswahl konnte keine Datei an die App zurückgeben</string>
+    <string name="file_null_uri_error">Keine Datei ausgewählt</string>
     <string name="relative_time_span_never">Nie</string>
     <string name="pref_flash_page_summ">Reduziert Ghosting auf E-Papier-Displays</string>
     <string name="last_auto_backup_info">Zuletzt automatisch gesichert: %s</string>
     <string name="pref_flash_page">Bei Umblättern weiß aufleuchten</string>
     <string name="label_data_storage">Daten und Speicher</string>
+    <string name="action_create">Erstellen</string>
+    <string name="action_apply">Anwenden</string>
+    <string name="action_revert_to_default">Auf Standard zurücksetzen</string>
+    <string name="no_scanlators_found">Keine Scanlatoren gefunden</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="pref_storage_usage">Speichernutzung</string>
+    <string name="action_sort_tracker_score">Tracker-Bewertung</string>
+    <string name="exclude_scanlators">Scanlatoren ausschließen</string>
 </resources>

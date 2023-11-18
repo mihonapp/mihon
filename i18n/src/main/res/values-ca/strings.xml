@@ -317,7 +317,6 @@
     <string name="lock_never">Mai</string>
     <plurals name="lock_after_mins">
         <item quantity="one">Després d’%1$s minut</item>
-        <item quantity="many">Després de %1$s minuts</item>
         <item quantity="other">Després de %1$s minuts</item>
     </plurals>
     <string name="secure_screen">Mode discret</string>
@@ -330,7 +329,6 @@
     <string name="pref_category_display">Visualització</string>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capítol nou</item>
-        <item quantity="many">%1$d capítols nous</item>
         <item quantity="other">%1$d capítols nous</item>
     </plurals>
     <string name="notification_chapters_single">Capítol %1$s</string>
@@ -338,7 +336,6 @@
     <string name="notification_chapters_multiple">Capítols %1$s</string>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Capítols %1$s i 1 més</item>
-        <item quantity="many">Capítols %1$s i %2$d més</item>
         <item quantity="other">Capítols %1$s i %2$d més</item>
     </plurals>
     <string name="hide_notification_content">Amaga el contingut de les notificacions</string>
@@ -350,7 +347,6 @@
     <string name="pref_always_show_chapter_transition">Mostra sempre la transició de capítol</string>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Per a %d element</item>
-        <item quantity="many">Per a %d elements</item>
         <item quantity="other">Per a %d elements</item>
     </plurals>
     <string name="action_menu">Menú</string>
@@ -360,7 +356,6 @@
     <string name="action_move_to_bottom">Mou a sota de tot</string>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Hi ha una actualització d’una extensió</item>
-        <item quantity="many">Hi ha actualitzacions de %d extensions</item>
         <item quantity="other">Hi ha actualitzacions de %d extensions</item>
     </plurals>
     <string name="channel_ext_updates">Actualitzacions d’extensions</string>
@@ -396,7 +391,6 @@
     <string name="downloaded_only_summary">Filtra tots els elements de la vostra biblioteca</string>
     <plurals name="download_queue_summary">
         <item quantity="one">En resta %1$s</item>
-        <item quantity="many">En resten %1$s</item>
         <item quantity="other">En resten %1$s</item>
     </plurals>
     <string name="gray_background">Gris</string>
@@ -405,13 +399,11 @@
     <string name="battery_optimization_setting_activity_not_found">No s’ha pogut obrir la configuració del dispositiu</string>
     <plurals name="restore_completed_message">
         <item quantity="one">Fet en %1$s amb %2$s error</item>
-        <item quantity="many">Fet en %1$s amb %2$s errors</item>
         <item quantity="other">Fet en %1$s amb %2$s errors</item>
     </plurals>
     <string name="pref_true_color_summary">Redueix les bandes de colors, però pot afectar el rendiment</string>
     <plurals name="num_categories">
         <item quantity="one">%d categoria</item>
-        <item quantity="many">%d categories</item>
         <item quantity="other">%d categories</item>
     </plurals>
     <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment externs. Configureu el seguiment d’elements individuals al seu botó de seguiment.</string>
@@ -441,7 +433,6 @@
     <string name="loader_not_implemented_error">No s’ha trobat la font</string>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s capítol</item>
-        <item quantity="many">%1$s capítols</item>
         <item quantity="other">%1$s capítols</item>
     </plurals>
     <string name="unknown_status">Estat desconegut</string>
@@ -460,7 +451,6 @@
     <string name="action_sort_date_added">Data d’incorporació</string>
     <plurals name="num_trackers">
         <item quantity="one">%d servei de seguiment</item>
-        <item quantity="many">%d serveis de seguiment</item>
         <item quantity="other">%d serveis de seguiment</item>
     </plurals>
     <string name="no_pinned_sources">No teniu cap origen fixat</string>
@@ -475,7 +465,6 @@
     <string name="parental_controls_info">Això no evita que les extensions no oficials o possiblement mal etiquetades puguin mostrar contingut NSFW (+18) a l’aplicació.</string>
     <plurals name="missing_chapters_warning">
         <item quantity="one">S’ha omès %d capítol. És possible que manqui a la font o que hagi estat filtrat</item>
-        <item quantity="many">S’han omès %d capítols. És possible que manquin a la font o que hagin estat filtrats</item>
         <item quantity="other">S’han omès %d capítols. És possible que manquin a la font o que hagin estat filtrats</item>
     </plurals>
     <string name="no_chapters_error">No s’ha trobat cap capítol</string>
@@ -574,7 +563,6 @@
     <string name="enhanced_services">Serveis de seguiment millorats</string>
     <plurals name="relative_time">
         <item quantity="one">Ahir</item>
-        <item quantity="many">Fa %1$d dies</item>
         <item quantity="other">Fa %1$d dies</item>
     </plurals>
     <string name="relative_time_today">Avui</string>
@@ -704,7 +692,6 @@
     <string name="crash_screen_description">S’ha produït un error inesperat al %s. Us suggerim que compartiu el registre d’errors al nostre canal d’assistència al Discord.</string>
     <plurals name="next_unread_chapters">
         <item quantity="one">El següent capítol no llegit</item>
-        <item quantity="many">Els següents %d capítols no llegits</item>
         <item quantity="other">Els següents %d capítols no llegits</item>
     </plurals>
     <string name="missing_storage_permission">No s’han concedit permisos d’emmagatzematge</string>
@@ -763,7 +750,6 @@
     <string name="information_required_plain">*obligatori</string>
     <plurals name="download_amount">
         <item quantity="one">El següent capítol</item>
-        <item quantity="many">Els següents %d capítols</item>
         <item quantity="other">Els següents %d capítols</item>
     </plurals>
     <string name="information_no_manga_category">La categoria és buida</string>
@@ -787,7 +773,6 @@
     <string name="pref_page_rotate">Rota les pàgines amples perquè s’ajustin a la pantalla</string>
     <plurals name="missing_chapters">
         <item quantity="one">Manca %1$s capítol</item>
-        <item quantity="many">Manquen %1$s capítols</item>
         <item quantity="other">Manquen %1$s capítols</item>
     </plurals>
     <string name="pref_debug_info">Informació de depuració</string>
@@ -796,7 +781,6 @@
     <string name="action_sort_next_updated">Pròxima actualització prevista</string>
     <plurals name="day">
         <item quantity="one">1 dia</item>
-        <item quantity="many">%d dies</item>
         <item quantity="other">%d dies</item>
     </plurals>
     <string name="action_filter_interval_long">Obtén mensualment (28 dies)</string>

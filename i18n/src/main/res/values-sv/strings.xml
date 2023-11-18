@@ -162,8 +162,8 @@
     <string name="pref_restore_backup">Återställ säkerhetskopia</string>
     <string name="pref_restore_backup_summ">Återställ biblioteket från en säkerhetskopia</string>
     <string name="pref_backup_directory">Säkerhetskopieringsplats</string>
-    <string name="pref_backup_interval">Säkerhetskopieringsfrekvens</string>
-    <string name="pref_backup_slots">Maximala säkerhetskopior</string>
+    <string name="pref_backup_interval">Automatisk säkerhetskopieringsfrekvens</string>
+    <string name="pref_backup_slots">Max antal automatiska säkerhetskopior</string>
     <string name="backup_created">Säkerhetskopia skapad</string>
     <string name="restore_completed">Återställning slutförd</string>
     <string name="backup_choice">Vad vill du säkerhetskopiera\?</string>
@@ -530,7 +530,7 @@
     <string name="rotation_landscape">Liggande</string>
     <string name="rotation_portrait">Porträtt</string>
     <string name="rotation_type">Rotation</string>
-    <string name="pref_create_folder_per_manga_summary">Skapa mappar enligt posternas titel</string>
+    <string name="pref_create_folder_per_manga_summary">Skapar mappar enligt posternas titel</string>
     <string name="pref_create_folder_per_manga">Spara sidor i separata mappar</string>
     <string name="pref_reader_actions">Åtgärder</string>
     <string name="pref_grayscale">Gråskala</string>
@@ -702,7 +702,7 @@
     <string name="action_search_hint">Sök…</string>
     <string name="pref_downloads_summary">Automatisk nedladdning, ladda ned i förväg</string>
     <string name="pref_tracking_summary">Envägs synkronisering av framfart, förbättrad synkronisering</string>
-    <string name="pref_backup_summary">Manuell och automatisk säkerhetskopiering</string>
+    <string name="pref_backup_summary">Manuell och automatisk säkerhetskopiering, lagringsutrymme</string>
     <string name="invalid_location">Ogiltig plats: %s</string>
     <string name="missing_storage_permission">Lagrings rättigheter inte tillagda</string>
     <string name="skipped_reason_not_always_update">Hoppat över för att serien inte behöver uppdateras</string>
@@ -818,4 +818,18 @@
     <string name="app_settings">Appinställningar</string>
     <string name="pref_relative_format">Relativa tidsstämplar</string>
     <string name="pref_relative_format_summary">\"%1$s\" istället för \"%2$s\"</string>
+    <string name="action_create">Skapa</string>
+    <string name="relative_time_span_never">Aldrig</string>
+    <string name="pref_flash_page_summ">Minimerar spöktext på e-papperskärmar</string>
+    <string name="action_apply">Tillämpa</string>
+    <string name="action_revert_to_default">Återgå till standard</string>
+    <string name="last_auto_backup_info">Senaste automatiska säkerhetskopieringen: %s</string>
+    <string name="no_scanlators_found">Inga scanlatorer hittades</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="pref_flash_page">Blinka vitt vid sidbyte</string>
+    <string name="pref_storage_usage">Lagringsanvändning</string>
+    <string name="action_sort_tracker_score">Spårares betyg</string>
+    <string name="label_data_storage">Data och lagring</string>
+    <string name="file_null_uri_error">Ingen fil vald</string>
+    <string name="exclude_scanlators">Exkludera scanlatorer</string>
 </resources>
