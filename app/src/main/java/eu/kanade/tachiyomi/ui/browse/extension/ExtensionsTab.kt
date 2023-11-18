@@ -14,6 +14,7 @@ import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun extensionsTab(
@@ -26,7 +27,7 @@ fun extensionsTab(
         titleRes = R.string.label_extensions,
         badgeNumber = state.updates.takeIf { it > 0 },
         searchEnabled = true,
-        actions = listOf(
+        actions = persistentListOf(
             AppBar.Action(
                 title = stringResource(R.string.action_filter),
                 icon = Icons.Outlined.Translate,

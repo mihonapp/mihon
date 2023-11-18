@@ -191,9 +191,9 @@ fun TrackDateSelector(
 private fun BaseSelector(
     title: String,
     content: @Composable BoxScope.() -> Unit,
-    thirdButton: @Composable (RowScope.() -> Unit)? = null,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
+    thirdButton: @Composable (RowScope.() -> Unit)? = null,
 ) {
     AlertDialogContent(
         modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),

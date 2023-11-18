@@ -43,6 +43,7 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.material.Scaffold
 
@@ -51,11 +52,11 @@ fun WebViewScreenContent(
     onNavigateUp: () -> Unit,
     initialTitle: String?,
     url: String,
-    headers: Map<String, String> = emptyMap(),
-    onUrlChange: (String) -> Unit = {},
     onShare: (String) -> Unit,
     onOpenInBrowser: (String) -> Unit,
     onClearCookies: (String) -> Unit,
+    headers: Map<String, String> = emptyMap(),
+    onUrlChange: (String) -> Unit = {},
 ) {
     val state = rememberWebViewState(url = url, additionalHttpHeaders = headers)
     val navigator = rememberWebViewNavigator()
@@ -124,7 +125,7 @@ fun WebViewScreenContent(
                         navigationIcon = Icons.Outlined.Close,
                         actions = {
                             AppBarActions(
-                                listOf(
+                                persistentListOf(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_webview_back),
                                         icon = Icons.AutoMirrored.Outlined.ArrowBack,

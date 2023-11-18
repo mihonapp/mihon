@@ -21,6 +21,7 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
 import tachiyomi.presentation.core.components.material.Scaffold
 
@@ -44,7 +45,7 @@ class BackupSchemaScreen : Screen() {
                     navigateUp = navigator::pop,
                     actions = {
                         AppBarActions(
-                            listOf(
+                            persistentListOf(
                                 AppBar.Action(
                                     title = stringResource(R.string.action_copy_to_clipboard),
                                     icon = Icons.Default.ContentCopy,

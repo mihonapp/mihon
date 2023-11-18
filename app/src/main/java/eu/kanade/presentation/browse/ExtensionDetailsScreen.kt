@@ -55,6 +55,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -80,40 +81,42 @@ fun ExtensionDetailsScreen(
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
-                        actions = buildList {
-                            if (state.extension?.isUnofficial == false) {
-                                add(
-                                    AppBar.Action(
-                                        title = stringResource(R.string.whats_new),
-                                        icon = Icons.Outlined.History,
-                                        onClick = onClickWhatsNew,
-                                    ),
-                                )
-                                add(
-                                    AppBar.Action(
-                                        title = stringResource(R.string.action_faq_and_guides),
-                                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                                        onClick = onClickReadme,
+                        actions = persistentListOf<AppBar.AppBarAction>().builder()
+                            .apply {
+                                if (state.extension?.isUnofficial == false) {
+                                    add(
+                                        AppBar.Action(
+                                            title = stringResource(R.string.whats_new),
+                                            icon = Icons.Outlined.History,
+                                            onClick = onClickWhatsNew,
+                                        ),
+                                    )
+                                    add(
+                                        AppBar.Action(
+                                            title = stringResource(R.string.action_faq_and_guides),
+                                            icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                                            onClick = onClickReadme,
+                                        ),
+                                    )
+                                }
+                                addAll(
+                                    listOf(
+                                        AppBar.OverflowAction(
+                                            title = stringResource(R.string.action_enable_all),
+                                            onClick = onClickEnableAll,
+                                        ),
+                                        AppBar.OverflowAction(
+                                            title = stringResource(R.string.action_disable_all),
+                                            onClick = onClickDisableAll,
+                                        ),
+                                        AppBar.OverflowAction(
+                                            title = stringResource(R.string.pref_clear_cookies),
+                                            onClick = onClickClearCookies,
+                                        ),
                                     ),
                                 )
                             }
-                            addAll(
-                                listOf(
-                                    AppBar.OverflowAction(
-                                        title = stringResource(R.string.action_enable_all),
-                                        onClick = onClickEnableAll,
-                                    ),
-                                    AppBar.OverflowAction(
-                                        title = stringResource(R.string.action_disable_all),
-                                        onClick = onClickDisableAll,
-                                    ),
-                                    AppBar.OverflowAction(
-                                        title = stringResource(R.string.pref_clear_cookies),
-                                        onClick = onClickClearCookies,
-                                    ),
-                                ),
-                            )
-                        },
+                            .build(),
                     )
                 },
                 scrollBehavior = scrollBehavior,
@@ -320,10 +323,10 @@ private fun DetailsHeader(
 
 @Composable
 private fun InfoText(
-    modifier: Modifier,
     primaryText: String,
-    primaryTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     secondaryText: String,
+    modifier: Modifier = Modifier,
+    primaryTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     onClick: (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -363,10 +366,10 @@ private fun InfoDivider() {
 
 @Composable
 private fun SourceSwitchPreference(
-    modifier: Modifier = Modifier,
     source: ExtensionSourceItem,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 

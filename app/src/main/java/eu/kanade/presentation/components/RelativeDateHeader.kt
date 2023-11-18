@@ -11,10 +11,10 @@ import java.util.Date
 
 @Composable
 fun RelativeDateHeader(
-    modifier: Modifier = Modifier,
     date: Date,
     relativeTime: Boolean,
     dateFormat: DateFormat,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     ListGroupHeader(

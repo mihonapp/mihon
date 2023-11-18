@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.presentation.core.util.clearFocusOnSoftKeyboardHide
 import tachiyomi.presentation.core.util.runOnEnterKeyPressed
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -184,7 +185,7 @@ fun AppBarTitle(
 
 @Composable
 fun AppBarActions(
-    actions: List<AppBar.AppBarAction>,
+    actions: ImmutableList<AppBar.AppBarAction>,
 ) {
     var showMenu by remember { mutableStateOf(false) }
 

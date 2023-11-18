@@ -33,6 +33,7 @@ import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.workManager
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -62,7 +63,7 @@ class WorkerInfoScreen : Screen() {
                     navigateUp = navigator::pop,
                     actions = {
                         AppBarActions(
-                            listOf(
+                            persistentListOf(
                                 AppBar.Action(
                                     title = stringResource(R.string.action_copy_to_clipboard),
                                     icon = Icons.Default.ContentCopy,

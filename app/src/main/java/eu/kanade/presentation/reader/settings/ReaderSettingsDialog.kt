@@ -17,6 +17,7 @@ import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ReaderSettingsDialog(
@@ -25,7 +26,7 @@ fun ReaderSettingsDialog(
     onHideMenus: () -> Unit,
     screenModel: ReaderSettingsScreenModel,
 ) {
-    val tabTitles = listOf(
+    val tabTitles = persistentListOf(
         stringResource(R.string.pref_category_reading_mode),
         stringResource(R.string.pref_category_general),
         stringResource(R.string.custom_filter),

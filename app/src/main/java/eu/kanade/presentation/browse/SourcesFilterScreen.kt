@@ -94,10 +94,10 @@ private fun SourcesFilterContent(
 
 @Composable
 private fun SourcesFilterHeader(
-    modifier: Modifier,
     language: String,
     enabled: Boolean,
     onClickItem: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SwitchPreferenceWidget(
         modifier = modifier,
@@ -109,10 +109,10 @@ private fun SourcesFilterHeader(
 
 @Composable
 private fun SourcesFilterItem(
-    modifier: Modifier,
     source: Source,
     enabled: Boolean,
     onClickItem: (Source) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BaseSourceItem(
         modifier = modifier,

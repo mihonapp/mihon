@@ -27,7 +27,6 @@ import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun CategoryListItem(
-    modifier: Modifier = Modifier,
     category: Category,
     canMoveUp: Boolean,
     canMoveDown: Boolean,
@@ -35,6 +34,7 @@ fun CategoryListItem(
     onMoveDown: (Category) -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
         modifier = modifier,

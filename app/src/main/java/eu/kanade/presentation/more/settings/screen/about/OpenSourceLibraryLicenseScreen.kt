@@ -20,6 +20,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.presentation.core.components.material.Scaffold
 
 class OpenSourceLibraryLicenseScreen(
@@ -41,7 +42,7 @@ class OpenSourceLibraryLicenseScreen(
                     actions = {
                         if (!website.isNullOrEmpty()) {
                             AppBarActions(
-                                listOf(
+                                persistentListOf(
                                     AppBar.Action(
                                         title = stringResource(R.string.website),
                                         icon = Icons.Default.Public,

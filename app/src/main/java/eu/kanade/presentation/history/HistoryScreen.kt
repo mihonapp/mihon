@@ -23,6 +23,7 @@ import eu.kanade.presentation.history.components.HistoryItem
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.preference.InMemoryPreferenceStore
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -51,7 +52,7 @@ fun HistoryScreen(
                 onChangeSearchQuery = onSearchQueryChange,
                 actions = {
                     AppBarActions(
-                        listOf(
+                        persistentListOf(
                             AppBar.Action(
                                 title = stringResource(R.string.pref_clear_history),
                                 icon = Icons.Outlined.DeleteSweep,

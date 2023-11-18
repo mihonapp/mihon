@@ -23,6 +23,7 @@ import eu.kanade.tachiyomi.ui.browse.migration.sources.migrateSourceTab
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.main.MainActivity
+import kotlinx.collections.immutable.persistentListOf
 
 data class BrowseTab(
     private val toExtensions: Boolean = false,
@@ -54,7 +55,7 @@ data class BrowseTab(
 
         TabbedScreen(
             titleRes = R.string.browse,
-            tabs = listOf(
+            tabs = persistentListOf(
                 sourcesTab(),
                 extensionsTab(extensionsScreenModel),
                 migrateSourceTab(),

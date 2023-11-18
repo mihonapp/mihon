@@ -55,6 +55,7 @@ import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.databinding.DownloadListBinding
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.util.lang.launchUI
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
@@ -183,7 +184,7 @@ object DownloadQueueScreen : Screen() {
                             }
 
                             AppBarActions(
-                                listOf(
+                                persistentListOf(
                                     AppBar.Action(
                                         title = stringResource(R.string.action_sort),
                                         icon = Icons.AutoMirrored.Outlined.Sort,
