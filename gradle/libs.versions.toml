@@ -98,7 +98,6 @@ ktlint = "org.jlleitschuh.gradle:ktlint-gradle:11.6.1"
 google-api-services-drive = "com.google.apis:google-api-services-drive:v3-rev197-1.25.0"
 google-api-client-oauth = "com.google.oauth-client:google-oauth-client:1.34.1"
 
-kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.13.0"
 
 [bundles]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
