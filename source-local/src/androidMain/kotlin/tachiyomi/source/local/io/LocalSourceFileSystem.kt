@@ -2,14 +2,15 @@ package tachiyomi.source.local.io
 
 import android.content.Context
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import tachiyomi.source.local.R
+import tachiyomi.core.i18n.stringResource
+import tachiyomi.i18n.MR
 import java.io.File
 
 actual class LocalSourceFileSystem(
     private val context: Context,
 ) {
 
-    private val baseFolderLocation = "${context.getString(R.string.app_name)}${File.separator}local"
+    private val baseFolderLocation = "${context.stringResource(MR.strings.app_name)}${File.separator}local"
 
     actual fun getBaseDirectories(): Sequence<File> {
         return DiskUtil.getExternalStorages(context)

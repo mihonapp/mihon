@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.source.service.SourcePreferences
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.api.ExtensionGithubApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
 import eu.kanade.tachiyomi.extension.model.Extension
@@ -24,6 +23,7 @@ import tachiyomi.core.util.lang.launchNow
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.source.model.StubSource
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Locale
@@ -121,7 +121,7 @@ class ExtensionManager(
             api.findExtensions()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            withUIContext { context.toast(R.string.extension_api_error) }
+            withUIContext { context.toast(MR.strings.extension_api_error) }
             emptyList()
         }
 

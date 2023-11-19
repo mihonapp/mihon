@@ -1,6 +1,5 @@
 package eu.kanade.presentation.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -20,17 +19,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
+import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.TabText
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun TabbedScreen(
-    @StringRes titleRes: Int,
+    titleRes: StringResource,
     tabs: ImmutableList<TabContent>,
     startIndex: Int? = null,
     searchQuery: String? = null,
@@ -96,7 +96,7 @@ fun TabbedScreen(
 }
 
 data class TabContent(
-    @StringRes val titleRes: Int,
+    val titleRes: StringResource,
     val badgeNumber: Int? = null,
     val searchEnabled: Boolean = false,
     val actions: ImmutableList<AppBar.Action> = persistentListOf(),

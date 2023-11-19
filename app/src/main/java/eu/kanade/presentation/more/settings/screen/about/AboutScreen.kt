@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -30,7 +29,6 @@ import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
@@ -44,9 +42,11 @@ import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.release.interactor.GetApplicationRelease
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LinkIcon
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.icons.CustomIcons
 import tachiyomi.presentation.core.icons.Discord
 import tachiyomi.presentation.core.icons.Facebook
@@ -74,7 +74,7 @@ object AboutScreen : Screen() {
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = stringResource(R.string.pref_category_about),
+                    title = stringResource(MR.strings.pref_category_about),
                     navigateUp = if (handleBack != null) handleBack::invoke else null,
                     scrollBehavior = scrollBehavior,
                 )
@@ -89,7 +89,7 @@ object AboutScreen : Screen() {
 
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(R.string.version),
+                        title = stringResource(MR.strings.version),
                         subtitle = getVersionName(withBuildDate = true),
                         onPreferenceClick = {
                             val deviceInfo = CrashLogUtil(context).getDebugInfo()
@@ -101,7 +101,7 @@ object AboutScreen : Screen() {
                 if (BuildConfig.INCLUDE_UPDATER) {
                     item {
                         TextPreferenceWidget(
-                            title = stringResource(R.string.check_for_updates),
+                            title = stringResource(MR.strings.check_for_updates),
                             widget = {
                                 AnimatedVisibility(visible = isCheckingUpdates) {
                                     CircularProgressIndicator(
@@ -140,7 +140,7 @@ object AboutScreen : Screen() {
                 if (!BuildConfig.DEBUG) {
                     item {
                         TextPreferenceWidget(
-                            title = stringResource(R.string.whats_new),
+                            title = stringResource(MR.strings.whats_new),
                             onPreferenceClick = { uriHandler.openUri(RELEASE_URL) },
                         )
                     }
@@ -148,21 +148,21 @@ object AboutScreen : Screen() {
 
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(R.string.help_translate),
+                        title = stringResource(MR.strings.help_translate),
                         onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/docs/contribute#translation") },
                     )
                 }
 
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(R.string.licenses),
+                        title = stringResource(MR.strings.licenses),
                         onPreferenceClick = { navigator.push(OpenSourceLicensesScreen()) },
                     )
                 }
 
                 item {
                     TextPreferenceWidget(
-                        title = stringResource(R.string.privacy_policy),
+                        title = stringResource(MR.strings.privacy_policy),
                         onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/privacy/") },
                     )
                 }
@@ -175,7 +175,7 @@ object AboutScreen : Screen() {
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         LinkIcon(
-                            label = stringResource(R.string.website),
+                            label = stringResource(MR.strings.website),
                             icon = Icons.Outlined.Public,
                             url = "https://tachiyomi.org",
                         )
@@ -226,10 +226,10 @@ object AboutScreen : Screen() {
                         onAvailableUpdate(result)
                     }
                     is GetApplicationRelease.Result.NoNewUpdate -> {
-                        context.toast(R.string.update_check_no_new_updates)
+                        context.toast(MR.strings.update_check_no_new_updates)
                     }
                     is GetApplicationRelease.Result.OsTooOld -> {
-                        context.toast(R.string.update_check_eol)
+                        context.toast(MR.strings.update_check_eol)
                     }
                     else -> {}
                 }

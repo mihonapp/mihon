@@ -36,17 +36,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -76,7 +76,7 @@ private fun AppThemesList(
 ) {
     val appThemes = remember {
         AppTheme.entries
-            .filterNot { it.titleResId == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
+            .filterNot { it.titleRes == null || (it == AppTheme.MONET && !DeviceUtil.isDynamicColorAvailable) }
     }
     LazyRow(
         contentPadding = PaddingValues(horizontal = PrefsHorizontalPadding),
@@ -104,7 +104,7 @@ private fun AppThemesList(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = stringResource(appTheme.titleResId!!),
+                    text = stringResource(appTheme.titleRes!!),
                     modifier = Modifier
                         .fillMaxWidth()
                         .secondaryItemAlpha(),
@@ -167,7 +167,7 @@ fun AppThemePreviewItem(
                 if (selected) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = stringResource(R.string.selected),
+                        contentDescription = stringResource(MR.strings.selected),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }

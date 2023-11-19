@@ -10,8 +10,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.SourcesFilterScreen
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.toast
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class SourcesFilterScreen : Screen() {
@@ -30,7 +30,7 @@ class SourcesFilterScreen : Screen() {
         if (state is SourcesFilterScreenModel.State.Error) {
             val context = LocalContext.current
             LaunchedEffect(Unit) {
-                context.toast(R.string.internal_error)
+                context.toast(MR.strings.internal_error)
                 navigator.pop()
             }
             return

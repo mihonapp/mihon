@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Після %1$s хвилини</item>
+        <item quantity="few">Після %1$s хвилин</item>
+        <item quantity="many">Після %1$s хвилин</item>
+        <item quantity="other">Після %1$s хвилин</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d новий розділ</item>
+        <item quantity="few">%1$d нових розділів</item>
+        <item quantity="many">%1$d нових розділів</item>
+        <item quantity="other">%1$d нових розділів</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Розділ %1$s та 1 більше</item>
+        <item quantity="few">Розділи %1$s та %2$d більше</item>
+        <item quantity="many">Розділи %1$s та %2$d більше</item>
+        <item quantity="other">Розділи %1$s та %2$d більше</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Для %d запису</item>
+        <item quantity="few">Для %d записів</item>
+        <item quantity="many">Для %d записів</item>
+        <item quantity="other">Для %d записів</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Наявне оновлення для розширення</item>
+        <item quantity="few">%d наявних оновлень розширень</item>
+        <item quantity="many">%d наявних оновлень розширень</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d категорія</item>
+        <item quantity="few">%d категорії</item>
+        <item quantity="many">%d категорій</item>
+        <item quantity="other">%d категорій</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s залишилось</item>
+        <item quantity="few">%1$s залишилось</item>
+        <item quantity="many">%1$s залишилось</item>
+        <item quantity="other">%1$s залишилось</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Зроблено за %1$s з %2$s помилкою</item>
+        <item quantity="few">Зроблено за %1$s з %2$s помилками</item>
+        <item quantity="many">Зроблено за %1$s з %2$s помилками</item>
+        <item quantity="other">Зроблено за %1$s з %2$s помилками</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s розділ</item>
+        <item quantity="few">%1$s розділів</item>
+        <item quantity="many">%1$s розділів</item>
+        <item quantity="other">%1$s розділів</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d трекер</item>
+        <item quantity="few">%d трекери</item>
+        <item quantity="many">%d трекерів</item>
+        <item quantity="other">%d трекерів</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Пропускається %d розділ, тому що джерело не має його, або він був відфільтрований</item>
+        <item quantity="few">Пропускаються %d розділи, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="many">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
+        <item quantity="other">Пропускання %d розділів, тому що джерело не має їх, або вони були відфільтровані</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Учора</item>
+        <item quantity="few">%1$d днів тому</item>
+        <item quantity="many">%1$d днів тому</item>
+        <item quantity="other">%1$d днів тому</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Наступний непрочитаний розділ</item>
+        <item quantity="few">Наступні %d непрочитані розділи</item>
+        <item quantity="many">Наступні %d непрочитані розділи</item>
+        <item quantity="other">Наступні %d непрочитані розділи</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Наступний розділ</item>
+        <item quantity="few">Наступних %d розділи</item>
+        <item quantity="many">Наступних %d розділів</item>
+        <item quantity="other">Наступних %d розділів</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Відсутній %1$s розділ</item>
+        <item quantity="few">Відсутні %1$s розділи</item>
+        <item quantity="many">Відсутні %1$s розділів</item>
+        <item quantity="other">Відсутні %1$s розділів</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 день</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d днів</item>
+        <item quantity="other">%d днів</item>
+    </plurals>
+</resources>

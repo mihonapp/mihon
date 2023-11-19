@@ -15,6 +15,8 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
+import tachiyomi.core.i18n.stringResource
+import tachiyomi.i18n.MR
 
 /**
  * Class used to show BigPictureStyle notifications
@@ -56,8 +58,8 @@ class SaveImageNotifier(private val context: Context) {
     fun onError(error: String?) {
         // Create notification
         with(notificationBuilder) {
-            setContentTitle(context.getString(R.string.download_notifier_title_error))
-            setContentText(error ?: context.getString(R.string.unknown_error))
+            setContentTitle(context.stringResource(MR.strings.download_notifier_title_error))
+            setContentText(error ?: context.stringResource(MR.strings.unknown_error))
             setSmallIcon(android.R.drawable.ic_menu_report_image)
         }
         updateNotification()
@@ -65,7 +67,7 @@ class SaveImageNotifier(private val context: Context) {
 
     private fun showCompleteNotification(uri: Uri, image: Bitmap?) {
         with(notificationBuilder) {
-            setContentTitle(context.getString(R.string.picture_saved))
+            setContentTitle(context.stringResource(MR.strings.picture_saved))
             setSmallIcon(R.drawable.ic_photo_24dp)
             image?.let { setStyle(NotificationCompat.BigPictureStyle().bigPicture(it)) }
             setLargeIcon(image)
@@ -78,13 +80,13 @@ class SaveImageNotifier(private val context: Context) {
             // Share action
             addAction(
                 R.drawable.ic_share_24dp,
-                context.getString(R.string.action_share),
+                context.stringResource(MR.strings.action_share),
                 NotificationReceiver.shareImagePendingBroadcast(context, uri.path!!, notificationId),
             )
             // Delete action
             addAction(
                 R.drawable.ic_delete_24dp,
-                context.getString(R.string.action_delete),
+                context.stringResource(MR.strings.action_delete),
                 NotificationReceiver.deleteImagePendingBroadcast(context, uri.path!!, notificationId),
             )
 

@@ -18,18 +18,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.reader.components.ChapterNavigator
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import kotlinx.collections.immutable.persistentListOf
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 private val animationSpec = tween<IntOffset>(200)
 
@@ -105,9 +105,9 @@ fun ReaderAppBars(
                                     AppBar.Action(
                                         title = stringResource(
                                             if (bookmarked) {
-                                                R.string.action_remove_bookmark
+                                                MR.strings.action_remove_bookmark
                                             } else {
-                                                R.string.action_bookmark
+                                                MR.strings.action_bookmark
                                             },
                                         ),
                                         icon = if (bookmarked) {
@@ -121,7 +121,7 @@ fun ReaderAppBars(
                                 onOpenInWebView?.let {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = stringResource(R.string.action_open_in_web_view),
+                                            title = stringResource(MR.strings.action_open_in_web_view),
                                             onClick = it,
                                         ),
                                     )
@@ -129,7 +129,7 @@ fun ReaderAppBars(
                                 onShare?.let {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = stringResource(R.string.action_share),
+                                            title = stringResource(MR.strings.action_share),
                                             onClick = it,
                                         ),
                                     )

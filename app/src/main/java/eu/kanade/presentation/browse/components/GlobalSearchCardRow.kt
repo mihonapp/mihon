@@ -13,15 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.library.components.CommonMangaItemDefaults
 import eu.kanade.presentation.library.components.MangaComfortableGridItem
-import eu.kanade.tachiyomi.R
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.manga.model.asMangaCover
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun GlobalSearchCardRow(
@@ -78,7 +78,7 @@ private fun MangaItem(
 @Composable
 private fun EmptyResultItem() {
     Text(
-        text = stringResource(R.string.no_results_found),
+        text = stringResource(MR.strings.no_results_found),
         modifier = Modifier
             .padding(
                 horizontal = MaterialTheme.padding.medium,

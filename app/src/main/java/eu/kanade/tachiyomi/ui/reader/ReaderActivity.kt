@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
@@ -85,11 +84,13 @@ import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -372,7 +373,7 @@ class ReaderActivity : BaseActivity() {
                 onClickCropBorder = {
                     val enabled = viewModel.toggleCropBorders()
                     menuToggleToast?.cancel()
-                    menuToggleToast = toast(if (enabled) R.string.on else R.string.off)
+                    menuToggleToast = toast(if (enabled) MR.strings.on else MR.strings.off)
                 },
                 onClickSettings = viewModel::openSettingsDialog,
             )
@@ -399,7 +400,7 @@ class ReaderActivity : BaseActivity() {
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 CircularProgressIndicator()
-                                Text(stringResource(R.string.loading))
+                                Text(stringResource(MR.strings.loading))
                             }
                         },
                     )
@@ -536,7 +537,7 @@ class ReaderActivity : BaseActivity() {
     private fun shareChapter() {
         assistUrl?.let {
             val intent = it.toUri().toShareIntent(this, type = "text/plain")
-            startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+            startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
         }
     }
 
@@ -683,9 +684,9 @@ class ReaderActivity : BaseActivity() {
 
         val intent = uri.toShareIntent(
             context = applicationContext,
-            message = getString(R.string.share_page_info, manga.title, chapter.name, page.number),
+            message = stringResource(MR.strings.share_page_info, manga.title, chapter.name, page.number),
         )
-        startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+        startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
     }
 
     /**
@@ -695,7 +696,7 @@ class ReaderActivity : BaseActivity() {
     private fun onSaveImageResult(result: ReaderViewModel.SaveImageResult) {
         when (result) {
             is ReaderViewModel.SaveImageResult.Success -> {
-                toast(R.string.picture_saved)
+                toast(MR.strings.picture_saved)
             }
             is ReaderViewModel.SaveImageResult.Error -> {
                 logcat(LogPriority.ERROR, result.error)
@@ -710,9 +711,9 @@ class ReaderActivity : BaseActivity() {
     private fun onSetAsCoverResult(result: ReaderViewModel.SetAsCoverResult) {
         toast(
             when (result) {
-                Success -> R.string.cover_updated
-                AddToLibraryFirst -> R.string.notification_first_add_to_library
-                Error -> R.string.notification_cover_update_failed
+                Success -> MR.strings.cover_updated
+                AddToLibraryFirst -> MR.strings.notification_first_add_to_library
+                Error -> MR.strings.notification_cover_update_failed
             },
         )
     }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">A pustis de %1$s minutu</item>
+        <item quantity="other">A pustis de %1$s minutos</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d capìtulu nou</item>
+        <item quantity="other">%1$d capìtulos noos</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Capìtulos %1$s e 1 àteru</item>
+        <item quantity="other">Capìtulos %1$s e àteros %2$d</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Pro %d elementu</item>
+        <item quantity="other">Pro %d elementos</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">B\'at un\'agiornamentu disponìbile pro un\'estensione</item>
+        <item quantity="other">B\'ant agiornamentos disponìbiles pro %d estensiones</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">Nd\'abarrat %1$s</item>
+        <item quantity="other">Nd\'abarrant %1$s</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d categoria</item>
+        <item quantity="other">%d categorias</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Fatu in %1$s cun %2$s errore</item>
+        <item quantity="other">Fatu in %1$s cun %2$s errores</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s capìtulu</item>
+        <item quantity="other">%1$s capìtulos</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d arrastadore</item>
+        <item quantity="other">%d arrastadores</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Brinchende %d capìtulu, sa fonte non lu tenet o est istadu bogadu cun unu filtru</item>
+        <item quantity="other">Brinchende %d capìtulos, sa fonte non los tenet o sunt istados bogados cun unu filtru</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Eris</item>
+        <item quantity="other">%1$d dies a oe</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Su capìtulu non lèghidu imbeniente</item>
+        <item quantity="other">Sos %d capìtulos non lèghidos imbenientes</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Su capìtulu imbeniente</item>
+        <item quantity="other">Sos %d capìtulos imbenientes</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Mancat %1$s capìtulu</item>
+        <item quantity="other">Mancant %1$s capìtulos</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 die</item>
+        <item quantity="other">%d dies</item>
+    </plurals>
+</resources>

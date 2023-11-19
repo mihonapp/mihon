@@ -17,6 +17,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import kotlinx.coroutines.guava.await
+import tachiyomi.i18n.MR
 
 class DebugInfoScreen : Screen() {
 
@@ -24,7 +25,7 @@ class DebugInfoScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         PreferenceScaffold(
-            titleRes = R.string.pref_debug_info,
+            titleRes = MR.strings.pref_debug_info,
             onBackPressed = navigator::pop,
             itemsProvider = {
                 listOf(

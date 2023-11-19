@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d ថ្ងៃមុន</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d ភាគបន្ទាប់ដែលមិនទាន់អាន</item>
+    </plurals>
+</resources>

@@ -1,5 +1,6 @@
 [versions]
 aboutlib_version = "10.9.2"
+moko = "0.23.0"
 okhttp_version = "5.0.0-alpha.11"
 shizuku_version = "12.2.0"
 sqlite = "2.4.0"
@@ -61,6 +62,9 @@ insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
 compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.1.0"
 
 swipe = "me.saket.swipe:swipe:1.2.0"
+
+moko-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
+moko-gradle = { module = "dev.icerock.moko:resources-generator", version.ref = "moko" }
 
 logcat = "com.squareup.logcat:logcat:0.1"
 

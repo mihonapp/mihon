@@ -7,29 +7,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.text.NumberFormat
 
 @Composable
 internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel) {
-    HeadingItem(R.string.pref_category_for_this_series)
+    HeadingItem(MR.strings.pref_category_for_this_series)
     val manga by screenModel.mangaFlow.collectAsState()
 
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
-    SettingsChipRow(R.string.pref_category_reading_mode) {
+    SettingsChipRow(MR.strings.pref_category_reading_mode) {
         ReadingMode.entries.map {
             FilterChip(
                 selected = it == readingMode,
@@ -40,7 +40,7 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
     }
 
     val orientation = remember(manga) { ReaderOrientation.fromPreference(manga?.readerOrientation?.toInt()) }
-    SettingsChipRow(R.string.rotation_type) {
+    SettingsChipRow(MR.strings.rotation_type) {
         ReaderOrientation.entries.map {
             FilterChip(
                 selected = it == orientation,
@@ -60,7 +60,7 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
 
 @Composable
 private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenModel) {
-    HeadingItem(R.string.pager_viewer)
+    HeadingItem(MR.strings.pager_viewer)
 
     val navigationModePager by screenModel.preferences.navigationModePager().collectAsState()
     val pagerNavInverted by screenModel.preferences.pagerNavInverted().collectAsState()
@@ -72,7 +72,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     )
 
     val imageScaleType by screenModel.preferences.imageScaleType().collectAsState()
-    SettingsChipRow(R.string.pref_image_scale_type) {
+    SettingsChipRow(MR.strings.pref_image_scale_type) {
         ReaderPreferences.ImageScaleType.mapIndexed { index, it ->
             FilterChip(
                 selected = imageScaleType == index + 1,
@@ -83,7 +83,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     }
 
     val zoomStart by screenModel.preferences.zoomStart().collectAsState()
-    SettingsChipRow(R.string.pref_zoom_start) {
+    SettingsChipRow(MR.strings.pref_zoom_start) {
         ReaderPreferences.ZoomStart.mapIndexed { index, it ->
             FilterChip(
                 selected = zoomStart == index + 1,
@@ -94,42 +94,42 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
     }
 
     CheckboxItem(
-        label = stringResource(R.string.pref_crop_borders),
+        label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBorders(),
     )
 
     CheckboxItem(
-        label = stringResource(R.string.pref_landscape_zoom),
+        label = stringResource(MR.strings.pref_landscape_zoom),
         pref = screenModel.preferences.landscapeZoom(),
     )
 
     CheckboxItem(
-        label = stringResource(R.string.pref_navigate_pan),
+        label = stringResource(MR.strings.pref_navigate_pan),
         pref = screenModel.preferences.navigateToPan(),
     )
 
     val dualPageSplitPaged by screenModel.preferences.dualPageSplitPaged().collectAsState()
     CheckboxItem(
-        label = stringResource(R.string.pref_dual_page_split),
+        label = stringResource(MR.strings.pref_dual_page_split),
         pref = screenModel.preferences.dualPageSplitPaged(),
     )
 
     if (dualPageSplitPaged) {
         CheckboxItem(
-            label = stringResource(R.string.pref_dual_page_invert),
+            label = stringResource(MR.strings.pref_dual_page_invert),
             pref = screenModel.preferences.dualPageInvertPaged(),
         )
     }
 
     val dualPageRotateToFit by screenModel.preferences.dualPageRotateToFit().collectAsState()
     CheckboxItem(
-        label = stringResource(R.string.pref_page_rotate),
+        label = stringResource(MR.strings.pref_page_rotate),
         pref = screenModel.preferences.dualPageRotateToFit(),
     )
 
     if (dualPageRotateToFit) {
         CheckboxItem(
-            label = stringResource(R.string.pref_page_rotate_invert),
+            label = stringResource(MR.strings.pref_page_rotate_invert),
             pref = screenModel.preferences.dualPageRotateToFitInvert(),
         )
     }
@@ -139,7 +139,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
 private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenModel) {
     val numberFormat = remember { NumberFormat.getPercentInstance() }
 
-    HeadingItem(R.string.webtoon_viewer)
+    HeadingItem(MR.strings.webtoon_viewer)
 
     val navigationModeWebtoon by screenModel.preferences.navigationModeWebtoon().collectAsState()
     val webtoonNavInverted by screenModel.preferences.webtoonNavInverted().collectAsState()
@@ -152,7 +152,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
 
     val webtoonSidePadding by screenModel.preferences.webtoonSidePadding().collectAsState()
     SliderItem(
-        label = stringResource(R.string.pref_webtoon_side_padding),
+        label = stringResource(MR.strings.pref_webtoon_side_padding),
         min = ReaderPreferences.WEBTOON_PADDING_MIN,
         max = ReaderPreferences.WEBTOON_PADDING_MAX,
         value = webtoonSidePadding,
@@ -163,25 +163,25 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
     )
 
     CheckboxItem(
-        label = stringResource(R.string.pref_crop_borders),
+        label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBordersWebtoon(),
     )
 
     val dualPageSplitWebtoon by screenModel.preferences.dualPageSplitWebtoon().collectAsState()
     CheckboxItem(
-        label = stringResource(R.string.pref_dual_page_split),
+        label = stringResource(MR.strings.pref_dual_page_split),
         pref = screenModel.preferences.dualPageSplitWebtoon(),
     )
 
     if (dualPageSplitWebtoon) {
         CheckboxItem(
-            label = stringResource(R.string.pref_dual_page_invert),
+            label = stringResource(MR.strings.pref_dual_page_invert),
             pref = screenModel.preferences.dualPageInvertWebtoon(),
         )
     }
 
     CheckboxItem(
-        label = stringResource(R.string.pref_double_tap_zoom),
+        label = stringResource(MR.strings.pref_double_tap_zoom),
         pref = screenModel.preferences.webtoonDoubleTapZoomEnabled(),
     )
 }
@@ -193,7 +193,7 @@ private fun ColumnScope.TapZonesItems(
     invertMode: ReaderPreferences.TappingInvertMode,
     onSelectInvertMode: (ReaderPreferences.TappingInvertMode) -> Unit,
 ) {
-    SettingsChipRow(R.string.pref_viewer_nav) {
+    SettingsChipRow(MR.strings.pref_viewer_nav) {
         ReaderPreferences.TapZones.mapIndexed { index, it ->
             FilterChip(
                 selected = selected == index,
@@ -204,12 +204,12 @@ private fun ColumnScope.TapZonesItems(
     }
 
     if (selected != 5) {
-        SettingsChipRow(R.string.pref_read_with_tapping_inverted) {
+        SettingsChipRow(MR.strings.pref_read_with_tapping_inverted) {
             ReaderPreferences.TappingInvertMode.entries.map {
                 FilterChip(
                     selected = it == invertMode,
                     onClick = { onSelectInvertMode(it) },
-                    label = { Text(stringResource(it.titleResId)) },
+                    label = { Text(stringResource(it.titleRes)) },
                 )
             }
         }

@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 
@@ -75,7 +75,7 @@ fun <T> ListPreferenceWidget(
             },
             confirmButton = {
                 TextButton(onClick = { isDialogShown = false }) {
-                    Text(text = stringResource(R.string.action_cancel))
+                    Text(text = stringResource(MR.strings.action_cancel))
                 }
             },
         )

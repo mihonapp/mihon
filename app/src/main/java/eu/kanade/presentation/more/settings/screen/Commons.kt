@@ -3,10 +3,10 @@ package eu.kanade.presentation.more.settings.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import eu.kanade.presentation.category.visualName
-import eu.kanade.tachiyomi.R
 import tachiyomi.domain.category.model.Category
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 /**
  * Returns a string of categories name for settings subtitle
@@ -34,15 +34,15 @@ fun getCategoriesLabel(
         includedCategories.isNotEmpty() && includedCategories.size != allCategories.size ->
             includedCategories.joinToString { it.visualName(context) }
         // All explicitly selected
-        includedCategories.size == allCategories.size -> stringResource(R.string.all)
-        allExcluded -> stringResource(R.string.none)
-        else -> stringResource(R.string.all)
+        includedCategories.size == allCategories.size -> stringResource(MR.strings.all)
+        allExcluded -> stringResource(MR.strings.none)
+        else -> stringResource(MR.strings.all)
     }
     val excludedItemsText = when {
-        excludedCategories.isEmpty() -> stringResource(R.string.none)
-        allExcluded -> stringResource(R.string.all)
+        excludedCategories.isEmpty() -> stringResource(MR.strings.none)
+        allExcluded -> stringResource(MR.strings.all)
         else -> excludedCategories.joinToString { it.visualName(context) }
     }
-    return stringResource(R.string.include, includedItemsText) + "\n" +
-        stringResource(R.string.exclude, excludedItemsText)
+    return stringResource(MR.strings.include, includedItemsText) + "\n" +
+        stringResource(MR.strings.exclude, excludedItemsText)
 }

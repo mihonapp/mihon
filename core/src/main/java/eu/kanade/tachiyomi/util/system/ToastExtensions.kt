@@ -2,7 +2,8 @@ package eu.kanade.tachiyomi.util.system
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.StringRes
+import dev.icerock.moko.resources.StringResource
+import tachiyomi.core.i18n.stringResource
 
 /**
  * Display a toast in this context.
@@ -11,11 +12,11 @@ import androidx.annotation.StringRes
  * @param duration the duration of the toast. Defaults to short.
  */
 fun Context.toast(
-    @StringRes resource: Int,
+    resource: StringResource,
     duration: Int = Toast.LENGTH_SHORT,
     block: (Toast) -> Unit = {},
 ): Toast {
-    return toast(getString(resource), duration, block)
+    return toast(stringResource(resource), duration, block)
 }
 
 /**

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="relative_time">
+        <item quantity="one">Vakar</item>
+        <item quantity="few">Prieš %1$d dienas</item>
+        <item quantity="other">Prieš %1$d dienų</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Po %1$s minutės</item>
+        <item quantity="few">Po %1$s minučių</item>
+        <item quantity="other">Po %1$s minučių</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategorija</item>
+        <item quantity="few">%d kategorijos</item>
+        <item quantity="other">%d kategorijos</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Skyrius %1$s ir 1 daugiau</item>
+        <item quantity="few">Skyriai %1$s ir %2$d daugiau</item>
+        <item quantity="other">Skyriai %1$s ir %2$d daugiau</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d naujas skyrius</item>
+        <item quantity="few">%1$d nauji skyriai</item>
+        <item quantity="other">%1$d nauji skyriai</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Atlikta %1$s su %2$s klaida</item>
+        <item quantity="few">Atlikta %1$s su %2$s klaidomis</item>
+        <item quantity="other">Atlikta %1$s su %2$s klaidomis</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">%d įrašui</item>
+        <item quantity="few">%d įrašams</item>
+        <item quantity="other">%d įrašų</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">%d plėtinio atnaujinimas pasiekiamas</item>
+        <item quantity="few">%d plėtinių atnaujinimai pasiekiami</item>
+        <item quantity="other">%d plėtinių atnaujinimai pasiekiami</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s skyrius</item>
+        <item quantity="few">%1$s skyriai</item>
+        <item quantity="other">%1$s skyriai</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">Liko vienas</item>
+        <item quantity="few">Liko %1$s</item>
+        <item quantity="other">Liko %1$s</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d stebėjimo įrenginys</item>
+        <item quantity="few">%d stebėjimo įrenginiai</item>
+        <item quantity="other">%d stebėjimo įrenginių</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Praleidžiamas %d skyrius, arba jo nėra šaltinyje, arba jis buvo nepasirinktas</item>
+        <item quantity="few">Praleidžiami %d skyriai, arba jų nėra šaltinyje, arba jie buvo nepasirinkti</item>
+        <item quantity="other">Praleidžiamia %d skyrių, arba jų nėra šaltinyje, arba jie buvo nepasirinkti</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Kitas neskaitytas skyrius</item>
+        <item quantity="few">Kiti %d neskaityti skyriai</item>
+        <item quantity="other">Kiti %d neskaitytų skyrių</item>
+    </plurals>
+</resources>

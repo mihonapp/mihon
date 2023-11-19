@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Minuutin jälkeen</item>
+        <item quantity="other">%1$s minuutin jälkeen</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">1 uusi luku</item>
+        <item quantity="other">%1$d uutta lukua</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Luku %1$s ja 1 lisää</item>
+        <item quantity="other">Luvut %1$s ja %2$d lisää</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Yhdelle sarjalle</item>
+        <item quantity="other">%d sarjalle</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Laajennuspäivitys saatavilla</item>
+        <item quantity="other">%d laajennuspäivitystä saatavilla</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">1 jäljellä</item>
+        <item quantity="other">%1$s jäljellä</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategoria</item>
+        <item quantity="other">%d kategoriaa</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Valmistui %1$s virheitä löytyi %2$s</item>
+        <item quantity="other">Valmistui %1$s virheitä löytyi %2$s</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">1 luku</item>
+        <item quantity="other">%1$s lukua</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">1 seurantapalvelin</item>
+        <item quantity="other">%d seurantapalvelinta</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">1 puuttuva luku</item>
+        <item quantity="other">%d puuttuvaa lukua</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Eilen</item>
+        <item quantity="other">%1$d päivää sitten</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Seuraava lukematon luku</item>
+        <item quantity="other">Seuraavat %d lukematonta lukua</item>
+    </plurals>
+</resources>

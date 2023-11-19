@@ -12,18 +12,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.manga.model.readingMode
 import eu.kanade.presentation.components.AdaptiveSheet
 import eu.kanade.presentation.reader.components.ModeSelectionDialog
 import eu.kanade.presentation.theme.TachiyomiTheme
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsIconGrid
 import tachiyomi.presentation.core.components.material.IconToggleButton
+import tachiyomi.presentation.core.i18n.stringResource
 
 private val ReadingModesWithoutDefault = ReadingMode.entries - ReadingMode.DEFAULT
 
@@ -31,7 +32,7 @@ private val ReadingModesWithoutDefault = ReadingMode.entries - ReadingMode.DEFAU
 fun ReadingModeSelectDialog(
     onDismissRequest: () -> Unit,
     screenModel: ReaderSettingsScreenModel,
-    onChange: (Int) -> Unit,
+    onChange: (StringResource) -> Unit,
 ) {
     val manga by screenModel.mangaFlow.collectAsState()
     val readingMode = remember(manga) { ReadingMode.fromPreference(manga?.readingMode?.toInt()) }
@@ -59,7 +60,7 @@ private fun DialogContent(
         onUseDefault = { onChangeReadingMode(ReadingMode.DEFAULT) }.takeIf { readingMode != ReadingMode.DEFAULT },
         onApply = { onChangeReadingMode(selected) },
     ) {
-        SettingsIconGrid(R.string.pref_category_reading_mode) {
+        SettingsIconGrid(MR.strings.pref_category_reading_mode) {
             items(ReadingModesWithoutDefault) { mode ->
                 IconToggleButton(
                     checked = mode == selected,

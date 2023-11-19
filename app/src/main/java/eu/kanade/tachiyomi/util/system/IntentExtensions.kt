@@ -6,7 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.IntentCompat
-import eu.kanade.tachiyomi.R
+import tachiyomi.core.i18n.stringResource
+import tachiyomi.i18n.MR
 import java.io.Serializable
 
 fun Uri.toShareIntent(context: Context, type: String = "image/*", message: String? = null): Intent {
@@ -27,7 +28,7 @@ fun Uri.toShareIntent(context: Context, type: String = "image/*", message: Strin
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
 
-    return Intent.createChooser(shareIntent, context.getString(R.string.action_share)).apply {
+    return Intent.createChooser(shareIntent, context.stringResource(MR.strings.action_share)).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK
     }
 }

@@ -1,20 +1,21 @@
 package eu.kanade.tachiyomi.ui.browse.migration
 
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.manga.model.hasCustomCover
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 data class MigrationFlag(
     val flag: Int,
     val isDefaultSelected: Boolean,
-    val titleId: Int,
+    val titleId: StringResource,
 ) {
     companion object {
-        fun create(flag: Int, defaultSelectionMap: Int, titleId: Int): MigrationFlag {
+        fun create(flag: Int, defaultSelectionMap: Int, titleId: StringResource): MigrationFlag {
             return MigrationFlag(
                 flag = flag,
                 isDefaultSelected = defaultSelectionMap and flag != 0,
@@ -53,15 +54,15 @@ object MigrationFlags {
     /** Returns information about applicable flags with default selections. */
     fun getFlags(manga: Manga?, defaultSelectedBitMap: Int): List<MigrationFlag> {
         val flags = mutableListOf<MigrationFlag>()
-        flags += MigrationFlag.create(CHAPTERS, defaultSelectedBitMap, R.string.chapters)
-        flags += MigrationFlag.create(CATEGORIES, defaultSelectedBitMap, R.string.categories)
+        flags += MigrationFlag.create(CHAPTERS, defaultSelectedBitMap, MR.strings.chapters)
+        flags += MigrationFlag.create(CATEGORIES, defaultSelectedBitMap, MR.strings.categories)
 
         if (manga != null) {
             if (manga.hasCustomCover(coverCache)) {
-                flags += MigrationFlag.create(CUSTOM_COVER, defaultSelectedBitMap, R.string.custom_cover)
+                flags += MigrationFlag.create(CUSTOM_COVER, defaultSelectedBitMap, MR.strings.custom_cover)
             }
             if (downloadCache.getDownloadCount(manga) > 0) {
-                flags += MigrationFlag.create(DELETE_DOWNLOADED, defaultSelectedBitMap, R.string.delete_downloaded)
+                flags += MigrationFlag.create(DELETE_DOWNLOADED, defaultSelectedBitMap, MR.strings.delete_downloaded)
             }
         }
         return flags

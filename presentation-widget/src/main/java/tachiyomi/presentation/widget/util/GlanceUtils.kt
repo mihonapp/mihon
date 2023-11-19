@@ -1,11 +1,8 @@
 package tachiyomi.presentation.widget.util
 
-import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
 import androidx.glance.appwidget.cornerRadius
 import tachiyomi.presentation.widget.R
 
@@ -15,11 +12,6 @@ fun GlanceModifier.appWidgetBackgroundRadius(): GlanceModifier {
 
 fun GlanceModifier.appWidgetInnerRadius(): GlanceModifier {
     return this.cornerRadius(R.dimen.appwidget_inner_radius)
-}
-
-@Composable
-fun stringResource(@StringRes id: Int): String {
-    return LocalContext.current.getString(id)
 }
 
 /**

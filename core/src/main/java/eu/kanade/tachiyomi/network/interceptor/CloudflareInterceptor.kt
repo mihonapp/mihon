@@ -5,7 +5,6 @@ import android.content.Context
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import eu.kanade.tachiyomi.core.R
 import eu.kanade.tachiyomi.network.AndroidCookieJar
 import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
@@ -15,6 +14,8 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import tachiyomi.core.i18n.stringResource
+import tachiyomi.i18n.MR
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 
@@ -48,7 +49,7 @@ class CloudflareInterceptor(
         // Because OkHttp's enqueue only handles IOExceptions, wrap the exception so that
         // we don't crash the entire app
         catch (e: CloudflareBypassException) {
-            throw IOException(context.getString(R.string.information_cloudflare_bypass_failure), e)
+            throw IOException(context.stringResource(MR.strings.information_cloudflare_bypass_failure), e)
         } catch (e: Exception) {
             throw IOException(e)
         }
@@ -130,7 +131,7 @@ class CloudflareInterceptor(
         if (!cloudflareBypassed) {
             // Prompt user to update WebView if it seems too outdated
             if (isWebViewOutdated) {
-                context.toast(R.string.information_webview_outdated, Toast.LENGTH_LONG)
+                context.toast(MR.strings.information_webview_outdated, Toast.LENGTH_LONG)
             }
 
             throw CloudflareBypassException()

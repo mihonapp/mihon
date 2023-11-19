@@ -1,6 +1,5 @@
 package eu.kanade.presentation.components
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -26,13 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMaxBy
-import eu.kanade.tachiyomi.R
+import dev.icerock.moko.resources.StringResource
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 val DownloadedOnlyBannerBackgroundColor
     @Composable get() = MaterialTheme.colorScheme.tertiary
@@ -43,7 +43,7 @@ val IndexingBannerBackgroundColor
 
 @Composable
 fun WarningBanner(
-    @StringRes textRes: Int,
+    textRes: StringResource,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -127,7 +127,7 @@ fun AppStateBanners(
 @Composable
 private fun DownloadedOnlyModeBanner(modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(R.string.label_downloaded_only),
+        text = stringResource(MR.strings.label_downloaded_only),
         modifier = Modifier
             .background(DownloadedOnlyBannerBackgroundColor)
             .fillMaxWidth()
@@ -142,7 +142,7 @@ private fun DownloadedOnlyModeBanner(modifier: Modifier = Modifier) {
 @Composable
 private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(R.string.pref_incognito_mode),
+        text = stringResource(MR.strings.pref_incognito_mode),
         modifier = Modifier
             .background(IncognitoModeBannerBackgroundColor)
             .fillMaxWidth()
@@ -173,7 +173,7 @@ private fun IndexingDownloadBanner(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = stringResource(R.string.download_notifier_cache_renewal),
+            text = stringResource(MR.strings.download_notifier_cache_renewal),
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,

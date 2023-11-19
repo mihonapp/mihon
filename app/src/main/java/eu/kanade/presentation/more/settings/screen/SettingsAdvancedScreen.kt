@@ -7,7 +7,6 @@ import android.os.Build
 import android.provider.Settings
 import android.webkit.WebStorage
 import android.webkit.WebView
-import androidx.annotation.StringRes
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -21,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -29,9 +27,8 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.DownloadCache
-import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
+import eu.kanade.tachiyomi.data.library.MetadataUpdateJob
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.network.PREF_DOH_360
@@ -60,6 +57,8 @@ import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -69,8 +68,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    @StringRes
-    override fun getTitleRes() = R.string.pref_category_advanced
+    override fun getTitleRes() = MR.strings.pref_category_advanced
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -86,13 +84,13 @@ object SettingsAdvancedScreen : SearchableSettings {
                 listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = basePreferences.acraEnabled(),
-                        title = stringResource(R.string.pref_enable_acra),
-                        subtitle = stringResource(R.string.pref_acra_summary),
+                        title = stringResource(MR.strings.pref_enable_acra),
+                        subtitle = stringResource(MR.strings.pref_acra_summary),
                         enabled = isPreviewBuildType || isReleaseBuildType,
                     ),
                     Preference.PreferenceItem.TextPreference(
-                        title = stringResource(R.string.pref_dump_crash_logs),
-                        subtitle = stringResource(R.string.pref_dump_crash_logs_summary),
+                        title = stringResource(MR.strings.pref_dump_crash_logs),
+                        subtitle = stringResource(MR.strings.pref_dump_crash_logs_summary),
                         onClick = {
                             scope.launch {
                                 CrashLogUtil(context).dumpLogs()
@@ -101,15 +99,15 @@ object SettingsAdvancedScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.SwitchPreference(
                         pref = networkPreferences.verboseLogging(),
-                        title = stringResource(R.string.pref_verbose_logging),
-                        subtitle = stringResource(R.string.pref_verbose_logging_summary),
+                        title = stringResource(MR.strings.pref_verbose_logging),
+                        subtitle = stringResource(MR.strings.pref_verbose_logging_summary),
                         onValueChanged = {
-                            context.toast(R.string.requires_app_restart)
+                            context.toast(MR.strings.requires_app_restart)
                             true
                         },
                     ),
                     Preference.PreferenceItem.TextPreference(
-                        title = stringResource(R.string.pref_debug_info),
+                        title = stringResource(MR.strings.pref_debug_info),
                         onClick = { navigator.push(DebugInfoScreen()) },
                     ),
                 ),
@@ -117,7 +115,7 @@ object SettingsAdvancedScreen : SearchableSettings {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 add(
                     Preference.PreferenceItem.TextPreference(
-                        title = stringResource(R.string.pref_manage_notifications),
+                        title = stringResource(MR.strings.pref_manage_notifications),
                         onClick = {
                             val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                                 putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
@@ -145,11 +143,11 @@ object SettingsAdvancedScreen : SearchableSettings {
         val uriHandler = LocalUriHandler.current
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_background_activity),
+            title = stringResource(MR.strings.label_background_activity),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_disable_battery_optimization),
-                    subtitle = stringResource(R.string.pref_disable_battery_optimization_summary),
+                    title = stringResource(MR.strings.pref_disable_battery_optimization),
+                    subtitle = stringResource(MR.strings.pref_disable_battery_optimization_summary),
                     onClick = {
                         val packageName: String = context.packageName
                         if (!context.powerManager.isIgnoringBatteryOptimizations(packageName)) {
@@ -162,16 +160,16 @@ object SettingsAdvancedScreen : SearchableSettings {
                                 }
                                 context.startActivity(intent)
                             } catch (e: ActivityNotFoundException) {
-                                context.toast(R.string.battery_optimization_setting_activity_not_found)
+                                context.toast(MR.strings.battery_optimization_setting_activity_not_found)
                             }
                         } else {
-                            context.toast(R.string.battery_optimization_disabled)
+                            context.toast(MR.strings.battery_optimization_disabled)
                         }
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = "Don't kill my app!",
-                    subtitle = stringResource(R.string.about_dont_kill_my_app),
+                    subtitle = stringResource(MR.strings.about_dont_kill_my_app),
                     onClick = { uriHandler.openUri("https://dontkillmyapp.com/") },
                 ),
             ),
@@ -184,19 +182,19 @@ object SettingsAdvancedScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_data),
+            title = stringResource(MR.strings.label_data),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_invalidate_download_cache),
-                    subtitle = stringResource(R.string.pref_invalidate_download_cache_summary),
+                    title = stringResource(MR.strings.pref_invalidate_download_cache),
+                    subtitle = stringResource(MR.strings.pref_invalidate_download_cache_summary),
                     onClick = {
                         Injekt.get<DownloadCache>().invalidateCache()
-                        context.toast(R.string.download_cache_invalidated)
+                        context.toast(MR.strings.download_cache_invalidated)
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_clear_database),
-                    subtitle = stringResource(R.string.pref_clear_database_summary),
+                    title = stringResource(MR.strings.pref_clear_database),
+                    subtitle = stringResource(MR.strings.pref_clear_database_summary),
                     onClick = { navigator.push(ClearDatabaseScreen()) },
                 ),
             ),
@@ -214,17 +212,17 @@ object SettingsAdvancedScreen : SearchableSettings {
         val userAgent by userAgentPref.collectAsState()
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_network),
+            title = stringResource(MR.strings.label_network),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_clear_cookies),
+                    title = stringResource(MR.strings.pref_clear_cookies),
                     onClick = {
                         networkHelper.cookieJar.removeAll()
-                        context.toast(R.string.cookies_cleared)
+                        context.toast(MR.strings.cookies_cleared)
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_clear_webview_data),
+                    title = stringResource(MR.strings.pref_clear_webview_data),
                     onClick = {
                         try {
                             WebView(context).run {
@@ -236,18 +234,18 @@ object SettingsAdvancedScreen : SearchableSettings {
                             }
                             WebStorage.getInstance().deleteAllData()
                             context.applicationInfo?.dataDir?.let { File("$it/app_webview/").deleteRecursively() }
-                            context.toast(R.string.webview_data_deleted)
+                            context.toast(MR.strings.webview_data_deleted)
                         } catch (e: Throwable) {
                             logcat(LogPriority.ERROR, e)
-                            context.toast(R.string.cache_delete_error)
+                            context.toast(MR.strings.cache_delete_error)
                         }
                     },
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = networkPreferences.dohProvider(),
-                    title = stringResource(R.string.pref_dns_over_https),
+                    title = stringResource(MR.strings.pref_dns_over_https),
                     entries = mapOf(
-                        -1 to stringResource(R.string.disabled),
+                        -1 to stringResource(MR.strings.disabled),
                         PREF_DOH_CLOUDFLARE to "Cloudflare",
                         PREF_DOH_GOOGLE to "Google",
                         PREF_DOH_ADGUARD to "AdGuard",
@@ -262,30 +260,30 @@ object SettingsAdvancedScreen : SearchableSettings {
                         PREF_DOH_SHECAN to "Shecan",
                     ),
                     onValueChanged = {
-                        context.toast(R.string.requires_app_restart)
+                        context.toast(MR.strings.requires_app_restart)
                         true
                     },
                 ),
                 Preference.PreferenceItem.EditTextPreference(
                     pref = userAgentPref,
-                    title = stringResource(R.string.pref_user_agent_string),
+                    title = stringResource(MR.strings.pref_user_agent_string),
                     onValueChanged = {
                         try {
                             // OkHttp checks for valid values internally
                             Headers.Builder().add("User-Agent", it)
                         } catch (_: IllegalArgumentException) {
-                            context.toast(R.string.error_user_agent_string_invalid)
+                            context.toast(MR.strings.error_user_agent_string_invalid)
                             return@EditTextPreference false
                         }
                         true
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_reset_user_agent_string),
+                    title = stringResource(MR.strings.pref_reset_user_agent_string),
                     enabled = remember(userAgent) { userAgent != userAgentPref.defaultValue() },
                     onClick = {
                         userAgentPref.delete()
-                        context.toast(R.string.requires_app_restart)
+                        context.toast(MR.strings.requires_app_restart)
                     },
                 ),
             ),
@@ -298,23 +296,23 @@ object SettingsAdvancedScreen : SearchableSettings {
         val context = LocalContext.current
 
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_library),
+            title = stringResource(MR.strings.label_library),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_refresh_library_covers),
-                    onClick = { LibraryUpdateJob.startNow(context, target = LibraryUpdateJob.Target.COVERS) },
+                    title = stringResource(MR.strings.pref_refresh_library_covers),
+                    onClick = { MetadataUpdateJob.startNow(context) },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = stringResource(R.string.pref_reset_viewer_flags),
-                    subtitle = stringResource(R.string.pref_reset_viewer_flags_summary),
+                    title = stringResource(MR.strings.pref_reset_viewer_flags),
+                    subtitle = stringResource(MR.strings.pref_reset_viewer_flags_summary),
                     onClick = {
                         scope.launchNonCancellable {
                             val success = Injekt.get<ResetViewerFlags>().await()
                             withUIContext {
                                 val message = if (success) {
-                                    R.string.pref_reset_viewer_flags_success
+                                    MR.strings.pref_reset_viewer_flags_success
                                 } else {
-                                    R.string.pref_reset_viewer_flags_error
+                                    MR.strings.pref_reset_viewer_flags_error
                                 }
                                 context.toast(message)
                             }
@@ -338,11 +336,11 @@ object SettingsAdvancedScreen : SearchableSettings {
             val dismiss = { shizukuMissing = false }
             AlertDialog(
                 onDismissRequest = dismiss,
-                title = { Text(text = stringResource(R.string.ext_installer_shizuku)) },
-                text = { Text(text = stringResource(R.string.ext_installer_shizuku_unavailable_dialog)) },
+                title = { Text(text = stringResource(MR.strings.ext_installer_shizuku)) },
+                text = { Text(text = stringResource(MR.strings.ext_installer_shizuku_unavailable_dialog)) },
                 dismissButton = {
                     TextButton(onClick = dismiss) {
-                        Text(text = stringResource(R.string.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                 },
                 confirmButton = {
@@ -352,19 +350,19 @@ object SettingsAdvancedScreen : SearchableSettings {
                             uriHandler.openUri("https://shizuku.rikka.app/download")
                         },
                     ) {
-                        Text(text = stringResource(R.string.action_ok))
+                        Text(text = stringResource(MR.strings.action_ok))
                     }
                 },
             )
         }
         return Preference.PreferenceGroup(
-            title = stringResource(R.string.label_extensions),
+            title = stringResource(MR.strings.label_extensions),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = extensionInstallerPref,
-                    title = stringResource(R.string.ext_installer_pref),
+                    title = stringResource(MR.strings.ext_installer_pref),
                     entries = extensionInstallerPref.entries
-                        .associateWith { stringResource(it.titleResId) },
+                        .associateWith { stringResource(it.titleRes) },
                     onValueChanged = {
                         if (it == BasePreferences.ExtensionInstaller.SHIZUKU &&
                             !context.isShizukuInstalled

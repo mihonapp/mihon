@@ -18,23 +18,23 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import kotlin.time.Duration.Companion.seconds
@@ -85,7 +85,7 @@ fun UpdateScreen(
         when {
             state.isLoading -> LoadingScreen(Modifier.padding(contentPadding))
             state.items.isEmpty() -> EmptyScreen(
-                textResource = R.string.information_no_recent,
+                stringRes = MR.strings.information_no_recent,
                 modifier = Modifier.padding(contentPadding),
             )
             else -> {
@@ -140,12 +140,12 @@ private fun UpdatesAppBar(
 ) {
     AppBar(
         modifier = modifier,
-        title = stringResource(R.string.label_recent_updates),
+        title = stringResource(MR.strings.label_recent_updates),
         actions = {
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
-                        title = stringResource(R.string.action_update_library),
+                        title = stringResource(MR.strings.action_update_library),
                         icon = Icons.Outlined.Refresh,
                         onClick = onUpdateLibrary,
                     ),
@@ -158,12 +158,12 @@ private fun UpdatesAppBar(
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
-                        title = stringResource(R.string.action_select_all),
+                        title = stringResource(MR.strings.action_select_all),
                         icon = Icons.Outlined.SelectAll,
                         onClick = onSelectAll,
                     ),
                     AppBar.Action(
-                        title = stringResource(R.string.action_select_inverse),
+                        title = stringResource(MR.strings.action_select_inverse),
                         icon = Icons.Outlined.FlipToBack,
                         onClick = onInvertSelection,
                     ),

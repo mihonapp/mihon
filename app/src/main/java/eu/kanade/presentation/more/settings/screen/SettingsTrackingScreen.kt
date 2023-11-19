@@ -1,7 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.Context
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -42,9 +39,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.more.settings.Preference
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.TrackerManager
@@ -57,7 +54,9 @@ import eu.kanade.tachiyomi.util.system.toast
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -65,8 +64,7 @@ object SettingsTrackingScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    @StringRes
-    override fun getTitleRes() = R.string.pref_category_tracking
+    override fun getTitleRes() = MR.strings.pref_category_tracking
 
     @Composable
     override fun RowScope.AppBarAction() {
@@ -74,7 +72,7 @@ object SettingsTrackingScreen : SearchableSettings {
         IconButton(onClick = { uriHandler.openUri("https://tachiyomi.org/docs/guides/tracking") }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                contentDescription = stringResource(R.string.tracking_guide),
+                contentDescription = stringResource(MR.strings.tracking_guide),
             )
         }
     }
@@ -111,10 +109,10 @@ object SettingsTrackingScreen : SearchableSettings {
                 val acceptedSources = (service as EnhancedTracker).getAcceptedSources()
                 sourceManager.getCatalogueSources().any { it::class.qualifiedName in acceptedSources }
             }
-        var enhancedTrackerInfo = stringResource(R.string.enhanced_tracking_info)
+        var enhancedTrackerInfo = stringResource(MR.strings.enhanced_tracking_info)
         if (enhancedTrackers.second.isNotEmpty()) {
             val missingSourcesInfo = stringResource(
-                R.string.enhanced_services_not_installed,
+                MR.strings.enhanced_services_not_installed,
                 enhancedTrackers.second.joinToString { it.name },
             )
             enhancedTrackerInfo += "\n\n$missingSourcesInfo"
@@ -123,10 +121,10 @@ object SettingsTrackingScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = trackPreferences.autoUpdateTrack(),
-                title = stringResource(R.string.pref_auto_update_manga_sync),
+                title = stringResource(MR.strings.pref_auto_update_manga_sync),
             ),
             Preference.PreferenceGroup(
-                title = stringResource(R.string.services),
+                title = stringResource(MR.strings.services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackerPreference(
                         title = trackerManager.myAnimeList.name,
@@ -143,13 +141,13 @@ object SettingsTrackingScreen : SearchableSettings {
                     Preference.PreferenceItem.TrackerPreference(
                         title = trackerManager.kitsu.name,
                         tracker = trackerManager.kitsu,
-                        login = { dialog = LoginDialog(trackerManager.kitsu, R.string.email) },
+                        login = { dialog = LoginDialog(trackerManager.kitsu, MR.strings.email) },
                         logout = { dialog = LogoutDialog(trackerManager.kitsu) },
                     ),
                     Preference.PreferenceItem.TrackerPreference(
                         title = trackerManager.mangaUpdates.name,
                         tracker = trackerManager.mangaUpdates,
-                        login = { dialog = LoginDialog(trackerManager.mangaUpdates, R.string.username) },
+                        login = { dialog = LoginDialog(trackerManager.mangaUpdates, MR.strings.username) },
                         logout = { dialog = LogoutDialog(trackerManager.mangaUpdates) },
                     ),
                     Preference.PreferenceItem.TrackerPreference(
@@ -164,11 +162,11 @@ object SettingsTrackingScreen : SearchableSettings {
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.bangumi) },
                     ),
-                    Preference.PreferenceItem.InfoPreference(stringResource(R.string.tracking_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
                 ),
             ),
             Preference.PreferenceGroup(
-                title = stringResource(R.string.enhanced_services),
+                title = stringResource(MR.strings.enhanced_services),
                 preferenceItems = enhancedTrackers.first
                     .map { service ->
                         Preference.PreferenceItem.TrackerPreference(
@@ -185,7 +183,7 @@ object SettingsTrackingScreen : SearchableSettings {
     @Composable
     private fun TrackingLoginDialog(
         tracker: Tracker,
-        @StringRes uNameStringRes: Int,
+        uNameStringRes: StringResource,
         onDismissRequest: () -> Unit,
     ) {
         val context = LocalContext.current
@@ -201,13 +199,13 @@ object SettingsTrackingScreen : SearchableSettings {
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = stringResource(R.string.login_title, tracker.name),
+                        text = stringResource(MR.strings.login_title, tracker.name),
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = stringResource(R.string.action_close),
+                            contentDescription = stringResource(MR.strings.action_close),
                         )
                     }
                 }
@@ -229,7 +227,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.fillMaxWidth(),
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(text = stringResource(R.string.password)) },
+                        label = { Text(text = stringResource(MR.strings.password)) },
                         trailingIcon = {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
@@ -275,7 +273,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         }
                     },
                 ) {
-                    val id = if (processing) R.string.loading else R.string.login
+                    val id = if (processing) MR.strings.loading else MR.strings.login
                     Text(text = stringResource(id))
                 }
             },
@@ -290,7 +288,7 @@ object SettingsTrackingScreen : SearchableSettings {
     ): Boolean {
         return try {
             tracker.login(username, password)
-            withUIContext { context.toast(R.string.login_success) }
+            withUIContext { context.toast(MR.strings.login_success) }
             true
         } catch (e: Throwable) {
             tracker.logout()
@@ -309,7 +307,7 @@ object SettingsTrackingScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = {
                 Text(
-                    text = stringResource(R.string.logout_title, tracker.name),
+                    text = stringResource(MR.strings.logout_title, tracker.name),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -320,21 +318,21 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,
                     ) {
-                        Text(text = stringResource(R.string.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     Button(
                         modifier = Modifier.weight(1f),
                         onClick = {
                             tracker.logout()
                             onDismissRequest()
-                            context.toast(R.string.logout_success)
+                            context.toast(MR.strings.logout_success)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error,
                             contentColor = MaterialTheme.colorScheme.onError,
                         ),
                     ) {
-                        Text(text = stringResource(R.string.logout))
+                        Text(text = stringResource(MR.strings.logout))
                     }
                 }
             },
@@ -344,7 +342,7 @@ object SettingsTrackingScreen : SearchableSettings {
 
 private data class LoginDialog(
     val tracker: Tracker,
-    @StringRes val uNameStringRes: Int,
+    val uNameStringRes: StringResource,
 )
 
 private data class LogoutDialog(

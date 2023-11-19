@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastMap
@@ -58,7 +57,6 @@ import eu.kanade.presentation.manga.components.MangaInfoBox
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
 import eu.kanade.presentation.util.formatChapterNumber
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.getNameForMangaInfo
 import eu.kanade.tachiyomi.ui.manga.ChapterList
@@ -70,11 +68,13 @@ import tachiyomi.domain.chapter.service.missingChaptersCount
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.VerticalFastScroller
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrollingUp
 import java.text.DateFormat
@@ -349,7 +349,9 @@ private fun MangaScreenSmallImpl(
                         val isReading = remember(state.chapters) {
                             state.chapters.fastAny { it.chapter.read }
                         }
-                        Text(text = stringResource(if (isReading) R.string.action_resume else R.string.action_start))
+                        Text(
+                            text = stringResource(if (isReading) MR.strings.action_resume else MR.strings.action_start),
+                        )
                     },
                     icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
                     onClick = onContinueReading,
@@ -608,7 +610,9 @@ fun MangaScreenLargeImpl(
                                 state.chapters.fastAny { it.chapter.read }
                             }
                             Text(
-                                text = stringResource(if (isReading) R.string.action_resume else R.string.action_start),
+                                text = stringResource(
+                                    if (isReading) MR.strings.action_resume else MR.strings.action_start,
+                                ),
                             )
                         },
                         icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
@@ -788,7 +792,7 @@ private fun LazyListScope.sharedChapterItems(
                 MangaChapterListItem(
                     title = if (manga.displayMode == Manga.CHAPTER_DISPLAY_NUMBER) {
                         stringResource(
-                            R.string.display_mode_chapter,
+                            MR.strings.display_mode_chapter,
                             formatChapterNumber(item.chapter.chapterNumber),
                         )
                     } else {
@@ -807,7 +811,7 @@ private fun LazyListScope.sharedChapterItems(
                         .takeIf { !item.chapter.read && it > 0L }
                         ?.let {
                             stringResource(
-                                R.string.chapter_progress,
+                                MR.strings.chapter_progress,
                                 it + 1,
                             )
                         },

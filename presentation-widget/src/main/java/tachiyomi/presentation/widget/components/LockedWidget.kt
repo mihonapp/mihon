@@ -16,8 +16,8 @@ import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import tachiyomi.core.Constants
-import tachiyomi.presentation.widget.R
-import tachiyomi.presentation.widget.util.stringResource
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun LockedWidget(
@@ -34,7 +34,7 @@ fun LockedWidget(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = stringResource(R.string.appwidget_unavailable_locked),
+            text = stringResource(MR.strings.appwidget_unavailable_locked),
             style = TextStyle(
                 color = foreground,
                 fontSize = 12.sp,

@@ -1,12 +1,12 @@
 package eu.kanade.domain.base
 
 import android.content.Context
-import androidx.annotation.StringRes
-import eu.kanade.tachiyomi.R
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.i18n.MR
 
 class BasePreferences(
     val context: Context,
@@ -24,10 +24,10 @@ class BasePreferences(
 
     fun acraEnabled() = preferenceStore.getBoolean("acra.enable", isPreviewBuildType || isReleaseBuildType)
 
-    enum class ExtensionInstaller(@StringRes val titleResId: Int) {
-        LEGACY(R.string.ext_installer_legacy),
-        PACKAGEINSTALLER(R.string.ext_installer_packageinstaller),
-        SHIZUKU(R.string.ext_installer_shizuku),
-        PRIVATE(R.string.ext_installer_private),
+    enum class ExtensionInstaller(val titleRes: StringResource) {
+        LEGACY(MR.strings.ext_installer_legacy),
+        PACKAGEINSTALLER(MR.strings.ext_installer_packageinstaller),
+        SHIZUKU(MR.strings.ext_installer_shizuku),
+        PRIVATE(MR.strings.ext_installer_private),
     }
 }

@@ -14,13 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AdaptiveSheet
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import tachiyomi.core.preference.TriState
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.CollapsibleBox
 import tachiyomi.presentation.core.components.HeadingItem
@@ -29,6 +28,7 @@ import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TextItem
 import tachiyomi.presentation.core.components.TriStateItem
 import tachiyomi.presentation.core.components.material.Button
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun SourceFilterDialog(
@@ -52,7 +52,7 @@ fun SourceFilterDialog(
                 ) {
                     TextButton(onClick = onReset) {
                         Text(
-                            text = stringResource(R.string.action_reset),
+                            text = stringResource(MR.strings.action_reset),
                             style = LocalTextStyle.current.copy(
                                 color = MaterialTheme.colorScheme.primary,
                             ),
@@ -65,7 +65,7 @@ fun SourceFilterDialog(
                         onFilter()
                         onDismissRequest()
                     }) {
-                        Text(stringResource(R.string.action_filter))
+                        Text(stringResource(MR.strings.action_filter))
                     }
                 }
                 HorizontalDivider()
