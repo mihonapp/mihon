@@ -35,3 +35,11 @@ android {
         consumerProguardFile("consumer-proguard.pro")
     }
 }
+
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.freeCompilerArgs += listOf(
+            "-Xexpect-actual-classes",
+        )
+    }
+}

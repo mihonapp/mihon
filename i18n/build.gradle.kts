@@ -38,8 +38,13 @@ multiplatformResources {
 
 tasks {
     val localesConfigTask = registerLocalesConfigTask(project)
-
     preBuild {
         dependsOn(localesConfigTask)
+    }
+
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.freeCompilerArgs += listOf(
+            "-Xexpect-actual-classes",
+        )
     }
 }
