@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.Application
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -12,7 +11,6 @@ import android.os.Build
 import android.os.Looper
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -39,6 +37,7 @@ import eu.kanade.tachiyomi.di.PreferenceModule
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.NetworkPreferences
 import eu.kanade.tachiyomi.ui.base.delegate.SecureActivityDelegate
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.cancelNotification
@@ -157,7 +156,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             callFactory(callFactoryInit)
             diskCache(diskCacheInit)
             crossfade((300 * this@App.animatorDurationScale).toInt())
-            allowRgb565(getSystemService<ActivityManager>()!!.isLowRamDevice)
+            allowRgb565(DeviceUtil.isLowRamDevice(this@App))
             if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
 
             // Coil spawns a new thread for every image load by default
