@@ -65,12 +65,8 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         fun setupTask(context: Context, prefInterval: Int? = null) {
             val syncPreferences = Injekt.get<SyncPreferences>()
             val interval = prefInterval ?: syncPreferences.syncInterval().get()
+
             if (interval > 0) {
-                // Generate a random delay in minutes (e.g., between 0 and 15 minutes) to avoid conflicts.
-                val randomDelay = Random.nextInt(0, 16)
-
-                val randomDelayMillis = TimeUnit.MINUTES.toMillis(randomDelay.toLong())
-
                 val request = PeriodicWorkRequestBuilder<SyncDataJob>(
                     interval.toLong(),
                     TimeUnit.MINUTES,
@@ -78,7 +74,7 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
                     TimeUnit.MINUTES,
                 )
                     .addTag(TAG_AUTO)
-                    .setInitialDelay(randomDelayMillis, TimeUnit.MILLISECONDS)
+                    // No initial delay is needed, remove the randomDelayMillis
                     .build()
 
                 context.workManager.enqueueUniquePeriodicWork(TAG_AUTO, ExistingPeriodicWorkPolicy.UPDATE, request)
