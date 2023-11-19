@@ -1,54 +1,62 @@
 package eu.kanade.presentation.theme
 
-import androidx.appcompat.view.ContextThemeWrapper
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
-import com.google.accompanist.themeadapter.material3.createMdc3Theme
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.AppTheme
-import eu.kanade.tachiyomi.ui.base.delegate.ThemingDelegate
+import eu.kanade.presentation.theme.colorscheme.GreenAppleColorScheme
+import eu.kanade.presentation.theme.colorscheme.LavenderColorScheme
+import eu.kanade.presentation.theme.colorscheme.MidnightDuskColorScheme
+import eu.kanade.presentation.theme.colorscheme.MonetColorScheme
+import eu.kanade.presentation.theme.colorscheme.StrawberryColorScheme
+import eu.kanade.presentation.theme.colorscheme.TachiyomiColorScheme
+import eu.kanade.presentation.theme.colorscheme.TakoColorScheme
+import eu.kanade.presentation.theme.colorscheme.TealTurqoiseColorScheme
+import eu.kanade.presentation.theme.colorscheme.TidalWaveColorScheme
+import eu.kanade.presentation.theme.colorscheme.YinYangColorScheme
+import eu.kanade.presentation.theme.colorscheme.YotsubaColorScheme
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 @Composable
-fun TachiyomiTheme(content: @Composable () -> Unit) {
-    val context = LocalContext.current
-    val layoutDirection = LocalLayoutDirection.current
-
-    val (colorScheme, typography) = createMdc3Theme(
-        context = context,
-        layoutDirection = layoutDirection,
-    )
-
+fun TachiyomiTheme(
+    appTheme: AppTheme? = null,
+    amoled: Boolean? = null,
+    content: @Composable () -> Unit,
+) {
     MaterialTheme(
-        colorScheme = colorScheme!!,
-        typography = typography!!,
+        colorScheme = getThemeColorScheme(appTheme, amoled),
         content = content,
     )
 }
 
 @Composable
-fun TachiyomiTheme(
-    appTheme: AppTheme,
-    amoled: Boolean,
-    content: @Composable () -> Unit,
-) {
-    val originalContext = LocalContext.current
-    val layoutDirection = LocalLayoutDirection.current
-    val themedContext = remember(appTheme, originalContext) {
-        val themeResIds = ThemingDelegate.getThemeResIds(appTheme, amoled)
-        themeResIds.fold(originalContext) { context, themeResId ->
-            ContextThemeWrapper(context, themeResId)
-        }
+@ReadOnlyComposable
+private fun getThemeColorScheme(
+    appTheme: AppTheme?,
+    amoled: Boolean?,
+): ColorScheme {
+    val uiPreferences = Injekt.get<UiPreferences>()
+    val colorScheme = when (appTheme ?: uiPreferences.appTheme().get()) {
+        AppTheme.DEFAULT -> TachiyomiColorScheme
+        AppTheme.MONET -> MonetColorScheme(LocalContext.current)
+        AppTheme.GREEN_APPLE -> GreenAppleColorScheme
+        AppTheme.LAVENDER -> LavenderColorScheme
+        AppTheme.MIDNIGHT_DUSK -> MidnightDuskColorScheme
+        AppTheme.STRAWBERRY_DAIQUIRI -> StrawberryColorScheme
+        AppTheme.TAKO -> TakoColorScheme
+        AppTheme.TEALTURQUOISE -> TealTurqoiseColorScheme
+        AppTheme.TIDAL_WAVE -> TidalWaveColorScheme
+        AppTheme.YINYANG -> YinYangColorScheme
+        AppTheme.YOTSUBA -> YotsubaColorScheme
+        else -> TachiyomiColorScheme
     }
-    val (colorScheme, typography) = createMdc3Theme(
-        context = themedContext,
-        layoutDirection = layoutDirection,
-    )
-
-    MaterialTheme(
-        colorScheme = colorScheme!!,
-        typography = typography!!,
-        content = content,
+    return colorScheme.getColorScheme(
+        isSystemInDarkTheme(),
+        amoled ?: uiPreferences.themeDarkAmoled().get(),
     )
 }
