@@ -18,7 +18,6 @@ import tachiyomi.domain.sync.SyncPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.TimeUnit
-import kotlin.random.Random
 
 class SyncDataJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {

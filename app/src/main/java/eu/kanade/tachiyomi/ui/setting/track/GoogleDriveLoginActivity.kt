@@ -6,9 +6,9 @@ import androidx.lifecycle.lifecycleScope
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveService
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchIO
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import tachiyomi.i18n.MR
 
 class GoogleDriveLoginActivity : BaseOAuthLoginActivity() {
     private val googleDriveService = Injekt.get<GoogleDriveService>()

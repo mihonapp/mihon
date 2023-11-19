@@ -334,7 +334,6 @@ object SettingsDataScreen : SearchableSettings {
             ),
         ) + getSyncServicePreferences(syncPreferences, syncService)
     }
-
 }
 
 @Composable
@@ -350,9 +349,11 @@ private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncServ
     }
 }
 
-
 @Composable
-private fun getBasePreferences(syncServiceType: SyncManager.SyncService, syncPreferences: SyncPreferences): List<Preference> {
+private fun getBasePreferences(
+    syncServiceType: SyncManager.SyncService,
+    syncPreferences: SyncPreferences,
+): List<Preference> {
     return when (syncServiceType) {
         SyncManager.SyncService.NONE -> emptyList()
         SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
