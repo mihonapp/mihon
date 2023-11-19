@@ -209,7 +209,7 @@ object SettingsMainScreen : Screen() {
             screen = SettingsBrowseScreen,
         ),
         Item(
-            titleRes = MR.strings.label_backup_and_sync,
+            titleRes = MR.strings.label_data_storage,
             subtitleRes = MR.strings.pref_backup_summary,
             icon = Icons.Outlined.Storage,
             screen = SettingsDataScreen,

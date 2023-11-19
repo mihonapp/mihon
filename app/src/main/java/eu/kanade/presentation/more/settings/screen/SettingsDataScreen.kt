@@ -65,7 +65,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @ReadOnlyComposable
     @Composable
-    override fun getTitleRes() = MR.strings.label_backup_and_sync
+    override fun getTitleRes() = MR.strings.label_data_storage
 
     @Composable
     override fun getPreferences(): List<Preference> {
@@ -79,23 +79,7 @@ object SettingsDataScreen : SearchableSettings {
         return listOf(
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
-        ) + listOf(
-            Preference.PreferenceGroup(
-                title = stringResource(MR.strings.label_sync),
-                preferenceItems = listOf(
-                    Preference.PreferenceItem.ListPreference(
-                        pref = syncPreferences.syncService(),
-                        title = stringResource(MR.strings.pref_sync_service),
-                        entries = mapOf(
-                            SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
-                            SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
-                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(MR.strings.google_drive),
-                        ),
-                        onValueChanged = { true },
-                    ),
-                ),
-            ),
-        ) + getSyncServicePreferences(syncPreferences, syncService)
+        ) + getSyncPreferences(syncPreferences = syncPreferences, syncService = syncService)
     }
 
     @Composable
@@ -342,21 +326,51 @@ object SettingsDataScreen : SearchableSettings {
             )
         }
     }
+
+    @Composable
+    private fun getSyncPreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
+        return listOf(
+            Preference.PreferenceItem.ListPreference(
+                pref = syncPreferences.syncService(),
+                title = stringResource(MR.strings.pref_sync_service),
+                entries = mapOf(
+                    SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
+                    SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
+                    SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(MR.strings.google_drive),
+                ),
+                onValueChanged = { true },
+            ),
+        ) + getSyncServicePreferences(syncPreferences, syncService)
+    }
+
 }
 
 @Composable
 private fun getSyncServicePreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
     val syncServiceType = SyncManager.SyncService.fromInt(syncService)
+
+    val basePreferences = getBasePreferences(syncServiceType, syncPreferences)
+
+    return if (syncServiceType != SyncManager.SyncService.NONE) {
+        basePreferences + getAdditionalPreferences(syncPreferences)
+    } else {
+        basePreferences
+    }
+}
+
+
+@Composable
+private fun getBasePreferences(syncServiceType: SyncManager.SyncService, syncPreferences: SyncPreferences): List<Preference> {
     return when (syncServiceType) {
         SyncManager.SyncService.NONE -> emptyList()
         SyncManager.SyncService.SYNCYOMI -> getSelfHostPreferences(syncPreferences)
         SyncManager.SyncService.GOOGLE_DRIVE -> getGoogleDrivePreferences()
-    } +
-        if (syncServiceType == SyncManager.SyncService.NONE) {
-            emptyList()
-        } else {
-            listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
-        }
+    }
+}
+
+@Composable
+private fun getAdditionalPreferences(syncPreferences: SyncPreferences): List<Preference> {
+    return listOf(getSyncNowPref(), getAutomaticSyncGroup(syncPreferences))
 }
 
 @Composable

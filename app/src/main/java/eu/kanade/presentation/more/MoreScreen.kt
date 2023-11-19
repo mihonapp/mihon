@@ -144,7 +144,7 @@ fun MoreScreen(
             }
             item {
                 TextPreferenceWidget(
-                    title = stringResource(MR.strings.label_backup_and_sync),
+                    title = stringResource(MR.strings.label_data_storage),
                     icon = Icons.Outlined.Storage,
                     onPreferenceClick = onClickDataAndStorage,
                 )
