@@ -81,15 +81,15 @@ object SettingsDataScreen : SearchableSettings {
             getDataGroup(),
         ) + listOf(
             Preference.PreferenceGroup(
-                title = stringResource(R.string.label_sync),
+                title = stringResource(MR.strings.label_sync),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.ListPreference(
                         pref = syncPreferences.syncService(),
-                        title = stringResource(R.string.pref_sync_service),
+                        title = stringResource(MR.strings.pref_sync_service),
                         entries = mapOf(
-                            SyncManager.SyncService.NONE.value to stringResource(R.string.off),
-                            SyncManager.SyncService.SYNCYOMI.value to stringResource(R.string.syncyomi),
-                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(R.string.google_drive),
+                            SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
+                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(MR.strings.google_drive),
                         ),
                         onValueChanged = { true },
                     ),
@@ -365,7 +365,7 @@ private fun getGoogleDrivePreferences(): List<Preference> {
     val googleDriveSync = Injekt.get<GoogleDriveService>()
     return listOf(
         Preference.PreferenceItem.TextPreference(
-            title = stringResource(MR.string.pref_google_drive_sign_in),
+            title = stringResource(MR.strings.pref_google_drive_sign_in),
             onClick = {
                 val intent = googleDriveSync.getSignInIntent()
                 context.startActivity(intent)
@@ -390,13 +390,13 @@ private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
                     val result = googleDriveSync.deleteSyncDataFromGoogleDrive()
                     when (result) {
                         GoogleDriveSyncService.DeleteSyncDataStatus.NOT_INITIALIZED -> context.toast(
-                            MR.string.google_drive_not_signed_in,
+                            MR.strings.google_drive_not_signed_in,
                         )
                         GoogleDriveSyncService.DeleteSyncDataStatus.NO_FILES -> context.toast(
-                            MR.string.google_drive_sync_data_not_found,
+                            MR.strings.google_drive_sync_data_not_found,
                         )
                         GoogleDriveSyncService.DeleteSyncDataStatus.SUCCESS -> context.toast(
-                            MR.string.google_drive_sync_data_purged,
+                            MR.strings.google_drive_sync_data_purged,
                         )
                     }
                 }
@@ -406,7 +406,7 @@ private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
     }
 
     return Preference.PreferenceItem.TextPreference(
-        title = stringResource(MR.string.pref_google_drive_purge_sync_data),
+        title = stringResource(MR.strings.pref_google_drive_purge_sync_data),
         onClick = { showPurgeDialog.value = true },
     )
 }
@@ -418,16 +418,16 @@ fun PurgeConfirmationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(MR.string.pref_purge_confirmation_title)) },
-        text = { Text(text = stringResource(MR.string.pref_purge_confirmation_message)) },
+        title = { Text(text = stringResource(MR.strings.pref_purge_confirmation_title)) },
+        text = { Text(text = stringResource(MR.strings.pref_purge_confirmation_message)) },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(MR.string.action_cancel))
+                Text(text = stringResource(MR.strings.action_cancel))
             }
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = stringResource(android.R.string.ok))
+                Text(text = stringResource(MR.strings.action_ok))
             }
         },
     )
@@ -438,8 +438,8 @@ private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Prefe
     val scope = rememberCoroutineScope()
     return listOf(
         Preference.PreferenceItem.EditTextPreference(
-            title = stringResource(MR.string.pref_sync_host),
-            subtitle = stringResource(MR.string.pref_sync_host_summ),
+            title = stringResource(MR.strings.pref_sync_host),
+            subtitle = stringResource(MR.strings.pref_sync_host_summ),
             pref = syncPreferences.syncHost(),
             onValueChanged = { newValue ->
                 scope.launch {
@@ -452,8 +452,8 @@ private fun getSelfHostPreferences(syncPreferences: SyncPreferences): List<Prefe
             },
         ),
         Preference.PreferenceItem.EditTextPreference(
-            title = stringResource(MR.string.pref_sync_api_key),
-            subtitle = stringResource(MR.string.pref_sync_api_key_summ),
+            title = stringResource(MR.strings.pref_sync_api_key),
+            subtitle = stringResource(MR.strings.pref_sync_api_key_summ),
             pref = syncPreferences.syncAPIKey(),
         ),
     )
@@ -472,7 +472,7 @@ private fun getSyncNowPref(): Preference.PreferenceGroup {
                     if (!SyncDataJob.isAnyJobRunning(context)) {
                         SyncDataJob.startNow(context)
                     } else {
-                        context.toast(MR.string.sync_in_progress)
+                        context.toast(MR.strings.sync_in_progress)
                     }
                 }
             },
@@ -480,11 +480,11 @@ private fun getSyncNowPref(): Preference.PreferenceGroup {
         )
     }
     return Preference.PreferenceGroup(
-        title = stringResource(MR.string.pref_sync_now_group_title),
+        title = stringResource(MR.strings.pref_sync_now_group_title),
         preferenceItems = listOf(
             Preference.PreferenceItem.TextPreference(
-                title = stringResource(MR.string.pref_sync_now),
-                subtitle = stringResource(MR.string.pref_sync_now_subtitle),
+                title = stringResource(MR.strings.pref_sync_now),
+                subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
                 onClick = {
                     showDialog = true
                 },
@@ -500,21 +500,21 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
     val lastSync by syncPreferences.lastSyncTimestamp().collectAsState()
 
     return Preference.PreferenceGroup(
-        title = stringResource(MR.string.pref_sync_service_category),
+        title = stringResource(MR.strings.pref_sync_service_category),
         preferenceItems = listOf(
             Preference.PreferenceItem.ListPreference(
                 pref = syncIntervalPref,
-                title = stringResource(MR.string.pref_sync_interval),
+                title = stringResource(MR.strings.pref_sync_interval),
                 entries = mapOf(
-                    0 to stringResource(MR.string.off),
-                    30 to stringResource(MR.string.update_30min),
-                    60 to stringResource(MR.string.update_1hour),
-                    180 to stringResource(MR.string.update_3hour),
-                    360 to stringResource(MR.string.update_6hour),
-                    720 to stringResource(MR.string.update_12hour),
-                    1440 to stringResource(MR.string.update_24hour),
-                    2880 to stringResource(MR.string.update_48hour),
-                    10080 to stringResource(MR.string.update_weekly),
+                    0 to stringResource(MR.strings.off),
+                    30 to stringResource(MR.strings.update_30min),
+                    60 to stringResource(MR.strings.update_1hour),
+                    180 to stringResource(MR.strings.update_3hour),
+                    360 to stringResource(MR.strings.update_6hour),
+                    720 to stringResource(MR.strings.update_12hour),
+                    1440 to stringResource(MR.strings.update_24hour),
+                    2880 to stringResource(MR.strings.update_48hour),
+                    10080 to stringResource(MR.strings.update_weekly),
                 ),
                 onValueChanged = {
                     SyncDataJob.setupTask(context, it)
@@ -522,7 +522,7 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
                 },
             ),
             Preference.PreferenceItem.InfoPreference(
-                stringResource(MR.string.last_synchronization, relativeTimeSpanString(lastSync)),
+                stringResource(MR.strings.last_synchronization, relativeTimeSpanString(lastSync)),
             ),
         ),
     )
@@ -535,16 +535,16 @@ fun SyncConfirmationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(MR.string.pref_sync_confirmation_title)) },
-        text = { Text(text = stringResource(MR.string.pref_sync_confirmation_message)) },
+        title = { Text(text = stringResource(MR.strings.pref_sync_confirmation_title)) },
+        text = { Text(text = stringResource(MR.strings.pref_sync_confirmation_message)) },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(MR.string.action_cancel))
+                Text(text = stringResource(MR.strings.action_cancel))
             }
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = stringResource(android.R.string.ok))
+                Text(text = stringResource(MR.strings.action_ok))
             }
         },
     )
