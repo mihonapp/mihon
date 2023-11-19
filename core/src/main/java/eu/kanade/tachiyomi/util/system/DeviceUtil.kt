@@ -7,7 +7,7 @@ import tachiyomi.core.util.system.logcat
 
 object DeviceUtil {
 
-    val isMiui by lazy {
+    val isMiui: Boolean by lazy {
         getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
     }
 
@@ -16,7 +16,7 @@ object DeviceUtil {
      *
      * @return MIUI major version code (e.g., 13) or null if can't be parsed.
      */
-    val miuiMajorVersion by lazy {
+    val miuiMajorVersion: Int? by lazy {
         if (!isMiui) return@lazy null
 
         Build.VERSION.INCREMENTAL
@@ -41,11 +41,11 @@ object DeviceUtil {
         }
     }
 
-    val isSamsung by lazy {
+    val isSamsung: Boolean by lazy {
         Build.MANUFACTURER.equals("samsung", ignoreCase = true)
     }
 
-    val oneUiVersion by lazy {
+    val oneUiVersion: Double? by lazy {
         try {
             val semPlatformIntField = Build.VERSION::class.java.getDeclaredField("SEM_PLATFORM_INT")
             val version = semPlatformIntField.getInt(null) - 90000

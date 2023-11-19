@@ -62,6 +62,18 @@ class WebtoonConfig(
         readerPreferences.dualPageInvertWebtoon()
             .register({ dualPageInvert = it }, { imagePropertyChangedListener?.invoke() })
 
+        readerPreferences.dualPageRotateToFitWebtoon()
+            .register(
+                { dualPageRotateToFit = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
+        readerPreferences.dualPageRotateToFitInvertWebtoon()
+            .register(
+                { dualPageRotateToFitInvert = it },
+                { imagePropertyChangedListener?.invoke() },
+            )
+
         readerPreferences.webtoonDoubleTapZoomEnabled()
             .register(
                 { doubleTapZoom = it },
