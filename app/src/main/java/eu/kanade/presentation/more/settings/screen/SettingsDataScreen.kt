@@ -85,8 +85,6 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
-        val backupIntervalPref = backupPreferences.backupInterval()
-        val backupInterval by backupIntervalPref.collectAsState()
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
 
         return Preference.PreferenceGroup(
@@ -98,7 +96,7 @@ object SettingsDataScreen : SearchableSettings {
 
                 // Automatic backups
                 Preference.PreferenceItem.ListPreference(
-                    pref = backupIntervalPref,
+                    pref = backupPreferences.backupInterval(),
                     title = stringResource(MR.strings.pref_backup_interval),
                     entries = mapOf(
                         0 to stringResource(MR.strings.off),
@@ -112,12 +110,6 @@ object SettingsDataScreen : SearchableSettings {
                         BackupCreateJob.setupTask(context, it)
                         true
                     },
-                ),
-                Preference.PreferenceItem.ListPreference(
-                    pref = backupPreferences.numberOfBackups(),
-                    enabled = backupInterval != 0,
-                    title = stringResource(MR.strings.pref_backup_slots),
-                    entries = listOf(2, 3, 4, 5).associateWith { it.toString() },
                 ),
                 Preference.PreferenceItem.InfoPreference(
                     stringResource(MR.strings.backup_info) + "\n\n" +

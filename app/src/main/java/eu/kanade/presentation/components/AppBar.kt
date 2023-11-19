@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
@@ -20,7 +21,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBar
@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
@@ -62,10 +61,11 @@ const val SEARCH_DEBOUNCE_MILLIS = 250L
 
 @Composable
 fun AppBar(
+    title: String?,
+
     modifier: Modifier = Modifier,
     backgroundColor: Color? = null,
     // Text
-    title: String?,
     subtitle: String? = null,
     // Up button
     navigateUp: (() -> Unit)? = null,
@@ -90,7 +90,7 @@ fun AppBar(
             if (isActionMode) {
                 AppBarTitle(actionModeCounter.toString())
             } else {
-                AppBarTitle(title, subtitle)
+                AppBarTitle(title, subtitle = subtitle)
             }
         },
         navigateUp = navigateUp,
@@ -110,10 +110,11 @@ fun AppBar(
 
 @Composable
 fun AppBar(
-    modifier: Modifier = Modifier,
-    backgroundColor: Color? = null,
     // Title
     titleContent: @Composable () -> Unit,
+
+    modifier: Modifier = Modifier,
+    backgroundColor: Color? = null,
     // Up button
     navigateUp: (() -> Unit)? = null,
     navigationIcon: ImageVector? = null,
@@ -140,7 +141,7 @@ fun AppBar(
                 } else {
                     navigateUp?.let {
                         IconButton(onClick = it) {
-                            UpIcon(navigationIcon)
+                            UpIcon(navigationIcon = navigationIcon)
                         }
                     }
                 }
@@ -160,9 +161,10 @@ fun AppBar(
 @Composable
 fun AppBarTitle(
     title: String?,
+    modifier: Modifier = Modifier,
     subtitle: String? = null,
 ) {
-    Column {
+    Column(modifier = modifier) {
         title?.let {
             Text(
                 text = it,
@@ -258,11 +260,12 @@ fun AppBarActions(
  */
 @Composable
 fun SearchToolbar(
+    searchQuery: String?,
+    onChangeSearchQuery: (String?) -> Unit,
+    modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit = {},
     navigateUp: (() -> Unit)? = null,
     searchEnabled: Boolean = true,
-    searchQuery: String?,
-    onChangeSearchQuery: (String?) -> Unit,
     placeholderText: String? = null,
     onSearch: (String) -> Unit = {},
     onClickCloseSearch: () -> Unit = { onChangeSearchQuery(null) },
@@ -274,6 +277,7 @@ fun SearchToolbar(
     val focusRequester = remember { FocusRequester() }
 
     AppBar(
+        modifier = modifier,
         titleContent = {
             if (searchQuery == null) return@AppBar titleContent()
 
@@ -390,12 +394,16 @@ fun SearchToolbar(
 }
 
 @Composable
-fun UpIcon(navigationIcon: ImageVector? = null) {
+fun UpIcon(
+    modifier: Modifier = Modifier,
+    navigationIcon: ImageVector? = null,
+) {
     val icon = navigationIcon
         ?: Icons.AutoMirrored.Outlined.ArrowBack
     Icon(
         imageVector = icon,
         contentDescription = stringResource(MR.strings.action_bar_up_description),
+        modifier = modifier,
     )
 }
 

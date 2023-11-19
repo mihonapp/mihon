@@ -67,7 +67,7 @@ fun MangaToolbar(
             },
             navigationIcon = {
                 IconButton(onClick = onBackClicked) {
-                    UpIcon(Icons.Outlined.Close.takeIf { isActionMode })
+                    UpIcon(navigationIcon = Icons.Outlined.Close.takeIf { isActionMode })
                 }
             },
             actions = {

@@ -1,13 +1,16 @@
 package eu.kanade.tachiyomi.util.system
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Build
+import androidx.core.content.getSystemService
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 
 object DeviceUtil {
 
-    val isMiui by lazy {
+    val isMiui: Boolean by lazy {
         getSystemProperty("ro.miui.ui.version.name")?.isNotEmpty() ?: false
     }
 
@@ -16,7 +19,7 @@ object DeviceUtil {
      *
      * @return MIUI major version code (e.g., 13) or null if can't be parsed.
      */
-    val miuiMajorVersion by lazy {
+    val miuiMajorVersion: Int? by lazy {
         if (!isMiui) return@lazy null
 
         Build.VERSION.INCREMENTAL
@@ -41,11 +44,11 @@ object DeviceUtil {
         }
     }
 
-    val isSamsung by lazy {
+    val isSamsung: Boolean by lazy {
         Build.MANUFACTURER.equals("samsung", ignoreCase = true)
     }
 
-    val oneUiVersion by lazy {
+    val oneUiVersion: Double? by lazy {
         try {
             val semPlatformIntField = Build.VERSION::class.java.getDeclaredField("SEM_PLATFORM_INT")
             val version = semPlatformIntField.getInt(null) - 90000
@@ -64,6 +67,20 @@ object DeviceUtil {
         "com.huawei.android.internal.app",
         "com.zui.resolver",
     )
+
+    /**
+     * ActivityManager#isLowRamDevice is based on a system property, which isn't
+     * necessarily trustworthy. 1GB is supposedly the regular threshold.
+     *
+     * Instead, we consider anything with less than 3GB of RAM as low memory
+     * considering how heavy image processing can be.
+     */
+    fun isLowRamDevice(context: Context): Boolean {
+        val memInfo = ActivityManager.MemoryInfo()
+        context.getSystemService<ActivityManager>()!!.getMemoryInfo(memInfo)
+        val totalMemBytes = memInfo.totalMem
+        return totalMemBytes < 3L * 1024 * 1024 * 1024
+    }
 
     @SuppressLint("PrivateApi")
     private fun getSystemProperty(key: String?): String? {

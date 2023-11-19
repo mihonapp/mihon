@@ -245,10 +245,12 @@ object SettingsReaderScreen : SearchableSettings {
 
         val navModePref = readerPreferences.navigationModeWebtoon()
         val dualPageSplitPref = readerPreferences.dualPageSplitWebtoon()
+        val rotateToFitPref = readerPreferences.dualPageRotateToFitWebtoon()
         val webtoonSidePaddingPref = readerPreferences.webtoonSidePadding()
 
         val navMode by navModePref.collectAsState()
         val dualPageSplit by dualPageSplitPref.collectAsState()
+        val rotateToFit by rotateToFitPref.collectAsState()
         val webtoonSidePadding by webtoonSidePaddingPref.collectAsState()
 
         return Preference.PreferenceGroup(
@@ -300,12 +302,29 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = dualPageSplitPref,
                     title = stringResource(MR.strings.pref_dual_page_split),
+                    onValueChanged = {
+                        rotateToFitPref.set(false)
+                        true
+                    },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.dualPageInvertWebtoon(),
                     title = stringResource(MR.strings.pref_dual_page_invert),
                     subtitle = stringResource(MR.strings.pref_dual_page_invert_summary),
                     enabled = dualPageSplit,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = rotateToFitPref,
+                    title = stringResource(MR.strings.pref_page_rotate),
+                    onValueChanged = {
+                        dualPageSplitPref.set(false)
+                        true
+                    },
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.dualPageRotateToFitInvertWebtoon(),
+                    title = stringResource(MR.strings.pref_page_rotate_invert),
+                    enabled = rotateToFit,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.webtoonDoubleTapZoomEnabled(),
