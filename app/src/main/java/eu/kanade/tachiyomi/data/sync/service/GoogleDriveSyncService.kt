@@ -175,8 +175,8 @@ class GoogleDriveService(private val context: Context) {
      * and setting up the service using the obtained tokens.
      */
     private fun initGoogleDriveService() {
-        val accessToken = syncPreferences.getGoogleDriveAccessToken()
-        val refreshToken = syncPreferences.getGoogleDriveRefreshToken()
+        val accessToken = syncPreferences.googleDriveAccessToken().get()
+        val refreshToken = syncPreferences.googleDriveRefreshToken().get()
 
         if (accessToken == "" || refreshToken == "") {
             googleDriveService = null
@@ -226,6 +226,9 @@ class GoogleDriveService(private val context: Context) {
             .build()
     }
     internal suspend fun refreshToken() = withContext(Dispatchers.IO) {
+        val refreshToken = syncPreferences.googleDriveRefreshToken().get()
+        val accessToken = syncPreferences.googleDriveAccessToken().get()
+
         val jsonFactory: JsonFactory = JacksonFactory.getDefaultInstance()
         val secrets = GoogleClientSecrets.load(
             jsonFactory,
@@ -238,22 +241,21 @@ class GoogleDriveService(private val context: Context) {
             .setClientSecrets(secrets)
             .build()
 
-        if (syncPreferences.getGoogleDriveRefreshToken() == "") {
+        if (refreshToken == "") {
             throw Exception(context.getString(R.string.google_drive_not_signed_in))
         }
 
-        credential.refreshToken = syncPreferences.getGoogleDriveRefreshToken()
+        credential.refreshToken = refreshToken
 
-        logcat(LogPriority.DEBUG) { "Refreshing access token with: ${syncPreferences.getGoogleDriveRefreshToken()}" }
+        logcat(LogPriority.DEBUG) { "Refreshing access token with: $refreshToken" }
 
         try {
             credential.refreshToken()
             val newAccessToken = credential.accessToken
-            val oldAccessToken = syncPreferences.getGoogleDriveAccessToken()
             // Save the new access token
-            syncPreferences.setGoogleDriveAccessToken(newAccessToken)
+            syncPreferences.googleDriveAccessToken().set(newAccessToken)
             setupGoogleDriveService(newAccessToken, credential.refreshToken)
-            logcat(LogPriority.DEBUG) { "Google Access token refreshed old: $oldAccessToken new: $newAccessToken" }
+            logcat(LogPriority.DEBUG) { "Google Access token refreshed old: $accessToken new: $newAccessToken" }
         } catch (e: TokenResponseException) {
             if (e.details.error == "invalid_grant") {
                 // The refresh token is invalid, prompt the user to sign in again
@@ -338,8 +340,8 @@ class GoogleDriveService(private val context: Context) {
             val refreshToken = tokenResponse.refreshToken
 
             // Save the tokens to SyncPreferences
-            syncPreferences.setGoogleDriveAccessToken(accessToken)
-            syncPreferences.setGoogleDriveRefreshToken(refreshToken)
+            syncPreferences.googleDriveAccessToken().set(accessToken)
+            syncPreferences.googleDriveRefreshToken().set(refreshToken)
 
             setupGoogleDriveService(accessToken, refreshToken)
             initGoogleDriveService()

@@ -11,28 +11,15 @@ class SyncPreferences(
     fun lastSyncTimestamp() = preferenceStore.getLong(Preference.appStateKey("last_sync_timestamp"), 0L)
 
     fun syncInterval() = preferenceStore.getInt("sync_interval", 0)
-
     fun syncService() = preferenceStore.getInt("sync_service", 0)
 
-    private fun googleDriveAccessToken() = preferenceStore.getString(
+    fun googleDriveAccessToken() = preferenceStore.getString(
         Preference.appStateKey("google_drive_access_token"),
         "",
     )
 
-    fun setGoogleDriveAccessToken(accessToken: String) {
-        googleDriveAccessToken().set(accessToken)
-    }
-
-    fun getGoogleDriveAccessToken() = googleDriveAccessToken().get()
-
-    private fun googleDriveRefreshToken() = preferenceStore.getString(
+    fun googleDriveRefreshToken() = preferenceStore.getString(
         Preference.appStateKey("google_drive_refresh_token"),
         "",
     )
-
-    fun setGoogleDriveRefreshToken(refreshToken: String) {
-        googleDriveRefreshToken().set(refreshToken)
-    }
-
-    fun getGoogleDriveRefreshToken() = googleDriveRefreshToken().get()
 }
