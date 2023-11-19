@@ -118,7 +118,6 @@ class SyncManager(
                 backupManga = filteredFavorites,
                 backupCategories = remoteBackup.backupCategories,
                 backupSources = remoteBackup.backupSources,
-                backupBrokenSources = remoteBackup.backupBrokenSources,
             )
 
             // It's local sync no need to restore data. (just update remote data)
