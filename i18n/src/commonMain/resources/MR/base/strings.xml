@@ -540,6 +540,8 @@
     <string name="pref_google_drive_purge_sync_data">Clear Sync Data from Google Drive</string>
     <string name="google_drive_sync_data_purged">Sync data purged from Google Drive</string>
     <string name="google_drive_sync_data_not_found">No sync data found in Google Drive</string>
+    <string name="google_drive_login_success">Logged in to Google Drive</string>
+    <string name="google_drive_login_failed">Failed to log in to Google Drive: %s</string>
     <string name="google_drive_not_signed_in">Not signed in to Google Drive</string>
     <string name="pref_purge_confirmation_title">Purge confirmation</string>
     <string name="pref_purge_confirmation_message">Purging sync data will delete all your sync data from Google Drive. Are you sure you want to continue?</string>
