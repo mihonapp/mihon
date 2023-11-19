@@ -127,7 +127,7 @@ class SyncManager(
                 return
             }
 
-            val backupUri = writeSyncDataToFile(context, newSyncData)
+            val backupUri = writeSyncDataToCache(context, newSyncData)
             logcat(LogPriority.DEBUG) { "Got Backup Uri: $backupUri" }
             if (backupUri != null) {
                 BackupRestoreJob.start(context, backupUri, sync = true)
@@ -137,15 +137,15 @@ class SyncManager(
         }
     }
 
-    private fun writeSyncDataToFile(context: Context, backup: Backup): Uri? {
-        val file = File(context.filesDir, "tachiyomi_sync_data.proto.gz")
+    private fun writeSyncDataToCache(context: Context, backup: Backup): Uri? {
+        val cacheFile = File(context.cacheDir, "tachiyomi_sync_data.proto.gz")
         return try {
-            FileOutputStream(file).use { output ->
+            FileOutputStream(cacheFile).use { output ->
                 output.write(ProtoBuf.encodeToByteArray(BackupSerializer, backup))
-                Uri.fromFile(file)
+                Uri.fromFile(cacheFile)
             }
         } catch (e: IOException) {
-            logcat(LogPriority.ERROR) { "Failed to write sync data locally" }
+            logcat(LogPriority.ERROR) { "Failed to write sync data to cache" }
             null
         }
     }
