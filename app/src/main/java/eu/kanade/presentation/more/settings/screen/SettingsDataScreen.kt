@@ -392,14 +392,14 @@ private fun getGoogleDrivePreferences(): List<Preference> {
 @Composable
 private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
     val scope = rememberCoroutineScope()
-    val showPurgeDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val googleDriveSync = remember { GoogleDriveSyncService(context) }
+    var showPurgeDialog by remember { mutableStateOf(false) }
 
-    if (showPurgeDialog.value) {
+    if (showPurgeDialog) {
         PurgeConfirmationDialog(
             onConfirm = {
-                showPurgeDialog.value = false
+                showPurgeDialog = false
                 scope.launch {
                     val result = googleDriveSync.deleteSyncDataFromGoogleDrive()
                     when (result) {
@@ -415,18 +415,18 @@ private fun getGoogleDrivePurge(): Preference.PreferenceItem.TextPreference {
                     }
                 }
             },
-            onDismissRequest = { showPurgeDialog.value = false },
+            onDismissRequest = { showPurgeDialog = false },
         )
     }
 
     return Preference.PreferenceItem.TextPreference(
         title = stringResource(MR.strings.pref_google_drive_purge_sync_data),
-        onClick = { showPurgeDialog.value = true },
+        onClick = { showPurgeDialog = true },
     )
 }
 
 @Composable
-fun PurgeConfirmationDialog(
+private fun PurgeConfirmationDialog(
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -543,7 +543,7 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
 }
 
 @Composable
-fun SyncConfirmationDialog(
+private fun SyncConfirmationDialog(
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
