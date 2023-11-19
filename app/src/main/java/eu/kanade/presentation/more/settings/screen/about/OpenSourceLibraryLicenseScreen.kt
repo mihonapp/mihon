@@ -21,7 +21,7 @@ import eu.kanade.presentation.util.Screen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 class OpenSourceLibraryLicenseScreen(
     private val name: String,
@@ -44,7 +44,7 @@ class OpenSourceLibraryLicenseScreen(
                             AppBarActions(
                                 persistentListOf(
                                     AppBar.Action(
-                                        title = localize(MR.strings.website),
+                                        title = stringResource(MR.strings.website),
                                         icon = Icons.Default.Public,
                                         onClick = { uriHandler.openUri(website) },
                                     ),

@@ -4,7 +4,7 @@ import android.content.Context
 import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.source.online.LicensedMangaChaptersException
 import eu.kanade.tachiyomi.util.system.isOnline
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.data.source.NoResultsException
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.i18n.MR
@@ -14,18 +14,18 @@ context(Context)
 val Throwable.formattedMessage: String
     get() {
         when (this) {
-            is HttpException -> return localize(MR.strings.exception_http, code)
+            is HttpException -> return stringResource(MR.strings.exception_http, code)
             is UnknownHostException -> {
                 return if (!isOnline()) {
-                    localize(MR.strings.exception_offline)
+                    stringResource(MR.strings.exception_offline)
                 } else {
-                    localize(MR.strings.exception_unknown_host, message ?: "")
+                    stringResource(MR.strings.exception_unknown_host, message ?: "")
                 }
             }
 
-            is NoResultsException -> return localize(MR.strings.no_results_found)
-            is SourceNotInstalledException -> return localize(MR.strings.loader_not_implemented_error)
-            is LicensedMangaChaptersException -> return localize(MR.strings.licensed_manga_chapters_error)
+            is NoResultsException -> return stringResource(MR.strings.no_results_found)
+            is SourceNotInstalledException -> return stringResource(MR.strings.loader_not_implemented_error)
+            is LicensedMangaChaptersException -> return stringResource(MR.strings.licensed_manga_chapters_error)
         }
         return when (val className = this::class.simpleName) {
             "Exception", "IOException" -> message ?: className

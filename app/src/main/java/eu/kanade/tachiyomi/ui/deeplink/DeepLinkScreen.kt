@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class DeepLinkScreen(
@@ -35,7 +35,7 @@ class DeepLinkScreen(
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = localize(MR.strings.action_search_hint),
+                    title = stringResource(MR.strings.action_search_hint),
                     navigateUp = navigator::pop,
                     scrollBehavior = scrollBehavior,
                 )

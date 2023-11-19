@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.kanade.tachiyomi.data.track.Tracker
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.core.preference.Preference as PreferenceData
 
 sealed class Preference {
@@ -109,7 +109,7 @@ sealed class Preference {
                     v.map { e[it] }
                         .takeIf { it.isNotEmpty() }
                         ?.joinToString()
-                } ?: localize(MR.strings.none)
+                } ?: stringResource(MR.strings.none)
                 subtitle?.format(combined)
             },
             override val icon: ImageVector? = null,

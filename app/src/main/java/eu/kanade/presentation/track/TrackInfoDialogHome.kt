@@ -55,7 +55,7 @@ import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import java.text.DateFormat
 
 private const val UnsetStatusTextAlpha = 0.5F
@@ -194,7 +194,7 @@ private fun TrackInfoItem(
                 Row(modifier = Modifier.height(IntrinsicSize.Min)) {
                     TrackDetailsItem(
                         modifier = Modifier.weight(1f),
-                        text = status?.let { localize(it) } ?: "",
+                        text = status?.let { stringResource(it) } ?: "",
                         onClick = onStatusClick,
                     )
                     VerticalDivider()
@@ -209,7 +209,7 @@ private fun TrackInfoItem(
                             modifier = Modifier
                                 .weight(1f)
                                 .alpha(if (score == null) UnsetStatusTextAlpha else 1f),
-                            text = score ?: localize(MR.strings.score),
+                            text = score ?: stringResource(MR.strings.score),
                             onClick = onScoreClick,
                         )
                     }
@@ -221,14 +221,14 @@ private fun TrackInfoItem(
                         TrackDetailsItem(
                             modifier = Modifier.weight(1F),
                             text = startDate,
-                            placeholder = localize(MR.strings.track_started_reading_date),
+                            placeholder = stringResource(MR.strings.track_started_reading_date),
                             onClick = onStartDateClick,
                         )
                         VerticalDivider()
                         TrackDetailsItem(
                             modifier = Modifier.weight(1F),
                             text = endDate,
-                            placeholder = localize(MR.strings.track_finished_reading_date),
+                            placeholder = stringResource(MR.strings.track_finished_reading_date),
                             onClick = onEndDateClick,
                         )
                     }
@@ -279,7 +279,7 @@ private fun TrackInfoItemEmpty(
                 .padding(start = 16.dp)
                 .weight(1f),
         ) {
-            Text(text = localize(MR.strings.add_tracking))
+            Text(text = stringResource(MR.strings.add_tracking))
         }
     }
 }
@@ -294,7 +294,7 @@ private fun TrackInfoItemMenu(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = localize(MR.strings.label_more),
+                contentDescription = stringResource(MR.strings.label_more),
             )
         }
         DropdownMenu(
@@ -302,14 +302,14 @@ private fun TrackInfoItemMenu(
             onDismissRequest = { expanded = false },
         ) {
             DropdownMenuItem(
-                text = { Text(localize(MR.strings.action_open_in_browser)) },
+                text = { Text(stringResource(MR.strings.action_open_in_browser)) },
                 onClick = {
                     onOpenInBrowser()
                     expanded = false
                 },
             )
             DropdownMenuItem(
-                text = { Text(localize(MR.strings.action_remove)) },
+                text = { Text(stringResource(MR.strings.action_remove)) },
                 onClick = {
                     onRemoved()
                     expanded = false

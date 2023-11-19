@@ -23,7 +23,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 class BackupSchemaScreen : Screen() {
 
@@ -47,7 +47,7 @@ class BackupSchemaScreen : Screen() {
                         AppBarActions(
                             persistentListOf(
                                 AppBar.Action(
-                                    title = localize(MR.strings.action_copy_to_clipboard),
+                                    title = stringResource(MR.strings.action_copy_to_clipboard),
                                     icon = Icons.Default.ContentCopy,
                                     onClick = {
                                         context.copyToClipboard(title, schema)

@@ -32,8 +32,8 @@ import tachiyomi.core.Constants
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MoreScreen(
@@ -80,8 +80,8 @@ fun MoreScreen(
             }
             item {
                 SwitchPreferenceWidget(
-                    title = localize(MR.strings.label_downloaded_only),
-                    subtitle = localize(MR.strings.downloaded_only_summary),
+                    title = stringResource(MR.strings.label_downloaded_only),
+                    subtitle = stringResource(MR.strings.downloaded_only_summary),
                     icon = Icons.Outlined.CloudOff,
                     checked = downloadedOnly,
                     onCheckedChanged = onDownloadedOnlyChange,
@@ -89,8 +89,8 @@ fun MoreScreen(
             }
             item {
                 SwitchPreferenceWidget(
-                    title = localize(MR.strings.pref_incognito_mode),
-                    subtitle = localize(MR.strings.pref_incognito_mode_summary),
+                    title = stringResource(MR.strings.pref_incognito_mode),
+                    subtitle = stringResource(MR.strings.pref_incognito_mode_summary),
                     icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
                     checked = incognitoMode,
                     onCheckedChanged = onIncognitoModeChange,
@@ -102,16 +102,16 @@ fun MoreScreen(
             item {
                 val downloadQueueState = downloadQueueStateProvider()
                 TextPreferenceWidget(
-                    title = localize(MR.strings.label_download_queue),
+                    title = stringResource(MR.strings.label_download_queue),
                     subtitle = when (downloadQueueState) {
                         DownloadQueueState.Stopped -> null
                         is DownloadQueueState.Paused -> {
                             val pending = downloadQueueState.pending
                             if (pending == 0) {
-                                localize(MR.strings.paused)
+                                stringResource(MR.strings.paused)
                             } else {
-                                "${localize(MR.strings.paused)} • ${
-                                    localizePlural(
+                                "${stringResource(MR.strings.paused)} • ${
+                                    pluralStringResource(
                                         MR.plurals.download_queue_summary,
                                         count = pending,
                                         pending,
@@ -121,7 +121,7 @@ fun MoreScreen(
                         }
                         is DownloadQueueState.Downloading -> {
                             val pending = downloadQueueState.pending
-                            localizePlural(MR.plurals.download_queue_summary, count = pending, pending)
+                            pluralStringResource(MR.plurals.download_queue_summary, count = pending, pending)
                         }
                     },
                     icon = Icons.Outlined.GetApp,
@@ -130,21 +130,21 @@ fun MoreScreen(
             }
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.categories),
+                    title = stringResource(MR.strings.categories),
                     icon = Icons.AutoMirrored.Outlined.Label,
                     onPreferenceClick = onClickCategories,
                 )
             }
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.label_stats),
+                    title = stringResource(MR.strings.label_stats),
                     icon = Icons.Outlined.QueryStats,
                     onPreferenceClick = onClickStats,
                 )
             }
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.label_data_storage),
+                    title = stringResource(MR.strings.label_data_storage),
                     icon = Icons.Outlined.Storage,
                     onPreferenceClick = onClickDataAndStorage,
                 )
@@ -154,21 +154,21 @@ fun MoreScreen(
 
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.label_settings),
+                    title = stringResource(MR.strings.label_settings),
                     icon = Icons.Outlined.Settings,
                     onPreferenceClick = onClickSettings,
                 )
             }
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.pref_category_about),
+                    title = stringResource(MR.strings.pref_category_about),
                     icon = Icons.Outlined.Info,
                     onPreferenceClick = onClickAbout,
                 )
             }
             item {
                 TextPreferenceWidget(
-                    title = localize(MR.strings.label_help),
+                    title = stringResource(MR.strings.label_help),
                     icon = Icons.AutoMirrored.Outlined.HelpOutline,
                     onPreferenceClick = { uriHandler.openUri(Constants.URL_HELP) },
                 )

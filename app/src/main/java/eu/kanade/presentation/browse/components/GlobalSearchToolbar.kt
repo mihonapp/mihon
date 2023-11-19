@@ -30,7 +30,7 @@ import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.SourceFilter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun GlobalSearchToolbar(
@@ -85,7 +85,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = localize(MR.strings.pinned_sources))
+                    Text(text = stringResource(MR.strings.pinned_sources))
                 },
             )
             FilterChip(
@@ -100,7 +100,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = localize(MR.strings.all))
+                    Text(text = stringResource(MR.strings.all))
                 },
             )
 
@@ -118,7 +118,7 @@ fun GlobalSearchToolbar(
                     )
                 },
                 label = {
-                    Text(text = localize(MR.strings.has_results))
+                    Text(text = stringResource(MR.strings.has_results))
                 },
             )
         }

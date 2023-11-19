@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 
@@ -75,7 +75,7 @@ fun <T> ListPreferenceWidget(
             },
             confirmButton = {
                 TextButton(onClick = { isDialogShown = false }) {
-                    Text(text = localize(MR.strings.action_cancel))
+                    Text(text = stringResource(MR.strings.action_cancel))
                 }
             },
         )

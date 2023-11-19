@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun BottomReaderBar(
@@ -43,28 +43,28 @@ fun BottomReaderBar(
         IconButton(onClick = onClickReadingMode) {
             Icon(
                 painter = painterResource(readingMode.iconRes),
-                contentDescription = localize(MR.strings.viewer),
+                contentDescription = stringResource(MR.strings.viewer),
             )
         }
 
         IconButton(onClick = onClickOrientation) {
             Icon(
                 painter = painterResource(orientation.iconRes),
-                contentDescription = localize(MR.strings.rotation_type),
+                contentDescription = stringResource(MR.strings.rotation_type),
             )
         }
 
         IconButton(onClick = onClickCropBorder) {
             Icon(
                 painter = painterResource(if (cropEnabled) R.drawable.ic_crop_24dp else R.drawable.ic_crop_off_24dp),
-                contentDescription = localize(MR.strings.pref_crop_borders),
+                contentDescription = stringResource(MR.strings.pref_crop_borders),
             )
         }
 
         IconButton(onClick = onClickSettings) {
             Icon(
                 imageVector = Icons.Outlined.Settings,
-                contentDescription = localize(MR.strings.action_settings),
+                contentDescription = stringResource(MR.strings.action_settings),
             )
         }
     }

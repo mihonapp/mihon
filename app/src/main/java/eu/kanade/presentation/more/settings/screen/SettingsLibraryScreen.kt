@@ -34,8 +34,8 @@ import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_C
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_OUTSIDE_RELEASE_PERIOD
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -75,15 +75,15 @@ object SettingsLibraryScreen : SearchableSettings {
         // For default category
         val ids = listOf(libraryPreferences.defaultCategory().defaultValue()) +
             allCategories.fastMap { it.id.toInt() }
-        val labels = listOf(localize(MR.strings.default_category_summary)) +
+        val labels = listOf(stringResource(MR.strings.default_category_summary)) +
             allCategories.fastMap { it.visualName(context) }
 
         return Preference.PreferenceGroup(
-            title = localize(MR.strings.categories),
+            title = stringResource(MR.strings.categories),
             preferenceItems = listOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = localize(MR.strings.action_edit_categories),
-                    subtitle = localizePlural(
+                    title = stringResource(MR.strings.action_edit_categories),
+                    subtitle = pluralStringResource(
                         MR.plurals.num_categories,
                         count = userCategoriesCount,
                         userCategoriesCount,
@@ -92,13 +92,13 @@ object SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.defaultCategory(),
-                    title = localize(MR.strings.default_category),
-                    subtitle = selectedCategory?.visualName ?: localize(MR.strings.default_category_summary),
+                    title = stringResource(MR.strings.default_category),
+                    subtitle = selectedCategory?.visualName ?: stringResource(MR.strings.default_category_summary),
                     entries = ids.zip(labels).toMap(),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.categorizedDisplaySettings(),
-                    title = localize(MR.strings.categorized_display_settings),
+                    title = stringResource(MR.strings.categorized_display_settings),
                     onValueChanged = {
                         if (!it) {
                             scope.launch {
@@ -130,8 +130,8 @@ object SettingsLibraryScreen : SearchableSettings {
         var showCategoriesDialog by rememberSaveable { mutableStateOf(false) }
         if (showCategoriesDialog) {
             TriStateListDialog(
-                title = localize(MR.strings.categories),
-                message = localize(MR.strings.pref_library_update_categories_details),
+                title = stringResource(MR.strings.categories),
+                message = stringResource(MR.strings.pref_library_update_categories_details),
                 items = allCategories,
                 initialChecked = included.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
                 initialInversed = excluded.mapNotNull { id -> allCategories.find { it.id.toString() == id } },
@@ -146,18 +146,18 @@ object SettingsLibraryScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = localize(MR.strings.pref_category_library_update),
+            title = stringResource(MR.strings.pref_category_library_update),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = autoUpdateIntervalPref,
-                    title = localize(MR.strings.pref_library_update_interval),
+                    title = stringResource(MR.strings.pref_library_update_interval),
                     entries = mapOf(
-                        0 to localize(MR.strings.update_never),
-                        12 to localize(MR.strings.update_12hour),
-                        24 to localize(MR.strings.update_24hour),
-                        48 to localize(MR.strings.update_48hour),
-                        72 to localize(MR.strings.update_72hour),
-                        168 to localize(MR.strings.update_weekly),
+                        0 to stringResource(MR.strings.update_never),
+                        12 to stringResource(MR.strings.update_12hour),
+                        24 to stringResource(MR.strings.update_24hour),
+                        48 to stringResource(MR.strings.update_48hour),
+                        72 to stringResource(MR.strings.update_72hour),
+                        168 to stringResource(MR.strings.update_weekly),
                     ),
                     onValueChanged = {
                         LibraryUpdateJob.setupTask(context, it)
@@ -167,12 +167,12 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.MultiSelectListPreference(
                     pref = libraryPreferences.autoUpdateDeviceRestrictions(),
                     enabled = autoUpdateInterval > 0,
-                    title = localize(MR.strings.pref_library_update_restriction),
-                    subtitle = localize(MR.strings.restrictions),
+                    title = stringResource(MR.strings.pref_library_update_restriction),
+                    subtitle = stringResource(MR.strings.restrictions),
                     entries = mapOf(
-                        DEVICE_ONLY_ON_WIFI to localize(MR.strings.connected_to_wifi),
-                        DEVICE_NETWORK_NOT_METERED to localize(MR.strings.network_not_metered),
-                        DEVICE_CHARGING to localize(MR.strings.charging),
+                        DEVICE_ONLY_ON_WIFI to stringResource(MR.strings.connected_to_wifi),
+                        DEVICE_NETWORK_NOT_METERED to stringResource(MR.strings.network_not_metered),
+                        DEVICE_CHARGING to stringResource(MR.strings.charging),
                     ),
                     onValueChanged = {
                         // Post to event looper to allow the preference to be updated.
@@ -181,7 +181,7 @@ object SettingsLibraryScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.TextPreference(
-                    title = localize(MR.strings.categories),
+                    title = stringResource(MR.strings.categories),
                     subtitle = getCategoriesLabel(
                         allCategories = allCategories,
                         included = included,
@@ -191,22 +191,22 @@ object SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.autoUpdateMetadata(),
-                    title = localize(MR.strings.pref_library_update_refresh_metadata),
-                    subtitle = localize(MR.strings.pref_library_update_refresh_metadata_summary),
+                    title = stringResource(MR.strings.pref_library_update_refresh_metadata),
+                    subtitle = stringResource(MR.strings.pref_library_update_refresh_metadata_summary),
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     pref = libraryPreferences.autoUpdateMangaRestrictions(),
-                    title = localize(MR.strings.pref_library_update_manga_restriction),
+                    title = stringResource(MR.strings.pref_library_update_manga_restriction),
                     entries = mapOf(
-                        MANGA_HAS_UNREAD to localize(MR.strings.pref_update_only_completely_read),
-                        MANGA_NON_READ to localize(MR.strings.pref_update_only_started),
-                        MANGA_NON_COMPLETED to localize(MR.strings.pref_update_only_non_completed),
-                        MANGA_OUTSIDE_RELEASE_PERIOD to localize(MR.strings.pref_update_only_in_release_period),
+                        MANGA_HAS_UNREAD to stringResource(MR.strings.pref_update_only_completely_read),
+                        MANGA_NON_READ to stringResource(MR.strings.pref_update_only_started),
+                        MANGA_NON_COMPLETED to stringResource(MR.strings.pref_update_only_non_completed),
+                        MANGA_OUTSIDE_RELEASE_PERIOD to stringResource(MR.strings.pref_update_only_in_release_period),
                     ),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = libraryPreferences.newShowUpdatesCount(),
-                    title = localize(MR.strings.pref_library_update_show_tab_badge),
+                    title = stringResource(MR.strings.pref_library_update_show_tab_badge),
                 ),
             ),
         )
@@ -217,34 +217,34 @@ object SettingsLibraryScreen : SearchableSettings {
         libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
-            title = localize(MR.strings.pref_chapter_swipe),
+            title = stringResource(MR.strings.pref_chapter_swipe),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.swipeToStartAction(),
-                    title = localize(MR.strings.pref_chapter_swipe_start),
+                    title = stringResource(MR.strings.pref_chapter_swipe_start),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to
-                            localize(MR.strings.disabled),
+                            stringResource(MR.strings.disabled),
                         LibraryPreferences.ChapterSwipeAction.ToggleBookmark to
-                            localize(MR.strings.action_bookmark),
+                            stringResource(MR.strings.action_bookmark),
                         LibraryPreferences.ChapterSwipeAction.ToggleRead to
-                            localize(MR.strings.action_mark_as_read),
+                            stringResource(MR.strings.action_mark_as_read),
                         LibraryPreferences.ChapterSwipeAction.Download to
-                            localize(MR.strings.action_download),
+                            stringResource(MR.strings.action_download),
                     ),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.swipeToEndAction(),
-                    title = localize(MR.strings.pref_chapter_swipe_end),
+                    title = stringResource(MR.strings.pref_chapter_swipe_end),
                     entries = mapOf(
                         LibraryPreferences.ChapterSwipeAction.Disabled to
-                            localize(MR.strings.disabled),
+                            stringResource(MR.strings.disabled),
                         LibraryPreferences.ChapterSwipeAction.ToggleBookmark to
-                            localize(MR.strings.action_bookmark),
+                            stringResource(MR.strings.action_bookmark),
                         LibraryPreferences.ChapterSwipeAction.ToggleRead to
-                            localize(MR.strings.action_mark_as_read),
+                            stringResource(MR.strings.action_mark_as_read),
                         LibraryPreferences.ChapterSwipeAction.Download to
-                            localize(MR.strings.action_download),
+                            stringResource(MR.strings.action_download),
                     ),
                 ),
             ),

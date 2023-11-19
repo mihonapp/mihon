@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.manga.components.MangaCover
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BadgeGroup
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
 
 object CommonMangaItemDefaults {
@@ -378,7 +378,7 @@ private fun ContinueReadingButton(
         ) {
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
-                contentDescription = localize(MR.strings.action_resume),
+                contentDescription = stringResource(MR.strings.action_resume),
                 modifier = Modifier.size(16.dp),
             )
         }

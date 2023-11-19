@@ -17,7 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 
 /**
@@ -107,7 +107,7 @@ class WebtoonTransitionHolder(
 
         val textView = AppCompatTextView(context).apply {
             wrapContent()
-            text = context.localize(MR.strings.transition_pages_loading)
+            text = context.stringResource(MR.strings.transition_pages_loading)
         }
 
         pagesContainer.addView(progress)
@@ -120,12 +120,12 @@ class WebtoonTransitionHolder(
     private fun setError(error: Throwable, transition: ChapterTransition) {
         val textView = AppCompatTextView(context).apply {
             wrapContent()
-            text = context.localize(MR.strings.transition_pages_error, error.message ?: "")
+            text = context.stringResource(MR.strings.transition_pages_error, error.message ?: "")
         }
 
         val retryBtn = AppCompatButton(context).apply {
             wrapContent()
-            text = context.localize(MR.strings.action_retry)
+            text = context.stringResource(MR.strings.action_retry)
             setOnClickListener {
                 val toChapter = transition.to
                 if (toChapter != null) {

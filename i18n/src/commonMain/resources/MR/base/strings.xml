@@ -5,6 +5,10 @@
     <!-- Generic strings -->
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="selected">Selected</string>
+    <string name="not_selected">Not selected</string>
+    <string name="action_menu_overflow_description">More options</string>
+    <string name="action_bar_up_description">Navigate up</string>
 
     <!-- Models -->
     <string name="name">Name</string>
@@ -38,9 +42,6 @@
     <string name="label_started">Started</string>
     <string name="label_local">Local</string>
     <string name="label_downloaded">Downloaded</string>
-
-    <string name="selected">Selected</string>
-    <string name="not_selected">Not selected</string>
 
     <string name="unlock_app_title">Unlock %s</string>
     <string name="confirm_lock_change">Authenticate to confirm change</string>

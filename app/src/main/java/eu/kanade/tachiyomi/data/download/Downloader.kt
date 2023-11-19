@@ -40,7 +40,7 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.util.lang.launchIO
@@ -303,7 +303,7 @@ class Downloader(
                 ) {
                     withUIContext {
                         notifier.onWarning(
-                            context.localize(MR.strings.download_queue_size_warning),
+                            context.stringResource(MR.strings.download_queue_size_warning),
                             WARNING_NOTIF_TIMEOUT_MS,
                             NotificationHandler.openUrl(context, LibraryUpdateNotifier.HELP_WARNING_URL),
                         )
@@ -326,7 +326,7 @@ class Downloader(
         if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
             download.status = Download.State.ERROR
             notifier.onError(
-                context.localize(MR.strings.download_insufficient_space),
+                context.stringResource(MR.strings.download_insufficient_space),
                 download.chapter.name,
                 download.manga.title,
             )
@@ -343,7 +343,7 @@ class Downloader(
                 val pages = download.source.getPageList(download.chapter.toSChapter())
 
                 if (pages.isEmpty()) {
-                    throw Exception(context.localize(MR.strings.page_list_empty_error))
+                    throw Exception(context.stringResource(MR.strings.page_list_empty_error))
                 }
                 // Don't trust index from source
                 val reIndexedPages = pages.mapIndexed { index, page -> Page(index, page.url, page.imageUrl, page.uri) }
@@ -547,7 +547,7 @@ class Downloader(
         try {
             val filenamePrefix = String.format("%03d", page.number)
             val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
-                ?: error(context.localize(MR.strings.download_notifier_split_page_not_found, page.number))
+                ?: error(context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number))
 
             // If the original page was previously split, then skip
             if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return

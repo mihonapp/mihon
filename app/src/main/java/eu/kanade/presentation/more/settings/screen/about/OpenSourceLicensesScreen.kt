@@ -13,7 +13,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 class OpenSourceLicensesScreen : Screen() {
 
@@ -23,7 +23,7 @@ class OpenSourceLicensesScreen : Screen() {
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = localize(MR.strings.licenses),
+                    title = stringResource(MR.strings.licenses),
                     navigateUp = navigator::pop,
                     scrollBehavior = scrollBehavior,
                 )

@@ -30,7 +30,7 @@ import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.TriStateItem
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
@@ -42,9 +42,9 @@ fun LibrarySettingsDialog(
     TabbedDialog(
         onDismissRequest = onDismissRequest,
         tabTitles = persistentListOf(
-            localize(MR.strings.action_filter),
-            localize(MR.strings.action_sort),
-            localize(MR.strings.action_display),
+            stringResource(MR.strings.action_filter),
+            stringResource(MR.strings.action_sort),
+            stringResource(MR.strings.action_display),
         ),
     ) { page ->
         Column(
@@ -75,7 +75,7 @@ private fun ColumnScope.FilterPage(
     val filterDownloaded by screenModel.libraryPreferences.filterDownloaded().collectAsState()
     val downloadedOnly by screenModel.preferences.downloadedOnly().collectAsState()
     TriStateItem(
-        label = localize(MR.strings.label_downloaded),
+        label = stringResource(MR.strings.label_downloaded),
         state = if (downloadedOnly) {
             TriState.ENABLED_IS
         } else {
@@ -86,25 +86,25 @@ private fun ColumnScope.FilterPage(
     )
     val filterUnread by screenModel.libraryPreferences.filterUnread().collectAsState()
     TriStateItem(
-        label = localize(MR.strings.action_filter_unread),
+        label = stringResource(MR.strings.action_filter_unread),
         state = filterUnread,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterUnread) },
     )
     val filterStarted by screenModel.libraryPreferences.filterStarted().collectAsState()
     TriStateItem(
-        label = localize(MR.strings.label_started),
+        label = stringResource(MR.strings.label_started),
         state = filterStarted,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterStarted) },
     )
     val filterBookmarked by screenModel.libraryPreferences.filterBookmarked().collectAsState()
     TriStateItem(
-        label = localize(MR.strings.action_filter_bookmarked),
+        label = stringResource(MR.strings.action_filter_bookmarked),
         state = filterBookmarked,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterBookmarked) },
     )
     val filterCompleted by screenModel.libraryPreferences.filterCompleted().collectAsState()
     TriStateItem(
-        label = localize(MR.strings.completed),
+        label = stringResource(MR.strings.completed),
         state = filterCompleted,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
@@ -118,7 +118,7 @@ private fun ColumnScope.FilterPage(
             val service = trackers[0]
             val filterTracker by screenModel.libraryPreferences.filterTracking(service.id.toInt()).collectAsState()
             TriStateItem(
-                label = localize(MR.strings.action_filter_tracked),
+                label = stringResource(MR.strings.action_filter_tracked),
                 state = filterTracker,
                 onClick = { screenModel.toggleTracker(service.id.toInt()) },
             )
@@ -163,7 +163,7 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
         SortItem(
-            label = localize(titleRes),
+            label = stringResource(titleRes),
             sortDescending = sortDescending.takeIf { sortingMode == mode },
             onClick = {
                 val isTogglingDirection = sortingMode == mode
@@ -202,7 +202,7 @@ private fun ColumnScope.DisplayPage(
             FilterChip(
                 selected = displayMode == mode,
                 onClick = { screenModel.setDisplayMode(mode) },
-                label = { Text(localize(titleRes)) },
+                label = { Text(stringResource(titleRes)) },
             )
         }
     }
@@ -219,13 +219,13 @@ private fun ColumnScope.DisplayPage(
 
         val columns by columnPreference.collectAsState()
         SliderItem(
-            label = localize(MR.strings.pref_library_columns),
+            label = stringResource(MR.strings.pref_library_columns),
             max = 10,
             value = columns,
             valueText = if (columns > 0) {
-                localize(MR.strings.pref_library_columns_per_row, columns)
+                stringResource(MR.strings.pref_library_columns_per_row, columns)
             } else {
-                localize(MR.strings.label_default)
+                stringResource(MR.strings.label_default)
             },
             onChange = columnPreference::set,
         )
@@ -233,29 +233,29 @@ private fun ColumnScope.DisplayPage(
 
     HeadingItem(MR.strings.overlay_header)
     CheckboxItem(
-        label = localize(MR.strings.action_display_download_badge),
+        label = stringResource(MR.strings.action_display_download_badge),
         pref = screenModel.libraryPreferences.downloadBadge(),
     )
     CheckboxItem(
-        label = localize(MR.strings.action_display_local_badge),
+        label = stringResource(MR.strings.action_display_local_badge),
         pref = screenModel.libraryPreferences.localBadge(),
     )
     CheckboxItem(
-        label = localize(MR.strings.action_display_language_badge),
+        label = stringResource(MR.strings.action_display_language_badge),
         pref = screenModel.libraryPreferences.languageBadge(),
     )
     CheckboxItem(
-        label = localize(MR.strings.action_display_show_continue_reading_button),
+        label = stringResource(MR.strings.action_display_show_continue_reading_button),
         pref = screenModel.libraryPreferences.showContinueReadingButton(),
     )
 
     HeadingItem(MR.strings.tabs_header)
     CheckboxItem(
-        label = localize(MR.strings.action_display_show_tabs),
+        label = stringResource(MR.strings.action_display_show_tabs),
         pref = screenModel.libraryPreferences.categoryTabs(),
     )
     CheckboxItem(
-        label = localize(MR.strings.action_display_show_number_of_items),
+        label = stringResource(MR.strings.action_display_show_number_of_items),
         pref = screenModel.libraryPreferences.categoryNumberOfItems(),
     )
 }

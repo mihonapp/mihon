@@ -24,13 +24,13 @@ import eu.kanade.presentation.util.formattedMessage
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.StateFlow
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.domain.library.model.LibraryDisplayMode
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
@@ -63,7 +63,7 @@ fun BrowseSourceContent(
         if (mangaList.itemCount > 0 && errorState != null && errorState is LoadState.Error) {
             val result = snackbarHostState.showSnackbar(
                 message = getErrorMessage(errorState),
-                actionLabel = context.localize(MR.strings.action_retry),
+                actionLabel = context.stringResource(MR.strings.action_retry),
                 duration = SnackbarDuration.Indefinite,
             )
             when (result) {
@@ -161,7 +161,7 @@ internal fun MissingSourceScreen(
         },
     ) { paddingValues ->
         EmptyScreen(
-            message = localize(MR.strings.source_not_installed, source.toString()),
+            message = stringResource(MR.strings.source_not_installed, source.toString()),
             modifier = Modifier.padding(paddingValues),
         )
     }

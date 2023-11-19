@@ -34,7 +34,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import kotlin.time.Duration.Companion.seconds
@@ -140,12 +140,12 @@ private fun UpdatesAppBar(
 ) {
     AppBar(
         modifier = modifier,
-        title = localize(MR.strings.label_recent_updates),
+        title = stringResource(MR.strings.label_recent_updates),
         actions = {
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
-                        title = localize(MR.strings.action_update_library),
+                        title = stringResource(MR.strings.action_update_library),
                         icon = Icons.Outlined.Refresh,
                         onClick = onUpdateLibrary,
                     ),
@@ -158,12 +158,12 @@ private fun UpdatesAppBar(
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
-                        title = localize(MR.strings.action_select_all),
+                        title = stringResource(MR.strings.action_select_all),
                         icon = Icons.Outlined.SelectAll,
                         onClick = onSelectAll,
                     ),
                     AppBar.Action(
-                        title = localize(MR.strings.action_select_inverse),
+                        title = stringResource(MR.strings.action_select_inverse),
                         icon = Icons.Outlined.FlipToBack,
                         onClick = onInvertSelection,
                     ),

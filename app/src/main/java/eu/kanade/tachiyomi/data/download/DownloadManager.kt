@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
@@ -159,7 +159,7 @@ class DownloadManager(
             .filter { "image" in it.type.orEmpty() }
 
         if (files.isEmpty()) {
-            throw Exception(context.localize(MR.strings.page_list_empty_error))
+            throw Exception(context.stringResource(MR.strings.page_list_empty_error))
         }
 
         return files.sortedBy { it.name }

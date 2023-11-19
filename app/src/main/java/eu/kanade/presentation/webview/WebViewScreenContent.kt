@@ -43,7 +43,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun WebViewScreenContent(
@@ -125,7 +125,7 @@ fun WebViewScreenContent(
                             AppBarActions(
                                 persistentListOf(
                                     AppBar.Action(
-                                        title = localize(MR.strings.action_webview_back),
+                                        title = stringResource(MR.strings.action_webview_back),
                                         icon = Icons.AutoMirrored.Outlined.ArrowBack,
                                         onClick = {
                                             if (navigator.canGoBack) {
@@ -135,7 +135,7 @@ fun WebViewScreenContent(
                                         enabled = navigator.canGoBack,
                                     ),
                                     AppBar.Action(
-                                        title = localize(MR.strings.action_webview_forward),
+                                        title = stringResource(MR.strings.action_webview_forward),
                                         icon = Icons.AutoMirrored.Outlined.ArrowForward,
                                         onClick = {
                                             if (navigator.canGoForward) {
@@ -145,19 +145,19 @@ fun WebViewScreenContent(
                                         enabled = navigator.canGoForward,
                                     ),
                                     AppBar.OverflowAction(
-                                        title = localize(MR.strings.action_webview_refresh),
+                                        title = stringResource(MR.strings.action_webview_refresh),
                                         onClick = { navigator.reload() },
                                     ),
                                     AppBar.OverflowAction(
-                                        title = localize(MR.strings.action_share),
+                                        title = stringResource(MR.strings.action_share),
                                         onClick = { onShare(currentUrl) },
                                     ),
                                     AppBar.OverflowAction(
-                                        title = localize(MR.strings.action_open_in_browser),
+                                        title = stringResource(MR.strings.action_open_in_browser),
                                         onClick = { onOpenInBrowser(currentUrl) },
                                     ),
                                     AppBar.OverflowAction(
-                                        title = localize(MR.strings.pref_clear_cookies),
+                                        title = stringResource(MR.strings.pref_clear_cookies),
                                         onClick = { onClearCookies(currentUrl) },
                                     ),
                                 ),

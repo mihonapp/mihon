@@ -93,7 +93,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -257,15 +257,15 @@ class MainActivity : BaseActivity() {
             if (showChangelog) {
                 AlertDialog(
                     onDismissRequest = { showChangelog = false },
-                    title = { Text(text = localize(MR.strings.updated_version, BuildConfig.VERSION_NAME)) },
+                    title = { Text(text = stringResource(MR.strings.updated_version, BuildConfig.VERSION_NAME)) },
                     dismissButton = {
                         TextButton(onClick = { openInBrowser(RELEASE_URL) }) {
-                            Text(text = localize(MR.strings.whats_new))
+                            Text(text = stringResource(MR.strings.whats_new))
                         }
                     },
                     confirmButton = {
                         TextButton(onClick = { showChangelog = false }) {
-                            Text(text = localize(MR.strings.action_ok))
+                            Text(text = stringResource(MR.strings.action_ok))
                         }
                     },
                 )

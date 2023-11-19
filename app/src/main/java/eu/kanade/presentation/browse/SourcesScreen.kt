@@ -31,7 +31,7 @@ import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.header
@@ -121,7 +121,7 @@ private fun SourceItem(
             if (source.supportsLatest) {
                 TextButton(onClick = { onClickItem(source, Listing.Latest) }) {
                     Text(
-                        text = localize(MR.strings.latest),
+                        text = stringResource(MR.strings.latest),
                         style = LocalTextStyle.current.copy(
                             color = MaterialTheme.colorScheme.primary,
                         ),
@@ -154,7 +154,7 @@ private fun SourcePinButton(
         Icon(
             imageVector = icon,
             tint = tint,
-            contentDescription = localize(description),
+            contentDescription = stringResource(description),
         )
     }
 }
@@ -174,7 +174,7 @@ fun SourceOptionsDialog(
             Column {
                 val textId = if (Pin.Pinned in source.pin) MR.strings.action_unpin else MR.strings.action_pin
                 Text(
-                    text = localize(textId),
+                    text = stringResource(textId),
                     modifier = Modifier
                         .clickable(onClick = onClickPin)
                         .fillMaxWidth()
@@ -182,7 +182,7 @@ fun SourceOptionsDialog(
                 )
                 if (!source.isLocal()) {
                     Text(
-                        text = localize(MR.strings.action_disable),
+                        text = stringResource(MR.strings.action_disable),
                         modifier = Modifier
                             .clickable(onClick = onClickDisable)
                             .fillMaxWidth()

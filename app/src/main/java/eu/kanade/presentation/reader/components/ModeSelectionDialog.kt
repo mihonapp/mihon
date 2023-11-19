@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.SettingsItemsPaddings
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ModeSelectionDialog(
@@ -40,7 +40,7 @@ fun ModeSelectionDialog(
             ) {
                 onUseDefault?.let {
                     OutlinedButton(onClick = it) {
-                        Text(text = localize(MR.strings.action_revert_to_default))
+                        Text(text = stringResource(MR.strings.action_revert_to_default))
                     }
                 }
 
@@ -57,7 +57,7 @@ fun ModeSelectionDialog(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = null,
                         )
-                        Text(text = localize(MR.strings.action_apply))
+                        Text(text = stringResource(MR.strings.action_apply))
                     }
                 }
             }

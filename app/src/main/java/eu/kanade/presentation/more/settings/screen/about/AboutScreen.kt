@@ -46,7 +46,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LinkIcon
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.icons.CustomIcons
 import tachiyomi.presentation.core.icons.Discord
 import tachiyomi.presentation.core.icons.Facebook
@@ -74,7 +74,7 @@ object AboutScreen : Screen() {
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = localize(MR.strings.pref_category_about),
+                    title = stringResource(MR.strings.pref_category_about),
                     navigateUp = if (handleBack != null) handleBack::invoke else null,
                     scrollBehavior = scrollBehavior,
                 )
@@ -89,7 +89,7 @@ object AboutScreen : Screen() {
 
                 item {
                     TextPreferenceWidget(
-                        title = localize(MR.strings.version),
+                        title = stringResource(MR.strings.version),
                         subtitle = getVersionName(withBuildDate = true),
                         onPreferenceClick = {
                             val deviceInfo = CrashLogUtil(context).getDebugInfo()
@@ -101,7 +101,7 @@ object AboutScreen : Screen() {
                 if (BuildConfig.INCLUDE_UPDATER) {
                     item {
                         TextPreferenceWidget(
-                            title = localize(MR.strings.check_for_updates),
+                            title = stringResource(MR.strings.check_for_updates),
                             widget = {
                                 AnimatedVisibility(visible = isCheckingUpdates) {
                                     CircularProgressIndicator(
@@ -140,7 +140,7 @@ object AboutScreen : Screen() {
                 if (!BuildConfig.DEBUG) {
                     item {
                         TextPreferenceWidget(
-                            title = localize(MR.strings.whats_new),
+                            title = stringResource(MR.strings.whats_new),
                             onPreferenceClick = { uriHandler.openUri(RELEASE_URL) },
                         )
                     }
@@ -148,21 +148,21 @@ object AboutScreen : Screen() {
 
                 item {
                     TextPreferenceWidget(
-                        title = localize(MR.strings.help_translate),
+                        title = stringResource(MR.strings.help_translate),
                         onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/docs/contribute#translation") },
                     )
                 }
 
                 item {
                     TextPreferenceWidget(
-                        title = localize(MR.strings.licenses),
+                        title = stringResource(MR.strings.licenses),
                         onPreferenceClick = { navigator.push(OpenSourceLicensesScreen()) },
                     )
                 }
 
                 item {
                     TextPreferenceWidget(
-                        title = localize(MR.strings.privacy_policy),
+                        title = stringResource(MR.strings.privacy_policy),
                         onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/privacy/") },
                     )
                 }
@@ -175,7 +175,7 @@ object AboutScreen : Screen() {
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         LinkIcon(
-                            label = localize(MR.strings.website),
+                            label = stringResource(MR.strings.website),
                             icon = Icons.Outlined.Public,
                             url = "https://tachiyomi.org",
                         )

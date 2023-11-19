@@ -55,7 +55,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.NavigationBar
 import tachiyomi.presentation.core.components.material.NavigationRail
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -241,7 +241,7 @@ object HomeScreen : Screen() {
                         }
                         if (count > 0) {
                             Badge {
-                                val desc = localizePlural(
+                                val desc = pluralStringResource(
                                     MR.plurals.notification_chapters_generic,
                                     count = count,
                                     count,
@@ -260,7 +260,7 @@ object HomeScreen : Screen() {
                         }
                         if (count > 0) {
                             Badge {
-                                val desc = localizePlural(
+                                val desc = pluralStringResource(
                                     MR.plurals.update_check_notification_ext_updates,
                                     count = count,
                                     count,

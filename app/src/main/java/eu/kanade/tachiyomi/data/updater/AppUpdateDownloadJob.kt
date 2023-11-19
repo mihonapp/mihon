@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import okhttp3.internal.http2.ErrorCode
 import okhttp3.internal.http2.StreamResetException
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.i18n.MR
@@ -37,7 +37,7 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
 
     override suspend fun doWork(): Result {
         val url = inputData.getString(EXTRA_DOWNLOAD_URL)
-        val title = inputData.getString(EXTRA_DOWNLOAD_TITLE) ?: context.localize(MR.strings.app_name)
+        val title = inputData.getString(EXTRA_DOWNLOAD_TITLE) ?: context.stringResource(MR.strings.app_name)
 
         if (url.isNullOrEmpty()) {
             return Result.failure()

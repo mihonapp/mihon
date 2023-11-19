@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.icerock.moko.resources.StringResource
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun StatsSection(
@@ -19,7 +19,7 @@ fun StatsSection(
 ) {
     Text(
         modifier = Modifier.padding(horizontal = MaterialTheme.padding.extraLarge),
-        text = localize(titleRes),
+        text = stringResource(titleRes),
         style = MaterialTheme.typography.titleSmall,
     )
     ElevatedCard(

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.TabText
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 object TabbedDialogPaddings {
     val Horizontal = 24.dp
@@ -94,7 +94,7 @@ private fun MoreMenu(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = localize(MR.strings.label_more),
+                contentDescription = stringResource(MR.strings.label_more),
             )
         }
         DropdownMenu(

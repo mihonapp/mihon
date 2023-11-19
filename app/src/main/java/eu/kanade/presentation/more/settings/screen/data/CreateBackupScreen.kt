@@ -43,7 +43,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 class CreateBackupScreen : Screen() {
 
@@ -71,7 +71,7 @@ class CreateBackupScreen : Screen() {
         Scaffold(
             topBar = {
                 AppBar(
-                    title = localize(MR.strings.pref_create_backup),
+                    title = stringResource(MR.strings.pref_create_backup),
                     navigateUp = navigator::pop,
                     scrollBehavior = it,
                 )
@@ -89,7 +89,7 @@ class CreateBackupScreen : Screen() {
                 ) {
                     item {
                         LabeledCheckbox(
-                            label = localize(MR.strings.manga),
+                            label = stringResource(MR.strings.manga),
                             checked = true,
                             onCheckedChange = {},
                             enabled = false,
@@ -98,7 +98,7 @@ class CreateBackupScreen : Screen() {
                     BackupChoices.forEach { (k, v) ->
                         item {
                             LabeledCheckbox(
-                                label = localize(v),
+                                label = stringResource(v),
                                 checked = state.flags.contains(k),
                                 onCheckedChange = {
                                     model.toggleFlag(k)
@@ -130,7 +130,7 @@ class CreateBackupScreen : Screen() {
                     },
                 ) {
                     Text(
-                        text = localize(MR.strings.action_create),
+                        text = stringResource(MR.strings.action_create),
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }

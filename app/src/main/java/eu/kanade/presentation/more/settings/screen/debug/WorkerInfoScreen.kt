@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.plus
 
 class WorkerInfoScreen : Screen() {
@@ -65,7 +65,7 @@ class WorkerInfoScreen : Screen() {
                         AppBarActions(
                             persistentListOf(
                                 AppBar.Action(
-                                    title = localize(MR.strings.action_copy_to_clipboard),
+                                    title = stringResource(MR.strings.action_copy_to_clipboard),
                                     icon = Icons.Default.ContentCopy,
                                     onClick = {
                                         context.copyToClipboard(title, enqueued + finished + running)

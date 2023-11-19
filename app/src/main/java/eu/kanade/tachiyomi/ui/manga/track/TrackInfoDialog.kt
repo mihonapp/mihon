@@ -65,7 +65,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
@@ -79,7 +79,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
@@ -229,7 +229,7 @@ data class TrackInfoDialogHomeScreen(
                     }
                     withUIContext {
                         context.toast(
-                            context.localize(
+                            context.stringResource(
                                 MR.strings.track_error,
                                 track!!.name,
                                 e.message ?: "",
@@ -502,9 +502,9 @@ private data class TrackDateSelectorScreen(
         }
         TrackDateSelector(
             title = if (start) {
-                localize(MR.strings.track_started_reading_date)
+                stringResource(MR.strings.track_started_reading_date)
             } else {
-                localize(MR.strings.track_finished_reading_date)
+                stringResource(MR.strings.track_finished_reading_date)
             },
             initialSelectedDateMillis = screenModel.initialSelection,
             selectableDates = selectableDates,
@@ -577,7 +577,7 @@ private data class TrackDateRemoverScreen(
             },
             title = {
                 Text(
-                    text = localize(MR.strings.track_remove_date_conf_title),
+                    text = stringResource(MR.strings.track_remove_date_conf_title),
                     textAlign = TextAlign.Center,
                 )
             },
@@ -585,9 +585,9 @@ private data class TrackDateRemoverScreen(
                 val serviceName = screenModel.getServiceName()
                 Text(
                     text = if (start) {
-                        localize(MR.strings.track_remove_start_date_conf_text, serviceName)
+                        stringResource(MR.strings.track_remove_start_date_conf_text, serviceName)
                     } else {
-                        localize(MR.strings.track_remove_finish_date_conf_text, serviceName)
+                        stringResource(MR.strings.track_remove_finish_date_conf_text, serviceName)
                     },
                 )
             },
@@ -597,7 +597,7 @@ private data class TrackDateRemoverScreen(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small, Alignment.End),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = localize(MR.strings.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     FilledTonalButton(
                         onClick = {
@@ -609,7 +609,7 @@ private data class TrackDateRemoverScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         ),
                     ) {
-                        Text(text = localize(MR.strings.action_remove))
+                        Text(text = stringResource(MR.strings.action_remove))
                     }
                 }
             },
@@ -753,7 +753,7 @@ private data class TrackerRemoveScreen(
             },
             title = {
                 Text(
-                    text = localize(MR.strings.track_delete_title, serviceName),
+                    text = stringResource(MR.strings.track_delete_title, serviceName),
                     textAlign = TextAlign.Center,
                 )
             },
@@ -762,12 +762,12 @@ private data class TrackerRemoveScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = localize(MR.strings.track_delete_text, serviceName),
+                        text = stringResource(MR.strings.track_delete_text, serviceName),
                     )
 
                     if (screenModel.isDeletable()) {
                         LabeledCheckbox(
-                            label = localize(MR.strings.track_delete_remote_text, serviceName),
+                            label = stringResource(MR.strings.track_delete_remote_text, serviceName),
                             checked = removeRemoteTrack,
                             onCheckedChange = { removeRemoteTrack = it },
                         )
@@ -783,7 +783,7 @@ private data class TrackerRemoveScreen(
                     ),
                 ) {
                     TextButton(onClick = navigator::pop) {
-                        Text(text = localize(MR.strings.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     FilledTonalButton(
                         onClick = {
@@ -796,7 +796,7 @@ private data class TrackerRemoveScreen(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         ),
                     ) {
-                        Text(text = localize(MR.strings.action_ok))
+                        Text(text = stringResource(MR.strings.action_ok))
                     }
                 }
             },

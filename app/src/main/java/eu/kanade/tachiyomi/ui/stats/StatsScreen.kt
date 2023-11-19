@@ -12,7 +12,7 @@ import eu.kanade.presentation.more.stats.StatsScreenState
 import eu.kanade.presentation.util.Screen
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class StatsScreen : Screen() {
@@ -27,7 +27,7 @@ class StatsScreen : Screen() {
         Scaffold(
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = localize(MR.strings.label_stats),
+                    title = stringResource(MR.strings.label_stats),
                     navigateUp = navigator::pop,
                     scrollBehavior = scrollBehavior,
                 )

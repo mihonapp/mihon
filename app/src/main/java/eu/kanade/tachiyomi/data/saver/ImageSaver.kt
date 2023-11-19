@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import logcat.LogPriority
 import okio.IOException
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.ImageUtil
 import tachiyomi.core.util.system.logcat
 import tachiyomi.i18n.MR
@@ -71,7 +71,7 @@ class ImageSaver(
         val imageLocation = (image.location as Location.Pictures).relativePath
         val relativePath = listOf(
             Environment.DIRECTORY_PICTURES,
-            context.localize(MR.strings.app_name),
+            context.stringResource(MR.strings.app_name),
             imageLocation,
         ).joinToString(File.separator)
 
@@ -86,7 +86,7 @@ class ImageSaver(
             context.contentResolver.insert(
                 pictureDir,
                 contentValues,
-            ) ?: throw IOException(context.localize(MR.strings.error_saving_picture))
+            ) ?: throw IOException(context.stringResource(MR.strings.error_saving_picture))
         }
 
         try {
@@ -97,7 +97,7 @@ class ImageSaver(
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
-            throw IOException(context.localize(MR.strings.error_saving_picture))
+            throw IOException(context.stringResource(MR.strings.error_saving_picture))
         }
 
         DiskUtil.scanMedia(context, picture)
@@ -185,7 +185,7 @@ sealed interface Location {
             is Pictures -> {
                 val file = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    context.localize(MR.strings.app_name),
+                    context.stringResource(MR.strings.app_name),
                 )
                 if (relativePath.isNotEmpty()) {
                     return File(

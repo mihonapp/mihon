@@ -41,7 +41,7 @@ import tachiyomi.presentation.core.components.WheelNumberPicker
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.AlertDialogContent
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 
@@ -54,7 +54,7 @@ fun TrackStatusSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        title = localize(MR.strings.status),
+        title = stringResource(MR.strings.status),
         content = {
             val state = rememberLazyListState()
             ScrollbarLazyColumn(state = state) {
@@ -77,7 +77,7 @@ fun TrackStatusSelector(
                                 onClick = null,
                             )
                             Text(
-                                text = value?.let { localize(it) } ?: "",
+                                text = value?.let { stringResource(it) } ?: "",
                                 style = MaterialTheme.typography.bodyLarge.merge(),
                                 modifier = Modifier.padding(start = 24.dp),
                             )
@@ -102,7 +102,7 @@ fun TrackChapterSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        title = localize(MR.strings.chapters),
+        title = stringResource(MR.strings.chapters),
         content = {
             WheelNumberPicker(
                 items = range.toImmutableList(),
@@ -125,7 +125,7 @@ fun TrackScoreSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        title = localize(MR.strings.score),
+        title = stringResource(MR.strings.score),
         content = {
             WheelTextPicker(
                 items = selections,
@@ -172,15 +172,15 @@ fun TrackDateSelector(
                 ) {
                     if (onRemove != null) {
                         TextButton(onClick = onRemove) {
-                            Text(text = localize(MR.strings.action_remove))
+                            Text(text = stringResource(MR.strings.action_remove))
                         }
                         Spacer(modifier = Modifier.weight(1f))
                     }
                     TextButton(onClick = onDismissRequest) {
-                        Text(text = localize(MR.strings.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     TextButton(onClick = { onConfirm(pickerState.selectedDateMillis!!) }) {
-                        Text(text = localize(MR.strings.action_ok))
+                        Text(text = stringResource(MR.strings.action_ok))
                     }
                 }
             }
@@ -215,10 +215,10 @@ private fun BaseSelector(
                     Spacer(modifier = Modifier.weight(1f))
                 }
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = localize(MR.strings.action_cancel))
+                    Text(text = stringResource(MR.strings.action_cancel))
                 }
                 TextButton(onClick = onConfirm) {
-                    Text(text = localize(MR.strings.action_ok))
+                    Text(text = stringResource(MR.strings.action_ok))
                 }
             }
         },

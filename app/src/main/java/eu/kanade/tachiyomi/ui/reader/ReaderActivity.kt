@@ -84,7 +84,7 @@ import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.Constants
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
@@ -400,7 +400,7 @@ class ReaderActivity : BaseActivity() {
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 CircularProgressIndicator()
-                                Text(localize(MR.strings.loading))
+                                Text(stringResource(MR.strings.loading))
                             }
                         },
                     )
@@ -537,7 +537,7 @@ class ReaderActivity : BaseActivity() {
     private fun shareChapter() {
         assistUrl?.let {
             val intent = it.toUri().toShareIntent(this, type = "text/plain")
-            startActivity(Intent.createChooser(intent, localize(MR.strings.action_share)))
+            startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
         }
     }
 
@@ -684,9 +684,9 @@ class ReaderActivity : BaseActivity() {
 
         val intent = uri.toShareIntent(
             context = applicationContext,
-            message = localize(MR.strings.share_page_info, manga.title, chapter.name, page.number),
+            message = stringResource(MR.strings.share_page_info, manga.title, chapter.name, page.number),
         )
-        startActivity(Intent.createChooser(intent, localize(MR.strings.action_share)))
+        startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
     }
 
     /**

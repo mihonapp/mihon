@@ -27,9 +27,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
 import org.xmlpull.v1.XmlPullParser
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -76,26 +76,26 @@ object SettingsAppearanceScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = localize(MR.strings.pref_category_theme),
+            title = stringResource(MR.strings.pref_category_theme),
             preferenceItems = listOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = themeModePref,
-                    title = localize(MR.strings.pref_theme_mode),
+                    title = stringResource(MR.strings.pref_theme_mode),
                     entries = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         mapOf(
-                            ThemeMode.SYSTEM to localize(MR.strings.theme_system),
-                            ThemeMode.LIGHT to localize(MR.strings.theme_light),
-                            ThemeMode.DARK to localize(MR.strings.theme_dark),
+                            ThemeMode.SYSTEM to stringResource(MR.strings.theme_system),
+                            ThemeMode.LIGHT to stringResource(MR.strings.theme_light),
+                            ThemeMode.DARK to stringResource(MR.strings.theme_dark),
                         )
                     } else {
                         mapOf(
-                            ThemeMode.LIGHT to localize(MR.strings.theme_light),
-                            ThemeMode.DARK to localize(MR.strings.theme_dark),
+                            ThemeMode.LIGHT to stringResource(MR.strings.theme_light),
+                            ThemeMode.DARK to stringResource(MR.strings.theme_dark),
                         )
                     },
                 ),
                 Preference.PreferenceItem.CustomPreference(
-                    title = localize(MR.strings.pref_app_theme),
+                    title = stringResource(MR.strings.pref_app_theme),
                 ) { item ->
                     val value by appThemePref.collectAsState()
                     AppThemePreferenceWidget(
@@ -107,7 +107,7 @@ object SettingsAppearanceScreen : SearchableSettings {
                 },
                 Preference.PreferenceItem.SwitchPreference(
                     pref = amoledPref,
-                    title = localize(MR.strings.pref_dark_theme_pure_black),
+                    title = stringResource(MR.strings.pref_dark_theme_pure_black),
                     enabled = themeMode != ThemeMode.LIGHT,
                 ),
             ),
@@ -140,11 +140,11 @@ object SettingsAppearanceScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = localize(MR.strings.pref_category_display),
+            title = stringResource(MR.strings.pref_category_display),
             preferenceItems = listOf(
                 Preference.PreferenceItem.BasicListPreference(
                     value = currentLanguage,
-                    title = localize(MR.strings.pref_app_language),
+                    title = stringResource(MR.strings.pref_app_language),
                     entries = langs,
                     onValueChanged = { newValue ->
                         currentLanguage = newValue
@@ -153,8 +153,8 @@ object SettingsAppearanceScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.tabletUiMode(),
-                    title = localize(MR.strings.pref_tablet_ui_mode),
-                    entries = TabletUiMode.entries.associateWith { localize(it.titleRes) },
+                    title = stringResource(MR.strings.pref_tablet_ui_mode),
+                    entries = TabletUiMode.entries.associateWith { stringResource(it.titleRes) },
                     onValueChanged = {
                         context.toast(MR.strings.requires_app_restart)
                         true
@@ -162,19 +162,19 @@ object SettingsAppearanceScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.dateFormat(),
-                    title = localize(MR.strings.pref_date_format),
+                    title = stringResource(MR.strings.pref_date_format),
                     entries = DateFormats
                         .associateWith {
                             val formattedDate = UiPreferences.dateFormat(it).format(now)
-                            "${it.ifEmpty { localize(MR.strings.label_default) }} ($formattedDate)"
+                            "${it.ifEmpty { stringResource(MR.strings.label_default) }} ($formattedDate)"
                         },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = uiPreferences.relativeTime(),
-                    title = localize(MR.strings.pref_relative_format),
-                    subtitle = localize(
+                    title = stringResource(MR.strings.pref_relative_format),
+                    subtitle = stringResource(
                         MR.strings.pref_relative_format_summary,
-                        localize(MR.strings.relative_time_today),
+                        stringResource(MR.strings.relative_time_today),
                         formattedNow,
                     ),
                 ),
@@ -201,7 +201,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         }
 
         langs.sortBy { it.second }
-        langs.add(0, Pair("", context.localize(MR.strings.label_default)))
+        langs.add(0, Pair("", context.stringResource(MR.strings.label_default)))
 
         return langs.toMap()
     }

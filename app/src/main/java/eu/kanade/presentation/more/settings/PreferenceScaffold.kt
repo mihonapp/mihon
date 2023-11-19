@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.components.AppBar
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun PreferenceScaffold(
@@ -17,7 +17,7 @@ fun PreferenceScaffold(
     Scaffold(
         topBar = {
             AppBar(
-                title = localize(titleRes),
+                title = stringResource(titleRes),
                 navigateUp = onBackPressed,
                 actions = actions,
                 scrollBehavior = it,

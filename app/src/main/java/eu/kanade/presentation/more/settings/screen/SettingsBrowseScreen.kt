@@ -8,9 +8,9 @@ import androidx.fragment.app.FragmentActivity
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -26,28 +26,28 @@ object SettingsBrowseScreen : SearchableSettings {
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
         return listOf(
             Preference.PreferenceGroup(
-                title = localize(MR.strings.label_sources),
+                title = stringResource(MR.strings.label_sources),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = sourcePreferences.hideInLibraryItems(),
-                        title = localize(MR.strings.pref_hide_in_library_items),
+                        title = stringResource(MR.strings.pref_hide_in_library_items),
                     ),
                 ),
             ),
             Preference.PreferenceGroup(
-                title = localize(MR.strings.pref_category_nsfw_content),
+                title = stringResource(MR.strings.pref_category_nsfw_content),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = sourcePreferences.showNsfwSource(),
-                        title = localize(MR.strings.pref_show_nsfw_source),
-                        subtitle = localize(MR.strings.requires_app_restart),
+                        title = stringResource(MR.strings.pref_show_nsfw_source),
+                        subtitle = stringResource(MR.strings.requires_app_restart),
                         onValueChanged = {
                             (context as FragmentActivity).authenticate(
-                                title = context.localize(MR.strings.pref_category_nsfw_content),
+                                title = context.stringResource(MR.strings.pref_category_nsfw_content),
                             )
                         },
                     ),
-                    Preference.PreferenceItem.InfoPreference(localize(MR.strings.parental_controls_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.parental_controls_info)),
                 ),
             ),
         )

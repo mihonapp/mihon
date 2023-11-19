@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.BookmarkRemove
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DoneAll
 import androidx.compose.material.icons.outlined.Download
-import androidx.compose.material.icons.outlined.Label
 import androidx.compose.material.icons.outlined.RemoveDone
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
@@ -59,7 +58,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -108,7 +107,7 @@ fun MangaBottomActionMenu(
             ) {
                 if (onBookmarkClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_bookmark),
+                        title = stringResource(MR.strings.action_bookmark),
                         icon = Icons.Outlined.BookmarkAdd,
                         toConfirm = confirm[0],
                         onLongClick = { onLongClickItem(0) },
@@ -117,7 +116,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onRemoveBookmarkClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_remove_bookmark),
+                        title = stringResource(MR.strings.action_remove_bookmark),
                         icon = Icons.Outlined.BookmarkRemove,
                         toConfirm = confirm[1],
                         onLongClick = { onLongClickItem(1) },
@@ -126,7 +125,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkAsReadClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_mark_as_read),
+                        title = stringResource(MR.strings.action_mark_as_read),
                         icon = Icons.Outlined.DoneAll,
                         toConfirm = confirm[2],
                         onLongClick = { onLongClickItem(2) },
@@ -135,7 +134,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkAsUnreadClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_mark_as_unread),
+                        title = stringResource(MR.strings.action_mark_as_unread),
                         icon = Icons.Outlined.RemoveDone,
                         toConfirm = confirm[3],
                         onLongClick = { onLongClickItem(3) },
@@ -144,7 +143,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onMarkPreviousAsReadClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_mark_previous_as_read),
+                        title = stringResource(MR.strings.action_mark_previous_as_read),
                         icon = ImageVector.vectorResource(R.drawable.ic_done_prev_24dp),
                         toConfirm = confirm[4],
                         onLongClick = { onLongClickItem(4) },
@@ -153,7 +152,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onDownloadClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_download),
+                        title = stringResource(MR.strings.action_download),
                         icon = Icons.Outlined.Download,
                         toConfirm = confirm[5],
                         onLongClick = { onLongClickItem(5) },
@@ -162,7 +161,7 @@ fun MangaBottomActionMenu(
                 }
                 if (onDeleteClicked != null) {
                     Button(
-                        title = localize(MR.strings.action_delete),
+                        title = stringResource(MR.strings.action_delete),
                         icon = Icons.Outlined.Delete,
                         toConfirm = confirm[6],
                         onLongClick = { onLongClickItem(6) },
@@ -259,21 +258,21 @@ fun LibraryBottomActionMenu(
                     .padding(horizontal = 8.dp, vertical = 12.dp),
             ) {
                 Button(
-                    title = localize(MR.strings.action_move_category),
+                    title = stringResource(MR.strings.action_move_category),
                     icon = Icons.AutoMirrored.Outlined.Label,
                     toConfirm = confirm[0],
                     onLongClick = { onLongClickItem(0) },
                     onClick = onChangeCategoryClicked,
                 )
                 Button(
-                    title = localize(MR.strings.action_mark_as_read),
+                    title = stringResource(MR.strings.action_mark_as_read),
                     icon = Icons.Outlined.DoneAll,
                     toConfirm = confirm[1],
                     onLongClick = { onLongClickItem(1) },
                     onClick = onMarkAsReadClicked,
                 )
                 Button(
-                    title = localize(MR.strings.action_mark_as_unread),
+                    title = stringResource(MR.strings.action_mark_as_unread),
                     icon = Icons.Outlined.RemoveDone,
                     toConfirm = confirm[2],
                     onLongClick = { onLongClickItem(2) },
@@ -282,7 +281,7 @@ fun LibraryBottomActionMenu(
                 if (onDownloadClicked != null) {
                     var downloadExpanded by remember { mutableStateOf(false) }
                     Button(
-                        title = localize(MR.strings.action_download),
+                        title = stringResource(MR.strings.action_download),
                         icon = Icons.Outlined.Download,
                         toConfirm = confirm[3],
                         onLongClick = { onLongClickItem(3) },
@@ -297,7 +296,7 @@ fun LibraryBottomActionMenu(
                     }
                 }
                 Button(
-                    title = localize(MR.strings.action_delete),
+                    title = stringResource(MR.strings.action_delete),
                     icon = Icons.Outlined.Delete,
                     toConfirm = confirm[4],
                     onLongClick = { onLongClickItem(4) },

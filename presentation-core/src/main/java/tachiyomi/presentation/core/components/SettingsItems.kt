@@ -47,7 +47,7 @@ import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.TriState
 import tachiyomi.core.preference.toggle
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.collectAsState
 
@@ -58,7 +58,7 @@ object SettingsItemsPaddings {
 
 @Composable
 fun HeadingItem(labelRes: StringResource) {
-    HeadingItem(localize(labelRes))
+    HeadingItem(stringResource(labelRes))
 }
 
 @Composable

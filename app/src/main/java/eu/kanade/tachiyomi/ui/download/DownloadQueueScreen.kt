@@ -58,7 +58,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import kotlin.math.roundToInt
 
@@ -104,7 +104,7 @@ object DownloadQueueScreen : Screen() {
                     titleContent = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = localize(MR.strings.label_download_queue),
+                                text = stringResource(MR.strings.label_download_queue),
                                 maxLines = 1,
                                 modifier = Modifier.weight(1f, false),
                                 overflow = TextOverflow.Ellipsis,
@@ -131,10 +131,10 @@ object DownloadQueueScreen : Screen() {
                                 onDismissRequest = onDismissRequest,
                             ) {
                                 NestedMenuItem(
-                                    text = { Text(text = localize(MR.strings.action_order_by_upload_date)) },
+                                    text = { Text(text = stringResource(MR.strings.action_order_by_upload_date)) },
                                     children = { closeMenu ->
                                         DropdownMenuItem(
-                                            text = { Text(text = localize(MR.strings.action_newest)) },
+                                            text = { Text(text = stringResource(MR.strings.action_newest)) },
                                             onClick = {
                                                 screenModel.reorderQueue(
                                                     { it.download.chapter.dateUpload },
@@ -144,7 +144,7 @@ object DownloadQueueScreen : Screen() {
                                             },
                                         )
                                         DropdownMenuItem(
-                                            text = { Text(text = localize(MR.strings.action_oldest)) },
+                                            text = { Text(text = stringResource(MR.strings.action_oldest)) },
                                             onClick = {
                                                 screenModel.reorderQueue(
                                                     { it.download.chapter.dateUpload },
@@ -156,10 +156,10 @@ object DownloadQueueScreen : Screen() {
                                     },
                                 )
                                 NestedMenuItem(
-                                    text = { Text(text = localize(MR.strings.action_order_by_chapter_number)) },
+                                    text = { Text(text = stringResource(MR.strings.action_order_by_chapter_number)) },
                                     children = { closeMenu ->
                                         DropdownMenuItem(
-                                            text = { Text(text = localize(MR.strings.action_asc)) },
+                                            text = { Text(text = stringResource(MR.strings.action_asc)) },
                                             onClick = {
                                                 screenModel.reorderQueue(
                                                     { it.download.chapter.chapterNumber },
@@ -169,7 +169,7 @@ object DownloadQueueScreen : Screen() {
                                             },
                                         )
                                         DropdownMenuItem(
-                                            text = { Text(text = localize(MR.strings.action_desc)) },
+                                            text = { Text(text = stringResource(MR.strings.action_desc)) },
                                             onClick = {
                                                 screenModel.reorderQueue(
                                                     { it.download.chapter.chapterNumber },
@@ -185,12 +185,12 @@ object DownloadQueueScreen : Screen() {
                             AppBarActions(
                                 persistentListOf(
                                     AppBar.Action(
-                                        title = localize(MR.strings.action_sort),
+                                        title = stringResource(MR.strings.action_sort),
                                         icon = Icons.AutoMirrored.Outlined.Sort,
                                         onClick = { sortExpanded = true },
                                     ),
                                     AppBar.OverflowAction(
-                                        title = localize(MR.strings.action_cancel_all),
+                                        title = stringResource(MR.strings.action_cancel_all),
                                         onClick = { screenModel.clearQueue() },
                                     ),
                                 ),
@@ -214,7 +214,7 @@ object DownloadQueueScreen : Screen() {
                             } else {
                                 MR.strings.action_resume
                             }
-                            Text(text = localize(id))
+                            Text(text = stringResource(id))
                         },
                         icon = {
                             val icon = if (isRunning) {

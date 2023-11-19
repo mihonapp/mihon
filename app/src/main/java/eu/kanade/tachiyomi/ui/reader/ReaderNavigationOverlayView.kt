@@ -13,7 +13,7 @@ import androidx.core.graphics.withTranslation
 import androidx.core.view.isVisible
 import eu.kanade.tachiyomi.ui.reader.viewer.ViewerNavigation
 import eu.kanade.tachiyomi.ui.reader.viewer.navigation.DisabledNavigation
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import kotlin.math.abs
 
 class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
@@ -80,8 +80,8 @@ class ReaderNavigationOverlayView(context: Context, attributeSet: AttributeSet) 
                 // Calculate center of rect height on screen
                 val y = height * (abs(rect.top - rect.bottom) / 2)
 
-                drawText(context.localize(region.type.nameRes), x, y, textBorderPaint)
-                drawText(context.localize(region.type.nameRes), x, y, textPaint)
+                drawText(context.stringResource(region.type.nameRes), x, y, textBorderPaint)
+                drawText(context.stringResource(region.type.nameRes), x, y, textPaint)
             }
         }
     }

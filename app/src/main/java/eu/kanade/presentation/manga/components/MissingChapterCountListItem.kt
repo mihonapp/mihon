@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -34,7 +34,7 @@ fun MissingChapterCountListItem(
     ) {
         HorizontalDivider(modifier = Modifier.weight(1f))
         Text(
-            text = localizePlural(MR.plurals.missing_chapters, count = count, count),
+            text = pluralStringResource(MR.plurals.missing_chapters, count = count, count),
             style = MaterialTheme.typography.labelMedium,
         )
         HorizontalDivider(modifier = Modifier.weight(1f))

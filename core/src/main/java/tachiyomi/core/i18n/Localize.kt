@@ -9,18 +9,18 @@ import dev.icerock.moko.resources.desc.Resource
 import dev.icerock.moko.resources.desc.ResourceFormatted
 import dev.icerock.moko.resources.desc.StringDesc
 
-fun Context.localize(resource: StringResource): String {
+fun Context.stringResource(resource: StringResource): String {
     return StringDesc.Resource(resource).toString(this)
 }
 
-fun Context.localize(resource: StringResource, vararg args: Any): String {
+fun Context.stringResource(resource: StringResource, vararg args: Any): String {
     return StringDesc.ResourceFormatted(resource, *args).toString(this)
 }
 
-fun Context.localizePlural(resource: PluralsResource, count: Int): String {
+fun Context.pluralStringResource(resource: PluralsResource, count: Int): String {
     return StringDesc.Plural(resource, count).toString(this)
 }
 
-fun Context.localizePlural(resource: PluralsResource, count: Int, vararg args: Any): String {
+fun Context.pluralStringResource(resource: PluralsResource, count: Int, vararg args: Any): String {
     return StringDesc.PluralFormatted(resource, count, *args).toString(this)
 }

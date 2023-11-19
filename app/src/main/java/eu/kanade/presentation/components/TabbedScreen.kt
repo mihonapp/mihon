@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.HorizontalPager
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.TabText
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun TabbedScreen(
@@ -52,7 +52,7 @@ fun TabbedScreen(
             val searchEnabled = tab.searchEnabled
 
             SearchToolbar(
-                titleContent = { AppBarTitle(localize(titleRes)) },
+                titleContent = { AppBarTitle(stringResource(titleRes)) },
                 searchEnabled = searchEnabled,
                 searchQuery = if (searchEnabled) searchQuery else null,
                 onChangeSearchQuery = onChangeSearchQuery,
@@ -75,7 +75,7 @@ fun TabbedScreen(
                     Tab(
                         selected = state.currentPage == index,
                         onClick = { scope.launch { state.animateScrollToPage(index) } },
-                        text = { TabText(text = localize(tab.titleRes), badgeCount = tab.badgeNumber) },
+                        text = { TabText(text = stringResource(tab.titleRes), badgeCount = tab.badgeNumber) },
                         unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                     )
                 }

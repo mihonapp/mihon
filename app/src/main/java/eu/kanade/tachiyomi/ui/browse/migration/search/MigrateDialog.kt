@@ -49,7 +49,7 @@ import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -79,7 +79,7 @@ internal fun MigrateDialog(
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = {
-                Text(text = localize(MR.strings.migration_dialog_what_to_include))
+                Text(text = stringResource(MR.strings.migration_dialog_what_to_include))
             },
             text = {
                 Column(
@@ -87,7 +87,7 @@ internal fun MigrateDialog(
                 ) {
                     flags.forEachIndexed { index, flag ->
                         LabeledCheckbox(
-                            label = localize(flag.titleId),
+                            label = stringResource(flag.titleId),
                             checked = selectedFlags[index],
                             onCheckedChange = { selectedFlags[index] = it },
                         )
@@ -104,7 +104,7 @@ internal fun MigrateDialog(
                             onClickTitle()
                         },
                     ) {
-                        Text(text = localize(MR.strings.action_show_manga))
+                        Text(text = stringResource(MR.strings.action_show_manga))
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
@@ -122,7 +122,7 @@ internal fun MigrateDialog(
                             }
                         },
                     ) {
-                        Text(text = localize(MR.strings.copy))
+                        Text(text = stringResource(MR.strings.copy))
                     }
                     TextButton(
                         onClick = {
@@ -138,7 +138,7 @@ internal fun MigrateDialog(
                             }
                         },
                     ) {
-                        Text(text = localize(MR.strings.migrate))
+                        Text(text = stringResource(MR.strings.migrate))
                     }
                 }
             },

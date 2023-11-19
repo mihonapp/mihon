@@ -6,7 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun RemoveMangaDialog(
@@ -18,7 +18,7 @@ fun RemoveMangaDialog(
         onDismissRequest = onDismissRequest,
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = localize(MR.strings.action_cancel))
+                Text(text = stringResource(MR.strings.action_cancel))
             }
         },
         confirmButton = {
@@ -28,14 +28,14 @@ fun RemoveMangaDialog(
                     onConfirm()
                 },
             ) {
-                Text(text = localize(MR.strings.action_remove))
+                Text(text = stringResource(MR.strings.action_remove))
             }
         },
         title = {
-            Text(text = localize(MR.strings.are_you_sure))
+            Text(text = stringResource(MR.strings.are_you_sure))
         },
         text = {
-            Text(text = localize(MR.strings.remove_manga, mangaToRemove.title))
+            Text(text = stringResource(MR.strings.remove_manga, mangaToRemove.title))
         },
     )
 }

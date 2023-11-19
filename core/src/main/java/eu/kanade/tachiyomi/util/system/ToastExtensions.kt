@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.util.system
 import android.content.Context
 import android.widget.Toast
 import dev.icerock.moko.resources.StringResource
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 
 /**
  * Display a toast in this context.
@@ -16,7 +16,7 @@ fun Context.toast(
     duration: Int = Toast.LENGTH_SHORT,
     block: (Toast) -> Unit = {},
 ): Toast {
-    return toast(localize(resource), duration, block)
+    return toast(stringResource(resource), duration, block)
 }
 
 /**

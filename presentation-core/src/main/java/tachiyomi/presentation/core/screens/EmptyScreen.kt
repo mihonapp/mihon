@@ -25,7 +25,7 @@ import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import kotlin.random.Random
 
@@ -42,7 +42,7 @@ fun EmptyScreen(
     actions: ImmutableList<EmptyScreenAction>? = null,
 ) {
     EmptyScreen(
-        message = localize(stringRes),
+        message = stringResource(stringRes),
         modifier = modifier,
         actions = actions,
     )
@@ -89,7 +89,7 @@ fun EmptyScreen(
                 actions.fastForEach {
                     ActionButton(
                         modifier = Modifier.weight(1f),
-                        title = localize(it.stringRes),
+                        title = stringResource(it.stringRes),
                         icon = it.icon,
                         onClick = it.onClick,
                     )

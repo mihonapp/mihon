@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.util.BackupUtil
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -29,7 +29,7 @@ class BackupFileValidator(
         }
 
         if (backup.backupManga.isEmpty()) {
-            throw IllegalStateException(context.localize(MR.strings.invalid_backup_file_missing_manga))
+            throw IllegalStateException(context.stringResource(MR.strings.invalid_backup_file_missing_manga))
         }
 
         val sources = backup.backupSources.associate { it.sourceId to it.name }

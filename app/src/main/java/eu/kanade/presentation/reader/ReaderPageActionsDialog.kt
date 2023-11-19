@@ -22,7 +22,7 @@ import eu.kanade.presentation.components.AdaptiveSheet
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ReaderPageActionsDialog(
@@ -42,13 +42,13 @@ fun ReaderPageActionsDialog(
         ) {
             ActionButton(
                 modifier = Modifier.weight(1f),
-                title = localize(MR.strings.set_as_cover),
+                title = stringResource(MR.strings.set_as_cover),
                 icon = Icons.Outlined.Photo,
                 onClick = { showSetCoverDialog = true },
             )
             ActionButton(
                 modifier = Modifier.weight(1f),
-                title = localize(MR.strings.action_share),
+                title = stringResource(MR.strings.action_share),
                 icon = Icons.Outlined.Share,
                 onClick = {
                     onShare()
@@ -57,7 +57,7 @@ fun ReaderPageActionsDialog(
             )
             ActionButton(
                 modifier = Modifier.weight(1f),
-                title = localize(MR.strings.action_save),
+                title = stringResource(MR.strings.action_save),
                 icon = Icons.Outlined.Save,
                 onClick = {
                     onSave()
@@ -85,16 +85,16 @@ private fun SetCoverDialog(
 ) {
     AlertDialog(
         text = {
-            Text(localize(MR.strings.confirm_set_image_as_cover))
+            Text(stringResource(MR.strings.confirm_set_image_as_cover))
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(localize(MR.strings.action_ok))
+                Text(stringResource(MR.strings.action_ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(localize(MR.strings.action_cancel))
+                Text(stringResource(MR.strings.action_cancel))
             }
         },
         onDismissRequest = onDismiss,

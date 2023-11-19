@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
-import tachiyomi.presentation.core.i18n.localize
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ChapterHeader(
@@ -35,9 +35,9 @@ fun ChapterHeader(
     ) {
         Text(
             text = if (chapterCount == null) {
-                localize(MR.strings.chapters)
+                stringResource(MR.strings.chapters)
             } else {
-                localizePlural(MR.plurals.manga_num_chapters, count = chapterCount, chapterCount)
+                pluralStringResource(MR.plurals.manga_num_chapters, count = chapterCount, chapterCount)
             },
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground,
@@ -54,7 +54,7 @@ private fun MissingChaptersWarning(count: Int) {
     }
 
     Text(
-        text = localizePlural(MR.plurals.missing_chapters, count = count, count),
+        text = pluralStringResource(MR.plurals.missing_chapters, count = count, count),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         style = MaterialTheme.typography.bodySmall,

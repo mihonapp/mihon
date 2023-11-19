@@ -51,7 +51,7 @@ import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
 
 @Composable
@@ -85,7 +85,7 @@ fun MangaCoverDialog(
                         IconButton(onClick = onDismissRequest) {
                             Icon(
                                 imageVector = Icons.Outlined.Close,
-                                contentDescription = localize(MR.strings.action_close),
+                                contentDescription = stringResource(MR.strings.action_close),
                             )
                         }
                     }
@@ -94,12 +94,12 @@ fun MangaCoverDialog(
                         AppBarActions(
                             actions = persistentListOf(
                                 AppBar.Action(
-                                    title = localize(MR.strings.action_share),
+                                    title = stringResource(MR.strings.action_share),
                                     icon = Icons.Outlined.Share,
                                     onClick = onShareClick,
                                 ),
                                 AppBar.Action(
-                                    title = localize(MR.strings.action_save),
+                                    title = stringResource(MR.strings.action_save),
                                     icon = Icons.Outlined.Save,
                                     onClick = onSaveClick,
                                 ),
@@ -119,7 +119,7 @@ fun MangaCoverDialog(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Edit,
-                                        contentDescription = localize(MR.strings.action_edit_cover),
+                                        contentDescription = stringResource(MR.strings.action_edit_cover),
                                     )
                                 }
                                 DropdownMenu(
@@ -128,14 +128,14 @@ fun MangaCoverDialog(
                                     offset = DpOffset(8.dp, 0.dp),
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(text = localize(MR.strings.action_edit)) },
+                                        text = { Text(text = stringResource(MR.strings.action_edit)) },
                                         onClick = {
                                             onEditClick(EditCoverAction.EDIT)
                                             expanded = false
                                         },
                                     )
                                     DropdownMenuItem(
-                                        text = { Text(text = localize(MR.strings.action_delete)) },
+                                        text = { Text(text = stringResource(MR.strings.action_delete)) },
                                         onClick = {
                                             onEditClick(EditCoverAction.DELETE)
                                             expanded = false

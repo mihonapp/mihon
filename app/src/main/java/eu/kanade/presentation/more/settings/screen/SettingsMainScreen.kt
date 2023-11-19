@@ -47,7 +47,7 @@ import eu.kanade.presentation.util.Screen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import cafe.adriel.voyager.core.screen.Screen as VoyagerScreen
 
 object SettingsMainScreen : Screen() {
@@ -84,13 +84,13 @@ object SettingsMainScreen : Screen() {
             topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topBarState),
             topBar = { scrollBehavior ->
                 AppBar(
-                    title = localize(MR.strings.label_settings),
+                    title = stringResource(MR.strings.label_settings),
                     navigateUp = backPress::invoke,
                     actions = {
                         AppBarActions(
                             persistentListOf(
                                 AppBar.Action(
-                                    title = localize(MR.strings.action_search),
+                                    title = stringResource(MR.strings.action_search),
                                     icon = Icons.Outlined.Search,
                                     onClick = { navigator.navigate(SettingsSearchScreen(), twoPane) },
                                 ),
@@ -147,7 +147,7 @@ object SettingsMainScreen : Screen() {
                         CompositionLocalProvider(LocalContentColor provides contentColor) {
                             TextPreferenceWidget(
                                 modifier = modifier,
-                                title = localize(item.titleRes),
+                                title = stringResource(item.titleRes),
                                 subtitle = item.formatSubtitle(),
                                 icon = item.icon,
                                 onPreferenceClick = { navigator.navigate(item.screen, twoPane) },
@@ -166,7 +166,7 @@ object SettingsMainScreen : Screen() {
     private data class Item(
         val titleRes: StringResource,
         val subtitleRes: StringResource? = null,
-        val formatSubtitle: @Composable () -> String? = { subtitleRes?.let { localize(it) } },
+        val formatSubtitle: @Composable () -> String? = { subtitleRes?.let { stringResource(it) } },
         val icon: ImageVector,
         val screen: VoyagerScreen,
     )
@@ -229,7 +229,7 @@ object SettingsMainScreen : Screen() {
         Item(
             titleRes = MR.strings.pref_category_about,
             formatSubtitle = {
-                "${localize(MR.strings.app_name)} ${AboutScreen.getVersionName(withBuildDate = false)}"
+                "${stringResource(MR.strings.app_name)} ${AboutScreen.getVersionName(withBuildDate = false)}"
             },
             icon = Icons.Outlined.Info,
             screen = AboutScreen,

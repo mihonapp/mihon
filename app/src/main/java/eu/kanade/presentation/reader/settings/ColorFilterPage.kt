@@ -16,7 +16,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
@@ -38,11 +38,11 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
                 ),
             )
         }
-    }.map { localize(it) }
+    }.map { stringResource(it) }
 
     val customBrightness by screenModel.preferences.customBrightness().collectAsState()
     CheckboxItem(
-        label = localize(MR.strings.pref_custom_brightness),
+        label = stringResource(MR.strings.pref_custom_brightness),
         pref = screenModel.preferences.customBrightness(),
     )
 
@@ -55,7 +55,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     if (customBrightness) {
         val customBrightnessValue by screenModel.preferences.customBrightnessValue().collectAsState()
         SliderItem(
-            label = localize(MR.strings.pref_custom_brightness),
+            label = stringResource(MR.strings.pref_custom_brightness),
             min = -75,
             max = 100,
             value = customBrightnessValue,
@@ -66,13 +66,13 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
 
     val colorFilter by screenModel.preferences.colorFilter().collectAsState()
     CheckboxItem(
-        label = localize(MR.strings.pref_custom_color_filter),
+        label = stringResource(MR.strings.pref_custom_color_filter),
         pref = screenModel.preferences.colorFilter(),
     )
     if (colorFilter) {
         val colorFilterValue by screenModel.preferences.colorFilterValue().collectAsState()
         SliderItem(
-            label = localize(MR.strings.color_filter_r_value),
+            label = stringResource(MR.strings.color_filter_r_value),
             max = 255,
             value = colorFilterValue.red,
             valueText = colorFilterValue.red.toString(),
@@ -83,7 +83,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             },
         )
         SliderItem(
-            label = localize(MR.strings.color_filter_g_value),
+            label = stringResource(MR.strings.color_filter_g_value),
             max = 255,
             value = colorFilterValue.green,
             valueText = colorFilterValue.green.toString(),
@@ -94,7 +94,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             },
         )
         SliderItem(
-            label = localize(MR.strings.color_filter_b_value),
+            label = stringResource(MR.strings.color_filter_b_value),
             max = 255,
             value = colorFilterValue.blue,
             valueText = colorFilterValue.blue.toString(),
@@ -105,7 +105,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             },
         )
         SliderItem(
-            label = localize(MR.strings.color_filter_a_value),
+            label = stringResource(MR.strings.color_filter_a_value),
             max = 255,
             value = colorFilterValue.alpha,
             valueText = colorFilterValue.alpha.toString(),
@@ -129,11 +129,11 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     }
 
     CheckboxItem(
-        label = localize(MR.strings.pref_grayscale),
+        label = stringResource(MR.strings.pref_grayscale),
         pref = screenModel.preferences.grayscale(),
     )
     CheckboxItem(
-        label = localize(MR.strings.pref_inverted_colors),
+        label = stringResource(MR.strings.pref_inverted_colors),
         pref = screenModel.preferences.invertedColors(),
     )
 }

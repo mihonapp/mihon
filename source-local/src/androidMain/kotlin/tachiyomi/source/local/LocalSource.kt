@@ -16,7 +16,7 @@ import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
@@ -57,7 +57,7 @@ actual class LocalSource(
     private val POPULAR_FILTERS = FilterList(OrderBy.Popular(context))
     private val LATEST_FILTERS = FilterList(OrderBy.Latest(context))
 
-    override val name: String = context.localize(MR.strings.local_source)
+    override val name: String = context.stringResource(MR.strings.local_source)
 
     override val id: Long = ID
 
@@ -312,9 +312,9 @@ actual class LocalSource(
                 .map { dir -> File(dir, chapter.url) }
                 .find { it.exists() }
                 ?.let(Format.Companion::valueOf)
-                ?: throw Exception(context.localize(MR.strings.chapter_not_found))
+                ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
         } catch (e: Format.UnknownFormatException) {
-            throw Exception(context.localize(MR.strings.local_invalid_format))
+            throw Exception(context.stringResource(MR.strings.local_invalid_format))
         } catch (e: Exception) {
             throw e
         }

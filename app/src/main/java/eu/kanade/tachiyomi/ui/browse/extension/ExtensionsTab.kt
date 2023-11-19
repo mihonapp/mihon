@@ -14,7 +14,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun extensionsTab(
@@ -29,7 +29,7 @@ fun extensionsTab(
         searchEnabled = true,
         actions = persistentListOf(
             AppBar.Action(
-                title = localize(MR.strings.action_filter),
+                title = stringResource(MR.strings.action_filter),
                 icon = Icons.Outlined.Translate,
                 onClick = { navigator.push(ExtensionFilterScreen()) },
             ),

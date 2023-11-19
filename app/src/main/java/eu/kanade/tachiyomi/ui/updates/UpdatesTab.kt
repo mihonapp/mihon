@@ -26,9 +26,9 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel.Event
 import kotlinx.coroutines.flow.collectLatest
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 object UpdatesTab : Tab {
 
@@ -39,7 +39,7 @@ object UpdatesTab : Tab {
             val image = AnimatedImageVector.animatedVectorResource(R.drawable.anim_updates_enter)
             return TabOptions(
                 index = 1u,
-                title = localize(MR.strings.label_recent_updates),
+                title = stringResource(MR.strings.label_recent_updates),
                 icon = rememberAnimatedVectorPainter(image, isSelected),
             )
         }
@@ -90,7 +90,7 @@ object UpdatesTab : Tab {
             screenModel.events.collectLatest { event ->
                 when (event) {
                     Event.InternalError -> screenModel.snackbarHostState.showSnackbar(
-                        context.localize(MR.strings.internal_error),
+                        context.stringResource(MR.strings.internal_error),
                     )
                     is Event.LibraryUpdateTriggered -> {
                         val msg = if (event.started) {
@@ -98,7 +98,7 @@ object UpdatesTab : Tab {
                         } else {
                             MR.strings.update_already_running
                         }
-                        screenModel.snackbarHostState.showSnackbar(context.localize(msg))
+                        screenModel.snackbarHostState.showSnackbar(context.stringResource(msg))
                     }
                 }
             }

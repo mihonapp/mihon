@@ -17,7 +17,7 @@ import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ReaderSettingsDialog(
@@ -27,9 +27,9 @@ fun ReaderSettingsDialog(
     screenModel: ReaderSettingsScreenModel,
 ) {
     val tabTitles = persistentListOf(
-        localize(MR.strings.pref_category_reading_mode),
-        localize(MR.strings.pref_category_general),
-        localize(MR.strings.custom_filter),
+        stringResource(MR.strings.pref_category_reading_mode),
+        stringResource(MR.strings.pref_category_general),
+        stringResource(MR.strings.custom_filter),
     )
     val pagerState = rememberPagerState { tabTitles.size }
 

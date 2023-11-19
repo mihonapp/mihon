@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import ru.beryukhov.reactivenetwork.ReactiveNetwork
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -113,7 +113,7 @@ class DownloadService : Service() {
     }
 
     private fun downloaderStop(string: StringResource) {
-        downloadManager.downloaderStop(localize(string))
+        downloadManager.downloaderStop(stringResource(string))
     }
 
     private fun listenNetworkChanges() {
@@ -145,7 +145,7 @@ class DownloadService : Service() {
 
     private fun getPlaceholderNotification(): Notification {
         return notificationBuilder(Notifications.CHANNEL_DOWNLOADER_PROGRESS) {
-            setContentTitle(localize(MR.strings.download_notifier_downloader_title))
+            setContentTitle(stringResource(MR.strings.download_notifier_downloader_title))
         }.build()
     }
 }

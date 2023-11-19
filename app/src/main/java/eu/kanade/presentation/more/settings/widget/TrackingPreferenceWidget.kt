@@ -20,7 +20,7 @@ import eu.kanade.presentation.more.settings.LocalPreferenceHighlighted
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun TrackingPreferenceWidget(
@@ -55,7 +55,7 @@ fun TrackingPreferenceWidget(
                         .padding(4.dp)
                         .size(32.dp),
                     tint = Color(0xFF4CAF50),
-                    contentDescription = localize(MR.strings.login_success),
+                    contentDescription = stringResource(MR.strings.login_success),
                 )
             }
         }

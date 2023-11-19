@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import androidx.compose.material3.DropdownMenu as ComposeDropdownMenu
 
 @Composable
@@ -54,13 +54,13 @@ fun RadioMenuItem(
             if (isChecked) {
                 Icon(
                     imageVector = Icons.Outlined.RadioButtonChecked,
-                    contentDescription = localize(MR.strings.selected),
+                    contentDescription = stringResource(MR.strings.selected),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
                     imageVector = Icons.Outlined.RadioButtonUnchecked,
-                    contentDescription = localize(MR.strings.not_selected),
+                    contentDescription = stringResource(MR.strings.not_selected),
                 )
             }
         },

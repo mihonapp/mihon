@@ -38,7 +38,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.preference.getAndSet
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
@@ -181,28 +181,30 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             .filter {
                 when {
                     it.manga.updateStrategy != UpdateStrategy.ALWAYS_UPDATE -> {
-                        skippedUpdates.add(it.manga to context.localize(MR.strings.skipped_reason_not_always_update))
+                        skippedUpdates.add(
+                            it.manga to context.stringResource(MR.strings.skipped_reason_not_always_update),
+                        )
                         false
                     }
 
                     MANGA_NON_COMPLETED in restrictions && it.manga.status.toInt() == SManga.COMPLETED -> {
-                        skippedUpdates.add(it.manga to context.localize(MR.strings.skipped_reason_completed))
+                        skippedUpdates.add(it.manga to context.stringResource(MR.strings.skipped_reason_completed))
                         false
                     }
 
                     MANGA_HAS_UNREAD in restrictions && it.unreadCount != 0L -> {
-                        skippedUpdates.add(it.manga to context.localize(MR.strings.skipped_reason_not_caught_up))
+                        skippedUpdates.add(it.manga to context.stringResource(MR.strings.skipped_reason_not_caught_up))
                         false
                     }
 
                     MANGA_NON_READ in restrictions && it.totalChapters > 0L && !it.hasStarted -> {
-                        skippedUpdates.add(it.manga to context.localize(MR.strings.skipped_reason_not_started))
+                        skippedUpdates.add(it.manga to context.stringResource(MR.strings.skipped_reason_not_started))
                         false
                     }
 
                     MANGA_OUTSIDE_RELEASE_PERIOD in restrictions && it.manga.nextUpdate > fetchWindow.second -> {
                         skippedUpdates.add(
-                            it.manga to context.localize(MR.strings.skipped_reason_not_in_release_period),
+                            it.manga to context.stringResource(MR.strings.skipped_reason_not_in_release_period),
                         )
                         false
                     }
@@ -287,9 +289,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
-                                            is NoChaptersException -> context.localize(MR.strings.no_chapters_error)
+                                            is NoChaptersException -> context.stringResource(
+                                                MR.strings.no_chapters_error,
+                                            )
                                             // failedUpdates will already have the source, don't need to copy it into the message
-                                            is SourceNotInstalledException -> context.localize(
+                                            is SourceNotInstalledException -> context.stringResource(
                                                 MR.strings.loader_not_implemented_error,
                                             )
                                             else -> e.message
@@ -388,7 +392,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             if (errors.isNotEmpty()) {
                 val file = context.createFileInCacheDir("tachiyomi_update_errors.txt")
                 file.bufferedWriter().use { out ->
-                    out.write(context.localize(MR.strings.library_errors_help, ERROR_LOG_HELP_URL) + "\n\n")
+                    out.write(context.stringResource(MR.strings.library_errors_help, ERROR_LOG_HELP_URL) + "\n\n")
                     // Error file format:
                     // ! Error
                     //   # Source

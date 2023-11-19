@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrollingUp
 
@@ -18,7 +18,7 @@ fun CategoryFloatingActionButton(
     onCreate: () -> Unit,
 ) {
     ExtendedFloatingActionButton(
-        text = { Text(text = localize(MR.strings.action_add)) },
+        text = { Text(text = stringResource(MR.strings.action_add)) },
         icon = { Icon(imageVector = Icons.Outlined.Add, contentDescription = null) },
         onClick = onCreate,
         expanded = lazyListState.isScrollingUp() || lazyListState.isScrolledToEnd(),

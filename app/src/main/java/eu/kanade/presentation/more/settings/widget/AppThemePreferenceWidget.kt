@@ -46,7 +46,7 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.isDynamicColorAvailable
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -104,7 +104,7 @@ private fun AppThemesList(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = localize(appTheme.titleRes!!),
+                    text = stringResource(appTheme.titleRes!!),
                     modifier = Modifier
                         .fillMaxWidth()
                         .secondaryItemAlpha(),
@@ -167,7 +167,7 @@ fun AppThemePreviewItem(
                 if (selected) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = localize(MR.strings.selected),
+                        contentDescription = stringResource(MR.strings.selected),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
@@ -45,7 +45,7 @@ internal fun InfoWidget(text: String) {
 private fun InfoWidgetPreview() {
     TachiyomiTheme {
         Surface {
-            InfoWidget(text = localize(MR.strings.download_ahead_info))
+            InfoWidget(text = stringResource(MR.strings.download_ahead_info))
         }
     }
 }

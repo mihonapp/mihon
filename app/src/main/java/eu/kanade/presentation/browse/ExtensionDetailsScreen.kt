@@ -58,7 +58,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 
 @Composable
@@ -77,7 +77,7 @@ fun ExtensionDetailsScreen(
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
-                title = localize(MR.strings.label_extension_info),
+                title = stringResource(MR.strings.label_extension_info),
                 navigateUp = navigateUp,
                 actions = {
                     AppBarActions(
@@ -86,14 +86,14 @@ fun ExtensionDetailsScreen(
                                 if (state.extension?.isUnofficial == false) {
                                     add(
                                         AppBar.Action(
-                                            title = localize(MR.strings.whats_new),
+                                            title = stringResource(MR.strings.whats_new),
                                             icon = Icons.Outlined.History,
                                             onClick = onClickWhatsNew,
                                         ),
                                     )
                                     add(
                                         AppBar.Action(
-                                            title = localize(MR.strings.action_faq_and_guides),
+                                            title = stringResource(MR.strings.action_faq_and_guides),
                                             icon = Icons.AutoMirrored.Outlined.HelpOutline,
                                             onClick = onClickReadme,
                                         ),
@@ -102,15 +102,15 @@ fun ExtensionDetailsScreen(
                                 addAll(
                                     listOf(
                                         AppBar.OverflowAction(
-                                            title = localize(MR.strings.action_enable_all),
+                                            title = stringResource(MR.strings.action_enable_all),
                                             onClick = onClickEnableAll,
                                         ),
                                         AppBar.OverflowAction(
-                                            title = localize(MR.strings.action_disable_all),
+                                            title = stringResource(MR.strings.action_disable_all),
                                             onClick = onClickDisableAll,
                                         ),
                                         AppBar.OverflowAction(
-                                            title = localize(MR.strings.pref_clear_cookies),
+                                            title = stringResource(MR.strings.pref_clear_cookies),
                                             onClick = onClickClearCookies,
                                         ),
                                     ),
@@ -260,7 +260,7 @@ private fun DetailsHeader(
             InfoText(
                 modifier = Modifier.weight(1f),
                 primaryText = extension.versionName,
-                secondaryText = localize(MR.strings.ext_info_version),
+                secondaryText = stringResource(MR.strings.ext_info_version),
             )
 
             InfoDivider()
@@ -268,7 +268,7 @@ private fun DetailsHeader(
             InfoText(
                 modifier = Modifier.weight(if (extension.isNsfw) 1.5f else 1f),
                 primaryText = LocaleHelper.getSourceDisplayName(extension.lang, context),
-                secondaryText = localize(MR.strings.ext_info_language),
+                secondaryText = stringResource(MR.strings.ext_info_language),
             )
 
             if (extension.isNsfw) {
@@ -276,12 +276,12 @@ private fun DetailsHeader(
 
                 InfoText(
                     modifier = Modifier.weight(1f),
-                    primaryText = localize(MR.strings.ext_nsfw_short),
+                    primaryText = stringResource(MR.strings.ext_nsfw_short),
                     primaryTextStyle = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Medium,
                     ),
-                    secondaryText = localize(MR.strings.ext_info_age_rating),
+                    secondaryText = stringResource(MR.strings.ext_info_age_rating),
                     onClick = onClickAgeRating,
                 )
             }
@@ -300,7 +300,7 @@ private fun DetailsHeader(
                 modifier = Modifier.weight(1f),
                 onClick = onClickUninstall,
             ) {
-                Text(localize(MR.strings.ext_uninstall))
+                Text(stringResource(MR.strings.ext_uninstall))
             }
 
             if (onClickAppInfo != null) {
@@ -309,7 +309,7 @@ private fun DetailsHeader(
                     onClick = onClickAppInfo,
                 ) {
                     Text(
-                        text = localize(MR.strings.ext_app_info),
+                        text = stringResource(MR.strings.ext_app_info),
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
@@ -387,7 +387,7 @@ private fun SourceSwitchPreference(
                     IconButton(onClick = { onClickSourcePreferences(source.source.id) }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
-                            contentDescription = localize(MR.strings.label_settings),
+                            contentDescription = stringResource(MR.strings.label_settings),
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
@@ -410,11 +410,11 @@ private fun NsfwWarningDialog(
 ) {
     AlertDialog(
         text = {
-            Text(text = localize(MR.strings.ext_nsfw_warning))
+            Text(text = stringResource(MR.strings.ext_nsfw_warning))
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {
-                Text(text = localize(MR.strings.action_ok))
+                Text(text = stringResource(MR.strings.action_ok))
             }
         },
         onDismissRequest = onClickConfirm,

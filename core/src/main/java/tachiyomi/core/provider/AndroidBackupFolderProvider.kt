@@ -3,7 +3,7 @@ package tachiyomi.core.provider
 import android.content.Context
 import android.os.Environment
 import androidx.core.net.toUri
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.File
 
@@ -14,7 +14,7 @@ class AndroidBackupFolderProvider(
     override fun directory(): File {
         return File(
             Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                context.localize(MR.strings.app_name),
+                context.stringResource(MR.strings.app_name),
             "backup",
         )
     }

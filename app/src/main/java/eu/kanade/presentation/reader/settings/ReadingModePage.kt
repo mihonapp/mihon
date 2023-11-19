@@ -19,7 +19,7 @@ import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import java.text.NumberFormat
 
@@ -34,7 +34,7 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
             FilterChip(
                 selected = it == readingMode,
                 onClick = { screenModel.onChangeReadingMode(it) },
-                label = { Text(localize(it.stringRes)) },
+                label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
@@ -45,7 +45,7 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
             FilterChip(
                 selected = it == orientation,
                 onClick = { screenModel.onChangeOrientation(it) },
-                label = { Text(localize(it.stringRes)) },
+                label = { Text(stringResource(it.stringRes)) },
             )
         }
     }
@@ -77,7 +77,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
             FilterChip(
                 selected = imageScaleType == index + 1,
                 onClick = { screenModel.preferences.imageScaleType().set(index + 1) },
-                label = { Text(localize(it)) },
+                label = { Text(stringResource(it)) },
             )
         }
     }
@@ -88,48 +88,48 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
             FilterChip(
                 selected = zoomStart == index + 1,
                 onClick = { screenModel.preferences.zoomStart().set(index + 1) },
-                label = { Text(localize(it)) },
+                label = { Text(stringResource(it)) },
             )
         }
     }
 
     CheckboxItem(
-        label = localize(MR.strings.pref_crop_borders),
+        label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBorders(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_landscape_zoom),
+        label = stringResource(MR.strings.pref_landscape_zoom),
         pref = screenModel.preferences.landscapeZoom(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_navigate_pan),
+        label = stringResource(MR.strings.pref_navigate_pan),
         pref = screenModel.preferences.navigateToPan(),
     )
 
     val dualPageSplitPaged by screenModel.preferences.dualPageSplitPaged().collectAsState()
     CheckboxItem(
-        label = localize(MR.strings.pref_dual_page_split),
+        label = stringResource(MR.strings.pref_dual_page_split),
         pref = screenModel.preferences.dualPageSplitPaged(),
     )
 
     if (dualPageSplitPaged) {
         CheckboxItem(
-            label = localize(MR.strings.pref_dual_page_invert),
+            label = stringResource(MR.strings.pref_dual_page_invert),
             pref = screenModel.preferences.dualPageInvertPaged(),
         )
     }
 
     val dualPageRotateToFit by screenModel.preferences.dualPageRotateToFit().collectAsState()
     CheckboxItem(
-        label = localize(MR.strings.pref_page_rotate),
+        label = stringResource(MR.strings.pref_page_rotate),
         pref = screenModel.preferences.dualPageRotateToFit(),
     )
 
     if (dualPageRotateToFit) {
         CheckboxItem(
-            label = localize(MR.strings.pref_page_rotate_invert),
+            label = stringResource(MR.strings.pref_page_rotate_invert),
             pref = screenModel.preferences.dualPageRotateToFitInvert(),
         )
     }
@@ -152,7 +152,7 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
 
     val webtoonSidePadding by screenModel.preferences.webtoonSidePadding().collectAsState()
     SliderItem(
-        label = localize(MR.strings.pref_webtoon_side_padding),
+        label = stringResource(MR.strings.pref_webtoon_side_padding),
         min = ReaderPreferences.WEBTOON_PADDING_MIN,
         max = ReaderPreferences.WEBTOON_PADDING_MAX,
         value = webtoonSidePadding,
@@ -163,25 +163,25 @@ private fun ColumnScope.WebtoonViewerSettings(screenModel: ReaderSettingsScreenM
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_crop_borders),
+        label = stringResource(MR.strings.pref_crop_borders),
         pref = screenModel.preferences.cropBordersWebtoon(),
     )
 
     val dualPageSplitWebtoon by screenModel.preferences.dualPageSplitWebtoon().collectAsState()
     CheckboxItem(
-        label = localize(MR.strings.pref_dual_page_split),
+        label = stringResource(MR.strings.pref_dual_page_split),
         pref = screenModel.preferences.dualPageSplitWebtoon(),
     )
 
     if (dualPageSplitWebtoon) {
         CheckboxItem(
-            label = localize(MR.strings.pref_dual_page_invert),
+            label = stringResource(MR.strings.pref_dual_page_invert),
             pref = screenModel.preferences.dualPageInvertWebtoon(),
         )
     }
 
     CheckboxItem(
-        label = localize(MR.strings.pref_double_tap_zoom),
+        label = stringResource(MR.strings.pref_double_tap_zoom),
         pref = screenModel.preferences.webtoonDoubleTapZoomEnabled(),
     )
 }
@@ -198,7 +198,7 @@ private fun ColumnScope.TapZonesItems(
             FilterChip(
                 selected = selected == index,
                 onClick = { onSelect(index) },
-                label = { Text(localize(it)) },
+                label = { Text(stringResource(it)) },
             )
         }
     }
@@ -209,7 +209,7 @@ private fun ColumnScope.TapZonesItems(
                 FilterChip(
                     selected = it == invertMode,
                     onClick = { onSelectInvertMode(it) },
-                    label = { Text(localize(it.titleRes)) },
+                    label = { Text(stringResource(it.titleRes)) },
                 )
             }
         }

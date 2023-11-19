@@ -13,7 +13,7 @@ import eu.kanade.tachiyomi.ui.browse.extension.ExtensionFilterState
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 
 @Composable
@@ -25,7 +25,7 @@ fun ExtensionFilterScreen(
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
-                title = localize(MR.strings.label_extensions),
+                title = stringResource(MR.strings.label_extensions),
                 navigateUp = navigateUp,
                 scrollBehavior = scrollBehavior,
             )

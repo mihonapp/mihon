@@ -20,9 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +30,7 @@ import androidx.compose.ui.window.DialogProperties
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.isScrolledToEnd
 import tachiyomi.presentation.core.util.isScrolledToStart
 
@@ -49,10 +47,10 @@ fun ScanlatorFilterDialog(
     val mutableExcludedScanlators = remember(excludedScanlators) { excludedScanlators.toMutableStateList() }
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = localize(MR.strings.exclude_scanlators)) },
+        title = { Text(text = stringResource(MR.strings.exclude_scanlators)) },
         text = textFunc@{
             if (sortedAvailableScanlators.isEmpty()) {
-                Text(text = localize(MR.strings.no_scanlators_found))
+                Text(text = stringResource(MR.strings.no_scanlators_found))
                 return@textFunc
             }
             Box {
@@ -108,16 +106,16 @@ fun ScanlatorFilterDialog(
         confirmButton = {
             if (sortedAvailableScanlators.isEmpty()) {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = localize(MR.strings.action_cancel))
+                    Text(text = stringResource(MR.strings.action_cancel))
                 }
             } else {
                 FlowRow {
                     TextButton(onClick = mutableExcludedScanlators::clear) {
-                        Text(text = localize(MR.strings.action_reset))
+                        Text(text = stringResource(MR.strings.action_reset))
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(onClick = onDismissRequest) {
-                        Text(text = localize(MR.strings.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     TextButton(
                         onClick = {
@@ -125,7 +123,7 @@ fun ScanlatorFilterDialog(
                             onDismissRequest()
                         },
                     ) {
-                        Text(text = localize(MR.strings.action_ok))
+                        Text(text = stringResource(MR.strings.action_ok))
                     }
                 }
             }

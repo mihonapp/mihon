@@ -6,7 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.category.visualName
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 /**
  * Returns a string of categories name for settings subtitle
@@ -34,15 +34,15 @@ fun getCategoriesLabel(
         includedCategories.isNotEmpty() && includedCategories.size != allCategories.size ->
             includedCategories.joinToString { it.visualName(context) }
         // All explicitly selected
-        includedCategories.size == allCategories.size -> localize(MR.strings.all)
-        allExcluded -> localize(MR.strings.none)
-        else -> localize(MR.strings.all)
+        includedCategories.size == allCategories.size -> stringResource(MR.strings.all)
+        allExcluded -> stringResource(MR.strings.none)
+        else -> stringResource(MR.strings.all)
     }
     val excludedItemsText = when {
-        excludedCategories.isEmpty() -> localize(MR.strings.none)
-        allExcluded -> localize(MR.strings.all)
+        excludedCategories.isEmpty() -> stringResource(MR.strings.none)
+        allExcluded -> stringResource(MR.strings.all)
         else -> excludedCategories.joinToString { it.visualName(context) }
     }
-    return localize(MR.strings.include, includedItemsText) + "\n" +
-        localize(MR.strings.exclude, excludedItemsText)
+    return stringResource(MR.strings.include, includedItemsText) + "\n" +
+        stringResource(MR.strings.exclude, excludedItemsText)
 }

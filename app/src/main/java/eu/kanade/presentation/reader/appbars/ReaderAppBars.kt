@@ -29,7 +29,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.Viewer
 import eu.kanade.tachiyomi.ui.reader.viewer.pager.R2LPagerViewer
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 private val animationSpec = tween<IntOffset>(200)
 
@@ -103,7 +103,7 @@ fun ReaderAppBars(
                             .apply {
                                 add(
                                     AppBar.Action(
-                                        title = localize(
+                                        title = stringResource(
                                             if (bookmarked) {
                                                 MR.strings.action_remove_bookmark
                                             } else {
@@ -121,7 +121,7 @@ fun ReaderAppBars(
                                 onOpenInWebView?.let {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = localize(MR.strings.action_open_in_web_view),
+                                            title = stringResource(MR.strings.action_open_in_web_view),
                                             onClick = it,
                                         ),
                                     )
@@ -129,7 +129,7 @@ fun ReaderAppBars(
                                 onShare?.let {
                                     add(
                                         AppBar.OverflowAction(
-                                            title = localize(MR.strings.action_share),
+                                            title = stringResource(MR.strings.action_share),
                                             onClick = it,
                                         ),
                                     )

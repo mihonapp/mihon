@@ -37,7 +37,7 @@ import logcat.LogPriority
 import okio.buffer
 import okio.gzip
 import okio.sink
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.core.util.system.logcat
@@ -76,7 +76,7 @@ class BackupCreator(
      */
     suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String {
         if (!context.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            throw IllegalStateException(context.localize(MR.strings.missing_storage_permission))
+            throw IllegalStateException(context.stringResource(MR.strings.missing_storage_permission))
         }
 
         val databaseManga = getFavorites.await()
@@ -111,7 +111,7 @@ class BackupCreator(
                     UniFile.fromUri(context, uri)
                 }
                 )
-                ?: throw Exception(context.localize(MR.strings.create_backup_file_error))
+                ?: throw Exception(context.stringResource(MR.strings.create_backup_file_error))
 
             if (!file.isFile) {
                 throw IllegalStateException("Failed to get handle on a backup file")
@@ -119,7 +119,7 @@ class BackupCreator(
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup)
             if (byteArray.isEmpty()) {
-                throw IllegalStateException(context.localize(MR.strings.empty_backup_error))
+                throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
             }
 
             file.openOutputStream().also {

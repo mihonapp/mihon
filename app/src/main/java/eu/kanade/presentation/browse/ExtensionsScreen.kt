@@ -48,7 +48,7 @@ import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.material.PullRefresh
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.header
@@ -136,7 +136,7 @@ private fun ExtensionContent(
                                 {
                                     Button(onClick = { onClickUpdateAll() }) {
                                         Text(
-                                            text = localize(MR.strings.ext_update_all),
+                                            text = stringResource(MR.strings.ext_update_all),
                                             style = LocalTextStyle.current.copy(
                                                 color = MaterialTheme.colorScheme.onPrimary,
                                             ),
@@ -312,7 +312,7 @@ private fun ExtensionItemContent(
                 }
                 if (warning != null) {
                     Text(
-                        text = localize(warning).uppercase(),
+                        text = stringResource(warning).uppercase(),
                         color = MaterialTheme.colorScheme.error,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -323,9 +323,9 @@ private fun ExtensionItemContent(
                     DotSeparatorNoSpaceText()
                     Text(
                         text = when (installStep) {
-                            InstallStep.Pending -> localize(MR.strings.ext_pending)
-                            InstallStep.Downloading -> localize(MR.strings.ext_downloading)
-                            InstallStep.Installing -> localize(MR.strings.ext_installing)
+                            InstallStep.Pending -> stringResource(MR.strings.ext_pending)
+                            InstallStep.Downloading -> stringResource(MR.strings.ext_downloading)
+                            InstallStep.Installing -> stringResource(MR.strings.ext_installing)
                             else -> error("Must not show non-install process text")
                         },
                     )
@@ -351,19 +351,19 @@ private fun ExtensionItemActions(
             ) {
                 Text(
                     text = when (installStep) {
-                        InstallStep.Installed -> localize(MR.strings.ext_installed)
-                        InstallStep.Error -> localize(MR.strings.action_retry)
+                        InstallStep.Installed -> stringResource(MR.strings.ext_installed)
+                        InstallStep.Error -> stringResource(MR.strings.action_retry)
                         InstallStep.Idle -> {
                             when (extension) {
                                 is Extension.Installed -> {
                                     if (extension.hasUpdate) {
-                                        localize(MR.strings.ext_update)
+                                        stringResource(MR.strings.ext_update)
                                     } else {
-                                        localize(MR.strings.action_settings)
+                                        stringResource(MR.strings.action_settings)
                                     }
                                 }
-                                is Extension.Untrusted -> localize(MR.strings.ext_trust)
-                                is Extension.Available -> localize(MR.strings.ext_install)
+                                is Extension.Untrusted -> stringResource(MR.strings.ext_trust)
+                                is Extension.Available -> stringResource(MR.strings.ext_install)
                             }
                         }
                         else -> error("Must not show install process text")
@@ -374,7 +374,7 @@ private fun ExtensionItemActions(
             IconButton(onClick = { onClickItemCancel(extension) }) {
                 Icon(
                     imageVector = Icons.Outlined.Close,
-                    contentDescription = localize(MR.strings.action_cancel),
+                    contentDescription = stringResource(MR.strings.action_cancel),
                 )
             }
         }
@@ -388,7 +388,7 @@ private fun ExtensionHeader(
     action: @Composable RowScope.() -> Unit = {},
 ) {
     ExtensionHeader(
-        text = localize(textRes),
+        text = stringResource(textRes),
         modifier = modifier,
         action = action,
     )
@@ -423,19 +423,19 @@ private fun ExtensionTrustDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = localize(MR.strings.untrusted_extension))
+            Text(text = stringResource(MR.strings.untrusted_extension))
         },
         text = {
-            Text(text = localize(MR.strings.untrusted_extension_message))
+            Text(text = stringResource(MR.strings.untrusted_extension_message))
         },
         confirmButton = {
             TextButton(onClick = onClickConfirm) {
-                Text(text = localize(MR.strings.ext_trust))
+                Text(text = stringResource(MR.strings.ext_trust))
             }
         },
         dismissButton = {
             TextButton(onClick = onClickDismiss) {
-                Text(text = localize(MR.strings.ext_uninstall))
+                Text(text = stringResource(MR.strings.ext_uninstall))
             }
         },
         onDismissRequest = onDismissRequest,

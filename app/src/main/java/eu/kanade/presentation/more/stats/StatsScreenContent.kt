@@ -20,7 +20,7 @@ import eu.kanade.presentation.more.stats.data.StatsData
 import eu.kanade.presentation.util.toDurationString
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import java.util.Locale
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -55,7 +55,7 @@ fun StatsScreenContent(
 private fun OverviewSection(
     data: StatsData.Overview,
 ) {
-    val none = localize(MR.strings.none)
+    val none = stringResource(MR.strings.none)
     val context = LocalContext.current
     val readDurationString = remember(data.totalReadDuration) {
         data.totalReadDuration
@@ -66,17 +66,17 @@ private fun OverviewSection(
         Row {
             StatsOverviewItem(
                 title = data.libraryMangaCount.toString(),
-                subtitle = localize(MR.strings.in_library),
+                subtitle = stringResource(MR.strings.in_library),
                 icon = Icons.Outlined.CollectionsBookmark,
             )
             StatsOverviewItem(
                 title = data.completedMangaCount.toString(),
-                subtitle = localize(MR.strings.label_completed_titles),
+                subtitle = stringResource(MR.strings.label_completed_titles),
                 icon = Icons.Outlined.LocalLibrary,
             )
             StatsOverviewItem(
                 title = readDurationString,
-                subtitle = localize(MR.strings.label_read_duration),
+                subtitle = stringResource(MR.strings.label_read_duration),
                 icon = Icons.Outlined.Schedule,
             )
         }
@@ -91,15 +91,15 @@ private fun TitlesStats(
         Row {
             StatsItem(
                 data.globalUpdateItemCount.toString(),
-                localize(MR.strings.label_titles_in_global_update),
+                stringResource(MR.strings.label_titles_in_global_update),
             )
             StatsItem(
                 data.startedMangaCount.toString(),
-                localize(MR.strings.label_started),
+                stringResource(MR.strings.label_started),
             )
             StatsItem(
                 data.localMangaCount.toString(),
-                localize(MR.strings.label_local),
+                stringResource(MR.strings.label_local),
             )
         }
     }
@@ -113,15 +113,15 @@ private fun ChapterStats(
         Row {
             StatsItem(
                 data.totalChapterCount.toString(),
-                localize(MR.strings.label_total_chapters),
+                stringResource(MR.strings.label_total_chapters),
             )
             StatsItem(
                 data.readChapterCount.toString(),
-                localize(MR.strings.label_read_chapters),
+                stringResource(MR.strings.label_read_chapters),
             )
             StatsItem(
                 data.downloadCount.toString(),
-                localize(MR.strings.label_downloaded),
+                stringResource(MR.strings.label_downloaded),
             )
         }
     }
@@ -131,7 +131,7 @@ private fun ChapterStats(
 private fun TrackerStats(
     data: StatsData.Trackers,
 ) {
-    val notApplicable = localize(MR.strings.not_applicable)
+    val notApplicable = stringResource(MR.strings.not_applicable)
     val meanScoreStr = remember(data.trackedTitleCount, data.meanScore) {
         if (data.trackedTitleCount > 0 && !data.meanScore.isNaN()) {
             // All other numbers are localized in English
@@ -144,15 +144,15 @@ private fun TrackerStats(
         Row {
             StatsItem(
                 data.trackedTitleCount.toString(),
-                localize(MR.strings.label_tracked_titles),
+                stringResource(MR.strings.label_tracked_titles),
             )
             StatsItem(
                 meanScoreStr,
-                localize(MR.strings.label_mean_score),
+                stringResource(MR.strings.label_mean_score),
             )
             StatsItem(
                 data.trackerCount.toString(),
-                localize(MR.strings.label_used),
+                stringResource(MR.strings.label_used),
             )
         }
     }

@@ -56,7 +56,7 @@ import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -72,7 +72,7 @@ object SettingsTrackingScreen : SearchableSettings {
         IconButton(onClick = { uriHandler.openUri("https://tachiyomi.org/docs/guides/tracking") }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                contentDescription = localize(MR.strings.tracking_guide),
+                contentDescription = stringResource(MR.strings.tracking_guide),
             )
         }
     }
@@ -109,9 +109,9 @@ object SettingsTrackingScreen : SearchableSettings {
                 val acceptedSources = (service as EnhancedTracker).getAcceptedSources()
                 sourceManager.getCatalogueSources().any { it::class.qualifiedName in acceptedSources }
             }
-        var enhancedTrackerInfo = localize(MR.strings.enhanced_tracking_info)
+        var enhancedTrackerInfo = stringResource(MR.strings.enhanced_tracking_info)
         if (enhancedTrackers.second.isNotEmpty()) {
-            val missingSourcesInfo = localize(
+            val missingSourcesInfo = stringResource(
                 MR.strings.enhanced_services_not_installed,
                 enhancedTrackers.second.joinToString { it.name },
             )
@@ -121,10 +121,10 @@ object SettingsTrackingScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = trackPreferences.autoUpdateTrack(),
-                title = localize(MR.strings.pref_auto_update_manga_sync),
+                title = stringResource(MR.strings.pref_auto_update_manga_sync),
             ),
             Preference.PreferenceGroup(
-                title = localize(MR.strings.services),
+                title = stringResource(MR.strings.services),
                 preferenceItems = listOf(
                     Preference.PreferenceItem.TrackerPreference(
                         title = trackerManager.myAnimeList.name,
@@ -162,11 +162,11 @@ object SettingsTrackingScreen : SearchableSettings {
                         login = { context.openInBrowser(BangumiApi.authUrl(), forceDefaultBrowser = true) },
                         logout = { dialog = LogoutDialog(trackerManager.bangumi) },
                     ),
-                    Preference.PreferenceItem.InfoPreference(localize(MR.strings.tracking_info)),
+                    Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.tracking_info)),
                 ),
             ),
             Preference.PreferenceGroup(
-                title = localize(MR.strings.enhanced_services),
+                title = stringResource(MR.strings.enhanced_services),
                 preferenceItems = enhancedTrackers.first
                     .map { service ->
                         Preference.PreferenceItem.TrackerPreference(
@@ -199,13 +199,13 @@ object SettingsTrackingScreen : SearchableSettings {
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = localize(MR.strings.login_title, tracker.name),
+                        text = stringResource(MR.strings.login_title, tracker.name),
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = localize(MR.strings.action_close),
+                            contentDescription = stringResource(MR.strings.action_close),
                         )
                     }
                 }
@@ -216,7 +216,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.fillMaxWidth(),
                         value = username,
                         onValueChange = { username = it },
-                        label = { Text(text = localize(uNameStringRes)) },
+                        label = { Text(text = stringResource(uNameStringRes)) },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         singleLine = true,
                         isError = inputError && !processing,
@@ -227,7 +227,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.fillMaxWidth(),
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text(text = localize(MR.strings.password)) },
+                        label = { Text(text = stringResource(MR.strings.password)) },
                         trailingIcon = {
                             IconButton(onClick = { hidePassword = !hidePassword }) {
                                 Icon(
@@ -274,7 +274,7 @@ object SettingsTrackingScreen : SearchableSettings {
                     },
                 ) {
                     val id = if (processing) MR.strings.loading else MR.strings.login
-                    Text(text = localize(id))
+                    Text(text = stringResource(id))
                 }
             },
         )
@@ -307,7 +307,7 @@ object SettingsTrackingScreen : SearchableSettings {
             onDismissRequest = onDismissRequest,
             title = {
                 Text(
-                    text = localize(MR.strings.logout_title, tracker.name),
+                    text = stringResource(MR.strings.logout_title, tracker.name),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -318,7 +318,7 @@ object SettingsTrackingScreen : SearchableSettings {
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,
                     ) {
-                        Text(text = localize(MR.strings.action_cancel))
+                        Text(text = stringResource(MR.strings.action_cancel))
                     }
                     Button(
                         modifier = Modifier.weight(1f),
@@ -332,7 +332,7 @@ object SettingsTrackingScreen : SearchableSettings {
                             contentColor = MaterialTheme.colorScheme.onError,
                         ),
                     ) {
-                        Text(text = localize(MR.strings.logout))
+                        Text(text = stringResource(MR.strings.logout))
                     }
                 }
             },

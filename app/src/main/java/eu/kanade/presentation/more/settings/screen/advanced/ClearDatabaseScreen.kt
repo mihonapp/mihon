@@ -51,7 +51,7 @@ import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.selectedBackground
@@ -85,16 +85,16 @@ class ClearDatabaseScreen : Screen() {
                                     }
                                 },
                             ) {
-                                Text(text = localize(MR.strings.action_ok))
+                                Text(text = stringResource(MR.strings.action_ok))
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = model::hideConfirmation) {
-                                Text(text = localize(MR.strings.action_cancel))
+                                Text(text = stringResource(MR.strings.action_cancel))
                             }
                         },
                         text = {
-                            Text(text = localize(MR.strings.clear_database_confirmation))
+                            Text(text = stringResource(MR.strings.clear_database_confirmation))
                         },
                     )
                 }
@@ -102,19 +102,19 @@ class ClearDatabaseScreen : Screen() {
                 Scaffold(
                     topBar = { scrollBehavior ->
                         AppBar(
-                            title = localize(MR.strings.pref_clear_database),
+                            title = stringResource(MR.strings.pref_clear_database),
                             navigateUp = navigator::pop,
                             actions = {
                                 if (s.items.isNotEmpty()) {
                                     AppBarActions(
                                         actions = persistentListOf(
                                             AppBar.Action(
-                                                title = localize(MR.strings.action_select_all),
+                                                title = stringResource(MR.strings.action_select_all),
                                                 icon = Icons.Outlined.SelectAll,
                                                 onClick = model::selectAll,
                                             ),
                                             AppBar.Action(
-                                                title = localize(MR.strings.action_select_all),
+                                                title = stringResource(MR.strings.action_select_all),
                                                 icon = Icons.Outlined.FlipToBack,
                                                 onClick = model::invertSelection,
                                             ),
@@ -128,7 +128,7 @@ class ClearDatabaseScreen : Screen() {
                 ) { contentPadding ->
                     if (s.items.isEmpty()) {
                         EmptyScreen(
-                            message = localize(MR.strings.database_clean),
+                            message = stringResource(MR.strings.database_clean),
                             modifier = Modifier.padding(contentPadding),
                         )
                     } else {
@@ -160,7 +160,7 @@ class ClearDatabaseScreen : Screen() {
                                 enabled = s.selection.isNotEmpty(),
                             ) {
                                 Text(
-                                    text = localize(MR.strings.action_delete),
+                                    text = stringResource(MR.strings.action_delete),
                                     color = MaterialTheme.colorScheme.onPrimary,
                                 )
                             }
@@ -196,7 +196,7 @@ class ClearDatabaseScreen : Screen() {
                     text = source.visualName,
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Text(text = localize(MR.strings.clear_database_source_item_count, count))
+                Text(text = stringResource(MR.strings.clear_database_source_item_count, count))
             }
             Checkbox(
                 checked = isSelected,

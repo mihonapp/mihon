@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.util.system.toShareIntent
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
@@ -52,13 +52,13 @@ class MangaCoverScreenModel(
             try {
                 saveCoverInternal(context, temp = false)
                 snackbarHostState.showSnackbar(
-                    context.localize(MR.strings.cover_saved),
+                    context.stringResource(MR.strings.cover_saved),
                     withDismissAction = true,
                 )
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
                 snackbarHostState.showSnackbar(
-                    context.localize(MR.strings.error_saving_cover),
+                    context.stringResource(MR.strings.error_saving_cover),
                     withDismissAction = true,
                 )
             }
@@ -75,7 +75,7 @@ class MangaCoverScreenModel(
             } catch (e: Throwable) {
                 logcat(LogPriority.ERROR, e)
                 snackbarHostState.showSnackbar(
-                    context.localize(MR.strings.error_sharing_cover),
+                    context.stringResource(MR.strings.error_sharing_cover),
                     withDismissAction = true,
                 )
             }
@@ -146,7 +146,7 @@ class MangaCoverScreenModel(
     private fun notifyCoverUpdated(context: Context) {
         screenModelScope.launch {
             snackbarHostState.showSnackbar(
-                context.localize(MR.strings.cover_updated),
+                context.stringResource(MR.strings.cover_updated),
                 withDismissAction = true,
             )
         }
@@ -155,7 +155,7 @@ class MangaCoverScreenModel(
     private fun notifyFailedCoverUpdate(context: Context, e: Throwable) {
         screenModelScope.launch {
             snackbarHostState.showSnackbar(
-                context.localize(MR.strings.notification_cover_update_failed),
+                context.stringResource(MR.strings.notification_cover_update_failed),
                 withDismissAction = true,
             )
             logcat(LogPriority.ERROR, e)

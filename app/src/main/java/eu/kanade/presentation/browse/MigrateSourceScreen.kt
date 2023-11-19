@@ -34,7 +34,7 @@ import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.theme.header
@@ -95,7 +95,7 @@ private fun MigrateSourceList(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = localize(MR.strings.migration_selection_prompt),
+                    text = stringResource(MR.strings.migration_selection_prompt),
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.header,
                 )
@@ -104,11 +104,11 @@ private fun MigrateSourceList(
                     when (sortingMode) {
                         SetMigrateSorting.Mode.ALPHABETICAL -> Icon(
                             Icons.Outlined.SortByAlpha,
-                            contentDescription = localize(MR.strings.action_sort_alpha),
+                            contentDescription = stringResource(MR.strings.action_sort_alpha),
                         )
                         SetMigrateSorting.Mode.TOTAL -> Icon(
                             Icons.Outlined.Numbers,
-                            contentDescription = localize(MR.strings.action_sort_count),
+                            contentDescription = stringResource(MR.strings.action_sort_count),
                         )
                     }
                 }
@@ -116,11 +116,11 @@ private fun MigrateSourceList(
                     when (sortingDirection) {
                         SetMigrateSorting.Direction.ASCENDING -> Icon(
                             Icons.Outlined.ArrowUpward,
-                            contentDescription = localize(MR.strings.action_asc),
+                            contentDescription = stringResource(MR.strings.action_asc),
                         )
                         SetMigrateSorting.Direction.DESCENDING -> Icon(
                             Icons.Outlined.ArrowDownward,
-                            contentDescription = localize(MR.strings.action_desc),
+                            contentDescription = stringResource(MR.strings.action_desc),
                         )
                     }
                 }
@@ -189,7 +189,7 @@ private fun MigrateSourceItem(
                     if (source.isStub) {
                         Text(
                             modifier = Modifier.secondaryItemAlpha(),
-                            text = localize(MR.strings.not_installed),
+                            text = stringResource(MR.strings.not_installed),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodySmall,

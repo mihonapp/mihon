@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
 import tachiyomi.i18n.MR
 
@@ -41,7 +41,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
-                notifier.showRestoreError(context.localize(MR.strings.restoring_backup_canceled))
+                notifier.showRestoreError(context.stringResource(MR.strings.restoring_backup_canceled))
                 Result.success()
             } else {
                 logcat(LogPriority.ERROR, e)

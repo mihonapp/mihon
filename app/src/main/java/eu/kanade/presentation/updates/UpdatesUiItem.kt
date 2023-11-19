@@ -44,7 +44,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.material.ReadItemAlpha
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
 
 internal fun LazyListScope.updatesLastUpdatedItem(
@@ -56,7 +56,7 @@ internal fun LazyListScope.updatesLastUpdatedItem(
                 .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         ) {
             Text(
-                text = localize(MR.strings.updates_last_update_info, relativeTimeSpanString(lastUpdated)),
+                text = stringResource(MR.strings.updates_last_update_info, relativeTimeSpanString(lastUpdated)),
                 fontStyle = FontStyle.Italic,
             )
         }
@@ -100,7 +100,7 @@ internal fun LazyListScope.updatesUiItems(
                     readProgress = updatesItem.update.lastPageRead
                         .takeIf { !updatesItem.update.read && it > 0L }
                         ?.let {
-                            localize(
+                            stringResource(
                                 MR.strings.chapter_progress,
                                 it + 1,
                             )
@@ -183,7 +183,7 @@ private fun UpdatesUiItem(
                 if (!update.read) {
                     Icon(
                         imageVector = Icons.Filled.Circle,
-                        contentDescription = localize(MR.strings.unread),
+                        contentDescription = stringResource(MR.strings.unread),
                         modifier = Modifier
                             .height(8.dp)
                             .padding(end = 4.dp),
@@ -193,7 +193,7 @@ private fun UpdatesUiItem(
                 if (update.bookmark) {
                     Icon(
                         imageVector = Icons.Filled.Bookmark,
-                        contentDescription = localize(MR.strings.action_filter_bookmarked),
+                        contentDescription = stringResource(MR.strings.action_filter_bookmarked),
                         modifier = Modifier
                             .sizeIn(maxHeight = with(LocalDensity.current) { textHeight.toDp() - 2.dp }),
                         tint = MaterialTheme.colorScheme.primary,

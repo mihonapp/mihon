@@ -9,7 +9,7 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 
 private val themes = listOf(
@@ -27,50 +27,50 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             FilterChip(
                 selected = readerTheme == value,
                 onClick = { screenModel.preferences.readerTheme().set(value) },
-                label = { Text(localize(labelRes)) },
+                label = { Text(stringResource(labelRes)) },
             )
         }
     }
 
     CheckboxItem(
-        label = localize(MR.strings.pref_show_page_number),
+        label = stringResource(MR.strings.pref_show_page_number),
         pref = screenModel.preferences.showPageNumber(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_fullscreen),
+        label = stringResource(MR.strings.pref_fullscreen),
         pref = screenModel.preferences.fullscreen(),
     )
 
     if (screenModel.hasDisplayCutout) {
         CheckboxItem(
-            label = localize(MR.strings.pref_cutout_short),
+            label = stringResource(MR.strings.pref_cutout_short),
             pref = screenModel.preferences.cutoutShort(),
         )
     }
 
     CheckboxItem(
-        label = localize(MR.strings.pref_keep_screen_on),
+        label = stringResource(MR.strings.pref_keep_screen_on),
         pref = screenModel.preferences.keepScreenOn(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_read_with_long_tap),
+        label = stringResource(MR.strings.pref_read_with_long_tap),
         pref = screenModel.preferences.readWithLongTap(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_always_show_chapter_transition),
+        label = stringResource(MR.strings.pref_always_show_chapter_transition),
         pref = screenModel.preferences.alwaysShowChapterTransition(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_page_transitions),
+        label = stringResource(MR.strings.pref_page_transitions),
         pref = screenModel.preferences.pageTransitions(),
     )
 
     CheckboxItem(
-        label = localize(MR.strings.pref_flash_page),
+        label = stringResource(MR.strings.pref_flash_page),
         pref = screenModel.preferences.flashOnPageChange(),
     )
 }

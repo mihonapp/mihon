@@ -10,10 +10,10 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
-import tachiyomi.core.i18n.localize
+import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
-import tachiyomi.presentation.core.i18n.localizePlural
+import tachiyomi.presentation.core.i18n.pluralStringResource
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -36,43 +36,43 @@ object SettingsSecurityScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = useAuthPref,
-                title = localize(MR.strings.lock_with_biometrics),
+                title = stringResource(MR.strings.lock_with_biometrics),
                 enabled = authSupported,
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
-                        title = context.localize(MR.strings.lock_with_biometrics),
+                        title = context.stringResource(MR.strings.lock_with_biometrics),
                     )
                 },
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.lockAppAfter(),
-                title = localize(MR.strings.lock_when_idle),
+                title = stringResource(MR.strings.lock_when_idle),
                 enabled = authSupported && useAuth,
                 entries = LockAfterValues
                     .associateWith {
                         when (it) {
-                            -1 -> localize(MR.strings.lock_never)
-                            0 -> localize(MR.strings.lock_always)
-                            else -> localizePlural(MR.plurals.lock_after_mins, count = it, it)
+                            -1 -> stringResource(MR.strings.lock_never)
+                            0 -> stringResource(MR.strings.lock_always)
+                            else -> pluralStringResource(MR.plurals.lock_after_mins, count = it, it)
                         }
                     },
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
-                        title = context.localize(MR.strings.lock_when_idle),
+                        title = context.stringResource(MR.strings.lock_when_idle),
                     )
                 },
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
-                title = localize(MR.strings.hide_notification_content),
+                title = stringResource(MR.strings.hide_notification_content),
             ),
             Preference.PreferenceItem.ListPreference(
                 pref = securityPreferences.secureScreen(),
-                title = localize(MR.strings.secure_screen),
+                title = stringResource(MR.strings.secure_screen),
                 entries = SecurityPreferences.SecureScreenMode.entries
-                    .associateWith { localize(it.titleRes) },
+                    .associateWith { stringResource(it.titleRes) },
             ),
-            Preference.PreferenceItem.InfoPreference(localize(MR.strings.secure_screen_summary)),
+            Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
         )
     }
 }

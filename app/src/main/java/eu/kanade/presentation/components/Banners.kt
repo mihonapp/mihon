@@ -32,7 +32,7 @@ import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMaxBy
 import dev.icerock.moko.resources.StringResource
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.localize
+import tachiyomi.presentation.core.i18n.stringResource
 
 val DownloadedOnlyBannerBackgroundColor
     @Composable get() = MaterialTheme.colorScheme.tertiary
@@ -47,7 +47,7 @@ fun WarningBanner(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = localize(textRes),
+        text = stringResource(textRes),
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.error)
@@ -127,7 +127,7 @@ fun AppStateBanners(
 @Composable
 private fun DownloadedOnlyModeBanner(modifier: Modifier = Modifier) {
     Text(
-        text = localize(MR.strings.label_downloaded_only),
+        text = stringResource(MR.strings.label_downloaded_only),
         modifier = Modifier
             .background(DownloadedOnlyBannerBackgroundColor)
             .fillMaxWidth()
@@ -142,7 +142,7 @@ private fun DownloadedOnlyModeBanner(modifier: Modifier = Modifier) {
 @Composable
 private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
     Text(
-        text = localize(MR.strings.pref_incognito_mode),
+        text = stringResource(MR.strings.pref_incognito_mode),
         modifier = Modifier
             .background(IncognitoModeBannerBackgroundColor)
             .fillMaxWidth()
@@ -173,7 +173,7 @@ private fun IndexingDownloadBanner(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = localize(MR.strings.download_notifier_cache_renewal),
+            text = stringResource(MR.strings.download_notifier_cache_renewal),
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,
