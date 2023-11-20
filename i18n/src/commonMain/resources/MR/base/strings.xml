@@ -525,7 +525,8 @@
     <string name="pref_sync_confirmation_message">Syncing will overwrite your local library with the remote library. Are you sure you want to continue?</string>
     <string name="pref_sync_service">Service</string>
     <string name="pref_sync_service_summ">Select the service to sync your library with</string>
-    <string name="pref_sync_service_category">Automatic Synchronization</string>
+    <string name="pref_sync_service_category">Sync</string>
+    <string name="pref_sync_automatic_category">Automatic Synchronization</string>
     <string name="pref_sync_interval">Synchronization frequency</string>
     <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>

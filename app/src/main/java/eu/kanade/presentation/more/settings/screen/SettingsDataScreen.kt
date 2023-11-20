@@ -367,15 +367,20 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getSyncPreferences(syncPreferences: SyncPreferences, syncService: Int): List<Preference> {
         return listOf(
-            Preference.PreferenceItem.ListPreference(
-                pref = syncPreferences.syncService(),
-                title = stringResource(MR.strings.pref_sync_service),
-                entries = mapOf(
-                    SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
-                    SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
-                    SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(MR.strings.google_drive),
+            Preference.PreferenceGroup(
+                title = stringResource(MR.strings.pref_sync_service_category),
+                preferenceItems = listOf(
+                    Preference.PreferenceItem.ListPreference(
+                        pref = syncPreferences.syncService(),
+                        title = stringResource(MR.strings.pref_sync_service),
+                        entries = mapOf(
+                            SyncManager.SyncService.NONE.value to stringResource(MR.strings.off),
+                            SyncManager.SyncService.SYNCYOMI.value to stringResource(MR.strings.syncyomi),
+                            SyncManager.SyncService.GOOGLE_DRIVE.value to stringResource(MR.strings.google_drive),
+                        ),
+                        onValueChanged = { true },
+                    ),
                 ),
-                onValueChanged = { true },
             ),
         ) + getSyncServicePreferences(syncPreferences, syncService)
     }
@@ -552,7 +557,7 @@ private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.
     val lastSync by syncPreferences.lastSyncTimestamp().collectAsState()
 
     return Preference.PreferenceGroup(
-        title = stringResource(MR.strings.pref_sync_service_category),
+        title = stringResource(MR.strings.pref_sync_automatic_category),
         preferenceItems = listOf(
             Preference.PreferenceItem.ListPreference(
                 pref = syncIntervalPref,
