@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -26,8 +27,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
@@ -54,6 +58,7 @@ import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -70,6 +75,7 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val backupPreferences = Injekt.get<BackupPreferences>()
+        val storagePreferences = Injekt.get<StoragePreferences>()
 
         PermissionRequestHelper.requestStoragePermission()
 
@@ -77,9 +83,48 @@ object SettingsDataScreen : SearchableSettings {
         val syncService by syncPreferences.syncService().collectAsState()
 
         return listOf(
+            getStorageLocationPref(storagePreferences = storagePreferences),
+            Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
+
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
         ) + getSyncPreferences(syncPreferences = syncPreferences, syncService = syncService)
+    }
+
+    @Composable
+    private fun getStorageLocationPref(
+        storagePreferences: StoragePreferences,
+    ): Preference.PreferenceItem.TextPreference {
+        val context = LocalContext.current
+        val storageDirPref = storagePreferences.baseStorageDirectory()
+        val storageDir by storageDirPref.collectAsState()
+        val pickStorageLocation = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenDocumentTree(),
+        ) { uri ->
+            if (uri != null) {
+                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+
+                context.contentResolver.takePersistableUriPermission(uri, flags)
+
+                val file = UniFile.fromUri(context, uri)
+                storageDirPref.set(file.uri.toString())
+            }
+        }
+
+        return Preference.PreferenceItem.TextPreference(
+            title = stringResource(MR.strings.pref_storage_location),
+            subtitle = remember(storageDir) {
+                (UniFile.fromUri(context, storageDir.toUri())?.filePath)
+            } ?: stringResource(MR.strings.invalid_location, storageDir),
+            onClick = {
+                try {
+                    pickStorageLocation.launch(null)
+                } catch (e: ActivityNotFoundException) {
+                    context.toast(MR.strings.file_picker_error)
+                }
+            },
+        )
     }
 
     @Composable

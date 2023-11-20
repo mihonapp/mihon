@@ -44,9 +44,9 @@ import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.storage.service.StoragePreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -64,7 +64,7 @@ class DownloadCache(
     private val provider: DownloadProvider = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
-    private val downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val storagePreferences: StoragePreferences = Injekt.get(),
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -98,7 +98,7 @@ class DownloadCache(
     private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
 
     init {
-        downloadPreferences.downloadsDirectory().changes()
+        storagePreferences.baseStorageDirectory().changes()
             .onEach {
                 rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
                 invalidateCache()
@@ -297,8 +297,8 @@ class DownloadCache(
      * Returns the downloads directory from the user's preferences.
      */
     private fun getDirectoryFromPreference(): UniFile {
-        val dir = downloadPreferences.downloadsDirectory().get()
-        return UniFile.fromUri(context, dir.toUri())
+        return UniFile.fromUri(context, storagePreferences.baseStorageDirectory().get().toUri())
+            .createDirectory(StoragePreferences.DOWNLOADS_DIR)
     }
 
     /**

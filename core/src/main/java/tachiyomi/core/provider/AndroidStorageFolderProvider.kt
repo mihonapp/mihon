@@ -7,7 +7,7 @@ import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.io.File
 
-class AndroidBackupFolderProvider(
+class AndroidStorageFolderProvider(
     private val context: Context,
 ) : FolderProvider {
 
@@ -15,7 +15,6 @@ class AndroidBackupFolderProvider(
         return File(
             Environment.getExternalStorageDirectory().absolutePath + File.separator +
                 context.stringResource(MR.strings.app_name),
-            "backup",
         )
     }
 

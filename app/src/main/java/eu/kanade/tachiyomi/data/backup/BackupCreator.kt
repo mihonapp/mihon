@@ -92,8 +92,8 @@ class BackupCreator(
             file = (
                 if (isAutoBackup) {
                     // Get dir of file and create
-                    var dir = UniFile.fromUri(context, uri)
-                    dir = dir.createDirectory("automatic")
+                    val dir = UniFile.fromUri(context, uri)
+                        .createDirectory("automatic")
 
                     // Delete older backups
                     dir.listFiles { _, filename -> Backup.filenameRegex.matches(filename) }

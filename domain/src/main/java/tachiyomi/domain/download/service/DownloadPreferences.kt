@@ -1,17 +1,10 @@
 package tachiyomi.domain.download.service
 
 import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.provider.FolderProvider
 
 class DownloadPreferences(
-    private val folderProvider: FolderProvider,
     private val preferenceStore: PreferenceStore,
 ) {
-
-    fun downloadsDirectory() = preferenceStore.getString(
-        "download_directory",
-        folderProvider.path(),
-    )
 
     fun downloadOnlyOverWifi() = preferenceStore.getBoolean(
         "pref_download_only_over_wifi_key",
