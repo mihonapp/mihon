@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.components.material.padding
@@ -126,7 +125,6 @@ private fun <T> WheelPicker(
         snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
             .map { calculateSnappedItemIndex(lazyListState) }
             .distinctUntilChanged()
-            .drop(1)
             .collectLatest {
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 internalOnSelectionChanged(it)

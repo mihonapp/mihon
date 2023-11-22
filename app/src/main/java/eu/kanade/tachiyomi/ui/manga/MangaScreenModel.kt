@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.util.fastAny
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.preference.asState
@@ -1050,6 +1051,10 @@ class MangaScreenModel(
         ) : State {
             val processedChapters by lazy {
                 chapters.applyFilters(manga).toList()
+            }
+
+            val isAnySelected by lazy {
+                chapters.fastAny { it.selected }
             }
 
             val chapterListItems by lazy {
