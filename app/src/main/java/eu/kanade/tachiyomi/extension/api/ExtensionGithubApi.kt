@@ -28,7 +28,7 @@ internal class ExtensionGithubApi {
     private val json: Json by injectLazy()
 
     private val lastExtCheck: Preference<Long> by lazy {
-        preferenceStore.getLong("last_ext_check", 0)
+        preferenceStore.getLong(Preference.appStateKey("last_ext_check"), 0)
     }
 
     private var requiresFallbackSource = false

@@ -13,7 +13,7 @@ class GetApplicationRelease(
 ) {
 
     private val lastChecked: Preference<Long> by lazy {
-        preferenceStore.getLong("last_app_check", 0)
+        preferenceStore.getLong(Preference.appStateKey("last_app_check"), 0)
     }
 
     suspend fun await(arguments: Arguments): Result {
