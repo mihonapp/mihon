@@ -14,6 +14,7 @@ import okhttp3.RequestBody.Companion.gzip
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.sync.SyncPreferences
+import java.util.concurrent.TimeUnit
 
 class SyncYomiSyncService(
     context: Context,
@@ -52,7 +53,12 @@ class SyncYomiSyncService(
         val apiKey = syncPreferences.syncAPIKey().get()
         val uploadUrl = "$host/api/sync/upload"
 
-        val client = OkHttpClient()
+        // Set timeout to 30 seconds
+        val client = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
 
         val headers = Headers.Builder().add(
             "Content-Type",
