@@ -364,8 +364,8 @@ private fun MangaScreenSmallImpl(
         PullRefresh(
             refreshing = state.isRefreshingData,
             onRefresh = onRefresh,
-            enabled = !isAnySelected,
-            indicatorPadding = WindowInsets.systemBars.only(WindowInsetsSides.Top).asPaddingValues(),
+            enabled = { !isAnySelected },
+            indicatorPadding = PaddingValues(top = topPadding),
         ) {
             val layoutDirection = LocalLayoutDirection.current
             VerticalFastScroller(
@@ -529,97 +529,98 @@ fun MangaScreenLargeImpl(
 
     val insetPadding = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal).asPaddingValues()
     var topBarHeight by remember { mutableIntStateOf(0) }
-    PullRefresh(
-        refreshing = state.isRefreshingData,
-        onRefresh = onRefresh,
-        enabled = !isAnySelected,
-        indicatorPadding = PaddingValues(
-            start = insetPadding.calculateStartPadding(layoutDirection),
-            top = with(density) { topBarHeight.toDp() },
-            end = insetPadding.calculateEndPadding(layoutDirection),
-        ),
-    ) {
-        val chapterListState = rememberLazyListState()
 
-        val internalOnBackPressed = {
-            if (isAnySelected) {
-                onAllChapterSelected(false)
-            } else {
-                onBackClicked()
-            }
+    val chapterListState = rememberLazyListState()
+
+    val internalOnBackPressed = {
+        if (isAnySelected) {
+            onAllChapterSelected(false)
+        } else {
+            onBackClicked()
         }
-        BackHandler(onBack = internalOnBackPressed)
+    }
+    BackHandler(onBack = internalOnBackPressed)
 
-        Scaffold(
-            topBar = {
-                val selectedChapterCount = remember(chapters) {
-                    chapters.count { it.selected }
+    Scaffold(
+        topBar = {
+            val selectedChapterCount = remember(chapters) {
+                chapters.count { it.selected }
+            }
+            MangaToolbar(
+                modifier = Modifier.onSizeChanged { topBarHeight = it.height },
+                title = state.manga.title,
+                titleAlphaProvider = { if (isAnySelected) 1f else 0f },
+                backgroundAlphaProvider = { 1f },
+                hasFilters = state.filterActive,
+                onBackClicked = internalOnBackPressed,
+                onClickFilter = onFilterButtonClicked,
+                onClickShare = onShareClicked,
+                onClickDownload = onDownloadActionClicked,
+                onClickEditCategory = onEditCategoryClicked,
+                onClickRefresh = onRefresh,
+                onClickMigrate = onMigrateClicked,
+                actionModeCounter = selectedChapterCount,
+                onSelectAll = { onAllChapterSelected(true) },
+                onInvertSelection = { onInvertSelection() },
+            )
+        },
+        bottomBar = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.BottomEnd,
+            ) {
+                val selectedChapters = remember(chapters) {
+                    chapters.filter { it.selected }
                 }
-                MangaToolbar(
-                    modifier = Modifier.onSizeChanged { topBarHeight = it.height },
-                    title = state.manga.title,
-                    titleAlphaProvider = { if (isAnySelected) 1f else 0f },
-                    backgroundAlphaProvider = { 1f },
-                    hasFilters = state.filterActive,
-                    onBackClicked = internalOnBackPressed,
-                    onClickFilter = onFilterButtonClicked,
-                    onClickShare = onShareClicked,
-                    onClickDownload = onDownloadActionClicked,
-                    onClickEditCategory = onEditCategoryClicked,
-                    onClickRefresh = onRefresh,
-                    onClickMigrate = onMigrateClicked,
-                    actionModeCounter = selectedChapterCount,
-                    onSelectAll = { onAllChapterSelected(true) },
-                    onInvertSelection = { onInvertSelection() },
+                SharedMangaBottomActionMenu(
+                    selected = selectedChapters,
+                    onMultiBookmarkClicked = onMultiBookmarkClicked,
+                    onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
+                    onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
+                    onDownloadChapter = onDownloadChapter,
+                    onMultiDeleteClicked = onMultiDeleteClicked,
+                    fillFraction = 0.5f,
                 )
-            },
-            bottomBar = {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.BottomEnd,
-                ) {
-                    val selectedChapters = remember(chapters) {
-                        chapters.filter { it.selected }
-                    }
-                    SharedMangaBottomActionMenu(
-                        selected = selectedChapters,
-                        onMultiBookmarkClicked = onMultiBookmarkClicked,
-                        onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
-                        onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
-                        onDownloadChapter = onDownloadChapter,
-                        onMultiDeleteClicked = onMultiDeleteClicked,
-                        fillFraction = 0.5f,
-                    )
-                }
-            },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            floatingActionButton = {
-                val isFABVisible = remember(chapters) {
-                    chapters.fastAny { !it.chapter.read } && !isAnySelected
-                }
-                AnimatedVisibility(
-                    visible = isFABVisible,
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                ) {
-                    ExtendedFloatingActionButton(
-                        text = {
-                            val isReading = remember(state.chapters) {
-                                state.chapters.fastAny { it.chapter.read }
-                            }
-                            Text(
-                                text = stringResource(
-                                    if (isReading) MR.strings.action_resume else MR.strings.action_start,
-                                ),
-                            )
-                        },
-                        icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
-                        onClick = onContinueReading,
-                        expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
-                    )
-                }
-            },
-        ) { contentPadding ->
+            }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        floatingActionButton = {
+            val isFABVisible = remember(chapters) {
+                chapters.fastAny { !it.chapter.read } && !isAnySelected
+            }
+            AnimatedVisibility(
+                visible = isFABVisible,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = {
+                        val isReading = remember(state.chapters) {
+                            state.chapters.fastAny { it.chapter.read }
+                        }
+                        Text(
+                            text = stringResource(
+                                if (isReading) MR.strings.action_resume else MR.strings.action_start,
+                            ),
+                        )
+                    },
+                    icon = { Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null) },
+                    onClick = onContinueReading,
+                    expanded = chapterListState.isScrollingUp() || chapterListState.isScrolledToEnd(),
+                )
+            }
+        },
+    ) { contentPadding ->
+        PullRefresh(
+            refreshing = state.isRefreshingData,
+            onRefresh = onRefresh,
+            enabled = { !isAnySelected },
+            indicatorPadding = PaddingValues(
+                start = insetPadding.calculateStartPadding(layoutDirection),
+                top = with(density) { topBarHeight.toDp() },
+                end = insetPadding.calculateEndPadding(layoutDirection),
+            ),
+        ) {
             TwoPanelBox(
                 modifier = Modifier.padding(
                     start = contentPadding.calculateStartPadding(layoutDirection),

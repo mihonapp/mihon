@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.zIndex
 import dev.icerock.moko.resources.StringResource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -70,6 +71,7 @@ fun TabbedScreen(
         ) {
             PrimaryTabRow(
                 selectedTabIndex = state.currentPage,
+                modifier = Modifier.zIndex(1f),
             ) {
                 tabs.forEachIndexed { index, tab ->
                     Tab(
