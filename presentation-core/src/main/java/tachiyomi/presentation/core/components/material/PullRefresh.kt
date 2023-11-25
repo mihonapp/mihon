@@ -196,7 +196,7 @@ private class PullToRefreshStateImpl(
             val newOffset = (distancePulled + available.y).coerceAtLeast(0f)
             val dragConsumed = newOffset - distancePulled
             distancePulled = newOffset
-            verticalOffset = calculateVerticalOffset() + (extraVerticalOffset * progress)
+            verticalOffset = calculateVerticalOffset() + (extraVerticalOffset * progress.coerceIn(0f, 1f))
             dragConsumed
         }
         return Offset(0f, y)
