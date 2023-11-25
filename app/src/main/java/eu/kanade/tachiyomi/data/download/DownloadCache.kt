@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.download
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
@@ -19,6 +18,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -64,7 +64,7 @@ class DownloadCache(
     private val provider: DownloadProvider = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
-    private val storagePreferences: StoragePreferences = Injekt.get(),
+    storagePreferences: StoragePreferences = Injekt.get(),
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -95,16 +95,9 @@ class DownloadCache(
         get() = File(context.cacheDir, "dl_index_cache")
 
     private val rootDownloadsDirLock = Mutex()
-    private var rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
+    private var rootDownloadsDir = RootDirectory(provider.downloadsDir)
 
     init {
-        storagePreferences.baseStorageDirectory().changes()
-            .onEach {
-                rootDownloadsDir = RootDirectory(getDirectoryFromPreference())
-                invalidateCache()
-            }
-            .launchIn(scope)
-
         // Attempt to read cache file
         scope.launch {
             rootDownloadsDirLock.withLock {
@@ -119,6 +112,14 @@ class DownloadCache(
                 }
             }
         }
+
+        storagePreferences.baseStorageDirectory().changes()
+            .drop(1)
+            .onEach {
+                rootDownloadsDir = RootDirectory(provider.downloadsDir)
+                invalidateCache()
+            }
+            .launchIn(scope)
     }
 
     /**
@@ -294,17 +295,6 @@ class DownloadCache(
     }
 
     /**
-     * Returns the downloads directory from the user's preferences.
-     */
-    private fun getDirectoryFromPreference(): UniFile {
-        return storagePreferences.baseStorageDirectory().get().let {
-            UniFile.fromUri(context, it.toUri()).also {
-                it?.createDirectory(StoragePreferences.DOWNLOADS_DIR)
-            }
-        }
-    }
-
-    /**
      * Renews the downloads cache.
      */
     private fun renewCache() {
@@ -335,7 +325,7 @@ class DownloadCache(
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirLock.withLock {
-                val sourceDirs = rootDownloadsDir.dir.listFiles().orEmpty()
+                val sourceDirs = rootDownloadsDir.dir?.listFiles().orEmpty()
                     .filter { it.isDirectory && !it.name.isNullOrBlank() }
                     .mapNotNull { dir ->
                         val sourceId = sourceMap[dir.name!!.lowercase()]
@@ -348,12 +338,12 @@ class DownloadCache(
                 sourceDirs.values
                     .map { sourceDir ->
                         async {
-                            sourceDir.mangaDirs = sourceDir.dir.listFiles().orEmpty()
+                            sourceDir.mangaDirs = sourceDir.dir?.listFiles().orEmpty()
                                 .filter { it.isDirectory && !it.name.isNullOrBlank() }
                                 .associate { it.name!! to MangaDirectory(it) }
 
                             sourceDir.mangaDirs.values.forEach { mangaDir ->
-                                val chapterDirs = mangaDir.dir.listFiles().orEmpty()
+                                val chapterDirs = mangaDir.dir?.listFiles().orEmpty()
                                     .mapNotNull {
                                         when {
                                             // Ignore incomplete downloads
@@ -430,7 +420,7 @@ class DownloadCache(
 @Serializable
 private class RootDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
-    val dir: UniFile,
+    val dir: UniFile?,
     var sourceDirs: Map<Long, SourceDirectory> = mapOf(),
 )
 
@@ -440,7 +430,7 @@ private class RootDirectory(
 @Serializable
 private class SourceDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
-    val dir: UniFile,
+    val dir: UniFile?,
     var mangaDirs: Map<String, MangaDirectory> = mapOf(),
 )
 
@@ -450,17 +440,26 @@ private class SourceDirectory(
 @Serializable
 private class MangaDirectory(
     @Serializable(with = UniFileAsStringSerializer::class)
-    val dir: UniFile,
+    val dir: UniFile?,
     var chapterDirs: MutableSet<String> = mutableSetOf(),
 )
 
-private object UniFileAsStringSerializer : KSerializer<UniFile> {
+private object UniFileAsStringSerializer : KSerializer<UniFile?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UniFile", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, value: UniFile) {
-        return encoder.encodeString(value.uri.toString())
+    override fun serialize(encoder: Encoder, value: UniFile?) {
+        return if (value == null) {
+            encoder.encodeNull()
+        } else {
+            encoder.encodeString(value.uri.toString())
+        }
     }
-    override fun deserialize(decoder: Decoder): UniFile {
-        return UniFile.fromUri(Injekt.get<Application>(), Uri.parse(decoder.decodeString()))
+
+    override fun deserialize(decoder: Decoder): UniFile? {
+        return if (decoder.decodeNotNullMark()) {
+            UniFile.fromUri(Injekt.get<Application>(), Uri.parse(decoder.decodeString()))
+        } else {
+            decoder.decodeNull()
+        }
     }
 }
