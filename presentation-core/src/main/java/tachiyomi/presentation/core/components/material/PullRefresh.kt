@@ -46,6 +46,7 @@ fun PullRefresh(
     content: @Composable () -> Unit,
 ) {
     val state = rememberPullToRefreshState(
+        initialRefreshing = refreshing,
         extraVerticalOffset = indicatorPadding.calculateTopPadding(),
         enabled = enabled,
     )
@@ -90,6 +91,7 @@ fun PullRefresh(
 
 @Composable
 private fun rememberPullToRefreshState(
+    initialRefreshing: Boolean,
     extraVerticalOffset: Dp,
     positionalThreshold: Dp = 64.dp,
     enabled: () -> Boolean = { true },
@@ -108,7 +110,7 @@ private fun rememberPullToRefreshState(
         ),
     ) {
         PullToRefreshStateImpl(
-            initialRefreshing = false,
+            initialRefreshing = initialRefreshing,
             extraVerticalOffset = extraVerticalOffsetPx,
             positionalThreshold = positionalThresholdPx,
             enabled = enabled,
@@ -133,18 +135,21 @@ private class PullToRefreshStateImpl(
 ) : PullToRefreshState {
 
     override val progress get() = adjustedDistancePulled / positionalThreshold
-    override var verticalOffset by mutableFloatStateOf(0f)
+    override var verticalOffset by mutableFloatStateOf(if (initialRefreshing) refreshingVerticalOffset else 0f)
 
     override var isRefreshing by mutableStateOf(initialRefreshing)
 
+    private val refreshingVerticalOffset: Float
+        get() = positionalThreshold + extraVerticalOffset
+
     override fun startRefresh() {
         isRefreshing = true
-        verticalOffset = positionalThreshold + extraVerticalOffset
+        verticalOffset = refreshingVerticalOffset
     }
 
     suspend fun startRefreshAnimated() {
         isRefreshing = true
-        animateTo(positionalThreshold + extraVerticalOffset)
+        animateTo(refreshingVerticalOffset)
     }
 
     override fun endRefresh() {
