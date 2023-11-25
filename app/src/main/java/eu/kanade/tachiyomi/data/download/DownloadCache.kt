@@ -297,8 +297,11 @@ class DownloadCache(
      * Returns the downloads directory from the user's preferences.
      */
     private fun getDirectoryFromPreference(): UniFile {
-        return UniFile.fromUri(context, storagePreferences.baseStorageDirectory().get().toUri())
-            .createDirectory(StoragePreferences.DOWNLOADS_DIR)
+        return storagePreferences.baseStorageDirectory().get().let {
+            UniFile.fromUri(context, it.toUri()).also {
+                it?.createDirectory(StoragePreferences.DOWNLOADS_DIR)
+            }
+        }
     }
 
     /**

@@ -5,9 +5,6 @@ import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
@@ -29,27 +26,14 @@ class DownloadProvider(
     private val storagePreferences: StoragePreferences = Injekt.get(),
 ) {
 
-    private val scope = MainScope()
-
-    /**
-     * The root directory for downloads.
-     */
-    private var downloadsDir = setDownloadsLocation()
-
-    init {
-        storagePreferences.baseStorageDirectory().changes()
-            .onEach { downloadsDir = setDownloadsLocation() }
-            .launchIn(scope)
-    }
-
-    private fun setDownloadsLocation(): UniFile {
-        return storagePreferences.baseStorageDirectory().get().let {
-            val dir = UniFile.fromUri(context, it.toUri())
-                .createDirectory(StoragePreferences.DOWNLOADS_DIR)
-            DiskUtil.createNoMediaFile(dir, context)
-            dir
+    private val downloadsDir: UniFile?
+        get() = storagePreferences.baseStorageDirectory().get().let {
+            UniFile.fromUri(context, it.toUri())
+                ?.createDirectory(StoragePreferences.DOWNLOADS_DIR)
+                ?.also { dir ->
+                    DiskUtil.createNoMediaFile(dir, context)
+                }
         }
-    }
 
     /**
      * Returns the download directory for a manga. For internal use only.
@@ -59,12 +43,12 @@ class DownloadProvider(
      */
     internal fun getMangaDir(mangaTitle: String, source: Source): UniFile {
         try {
-            return downloadsDir
+            return downloadsDir!!
                 .createDirectory(getSourceDirName(source))
                 .createDirectory(getMangaDirName(mangaTitle))
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e) { "Invalid download directory" }
-            throw Exception(context.stringResource(MR.strings.invalid_location, downloadsDir))
+            throw Exception(context.stringResource(MR.strings.invalid_location, downloadsDir ?: ""))
         }
     }
 
@@ -74,7 +58,7 @@ class DownloadProvider(
      * @param source the source to query.
      */
     fun findSourceDir(source: Source): UniFile? {
-        return downloadsDir.findFile(getSourceDirName(source), true)
+        return downloadsDir?.findFile(getSourceDirName(source), true)
     }
 
     /**
