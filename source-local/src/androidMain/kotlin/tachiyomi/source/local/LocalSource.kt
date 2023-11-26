@@ -22,6 +22,9 @@ import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
 import tachiyomi.core.metadata.comicinfo.getComicInfo
 import tachiyomi.core.metadata.tachiyomi.MangaDetails
+import tachiyomi.core.storage.extension
+import tachiyomi.core.storage.nameWithoutExtension
+import tachiyomi.core.storage.toFile
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.ImageUtil
 import tachiyomi.core.util.system.logcat
@@ -37,7 +40,6 @@ import tachiyomi.source.local.metadata.fillChapterMetadata
 import tachiyomi.source.local.metadata.fillMangaMetadata
 import uy.kohesive.injekt.injectLazy
 import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
@@ -83,11 +85,11 @@ actual class LocalSource(
         }
         var mangaDirs = baseDirFiles
             // Filter out files that are hidden and is not a folder
-            .filter { it.isDirectory && !it.name.startsWith('.') }
+            .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
             .distinctBy { it.name }
             .filter { // Filter by query or last modified
                 if (lastModifiedLimit == 0L) {
-                    it.name.contains(query, ignoreCase = true)
+                    it.name.orEmpty().contains(query, ignoreCase = true)
                 } else {
                     it.lastModified() >= lastModifiedLimit
                 }
@@ -97,16 +99,16 @@ actual class LocalSource(
             when (filter) {
                 is OrderBy.Popular -> {
                     mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                        mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
                     } else {
-                        mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name })
+                        mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
                     }
                 }
                 is OrderBy.Latest -> {
                     mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedBy(File::lastModified)
+                        mangaDirs.sortedBy(UniFile::lastModified)
                     } else {
-                        mangaDirs.sortedByDescending(File::lastModified)
+                        mangaDirs.sortedByDescending(UniFile::lastModified)
                     }
                 }
 
@@ -119,13 +121,13 @@ actual class LocalSource(
         // Transform mangaDirs to list of SManga
         val mangas = mangaDirs.map { mangaDir ->
             SManga.create().apply {
-                title = mangaDir.name
-                url = mangaDir.name
+                title = mangaDir.name.orEmpty()
+                url = mangaDir.name.orEmpty()
 
                 // Try to find the cover
-                coverManager.find(mangaDir.name)
-                    ?.takeIf(File::exists)
-                    ?.let { thumbnail_url = it.absolutePath }
+                coverManager.find(mangaDir.name.orEmpty())
+                    ?.takeIf(UniFile::exists)
+                    ?.let { thumbnail_url = it.uri.toString() }
             }
         }
 
@@ -155,7 +157,7 @@ actual class LocalSource(
     // Manga details related
     override suspend fun getMangaDetails(manga: SManga): SManga = withIOContext {
         coverManager.find(manga.url)?.let {
-            manga.thumbnail_url = it.absolutePath
+            manga.thumbnail_url = it.uri.toString()
         }
 
         // Augment manga details based on metadata files
@@ -174,13 +176,13 @@ actual class LocalSource(
                 // Top level ComicInfo.xml
                 comicInfoFile != null -> {
                     noXmlFile?.delete()
-                    setMangaDetailsFromComicInfoFile(comicInfoFile.inputStream(), manga)
+                    setMangaDetailsFromComicInfoFile(comicInfoFile.openInputStream(), manga)
                 }
 
                 // Old custom JSON format
                 // TODO: remove support for this entirely after a while
                 legacyJsonDetailsFile != null -> {
-                    json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.inputStream()).run {
+                    json.decodeFromStream<MangaDetails>(legacyJsonDetailsFile.openInputStream()).run {
                         title?.let { manga.title = it }
                         author?.let { manga.author = it }
                         artist?.let { manga.artist = it }
@@ -190,7 +192,7 @@ actual class LocalSource(
                     }
                     // Replace with ComicInfo.xml file
                     val comicInfo = manga.getComicInfo()
-                    UniFile.fromFile(mangaDir)
+                    mangaDir
                         ?.createFile(COMIC_INFO_FILE)
                         ?.openOutputStream()
                         ?.use {
@@ -206,7 +208,7 @@ actual class LocalSource(
                         .filter(Archive::isSupported)
                         .toList()
 
-                    val folderPath = mangaDir?.absolutePath
+                    val folderPath = mangaDir?.filePath
 
                     val copiedFile = copyComicInfoFileFromArchive(chapterArchives, folderPath)
                     if (copiedFile != null) {
@@ -224,11 +226,11 @@ actual class LocalSource(
         return@withIOContext manga
     }
 
-    private fun copyComicInfoFileFromArchive(chapterArchives: List<File>, folderPath: String?): File? {
+    private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folderPath: String?): File? {
         for (chapter in chapterArchives) {
             when (Format.valueOf(chapter)) {
                 is Format.Zip -> {
-                    ZipFile(chapter).use { zip: ZipFile ->
+                    ZipFile(chapter.toFile()).use { zip: ZipFile ->
                         zip.getEntry(COMIC_INFO_FILE)?.let { comicInfoFile ->
                             zip.getInputStream(comicInfoFile).buffered().use { stream ->
                                 return copyComicInfoFile(stream, folderPath)
@@ -237,7 +239,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.Rar -> {
-                    JunrarArchive(chapter).use { rar ->
+                    JunrarArchive(chapter.toFile()).use { rar ->
                         rar.fileHeaders.firstOrNull { it.fileName == COMIC_INFO_FILE }?.let { comicInfoFile ->
                             rar.getInputStream(comicInfoFile).buffered().use { stream ->
                                 return copyComicInfoFile(stream, folderPath)
@@ -276,9 +278,9 @@ actual class LocalSource(
                 SChapter.create().apply {
                     url = "${manga.url}/${chapterFile.name}"
                     name = if (chapterFile.isDirectory) {
-                        chapterFile.name
+                        chapterFile.name.orEmpty()
                     } else {
-                        chapterFile.nameWithoutExtension
+                        chapterFile.nameWithoutExtension.orEmpty()
                     }
                     date_upload = chapterFile.lastModified()
                     chapter_number = ChapterRecognition
@@ -308,8 +310,8 @@ actual class LocalSource(
 
     fun getFormat(chapter: SChapter): Format {
         try {
-            return File(fileSystem.getBaseDirectory(), chapter.url)
-                .takeIf { it.exists() }
+            return fileSystem.getBaseDirectory()
+                ?.findFile(chapter.url)
                 ?.let(Format.Companion::valueOf)
                 ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
         } catch (e: Format.UnknownFormatException) {
@@ -319,18 +321,24 @@ actual class LocalSource(
         }
     }
 
-    private fun updateCover(chapter: SChapter, manga: SManga): File? {
+    private fun updateCover(chapter: SChapter, manga: SManga): UniFile? {
         return try {
             when (val format = getFormat(chapter)) {
                 is Format.Directory -> {
                     val entry = format.file.listFiles()
-                        ?.sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                        ?.find { !it.isDirectory && ImageUtil.isImage(it.name) { FileInputStream(it) } }
+                        ?.sortedWith { f1, f2 ->
+                            f1.name.orEmpty().compareToCaseInsensitiveNaturalOrder(
+                                f2.name.orEmpty(),
+                            )
+                        }
+                        ?.find {
+                            !it.isDirectory && ImageUtil.isImage(it.name) { it.openInputStream() }
+                        }
 
-                    entry?.let { coverManager.update(manga, it.inputStream()) }
+                    entry?.let { coverManager.update(manga, it.openInputStream()) }
                 }
                 is Format.Zip -> {
-                    ZipFile(format.file).use { zip ->
+                    ZipFile(format.file.toFile()).use { zip ->
                         val entry = zip.entries().toList()
                             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
                             .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
@@ -339,7 +347,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.Rar -> {
-                    JunrarArchive(format.file).use { archive ->
+                    JunrarArchive(format.file.toFile()).use { archive ->
                         val entry = archive.fileHeaders
                             .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
                             .find { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }

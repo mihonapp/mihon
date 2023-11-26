@@ -1,14 +1,14 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.storage.EpubFile
-import java.io.File
 
 /**
  * Loader used to load a chapter from a .epub file.
  */
-internal class EpubPageLoader(file: File) : PageLoader() {
+internal class EpubPageLoader(file: UniFile) : PageLoader() {
 
     private val epub = EpubFile(file)
 

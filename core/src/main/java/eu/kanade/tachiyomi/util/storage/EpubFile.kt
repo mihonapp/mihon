@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.util.storage
 
+import com.hippo.unifile.UniFile
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import tachiyomi.core.storage.toFile
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
@@ -11,12 +13,12 @@ import java.util.zip.ZipFile
 /**
  * Wrapper over ZipFile to load files in epub format.
  */
-class EpubFile(file: File) : Closeable {
+class EpubFile(file: UniFile) : Closeable {
 
     /**
      * Zip file of this epub.
      */
-    private val zip = ZipFile(file)
+    private val zip = ZipFile(file.toFile())
 
     /**
      * Path separator used by this epub.

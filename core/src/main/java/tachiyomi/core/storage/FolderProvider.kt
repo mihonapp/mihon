@@ -1,4 +1,4 @@
-package tachiyomi.core.provider
+package tachiyomi.core.storage
 
 import java.io.File
 

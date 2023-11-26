@@ -37,7 +37,9 @@ import kotlin.math.min
 
 object ImageUtil {
 
-    fun isImage(name: String, openStream: (() -> InputStream)? = null): Boolean {
+    fun isImage(name: String?, openStream: (() -> InputStream)? = null): Boolean {
+        if (name == null) return false
+
         val contentType = try {
             URLConnection.guessContentTypeFromName(name)
         } catch (e: Exception) {

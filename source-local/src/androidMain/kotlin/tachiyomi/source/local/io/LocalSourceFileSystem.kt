@@ -1,27 +1,31 @@
 package tachiyomi.source.local.io
 
-import tachiyomi.core.provider.FolderProvider
-import java.io.File
+import android.content.Context
+import androidx.core.net.toUri
+import com.hippo.unifile.UniFile
+import tachiyomi.core.storage.FolderProvider
 
 actual class LocalSourceFileSystem(
+    private val context: Context,
     private val folderProvider: FolderProvider,
 ) {
 
-    actual fun getBaseDirectory(): File {
-        return File(folderProvider.directory(), "local")
+    actual fun getBaseDirectory(): UniFile? {
+        return UniFile.fromUri(context, folderProvider.path().toUri())
+            ?.createDirectory("local")
     }
 
-    actual fun getFilesInBaseDirectory(): List<File> {
-        return getBaseDirectory().listFiles().orEmpty().toList()
+    actual fun getFilesInBaseDirectory(): List<UniFile> {
+        return getBaseDirectory()?.listFiles().orEmpty().toList()
     }
 
-    actual fun getMangaDirectory(name: String): File? {
+    actual fun getMangaDirectory(name: String): UniFile? {
         return getFilesInBaseDirectory()
             // Get the first mangaDir or null
             .firstOrNull { it.isDirectory && it.name == name }
     }
 
-    actual fun getFilesInMangaDirectory(name: String): List<File> {
+    actual fun getFilesInMangaDirectory(name: String): List<UniFile> {
         return getFilesInBaseDirectory()
             // Filter out ones that are not related to the manga and is not a directory
             .filter { it.isDirectory && it.name == name }

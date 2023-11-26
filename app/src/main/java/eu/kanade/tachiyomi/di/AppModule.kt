@@ -25,7 +25,7 @@ import kotlinx.serialization.json.Json
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.core.provider.AndroidStorageFolderProvider
+import tachiyomi.core.storage.AndroidStorageFolderProvider
 import tachiyomi.data.AndroidDatabaseHandler
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
@@ -125,7 +125,7 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory { ImageSaver(app) }
 
         addSingletonFactory { AndroidStorageFolderProvider(app) }
-        addSingletonFactory { LocalSourceFileSystem(get<AndroidStorageFolderProvider>()) }
+        addSingletonFactory { LocalSourceFileSystem(app, get<AndroidStorageFolderProvider>()) }
         addSingletonFactory { LocalCoverManager(app, get()) }
 
         // Asynchronously init expensive components for a faster cold start

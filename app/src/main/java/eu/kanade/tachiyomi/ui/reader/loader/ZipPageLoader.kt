@@ -1,23 +1,24 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.os.Build
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
+import tachiyomi.core.storage.toFile
 import tachiyomi.core.util.system.ImageUtil
-import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
 
 /**
  * Loader used to load a chapter from a .zip or .cbz file.
  */
-internal class ZipPageLoader(file: File) : PageLoader() {
+internal class ZipPageLoader(file: UniFile) : PageLoader() {
 
     private val zip = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        ZipFile(file, StandardCharsets.ISO_8859_1)
+        ZipFile(file.toFile(), StandardCharsets.ISO_8859_1)
     } else {
-        ZipFile(file)
+        ZipFile(file.toFile())
     }
 
     override var isLocal: Boolean = true
