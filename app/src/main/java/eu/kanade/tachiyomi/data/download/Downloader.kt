@@ -43,6 +43,7 @@ import okhttp3.Response
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
+import tachiyomi.core.storage.extension
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNow
 import tachiyomi.core.util.lang.withIOContext
@@ -353,7 +354,7 @@ class Downloader(
 
             // Delete all temporary (unfinished) files
             tmpDir.listFiles()
-                ?.filter { it.name!!.endsWith(".tmp") }
+                ?.filter { it.extension == "tmp" }
                 ?.forEach { it.delete() }
 
             download.status = Download.State.DOWNLOADING

@@ -40,6 +40,8 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
+import tachiyomi.core.storage.extension
+import tachiyomi.core.storage.nameWithoutExtension
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.system.logcat
@@ -351,8 +353,7 @@ class DownloadCache(
                                             // Folder of images
                                             it.isDirectory -> it.name
                                             // CBZ files
-                                            it.isFile && it.name?.endsWith(".cbz") == true ->
-                                                it.name!!.substringBeforeLast(".cbz")
+                                            it.isFile && it.extension == "cbz" -> it.nameWithoutExtension
                                             // Anything else is irrelevant
                                             else -> null
                                         }
