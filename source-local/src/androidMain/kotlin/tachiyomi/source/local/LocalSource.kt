@@ -310,8 +310,10 @@ actual class LocalSource(
 
     fun getFormat(chapter: SChapter): Format {
         try {
+            val (mangaDirName, chapterName) = chapter.url.split(File.separator, limit = 2)
             return fileSystem.getBaseDirectory()
-                ?.findFile(chapter.url)
+                ?.findFile(mangaDirName)
+                ?.findFile(chapterName)
                 ?.let(Format.Companion::valueOf)
                 ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
         } catch (e: Format.UnknownFormatException) {

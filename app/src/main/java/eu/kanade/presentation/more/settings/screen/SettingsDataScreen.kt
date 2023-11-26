@@ -42,6 +42,7 @@ import eu.kanade.tachiyomi.data.backup.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.copyToClipboard
@@ -100,6 +101,7 @@ object SettingsDataScreen : SearchableSettings {
 
                 val file = UniFile.fromUri(context, uri)
                 storageDirPref.set(file.uri.toString())
+                Injekt.get<DownloadCache>().invalidateCache()
             }
         }
 

@@ -1,18 +1,14 @@
 package tachiyomi.source.local.io
 
-import android.content.Context
-import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
-import tachiyomi.core.storage.FolderProvider
+import tachiyomi.domain.storage.service.StorageManager
 
 actual class LocalSourceFileSystem(
-    private val context: Context,
-    private val folderProvider: FolderProvider,
+    private val storageManager: StorageManager,
 ) {
 
     actual fun getBaseDirectory(): UniFile? {
-        return UniFile.fromUri(context, folderProvider.path().toUri())
-            ?.createDirectory("local")
+        return storageManager.getLocalSourceDirectory()
     }
 
     actual fun getFilesInBaseDirectory(): List<UniFile> {

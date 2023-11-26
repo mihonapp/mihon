@@ -1,20 +1,15 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
-import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -27,27 +22,11 @@ import uy.kohesive.injekt.api.get
  */
 class DownloadProvider(
     private val context: Context,
-    storagePreferences: StoragePreferences = Injekt.get(),
+    private val storageManager: StorageManager = Injekt.get(),
 ) {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
-    private var _downloadsDir: UniFile? =
-        storagePreferences.baseStorageDirectory().get().let(::getDownloadsLocation)
     val downloadsDir: UniFile?
-        get() = _downloadsDir
-
-    init {
-        storagePreferences.baseStorageDirectory().changes()
-            .onEach { _downloadsDir = getDownloadsLocation(it) }
-            .launchIn(scope)
-    }
-
-    private fun getDownloadsLocation(dir: String): UniFile? {
-        return UniFile.fromUri(context, dir.toUri())
-            ?.createDirectory(StoragePreferences.DOWNLOADS_DIR)
-            ?.also { DiskUtil.createNoMediaFile(it, context) }
-    }
+        get() = storageManager.getDownloadsDirectory()
 
     /**
      * Returns the download directory for a manga. For internal use only.
