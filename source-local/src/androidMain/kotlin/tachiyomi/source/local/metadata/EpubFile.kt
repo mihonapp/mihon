@@ -8,37 +8,25 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 /**
- * Fills manga metadata using this epub file's metadata.
+ * Fills manga and chapter metadata using this epub file's metadata.
  */
-fun EpubFile.fillMangaMetadata(manga: SManga) {
-    val ref = getPackageHref()
-    val doc = getPackageDocument(ref)
-
-    val creator = doc.getElementsByTag("dc:creator").first()
-    val description = doc.getElementsByTag("dc:description").first()
-
-    manga.author = creator?.text()
-    manga.description = description?.text()
-}
-
-/**
- * Fills chapter metadata using this epub file's metadata.
- */
-fun EpubFile.fillChapterMetadata(chapter: SChapter) {
+fun EpubFile.fillMetadata(manga: SManga, chapter: SChapter) {
     val ref = getPackageHref()
     val doc = getPackageDocument(ref)
 
     val title = doc.getElementsByTag("dc:title").first()
     val publisher = doc.getElementsByTag("dc:publisher").first()
     val creator = doc.getElementsByTag("dc:creator").first()
+    val description = doc.getElementsByTag("dc:description").first()
     var date = doc.getElementsByTag("dc:date").first()
     if (date == null) {
         date = doc.select("meta[property=dcterms:modified]").first()
     }
 
-    if (title != null) {
-        chapter.name = title.text()
-    }
+    creator?.text()?.let { manga.author = it }
+    description?.text()?.let { manga.description = it }
+
+    title?.text()?.let { chapter.name = it }
 
     if (publisher != null) {
         chapter.scanlator = publisher.text()

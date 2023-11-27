@@ -16,16 +16,15 @@ actual class LocalSourceFileSystem(
     }
 
     actual fun getMangaDirectory(name: String): UniFile? {
-        return getFilesInBaseDirectory()
-            // Get the first mangaDir or null
-            .firstOrNull { it.isDirectory && it.name == name }
+        return getBaseDirectory()
+            ?.findFile(name, true)
+            ?.takeIf { it.isDirectory }
     }
 
     actual fun getFilesInMangaDirectory(name: String): List<UniFile> {
-        return getFilesInBaseDirectory()
-            // Filter out ones that are not related to the manga and is not a directory
-            .filter { it.isDirectory && it.name == name }
-            // Get all the files inside the filtered folders
-            .flatMap { it.listFiles().orEmpty().toList() }
+        return getBaseDirectory()
+            ?.findFile(name, true)
+            ?.takeIf { it.isDirectory }
+            ?.listFiles().orEmpty().toList()
     }
 }
