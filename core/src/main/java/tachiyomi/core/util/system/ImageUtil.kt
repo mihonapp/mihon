@@ -245,7 +245,7 @@ object ImageUtil {
                 // Remove pre-existing split if exists (this split shouldn't exist under normal circumstances)
                 tmpDir.findFile(splitImageName)?.delete()
 
-                val splitFile = tmpDir.createFile(splitImageName)
+                val splitFile = tmpDir.createFile(splitImageName)!!
 
                 val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
 

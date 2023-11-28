@@ -99,8 +99,9 @@ object SettingsDataScreen : SearchableSettings {
 
                 context.contentResolver.takePersistableUriPermission(uri, flags)
 
-                val file = UniFile.fromUri(context, uri)
-                storageDirPref.set(file.uri.toString())
+                UniFile.fromUri(context, uri)?.let {
+                    storageDirPref.set(it.uri.toString())
+                }
                 Injekt.get<DownloadCache>().invalidateCache()
             }
         }

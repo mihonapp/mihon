@@ -165,7 +165,7 @@ fun Context.createReaderThemeContext(): Context {
  * @return document size of [uri] or null if size can't be obtained
  */
 fun Context.getUriSize(uri: Uri): Long? {
-    return UniFile.fromUri(this, uri).length().takeIf { it >= 0 }
+    return UniFile.fromUri(this, uri)?.length()?.takeIf { it >= 0 }
 }
 
 /**

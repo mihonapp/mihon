@@ -37,8 +37,8 @@ class DownloadProvider(
     internal fun getMangaDir(mangaTitle: String, source: Source): UniFile {
         try {
             return downloadsDir!!
-                .createDirectory(getSourceDirName(source))
-                .createDirectory(getMangaDirName(mangaTitle))
+                .createDirectory(getSourceDirName(source))!!
+                .createDirectory(getMangaDirName(mangaTitle))!!
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e) { "Invalid download directory" }
             throw Exception(context.stringResource(MR.strings.invalid_location, downloadsDir ?: ""))

@@ -58,7 +58,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             if (isAutoBackup) {
                 backupPreferences.lastAutoBackupTimestamp().set(Date().time)
             } else {
-                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri()))
+                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
             }
             Result.success()
         } catch (e: Exception) {

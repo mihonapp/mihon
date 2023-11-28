@@ -34,7 +34,7 @@ actual class LocalCoverManager(
             return null
         }
 
-        val targetFile = find(manga.url) ?: directory.createFile(DEFAULT_COVER_NAME)
+        val targetFile = find(manga.url) ?: directory.createFile(DEFAULT_COVER_NAME)!!
 
         inputStream.use { input ->
             targetFile.openOutputStream().use { output ->
