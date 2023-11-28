@@ -91,7 +91,7 @@ class DownloadProvider(
         val mangaDir = findMangaDir(manga.title, source) ?: return null to emptyList()
         return mangaDir to chapters.mapNotNull { chapter ->
             getValidChapterDirNames(chapter.name, chapter.scanlator).asSequence()
-                .mapNotNull { mangaDir.findFile(it) }
+                .mapNotNull { mangaDir.findFile(it, true) }
                 .firstOrNull()
         }
     }

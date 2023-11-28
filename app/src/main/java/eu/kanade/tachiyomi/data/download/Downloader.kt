@@ -642,7 +642,7 @@ class Downloader(
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
         val comicInfo = getComicInfo(manga, chapter, chapterUrl, categories)
         // Remove the old file
-        dir.findFile(COMIC_INFO_FILE)?.delete()
+        dir.findFile(COMIC_INFO_FILE, true)?.delete()
         dir.createFile(COMIC_INFO_FILE)!!.openOutputStream().use {
             val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
             it.write(comicInfoString.toByteArray())
