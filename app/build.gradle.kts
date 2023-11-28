@@ -164,7 +164,6 @@ dependencies {
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
     implementation(compose.accompanist.webview)
-    implementation(compose.accompanist.permissions)
     implementation(compose.accompanist.systemuicontroller)
     lintChecks(compose.lintchecks)
 

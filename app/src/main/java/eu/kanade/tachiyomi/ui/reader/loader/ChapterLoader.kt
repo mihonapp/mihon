@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
 import tachiyomi.core.i18n.stringResource
+import tachiyomi.core.storage.toTempFile
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
@@ -88,13 +89,13 @@ class ChapterLoader(
             source is LocalSource -> source.getFormat(chapter.chapter).let { format ->
                 when (format) {
                     is Format.Directory -> DirectoryPageLoader(format.file)
-                    is Format.Zip -> ZipPageLoader(format.file)
+                    is Format.Zip -> ZipPageLoader(format.file.toTempFile(context))
                     is Format.Rar -> try {
-                        RarPageLoader(format.file)
+                        RarPageLoader(format.file.toTempFile(context))
                     } catch (e: UnsupportedRarV5Exception) {
                         error(context.stringResource(MR.strings.loader_rar5_error))
                     }
-                    is Format.Epub -> EpubPageLoader(format.file)
+                    is Format.Epub -> EpubPageLoader(format.file.toTempFile(context))
                 }
             }
             source is HttpSource -> HttpPageLoader(chapter, source)

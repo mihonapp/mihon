@@ -2,12 +2,11 @@ package eu.kanade.tachiyomi.ui.reader.loader
 
 import com.github.junrar.Archive
 import com.github.junrar.rarfile.FileHeader
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
-import tachiyomi.core.storage.toFile
 import tachiyomi.core.util.system.ImageUtil
+import java.io.File
 import java.io.InputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
@@ -15,9 +14,9 @@ import java.io.PipedOutputStream
 /**
  * Loader used to load a chapter from a .rar or .cbr file.
  */
-internal class RarPageLoader(file: UniFile) : PageLoader() {
+internal class RarPageLoader(file: File) : PageLoader() {
 
-    private val rar = Archive(file.toFile())
+    private val rar = Archive(file)
 
     override var isLocal: Boolean = true
 

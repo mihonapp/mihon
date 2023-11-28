@@ -26,7 +26,7 @@ import tachiyomi.core.metadata.comicinfo.getComicInfo
 import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.core.storage.extension
 import tachiyomi.core.storage.nameWithoutExtension
-import tachiyomi.core.storage.toFile
+import tachiyomi.core.storage.toTempFile
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.ImageUtil
 import tachiyomi.core.util.system.logcat
@@ -213,7 +213,7 @@ actual class LocalSource(
         for (chapter in chapterArchives) {
             when (Format.valueOf(chapter)) {
                 is Format.Zip -> {
-                    ZipFile(chapter.toFile()).use { zip: ZipFile ->
+                    ZipFile(chapter.toTempFile(context)).use { zip: ZipFile ->
                         zip.getEntry(COMIC_INFO_FILE)?.let { comicInfoFile ->
                             zip.getInputStream(comicInfoFile).buffered().use { stream ->
                                 return copyComicInfoFile(stream, folderPath)
@@ -222,7 +222,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.Rar -> {
-                    JunrarArchive(chapter.toFile()).use { rar ->
+                    JunrarArchive(chapter.toTempFile(context)).use { rar ->
                         rar.fileHeaders.firstOrNull { it.fileName == COMIC_INFO_FILE }?.let { comicInfoFile ->
                             rar.getInputStream(comicInfoFile).buffered().use { stream ->
                                 return copyComicInfoFile(stream, folderPath)
@@ -272,7 +272,7 @@ actual class LocalSource(
 
                     val format = Format.valueOf(chapterFile)
                     if (format is Format.Epub) {
-                        EpubFile(format.file).use { epub ->
+                        EpubFile(format.file.toTempFile(context)).use { epub ->
                             epub.fillMetadata(manga, this)
                         }
                     }
@@ -331,7 +331,7 @@ actual class LocalSource(
                     entry?.let { coverManager.update(manga, it.openInputStream()) }
                 }
                 is Format.Zip -> {
-                    ZipFile(format.file.toFile()).use { zip ->
+                    ZipFile(format.file.toTempFile(context)).use { zip ->
                         val entry = zip.entries().toList()
                             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
                             .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
@@ -340,7 +340,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.Rar -> {
-                    JunrarArchive(format.file.toFile()).use { archive ->
+                    JunrarArchive(format.file.toTempFile(context)).use { archive ->
                         val entry = archive.fileHeaders
                             .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
                             .find { !it.isDirectory && ImageUtil.isImage(it.fileName) { archive.getInputStream(it) } }
@@ -349,7 +349,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.Epub -> {
-                    EpubFile(format.file).use { epub ->
+                    EpubFile(format.file.toTempFile(context)).use { epub ->
                         val entry = epub.getImagesFromPages()
                             .firstOrNull()
                             ?.let { epub.getEntry(it) }
