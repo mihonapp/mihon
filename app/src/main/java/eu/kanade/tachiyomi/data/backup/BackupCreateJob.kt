@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
-import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.storage.service.StorageManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.Date
@@ -43,6 +43,8 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: getAutomaticBackupLocation()
+            ?: return Result.failure()
+
         val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
 
         try {
@@ -56,7 +58,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             if (isAutoBackup) {
                 backupPreferences.lastAutoBackupTimestamp().set(Date().time)
             } else {
-                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri()))
+                notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
             }
             Result.success()
         } catch (e: Exception) {
@@ -75,13 +77,9 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         )
     }
 
-    private fun getAutomaticBackupLocation(): Uri {
-        val storagePreferences = Injekt.get<StoragePreferences>()
-        return storagePreferences.baseStorageDirectory().get().let {
-            val dir = UniFile.fromUri(context, it.toUri())
-                .createDirectory(StoragePreferences.BACKUP_DIR)
-            dir.uri
-        }
+    private fun getAutomaticBackupLocation(): Uri? {
+        val storageManager = Injekt.get<StorageManager>()
+        return storageManager.getAutomaticBackupsDirectory()?.uri
     }
 
     companion object {

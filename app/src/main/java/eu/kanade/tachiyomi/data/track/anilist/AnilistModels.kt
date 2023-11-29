@@ -4,6 +4,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import eu.kanade.tachiyomi.util.lang.htmlDecode
 import kotlinx.serialization.Serializable
 import uy.kohesive.injekt.injectLazy
 import java.text.SimpleDateFormat
@@ -25,7 +26,7 @@ data class ALManga(
         title = title_user_pref
         total_chapters = this@ALManga.total_chapters
         cover_url = image_url_lge
-        summary = description ?: ""
+        summary = description?.htmlDecode() ?: ""
         tracking_url = AnilistApi.mangaUrl(media_id)
         publishing_status = this@ALManga.publishing_status
         publishing_type = format

@@ -37,7 +37,9 @@ import kotlin.math.min
 
 object ImageUtil {
 
-    fun isImage(name: String, openStream: (() -> InputStream)? = null): Boolean {
+    fun isImage(name: String?, openStream: (() -> InputStream)? = null): Boolean {
+        if (name == null) return false
+
         val contentType = try {
             URLConnection.guessContentTypeFromName(name)
         } catch (e: Exception) {
@@ -243,7 +245,7 @@ object ImageUtil {
                 // Remove pre-existing split if exists (this split shouldn't exist under normal circumstances)
                 tmpDir.findFile(splitImageName)?.delete()
 
-                val splitFile = tmpDir.createFile(splitImageName)
+                val splitFile = tmpDir.createFile(splitImageName)!!
 
                 val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
 

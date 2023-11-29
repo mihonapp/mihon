@@ -33,12 +33,14 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
+import java.math.RoundingMode
 import java.text.NumberFormat
 
 class LibraryUpdateNotifier(private val context: Context) {
 
     private val preferences: SecurityPreferences by injectLazy()
     private val percentFormatter = NumberFormat.getPercentInstance().apply {
+        roundingMode = RoundingMode.DOWN
         maximumFractionDigits = 0
     }
 
@@ -78,20 +80,17 @@ class LibraryUpdateNotifier(private val context: Context) {
      * @param total the total progress.
      */
     fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
-        if (preferences.hideNotificationContent().get()) {
-            progressNotificationBuilder
-                .setContentTitle(context.stringResource(MR.strings.notification_check_updates))
-                .setContentText("($current/$total)")
-        } else {
+        progressNotificationBuilder
+            .setContentTitle(
+                context.stringResource(
+                    MR.strings.notification_updating_progress,
+                    percentFormatter.format(current.toFloat() / total),
+                ),
+            )
+
+        if (!preferences.hideNotificationContent().get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
-            progressNotificationBuilder
-                .setContentTitle(
-                    context.stringResource(
-                        MR.strings.notification_updating_progress,
-                        percentFormatter.format(current.toFloat() / total),
-                    ),
-                )
-                .setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
+            progressNotificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
 
         context.notify(

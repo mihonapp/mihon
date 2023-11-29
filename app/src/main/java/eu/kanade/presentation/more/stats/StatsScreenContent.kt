@@ -1,8 +1,10 @@
 package eu.kanade.presentation.more.stats
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.presentation.more.stats.components.StatsItem
 import eu.kanade.presentation.more.stats.components.StatsOverviewItem
@@ -63,21 +66,23 @@ private fun OverviewSection(
             .toDurationString(context, fallback = none)
     }
     StatsSection(MR.strings.label_overview_section) {
-        Row {
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min),
+        ) {
             StatsOverviewItem(
                 title = data.libraryMangaCount.toString(),
                 subtitle = stringResource(MR.strings.in_library),
                 icon = Icons.Outlined.CollectionsBookmark,
             )
             StatsOverviewItem(
-                title = data.completedMangaCount.toString(),
-                subtitle = stringResource(MR.strings.label_completed_titles),
-                icon = Icons.Outlined.LocalLibrary,
-            )
-            StatsOverviewItem(
                 title = readDurationString,
                 subtitle = stringResource(MR.strings.label_read_duration),
                 icon = Icons.Outlined.Schedule,
+            )
+            StatsOverviewItem(
+                title = data.completedMangaCount.toString(),
+                subtitle = stringResource(MR.strings.label_completed_titles),
+                icon = Icons.Outlined.LocalLibrary,
             )
         }
     }

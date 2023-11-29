@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animate
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ fun PullRefresh(
     content: @Composable () -> Unit,
 ) {
     val state = rememberPullToRefreshState(
+        initialRefreshing = refreshing,
         extraVerticalOffset = indicatorPadding.calculateTopPadding(),
         enabled = enabled,
     )
@@ -84,12 +86,15 @@ fun PullRefresh(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(contentPadding),
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
 @Composable
 private fun rememberPullToRefreshState(
+    initialRefreshing: Boolean,
     extraVerticalOffset: Dp,
     positionalThreshold: Dp = 64.dp,
     enabled: () -> Boolean = { true },
@@ -108,7 +113,7 @@ private fun rememberPullToRefreshState(
         ),
     ) {
         PullToRefreshStateImpl(
-            initialRefreshing = false,
+            initialRefreshing = initialRefreshing,
             extraVerticalOffset = extraVerticalOffsetPx,
             positionalThreshold = positionalThresholdPx,
             enabled = enabled,
@@ -133,18 +138,21 @@ private class PullToRefreshStateImpl(
 ) : PullToRefreshState {
 
     override val progress get() = adjustedDistancePulled / positionalThreshold
-    override var verticalOffset by mutableFloatStateOf(0f)
+    override var verticalOffset by mutableFloatStateOf(if (initialRefreshing) refreshingVerticalOffset else 0f)
 
     override var isRefreshing by mutableStateOf(initialRefreshing)
 
+    private val refreshingVerticalOffset: Float
+        get() = positionalThreshold + extraVerticalOffset
+
     override fun startRefresh() {
         isRefreshing = true
-        verticalOffset = positionalThreshold + extraVerticalOffset
+        verticalOffset = refreshingVerticalOffset
     }
 
     suspend fun startRefreshAnimated() {
         isRefreshing = true
-        animateTo(positionalThreshold + extraVerticalOffset)
+        animateTo(refreshingVerticalOffset)
     }
 
     override fun endRefresh() {
@@ -196,7 +204,7 @@ private class PullToRefreshStateImpl(
             val newOffset = (distancePulled + available.y).coerceAtLeast(0f)
             val dragConsumed = newOffset - distancePulled
             distancePulled = newOffset
-            verticalOffset = calculateVerticalOffset() + (extraVerticalOffset * progress)
+            verticalOffset = calculateVerticalOffset() + (extraVerticalOffset * progress.coerceIn(0f, 1f))
             dragConsumed
         }
         return Offset(0f, y)

@@ -19,6 +19,8 @@ dependencies {
     implementation(platform(kotlinx.coroutines.bom))
     implementation(kotlinx.bundles.coroutines)
 
+    implementation(libs.unifile)
+
     api(libs.sqldelight.android.paging)
 
     testImplementation(libs.bundles.test)

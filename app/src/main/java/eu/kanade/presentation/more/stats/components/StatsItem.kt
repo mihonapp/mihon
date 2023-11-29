@@ -3,6 +3,8 @@ package eu.kanade.presentation.more.stats.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -53,7 +55,9 @@ private fun RowScope.BaseStatsItem(
     icon: ImageVector? = null,
 ) {
     Column(
-        modifier = Modifier.weight(1f),
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -74,6 +78,7 @@ private fun RowScope.BaseStatsItem(
             textAlign = TextAlign.Center,
         )
         if (icon != null) {
+            Spacer(modifier = Modifier.weight(1f))
             Icon(
                 imageVector = icon,
                 contentDescription = null,

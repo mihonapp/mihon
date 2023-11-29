@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
+import tachiyomi.core.storage.extension
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
@@ -340,7 +341,7 @@ class DownloadManager(
             .firstOrNull() ?: return
 
         var newName = provider.getChapterDirName(newChapter.name, newChapter.scanlator)
-        if (oldDownload.isFile && oldDownload.name?.endsWith(".cbz") == true) {
+        if (oldDownload.isFile && oldDownload.extension == "cbz") {
             newName += ".cbz"
         }
 

@@ -1,14 +1,14 @@
 package tachiyomi.source.local.io
 
-import java.io.File
+import com.hippo.unifile.UniFile
 
 expect class LocalSourceFileSystem {
 
-    fun getBaseDirectories(): Sequence<File>
+    fun getBaseDirectory(): UniFile?
 
-    fun getFilesInBaseDirectories(): Sequence<File>
+    fun getFilesInBaseDirectory(): List<UniFile>
 
-    fun getMangaDirectory(name: String): File?
+    fun getMangaDirectory(name: String): UniFile?
 
-    fun getFilesInMangaDirectory(name: String): Sequence<File>
+    fun getFilesInMangaDirectory(name: String): List<UniFile>
 }

@@ -1,7 +1,7 @@
 package tachiyomi.domain.storage.service
 
 import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.provider.FolderProvider
+import tachiyomi.core.storage.FolderProvider
 
 class StoragePreferences(
     private val folderProvider: FolderProvider,
@@ -9,9 +9,4 @@ class StoragePreferences(
 ) {
 
     fun baseStorageDirectory() = preferenceStore.getString("storage_dir", folderProvider.path())
-
-    companion object {
-        const val BACKUP_DIR = "backup"
-        const val DOWNLOADS_DIR = "downloads"
-    }
 }
