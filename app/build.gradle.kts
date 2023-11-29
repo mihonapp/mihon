@@ -196,7 +196,6 @@ dependencies {
 
     // RxJava
     implementation(libs.rxjava)
-    implementation(libs.flowreactivenetwork)
 
     // Networking
     implementation(libs.bundles.okhttp)
