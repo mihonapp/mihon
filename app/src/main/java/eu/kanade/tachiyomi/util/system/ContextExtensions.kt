@@ -1,13 +1,11 @@
 package eu.kanade.tachiyomi.util.system
 
-import android.app.ActivityManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
@@ -67,26 +65,6 @@ fun Context.hasPermission(
 
 val Context.powerManager: PowerManager
     get() = getSystemService()!!
-
-/**
- * Convenience method to acquire a partial wake lock.
- */
-fun Context.acquireWakeLock(tag: String): PowerManager.WakeLock {
-    val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$tag:WakeLock")
-    wakeLock.acquire()
-    return wakeLock
-}
-
-/**
- * Returns true if the given service class is running.
- */
-fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
-    val className = serviceClass.name
-    val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    @Suppress("DEPRECATION")
-    return manager.getRunningServices(Integer.MAX_VALUE)
-        .any { className == it.service.className }
-}
 
 fun Context.openInBrowser(url: String, forceDefaultBrowser: Boolean = false) {
     this.openInBrowser(url.toUri(), forceDefaultBrowser)
@@ -199,12 +177,4 @@ fun Context.isInstalledFromFDroid(): Boolean {
     return installerPackageName == "org.fdroid.fdroid" ||
         // F-Droid builds typically disable the updater
         (!BuildConfig.INCLUDE_UPDATER && !isDevFlavor)
-}
-
-fun Context.getApplicationIcon(pkgName: String): Drawable? {
-    return try {
-        packageManager.getApplicationIcon(pkgName)
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    }
 }
