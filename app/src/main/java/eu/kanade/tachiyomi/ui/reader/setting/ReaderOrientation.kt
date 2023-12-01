@@ -1,57 +1,62 @@
 package eu.kanade.tachiyomi.ui.reader.setting
 
 import android.content.pm.ActivityInfo
-import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ScreenLockLandscape
+import androidx.compose.material.icons.filled.ScreenLockPortrait
+import androidx.compose.material.icons.filled.ScreenRotation
+import androidx.compose.material.icons.filled.StayCurrentLandscape
+import androidx.compose.material.icons.filled.StayCurrentPortrait
+import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.tachiyomi.R
 import tachiyomi.i18n.MR
 
 enum class ReaderOrientation(
     val flag: Int,
     val stringRes: StringResource,
-    @DrawableRes val iconRes: Int,
+    val icon: ImageVector,
     val flagValue: Int,
 ) {
     DEFAULT(
         ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED,
         MR.strings.label_default,
-        R.drawable.ic_screen_rotation_24dp,
+        Icons.Default.ScreenRotation,
         0x00000000,
     ),
     FREE(
         ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED,
         MR.strings.rotation_free,
-        R.drawable.ic_screen_rotation_24dp,
+        Icons.Default.ScreenRotation,
         0x00000008,
     ),
     PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT,
         MR.strings.rotation_portrait,
-        R.drawable.ic_stay_current_portrait_24dp,
+        Icons.Default.StayCurrentPortrait,
         0x00000010,
     ),
     LANDSCAPE(
         ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE,
         MR.strings.rotation_landscape,
-        R.drawable.ic_stay_current_landscape_24dp,
+        Icons.Default.StayCurrentLandscape,
         0x00000018,
     ),
     LOCKED_PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
         MR.strings.rotation_force_portrait,
-        R.drawable.ic_screen_lock_portrait_24dp,
+        Icons.Default.ScreenLockPortrait,
         0x00000020,
     ),
     LOCKED_LANDSCAPE(
         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
         MR.strings.rotation_force_landscape,
-        R.drawable.ic_screen_lock_landscape_24dp,
+        Icons.Default.ScreenLockLandscape,
         0x00000028,
     ),
     REVERSE_PORTRAIT(
         ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT,
         MR.strings.rotation_reverse_portrait,
-        R.drawable.ic_stay_current_portrait_24dp,
+        Icons.Default.StayCurrentPortrait,
         0x00000030,
     ),
     ;
