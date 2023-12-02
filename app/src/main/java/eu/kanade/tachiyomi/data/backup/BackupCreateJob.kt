@@ -17,6 +17,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
+import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.util.system.logcat
@@ -39,19 +40,14 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         if (isAutoBackup && BackupRestoreJob.isRunning(context)) return Result.retry()
 
-        val backupPreferences = Injekt.get<BackupPreferences>()
-
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: getAutomaticBackupLocation()
             ?: return Result.failure()
 
-        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
+        setForegroundSafely()
 
-        try {
-            setForeground(getForegroundInfo())
-        } catch (e: IllegalStateException) {
-            logcat(LogPriority.ERROR, e) { "Not allowed to run on foreground service" }
-        }
+        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
+        val backupPreferences = Injekt.get<BackupPreferences>()
 
         return try {
             val location = BackupCreator(context).createBackup(uri, flags, isAutoBackup)

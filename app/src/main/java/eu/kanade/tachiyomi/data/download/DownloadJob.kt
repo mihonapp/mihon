@@ -16,11 +16,10 @@ import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
 import eu.kanade.tachiyomi.util.system.isOnline
 import eu.kanade.tachiyomi.util.system.notificationBuilder
+import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import logcat.LogPriority
-import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.download.service.DownloadPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -51,21 +50,18 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
     }
 
     override suspend fun doWork(): Result {
-        try {
-            setForeground(getForegroundInfo())
-        } catch (e: IllegalStateException) {
-            logcat(LogPriority.ERROR, e) { "Not allowed to set foreground job" }
+        var active = checkConnectivity() && downloadManager.downloaderStart()
+
+        if (!active) {
+            return Result.failure()
         }
 
-        var networkCheck = checkConnectivity()
-        var active = networkCheck
-        downloadManager.downloaderStart()
+        setForegroundSafely()
 
         // Keep the worker running when needed
         while (active) {
             delay(100)
-            networkCheck = checkConnectivity()
-            active = !isStopped && networkCheck && downloadManager.isRunning
+            active = !isStopped && downloadManager.isRunning && checkConnectivity()
         }
 
         return Result.success()
