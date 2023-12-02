@@ -21,6 +21,8 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_APP_SPECIFIC_LOCALES" />
+    
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- Remove permission from Firebase dependency -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"
@@ -152,10 +154,6 @@
             android:exported="false" />
 
         <service
-            android:name=".data.download.DownloadService"
-            android:exported="false" />
-
-        <service
             android:name=".extension.util.ExtensionInstallService"
             android:exported="false" />
 
@@ -167,6 +165,11 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

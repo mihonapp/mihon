@@ -11,8 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.manga.model.readerOrientation
@@ -72,7 +70,7 @@ private fun DialogContent(
                         selected = mode
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    imageVector = ImageVector.vectorResource(mode.iconRes),
+                    imageVector = mode.icon,
                     title = stringResource(mode.stringRes),
                 )
             }

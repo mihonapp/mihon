@@ -20,14 +20,14 @@ lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref
 lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle_version" }
 lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
 
-workmanager = "androidx.work:work-runtime-ktx:2.8.1"
+workmanager = "androidx.work:work-runtime:2.9.0"
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 
-benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.1"
-test-ext = "androidx.test.ext:junit-ktx:1.2.0-alpha01"
-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-alpha01"
+benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.2"
+test-ext = "androidx.test.ext:junit-ktx:1.2.0-alpha02"
+test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-alpha02"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0-alpha05"
 
 [bundles]
