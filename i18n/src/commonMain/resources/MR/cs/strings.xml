@@ -84,10 +84,8 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">Umístění pro stažení</string>
     <string name="pref_remove_after_marked_as_read">Po ručním označení jako přečtené</string>
     <string name="pref_remove_after_read">Po přečtení automaticky smazat</string>
-    <string name="custom_dir">Vlastní umístění</string>
     <string name="pref_download_new">Stahovat nové kapitoly</string>
     <string name="username">Uživatelské jméno</string>
     <string name="password">Heslo</string>
@@ -207,7 +205,6 @@
     <string name="services">Sledovače</string>
     <string name="pref_create_backup">Vytvořit zálohu</string>
     <string name="pref_restore_backup">Obnovit zálohu</string>
-    <string name="pref_backup_directory">Místo zálohy</string>
     <string name="pref_backup_interval">Frekvence automatických záloh</string>
     <string name="backup_created">Záloha vytvořena</string>
     <string name="restore_completed">Obnova dokončena</string>
@@ -258,7 +255,6 @@
     <string name="fifth_to_last">Pátá předposlední přečtená kapitola</string>
     <string name="pref_create_backup_summ">Lze použít k obnovení aktuální knihovny</string>
     <string name="pref_restore_backup_summ">Obnovit knihovnu ze záložního souboru</string>
-    <string name="pref_backup_slots">Maximum automatických záloh</string>
     <string name="login_title">Přihlásit se do %1$s</string>
     <string name="show_title">Název zdroje</string>
     <string name="show_chapter_number">Číslo kapitoly</string>
@@ -420,7 +416,6 @@
     <string name="notification_chapters_multiple">Kapitoly %1$s</string>
     <string name="notification_chapters_single_and_more">Kapitola %1$s a %2$d dalších</string>
     <string name="notification_chapters_single">Kapitola %1$s</string>
-    <string name="notification_check_updates">Hledám nové kapitoly</string>
     <string name="download_insufficient_space">Nelze stáhnout kapitoly kvůli nedostatku místa</string>
     <string name="migration_help_guide">Návod k přesunu zdrojů</string>
     <string name="clear_history_confirmation">Jste si jistý/á\? Všechna historie bude navždy ztracena.</string>

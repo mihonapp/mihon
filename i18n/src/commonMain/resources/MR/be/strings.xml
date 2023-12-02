@@ -288,12 +288,10 @@
     <string name="second_to_last">Перадапошняя частка</string>
     <string name="last_read_chapter">Апошняя прачытаная частка</string>
     <string name="disabled">Адключана</string>
-    <string name="custom_dir">Карыстацкая дырэкторыя</string>
     <string name="pref_remove_bookmarked_chapters">Дазволіць выдаленне частак з закладкамі</string>
     <string name="pref_remove_after_read">Аўтаматычна пасля чытання</string>
     <string name="pref_remove_after_marked_as_read">Пасля таго, як пазначана як \"Прачытанае\"</string>
     <string name="pref_category_delete_chapters">Выдаліць часткі</string>
-    <string name="pref_download_directory">Каталог загрузак</string>
     <string name="pref_lowest">Найнізкая</string>
     <string name="pref_low">Нізкая</string>
     <string name="pref_high">Высокая</string>

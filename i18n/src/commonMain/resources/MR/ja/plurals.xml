@@ -4,22 +4,22 @@
         <item quantity="other">%1$s分後</item>
     </plurals>
     <plurals name="notification_chapters_generic">
-        <item quantity="other">%1$d新しい章</item>
+        <item quantity="other">%1$d件の新しい章</item>
     </plurals>
     <plurals name="download_queue_summary">
         <item quantity="other">残り%1$s件</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="other">%1$sで完成済み　%2$s件のエラーが発生しました</item>
+        <item quantity="other">%1$sで完了しました (%2$s件のエラー)</item>
     </plurals>
     <plurals name="num_categories">
         <item quantity="other">%d件のカテゴリー</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="other">%d件の拡張機能の更新が利用可能</item>
+        <item quantity="other">%d件の拡張機能の更新が利用可能です</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="other">第%1$s章とその他%2$d章</item>
+        <item quantity="other">%1$s章と他%2$d章</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="other">%d件の項目</item>
@@ -31,7 +31,7 @@
         <item quantity="other">%d個のトラッカー</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="other">ソースには存在しないか、フィルターによって排除されたため、%d章がスキップされました</item>
+        <item quantity="other">%d章をスキップします。ソースに章が存在しないか、フィルタリングされています。</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="other">%1$d日前</item>
@@ -43,7 +43,7 @@
         <item quantity="other">次の%d章</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="other">%1$s章が欠けています</item>
+        <item quantity="other">%1$s章が存在しません</item>
     </plurals>
     <plurals name="day">
         <item quantity="other">%d日</item>

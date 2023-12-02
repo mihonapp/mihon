@@ -295,7 +295,6 @@
     <string name="color_filter_g_value">G</string>
     <string name="pref_category_reading_mode">पढ्ने मोड</string>
     <string name="pref_hide_threshold">स्क्रोलमा मेनु लुकाउनका लागि संवेदनशीलता</string>
-    <string name="pref_download_directory">डाउनलोड स्थान</string>
     <string name="second_to_last">अन्तिम पढिएको अध्याय भन्दा पहिले १ अध्याय</string>
     <string name="pref_category_auto_download">स्वत: डाउनलोड गर्नुहोस्</string>
     <string name="tracking_guide">ट्र्याकिङ गाइड</string>
@@ -348,7 +347,6 @@
     <string name="pref_high">उच्च</string>
     <string name="pref_lowest">सबैभन्दा कम</string>
     <string name="pref_category_delete_chapters">अध्यायहरू हटाउनुहोस्</string>
-    <string name="custom_dir">कस्टम स्थान</string>
     <string name="pref_remove_after_marked_as_read">आफै पढिएको रूपमा चिन्ह लगाइएपछि</string>
     <string name="pref_remove_after_read">पढिसकेपछि स्वचालित रूपमा हटाउनुहोस्</string>
     <string name="save_chapter_as_cbz">CBZ अभिलेख को रूपमा सेभ गर्नुहोस्</string>
@@ -371,7 +369,6 @@
     <string name="label_data">डेटा</string>
     <string name="cache_delete_error">खाली गर्दा त्रुटि भयो</string>
     <string name="status">स्थिति</string>
-    <string name="notification_check_updates">नयाँ अध्यायहरूको लागि जाँच गर्दै</string>
     <string name="update_check_notification_download_in_progress">डाउनलोड गर्दै…</string>
     <string name="update_check_notification_download_complete">अपडेट स्थापना गर्न ट्याप गर्नुहोस्</string>
     <string name="download_notifier_unknown_error">अप्रत्याशित त्रुटिका कारण अध्याय डाउनलोड गर्न सकिएन</string>
@@ -394,9 +391,7 @@
     <string name="pref_restore_backup">ब्याकअप रिस्टोर गर्नुहोस्</string>
     <string name="pref_restore_backup_summ">ब्याकअप फाइलबाट पुस्तकालय रिस्टोर गर्नुहोस्</string>
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
-    <string name="pref_backup_directory">ब्याकअप स्थान</string>
     <string name="pref_backup_interval">स्वचालित ब्याकअप फ्रिक्वेन्सी</string>
-    <string name="pref_backup_slots">अधिकतम स्वचालित ब्याकअपहरू</string>
     <string name="used_cache">प्रयोग गरिएको: %1$s</string>
     <string name="cache_deleted">क्यास खाली गरियो। %1$d फाइलहरू हटाएका छन्</string>
     <string name="notification_chapters_single_and_more">अध्याय %1$s र %2$d अरू</string>

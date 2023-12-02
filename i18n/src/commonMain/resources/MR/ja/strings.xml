@@ -100,9 +100,9 @@
     <string name="white_background">白</string>
     <string name="black_background">ブラック</string>
     <string name="pref_viewer_type">既定のビューアモード</string>
-    <string name="left_to_right_viewer">ページに分ける（左から右）</string>
-    <string name="right_to_left_viewer">ページに分ける（右から左）</string>
-    <string name="vertical_viewer">ページに分ける（上から下）</string>
+    <string name="left_to_right_viewer">ページ分割 (左から右)</string>
+    <string name="right_to_left_viewer">ページ分割 (右から左)</string>
+    <string name="vertical_viewer">ページ分割 (上から下)</string>
     <string name="webtoon_viewer">縦長のストリップ</string>
     <string name="pager_viewer">ページに分ける</string>
     <string name="pref_image_scale_type">スケールの種類</string>
@@ -125,10 +125,8 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">ダウンロードフォルダ</string>
     <string name="pref_remove_after_marked_as_read">手動で既読にした後</string>
     <string name="pref_remove_after_read">読んだ後自動で削除</string>
-    <string name="custom_dir">カスタムディレクトリ</string>
     <string name="disabled">無効</string>
     <string name="second_to_last">最後に読んだ章の2番目</string>
     <string name="pref_download_new">新しい章をダウンロード</string>
@@ -136,9 +134,7 @@
     <string name="pref_create_backup_summ">現在のライブラリを復元するために使用できます</string>
     <string name="pref_restore_backup">バックアップを復元</string>
     <string name="pref_restore_backup_summ">バックアップファイルからライブラリを復元する</string>
-    <string name="pref_backup_directory">バックアップディレクトリ</string>
     <string name="pref_backup_interval">自動バックアップの頻度</string>
-    <string name="pref_backup_slots">最大の自動バックアップ数</string>
     <string name="backup_created">バックアップが作成されました</string>
     <string name="pref_clear_chapter_cache">チャプタキャッシュをクリア</string>
     <string name="cache_delete_error">消去中にエラーが発生しました</string>
@@ -204,7 +200,7 @@
     <string name="copied_to_clipboard">次をクリップボードにコピーしました:
 \n%1$s</string>
     <string name="display_mode_chapter">第%1$s章</string>
-    <string name="chapter_downloading_progress">ダウンロード中（%1$d/%2$d）</string>
+    <string name="chapter_downloading_progress">ダウンロード中 (%1$d/%2$d)</string>
     <string name="chapter_error">エラー</string>
     <string name="chapter_paused">一時停止済み</string>
     <string name="show_title">ソースタイトル</string>
@@ -295,7 +291,7 @@
     <string name="logout">ログアウト</string>
     <string name="logout_success">ログアウトしました</string>
     <string name="paused">一時停止</string>
-    <string name="other_source">他</string>
+    <string name="other_source">その他</string>
     <string name="label_more">その他</string>
     <string name="action_sort_latest_chapter">最新章の更新順</string>
     <string name="action_view_chapters">章を見る</string>
@@ -373,7 +369,6 @@
     <string name="channel_new_chapters">章の更新</string>
     <string name="information_webview_outdated">WebViewアプリを更新して互換性を向上させてください</string>
     <string name="information_webview_required">WebViewが必要です</string>
-    <string name="notification_check_updates">新しい章を確認中</string>
     <string name="updating_library">ライブラリを更新中</string>
     <string name="viewer">ビューアモード</string>
     <string name="manga_info_collapse">詳細を非表示</string>
@@ -391,7 +386,7 @@
     <string name="in_library">ライブラリ内</string>
     <string name="local_source_help_guide">ローカルソースガイド</string>
     <string name="pinned_sources">ピン留め済み</string>
-    <string name="last_used_source">最近に使用済み</string>
+    <string name="last_used_source">最近に使用</string>
     <string name="pref_show_reading_mode_summary">現在のビューアモードを、ビューアが立ち上がるとしばらく表示します</string>
     <string name="pref_show_reading_mode">ビューアモードを表示</string>
     <string name="loader_not_implemented_error">ソースが見つかりませんでした</string>
@@ -472,7 +467,7 @@
     <string name="nav_zone_prev">前へ</string>
     <string name="pref_show_navigation_mode_summary">ビューアが立ち上がるとしばらく表示します</string>
     <string name="pref_show_navigation_mode">タップ可能なゾーンを表示</string>
-    <string name="pref_dns_over_https">DNS over HTTPS（DoH）</string>
+    <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">含まれているカテゴリーに入っていても、除外対象カテゴリーにある項目は更新されません。</string>
     <string name="pref_category_auto_download">自動ダウンロード</string>
     <string name="exclude">下記を除外: %s</string>
@@ -522,7 +517,7 @@
     <string name="action_start_downloading_now">ダウンロードを開始します</string>
     <string name="theme_monet">ダイナミック</string>
     <string name="about_dont_kill_my_app">一部のスマホメーカーはバックグラウンドサービスを終了する追加のアプリ制限を施しています。修正する方法についてはこのWebサイトをご覧ください。</string>
-    <string name="label_background_activity">背景活動</string>
+    <string name="label_background_activity">バックグラウンドアクティビティ</string>
     <string name="restore_miui_warning">MIUI最適化が有効な場合はバックアップ・復元が正常に機能しない恐れがあります。</string>
     <string name="pref_lowest">最低</string>
     <string name="pref_low">低い</string>
@@ -585,7 +580,7 @@
     <string name="learn_more">タップでもっと詳しく</string>
     <string name="channel_skipped">スキップ済み</string>
     <string name="notification_update_error">%1$d件の更新に失敗しました</string>
-    <string name="rotation_reverse_portrait">縦向き（反転）</string>
+    <string name="rotation_reverse_portrait">縦向き (反転)</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
     <string name="disabled_nav">無効</string>
     <string name="empty_backup_error">バックアップできるライブラリ項目はありません</string>
@@ -675,12 +670,12 @@
     <string name="label_local">ローカル</string>
     <string name="label_started">開始済み</string>
     <string name="label_read_duration">閲覧時間</string>
-    <string name="label_titles_section">項目</string>
-    <string name="label_titles_in_global_update">グローバルアップデート対象</string>
-    <string name="label_total_chapters">総計</string>
+    <string name="label_titles_section">作品</string>
+    <string name="label_titles_in_global_update">グローバルアップデート</string>
+    <string name="label_total_chapters">合計</string>
     <string name="label_read_chapters">閲覧済み</string>
     <string name="label_tracker_section">トラッカー</string>
-    <string name="label_tracked_titles">追跡中の作品</string>
+    <string name="label_tracked_titles">トラッキング中の作品</string>
     <string name="label_used">使用中</string>
     <string name="not_applicable">N/A</string>
     <string name="hour_short">%d時間</string>
@@ -688,9 +683,9 @@
     <string name="seconds_short">%d秒</string>
     <string name="label_stats">統計情報</string>
     <string name="label_overview_section">概要</string>
-    <string name="label_completed_titles">読了した作品</string>
+    <string name="label_completed_titles">読み終わった作品</string>
     <string name="label_downloaded">ダウンロード済み</string>
-    <string name="label_mean_score">平均点数</string>
+    <string name="label_mean_score">平均</string>
     <string name="day_short">%d日</string>
     <string name="action_not_now">後で</string>
     <string name="information_no_manga_category">カテゴリが空です</string>
@@ -732,7 +727,7 @@
     <string name="track_delete_remote_text">%s からも削除</string>
     <string name="delete_downloaded">ダウンロードを削除</string>
     <string name="action_filter_interval_late">10+チェック後半</string>
-    <string name="action_filter_interval_dropped">落とした\? 20歳以上後半と2ヶ月</string>
+    <string name="action_filter_interval_dropped">落とした? 20歳以上後半と2ヶ月</string>
     <string name="action_filter_interval_passed">チェック期間を過ぎました</string>
     <string name="action_ok">OK</string>
     <string name="syncing_library">ライブラリを同期しています</string>
@@ -750,7 +745,7 @@
     <string name="pref_relative_format">相対的なタイムスタンプ</string>
     <string name="pref_relative_format_summary">「%2$s」の代わりに「%1$s」を使用</string>
     <string name="action_sort_category">カテゴリの並べ替え</string>
-    <string name="notification_updating_progress">ライブラリの更新中…（%s）</string>
+    <string name="notification_updating_progress">ライブラリの更新中… (%s)</string>
     <string name="sort_category_confirmation">カテゴリをアルファベット順で並べ替えますか？</string>
     <string name="source_settings">ソース設定</string>
     <string name="app_settings">アプリ設定</string>
@@ -768,4 +763,10 @@
     <string name="no_scanlators_found">スキャンレーターが見つかりませんでした</string>
     <string name="scanlator">スキャンレーター</string>
     <string name="exclude_scanlators">スキャンレーターを除外</string>
+    <string name="action_menu_overflow_description">その他のオプション</string>
+    <string name="selected">選択済み</string>
+    <string name="not_selected">未選択</string>
+    <string name="action_bar_up_description">上に移動</string>
+    <string name="pref_storage_location">保存場所</string>
+    <string name="pref_storage_location_info">自動バックアップ、章のダウンロード、ローカル ソースの保存位置となります。</string>
 </resources>
