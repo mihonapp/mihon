@@ -1,6 +1,5 @@
 package eu.kanade.presentation.reader.settings
 
-import android.os.Build
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
@@ -10,6 +9,7 @@ import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences.Companion.ColorFilterMode
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import tachiyomi.core.preference.getAndSet
 import tachiyomi.i18n.MR
@@ -21,25 +21,6 @@ import tachiyomi.presentation.core.util.collectAsState
 
 @Composable
 internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel) {
-    val colorFilterModes = buildList {
-        addAll(
-            listOf(
-                MR.strings.label_default,
-                MR.strings.filter_mode_multiply,
-                MR.strings.filter_mode_screen,
-            ),
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            addAll(
-                listOf(
-                    MR.strings.filter_mode_overlay,
-                    MR.strings.filter_mode_lighten,
-                    MR.strings.filter_mode_darken,
-                ),
-            )
-        }
-    }.map { stringResource(it) }
-
     val customBrightness by screenModel.preferences.customBrightness().collectAsState()
     CheckboxItem(
         label = stringResource(MR.strings.pref_custom_brightness),
@@ -118,11 +99,11 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
 
         val colorFilterMode by screenModel.preferences.colorFilterMode().collectAsState()
         SettingsChipRow(MR.strings.pref_color_filter_mode) {
-            colorFilterModes.mapIndexed { index, it ->
+            ColorFilterMode.mapIndexed { index, it ->
                 FilterChip(
                     selected = colorFilterMode == index,
                     onClick = { screenModel.preferences.colorFilterMode().set(index) },
-                    label = { Text(it) },
+                    label = { Text(stringResource(it.first)) },
                 )
             }
         }
