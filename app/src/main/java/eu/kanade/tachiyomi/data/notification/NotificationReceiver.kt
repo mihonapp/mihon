@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
@@ -14,7 +15,6 @@ import eu.kanade.tachiyomi.data.updater.AppUpdateDownloadJob
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
@@ -35,7 +35,6 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
-import java.io.File
 import eu.kanade.tachiyomi.BuildConfig.APPLICATION_ID as ID
 
 /**
@@ -64,15 +63,13 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_SHARE_IMAGE ->
                 shareImage(
                     context,
-                    intent.getStringExtra(EXTRA_FILE_LOCATION)!!,
-                    intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1),
+                    intent.getStringExtra(EXTRA_URI)!!.toUri(),
                 )
             // Delete image from path and dismiss notification
             ACTION_DELETE_IMAGE ->
                 deleteImage(
                     context,
-                    intent.getStringExtra(EXTRA_FILE_LOCATION)!!,
-                    intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1),
+                    intent.getStringExtra(EXTRA_URI)!!.toUri(),
                 )
             // Share backup file
             ACTION_SHARE_BACKUP ->
@@ -80,7 +77,6 @@ class NotificationReceiver : BroadcastReceiver() {
                     context,
                     intent.getParcelableExtraCompat(EXTRA_URI)!!,
                     "application/x-protobuf+gzip",
-                    intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1),
                 )
             ACTION_CANCEL_RESTORE -> cancelRestore(context)
             // Cancel library update and dismiss notification
@@ -137,12 +133,10 @@ class NotificationReceiver : BroadcastReceiver() {
      * Called to start share intent to share image
      *
      * @param context context of application
-     * @param path path of file
-     * @param notificationId id of notification
+     * @param uri path of file
      */
-    private fun shareImage(context: Context, path: String, notificationId: Int) {
-        dismissNotification(context, notificationId)
-        context.startActivity(File(path).getUriCompat(context).toShareIntent(context))
+    private fun shareImage(context: Context, uri: Uri) {
+        context.startActivity(uri.toShareIntent(context))
     }
 
     /**
@@ -150,10 +144,8 @@ class NotificationReceiver : BroadcastReceiver() {
      *
      * @param context context of application
      * @param path path of file
-     * @param notificationId id of notification
      */
-    private fun shareFile(context: Context, uri: Uri, fileMimeType: String, notificationId: Int) {
-        dismissNotification(context, notificationId)
+    private fun shareFile(context: Context, uri: Uri, fileMimeType: String) {
         context.startActivity(uri.toShareIntent(context, fileMimeType))
     }
 
@@ -180,17 +172,11 @@ class NotificationReceiver : BroadcastReceiver() {
     /**
      * Called to delete image
      *
-     * @param path path of file
-     * @param notificationId id of notification
+     * @param uri path of file
      */
-    private fun deleteImage(context: Context, path: String, notificationId: Int) {
-        dismissNotification(context, notificationId)
-
-        // Delete file
-        val file = File(path)
-        file.delete()
-
-        DiskUtil.scanMedia(context, file.toUri())
+    private fun deleteImage(context: Context, uri: Uri) {
+        UniFile.fromUri(context, uri)?.delete()
+        DiskUtil.scanMedia(context, uri)
     }
 
     /**
@@ -409,18 +395,17 @@ class NotificationReceiver : BroadcastReceiver() {
         }
 
         /**
-         * Returns [PendingIntent] that starts a service which cancels the notification and starts a share activity
+         * Returns [PendingIntent] that starts a share activity
          *
          * @param context context of application
-         * @param path location path of file
+         * @param uri location path of file
          * @param notificationId id of notification
          * @return [PendingIntent]
          */
-        internal fun shareImagePendingBroadcast(context: Context, path: String, notificationId: Int): PendingIntent {
+        internal fun shareImagePendingBroadcast(context: Context, uri: Uri): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_SHARE_IMAGE
-                putExtra(EXTRA_FILE_LOCATION, path)
-                putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+                putExtra(EXTRA_URI, uri.toString())
             }
             return PendingIntent.getBroadcast(
                 context,
@@ -434,15 +419,13 @@ class NotificationReceiver : BroadcastReceiver() {
          * Returns [PendingIntent] that starts a service which removes an image from disk
          *
          * @param context context of application
-         * @param path location path of file
-         * @param notificationId id of notification
+         * @param uri location path of file
          * @return [PendingIntent]
          */
-        internal fun deleteImagePendingBroadcast(context: Context, path: String, notificationId: Int): PendingIntent {
+        internal fun deleteImagePendingBroadcast(context: Context, uri: Uri): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_DELETE_IMAGE
-                putExtra(EXTRA_FILE_LOCATION, path)
-                putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+                putExtra(EXTRA_URI, uri.toString())
             }
             return PendingIntent.getBroadcast(
                 context,
@@ -625,14 +608,12 @@ class NotificationReceiver : BroadcastReceiver() {
          *
          * @param context context of application
          * @param uri uri of backup file
-         * @param notificationId id of notification
          * @return [PendingIntent]
          */
-        internal fun shareBackupPendingBroadcast(context: Context, uri: Uri, notificationId: Int): PendingIntent {
+        internal fun shareBackupPendingBroadcast(context: Context, uri: Uri): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_SHARE_BACKUP
                 putExtra(EXTRA_URI, uri)
-                putExtra(EXTRA_NOTIFICATION_ID, notificationId)
             }
             return PendingIntent.getBroadcast(
                 context,
