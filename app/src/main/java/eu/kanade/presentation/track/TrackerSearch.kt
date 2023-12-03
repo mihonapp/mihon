@@ -193,6 +193,7 @@ fun TrackerSearch(
                                 type = it.publishing_type.toLowerCase(Locale.current).capitalize(Locale.current),
                                 startDate = it.start_date,
                                 status = it.publishing_status.toLowerCase(Locale.current).capitalize(Locale.current),
+                                score = it.score,
                                 description = it.summary.trim(),
                                 selected = it == selected,
                                 onClick = { onSelectedChange(it) },
@@ -218,6 +219,7 @@ private fun SearchResultItem(
     type: String,
     startDate: String,
     status: String,
+    score: Float,
     description: String,
     selected: Boolean,
     onClick: () -> Unit,
@@ -277,6 +279,12 @@ private fun SearchResultItem(
                         SearchResultItemDetails(
                             title = stringResource(MR.strings.track_status),
                             text = status,
+                        )
+                    }
+                    if (score != -1f) {
+                        SearchResultItemDetails(
+                            title = stringResource(MR.strings.score),
+                            text = score.toString(),
                         )
                     }
                 }
