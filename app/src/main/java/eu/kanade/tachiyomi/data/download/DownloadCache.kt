@@ -94,7 +94,7 @@ class DownloadCache(
         .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
     private val diskCacheFile: File
-        get() = File(context.cacheDir, "dl_index_cache")
+        get() = File(context.cacheDir, "dl_index_cache_v2")
 
     private val rootDownloadsDirLock = Mutex()
     private var rootDownloadsDir = RootDirectory(provider.downloadsDir)
