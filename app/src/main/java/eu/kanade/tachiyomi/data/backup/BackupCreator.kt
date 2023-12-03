@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.backup
 
-import android.Manifest
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
@@ -31,7 +30,6 @@ import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.preferenceKey
 import eu.kanade.tachiyomi.source.sourcePreferences
-import eu.kanade.tachiyomi.util.system.hasPermission
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import okio.buffer
@@ -73,10 +71,6 @@ class BackupCreator(
      * @param isAutoBackup backup called from scheduled backup job
      */
     suspend fun createBackup(uri: Uri, flags: Int, isAutoBackup: Boolean): String {
-        if (!context.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            throw IllegalStateException(context.stringResource(MR.strings.missing_storage_permission))
-        }
-
         val databaseManga = getFavorites.await()
         val backup = Backup(
             backupMangas(databaseManga, flags),
