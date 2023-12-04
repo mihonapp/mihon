@@ -108,12 +108,10 @@
     <string name="update_24hour">Ĉiutage</string>
     <string name="invalid_backup_file">Nevalida savkopia dosiero</string>
     <string name="backup_created">Savkopio kreita</string>
-    <string name="pref_backup_directory">Savkopiejo</string>
     <string name="pref_create_backup">Krei savkopion</string>
     <string name="pref_download_new">Elŝuti novajn ĉapitrojn</string>
     <string name="disabled">Malŝaltita</string>
     <string name="pref_category_delete_chapters">Forigi ĉapitrojn</string>
-    <string name="pref_download_directory">Elŝutejo</string>
     <string name="double_tap_anim_speed_0">Sen animacioj</string>
     <string name="scale_type_original_size">Originala grando</string>
     <string name="scale_type_stretch">Streĉi</string>
@@ -132,7 +130,6 @@
     <string name="in_library">En biblioteko</string>
     <string name="manga_added_library">Aldonita al biblioteko</string>
     <string name="add_to_library">Aldoni al biblioteko</string>
-    <string name="custom_dir">Propra dosierujo</string>
     <string name="pref_remove_after_read">Aŭtomate post legado</string>
     <string name="pref_category_reading">Legada</string>
     <string name="pref_category_reading_mode">Legada reĝimo</string>
@@ -364,7 +361,6 @@
     <string name="channel_ext_updates">Kromaĵaj ĝisdatigoj</string>
     <string name="download_notifier_download_paused">Elŝutito paŭzigita</string>
     <string name="download_notifier_downloader_title">Elŝutilo</string>
-    <string name="notification_check_updates">Kontrolas por trovi novajn ĉapitrojn</string>
     <string name="pref_category_for_this_series">Por ĉi-serion</string>
     <string name="custom_filter">Propra filtrilo</string>
     <string name="source_unsupported">Fonto ne subtenita</string>
@@ -386,7 +382,6 @@
     <string name="restoring_backup">Restaŭras savkopion</string>
     <string name="restore_completed">Restaŭrado kompletita</string>
     <string name="invalid_backup_file_missing_manga">Savkopio enhavas neniun mangaon.</string>
-    <string name="pref_backup_slots">Maksimume savkopioj</string>
     <string name="rotation_force_landscape">Deviga horizontala</string>
     <string name="rotation_force_portrait">Deviga vertikala</string>
     <string name="rotation_portrait">Vertikala</string>

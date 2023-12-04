@@ -55,7 +55,6 @@
     <string name="information_no_recent_manga">هیچ مانگایەکت لەم دواییانە نەخوێندووەتەوە</string>
     <string name="label_extension_info">زانیاری زیادکراو</string>
     <string name="label_help">یارمەتی</string>
-    <string name="notification_check_updates">گەڕان بە دوای چاپتەری نوێدا</string>
     <string name="information_empty_library">تۆماری ڕابردووەکەت بەتاڵە</string>
     <string name="action_search_settings">گەڕان لە ناو سازکارییەکان</string>
     <string name="action_mark_as_unread">وەک نەخوێندراوێک ئاماژەی پێبکە</string>
@@ -189,7 +188,6 @@
     <string name="add_to_library">کردنە ناو کۆکراوەکان</string>
     <string name="notification_first_add_to_library">تکایە مانگا بۆ کۆکراوەکان زیاد بکە پێش کردنی ئەمە</string>
     <string name="snack_add_to_library">زیادکردنی مانگا بۆ کۆکراوەکان؟</string>
-    <string name="pref_download_directory">شوێنی داونلۆد</string>
     <string name="ext_downloading">داونلۆدکردن</string>
     <string name="label_downloaded_only">تەنها داونلۆدکراوەکان</string>
     <string name="parental_controls_info">ئەمە ڕێگری ناکات لە دەرکەوتنی بابەتی سەروو 18 ی نا فەرمی لە بەرنامەکە.</string>

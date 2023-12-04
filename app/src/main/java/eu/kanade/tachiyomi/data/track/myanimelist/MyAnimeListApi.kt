@@ -16,6 +16,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.float
+import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -103,7 +104,7 @@ class MyAnimeListApi(
                 .appendPath(id.toString())
                 .appendQueryParameter(
                     "fields",
-                    "id,title,synopsis,num_chapters,main_picture,status,media_type,start_date",
+                    "id,title,synopsis,num_chapters,mean,main_picture,status,media_type,start_date",
                 )
                 .build()
             with(json) {
@@ -117,6 +118,7 @@ class MyAnimeListApi(
                             title = obj["title"]!!.jsonPrimitive.content
                             summary = obj["synopsis"]?.jsonPrimitive?.content ?: ""
                             total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
+                            score = obj["mean"]?.jsonPrimitive?.floatOrNull ?: -1f
                             cover_url =
                                 obj["main_picture"]?.jsonObject?.get("large")?.jsonPrimitive?.content
                                     ?: ""

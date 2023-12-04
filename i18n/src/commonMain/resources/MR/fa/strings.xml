@@ -14,7 +14,6 @@
     <string name="notification_chapters_single_and_more">قسمت %1$s و %2$d قسمت دیگر</string>
     <string name="notification_chapters_single">قسمت %1$s</string>
     <string name="notification_new_chapters">قسمت‌های جدید پیدا شدند</string>
-    <string name="notification_check_updates">درحال بررسی برای قسمت‌های جدید</string>
     <string name="download_queue_error">دانلود قسمت ها با خطا مواجه شد. با مراجعه به بخش دانلودها می توانید دوباره تلاش کنید</string>
     <string name="copy">کپی</string>
     <string name="migrate">تغییر منبع</string>
@@ -120,9 +119,7 @@
     <string name="no_results_found">هیچ نتیجه ای یافت نشد</string>
     <string name="no_more_results">نتیجه بیشتری یافت نشد</string>
     <string name="tabs_header">تب ها</string>
-    <string name="pref_backup_slots">حداکثر تعداد نسخه‌های پشتیبان</string>
     <string name="pref_backup_interval">زمان پشتیبان گیری</string>
-    <string name="pref_backup_directory">محل پشتیبان گیری</string>
     <string name="pref_restore_backup_summ">بازگرداندن کتابخانه از فایل پشتیبان</string>
     <string name="pref_restore_backup">برگرداندن نسخه پشتیبان</string>
     <string name="pref_create_backup_summ">می تواند برای بازگرداندن کتابخانه فعلی استفاده شود</string>
@@ -144,8 +141,6 @@
     <string name="pref_category_for_this_series">برای این مجموعه</string>
     <string name="decode_image_error">بازکردن عکس با خطا مواجه شد</string>
     <string name="plan_to_read">قصد خواندن دارم(Plan to read)</string>
-    <string name="custom_dir">مکان سفارشی</string>
-    <string name="pref_download_directory">مکان دانلود</string>
     <string name="scale_type_smart_fit">هم اندازه حالت هوشمند</string>
     <string name="filter_mode_multiply">Multiply</string>
     <string name="filter_mode_overlay">Overlay</string>
@@ -601,4 +596,22 @@
     <string name="backup_info">شما باید از پشتیبانی ها در جا های دیگر هم کپی داشته باشید.</string>
     <string name="action_update_category">بروزرسانی دسته بندی</string>
     <string name="action_copy_to_clipboard">کپی کردن به کلیپ‌برد</string>
+    <string name="loader_rar5_error">فرمت RARv5 پشتیبانی نشده</string>
+    <string name="on_hiatus">متوقف شده</string>
+    <string name="unlock_app_title">باز گشایی %s</string>
+    <string name="delete_downloaded">پاک کردن قسمت های دانلود شده</string>
+    <string name="action_apply">ذخیره</string>
+    <string name="action_revert_to_default">باز نشانی به حالت اولیه</string>
+    <string name="action_sort_category">منظم کردن دسته بندی ها</string>
+    <string name="action_menu_overflow_description">گزینه های بیشتر</string>
+    <string name="selected">انتخاب شده</string>
+    <string name="not_selected">انتخاب نشده</string>
+    <string name="action_move_to_bottom_all_for_series">مجموعه ها را به پایین منطقل کن</string>
+    <string name="action_bar_up_description">برو به بالا</string>
+    <string name="action_sort_tracker_score">امتیاز رهگیز</string>
+    <string name="label_data_storage">داده های و ذخیره سازی</string>
+    <string name="sort_category_confirmation">آیا مایلید که دسته بندی ها را به ترتیب الفبا منظم کنید؟</string>
+    <string name="action_ok">باشه</string>
+    <string name="action_sort_next_updated">به روز رسانی مورد انتظار بعدی</string>
+    <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Tachiyomi از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
 </resources>

@@ -144,11 +144,9 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">Ubicació de les baixades</string>
     <string name="pref_remove_after_marked_as_read">Després de marcar com a llegit de manera manual</string>
     <string name="pref_remove_after_read">Suprimeix automàticament després de llegir</string>
     <string name="pref_double_tap_anim_speed">Velocitat de l’animació del doble toc</string>
-    <string name="custom_dir">Ubicació personalitzada</string>
     <string name="disabled">Desactivat</string>
     <string name="last_read_chapter">Darrer capítol llegit</string>
     <string name="second_to_last">Penúltim capítol llegit</string>
@@ -161,9 +159,7 @@
     <string name="pref_create_backup_summ">Es pot utilitzar per a restaurar la biblioteca actual</string>
     <string name="pref_restore_backup">Restaura una còpia de seguretat</string>
     <string name="pref_restore_backup_summ">Restaura la biblioteca del fitxer de còpia de seguretat</string>
-    <string name="pref_backup_directory">Ubicació de la còpia de seguretat</string>
     <string name="pref_backup_interval">Freqüència de la còpia de seguretat automàtica</string>
-    <string name="pref_backup_slots">Màxim de còpies de seguretat automàtiques</string>
     <string name="backup_created">S’ha creat la còpia de seguretat</string>
     <string name="restore_completed">S’ha completat la restauració</string>
     <string name="backup_choice">De què voleu fer una còpia de seguretat\?</string>
@@ -327,7 +323,6 @@
     <string name="notification_chapters_single_and_more">Capítol %1$s i %2$d més</string>
     <string name="notification_chapters_multiple">Capítols %1$s</string>
     <string name="hide_notification_content">Amaga el contingut de les notificacions</string>
-    <string name="notification_check_updates">S’està comprovant si hi ha capítols nous</string>
     <string name="pref_disable_battery_optimization">Desactiva l’optimització de la bateria</string>
     <string name="pref_disable_battery_optimization_summary">Fa que funcionin millor les actualitzacions de la biblioteca en segon pla i les còpies de seguretat</string>
     <string name="battery_optimization_disabled">L’optimització de la bateria ja està desactivada</string>
@@ -768,4 +763,10 @@
     <string name="action_sort_tracker_score">Puntuació del servei de seguiment</string>
     <string name="label_data_storage">Dades i emmagatzematge</string>
     <string name="exclude_scanlators">Exclou scanlators</string>
+    <string name="selected">Seleccionat</string>
+    <string name="not_selected">No seleccionat</string>
+    <string name="pref_storage_location">Ubicació de l’emmagatzematge</string>
+    <string name="pref_storage_location_info">S’utilitza per a les còpies de seguretat automàtiques, les baixades de capítols i la font local.</string>
+    <string name="action_menu_overflow_description">Més opcions</string>
+    <string name="action_bar_up_description">Navega cap amunt</string>
 </resources>

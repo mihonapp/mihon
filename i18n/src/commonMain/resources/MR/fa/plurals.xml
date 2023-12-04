@@ -52,4 +52,16 @@
         <item quantity="one">قسمت خوانده نشده بعدی</item>
         <item quantity="other">%d قسمت خوانده نشده بعدی</item>
     </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">قسمت بعدی</item>
+        <item quantity="other">%d قسمت بعدی</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s قسمت گم شده</item>
+        <item quantity="other">%1$s قسمت گم شده</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 روز</item>
+        <item quantity="other">%d روز</item>
+    </plurals>
 </resources>

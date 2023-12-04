@@ -145,10 +145,8 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">Локација преузимања</string>
     <string name="pref_remove_after_marked_as_read">Када су означена као прочитана</string>
     <string name="pref_remove_after_read">Аутоматски обриши након читања</string>
-    <string name="custom_dir">Друга локација</string>
     <string name="disabled">Онемогућено</string>
     <string name="last_read_chapter">Последње прочитано поглавље</string>
     <string name="second_to_last">Претпоследње прочитано поглавље</string>
@@ -161,9 +159,7 @@
     <string name="pref_create_backup_summ">Може се користити за враћање на тренутно стање колекције</string>
     <string name="pref_restore_backup">Врати се на резервну копију</string>
     <string name="pref_restore_backup_summ">Врати се на колекцију из резервне копије</string>
-    <string name="pref_backup_directory">Локација резервних копија</string>
     <string name="pref_backup_interval">Учесталост прављења резервних копија</string>
-    <string name="pref_backup_slots">Максималан број резервних копија</string>
     <string name="backup_created">Направљена је резервна копија</string>
     <string name="restore_completed">Враћање је завршено</string>
     <string name="backup_choice">Шта све желите да буде у резервној копији\?</string>
@@ -276,7 +272,6 @@
     <string name="notification_chapters_single_and_more">Поглавље %1$s и још %2$d</string>
     <string name="notification_chapters_single">Поглавље %1$s</string>
     <string name="notification_new_chapters">Пронађена су нова поглавља</string>
-    <string name="notification_check_updates">Тражење нових поглавља</string>
     <string name="download_queue_error">Неуспешно преузимање поглавља. Покушајте поново у секцији за преузимања</string>
     <string name="copy">Копирај</string>
     <string name="migrate">Мигрирај</string>

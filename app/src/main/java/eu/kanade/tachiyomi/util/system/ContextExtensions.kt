@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.content.PermissionChecker
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
@@ -52,16 +51,6 @@ fun Context.copyToClipboard(label: String, content: String) {
         toast(MR.strings.clipboard_copy_error)
     }
 }
-
-/**
- * Checks if the give permission is granted.
- *
- * @param permission the permission to check.
- * @return true if it has permissions.
- */
-fun Context.hasPermission(
-    permission: String,
-) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
 
 val Context.powerManager: PowerManager
     get() = getSystemService()!!

@@ -335,12 +335,10 @@
     <string name="pref_category_delete_chapters">Boblarni o\'chirish</string>
     <string name="invalid_location">Noto\'g\'ri joylashuv: %s</string>
     <string name="pref_low">Past</string>
-    <string name="custom_dir">Foydalanuvchi papkasi</string>
     <string name="pref_remove_after_marked_as_read">«O\'qilgan» deb belgilangandan so\'ng o\'chirish</string>
     <string name="zoom_start_automatic">Avtomatik</string>
     <string name="rotation_portrait">Portret</string>
     <string name="rotation_force_portrait">O\'zgarmas portret</string>
-    <string name="pref_download_directory">Yuklamalar papkasi</string>
     <string name="pref_hide_threshold">Aylantirish vaqtida menyu yashirish sezuvchanligi</string>
     <string name="rotation_force_landscape">O\'zgarmas landshaft</string>
     <string name="pref_image_scale_type">Kattalashtirish</string>

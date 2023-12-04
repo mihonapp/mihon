@@ -60,4 +60,8 @@
         <item quantity="one">Hiányzó %1$s fejezet</item>
         <item quantity="other">Hiányzó %1$s fejezetek</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="one">1 nap</item>
+        <item quantity="other">%d nap</item>
+    </plurals>
 </resources>
