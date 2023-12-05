@@ -291,9 +291,7 @@
     <string name="gray_background">Сұр</string>
     <string name="pref_viewer_type">Әдепкі оқу режимі</string>
     <string name="pref_highest">Ең жоғары</string>
-    <string name="pref_download_directory">Жүктеу орны</string>
     <string name="pref_remove_exclude_categories">Саналмайтын санаттар</string>
-    <string name="custom_dir">Реттелетін орын</string>
     <string name="pref_remove_after_marked_as_read">Қолмен оқылған деп белгіленгеннен кейін</string>
     <string name="pref_remove_after_read">Оқығаннан кейін автоматты түрде жою</string>
     <string name="pref_remove_bookmarked_chapters">Бетбелгіленген тарауларды жоюға рұқсат беру</string>
@@ -408,7 +406,6 @@
     <string name="pref_refresh_library_covers">Туындылар мұқабасын жаңарту</string>
     <string name="information_cloudflare_bypass_failure">Cloudflare айналып өтілмеді</string>
     <string name="information_webview_outdated">Жақсырақ үйлесімділік үшін WebView-ді жаңартыңыз</string>
-    <string name="pref_backup_directory">Сақтық көшірме бумасы</string>
     <string name="backup_restore_missing_trackers">Бақылау қызметіне кірілмеген:</string>
     <string name="latest">Соңғы</string>
     <string name="local_filter_order_by">Сұрыптау</string>
@@ -419,7 +416,6 @@
     <string name="date">Күн</string>
     <string name="ongoing">Шығып жатыр</string>
     <string name="restore_in_progress">Қалпына келтіру әлдеқашан орындалуда</string>
-    <string name="pref_backup_slots">Сақтық көшірме саны</string>
     <string name="backup_choice">Сақтық көшірмесіне нені қалайсыз\?</string>
     <string name="restoring_backup">Сақтық көшірмесін қалпына келтіру</string>
     <string name="backup_in_progress">Сақтық көшірмесі әлдеқашан орындалуда</string>
@@ -587,7 +583,6 @@
     <string name="crash_screen_restart_application">Қолданбаны өшіріп қосу</string>
     <string name="download_queue_error">Тараулар жүктелмеді. Жүктеулер кезегіне барып, сол жерден байқап көре аласыз</string>
     <string name="download_insufficient_space">Жадта орын аз болғандықтан тараулар жүктелмейді</string>
-    <string name="notification_check_updates">Жаңа тараулар бар ма екенін тексеру</string>
     <string name="notification_chapters_single_and_more">%1$s тарау мен %2$d</string>
     <string name="notification_first_add_to_library">Бұны істер алдыңда жазбаны кітапханаңызға қосыңыз</string>
     <string name="skipped_reason_completed">Туынды аяқталған үшін өткізіп жіберілді</string>

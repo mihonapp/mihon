@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.ui.security.UnlockActivity
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
-import eu.kanade.tachiyomi.util.system.overridePendingTransitionCompat
 import eu.kanade.tachiyomi.util.view.setSecureScreen
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -107,7 +106,7 @@ class SecureActivityDelegateImpl : SecureActivityDelegate, DefaultLifecycleObser
         if (activity.isAuthenticationSupported()) {
             if (!SecureActivityDelegate.requireUnlock) return
             activity.startActivity(Intent(activity, UnlockActivity::class.java))
-            activity.overridePendingTransitionCompat(0, 0)
+            activity.overridePendingTransition(0, 0)
         } else {
             securityPreferences.useAuthenticator().set(false)
         }

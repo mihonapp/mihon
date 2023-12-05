@@ -46,6 +46,9 @@ class DownloadManager(
      */
     private val downloader = Downloader(context, provider, cache)
 
+    val isRunning: Boolean
+        get() = downloader.isRunning
+
     /**
      * Queue to delay the deletion of a list of chapters until triggered.
      */
@@ -59,13 +62,19 @@ class DownloadManager(
     fun downloaderStop(reason: String? = null) = downloader.stop(reason)
 
     val isDownloaderRunning
-        get() = DownloadService.isRunning
+        get() = DownloadJob.isRunningFlow(context)
 
     /**
      * Tells the downloader to begin downloads.
      */
     fun startDownloads() {
-        DownloadService.start(context)
+        if (downloader.isRunning) return
+
+        if (DownloadJob.isRunning(context)) {
+            downloader.start()
+        } else {
+            DownloadJob.start(context)
+        }
     }
 
     /**
@@ -94,22 +103,16 @@ class DownloadManager(
         return queueState.value.find { it.chapter.id == chapterId }
     }
 
-    fun startDownloadNow(chapterId: Long?) {
-        if (chapterId == null) return
-        val download = getQueuedDownloadOrNull(chapterId)
+    fun startDownloadNow(chapterId: Long) {
+        val existingDownload = getQueuedDownloadOrNull(chapterId)
         // If not in queue try to start a new download
-        val toAdd = download ?: runBlocking { Download.fromChapterId(chapterId) } ?: return
-        val queue = queueState.value.toMutableList()
-        download?.let { queue.remove(it) }
-        queue.add(0, toAdd)
-        reorderQueue(queue)
-        if (!downloader.isRunning) {
-            if (DownloadService.isRunning(context)) {
-                downloader.start()
-            } else {
-                DownloadService.start(context)
-            }
+        val toAdd = existingDownload ?: runBlocking { Download.fromChapterId(chapterId) } ?: return
+        queueState.value.toMutableList().apply {
+            existingDownload?.let { remove(it) }
+            add(0, toAdd)
+            reorderQueue(this)
         }
+        startDownloads()
     }
 
     /**
@@ -143,7 +146,7 @@ class DownloadManager(
             addAll(0, downloads)
             reorderQueue(this)
         }
-        if (!DownloadService.isRunning(context)) DownloadService.start(context)
+        if (!DownloadJob.isRunning(context)) startDownloads()
     }
 
     /**

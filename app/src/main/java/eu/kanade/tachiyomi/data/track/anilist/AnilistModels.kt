@@ -19,6 +19,7 @@ data class ALManga(
     val publishing_status: String,
     val start_date_fuzzy: Long,
     val total_chapters: Int,
+    val average_score: Int,
 ) {
 
     fun toTrack() = TrackSearch.create(TrackerManager.ANILIST).apply {
@@ -27,6 +28,7 @@ data class ALManga(
         total_chapters = this@ALManga.total_chapters
         cover_url = image_url_lge
         summary = description?.htmlDecode() ?: ""
+        score = average_score.toFloat()
         tracking_url = AnilistApi.mangaUrl(media_id)
         publishing_status = this@ALManga.publishing_status
         publishing_type = format

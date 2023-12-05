@@ -108,15 +108,12 @@
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">A</string>
-    <string name="pref_download_directory">下載位置</string>
     <string name="pref_remove_after_marked_as_read">手動標示為已讀後</string>
-    <string name="custom_dir">自訂位置</string>
     <string name="disabled">已停用</string>
     <string name="pref_download_new">自動下載新章節</string>
     <string name="services">歷程平台</string>
     <string name="pref_create_backup">建立備份</string>
     <string name="pref_restore_backup">還原備份</string>
-    <string name="pref_backup_directory">備份位置</string>
     <string name="pref_backup_interval">自動備份頻率</string>
     <string name="backup_created">已建立備份</string>
     <string name="restore_completed">還原成功</string>
@@ -267,7 +264,6 @@
 \n
 \n若選擇信任該憑證，即表示你願意承擔上述風險。</string>
     <string name="last_read_chapter">最後閱畢的章節</string>
-    <string name="pref_backup_slots">最大自動備份數量</string>
     <string name="clear_database_confirmation">您確定要這樣做嗎？未收藏的漫畫的閱讀進度和章節會被刪除</string>
     <string name="latest">新上架</string>
     <string name="manga_tracking_tab">歷程</string>
@@ -390,7 +386,6 @@
     <string name="tapping_inverted_vertical">垂直</string>
     <string name="tapping_inverted_horizontal">水平</string>
     <string name="pref_read_with_tapping_inverted">反轉輕觸區域</string>
-    <string name="notification_check_updates">正在檢查是否有新章節</string>
     <string name="vertical_plus_viewer">捲動式 (頁間留空)</string>
     <string name="tapping_inverted_none">無</string>
     <string name="restore_duration">%02d 分 %02d 秒</string>
@@ -768,4 +763,10 @@
     <string name="scanlator">掃譯者</string>
     <string name="exclude_scanlators">排除掃譯者</string>
     <string name="action_create">建立</string>
+    <string name="action_menu_overflow_description">更多選項</string>
+    <string name="selected">已勾選</string>
+    <string name="not_selected">尚未勾選</string>
+    <string name="action_bar_up_description">向上瀏覽</string>
+    <string name="pref_storage_location">儲存位置</string>
+    <string name="pref_storage_location_info">供自動備份、章節下載和本機來源使用。</string>
 </resources>

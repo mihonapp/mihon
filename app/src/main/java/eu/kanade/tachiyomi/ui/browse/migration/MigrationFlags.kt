@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 data class MigrationFlag(

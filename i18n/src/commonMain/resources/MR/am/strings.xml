@@ -158,12 +158,10 @@
     <string name="label_settings">ማስተካከያዎች</string>
     <string name="label_more">ተጨማሪ</string>
     <string name="name">ስም</string>
-    <string name="custom_dir">ብጁ አካባቢ</string>
     <string name="pref_remove_bookmarked_chapters">ዕልባት የተደረገባቸውን ምዕራፎች ሰርዝ</string>
     <string name="pref_remove_after_read">ካነበብኩ በኋላ</string>
     <string name="pref_remove_after_marked_as_read">በእጅ እንደተነበበ ምልክት ከተደረገ በኋላ</string>
     <string name="pref_category_delete_chapters">ምዕራፎችን ሰርዝ</string>
-    <string name="pref_download_directory">አካባቢን ያውርዱ</string>
     <string name="pref_webtoon_side_padding">የጎን ሽፋን</string>
     <string name="pref_category_reading">ንባብ</string>
     <string name="pref_category_reading_mode">የንባብ ሁነታ</string>
@@ -246,9 +244,7 @@
     <string name="color_filter_g_value">ኣ</string>
     <string name="invalid_backup_file">ልክ ያልሆነ የመጠባበቂያ ፋይል</string>
     <string name="backup_created">ምትኬ ተፈጥሯል</string>
-    <string name="pref_backup_slots">ከፍተኛ መጠባበቂያዎች</string>
     <string name="pref_backup_interval">የመጠባበቂያ ድግግሞሽ</string>
-    <string name="pref_backup_directory">የመጠባበቂያ ቦታ</string>
     <string name="pref_restore_backup_summ">ቤተ-መጽሐፍት ከመጠባበቂያ ፋይል ይመልሱ</string>
     <string name="pref_restore_backup">ምትኬ ወደነበረበት</string>
     <string name="pref_create_backup_summ">የአሁኑን ቤተ-መጽሐፍት ወደነበረበት ለመመለስ ሊያገለግል ይችላል</string>

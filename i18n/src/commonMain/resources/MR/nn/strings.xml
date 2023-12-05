@@ -190,7 +190,6 @@
     <string name="action_track">Spor</string>
     <string name="pref_create_backup">Lag reservekopi</string>
     <string name="pref_restore_backup">Gjenopprett reservekopi</string>
-    <string name="pref_backup_directory">Reservekopifil-mappe</string>
     <string name="backup_created">Reservekopi oppretta</string>
     <string name="invalid_backup_file">Ugyldig reservekopifil</string>
     <string name="invalid_backup_file_missing_manga">Reservekopi inneheld ingen manga.</string>

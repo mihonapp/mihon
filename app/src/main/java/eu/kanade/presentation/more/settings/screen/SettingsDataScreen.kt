@@ -114,7 +114,8 @@ object SettingsDataScreen : SearchableSettings {
         return Preference.PreferenceItem.TextPreference(
             title = stringResource(MR.strings.pref_storage_location),
             subtitle = remember(storageDir) {
-                (UniFile.fromUri(context, storageDir.toUri())?.filePath)
+                val file = UniFile.fromUri(context, storageDir.toUri())
+                file?.filePath ?: file?.uri?.toString()
             } ?: stringResource(MR.strings.invalid_location, storageDir),
             onClick = {
                 try {

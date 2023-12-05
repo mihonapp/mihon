@@ -87,10 +87,8 @@
     <string name="rotation_free">Livre</string>
     <string name="rotation_force_portrait">Vertical bloqueado</string>
     <string name="rotation_force_landscape">Horizontal bloqueado</string>
-    <string name="pref_download_directory">Localização das Transferências</string>
     <string name="pref_remove_after_marked_as_read">Após marcado como lido manualmente</string>
     <string name="pref_remove_after_read">Eliminar automaticamente após a leitura</string>
-    <string name="custom_dir">Localização personalizada</string>
     <string name="disabled">Desativado</string>
     <string name="last_read_chapter">Último capítulo</string>
     <string name="second_to_last">Penúltimo capítulo lido</string>
@@ -226,11 +224,9 @@
     <string name="pref_double_tap_anim_speed">Velocidade de animação de toque duplo</string>
     <string name="pager_viewer">Paginação</string>
     <string name="color_filter_r_value">R</string>
-    <string name="pref_backup_directory">Localização de cópia de segurança</string>
     <string name="backup_created">Cópia de segurança criada</string>
     <string name="restore_completed">Restauro completo</string>
     <string name="backup_choice">O que pretende fazer cópia de segurança\?</string>
-    <string name="pref_backup_slots">Máximo de cópias de segurança</string>
     <string name="action_display_download_badge">Capítulos transferidos</string>
     <string name="ext_trust">Confiar</string>
     <string name="ext_untrusted">Não confiável</string>
@@ -326,7 +322,6 @@
     <string name="notification_chapters_single_and_more">Capítulo %1$s e %2$d mais</string>
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
     <string name="hide_notification_content">Esconder conteúdo das notificações</string>
-    <string name="notification_check_updates">Verificando por novos capítulos</string>
     <string name="pref_disable_battery_optimization">Desativar otimização de bateria</string>
     <string name="pref_disable_battery_optimization_summary">Ajuda com a atualização e cópia de segurança da biblioteca em segundo plano</string>
     <string name="battery_optimization_disabled">A otimização de bateria já está desativada</string>

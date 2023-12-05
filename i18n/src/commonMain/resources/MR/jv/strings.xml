@@ -13,7 +13,6 @@
     <string name="version">Versi</string>
     <string name="pref_dns_over_https">DNS liwat HTTPS</string>
     <string name="disabled">Dipateni</string>
-    <string name="pref_download_directory">Lokasi donlot</string>
     <string name="color_filter_a_value">T</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_g_value">I</string>
@@ -312,4 +311,7 @@
     <string name="label_started">Diwiwiti</string>
     <string name="label_downloaded">Diundhuh</string>
     <string name="action_search_hint">Telusuri…</string>
+    <string name="delete_downloaded">Ngehapus downloadan</string>
+    <string name="selected">Dipilih</string>
+    <string name="not_selected">Gak dipilih</string>
 </resources>

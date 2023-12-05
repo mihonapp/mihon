@@ -81,13 +81,13 @@ class SaveImageNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_share_24dp,
                 context.stringResource(MR.strings.action_share),
-                NotificationReceiver.shareImagePendingBroadcast(context, uri.path!!, notificationId),
+                NotificationReceiver.shareImagePendingBroadcast(context, uri),
             )
             // Delete action
             addAction(
                 R.drawable.ic_delete_24dp,
                 context.stringResource(MR.strings.action_delete),
-                NotificationReceiver.deleteImagePendingBroadcast(context, uri.path!!, notificationId),
+                NotificationReceiver.deleteImagePendingBroadcast(context, uri),
             )
 
             updateNotification()

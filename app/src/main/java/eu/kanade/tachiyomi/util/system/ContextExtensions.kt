@@ -1,18 +1,15 @@
 package eu.kanade.tachiyomi.util.system
 
-import android.app.ActivityManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.content.PermissionChecker
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
@@ -55,38 +52,8 @@ fun Context.copyToClipboard(label: String, content: String) {
     }
 }
 
-/**
- * Checks if the give permission is granted.
- *
- * @param permission the permission to check.
- * @return true if it has permissions.
- */
-fun Context.hasPermission(
-    permission: String,
-) = PermissionChecker.checkSelfPermission(this, permission) == PermissionChecker.PERMISSION_GRANTED
-
 val Context.powerManager: PowerManager
     get() = getSystemService()!!
-
-/**
- * Convenience method to acquire a partial wake lock.
- */
-fun Context.acquireWakeLock(tag: String): PowerManager.WakeLock {
-    val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$tag:WakeLock")
-    wakeLock.acquire()
-    return wakeLock
-}
-
-/**
- * Returns true if the given service class is running.
- */
-fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
-    val className = serviceClass.name
-    val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    @Suppress("DEPRECATION")
-    return manager.getRunningServices(Integer.MAX_VALUE)
-        .any { className == it.service.className }
-}
 
 fun Context.openInBrowser(url: String, forceDefaultBrowser: Boolean = false) {
     this.openInBrowser(url.toUri(), forceDefaultBrowser)
@@ -199,12 +166,4 @@ fun Context.isInstalledFromFDroid(): Boolean {
     return installerPackageName == "org.fdroid.fdroid" ||
         // F-Droid builds typically disable the updater
         (!BuildConfig.INCLUDE_UPDATER && !isDevFlavor)
-}
-
-fun Context.getApplicationIcon(pkgName: String): Drawable? {
-    return try {
-        packageManager.getApplicationIcon(pkgName)
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    }
 }

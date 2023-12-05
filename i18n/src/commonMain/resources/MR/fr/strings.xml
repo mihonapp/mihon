@@ -105,7 +105,6 @@
     <string name="color_filter_g_value">V</string>
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_a_value">O</string>
-    <string name="pref_download_directory">Répertoire de téléchargement</string>
     <string name="pref_remove_after_read">Suppression automatique après lecture</string>
     <string name="disabled">Désactivé</string>
     <string name="last_read_chapter">Dernier chapitre lu</string>
@@ -186,7 +185,6 @@
     <string name="download_notifier_no_network">Aucune connexion disponible</string>
     <string name="clear_database_confirmation">Êtes-vous sûr(e) \? Les chapitres lus et la progression des entrées non présentes dans la bibliothèque seront perdues</string>
     <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés \?</string>
-    <string name="custom_dir">Répertoire personnalisé</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
@@ -208,7 +206,6 @@
     <string name="chapter_paused">En pause</string>
     <string name="action_open_log">Ouvrir le fichier</string>
     <string name="action_restore">Restaurer</string>
-    <string name="pref_backup_directory">Dossier de sauvegarde</string>
     <string name="restore_completed">Restauration terminée</string>
     <string name="backup_choice">Que voulez-vous sauvegarder \?</string>
     <string name="delete_downloads_for_manga">Supprimer les chapitres téléchargés ?</string>
@@ -219,7 +216,6 @@
     <string name="pref_restore_backup">Restaurer une sauvegarde</string>
     <string name="pref_restore_backup_summ">Restaurer la bibliothèque à partir d\'un fichier de sauvegarde</string>
     <string name="pref_backup_interval">Fréquence de sauvegarde</string>
-    <string name="pref_backup_slots">Nombre maximal de sauvegardes</string>
     <string name="backup_created">Sauvegarde créée</string>
     <string name="restoring_backup">Restauration de sauvegarde en cours</string>
     <string name="creating_backup">Création de sauvegarde en cours</string>
@@ -327,7 +323,6 @@
     <string name="notification_chapters_single_and_more">Chapitre %1$s et %2$d autres</string>
     <string name="notification_chapters_multiple">Chapitres %1$s</string>
     <string name="hide_notification_content">Cacher le contenu des notifications</string>
-    <string name="notification_check_updates">Recherche de nouveaux chapitres</string>
     <string name="pref_disable_battery_optimization">Désactiver la fonction d\'optimisation de la batterie</string>
     <string name="pref_disable_battery_optimization_summary">Facilite les mises à jour et sauvegardes de la bibliothèque en arrière-plan</string>
     <string name="battery_optimization_disabled">La fonction d\'optimisation de la batterie est déjà désactivée</string>
@@ -742,4 +737,20 @@
     <string name="action_move_to_bottom_all_for_series">Déplacer la série vers le bas</string>
     <string name="track_delete_remote_text">Supprimez également de %s</string>
     <string name="exception_unknown_host">Impossible de joindre %s</string>
+    <string name="app_settings">Paramètres de l\'application</string>
+    <string name="delete_downloaded">Supprimer le(s) téléchargement(s)</string>
+    <string name="action_apply">Appliquer</string>
+    <string name="action_revert_to_default">Réintialiser les valeurs par défaut</string>
+    <string name="action_sort_category">Trier les catégories</string>
+    <string name="action_menu_overflow_description">Plus d\'options</string>
+    <string name="selected">Sélectionné</string>
+    <string name="not_selected">Pas sélectionné(e)</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="pref_flash_page">Faire l\'écran clignoter sur le changement de page</string>
+    <string name="action_bar_up_description">Naviguer vers le haut</string>
+    <string name="action_sort_tracker_score">Score du service de suivi</string>
+    <string name="label_data_storage">Données et stockage</string>
+    <string name="sort_category_confirmation">Voulez-vous trier les catégories par ordre alphabétique ?</string>
+    <string name="track_activity_name">Se connecter au service de suivi</string>
+    <string name="pref_relative_format_summary">« %1$s » au lieu de « %2$s »</string>
 </resources>

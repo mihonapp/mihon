@@ -116,10 +116,8 @@
     <string name="rotation_free">حر</string>
     <string name="rotation_force_portrait">الوضع الرأسي اﻹجباري</string>
     <string name="rotation_force_landscape">الوضع الأفقي الإجباري</string>
-    <string name="pref_download_directory">موقع التنزيل</string>
     <string name="pref_remove_after_marked_as_read">بعد وضع علامة \"مقروءة\" يدوياً</string>
     <string name="pref_remove_after_read">الحذف تلقائيا بعد القراءة</string>
-    <string name="custom_dir">مجلد مخصص</string>
     <string name="disabled">معطل</string>
     <string name="last_read_chapter">آخر فصل مقروء</string>
     <string name="second_to_last">من الفصل الثاني قبل الأخير</string>
@@ -132,9 +130,7 @@
     <string name="pref_create_backup_summ">يمكن استخدامها لإستعادة المكتبة الحالية</string>
     <string name="pref_restore_backup">إستعادة النسخة الإحتياطية</string>
     <string name="pref_restore_backup_summ">إستعادة مكتبة من ملف نسخة إحتياطية</string>
-    <string name="pref_backup_directory">موقع النسخ الإحتياطي</string>
     <string name="pref_backup_interval">معدل النسخ الاحتياطي التلقائي</string>
-    <string name="pref_backup_slots">أقصى عدد للنسخ الاحتياطية التلقائية</string>
     <string name="backup_created">أُنشئت نسخة احتياطية</string>
     <string name="restore_completed">اكتملت الاستعادة</string>
     <string name="backup_choice">ما الذي تريد نسخه احتياطيّاً؟</string>
@@ -350,7 +346,6 @@
     <string name="notification_chapters_multiple">الفصول %1$s</string>
     <string name="notification_chapters_single_and_more">الفصل %1$s و%2$d فصول أخرى</string>
     <string name="notification_chapters_single">الفصل %1$s</string>
-    <string name="notification_check_updates">جارٍ التحقق من وجود فصول جديدة</string>
     <string name="recent_manga_time">الفصل %1$s - %2$s</string>
     <string name="updating_library">تُحدَّث المكتبة</string>
     <string name="viewer">وضع القراءة</string>
@@ -768,4 +763,10 @@
     <string name="no_scanlators_found">لم يُعثَر على مترجمين</string>
     <string name="scanlator">المترجم</string>
     <string name="exclude_scanlators">احجب بعض المترجمين</string>
+    <string name="action_menu_overflow_description">خيارات أكثر</string>
+    <string name="selected">محدَّد</string>
+    <string name="not_selected">غير مُحدَّد</string>
+    <string name="action_bar_up_description">اصعد</string>
+    <string name="pref_storage_location">مكان التخزين</string>
+    <string name="pref_storage_location_info">يُستخدَم في الاحتياط وتنزيل الفصول والمصدر المحليِّ.</string>
 </resources>

@@ -163,7 +163,6 @@
     <string name="ongoing">Vēl turpinās</string>
     <string name="title">Nosaukums</string>
     <string name="pref_category_delete_chapters">Izdzēst nodaļas</string>
-    <string name="pref_download_directory">Lejuplādes vieta</string>
     <string name="pref_category_auto_download">Automātiska lejupielāde</string>
     <string name="pref_restore_backup">Atjaunot dublējumu</string>
     <string name="backup_restore_missing_trackers">Sekotāji, kas nav pieteikušies:</string>
@@ -348,7 +347,6 @@
     <string name="pref_highest">Augstākais</string>
     <string name="label_warning">Brīdinājums</string>
     <string name="pref_skip_read_chapters">Izlaist izlasītās nodaļas</string>
-    <string name="custom_dir">Pielāgota lokācija</string>
     <string name="pref_inverted_colors">Invertēts</string>
     <string name="filter_mode_multiply">Reizināt</string>
     <string name="filter_mode_screen">Ekrāns</string>
@@ -372,7 +370,6 @@
     <string name="split_tall_images_summary">Uzlabo lasītāja veiktspēju, sadalot garus lejupielādētus attēlus</string>
     <string name="enhanced_tracking_info">Pakalpojumi, kas nodrošina uzlabotus līdzekļus konkrētiem avotiem. Pievienojot bibliotēkai, ieraksts tiks automātiski izsekots.</string>
     <string name="pref_create_backup">Izveidot dublējumu</string>
-    <string name="pref_backup_directory">Dublējuma atrašanās vieta</string>
     <string name="invalid_backup_file">Nederīgs dublējuma fails</string>
     <string name="pref_backup_interval">Dublējumu biežums</string>
     <string name="backup_info">Kopijas vajadzētu glabāt arī citās vietās.</string>
@@ -400,7 +397,6 @@
     <string name="database_clean">Nav ko tīrīt</string>
     <string name="pref_disable_battery_optimization">Atspējot akumulatora optimizāciju</string>
     <string name="pref_restore_backup_summ">Atjaunot bibliotēku no dublējuma faila</string>
-    <string name="pref_backup_slots">Maksimālais dublējumu skaits</string>
     <string name="pref_clear_cookies">Notīrīt sīkfailus</string>
     <string name="pref_dns_over_https">Izvēlēties DNS pār HTTPS (DoH)</string>
     <string name="cookies_cleared">Sīkfaili notīrīti</string>
@@ -513,7 +509,6 @@
     <string name="viewer">Lasīšanas režīms</string>
     <string name="no_next_chapter">Nākošā nodaļa nav atrasta</string>
     <string name="empty_screen">Nu, šis ir neveikli</string>
-    <string name="notification_check_updates">Pārbauda, vai nav jaunu nodaļu</string>
     <string name="notification_update_skipped">%1$d atjauninājums(-i) izlaists(-i)</string>
     <string name="update_check_open">Atvērt vietnē GitHub</string>
     <string name="update_check_eol">Šī Android versija vairs netiek atbalstīta</string>

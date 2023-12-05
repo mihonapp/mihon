@@ -87,10 +87,8 @@
     <string name="rotation_free">Cualquier dirección</string>
     <string name="rotation_force_portrait">Forzar en vertical</string>
     <string name="rotation_force_landscape">Forzar en horizontal</string>
-    <string name="pref_download_directory">Carpeta de descarga</string>
     <string name="pref_remove_after_marked_as_read">Borrarlos tras marcarlos como leídos de forma manual</string>
     <string name="pref_remove_after_read">Borrar capítulos terminados de forma automática</string>
-    <string name="custom_dir">Ubicación personalizada</string>
     <string name="services">Servicios de seguimiento</string>
     <string name="pref_clear_chapter_cache">Vaciar la caché de capítulos</string>
     <string name="used_cache">Usado: %1$s</string>
@@ -205,9 +203,7 @@
     <string name="pref_create_backup_summ">Se puede utilizar para restaurar la biblioteca actual</string>
     <string name="pref_restore_backup">Restaurar copia de seguridad</string>
     <string name="pref_restore_backup_summ">Restaurar la biblioteca a partir de una copia de seguridad</string>
-    <string name="pref_backup_directory">Ubicación de la copia de respaldo</string>
-    <string name="pref_backup_interval">Frecuencia de la copia de seguridad automática</string>
-    <string name="pref_backup_slots">Copias de seguridad automáticas máximas</string>
+    <string name="pref_backup_interval">Frecuencia de respaldo automático</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="backup_choice">¿De qué quieres hacer una copia de seguridad\?</string>
@@ -328,7 +324,6 @@
     <string name="notification_chapters_single_and_more">Capítulo %1$s y %2$d más</string>
     <string name="notification_chapters_multiple">Capítulos %1$s</string>
     <string name="hide_notification_content">Ocultar el contenido de las notificaciones</string>
-    <string name="notification_check_updates">Buscando nuevos capítulos</string>
     <string name="pref_disable_battery_optimization">Desactivar la optimización de batería</string>
     <string name="email">Correo electrónico</string>
     <string name="pref_disable_battery_optimization_summary">Mejora la cadencia de las actualizaciones y las copias de respaldo que se hagan en segundo plano</string>
@@ -398,7 +393,7 @@
     <string name="loader_not_implemented_error">No se ha encontrado la fuente</string>
     <string name="action_disable">Desactivar</string>
     <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surja efecto</string>
-    <string name="label_network">Networking</string>
+    <string name="label_network">Red</string>
     <string name="unknown_status">Estado desconocido</string>
     <string name="tapping_inverted_both">Ambos</string>
     <string name="tapping_inverted_vertical">Vertical</string>
@@ -486,7 +481,7 @@
     <string name="action_display_show_number_of_items">Mostrar el número de elementos</string>
     <string name="action_sort_chapter_fetch_date">Fecha de obtención del capítulo</string>
     <string name="rotation_type">Tipo de rotación</string>
-    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título de las entradas</string>
+    <string name="pref_create_folder_per_manga_summary">Crea carpetas según el título de la obra</string>
     <string name="pref_create_folder_per_manga">Guardar las páginas en carpetas independientes</string>
     <string name="pref_reader_actions">Acciones</string>
     <string name="pref_grayscale">Escala de grises</string>
@@ -554,7 +549,7 @@
     <string name="label_warning">Advertencia</string>
     <string name="notification_size_warning">Las actualizaciones grandes pueden implicar un mayor uso de la batería y que los distintos servicios bloqueen o ralenticen el acceso a tu dispositivo. Toca aquí para más información.</string>
     <string name="action_display_language_badge">Idioma</string>
-    <string name="backup_info">También deberías guardar las copias de seguridad en otros lugares. Las copias de seguridad pueden contener datos confidenciales, incluidas las contraseñas almacenadas.</string>
+    <string name="backup_info">Es una buena idea tener copias de respaldo fuera de tu dispositivo. También incluyen contraseñas y otros datos privados que seguramente no quieras compartir.</string>
     <string name="connected_to_wifi">Solo con Wi-Fi</string>
     <string name="update_72hour">Cada 3 días</string>
     <string name="download_queue_size_warning">Advertencia: Las descargas grandes pueden llevar a que las fuentes se vuelvan cada vez más lentas y en casos extremos que los servidores limiten o impidan el acceso a Tachiyomi. Toca aquí para más información.</string>
@@ -653,7 +648,7 @@
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
     <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>
     <string name="pref_security_summary">Pantalla segura y desbloqueo biométrico</string>
-    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas, y el espacio de almacenamiento</string>
+    <string name="pref_backup_summary">Copias de seguridad manuales y automáticas, almacenamiento</string>
     <string name="pref_browse_summary">Fuentes, extensiones y búsqueda global</string>
     <string name="crash_screen_title">¡Vaya!</string>
     <string name="crash_screen_restart_application">Reiniciar la aplicación</string>
@@ -730,7 +725,7 @@
     <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
     <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
     <string name="action_ok">Aceptar</string>
-    <string name="track_delete_title">¿Quitar el rastreo de %s\?</string>
+    <string name="track_delete_title">¿Quieres desvincular %s?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>
     <string name="delete_downloaded">Borrar los ya descargados</string>
@@ -754,18 +749,24 @@
     <string name="app_settings">Ajustes de la aplicación</string>
     <string name="action_sort_category">Ordenar categorías</string>
     <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
-    <string name="file_null_uri_error">Ningún archivo seleccionado</string>
+    <string name="file_null_uri_error">No has elegido ningún archivo</string>
     <string name="relative_time_span_never">Nunca</string>
-    <string name="pref_flash_page_summ">Reducir el ghosting en las pantallas de tinta electrónica</string>
-    <string name="last_auto_backup_info">Última copia de seguridad automática: %s</string>
-    <string name="pref_flash_page">Parpadeo en blanco al cambiar de página</string>
+    <string name="pref_flash_page_summ">Esta transición minimiza las manchas y el efecto de retención de imagen en pantallas de tinta electrónica</string>
+    <string name="last_auto_backup_info">Última copia automática: %s</string>
+    <string name="pref_flash_page">Parpadear a blanco al cambiar de página</string>
     <string name="label_data_storage">Datos y almacenamiento</string>
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
     <string name="action_sort_tracker_score">Puntuación del rastreador</string>
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Volver a la configuración predeterminada</string>
     <string name="action_create">Crear</string>
-    <string name="no_scanlators_found">Sin ningún scanlators</string>
-    <string name="scanlator">Scanlator</string>
-    <string name="exclude_scanlators">Omitir a los scanlators</string>
+    <string name="no_scanlators_found">Sin escanducciones</string>
+    <string name="scanlator">Escanductor</string>
+    <string name="exclude_scanlators">Excluir escanducciones</string>
+    <string name="selected">Seleccionado</string>
+    <string name="not_selected">Sin seleccionar</string>
+    <string name="action_menu_overflow_description">Más opciones</string>
+    <string name="action_bar_up_description">Subir un nivel</string>
+    <string name="pref_storage_location">Ubicación del almacenamiento</string>
+    <string name="pref_storage_location_info">Se utiliza para las copias de seguridad automáticas, las descargas de capítulos y la fuente local.</string>
 </resources>

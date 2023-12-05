@@ -286,7 +286,6 @@
     <string name="pref_category_reading">Læser</string>
     <string name="channel_ext_updates">Udvidelsesopdateringer</string>
     <string name="creating_backup_error">Sikkerhedskopiering mislykkedes</string>
-    <string name="pref_backup_directory">Placering af sikkerhedskopi</string>
     <string name="rotation_free">Fri</string>
     <string name="channel_errors">Fejl</string>
     <string name="restore_completed">Gendannelse fuldført</string>
@@ -300,7 +299,6 @@
     <string name="pref_category_reading_mode">Læsetilstand</string>
     <string name="remove_manga">Du er ved at fjerne \"%s\" fra dit bibliotek</string>
     <string name="pref_highest">Højeste</string>
-    <string name="pref_backup_slots">Maksimale antal automatiske sikkerhedskopier</string>
     <string name="pref_low">Lav</string>
     <string name="source_settings">Kildeindstillinger</string>
     <string name="app_settings">App-indstillinger</string>

@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -108,11 +109,13 @@ class BangumiApi(
         } else {
             0
         }
+        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.floatOrNull ?: -1f
         return TrackSearch.create(trackId).apply {
             media_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name_cn"]!!.jsonPrimitive.content
             cover_url = coverUrl
             summary = obj["name"]!!.jsonPrimitive.content
+            score = rating
             tracking_url = obj["url"]!!.jsonPrimitive.content
             total_chapters = totalChapters
         }
