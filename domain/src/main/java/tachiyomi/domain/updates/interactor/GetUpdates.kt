@@ -3,7 +3,7 @@ package tachiyomi.domain.updates.interactor
 import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import tachiyomi.domain.updates.repository.UpdatesRepository
-import java.util.Calendar
+import java.time.Instant
 
 class GetUpdates(
     private val repository: UpdatesRepository,
@@ -13,8 +13,8 @@ class GetUpdates(
         return repository.awaitWithRead(read, after, limit = 500)
     }
 
-    fun subscribe(calendar: Calendar): Flow<List<UpdatesWithRelations>> {
-        return repository.subscribeAll(calendar.time.time, limit = 500)
+    fun subscribe(instant: Instant): Flow<List<UpdatesWithRelations>> {
+        return repository.subscribeAll(instant.toEpochMilli(), limit = 500)
     }
 
     fun subscribe(read: Boolean, after: Long): Flow<List<UpdatesWithRelations>> {

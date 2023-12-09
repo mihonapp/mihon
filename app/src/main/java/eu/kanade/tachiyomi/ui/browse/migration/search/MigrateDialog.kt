@@ -53,7 +53,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.Date
+import java.time.Instant
 
 @Composable
 internal fun MigrateDialog(
@@ -298,7 +298,7 @@ internal class MigrateDialogScreenModel(
                 favorite = true,
                 chapterFlags = oldManga.chapterFlags,
                 viewerFlags = oldManga.viewerFlags,
-                dateAdded = if (replace) oldManga.dateAdded else Date().time,
+                dateAdded = if (replace) oldManga.dateAdded else Instant.now().toEpochMilli(),
             ),
         )
     }

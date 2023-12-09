@@ -45,8 +45,8 @@ import tachiyomi.presentation.widget.util.appWidgetBackgroundRadius
 import tachiyomi.presentation.widget.util.calculateRowAndColumnCount
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.Calendar
-import java.util.Date
+import java.time.Instant
+import java.time.ZonedDateTime
 
 abstract class BaseUpdatesGridGlanceWidget(
     private val context: Context = Injekt.get<Application>(),
@@ -89,7 +89,7 @@ abstract class BaseUpdatesGridGlanceWidget(
 
             val flow = remember {
                 getUpdates
-                    .subscribe(false, DateLimit.timeInMillis)
+                    .subscribe(false, DateLimit.toEpochMilli())
                     .map { rawData ->
                         rawData.prepareData(rowCount, columnCount)
                     }
@@ -147,10 +147,7 @@ abstract class BaseUpdatesGridGlanceWidget(
     }
 
     companion object {
-        val DateLimit: Calendar
-            get() = Calendar.getInstance().apply {
-                time = Date()
-                add(Calendar.MONTH, -3)
-            }
+        val DateLimit: Instant
+            get() = ZonedDateTime.now().minusMonths(3).toInstant()
     }
 }

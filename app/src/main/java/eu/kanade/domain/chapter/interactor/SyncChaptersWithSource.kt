@@ -22,8 +22,8 @@ import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 import java.lang.Long.max
+import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.Date
 import java.util.TreeSet
 
 class SyncChaptersWithSource(
@@ -83,7 +83,7 @@ class SyncChaptersWithSource(
             }
         }
 
-        val rightNow = Date().time
+        val rightNow = Instant.now().toEpochMilli()
 
         // Used to not set upload date of older chapters
         // to a higher value than newer chapters

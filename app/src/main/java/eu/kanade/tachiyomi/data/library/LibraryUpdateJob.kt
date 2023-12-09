@@ -69,8 +69,8 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.Date
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -111,7 +111,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         setForegroundSafely()
 
-        libraryPreferences.lastUpdatedTimestamp().set(Date().time)
+        libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
 
         val categoryId = inputData.getLong(KEY_CATEGORY, -1L)
         addMangaToQueue(categoryId)

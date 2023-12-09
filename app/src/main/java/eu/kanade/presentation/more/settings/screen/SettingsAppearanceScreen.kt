@@ -33,7 +33,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.util.Date
+import java.time.Instant
 
 object SettingsAppearanceScreen : SearchableSettings {
 
@@ -123,7 +123,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         var currentLanguage by remember {
             mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "")
         }
-        val now = remember { Date().time }
+        val now = remember { Instant.now().toEpochMilli() }
 
         val dateFormat by uiPreferences.dateFormat().collectAsState()
         val formattedNow = remember(dateFormat) {

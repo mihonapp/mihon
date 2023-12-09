@@ -7,7 +7,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.util.Date
+import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
@@ -29,7 +29,7 @@ fun Duration.toDurationString(context: Context, fallback: String): String {
 @Composable
 @ReadOnlyComposable
 fun relativeTimeSpanString(epochMillis: Long): String {
-    val now = Date().time
+    val now = Instant.now().toEpochMilli()
     return when {
         epochMillis <= 0L -> stringResource(MR.strings.relative_time_span_never)
         now - epochMillis < 1.minutes.inWholeMilliseconds -> stringResource(
