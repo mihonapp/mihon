@@ -180,7 +180,10 @@
     <string name="onboarding_action_next">Next</string>
     <string name="onboarding_action_finish">Get started</string>
     <string name="onboarding_action_skip">Skip</string>
-    <string name="onboarding_storage_info">Select a storage location where chapter downloads, backups, and local source content will be stored.</string>
+    <string name="onboarding_storage_info">Select a folder where %1$s will store chapter downloads, backups, and more.\n\nA dedicated folder is recommended.\n\nSelected folder: %2$s</string>
+    <string name="onboarding_storage_action_select">Select a folder</string>
+    <string name="onboarding_guides_new_user">New to %s? We recommend checking out the getting started guide.</string>
+    <string name="onboarding_guides_returning_user">Already used %s before?</string>
 
     <!-- Preferences -->
       <!-- Subsections -->
@@ -439,6 +442,7 @@
     <string name="pref_remove_after_read">After reading automatically delete</string>
     <string name="pref_remove_bookmarked_chapters">Allow deleting bookmarked chapters</string>
     <string name="pref_remove_exclude_categories">Excluded categories</string>
+    <string name="no_location_set">No storage location set</string>
     <string name="invalid_location">Invalid location: %s</string>
     <string name="disabled">Disabled</string>
     <string name="last_read_chapter">Last read chapter</string>

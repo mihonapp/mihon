@@ -3,8 +3,11 @@ package eu.kanade.presentation.more.onboarding
 import android.content.ActivityNotFoundException
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
@@ -22,11 +25,19 @@ internal fun StorageStep(
     val pickStorageLocation = SettingsDataScreen.storageLocationPicker(storagePref)
 
     Column(
+        modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(stringResource(MR.strings.onboarding_storage_info))
+        Text(
+            stringResource(
+                MR.strings.onboarding_storage_info,
+                stringResource(MR.strings.app_name),
+                SettingsDataScreen.storageLocationText(storagePref),
+            ),
+        )
 
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = {
                 try {
                     pickStorageLocation.launch(null)
@@ -35,7 +46,7 @@ internal fun StorageStep(
                 }
             },
         ) {
-            Text(SettingsDataScreen.storageLocationText(storagePref))
+            Text(stringResource(MR.strings.onboarding_storage_action_select))
         }
     }
 }

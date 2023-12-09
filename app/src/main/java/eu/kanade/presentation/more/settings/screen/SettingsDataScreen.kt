@@ -110,6 +110,10 @@ object SettingsDataScreen : SearchableSettings {
         val context = LocalContext.current
         val storageDir by storageDirPref.collectAsState()
 
+        if (storageDir == storageDirPref.defaultValue()) {
+            return stringResource(MR.strings.no_location_set)
+        }
+
         return remember(storageDir) {
             val file = UniFile.fromUri(context, storageDir.toUri())
             file?.filePath ?: file?.uri?.toString()

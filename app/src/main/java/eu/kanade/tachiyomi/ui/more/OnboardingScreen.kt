@@ -8,6 +8,7 @@ import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.ui.setting.SettingsScreen
 import tachiyomi.domain.storage.service.StoragePreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -22,12 +23,18 @@ class OnboardingScreen : Screen() {
         val storagePreferences = remember { Injekt.get<StoragePreferences>() }
         val uiPreferences = remember { Injekt.get<UiPreferences>() }
 
+        val finishOnboarding = {
+            basePreferences.shownOnboardingFlow().set(true)
+            navigator.pop()
+        }
+
         OnboardingScreen(
             storagePreferences = storagePreferences,
             uiPreferences = uiPreferences,
-            onComplete = {
-                basePreferences.shownOnboardingFlow().set(true)
-                navigator.pop()
+            onComplete = { finishOnboarding() },
+            onRestoreBackup = {
+                finishOnboarding()
+                navigator.push(SettingsScreen.toDataAndStorageScreen())
             },
         )
     }
