@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Darrer capítol</string>
     <string name="action_view_chapters">Mostra els capítols</string>
     <string name="action_cancel_all">Cancel·la-ho tot</string>
-    <string name="pref_theme_mode">Mode fosc</string>
     <string name="theme_light">Desactivat</string>
     <string name="theme_dark">Activat</string>
     <string name="theme_system">Per defecte del sistema</string>

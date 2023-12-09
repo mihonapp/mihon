@@ -342,7 +342,6 @@
     <string name="theme_dark">켜기</string>
     <string name="theme_light">끄기</string>
     <string name="theme_system">시스템 설정 사용</string>
-    <string name="pref_theme_mode">다크 모드</string>
     <string name="action_disable_all">모두 비활성화</string>
     <string name="spen_next_page">다음 페이지</string>
     <string name="confirm_lock_change">변경 확인을 위해 인증이 필요합니다</string>

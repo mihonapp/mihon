@@ -150,7 +150,6 @@
     <string name="theme_dark">Уключаны</string>
     <string name="theme_light">Выключаны</string>
     <string name="theme_system">У адпаведнасці з сістэмнай тэмай</string>
-    <string name="pref_theme_mode">Цёмны рэжым</string>
     <string name="pref_category_theme">Тэма</string>
     <string name="pref_category_about">Інфармацыя</string>
     <string name="pref_category_advanced">Дадаткова</string>

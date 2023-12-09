@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Останній розділ</string>
     <string name="action_view_chapters">Подивитись розділи</string>
     <string name="action_cancel_all">Скасувати все</string>
-    <string name="pref_theme_mode">Темний режим</string>
     <string name="theme_light">Вимкнено</string>
     <string name="theme_dark">Увімкнено</string>
     <string name="theme_system">Використовувати системну</string>

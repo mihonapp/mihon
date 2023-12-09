@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Bab terkini</string>
     <string name="action_view_chapters">Buka bab</string>
     <string name="action_cancel_all">Batalkan semua</string>
-    <string name="pref_theme_mode">Tema gelap</string>
     <string name="theme_light">Mati</string>
     <string name="theme_dark">Hidup</string>
     <string name="theme_system">Ikut sistem</string>

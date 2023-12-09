@@ -141,7 +141,6 @@
     <string name="pref_date_format">תבנית תאריך</string>
     <string name="theme_dark">פעיל</string>
     <string name="theme_light">כבוי</string>
-    <string name="pref_theme_mode">מצב חשוך</string>
     <string name="pref_category_about">אודות</string>
     <string name="pref_category_advanced">מתקדם</string>
     <string name="pref_category_downloads">הורדות</string>

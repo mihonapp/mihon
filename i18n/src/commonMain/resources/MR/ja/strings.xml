@@ -296,7 +296,6 @@
     <string name="action_sort_latest_chapter">最新章の更新順</string>
     <string name="action_view_chapters">章を見る</string>
     <string name="action_cancel_all">すべてキャンセル</string>
-    <string name="pref_theme_mode">ダークモード</string>
     <string name="theme_light">オフ</string>
     <string name="theme_dark">オン</string>
     <string name="theme_system">システムに従う</string>
@@ -726,8 +725,8 @@
     <string name="track_delete_text">ローカルの追跡が削除されます。</string>
     <string name="track_delete_remote_text">%s からも削除</string>
     <string name="delete_downloaded">ダウンロードを削除</string>
-    <string name="action_filter_interval_late">10+チェック後半</string>
-    <string name="action_filter_interval_dropped">落とした? 20歳以上後半と2ヶ月</string>
+    <string name="action_filter_interval_late">レイト10+チェック</string>
+    <string name="action_filter_interval_dropped">落選？ 20歳後半と2ヶ月</string>
     <string name="action_filter_interval_passed">チェック期間を過ぎました</string>
     <string name="action_ok">OK</string>
     <string name="syncing_library">ライブラリを同期しています</string>

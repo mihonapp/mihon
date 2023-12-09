@@ -350,7 +350,6 @@
     <string name="theme_system">Ακολουθήστε το σύστημα</string>
     <string name="theme_dark">Ενεργοποιημένο</string>
     <string name="theme_light">Απενεργοποιημένο</string>
-    <string name="pref_theme_mode">Σκοτεινή λειτουργία</string>
     <string name="action_move_to_bottom">Μετακίνηση στον πάτο</string>
     <string name="action_move_to_top">Μετακίνηση στην κορυφή</string>
     <string name="action_cancel_all">Ακύρωση όλων</string>

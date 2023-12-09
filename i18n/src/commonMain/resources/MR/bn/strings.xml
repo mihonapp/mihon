@@ -315,7 +315,6 @@
     <string name="theme_dark">চালু করুন</string>
     <string name="theme_light">বন্ধ করুন</string>
     <string name="theme_system">সিস্টেমকে অনুসরণ করুন</string>
-    <string name="pref_theme_mode">অন্ধকার মোড</string>
     <string name="pref_category_theme">থিম</string>
     <string name="action_move_to_bottom">নীচে সরান</string>
     <string name="action_move_to_top">শীর্ষে সরান</string>

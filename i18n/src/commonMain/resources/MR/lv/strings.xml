@@ -139,7 +139,6 @@
     <string name="theme_dark">Ieslēgts</string>
     <string name="theme_light">Izslēgts</string>
     <string name="theme_system">Sekot sistēmu</string>
-    <string name="pref_theme_mode">Tumšais režīms</string>
     <string name="pref_category_theme">Motīvs</string>
     <string name="pref_category_library">Bibliotēka</string>
     <string name="action_webview_refresh">Atjaunot</string>
@@ -744,4 +743,29 @@
     <string name="action_sort_category">Kārtot kategorijas</string>
     <string name="action_sort_tracker_score">Izsekošanas rezultāts</string>
     <string name="label_data_storage">Dati un uzglabāšana</string>
+    <string name="pref_storage_location">Krātuves atrašanās vieta</string>
+    <string name="action_create">Izveidot</string>
+    <string name="relative_time_span_never">Nekad</string>
+    <string name="pref_flash_page_summ">Samazina spoku rašanos uz e-ink displejiem</string>
+    <string name="pref_storage_location_info">Izmanto automātiskajām dublējumkopijām, nodaļu lejupielādei un vietējam avotam.</string>
+    <string name="action_apply">Pieteikties</string>
+    <string name="action_revert_to_default">Atgriezt noklusējuma iestatījumus</string>
+    <string name="action_menu_overflow_description">Vairāk iespēju</string>
+    <string name="last_auto_backup_info">Pēdējā automātiskā dublēšana: %s</string>
+    <string name="selected">Atlasīts</string>
+    <string name="no_scanlators_found">Nav atrasts neviens scanlators</string>
+    <string name="not_selected">Nav atlasīts</string>
+    <string name="action_move_to_bottom_all_for_series">Pārvietot sēriju uz apakšu</string>
+    <string name="scanlator">Skanlators</string>
+    <string name="pref_flash_page">Zibsnīt baltu, kad maina lapu</string>
+    <string name="pref_storage_usage">Krātuves izmantošana</string>
+    <string name="notification_updating_progress">Bibliotēkas atjaunināšana... (%s)</string>
+    <string name="action_bar_up_description">Virzīties uz augšu</string>
+    <string name="sort_category_confirmation">Vai vēlaties kategorijas sakārtot pēc alfabēta?</string>
+    <string name="file_null_uri_error">Nav atlasīts neviens fails</string>
+    <string name="source_settings">Avota iestatījumi</string>
+    <string name="app_settings">Lietotnes iestatījumi</string>
+    <string name="pref_relative_format">Relatīviās laika stampas</string>
+    <string name="pref_relative_format_summary">\"%1$s\", nevis \"%2$s\"</string>
+    <string name="exclude_scanlators">Izslēgt skanlatorus</string>
 </resources>

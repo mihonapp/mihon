@@ -2,7 +2,6 @@
 <resources>
     <string name="theme_dark">अन</string>
     <string name="theme_light">अफ</string>
-    <string name="pref_theme_mode">अँध्यारो मोड</string>
     <string name="pref_category_theme">थीम</string>
     <string name="pref_category_about">बारेमा</string>
     <string name="pref_category_advanced">उन्नत सेटिङहरू</string>

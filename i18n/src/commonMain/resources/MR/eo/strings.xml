@@ -62,7 +62,6 @@
     <string name="theme_dark">Ŝalti</string>
     <string name="theme_light">Malŝalti</string>
     <string name="theme_system">Laŭ operaciumo</string>
-    <string name="pref_theme_mode">Malhela etoso</string>
     <string name="pref_category_theme">Etoso</string>
     <string name="pref_category_about">Pri</string>
     <string name="pref_category_downloads">Elŝutoj</string>

@@ -261,7 +261,6 @@
     <string name="theme_dark">روشن</string>
     <string name="theme_light">خاموش</string>
     <string name="theme_system">تم پیش‌فرض سیستم</string>
-    <string name="pref_theme_mode">تم تیره</string>
     <string name="pref_category_about">درباره</string>
     <string name="pref_category_advanced">پیشرفته</string>
     <string name="pref_category_tracking">ردیابی</string>
@@ -614,4 +613,19 @@
     <string name="action_ok">باشه</string>
     <string name="action_sort_next_updated">به روز رسانی مورد انتظار بعدی</string>
     <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Tachiyomi از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
+    <string name="skipped_reason_not_always_update">به دلیل این که این مجموعه نیازی به به روز رسانی نداشت رد شد</string>
+    <string name="skipped_reason_not_caught_up">به دلیل وجود چپتر های خوانده نشده رد شد</string>
+    <string name="notification_update_skipped">%1$d بزور رسانی رد شد</string>
+    <string name="skipped_reason_not_started">به دلیل این که هیچ چپتری خوانده نشده بود رد شد</string>
+    <string name="notification_update_error">%1$d بروز رسانی ناموفق</string>
+    <string name="pref_relative_format_summary">\"%1$s\" به جای \"%2$s\"</string>
+    <string name="pref_library_columns_per_row">%d در هر ردیف</string>
+    <string name="pref_page_rotate">صفحات عریض را بچرخان تا جا شوند</string>
+    <string name="popular">محبوب</string>
+    <string name="pref_chapter_swipe_end">حرکت کشیدن به راست</string>
+    <string name="pref_flash_page">در هنگام عوض شدن صفحه فلاش سفید بزن</string>
+    <string name="pref_chapter_swipe_start">حرکت کشیدن به چپ</string>
+    <string name="updates_last_update_info">آخرین به روز رسانی کتابخانه: %s</string>
+    <string name="pref_update_only_in_release_period">خارج از دوره انتشار موزد انتظار</string>
+    <string name="pref_double_tap_zoom">برای بزرگ نمایی دوبار ضربه بزنید</string>
 </resources>

@@ -234,7 +234,6 @@
     <string name="action_sort_latest_chapter">Последње поглавље</string>
     <string name="action_view_chapters">Погледај поглавља</string>
     <string name="action_cancel_all">Откажи све</string>
-    <string name="pref_theme_mode">Тамна тема</string>
     <string name="theme_light">Икључено</string>
     <string name="theme_dark">Укључено</string>
     <string name="theme_system">По систему</string>
