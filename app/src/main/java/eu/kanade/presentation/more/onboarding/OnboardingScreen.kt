@@ -16,7 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.ui.UiPreferences
+import eu.kanade.tachiyomi.util.system.toast
 import soup.compose.material.motion.animation.materialSharedAxisX
 import soup.compose.material.motion.animation.rememberSlideDistance
 import tachiyomi.domain.storage.service.StoragePreferences
@@ -32,15 +34,19 @@ fun OnboardingScreen(
     onComplete: () -> Unit,
     onRestoreBackup: () -> Unit,
 ) {
-    var currentStep by remember { mutableIntStateOf(0) }
-    val steps: List<@Composable () -> Unit> = listOf(
-        { ThemeStep(uiPreferences = uiPreferences) },
-        { StorageStep(storagePref = storagePreferences.baseStorageDirectory()) },
-        // TODO: prompt for notification permissions when bumping target to Android 13
-        { GuidesStep(onRestoreBackup = onRestoreBackup) },
-    )
-    val isLastStep = currentStep == steps.size - 1
+    val context = LocalContext.current
     val slideDistance = rememberSlideDistance()
+
+    var currentStep by remember { mutableIntStateOf(0) }
+    val steps: List<@Composable () -> Unit> = remember {
+        listOf(
+            { ThemeStep(uiPreferences = uiPreferences) },
+            { StorageStep(storagePref = storagePreferences.baseStorageDirectory()) },
+            // TODO: prompt for notification permissions when bumping target to Android 13
+            { GuidesStep(onRestoreBackup = onRestoreBackup) },
+        )
+    }
+    val isLastStep = currentStep == steps.size - 1
 
     BackHandler(enabled = currentStep != 0, onBack = { currentStep-- })
 
@@ -56,10 +62,15 @@ fun OnboardingScreen(
             },
         ),
         onAcceptClick = {
-            if (!isLastStep) {
-                currentStep++
-            } else {
+            if (isLastStep) {
                 onComplete()
+            } else {
+                // TODO: this is kind of janky
+                if (currentStep == 1 && !storagePreferences.baseStorageDirectory().isSet()) {
+                    context.toast(MR.strings.onboarding_storage_selection_required)
+                } else {
+                    currentStep++
+                }
             }
         },
         rejectText = stringResource(MR.strings.onboarding_action_skip),

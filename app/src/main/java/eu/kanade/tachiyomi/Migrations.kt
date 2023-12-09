@@ -396,7 +396,12 @@ object Migrations {
                     newKey = { Preference.privateKey(it) },
                 )
             }
-            if (oldVersion < 110) {
+            if (oldVersion < 111) {
+                File(context.cacheDir, "dl_index_cache")
+                    .takeIf { it.exists() }
+                    ?.delete()
+            }
+            if (oldVersion < 112) {
                 val prefsToReplace = listOf(
                     "pref_download_only",
                     "incognito_mode",
@@ -409,17 +414,13 @@ object Migrations {
                     "last_app_check",
                     "last_ext_check",
                     "last_version_code",
+                    "storage_dir",
                 )
                 replacePreferences(
                     preferenceStore = preferenceStore,
                     filterPredicate = { it.key in prefsToReplace },
                     newKey = { Preference.appStateKey(it) },
                 )
-            }
-            if (oldVersion < 111) {
-                File(context.cacheDir, "dl_index_cache")
-                    .takeIf { it.exists() }
-                    ?.delete()
             }
             return true
         }
