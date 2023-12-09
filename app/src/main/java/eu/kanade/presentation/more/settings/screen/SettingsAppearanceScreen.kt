@@ -2,8 +2,8 @@ package eu.kanade.presentation.more.settings.screen
 
 import android.app.Activity
 import android.content.Context
-import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ReadOnlyComposable
@@ -19,13 +19,11 @@ import eu.kanade.domain.ui.model.TabletUiMode
 import eu.kanade.domain.ui.model.ThemeMode
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.presentation.more.settings.widget.AppThemeModePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.merge
 import org.xmlpull.v1.XmlPullParser
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -43,72 +41,59 @@ object SettingsAppearanceScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val context = LocalContext.current
         val uiPreferences = remember { Injekt.get<UiPreferences>() }
 
         return listOf(
-            getThemeGroup(context = context, uiPreferences = uiPreferences),
-            getDisplayGroup(context = context, uiPreferences = uiPreferences),
+            getThemeGroup(uiPreferences = uiPreferences),
+            getDisplayGroup(uiPreferences = uiPreferences),
         )
     }
 
     @Composable
     private fun getThemeGroup(
-        context: Context,
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+
         val themeModePref = uiPreferences.themeMode()
         val themeMode by themeModePref.collectAsState()
 
         val appThemePref = uiPreferences.appTheme()
+        val appTheme by appThemePref.collectAsState()
 
         val amoledPref = uiPreferences.themeDarkAmoled()
         val amoled by amoledPref.collectAsState()
 
-        LaunchedEffect(themeMode) {
-            setAppCompatDelegateThemeMode(themeMode)
-        }
-
-        LaunchedEffect(Unit) {
-            merge(appThemePref.changes(), amoledPref.changes())
-                .drop(2)
-                .collectLatest { (context as? Activity)?.let { ActivityCompat.recreate(it) } }
-        }
-
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_theme),
             preferenceItems = listOf(
-                Preference.PreferenceItem.ListPreference(
-                    pref = themeModePref,
-                    title = stringResource(MR.strings.pref_theme_mode),
-                    entries = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        mapOf(
-                            ThemeMode.SYSTEM to stringResource(MR.strings.theme_system),
-                            ThemeMode.LIGHT to stringResource(MR.strings.theme_light),
-                            ThemeMode.DARK to stringResource(MR.strings.theme_dark),
-                        )
-                    } else {
-                        mapOf(
-                            ThemeMode.LIGHT to stringResource(MR.strings.theme_light),
-                            ThemeMode.DARK to stringResource(MR.strings.theme_dark),
-                        )
-                    },
-                ),
                 Preference.PreferenceItem.CustomPreference(
                     title = stringResource(MR.strings.pref_app_theme),
-                ) { item ->
-                    val value by appThemePref.collectAsState()
-                    AppThemePreferenceWidget(
-                        title = item.title,
-                        value = value,
-                        amoled = amoled,
-                        onItemClick = { appThemePref.set(it) },
-                    )
+                ) {
+                    Column {
+                        AppThemeModePreferenceWidget(
+                            value = themeMode,
+                            onItemClick = {
+                                themeModePref.set(it)
+                                setAppCompatDelegateThemeMode(it)
+                            },
+                        )
+
+                        AppThemePreferenceWidget(
+                            value = appTheme,
+                            amoled = amoled,
+                            onItemClick = { appThemePref.set(it) },
+                        )
+                    }
                 },
                 Preference.PreferenceItem.SwitchPreference(
                     pref = amoledPref,
                     title = stringResource(MR.strings.pref_dark_theme_pure_black),
                     enabled = themeMode != ThemeMode.LIGHT,
+                    onValueChanged = {
+                        (context as? Activity)?.let { ActivityCompat.recreate(it) }
+                        true
+                    },
                 ),
             ),
         )
@@ -116,9 +101,10 @@ object SettingsAppearanceScreen : SearchableSettings {
 
     @Composable
     private fun getDisplayGroup(
-        context: Context,
         uiPreferences: UiPreferences,
     ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+
         val langs = remember { getLangs(context) }
         var currentLanguage by remember {
             mutableStateOf(AppCompatDelegate.getApplicationLocales().get(0)?.toLanguageTag() ?: "")

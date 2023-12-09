@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.stateIn
  * Local-copy implementation of PreferenceStore mostly for test and preview purposes
  */
 class InMemoryPreferenceStore(
-    private val initialPreferences: Sequence<InMemoryPreference<*>> = sequenceOf(),
+    initialPreferences: Sequence<InMemoryPreference<*>> = sequenceOf(),
 ) : PreferenceStore {
 
     private val preferences: Map<String, Preference<*>> =

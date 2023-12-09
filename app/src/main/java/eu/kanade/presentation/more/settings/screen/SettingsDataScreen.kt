@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -80,13 +81,12 @@ object SettingsDataScreen : SearchableSettings {
     }
 
     @Composable
-    private fun getStorageLocationPref(
-        storagePreferences: StoragePreferences,
-    ): Preference.PreferenceItem.TextPreference {
+    fun storageLocationPicker(
+        storageDirPref: tachiyomi.core.preference.Preference<String>,
+    ): ManagedActivityResultLauncher<Uri?, Uri?> {
         val context = LocalContext.current
-        val storageDirPref = storagePreferences.baseStorageDirectory()
-        val storageDir by storageDirPref.collectAsState()
-        val pickStorageLocation = rememberLauncherForActivityResult(
+
+        return rememberLauncherForActivityResult(
             contract = ActivityResultContracts.OpenDocumentTree(),
         ) { uri ->
             if (uri != null) {
@@ -101,13 +101,31 @@ object SettingsDataScreen : SearchableSettings {
                 Injekt.get<DownloadCache>().invalidateCache()
             }
         }
+    }
+
+    @Composable
+    fun storageLocationText(
+        storageDirPref: tachiyomi.core.preference.Preference<String>,
+    ): String {
+        val context = LocalContext.current
+        val storageDir by storageDirPref.collectAsState()
+
+        return remember(storageDir) {
+            val file = UniFile.fromUri(context, storageDir.toUri())
+            file?.filePath ?: file?.uri?.toString()
+        } ?: stringResource(MR.strings.invalid_location, storageDir)
+    }
+
+    @Composable
+    private fun getStorageLocationPref(
+        storagePreferences: StoragePreferences,
+    ): Preference.PreferenceItem.TextPreference {
+        val context = LocalContext.current
+        val pickStorageLocation = storageLocationPicker(storagePreferences.baseStorageDirectory())
 
         return Preference.PreferenceItem.TextPreference(
             title = stringResource(MR.strings.pref_storage_location),
-            subtitle = remember(storageDir) {
-                val file = UniFile.fromUri(context, storageDir.toUri())
-                file?.filePath ?: file?.uri?.toString()
-            } ?: stringResource(MR.strings.invalid_location, storageDir),
+            subtitle = storageLocationText(storagePreferences.baseStorageDirectory()),
             onClick = {
                 try {
                     pickStorageLocation.launch(null)
