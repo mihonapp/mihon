@@ -92,7 +92,6 @@ private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTIL
 
 @Composable
 fun MangaInfoBox(
-    modifier: Modifier = Modifier,
     isTabletUi: Boolean,
     appBarPadding: Dp,
     title: String,
@@ -104,6 +103,7 @@ fun MangaInfoBox(
     status: Long,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         // Backdrop
@@ -162,7 +162,6 @@ fun MangaInfoBox(
 
 @Composable
 fun MangaActionRow(
-    modifier: Modifier = Modifier,
     favorite: Boolean,
     trackingCount: Int,
     fetchInterval: Int?,
@@ -173,6 +172,7 @@ fun MangaActionRow(
     onTrackingClicked: (() -> Unit)?,
     onEditIntervalClicked: (() -> Unit)?,
     onEditCategory: (() -> Unit)?,
+    modifier: Modifier = Modifier,
 ) {
     val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
 
@@ -226,12 +226,12 @@ fun MangaActionRow(
 
 @Composable
 fun ExpandableMangaDescription(
-    modifier: Modifier = Modifier,
     defaultExpandState: Boolean,
     description: String?,
     tagsProvider: () -> List<String>?,
     onTagSearch: (String) -> Unit,
     onCopyTagToClipboard: (tag: String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         val (expanded, onExpanded) = rememberSaveable {
@@ -406,13 +406,13 @@ private fun MangaAndSourceTitlesSmall(
 @Composable
 private fun MangaContentInfo(
     title: String,
-    textAlign: TextAlign? = LocalTextStyle.current.textAlign,
     doSearch: (query: String, global: Boolean) -> Unit,
     author: String?,
     artist: String?,
     status: Long,
     sourceName: String,
     isStubSource: Boolean,
+    textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
     val context = LocalContext.current
     Text(
@@ -556,7 +556,10 @@ private fun MangaSummary(
     expanded: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val animProgress by animateFloatAsState(if (expanded) 1f else 0f)
+    val animProgress by animateFloatAsState(
+        targetValue = if (expanded) 1f else 0f,
+        label = "summary",
+    )
     Layout(
         modifier = modifier.clipToBounds(),
         contents = listOf(

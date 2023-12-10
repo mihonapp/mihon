@@ -16,6 +16,7 @@ import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.source.local.isLocal
 
 class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
     AbstractComposeView(context, attrs) {
@@ -31,7 +32,7 @@ class ReaderTransitionView @JvmOverloads constructor(context: Context, attrs: At
             Data(
                 transition = transition,
                 currChapterDownloaded = transition.from.pageLoader?.isLocal == true,
-                goingToChapterDownloaded = transition.to?.chapter?.let { goingToChapter ->
+                goingToChapterDownloaded = manga.isLocal() || transition.to?.chapter?.let { goingToChapter ->
                     downloadManager.isChapterDownloaded(
                         chapterName = goingToChapter.name,
                         chapterScanlator = goingToChapter.scanlator,
