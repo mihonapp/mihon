@@ -1,13 +1,13 @@
 [versions]
 aboutlib_version = "10.9.2"
+leakcanary = "2.12"
 moko = "0.23.0"
 okhttp_version = "5.0.0-alpha.11"
-shizuku_version = "12.2.0"
-sqlite = "2.4.0"
-sqldelight = "2.0.0"
-leakcanary = "2.12"
-voyager = "1.0.0-rc10"
 richtext = "0.17.0"
+shizuku_version = "12.2.0"
+sqldelight = "2.0.0"
+sqlite = "2.4.0"
+voyager = "1.0.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
@@ -90,6 +90,7 @@ kotest-assertions = "io.kotest:kotest-assertions-core:5.8.0"
 mockk = "io.mockk:mockk:1.13.8"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
@@ -102,6 +103,6 @@ sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
 coil = ["coil-core", "coil-gif", "coil-compose"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
-voyager = ["voyager-navigator", "voyager-tab-navigator", "voyager-transitions"]
+voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
 test = ["junit", "kotest-assertions", "mockk"]
