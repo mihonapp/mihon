@@ -24,8 +24,10 @@ import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.presentation.core.components.TwoPanelBox
 
 class SettingsScreen(
-    private val destination: Destination = Destination.Main,
+    private val destination: Int? = null,
 ) : Screen() {
+
+    constructor(destination: Destination) : this(destination.id)
 
     @Composable
     override fun Content() {
@@ -33,10 +35,10 @@ class SettingsScreen(
         if (!isTabletUi()) {
             Navigator(
                 screen = when (destination) {
-                    Destination.Main -> SettingsMainScreen
-                    Destination.About -> AboutScreen
-                    Destination.DataAndStorage -> SettingsDataScreen
-                    Destination.Tracking -> SettingsTrackingScreen
+                    Destination.About.id -> AboutScreen
+                    Destination.DataAndStorage.id -> SettingsDataScreen
+                    Destination.Tracking.id -> SettingsTrackingScreen
+                    else -> SettingsMainScreen
                 },
                 content = {
                     val pop: () -> Unit = {
@@ -54,10 +56,10 @@ class SettingsScreen(
         } else {
             Navigator(
                 screen = when (destination) {
-                    Destination.Main -> SettingsAppearanceScreen
-                    Destination.About -> AboutScreen
-                    Destination.DataAndStorage -> SettingsDataScreen
-                    Destination.Tracking -> SettingsTrackingScreen
+                    Destination.About.id -> AboutScreen
+                    Destination.DataAndStorage.id -> SettingsDataScreen
+                    Destination.Tracking.id -> SettingsTrackingScreen
+                    else -> SettingsAppearanceScreen
                 },
             ) {
                 val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
@@ -76,10 +78,9 @@ class SettingsScreen(
         }
     }
 
-    sealed interface Destination {
-        data object Main : Destination
-        data object About : Destination
-        data object DataAndStorage : Destination
-        data object Tracking : Destination
+    sealed class Destination(val id: Int) {
+        data object About : Destination(0)
+        data object DataAndStorage : Destination(1)
+        data object Tracking : Destination(2)
     }
 }
