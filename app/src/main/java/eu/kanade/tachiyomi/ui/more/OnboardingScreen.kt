@@ -34,7 +34,7 @@ class OnboardingScreen : Screen() {
             onComplete = { finishOnboarding() },
             onRestoreBackup = {
                 finishOnboarding()
-                navigator.push(SettingsScreen.toDataAndStorageScreen())
+                navigator.push(SettingsScreen(SettingsScreen.Destination.DataAndStorage))
             },
         )
     }

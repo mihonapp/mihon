@@ -15,6 +15,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.more.settings.screen.SettingsAppearanceScreen
 import eu.kanade.presentation.more.settings.screen.SettingsDataScreen
 import eu.kanade.presentation.more.settings.screen.SettingsMainScreen
+import eu.kanade.presentation.more.settings.screen.SettingsTrackingScreen
 import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.presentation.util.LocalBackPress
@@ -22,9 +23,8 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.presentation.core.components.TwoPanelBox
 
-class SettingsScreen private constructor(
-    val toDataAndStorage: Boolean,
-    val toAbout: Boolean,
+class SettingsScreen(
+    private val destination: Destination = Destination.Main,
 ) : Screen() {
 
     @Composable
@@ -32,12 +32,11 @@ class SettingsScreen private constructor(
         val parentNavigator = LocalNavigator.currentOrThrow
         if (!isTabletUi()) {
             Navigator(
-                screen = if (toDataAndStorage) {
-                    SettingsDataScreen
-                } else if (toAbout) {
-                    AboutScreen
-                } else {
-                    SettingsMainScreen
+                screen = when (destination) {
+                    Destination.Main -> SettingsMainScreen
+                    Destination.About -> AboutScreen
+                    Destination.DataAndStorage -> SettingsDataScreen
+                    Destination.Tracking -> SettingsTrackingScreen
                 },
                 content = {
                     val pop: () -> Unit = {
@@ -54,12 +53,11 @@ class SettingsScreen private constructor(
             )
         } else {
             Navigator(
-                screen = if (toDataAndStorage) {
-                    SettingsDataScreen
-                } else if (toAbout) {
-                    AboutScreen
-                } else {
-                    SettingsAppearanceScreen
+                screen = when (destination) {
+                    Destination.Main -> SettingsAppearanceScreen
+                    Destination.About -> AboutScreen
+                    Destination.DataAndStorage -> SettingsDataScreen
+                    Destination.Tracking -> SettingsTrackingScreen
                 },
             ) {
                 val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
@@ -78,11 +76,10 @@ class SettingsScreen private constructor(
         }
     }
 
-    companion object {
-        fun toMainScreen() = SettingsScreen(toDataAndStorage = false, toAbout = false)
-
-        fun toDataAndStorageScreen() = SettingsScreen(toDataAndStorage = true, toAbout = false)
-
-        fun toAboutScreen() = SettingsScreen(toDataAndStorage = false, toAbout = true)
+    sealed interface Destination {
+        data object Main : Destination
+        data object About : Destination
+        data object DataAndStorage : Destination
+        data object Tracking : Destination
     }
 }
