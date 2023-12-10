@@ -73,8 +73,6 @@ fun OnboardingScreen(
                 }
             }
         },
-        rejectText = stringResource(MR.strings.onboarding_action_skip),
-        onRejectClick = onComplete,
     ) {
         Box(
             modifier = Modifier
@@ -87,7 +85,7 @@ fun OnboardingScreen(
                 targetState = currentStep,
                 transitionSpec = {
                     materialSharedAxisX(
-                        forward = true,
+                        forward = targetState > initialState,
                         slideDistance = slideDistance,
                     )
                 },
