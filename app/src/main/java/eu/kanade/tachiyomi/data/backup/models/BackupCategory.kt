@@ -11,14 +11,12 @@ class BackupCategory(
     // @ProtoNumber(3) val updateInterval: Int = 0, 1.x value not used in 0.x
     @ProtoNumber(100) var flags: Long = 0,
 ) {
-    fun getCategory(): Category {
-        return Category(
-            id = 0,
-            name = this@BackupCategory.name,
-            flags = this@BackupCategory.flags,
-            order = this@BackupCategory.order,
-        )
-    }
+    fun toCategory(id: Long) = Category(
+        id = id,
+        name = this@BackupCategory.name,
+        flags = this@BackupCategory.flags,
+        order = this@BackupCategory.order,
+    )
 }
 
 val backupCategoryMapper = { category: Category ->
