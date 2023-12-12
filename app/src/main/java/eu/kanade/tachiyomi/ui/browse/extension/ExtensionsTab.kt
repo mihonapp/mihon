@@ -12,6 +12,7 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
+import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -47,6 +48,17 @@ fun extensionsTab(
                 },
                 onClickItemCancel = extensionsScreenModel::cancelInstallUpdateExtension,
                 onClickUpdateAll = extensionsScreenModel::updateAllExtensions,
+                onClickItemWebView = { extension ->
+                    extension.sources.getOrNull(0)?.let {
+                        navigator.push(
+                            WebViewScreen(
+                                url = it.baseUrl,
+                                initialTitle = it.name,
+                                sourceId = it.id,
+                            ),
+                        )
+                    }
+                },
                 onInstallExtension = extensionsScreenModel::installExtension,
                 onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
                 onTrustExtension = { extensionsScreenModel.trustSignature(it.signatureHash) },
