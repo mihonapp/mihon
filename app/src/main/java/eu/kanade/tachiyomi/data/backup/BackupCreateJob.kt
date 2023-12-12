@@ -27,8 +27,6 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.toJavaDuration
 
 class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
@@ -97,7 +95,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
                     10,
                     TimeUnit.MINUTES,
                 )
-                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10.minutes.toJavaDuration())
+                    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)
                     .addTag(TAG_AUTO)
                     .setConstraints(constraints)
                     .setInputData(workDataOf(IS_AUTO_BACKUP_KEY to true))

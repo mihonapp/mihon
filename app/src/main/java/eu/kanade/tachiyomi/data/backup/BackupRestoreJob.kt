@@ -26,6 +26,8 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
     private val notifier = BackupNotifier(context)
 
     override suspend fun doWork(): Result {
+        if (isRunning(context)) return Result.failure()
+
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: return Result.failure()
         val sync = inputData.getBoolean(SYNC_KEY, false)
