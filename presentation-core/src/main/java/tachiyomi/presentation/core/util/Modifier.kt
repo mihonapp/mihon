@@ -1,6 +1,5 @@
 package tachiyomi.presentation.core.util
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -28,7 +28,10 @@ import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
 fun Modifier.selectedBackground(isSelected: Boolean): Modifier = if (isSelected) {
     composed {
         val alpha = if (isSystemInDarkTheme()) 0.16f else 0.22f
-        Modifier.background(MaterialTheme.colorScheme.secondary.copy(alpha = alpha))
+        val color = MaterialTheme.colorScheme.secondary.copy(alpha = alpha)
+        Modifier.drawBehind {
+            drawRect(color)
+        }
     }
 } else {
     this

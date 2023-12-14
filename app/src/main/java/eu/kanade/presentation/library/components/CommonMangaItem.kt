@@ -62,15 +62,15 @@ private const val GridSelectedCoverAlpha = 0.76f
  */
 @Composable
 fun MangaCompactGridItem(
+    coverData: tachiyomi.domain.manga.model.MangaCover,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
     isSelected: Boolean = false,
     title: String? = null,
-    coverData: tachiyomi.domain.manga.model.MangaCover,
+    onClickContinueReading: (() -> Unit)? = null,
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
     coverBadgeEnd: @Composable (RowScope.() -> Unit)? = null,
-    onLongClick: () -> Unit,
-    onClick: () -> Unit,
-    onClickContinueReading: (() -> Unit)? = null,
 ) {
     GridItemSelectable(
         isSelected = isSelected,
@@ -163,15 +163,15 @@ private fun BoxScope.CoverTextOverlay(
  */
 @Composable
 fun MangaComfortableGridItem(
-    isSelected: Boolean = false,
-    title: String,
-    titleMaxLines: Int = 2,
     coverData: tachiyomi.domain.manga.model.MangaCover,
+    title: String,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    isSelected: Boolean = false,
+    titleMaxLines: Int = 2,
     coverAlpha: Float = 1f,
     coverBadgeStart: (@Composable RowScope.() -> Unit)? = null,
     coverBadgeEnd: (@Composable RowScope.() -> Unit)? = null,
-    onLongClick: () -> Unit,
-    onClick: () -> Unit,
     onClickContinueReading: (() -> Unit)? = null,
 ) {
     GridItemSelectable(
@@ -253,10 +253,10 @@ private fun MangaGridCover(
 
 @Composable
 private fun GridItemTitle(
-    modifier: Modifier,
     title: String,
     style: TextStyle,
     minLines: Int,
+    modifier: Modifier = Modifier,
     maxLines: Int = 2,
 ) {
     Text(
@@ -276,10 +276,10 @@ private fun GridItemTitle(
  */
 @Composable
 private fun GridItemSelectable(
-    modifier: Modifier = Modifier,
     isSelected: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -316,13 +316,13 @@ private fun Modifier.selectedOutline(
  */
 @Composable
 fun MangaListItem(
-    isSelected: Boolean = false,
-    title: String,
     coverData: tachiyomi.domain.manga.model.MangaCover,
-    coverAlpha: Float = 1f,
-    badge: @Composable (RowScope.() -> Unit),
-    onLongClick: () -> Unit,
+    title: String,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    badge: @Composable (RowScope.() -> Unit),
+    isSelected: Boolean = false,
+    coverAlpha: Float = 1f,
     onClickContinueReading: (() -> Unit)? = null,
 ) {
     Row(
