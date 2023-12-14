@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Ùrtimu capìtulu</string>
     <string name="action_view_chapters">Pòmpia sos capìtulos</string>
     <string name="action_cancel_all">Annulla totu</string>
-    <string name="pref_theme_mode">Tema iscuru</string>
     <string name="theme_light">Istudadu</string>
     <string name="theme_dark">Allutu</string>
     <string name="theme_system">Sighi su sistema</string>

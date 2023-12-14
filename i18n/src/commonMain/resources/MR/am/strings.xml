@@ -54,7 +54,6 @@
     <string name="theme_dark">በርቷል</string>
     <string name="theme_light">ጠፍቷል</string>
     <string name="theme_system">ስርዓት ይከተሉ</string>
-    <string name="pref_theme_mode">ጨለማ ሁነታ</string>
     <string name="pref_category_theme">ገጽታ</string>
     <string name="pref_category_about">ስለ</string>
     <string name="pref_category_advanced">የላቀ</string>

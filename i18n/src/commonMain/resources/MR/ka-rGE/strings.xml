@@ -79,7 +79,6 @@
     <string name="pref_category_tracking">თვალყურის დევნება</string>
     <string name="pref_category_advanced">დამატებით</string>
     <string name="pref_category_about">ინფორმაცია</string>
-    <string name="pref_theme_mode">ბნელი რეჟიმი</string>
     <string name="theme_system">სისტემური</string>
     <string name="theme_light">მსუბუქი</string>
     <string name="theme_dark">ჩართული</string>

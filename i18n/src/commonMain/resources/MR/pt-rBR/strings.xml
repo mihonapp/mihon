@@ -301,10 +301,9 @@
     <string name="action_sort_latest_chapter">Último capítulo</string>
     <string name="action_view_chapters">Visualizar os capítulos</string>
     <string name="action_cancel_all">Cancelar todos</string>
-    <string name="pref_theme_mode">Modo noturno</string>
-    <string name="theme_light">Desligado</string>
-    <string name="theme_dark">Ligado</string>
-    <string name="theme_system">Seguir o sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_system">Sistema</string>
     <string name="pref_manage_notifications">Gerenciar notificações</string>
     <string name="pref_category_security">Segurança e privacidade</string>
     <string name="lock_with_biometrics">Exigir desbloqueio</string>
@@ -769,4 +768,19 @@
     <string name="pref_storage_location_info">Usado para backups automáticos, downloads de capítulos e na fonte local.</string>
     <string name="action_menu_overflow_description">Mais opções</string>
     <string name="action_bar_up_description">Navegar para cima</string>
+    <string name="onboarding_storage_action_select">Selecionar uma pasta</string>
+    <string name="pref_onboarding_guide">Guia de introdução</string>
+    <string name="onboarding_guides_new_user">Novo no %s? Recomendamos dar uma olhada no guia de introdução.</string>
+    <string name="onboarding_action_finish">Começar</string>
+    <string name="onboarding_heading">Bem-vindo(a)!</string>
+    <string name="onboarding_guides_returning_user">Já utilizou o %s antes?</string>
+    <string name="onboarding_action_skip">Pular</string>
+    <string name="onboarding_action_next">Próximo</string>
+    <string name="onboarding_description">Vamos definir algumas coisas primeiro. Você sempre pode fazer alterações nas configurações depois também.</string>
+    <string name="no_location_set">Local de armazenamento não definido</string>
+    <string name="onboarding_storage_info">Escolha uma pasta onde o %1$s irá armazenar os downloads de capítulos, backups e mais.
+\n
+\nUma pasta dedicada é recomendada.
+\n
+\nPasta selecionada: %2$s</string>
 </resources>

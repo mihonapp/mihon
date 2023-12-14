@@ -316,7 +316,6 @@
     <string name="theme_system">Systemowy</string>
     <string name="theme_dark">Włącz</string>
     <string name="theme_light">Wyłącz</string>
-    <string name="pref_theme_mode">Ciemny motyw</string>
     <string name="action_move_to_bottom">Przenieś na dół</string>
     <string name="action_move_to_top">Przenieś na górę</string>
     <string name="action_oldest">Najstarsze</string>

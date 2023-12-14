@@ -309,7 +309,6 @@
     <string name="theme_system">اتبع مظهر النظام</string>
     <string name="theme_dark">مفعّل</string>
     <string name="theme_light">غير مفعّل</string>
-    <string name="pref_theme_mode">الوضع الليلي</string>
     <string name="battery_optimization_disabled">تم إلغاء وضع تحسين البطارية مُسبقاً</string>
     <string name="pref_disable_battery_optimization_summary">يساعد في عملية تحديث المكتبة والنسخ الإحتياطي في الخلفية</string>
     <string name="pref_disable_battery_optimization">إطفاء وضع تحسين البطارية</string>

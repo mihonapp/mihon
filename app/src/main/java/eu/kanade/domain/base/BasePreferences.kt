@@ -24,6 +24,8 @@ class BasePreferences(
 
     fun acraEnabled() = preferenceStore.getBoolean("acra.enable", isPreviewBuildType || isReleaseBuildType)
 
+    fun shownOnboardingFlow() = preferenceStore.getBoolean(Preference.appStateKey("onboarding_complete"), false)
+
     enum class ExtensionInstaller(val titleRes: StringResource) {
         LEGACY(MR.strings.ext_installer_legacy),
         PACKAGEINSTALLER(MR.strings.ext_installer_packageinstaller),

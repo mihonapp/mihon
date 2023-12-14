@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">नवीनतम अध्याय</string>
     <string name="action_view_chapters">अध्याय देखें</string>
     <string name="action_cancel_all">सब रद्द करो</string>
-    <string name="pref_theme_mode">डार्क मोड</string>
     <string name="theme_light">बंद</string>
     <string name="theme_dark">चालू करे</string>
     <string name="theme_system">सिस्टम का पालन करें</string>

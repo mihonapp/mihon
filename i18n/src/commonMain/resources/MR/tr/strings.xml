@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Son bölüm</string>
     <string name="action_view_chapters">Bölümleri görüntüle</string>
     <string name="action_cancel_all">Hepsini iptal et</string>
-    <string name="pref_theme_mode">Karanlık kip</string>
     <string name="theme_light">Kapalı</string>
     <string name="theme_dark">Açık</string>
     <string name="theme_system">Sisteme uy</string>

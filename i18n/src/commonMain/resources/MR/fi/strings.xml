@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Viimeisin luku</string>
     <string name="action_view_chapters">Näytä luvut</string>
     <string name="action_cancel_all">Peruuta kaikki</string>
-    <string name="pref_theme_mode">Pimeä tila</string>
     <string name="theme_light">Pois päältä</string>
     <string name="theme_dark">Päällä</string>
     <string name="theme_system">Seuraa järjestelmää</string>

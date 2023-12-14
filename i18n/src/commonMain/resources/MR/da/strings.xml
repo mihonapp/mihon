@@ -126,7 +126,6 @@
     <string name="pref_category_advanced">Avanceret</string>
     <string name="pref_category_about">Om</string>
     <string name="pref_category_theme">Tema</string>
-    <string name="pref_theme_mode">Mørk tilstand</string>
     <string name="theme_system">Følg system</string>
     <string name="theme_light">Fra</string>
     <string name="theme_dark">Til</string>

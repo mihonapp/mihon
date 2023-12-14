@@ -155,7 +155,6 @@
     <string name="action_open_log">Тӑвӑм-пулӑм кӗнекине уҫ</string>
     <string name="action_reset">Тасат</string>
     <string name="action_sort">Уйӑр</string>
-    <string name="pref_theme_mode">Тӗксӗм темӑ</string>
     <string name="theme_system">Системри пекех</string>
     <string name="pref_category_reader">Вулӑш</string>
     <string name="pref_category_tracking">Йӗрлев</string>

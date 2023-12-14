@@ -73,7 +73,6 @@
     <string name="theme_dark">Įjungta</string>
     <string name="theme_light">Išjungta</string>
     <string name="theme_system">Pagal sistemą</string>
-    <string name="pref_theme_mode">Tamsi</string>
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_about">Apie</string>
     <string name="pref_category_advanced">Papildomi</string>

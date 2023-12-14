@@ -97,7 +97,6 @@
     <string name="theme_system">तंत्राचे अनुसरण करा</string>
     <string name="theme_dark">डार्क</string>
     <string name="theme_light">लाइट</string>
-    <string name="pref_theme_mode">गडद मोड</string>
     <string name="pref_category_about">ॲप बद्दल</string>
     <string name="pref_category_advanced">प्रगत</string>
     <string name="pref_category_tracking">ट्रॅकिंग</string>

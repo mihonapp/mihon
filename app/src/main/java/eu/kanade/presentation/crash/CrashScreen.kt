@@ -2,7 +2,7 @@ package eu.kanade.presentation.crash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BugReport
@@ -47,7 +47,7 @@ fun CrashScreen(
             modifier = Modifier
                 .padding(vertical = MaterialTheme.padding.small)
                 .clip(MaterialTheme.shapes.small)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
             Text(

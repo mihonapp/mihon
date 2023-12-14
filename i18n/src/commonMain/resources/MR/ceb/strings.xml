@@ -115,7 +115,6 @@
     <string name="pref_category_tracking">Pagsubay</string>
     <string name="pref_category_advanced">Abante</string>
     <string name="pref_category_theme">Tema</string>
-    <string name="pref_theme_mode">Dark mode</string>
     <string name="theme_dark">Sa</string>
     <string name="pref_app_theme">Tema sa app</string>
     <string name="theme_monet">Dinamiko</string>

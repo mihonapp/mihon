@@ -57,7 +57,6 @@
     <string name="pref_category_downloads">Жүктеулер</string>
     <string name="pref_category_advanced">Толығырақ</string>
     <string name="pref_category_theme">Кейіп</string>
-    <string name="pref_theme_mode">Қараңғы режим</string>
     <string name="theme_system">Жүйе бойынша</string>
     <string name="theme_light">Өшірулі</string>
     <string name="theme_dark">Қосулы</string>

@@ -120,7 +120,6 @@
     <string name="pref_category_advanced">ការកំណត់ពិសេស</string>
     <string name="pref_category_about">អំពីរ</string>
     <string name="pref_category_theme">ពណ៌</string>
-    <string name="pref_theme_mode">ខ្មៅ</string>
     <string name="theme_system">តាមទូរសព្ទ</string>
     <string name="theme_light">បិទ</string>
     <string name="theme_dark">បើក</string>

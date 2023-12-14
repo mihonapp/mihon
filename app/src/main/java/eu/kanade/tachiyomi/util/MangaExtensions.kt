@@ -12,7 +12,7 @@ import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.InputStream
-import java.util.Date
+import java.time.Instant
 
 /**
  * Call before updating [Manga.thumbnail_url] to ensure old cover can be cleared from cache
@@ -28,7 +28,7 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
 
     return when {
         isLocal() -> {
-            this.copy(coverLastModified = Date().time)
+            this.copy(coverLastModified = Instant.now().toEpochMilli())
         }
         hasCustomCover(coverCache) -> {
             coverCache.deleteFromCache(this, false)
@@ -36,7 +36,7 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
         }
         else -> {
             coverCache.deleteFromCache(this, false)
-            this.copy(coverLastModified = Date().time)
+            this.copy(coverLastModified = Instant.now().toEpochMilli())
         }
     }
 }
@@ -44,7 +44,7 @@ fun Manga.prepUpdateCover(coverCache: CoverCache, remoteManga: SManga, refreshSa
 fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Manga {
     if (isLocal()) return this
     return if (coverCache.deleteFromCache(this, true) > 0) {
-        return copy(coverLastModified = Date().time)
+        return copy(coverLastModified = Instant.now().toEpochMilli())
     } else {
         this
     }

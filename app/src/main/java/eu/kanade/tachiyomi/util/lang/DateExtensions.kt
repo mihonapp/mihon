@@ -8,6 +8,7 @@ import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 
@@ -38,13 +39,8 @@ fun Long.convertEpochMillisZone(
  * @return date as time key
  */
 fun Long.toDateKey(): Date {
-    val cal = Calendar.getInstance()
-    cal.time = Date(this)
-    cal[Calendar.HOUR_OF_DAY] = 0
-    cal[Calendar.MINUTE] = 0
-    cal[Calendar.SECOND] = 0
-    cal[Calendar.MILLISECOND] = 0
-    return cal.time
+    val instant = Instant.ofEpochMilli(this)
+    return Date.from(instant.truncatedTo(ChronoUnit.DAYS))
 }
 
 private const val MILLISECONDS_IN_DAY = 86_400_000L

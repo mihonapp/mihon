@@ -50,7 +50,6 @@
     <string name="theme_system">Slijedi sustav</string>
     <string name="theme_dark">Uključeno</string>
     <string name="theme_light">Isključeno</string>
-    <string name="pref_theme_mode">Tamna tema</string>
     <string name="pref_category_about">Informacije</string>
     <string name="pref_category_advanced">Napredno</string>
     <string name="pref_category_tracking">Praćenje</string>

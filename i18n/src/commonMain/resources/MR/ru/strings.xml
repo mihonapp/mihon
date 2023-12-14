@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Последняя глава</string>
     <string name="action_view_chapters">Просмотреть главы</string>
     <string name="action_cancel_all">Отменить всё</string>
-    <string name="pref_theme_mode">Тёмный режим</string>
     <string name="theme_light">Выключен</string>
     <string name="theme_dark">Включён</string>
     <string name="theme_system">Система</string>

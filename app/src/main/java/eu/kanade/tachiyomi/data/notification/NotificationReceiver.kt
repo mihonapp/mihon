@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.net.toUri
-import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
@@ -15,7 +14,6 @@ import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.data.updater.AppUpdateDownloadJob
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
-import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getParcelableExtraCompat
 import eu.kanade.tachiyomi.util.system.notificationManager
@@ -63,12 +61,6 @@ class NotificationReceiver : BroadcastReceiver() {
             // Launch share activity and dismiss notification
             ACTION_SHARE_IMAGE ->
                 shareImage(
-                    context,
-                    intent.getStringExtra(EXTRA_URI)!!.toUri(),
-                )
-            // Delete image from path and dismiss notification
-            ACTION_DELETE_IMAGE ->
-                deleteImage(
                     context,
                     intent.getStringExtra(EXTRA_URI)!!.toUri(),
                 )
@@ -170,16 +162,6 @@ class NotificationReceiver : BroadcastReceiver() {
         } else {
             context.toast(MR.strings.chapter_error)
         }
-    }
-
-    /**
-     * Called to delete image
-     *
-     * @param uri path of file
-     */
-    private fun deleteImage(context: Context, uri: Uri) {
-        UniFile.fromUri(context, uri)?.delete()
-        DiskUtil.scanMedia(context, uri)
     }
 
     /**
@@ -419,26 +401,6 @@ class NotificationReceiver : BroadcastReceiver() {
         internal fun shareImagePendingBroadcast(context: Context, uri: Uri): PendingIntent {
             val intent = Intent(context, NotificationReceiver::class.java).apply {
                 action = ACTION_SHARE_IMAGE
-                putExtra(EXTRA_URI, uri.toString())
-            }
-            return PendingIntent.getBroadcast(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-        }
-
-        /**
-         * Returns [PendingIntent] that starts a service which removes an image from disk
-         *
-         * @param context context of application
-         * @param uri location path of file
-         * @return [PendingIntent]
-         */
-        internal fun deleteImagePendingBroadcast(context: Context, uri: Uri): PendingIntent {
-            val intent = Intent(context, NotificationReceiver::class.java).apply {
-                action = ACTION_DELETE_IMAGE
                 putExtra(EXTRA_URI, uri.toString())
             }
             return PendingIntent.getBroadcast(

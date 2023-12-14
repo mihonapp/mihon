@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">Dernier chapitre</string>
     <string name="action_view_chapters">Voir les chapitres</string>
     <string name="action_cancel_all">Tout annuler</string>
-    <string name="pref_theme_mode">Mode sombre</string>
     <string name="theme_light">Désactivé</string>
     <string name="theme_dark">Activé</string>
     <string name="theme_system">Par défaut du système</string>

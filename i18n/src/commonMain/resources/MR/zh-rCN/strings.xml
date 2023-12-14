@@ -301,7 +301,6 @@
     <string name="action_sort_latest_chapter">作品更新时间</string>
     <string name="action_view_chapters">查看章节</string>
     <string name="action_cancel_all">全部取消</string>
-    <string name="pref_theme_mode">深色模式</string>
     <string name="theme_light">关闭</string>
     <string name="theme_dark">开启</string>
     <string name="theme_system">跟随系统</string>

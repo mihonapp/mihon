@@ -346,7 +346,6 @@
     <string name="action_filter_tracked">Sledované</string>
     <string name="action_faq_and_guides">FAQ a návody</string>
     <string name="pref_category_theme">Téma</string>
-    <string name="pref_theme_mode">Tmavý režim</string>
     <string name="theme_light">Vyp.</string>
     <string name="theme_dark">Zap.</string>
     <string name="pref_app_theme">Téma aplikácie</string>

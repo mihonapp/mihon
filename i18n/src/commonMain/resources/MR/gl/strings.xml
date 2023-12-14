@@ -138,7 +138,6 @@
     <string name="theme_dark">Activado</string>
     <string name="theme_light">Desactivado</string>
     <string name="theme_system">Utilizar o do sistema</string>
-    <string name="pref_theme_mode">Modo escuro</string>
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_about">Acerca de</string>
     <string name="pref_category_advanced">Avanzado</string>

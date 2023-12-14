@@ -116,7 +116,6 @@
     <string name="action_display_language_badge">భాష</string>
     <string name="action_faq_and_guides">తరుచుగా అడిగిన ప్రశ్నలు మరియు మార్గదర్శకములు</string>
     <string name="pref_category_about">గురించి</string>
-    <string name="pref_theme_mode">నలుపు వీక్షణ</string>
     <string name="pref_category_theme">వీక్షణము</string>
     <string name="theme_system">పరికరమును అనుసరించుము</string>
     <string name="theme_light">ఆపుము</string>

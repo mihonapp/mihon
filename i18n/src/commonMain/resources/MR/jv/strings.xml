@@ -42,7 +42,6 @@
     <string name="pref_date_format">Format tanggal</string>
     <string name="theme_dark">Murup</string>
     <string name="theme_light">Mati</string>
-    <string name="pref_theme_mode">Mode Peteng</string>
     <string name="pref_category_theme">Tema</string>
     <string name="pref_category_downloads">Donlot</string>
     <string name="action_webview_back">Bali</string>

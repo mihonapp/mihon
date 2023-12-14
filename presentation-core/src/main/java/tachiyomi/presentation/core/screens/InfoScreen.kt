@@ -38,8 +38,8 @@ fun InfoScreen(
     subtitleText: String,
     acceptText: String,
     onAcceptClick: () -> Unit,
-    rejectText: String,
-    onRejectClick: () -> Unit,
+    rejectText: String? = null,
+    onRejectClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
@@ -69,11 +69,13 @@ fun InfoScreen(
                 ) {
                     Text(text = acceptText)
                 }
-                OutlinedButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = onRejectClick,
-                ) {
-                    Text(text = rejectText)
+                if (rejectText != null && onRejectClick != null) {
+                    OutlinedButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = onRejectClick,
+                    ) {
+                        Text(text = rejectText)
+                    }
                 }
             }
         },

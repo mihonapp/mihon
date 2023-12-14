@@ -102,7 +102,6 @@
     <string name="theme_dark">Nakabukas</string>
     <string name="theme_light">Nakasara</string>
     <string name="theme_system">Sundan ang sistema</string>
-    <string name="pref_theme_mode">Madilim na tema</string>
     <string name="pref_category_about">Patungkol</string>
     <string name="pref_category_advanced">Karagdagan</string>
     <string name="pref_category_tracking">Pagta-track</string>
@@ -272,7 +271,7 @@
     <string name="notification_chapters_single_and_more">Kabanata %1$s at karagdagang %2$d pa</string>
     <string name="notification_chapters_single">Kabanata %1$s</string>
     <string name="notification_new_chapters">May mga bagong kabanata</string>
-    <string name="download_insufficient_space">Di ma-download ang mga kabanata dahil sa mababang espasyo</string>
+    <string name="download_insufficient_space">Di ma-download ang mga kabanata dahil sa mababang espasyo sa storage</string>
     <string name="download_queue_error">Di ma-download ang mga kabanata. Subukan mo uli ito sa Dina-download</string>
     <string name="copy">Kopyahin</string>
     <string name="migrate">Ilipat</string>
@@ -644,7 +643,7 @@
     <string name="pref_downloads_summary">Kusang pag-download, i-download agad</string>
     <string name="pref_tracking_summary">Isahang pagsabay sa progress, pinahusay na pagsabay</string>
     <string name="pref_appearance_summary">Tema, ayos ng petsa &amp; oras</string>
-    <string name="pref_backup_summary">Mano-mano at kusang pag-backup</string>
+    <string name="pref_backup_summary">Mano-mano at awtomatikong pag-backup, espasyo sa storage</string>
     <string name="pref_security_summary">Pag-lock aa app, bantayan ang screen</string>
     <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
     <string name="pref_library_summary">Mga kategorya, panlahatang update, pag-swipe ng kabanata</string>
@@ -764,7 +763,7 @@
     <string name="exclude_scanlators">Ibukod ang mga scanlator</string>
     <string name="action_create">Lumikha</string>
     <string name="pref_storage_location">Lokasyon ng storage</string>
-    <string name="pref_storage_location_info">Ginagamit para sa automatikong pa-backup, pag-download ng mga kabanata, at lokal na source.</string>
+    <string name="pref_storage_location_info">Ginagamit para sa automatikong pag-backup, pag-download ng mga kabanata, at lokal na source.</string>
     <string name="action_menu_overflow_description">Ibang opsiyon</string>
     <string name="selected">Napili</string>
     <string name="not_selected">Di napili</string>

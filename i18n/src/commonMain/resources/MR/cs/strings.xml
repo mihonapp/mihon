@@ -392,7 +392,6 @@
     <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
     <string name="theme_dark">Zapnuto</string>
     <string name="theme_light">Vypnuto</string>
-    <string name="pref_theme_mode">Temný vzhled</string>
     <string name="pref_category_theme">Vzhled</string>
     <string name="action_move_to_top">Přesunout nahoru</string>
     <string name="action_desc">Sestupně</string>

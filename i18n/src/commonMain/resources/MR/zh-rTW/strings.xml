@@ -293,7 +293,6 @@
     <string name="obsolete_extension_message">這個擴充套件已無法使用，其可能無法正確運作或導致本程式發生問題。建議解除安裝。</string>
     <string name="theme_light">關閉</string>
     <string name="theme_system">遵循系統</string>
-    <string name="pref_theme_mode">深色模式</string>
     <string name="theme_dark">開啟</string>
     <string name="pref_date_format">日期格式</string>
     <string name="downloaded_only_summary">將套用至你書櫃中的作品</string>
