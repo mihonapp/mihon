@@ -381,12 +381,7 @@ object Migrations {
                     newKey = { Preference.privateKey(it) },
                 )
             }
-            if (oldVersion < 111) {
-                File(context.cacheDir, "dl_index_cache")
-                    .takeIf { it.exists() }
-                    ?.delete()
-            }
-            if (oldVersion < 112) {
+            if (oldVersion < 113) {
                 val prefsToReplace = listOf(
                     "pref_download_only",
                     "incognito_mode",
@@ -406,6 +401,9 @@ object Migrations {
                     filterPredicate = { it.key in prefsToReplace },
                     newKey = { Preference.appStateKey(it) },
                 )
+
+                // Deleting old download cache index files, but might as well clear it all out
+                context.cacheDir.deleteRecursively()
             }
             return true
         }
