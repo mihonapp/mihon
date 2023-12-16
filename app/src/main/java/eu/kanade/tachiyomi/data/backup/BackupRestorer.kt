@@ -4,11 +4,13 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.BooleanPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.FloatPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.IntPreferenceValue
@@ -25,7 +27,6 @@ import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.preference.AndroidPreferenceStore
 import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.data.DatabaseHandler
-import tachiyomi.data.Manga_sync
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -33,9 +34,10 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
-import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.track.interactor.GetTracks
+import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -53,10 +55,11 @@ class BackupRestorer(
 
     private val handler: DatabaseHandler = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-    private val getManga: GetManga = Injekt.get(),
     private val getMangaByUrlAndSourceId: GetMangaByUrlAndSourceId = Injekt.get(),
     private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
+    private val getTracks: GetTracks = Injekt.get(),
+    private val insertTrack: InsertTrack = Injekt.get(),
     private val fetchInterval: FetchInterval = Injekt.get(),
 
     private val preferenceStore: PreferenceStore = Injekt.get(),
@@ -205,12 +208,11 @@ class BackupRestorer(
 
             restoreMangaDetails(
                 manga = restoredManga,
-                chapters = backupManga.getChaptersImpl(),
+                chapters = backupManga.chapters,
                 categories = backupManga.categories,
                 backupCategories = backupCategories,
-                history = backupManga.brokenHistory.map { BackupHistory(it.url, it.lastRead, it.readDuration) } +
-                    backupManga.history,
-                tracks = backupManga.getTrackingImpl(),
+                history = backupManga.history + backupManga.brokenHistory.map { it.toBackupHistory() },
+                tracks = backupManga.tracking,
             )
         } catch (e: Exception) {
             val sourceName = sourceMapping[backupManga.source] ?: backupManga.source.toString()
@@ -283,20 +285,30 @@ class BackupRestorer(
         )
     }
 
-    private suspend fun restoreChapters(manga: Manga, chapters: List<Chapter>) {
+    private suspend fun restoreChapters(manga: Manga, backupChapters: List<BackupChapter>) {
         val dbChaptersByUrl = getChaptersByMangaId.await(manga.id)
             .associateBy { it.url }
 
-        val processed = chapters.map { chapter ->
-            var updatedChapter = chapter
+        val (existingChapters, newChapters) = backupChapters
+            .mapNotNull {
+                val chapter = it.toChapterImpl()
 
-            val dbChapter = dbChaptersByUrl[updatedChapter.url]
-            if (dbChapter != null) {
-                updatedChapter = updatedChapter
+                val dbChapter = dbChaptersByUrl[chapter.url]
+                    ?: // New chapter
+                    return@mapNotNull chapter
+
+                if (chapter.forComparison() == dbChapter.forComparison()) {
+                    // Same state; skip
+                    return@mapNotNull null
+                }
+
+                // Update to an existing chapter
+                var updatedChapter = chapter
                     .copyFrom(dbChapter)
                     .copy(
                         id = dbChapter.id,
-                        bookmark = updatedChapter.bookmark || dbChapter.bookmark,
+                        mangaId = manga.id,
+                        bookmark = chapter.bookmark || dbChapter.bookmark,
                     )
                 if (dbChapter.read && !updatedChapter.read) {
                     updatedChapter = updatedChapter.copy(
@@ -308,17 +320,18 @@ class BackupRestorer(
                         lastPageRead = dbChapter.lastPageRead,
                     )
                 }
+                updatedChapter
             }
+            .partition { it.id > 0 }
 
-            updatedChapter.copy(mangaId = manga.id)
-        }
-
-        val (existingChapters, newChapters) = processed.partition { it.id > 0 }
-        insertChapters(newChapters)
-        updateKnownChapters(existingChapters)
+        insertNewChapters(newChapters)
+        updateExistingChapters(existingChapters)
     }
 
-    private suspend fun insertChapters(chapters: List<Chapter>) {
+    private fun Chapter.forComparison() =
+        this.copy(id = 0L, mangaId = 0L, dateFetch = 0L, dateUpload = 0L, lastModifiedAt = 0L)
+
+    private suspend fun insertNewChapters(chapters: List<Chapter>) {
         handler.await(true) {
             chapters.forEach { chapter ->
                 chaptersQueries.insert(
@@ -338,7 +351,7 @@ class BackupRestorer(
         }
     }
 
-    private suspend fun updateKnownChapters(chapters: List<Chapter>) {
+    private suspend fun updateExistingChapters(chapters: List<Chapter>) {
         handler.await(true) {
             chapters.forEach { chapter ->
                 chaptersQueries.update(
@@ -393,16 +406,16 @@ class BackupRestorer(
 
     private suspend fun restoreMangaDetails(
         manga: Manga,
-        chapters: List<Chapter>,
+        chapters: List<BackupChapter>,
         categories: List<Long>,
         backupCategories: List<BackupCategory>,
         history: List<BackupHistory>,
-        tracks: List<Track>,
+        tracks: List<BackupTracking>,
     ): Manga {
-        restoreChapters(manga, chapters)
         restoreCategories(manga, categories, backupCategories)
-        restoreHistory(history)
+        restoreChapters(manga, chapters)
         restoreTracking(manga, tracks)
+        restoreHistory(history)
         updateManga.awaitUpdateFetchInterval(manga, now, currentFetchWindow)
         return manga
     }
@@ -441,10 +454,9 @@ class BackupRestorer(
         }
     }
 
-    private suspend fun restoreHistory(history: List<BackupHistory>) {
-        // List containing history to be updated
+    private suspend fun restoreHistory(backupHistory: List<BackupHistory>) {
         val toUpdate = mutableListOf<HistoryUpdate>()
-        for ((url, lastRead, readDuration) in history) {
+        for ((url, lastRead, readDuration) in backupHistory) {
             var dbHistory = handler.awaitOneOrNull { historyQueries.getHistoryByChapterUrl(url) }
             // Check if history already in database and update
             if (dbHistory != null) {
@@ -474,76 +486,53 @@ class BackupRestorer(
                     }
             }
         }
-        handler.await(true) {
-            toUpdate.forEach { payload ->
-                historyQueries.upsert(
-                    payload.chapterId,
-                    payload.readAt,
-                    payload.sessionReadDuration,
-                )
-            }
-        }
-    }
-
-    private suspend fun restoreTracking(manga: Manga, tracks: List<Track>) {
-        // Get tracks from database
-        val dbTracks = handler.awaitList { manga_syncQueries.getTracksByMangaId(manga.id) }
-        val toUpdate = mutableListOf<Manga_sync>()
-        val toInsert = mutableListOf<Track>()
-
-        tracks
-            // Fix foreign keys with the current manga id
-            .map { it.copy(mangaId = manga.id) }
-            .forEach { track ->
-                var isInDatabase = false
-                for (dbTrack in dbTracks) {
-                    if (track.syncId == dbTrack.sync_id) {
-                        // The sync is already in the db, only update its fields
-                        var temp = dbTrack
-                        if (track.remoteId != dbTrack.remote_id) {
-                            temp = temp.copy(remote_id = track.remoteId)
-                        }
-                        if (track.libraryId != dbTrack.library_id) {
-                            temp = temp.copy(library_id = track.libraryId)
-                        }
-                        temp = temp.copy(last_chapter_read = max(dbTrack.last_chapter_read, track.lastChapterRead))
-                        isInDatabase = true
-                        toUpdate.add(temp)
-                        break
-                    }
-                }
-                if (!isInDatabase) {
-                    // Insert new sync. Let the db assign the id
-                    toInsert.add(track.copy(id = 0))
-                }
-            }
-
-        // Update database
         if (toUpdate.isNotEmpty()) {
             handler.await(true) {
-                toUpdate.forEach { track ->
-                    manga_syncQueries.update(
-                        track.manga_id,
-                        track.sync_id,
-                        track.remote_id,
-                        track.library_id,
-                        track.title,
-                        track.last_chapter_read,
-                        track.total_chapters,
-                        track.status,
-                        track.score,
-                        track.remote_url,
-                        track.start_date,
-                        track.finish_date,
-                        track._id,
+                toUpdate.forEach { payload ->
+                    historyQueries.upsert(
+                        payload.chapterId,
+                        payload.readAt,
+                        payload.sessionReadDuration,
                     )
                 }
             }
         }
-        if (toInsert.isNotEmpty()) {
+    }
+
+    private suspend fun restoreTracking(manga: Manga, backupTracks: List<BackupTracking>) {
+        val dbTrackBySyncId = getTracks.await(manga.id).associateBy { it.syncId }
+
+        val (existingTracks, newTracks) = backupTracks
+            .mapNotNull {
+                val track = it.getTrackImpl()
+                val dbTrack = dbTrackBySyncId[track.syncId]
+                    ?: // New track
+                    return@mapNotNull track.copy(
+                        id = 0, // Let DB assign new ID
+                        mangaId = manga.id,
+                    )
+
+                if (track.forComparison() == dbTrack.forComparison()) {
+                    // Same state; skip
+                    return@mapNotNull null
+                }
+
+                // Update to an existing track
+                dbTrack.copy(
+                    remoteId = track.remoteId,
+                    libraryId = track.libraryId,
+                    lastChapterRead = max(dbTrack.lastChapterRead, track.lastChapterRead),
+                )
+            }
+            .partition { it.id > 0 }
+
+        if (newTracks.isNotEmpty()) {
+            insertTrack.awaitAll(newTracks)
+        }
+        if (existingTracks.isNotEmpty()) {
             handler.await(true) {
-                toInsert.forEach { track ->
-                    manga_syncQueries.insert(
+                existingTracks.forEach { track ->
+                    manga_syncQueries.update(
                         track.mangaId,
                         track.syncId,
                         track.remoteId,
@@ -556,11 +545,14 @@ class BackupRestorer(
                         track.remoteUrl,
                         track.startDate,
                         track.finishDate,
+                        track.id,
                     )
                 }
             }
         }
     }
+
+    private fun Track.forComparison() = this.copy(id = 0L, mangaId = 0L)
 
     private fun restoreAppPreferences(preferences: List<BackupPreference>) {
         restorePreferences(preferences, preferenceStore)
