@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup
+package eu.kanade.tachiyomi.data.backup.create
 
 internal object BackupCreateFlags {
     const val BACKUP_CATEGORY = 0x1
