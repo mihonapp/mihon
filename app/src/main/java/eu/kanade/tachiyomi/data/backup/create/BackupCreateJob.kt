@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.data.backup.create
 
 import android.content.Context
+import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build
 import androidx.core.net.toUri
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -70,6 +72,11 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         return ForegroundInfo(
             Notifications.ID_BACKUP_PROGRESS,
             notifier.showBackupProgress().build(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            } else {
+                0
+            },
         )
     }
 

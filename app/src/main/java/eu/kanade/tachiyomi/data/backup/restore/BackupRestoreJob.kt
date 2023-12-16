@@ -1,7 +1,9 @@
 package eu.kanade.tachiyomi.data.backup.restore
 
 import android.content.Context
+import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -54,6 +56,11 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
         return ForegroundInfo(
             Notifications.ID_RESTORE_PROGRESS,
             notifier.showRestoreProgress().build(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            } else {
+                0
+            },
         )
     }
 
