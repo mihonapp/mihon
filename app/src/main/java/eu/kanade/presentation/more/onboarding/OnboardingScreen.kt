@@ -36,7 +36,7 @@ fun OnboardingScreen(
         listOf(
             ThemeStep(),
             StorageStep(),
-            // TODO: prompt for notification permissions when bumping target to Android 13
+            PermissionStep(),
             GuidesStep(onRestoreBackup = onRestoreBackup),
         )
     }
