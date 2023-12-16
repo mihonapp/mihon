@@ -783,4 +783,5 @@
 \nUma pasta dedicada é recomendada.
 \n
 \nPasta selecionada: %2$s</string>
+    <string name="onboarding_storage_selection_required">Uma pasta deve ser selecionada</string>
 </resources>

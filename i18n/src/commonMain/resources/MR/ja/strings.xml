@@ -296,9 +296,9 @@
     <string name="action_sort_latest_chapter">最新章の更新順</string>
     <string name="action_view_chapters">章を見る</string>
     <string name="action_cancel_all">すべてキャンセル</string>
-    <string name="theme_light">オフ</string>
-    <string name="theme_dark">オン</string>
-    <string name="theme_system">システムに従う</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_system">システム</string>
     <string name="pref_manage_notifications">通知設定</string>
     <string name="pref_category_security">セキュリティとプライバシー</string>
     <string name="lock_with_biometrics">アンロックを必要とする</string>
@@ -768,4 +768,20 @@
     <string name="action_bar_up_description">上に移動</string>
     <string name="pref_storage_location">保存場所</string>
     <string name="pref_storage_location_info">自動バックアップ、章のダウンロード、ローカル ソースの保存位置となります。</string>
+    <string name="onboarding_storage_action_select">フォルダを選択してください</string>
+    <string name="pref_onboarding_guide">入門ガイド</string>
+    <string name="onboarding_guides_new_user">%sは初めて？入門ガイドをチェックしてみしましょう。</string>
+    <string name="onboarding_action_finish">はじめる</string>
+    <string name="onboarding_storage_selection_required">フォルダを選択してください</string>
+    <string name="onboarding_heading">ようこそ！</string>
+    <string name="onboarding_guides_returning_user">%sを使ったことはもうありましたか？</string>
+    <string name="onboarding_action_skip">スキップ</string>
+    <string name="onboarding_action_next">次へ</string>
+    <string name="onboarding_description">はじめに初回設定をしていきましょう。このあとも「設定」にていつも変更できます。</string>
+    <string name="no_location_set">保存場所が設定されていません</string>
+    <string name="onboarding_storage_info">%1$sのダウンロード、バックアップなどの保存先のフォルダを設定してください。
+\n
+\nアプリ専用のフォルダの作成・使用がおすすめです。
+\n
+\n選択したフォルダ：%2$s</string>
 </resources>

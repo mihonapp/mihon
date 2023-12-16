@@ -306,9 +306,9 @@
     <string name="pref_category_security">الأمان و الخصوصية</string>
     <string name="pref_manage_notifications">أدر الإشعارات</string>
     <string name="pref_date_format">صيغة التاريخ</string>
-    <string name="theme_system">اتبع مظهر النظام</string>
-    <string name="theme_dark">مفعّل</string>
-    <string name="theme_light">غير مفعّل</string>
+    <string name="theme_system">النظام</string>
+    <string name="theme_dark">داكن</string>
+    <string name="theme_light">فاتح</string>
     <string name="battery_optimization_disabled">تم إلغاء وضع تحسين البطارية مُسبقاً</string>
     <string name="pref_disable_battery_optimization_summary">يساعد في عملية تحديث المكتبة والنسخ الإحتياطي في الخلفية</string>
     <string name="pref_disable_battery_optimization">إطفاء وضع تحسين البطارية</string>
@@ -768,4 +768,20 @@
     <string name="action_bar_up_description">اصعد</string>
     <string name="pref_storage_location">مكان التخزين</string>
     <string name="pref_storage_location_info">يُستخدَم في الاحتياط وتنزيل الفصول والمصدر المحليِّ.</string>
+    <string name="onboarding_storage_action_select">حدِّد مجلَّدًا</string>
+    <string name="pref_onboarding_guide">دليل البدء</string>
+    <string name="onboarding_guides_new_user">أحديث العهد بـ%s؟ طالع دليل البدء.</string>
+    <string name="onboarding_action_finish">ابدأ</string>
+    <string name="onboarding_storage_selection_required">لا بد من تحديد مجلَّد</string>
+    <string name="onboarding_heading">أهلًا وسهلًا!</string>
+    <string name="onboarding_guides_returning_user">أستخدمتَ %s قبلًا؟</string>
+    <string name="onboarding_action_skip">تخطَّ</string>
+    <string name="onboarding_action_next">التالي</string>
+    <string name="onboarding_description">أول أمرنا أن نضبط بعض الأمور، ولك أن تغيرها في الإعدادات لاحقًا.</string>
+    <string name="no_location_set">لم يُعيَّن موضع للتخزين</string>
+    <string name="onboarding_storage_info">حدِّد مجلَّدًا يُخزِّن فيه %1$s الفصول المنزَّلة والاحتياطات وغيرها.
+\n
+\nوالأحسن أن يكون المجلَّد مخصوصًا لذلك.
+\n
+\nالمجلَّد المحدَّد: %2$s</string>
 </resources>

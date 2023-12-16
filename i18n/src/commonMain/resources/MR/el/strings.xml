@@ -347,9 +347,9 @@
     <string name="pref_category_security">Ασφάλεια και ιδιωτικότητα</string>
     <string name="pref_manage_notifications">Διαχείριση ειδοποιήσεων</string>
     <string name="pref_date_format">Μορφή ημερομηνίας</string>
-    <string name="theme_system">Ακολουθήστε το σύστημα</string>
-    <string name="theme_dark">Ενεργοποιημένο</string>
-    <string name="theme_light">Απενεργοποιημένο</string>
+    <string name="theme_system">Σύστημα</string>
+    <string name="theme_dark">Σκοτεινό</string>
+    <string name="theme_light">Φωτεινό</string>
     <string name="action_move_to_bottom">Μετακίνηση στον πάτο</string>
     <string name="action_move_to_top">Μετακίνηση στην κορυφή</string>
     <string name="action_cancel_all">Ακύρωση όλων</string>
@@ -768,4 +768,20 @@
     <string name="action_bar_up_description">Πλοήγηση προς τα πάνω</string>
     <string name="pref_storage_location">Τοποθεσία αποθήκευσης</string>
     <string name="pref_storage_location_info">Χρησιμοποιείται για αυτόματα αντίγραφα ασφαλείας, λήψη κεφαλαίων και τοπική πηγή.</string>
+    <string name="onboarding_storage_action_select">Επιλέξτε ένα φάκελο</string>
+    <string name="onboarding_action_finish">Ξεκινήστε</string>
+    <string name="onboarding_storage_selection_required">Ένας φάκελος πρέπει να επιλεγεί</string>
+    <string name="onboarding_heading">Καλώς ορίσατε!</string>
+    <string name="onboarding_action_skip">Παράλειψη</string>
+    <string name="onboarding_action_next">Επόμενο</string>
+    <string name="pref_onboarding_guide">Οδηγός εισαγωγής</string>
+    <string name="onboarding_guides_new_user">Είστε νέοι στο %s; Σας συνιστούμε να ανατρέξετε στον οδηγό έναρξης.</string>
+    <string name="onboarding_guides_returning_user">Έχετε ξαναχρησιμοποιήσει το %s;</string>
+    <string name="onboarding_description">Ας ρυθμίσουμε πρώτα κάποια πράγματα. Μπορείτε πάντα να τα αλλάξετε στις ρυθμίσεις αργότερα.</string>
+    <string name="no_location_set">Δεν έχει οριστεί τοποθεσία αποθήκευσης</string>
+    <string name="onboarding_storage_info">Επιλέξτε ένα φάκελο όπου το %1$s θα αποθηκεύει λήψεις κεφαλαίων, αντίγραφα ασφαλείας και άλλα.
+\n
+\nΣυνιστάται ένας αποκλειστικός φάκελος.
+\n
+\nΕπιλεγμένος φάκελος: %2$s</string>
 </resources>

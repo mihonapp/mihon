@@ -615,4 +615,14 @@
     <string name="action_not_now">এখন না</string>
     <string name="pref_debug_info">ডিবাগ তথ্য</string>
     <string name="skipped_reason_not_always_update">বাদ দেওয়া হয়েছে কারণ সিরিজের আপডেটের প্রয়োজন নেই৷</string>
+    <string name="unlock_app_title">আনলক %s</string>
+    <string name="action_set_interval">সেট ইন্টারভেল</string>
+    <string name="delete_downloaded">ডাউনলোড করা ফাইল ডিলেট করুন</string>
+    <string name="action_menu_overflow_description">আর অপশন</string>
+    <string name="selected">সিলেক্টেড</string>
+    <string name="not_selected">নট সিলেক্টেড</string>
+    <string name="scanlator">স্ক্যানলেটর</string>
+    <string name="action_bar_up_description">নেভিগেট আপ</string>
+    <string name="label_data_storage">ডাটা অন স্টোরেজ</string>
+    <string name="action_filter_interval_custom">কাস্টমাইজড আনার ব্যবধান</string>
 </resources>

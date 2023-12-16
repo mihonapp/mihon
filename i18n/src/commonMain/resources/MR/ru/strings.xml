@@ -301,8 +301,8 @@
     <string name="action_sort_latest_chapter">Последняя глава</string>
     <string name="action_view_chapters">Просмотреть главы</string>
     <string name="action_cancel_all">Отменить всё</string>
-    <string name="theme_light">Выключен</string>
-    <string name="theme_dark">Включён</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
     <string name="theme_system">Система</string>
     <string name="pref_manage_notifications">Управление уведомлениями</string>
     <string name="pref_category_security">Безопасность и конфиденциальность</string>
@@ -768,4 +768,20 @@
     <string name="action_bar_up_description">Перейти вверх</string>
     <string name="pref_storage_location">Путь хранилища</string>
     <string name="pref_storage_location_info">Используется для автоматических резевных копии, загрузок глав и источнике на устройстве.</string>
+    <string name="onboarding_storage_action_select">Выбрать папку</string>
+    <string name="pref_onboarding_guide">Руководство для начинающих</string>
+    <string name="onboarding_guides_new_user">Новичок в %s? Мы настоятельно рекомендуем ознакомиться с нашим руководством.</string>
+    <string name="onboarding_action_finish">Начать</string>
+    <string name="onboarding_storage_selection_required">Необходимо выбрать папку</string>
+    <string name="onboarding_heading">Добро пожаловать!</string>
+    <string name="onboarding_guides_returning_user">Уже использовали %s раньше?</string>
+    <string name="onboarding_action_skip">Пропустить</string>
+    <string name="onboarding_action_next">Следующее</string>
+    <string name="onboarding_description">Давайте настроем парочку вещей. Вы всегда можете их поменять позже в настройках.</string>
+    <string name="no_location_set">Не указан путь хранилища</string>
+    <string name="onboarding_storage_info">Выберите папку где %1$s будет хранить загруженные главы, резервные копии и другое.
+\n
+\nРекомендуется использовать выделенную папку.
+\n
+\nВыбранная папка: %2$s</string>
 </resources>

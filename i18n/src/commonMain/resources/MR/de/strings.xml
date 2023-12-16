@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Neuestes Kapitel</string>
     <string name="action_view_chapters">Kapitel anzeigen</string>
     <string name="action_cancel_all">Alle abbrechen</string>
-    <string name="theme_light">Aus</string>
-    <string name="theme_dark">An</string>
-    <string name="theme_system">Systemeinstellung</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_system">System</string>
     <string name="pref_manage_notifications">Benachrichtigungen verwalten</string>
     <string name="pref_category_security">Sicherheit und Privatsphäre</string>
     <string name="lock_with_biometrics">Entsperren erforderlich</string>
@@ -768,4 +768,20 @@
     <string name="pref_storage_location_info">Wird für automatische Datensicherungen, heruntergeladene Kapitel und lokale Quellen verwendet.</string>
     <string name="action_menu_overflow_description">Weitere Optionen</string>
     <string name="action_bar_up_description">Nach oben navigieren</string>
+    <string name="onboarding_storage_action_select">Ordner auswählen</string>
+    <string name="pref_onboarding_guide">Einführungstour</string>
+    <string name="onboarding_guides_new_user">Neu bei %s? Wir empfehlen dir, unseren Einstiegsleitfaden anzusehen.</string>
+    <string name="onboarding_action_finish">Loslegen</string>
+    <string name="onboarding_storage_selection_required">Es muss ein Ordner ausgewählt sein</string>
+    <string name="onboarding_heading">Willkommen!</string>
+    <string name="onboarding_guides_returning_user">%s bereits genutzt?</string>
+    <string name="onboarding_action_skip">Überspringen</string>
+    <string name="onboarding_action_next">Weiter</string>
+    <string name="onboarding_description">Lass uns zuerst ein paar Dinge einrichten. Du kannst diese später in den Einstellungen jederzeit ändern.</string>
+    <string name="no_location_set">Kein Speicherort festgelegt</string>
+    <string name="onboarding_storage_info">Wähle einen Ordner aus, in welchem %1$s Kapitel-Downloads, Datensicherungen und mehr speichern wird.
+\n
+\nEin dedizierter Ordner wird empfohlen.
+\n
+\nAusgewählter Ordner: %2$s</string>
 </resources>
