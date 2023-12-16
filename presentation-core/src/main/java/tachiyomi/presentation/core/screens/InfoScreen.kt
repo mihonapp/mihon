@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
@@ -38,6 +39,7 @@ fun InfoScreen(
     subtitleText: String,
     acceptText: String,
     onAcceptClick: () -> Unit,
+    canAccept: Boolean = true,
     rejectText: String? = null,
     onRejectClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
@@ -63,8 +65,9 @@ fun InfoScreen(
                         vertical = MaterialTheme.padding.small,
                     ),
             ) {
-                androidx.compose.material3.Button(
+                Button(
                     modifier = Modifier.fillMaxWidth(),
+                    enabled = canAccept,
                     onClick = onAcceptClick,
                 ) {
                     Text(text = acceptText)

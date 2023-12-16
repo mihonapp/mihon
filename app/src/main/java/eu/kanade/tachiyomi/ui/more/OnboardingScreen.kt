@@ -5,11 +5,9 @@ import androidx.compose.runtime.remember
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
-import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.more.onboarding.OnboardingScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.setting.SettingsScreen
-import tachiyomi.domain.storage.service.StoragePreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -20,8 +18,6 @@ class OnboardingScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
 
         val basePreferences = remember { Injekt.get<BasePreferences>() }
-        val storagePreferences = remember { Injekt.get<StoragePreferences>() }
-        val uiPreferences = remember { Injekt.get<UiPreferences>() }
 
         val finishOnboarding = {
             basePreferences.shownOnboardingFlow().set(true)
@@ -29,8 +25,6 @@ class OnboardingScreen : Screen() {
         }
 
         OnboardingScreen(
-            storagePreferences = storagePreferences,
-            uiPreferences = uiPreferences,
             onComplete = { finishOnboarding() },
             onRestoreBackup = {
                 finishOnboarding()
