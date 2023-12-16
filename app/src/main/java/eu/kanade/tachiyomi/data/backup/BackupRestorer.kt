@@ -31,7 +31,6 @@ import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.history.model.HistoryUpdate
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
@@ -291,7 +290,7 @@ class BackupRestorer(
 
         val (existingChapters, newChapters) = backupChapters
             .mapNotNull {
-                val chapter = it.toChapterImpl()
+                val chapter = it.toChapterImpl().copy(mangaId = manga.id)
 
                 val dbChapter = dbChaptersByUrl[chapter.url]
                     ?: // New chapter
@@ -307,7 +306,6 @@ class BackupRestorer(
                     .copyFrom(dbChapter)
                     .copy(
                         id = dbChapter.id,
-                        mangaId = manga.id,
                         bookmark = chapter.bookmark || dbChapter.bookmark,
                     )
                 if (dbChapter.read && !updatedChapter.read) {
@@ -455,44 +453,39 @@ class BackupRestorer(
     }
 
     private suspend fun restoreHistory(backupHistory: List<BackupHistory>) {
-        val toUpdate = mutableListOf<HistoryUpdate>()
-        for ((url, lastRead, readDuration) in backupHistory) {
-            var dbHistory = handler.awaitOneOrNull { historyQueries.getHistoryByChapterUrl(url) }
-            // Check if history already in database and update
-            if (dbHistory != null) {
-                dbHistory = dbHistory.copy(
-                    last_read = Date(max(lastRead, dbHistory.last_read?.time ?: 0L)),
-                    time_read = max(readDuration, dbHistory.time_read) - dbHistory.time_read,
-                )
-                toUpdate.add(
-                    HistoryUpdate(
-                        chapterId = dbHistory.chapter_id,
-                        readAt = dbHistory.last_read!!,
-                        sessionReadDuration = dbHistory.time_read,
-                    ),
-                )
-            } else {
-                // If not in database, create
-                handler
-                    .awaitOneOrNull { chaptersQueries.getChapterByUrl(url) }
-                    ?.let {
-                        toUpdate.add(
-                            HistoryUpdate(
-                                chapterId = it._id,
-                                readAt = Date(lastRead),
-                                sessionReadDuration = readDuration,
-                            ),
-                        )
-                    }
+        val toUpdate = backupHistory.mapNotNull { history ->
+            val dbHistory = handler.awaitOneOrNull { historyQueries.getHistoryByChapterUrl(history.url) }
+            val item = history.getHistoryImpl()
+
+            if (dbHistory == null) {
+                val chapter = handler.awaitOneOrNull { chaptersQueries.getChapterByUrl(history.url) }
+                return@mapNotNull if (chapter == null) {
+                    // Chapter doesn't exist; skip
+                    null
+                } else {
+                    // New history entry
+                    item.copy(chapterId = chapter._id)
+                }
             }
+
+            // Update history entry
+            item.copy(
+                id = dbHistory._id,
+                chapterId = dbHistory.chapter_id,
+                readAt = max(item.readAt?.time ?: 0L, dbHistory.last_read?.time ?: 0L)
+                    .takeIf { it > 0L }
+                    ?.let { Date(it) },
+                readDuration = max(item.readDuration, dbHistory.time_read),
+            )
         }
+
         if (toUpdate.isNotEmpty()) {
             handler.await(true) {
-                toUpdate.forEach { payload ->
+                toUpdate.forEach {
                     historyQueries.upsert(
-                        payload.chapterId,
-                        payload.readAt,
-                        payload.sessionReadDuration,
+                        it.chapterId,
+                        it.readAt,
+                        it.readDuration,
                     )
                 }
             }

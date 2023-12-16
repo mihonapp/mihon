@@ -7,4 +7,13 @@ data class History(
     val chapterId: Long,
     val readAt: Date?,
     val readDuration: Long,
-)
+) {
+    companion object {
+        fun create() = History(
+            id = -1L,
+            chapterId = -1L,
+            readAt = null,
+            readDuration = -1L,
+        )
+    }
+}
