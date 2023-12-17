@@ -784,4 +784,13 @@
 \nYalnızca buna ait bir klasör tavsiye edilir.
 \n
 \nSeçilen klasör: %2$s</string>
+    <string name="onboarding_permission_notifications">Bildirim izni</string>
+    <string name="onboarding_permission_install_apps">Uygulama kurma izni</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Uzun süreli kitaplık güncellemeleri, indirmeler ve yedekleme geri yüklemelerinin kesintiye uğramasını önleyin.</string>
+    <string name="onboarding_permission_type_optional">İsteğe bağlı</string>
+    <string name="onboarding_permission_ignore_battery_opts">Arka planda pil kullanımı</string>
+    <string name="onboarding_permission_install_apps_description">Kaynak uzantılarını kurmak için.</string>
+    <string name="onboarding_permission_notifications_description">Kitaplık güncellemeleri ve daha fazlası için bildirim alın.</string>
+    <string name="onboarding_permission_type_required">Gerekli</string>
+    <string name="onboarding_permission_action_grant">Ver</string>
 </resources>

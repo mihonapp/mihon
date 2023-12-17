@@ -777,11 +777,20 @@
     <string name="onboarding_guides_returning_user">¿Ya usaste %s antes?</string>
     <string name="onboarding_action_skip">Saltar</string>
     <string name="onboarding_action_next">Siguiente</string>
-    <string name="onboarding_description">Vamos a configurar algunas cosas primero. Siempre puedes cambiarlas más tarde en la configuración también.</string>
+    <string name="onboarding_description">Vamos a configurar algunas cosas primero. Siempre puedes volver a cambiarlas más tarde en la configuración.</string>
     <string name="no_location_set">No se ha establecido una ubicación de almacenamiento</string>
     <string name="onboarding_storage_info">Selecciona una carpeta donde %1$s almacenará las descargas de capítulos, copias de seguridad y más.
 \n
 \nSe recomienda una carpeta dedicada.
 \n
 \nCarpeta seleccionada: %2$s</string>
+    <string name="onboarding_permission_install_apps">Permiso para instalar aplicaciones</string>
+    <string name="onboarding_permission_type_optional">Opcional</string>
+    <string name="onboarding_permission_type_required">Requerido</string>
+    <string name="onboarding_permission_notifications">Permiso de notificación</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Evitar interrupciones en las actualizaciones largas de la biblioteca, descargas y restauraciones de copias de seguridad.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Uso de batería en segundo plano</string>
+    <string name="onboarding_permission_install_apps_description">Para instalar las extensiones de fuentes.</string>
+    <string name="onboarding_permission_notifications_description">Recibe notificaciones sobre actualizaciones de la biblioteca y más.</string>
+    <string name="onboarding_permission_action_grant">Permitir</string>
 </resources>

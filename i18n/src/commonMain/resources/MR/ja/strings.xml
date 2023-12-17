@@ -769,7 +769,7 @@
     <string name="pref_storage_location">保存場所</string>
     <string name="pref_storage_location_info">自動バックアップ、章のダウンロード、ローカル ソースの保存位置となります。</string>
     <string name="onboarding_storage_action_select">フォルダを選択してください</string>
-    <string name="pref_onboarding_guide">入門ガイド</string>
+    <string name="pref_onboarding_guide">初回設定ガイド</string>
     <string name="onboarding_guides_new_user">%sは初めて？入門ガイドをチェックしてみしましょう。</string>
     <string name="onboarding_action_finish">はじめる</string>
     <string name="onboarding_storage_selection_required">フォルダを選択してください</string>
@@ -784,4 +784,13 @@
 \nアプリ専用のフォルダの作成・使用がおすすめです。
 \n
 \n選択したフォルダ：%2$s</string>
+    <string name="onboarding_permission_notifications">通知の許可</string>
+    <string name="onboarding_permission_install_apps">アプリのインストールの許可</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">時間のかかるライブラリ更新、ダウンロードやバックアップの復元などへの中断を防ぎます。</string>
+    <string name="onboarding_permission_type_optional">任意</string>
+    <string name="onboarding_permission_ignore_battery_opts">バックグラウンドでのバッテリー使用量</string>
+    <string name="onboarding_permission_install_apps_description">ソース拡張機能をインストールするために必要です。</string>
+    <string name="onboarding_permission_notifications_description">ライブラリ更新などの通知を送信します。</string>
+    <string name="onboarding_permission_type_required">必須</string>
+    <string name="onboarding_permission_action_grant">許可</string>
 </resources>

@@ -784,4 +784,13 @@
 \nEn dedikerad mapp rekommenderas.
 \n
 \nVald mapp: %2$s</string>
+    <string name="onboarding_permission_notifications">Aviseringsbehörigheter</string>
+    <string name="onboarding_permission_install_apps">Installera app behörigheter</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Undvik avbrott i långvariga biblioteksuppdateringar, nedladdningar och säkerhetskopieringsåterställningar.</string>
+    <string name="onboarding_permission_type_optional">Valfritt</string>
+    <string name="onboarding_permission_ignore_battery_opts">Bakgrundsbatterianvändning</string>
+    <string name="onboarding_permission_install_apps_description">För att installera källtillägg.</string>
+    <string name="onboarding_permission_notifications_description">Få aviseringar om biblioteksuppdateringar och mer.</string>
+    <string name="onboarding_permission_type_required">Krävs</string>
+    <string name="onboarding_permission_action_grant">Bevilja</string>
 </resources>

@@ -750,9 +750,9 @@
     <string name="source_settings">來源設定</string>
     <string name="file_null_uri_error">未選擇檔案</string>
     <string name="relative_time_span_never">永不</string>
-    <string name="pref_flash_page_summ">減少電子墨水螢幕上的殘影</string>
+    <string name="pref_flash_page_summ">減少電子紙顯示器上的殘影</string>
     <string name="last_auto_backup_info">最後一次自動備份：%s</string>
-    <string name="pref_flash_page">頁面轉換時閃白</string>
+    <string name="pref_flash_page">翻頁時閃爍白畫面</string>
     <string name="label_data_storage">資料與儲存空間</string>
     <string name="pref_storage_usage">儲存空間使用情形</string>
     <string name="action_sort_tracker_score">歷程平台評分</string>
@@ -784,4 +784,13 @@
 \n建議使用專屬的資料夾。
 \n
 \n選擇的資料夾：%2$s</string>
+    <string name="onboarding_permission_notifications">通知權限</string>
+    <string name="onboarding_permission_install_apps">安裝應用程式權限</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">避免中斷書櫃更新、章節下載和還原備份等較為費時的作業。</string>
+    <string name="onboarding_permission_type_optional">選用</string>
+    <string name="onboarding_permission_ignore_battery_opts">背景耗電量</string>
+    <string name="onboarding_permission_install_apps_description">用以安裝來源擴充套件。</string>
+    <string name="onboarding_permission_notifications_description">用以傳送書櫃更新等通知。</string>
+    <string name="onboarding_permission_type_required">必要</string>
+    <string name="onboarding_permission_action_grant">授予</string>
 </resources>
