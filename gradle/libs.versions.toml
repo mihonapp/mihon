@@ -2,7 +2,7 @@
 aboutlib_version = "10.9.2"
 leakcanary = "2.12"
 moko = "0.23.0"
-okhttp_version = "5.0.0-alpha.11"
+okhttp_version = "5.0.0-alpha.12"
 richtext = "0.17.0"
 shizuku_version = "12.2.0"
 sqldelight = "2.0.0"
