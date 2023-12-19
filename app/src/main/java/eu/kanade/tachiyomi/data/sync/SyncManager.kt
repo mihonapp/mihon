@@ -2,15 +2,14 @@ package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags
-import eu.kanade.tachiyomi.data.backup.BackupCreator
-import eu.kanade.tachiyomi.data.backup.BackupNotifier
-import eu.kanade.tachiyomi.data.backup.BackupRestoreJob
-import eu.kanade.tachiyomi.data.backup.BackupRestorer
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
+import eu.kanade.tachiyomi.data.backup.create.BackupCreator
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.MangaRestorer
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
 import eu.kanade.tachiyomi.data.sync.service.SyncData
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
@@ -51,8 +50,7 @@ class SyncManager(
 ) {
     private val backupCreator: BackupCreator = BackupCreator(context)
     private val notifier: SyncNotifier = SyncNotifier(context)
-    private val backupNotify: BackupNotifier = BackupNotifier(context)
-    private val backupRestorer: BackupRestorer = BackupRestorer(context, backupNotify)
+    private val mangaRestorer: MangaRestorer = MangaRestorer()
 
     enum class SyncService(val value: Int) {
         NONE(0),
@@ -253,7 +251,7 @@ class SyncManager(
             localMangaMap[nonFavorite.url]?.let { localManga ->
                 if (localManga.favorite != nonFavorite.favorite) {
                     val updatedManga = localManga.copy(favorite = nonFavorite.favorite)
-                    backupRestorer.updateManga(updatedManga)
+                    mangaRestorer.updateManga(updatedManga)
                 }
             }
         }
