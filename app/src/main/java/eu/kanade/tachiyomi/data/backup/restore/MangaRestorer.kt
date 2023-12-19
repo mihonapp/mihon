@@ -24,6 +24,8 @@ import java.util.Date
 import kotlin.math.max
 
 class MangaRestorer(
+    private var isSync: Boolean = false,
+
     private val handler: DatabaseHandler = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
     private val getMangaByUrlAndSourceId: GetMangaByUrlAndSourceId = Injekt.get(),
@@ -33,7 +35,6 @@ class MangaRestorer(
     private val insertTrack: InsertTrack = Injekt.get(),
     fetchInterval: FetchInterval = Injekt.get(),
 ) {
-
     private var now = ZonedDateTime.now()
     private var currentFetchWindow = fetchInterval.getWindow(now)
 
@@ -100,7 +101,7 @@ class MangaRestorer(
         )
     }
 
-    private suspend fun updateManga(manga: Manga): Manga {
+    suspend fun updateManga(manga: Manga): Manga {
         handler.await(true) {
             mangasQueries.update(
                 source = manga.source,
@@ -142,41 +143,39 @@ class MangaRestorer(
             .associateBy { it.url }
 
         val (existingChapters, newChapters) = backupChapters
-            .mapNotNull {
-                val chapter = it.toChapterImpl().copy(mangaId = manga.id)
-
+            .mapNotNull { backupChapter ->
+                val chapter = backupChapter.toChapterImpl().copy(mangaId = manga.id)
                 val dbChapter = dbChaptersByUrl[chapter.url]
-                    ?: // New chapter
-                    return@mapNotNull chapter
 
-                if (chapter.forComparison() == dbChapter.forComparison()) {
-                    // Same state; skip
-                    return@mapNotNull null
+                when {
+                    dbChapter == null -> chapter // New chapter
+                    chapter.forComparison() == dbChapter.forComparison() -> null // Same state; skip
+                    else -> updateChapterBasedOnSyncState(chapter, dbChapter)
                 }
-
-                // Update to an existing chapter
-                var updatedChapter = chapter
-                    .copyFrom(dbChapter)
-                    .copy(
-                        id = dbChapter.id,
-                        bookmark = chapter.bookmark || dbChapter.bookmark,
-                    )
-                if (dbChapter.read && !updatedChapter.read) {
-                    updatedChapter = updatedChapter.copy(
-                        read = true,
-                        lastPageRead = dbChapter.lastPageRead,
-                    )
-                } else if (updatedChapter.lastPageRead == 0L && dbChapter.lastPageRead != 0L) {
-                    updatedChapter = updatedChapter.copy(
-                        lastPageRead = dbChapter.lastPageRead,
-                    )
-                }
-                updatedChapter
             }
             .partition { it.id > 0 }
 
         insertNewChapters(newChapters)
         updateExistingChapters(existingChapters)
+    }
+
+    private fun updateChapterBasedOnSyncState(chapter: Chapter, dbChapter: Chapter): Chapter {
+        return if (isSync) {
+            chapter.copy(
+                id = dbChapter.id,
+                bookmark = chapter.bookmark || dbChapter.bookmark,
+                read = chapter.read,
+                lastPageRead = chapter.lastPageRead
+            )
+        } else {
+            chapter.copyFrom(dbChapter).let {
+                when {
+                    dbChapter.read && !it.read -> it.copy(read = true, lastPageRead = dbChapter.lastPageRead)
+                    it.lastPageRead == 0L && dbChapter.lastPageRead != 0L -> it.copy(lastPageRead = dbChapter.lastPageRead)
+                    else -> it
+                }
+            }
+        }
     }
 
     private fun Chapter.forComparison() =
