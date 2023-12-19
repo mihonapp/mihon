@@ -30,7 +30,7 @@ data class BackupTracking(
 ) {
 
     @Suppress("DEPRECATION")
-    fun getTrackingImpl(): Track {
+    fun getTrackImpl(): Track {
         return Track(
             id = -1,
             mangaId = -1,

@@ -99,9 +99,9 @@
     <string name="pref_manage_notifications">Pamahalaan ang mga abiso</string>
     <string name="pref_category_security">Seguridad at privacy</string>
     <string name="pref_date_format">Ayos ng petsa</string>
-    <string name="theme_dark">Nakabukas</string>
-    <string name="theme_light">Nakasara</string>
-    <string name="theme_system">Sundan ang sistema</string>
+    <string name="theme_dark">Madilim</string>
+    <string name="theme_light">Maliwanag</string>
+    <string name="theme_system">Sistema</string>
     <string name="pref_category_about">Patungkol</string>
     <string name="pref_category_advanced">Karagdagan</string>
     <string name="pref_category_tracking">Pagta-track</string>
@@ -115,7 +115,7 @@
     <string name="last_read_chapter">Huling nabasang kabanata</string>
     <string name="disabled">Sarado</string>
     <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
-    <string name="pref_remove_after_read">Pagkatapos basahin, kusang burahin</string>
+    <string name="pref_remove_after_read">Pagkatapos basahin, awtomatikong burahin</string>
     <string name="pref_webtoon_side_padding">Kapal ng gilid</string>
     <string name="pref_category_reading">Pagbabasa</string>
     <string name="pref_always_show_chapter_transition">Ipakita palagi ang paglipat-kabanata</string>
@@ -133,7 +133,7 @@
     <string name="zoom_start_center">Gitna</string>
     <string name="zoom_start_right">Kanan</string>
     <string name="zoom_start_left">Kaliwa</string>
-    <string name="zoom_start_automatic">Kusa</string>
+    <string name="zoom_start_automatic">Awtomatiko</string>
     <string name="pref_zoom_start">Panimulang pag-zoom</string>
     <string name="scale_type_smart_fit">Matalinong pagsasalaki</string>
     <string name="scale_type_original_size">Orihinal na laki</string>
@@ -185,7 +185,7 @@
 \nMaaaring mabasa ng isang kaduda-dudang extension ang kahit anong nakatagong credentials sa pag-login o di kaya nama\'y magsimula ng delikadong code.
 \n
 \nTinatanggap mo ang mga bantang ito sa pagtiwala sa certificate na ito.</string>
-    <string name="untrusted_extension">Kaduda-dudang extension</string>
+    <string name="untrusted_extension">Di-pinagkakatiwalaang extension</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Tiwala</string>
     <string name="ext_untrusted">Kaduda-duda</string>
@@ -202,17 +202,17 @@
     <string name="default_category_summary">Palaging tanungin</string>
     <string name="default_category">Default na kategorya</string>
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
-    <string name="pref_library_update_refresh_metadata">Kusang sariwain ang metadata</string>
+    <string name="pref_library_update_refresh_metadata">Awtomatikong i-refresh ang metadata</string>
     <string name="pref_update_only_non_completed">May \"Kumpleto\" na estado</string>
     <string name="charging">Kapag naka-charge</string>
-    <string name="pref_library_update_restriction">Kondisyon sa kusang pag-update</string>
+    <string name="pref_library_update_restriction">Awtomatikong ina-update ang mga paghihigpit sa device</string>
     <string name="update_weekly">Linggo-linggo</string>
     <string name="update_48hour">Kada 2 araw</string>
     <string name="update_24hour">Araw-araw</string>
     <string name="update_12hour">Kada 12 oras</string>
     <string name="update_6hour">Kada 6 na oras</string>
     <string name="update_never">Nakapatay</string>
-    <string name="pref_library_update_interval">Kusang pag-update</string>
+    <string name="pref_library_update_interval">Awtomatikong pag-update</string>
     <string name="pref_category_library_update">Panlahatang update</string>
     <string name="landscape">Pahiga</string>
     <string name="portrait">Patayo</string>
@@ -385,7 +385,7 @@
     <string name="pref_disable_battery_optimization_summary">Nakatutulong sa pag-update ng aklatan sa background at pag-backup</string>
     <string name="pref_refresh_library_covers">I-refresh ang mga cover sa aklatan</string>
     <string name="clear_database_completed">Binura na</string>
-    <string name="clear_database_confirmation">Sigurado ka ba\? Ang mga nabasang kabanata at pag-unlad ng mga wala sa aklatan ay mawawala</string>
+    <string name="clear_database_confirmation">Sigurado ka ba? Ang mga nabasang kabanata at progress ng mga wala sa aklatan ay mawawala</string>
     <string name="pref_clear_database_summary">Burahin ang nakaraan ng mga entry na hindi naka-save sa aklatan mo</string>
     <string name="pref_clear_database">Linisin ang database</string>
     <string name="cache_delete_error">Nagka-error habang nililinis</string>
@@ -508,7 +508,7 @@
     <string name="action_start_downloading_now">I-download na</string>
     <string name="about_dont_kill_my_app">May dagdag na mga restriksyon sa app ang ilang mga modelo ng phone na pumapatay sa mga serbisyo sa background. May impormasyon sa site na ito para maayos ang naturang problema.</string>
     <string name="restore_miui_warning">Maaaring hindi gumana nang maayos ang pag-backup/pag-restore kung nakasara ang MIUI optimization.</string>
-    <string name="enhanced_tracking_info">Nagbibigay ng mga pinahusay na mga feature para sa ilang mga source. Kusang tina-track ang mga entry kapag naidagdag ito sa iyong aklatan.</string>
+    <string name="enhanced_tracking_info">Nagbibigay ng mga pinahusay na mga feature para sa ilang mga source. Awtomatikong tina-track ang mga entry kapag naidagdag ito sa iyong aklatan.</string>
     <string name="enhanced_services">Pinahusay na tracker</string>
     <string name="theme_midnightdusk">Hatinggabi</string>
     <string name="theme_greenapple">Berdeng Mansanas</string>
@@ -519,7 +519,7 @@
     <string name="theme_yinyang">Yin at Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Presas</string>
-    <string name="label_background_activity">Gawaing likuran</string>
+    <string name="label_background_activity">Aktibidad sa background</string>
     <string name="pref_lowest">Pinakamababa</string>
     <string name="pref_low">Mababa</string>
     <string name="pref_high">Mataas</string>
@@ -535,9 +535,9 @@
     <string name="getting_started_guide">Gabay sa Pagsisimula</string>
     <string name="pref_tablet_ui_mode">Pang-tablet na UI</string>
     <string name="help_translate">Tumulong sa pagsalin</string>
-    <string name="pref_remove_exclude_categories">Kategoryang di-kasama</string>
+    <string name="pref_remove_exclude_categories">Mga hindi kasamang kategorya</string>
     <string name="ext_app_info">Tungkol sa app</string>
-    <string name="ext_installer_shizuku_unavailable_dialog">Paki-install at buksan ang Shizuku para magamit ito bilang taga-install ng extension.</string>
+    <string name="ext_installer_shizuku_unavailable_dialog">I-Install at buksan ang Shizuku para magamit ito bilang taga-install ng extension.</string>
     <string name="ext_installer_shizuku_stopped">Di tumatakbo ang Shizuku</string>
     <string name="ext_installer_legacy">Legasiya</string>
     <string name="ext_installer_pref">Taga-install</string>
@@ -551,7 +551,7 @@
     <string name="backup_info">Dapat nagtatabi rin kayo ng mga kopya ng backup sa ibang mga lugar. Ang mga backup ay naglalaman ng sensitibong data tulad ng nakaimbak na password; mag-ingat kung ibahagi ito.</string>
     <string name="connected_to_wifi">Sa Wi-Fi lang</string>
     <string name="update_72hour">Kada 3 araw</string>
-    <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal at/o pagharang ng mga source sa Tachiyomi ang mga malalaking maramihang pag-download. I-tap para matuto pa.</string>
+    <string name="download_queue_size_warning">Babala: maaaring humantong sa pagbagal at/o pagharang ng mga source sa Tachiyomi ang maramihang pag-download. I-tap para matuto pa.</string>
     <string name="channel_app_updates">Mga update sa app</string>
     <string name="ext_update_all">I-update lahat</string>
     <string name="clear_database_source_item_count">%1$d na entry sa database na wala sa aklatan</string>
@@ -573,7 +573,7 @@
     <string name="pref_update_only_started">Hindi pa nasisimulan</string>
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang mga kabanata</string>
     <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nabasang mga kabanata</string>
-    <string name="pref_landscape_zoom">Kusang mag-zoom sa mga malalawak na larawan</string>
+    <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
     <string name="channel_skipped">Nilaktawan</string>
@@ -640,7 +640,7 @@
     <string name="skipped_reason_not_always_update">Nilaktawan dahil hindi kailangan ang pag-update sa serye</string>
     <string name="action_search_hint">Maghanap…</string>
     <string name="pref_reader_summary">Paraan ng pagbasa, pagpapakita, nabigasyon</string>
-    <string name="pref_downloads_summary">Kusang pag-download, i-download agad</string>
+    <string name="pref_downloads_summary">Awtomatikong pag-download, i-download nang maaga</string>
     <string name="pref_tracking_summary">Isahang pagsabay sa progress, pinahusay na pagsabay</string>
     <string name="pref_appearance_summary">Tema, ayos ng petsa &amp; oras</string>
     <string name="pref_backup_summary">Mano-mano at awtomatikong pag-backup, espasyo sa storage</string>
@@ -768,4 +768,20 @@
     <string name="selected">Napili</string>
     <string name="not_selected">Di napili</string>
     <string name="action_bar_up_description">Mag-navigate pataas</string>
+    <string name="onboarding_storage_action_select">Pumili ng folder</string>
+    <string name="pref_onboarding_guide">Gabay sa onboarding</string>
+    <string name="onboarding_guides_new_user">Bago sa %s? Inirerekomenda naming tingnan ang gabay sa pagsisimula.</string>
+    <string name="onboarding_action_finish">Magsimula</string>
+    <string name="onboarding_storage_selection_required">Dapat pumili ng isang folder</string>
+    <string name="onboarding_heading">Maligayang pagdating!</string>
+    <string name="onboarding_guides_returning_user">Gumagamit ba ng %s dati?</string>
+    <string name="onboarding_action_skip">Laktawan</string>
+    <string name="onboarding_action_next">Susunod</string>
+    <string name="onboarding_description">Mag-set up muna tayo ng ilang bagay. Maaari mo ring baguhin ang mga ito anumang oras sa mga setting sa ibang pagkakataon.</string>
+    <string name="no_location_set">Walang nakatakdang lokasyon ng storage</string>
+    <string name="onboarding_storage_info">Pumili ng folder kung saan mag-imbak ang %1$s ng mga na-download ng kabanata, mga backup, at higit pa.
+\n
+\nInirerekomenda ang isang nakalaang folder.
+\n
+\nNapiling folder: %2$s</string>
 </resources>

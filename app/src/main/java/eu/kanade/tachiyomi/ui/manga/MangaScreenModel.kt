@@ -118,7 +118,7 @@ class MangaScreenModel(
     private val successState: State.Success?
         get() = state.value as? State.Success
 
-    private val loggedInTrackers by lazy { trackerManager.trackers.filter { it.isLoggedIn } }
+    val loggedInTrackers by lazy { trackerManager.trackers.filter { it.isLoggedIn } }
 
     val manga: Manga?
         get() = successState?.manga
@@ -636,18 +636,18 @@ class MangaScreenModel(
     ) {
         val successState = successState ?: return
 
-        if (startNow) {
-            val chapterId = chapters.singleOrNull()?.id ?: return
-            downloadManager.startDownloadNow(chapterId)
-        } else {
-            downloadChapters(chapters)
-        }
-
-        if (!isFavorited && !successState.hasPromptedToAddBefore) {
-            updateSuccessState { state ->
-                state.copy(hasPromptedToAddBefore = true)
+        screenModelScope.launchNonCancellable {
+            if (startNow) {
+                val chapterId = chapters.singleOrNull()?.id ?: return@launchNonCancellable
+                downloadManager.startDownloadNow(chapterId)
+            } else {
+                downloadChapters(chapters)
             }
-            screenModelScope.launch {
+
+            if (!isFavorited && !successState.hasPromptedToAddBefore) {
+                updateSuccessState { state ->
+                    state.copy(hasPromptedToAddBefore = true)
+                }
                 val result = snackbarHostState.showSnackbar(
                     message = context.stringResource(MR.strings.snack_add_to_library),
                     actionLabel = context.stringResource(MR.strings.action_add),

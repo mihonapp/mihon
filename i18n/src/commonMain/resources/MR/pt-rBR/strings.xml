@@ -783,4 +783,14 @@
 \nUma pasta dedicada é recomendada.
 \n
 \nPasta selecionada: %2$s</string>
+    <string name="onboarding_storage_selection_required">Uma pasta deve ser selecionada</string>
+    <string name="onboarding_permission_notifications">Permissão de notificação</string>
+    <string name="onboarding_permission_install_apps">Permissão de instalação de aplicativos</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Evite interrupções para tarefas longas como atualizações da biblioteca, downloads e restauração de backups.</string>
+    <string name="onboarding_permission_type_optional">Opcional</string>
+    <string name="onboarding_permission_ignore_battery_opts">Uso de bateria em plano de fundo</string>
+    <string name="onboarding_permission_install_apps_description">Para instalar extensões de fontes.</string>
+    <string name="onboarding_permission_notifications_description">Seja notificado para atualizações da biblioteca e mais.</string>
+    <string name="onboarding_permission_type_required">Obrigatório</string>
+    <string name="onboarding_permission_action_grant">Conceder</string>
 </resources>

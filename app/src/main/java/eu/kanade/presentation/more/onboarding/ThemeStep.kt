@@ -8,33 +8,40 @@ import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.presentation.more.settings.widget.AppThemeModePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import tachiyomi.presentation.core.util.collectAsState
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-@Composable
-internal fun ThemeStep(
-    uiPreferences: UiPreferences,
-) {
-    val themeModePref = uiPreferences.themeMode()
-    val themeMode by themeModePref.collectAsState()
+internal class ThemeStep : OnboardingStep {
 
-    val appThemePref = uiPreferences.appTheme()
-    val appTheme by appThemePref.collectAsState()
+    override val isComplete: Boolean = true
 
-    val amoledPref = uiPreferences.themeDarkAmoled()
-    val amoled by amoledPref.collectAsState()
+    private val uiPreferences: UiPreferences = Injekt.get()
 
-    Column {
-        AppThemeModePreferenceWidget(
-            value = themeMode,
-            onItemClick = {
-                themeModePref.set(it)
-                setAppCompatDelegateThemeMode(it)
-            },
-        )
+    @Composable
+    override fun Content() {
+        val themeModePref = uiPreferences.themeMode()
+        val themeMode by themeModePref.collectAsState()
 
-        AppThemePreferenceWidget(
-            value = appTheme,
-            amoled = amoled,
-            onItemClick = { appThemePref.set(it) },
-        )
+        val appThemePref = uiPreferences.appTheme()
+        val appTheme by appThemePref.collectAsState()
+
+        val amoledPref = uiPreferences.themeDarkAmoled()
+        val amoled by amoledPref.collectAsState()
+
+        Column {
+            AppThemeModePreferenceWidget(
+                value = themeMode,
+                onItemClick = {
+                    themeModePref.set(it)
+                    setAppCompatDelegateThemeMode(it)
+                },
+            )
+
+            AppThemePreferenceWidget(
+                value = appTheme,
+                amoled = amoled,
+                onItemClick = { appThemePref.set(it) },
+            )
+        }
     }
 }

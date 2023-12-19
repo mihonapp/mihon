@@ -291,9 +291,9 @@
     <string name="pref_category_library">書櫃</string>
     <string name="ext_obsolete">過舊</string>
     <string name="obsolete_extension_message">這個擴充套件已無法使用，其可能無法正確運作或導致本程式發生問題。建議解除安裝。</string>
-    <string name="theme_light">關閉</string>
-    <string name="theme_system">遵循系統</string>
-    <string name="theme_dark">開啟</string>
+    <string name="theme_light">淺色</string>
+    <string name="theme_system">系統</string>
+    <string name="theme_dark">深色</string>
     <string name="pref_date_format">日期格式</string>
     <string name="downloaded_only_summary">將套用至你書櫃中的作品</string>
     <string name="label_downloaded_only">僅限下載內容</string>
@@ -643,7 +643,7 @@
     <string name="pref_appearance_summary">主題、日期格式</string>
     <string name="pref_downloads_summary">自動下載、預先下載</string>
     <string name="pref_tracking_summary">單向進度同步、增強式同步</string>
-    <string name="pref_backup_summary">手動與自動備份，儲存空間</string>
+    <string name="pref_backup_summary">手動與自動備份、儲存空間</string>
     <string name="pref_security_summary">上鎖應用程式、防窺畫面</string>
     <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
@@ -750,9 +750,9 @@
     <string name="source_settings">來源設定</string>
     <string name="file_null_uri_error">未選擇檔案</string>
     <string name="relative_time_span_never">永不</string>
-    <string name="pref_flash_page_summ">減少電子墨水螢幕上的殘影</string>
+    <string name="pref_flash_page_summ">減少電子紙顯示器上的殘影</string>
     <string name="last_auto_backup_info">最後一次自動備份：%s</string>
-    <string name="pref_flash_page">頁面轉換時閃白</string>
+    <string name="pref_flash_page">翻頁時閃爍白畫面</string>
     <string name="label_data_storage">資料與儲存空間</string>
     <string name="pref_storage_usage">儲存空間使用情形</string>
     <string name="action_sort_tracker_score">歷程平台評分</string>
@@ -768,4 +768,29 @@
     <string name="action_bar_up_description">向上瀏覽</string>
     <string name="pref_storage_location">儲存位置</string>
     <string name="pref_storage_location_info">供自動備份、章節下載和本機來源使用。</string>
+    <string name="onboarding_storage_action_select">選擇資料夾</string>
+    <string name="pref_onboarding_guide">新手上路精靈</string>
+    <string name="onboarding_guides_new_user">初探 %s？我們建議你查看入門指南。</string>
+    <string name="onboarding_action_finish">開始使用</string>
+    <string name="onboarding_storage_selection_required">必須選擇一個資料夾</string>
+    <string name="onboarding_heading">歡迎！</string>
+    <string name="onboarding_guides_returning_user">已是 %s 的既有使用者？</string>
+    <string name="onboarding_action_skip">略過</string>
+    <string name="onboarding_action_next">下一步</string>
+    <string name="onboarding_description">讓我們先設定一些東西。稍後你隨時可至設定中變更這些選項。</string>
+    <string name="no_location_set">未設定儲存位置</string>
+    <string name="onboarding_storage_info">選擇供 %1$s 存放下載的章節、備份檔等內容的資料夾。
+\n
+\n建議使用專屬的資料夾。
+\n
+\n選擇的資料夾：%2$s</string>
+    <string name="onboarding_permission_notifications">通知權限</string>
+    <string name="onboarding_permission_install_apps">安裝應用程式權限</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">避免中斷書櫃更新、章節下載和還原備份等較為費時的作業。</string>
+    <string name="onboarding_permission_type_optional">選用</string>
+    <string name="onboarding_permission_ignore_battery_opts">背景耗電量</string>
+    <string name="onboarding_permission_install_apps_description">用以安裝來源擴充套件。</string>
+    <string name="onboarding_permission_notifications_description">用以傳送書櫃更新等通知。</string>
+    <string name="onboarding_permission_type_required">必要</string>
+    <string name="onboarding_permission_action_grant">授予</string>
 </resources>

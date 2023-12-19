@@ -160,7 +160,8 @@
 
         <service
             android:name=".extension.util.ExtensionInstallService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"

@@ -13,13 +13,17 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.system.isConnectedToWifi
-import eu.kanade.tachiyomi.util.system.isOnline
+import eu.kanade.tachiyomi.util.system.NetworkState
+import eu.kanade.tachiyomi.util.system.activeNetworkState
+import eu.kanade.tachiyomi.util.system.networkStateFlow
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import tachiyomi.domain.download.service.DownloadPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -50,7 +54,11 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
     }
 
     override suspend fun doWork(): Result {
-        var active = checkConnectivity() && downloadManager.downloaderStart()
+        var networkCheck = checkNetworkState(
+            applicationContext.activeNetworkState(),
+            downloadPreferences.downloadOnlyOverWifi().get(),
+        )
+        var active = networkCheck && downloadManager.downloaderStart()
 
         if (!active) {
             return Result.failure()
@@ -58,29 +66,36 @@ class DownloadJob(context: Context, workerParams: WorkerParameters) : CoroutineW
 
         setForegroundSafely()
 
+        coroutineScope {
+            combineTransform(
+                applicationContext.networkStateFlow(),
+                downloadPreferences.downloadOnlyOverWifi().changes(),
+                transform = { a, b -> emit(checkNetworkState(a, b)) },
+            )
+                .onEach { networkCheck = it }
+                .launchIn(this)
+        }
+
         // Keep the worker running when needed
         while (active) {
-            delay(100)
-            active = !isStopped && downloadManager.isRunning && checkConnectivity()
+            active = !isStopped && downloadManager.isRunning && networkCheck
         }
 
         return Result.success()
     }
 
-    private fun checkConnectivity(): Boolean {
-        return with(applicationContext) {
-            if (isOnline()) {
-                val noWifi = downloadPreferences.downloadOnlyOverWifi().get() && !isConnectedToWifi()
-                if (noWifi) {
-                    downloadManager.downloaderStop(
-                        applicationContext.getString(R.string.download_notifier_text_only_wifi),
-                    )
-                }
-                !noWifi
-            } else {
-                downloadManager.downloaderStop(applicationContext.getString(R.string.download_notifier_no_network))
-                false
+    private fun checkNetworkState(state: NetworkState, requireWifi: Boolean): Boolean {
+        return if (state.isOnline) {
+            val noWifi = requireWifi && !state.isWifi
+            if (noWifi) {
+                downloadManager.downloaderStop(
+                    applicationContext.getString(R.string.download_notifier_text_only_wifi),
+                )
             }
+            !noWifi
+        } else {
+            downloadManager.downloaderStop(applicationContext.getString(R.string.download_notifier_no_network))
+            false
         }
     }
 

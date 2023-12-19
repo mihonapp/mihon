@@ -8,7 +8,9 @@ import kotlinx.serialization.protobuf.ProtoNumber
 data class BrokenBackupSource(
     @ProtoNumber(0) var name: String = "",
     @ProtoNumber(1) var sourceId: Long,
-)
+) {
+    fun toBackupSource() = BackupSource(name, sourceId)
+}
 
 @Serializable
 data class BackupSource(

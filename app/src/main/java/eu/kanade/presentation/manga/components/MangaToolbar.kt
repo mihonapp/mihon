@@ -35,10 +35,8 @@ import tachiyomi.presentation.core.theme.active
 
 @Composable
 fun MangaToolbar(
-    modifier: Modifier = Modifier,
     title: String,
     titleAlphaProvider: () -> Float,
-    backgroundAlphaProvider: () -> Float = titleAlphaProvider,
     hasFilters: Boolean,
     onBackClicked: () -> Unit,
     onClickFilter: () -> Unit,
@@ -47,10 +45,14 @@ fun MangaToolbar(
     onClickEditCategory: (() -> Unit)?,
     onClickRefresh: () -> Unit,
     onClickMigrate: (() -> Unit)?,
+
     // For action mode
     actionModeCounter: Int,
     onSelectAll: () -> Unit,
     onInvertSelection: () -> Unit,
+
+    modifier: Modifier = Modifier,
+    backgroundAlphaProvider: () -> Float = titleAlphaProvider,
 ) {
     Column(
         modifier = modifier,
@@ -62,7 +64,7 @@ fun MangaToolbar(
                     text = if (isActionMode) actionModeCounter.toString() else title,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.alpha(if (isActionMode) 1f else titleAlphaProvider()),
+                    color = LocalContentColor.current.copy(alpha = if (isActionMode) 1f else titleAlphaProvider()),
                 )
             },
             navigationIcon = {

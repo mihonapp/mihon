@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Senaste kapitel</string>
     <string name="action_view_chapters">Visa kapitel</string>
     <string name="action_cancel_all">Avbryt alla</string>
-    <string name="theme_light">Av</string>
-    <string name="theme_dark">På</string>
-    <string name="theme_system">Följ systemet</string>
+    <string name="theme_light">Ljus</string>
+    <string name="theme_dark">Mörk</string>
+    <string name="theme_system">System</string>
     <string name="pref_manage_notifications">Hantera aviseringar</string>
     <string name="pref_category_security">Säkerhet och integritet</string>
     <string name="lock_with_biometrics">Kräver upplåsning</string>
@@ -768,4 +768,29 @@
     <string name="selected">Vald</string>
     <string name="not_selected">Inte vald</string>
     <string name="action_bar_up_description">Navigera upp</string>
+    <string name="onboarding_storage_action_select">Välj en mapp</string>
+    <string name="pref_onboarding_guide">Introduktionsguide</string>
+    <string name="onboarding_guides_new_user">Ny till %s? Vi rekommenderar att du tar en titt på komma igång guiden.</string>
+    <string name="onboarding_action_finish">Kom igång</string>
+    <string name="onboarding_storage_selection_required">En mapp måste väljas</string>
+    <string name="onboarding_heading">Välkommen!</string>
+    <string name="onboarding_guides_returning_user">Redan använt %s förut?</string>
+    <string name="onboarding_action_skip">Hoppa över</string>
+    <string name="onboarding_action_next">Nästa</string>
+    <string name="onboarding_description">Låt oss ställa in några saker först. Du kan alltid ändra dessa i inställningarna senare.</string>
+    <string name="no_location_set">Ingen lagringsplats inställd</string>
+    <string name="onboarding_storage_info">Välj en mapp där %1$s lagrar kapitelnedladdningar, säkerhetskopior och mer.
+\n
+\nEn dedikerad mapp rekommenderas.
+\n
+\nVald mapp: %2$s</string>
+    <string name="onboarding_permission_notifications">Aviseringsbehörigheter</string>
+    <string name="onboarding_permission_install_apps">Installera app behörigheter</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Undvik avbrott i långvariga biblioteksuppdateringar, nedladdningar och säkerhetskopieringsåterställningar.</string>
+    <string name="onboarding_permission_type_optional">Valfritt</string>
+    <string name="onboarding_permission_ignore_battery_opts">Bakgrundsbatterianvändning</string>
+    <string name="onboarding_permission_install_apps_description">För att installera källtillägg.</string>
+    <string name="onboarding_permission_notifications_description">Få aviseringar om biblioteksuppdateringar och mer.</string>
+    <string name="onboarding_permission_type_required">Krävs</string>
+    <string name="onboarding_permission_action_grant">Bevilja</string>
 </resources>

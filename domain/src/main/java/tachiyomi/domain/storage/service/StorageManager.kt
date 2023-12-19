@@ -6,8 +6,14 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 
 class StorageManager(
     private val context: Context,
@@ -16,24 +22,33 @@ class StorageManager(
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private var baseDir: UniFile? = storagePreferences.baseStorageDirectory().get().let(::getBaseDir)
+    private var baseDir: UniFile? = getBaseDir(storagePreferences.baseStorageDirectory().get())
+
+    private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
+    val changes = _changes.receiveAsFlow()
+        .shareIn(scope, SharingStarted.Lazily, 1)
 
     init {
         storagePreferences.baseStorageDirectory().changes()
-            .onEach { baseDir = getBaseDir(it) }
+            .drop(1)
+            .distinctUntilChanged()
+            .onEach { uri ->
+                baseDir = getBaseDir(uri)
+                baseDir?.let { parent ->
+                    parent.createDirectory(AUTOMATIC_BACKUPS_PATH)
+                    parent.createDirectory(LOCAL_SOURCE_PATH)
+                    parent.createDirectory(DOWNLOADS_PATH).also {
+                        DiskUtil.createNoMediaFile(it, context)
+                    }
+                }
+                _changes.send(Unit)
+            }
             .launchIn(scope)
     }
 
-    private fun getBaseDir(path: String): UniFile? {
-        val file = UniFile.fromUri(context, path.toUri())
-
-        return file.takeIf { it?.exists() == true }?.also { parent ->
-            parent.createDirectory(AUTOMATIC_BACKUPS_PATH)
-            parent.createDirectory(LOCAL_SOURCE_PATH)
-            parent.createDirectory(DOWNLOADS_PATH).also {
-                DiskUtil.createNoMediaFile(it, context)
-            }
-        }
+    private fun getBaseDir(uri: String): UniFile? {
+        return UniFile.fromUri(context, uri.toUri())
+            .takeIf { it?.exists() == true }
     }
 
     fun getAutomaticBackupsDirectory(): UniFile? {

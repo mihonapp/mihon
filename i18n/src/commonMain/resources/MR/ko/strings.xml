@@ -150,7 +150,7 @@
     <string name="cookies_cleared">쿠키 삭제됨</string>
     <string name="pref_clear_database">데이터베이스 삭제</string>
     <string name="pref_clear_database_summary">서재에 추가되지 않은 항목의 기록을 삭제합니다</string>
-    <string name="clear_database_confirmation">확실합니까\? 서재에 없는 항목의 읽은 기록이 삭제됩니다</string>
+    <string name="clear_database_confirmation">확실합니까? 서재에 없는 항목의 읽기 기록이 삭제됩니다</string>
     <string name="version">버전</string>
     <string name="pref_enable_acra">오류 보고서 전송</string>
     <string name="pref_acra_summary">버그를 수정하는데 도움이 됩니다. 개인 정보는 전송되지 않습니다</string>
@@ -309,7 +309,7 @@
     <string name="pref_disable_battery_optimization">배터리 최적화 끄기</string>
     <string name="restore_miui_warning">MIUI 최적화가 꺼져 있을 경우 백업/복원 기능이 정상 작동하지 않을 수 있습니다.</string>
     <string name="restore_in_progress">복원이 이미 진행중 입니다</string>
-    <string name="requires_app_restart">설정을 적용하기 위해 앱을 재시작해야 합니다</string>
+    <string name="requires_app_restart">앱을 재시작한 후에 적용됩니다</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="label_data">데이터</string>
     <string name="backup_in_progress">백업이 이미 진행중입니다</string>
@@ -448,7 +448,7 @@
     <string name="backup_restore_missing_sources">없어진 소스:</string>
     <string name="backup_restore_missing_trackers">로그인 되지않은 트래커:</string>
     <string name="pref_auto_clear_chapter_cache">앱 실행 시 회차 캐시 삭제</string>
-    <string name="clear_database_source_item_count">데이터베이스에 없는 항목이 %1$d개 있습니다</string>
+    <string name="clear_database_source_item_count">서재에 없는 항목이 데이터베이스에 %1$d개 있습니다</string>
     <string name="about_dont_kill_my_app">일부 제조사는 백그라운드 서비스를 종료하는 추가적인 제한 사항이 있습니다. 자세한 사항은 웹사이트를 참조하세요.</string>
     <string name="pref_tablet_ui_mode">태블릿 UI</string>
     <string name="tabs_header">탭</string>
@@ -622,7 +622,7 @@
     <string name="cant_open_last_read_chapter">마지막 회차를 열 수 없습니다</string>
     <string name="appwidget_updates_description">최근에 업데이트된 항목 보기</string>
     <string name="on_hold_list">보류 목록</string>
-    <string name="download_notifier_split_page_not_found">분할하는 동안 %d 페이지를 찾을 수 없습니다</string>
+    <string name="download_notifier_split_page_not_found">분리 중 페이지 %d을 찾을 수 없습니다</string>
     <string name="loader_rar5_error">RARv5 포맷은 지원되지 않습니다</string>
     <string name="appwidget_unavailable_locked">앱 잠금 사용 중에는 위젯을 이용할 수 없습니다</string>
     <string name="theme_tidalwave">파도</string>

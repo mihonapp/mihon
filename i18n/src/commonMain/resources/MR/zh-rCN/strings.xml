@@ -762,4 +762,7 @@
     <string name="scanlator">扫译者</string>
     <string name="action_sort_tracker_score">记录平台评分</string>
     <string name="exclude_scanlators">排除的扫译者</string>
+    <string name="action_menu_overflow_description">更多选项</string>
+    <string name="selected">已选择</string>
+    <string name="not_selected">未选择</string>
 </resources>

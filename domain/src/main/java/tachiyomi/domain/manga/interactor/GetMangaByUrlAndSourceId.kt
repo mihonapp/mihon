@@ -6,7 +6,7 @@ import tachiyomi.domain.manga.repository.MangaRepository
 class GetMangaByUrlAndSourceId(
     private val mangaRepository: MangaRepository,
 ) {
-    suspend fun awaitManga(url: String, sourceId: Long): Manga? {
+    suspend fun await(url: String, sourceId: Long): Manga? {
         return mangaRepository.getMangaByUrlAndSourceId(url, sourceId)
     }
 }

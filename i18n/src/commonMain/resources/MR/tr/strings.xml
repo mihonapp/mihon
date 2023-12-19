@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Son bölüm</string>
     <string name="action_view_chapters">Bölümleri görüntüle</string>
     <string name="action_cancel_all">Hepsini iptal et</string>
-    <string name="theme_light">Kapalı</string>
-    <string name="theme_dark">Açık</string>
-    <string name="theme_system">Sisteme uy</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="theme_system">Sistem</string>
     <string name="pref_manage_notifications">Bildirimleri yönet</string>
     <string name="pref_category_security">Güvenlik ve gizlilik</string>
     <string name="lock_with_biometrics">Kilit açma gerektirir</string>
@@ -768,4 +768,29 @@
     <string name="pref_storage_location">Depolama yeri</string>
     <string name="pref_storage_location_info">Kendiliğinden yedeklemeler, bölüm indirmeleri ve yerel kaynak için kullanılır.</string>
     <string name="action_bar_up_description">Yukarı git</string>
+    <string name="onboarding_storage_action_select">Klasör seç</string>
+    <string name="pref_onboarding_guide">Başlangıç rehberi</string>
+    <string name="onboarding_guides_new_user">%s\'de yeni misiniz? Başlangıç rehberine göz atmanızı tavsiye ederiz.</string>
+    <string name="onboarding_action_finish">Başlayın</string>
+    <string name="onboarding_storage_selection_required">Bir klasör seçilmelidir</string>
+    <string name="onboarding_heading">Hoş geldiniz!</string>
+    <string name="onboarding_guides_returning_user">Daha önce %s kullandınız mı?</string>
+    <string name="onboarding_action_skip">Atla</string>
+    <string name="onboarding_action_next">Sonraki</string>
+    <string name="onboarding_description">Önce bazı şeyleri ayarlayalım. Bunları daha sonra ayarlardan da değiştirebilirsiniz.</string>
+    <string name="no_location_set">Kaydetme konumu ayarlanmadı</string>
+    <string name="onboarding_storage_info">%1$s bölüm indirmelerini, yedeklemeleri ve başka şeyleri kaydedeceği bir klasör seçin.
+\n
+\nYalnızca buna ait bir klasör tavsiye edilir.
+\n
+\nSeçilen klasör: %2$s</string>
+    <string name="onboarding_permission_notifications">Bildirim izni</string>
+    <string name="onboarding_permission_install_apps">Uygulama kurma izni</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Uzun süreli kitaplık güncellemeleri, indirmeler ve yedekleme geri yüklemelerinin kesintiye uğramasını önleyin.</string>
+    <string name="onboarding_permission_type_optional">İsteğe bağlı</string>
+    <string name="onboarding_permission_ignore_battery_opts">Arka planda pil kullanımı</string>
+    <string name="onboarding_permission_install_apps_description">Kaynak uzantılarını kurmak için.</string>
+    <string name="onboarding_permission_notifications_description">Kitaplık güncellemeleri ve daha fazlası için bildirim alın.</string>
+    <string name="onboarding_permission_type_required">Gerekli</string>
+    <string name="onboarding_permission_action_grant">Ver</string>
 </resources>

@@ -1,14 +1,15 @@
-package eu.kanade.tachiyomi.data.backup
+package eu.kanade.tachiyomi.data.backup.create
 
 import android.content.Context
 import android.net.Uri
 import com.hippo.unifile.UniFile
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_APP_PREFS
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_CATEGORY
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_CHAPTER
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_HISTORY
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_SOURCE_PREFS
-import eu.kanade.tachiyomi.data.backup.BackupCreateFlags.BACKUP_TRACK
+import eu.kanade.tachiyomi.data.backup.BackupFileValidator
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_APP_PREFS
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_CATEGORY
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_CHAPTER
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_HISTORY
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_SOURCE_PREFS
+import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_TRACK
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter

@@ -45,4 +45,7 @@
     <plurals name="missing_chapters">
         <item quantity="other">Đang thiếu %1$s</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="other">%d ngày</item>
+    </plurals>
 </resources>

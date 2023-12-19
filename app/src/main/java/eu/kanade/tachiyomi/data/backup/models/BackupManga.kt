@@ -4,9 +4,7 @@ import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
-import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.track.model.Track
 
 @Suppress("DEPRECATION")
 @Serializable
@@ -61,18 +59,6 @@ data class BackupManga(
             lastModifiedAt = this@BackupManga.lastModifiedAt,
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
         )
-    }
-
-    fun getChaptersImpl(): List<Chapter> {
-        return chapters.map {
-            it.toChapterImpl()
-        }
-    }
-
-    fun getTrackingImpl(): List<Track> {
-        return tracking.map {
-            it.getTrackingImpl()
-        }
     }
 
     companion object {

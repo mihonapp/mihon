@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.updater
 
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -55,6 +57,11 @@ class AppUpdateDownloadJob(private val context: Context, workerParams: WorkerPar
         return ForegroundInfo(
             Notifications.ID_APP_UPDATER,
             notifier.onDownloadStarted().build(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            } else {
+                0
+            },
         )
     }
 

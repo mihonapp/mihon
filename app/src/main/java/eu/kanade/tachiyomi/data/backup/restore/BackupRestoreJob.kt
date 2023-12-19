@@ -1,7 +1,9 @@
-package eu.kanade.tachiyomi.data.backup
+package eu.kanade.tachiyomi.data.backup.restore
 
 import android.content.Context
+import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -9,6 +11,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
@@ -28,13 +31,12 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
     override suspend fun doWork(): Result {
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
             ?: return Result.failure()
-        val sync = inputData.getBoolean(SYNC_KEY, false)
+        val isSync = inputData.getBoolean(SYNC_KEY, false)
 
         setForegroundSafely()
 
         return try {
-            val restorer = BackupRestorer(context, notifier)
-            restorer.syncFromBackup(uri, sync)
+            BackupRestorer(context, notifier, isSync).restore(uri)
             Result.success()
         } catch (e: Exception) {
             if (e is CancellationException) {
@@ -54,6 +56,11 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
         return ForegroundInfo(
             Notifications.ID_RESTORE_PROGRESS,
             notifier.showRestoreProgress().build(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            } else {
+                0
+            },
         )
     }
 

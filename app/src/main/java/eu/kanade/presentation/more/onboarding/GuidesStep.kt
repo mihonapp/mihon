@@ -17,34 +17,38 @@ import eu.kanade.presentation.theme.TachiyomiTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-@Composable
-internal fun GuidesStep(
-    onRestoreBackup: () -> Unit,
-) {
-    val handler = LocalUriHandler.current
+internal class GuidesStep(
+    private val onRestoreBackup: () -> Unit,
+) : OnboardingStep {
+    override val isComplete: Boolean = true
 
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(stringResource(MR.strings.onboarding_guides_new_user, stringResource(MR.strings.app_name)))
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { handler.openUri(GETTING_STARTED_URL) },
+    @Composable
+    override fun Content() {
+        val handler = LocalUriHandler.current
+
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(stringResource(MR.strings.getting_started_guide))
-        }
+            Text(stringResource(MR.strings.onboarding_guides_new_user, stringResource(MR.strings.app_name)))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { handler.openUri(GETTING_STARTED_URL) },
+            ) {
+                Text(stringResource(MR.strings.getting_started_guide))
+            }
 
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-        )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
 
-        Text(stringResource(MR.strings.onboarding_guides_returning_user, stringResource(MR.strings.app_name)))
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onRestoreBackup,
-        ) {
-            Text(stringResource(MR.strings.pref_restore_backup))
+            Text(stringResource(MR.strings.onboarding_guides_returning_user, stringResource(MR.strings.app_name)))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onRestoreBackup,
+            ) {
+                Text(stringResource(MR.strings.pref_restore_backup))
+            }
         }
     }
 }
@@ -57,6 +61,6 @@ private fun GuidesStepPreview() {
     TachiyomiTheme {
         GuidesStep(
             onRestoreBackup = {},
-        )
+        ).Content()
     }
 }

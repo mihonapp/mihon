@@ -70,6 +70,10 @@ getAllManga:
 SELECT *
 FROM mangas;
 
+getAllMangaSourceAndUrl:
+SELECT source, url
+FROM mangas;
+
 getMangasWithFavoriteTimestamp:
 SELECT *
 FROM mangas

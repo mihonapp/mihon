@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Darrer capítol</string>
     <string name="action_view_chapters">Mostra els capítols</string>
     <string name="action_cancel_all">Cancel·la-ho tot</string>
-    <string name="theme_light">Desactivat</string>
-    <string name="theme_dark">Activat</string>
-    <string name="theme_system">Per defecte del sistema</string>
+    <string name="theme_light">Clar</string>
+    <string name="theme_dark">Fosc</string>
+    <string name="theme_system">Sistema</string>
     <string name="pref_manage_notifications">Gestiona les notificacions</string>
     <string name="pref_category_security">Seguretat i privadesa</string>
     <string name="lock_with_biometrics">Requereix desblocatge</string>
@@ -768,4 +768,20 @@
     <string name="pref_storage_location_info">S’utilitza per a les còpies de seguretat automàtiques, les baixades de capítols i la font local.</string>
     <string name="action_menu_overflow_description">Més opcions</string>
     <string name="action_bar_up_description">Navega cap amunt</string>
+    <string name="onboarding_storage_action_select">Selecciona una carpeta</string>
+    <string name="pref_onboarding_guide">Guia de benvinguda</string>
+    <string name="onboarding_guides_new_user">No heu fet servir mai el %s? Us recomanem que reviseu la guia de benvinguda.</string>
+    <string name="onboarding_action_finish">Comença</string>
+    <string name="onboarding_storage_selection_required">Cal que seleccioneu una carpeta</string>
+    <string name="onboarding_heading">Et donem la benvinguda!</string>
+    <string name="onboarding_guides_returning_user">Ja heu fet servir %s abans?</string>
+    <string name="onboarding_action_skip">Omet</string>
+    <string name="onboarding_action_next">Següent</string>
+    <string name="onboarding_description">Primer cal configurar unes quantes coses. Sempre podràs canviar aquestes opcions a la configuració.</string>
+    <string name="no_location_set">No s’ha definit una ubicació d’emmagatzematge</string>
+    <string name="onboarding_storage_info">Seleccioneu una carpeta on el %1$s emmagatzemarà les baixades dels capítols, les còpies de seguretat i més.
+\n
+\nÉs recomanable fer servir una carpeta dedicada.
+\n
+\nCarpeta seleccionada: %2$s</string>
 </resources>

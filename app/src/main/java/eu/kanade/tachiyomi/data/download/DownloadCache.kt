@@ -18,7 +18,6 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -48,7 +47,7 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.domain.storage.service.StoragePreferences
+import tachiyomi.domain.storage.service.StorageManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -66,7 +65,7 @@ class DownloadCache(
     private val provider: DownloadProvider = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
-    storagePreferences: StoragePreferences = Injekt.get(),
+    private val storageManager: StorageManager = Injekt.get(),
 ) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -74,7 +73,7 @@ class DownloadCache(
     private val _changes: Channel<Unit> = Channel(Channel.UNLIMITED)
     val changes = _changes.receiveAsFlow()
         .onStart { emit(Unit) }
-        .shareIn(scope, SharingStarted.Eagerly, 1)
+        .shareIn(scope, SharingStarted.Lazily, 1)
 
     /**
      * The interval after which this cache should be invalidated. 1 hour shouldn't cause major
@@ -94,10 +93,10 @@ class DownloadCache(
         .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
     private val diskCacheFile: File
-        get() = File(context.cacheDir, "dl_index_cache_v2")
+        get() = File(context.cacheDir, "dl_index_cache_v3")
 
     private val rootDownloadsDirLock = Mutex()
-    private var rootDownloadsDir = RootDirectory(provider.downloadsDir)
+    private var rootDownloadsDir = RootDirectory(storageManager.getDownloadsDirectory())
 
     init {
         // Attempt to read cache file
@@ -115,12 +114,8 @@ class DownloadCache(
             }
         }
 
-        storagePreferences.baseStorageDirectory().changes()
-            .drop(1)
-            .onEach {
-                rootDownloadsDir = RootDirectory(provider.downloadsDir)
-                invalidateCache()
-            }
+        storageManager.changes
+            .onEach { invalidateCache() }
             .launchIn(scope)
     }
 
@@ -294,6 +289,8 @@ class DownloadCache(
     fun invalidateCache() {
         lastRenew = 0L
         renewalJob?.cancel()
+        diskCacheFile.delete()
+        renewCache()
     }
 
     /**
@@ -310,23 +307,26 @@ class DownloadCache(
                 _isInitializing.emit(true)
             }
 
-            var sources = getSources()
-
             // Try to wait until extensions and sources have loaded
-            withTimeoutOrNull(30.seconds) {
-                while (!extensionManager.isInitialized) {
-                    delay(2.seconds)
-                }
+            var sources = getSources()
+            if (sources.isEmpty()) {
+                withTimeoutOrNull(30.seconds) {
+                    while (!extensionManager.isInitialized) {
+                        delay(2.seconds)
+                    }
 
-                while (sources.isEmpty()) {
-                    delay(2.seconds)
-                    sources = getSources()
+                    while (extensionManager.availableExtensionsFlow.value.isNotEmpty() && sources.isEmpty()) {
+                        delay(2.seconds)
+                        sources = getSources()
+                    }
                 }
             }
 
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }
 
             rootDownloadsDirLock.withLock {
+                rootDownloadsDir = RootDirectory(storageManager.getDownloadsDirectory())
+
                 val sourceDirs = rootDownloadsDir.dir?.listFiles().orEmpty()
                     .filter { it.isDirectory && !it.name.isNullOrBlank() }
                     .mapNotNull { dir ->
@@ -371,10 +371,9 @@ class DownloadCache(
         }.also {
             it.invokeOnCompletion(onCancelling = true) { exception ->
                 if (exception != null && exception !is CancellationException) {
-                    logcat(LogPriority.ERROR, exception) { "Failed to create download cache" }
+                    logcat(LogPriority.ERROR, exception) { "DownloadCache: failed to create cache" }
                 }
                 lastRenew = System.currentTimeMillis()
-
                 notifyChanges()
             }
         }
