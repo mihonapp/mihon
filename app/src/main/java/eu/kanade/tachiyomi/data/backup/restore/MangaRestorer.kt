@@ -165,13 +165,15 @@ class MangaRestorer(
                 id = dbChapter.id,
                 bookmark = chapter.bookmark || dbChapter.bookmark,
                 read = chapter.read,
-                lastPageRead = chapter.lastPageRead
+                lastPageRead = chapter.lastPageRead,
             )
         } else {
             chapter.copyFrom(dbChapter).let {
                 when {
                     dbChapter.read && !it.read -> it.copy(read = true, lastPageRead = dbChapter.lastPageRead)
-                    it.lastPageRead == 0L && dbChapter.lastPageRead != 0L -> it.copy(lastPageRead = dbChapter.lastPageRead)
+                    it.lastPageRead == 0L && dbChapter.lastPageRead != 0L -> it.copy(
+                        lastPageRead = dbChapter.lastPageRead,
+                    )
                     else -> it
                 }
             }
