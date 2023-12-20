@@ -34,6 +34,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.SyncOptionsScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -559,6 +560,7 @@ private fun getSyncNowPref(): Preference.PreferenceGroup {
     return Preference.PreferenceGroup(
         title = stringResource(MR.strings.pref_sync_now_group_title),
         preferenceItems = listOf(
+            getSyncOptionsPref(),
             Preference.PreferenceItem.TextPreference(
                 title = stringResource(MR.strings.pref_sync_now),
                 subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
@@ -567,6 +569,16 @@ private fun getSyncNowPref(): Preference.PreferenceGroup {
                 },
             ),
         ),
+    )
+}
+
+@Composable
+private fun getSyncOptionsPref(): Preference.PreferenceItem.TextPreference {
+    val navigator = LocalNavigator.currentOrThrow
+    return Preference.PreferenceItem.TextPreference(
+        title = stringResource(MR.strings.pref_sync_options),
+        subtitle = stringResource(MR.strings.pref_sync_options_summ),
+        onClick = { navigator.push(SyncOptionsScreen()) },
     )
 }
 
