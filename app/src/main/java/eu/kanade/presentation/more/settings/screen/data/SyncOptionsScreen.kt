@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -21,13 +22,12 @@ import kotlinx.collections.immutable.minus
 import kotlinx.collections.immutable.plus
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.update
+import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import androidx.compose.runtime.getValue
-import tachiyomi.domain.sync.SyncPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -110,7 +110,6 @@ private class SyncOptionsScreenModel : StateScreenModel<SyncOptionsScreenModel.S
         syncPreferences.syncFlags().set(flagsInt)
     }
 
-
     @Immutable
     data class State(
         val flags: PersistentSet<Int> = SyncChoices.keys.toPersistentSet(),
@@ -122,4 +121,3 @@ private val SyncChoices = mapOf(
     SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN to MR.strings.sync_on_chapter_open,
     SyncPreferences.Flags.SYNC_ON_APP_START to MR.strings.sync_on_app_start,
 )
-

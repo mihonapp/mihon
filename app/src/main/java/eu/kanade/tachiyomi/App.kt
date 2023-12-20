@@ -176,7 +176,6 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         if (syncPreferences.syncService().get() != 0 && syncFlags and SyncPreferences.Flags.SYNC_ON_APP_START == SyncPreferences.Flags.SYNC_ON_APP_START) {
             SyncDataJob.startNow(this@App)
         }
-
     }
 
     override fun onStop(owner: LifecycleOwner) {

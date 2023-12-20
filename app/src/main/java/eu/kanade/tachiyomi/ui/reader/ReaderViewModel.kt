@@ -100,7 +100,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val upsertHistory: UpsertHistory = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
-    private val syncPreferences: SyncPreferences = Injekt.get()
+    private val syncPreferences: SyncPreferences = Injekt.get(),
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -534,7 +534,8 @@ class ReaderViewModel @JvmOverloads constructor(
 
                 // Check if syncing is enabled for chapter read:
                 if (syncPreferences.syncService().get() != 0 &&
-                    syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_READ == SyncPreferences.Flags.SYNC_ON_CHAPTER_READ) {
+                    syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_READ == SyncPreferences.Flags.SYNC_ON_CHAPTER_READ
+                ) {
                     SyncDataJob.startNow(Injekt.get<Application>())
                 }
             }
@@ -549,7 +550,8 @@ class ReaderViewModel @JvmOverloads constructor(
 
             // Check if syncing is enabled for chapter open:
             if (syncPreferences.syncService().get() != 0 &&
-                syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN == SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN) {
+                syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN == SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN
+            ) {
                 SyncDataJob.startNow(Injekt.get<Application>())
             }
         }

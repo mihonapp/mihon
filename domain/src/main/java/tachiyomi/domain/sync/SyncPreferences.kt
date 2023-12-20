@@ -17,7 +17,6 @@ class SyncPreferences(
         fun values() = listOf(NONE, SYNC_ON_CHAPTER_READ, SYNC_ON_CHAPTER_OPEN, SYNC_ON_APP_START)
     }
 
-
     fun syncHost() = preferenceStore.getString("sync_host", "https://sync.tachiyomi.org")
     fun syncAPIKey() = preferenceStore.getString("sync_api_key", "")
     fun lastSyncTimestamp() = preferenceStore.getLong(Preference.appStateKey("last_sync_timestamp"), 0L)
@@ -35,5 +34,5 @@ class SyncPreferences(
         "",
     )
 
-    fun syncFlags() = preferenceStore.getInt("sync_flags",  Flags.Defaults)
+    fun syncFlags() = preferenceStore.getInt("sync_flags", Flags.Defaults)
 }
