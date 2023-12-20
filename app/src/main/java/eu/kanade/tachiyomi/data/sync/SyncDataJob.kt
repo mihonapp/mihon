@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -47,6 +49,11 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         return ForegroundInfo(
             Notifications.ID_RESTORE_PROGRESS,
             notifier.showSyncProgress().build(),
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            } else {
+                0
+            },
         )
     }
 
