@@ -172,9 +172,9 @@ class BackupRestorer(
 }
 
 data class RestoreOptions(
-    val appSettings: Boolean,
-    val sourceSettings: Boolean,
-    val library: Boolean,
+    val appSettings: Boolean = true,
+    val sourceSettings: Boolean = true,
+    val library: Boolean = true,
 ) {
     fun toBooleanArray() = booleanArrayOf(appSettings, sourceSettings, library)
 

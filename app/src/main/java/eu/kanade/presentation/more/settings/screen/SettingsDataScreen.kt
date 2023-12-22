@@ -1,28 +1,24 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -34,17 +30,13 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
-import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
-import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
-import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import eu.kanade.tachiyomi.util.system.DeviceUtil
-import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
@@ -142,14 +134,42 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
+        val navigator = LocalNavigator.currentOrThrow
+
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_backup),
             preferenceItems = listOf(
                 // Manual actions
-                getCreateBackupPref(),
-                getRestoreBackupPref(),
+                Preference.PreferenceItem.CustomPreference(
+                    title = stringResource(MR.strings.label_backup),
+                ) {
+                    BasePreferenceWidget(
+                        subcomponent = {
+                            MultiChoiceSegmentedButtonRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = PrefsHorizontalPadding),
+                            ) {
+                                SegmentedButton(
+                                    checked = false,
+                                    onCheckedChange = { navigator.push(CreateBackupScreen()) },
+                                    shape = SegmentedButtonDefaults.itemShape(0, 2),
+                                ) {
+                                    Text(stringResource(MR.strings.pref_create_backup))
+                                }
+                                SegmentedButton(
+                                    checked = false,
+                                    onCheckedChange = { navigator.push(RestoreBackupScreen()) },
+                                    shape = SegmentedButtonDefaults.itemShape(1, 2),
+                                ) {
+                                    Text(stringResource(MR.strings.pref_restore_backup))
+                                }
+                            }
+                        },
+                    )
+                },
 
                 // Automatic backups
                 Preference.PreferenceItem.ListPreference(
@@ -173,156 +193,6 @@ object SettingsDataScreen : SearchableSettings {
                         stringResource(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
                 ),
             ),
-        )
-    }
-
-    @Composable
-    private fun getCreateBackupPref(): Preference.PreferenceItem.TextPreference {
-        val navigator = LocalNavigator.currentOrThrow
-        return Preference.PreferenceItem.TextPreference(
-            title = stringResource(MR.strings.pref_create_backup),
-            subtitle = stringResource(MR.strings.pref_create_backup_summ),
-            onClick = { navigator.push(CreateBackupScreen()) },
-        )
-    }
-
-    @Composable
-    private fun getRestoreBackupPref(): Preference.PreferenceItem.TextPreference {
-        val context = LocalContext.current
-        var error by remember { mutableStateOf<Any?>(null) }
-        if (error != null) {
-            val onDismissRequest = { error = null }
-            when (val err = error) {
-                is InvalidRestore -> {
-                    AlertDialog(
-                        onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(MR.strings.invalid_backup_file)) },
-                        text = { Text(text = listOfNotNull(err.uri, err.message).joinToString("\n\n")) },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    context.copyToClipboard(err.message, err.message)
-                                    onDismissRequest()
-                                },
-                            ) {
-                                Text(text = stringResource(MR.strings.action_copy_to_clipboard))
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(onClick = onDismissRequest) {
-                                Text(text = stringResource(MR.strings.action_ok))
-                            }
-                        },
-                    )
-                }
-                is MissingRestoreComponents -> {
-                    AlertDialog(
-                        onDismissRequest = onDismissRequest,
-                        title = { Text(text = stringResource(MR.strings.pref_restore_backup)) },
-                        text = {
-                            Column(
-                                modifier = Modifier.verticalScroll(rememberScrollState()),
-                            ) {
-                                val msg = buildString {
-                                    append(stringResource(MR.strings.backup_restore_content_full))
-                                    if (err.sources.isNotEmpty()) {
-                                        append("\n\n").append(stringResource(MR.strings.backup_restore_missing_sources))
-                                        err.sources.joinTo(
-                                            this,
-                                            separator = "\n- ",
-                                            prefix = "\n- ",
-                                        )
-                                    }
-                                    if (err.trackers.isNotEmpty()) {
-                                        append(
-                                            "\n\n",
-                                        ).append(stringResource(MR.strings.backup_restore_missing_trackers))
-                                        err.trackers.joinTo(
-                                            this,
-                                            separator = "\n- ",
-                                            prefix = "\n- ",
-                                        )
-                                    }
-                                }
-                                Text(text = msg)
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    BackupRestoreJob.start(
-                                        context = context,
-                                        uri = err.uri,
-                                        // TODO: allow user-selectable restore options
-                                        options = RestoreOptions(
-                                            appSettings = true,
-                                            sourceSettings = true,
-                                            library = true,
-                                        ),
-                                    )
-                                    onDismissRequest()
-                                },
-                            ) {
-                                Text(text = stringResource(MR.strings.action_restore))
-                            }
-                        },
-                    )
-                }
-                else -> error = null // Unknown
-            }
-        }
-
-        val chooseBackup = rememberLauncherForActivityResult(
-            object : ActivityResultContracts.GetContent() {
-                override fun createIntent(context: Context, input: String): Intent {
-                    val intent = super.createIntent(context, input)
-                    return Intent.createChooser(intent, context.stringResource(MR.strings.file_select_backup))
-                }
-            },
-        ) {
-            if (it == null) {
-                context.toast(MR.strings.file_null_uri_error)
-                return@rememberLauncherForActivityResult
-            }
-
-            val results = try {
-                BackupFileValidator().validate(context, it)
-            } catch (e: Exception) {
-                error = InvalidRestore(it, e.message.toString())
-                return@rememberLauncherForActivityResult
-            }
-
-            if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
-                BackupRestoreJob.start(
-                    context = context,
-                    uri = it,
-                    // TODO: allow user-selectable restore options
-                    options = RestoreOptions(
-                        appSettings = true,
-                        sourceSettings = true,
-                        library = true,
-                    ),
-                )
-                return@rememberLauncherForActivityResult
-            }
-
-            error = MissingRestoreComponents(it, results.missingSources, results.missingTrackers)
-        }
-
-        return Preference.PreferenceItem.TextPreference(
-            title = stringResource(MR.strings.pref_restore_backup),
-            subtitle = stringResource(MR.strings.pref_restore_backup_summ),
-            onClick = {
-                if (!BackupRestoreJob.isRunning(context)) {
-                    if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                        context.toast(MR.strings.restore_miui_warning, Toast.LENGTH_LONG)
-                    }
-                    // no need to catch because it's wrapped with a chooser
-                    chooseBackup.launch("*/*")
-                } else {
-                    context.toast(MR.strings.restore_in_progress)
-                }
-            },
         )
     }
 
@@ -394,14 +264,3 @@ object SettingsDataScreen : SearchableSettings {
         }
     }
 }
-
-private data class MissingRestoreComponents(
-    val uri: Uri,
-    val sources: List<String>,
-    val trackers: List<String>,
-)
-
-private data class InvalidRestore(
-    val uri: Uri? = null,
-    val message: String,
-)
