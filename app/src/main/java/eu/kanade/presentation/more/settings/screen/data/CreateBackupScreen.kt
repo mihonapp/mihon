@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -76,61 +77,66 @@ class CreateBackupScreen : Screen() {
                 )
             },
         ) { contentPadding ->
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxSize(),
             ) {
-                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                    item {
-                        WarningBanner(MR.strings.restore_miui_warning)
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                        item {
+                            WarningBanner(MR.strings.restore_miui_warning)
+                        }
                     }
-                }
-                item {
-                    LabeledCheckbox(
-                        label = stringResource(MR.strings.manga),
-                        checked = true,
-                        onCheckedChange = {},
-                        enabled = false,
-                        modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                    )
-                }
-                BackupChoices.forEach { (k, v) ->
+
                     item {
                         LabeledCheckbox(
-                            label = stringResource(v),
-                            checked = state.flags.contains(k),
-                            onCheckedChange = {
-                                model.toggleFlag(k)
-                            },
+                            label = stringResource(MR.strings.manga),
+                            checked = true,
+                            onCheckedChange = {},
+                            enabled = false,
                             modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                         )
                     }
-                }
-            }
-
-            HorizontalDivider()
-
-            Button(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
-                onClick = {
-                    if (!BackupCreateJob.isManualJobRunning(context)) {
-                        try {
-                            chooseBackupDir.launch(Backup.getFilename())
-                        } catch (e: ActivityNotFoundException) {
-                            context.toast(MR.strings.file_picker_error)
+                    BackupChoices.forEach { (k, v) ->
+                        item {
+                            LabeledCheckbox(
+                                label = stringResource(v),
+                                checked = state.flags.contains(k),
+                                onCheckedChange = {
+                                    model.toggleFlag(k)
+                                },
+                                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                            )
                         }
-                    } else {
-                        context.toast(MR.strings.backup_in_progress)
                     }
-                },
-            ) {
-                Text(
-                    text = stringResource(MR.strings.action_create),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
+                }
+
+                HorizontalDivider()
+
+                Button(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .fillMaxWidth(),
+                    onClick = {
+                        if (!BackupCreateJob.isManualJobRunning(context)) {
+                            try {
+                                chooseBackupDir.launch(Backup.getFilename())
+                            } catch (e: ActivityNotFoundException) {
+                                context.toast(MR.strings.file_picker_error)
+                            }
+                        } else {
+                            context.toast(MR.strings.backup_in_progress)
+                        }
+                    },
+                ) {
+                    Text(
+                        text = stringResource(MR.strings.action_create),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
         }
     }
