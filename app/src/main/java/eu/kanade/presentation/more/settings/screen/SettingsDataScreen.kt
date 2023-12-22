@@ -40,6 +40,7 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
+import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -249,7 +250,16 @@ object SettingsDataScreen : SearchableSettings {
                         confirmButton = {
                             TextButton(
                                 onClick = {
-                                    BackupRestoreJob.start(context, err.uri)
+                                    BackupRestoreJob.start(
+                                        context = context,
+                                        uri = err.uri,
+                                        // TODO: allow user-selectable restore options
+                                        options = RestoreOptions(
+                                            appSettings = true,
+                                            sourceSettings = true,
+                                            library = true,
+                                        ),
+                                    )
                                     onDismissRequest()
                                 },
                             ) {
@@ -283,7 +293,16 @@ object SettingsDataScreen : SearchableSettings {
             }
 
             if (results.missingSources.isEmpty() && results.missingTrackers.isEmpty()) {
-                BackupRestoreJob.start(context, it)
+                BackupRestoreJob.start(
+                    context = context,
+                    uri = it,
+                    // TODO: allow user-selectable restore options
+                    options = RestoreOptions(
+                        appSettings = true,
+                        sourceSettings = true,
+                        library = true,
+                    ),
+                )
                 return@rememberLauncherForActivityResult
             }
 

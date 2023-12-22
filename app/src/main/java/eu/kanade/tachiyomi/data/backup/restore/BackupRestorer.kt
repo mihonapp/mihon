@@ -39,10 +39,10 @@ class BackupRestorer(
      */
     private var sourceMapping: Map<Long, String> = emptyMap()
 
-    suspend fun restore(uri: Uri) {
+    suspend fun restore(uri: Uri, options: RestoreOptions) {
         val startTime = System.currentTimeMillis()
 
-        restoreFromFile(uri)
+        restoreFromFile(uri, options)
 
         val time = System.currentTimeMillis() - startTime
 
@@ -57,20 +57,36 @@ class BackupRestorer(
         )
     }
 
-    private suspend fun restoreFromFile(uri: Uri) {
+    private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
         val backup = BackupUtil.decodeBackup(context, uri)
-
-        restoreAmount = backup.backupManga.size + 3 // +3 for categories, app prefs, source prefs
 
         // Store source mapping for error messages
         val backupMaps = backup.backupSources + backup.backupBrokenSources.map { it.toBackupSource() }
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
 
+        if (options.library) {
+            restoreAmount += backup.backupManga.size + 1 // +1 for categories
+        }
+        if (options.appSettings) {
+            restoreAmount += 1
+        }
+        if (options.sourceSettings) {
+            restoreAmount += 1
+        }
+
         coroutineScope {
-            restoreCategories(backup.backupCategories)
-            restoreAppPreferences(backup.backupPreferences)
-            restoreSourcePreferences(backup.backupSourcePreferences)
-            restoreManga(backup.backupManga, backup.backupCategories)
+            if (options.library) {
+                restoreCategories(backup.backupCategories)
+            }
+            if (options.appSettings) {
+                restoreAppPreferences(backup.backupPreferences)
+            }
+            if (options.sourceSettings) {
+                restoreSourcePreferences(backup.backupSourcePreferences)
+            }
+            if (options.library) {
+                restoreManga(backup.backupManga, backup.backupCategories)
+            }
 
             // TODO: optionally trigger online library + tracker update
         }
@@ -152,5 +168,21 @@ class BackupRestorer(
             // Empty
         }
         return File("")
+    }
+}
+
+data class RestoreOptions(
+    val appSettings: Boolean,
+    val sourceSettings: Boolean,
+    val library: Boolean,
+) {
+    fun toBooleanArray() = booleanArrayOf(appSettings, sourceSettings, library)
+
+    companion object {
+        fun fromBooleanArray(booleanArray: BooleanArray) = RestoreOptions(
+            appSettings = booleanArray[0],
+            sourceSettings = booleanArray[1],
+            library = booleanArray[2],
+        )
     }
 }
