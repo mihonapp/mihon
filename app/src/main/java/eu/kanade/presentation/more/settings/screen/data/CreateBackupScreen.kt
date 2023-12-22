@@ -4,10 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +26,7 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
@@ -77,63 +76,61 @@ class CreateBackupScreen : Screen() {
                 )
             },
         ) { contentPadding ->
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(contentPadding)
                     .fillMaxSize(),
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = MaterialTheme.padding.medium),
-                ) {
+                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                     item {
-                        LabeledCheckbox(
-                            label = stringResource(MR.strings.manga),
-                            checked = true,
-                            onCheckedChange = {},
-                            enabled = false,
-                        )
-                    }
-                    BackupChoices.forEach { (k, v) ->
-                        item {
-                            LabeledCheckbox(
-                                label = stringResource(v),
-                                checked = state.flags.contains(k),
-                                onCheckedChange = {
-                                    model.toggleFlag(k)
-                                },
-                            )
-                        }
+                        WarningBanner(MR.strings.restore_miui_warning)
                     }
                 }
-
-                HorizontalDivider()
-
-                Button(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    onClick = {
-                        if (!BackupCreateJob.isManualJobRunning(context)) {
-                            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                                context.toast(MR.strings.restore_miui_warning, Toast.LENGTH_LONG)
-                            }
-                            try {
-                                chooseBackupDir.launch(Backup.getFilename())
-                            } catch (e: ActivityNotFoundException) {
-                                context.toast(MR.strings.file_picker_error)
-                            }
-                        } else {
-                            context.toast(MR.strings.backup_in_progress)
-                        }
-                    },
-                ) {
-                    Text(
-                        text = stringResource(MR.strings.action_create),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                item {
+                    LabeledCheckbox(
+                        label = stringResource(MR.strings.manga),
+                        checked = true,
+                        onCheckedChange = {},
+                        enabled = false,
+                        modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                     )
                 }
+                BackupChoices.forEach { (k, v) ->
+                    item {
+                        LabeledCheckbox(
+                            label = stringResource(v),
+                            checked = state.flags.contains(k),
+                            onCheckedChange = {
+                                model.toggleFlag(k)
+                            },
+                            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider()
+
+            Button(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    if (!BackupCreateJob.isManualJobRunning(context)) {
+                        try {
+                            chooseBackupDir.launch(Backup.getFilename())
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(MR.strings.file_picker_error)
+                        }
+                    } else {
+                        context.toast(MR.strings.backup_in_progress)
+                    }
+                },
+            ) {
+                Text(
+                    text = stringResource(MR.strings.action_create),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
             }
         }
     }
