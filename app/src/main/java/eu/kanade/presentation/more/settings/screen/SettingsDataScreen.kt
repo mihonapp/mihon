@@ -54,6 +54,8 @@ import uy.kohesive.injekt.api.get
 
 object SettingsDataScreen : SearchableSettings {
 
+    val restorePreferenceKeyString = MR.strings.label_backup
+
     @ReadOnlyComposable
     @Composable
     override fun getTitleRes() = MR.strings.label_data_storage
@@ -143,7 +145,7 @@ object SettingsDataScreen : SearchableSettings {
             preferenceItems = listOf(
                 // Manual actions
                 Preference.PreferenceItem.CustomPreference(
-                    title = stringResource(MR.strings.label_backup),
+                    title = stringResource(restorePreferenceKeyString),
                 ) {
                     BasePreferenceWidget(
                         subcomponent = {
