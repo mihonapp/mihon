@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -18,6 +19,7 @@ dependencies {
 
     implementation(platform(kotlinx.coroutines.bom))
     implementation(kotlinx.bundles.coroutines)
+    implementation(kotlinx.bundles.serialization)
 
     implementation(libs.unifile)
 

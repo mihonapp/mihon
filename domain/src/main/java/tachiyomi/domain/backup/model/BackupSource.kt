@@ -1,6 +1,5 @@
-package eu.kanade.tachiyomi.data.backup.models
+package tachiyomi.domain.backup.model
 
-import eu.kanade.tachiyomi.source.Source
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
@@ -8,16 +7,7 @@ import kotlinx.serialization.protobuf.ProtoNumber
 data class BackupSource(
     @ProtoNumber(1) var name: String = "",
     @ProtoNumber(2) var sourceId: Long,
-) {
-    companion object {
-        fun copyFrom(source: Source): BackupSource {
-            return BackupSource(
-                name = source.name,
-                sourceId = source.id,
-            )
-        }
-    }
-}
+)
 
 @Serializable
 data class BrokenBackupSource(

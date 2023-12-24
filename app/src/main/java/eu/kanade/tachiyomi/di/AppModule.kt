@@ -22,6 +22,7 @@ import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.source.AndroidSourceManager
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
@@ -105,6 +106,9 @@ class AppModule(val app: Application) : InjektModule {
                 indent = 2
                 xmlVersion = XmlVersion.XML10
             }
+        }
+        addSingletonFactory<ProtoBuf> {
+            ProtoBuf
         }
 
         addSingletonFactory { ChapterCache(app) }

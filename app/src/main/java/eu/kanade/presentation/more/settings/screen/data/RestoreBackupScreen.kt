@@ -154,7 +154,7 @@ class RestoreBackupScreen : Screen() {
                 }
 
                 val results = try {
-                    BackupFileValidator().validate(context, it)
+                    BackupFileValidator(context).validate(it)
                 } catch (e: Exception) {
                     model.setError(InvalidRestore(it, e.message.toString()))
                     return@rememberLauncherForActivityResult

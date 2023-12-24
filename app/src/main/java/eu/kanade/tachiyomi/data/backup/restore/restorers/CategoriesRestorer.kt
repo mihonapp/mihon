@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
-import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.backup.model.BackupCategory
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.library.service.LibraryPreferences
 import uy.kohesive.injekt.Injekt

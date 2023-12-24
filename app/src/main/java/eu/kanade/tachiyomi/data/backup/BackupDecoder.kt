@@ -1,21 +1,25 @@
-package eu.kanade.tachiyomi.util
+package eu.kanade.tachiyomi.data.backup
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.data.backup.create.BackupCreator
-import eu.kanade.tachiyomi.data.backup.models.Backup
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
+import kotlinx.serialization.protobuf.ProtoBuf
 import okio.buffer
 import okio.gzip
 import okio.source
+import tachiyomi.domain.backup.model.Backup
+import tachiyomi.domain.backup.model.BackupSerializer
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-object BackupUtil {
+class BackupDecoder(
+    private val context: Context,
+    private val parser: ProtoBuf = Injekt.get(),
+) {
+
     /**
      * Decode a potentially-gzipped backup.
      */
-    fun decodeBackup(context: Context, uri: Uri): Backup {
-        val backupCreator = BackupCreator(context)
-
+    fun decode(uri: Uri): Backup {
         val backupStringSource = context.contentResolver.openInputStream(uri)!!.source().buffer()
 
         val peeked = backupStringSource.peek()
@@ -27,6 +31,6 @@ object BackupUtil {
             backupStringSource
         }.use { it.readByteArray() }
 
-        return backupCreator.parser.decodeFromByteArray(BackupSerializer, backupString)
+        return parser.decodeFromByteArray(BackupSerializer, backupString)
     }
 }

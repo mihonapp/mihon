@@ -17,10 +17,10 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.protobuf.schema.ProtoBufSchemaGenerator
+import tachiyomi.domain.backup.model.Backup
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource

@@ -1,12 +1,13 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
-import eu.kanade.tachiyomi.data.backup.models.BackupChapter
-import eu.kanade.tachiyomi.data.backup.models.BackupHistory
-import eu.kanade.tachiyomi.data.backup.models.BackupManga
-import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
-import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
+import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.backup.model.BackupChapter
+import tachiyomi.domain.backup.model.BackupHistory
+import tachiyomi.domain.backup.model.BackupManga
+import tachiyomi.domain.backup.model.backupChapterMapper
+import tachiyomi.domain.backup.model.backupTrackMapper
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
@@ -27,7 +28,7 @@ class MangaBackupCreator(
 
     private suspend fun backupManga(manga: Manga, options: Int): BackupManga {
         // Entry for this manga
-        val mangaObject = BackupManga.copyFrom(manga)
+        val mangaObject = manga.toBackupManga()
 
         // Check if user wants chapter information in backup
         if (options and BackupCreateFlags.BACKUP_CHAPTER == BackupCreateFlags.BACKUP_CHAPTER) {
@@ -77,3 +78,24 @@ class MangaBackupCreator(
         return mangaObject
     }
 }
+
+private fun Manga.toBackupManga() =
+    BackupManga(
+        url = this.url,
+        title = this.title,
+        artist = this.artist,
+        author = this.author,
+        description = this.description,
+        genre = this.genre.orEmpty(),
+        status = this.status.toInt(),
+        thumbnailUrl = this.thumbnailUrl,
+        favorite = this.favorite,
+        source = this.source,
+        dateAdded = this.dateAdded,
+        viewer = (this.viewerFlags.toInt() and ReadingMode.MASK),
+        viewer_flags = this.viewerFlags.toInt(),
+        chapterFlags = this.chapterFlags.toInt(),
+        updateStrategy = this.updateStrategy,
+        lastModifiedAt = this.lastModifiedAt,
+        favoriteModifiedAt = this.favoriteModifiedAt,
+    )
