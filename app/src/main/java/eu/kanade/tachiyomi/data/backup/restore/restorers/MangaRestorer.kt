@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup.restore
+package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory

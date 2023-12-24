@@ -7,6 +7,9 @@ import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
+import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.util.BackupUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
@@ -168,21 +171,5 @@ class BackupRestorer(
             // Empty
         }
         return File("")
-    }
-}
-
-data class RestoreOptions(
-    val appSettings: Boolean = true,
-    val sourceSettings: Boolean = true,
-    val library: Boolean = true,
-) {
-    fun toBooleanArray() = booleanArrayOf(appSettings, sourceSettings, library)
-
-    companion object {
-        fun fromBooleanArray(booleanArray: BooleanArray) = RestoreOptions(
-            appSettings = booleanArray[0],
-            sourceSettings = booleanArray[1],
-            library = booleanArray[2],
-        )
     }
 }
