@@ -36,8 +36,8 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.minus
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.plus
-import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.update
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -161,7 +161,12 @@ private class CreateBackupScreenModel : StateScreenModel<CreateBackupScreenModel
 
     @Immutable
     data class State(
-        val flags: PersistentSet<Int> = BackupChoices.keys.toPersistentSet(),
+        val flags: PersistentSet<Int> = persistentSetOf(
+            BackupCreateFlags.BACKUP_CATEGORY,
+            BackupCreateFlags.BACKUP_CHAPTER,
+            BackupCreateFlags.BACKUP_TRACK,
+            BackupCreateFlags.BACKUP_HISTORY,
+        ),
     )
 }
 
