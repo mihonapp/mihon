@@ -8,7 +8,7 @@ class TrackImpl : Track {
 
     override var sync_id: Int = 0
 
-    override var media_id: Long = 0
+    override var remote_id: Long = 0
 
     override var library_id: Long? = null
 

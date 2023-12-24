@@ -8,6 +8,7 @@ import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import okhttp3.OkHttpClient
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 interface Tracker {
 
@@ -39,11 +40,11 @@ interface Tracker {
     fun getScoreList(): ImmutableList<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
-    fun get10PointScore(track: tachiyomi.domain.track.model.Track): Double
+    fun get10PointScore(track: DomainTrack): Double
 
     fun indexToScore(index: Int): Float
 
-    fun displayScore(track: Track): String
+    fun displayScore(track: DomainTrack): String
 
     suspend fun update(track: Track, didReadChapter: Boolean = false): Track
 

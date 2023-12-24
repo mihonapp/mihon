@@ -58,7 +58,7 @@ data class DummyTracker(
 
     override fun indexToScore(index: Int): Float = getScoreList()[index].toFloat()
 
-    override fun displayScore(track: eu.kanade.tachiyomi.data.database.models.Track): String =
+    override fun displayScore(track: Track): String =
         track.score.toString()
 
     override suspend fun update(

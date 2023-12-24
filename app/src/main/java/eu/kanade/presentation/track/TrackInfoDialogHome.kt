@@ -47,7 +47,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.theme.TachiyomiTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
@@ -101,7 +100,7 @@ fun TrackInfoDialogHome(
                         }
                     },
                     onChaptersClick = { onChapterClick(item) },
-                    score = item.tracker.displayScore(item.track.toDbTrack())
+                    score = item.tracker.displayScore(item.track)
                         .takeIf { supportsScoring && item.track.score != 0.0 },
                     onScoreClick = { onScoreClick(item) }
                         .takeIf { supportsScoring },

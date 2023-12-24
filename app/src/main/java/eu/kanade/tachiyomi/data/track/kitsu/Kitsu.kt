@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
@@ -65,7 +66,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         return if (index > 0) (index + 1) / 2f else 0f
     }
 
-    override fun displayScore(track: Track): String {
+    override fun displayScore(track: DomainTrack): String {
         val df = DecimalFormat("0.#")
         return df.format(track.score)
     }
@@ -92,15 +93,15 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         return api.updateLibManga(track)
     }
 
-    override suspend fun delete(track: Track): Track {
-        return api.removeLibManga(track)
+    override suspend fun delete(track: DomainTrack) {
+        api.removeLibManga(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.findLibManga(track, getUserId())
         return if (remoteTrack != null) {
             track.copyPersonalFrom(remoteTrack)
-            track.media_id = remoteTrack.media_id
+            track.remote_id = remoteTrack.remote_id
 
             if (track.status != COMPLETED) {
                 track.status = if (hasReadChapters) READING else track.status

@@ -10,7 +10,7 @@ class TrackSearch : Track {
 
     override var sync_id: Int = 0
 
-    override var media_id: Long = 0
+    override var remote_id: Long = 0
 
     override var library_id: Long? = null
 
@@ -48,7 +48,7 @@ class TrackSearch : Track {
 
         if (manga_id != other.manga_id) return false
         if (sync_id != other.sync_id) return false
-        if (media_id != other.media_id) return false
+        if (remote_id != other.remote_id) return false
 
         return true
     }
@@ -56,7 +56,7 @@ class TrackSearch : Track {
     override fun hashCode(): Int {
         var result = manga_id.hashCode()
         result = 31 * result + sync_id
-        result = 31 * result + media_id.hashCode()
+        result = 31 * result + remote_id.hashCode()
         return result
     }
 

@@ -30,6 +30,7 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.util.system.logcat
 import uy.kohesive.injekt.injectLazy
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaUpdatesApi(
     interceptor: MangaUpdatesInterceptor,
@@ -48,7 +49,7 @@ class MangaUpdatesApi(
 
     suspend fun getSeriesListItem(track: Track): Pair<ListItem, Rating?> {
         val listItem = with(json) {
-            authClient.newCall(GET("$baseUrl/v1/lists/series/${track.media_id}"))
+            authClient.newCall(GET("$baseUrl/v1/lists/series/${track.remote_id}"))
                 .awaitSuccess()
                 .parseAs<ListItem>()
         }
@@ -63,7 +64,7 @@ class MangaUpdatesApi(
         val body = buildJsonArray {
             addJsonObject {
                 putJsonObject("series") {
-                    put("id", track.media_id)
+                    put("id", track.remote_id)
                 }
                 put("list_id", status)
             }
@@ -87,7 +88,7 @@ class MangaUpdatesApi(
         val body = buildJsonArray {
             addJsonObject {
                 putJsonObject("series") {
-                    put("id", track.media_id)
+                    put("id", track.remote_id)
                 }
                 put("list_id", track.status)
                 putJsonObject("status") {
@@ -106,9 +107,9 @@ class MangaUpdatesApi(
         updateSeriesRating(track)
     }
 
-    suspend fun deleteSeriesFromList(track: Track) {
+    suspend fun deleteSeriesFromList(track: DomainTrack) {
         val body = buildJsonArray {
-            add(track.media_id)
+            add(track.remoteId)
         }
         authClient.newCall(
             POST(
@@ -122,7 +123,7 @@ class MangaUpdatesApi(
     private suspend fun getSeriesRating(track: Track): Rating? {
         return try {
             with(json) {
-                authClient.newCall(GET("$baseUrl/v1/series/${track.media_id}/rating"))
+                authClient.newCall(GET("$baseUrl/v1/series/${track.remote_id}/rating"))
                     .awaitSuccess()
                     .parseAs<Rating>()
             }
@@ -138,7 +139,7 @@ class MangaUpdatesApi(
             }
             authClient.newCall(
                 PUT(
-                    url = "$baseUrl/v1/series/${track.media_id}/rating",
+                    url = "$baseUrl/v1/series/${track.remote_id}/rating",
                     body = body.toString().toRequestBody(contentType),
                 ),
             )
@@ -146,7 +147,7 @@ class MangaUpdatesApi(
         } else {
             authClient.newCall(
                 DELETE(
-                    url = "$baseUrl/v1/series/${track.media_id}/rating",
+                    url = "$baseUrl/v1/series/${track.remote_id}/rating",
                 ),
             )
                 .awaitSuccess()

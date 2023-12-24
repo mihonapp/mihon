@@ -399,7 +399,7 @@ private data class TrackScoreSelectorScreen(
     private class Model(
         private val track: Track,
         private val tracker: Tracker,
-    ) : StateScreenModel<Model.State>(State(tracker.displayScore(track.toDbTrack()))) {
+    ) : StateScreenModel<Model.State>(State(tracker.displayScore(track))) {
 
         fun getSelections(): ImmutableList<String> {
             return tracker.getScoreList()
@@ -816,7 +816,7 @@ private data class TrackerRemoveScreen(
 
         fun deleteMangaFromService() {
             screenModelScope.launchNonCancellable {
-                (tracker as DeletableTracker).delete(track.toDbTrack())
+                (tracker as DeletableTracker).delete(track)
             }
         }
 
