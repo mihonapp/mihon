@@ -13,7 +13,7 @@ fun Track.copyPersonalFrom(other: Track): Track {
     )
 }
 
-fun Track.toDbTrack(): DbTrack = DbTrack.create(syncId).also {
+fun Track.toDbTrack(): DbTrack = DbTrack.create(trackerId).also {
     it.id = id
     it.manga_id = mangaId
     it.remote_id = remoteId
@@ -33,7 +33,7 @@ fun DbTrack.toDomainTrack(idRequired: Boolean = true): Track? {
     return Track(
         id = trackId,
         mangaId = manga_id,
-        syncId = sync_id.toLong(),
+        trackerId = tracker_id.toLong(),
         remoteId = remote_id,
         libraryId = library_id,
         title = title,

@@ -244,7 +244,7 @@ data class TrackInfoDialogHomeScreen(
             val source = Injekt.get<SourceManager>().getOrStub(sourceId)
             return loggedInTrackers
                 // Map to TrackItem
-                .map { service -> TrackItem(find { it.syncId == service.id }, service) }
+                .map { service -> TrackItem(find { it.trackerId == service.id }, service) }
                 // Show only if the service supports this manga's source
                 .filter { (it.tracker as? EnhancedTracker)?.accept(source) ?: true }
         }
