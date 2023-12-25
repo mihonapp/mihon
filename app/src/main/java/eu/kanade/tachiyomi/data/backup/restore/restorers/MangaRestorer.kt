@@ -328,7 +328,7 @@ class MangaRestorer(
                 readAt = max(item.readAt?.time ?: 0L, dbHistory.last_read?.time ?: 0L)
                     .takeIf { it > 0L }
                     ?.let { Date(it) },
-                readDuration = max(item.readDuration, dbHistory.time_read),
+                readDuration = max(item.readDuration, dbHistory.time_read) - dbHistory.time_read,
             )
         }
 
