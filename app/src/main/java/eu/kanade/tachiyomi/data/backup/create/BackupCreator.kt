@@ -68,7 +68,7 @@ class BackupCreator(
                         .forEach { it.delete() }
 
                     // Create new file to place backup
-                    dir?.createFile(BackupCreator.getFilename())
+                    dir?.createFile(getFilename())
                 } else {
                     UniFile.fromUri(context, uri)
                 }

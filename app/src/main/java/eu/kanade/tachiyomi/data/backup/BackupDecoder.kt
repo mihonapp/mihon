@@ -20,17 +20,20 @@ class BackupDecoder(
      * Decode a potentially-gzipped backup.
      */
     fun decode(uri: Uri): Backup {
-        val backupStringSource = context.contentResolver.openInputStream(uri)!!.source().buffer()
+        return context.contentResolver.openInputStream(uri)!!.use { inputStream ->
+            val source = inputStream.source().buffer()
 
-        val peeked = backupStringSource.peek()
-        peeked.require(2)
-        val id1id2 = peeked.readShort()
-        val backupString = if (id1id2.toInt() == 0x1f8b) { // 0x1f8b is gzip magic bytes
-            backupStringSource.gzip().buffer()
-        } else {
-            backupStringSource
-        }.use { it.readByteArray() }
+            val peeked = source.peek().apply {
+                require(2)
+            }
+            val id1id2 = peeked.readShort()
+            val backupString = if (id1id2.toInt() == 0x1f8b) { // 0x1f8b is gzip magic bytes
+                source.gzip().buffer()
+            } else {
+                source
+            }.use { it.readByteArray() }
 
-        return parser.decodeFromByteArray(BackupSerializer, backupString)
+            parser.decodeFromByteArray(BackupSerializer, backupString)
+        }
     }
 }

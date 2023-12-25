@@ -65,7 +65,6 @@ object SettingsLibraryScreen : SearchableSettings {
         allCategories: List<Category>,
         libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
-        val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val userCategoriesCount = allCategories.filterNot(Category::isSystemCategory).size
 
@@ -76,7 +75,7 @@ object SettingsLibraryScreen : SearchableSettings {
         val ids = listOf(libraryPreferences.defaultCategory().defaultValue()) +
             allCategories.fastMap { it.id.toInt() }
         val labels = listOf(stringResource(MR.strings.default_category_summary)) +
-            allCategories.fastMap { it.visualName(context) }
+            allCategories.fastMap { it.visualName }
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.categories),

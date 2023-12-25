@@ -51,6 +51,7 @@ class InMemoryPreferenceStore(
         TODO("Not yet implemented")
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T> getObject(
         key: String,
         defaultValue: T,
@@ -59,7 +60,7 @@ class InMemoryPreferenceStore(
     ): Preference<T> {
         val default = InMemoryPreference(key, null, defaultValue)
         val data: T? = preferences[key]?.get() as? T
-        return if (data == null) default else InMemoryPreference<T>(key, data, defaultValue)
+        return if (data == null) default else InMemoryPreference(key, data, defaultValue)
     }
 
     override fun getAll(): Map<String, *> {

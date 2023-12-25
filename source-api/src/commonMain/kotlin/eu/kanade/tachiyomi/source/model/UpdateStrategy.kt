@@ -6,6 +6,7 @@ package eu.kanade.tachiyomi.source.model
  *
  * @since extensions-lib 1.4
  */
+@Suppress("UNUSED")
 enum class UpdateStrategy {
     /**
      * Series marked as always update will be included in the library

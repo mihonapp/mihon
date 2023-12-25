@@ -246,7 +246,7 @@ class LibraryUpdateNotifier(private val context: Context) {
 
             // Mark chapters as read action
             addAction(
-                R.drawable.ic_glasses_24dp,
+                R.drawable.ic_done_24dp,
                 context.stringResource(MR.strings.action_mark_as_read),
                 NotificationReceiver.markAsReadPendingBroadcast(
                     context,
