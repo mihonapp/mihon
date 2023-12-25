@@ -36,6 +36,7 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.minus
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.plus
 import kotlinx.coroutines.flow.update
@@ -170,7 +171,7 @@ private class CreateBackupScreenModel : StateScreenModel<CreateBackupScreenModel
     )
 }
 
-private val BackupChoices = mapOf(
+private val BackupChoices = persistentMapOf(
     BackupCreateFlags.BACKUP_CATEGORY to MR.strings.categories,
     BackupCreateFlags.BACKUP_CHAPTER to MR.strings.chapters,
     BackupCreateFlags.BACKUP_TRACK to MR.strings.track,

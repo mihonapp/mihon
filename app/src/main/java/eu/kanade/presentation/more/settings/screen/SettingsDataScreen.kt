@@ -3,12 +3,9 @@ package eu.kanade.presentation.more.settings.screen
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
-import android.text.format.Formatter
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
@@ -31,13 +28,15 @@ import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
+import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
-import eu.kanade.tachiyomi.util.storage.DiskUtil
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchNonCancellable
@@ -65,7 +64,7 @@ object SettingsDataScreen : SearchableSettings {
         val backupPreferences = Injekt.get<BackupPreferences>()
         val storagePreferences = Injekt.get<StoragePreferences>()
 
-        return listOf(
+        return persistentListOf(
             getStorageLocationPref(storagePreferences = storagePreferences),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.pref_storage_location_info)),
 
@@ -142,7 +141,7 @@ object SettingsDataScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_backup),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 // Manual actions
                 Preference.PreferenceItem.CustomPreference(
                     title = stringResource(restorePreferenceKeyString),
@@ -177,7 +176,7 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = backupPreferences.backupInterval(),
                     title = stringResource(MR.strings.pref_backup_interval),
-                    entries = mapOf(
+                    entries = persistentMapOf(
                         0 to stringResource(MR.strings.off),
                         6 to stringResource(MR.strings.update_6hour),
                         12 to stringResource(MR.strings.update_12hour),
@@ -200,8 +199,8 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     private fun getDataGroup(): Preference.PreferenceGroup {
-        val scope = rememberCoroutineScope()
         val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         val libraryPreferences = remember { Injekt.get<LibraryPreferences>() }
 
         val chapterCache = remember { Injekt.get<ChapterCache>() }
@@ -210,8 +209,19 @@ object SettingsDataScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
-            preferenceItems = listOf(
-                getStorageInfoPref(cacheReadableSize),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.CustomPreference(
+                    title = stringResource(MR.strings.pref_storage_usage),
+                ) {
+                    BasePreferenceWidget(
+                        title = stringResource(MR.strings.pref_storage_usage),
+                        subcomponent = {
+                            StorageInfo(
+                                modifier = Modifier.padding(horizontal = PrefsHorizontalPadding),
+                            )
+                        },
+                    )
+                },
 
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_clear_chapter_cache),
@@ -237,32 +247,5 @@ object SettingsDataScreen : SearchableSettings {
                 ),
             ),
         )
-    }
-
-    @Composable
-    fun getStorageInfoPref(
-        chapterCacheReadableSize: String,
-    ): Preference.PreferenceItem.CustomPreference {
-        val context = LocalContext.current
-        val available = remember {
-            Formatter.formatFileSize(context, DiskUtil.getAvailableStorageSpace(Environment.getDataDirectory()))
-        }
-        val total = remember {
-            Formatter.formatFileSize(context, DiskUtil.getTotalStorageSpace(Environment.getDataDirectory()))
-        }
-
-        return Preference.PreferenceItem.CustomPreference(
-            title = stringResource(MR.strings.pref_storage_usage),
-        ) {
-            BasePreferenceWidget(
-                title = stringResource(MR.strings.pref_storage_usage),
-                subcomponent = {
-                    // TODO: downloads, SD cards, bar representation?, i18n
-                    Box(modifier = Modifier.padding(horizontal = PrefsHorizontalPadding)) {
-                        Text(text = "Available: $available / $total (chapter cache: $chapterCacheReadableSize)")
-                    }
-                },
-            )
-        }
     }
 }

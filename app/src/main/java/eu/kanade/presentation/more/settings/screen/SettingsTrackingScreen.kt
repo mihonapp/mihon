@@ -51,6 +51,8 @@ import eu.kanade.tachiyomi.data.track.myanimelist.MyAnimeListApi
 import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.domain.source.service.SourceManager
@@ -125,7 +127,7 @@ object SettingsTrackingScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
-                preferenceItems = listOf(
+                preferenceItems = persistentListOf(
                     Preference.PreferenceItem.TrackerPreference(
                         title = trackerManager.myAnimeList.name,
                         tracker = trackerManager.myAnimeList,
@@ -167,15 +169,17 @@ object SettingsTrackingScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.enhanced_services),
-                preferenceItems = enhancedTrackers.first
-                    .map { service ->
-                        Preference.PreferenceItem.TrackerPreference(
-                            title = service.name,
-                            tracker = service,
-                            login = { (service as EnhancedTracker).loginNoop() },
-                            logout = service::logout,
-                        )
-                    } + listOf(Preference.PreferenceItem.InfoPreference(enhancedTrackerInfo)),
+                preferenceItems = (
+                    enhancedTrackers.first
+                        .map { service ->
+                            Preference.PreferenceItem.TrackerPreference(
+                                title = service.name,
+                                tracker = service,
+                                login = { (service as EnhancedTracker).loginNoop() },
+                                logout = service::logout,
+                            )
+                        } + listOf(Preference.PreferenceItem.InfoPreference(enhancedTrackerInfo))
+                    ).toImmutableList(),
             ),
         )
     }
