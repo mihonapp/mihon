@@ -40,7 +40,7 @@ preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
-coil-bom = { module = "io.coil-kt:coil-bom", version = "2.4.0" }
+coil-bom = { module = "io.coil-kt:coil-bom", version = "2.5.0" }
 coil-core = { module = "io.coil-kt:coil" }
 coil-gif = { module = "io.coil-kt:coil-gif" }
 coil-compose = { module = "io.coil-kt:coil-compose" }
