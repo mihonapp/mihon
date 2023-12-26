@@ -214,7 +214,6 @@ object SettingsDataScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_storage_usage),
                 ) {
                     BasePreferenceWidget(
-                        title = stringResource(MR.strings.pref_storage_usage),
                         subcomponent = {
                             StorageInfo(
                                 modifier = Modifier.padding(horizontal = PrefsHorizontalPadding),
