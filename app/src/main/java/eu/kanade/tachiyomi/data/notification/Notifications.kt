@@ -30,8 +30,6 @@ object Notifications {
     const val ID_LIBRARY_SIZE_WARNING = -103
     const val CHANNEL_LIBRARY_ERROR = "library_errors_channel"
     const val ID_LIBRARY_ERROR = -102
-    const val CHANNEL_LIBRARY_SKIPPED = "library_skipped_channel"
-    const val ID_LIBRARY_SKIPPED = -104
 
     /**
      * Notification channel and ids used by the downloader.
@@ -86,6 +84,7 @@ object Notifications {
         "updates_ext_channel",
         "downloader_cache_renewal",
         "crash_logs_channel",
+        "library_skipped_channel",
     )
 
     /**
@@ -129,11 +128,6 @@ object Notifications {
                 },
                 buildNotificationChannel(CHANNEL_LIBRARY_ERROR, IMPORTANCE_LOW) {
                     setName(context.stringResource(MR.strings.channel_errors))
-                    setGroup(GROUP_LIBRARY)
-                    setShowBadge(false)
-                },
-                buildNotificationChannel(CHANNEL_LIBRARY_SKIPPED, IMPORTANCE_LOW) {
-                    setName(context.stringResource(MR.strings.channel_skipped))
                     setGroup(GROUP_LIBRARY)
                     setShowBadge(false)
                 },
