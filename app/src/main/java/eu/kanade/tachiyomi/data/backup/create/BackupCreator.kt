@@ -12,6 +12,13 @@ import eu.kanade.tachiyomi.data.backup.create.creators.CategoriesBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.MangaBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.PreferenceBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.SourcesBackupCreator
+import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupPreference
+import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
+import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import okio.buffer
@@ -19,13 +26,6 @@ import okio.gzip
 import okio.sink
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.backup.model.Backup
-import tachiyomi.domain.backup.model.BackupCategory
-import tachiyomi.domain.backup.model.BackupManga
-import tachiyomi.domain.backup.model.BackupPreference
-import tachiyomi.domain.backup.model.BackupSerializer
-import tachiyomi.domain.backup.model.BackupSource
-import tachiyomi.domain.backup.model.BackupSourcePreferences
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga

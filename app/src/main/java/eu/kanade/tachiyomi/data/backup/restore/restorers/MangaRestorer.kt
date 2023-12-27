@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupChapter
+import eu.kanade.tachiyomi.data.backup.models.BackupHistory
+import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.UpdateStrategyColumnAdapter
-import tachiyomi.domain.backup.model.BackupCategory
-import tachiyomi.domain.backup.model.BackupChapter
-import tachiyomi.domain.backup.model.BackupHistory
-import tachiyomi.domain.backup.model.BackupManga
-import tachiyomi.domain.backup.model.BackupTracking
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter

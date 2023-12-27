@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
+import eu.kanade.tachiyomi.data.backup.models.BackupSource
 import eu.kanade.tachiyomi.source.Source
-import tachiyomi.domain.backup.model.BackupSource
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt

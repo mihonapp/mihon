@@ -4,6 +4,10 @@ import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
+import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupPreference
+import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
@@ -13,10 +17,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import tachiyomi.core.i18n.stringResource
-import tachiyomi.domain.backup.model.BackupCategory
-import tachiyomi.domain.backup.model.BackupManga
-import tachiyomi.domain.backup.model.BackupPreference
-import tachiyomi.domain.backup.model.BackupSourcePreferences
 import tachiyomi.i18n.MR
 import java.io.File
 import java.text.SimpleDateFormat
