@@ -11,10 +11,12 @@ class SyncPreferences(
         const val SYNC_ON_CHAPTER_READ = 0x1
         const val SYNC_ON_CHAPTER_OPEN = 0x2
         const val SYNC_ON_APP_START = 0x4
+        const val SYNC_ON_APP_RESUME = 0x8
+        const val SYNC_ON_LIBRARY_UPDATE = 0x10
 
         const val Defaults = NONE
 
-        fun values() = listOf(NONE, SYNC_ON_CHAPTER_READ, SYNC_ON_CHAPTER_OPEN, SYNC_ON_APP_START)
+        fun values() = listOf(NONE, SYNC_ON_CHAPTER_READ, SYNC_ON_CHAPTER_OPEN, SYNC_ON_APP_START, SYNC_ON_APP_RESUME, SYNC_ON_LIBRARY_UPDATE)
     }
 
     fun syncHost() = preferenceStore.getString("sync_host", "https://sync.tachiyomi.org")
@@ -35,4 +37,8 @@ class SyncPreferences(
     )
 
     fun syncFlags() = preferenceStore.getInt("sync_flags", Flags.Defaults)
+
+    fun isSyncEnabled(): Boolean {
+        return syncService().get() != 0
+    }
 }

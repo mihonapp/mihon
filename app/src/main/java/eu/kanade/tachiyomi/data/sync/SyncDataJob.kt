@@ -60,7 +60,7 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
     companion object {
         private const val TAG_JOB = "SyncDataJob"
         private const val TAG_AUTO = "$TAG_JOB:auto"
-        private const val TAG_MANUAL = "$TAG_JOB:manual"
+        const val TAG_MANUAL = "$TAG_JOB:manual"
 
         private val jobTagList = listOf(TAG_AUTO, TAG_MANUAL)
 

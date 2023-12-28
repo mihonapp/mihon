@@ -533,7 +533,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 deleteChapterIfNeeded(readerChapter)
 
                 // Check if syncing is enabled for chapter read:
-                if (syncPreferences.syncService().get() != 0 &&
+                if (syncPreferences.isSyncEnabled() &&
                     syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_READ == SyncPreferences.Flags.SYNC_ON_CHAPTER_READ
                 ) {
                     SyncDataJob.startNow(Injekt.get<Application>())
@@ -549,7 +549,7 @@ class ReaderViewModel @JvmOverloads constructor(
             )
 
             // Check if syncing is enabled for chapter open:
-            if (syncPreferences.syncService().get() != 0 &&
+            if (syncPreferences.isSyncEnabled() &&
                 syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN == SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN
             ) {
                 SyncDataJob.startNow(Injekt.get<Application>())

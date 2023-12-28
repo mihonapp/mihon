@@ -120,4 +120,6 @@ private val SyncChoices = mapOf(
     SyncPreferences.Flags.SYNC_ON_CHAPTER_READ to MR.strings.sync_on_chapter_read,
     SyncPreferences.Flags.SYNC_ON_CHAPTER_OPEN to MR.strings.sync_on_chapter_open,
     SyncPreferences.Flags.SYNC_ON_APP_START to MR.strings.sync_on_app_start,
+    SyncPreferences.Flags.SYNC_ON_APP_RESUME to MR.strings.sync_on_app_resume,
+    SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE to MR.strings.sync_on_library_update,
 )
