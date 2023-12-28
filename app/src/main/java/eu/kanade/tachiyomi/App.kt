@@ -137,6 +137,13 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         if (!LogcatLogger.isInstalled && networkPreferences.verboseLogging().get()) {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         }
+
+
+        val syncPreferences: SyncPreferences by injectLazy()
+        val syncFlags = syncPreferences.syncFlags().get()
+        if (syncPreferences.isSyncEnabled() && syncFlags and SyncPreferences.Flags.SYNC_ON_APP_START == SyncPreferences.Flags.SYNC_ON_APP_START) {
+            SyncDataJob.startNow(this@App)
+        }
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -173,7 +180,7 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
 
         val syncPreferences: SyncPreferences by injectLazy()
         val syncFlags = syncPreferences.syncFlags().get()
-        if (syncPreferences.syncService().get() != 0 && syncFlags and SyncPreferences.Flags.SYNC_ON_APP_START == SyncPreferences.Flags.SYNC_ON_APP_START) {
+        if (syncPreferences.isSyncEnabled() && syncFlags and SyncPreferences.Flags.SYNC_ON_APP_RESUME == SyncPreferences.Flags.SYNC_ON_APP_RESUME) {
             SyncDataJob.startNow(this@App)
         }
     }
