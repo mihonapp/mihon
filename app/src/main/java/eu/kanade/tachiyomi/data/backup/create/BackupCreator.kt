@@ -73,10 +73,9 @@ class BackupCreator(
                     UniFile.fromUri(context, uri)
                 }
                 )
-                ?: throw Exception(context.stringResource(MR.strings.create_backup_file_error))
 
-            if (!file.isFile) {
-                throw IllegalStateException("Failed to get handle on a backup file")
+            if (file == null || !file.isFile) {
+                throw IllegalStateException(context.stringResource(MR.strings.create_backup_file_error))
             }
 
             val databaseManga = getFavorites.await()
