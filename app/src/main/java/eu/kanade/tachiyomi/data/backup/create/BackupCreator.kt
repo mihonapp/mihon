@@ -131,13 +131,13 @@ class BackupCreator(
     private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
         if (!options.appSettings) return emptyList()
 
-        return preferenceBackupCreator.backupAppPreferences()
+        return preferenceBackupCreator.backupAppPreferences(includePrivatePreferences = options.privateSettings)
     }
 
     private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
         if (!options.sourceSettings) return emptyList()
 
-        return preferenceBackupCreator.backupSourcePreferences()
+        return preferenceBackupCreator.backupSourcePreferences(includePrivatePreferences = options.privateSettings)
     }
 
     companion object {

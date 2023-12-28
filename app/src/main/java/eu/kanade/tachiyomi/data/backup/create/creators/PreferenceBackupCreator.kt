@@ -22,26 +22,27 @@ class PreferenceBackupCreator(
     private val preferenceStore: PreferenceStore = Injekt.get(),
 ) {
 
-    fun backupAppPreferences(): List<BackupPreference> {
+    fun backupAppPreferences(includePrivatePreferences: Boolean): List<BackupPreference> {
         return preferenceStore.getAll().toBackupPreferences()
+            .withPrivatePreferences(includePrivatePreferences)
     }
 
-    fun backupSourcePreferences(): List<BackupSourcePreferences> {
+    fun backupSourcePreferences(includePrivatePreferences: Boolean): List<BackupSourcePreferences> {
         return sourceManager.getCatalogueSources()
             .filterIsInstance<ConfigurableSource>()
             .map {
                 BackupSourcePreferences(
                     it.preferenceKey(),
-                    it.sourcePreferences().all.toBackupPreferences(),
+                    it.sourcePreferences().all.toBackupPreferences()
+                        .withPrivatePreferences(includePrivatePreferences),
                 )
             }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun Map<String, *>.toBackupPreferences(): List<BackupPreference> {
-        return this.filterKeys {
-            !Preference.isAppState(it) && !Preference.isPrivate(it)
-        }
+        return this
+            .filterKeys { !Preference.isAppState(it) }
             .mapNotNull { (key, value) ->
                 when (value) {
                     is Int -> BackupPreference(key, IntPreferenceValue(value))
@@ -56,4 +57,11 @@ class PreferenceBackupCreator(
                 }
             }
     }
+
+    private fun List<BackupPreference>.withPrivatePreferences(include: Boolean) =
+        if (include) {
+            this
+        } else {
+            this.filter { !Preference.isPrivate(it.key) }
+        }
 }

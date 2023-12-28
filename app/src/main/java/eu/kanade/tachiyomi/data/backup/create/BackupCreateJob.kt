@@ -19,6 +19,8 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.lang.asBooleanArray
+import eu.kanade.tachiyomi.util.lang.asDataClass
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
@@ -47,9 +49,8 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         setForegroundSafely()
 
-        val options = inputData.getBooleanArray(OPTIONS_KEY)
-            ?.let { BackupOptions.fromBooleanArray(it) }
-            ?: BackupOptions.AutomaticDefaults
+        val options: BackupOptions = inputData.getBooleanArray(OPTIONS_KEY)?.asDataClass()
+            ?: BackupOptions()
 
         return try {
             val location = BackupCreator(context, isAutoBackup).backup(uri, options)
@@ -118,7 +119,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             val inputData = workDataOf(
                 IS_AUTO_BACKUP_KEY to false,
                 LOCATION_URI_KEY to uri.toString(),
-                OPTIONS_KEY to options.toBooleanArray(),
+                OPTIONS_KEY to options.asBooleanArray(),
             )
             val request = OneTimeWorkRequestBuilder<BackupCreateJob>()
                 .addTag(TAG_MANUAL)
