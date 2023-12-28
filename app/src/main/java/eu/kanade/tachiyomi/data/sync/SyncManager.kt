@@ -60,7 +60,7 @@ class SyncManager(
         ;
 
         companion object {
-            fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: NONE
+            fun fromInt(value: Int) = entries.firstOrNull { it.value == value } ?: NONE
         }
     }
 
