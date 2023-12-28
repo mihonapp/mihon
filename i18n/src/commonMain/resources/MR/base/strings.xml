@@ -569,9 +569,11 @@
     <string name="pref_purge_confirmation_message">Purging sync data will delete all your sync data from Google Drive. Are you sure you want to continue?</string>
     <string name="pref_sync_options">Create sync triggers</string>
     <string name="pref_sync_options_summ">Can be used to set sync triggers</string>
-    <string name="sync_on_chapter_read">On chapter read</string>
-    <string name="sync_on_chapter_open">On every open chapter page (EXPERIMENTAL NOT RECOMMENDED, everytime you go to next page it or previous it will sync.)</string>
-    <string name="sync_on_app_start">On app start</string>
+    <string name="sync_on_chapter_read">Sync on Chapter Read</string>
+    <string name="sync_on_chapter_open">Sync on Every Chapter Page</string>
+    <string name="sync_on_app_start">Sync on App Start</string>
+    <string name="sync_on_app_resume">Sync on App Resume</string>
+    <string name="sync_on_library_update">Sync on Library Update</string>
 
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
