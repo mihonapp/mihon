@@ -118,7 +118,7 @@ class BackupCreator(
         }
     }
 
-    private suspend fun backupCategories(options: Int): List<BackupCategory> {
+    suspend fun backupCategories(options: Int): List<BackupCategory> {
         if (options and BACKUP_CATEGORY != BACKUP_CATEGORY) return emptyList()
 
         return categoriesBackupCreator.backupCategories()
@@ -128,7 +128,7 @@ class BackupCreator(
         return mangaBackupCreator.backupMangas(mangas, flags)
     }
 
-    private fun backupSources(mangas: List<Manga>): List<BackupSource> {
+    fun backupSources(mangas: List<Manga>): List<BackupSource> {
         return sourcesBackupCreator.backupSources(mangas)
     }
 
