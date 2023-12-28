@@ -31,11 +31,11 @@ class TrackRepositoryImpl(
         }
     }
 
-    override suspend fun delete(mangaId: Long, syncId: Long) {
+    override suspend fun delete(mangaId: Long, trackerId: Long) {
         handler.await {
             manga_syncQueries.delete(
                 mangaId = mangaId,
-                syncId = syncId,
+                syncId = trackerId,
             )
         }
     }
@@ -53,7 +53,7 @@ class TrackRepositoryImpl(
             tracks.forEach { mangaTrack ->
                 manga_syncQueries.insert(
                     mangaId = mangaTrack.mangaId,
-                    syncId = mangaTrack.syncId,
+                    syncId = mangaTrack.trackerId,
                     remoteId = mangaTrack.remoteId,
                     libraryId = mangaTrack.libraryId,
                     title = mangaTrack.title,

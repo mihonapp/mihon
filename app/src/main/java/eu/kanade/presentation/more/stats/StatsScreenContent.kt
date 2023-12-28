@@ -140,7 +140,7 @@ private fun TrackerStats(
     val meanScoreStr = remember(data.trackedTitleCount, data.meanScore) {
         if (data.trackedTitleCount > 0 && !data.meanScore.isNaN()) {
             // All other numbers are localized in English
-            String.format(Locale.ENGLISH, "%.2f ★", data.meanScore)
+            "%.2f ★".format(Locale.ENGLISH, data.meanScore)
         } else {
             notApplicable
         }

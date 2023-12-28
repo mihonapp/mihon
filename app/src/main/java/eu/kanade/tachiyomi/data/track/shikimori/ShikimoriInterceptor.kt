@@ -5,7 +5,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
-class ShikimoriInterceptor(val shikimori: Shikimori) : Interceptor {
+class ShikimoriInterceptor(private val shikimori: Shikimori) : Interceptor {
 
     private val json: Json by injectLazy()
 

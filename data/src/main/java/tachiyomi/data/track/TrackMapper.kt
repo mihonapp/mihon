@@ -20,7 +20,7 @@ object TrackMapper {
     ): Track = Track(
         id = id,
         mangaId = mangaId,
-        syncId = syncId,
+        trackerId = syncId,
         remoteId = remoteId,
         libraryId = libraryId,
         title = title,

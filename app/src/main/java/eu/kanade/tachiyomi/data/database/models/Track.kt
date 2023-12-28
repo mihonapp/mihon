@@ -8,9 +8,9 @@ interface Track : Serializable {
 
     var manga_id: Long
 
-    var sync_id: Int
+    var tracker_id: Int
 
-    var media_id: Long
+    var remote_id: Long
 
     var library_id: Long?
 
@@ -40,7 +40,7 @@ interface Track : Serializable {
 
     companion object {
         fun create(serviceId: Long): Track = TrackImpl().apply {
-            sync_id = serviceId.toInt()
+            tracker_id = serviceId.toInt()
         }
     }
 }

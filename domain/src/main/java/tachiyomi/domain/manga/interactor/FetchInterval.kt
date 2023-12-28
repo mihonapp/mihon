@@ -46,6 +46,8 @@ class FetchInterval(
     }
 
     internal fun calculateInterval(chapters: List<Chapter>, zone: ZoneId): Int {
+        val chapterWindow = if (chapters.size <= 8) 3 else 10
+
         val uploadDates = chapters.asSequence()
             .filter { it.dateUpload > 0L }
             .sortedByDescending { it.dateUpload }
@@ -55,7 +57,7 @@ class FetchInterval(
                     .atStartOfDay()
             }
             .distinct()
-            .take(10)
+            .take(chapterWindow)
             .toList()
 
         val fetchDates = chapters.asSequence()
@@ -66,7 +68,7 @@ class FetchInterval(
                     .atStartOfDay()
             }
             .distinct()
-            .take(10)
+            .take(chapterWindow)
             .toList()
 
         val interval = when {

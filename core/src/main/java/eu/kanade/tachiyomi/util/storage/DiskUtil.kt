@@ -3,12 +3,31 @@ package eu.kanade.tachiyomi.util.storage
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Environment
 import android.os.StatFs
+import androidx.core.content.ContextCompat
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.util.lang.Hash
 import java.io.File
 
 object DiskUtil {
+
+    /**
+     * Returns the root folders of all the available external storages.
+     */
+    fun getExternalStorages(context: Context): List<File> {
+        return ContextCompat.getExternalFilesDirs(context, null)
+            .filterNotNull()
+            .mapNotNull {
+                val file = File(it.absolutePath.substringBefore("/Android/"))
+                val state = Environment.getExternalStorageState(file)
+                if (state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY) {
+                    file
+                } else {
+                    null
+                }
+            }
+    }
 
     fun hashKeyForDisk(key: String): String {
         return Hash.md5(key)

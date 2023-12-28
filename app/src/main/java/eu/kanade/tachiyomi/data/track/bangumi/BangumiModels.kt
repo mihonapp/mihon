@@ -62,12 +62,3 @@ fun Track.toBangumiStatus() = when (status) {
     Bangumi.PLAN_TO_READ -> "wish"
     else -> throw NotImplementedError("Unknown status: $status")
 }
-
-fun toTrackStatus(status: String) = when (status) {
-    "do" -> Bangumi.READING
-    "collect" -> Bangumi.COMPLETED
-    "on_hold" -> Bangumi.ON_HOLD
-    "dropped" -> Bangumi.DROPPED
-    "wish" -> Bangumi.PLAN_TO_READ
-    else -> throw NotImplementedError("Unknown status: $status")
-}

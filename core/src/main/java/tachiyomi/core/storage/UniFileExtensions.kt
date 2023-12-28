@@ -16,7 +16,7 @@ val UniFile.nameWithoutExtension: String?
 fun UniFile.toTempFile(context: Context): File {
     val inputStream = context.contentResolver.openInputStream(uri)!!
     val tempFile = File.createTempFile(
-        nameWithoutExtension.orEmpty(),
+        nameWithoutExtension.orEmpty().padEnd(3), // Prefix must be 3+ chars
         null,
     )
 

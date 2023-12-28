@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.domain.track.model.toDbTrack
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
@@ -120,16 +121,16 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         }
     }
 
-    override fun displayScore(track: Track): String {
+    override fun displayScore(track: DomainTrack): String {
         val score = track.score
 
         return when (scorePreference.get()) {
             POINT_5 -> when (score) {
-                0f -> "0 ★"
+                0.0 -> "0 ★"
                 else -> "${((score + 10) / 20).toInt()} ★"
             }
             POINT_3 -> when {
-                score == 0f -> "0"
+                score == 0.0 -> "0"
                 score <= 35 -> "😦"
                 score <= 60 -> "😐"
                 else -> "😊"
@@ -167,13 +168,13 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         return api.updateLibManga(track)
     }
 
-    override suspend fun delete(track: Track): Track {
-        if (track.library_id == null || track.library_id!! == 0L) {
-            val libManga = api.findLibManga(track, getUsername().toInt()) ?: return track
-            track.library_id = libManga.library_id
+    override suspend fun delete(track: DomainTrack) {
+        if (track.libraryId == null || track.libraryId == 0L) {
+            val libManga = api.findLibManga(track.toDbTrack(), getUsername().toInt()) ?: return
+            return api.deleteLibManga(track.copy(id = libManga.library_id!!))
         }
 
-        return api.deleteLibManga(track)
+        api.deleteLibManga(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

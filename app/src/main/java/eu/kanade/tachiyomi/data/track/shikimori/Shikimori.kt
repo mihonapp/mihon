@@ -13,6 +13,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
@@ -37,7 +38,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
-    override fun displayScore(track: Track): String {
+    override fun displayScore(track: DomainTrack): String {
         return track.score.toInt().toString()
     }
 
@@ -59,8 +60,8 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
         return api.updateLibManga(track, getUsername())
     }
 
-    override suspend fun delete(track: Track): Track {
-        return api.deleteLibManga(track)
+    override suspend fun delete(track: DomainTrack) {
+        api.deleteLibManga(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

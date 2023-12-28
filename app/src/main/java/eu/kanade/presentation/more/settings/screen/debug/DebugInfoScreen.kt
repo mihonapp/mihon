@@ -15,6 +15,8 @@ import eu.kanade.presentation.more.settings.screen.about.AboutScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.guava.await
 import tachiyomi.i18n.MR
 
@@ -47,7 +49,7 @@ class DebugInfoScreen : Screen() {
     private fun getAppInfoGroup(): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
             title = "App info",
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
                     title = "Version",
                     subtitle = AboutScreen.getVersionName(false),
@@ -96,8 +98,8 @@ class DebugInfoScreen : Screen() {
     }
 
     private fun getDeviceInfoGroup(): Preference.PreferenceGroup {
-        val items = buildList {
-            add(
+        val items = persistentListOf<Preference.PreferenceItem<out Any>>().mutate {
+            it.add(
                 Preference.PreferenceItem.TextPreference(
                     title = "Model",
                     subtitle = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})",
@@ -105,14 +107,14 @@ class DebugInfoScreen : Screen() {
             )
 
             if (DeviceUtil.oneUiVersion != null) {
-                add(
+                it.add(
                     Preference.PreferenceItem.TextPreference(
                         title = "OneUI version",
                         subtitle = "${DeviceUtil.oneUiVersion}",
                     ),
                 )
             } else if (DeviceUtil.miuiMajorVersion != null) {
-                add(
+                it.add(
                     Preference.PreferenceItem.TextPreference(
                         title = "MIUI version",
                         subtitle = "${DeviceUtil.miuiMajorVersion}",
@@ -127,7 +129,7 @@ class DebugInfoScreen : Screen() {
             } else {
                 Build.VERSION.RELEASE
             }
-            add(
+            it.add(
                 Preference.PreferenceItem.TextPreference(
                     title = "Android version",
                     subtitle = "$androidVersion (${Build.DISPLAY})",

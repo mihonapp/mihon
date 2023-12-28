@@ -114,6 +114,7 @@ internal fun Modifier.highlightBackground(highlighted: Boolean): Modifier = comp
         } else {
             tween(200)
         },
+        label = "highlight",
     )
     Modifier.background(color = highlight)
 }

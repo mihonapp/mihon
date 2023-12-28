@@ -6,7 +6,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
-class BangumiInterceptor(val bangumi: Bangumi) : Interceptor {
+class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
 
     private val json: Json by injectLazy()
 

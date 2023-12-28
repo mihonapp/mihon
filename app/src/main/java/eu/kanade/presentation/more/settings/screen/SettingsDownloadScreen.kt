@@ -12,6 +12,9 @@ import androidx.compose.ui.util.fastMap
 import eu.kanade.presentation.category.visualName
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.widget.TriStateListDialog
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
@@ -68,7 +71,7 @@ object SettingsDownloadScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_delete_chapters),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadPreferences.removeAfterMarkedAsRead(),
                     title = stringResource(MR.strings.pref_remove_after_marked_as_read),
@@ -76,7 +79,7 @@ object SettingsDownloadScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = downloadPreferences.removeAfterReadSlots(),
                     title = stringResource(MR.strings.pref_remove_after_read),
-                    entries = mapOf(
+                    entries = persistentMapOf(
                         -1 to stringResource(MR.strings.disabled),
                         0 to stringResource(MR.strings.last_read_chapter),
                         1 to stringResource(MR.strings.second_to_last),
@@ -105,7 +108,9 @@ object SettingsDownloadScreen : SearchableSettings {
         return Preference.PreferenceItem.MultiSelectListPreference(
             pref = downloadPreferences.removeExcludeCategories(),
             title = stringResource(MR.strings.pref_remove_exclude_categories),
-            entries = categories().associate { it.id.toString() to it.visualName },
+            entries = categories()
+                .associate { it.id.toString() to it.visualName }
+                .toImmutableMap(),
         )
     }
 
@@ -142,7 +147,7 @@ object SettingsDownloadScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_auto_download),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadNewChaptersPref,
                     title = stringResource(MR.strings.pref_download_new),
@@ -167,17 +172,19 @@ object SettingsDownloadScreen : SearchableSettings {
     ): Preference.PreferenceGroup {
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.download_ahead),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = downloadPreferences.autoDownloadWhileReading(),
                     title = stringResource(MR.strings.auto_download_while_reading),
-                    entries = listOf(0, 2, 3, 5, 10).associateWith {
-                        if (it == 0) {
-                            stringResource(MR.strings.disabled)
-                        } else {
-                            pluralStringResource(MR.plurals.next_unread_chapters, count = it, it)
+                    entries = listOf(0, 2, 3, 5, 10)
+                        .associateWith {
+                            if (it == 0) {
+                                stringResource(MR.strings.disabled)
+                            } else {
+                                pluralStringResource(MR.plurals.next_unread_chapters, count = it, it)
+                            }
                         }
-                    },
+                        .toImmutableMap(),
                 ),
                 Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.download_ahead_info)),
             ),

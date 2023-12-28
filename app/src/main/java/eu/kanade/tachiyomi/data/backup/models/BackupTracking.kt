@@ -7,7 +7,6 @@ import tachiyomi.domain.track.model.Track
 @Serializable
 data class BackupTracking(
     // in 1.x some of these values have different types or names
-    // syncId is called siteId in 1,x
     @ProtoNumber(1) var syncId: Int,
     // LibraryId is not null in 1.x
     @ProtoNumber(2) var libraryId: Long,
@@ -34,7 +33,7 @@ data class BackupTracking(
         return Track(
             id = -1,
             mangaId = -1,
-            syncId = this@BackupTracking.syncId.toLong(),
+            trackerId = this@BackupTracking.syncId.toLong(),
             remoteId = if (this@BackupTracking.mediaIdInt != 0) {
                 this@BackupTracking.mediaIdInt.toLong()
             } else {

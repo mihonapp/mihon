@@ -20,6 +20,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 internal class GuidesStep(
     private val onRestoreBackup: () -> Unit,
 ) : OnboardingStep {
+
     override val isComplete: Boolean = true
 
     @Composable

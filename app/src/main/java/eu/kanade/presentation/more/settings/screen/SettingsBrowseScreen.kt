@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -27,7 +28,7 @@ object SettingsBrowseScreen : SearchableSettings {
         return listOf(
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.label_sources),
-                preferenceItems = listOf(
+                preferenceItems = persistentListOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = sourcePreferences.hideInLibraryItems(),
                         title = stringResource(MR.strings.pref_hide_in_library_items),
@@ -36,7 +37,7 @@ object SettingsBrowseScreen : SearchableSettings {
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.pref_category_nsfw_content),
-                preferenceItems = listOf(
+                preferenceItems = persistentListOf(
                     Preference.PreferenceItem.SwitchPreference(
                         pref = sourcePreferences.showNsfwSource(),
                         title = stringResource(MR.strings.pref_show_nsfw_source),

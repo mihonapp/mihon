@@ -1,11 +1,11 @@
 package eu.kanade.tachiyomi.data.track
 
-import eu.kanade.tachiyomi.data.database.models.Track
+import tachiyomi.domain.track.model.Track
 
 /**
  * Tracker that support deleting am entry from a user's list.
  */
 interface DeletableTracker {
 
-    suspend fun delete(track: Track): Track
+    suspend fun delete(track: Track)
 }

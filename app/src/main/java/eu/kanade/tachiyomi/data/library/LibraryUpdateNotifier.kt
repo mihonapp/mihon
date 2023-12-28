@@ -140,27 +140,6 @@ class LibraryUpdateNotifier(private val context: Context) {
     }
 
     /**
-     * Shows notification containing update entries that were skipped.
-     *
-     * @param skipped Number of entries that were skipped during the update.
-     */
-    fun showUpdateSkippedNotification(skipped: Int) {
-        if (skipped == 0) {
-            return
-        }
-
-        context.notify(
-            Notifications.ID_LIBRARY_SKIPPED,
-            Notifications.CHANNEL_LIBRARY_SKIPPED,
-        ) {
-            setContentTitle(context.stringResource(MR.strings.notification_update_skipped, skipped))
-            setContentText(context.stringResource(MR.strings.learn_more))
-            setSmallIcon(R.drawable.ic_tachi)
-            setContentIntent(NotificationHandler.openUrl(context, HELP_SKIPPED_URL))
-        }
-    }
-
-    /**
      * Shows the notification containing the result of the update done by the service.
      *
      * @param updates a list of manga with new updates.
@@ -246,7 +225,7 @@ class LibraryUpdateNotifier(private val context: Context) {
 
             // Mark chapters as read action
             addAction(
-                R.drawable.ic_glasses_24dp,
+                R.drawable.ic_done_24dp,
                 context.stringResource(MR.strings.action_mark_as_read),
                 NotificationReceiver.markAsReadPendingBroadcast(
                     context,
@@ -385,4 +364,3 @@ class LibraryUpdateNotifier(private val context: Context) {
 private const val NOTIF_MAX_CHAPTERS = 5
 private const val NOTIF_TITLE_MAX_LEN = 45
 private const val NOTIF_ICON_SIZE = 192
-private const val HELP_SKIPPED_URL = "https://tachiyomi.org/docs/faq/library#why-is-global-update-skipping-entries"

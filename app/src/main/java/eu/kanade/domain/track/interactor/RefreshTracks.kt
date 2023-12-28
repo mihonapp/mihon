@@ -25,7 +25,7 @@ class RefreshTracks(
     suspend fun await(mangaId: Long): List<Pair<Tracker?, Throwable>> {
         return supervisorScope {
             return@supervisorScope getTracks.await(mangaId)
-                .map { it to trackerManager.get(it.syncId) }
+                .map { it to trackerManager.get(it.trackerId) }
                 .filter { (_, service) -> service?.isLoggedIn == true }
                 .map { (track, service) ->
                     async {
