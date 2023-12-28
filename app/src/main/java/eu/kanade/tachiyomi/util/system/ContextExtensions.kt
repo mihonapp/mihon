@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -166,4 +167,15 @@ fun Context.isInstalledFromFDroid(): Boolean {
     return installerPackageName == "org.fdroid.fdroid" ||
         // F-Droid builds typically disable the updater
         (!BuildConfig.INCLUDE_UPDATER && !isDevFlavor)
+}
+
+fun Context.launchRequestPackageInstallsPermission() {
+    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+            data = Uri.parse("package:$packageName")
+        }
+    } else {
+        Intent(Settings.ACTION_SECURITY_SETTINGS)
+    }
+    startActivity(intent)
 }

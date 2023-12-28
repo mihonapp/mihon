@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.presentation.components.SEARCH_DEBOUNCE_MILLIS
@@ -34,6 +35,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class ExtensionsScreenModel(
     preferences: SourcePreferences = Injekt.get(),
+    basePreferences: BasePreferences = Injekt.get(),
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : StateScreenModel<ExtensionsScreenModel.State>(State()) {
@@ -124,6 +126,10 @@ class ExtensionsScreenModel(
         preferences.extensionUpdatesCount().changes()
             .onEach { mutableState.update { state -> state.copy(updates = it) } }
             .launchIn(screenModelScope)
+
+        basePreferences.extensionInstaller().changes()
+            .onEach { mutableState.update { state -> state.copy(installer = it) } }
+            .launchIn(screenModelScope)
     }
 
     fun search(query: String?) {
@@ -199,6 +205,7 @@ class ExtensionsScreenModel(
         val isRefreshing: Boolean = false,
         val items: ItemGroups = mutableMapOf(),
         val updates: Int = 0,
+        val installer: BasePreferences.ExtensionInstaller? = null,
         val searchQuery: String? = null,
     ) {
         val isEmpty = items.isEmpty()
