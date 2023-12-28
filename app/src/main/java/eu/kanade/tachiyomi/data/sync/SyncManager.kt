@@ -22,7 +22,6 @@ import tachiyomi.data.Chapters
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.manga.MangaMapper.mapManga
 import tachiyomi.domain.category.interactor.GetCategories
-import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.sync.SyncPreferences
@@ -61,7 +60,7 @@ class SyncManager(
         ;
 
         companion object {
-            fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: NONE
+            fun fromInt(value: Int) = entries.firstOrNull { it.value == value } ?: NONE
         }
     }
 
@@ -190,7 +189,9 @@ class SyncManager(
         val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id, 0).executeAsList() }
         val localCategories = getCategories.await(localManga.id).map { it.order }
 
-        return localManga != remoteManga || areChaptersDifferent(localChapters, backupManga.chapters) || localCategories != backupManga.categories
+        return localManga != remoteManga ||
+            areChaptersDifferent(localChapters, backupManga.chapters) ||
+            localCategories != backupManga.categories
     }
 
     /**
