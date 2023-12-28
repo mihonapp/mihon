@@ -13,7 +13,7 @@ interface TrackRepository {
 
     fun getTracksByMangaIdAsFlow(mangaId: Long): Flow<List<Track>>
 
-    suspend fun delete(mangaId: Long, syncId: Long)
+    suspend fun delete(mangaId: Long, trackerId: Long)
 
     suspend fun insert(track: Track)
 

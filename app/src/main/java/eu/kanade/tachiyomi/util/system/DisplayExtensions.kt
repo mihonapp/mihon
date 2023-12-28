@@ -17,16 +17,8 @@ private const val TABLET_UI_MIN_SCREEN_WIDTH_PORTRAIT_DP = 700
 // make sure icons on the nav rail fit
 private const val TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP = 600
 
-fun Context.isTabletUi(): Boolean {
-    return resources.configuration.isTabletUi()
-}
-
 fun Configuration.isTabletUi(): Boolean {
     return smallestScreenWidthDp >= TABLET_UI_REQUIRED_SCREEN_WIDTH_DP
-}
-
-fun Configuration.isAutoTabletUiAvailable(): Boolean {
-    return smallestScreenWidthDp >= TABLET_UI_MIN_SCREEN_WIDTH_LANDSCAPE_DP
 }
 
 // TODO: move the logic to `isTabletUi()` when main activity is rewritten in Compose

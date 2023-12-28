@@ -29,7 +29,6 @@ import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.storage.service.StorageManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class BackupCreateJob(private val context: Context, workerParams: WorkerParameters) :
@@ -49,13 +48,10 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
         setForegroundSafely()
 
         val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
-        val backupPreferences = Injekt.get<BackupPreferences>()
 
         return try {
-            val location = BackupCreator(context).createBackup(uri, flags, isAutoBackup)
-            if (isAutoBackup) {
-                backupPreferences.lastAutoBackupTimestamp().set(Instant.now().toEpochMilli())
-            } else {
+            val location = BackupCreator(context, isAutoBackup).backup(uri, flags)
+            if (!isAutoBackup) {
                 notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
             }
             Result.success()

@@ -25,7 +25,7 @@ class DownloadProvider(
     private val storageManager: StorageManager = Injekt.get(),
 ) {
 
-    val downloadsDir: UniFile?
+    private val downloadsDir: UniFile?
         get() = storageManager.getDownloadsDirectory()
 
     /**

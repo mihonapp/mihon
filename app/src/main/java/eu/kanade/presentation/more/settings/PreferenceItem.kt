@@ -21,7 +21,6 @@ import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TrackingPreferenceWidget
 import kotlinx.coroutines.launch
-import tachiyomi.core.preference.PreferenceStore
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
@@ -157,8 +156,8 @@ internal fun PreferenceItem(
                 )
             }
             is Preference.PreferenceItem.TrackerPreference -> {
-                val uName by Injekt.get<PreferenceStore>()
-                    .getString(TrackPreferences.trackUsername(item.tracker.id))
+                val uName by Injekt.get<TrackPreferences>()
+                    .trackUsername(item.tracker)
                     .collectAsState()
                 item.tracker.run {
                     TrackingPreferenceWidget(

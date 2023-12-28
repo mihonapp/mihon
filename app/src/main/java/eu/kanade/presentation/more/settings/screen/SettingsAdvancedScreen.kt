@@ -51,6 +51,9 @@ import eu.kanade.tachiyomi.util.system.isShizukuInstalled
 import eu.kanade.tachiyomi.util.system.powerManager
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import okhttp3.Headers
@@ -149,7 +152,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_background_activity),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_disable_battery_optimization),
                     subtitle = stringResource(MR.strings.pref_disable_battery_optimization_summary),
@@ -188,7 +191,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_data),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_invalidate_download_cache),
                     subtitle = stringResource(MR.strings.pref_invalidate_download_cache_summary),
@@ -218,7 +221,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_network),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_clear_cookies),
                     onClick = {
@@ -249,7 +252,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = networkPreferences.dohProvider(),
                     title = stringResource(MR.strings.pref_dns_over_https),
-                    entries = mapOf(
+                    entries = persistentMapOf(
                         -1 to stringResource(MR.strings.disabled),
                         PREF_DOH_CLOUDFLARE to "Cloudflare",
                         PREF_DOH_GOOGLE to "Google",
@@ -302,7 +305,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_library),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_refresh_library_covers),
                     onClick = { MetadataUpdateJob.startNow(context) },
@@ -362,12 +365,13 @@ object SettingsAdvancedScreen : SearchableSettings {
         }
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_extensions),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.ListPreference(
                     pref = extensionInstallerPref,
                     title = stringResource(MR.strings.ext_installer_pref),
                     entries = extensionInstallerPref.entries
-                        .associateWith { stringResource(it.titleRes) },
+                        .associateWith { stringResource(it.titleRes) }
+                        .toImmutableMap(),
                     onValueChanged = {
                         if (it == BasePreferences.ExtensionInstaller.SHIZUKU &&
                             !context.isShizukuInstalled

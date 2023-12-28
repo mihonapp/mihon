@@ -10,6 +10,8 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -55,7 +57,8 @@ object SettingsSecurityScreen : SearchableSettings {
                             0 -> stringResource(MR.strings.lock_always)
                             else -> pluralStringResource(MR.plurals.lock_after_mins, count = it, it)
                         }
-                    },
+                    }
+                    .toImmutableMap(),
                 onValueChanged = {
                     (context as FragmentActivity).authenticate(
                         title = context.stringResource(MR.strings.lock_when_idle),
@@ -70,14 +73,15 @@ object SettingsSecurityScreen : SearchableSettings {
                 pref = securityPreferences.secureScreen(),
                 title = stringResource(MR.strings.secure_screen),
                 entries = SecurityPreferences.SecureScreenMode.entries
-                    .associateWith { stringResource(it.titleRes) },
+                    .associateWith { stringResource(it.titleRes) }
+                    .toImmutableMap(),
             ),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
         )
     }
 }
 
-private val LockAfterValues = listOf(
+private val LockAfterValues = persistentListOf(
     0, // Always
     1,
     2,

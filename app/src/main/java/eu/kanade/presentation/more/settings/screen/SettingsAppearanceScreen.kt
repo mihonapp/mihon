@@ -24,6 +24,9 @@ import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.util.system.LocaleHelper
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableMap
 import org.xmlpull.v1.XmlPullParser
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -66,7 +69,7 @@ object SettingsAppearanceScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_theme),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.CustomPreference(
                     title = stringResource(MR.strings.pref_app_theme),
                 ) {
@@ -127,7 +130,7 @@ object SettingsAppearanceScreen : SearchableSettings {
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_display),
-            preferenceItems = listOf(
+            preferenceItems = persistentListOf(
                 Preference.PreferenceItem.BasicListPreference(
                     value = currentLanguage,
                     title = stringResource(MR.strings.pref_app_language),
@@ -140,7 +143,9 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.tabletUiMode(),
                     title = stringResource(MR.strings.pref_tablet_ui_mode),
-                    entries = TabletUiMode.entries.associateWith { stringResource(it.titleRes) },
+                    entries = TabletUiMode.entries
+                        .associateWith { stringResource(it.titleRes) }
+                        .toImmutableMap(),
                     onValueChanged = {
                         context.toast(MR.strings.requires_app_restart)
                         true
@@ -153,7 +158,8 @@ object SettingsAppearanceScreen : SearchableSettings {
                         .associateWith {
                             val formattedDate = UiPreferences.dateFormat(it).format(now)
                             "${it.ifEmpty { stringResource(MR.strings.label_default) }} ($formattedDate)"
-                        },
+                        }
+                        .toImmutableMap(),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = uiPreferences.relativeTime(),
@@ -167,7 +173,7 @@ object SettingsAppearanceScreen : SearchableSettings {
             ),
         )
     }
-    private fun getLangs(context: Context): Map<String, String> {
+    private fun getLangs(context: Context): ImmutableMap<String, String> {
         val langs = mutableListOf<Pair<String, String>>()
         val parser = context.resources.getXml(R.xml.locales_config)
         var eventType = parser.eventType
@@ -189,7 +195,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         langs.sortBy { it.second }
         langs.add(0, Pair("", context.stringResource(MR.strings.label_default)))
 
-        return langs.toMap()
+        return langs.toMap().toImmutableMap()
     }
 }
 

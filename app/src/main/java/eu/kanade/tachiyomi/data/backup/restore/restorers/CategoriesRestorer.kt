@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.data.backup.restore
+package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import tachiyomi.data.DatabaseHandler

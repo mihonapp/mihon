@@ -30,7 +30,7 @@ fun DisplayRefreshHost(
     val currentDisplayRefresh = hostState.currentDisplayRefresh
     LaunchedEffect(currentDisplayRefresh) {
         if (currentDisplayRefresh) {
-            delay(200)
+            delay(1500)
             hostState.currentDisplayRefresh = false
         }
     }
@@ -39,7 +39,7 @@ fun DisplayRefreshHost(
         Canvas(
             modifier = modifier.fillMaxSize(),
         ) {
-            drawRect(Color.White)
+            drawRect(Color.Black)
         }
     }
 }

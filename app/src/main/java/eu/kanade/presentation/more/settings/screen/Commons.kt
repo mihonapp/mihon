@@ -11,7 +11,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 /**
  * Returns a string of categories name for settings subtitle
  */
-
 @ReadOnlyComposable
 @Composable
 fun getCategoriesLabel(

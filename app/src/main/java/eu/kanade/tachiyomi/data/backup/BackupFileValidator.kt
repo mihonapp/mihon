@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.track.TrackerManager
-import eu.kanade.tachiyomi.util.BackupUtil
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -11,6 +10,8 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class BackupFileValidator(
+    private val context: Context,
+
     private val sourceManager: SourceManager = Injekt.get(),
     private val trackerManager: TrackerManager = Injekt.get(),
 ) {
@@ -21,9 +22,9 @@ class BackupFileValidator(
      * @throws Exception if manga cannot be found.
      * @return List of missing sources or missing trackers.
      */
-    fun validate(context: Context, uri: Uri): Results {
+    fun validate(uri: Uri): Results {
         val backup = try {
-            BackupUtil.decodeBackup(context, uri)
+            BackupDecoder(context).decode(uri)
         } catch (e: Exception) {
             throw IllegalStateException(e)
         }

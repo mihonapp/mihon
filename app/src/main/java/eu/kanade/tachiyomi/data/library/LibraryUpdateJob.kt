@@ -235,7 +235,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     .map { (reason, entries) -> "$reason: [${entries.map { it.first.title }.sorted().joinToString()}]" }
                     .joinToString()
             }
-            notifier.showUpdateSkippedNotification(skippedUpdates.size)
         }
     }
 

@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import eu.kanade.core.preference.asToggleableState
 import eu.kanade.presentation.category.visualName
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import tachiyomi.core.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
@@ -39,7 +40,7 @@ import kotlin.time.Duration.Companion.seconds
 fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
-    categories: List<Category>,
+    categories: ImmutableList<Category>,
 ) {
     var name by remember { mutableStateOf("") }
 
@@ -98,7 +99,7 @@ fun CategoryCreateDialog(
 fun CategoryRenameDialog(
     onDismissRequest: () -> Unit,
     onRename: (String) -> Unit,
-    categories: List<Category>,
+    categories: ImmutableList<Category>,
     category: Category,
 ) {
     var name by remember { mutableStateOf(category.name) }

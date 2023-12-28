@@ -2,12 +2,15 @@ package eu.kanade.tachiyomi.data.backup.restore
 
 import android.content.Context
 import android.net.Uri
+import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
-import eu.kanade.tachiyomi.util.BackupUtil
+import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
@@ -39,10 +42,10 @@ class BackupRestorer(
      */
     private var sourceMapping: Map<Long, String> = emptyMap()
 
-    suspend fun restore(uri: Uri) {
+    suspend fun restore(uri: Uri, options: RestoreOptions) {
         val startTime = System.currentTimeMillis()
 
-        restoreFromFile(uri)
+        restoreFromFile(uri, options)
 
         val time = System.currentTimeMillis() - startTime
 
@@ -57,20 +60,36 @@ class BackupRestorer(
         )
     }
 
-    private suspend fun restoreFromFile(uri: Uri) {
-        val backup = BackupUtil.decodeBackup(context, uri)
-
-        restoreAmount = backup.backupManga.size + 3 // +3 for categories, app prefs, source prefs
+    private suspend fun restoreFromFile(uri: Uri, options: RestoreOptions) {
+        val backup = BackupDecoder(context).decode(uri)
 
         // Store source mapping for error messages
         val backupMaps = backup.backupSources + backup.backupBrokenSources.map { it.toBackupSource() }
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
 
+        if (options.library) {
+            restoreAmount += backup.backupManga.size + 1 // +1 for categories
+        }
+        if (options.appSettings) {
+            restoreAmount += 1
+        }
+        if (options.sourceSettings) {
+            restoreAmount += 1
+        }
+
         coroutineScope {
-            restoreCategories(backup.backupCategories)
-            restoreAppPreferences(backup.backupPreferences)
-            restoreSourcePreferences(backup.backupSourcePreferences)
-            restoreManga(backup.backupManga, backup.backupCategories)
+            if (options.library) {
+                restoreCategories(backup.backupCategories)
+            }
+            if (options.appSettings) {
+                restoreAppPreferences(backup.backupPreferences)
+            }
+            if (options.sourceSettings) {
+                restoreSourcePreferences(backup.backupSourcePreferences)
+            }
+            if (options.library) {
+                restoreManga(backup.backupManga, backup.backupCategories)
+            }
 
             // TODO: optionally trigger online library + tracker update
         }

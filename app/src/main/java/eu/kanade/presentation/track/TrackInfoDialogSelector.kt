@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.presentation.theme.TachiyomiTheme
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -233,7 +234,7 @@ private fun TrackStatusSelectorPreviews() {
             TrackStatusSelector(
                 selection = 1,
                 onSelectionChange = {},
-                selections = mapOf(
+                selections = persistentMapOf(
                     // Anilist values
                     1 to MR.strings.reading,
                     2 to MR.strings.plan_to_read,

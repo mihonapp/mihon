@@ -62,8 +62,8 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
     private fun randTrackSearch() = TrackSearch().let {
         it.id = Random.nextLong()
         it.manga_id = Random.nextLong()
-        it.sync_id = Random.nextInt()
-        it.media_id = Random.nextLong()
+        it.tracker_id = Random.nextInt()
+        it.remote_id = Random.nextLong()
         it.library_id = Random.nextLong()
         it.title = lorem((1..10).random()).joinToString()
         it.last_chapter_read = (0..100).random().toFloat()

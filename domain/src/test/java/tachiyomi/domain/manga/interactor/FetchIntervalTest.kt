@@ -55,6 +55,21 @@ class FetchIntervalTest {
     }
 
     @Test
+    fun `returns interval based on smaller subset of recent chapters if very few chapters`() {
+        val oldChapters = (1..3).map {
+            chapterWithTime(chapter, (it * 7).days)
+        }
+        // Significant gap between chapters
+        val newChapters = (1..3).map {
+            chapterWithTime(chapter, oldChapters.lastUploadDate() + 365.days + (it * 7).days)
+        }
+
+        val chapters = oldChapters + newChapters
+
+        fetchInterval.calculateInterval(chapters, testZoneId) shouldBe 7
+    }
+
+    @Test
     fun `returns interval of 7 days when multiple chapters in 1 day`() {
         val chapters = (1..10).map {
             chapterWithTime(chapter, 10.hours)

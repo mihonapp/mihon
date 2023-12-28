@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <color name="splash">@color/accent_blue</color>
 
     <color name="cover_placeholder">#1F888888</color>
@@ -20,21 +20,7 @@
     <color name="background_amoled">#000000</color>
 
     <!-- Material Design Colors -->
-    <color name="md_black_1000">#000000</color>
-    <color name="md_black_1000_87">#DE000000</color>
-    <color name="md_black_1000_54">#8A000000</color>
-    <color name="md_black_1000_38">#61000000</color>
     <color name="md_black_1000_12">#1F000000</color>
-    <color name="md_black_1000_8">#14000000</color>
-    <color name="md_black_1000_6">#0F000000</color>
-
-    <color name="md_white_1000">#FFFFFFFF</color>
-    <color name="md_white_1000_70">#B3FFFFFF</color>
-    <color name="md_white_1000_54">#8AFFFFFF</color>
-    <color name="md_white_1000_50">#80FFFFFF</color>
-    <color name="md_white_1000_20">#33FFFFFF</color>
     <color name="md_white_1000_12">#1FFFFFFF</color>
-    <color name="md_white_1000_8">#14FFFFFF</color>
-    <color name="md_white_1000_6">#0FFFFFFF</color>
 
 </resources>

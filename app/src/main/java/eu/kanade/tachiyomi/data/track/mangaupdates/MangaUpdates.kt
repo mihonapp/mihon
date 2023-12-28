@@ -12,6 +12,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.i18n.MR
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
 
@@ -60,7 +61,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     override fun indexToScore(index: Int): Float = SCORE_LIST[index].toFloat()
 
-    override fun displayScore(track: Track): String = track.score.toString()
+    override fun displayScore(track: DomainTrack): String = track.score.toString()
 
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETE_LIST && didReadChapter) {
@@ -70,9 +71,8 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         return track
     }
 
-    override suspend fun delete(track: Track): Track {
+    override suspend fun delete(track: DomainTrack) {
         api.deleteSeriesFromList(track)
-        return track
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {

@@ -217,7 +217,7 @@ class LibraryScreenModel(
             if (isNotLoggedInAnyTrack || trackFiltersIsIgnored) return@tracking true
 
             val mangaTracks = trackMap
-                .mapValues { entry -> entry.value.map { it.syncId } }[item.libraryManga.id]
+                .mapValues { entry -> entry.value.map { it.trackerId } }[item.libraryManga.id]
                 .orEmpty()
 
             val isExcluded = excludedTracks.isNotEmpty() && mangaTracks.fastAny { it in excludedTracks }
@@ -257,7 +257,7 @@ class LibraryScreenModel(
                     entry.value.isEmpty() -> null
                     else ->
                         entry.value
-                            .mapNotNull { trackerMap[it.syncId]?.get10PointScore(it) }
+                            .mapNotNull { trackerMap[it.trackerId]?.get10PointScore(it) }
                             .average()
                 }
             }

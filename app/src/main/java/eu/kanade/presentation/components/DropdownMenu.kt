@@ -1,7 +1,10 @@
 package eu.kanade.presentation.components
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.RadioButtonChecked
@@ -22,12 +25,17 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import androidx.compose.material3.DropdownMenu as ComposeDropdownMenu
 
+/**
+ * DropdownMenu but overlaps anchor and has width constraints to better
+ * match non-Compose implementation.
+ */
 @Composable
 fun DropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(8.dp, (-56).dp),
+    scrollState: ScrollState = rememberScrollState(),
     properties: PopupProperties = PopupProperties(focusable = true),
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -36,6 +44,7 @@ fun DropdownMenu(
         onDismissRequest = onDismissRequest,
         modifier = modifier.sizeIn(minWidth = 196.dp, maxWidth = 196.dp),
         offset = offset,
+        scrollState = scrollState,
         properties = properties,
         content = content,
     )
@@ -45,6 +54,7 @@ fun DropdownMenu(
 fun RadioMenuItem(
     text: @Composable () -> Unit,
     isChecked: Boolean,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     DropdownMenuItem(
@@ -64,6 +74,7 @@ fun RadioMenuItem(
                 )
             }
         },
+        modifier = modifier,
     )
 }
 
@@ -71,25 +82,29 @@ fun RadioMenuItem(
 fun NestedMenuItem(
     text: @Composable () -> Unit,
     children: @Composable ColumnScope.(() -> Unit) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var nestedExpanded by remember { mutableStateOf(false) }
     val closeMenu = { nestedExpanded = false }
 
-    DropdownMenuItem(
-        text = text,
-        onClick = { nestedExpanded = true },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
-                contentDescription = null,
-            )
-        },
-    )
+    Box {
+        DropdownMenuItem(
+            text = text,
+            onClick = { nestedExpanded = true },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
+                    contentDescription = null,
+                )
+            },
+        )
 
-    DropdownMenu(
-        expanded = nestedExpanded,
-        onDismissRequest = closeMenu,
-    ) {
-        children(closeMenu)
+        DropdownMenu(
+            expanded = nestedExpanded,
+            onDismissRequest = closeMenu,
+            modifier = modifier,
+        ) {
+            children(closeMenu)
+        }
     }
 }

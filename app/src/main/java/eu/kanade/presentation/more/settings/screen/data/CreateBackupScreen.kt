@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -28,16 +27,18 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
-import eu.kanade.tachiyomi.data.backup.models.Backup
+import eu.kanade.tachiyomi.data.backup.create.BackupCreator
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.minus
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.plus
-import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.update
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -83,16 +84,21 @@ class CreateBackupScreen : Screen() {
                     .fillMaxSize(),
             ) {
                 LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = MaterialTheme.padding.medium),
+                    modifier = Modifier.weight(1f),
                 ) {
+                    if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                        item {
+                            WarningBanner(MR.strings.restore_miui_warning)
+                        }
+                    }
+
                     item {
                         LabeledCheckbox(
                             label = stringResource(MR.strings.manga),
                             checked = true,
                             onCheckedChange = {},
                             enabled = false,
+                            modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                         )
                     }
                     BackupChoices.forEach { (k, v) ->
@@ -103,6 +109,7 @@ class CreateBackupScreen : Screen() {
                                 onCheckedChange = {
                                     model.toggleFlag(k)
                                 },
+                                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                             )
                         }
                     }
@@ -116,11 +123,8 @@ class CreateBackupScreen : Screen() {
                         .fillMaxWidth(),
                     onClick = {
                         if (!BackupCreateJob.isManualJobRunning(context)) {
-                            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                                context.toast(MR.strings.restore_miui_warning, Toast.LENGTH_LONG)
-                            }
                             try {
-                                chooseBackupDir.launch(Backup.getFilename())
+                                chooseBackupDir.launch(BackupCreator.getFilename())
                             } catch (e: ActivityNotFoundException) {
                                 context.toast(MR.strings.file_picker_error)
                             }
@@ -158,11 +162,16 @@ private class CreateBackupScreenModel : StateScreenModel<CreateBackupScreenModel
 
     @Immutable
     data class State(
-        val flags: PersistentSet<Int> = BackupChoices.keys.toPersistentSet(),
+        val flags: PersistentSet<Int> = persistentSetOf(
+            BackupCreateFlags.BACKUP_CATEGORY,
+            BackupCreateFlags.BACKUP_CHAPTER,
+            BackupCreateFlags.BACKUP_TRACK,
+            BackupCreateFlags.BACKUP_HISTORY,
+        ),
     )
 }
 
-private val BackupChoices = mapOf(
+private val BackupChoices = persistentMapOf(
     BackupCreateFlags.BACKUP_CATEGORY to MR.strings.categories,
     BackupCreateFlags.BACKUP_CHAPTER to MR.strings.chapters,
     BackupCreateFlags.BACKUP_TRACK to MR.strings.track,
