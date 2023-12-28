@@ -138,7 +138,6 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         }
 
-
         val syncPreferences: SyncPreferences by injectLazy()
         val syncFlags = syncPreferences.syncFlags().get()
         if (syncPreferences.isSyncEnabled() && syncFlags and SyncPreferences.Flags.SYNC_ON_APP_START == SyncPreferences.Flags.SYNC_ON_APP_START) {

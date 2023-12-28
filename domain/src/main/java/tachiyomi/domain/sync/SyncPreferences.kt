@@ -16,7 +16,14 @@ class SyncPreferences(
 
         const val Defaults = NONE
 
-        fun values() = listOf(NONE, SYNC_ON_CHAPTER_READ, SYNC_ON_CHAPTER_OPEN, SYNC_ON_APP_START, SYNC_ON_APP_RESUME, SYNC_ON_LIBRARY_UPDATE)
+        fun values() = listOf(
+            NONE,
+            SYNC_ON_CHAPTER_READ,
+            SYNC_ON_CHAPTER_OPEN,
+            SYNC_ON_APP_START,
+            SYNC_ON_APP_RESUME,
+            SYNC_ON_LIBRARY_UPDATE,
+        )
     }
 
     fun syncHost() = preferenceStore.getString("sync_host", "https://sync.tachiyomi.org")

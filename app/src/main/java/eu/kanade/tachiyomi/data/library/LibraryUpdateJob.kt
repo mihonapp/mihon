@@ -490,7 +490,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
             // Only proceed with SyncDataJob if sync is enabled and the specific sync on library update flag is set
             if (syncPreferences.isSyncEnabled() && syncPreferences.syncFlags().get() and SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE == SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE) {
-
                 // Check if SyncDataJob is already running
                 if (wm.isRunning(SyncDataJob.TAG_MANUAL)) {
                     // SyncDataJob is already running
@@ -513,7 +512,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 wm.beginUniqueWork(WORK_NAME_MANUAL, ExistingWorkPolicy.KEEP, syncDataJob)
                     .then(libraryUpdateJob)
                     .enqueue()
-
             } else {
                 val inputData = workDataOf(KEY_CATEGORY to category?.id)
                 val request = OneTimeWorkRequestBuilder<LibraryUpdateJob>()
@@ -527,7 +525,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
             return true
         }
-
 
         fun stop(context: Context) {
             val wm = context.workManager
