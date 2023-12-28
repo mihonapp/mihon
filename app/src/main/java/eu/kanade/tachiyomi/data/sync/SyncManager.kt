@@ -9,7 +9,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
-import eu.kanade.tachiyomi.data.backup.restore.MangaRestorer
+import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
+import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveSyncService
 import eu.kanade.tachiyomi.data.sync.service.SyncData
 import eu.kanade.tachiyomi.data.sync.service.SyncYomiSyncService
@@ -48,7 +49,7 @@ class SyncManager(
     private val getFavorites: GetFavorites = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
 ) {
-    private val backupCreator: BackupCreator = BackupCreator(context)
+    private val backupCreator: BackupCreator = BackupCreator(context, false)
     private val notifier: SyncNotifier = SyncNotifier(context)
     private val mangaRestorer: MangaRestorer = MangaRestorer()
 
@@ -72,12 +73,11 @@ class SyncManager(
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
         val backup = Backup(
-            backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults),
-            backupCreator.backupCategories(BackupCreateFlags.AutomaticDefaults),
-            emptyList(),
-            backupCreator.prepExtensionInfoForSync(databaseManga),
-            backupCreator.backupAppPreferences(BackupCreateFlags.AutomaticDefaults),
-            backupCreator.backupSourcePreferences(BackupCreateFlags.AutomaticDefaults),
+            backupManga = backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults),
+            backupCategories = backupCreator.backupCategories(BackupCreateFlags.AutomaticDefaults),
+            backupSources = backupCreator.backupSources(databaseManga),
+            backupPreferences = backupCreator.backupAppPreferences(BackupCreateFlags.AutomaticDefaults),
+            backupSourcePreferences = backupCreator.backupSourcePreferences(BackupCreateFlags.AutomaticDefaults),
         )
 
         // Create the SyncData object
@@ -116,6 +116,8 @@ class SyncManager(
                 backupManga = filteredFavorites,
                 backupCategories = remoteBackup.backupCategories,
                 backupSources = remoteBackup.backupSources,
+                backupPreferences = remoteBackup.backupPreferences,
+                backupSourcePreferences = remoteBackup.backupSourcePreferences,
             )
 
             // It's local sync no need to restore data. (just update remote data)
@@ -128,7 +130,11 @@ class SyncManager(
             val backupUri = writeSyncDataToCache(context, newSyncData)
             logcat(LogPriority.DEBUG) { "Got Backup Uri: $backupUri" }
             if (backupUri != null) {
-                BackupRestoreJob.start(context, backupUri, sync = true)
+                BackupRestoreJob.start(context, backupUri, sync = true, options = RestoreOptions(
+                    appSettings = true,
+                    sourceSettings = true,
+                    library = true,
+                ))
             } else {
                 logcat(LogPriority.ERROR) { "Failed to write sync data to file" }
             }
