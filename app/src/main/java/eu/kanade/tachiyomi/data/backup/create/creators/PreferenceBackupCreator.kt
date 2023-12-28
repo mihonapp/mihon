@@ -40,7 +40,7 @@ class PreferenceBackupCreator(
     @Suppress("UNCHECKED_CAST")
     private fun Map<String, *>.toBackupPreferences(): List<BackupPreference> {
         return this.filterKeys {
-            !Preference.isPrivate(it) && !Preference.isAppState(it)
+            !Preference.isAppState(it) && !Preference.isPrivate(it)
         }
             .mapNotNull { (key, value) ->
                 when (value) {

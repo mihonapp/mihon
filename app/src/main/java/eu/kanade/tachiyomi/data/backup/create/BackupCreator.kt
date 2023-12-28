@@ -5,9 +5,6 @@ import android.net.Uri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_APP_PREFS
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_CATEGORY
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags.BACKUP_SOURCE_PREFS
 import eu.kanade.tachiyomi.data.backup.create.creators.CategoriesBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.MangaBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.PreferenceBackupCreator
@@ -52,7 +49,7 @@ class BackupCreator(
     private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
 ) {
 
-    suspend fun backup(uri: Uri, flags: Int): String {
+    suspend fun backup(uri: Uri, options: BackupOptions): String {
         var file: UniFile? = null
         try {
             file = (
@@ -80,11 +77,11 @@ class BackupCreator(
 
             val databaseManga = getFavorites.await()
             val backup = Backup(
-                backupManga = backupMangas(databaseManga, flags),
-                backupCategories = backupCategories(flags),
+                backupManga = backupMangas(databaseManga, options),
+                backupCategories = backupCategories(options),
                 backupSources = backupSources(databaseManga),
-                backupPreferences = backupAppPreferences(flags),
-                backupSourcePreferences = backupSourcePreferences(flags),
+                backupPreferences = backupAppPreferences(options),
+                backupSourcePreferences = backupSourcePreferences(options),
             )
 
             val byteArray = parser.encodeToByteArray(BackupSerializer, backup)
@@ -117,28 +114,28 @@ class BackupCreator(
         }
     }
 
-    private suspend fun backupCategories(options: Int): List<BackupCategory> {
-        if (options and BACKUP_CATEGORY != BACKUP_CATEGORY) return emptyList()
+    private suspend fun backupCategories(options: BackupOptions): List<BackupCategory> {
+        if (!options.categories) return emptyList()
 
         return categoriesBackupCreator.backupCategories()
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
-        return mangaBackupCreator.backupMangas(mangas, flags)
+    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
+        return mangaBackupCreator.backupMangas(mangas, options)
     }
 
     private fun backupSources(mangas: List<Manga>): List<BackupSource> {
         return sourcesBackupCreator.backupSources(mangas)
     }
 
-    private fun backupAppPreferences(flags: Int): List<BackupPreference> {
-        if (flags and BACKUP_APP_PREFS != BACKUP_APP_PREFS) return emptyList()
+    private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
+        if (!options.appSettings) return emptyList()
 
         return preferenceBackupCreator.backupAppPreferences()
     }
 
-    private fun backupSourcePreferences(flags: Int): List<BackupSourcePreferences> {
-        if (flags and BACKUP_SOURCE_PREFS != BACKUP_SOURCE_PREFS) return emptyList()
+    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
+        if (!options.sourceSettings) return emptyList()
 
         return preferenceBackupCreator.backupSourcePreferences()
     }
