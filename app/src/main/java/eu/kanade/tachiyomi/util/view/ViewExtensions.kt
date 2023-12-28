@@ -4,9 +4,11 @@ package eu.kanade.tachiyomi.util.view
 
 import android.content.res.Resources
 import android.graphics.Rect
+import android.os.Build
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.RoundedCorner
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -94,4 +96,23 @@ fun View?.isVisibleOnScreen(): Boolean {
     val screen =
         Rect(0, 0, Resources.getSystem().displayMetrics.widthPixels, Resources.getSystem().displayMetrics.heightPixels)
     return actualPosition.intersect(screen)
+}
+
+/**
+ * Returns window radius (in pixel) applied to this view
+ */
+fun View.getWindowRadius(): Int {
+    val rad = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val windowInsets = rootWindowInsets
+        listOfNotNull(
+            windowInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_LEFT),
+            windowInsets.getRoundedCorner(RoundedCorner.POSITION_TOP_RIGHT),
+            windowInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_LEFT),
+            windowInsets.getRoundedCorner(RoundedCorner.POSITION_BOTTOM_RIGHT),
+        )
+            .minOfOrNull { it.radius }
+    } else {
+        null
+    }
+    return rad ?: 0
 }

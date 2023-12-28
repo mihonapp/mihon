@@ -80,94 +80,93 @@ abstract class SyncService(
     }
 
     /**
-     * Merges two lists of SyncManga objects, prioritizing the manga with the most recent lastModifiedAt value.
-     * If lastModifiedAt is null, the function defaults to Instant.MIN for comparison purposes.
+     * Merges two lists of BackupManga objects, selecting the most recent manga based on the lastModifiedAt value.
+     * If lastModifiedAt is null for a manga, it treats that manga as the oldest possible for comparison purposes.
+     * This function is designed to reconcile local and remote manga lists, ensuring the most up-to-date manga is retained.
      *
-     * @param localMangaList The list of local SyncManga objects.
-     * @param remoteMangaList The list of remote SyncManga objects.
-     * @return The merged list of SyncManga objects.
+     * @param localMangaList The list of local BackupManga objects or null.
+     * @param remoteMangaList The list of remote BackupManga objects or null.
+     * @return A list of BackupManga objects, each representing the most recent version of the manga from either local or remote sources.
      */
     private fun mergeMangaLists(
         localMangaList: List<BackupManga>?,
         remoteMangaList: List<BackupManga>?,
     ): List<BackupManga> {
-        if (localMangaList == null) return remoteMangaList ?: emptyList()
-        if (remoteMangaList == null) return localMangaList
+        // Convert null lists to empty to simplify logic
+        val localMangaListSafe = localMangaList.orEmpty()
+        val remoteMangaListSafe = remoteMangaList.orEmpty()
 
-        val localMangaMap = localMangaList.associateBy { Pair(it.source, it.url) }
-        val remoteMangaMap = remoteMangaList.associateBy { Pair(it.source, it.url) }
+        // Associate both local and remote manga by their unique keys (source and url)
+        val localMangaMap = localMangaListSafe.associateBy { Pair(it.source, it.url) }
+        val remoteMangaMap = remoteMangaListSafe.associateBy { Pair(it.source, it.url) }
 
-        val mergedMangaMap = mutableMapOf<Pair<Long, String>, BackupManga>()
+        // Prepare to merge both sets of manga
+        return (localMangaMap.keys + remoteMangaMap.keys).mapNotNull { key ->
+            val local = localMangaMap[key]
+            val remote = remoteMangaMap[key]
 
-        localMangaMap.forEach { (key, localManga) ->
-            val remoteManga = remoteMangaMap[key]
-            if (remoteManga != null) {
-                val localMangaLastModifiedAtInstant = Instant.ofEpochMilli(localManga.lastModifiedAt)
-                val remoteMangaLastModifiedAtInstant = Instant.ofEpochMilli(remoteManga.lastModifiedAt)
-                val mergedChapters = mergeChapters(localManga.chapters, remoteManga.chapters)
-                // Keep the more recent manga
-                if (localMangaLastModifiedAtInstant.isAfter(remoteMangaLastModifiedAtInstant)) {
-                    mergedMangaMap[key] = localManga.copy(chapters = mergedChapters)
-                } else {
-                    mergedMangaMap[key] = remoteManga.copy(chapters = mergedChapters)
+            when {
+                local != null && remote == null -> local
+                local == null && remote != null -> remote
+                local != null && remote != null -> {
+                    // Compare last modified times and merge chapters
+                    val localTime = Instant.ofEpochMilli(local.lastModifiedAt)
+                    val remoteTime = Instant.ofEpochMilli(remote.lastModifiedAt)
+                    val mergedChapters = mergeChapters(local.chapters, remote.chapters)
+
+                    if (localTime >= remoteTime) {
+                        local.copy(chapters = mergedChapters)
+                    } else {
+                        remote.copy(chapters = mergedChapters)
+                    }
                 }
-            } else {
-                // If there is no corresponding remote manga, keep the local one
-                mergedMangaMap[key] = localManga
+                else -> null // This case occurs if both are null, which shouldn't happen but is handled for completeness.
             }
         }
-
-        // Add any remote manga that doesn't exist locally
-        remoteMangaMap.forEach { (key, remoteManga) ->
-            if (!mergedMangaMap.containsKey(key)) {
-                mergedMangaMap[key] = remoteManga
-            }
-        }
-
-        return mergedMangaMap.values.toList()
     }
 
-    /**
-     * Merges two lists of SyncChapter objects, prioritizing the chapter with the most recent lastModifiedAt value.
-     * If lastModifiedAt is null, the function defaults to Instant.MIN for comparison purposes.
+/**
+     * Merges two lists of BackupChapter objects, selecting the most recent chapter based on the lastModifiedAt value.
+     * If lastModifiedAt is null for a chapter, it treats that chapter as the oldest possible for comparison purposes.
+     * This function is designed to reconcile local and remote chapter lists, ensuring the most up-to-date chapter is retained.
      *
-     * @param localChapters The list of local SyncChapter objects.
-     * @param remoteChapters The list of remote SyncChapter objects.
-     * @return The merged list of SyncChapter objects.
+     * @param localChapters The list of local BackupChapter objects.
+     * @param remoteChapters The list of remote BackupChapter objects.
+     * @return A list of BackupChapter objects, each representing the most recent version of the chapter from either local or remote sources.
+     *
+     * - This function is used in scenarios where local and remote chapter lists need to be synchronized.
+     * - It iterates over the union of the URLs from both local and remote chapters.
+     * - For each URL, it compares the corresponding local and remote chapters based on the lastModifiedAt value.
+     * - If only one source (local or remote) has the chapter for a URL, that chapter is used.
+     * - If both sources have the chapter, the one with the more recent lastModifiedAt value is chosen.
+     * - If lastModifiedAt is null or missing, the chapter is considered the oldest for safety, ensuring that any chapter with a valid timestamp is preferred.
+     * - The resulting list contains the most recent chapters from the combined set of local and remote chapters.
      */
     private fun mergeChapters(
         localChapters: List<BackupChapter>,
         remoteChapters: List<BackupChapter>,
     ): List<BackupChapter> {
+        // Associate chapters by URL for both local and remote
         val localChapterMap = localChapters.associateBy { it.url }
         val remoteChapterMap = remoteChapters.associateBy { it.url }
-        val mergedChapterMap = mutableMapOf<String, BackupChapter>()
 
-        localChapterMap.forEach { (url, localChapter) ->
+        // Merge both chapter maps
+        return (localChapterMap.keys + remoteChapterMap.keys).mapNotNull { url ->
+            // Determine the most recent chapter by comparing lastModifiedAt, considering null as Instant.MIN
+            val localChapter = localChapterMap[url]
             val remoteChapter = remoteChapterMap[url]
-            if (remoteChapter != null) {
-                val localInstant = localChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) }
-                val remoteInstant = remoteChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) }
 
-                val mergedChapter =
-                    if (localInstant > remoteInstant) {
-                        localChapter
-                    } else {
-                        remoteChapter
-                    }
-                mergedChapterMap[url] = mergedChapter
-            } else {
-                mergedChapterMap[url] = localChapter
+            when {
+                localChapter != null && remoteChapter == null -> localChapter
+                localChapter == null && remoteChapter != null -> remoteChapter
+                localChapter != null && remoteChapter != null -> {
+                    val localInstant = localChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) } ?: Instant.MIN
+                    val remoteInstant = remoteChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) } ?: Instant.MIN
+                    if (localInstant >= remoteInstant) localChapter else remoteChapter
+                }
+                else -> null
             }
         }
-
-        remoteChapterMap.forEach { (url, remoteChapter) ->
-            if (!mergedChapterMap.containsKey(url)) {
-                mergedChapterMap[url] = remoteChapter
-            }
-        }
-
-        return mergedChapterMap.values.toList()
     }
 
     /**
