@@ -130,16 +130,11 @@ class SyncManager(
             val backupUri = writeSyncDataToCache(context, newSyncData)
             logcat(LogPriority.DEBUG) { "Got Backup Uri: $backupUri" }
             if (backupUri != null) {
-                BackupRestoreJob.start(
-                    context,
-                    backupUri,
-                    sync = true,
-                    options = RestoreOptions(
-                        appSettings = true,
-                        sourceSettings = true,
-                        library = true,
-                    ),
-                )
+                BackupRestoreJob.start(context, backupUri, sync = true, options = RestoreOptions(
+                    appSettings = true,
+                    sourceSettings = true,
+                    library = true,
+                ))
             } else {
                 logcat(LogPriority.ERROR) { "Failed to write sync data to file" }
             }
