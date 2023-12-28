@@ -168,49 +168,28 @@ class SyncManager(
         return handler.awaitList { mangasQueries.getAllManga(::mapManga) }
     }
 
-    /**
-     * Determines if there are differences between the local manga details and categories and their corresponding
-     * remote backup versions. This is used to identify changes or updates that might have occurred.
-     *
-     * @param localManga The manga object from the local database of type [Manga].
-     * @param backupManga The manga object from the remote backup of type [BackupManga].
-     *
-     * @return Boolean indicating whether there are differences. Returns true if any of the following is true:
-     * - The local manga details differ from the remote backup manga details.
-     * - The chapters of the local manga differ from the chapters of the remote backup manga.
-     * - The categories of the local manga differ from the categories of the remote backup manga.
-     *
-     * This function uses a combination of direct property comparisons and delegated comparison functions
-     * to assess differences across manga details, chapters, and categories. It relies on proper conversion
-     * of remote manga and chapters to the local format for accurate comparison.
-     */
-    private suspend fun isMangaDifferent(localManga: Manga, backupManga: BackupManga): Boolean {
-        val remoteManga = backupManga.getMangaImpl()
+    private suspend fun isMangaDifferent(localManga: Manga, remoteManga: BackupManga): Boolean {
         val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id, 0).executeAsList() }
         val localCategories = getCategories.await(localManga.id).map { it.order }
 
-        return localManga != remoteManga ||
-            areChaptersDifferent(localChapters, backupManga.chapters) ||
-            localCategories != backupManga.categories
+        return localManga.source != remoteManga.source ||
+            localManga.url != remoteManga.url ||
+            localManga.title != remoteManga.title ||
+            localManga.artist != remoteManga.artist ||
+            localManga.author != remoteManga.author ||
+            localManga.description != remoteManga.description ||
+            localManga.genre != remoteManga.genre ||
+            localManga.status.toInt() != remoteManga.status ||
+            localManga.thumbnailUrl != remoteManga.thumbnailUrl ||
+            localManga.dateAdded != remoteManga.dateAdded ||
+            localManga.chapterFlags.toInt() != remoteManga.chapterFlags ||
+            localManga.favorite != remoteManga.favorite ||
+            localManga.viewerFlags.toInt() != remoteManga.viewer_flags ||
+            localManga.updateStrategy != remoteManga.updateStrategy ||
+            areChaptersDifferent(localChapters, remoteManga.chapters) ||
+            localCategories != remoteManga.categories
     }
 
-    /**
-     * Checks if there are any differences between a list of local chapters and a list of backup chapters.
-     * This function is used to determine if updates or changes have occurred between the two sets of chapters.
-     *
-     * @param localChapters The list of chapters from the local source, of type [Chapters].
-     * @param remoteChapters The list of chapters from the remote backup source, of type [BackupChapter].
-     *
-     * @return Boolean indicating whether there are differences. Returns true if any of the following is true:
-     * - The count of local and remote chapters differs.
-     * - Any corresponding chapters (matched by URL) have differing attributes including name, scanlator,
-     *   read status, bookmark status, last page read, chapter number, source order, fetch date, upload date,
-     *   or last modified date.
-     *
-     * Each chapter is compared based on a set of fields that define its content and state. If any of these fields
-     * differ between the local chapter and its corresponding remote chapter, it is considered a difference.
-     *
-     */
     private fun areChaptersDifferent(localChapters: List<Chapters>, remoteChapters: List<BackupChapter>): Boolean {
         // Early return if the sizes are different
         if (localChapters.size != remoteChapters.size) {
@@ -236,8 +215,7 @@ class SyncManager(
                 localChapter.chapter_number != remoteChapter.chapterNumber ||
                 localChapter.source_order != remoteChapter.sourceOrder ||
                 localChapter.date_fetch != remoteChapter.dateFetch ||
-                localChapter.date_upload != remoteChapter.dateUpload ||
-                localChapter.last_modified_at != remoteChapter.lastModifiedAt
+                localChapter.date_upload != remoteChapter.dateUpload
         }
     }
 
