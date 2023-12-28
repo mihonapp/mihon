@@ -30,9 +30,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
-import eu.kanade.presentation.more.settings.screen.data.SyncOptionsScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
+import eu.kanade.presentation.more.settings.screen.data.SyncOptionsScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -436,28 +436,28 @@ object SettingsDataScreen : SearchableSettings {
             title = stringResource(MR.strings.pref_sync_now_group_title),
             preferenceItems = persistentListOf(
                 getSyncOptionsPref(),
-            Preference.PreferenceItem.TextPreference(
-                title = stringResource(MR.strings.pref_sync_now),
-                subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
-                onClick = {
-                    showDialog = true
-                },
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_sync_now),
+                    subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
+                    onClick = {
+                        showDialog = true
+                    },
+                ),
             ),
-        ),
-    )
-}
+        )
+    }
 
     @Composable
-private fun getSyncOptionsPref(): Preference.PreferenceItem.TextPreference {
-    val navigator = LocalNavigator.currentOrThrow
-    return Preference.PreferenceItem.TextPreference(
-        title = stringResource(MR.strings.pref_sync_options),
-        subtitle = stringResource(MR.strings.pref_sync_options_summ),
-        onClick = { navigator.push(SyncOptionsScreen()) },
-    )
-}
+    private fun getSyncOptionsPref(): Preference.PreferenceItem.TextPreference {
+        val navigator = LocalNavigator.currentOrThrow
+        return Preference.PreferenceItem.TextPreference(
+            title = stringResource(MR.strings.pref_sync_options),
+            subtitle = stringResource(MR.strings.pref_sync_options_summ),
+            onClick = { navigator.push(SyncOptionsScreen()) },
+        )
+    }
 
-@Composable
+    @Composable
     private fun getAutomaticSyncGroup(syncPreferences: SyncPreferences): Preference.PreferenceGroup {
         val context = LocalContext.current
         val syncIntervalPref = syncPreferences.syncInterval()
