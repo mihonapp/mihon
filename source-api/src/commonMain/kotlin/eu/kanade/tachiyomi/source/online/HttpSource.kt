@@ -473,4 +473,4 @@ abstract class HttpSource : CatalogueSource {
     override fun getFilterList() = FilterList()
 }
 
-class LicensedMangaChaptersException : Exception("Licensed - No chapters to show")
+class LicensedMangaChaptersException : RuntimeException()

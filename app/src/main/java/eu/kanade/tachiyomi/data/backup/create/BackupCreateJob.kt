@@ -19,6 +19,8 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.lang.asBooleanArray
+import eu.kanade.tachiyomi.util.lang.asDataClass
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
@@ -47,10 +49,11 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         setForegroundSafely()
 
-        val flags = inputData.getInt(BACKUP_FLAGS_KEY, BackupCreateFlags.AutomaticDefaults)
+        val options: BackupOptions = inputData.getBooleanArray(OPTIONS_KEY)?.asDataClass()
+            ?: BackupOptions()
 
         return try {
-            val location = BackupCreator(context, isAutoBackup).backup(uri, flags)
+            val location = BackupCreator(context, isAutoBackup).backup(uri, options)
             if (!isAutoBackup) {
                 notifier.showBackupComplete(UniFile.fromUri(context, location.toUri())!!)
             }
@@ -112,11 +115,11 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
             }
         }
 
-        fun startNow(context: Context, uri: Uri, flags: Int) {
+        fun startNow(context: Context, uri: Uri, options: BackupOptions) {
             val inputData = workDataOf(
                 IS_AUTO_BACKUP_KEY to false,
                 LOCATION_URI_KEY to uri.toString(),
-                BACKUP_FLAGS_KEY to flags,
+                OPTIONS_KEY to options.asBooleanArray(),
             )
             val request = OneTimeWorkRequestBuilder<BackupCreateJob>()
                 .addTag(TAG_MANUAL)
@@ -132,4 +135,4 @@ private const val TAG_MANUAL = "$TAG_AUTO:manual"
 
 private const val IS_AUTO_BACKUP_KEY = "is_auto_backup" // Boolean
 private const val LOCATION_URI_KEY = "location_uri" // String
-private const val BACKUP_FLAGS_KEY = "backup_flags" // Int
+private const val OPTIONS_KEY = "options" // BooleanArray
