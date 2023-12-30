@@ -20,7 +20,7 @@ END;
 
 insert:
 INSERT INTO mangas_categories(manga_id, category_id, last_modified_at)
-VALUES (:mangaId, :categoryId, strftime('%s', 'now'));
+VALUES (:mangaId, :categoryId, 0);
 
 deleteMangaCategoryByMangaId:
 DELETE FROM mangas_categories
