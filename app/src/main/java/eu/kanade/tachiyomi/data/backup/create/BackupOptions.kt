@@ -16,7 +16,7 @@ data class BackupOptions(
 ) {
 
     companion object {
-        val entries = persistentListOf(
+        val libraryOptions = persistentListOf(
             Entry(
                 label = MR.strings.categories,
                 getter = BackupOptions::categories,
@@ -37,6 +37,9 @@ data class BackupOptions(
                 getter = BackupOptions::history,
                 setter = { options, enabled -> options.copy(history = enabled) },
             ),
+        )
+
+        val settingsOptions = persistentListOf(
             Entry(
                 label = MR.strings.app_settings,
                 getter = BackupOptions::appSettings,
