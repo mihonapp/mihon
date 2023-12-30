@@ -120,7 +120,7 @@ abstract class SyncService(
                         remote.copy(chapters = mergedChapters)
                     }
                 }
-                else -> null // This case occurs if both are null, which shouldn't happen but is handled for completeness.
+                else -> null
             }
         }
     }
