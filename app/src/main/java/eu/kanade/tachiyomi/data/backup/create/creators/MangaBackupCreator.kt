@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi.data.backup.create.creators
 
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
+import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
@@ -20,18 +20,17 @@ class MangaBackupCreator(
     private val getHistory: GetHistory = Injekt.get(),
 ) {
 
-    suspend fun backupMangas(mangas: List<Manga>, flags: Int): List<BackupManga> {
+    suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         return mangas.map {
-            backupManga(it, flags)
+            backupManga(it, options)
         }
     }
 
-    private suspend fun backupManga(manga: Manga, options: Int): BackupManga {
+    private suspend fun backupManga(manga: Manga, options: BackupOptions): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
-        // Check if user wants chapter information in backup
-        if (options and BackupCreateFlags.BACKUP_CHAPTER == BackupCreateFlags.BACKUP_CHAPTER) {
+        if (options.chapters) {
             // Backup all the chapters
             handler.awaitList {
                 chaptersQueries.getChaptersByMangaId(
@@ -44,8 +43,7 @@ class MangaBackupCreator(
                 ?.let { mangaObject.chapters = it }
         }
 
-        // Check if user wants category information in backup
-        if (options and BackupCreateFlags.BACKUP_CATEGORY == BackupCreateFlags.BACKUP_CATEGORY) {
+        if (options.categories) {
             // Backup categories for this manga
             val categoriesForManga = getCategories.await(manga.id)
             if (categoriesForManga.isNotEmpty()) {
@@ -53,16 +51,14 @@ class MangaBackupCreator(
             }
         }
 
-        // Check if user wants track information in backup
-        if (options and BackupCreateFlags.BACKUP_TRACK == BackupCreateFlags.BACKUP_TRACK) {
+        if (options.tracking) {
             val tracks = handler.awaitList { manga_syncQueries.getTracksByMangaId(manga.id, backupTrackMapper) }
             if (tracks.isNotEmpty()) {
                 mangaObject.tracking = tracks
             }
         }
 
-        // Check if user wants history information in backup
-        if (options and BackupCreateFlags.BACKUP_HISTORY == BackupCreateFlags.BACKUP_HISTORY) {
+        if (options.history) {
             val historyByMangaId = getHistory.await(manga.id)
             if (historyByMangaId.isNotEmpty()) {
                 val history = historyByMangaId.map { history ->

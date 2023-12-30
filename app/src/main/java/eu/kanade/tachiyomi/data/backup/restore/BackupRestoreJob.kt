@@ -13,6 +13,8 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.lang.asBooleanArray
+import eu.kanade.tachiyomi.util.lang.asDataClass
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
@@ -30,8 +32,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
     override suspend fun doWork(): Result {
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
-        val options = inputData.getBooleanArray(OPTIONS_KEY)
-            ?.let { RestoreOptions.fromBooleanArray(it) }
+        val options: RestoreOptions? = inputData.getBooleanArray(OPTIONS_KEY)?.asDataClass()
 
         if (uri == null || options == null) {
             return Result.failure()
@@ -84,7 +85,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
             val inputData = workDataOf(
                 LOCATION_URI_KEY to uri.toString(),
                 SYNC_KEY to sync,
-                OPTIONS_KEY to options.toBooleanArray(),
+                OPTIONS_KEY to options.asBooleanArray(),
             )
             val request = OneTimeWorkRequestBuilder<BackupRestoreJob>()
                 .addTag(TAG)

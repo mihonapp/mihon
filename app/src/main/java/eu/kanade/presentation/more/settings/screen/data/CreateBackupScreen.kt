@@ -29,16 +29,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.create.BackupCreator
+import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
-import kotlinx.collections.immutable.PersistentSet
-import kotlinx.collections.immutable.minus
-import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.plus
 import kotlinx.coroutines.flow.update
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
@@ -101,13 +96,13 @@ class CreateBackupScreen : Screen() {
                             modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                         )
                     }
-                    BackupChoices.forEach { (k, v) ->
+                    BackupOptions.entries.forEach { option ->
                         item {
                             LabeledCheckbox(
-                                label = stringResource(v),
-                                checked = state.flags.contains(k),
+                                label = stringResource(option.label),
+                                checked = option.getter(state.options),
                                 onCheckedChange = {
-                                    model.toggleFlag(k)
+                                    model.toggle(option.setter, it)
                                 },
                                 modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                             )
@@ -145,37 +140,20 @@ class CreateBackupScreen : Screen() {
 
 private class CreateBackupScreenModel : StateScreenModel<CreateBackupScreenModel.State>(State()) {
 
-    fun toggleFlag(flag: Int) {
+    fun toggle(setter: (BackupOptions, Boolean) -> BackupOptions, enabled: Boolean) {
         mutableState.update {
-            if (it.flags.contains(flag)) {
-                it.copy(flags = it.flags - flag)
-            } else {
-                it.copy(flags = it.flags + flag)
-            }
+            it.copy(
+                options = setter(it.options, enabled),
+            )
         }
     }
 
     fun createBackup(context: Context, uri: Uri) {
-        val flags = state.value.flags.fold(initial = 0, operation = { a, b -> a or b })
-        BackupCreateJob.startNow(context, uri, flags)
+        BackupCreateJob.startNow(context, uri, state.value.options)
     }
 
     @Immutable
     data class State(
-        val flags: PersistentSet<Int> = persistentSetOf(
-            BackupCreateFlags.BACKUP_CATEGORY,
-            BackupCreateFlags.BACKUP_CHAPTER,
-            BackupCreateFlags.BACKUP_TRACK,
-            BackupCreateFlags.BACKUP_HISTORY,
-        ),
+        val options: BackupOptions = BackupOptions(),
     )
 }
-
-private val BackupChoices = persistentMapOf(
-    BackupCreateFlags.BACKUP_CATEGORY to MR.strings.categories,
-    BackupCreateFlags.BACKUP_CHAPTER to MR.strings.chapters,
-    BackupCreateFlags.BACKUP_TRACK to MR.strings.track,
-    BackupCreateFlags.BACKUP_HISTORY to MR.strings.history,
-    BackupCreateFlags.BACKUP_APP_PREFS to MR.strings.app_settings,
-    BackupCreateFlags.BACKUP_SOURCE_PREFS to MR.strings.source_settings,
-)

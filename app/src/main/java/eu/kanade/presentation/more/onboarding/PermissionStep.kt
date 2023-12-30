@@ -11,8 +11,6 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -35,33 +33,29 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
+import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 internal class PermissionStep : OnboardingStep {
 
-    private var installGranted by mutableStateOf(false)
     private var notificationGranted by mutableStateOf(false)
     private var batteryGranted by mutableStateOf(false)
 
-    override val isComplete: Boolean
-        get() = installGranted
+    override val isComplete: Boolean = true
 
     @Composable
     override fun Content() {
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
 
+        val installGranted = rememberRequestPackageInstallsPermissionState()
+
         DisposableEffect(lifecycleOwner.lifecycle) {
             val observer = object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    installGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.packageManager.canRequestPackageInstalls()
-                    } else {
-                        @Suppress("DEPRECATION")
-                        Settings.Secure.getInt(context.contentResolver, Settings.Secure.INSTALL_NON_MARKET_APPS) != 0
-                    }
                     notificationGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
                             PackageManager.PERMISSION_GRANTED
@@ -78,30 +72,15 @@ internal class PermissionStep : OnboardingStep {
             }
         }
 
-        Column(
-            modifier = Modifier.padding(vertical = 16.dp),
-        ) {
-            SectionHeader(stringResource(MR.strings.onboarding_permission_type_required))
-
+        Column {
             PermissionItem(
                 title = stringResource(MR.strings.onboarding_permission_install_apps),
                 subtitle = stringResource(MR.strings.onboarding_permission_install_apps_description),
                 granted = installGranted,
                 onButtonClick = {
-                    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                            data = Uri.parse("package:${context.packageName}")
-                        }
-                    } else {
-                        Intent(Settings.ACTION_SECURITY_SETTINGS)
-                    }
-                    context.startActivity(intent)
+                    context.launchRequestPackageInstallsPermission()
                 },
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SectionHeader(stringResource(MR.strings.onboarding_permission_type_optional))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val permissionRequester = rememberLauncherForActivityResult(
