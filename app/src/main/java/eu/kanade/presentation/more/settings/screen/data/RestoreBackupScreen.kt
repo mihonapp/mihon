@@ -92,7 +92,7 @@ class RestoreBackupScreen(
                     }
 
                     if (state.error != null) {
-                        errorMessageItem(state, model)
+                        errorMessageItem(state.error)
                     }
                 }
 
@@ -118,8 +118,7 @@ class RestoreBackupScreen(
     }
 
     private fun LazyListScope.errorMessageItem(
-        state: RestoreBackupScreenModel.State,
-        model: RestoreBackupScreenModel,
+        error: Any?,
     ) {
         item {
             SectionCard {
@@ -127,23 +126,23 @@ class RestoreBackupScreen(
                     modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 ) {
-                    when (val err = state.error) {
+                    when (error) {
                         is MissingRestoreComponents -> {
                             val msg = buildString {
                                 append(stringResource(MR.strings.backup_restore_content_full))
-                                if (err.sources.isNotEmpty()) {
+                                if (error.sources.isNotEmpty()) {
                                     append("\n\n")
                                     append(stringResource(MR.strings.backup_restore_missing_sources))
-                                    err.sources.joinTo(
+                                    error.sources.joinTo(
                                         this,
                                         separator = "\n- ",
                                         prefix = "\n- ",
                                     )
                                 }
-                                if (err.trackers.isNotEmpty()) {
+                                if (error.trackers.isNotEmpty()) {
                                     append("\n\n")
                                     append(stringResource(MR.strings.backup_restore_missing_trackers))
-                                    err.trackers.joinTo(
+                                    error.trackers.joinTo(
                                         this,
                                         separator = "\n- ",
                                         prefix = "\n- ",
@@ -159,13 +158,13 @@ class RestoreBackupScreen(
                             Text(text = stringResource(MR.strings.invalid_backup_file))
 
                             SelectionContainer {
-                                Text(text = listOfNotNull(err.uri, err.message).joinToString("\n\n"))
+                                Text(text = listOfNotNull(error.uri, error.message).joinToString("\n\n"))
                             }
                         }
 
                         else -> {
                             SelectionContainer {
-                                Text(text = err.toString())
+                                Text(text = error.toString())
                             }
                         }
                     }
@@ -182,6 +181,22 @@ private class RestoreBackupScreenModel(
 
     init {
         validate(uri)
+    }
+
+    fun toggle(setter: (RestoreOptions, Boolean) -> RestoreOptions, enabled: Boolean) {
+        mutableState.update {
+            it.copy(
+                options = setter(it.options, enabled),
+            )
+        }
+    }
+
+    fun startRestore() {
+        BackupRestoreJob.start(
+            context = context,
+            uri = uri,
+            options = state.value.options,
+        )
     }
 
     private fun validate(uri: Uri) {
@@ -204,22 +219,6 @@ private class RestoreBackupScreenModel(
         }
 
         setError(error = null, canRestore = true)
-    }
-
-    fun toggle(setter: (RestoreOptions, Boolean) -> RestoreOptions, enabled: Boolean) {
-        mutableState.update {
-            it.copy(
-                options = setter(it.options, enabled),
-            )
-        }
-    }
-
-    fun startRestore() {
-        BackupRestoreJob.start(
-            context = context,
-            uri = uri,
-            options = state.value.options,
-        )
     }
 
     private fun setError(error: Any?, canRestore: Boolean) {
