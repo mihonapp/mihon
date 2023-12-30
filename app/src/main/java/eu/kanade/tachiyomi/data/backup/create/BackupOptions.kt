@@ -18,24 +18,33 @@ data class BackupOptions(
     companion object {
         val libraryOptions = persistentListOf(
             Entry(
+                label = MR.strings.manga,
+                getter = BackupOptions::libraryEntries,
+                setter = { options, enabled -> options.copy(libraryEntries = enabled) },
+            ),
+            Entry(
                 label = MR.strings.categories,
                 getter = BackupOptions::categories,
                 setter = { options, enabled -> options.copy(categories = enabled) },
+                enabled = { it.libraryEntries },
             ),
             Entry(
                 label = MR.strings.chapters,
                 getter = BackupOptions::chapters,
                 setter = { options, enabled -> options.copy(chapters = enabled) },
+                enabled = { it.libraryEntries },
             ),
             Entry(
                 label = MR.strings.track,
                 getter = BackupOptions::tracking,
                 setter = { options, enabled -> options.copy(tracking = enabled) },
+                enabled = { it.libraryEntries },
             ),
             Entry(
                 label = MR.strings.history,
                 getter = BackupOptions::history,
                 setter = { options, enabled -> options.copy(history = enabled) },
+                enabled = { it.libraryEntries },
             ),
         )
 
@@ -54,6 +63,7 @@ data class BackupOptions(
                 label = MR.strings.private_settings,
                 getter = BackupOptions::privateSettings,
                 setter = { options, enabled -> options.copy(privateSettings = enabled) },
+                enabled = { it.appSettings || it.sourceSettings },
             ),
         )
     }
@@ -62,5 +72,6 @@ data class BackupOptions(
         val label: StringResource,
         val getter: (BackupOptions) -> Boolean,
         val setter: (BackupOptions, Boolean) -> BackupOptions,
+        val enabled: (BackupOptions) -> Boolean = { true },
     )
 }

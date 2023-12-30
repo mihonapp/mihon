@@ -31,7 +31,11 @@ fun LabeledCheckbox(
             .heightIn(min = 48.dp)
             .clickable(
                 role = Role.Checkbox,
-                onClick = { onCheckedChange(!checked) },
+                onClick = {
+                    if (enabled) {
+                        onCheckedChange(!checked)
+                    }
+                },
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),

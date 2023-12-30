@@ -155,7 +155,7 @@ object SettingsDataScreen : SearchableSettings {
                 return@rememberLauncherForActivityResult
             }
 
-            navigator.push(RestoreBackupScreen(it))
+            navigator.push(RestoreBackupScreen(it.toString()))
         }
 
         return Preference.PreferenceGroup(

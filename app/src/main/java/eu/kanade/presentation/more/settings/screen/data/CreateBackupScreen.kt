@@ -92,17 +92,7 @@ class CreateBackupScreen : Screen() {
 
                     item {
                         SectionCard(MR.strings.label_library) {
-                            Column {
-                                LabeledCheckbox(
-                                    label = stringResource(MR.strings.manga),
-                                    checked = true,
-                                    onCheckedChange = {},
-                                    enabled = false,
-                                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                                )
-
-                                Options(BackupOptions.libraryOptions, state, model)
-                            }
+                            Options(BackupOptions.libraryOptions, state, model)
                         }
                     }
 
@@ -153,6 +143,7 @@ class CreateBackupScreen : Screen() {
                 onCheckedChange = {
                     model.toggle(option.setter, it)
                 },
+                enabled = option.enabled(state.options),
                 modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
             )
         }

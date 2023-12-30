@@ -18,3 +18,9 @@ inline fun <reified T : Any> BooleanArray.asDataClass(): T {
     require(properties.size == this.size) { "Boolean array size does not match data class property count" }
     return T::class.primaryConstructor!!.call(*this.toTypedArray())
 }
+
+fun <T : Any> T.anyEnabled(): Boolean {
+    return this::class.declaredMemberProperties
+        .filterIsInstance<KProperty1<T, Boolean>>()
+        .any { it.get(this) }
+}

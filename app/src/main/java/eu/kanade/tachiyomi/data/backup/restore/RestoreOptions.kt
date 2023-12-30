@@ -10,8 +10,6 @@ data class RestoreOptions(
     val sourceSettings: Boolean = true,
 ) {
 
-    fun anyEnabled() = library || appSettings || sourceSettings
-
     companion object {
         val options = persistentListOf(
             Entry(

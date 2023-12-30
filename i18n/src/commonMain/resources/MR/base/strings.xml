@@ -493,7 +493,8 @@
     <string name="pref_backup_interval">Automatic backup frequency</string>
     <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
-    <string name="invalid_backup_file">Invalid backup file</string>
+    <string name="invalid_backup_file">Invalid backup file:</string>
+    <string name="invalid_backup_file_error">Full error:</string>
     <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
     <string name="backup_restore_missing_sources">Missing sources:</string>
     <string name="backup_restore_missing_trackers">Trackers not logged into:</string>
