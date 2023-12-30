@@ -2,8 +2,8 @@ package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
 import android.net.Uri
-import eu.kanade.tachiyomi.data.backup.create.BackupCreateFlags
 import eu.kanade.tachiyomi.data.backup.create.BackupCreator
+import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
@@ -72,12 +72,22 @@ class SyncManager(
      */
     suspend fun syncData() {
         val databaseManga = getAllMangaFromDB()
+        val backupOptions = BackupOptions(
+            libraryEntries = true,
+            categories = true,
+            chapters = true,
+            tracking = true,
+            history = true,
+            appSettings = true,
+            sourceSettings = true,
+            privateSettings = true,
+        )
         val backup = Backup(
-            backupManga = backupCreator.backupMangas(databaseManga, BackupCreateFlags.AutomaticDefaults),
-            backupCategories = backupCreator.backupCategories(BackupCreateFlags.AutomaticDefaults),
+            backupManga = backupCreator.backupMangas(databaseManga, backupOptions),
+            backupCategories = backupCreator.backupCategories(backupOptions),
             backupSources = backupCreator.backupSources(databaseManga),
-            backupPreferences = backupCreator.backupAppPreferences(BackupCreateFlags.AutomaticDefaults),
-            backupSourcePreferences = backupCreator.backupSourcePreferences(BackupCreateFlags.AutomaticDefaults),
+            backupPreferences = backupCreator.backupAppPreferences(backupOptions),
+            backupSourcePreferences = backupCreator.backupSourcePreferences(backupOptions),
         )
 
         // Create the SyncData object
