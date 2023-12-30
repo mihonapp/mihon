@@ -19,6 +19,7 @@ import eu.kanade.tachiyomi.data.download.Downloader
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.source.UnmeteredSource
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.util.lang.chop
 import eu.kanade.tachiyomi.util.system.cancelNotification
@@ -30,15 +31,22 @@ import tachiyomi.core.i18n.pluralStringResource
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.lang.launchUI
 import tachiyomi.domain.chapter.model.Chapter
+import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
-import uy.kohesive.injekt.injectLazy
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.math.RoundingMode
 import java.text.NumberFormat
 
-class LibraryUpdateNotifier(private val context: Context) {
+class LibraryUpdateNotifier(
+    private val context: Context,
 
-    private val preferences: SecurityPreferences by injectLazy()
+    private val securityPreferences: SecurityPreferences = Injekt.get(),
+    private val sourceManager: SourceManager = Injekt.get(),
+) {
+
     private val percentFormatter = NumberFormat.getPercentInstance().apply {
         roundingMode = RoundingMode.DOWN
         maximumFractionDigits = 0
@@ -88,7 +96,7 @@ class LibraryUpdateNotifier(private val context: Context) {
                 ),
             )
 
-        if (!preferences.hideNotificationContent().get()) {
+        if (!securityPreferences.hideNotificationContent().get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
             progressNotificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
         }
@@ -101,7 +109,19 @@ class LibraryUpdateNotifier(private val context: Context) {
         )
     }
 
-    fun showQueueSizeWarningNotification() {
+    /**
+     * Warn when excessively checking any single source.
+     */
+    fun showQueueSizeWarningNotificationIfNeeded(mangaToUpdate: List<LibraryManga>) {
+        val maxUpdatesFromSource = mangaToUpdate
+            .groupBy { it.manga.source }
+            .filterKeys { sourceManager.get(it) !is UnmeteredSource }
+            .maxOfOrNull { it.value.size } ?: 0
+
+        if (maxUpdatesFromSource <= MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+            return
+        }
+
         context.notify(
             Notifications.ID_LIBRARY_SIZE_WARNING,
             Notifications.CHANNEL_LIBRARY_PROGRESS,
@@ -151,7 +171,7 @@ class LibraryUpdateNotifier(private val context: Context) {
             Notifications.CHANNEL_NEW_CHAPTERS,
         ) {
             setContentTitle(context.stringResource(MR.strings.notification_new_chapters))
-            if (updates.size == 1 && !preferences.hideNotificationContent().get()) {
+            if (updates.size == 1 && !securityPreferences.hideNotificationContent().get()) {
                 setContentText(updates.first().first.title.chop(NOTIF_TITLE_MAX_LEN))
             } else {
                 setContentText(
@@ -162,7 +182,7 @@ class LibraryUpdateNotifier(private val context: Context) {
                     ),
                 )
 
-                if (!preferences.hideNotificationContent().get()) {
+                if (!securityPreferences.hideNotificationContent().get()) {
                     setStyle(
                         NotificationCompat.BigTextStyle().bigText(
                             updates.joinToString("\n") {
@@ -186,7 +206,7 @@ class LibraryUpdateNotifier(private val context: Context) {
         }
 
         // Per-manga notification
-        if (!preferences.hideNotificationContent().get()) {
+        if (!securityPreferences.hideNotificationContent().get()) {
             launchUI {
                 context.notify(
                     updates.map { (manga, chapters) ->
@@ -364,3 +384,4 @@ class LibraryUpdateNotifier(private val context: Context) {
 private const val NOTIF_MAX_CHAPTERS = 5
 private const val NOTIF_TITLE_MAX_LEN = 45
 private const val NOTIF_ICON_SIZE = 192
+private const val MANGA_PER_SOURCE_QUEUE_WARNING_THRESHOLD = 60
