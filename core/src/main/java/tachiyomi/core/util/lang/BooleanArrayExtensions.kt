@@ -1,13 +1,15 @@
-package eu.kanade.tachiyomi.util.lang
+package tachiyomi.core.util.lang
 
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.primaryConstructor
 
 fun <T : Any> T.asBooleanArray(): BooleanArray {
-    return this::class.declaredMemberProperties
+    val constructorParams = this::class.primaryConstructor!!.parameters.map { it.name }
+    val properties = this::class.declaredMemberProperties
         .filterIsInstance<KProperty1<T, Boolean>>()
-        .map { it.get(this) }
+    return constructorParams
+        .map { param -> properties.find { it.name == param }!!.get(this) }
         .toBooleanArray()
 }
 

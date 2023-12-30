@@ -13,8 +13,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.notification.Notifications
-import eu.kanade.tachiyomi.util.lang.asBooleanArray
-import eu.kanade.tachiyomi.util.lang.asDataClass
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
@@ -22,6 +20,8 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
+import tachiyomi.core.util.lang.asBooleanArray
+import tachiyomi.core.util.lang.asDataClass
 import tachiyomi.core.util.system.logcat
 import tachiyomi.i18n.MR
 

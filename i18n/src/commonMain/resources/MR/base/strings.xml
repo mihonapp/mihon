@@ -497,7 +497,7 @@
     <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
     <string name="backup_restore_missing_sources">Missing sources:</string>
     <string name="backup_restore_missing_trackers">Trackers not logged into:</string>
-    <string name="backup_restore_content_full">Data from the backup file will be restored.\n\nYou will need to install any missing extensions and log in to tracking services afterwards to use them.</string>
+    <string name="backup_restore_content_full">Data from the backup file will be restored.\n\nYou may need to install any missing extensions and log in to tracking services afterwards to use them.</string>
     <string name="restore_completed">Restore completed</string>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="backup_in_progress">Backup is already in progress</string>
