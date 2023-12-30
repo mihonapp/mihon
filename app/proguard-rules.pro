@@ -81,3 +81,6 @@
 
 # Google OAuth
 -keep class com.google.api.client.** { *; }
+
+# Restore options
+-keep class eu.kanade.tachiyomi.data.backup.restore.RestoreOptions { *; }
