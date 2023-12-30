@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun LabeledCheckbox(
@@ -33,7 +34,7 @@ fun LabeledCheckbox(
                 onClick = { onCheckedChange(!checked) },
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         Checkbox(
             checked = checked,

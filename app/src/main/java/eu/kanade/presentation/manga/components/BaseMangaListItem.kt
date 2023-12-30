@@ -19,8 +19,8 @@ import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun BaseMangaListItem(
-    modifier: Modifier = Modifier,
     manga: Manga,
+    modifier: Modifier = Modifier,
     onClickItem: () -> Unit = {},
     onClickCover: () -> Unit = onClickItem,
     cover: @Composable RowScope.() -> Unit = { defaultCover(manga, onClickCover) },

@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.header
 import tachiyomi.presentation.core.util.secondaryItemAlpha
@@ -30,7 +31,7 @@ fun StorageInfo(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         storages.forEach {
             StorageInfo(it)
@@ -50,7 +51,7 @@ private fun StorageInfo(
     val totalText = remember(total) { Formatter.formatFileSize(context, total) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
     ) {
         Text(
             text = file.absolutePath,

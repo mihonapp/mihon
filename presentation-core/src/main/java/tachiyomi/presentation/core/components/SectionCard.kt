@@ -1,8 +1,9 @@
-package eu.kanade.presentation.more.stats.components
+package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,15 +14,18 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
-fun StatsSection(
-    titleRes: StringResource,
+fun LazyItemScope.SectionCard(
+    titleRes: StringResource? = null,
     content: @Composable () -> Unit,
 ) {
-    Text(
-        modifier = Modifier.padding(horizontal = MaterialTheme.padding.extraLarge),
-        text = stringResource(titleRes),
-        style = MaterialTheme.typography.titleSmall,
-    )
+    if (titleRes != null) {
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.extraLarge),
+            text = stringResource(titleRes),
+            style = MaterialTheme.typography.titleSmall,
+        )
+    }
+
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()

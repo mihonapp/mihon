@@ -87,6 +87,8 @@ class CreateBackupScreen : Screen() {
                         }
                     }
 
+                    // TODO: separate sections for library and settings
+
                     item {
                         LabeledCheckbox(
                             label = stringResource(MR.strings.manga),
