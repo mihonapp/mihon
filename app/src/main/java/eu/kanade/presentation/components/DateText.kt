@@ -13,9 +13,11 @@ import java.util.Date
 
 @Composable
 fun relativeDateText(
-    date: Long,
+    dateEpochMillis: Long,
 ): String {
-    return relativeDateText(date = Date(date).takeIf { date > 0L })
+    return relativeDateText(
+        date = Date(dateEpochMillis).takeIf { dateEpochMillis > 0L },
+    )
 }
 
 @Composable
@@ -30,9 +32,9 @@ fun relativeDateText(
 
     return date
         ?.toRelativeString(
-            context,
-            relativeTime,
-            dateFormat,
+            context = context,
+            relative = relativeTime,
+            dateFormat = dateFormat,
         )
         ?: stringResource(MR.strings.not_applicable)
 }
