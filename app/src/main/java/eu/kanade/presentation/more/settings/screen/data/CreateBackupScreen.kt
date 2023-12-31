@@ -6,23 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -39,9 +28,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.update
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
+import tachiyomi.presentation.core.components.LazyColumnWithAction
 import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 class CreateBackupScreen : Screen() {
@@ -76,55 +65,37 @@ class CreateBackupScreen : Screen() {
                 )
             },
         ) { contentPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize(),
+            LazyColumnWithAction(
+                contentPadding = contentPadding,
+                actionLabel = stringResource(MR.strings.action_create),
+                onClickAction = {
+                    if (!BackupCreateJob.isManualJobRunning(context)) {
+                        try {
+                            chooseBackupDir.launch(BackupCreator.getFilename())
+                        } catch (e: ActivityNotFoundException) {
+                            context.toast(MR.strings.file_picker_error)
+                        }
+                    } else {
+                        context.toast(MR.strings.backup_in_progress)
+                    }
+                },
             ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                        item {
-                            WarningBanner(MR.strings.restore_miui_warning)
-                        }
-                    }
-
+                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
                     item {
-                        SectionCard(MR.strings.label_library) {
-                            Options(BackupOptions.libraryOptions, state, model)
-                        }
-                    }
-
-                    item {
-                        SectionCard(MR.strings.label_settings) {
-                            Options(BackupOptions.settingsOptions, state, model)
-                        }
+                        WarningBanner(MR.strings.restore_miui_warning)
                     }
                 }
 
-                HorizontalDivider()
+                item {
+                    SectionCard(MR.strings.label_library) {
+                        Options(BackupOptions.libraryOptions, state, model)
+                    }
+                }
 
-                Button(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    onClick = {
-                        if (!BackupCreateJob.isManualJobRunning(context)) {
-                            try {
-                                chooseBackupDir.launch(BackupCreator.getFilename())
-                            } catch (e: ActivityNotFoundException) {
-                                context.toast(MR.strings.file_picker_error)
-                            }
-                        } else {
-                            context.toast(MR.strings.backup_in_progress)
-                        }
-                    },
-                ) {
-                    Text(
-                        text = stringResource(MR.strings.action_create),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
+                item {
+                    SectionCard(MR.strings.label_settings) {
+                        Options(BackupOptions.settingsOptions, state, model)
+                    }
                 }
             }
         }
@@ -144,7 +115,6 @@ class CreateBackupScreen : Screen() {
                     model.toggle(option.setter, it)
                 },
                 enabled = option.enabled(state.options),
-                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
             )
         }
     }

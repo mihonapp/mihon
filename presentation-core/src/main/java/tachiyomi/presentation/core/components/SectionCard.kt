@@ -1,6 +1,7 @@
 package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -16,7 +17,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 @Composable
 fun LazyItemScope.SectionCard(
     titleRes: StringResource? = null,
-    content: @Composable () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     if (titleRes != null) {
         Text(

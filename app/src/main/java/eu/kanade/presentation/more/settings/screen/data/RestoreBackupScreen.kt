@@ -4,14 +4,9 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +19,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -41,6 +35,7 @@ import kotlinx.coroutines.flow.update
 import tachiyomi.core.util.lang.anyEnabled
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
+import tachiyomi.presentation.core.components.LazyColumnWithAction
 import tachiyomi.presentation.core.components.SectionCard
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -66,58 +61,39 @@ class RestoreBackupScreen(
                 )
             },
         ) { contentPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize(),
+            LazyColumnWithAction(
+                contentPadding = contentPadding,
+                actionLabel = stringResource(MR.strings.action_restore),
+                actionEnabled = state.canRestore && state.options.anyEnabled(),
+                onClickAction = {
+                    model.startRestore()
+                    navigator.pop()
+                },
             ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
-                        item {
-                            WarningBanner(MR.strings.restore_miui_warning)
-                        }
-                    }
-
-                    if (state.canRestore) {
-                        item {
-                            SectionCard {
-                                RestoreOptions.options.forEach { option ->
-                                    LabeledCheckbox(
-                                        label = stringResource(option.label),
-                                        checked = option.getter(state.options),
-                                        onCheckedChange = {
-                                            model.toggle(option.setter, it)
-                                        },
-                                        modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium),
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    if (state.error != null) {
-                        errorMessageItem(state.error)
+                if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                    item {
+                        WarningBanner(MR.strings.restore_miui_warning)
                     }
                 }
 
-                HorizontalDivider()
+                if (state.canRestore) {
+                    item {
+                        SectionCard {
+                            RestoreOptions.options.forEach { option ->
+                                LabeledCheckbox(
+                                    label = stringResource(option.label),
+                                    checked = option.getter(state.options),
+                                    onCheckedChange = {
+                                        model.toggle(option.setter, it)
+                                    },
+                                )
+                            }
+                        }
+                    }
+                }
 
-                Button(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
-                    enabled = state.canRestore && state.options.anyEnabled(),
-                    onClick = {
-                        model.startRestore()
-                        navigator.pop()
-                    },
-                ) {
-                    Text(
-                        text = stringResource(MR.strings.action_restore),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
+                if (state.error != null) {
+                    errorMessageItem(state.error)
                 }
             }
         }
