@@ -26,6 +26,8 @@ data class BackupOptions(
         privateSettings,
     )
 
+    fun anyEnabled() = libraryEntries || appSettings || sourceSettings
+
     companion object {
         val libraryOptions = persistentListOf(
             Entry(

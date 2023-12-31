@@ -68,6 +68,7 @@ class CreateBackupScreen : Screen() {
             LazyColumnWithAction(
                 contentPadding = contentPadding,
                 actionLabel = stringResource(MR.strings.action_create),
+                actionEnabled = state.options.anyEnabled(),
                 onClickAction = {
                     if (!BackupCreateJob.isManualJobRunning(context)) {
                         try {
