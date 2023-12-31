@@ -24,8 +24,6 @@ import eu.kanade.tachiyomi.util.system.isRunning
 import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
-import tachiyomi.core.util.lang.asBooleanArray
-import tachiyomi.core.util.lang.asDataClass
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.storage.service.StorageManager
@@ -49,7 +47,7 @@ class BackupCreateJob(private val context: Context, workerParams: WorkerParamete
 
         setForegroundSafely()
 
-        val options: BackupOptions = inputData.getBooleanArray(OPTIONS_KEY)?.asDataClass()
+        val options = inputData.getBooleanArray(OPTIONS_KEY)?.let { BackupOptions.fromBooleanArray(it) }
             ?: BackupOptions()
 
         return try {

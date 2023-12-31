@@ -20,8 +20,6 @@ import eu.kanade.tachiyomi.util.system.workManager
 import kotlinx.coroutines.CancellationException
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.util.lang.asBooleanArray
-import tachiyomi.core.util.lang.asDataClass
 import tachiyomi.core.util.system.logcat
 import tachiyomi.i18n.MR
 
@@ -32,7 +30,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
     override suspend fun doWork(): Result {
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
-        val options: RestoreOptions? = inputData.getBooleanArray(OPTIONS_KEY)?.asDataClass()
+        val options = inputData.getBooleanArray(OPTIONS_KEY)?.let { RestoreOptions.fromBooleanArray(it) }
 
         if (uri == null || options == null) {
             return Result.failure()

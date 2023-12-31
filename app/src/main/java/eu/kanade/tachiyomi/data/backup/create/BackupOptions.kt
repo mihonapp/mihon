@@ -15,6 +15,17 @@ data class BackupOptions(
     val privateSettings: Boolean = false,
 ) {
 
+    fun asBooleanArray() = booleanArrayOf(
+        libraryEntries,
+        categories,
+        chapters,
+        tracking,
+        history,
+        appSettings,
+        sourceSettings,
+        privateSettings,
+    )
+
     companion object {
         val libraryOptions = persistentListOf(
             Entry(
@@ -65,6 +76,17 @@ data class BackupOptions(
                 setter = { options, enabled -> options.copy(privateSettings = enabled) },
                 enabled = { it.appSettings || it.sourceSettings },
             ),
+        )
+
+        fun fromBooleanArray(array: BooleanArray) = BackupOptions(
+            libraryEntries = array[0],
+            categories = array[1],
+            chapters = array[2],
+            tracking = array[3],
+            history = array[4],
+            appSettings = array[5],
+            sourceSettings = array[6],
+            privateSettings = array[7],
         )
     }
 
