@@ -1,5 +1,6 @@
 [versions]
 aboutlib_version = "10.10.0"
+acra = "5.11.3"
 leakcanary = "2.12"
 moko = "0.23.0"
 okhttp_version = "5.0.0-alpha.12"
@@ -67,7 +68,8 @@ moko-gradle = { module = "dev.icerock.moko:resources-generator", version.ref = "
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-acra-http = "ch.acra:acra-http:5.11.3"
+acra-http = { module = "ch.acra:acra-http", version.ref = "acra" }
+acra-scheduler = { module = "ch.acra:acra-advanced-scheduler", version.ref = "acra" }
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.5.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
@@ -97,6 +99,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 ktlint = "org.jlleitschuh.gradle:ktlint-gradle:12.0.3"
 
 [bundles]
+acra = ["acra-http", "acra-scheduler"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]

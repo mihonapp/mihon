@@ -246,7 +246,7 @@ dependencies {
     implementation(libs.logcat)
 
     // Crash reports/analytics
-    implementation(libs.acra.http)
+    implementation(libs.bundles.acra)
     "standardImplementation"(libs.firebase.analytics)
 
     // Shizuku
