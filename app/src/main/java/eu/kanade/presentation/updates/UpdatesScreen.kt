@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import eu.kanade.presentation.components.AppBar
@@ -37,6 +36,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -44,7 +44,6 @@ fun UpdateScreen(
     state: UpdatesScreenModel.State,
     snackbarHostState: SnackbarHostState,
     lastUpdated: Long,
-    relativeTime: Boolean,
     onClickCover: (UpdatesItem) -> Unit,
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
@@ -57,8 +56,6 @@ fun UpdateScreen(
     onOpenChapter: (UpdatesItem) -> Unit,
 ) {
     BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
-
-    val context = LocalContext.current
 
     Scaffold(
         topBar = { scrollBehavior ->
@@ -113,7 +110,7 @@ fun UpdateScreen(
                         updatesLastUpdatedItem(lastUpdated)
 
                         updatesUiItems(
-                            uiModels = state.getUiModel(context, relativeTime),
+                            uiModels = state.getUiModel(),
                             selectionMode = state.selectionMode,
                             onUpdateSelected = onUpdateSelected,
                             onClickCover = onClickCover,
@@ -209,6 +206,6 @@ private fun UpdatesBottomBar(
 }
 
 sealed interface UpdatesUiModel {
-    data class Header(val date: String) : UpdatesUiModel
+    data class Header(val date: Date) : UpdatesUiModel
     data class Item(val item: UpdatesItem) : UpdatesUiModel
 }

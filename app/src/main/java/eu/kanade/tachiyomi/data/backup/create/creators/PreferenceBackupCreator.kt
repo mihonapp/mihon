@@ -37,6 +37,7 @@ class PreferenceBackupCreator(
                         .withPrivatePreferences(includePrivatePreferences),
                 )
             }
+            .filter { it.prefs.isNotEmpty() }
     }
 
     @Suppress("UNCHECKED_CAST")

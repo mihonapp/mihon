@@ -59,7 +59,7 @@ fun NewUpdateScreen(
                 modifier = Modifier.padding(top = MaterialTheme.padding.small),
             ) {
                 Text(text = stringResource(MR.strings.update_check_open))
-                Spacer(modifier = Modifier.width(MaterialTheme.padding.tiny))
+                Spacer(modifier = Modifier.width(MaterialTheme.padding.extraSmall))
                 Icon(imageVector = Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null)
             }
         }

@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -36,7 +37,9 @@ import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.data.sync.SyncManager
 import eu.kanade.tachiyomi.data.sync.service.GoogleDriveService
@@ -47,6 +50,7 @@ import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
+import tachiyomi.core.storage.displayablePath
 import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
@@ -120,7 +124,7 @@ object SettingsDataScreen : SearchableSettings {
 
         return remember(storageDir) {
             val file = UniFile.fromUri(context, storageDir.toUri())
-            file?.filePath ?: file?.uri?.toString()
+            file?.displayablePath
         } ?: stringResource(MR.strings.invalid_location, storageDir)
     }
 
@@ -151,6 +155,22 @@ object SettingsDataScreen : SearchableSettings {
 
         val lastAutoBackup by backupPreferences.lastAutoBackupTimestamp().collectAsState()
 
+        val chooseBackup = rememberLauncherForActivityResult(
+            object : ActivityResultContracts.GetContent() {
+                override fun createIntent(context: Context, input: String): Intent {
+                    val intent = super.createIntent(context, input)
+                    return Intent.createChooser(intent, context.stringResource(MR.strings.file_select_backup))
+                }
+            },
+        ) {
+            if (it == null) {
+                context.toast(MR.strings.file_null_uri_error)
+                return@rememberLauncherForActivityResult
+            }
+
+            navigator.push(RestoreBackupScreen(it.toString()))
+        }
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_backup),
             preferenceItems = persistentListOf(
@@ -174,7 +194,18 @@ object SettingsDataScreen : SearchableSettings {
                                 }
                                 SegmentedButton(
                                     checked = false,
-                                    onCheckedChange = { navigator.push(RestoreBackupScreen()) },
+                                    onCheckedChange = {
+                                        if (!BackupRestoreJob.isRunning(context)) {
+                                            if (DeviceUtil.isMiui && DeviceUtil.isMiuiOptimizationDisabled()) {
+                                                context.toast(MR.strings.restore_miui_warning)
+                                            }
+
+                                            // no need to catch because it's wrapped with a chooser
+                                            chooseBackup.launch("*/*")
+                                        } else {
+                                            context.toast(MR.strings.restore_in_progress)
+                                        }
+                                    },
                                     shape = SegmentedButtonDefaults.itemShape(1, 2),
                                 ) {
                                     Text(stringResource(MR.strings.pref_restore_backup))

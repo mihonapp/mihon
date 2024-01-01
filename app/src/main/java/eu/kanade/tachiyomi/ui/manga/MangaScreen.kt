@@ -104,8 +104,6 @@ class MangaScreen(
         MangaScreen(
             state = successState,
             snackbarHostState = screenModel.snackbarHostState,
-            dateRelativeTime = screenModel.relativeTime,
-            dateFormat = screenModel.dateFormat,
             fetchInterval = successState.manga.fetchInterval,
             isTabletUi = isTabletUi(),
             chapterSwipeStartAction = screenModel.chapterSwipeStartAction,
@@ -245,6 +243,7 @@ class MangaScreen(
             is MangaScreenModel.Dialog.SetFetchInterval -> {
                 SetIntervalDialog(
                     interval = dialog.manga.fetchInterval,
+                    nextUpdate = dialog.manga.nextUpdate,
                     onDismissRequest = onDismissRequest,
                     onValueChanged = { screenModel.setFetchInterval(dialog.manga, it) },
                 )

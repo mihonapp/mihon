@@ -345,7 +345,7 @@ fun SettingsIconGrid(labelRes: StringResource, content: LazyGridScope.() -> Unit
                 end = SettingsItemsPaddings.Horizontal,
                 bottom = SettingsItemsPaddings.Vertical,
             ),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             content = content,
         )
