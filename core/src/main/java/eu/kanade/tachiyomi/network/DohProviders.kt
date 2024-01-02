@@ -128,14 +128,13 @@ fun OkHttpClient.Builder.dohQuad101() = dns(
 /*
  * Mullvad DoH
  * without ad blocking option
- * Source : https://mullvad.net/en/help/dns-over-https-and-dns-over-tls/
+ * Source: https://mullvad.net/en/help/dns-over-https-and-dns-over-tls
  */
 fun OkHttpClient.Builder.dohMullvad() = dns(
     DnsOverHttps.Builder().client(build())
-        .url("https://doh.mullvad.net/dns-query".toHttpUrl())
+        .url(" https://dns.mullvad.net/dns-query".toHttpUrl())
         .bootstrapDnsHosts(
             InetAddress.getByName("194.242.2.2"),
-            InetAddress.getByName("193.19.108.2"),
             InetAddress.getByName("2a07:e340::2"),
         )
         .build(),
@@ -144,7 +143,7 @@ fun OkHttpClient.Builder.dohMullvad() = dns(
 /*
  * Control D
  * unfiltered option
- * Source : https://controld.com/free-dns/?
+ * Source: https://controld.com/free-dns/?
  */
 fun OkHttpClient.Builder.dohControlD() = dns(
     DnsOverHttps.Builder().client(build())
