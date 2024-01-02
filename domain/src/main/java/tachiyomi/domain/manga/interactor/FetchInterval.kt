@@ -19,16 +19,15 @@ class FetchInterval(
         dateTime: ZonedDateTime,
         window: Pair<Long, Long>,
     ): MangaUpdate? {
+        val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
+            chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true),
+            zone = dateTime.zone,
+        )
         val currentWindow = if (window.first == 0L && window.second == 0L) {
             getWindow(ZonedDateTime.now())
         } else {
             window
         }
-        val chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true)
-        val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
-            chapters,
-            dateTime.zone,
-        )
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, currentWindow)
 
         return if (manga.nextUpdate == nextUpdate && manga.fetchInterval == interval) {
@@ -102,7 +101,7 @@ class FetchInterval(
             manga.fetchInterval == 0
         ) {
             val latestDate = ZonedDateTime.ofInstant(
-                Instant.ofEpochMilli(manga.lastUpdate),
+                if (manga.lastUpdate > 0) Instant.ofEpochMilli(manga.lastUpdate) else Instant.now(),
                 dateTime.zone,
             )
                 .toLocalDate()

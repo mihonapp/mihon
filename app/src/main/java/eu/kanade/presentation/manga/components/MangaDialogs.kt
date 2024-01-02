@@ -77,7 +77,6 @@ fun SetIntervalDialog(
         title = { Text(stringResource(MR.strings.manga_modify_calculated_interval_title)) },
         text = {
             Column {
-                // TODO: figure out why nextUpdate is a weird number sometimes
                 if (nextUpdateDays >= 0) {
                     Text(
                         stringResource(

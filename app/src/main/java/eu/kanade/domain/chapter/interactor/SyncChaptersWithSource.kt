@@ -22,7 +22,6 @@ import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 import java.lang.Long.max
-import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.TreeSet
 
@@ -57,6 +56,7 @@ class SyncChaptersWithSource(
         }
 
         val now = ZonedDateTime.now()
+        val nowMillis = now.toInstant().toEpochMilli()
 
         val sourceChapters = rawSourceChapters
             .distinctBy { it.url }
@@ -67,36 +67,27 @@ class SyncChaptersWithSource(
                     .copy(mangaId = manga.id, sourceOrder = i.toLong())
             }
 
-        // Chapters from db.
         val dbChapters = getChaptersByMangaId.await(manga.id)
 
-        // Chapters from the source not in db.
-        val toAdd = mutableListOf<Chapter>()
-
-        // Chapters whose metadata have changed.
-        val toChange = mutableListOf<Chapter>()
-
-        // Chapters from the db not in source.
-        val toDelete = dbChapters.filterNot { dbChapter ->
+        val newChapters = mutableListOf<Chapter>()
+        val updatedChapters = mutableListOf<Chapter>()
+        val removedChapters = dbChapters.filterNot { dbChapter ->
             sourceChapters.any { sourceChapter ->
                 dbChapter.url == sourceChapter.url
             }
         }
 
-        val rightNow = Instant.now().toEpochMilli()
-
         // Used to not set upload date of older chapters
         // to a higher value than newer chapters
         var maxSeenUploadDate = 0L
 
-        val sManga = manga.toSManga()
         for (sourceChapter in sourceChapters) {
             var chapter = sourceChapter
 
             // Update metadata from source if necessary.
             if (source is HttpSource) {
                 val sChapter = chapter.toSChapter()
-                source.prepareNewChapter(sChapter, sManga)
+                source.prepareNewChapter(sChapter, manga.toSManga())
                 chapter = chapter.copyFromSChapter(sChapter)
             }
 
@@ -108,13 +99,13 @@ class SyncChaptersWithSource(
 
             if (dbChapter == null) {
                 val toAddChapter = if (chapter.dateUpload == 0L) {
-                    val altDateUpload = if (maxSeenUploadDate == 0L) rightNow else maxSeenUploadDate
+                    val altDateUpload = if (maxSeenUploadDate == 0L) nowMillis else maxSeenUploadDate
                     chapter.copy(dateUpload = altDateUpload)
                 } else {
                     maxSeenUploadDate = max(maxSeenUploadDate, sourceChapter.dateUpload)
                     chapter
                 }
-                toAdd.add(toAddChapter)
+                newChapters.add(toAddChapter)
             } else {
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
                     val shouldRenameChapter = downloadProvider.isChapterDirNameChanged(dbChapter, chapter) &&
@@ -134,13 +125,13 @@ class SyncChaptersWithSource(
                     if (chapter.dateUpload != 0L) {
                         toChangeChapter = toChangeChapter.copy(dateUpload = chapter.dateUpload)
                     }
-                    toChange.add(toChangeChapter)
+                    updatedChapters.add(toChangeChapter)
                 }
             }
         }
 
-        // Return if there's nothing to add, delete or change, avoiding unnecessary db transactions.
-        if (toAdd.isEmpty() && toDelete.isEmpty() && toChange.isEmpty()) {
+        // Return if there's nothing to add, delete, or update to avoid unnecessary db transactions.
+        if (newChapters.isEmpty() && removedChapters.isEmpty() && updatedChapters.isEmpty()) {
             if (manualFetch || manga.fetchInterval == 0 || manga.nextUpdate < fetchWindow.first) {
                 updateManga.awaitUpdateFetchInterval(
                     manga,
@@ -157,20 +148,20 @@ class SyncChaptersWithSource(
         val deletedReadChapterNumbers = TreeSet<Double>()
         val deletedBookmarkedChapterNumbers = TreeSet<Double>()
 
-        toDelete.forEach { chapter ->
+        removedChapters.forEach { chapter ->
             if (chapter.read) deletedReadChapterNumbers.add(chapter.chapterNumber)
             if (chapter.bookmark) deletedBookmarkedChapterNumbers.add(chapter.chapterNumber)
             deletedChapterNumbers.add(chapter.chapterNumber)
         }
 
-        val deletedChapterNumberDateFetchMap = toDelete.sortedByDescending { it.dateFetch }
+        val deletedChapterNumberDateFetchMap = removedChapters.sortedByDescending { it.dateFetch }
             .associate { it.chapterNumber to it.dateFetch }
 
         // Date fetch is set in such a way that the upper ones will have bigger value than the lower ones
         // Sources MUST return the chapters from most to less recent, which is common.
-        var itemCount = toAdd.size
-        var updatedToAdd = toAdd.map { toAddItem ->
-            var chapter = toAddItem.copy(dateFetch = rightNow + itemCount--)
+        var itemCount = newChapters.size
+        var updatedToAdd = newChapters.map { toAddItem ->
+            var chapter = toAddItem.copy(dateFetch = nowMillis + itemCount--)
 
             if (chapter.isRecognizedNumber.not() || chapter.chapterNumber !in deletedChapterNumbers) return@map chapter
 
@@ -189,8 +180,8 @@ class SyncChaptersWithSource(
             chapter
         }
 
-        if (toDelete.isNotEmpty()) {
-            val toDeleteIds = toDelete.map { it.id }
+        if (removedChapters.isNotEmpty()) {
+            val toDeleteIds = removedChapters.map { it.id }
             chapterRepository.removeChaptersWithIds(toDeleteIds)
         }
 
@@ -198,8 +189,8 @@ class SyncChaptersWithSource(
             updatedToAdd = chapterRepository.addAll(updatedToAdd)
         }
 
-        if (toChange.isNotEmpty()) {
-            val chapterUpdates = toChange.map { it.toChapterUpdate() }
+        if (updatedChapters.isNotEmpty()) {
+            val chapterUpdates = updatedChapters.map { it.toChapterUpdate() }
             updateChapter.awaitAll(chapterUpdates)
         }
         updateManga.awaitUpdateFetchInterval(manga, now, fetchWindow)
