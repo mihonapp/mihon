@@ -18,6 +18,7 @@ import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
+import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
@@ -337,6 +338,15 @@ actual class LocalSource(
                             .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
 
                         entry?.let { coverManager.update(manga, zip.getInputStream(it)) }
+                    }
+                }
+                is Format.SevenZip -> {
+                    SevenZFile(format.file.toTempFile(context)).use { archive ->
+                        val entry = archive.entries.toList()
+                            .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
+                            .find { !it.isDirectory && ImageUtil.isImage(it.name) { archive.getInputStream(it) } }
+
+                        entry?.let { coverManager.update(manga, archive.getInputStream(it)) }
                     }
                 }
                 is Format.Rar -> {

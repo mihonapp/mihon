@@ -90,6 +90,7 @@ class ChapterLoader(
                 when (format) {
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Zip -> ZipPageLoader(format.file.toTempFile(context))
+                    is Format.SevenZip -> SevenZipPageLoader(format.file.toTempFile(context))
                     is Format.Rar -> try {
                         RarPageLoader(format.file.toTempFile(context))
                     } catch (e: UnsupportedRarV5Exception) {
