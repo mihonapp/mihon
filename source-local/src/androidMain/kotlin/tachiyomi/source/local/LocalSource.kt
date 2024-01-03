@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.EpubFile
+import eu.kanade.tachiyomi.util.storage.SevenZUtil.getImages
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.serialization.json.Json
@@ -342,11 +343,9 @@ actual class LocalSource(
                 }
                 is Format.SevenZip -> {
                     SevenZFile(format.file.toTempFile(context)).use { archive ->
-                        val entry = archive.entries.toList()
-                            .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
-                            .find { !it.isDirectory && ImageUtil.isImage(it.name) { archive.getInputStream(it) } }
+                        val entry = archive.getImages().firstOrNull()
 
-                        entry?.let { coverManager.update(manga, archive.getInputStream(it)) }
+                        entry?.let { coverManager.update(manga, it) }
                     }
                 }
                 is Format.Rar -> {
