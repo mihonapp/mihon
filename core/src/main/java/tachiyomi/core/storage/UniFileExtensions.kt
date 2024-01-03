@@ -13,6 +13,9 @@ val UniFile.extension: String?
 val UniFile.nameWithoutExtension: String?
     get() = name?.substringBeforeLast('.')
 
+val UniFile.displayablePath: String
+    get() = filePath ?: uri.toString()
+
 fun UniFile.toTempFile(context: Context): File {
     val inputStream = context.contentResolver.openInputStream(uri)!!
     val tempFile = File.createTempFile(

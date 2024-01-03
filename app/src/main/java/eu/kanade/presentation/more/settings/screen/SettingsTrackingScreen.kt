@@ -317,7 +317,7 @@ object SettingsTrackingScreen : SearchableSettings {
                 )
             },
             confirmButton = {
-                Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.tiny)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall)) {
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = onDismissRequest,

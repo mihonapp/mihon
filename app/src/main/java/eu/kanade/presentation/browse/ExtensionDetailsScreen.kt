@@ -295,7 +295,7 @@ private fun DetailsHeader(
                 top = MaterialTheme.padding.small,
                 bottom = MaterialTheme.padding.medium,
             ),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         ) {
             OutlinedButton(
                 modifier = Modifier.weight(1f),

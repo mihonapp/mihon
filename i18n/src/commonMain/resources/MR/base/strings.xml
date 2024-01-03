@@ -498,11 +498,12 @@
     <string name="pref_backup_interval">Automatic backup frequency</string>
     <string name="action_create">Create</string>
     <string name="backup_created">Backup created</string>
-    <string name="invalid_backup_file">Invalid backup file</string>
+    <string name="invalid_backup_file">Invalid backup file:</string>
+    <string name="invalid_backup_file_error">Full error:</string>
     <string name="invalid_backup_file_missing_manga">Backup does not contain any library entries.</string>
     <string name="backup_restore_missing_sources">Missing sources:</string>
     <string name="backup_restore_missing_trackers">Trackers not logged into:</string>
-    <string name="backup_restore_content_full">Data from the backup file will be restored.\n\nYou will need to install any missing extensions and log in to tracking services afterwards to use them.</string>
+    <string name="backup_restore_content_full">You may need to install any missing extensions and log in to tracking services afterwards to use them.</string>
     <string name="restore_completed">Restore completed</string>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="backup_in_progress">Backup is already in progress</string>
@@ -713,6 +714,8 @@
     <string name="display_mode_chapter">Chapter %1$s</string>
     <string name="manga_display_interval_title">Estimate every</string>
     <string name="manga_display_modified_interval_title">Set to update every</string>
+    <!-- "... around 2 days" -->
+    <string name="manga_interval_expected_update">Next update expected in around %s</string>
     <string name="manga_modify_calculated_interval_title">Customize interval</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>

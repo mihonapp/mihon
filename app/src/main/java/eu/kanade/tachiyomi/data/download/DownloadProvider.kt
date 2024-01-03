@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import logcat.LogPriority
 import tachiyomi.core.i18n.stringResource
+import tachiyomi.core.storage.displayablePath
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
@@ -41,7 +42,12 @@ class DownloadProvider(
                 .createDirectory(getMangaDirName(mangaTitle))!!
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e) { "Invalid download directory" }
-            throw Exception(context.stringResource(MR.strings.invalid_location, downloadsDir ?: ""))
+            throw Exception(
+                context.stringResource(
+                    MR.strings.invalid_location,
+                    downloadsDir?.displayablePath ?: "",
+                ),
+            )
         }
     }
 

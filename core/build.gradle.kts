@@ -46,4 +46,6 @@ dependencies {
 
     // JavaScript engine
     implementation(libs.bundles.js.engine)
+
+    testImplementation(libs.bundles.test)
 }

@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.manga.components.ChapterDownloadAction
 import eu.kanade.presentation.manga.components.ChapterDownloadIndicator
 import eu.kanade.presentation.manga.components.DotSeparatorText
@@ -91,7 +92,7 @@ internal fun LazyListScope.updatesUiItems(
             is UpdatesUiModel.Header -> {
                 ListGroupHeader(
                     modifier = Modifier.animateItemPlacement(),
-                    text = item.date,
+                    text = relativeDateText(item.date),
                 )
             }
             is UpdatesUiModel.Item -> {
