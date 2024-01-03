@@ -6,11 +6,11 @@ import tachiyomi.core.util.system.ImageUtil
 import java.io.InputStream
 
 object SevenZUtil {
-    fun SevenZFile.getImages(): Sequence<InputStream> {
+    fun SevenZFile.getImages(): Sequence<ByteArray> {
         return generateSequence { runCatching { getNextEntry() }.getOrNull() }
             .filter { !it.isDirectory && ImageUtil.isImage(it.name) { getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .map(::getInputStream)
-            .map { it.use(InputStream::readBytes).inputStream() } // ByteArrayInputStream
+            .map { it.use(InputStream::readBytes) } // ByteArray
     }
 }

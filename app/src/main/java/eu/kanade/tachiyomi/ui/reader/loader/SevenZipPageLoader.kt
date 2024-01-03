@@ -19,7 +19,7 @@ internal class SevenZipPageLoader(file: File) : PageLoader() {
         return zip.getImages()
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
-                    stream = { entry }
+                    stream = { entry.copyOf().inputStream() }
                     status = Page.State.READY
                 }
             }.toList()

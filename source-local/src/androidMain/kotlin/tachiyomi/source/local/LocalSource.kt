@@ -345,7 +345,7 @@ actual class LocalSource(
                     SevenZFile(format.file.toTempFile(context)).use { archive ->
                         val entry = archive.getImages().firstOrNull()
 
-                        entry?.let { coverManager.update(manga, it) }
+                        entry?.let { coverManager.update(manga, it.inputStream()) }
                     }
                 }
                 is Format.Rar -> {
