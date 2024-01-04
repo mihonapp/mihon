@@ -61,7 +61,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
     override suspend fun beforeSync() = googleDriveService.refreshToken()
 
-    override suspend fun pushSyncData(): SyncData? {
+    override suspend fun pullSyncData(): SyncData? {
         val drive = googleDriveService.googleDriveService
 
         // Check if the Google Drive service is initialized
@@ -87,7 +87,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         return json.decodeFromString(SyncData.serializer(), jsonString)
     }
 
-    override suspend fun pullSyncData(syncData: SyncData) {
+    override suspend fun pushSyncData(syncData: SyncData) {
         val jsonData = json.encodeToString(syncData)
 
         val drive = googleDriveService.googleDriveService
