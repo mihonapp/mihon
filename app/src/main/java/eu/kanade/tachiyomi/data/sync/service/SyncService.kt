@@ -23,15 +23,15 @@ abstract class SyncService(
     open suspend fun doSync(syncData: SyncData): Backup? {
         beforeSync()
 
-        val remoteSData = pushSyncData()
+        val remoteSData = pullSyncData()
 
         val finalSyncData =
             if (remoteSData == null) {
-                pullSyncData(syncData)
+                pushSyncData(syncData)
                 syncData
             } else {
                 val mergedSyncData = mergeSyncData(syncData, remoteSData)
-                pullSyncData(mergedSyncData)
+                pushSyncData(mergedSyncData)
                 mergedSyncData
             }
 
@@ -46,12 +46,12 @@ abstract class SyncService(
     /**
      * Download sync data from the remote storage
      */
-    abstract suspend fun pushSyncData(): SyncData?
+    abstract suspend fun pullSyncData(): SyncData?
 
     /**
      * Upload sync data to the remote storage
      */
-    abstract suspend fun pullSyncData(syncData: SyncData)
+    abstract suspend fun pushSyncData(syncData: SyncData)
 
     /**
      * Merges the local and remote sync data into a single JSON string.

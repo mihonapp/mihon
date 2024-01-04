@@ -22,7 +22,7 @@ class SyncYomiSyncService(
     syncPreferences: SyncPreferences,
     private val notifier: SyncNotifier,
 ) : SyncService(context, json, syncPreferences) {
-    override suspend fun pushSyncData(): SyncData? {
+    override suspend fun pullSyncData(): SyncData? {
         val host = syncPreferences.syncHost().get()
         val apiKey = syncPreferences.syncAPIKey().get()
         val downloadUrl = "$host/api/sync/download"
@@ -48,7 +48,7 @@ class SyncYomiSyncService(
         }
     }
 
-    override suspend fun pullSyncData(syncData: SyncData) {
+    override suspend fun pushSyncData(syncData: SyncData) {
         val host = syncPreferences.syncHost().get()
         val apiKey = syncPreferences.syncAPIKey().get()
         val uploadUrl = "$host/api/sync/upload"
