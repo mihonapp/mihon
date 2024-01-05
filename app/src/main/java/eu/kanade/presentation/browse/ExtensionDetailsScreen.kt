@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -116,7 +117,7 @@ fun ExtensionDetailsScreen(
     ) { paddingValues ->
         if (state.extension == null) {
             EmptyScreen(
-                stringRes = MR.strings.empty_screen,
+                MR.strings.empty_screen,
                 modifier = Modifier.padding(paddingValues),
             )
             return@Scaffold
@@ -149,6 +150,21 @@ private fun ExtensionDetails(
         contentPadding = contentPadding,
     ) {
         when {
+            extension.isRepoSource ->
+                item {
+                    val uriHandler = LocalUriHandler.current
+                    WarningBanner(
+                        MR.strings.repo_extension_message,
+                        modifier = Modifier.clickable {
+                            extension.repoUrl ?: return@clickable
+                            uriHandler.openUri(
+                                extension.repoUrl
+                                    .replace("https://raw.githubusercontent.com", "https://github.com")
+                                    .removeSuffix("/repo/"),
+                            )
+                        },
+                    )
+                }
             extension.isUnofficial ->
                 item {
                     WarningBanner(MR.strings.unofficial_extension_message)

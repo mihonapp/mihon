@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.extension.api
 
 import android.content.Context
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -24,6 +25,7 @@ internal class ExtensionGithubApi {
 
     private val networkService: NetworkHelper by injectLazy()
     private val preferenceStore: PreferenceStore by injectLazy()
+    private val sourcePreferences: SourcePreferences by injectLazy()
     private val extensionManager: ExtensionManager by injectLazy()
     private val json: Json by injectLazy()
 
@@ -58,7 +60,20 @@ internal class ExtensionGithubApi {
             val extensions = with(json) {
                 response
                     .parseAs<List<ExtensionJsonObject>>()
-                    .toExtensions()
+                    .toExtensions() + sourcePreferences.extensionRepos()
+                    .get()
+                    .flatMap { repoPath ->
+                        val url = if (requiresFallbackSource) {
+                            "$FALLBACK_BASE_URL$repoPath@repo/"
+                        } else {
+                            "$BASE_URL$repoPath/repo/"
+                        }
+                        networkService.client
+                            .newCall(GET("${url}index.min.json"))
+                            .awaitSuccess()
+                            .parseAs<List<ExtensionJsonObject>>()
+                            .toExtensions(url, repoSource = true)
+                    }
             }
 
             // Sanity check - a small number of extensions probably means something broke
@@ -71,10 +86,7 @@ internal class ExtensionGithubApi {
         }
     }
 
-    suspend fun checkForUpdates(
-        context: Context,
-        fromAvailableExtensionList: Boolean = false,
-    ): List<Extension.Installed>? {
+    suspend fun checkForUpdates(context: Context, fromAvailableExtensionList: Boolean = false): List<Extension.Installed>? {
         // Limit checks to once a day at most
         if (!fromAvailableExtensionList &&
             Instant.now().toEpochMilli() < lastExtCheck.get() + 1.days.inWholeMilliseconds
@@ -111,7 +123,10 @@ internal class ExtensionGithubApi {
         return extensionsWithUpdate
     }
 
-    private fun List<ExtensionJsonObject>.toExtensions(): List<Extension.Available> {
+    private fun List<ExtensionJsonObject>.toExtensions(
+        repoUrl: String = getUrlPrefix(),
+        repoSource: Boolean = false,
+    ): List<Extension.Available> {
         return this
             .filter {
                 val libVersion = it.extractLibVersion()
@@ -128,13 +143,15 @@ internal class ExtensionGithubApi {
                     isNsfw = it.nsfw == 1,
                     sources = it.sources?.map(extensionSourceMapper).orEmpty(),
                     apkName = it.apk,
-                    iconUrl = "${getUrlPrefix()}icon/${it.pkg}.png",
+                    iconUrl = "${repoUrl}icon/${it.pkg}.png",
+                    repoUrl = repoUrl,
+                    isRepoSource = repoSource,
                 )
             }
     }
 
     fun getApkUrl(extension: Extension.Available): String {
-        return "${getUrlPrefix()}apk/${extension.apkName}"
+        return "${extension.repoUrl}/apk/${extension.apkName}"
     }
 
     private fun getUrlPrefix(): String {
@@ -150,8 +167,10 @@ internal class ExtensionGithubApi {
     }
 }
 
-private const val REPO_URL_PREFIX = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/"
-private const val FALLBACK_REPO_URL_PREFIX = "https://gcore.jsdelivr.net/gh/tachiyomiorg/tachiyomi-extensions@repo/"
+private const val BASE_URL = "https://raw.githubusercontent.com/"
+private const val REPO_URL_PREFIX = "${BASE_URL}tachiyomiorg/tachiyomi-extensions/repo/"
+private const val FALLBACK_BASE_URL = "https://gcore.jsdelivr.net/gh/"
+private const val FALLBACK_REPO_URL_PREFIX = "${FALLBACK_BASE_URL}tachiyomiorg/tachiyomi-extensions@repo/"
 
 @Serializable
 private data class ExtensionJsonObject(

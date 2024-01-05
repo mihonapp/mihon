@@ -25,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import dev.icerock.moko.resources.StringResource
 import eu.kanade.core.preference.asToggleableState
 import eu.kanade.presentation.category.visualName
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import tachiyomi.core.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
@@ -40,12 +42,15 @@ import kotlin.time.Duration.Companion.seconds
 fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
-    categories: ImmutableList<Category>,
+    categories: ImmutableList<String>,
+    title: String,
+    extraMessage: String? = null,
+    alreadyExistsError: StringResource = MR.strings.error_category_exists,
 ) {
     var name by remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
-    val nameAlreadyExists = remember(name) { categories.anyWithName(name) }
+    val nameAlreadyExists = remember(name) { categories.contains(name) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -66,25 +71,32 @@ fun CategoryCreateDialog(
             }
         },
         title = {
-            Text(text = stringResource(MR.strings.action_add_category))
+            Text(text = title)
         },
         text = {
-            OutlinedTextField(
-                modifier = Modifier.focusRequester(focusRequester),
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(text = stringResource(MR.strings.name)) },
-                supportingText = {
-                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
-                        MR.strings.error_category_exists
-                    } else {
-                        MR.strings.information_required_plain
-                    }
-                    Text(text = stringResource(msgRes))
-                },
-                isError = name.isNotEmpty() && nameAlreadyExists,
-                singleLine = true,
-            )
+            Column {
+                extraMessage?.let { Text(it) }
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .focusRequester(focusRequester),
+                    value = name,
+                    onValueChange = { name = it },
+                    label = {
+                        Text(text = stringResource(MR.strings.name))
+                    },
+                    supportingText = {
+                        val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
+                            alreadyExistsError
+                        } else {
+                            MR.strings.information_required_plain
+                        }
+                        Text(text = stringResource(msgRes))
+                    },
+                    isError = name.isNotEmpty() && nameAlreadyExists,
+                    singleLine = true,
+                )
+            }
         },
     )
 
@@ -99,14 +111,15 @@ fun CategoryCreateDialog(
 fun CategoryRenameDialog(
     onDismissRequest: () -> Unit,
     onRename: (String) -> Unit,
-    categories: ImmutableList<Category>,
-    category: Category,
+    categories: ImmutableList<String>,
+    category: String,
+    alreadyExistsError: StringResource = MR.strings.error_category_exists,
 ) {
-    var name by remember { mutableStateOf(category.name) }
+    var name by remember { mutableStateOf(category) }
     var valueHasChanged by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
-    val nameAlreadyExists = remember(name) { categories.anyWithName(name) }
+    val nameAlreadyExists = remember(name) { categories.contains(name) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -140,7 +153,7 @@ fun CategoryRenameDialog(
                 label = { Text(text = stringResource(MR.strings.name)) },
                 supportingText = {
                     val msgRes = if (valueHasChanged && nameAlreadyExists) {
-                        MR.strings.error_category_exists
+                        alreadyExistsError
                     } else {
                         MR.strings.information_required_plain
                     }
@@ -163,7 +176,8 @@ fun CategoryRenameDialog(
 fun CategoryDeleteDialog(
     onDismissRequest: () -> Unit,
     onDelete: () -> Unit,
-    category: Category,
+    title: String,
+    text: String,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -181,10 +195,10 @@ fun CategoryDeleteDialog(
             }
         },
         title = {
-            Text(text = stringResource(MR.strings.delete_category))
+            Text(text = title)
         },
         text = {
-            Text(text = stringResource(MR.strings.delete_category_confirmation, category.name))
+            Text(text = text)
         },
     )
 }
@@ -220,7 +234,7 @@ fun CategorySortAlphabeticallyDialog(
 
 @Composable
 fun ChangeCategoryDialog(
-    initialSelection: List<CheckboxState<Category>>,
+    initialSelection: ImmutableList<CheckboxState<Category>>,
     onDismissRequest: () -> Unit,
     onEditCategories: () -> Unit,
     onConfirm: (List<Long>, List<Long>) -> Unit,
@@ -292,7 +306,7 @@ fun ChangeCategoryDialog(
                         if (index != -1) {
                             val mutableList = selection.toMutableList()
                             mutableList[index] = it.next()
-                            selection = mutableList.toList()
+                            selection = mutableList.toList().toImmutableList()
                         }
                     }
                     Row(
@@ -325,8 +339,4 @@ fun ChangeCategoryDialog(
             }
         },
     )
-}
-
-private fun List<Category>.anyWithName(name: String): Boolean {
-    return any { name == it.name }
 }
