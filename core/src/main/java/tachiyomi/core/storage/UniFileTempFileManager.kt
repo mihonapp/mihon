@@ -11,9 +11,11 @@ class UniFileTempFileManager(
     private val context: Context,
 ) {
 
-    private val dir = File(context.externalCacheDir, "tmp").also { it.mkdir() }
+    private val dir = File(context.externalCacheDir, "tmp")
 
     fun createTempFile(file: UniFile): File {
+        dir.mkdirs()
+
         val inputStream = context.contentResolver.openInputStream(file.uri)!!
         val tempFile = File.createTempFile(
             file.nameWithoutExtension.orEmpty().padEnd(3), // Prefix must be 3+ chars
