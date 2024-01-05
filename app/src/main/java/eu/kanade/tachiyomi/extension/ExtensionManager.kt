@@ -258,7 +258,6 @@ class ExtensionManager(
         val untrustedSignatures = _untrustedExtensionsFlow.value.map { it.signatureHash }.toSet()
         if (signature !in untrustedSignatures) return
 
-        ExtensionLoader.trustedSignatures += signature
         preferences.trustedSignatures() += signature
 
         val nowTrustedExtensions = _untrustedExtensionsFlow.value.filter { it.signatureHash == signature }
