@@ -273,10 +273,7 @@ private fun MangaScreenSmallImpl(
             onBackClicked()
         }
     }
-    BackHandler(
-        enabled = isAnySelected,
-        onBack = { onAllChapterSelected(false) },
-    )
+    BackHandler(onBack = internalOnBackPressed)
 
     Scaffold(
         topBar = {
@@ -530,10 +527,7 @@ fun MangaScreenLargeImpl(
             onBackClicked()
         }
     }
-    BackHandler(
-        enabled = isAnySelected,
-        onBack = { onAllChapterSelected(false) },
-    )
+    BackHandler(onBack = internalOnBackPressed)
 
     Scaffold(
         topBar = {
