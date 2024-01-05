@@ -182,7 +182,7 @@ fun MangaActionRow(
     val nextUpdateDays = remember(nextUpdate) {
         return@remember if (nextUpdate != null) {
             val now = Instant.now()
-            now.until(nextUpdate, ChronoUnit.DAYS).toInt()
+            now.until(nextUpdate, ChronoUnit.DAYS).toInt().coerceAtLeast(0)
         } else {
             null
         }
