@@ -86,7 +86,8 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
-import kotlin.math.absoluteValue
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
 
 private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))
@@ -165,7 +166,7 @@ fun MangaInfoBox(
 fun MangaActionRow(
     favorite: Boolean,
     trackingCount: Int,
-    fetchInterval: Int?,
+    nextUpdate: Instant?,
     isUserIntervalMode: Boolean,
     onAddToLibraryClicked: () -> Unit,
     onWebViewClicked: (() -> Unit)?,
@@ -176,6 +177,16 @@ fun MangaActionRow(
     modifier: Modifier = Modifier,
 ) {
     val defaultActionButtonColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .38f)
+
+    // TODO: show something better when using custom interval
+    val nextUpdateDays = remember(nextUpdate) {
+        return@remember if (nextUpdate != null) {
+            val now = Instant.now()
+            now.until(nextUpdate, ChronoUnit.DAYS).toInt()
+        } else {
+            null
+        }
+    }
 
     Row(modifier = modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)) {
         MangaActionButton(
@@ -189,18 +200,20 @@ fun MangaActionRow(
             onClick = onAddToLibraryClicked,
             onLongClick = onEditCategory,
         )
-        if (onEditIntervalClicked != null && fetchInterval != null) {
-            MangaActionButton(
-                title = pluralStringResource(
+        MangaActionButton(
+            title = if (nextUpdateDays != null) {
+                pluralStringResource(
                     MR.plurals.day,
-                    count = fetchInterval.absoluteValue,
-                    fetchInterval.absoluteValue,
-                ),
-                icon = Icons.Default.HourglassEmpty,
-                color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
-                onClick = onEditIntervalClicked,
-            )
-        }
+                    count = nextUpdateDays,
+                    nextUpdateDays,
+                )
+            } else {
+                stringResource(MR.strings.not_applicable)
+            },
+            icon = Icons.Default.HourglassEmpty,
+            color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
+            onClick = { onEditIntervalClicked?.invoke() },
+        )
         MangaActionButton(
             title = if (trackingCount == 0) {
                 stringResource(MR.strings.manga_tracking_tab)

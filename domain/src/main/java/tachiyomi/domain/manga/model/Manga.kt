@@ -1,8 +1,10 @@
 package tachiyomi.domain.manga.model
 
+import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import tachiyomi.core.preference.TriState
 import java.io.Serializable
+import java.time.Instant
 
 data class Manga(
     val id: Long,
@@ -28,6 +30,11 @@ data class Manga(
     val lastModifiedAt: Long,
     val favoriteModifiedAt: Long?,
 ) : Serializable {
+
+    val expectedNextUpdate: Instant?
+        get() = nextUpdate
+            .takeIf { status != SManga.COMPLETED.toLong() }
+            ?.let { Instant.ofEpochMilli(it) }
 
     val sorting: Long
         get() = chapterFlags and CHAPTER_SORTING_MASK
