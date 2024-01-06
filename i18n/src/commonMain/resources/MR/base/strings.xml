@@ -577,6 +577,7 @@
     <string name="google_drive_login_success">Logged in to Google Drive</string>
     <string name="google_drive_login_failed">Failed to log in to Google Drive: %s</string>
     <string name="google_drive_not_signed_in">Not signed in to Google Drive</string>
+    <string name="error_deleting_google_drive_lock_file">Error Deleting Google Drive Lock File</string>
     <string name="pref_purge_confirmation_title">Purge confirmation</string>
     <string name="pref_purge_confirmation_message">Purging sync data will delete all your sync data from Google Drive. Are you sure you want to continue?</string>
 
