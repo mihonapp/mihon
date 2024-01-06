@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.data.sync.service
 
 import android.content.Context
-import com.google.gson.JsonObject
 import eu.kanade.tachiyomi.data.sync.SyncNotifier
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.PATCH
@@ -32,10 +31,12 @@ class SyncYomiSyncService(
     enum class SyncStatus {
         @SerialName("pending")
         Pending,
+
         @SerialName("syncing")
         Syncing,
+
         @SerialName("success")
-        Success
+        Success,
     }
 
     @Serializable
@@ -53,7 +54,21 @@ class SyncYomiSyncService(
         @SerialName("acquired_at")
         val acquiredAt: String?,
         @SerialName("expires_at")
-        val expiresAt: String?
+        val expiresAt: String?,
+    )
+
+    @Serializable
+    data class LockfileCreateRequest(
+        @SerialName("acquired_by")
+        val acquiredBy: String,
+    )
+
+    @Serializable
+    data class LockfilePatchRequest(
+        @SerialName("user_api_key")
+        val userApiKey: String,
+        @SerialName("acquired_by")
+        val acquiredBy: String,
     )
 
     override suspend fun beforeSync() {
@@ -63,13 +78,13 @@ class SyncYomiSyncService(
         val deviceId = syncPreferences.uniqueDeviceID()
         val client = OkHttpClient()
         val headers = Headers.Builder().add("X-API-Token", apiKey).build()
-        val createLockfileJson = JsonObject().apply {
-            addProperty("acquired_by", deviceId)
-        }
-        val patchJson = JsonObject().apply {
-            addProperty("user_api_key", apiKey)
-            addProperty("acquired_by", deviceId)
-        }
+        val json = Json { ignoreUnknownKeys = true }
+
+        val createLockfileRequest = LockfileCreateRequest(deviceId)
+        val createLockfileJson = json.encodeToString(createLockfileRequest)
+
+        val patchRequest = LockfilePatchRequest(apiKey, deviceId)
+        val patchJson = json.encodeToString(patchRequest)
 
         val lockFileRequest = GET(
             url = lockFileApi,
@@ -79,13 +94,13 @@ class SyncYomiSyncService(
         val lockFileCreate = POST(
             url = lockFileApi,
             headers = headers,
-            body = createLockfileJson.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+            body = createLockfileJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
         )
 
         val lockFileUpdate = PATCH(
             url = lockFileApi,
             headers = headers,
-            body = patchJson.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
+            body = patchJson.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()),
         )
 
         // create lock file first
@@ -93,7 +108,6 @@ class SyncYomiSyncService(
         // update lock file acquired_by
         client.newCall(lockFileUpdate).execute()
 
-        val json = Json { ignoreUnknownKeys = true }
         var backoff = 2000L // Start with 2 seconds
         val maxBackoff = 32000L // Maximum backoff time e.g., 32 seconds
         var lockFile: LockFile
@@ -108,7 +122,6 @@ class SyncYomiSyncService(
                 delay(backoff)
                 backoff = (backoff * 2).coerceAtMost(maxBackoff)
             }
-
         } while (lockFile.status != SyncStatus.Success)
 
         // update lock file acquired_by

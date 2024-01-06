@@ -158,7 +158,9 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                     .setFields("id")
                     .execute()
 
-                logcat(LogPriority.DEBUG) { "Created new sync data file in Google Drive with file ID: ${uploadedFile.id}" }
+                logcat(
+                    LogPriority.DEBUG,
+                ) { "Created new sync data file in Google Drive with file ID: ${uploadedFile.id}" }
             }
 
             // Data has been successfully pushed or updated, delete the lock file

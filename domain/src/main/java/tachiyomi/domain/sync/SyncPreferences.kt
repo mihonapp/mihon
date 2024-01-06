@@ -36,5 +36,4 @@ class SyncPreferences(
 
         return uniqueID
     }
-
 }
