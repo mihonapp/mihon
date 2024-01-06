@@ -15,7 +15,7 @@ import kotlin.coroutines.resume
 object WebViewUtil {
     const val SPOOF_PACKAGE_NAME = "org.chromium.chrome"
 
-    const val MINIMUM_WEBVIEW_VERSION = 114
+    const val MINIMUM_WEBVIEW_VERSION = 118
 
     /**
      * Uses the WebView's user agent string to create something similar to what Chrome on Android
