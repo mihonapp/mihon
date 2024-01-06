@@ -190,7 +190,7 @@
     <string name="onboarding_permission_ignore_battery_opts_description">Avoid interruptions to long-running library updates, downloads, and backup restores.</string>
     <string name="onboarding_permission_action_grant">Grant</string>
     <string name="onboarding_guides_new_user">New to %s? We recommend checking out the getting started guide.</string>
-    <string name="onboarding_guides_returning_user">Already used %s before?</string>
+    <string name="onboarding_guides_returning_user">Reinstalling %s?</string>
 
     <!-- Preferences -->
       <!-- Subsections -->
