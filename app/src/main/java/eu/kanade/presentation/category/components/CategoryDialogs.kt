@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import dev.icerock.moko.resources.StringResource
 import eu.kanade.core.preference.asToggleableState
 import eu.kanade.presentation.category.visualName
 import kotlinx.collections.immutable.ImmutableList
@@ -43,9 +42,6 @@ fun CategoryCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
     categories: ImmutableList<String>,
-    title: String,
-    extraMessage: String? = null,
-    alreadyExistsError: StringResource = MR.strings.error_category_exists,
 ) {
     var name by remember { mutableStateOf("") }
 
@@ -71,32 +67,28 @@ fun CategoryCreateDialog(
             }
         },
         title = {
-            Text(text = title)
+            Text(text = stringResource(MR.strings.action_add_category))
         },
         text = {
-            Column {
-                extraMessage?.let { Text(it) }
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
-                    value = name,
-                    onValueChange = { name = it },
-                    label = {
-                        Text(text = stringResource(MR.strings.name))
-                    },
-                    supportingText = {
-                        val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
-                            alreadyExistsError
-                        } else {
-                            MR.strings.information_required_plain
-                        }
-                        Text(text = stringResource(msgRes))
-                    },
-                    isError = name.isNotEmpty() && nameAlreadyExists,
-                    singleLine = true,
-                )
-            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .focusRequester(focusRequester),
+                value = name,
+                onValueChange = { name = it },
+                label = {
+                    Text(text = stringResource(MR.strings.name))
+                },
+                supportingText = {
+                    val msgRes = if (name.isNotEmpty() && nameAlreadyExists) {
+                        MR.strings.error_category_exists
+                    } else {
+                        MR.strings.information_required_plain
+                    }
+                    Text(text = stringResource(msgRes))
+                },
+                isError = name.isNotEmpty() && nameAlreadyExists,
+                singleLine = true,
+            )
         },
     )
 
@@ -113,7 +105,6 @@ fun CategoryRenameDialog(
     onRename: (String) -> Unit,
     categories: ImmutableList<String>,
     category: String,
-    alreadyExistsError: StringResource = MR.strings.error_category_exists,
 ) {
     var name by remember { mutableStateOf(category) }
     var valueHasChanged by remember { mutableStateOf(false) }
@@ -153,7 +144,7 @@ fun CategoryRenameDialog(
                 label = { Text(text = stringResource(MR.strings.name)) },
                 supportingText = {
                     val msgRes = if (valueHasChanged && nameAlreadyExists) {
-                        alreadyExistsError
+                        MR.strings.error_category_exists
                     } else {
                         MR.strings.information_required_plain
                     }
@@ -176,8 +167,7 @@ fun CategoryRenameDialog(
 fun CategoryDeleteDialog(
     onDismissRequest: () -> Unit,
     onDelete: () -> Unit,
-    title: String,
-    text: String,
+    category: String,
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -195,10 +185,10 @@ fun CategoryDeleteDialog(
             }
         },
         title = {
-            Text(text = title)
+            Text(text = stringResource(MR.strings.delete_category))
         },
         text = {
-            Text(text = text)
+            Text(text = stringResource(MR.strings.delete_category_confirmation, category))
         },
     )
 }

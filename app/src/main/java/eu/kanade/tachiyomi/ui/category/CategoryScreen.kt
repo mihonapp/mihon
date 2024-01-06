@@ -18,8 +18,6 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.collectLatest
-import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class CategoryScreen : Screen() {
@@ -57,7 +55,6 @@ class CategoryScreen : Screen() {
                     onDismissRequest = screenModel::dismissDialog,
                     onCreate = screenModel::createCategory,
                     categories = successState.categories.fastMap { it.name }.toImmutableList(),
-                    title = stringResource(MR.strings.action_add_category),
                 )
             }
             is CategoryDialog.Rename -> {
@@ -72,8 +69,7 @@ class CategoryScreen : Screen() {
                 CategoryDeleteDialog(
                     onDismissRequest = screenModel::dismissDialog,
                     onDelete = { screenModel.deleteCategory(dialog.category.id) },
-                    title = stringResource(MR.strings.delete_category),
-                    text = stringResource(MR.strings.delete_category_confirmation, dialog.category.name),
+                    category = dialog.category.name,
                 )
             }
             is CategoryDialog.SortAlphabetically -> {

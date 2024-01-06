@@ -1,11 +1,11 @@
-package eu.kanade.presentation.category.repos
+package eu.kanade.presentation.more.settings.screen.browse
 
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.source.interactor.CreateSourceRepo
-import eu.kanade.domain.source.interactor.DeleteSourceRepos
+import eu.kanade.domain.source.interactor.DeleteSourceRepo
 import eu.kanade.domain.source.interactor.GetSourceRepos
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -18,10 +18,10 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class RepoScreenModel(
+class ExtensionReposScreenModel(
     private val getSourceRepos: GetSourceRepos = Injekt.get(),
     private val createSourceRepo: CreateSourceRepo = Injekt.get(),
-    private val deleteSourceRepos: DeleteSourceRepos = Injekt.get(),
+    private val deleteSourceRepo: DeleteSourceRepo = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -48,20 +48,20 @@ class RepoScreenModel(
     fun createRepo(name: String) {
         screenModelScope.launchIO {
             when (createSourceRepo.await(name)) {
-                is CreateSourceRepo.Result.InvalidName -> _events.send(RepoEvent.InvalidName)
+                is CreateSourceRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
                 else -> {}
             }
         }
     }
 
     /**
-     * Deletes the given repos from the database.
+     * Deletes the given repo from the database.
      *
-     * @param repos The list of repos to delete.
+     * @param repo The repo to delete.
      */
-    fun deleteRepos(repos: List<String>) {
+    fun deleteRepo(repo: String) {
         screenModelScope.launchIO {
-            deleteSourceRepos.await(repos)
+            deleteSourceRepo.await(repo)
         }
     }
 
@@ -86,8 +86,7 @@ class RepoScreenModel(
 
 sealed class RepoEvent {
     sealed class LocalizedMessage(val stringRes: StringResource) : RepoEvent()
-    data object InvalidName : LocalizedMessage(MR.strings.invalid_repo_name)
-    data object InternalError : LocalizedMessage(MR.strings.internal_error)
+    data object InvalidUrl : LocalizedMessage(MR.strings.invalid_repo_name)
 }
 
 sealed class RepoDialog {

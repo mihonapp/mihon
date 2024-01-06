@@ -12,7 +12,7 @@ import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.CreateSourceRepo
-import eu.kanade.domain.source.interactor.DeleteSourceRepos
+import eu.kanade.domain.source.interactor.DeleteSourceRepo
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
 import eu.kanade.domain.source.interactor.GetSourceRepos
@@ -172,7 +172,7 @@ class DomainModule : InjektModule {
         addFactory { ToggleSourcePin(get()) }
 
         addFactory { CreateSourceRepo(get()) }
-        addFactory { DeleteSourceRepos(get()) }
+        addFactory { DeleteSourceRepo(get()) }
         addFactory { GetSourceRepos(get()) }
     }
 }

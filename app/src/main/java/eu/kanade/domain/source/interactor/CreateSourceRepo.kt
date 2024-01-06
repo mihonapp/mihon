@@ -7,28 +7,20 @@ class CreateSourceRepo(private val preferences: SourcePreferences) {
 
     fun await(name: String): Result {
         // Do not allow invalid formats
-        if (!name.matches(repoRegex)) {
-            return Result.InvalidName
+        if (!name.matches(repoRegex) || name.startsWith(OFFICIAL_REPO_BASE_URL)) {
+            return Result.InvalidUrl
         }
 
-        preferences.extensionRepos() += name
+        preferences.extensionRepos() += name.substringBeforeLast("/index.min.json")
 
         return Result.Success
     }
 
-    sealed class Result {
-        data object InvalidName : Result()
-        data object Success : Result()
-    }
-
-    /**
-     * Returns true if a repo with the given name already exists.
-     */
-    private fun repoExists(name: String): Boolean {
-        return preferences.extensionRepos().get().any { it.equals(name, true) }
-    }
-
-    companion object {
-        val repoRegex = """^[a-zA-Z0-9-_.]*?\/[a-zA-Z0-9-_.]*?$""".toRegex()
+    sealed interface Result {
+        data object InvalidUrl : Result
+        data object Success : Result
     }
 }
+
+const val OFFICIAL_REPO_BASE_URL = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo"
+private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()

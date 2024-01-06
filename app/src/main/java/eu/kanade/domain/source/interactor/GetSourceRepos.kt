@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.map
 class GetSourceRepos(private val preferences: SourcePreferences) {
 
     fun subscribe(): Flow<List<String>> {
-        return preferences.extensionRepos().changes().map { it.sortedWith(String.CASE_INSENSITIVE_ORDER) }
+        return preferences.extensionRepos().changes()
+            .map { it.sortedWith(String.CASE_INSENSITIVE_ORDER) }
     }
 }

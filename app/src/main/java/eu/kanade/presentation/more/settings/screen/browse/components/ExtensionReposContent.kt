@@ -1,9 +1,8 @@
-package eu.kanade.presentation.category.components.repo
+package eu.kanade.presentation.more.settings.screen.browse.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,7 +23,7 @@ import kotlinx.collections.immutable.ImmutableList
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
-fun SourceRepoContent(
+fun ExtensionReposContent(
     repos: ImmutableList<String>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
@@ -38,7 +37,7 @@ fun SourceRepoContent(
         modifier = modifier,
     ) {
         items(repos) { repo ->
-            SourceRepoListItem(
+            ExtensionRepoListItem(
                 modifier = Modifier.animateItemPlacement(),
                 repo = repo,
                 onDelete = { onClickDelete(repo) },
@@ -48,7 +47,7 @@ fun SourceRepoContent(
 }
 
 @Composable
-private fun SourceRepoListItem(
+private fun ExtensionRepoListItem(
     repo: String,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -66,13 +65,16 @@ private fun SourceRepoListItem(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = "")
+            Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
             Text(text = repo, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
         }
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
             IconButton(onClick = onDelete) {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = "")
+                Icon(imageVector = Icons.Outlined.Delete, contentDescription = null)
             }
         }
     }
