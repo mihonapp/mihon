@@ -23,10 +23,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.suspendCancellableCoroutine
+import logcat.LogPriority
 import tachiyomi.core.util.lang.launchIO
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.util.system.logcat
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -184,28 +186,35 @@ class WebtoonPageHolder(
 
         val streamFn = page?.stream ?: return
 
-        val (openStream, isAnimated) = withIOContext {
-            val stream = streamFn().buffered(16)
-            val openStream = process(stream)
+        try {
+            val (openStream, isAnimated) = withIOContext {
+                val stream = streamFn().buffered(16)
+                val openStream = process(stream)
 
-            val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
-            Pair(openStream, isAnimated)
-        }
-        withUIContext {
-            frame.setImage(
-                openStream,
-                isAnimated,
-                ReaderPageImageView.Config(
-                    zoomDuration = viewer.config.doubleTapAnimDuration,
-                    minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
-                    cropBorders = viewer.config.imageCropBorders,
-                ),
-            )
-            removeErrorLayout()
-        }
-        // Suspend the coroutine to close the input stream only when the WebtoonPageHolder is recycled
-        suspendCancellableCoroutine<Nothing> { continuation ->
-            continuation.invokeOnCancellation { openStream.close() }
+                val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
+                Pair(openStream, isAnimated)
+            }
+            withUIContext {
+                frame.setImage(
+                    openStream,
+                    isAnimated,
+                    ReaderPageImageView.Config(
+                        zoomDuration = viewer.config.doubleTapAnimDuration,
+                        minimumScaleType = SubsamplingScaleImageView.SCALE_TYPE_FIT_WIDTH,
+                        cropBorders = viewer.config.imageCropBorders,
+                    ),
+                )
+                removeErrorLayout()
+            }
+            // Suspend the coroutine to close the input stream only when the WebtoonPageHolder is recycled
+            suspendCancellableCoroutine<Nothing> { continuation ->
+                continuation.invokeOnCancellation { openStream.close() }
+            }
+        } catch (e: Throwable) {
+            logcat(LogPriority.ERROR, e)
+            withUIContext {
+                setError()
+            }
         }
     }
 

@@ -77,7 +77,7 @@ internal fun GlobalSearchContent(
                     title = fromSourceId?.let {
                         "▶ ${source.name}".takeIf { source.id == fromSourceId }
                     } ?: source.name,
-                    subtitle = LocaleHelper.getDisplayName(source.lang),
+                    subtitle = LocaleHelper.getLocalizedDisplayName(source.lang),
                     onClick = { onClickSource(source) },
                 ) {
                     when (result) {

@@ -34,7 +34,6 @@ import tachiyomi.core.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
-import java.util.Locale
 
 class AppLanguageScreen : Screen() {
 
@@ -104,9 +103,9 @@ class AppLanguageScreen : Screen() {
                 for (i in 0..<parser.attributeCount) {
                     if (parser.getAttributeName(i) == "name") {
                         val langTag = parser.getAttributeValue(i)
-                        val displayName = LocaleHelper.getDisplayName(langTag)
+                        val displayName = LocaleHelper.getLocalizedDisplayName(langTag)
                         if (displayName.isNotEmpty()) {
-                            langs.add(Language(langTag, displayName, Locale.forLanguageTag(langTag).displayName))
+                            langs.add(Language(langTag, displayName, LocaleHelper.getDisplayName(langTag)))
                         }
                     }
                 }
