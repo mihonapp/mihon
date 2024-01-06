@@ -2,6 +2,7 @@ package tachiyomi.domain.sync
 
 import tachiyomi.core.preference.Preference
 import tachiyomi.core.preference.PreferenceStore
+import java.util.UUID
 
 class SyncPreferences(
     private val preferenceStore: PreferenceStore,
@@ -22,4 +23,18 @@ class SyncPreferences(
         Preference.appStateKey("google_drive_refresh_token"),
         "",
     )
+
+    fun uniqueDeviceID(): String {
+        val uniqueIDPreference = preferenceStore.getString("unique_device_id", "")
+
+        // Retrieve the current value of the preference
+        var uniqueID = uniqueIDPreference.get()
+        if (uniqueID.isBlank()) {
+            uniqueID = UUID.randomUUID().toString()
+            uniqueIDPreference.set(uniqueID)
+        }
+
+        return uniqueID
+    }
+
 }
