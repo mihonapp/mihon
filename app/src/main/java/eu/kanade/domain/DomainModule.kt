@@ -11,8 +11,11 @@ import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
+import eu.kanade.domain.source.interactor.CreateSourceRepo
+import eu.kanade.domain.source.interactor.DeleteSourceRepo
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
+import eu.kanade.domain.source.interactor.GetSourceRepos
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.domain.source.interactor.ToggleLanguage
@@ -167,5 +170,9 @@ class DomainModule : InjektModule {
         addFactory { ToggleLanguage(get()) }
         addFactory { ToggleSource(get()) }
         addFactory { ToggleSourcePin(get()) }
+
+        addFactory { CreateSourceRepo(get()) }
+        addFactory { DeleteSourceRepo(get()) }
+        addFactory { GetSourceRepos(get()) }
     }
 }

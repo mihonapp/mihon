@@ -1,10 +1,10 @@
 [versions]
 aboutlib_version = "10.10.0"
 acra = "5.11.3"
-leakcanary = "2.12"
+leakcanary = "2.13"
 moko = "0.23.0"
 okhttp_version = "5.0.0-alpha.12"
-richtext = "0.17.0"
+richtext = "0.20.0"
 shizuku_version = "12.2.0"
 sqldelight = "2.0.0"
 sqlite = "2.4.0"

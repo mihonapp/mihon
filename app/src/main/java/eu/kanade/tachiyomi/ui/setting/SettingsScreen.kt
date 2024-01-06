@@ -40,7 +40,6 @@ class SettingsScreen(
                     Destination.Tracking.id -> SettingsTrackingScreen
                     else -> SettingsMainScreen
                 },
-                onBackPressed = null,
                 content = {
                     val pop: () -> Unit = {
                         if (it.canPop) {
@@ -62,7 +61,6 @@ class SettingsScreen(
                     Destination.Tracking.id -> SettingsTrackingScreen
                     else -> SettingsAppearanceScreen
                 },
-                onBackPressed = null,
             ) {
                 val insets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)
                 TwoPanelBox(

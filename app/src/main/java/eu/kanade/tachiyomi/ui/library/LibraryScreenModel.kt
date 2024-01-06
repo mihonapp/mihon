@@ -28,9 +28,11 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.chapter.getNextUnread
 import eu.kanade.tachiyomi.util.removeCovers
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -661,13 +663,15 @@ class LibraryScreenModel(
             val common = getCommonCategories(mangaList)
             // Get indexes of the mix categories to preselect.
             val mix = getMixCategories(mangaList)
-            val preselected = categories.map {
-                when (it) {
-                    in common -> CheckboxState.State.Checked(it)
-                    in mix -> CheckboxState.TriState.Exclude(it)
-                    else -> CheckboxState.State.None(it)
+            val preselected = categories
+                .map {
+                    when (it) {
+                        in common -> CheckboxState.State.Checked(it)
+                        in mix -> CheckboxState.TriState.Exclude(it)
+                        else -> CheckboxState.State.None(it)
+                    }
                 }
-            }
+                .toImmutableList()
             mutableState.update { it.copy(dialog = Dialog.ChangeCategory(mangaList, preselected)) }
         }
     }
@@ -683,7 +687,10 @@ class LibraryScreenModel(
 
     sealed interface Dialog {
         data object SettingsSheet : Dialog
-        data class ChangeCategory(val manga: List<Manga>, val initialSelection: List<CheckboxState<Category>>) : Dialog
+        data class ChangeCategory(
+            val manga: List<Manga>,
+            val initialSelection: ImmutableList<CheckboxState<Category>>,
+        ) : Dialog
         data class DeleteManga(val manga: List<Manga>) : Dialog
     }
 

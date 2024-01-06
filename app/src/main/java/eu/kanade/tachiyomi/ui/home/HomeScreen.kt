@@ -1,11 +1,8 @@
 package eu.kanade.tachiyomi.ui.home
 
-import androidx.activity.compose.PredictiveBackHandler
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animate
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
@@ -26,20 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.util.fastForEach
-import androidx.compose.ui.util.lerp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -59,7 +49,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import soup.compose.material.motion.MotionConstants
 import soup.compose.material.motion.animation.materialFadeThroughIn
 import soup.compose.material.motion.animation.materialFadeThroughOut
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -70,7 +59,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import kotlin.coroutines.cancellation.CancellationException
 
 object HomeScreen : Screen() {
 
@@ -92,8 +80,6 @@ object HomeScreen : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        var scale by remember { mutableFloatStateOf(1f) }
-
         TabNavigator(
             tab = LibraryTab,
             key = TabNavigatorKey,
@@ -132,11 +118,6 @@ object HomeScreen : Screen() {
                 ) { contentPadding ->
                     Box(
                         modifier = Modifier
-                            .graphicsLayer {
-                                scaleX = scale
-                                scaleY = scale
-                                transformOrigin = TransformOrigin(0.5f, 1f)
-                            }
                             .padding(contentPadding)
                             .consumeWindowInsets(contentPadding),
                     ) {
@@ -157,30 +138,10 @@ object HomeScreen : Screen() {
             }
 
             val goToLibraryTab = { tabNavigator.current = LibraryTab }
-
-            var handlingBack by remember { mutableStateOf(false) }
-            PredictiveBackHandler(enabled = handlingBack || tabNavigator.current != LibraryTab) { progress ->
-                handlingBack = true
-                val currentTab = tabNavigator.current
-                try {
-                    progress.collect { backEvent ->
-                        scale = lerp(1f, 0.92f, LinearOutSlowInEasing.transform(backEvent.progress))
-                        tabNavigator.current = if (backEvent.progress > 0.25f) tabs[0] else currentTab
-                    }
-                    goToLibraryTab()
-                } catch (e: CancellationException) {
-                    tabNavigator.current = currentTab
-                } finally {
-                    animate(
-                        initialValue = scale,
-                        targetValue = 1f,
-                        animationSpec = tween(durationMillis = MotionConstants.DefaultMotionDuration),
-                    ) { value, _ ->
-                        scale = value
-                    }
-                    handlingBack = false
-                }
-            }
+            BackHandler(
+                enabled = tabNavigator.current != LibraryTab,
+                onBack = goToLibraryTab,
+            )
 
             LaunchedEffect(Unit) {
                 launch {

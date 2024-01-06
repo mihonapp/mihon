@@ -164,7 +164,6 @@
     <string name="action_webview_forward">Forward</string>
     <string name="action_webview_refresh">Refresh</string>
     <string name="action_start_downloading_now">Start downloading now</string>
-    <string name="action_faq_and_guides">FAQ and Guides</string>
     <string name="action_not_now">Not now</string>
 
     <!-- Operations -->
@@ -281,12 +280,12 @@
     <string name="charging">When charging</string>
     <string name="restrictions">Restrictions: %s</string>
 
-    <string name="pref_library_update_manga_restriction">Skip updating entries</string>
-    <string name="pref_update_only_completely_read">With unread chapter(s)</string>
-    <string name="pref_update_only_non_completed">With \"Completed\" status</string>
-    <string name="pref_update_only_started">That haven\'t been started</string>
+    <string name="pref_library_update_smart_update">Smart update</string>
+    <string name="pref_update_only_completely_read">Skip entries with unread chapter(s)</string>
+    <string name="pref_update_only_non_completed">Skip entries with \"Completed\" status</string>
+    <string name="pref_update_only_started">Skip unstarted entries</string>
+    <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_update_only_in_release_period">Outside expected release period</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -323,7 +322,7 @@
     <string name="ext_uninstall">Uninstall</string>
     <string name="ext_app_info">App info</string>
     <string name="untrusted_extension">Untrusted extension</string>
-    <string name="untrusted_extension_message">This extension was signed with an untrusted certificate and wasn\'t activated.\n\nA malicious extension could read any stored login credentials or execute arbitrary code.\n\nBy trusting this certificate you accept these risks.</string>
+    <string name="untrusted_extension_message">This extension was signed by any unknown author and wasn\'t loaded.\n\nMalicious extensions can read any stored login credentials or execute arbitrary code.\n\nBy trusting this extension\'s certificate, you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available. It may not function properly and can cause issues with the app. Uninstalling it is recommended.</string>
     <string name="unofficial_extension_message">This extension is not from the official list.</string>
     <string name="extension_api_error">Failed to get extensions list</string>
@@ -341,6 +340,18 @@
     <string name="ext_installer_private" translatable="false">Private</string>
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
+
+    <!-- Extension repos -->
+    <string name="label_extension_repos">Extension repos</string>
+    <string name="information_empty_repos">You have no repos set.</string>
+    <string name="action_add_repo">Add repo</string>
+    <string name="label_add_repo_input">Repo URL</string>
+    <string name="action_add_repo_message">Add additional repos to Tachiyomi. This should be a URL that ends with \"index.min.json\".</string>
+    <string name="error_repo_exists">This repo already exists!</string>
+    <string name="action_delete_repo">Delete repo</string>
+    <string name="invalid_repo_name">Invalid repo URL</string>
+    <string name="delete_repo_confirmation">Do you wish to delete the repo \"%s\"?</string>
+    <string name="repo_extension_message">This extension is from an external repo. Tap to view the repo.</string>
 
       <!-- Reader section -->
     <string name="pref_fullscreen">Fullscreen</string>
@@ -708,9 +719,10 @@
     <string name="display_mode_chapter">Chapter %1$s</string>
     <string name="manga_display_interval_title">Estimate every</string>
     <string name="manga_display_modified_interval_title">Set to update every</string>
+    <string name="manga_interval_header">Next update</string>
     <!-- "... around 2 days" -->
-    <string name="manga_interval_expected_update">Next update expected in around %s</string>
-    <string name="manga_modify_calculated_interval_title">Customize interval</string>
+    <string name="manga_interval_expected_update">Next update expected in around %1$s, checking around every %2$s</string>
+    <string name="manga_interval_custom_amount">Custom update frequency:</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>
     <string name="chapter_paused">Paused</string>

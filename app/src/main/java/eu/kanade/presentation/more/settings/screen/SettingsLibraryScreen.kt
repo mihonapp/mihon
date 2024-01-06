@@ -198,7 +198,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.MultiSelectListPreference(
                     pref = libraryPreferences.autoUpdateMangaRestrictions(),
-                    title = stringResource(MR.strings.pref_library_update_manga_restriction),
+                    title = stringResource(MR.strings.pref_library_update_smart_update),
                     entries = persistentMapOf(
                         MANGA_HAS_UNREAD to stringResource(MR.strings.pref_update_only_completely_read),
                         MANGA_NON_READ to stringResource(MR.strings.pref_update_only_started),
