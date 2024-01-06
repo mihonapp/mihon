@@ -129,7 +129,8 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
     override suspend fun pushSyncData(syncData: SyncData) {
         val jsonData = json.encodeToString(syncData)
-        val drive = googleDriveService.driveService ?: throw Exception(context.getString(R.string.google_drive_not_signed_in))
+        val drive = googleDriveService.driveService
+            ?: throw Exception(context.getString(R.string.google_drive_not_signed_in))
 
         val fileList = getFileList(drive)
 
