@@ -65,7 +65,7 @@
     <string name="action_sort_alpha">Pa-alpabeto</string>
     <string name="action_filter_empty">Tanggalin ang pansala</string>
     <string name="action_filter_unread">Hindi Nabasa</string>
-    <string name="action_filter_bookmarked">Tinandaan</string>
+    <string name="action_filter_bookmarked">Na-bookmark</string>
     <string name="action_filter">Pansala</string>
     <string name="action_menu">Menu</string>
     <string name="action_settings">Mga setting</string>
@@ -152,7 +152,7 @@
     <string name="black_background">Itim</string>
     <string name="gray_background">Abo</string>
     <string name="white_background">Puti</string>
-    <string name="pref_reader_theme">Likurang kulay</string>
+    <string name="pref_reader_theme">Kulay ng background</string>
     <string name="pref_read_with_long_tap">Ipakita ang mga aksyon sa mahabang tap</string>
     <string name="pref_read_with_volume_keys_inverted">Baligtarin ang pindutan ng volume</string>
     <string name="pref_read_with_volume_keys">Pindutan ng volume</string>
@@ -412,7 +412,7 @@
     <string name="channel_errors">Mga error</string>
     <string name="channel_progress">Takbo</string>
     <string name="backup_restore_missing_trackers">Di naka-login sa mga tracker:</string>
-    <string name="pref_remove_bookmarked_chapters">Burahin din ang may pananda</string>
+    <string name="pref_remove_bookmarked_chapters">Payagan ang pagtanggal ng mga naka-bookmark na kabanata</string>
     <string name="pref_category_delete_chapters">Magbura ng kabanata</string>
     <string name="parental_controls_info">Hindi nito naiiwasan ang pagpapakita ng mga NSFW (18+) sa mga di-opisyal o posibleng maling naka-flag na extension sa loob ng app.</string>
     <string name="ext_nsfw_warning">Posibleng may NSFW (18+) content ang mga source mula sa extension na ito</string>
@@ -451,7 +451,7 @@
     <string name="action_asc">Pataas</string>
     <string name="action_order_by_chapter_number">Kabanata</string>
     <string name="action_order_by_upload_date">Petsa in-upload</string>
-    <string name="action_filter_tracked">Sinundan</string>
+    <string name="action_filter_tracked">Sinusubaybayan</string>
     <string name="right_and_left_nav">Kaliwa at Kanan</string>
     <string name="pref_dual_page_split">Hatiin ang mga malalapad na pahina</string>
     <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga item</string>
@@ -561,12 +561,10 @@
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
     <string name="library_errors_help">Para sa tulong sa pag-aayos ng mga error sa pag-update ng aklatan, tingnan ang %1$s</string>
     <string name="pref_update_only_completely_read">May di pa nababasang kabanata</string>
-    <string name="pref_library_update_manga_restriction">Laktawan ang pag-update</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
     <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
-    <string name="action_faq_and_guides">Mga Madalas Itanong (FAQ) at Gabay</string>
     <string name="action_show_manga">Ipakita ang entry</string>
     <string name="action_display_cover_only_grid">Pabalat lang</string>
     <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>
@@ -576,10 +574,8 @@
     <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
     <string name="pref_navigate_pan">I-pan ang mga malalapad na larawan</string>
     <string name="learn_more">Matuto pa</string>
-    <string name="channel_skipped">Nilaktawan</string>
     <string name="notification_update_error">Nabigo ang %1$d (na) update</string>
     <string name="rotation_reverse_portrait">Baligtad na patayo</string>
-    <string name="notification_update_skipped">Nilaktawan ang %1$d (na) update</string>
     <string name="action_move_to_top_all_for_series">Ilagay sa taas ang serye</string>
     <string name="disabled_nav">Nakasara</string>
     <string name="empty_backup_error">Walang entry sa Aklatan na maiba-backup</string>
@@ -721,7 +717,6 @@
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
     <string name="pref_update_only_in_release_period">Sa labas ng inaasahang release period</string>
     <string name="intervals_header">Mga pagitan</string>
-    <string name="manga_modify_calculated_interval_title">Ayusin ang interval</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
     <string name="delete_downloaded">Tanggalin ang na-download</string>
@@ -784,4 +779,16 @@
 \nInirerekomenda ang isang nakalaang folder.
 \n
 \nNapiling folder: %2$s</string>
+    <string name="onboarding_permission_notifications">Pahintulot sa pag-abiso</string>
+    <string name="onboarding_permission_install_apps">Pahintulot sa pag-install ng mga app</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Ma-iwasan ang mga hadlang sa mahahabang pag-update ng aklatan, pag-download, at pag-restore ng mga backup.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Paggamit ng baterya sa background</string>
+    <string name="onboarding_permission_install_apps_description">Para mag-install ng mga extension ng source.</string>
+    <string name="onboarding_permission_notifications_description">Maabisuhan para sa mga update sa aklatan at higit pa.</string>
+    <string name="onboarding_permission_action_grant">Payagan</string>
+    <string name="available_disk_space_info">Na magagamit: %1$s / Kabuuan: %2$s</string>
+    <string name="manga_interval_expected_update">Inaasahan ang susunod na update sa humigit-kumulang %s</string>
+    <string name="invalid_backup_file_error">Buong error:</string>
+    <string name="ext_permission_install_apps_warning">Kinakailangan ng permiso para mag-install ng mga extension. I-tap upang mapayagan ito.</string>
+    <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
 </resources>

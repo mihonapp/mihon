@@ -550,7 +550,6 @@
     <string name="pref_remove_exclude_categories">Categorias excluídas</string>
     <string name="label_background_activity">Atividade em segundo plano</string>
     <string name="channel_app_updates">Atualizações da app</string>
-    <string name="pref_library_update_manga_restriction">Pular a atualização de itens</string>
     <string name="pref_inverted_colors">Invertido</string>
     <string name="backup_info">Deve manter cópias em outros locais também.</string>
     <string name="pref_tablet_ui_mode">Interface de tablet</string>
@@ -566,7 +565,6 @@
     <string name="on_hiatus">Em hiato</string>
     <string name="publishing_finished">Publicação concluída</string>
     <string name="cancelled">Cancelado</string>
-    <string name="action_faq_and_guides">Perguntas frequentes e Guias</string>
     <string name="action_show_manga">Mostrar o item</string>
     <string name="disabled_nav">Desativado</string>
     <string name="action_display_cover_only_grid">Grelha apenas de capas</string>
@@ -574,7 +572,6 @@
     <string name="action_move_to_top_all_for_series">Mover séries para o topo</string>
     <string name="skipped_reason_completed">Ignorado porque a séria está completa</string>
     <string name="skipped_reason_not_started">Ignorado porque nenhum capítulo foi lido</string>
-    <string name="channel_skipped">Ignorado</string>
     <string name="skipped_reason_not_caught_up">Ignorado porque existem capítulos não lidos</string>
     <string name="empty_backup_error">Sem entradas na biblioteca para fazer cópia de segurança</string>
     <string name="pref_update_only_started">Que não começaram a ser lidos</string>
@@ -582,7 +579,6 @@
     <string name="webview_data_deleted">Dados do WebView limpos</string>
     <string name="rotation_reverse_portrait">Vertical invertido</string>
     <string name="source_filter_empty_screen">Nenhuma fonte instalada encontrada</string>
-    <string name="notification_update_skipped">%1$d atualização(ões) ignorada(s)</string>
     <string name="notification_update_error">%1$d actualização(ões) falhada(s)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="update_check_fdroid_migration_info">Uma nova versão está disponível a partir dos lançamentos oficiais. Toque para saber como migrar de versões não oficiais do F-Droid.</string>
@@ -711,7 +707,6 @@
     <string name="action_filter_interval_long">Buscar mensalmente (28 dias)</string>
     <string name="pref_update_only_in_release_period">Fora do período esperado de lançamento</string>
     <string name="pref_debug_info">Informações de depuração</string>
-    <string name="manga_modify_calculated_interval_title">Customizar intervalo</string>
     <string name="pref_chapter_swipe">Trocar de capítulo</string>
     <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
     <string name="intervals_header">intervalos</string>

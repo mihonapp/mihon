@@ -561,9 +561,7 @@
     <string name="privacy_policy">Polìtica de riservadesa</string>
     <string name="save_chapter_as_cbz">Sarva comente archìviu CBZ</string>
     <string name="library_errors_help">Pro tènnere un\'agiudu pro acontzare sos errores de agiornamentu de sa biblioteca pòmpia·ti %1$s</string>
-    <string name="pref_library_update_manga_restriction">Brinca sos agiornamentos de sos elementos</string>
     <string name="pref_update_only_completely_read">Cun capìtulos non lèghidos</string>
-    <string name="action_faq_and_guides">PF e ghias</string>
     <string name="publishing_finished">Publicatzione acabada</string>
     <string name="on_hiatus">In pàusa</string>
     <string name="cancelled">Annullada</string>
@@ -576,9 +574,7 @@
     <string name="skipped_reason_not_caught_up">Brincadu ca bi sunt capìtulos non lèghidos</string>
     <string name="skipped_reason_not_started">Brincadu ca non bi sunt capìtulos lèghidos</string>
     <string name="learn_more">Toca pro àteras informatziones</string>
-    <string name="channel_skipped">Brincadu</string>
     <string name="notification_update_error">%1$d agiornamentu(os) fallidu(os)</string>
-    <string name="notification_update_skipped">%1$d agiornamentu(os) brincadu(os)</string>
     <string name="rotation_reverse_portrait">Verticale a s\'imbesse</string>
     <string name="action_move_to_top_all_for_series">Move sa sèrie cara a pitzos</string>
     <string name="disabled_nav">Disabilitadu</string>
@@ -722,7 +718,6 @@
     <string name="action_set_interval">Imposta s\'intervallu</string>
     <string name="action_filter_interval_late">Verìfica in ritardu de 10+ dies</string>
     <string name="action_filter_interval_passed">Perìodu de controllu coladu</string>
-    <string name="manga_modify_calculated_interval_title">Personaliza s\'intervallu</string>
     <string name="action_ok">AB</string>
     <string name="track_delete_title">Bogare s\'arrastadore de %s\?</string>
     <string name="track_delete_text">Custu at a bogare s\'arrastamentu locale.</string>

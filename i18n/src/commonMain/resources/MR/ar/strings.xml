@@ -557,7 +557,6 @@
     <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="pref_library_update_manga_restriction">تخطي تحديث الإدخالات</string>
     <string name="pref_update_only_completely_read">فيها فصول لم تُقرأ</string>
     <string name="ext_installer_legacy">قياسي</string>
     <string name="pref_auto_clear_chapter_cache">امسح ملفات التخزين المؤقت عند فتح التطبيق</string>
@@ -566,7 +565,6 @@
     <string name="extension_api_error">فشل الحصول على قائمة الملحقات</string>
     <string name="ext_installer_shizuku_unavailable_dialog">ثبِّت «شيزوكو» وشغِّله لتستخدمه مثبِّت إضافات.</string>
     <string name="download_queue_size_warning">تحذير: يمكن أن تؤدِّي التنزيلات كبيرة الحجم والعدد إلى إبطاء المصادر، وقد يُحظر Tachiyomi منها بسبب ذلك. اضغط لمعرفة المزيد۔</string>
-    <string name="action_faq_and_guides">الاسئله الشائعه والأدلة</string>
     <string name="action_show_manga">إظهار الدخول</string>
     <string name="action_display_cover_only_grid">شبكة بالاغلفة</string>
     <string name="skipped_reason_not_started">تُخُطِّيت بسبب عدم وجود فصول قُرئت</string>
@@ -575,12 +573,10 @@
     <string name="skipped_reason_completed">تُخُطِّيت لأنها تمِّت</string>
     <string name="pref_navigate_pan">حرِّك الصور الواسعة</string>
     <string name="pref_landscape_zoom">كبِّر الصور العريضة تلقائيًّا</string>
-    <string name="channel_skipped">متجاوَز</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
     <string name="rotation_reverse_portrait">رأسي بالعكس</string>
     <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
-    <string name="notification_update_skipped">تُخُطِّي %1$d تحديث أو تحديثات</string>
     <string name="learn_more">اضغط لقراءة المزيد</string>
     <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية التحويل من إصدارات F-Droid غير الرسمية.</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
@@ -718,7 +714,6 @@
     <string name="action_filter_interval_dropped">ربما أُلغيت؟ ٢٠ التماسًا متأخرًا وشهران</string>
     <string name="manga_display_interval_title">قدِّر كلَّ</string>
     <string name="pref_update_only_in_release_period">ليس ضمن مدة الإصدار المتوقعة</string>
-    <string name="manga_modify_calculated_interval_title">خصِّص المدة</string>
     <string name="skipped_reason_not_in_release_period">تُخُطِّيت بسبب عدم توقع صدور اليوم</string>
     <string name="manga_display_modified_interval_title">عيِّن التحديث كلَّ</string>
     <string name="intervals_header">المدة</string>

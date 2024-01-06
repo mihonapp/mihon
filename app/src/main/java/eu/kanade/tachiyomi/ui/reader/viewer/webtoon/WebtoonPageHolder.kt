@@ -80,7 +80,7 @@ class WebtoonPageHolder(
         refreshLayoutParams()
 
         frame.onImageLoaded = { onImageDecoded() }
-        frame.onImageLoadError = { onImageDecodeError() }
+        frame.onImageLoadError = { setError() }
         frame.onScaleChanged = { viewer.activity.hideMenu() }
     }
 
@@ -240,7 +240,7 @@ class WebtoonPageHolder(
      */
     private fun setError() {
         progressContainer.isVisible = false
-        initErrorLayout(withOpenInWebView = false)
+        initErrorLayout()
     }
 
     /**
@@ -249,14 +249,6 @@ class WebtoonPageHolder(
     private fun onImageDecoded() {
         progressContainer.isVisible = false
         removeErrorLayout()
-    }
-
-    /**
-     * Called when the image fails to decode.
-     */
-    private fun onImageDecodeError() {
-        progressContainer.isVisible = false
-        initErrorLayout(withOpenInWebView = true)
     }
 
     /**
@@ -278,22 +270,26 @@ class WebtoonPageHolder(
     /**
      * Initializes a button to retry pages.
      */
-    private fun initErrorLayout(withOpenInWebView: Boolean): ReaderErrorBinding {
+    private fun initErrorLayout(): ReaderErrorBinding {
         if (errorLayout == null) {
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), frame, true)
             errorLayout?.root?.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, (parentHeight * 0.8).toInt())
             errorLayout?.actionRetry?.setOnClickListener {
                 page?.let { it.chapter.pageLoader?.retryPage(it) }
             }
-            val imageUrl = page?.imageUrl
-            if (imageUrl.orEmpty().startsWith("http", true)) {
+        }
+
+        val imageUrl = page?.imageUrl
+        errorLayout?.actionOpenInWebView?.isVisible = imageUrl != null
+        if (imageUrl != null) {
+            if (imageUrl.startsWith("http", true)) {
                 errorLayout?.actionOpenInWebView?.setOnClickListener {
-                    val intent = WebViewActivity.newIntent(context, imageUrl!!)
+                    val intent = WebViewActivity.newIntent(context, imageUrl)
                     context.startActivity(intent)
                 }
             }
         }
-        errorLayout?.actionOpenInWebView?.isVisible = withOpenInWebView
+
         return errorLayout!!
     }
 

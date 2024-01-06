@@ -114,7 +114,7 @@
     <string name="services">Servizi di tracking</string>
     <string name="pref_clear_chapter_cache">Cancella cache capitoli</string>
     <string name="used_cache">Usati: %1$s</string>
-    <string name="cache_deleted">Cache cancellata. %1$d file sono stati cancellati</string>
+    <string name="cache_deleted">Cache cancellat, %1$d file cancellati</string>
     <string name="cache_delete_error">Errore durante la cancellazione</string>
     <string name="pref_clear_cookies">Cancella cookie</string>
     <string name="cookies_cleared">Cookie cancellati</string>
@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Ultimo capitolo</string>
     <string name="action_view_chapters">Visualizza capitoli</string>
     <string name="action_cancel_all">Annulla tutto</string>
-    <string name="theme_light">Disattivo</string>
-    <string name="theme_dark">Attivo</string>
-    <string name="theme_system">Usa il tema di sistema</string>
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_system">Sistema</string>
     <string name="pref_manage_notifications">Gestisci le notifiche</string>
     <string name="pref_category_security">Sicurezza e privacy</string>
     <string name="lock_with_biometrics">Richiedi sblocco</string>
@@ -560,13 +560,11 @@
     <string name="extension_api_error">Impossibile ottenere l\'elenco estensioni</string>
     <string name="privacy_policy">Politica sulla privacy</string>
     <string name="pref_update_only_completely_read">Con capitoli non letti</string>
-    <string name="pref_library_update_manga_restriction">Salta l\'aggiornamento delle voci</string>
     <string name="library_errors_help">Per un aiuto su come risolvere gli errori di aggiornamento della libreria vedi %1$s</string>
     <string name="save_chapter_as_cbz">Salva come archivio CBZ</string>
     <string name="cancelled">Cancellata</string>
     <string name="on_hiatus">In pausa</string>
     <string name="publishing_finished">Pubblicazione terminata</string>
-    <string name="action_faq_and_guides">Domande frequenti e guide</string>
     <string name="action_show_manga">Mostra voce</string>
     <string name="pref_navigate_pan">Scorri le immagini larghe</string>
     <string name="pref_landscape_zoom">Ingrandisci automaticamente le immagini larghe</string>
@@ -575,9 +573,7 @@
     <string name="skipped_reason_completed">Saltato perché la serie è completa</string>
     <string name="skipped_reason_not_caught_up">Saltato perché ci sono capitoli non letti</string>
     <string name="skipped_reason_not_started">Saltato perché non ci sono capitoli letti</string>
-    <string name="channel_skipped">Saltato</string>
     <string name="notification_update_error">%1$d aggiornamento(i) fallito(i)</string>
-    <string name="notification_update_skipped">%1$d aggiornamento(i) saltato(i)</string>
     <string name="learn_more">Tocca per approfondire</string>
     <string name="rotation_reverse_portrait">Verticale inverso</string>
     <string name="action_move_to_top_all_for_series">Sposta la serie in cima</string>
@@ -714,7 +710,6 @@
     <string name="action_filter_interval_long">Recupera mensilmente (28 giorni)</string>
     <string name="action_filter_interval_dropped">Abbandonato\? In ritardo tra 20 giorni e 2 mesi</string>
     <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
-    <string name="manga_modify_calculated_interval_title">Personalizza intervallo</string>
     <string name="intervals_header">Intervalli</string>
     <string name="manga_display_interval_title">Stima ogni</string>
     <string name="action_filter_interval_custom">Intervallo di recupero personalizzato</string>
@@ -750,4 +745,48 @@
     <string name="sort_category_confirmation">Vuoi ordinare le categorie alfabeticamente\?</string>
     <string name="file_null_uri_error">Il selettore di file ha restituito file all\'app</string>
     <string name="label_data_storage">Dati e archiviazione</string>
+    <string name="onboarding_storage_action_select">Scegli una cartella</string>
+    <string name="onboarding_action_finish">Iniziamo</string>
+    <string name="action_apply">Applica</string>
+    <string name="onboarding_storage_selection_required">Devi selezionare una cartella</string>
+    <string name="onboarding_permission_notifications">Permessi di notifica</string>
+    <string name="action_revert_to_default">Reimposta predefiniti</string>
+    <string name="onboarding_permission_install_apps">Permessi per installare app</string>
+    <string name="onboarding_heading">Ti diamo il benvenuto!</string>
+    <string name="action_menu_overflow_description">Altre opzioni</string>
+    <string name="selected">Selezionato</string>
+    <string name="not_selected">Non selezionato</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="onboarding_action_skip">Salta</string>
+    <string name="onboarding_action_next">Prossimo</string>
+    <string name="onboarding_permission_ignore_battery_opts">Uso della batteria in secondo piano</string>
+    <string name="onboarding_permission_install_apps_description">Per installare le estensioni delle fonti.</string>
+    <string name="action_bar_up_description">Navigare su</string>
+    <string name="onboarding_description">Per prima cosa impostiamo alcune cose. Puoi sempre cambiarle successivamente nelle impostazioni.</string>
+    <string name="onboarding_permission_notifications_description">Ricevi notifiche per aggiornamenti della libreria e altro.</string>
+    <string name="ext_permission_install_apps_warning">È necessaria l\'autorizzazione per installare le estensioni. Tocca qui per concederla.</string>
+    <string name="onboarding_storage_info">Selezione una cartella dove %1$s salverà i capitoli scaricati, i backup e altro.
+\n
+\nÈ raccomandato usare una cartella dedicata.
+\n
+\nCartella selezionata: %2$s</string>
+    <string name="pref_storage_location">Posizione di archiviazione</string>
+    <string name="action_create">Crea</string>
+    <string name="relative_time_span_never">Mai</string>
+    <string name="pref_flash_page_summ">Riduce il ghosting sugli schermi e-ink</string>
+    <string name="pref_onboarding_guide">Guida di benvenuto</string>
+    <string name="pref_storage_location_info">Usato per i backup automatici, download capitoli e fonti locali.</string>
+    <string name="onboarding_guides_new_user">Nuovo su %s? Ti consigliamo di dare un\'occhiata alla guida introduttiva.</string>
+    <string name="available_disk_space_info">Disponibile: %1$s / Totale: %2$s</string>
+    <string name="last_auto_backup_info">Ultimo backup automatico: %s</string>
+    <string name="onboarding_guides_returning_user">Hai già usato %s in precedenza?</string>
+    <string name="no_scanlators_found">Nessuno scanlator trovato</string>
+    <string name="pref_flash_page">Lampeggia al cambio pagina</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Evita interruzioni a lunghi aggiornamenti libreria, download e ripristino di backup.</string>
+    <string name="pref_storage_usage">Archiviazione utilizzata</string>
+    <string name="action_sort_tracker_score">Punteggio del tracker</string>
+    <string name="no_location_set">Cartella di archiviazione non impostata</string>
+    <string name="private_settings">Includi impostazioni sensibili (es. token di login dei tracker)</string>
+    <string name="onboarding_permission_action_grant">Consenti</string>
+    <string name="exclude_scanlators">Escludi scanlator</string>
 </resources>

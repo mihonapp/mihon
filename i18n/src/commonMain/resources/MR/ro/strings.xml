@@ -504,7 +504,6 @@
     <string name="publishing_finished">Editare finalizată</string>
     <string name="cancelled">Anulat</string>
     <string name="on_hiatus">În hiatus</string>
-    <string name="notification_update_skipped">%1$d actualizări omise</string>
     <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
     <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
     <string name="local_invalid_format">Format de capitol invalid</string>
@@ -530,8 +529,6 @@
     <string name="download_notifier_split_page_not_found">Pagina %d nu a fost găsită în timpul divizării</string>
     <string name="delete_category_confirmation">Doriți să ștergeți categoria \"%s\"\?</string>
     <string name="internal_error">InternalError: Verificați jurnalele de accident pentru informații suplimentare</string>
-    <string name="channel_skipped">Ignorat</string>
-    <string name="action_faq_and_guides">Întrebări frecvente și ghiduri</string>
     <string name="theme_lavender">Lavandă</string>
     <string name="pref_dark_theme_pure_black">Mod întunecat negru pur</string>
     <string name="enhanced_tracking_info">Servicii care oferă caracteristici îmbunătățite pentru anumite surse. Înregistrările sunt urmărite automat atunci când sunt adăugate la biblioteca dumneavoastră.</string>
@@ -544,7 +541,6 @@
     <string name="complete_list">Lista completă</string>
     <string name="action_display_cover_only_grid">Acoperire tip grilaj</string>
     <string name="action_move_to_top_all_for_series">Mutați seria pe prima poziție</string>
-    <string name="pref_library_update_manga_restriction">Omiteți actualizarea intrărilor</string>
     <string name="pref_update_only_started">Care nu au fost începute</string>
     <string name="ext_installer_shizuku_stopped">Shizuku nu rulează</string>
     <string name="pref_app_language">Limba aplicației</string>
@@ -727,7 +723,6 @@
     <string name="action_menu_overflow_description">Mai multe opțiuni</string>
     <string name="library_sync_complete">Sincronizare bibliotecă completă</string>
     <string name="last_auto_backup_info">Ultima copie de rezervă creata la: %s</string>
-    <string name="manga_modify_calculated_interval_title">Personalizați intervalul</string>
     <string name="pref_page_rotate_invert">Răsturnați orientarea paginilor late rotite</string>
     <string name="selected">Selectați</string>
     <string name="no_scanlators_found">Nici un scanlator nu a fost găsit</string>

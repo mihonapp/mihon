@@ -158,11 +158,11 @@
     <string name="action_open_in_web_view">WebView で開く</string>
     <string name="pref_category_reader">ビューア</string>
     <string name="pref_category_tracking">同期</string>
-    <string name="untrusted_extension_message">この拡張機能は信頼できない証明書でサインされているため、有効にされていません。
+    <string name="untrusted_extension_message">この拡張機能は不明の作成者によりサインされているため、ロードされていません。
 \n
 \n悪意のある拡張機能は保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
 \n
-\nこれらのリスクを受け入れ、この証明書を信頼しますか？</string>
+\nこれらのリスクを受け入れ、この拡張機能の証明書を信頼しますか？</string>
     <string name="pref_show_page_number">ページ数を表示</string>
     <string name="pref_keep_screen_on">画面を常にON</string>
     <string name="scale_type_fit_height">高さに合わせる</string>
@@ -178,7 +178,7 @@
     <string name="restoring_backup">バックアップを復元中</string>
     <string name="creating_backup">バックアップを作成中</string>
     <string name="used_cache">サイズ: %1$s</string>
-    <string name="cache_deleted">キャッシュを削除しました。%1$d件のファイルは削除されました</string>
+    <string name="cache_deleted">キャッシュがクリアされ、%1$d 個のファイルが削除されました</string>
     <string name="pref_clear_cookies">Cookiesを削除</string>
     <string name="cookies_cleared">Cookiesを削除しました</string>
     <string name="clear_database_confirmation">データベースをクリアしてもよろしいですか？ライブラリにない項目の読んだ章と読書進捗はすべて失われます</string>
@@ -331,7 +331,7 @@
     <string name="restore_duration">%02d分%02d秒</string>
     <string name="backup_restore_missing_sources">ソースがありません:</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはライブラリの項目が含まれません。</string>
-    <string name="invalid_backup_file">バックアップファイルは無効です</string>
+    <string name="invalid_backup_file">無効なバックアップファイル：</string>
     <string name="tracking_info">一方同期の外部追跡サービスにある章の読書進捗を更新します。個別の項目の「同期」ボタンで追跡サービスを設定してください。</string>
     <string name="pref_webtoon_side_padding">余白</string>
     <string name="pref_category_reading">読書中</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_invert_summary">分割された幅広いページの配置が読む方向と一致しない場合は有効にしてください</string>
     <string name="pref_dual_page_invert">分割ページの配置を反転</string>
     <string name="pref_dual_page_split">幅広いページの分割</string>
-    <string name="backup_restore_content_full">バックアップファイルからデータを復旧します。
-\n
-\n後で手動で必要な拡張機能をインストールし、使用したい追跡サービスにログインしてください。</string>
+    <string name="backup_restore_content_full">後で手動で必要な拡張機能をインストールし、使用したい追跡サービスにログインしてください。</string>
     <string name="nav_zone_right">右</string>
     <string name="nav_zone_left">左</string>
     <string name="nav_zone_next">次へ</string>
@@ -559,14 +557,12 @@
     <string name="database_clean">消去できるものはありませんでした</string>
     <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="pref_library_update_manga_restriction">項目更新のスキップ</string>
     <string name="pref_update_only_completely_read">未読の章あり</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
     <string name="cancelled">キャンセル済み</string>
     <string name="on_hiatus">休載中</string>
-    <string name="action_faq_and_guides">よくあるご質問とガイド</string>
     <string name="action_show_manga">項目を表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
     <string name="pref_update_only_started">読み始めていない</string>
@@ -575,9 +571,7 @@
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
     <string name="skipped_reason_not_started">読了した章がない為スキップしました</string>
     <string name="pref_navigate_pan">幅広い画像を左右に移動</string>
-    <string name="notification_update_skipped">%1$d件の更新がスキップされました</string>
     <string name="learn_more">タップでもっと詳しく</string>
-    <string name="channel_skipped">スキップ済み</string>
     <string name="notification_update_error">%1$d件の更新に失敗しました</string>
     <string name="rotation_reverse_portrait">縦向き (反転)</string>
     <string name="action_move_to_top_all_for_series">シリーズをトップに移動</string>
@@ -717,7 +711,6 @@
     <string name="pref_update_only_in_release_period">更新予定時間外</string>
     <string name="intervals_header">間隔</string>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
-    <string name="manga_modify_calculated_interval_title">間隔を設定</string>
     <string name="has_results">結果あり</string>
     <string name="track_delete_title">%s の追跡を削除しますか\?</string>
     <string name="manga_display_interval_title">毎に評価</string>
@@ -787,10 +780,12 @@
     <string name="onboarding_permission_notifications">通知の許可</string>
     <string name="onboarding_permission_install_apps">アプリのインストールの許可</string>
     <string name="onboarding_permission_ignore_battery_opts_description">時間のかかるライブラリ更新、ダウンロードやバックアップの復元などへの中断を防ぎます。</string>
-    <string name="onboarding_permission_type_optional">任意</string>
     <string name="onboarding_permission_ignore_battery_opts">バックグラウンドでのバッテリー使用量</string>
     <string name="onboarding_permission_install_apps_description">ソース拡張機能をインストールするために必要です。</string>
     <string name="onboarding_permission_notifications_description">ライブラリ更新などの通知を送信します。</string>
-    <string name="onboarding_permission_type_required">必須</string>
     <string name="onboarding_permission_action_grant">許可</string>
+    <string name="available_disk_space_info">空き領域：%1$s/総計：%2$s</string>
+    <string name="manga_interval_expected_update">次のアップデートは%sに実行する予定です</string>
+    <string name="invalid_backup_file_error">詳細なエラー情報：</string>
+    <string name="ext_permission_install_apps_warning">拡張機能をインストールするためには権限が必要です。タップで許可してください。</string>
 </resources>

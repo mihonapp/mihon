@@ -295,8 +295,6 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instaliuoti ir paleisti Shizuku, kad galėtumėte naudoti Shizuku kaip papildinių instaliuotoją.</string>
     <string name="pref_show_navigation_mode">Rodyti lietimui jautrias zonas</string>
     <string name="label_warning">Įspėjimas</string>
-    <string name="action_faq_and_guides">DUK ir vadovai</string>
-    <string name="pref_library_update_manga_restriction">Praleisti įrašų atnaujinimą</string>
     <string name="update_72hour">Kas 3 dienas</string>
     <string name="connected_to_wifi">Kai naudojamas Wi-Fi</string>
     <string name="ext_updates_pending">Yra naujinių</string>
@@ -372,7 +370,6 @@
     <string name="migration_dialog_what_to_include">Pasirinkite duomenis, kuriuos norite įtraukti</string>
     <string name="copy">Kopijuoti</string>
     <string name="notification_new_chapters">Atrasti nauji skyriai</string>
-    <string name="notification_update_skipped">Praleistas %1$d naujinys (-iai)</string>
     <string name="skipped_reason_not_caught_up">Praleista, nes yra neperskaitytų skyrių</string>
     <string name="update_check_notification_download_in_progress">Atsiunčiama…</string>
     <string name="file_select_cover">Pasirinkti viršelio vaizdą</string>
@@ -497,7 +494,6 @@
     <string name="download_notifier_split_page_path_not_found">Nepavyko rasti puslapio failo kelio %d</string>
     <string name="channel_common">Bendras</string>
     <string name="channel_complete">Baigtas</string>
-    <string name="channel_skipped">Praleistas</string>
     <string name="download_notifier_download_paused">Atsisiuntimas pristabdytas</string>
     <string name="channel_new_chapters">Skyriaus atnaujinimai</string>
     <string name="spen_next_page">Kitas puslapis</string>

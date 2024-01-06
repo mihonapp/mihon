@@ -70,7 +70,6 @@
     <string name="action_open_log">Opne logg</string>
     <string name="action_show_errors">Trykk for å sjå detaljar</string>
     <string name="action_webview_back">Tilbake</string>
-    <string name="action_faq_and_guides">FAQ og guidar</string>
     <string name="loading">Lastar…</string>
     <string name="pref_category_general">Generelt</string>
     <string name="pref_category_appearance">Utsjånad</string>

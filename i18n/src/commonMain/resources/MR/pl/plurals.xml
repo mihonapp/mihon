@@ -96,4 +96,10 @@
         <item quantity="many">%d dni</item>
         <item quantity="other">%d dni</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">repo</item>
+        <item quantity="few">repos</item>
+        <item quantity="many">repos</item>
+        <item quantity="other">repos</item>
+    </plurals>
 </resources>

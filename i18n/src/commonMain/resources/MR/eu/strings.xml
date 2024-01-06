@@ -357,7 +357,6 @@
     <string name="snack_add_to_library">Manga liburutegira gehitu\?</string>
     <string name="file_select_backup">Hautatu babeskopia fitxategia</string>
     <string name="notification_cover_update_failed">Ezin izan da azala eguneratu</string>
-    <string name="pref_library_update_manga_restriction">Saltatu eguneraketak</string>
     <string name="action_sort_date_added">Gehiketa data</string>
     <string name="action_search">Bilatu</string>
     <string name="action_search_settings">Bilatu ezarpenak</string>
@@ -566,7 +565,6 @@
     <string name="pref_dual_page_invert">Alderantzikatu orrialde bikoitzeko zatiketa</string>
     <string name="pref_dual_page_invert_summary">Orrialde bikoitzeko zatiketaren kokapena irakurketa noranzkoarekin bat ez badator</string>
     <string name="pref_library_update_restriction">Eguneraketa automatikoentzako gailuaren murrizketak</string>
-    <string name="action_faq_and_guides">Ohiko galderak eta gidak</string>
     <string name="action_show_manga">Manga erakutsi</string>
     <string name="skipped_reason_not_caught_up">Saltatu egin da irakurri gabeko kapituluak daudelako</string>
     <string name="pref_update_only_started">Kapitulurik irakurri gabe</string>
@@ -590,4 +588,21 @@
     <string name="action_not_now">Orain ez</string>
     <string name="delete_downloaded">Ezabatu deskargatuak</string>
     <string name="pref_library_columns_per_row">%d ilara bakoitzeko</string>
+    <string name="onboarding_storage_action_select">Aukeratu karpeta bat</string>
+    <string name="action_apply">Ezarri</string>
+    <string name="onboarding_storage_selection_required">Karpeta bat aukeratu behar da</string>
+    <string name="onboarding_permission_notifications">Notifikazioetarako baimena</string>
+    <string name="onboarding_permission_install_apps">Aplikazioak instalatzeko baimena</string>
+    <string name="action_sort_category">Kategoriak ordenatu</string>
+    <string name="onboarding_heading">Ongi etorri!</string>
+    <string name="action_update_category">Kategoria eguneratu</string>
+    <string name="action_menu_overflow_description">Aukera gehiago</string>
+    <string name="onboarding_guides_returning_user">%s erabili duzu dagoeneko?</string>
+    <string name="selected">Aukeratuak</string>
+    <string name="not_selected">Aukeratu gabeak</string>
+    <string name="onboarding_action_next">Hurrengoa</string>
+    <string name="action_bar_up_description">Nabigatu gora</string>
+    <string name="sort_category_confirmation">Kategoriak alfabetikoki ordenatu nahi?</string>
+    <string name="action_display_show_continue_reading_button">Jarraitu irakurtzen botoia</string>
+    <string name="action_ok">OK</string>
 </resources>

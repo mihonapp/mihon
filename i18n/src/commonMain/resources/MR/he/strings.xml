@@ -379,9 +379,7 @@
     <string name="pref_show_reading_mode">הראה מצב קריאה</string>
     <string name="ext_unofficial">בלתי רשמי</string>
     <string name="ext_app_info">פרטי האפליקצייה</string>
-    <string name="pref_library_update_manga_restriction">דלג על עדכוני פריטים</string>
     <string name="extension_api_error">נכשל בקבלת רשימת ההרחבות</string>
-    <string name="action_faq_and_guides">שו\"ת ומדריכים</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="none">אין</string>
     <string name="update_72hour">כל 3 ימים</string>
@@ -527,7 +525,6 @@
     <string name="action_sort_unread_count">לא נקראו</string>
     <string name="categorized_display_settings">הגדרות מיון לכל קטגוריה בנפרד</string>
     <string name="source_empty_screen">מקור לא נמצא</string>
-    <string name="notification_update_skipped">%1$d עדכונים דולגו</string>
     <string name="update_check_eol">גרסת האנדרואיד הזאת כבר לא נתמכת</string>
     <string name="information_webview_required">WebView נצרך ל-Tachiyomi</string>
     <string name="action_display_cover_only_grid">רשת רק של הכריכות</string>
@@ -539,7 +536,6 @@
     <string name="skipped_reason_not_caught_up">דולג בגלל שיש פרקים שלא נקראו</string>
     <string name="skipped_reason_not_started">דולג בגלל שאין פרקים שנקראו</string>
     <string name="action_close">סגור</string>
-    <string name="channel_skipped">דולגו</string>
     <string name="pref_true_color_summary">מפחית פסים, אך עשוי להשפיע על הביצועים</string>
     <string name="channel_errors">שגיאות</string>
     <string name="pref_reset_viewer_flags">אפס את הגדרות מצב הקריאה של כל סדרה בנפרד</string>
@@ -588,7 +584,6 @@
     <string name="action_filter_interval_custom">קבע מרווח זמן מותאם מראש לטעינה</string>
     <string name="action_filter_interval_long">טען חודשית (28 ימים)</string>
     <string name="unknown_title">כותרת לא מוכרת</string>
-    <string name="manga_modify_calculated_interval_title">בחר מרווח זמן מותאם אישית</string>
     <string name="download_notifier_downloader_title">מנהל ההורדות</string>
     <string name="exception_http">HTTP %d, בדוק באתר ב-WebView</string>
     <string name="exception_offline">אין חיבור אינטרנט</string>

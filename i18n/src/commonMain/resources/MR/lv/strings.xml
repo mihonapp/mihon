@@ -204,8 +204,6 @@
     <string name="update_never">Izslēgts</string>
     <string name="action_display_language_badge">Valoda</string>
     <string name="action_sort_chapter_fetch_date">Nodaļas ieneses datums</string>
-    <string name="pref_library_update_manga_restriction">Izlaist ierakstu atjaunināšanu</string>
-    <string name="action_faq_and_guides">Biežāk uzdotie jautājumi un rokasgrāmatas</string>
     <string name="action_close">Aizvērt</string>
     <string name="pref_category_library_update">Globāls atjauninājums</string>
     <string name="parental_controls_info">Šis neliedz neoficiāliem vai, iespējams, nepareizi atzīmētiem paplašinājumiem parādīties NSFW (18+) saturu lietotnē.</string>
@@ -508,12 +506,10 @@
     <string name="viewer">Lasīšanas režīms</string>
     <string name="no_next_chapter">Nākošā nodaļa nav atrasta</string>
     <string name="empty_screen">Nu, šis ir neveikli</string>
-    <string name="notification_update_skipped">%1$d atjauninājums(-i) izlaists(-i)</string>
     <string name="update_check_open">Atvērt vietnē GitHub</string>
     <string name="update_check_eol">Šī Android versija vairs netiek atbalstīta</string>
     <string name="update_check_notification_download_in_progress">Lejupielādē…</string>
     <string name="channel_progress">Progress</string>
-    <string name="channel_skipped">Izlaists</string>
     <string name="decode_image_error">Attēlu nevarēja ielādēt</string>
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku\?</string>
     <string name="pref_category_for_this_series">Priekš šīs sērijas</string>
@@ -736,7 +732,6 @@
     <string name="action_filter_interval_dropped">Pametāt\? Par vēlu +20 un 2 mēnešus</string>
     <string name="pref_chapter_swipe">Vilkt nodaļas</string>
     <string name="manga_display_modified_interval_title">Atjaunināt katru</string>
-    <string name="manga_modify_calculated_interval_title">Pielāgot intervālu</string>
     <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
     <string name="exception_offline">Nav interneta savienojuma</string>
     <string name="exception_unknown_host">Nevarēja sasniegt %s</string>

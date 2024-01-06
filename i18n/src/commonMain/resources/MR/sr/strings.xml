@@ -558,7 +558,6 @@
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију поглавља током покретања апликације</string>
     <string name="database_clean">Нема ништа за чишћење</string>
-    <string name="pref_library_update_manga_restriction">Прескочи ажурирање наслова</string>
     <string name="pref_update_only_completely_read">Sa neporcitanim poglavljem(ima)</string>
     <string name="privacy_policy">Политика приватности</string>
     <string name="cancelled">Отказано</string>
@@ -570,15 +569,12 @@
     <string name="learn_more">Додирните да сазнате више</string>
     <string name="library_errors_help">За помоћ о томе како да поправите грешке у ажурирању колекције, погледајте %1$s</string>
     <string name="skipped_reason_not_started">Прескочено јер ниједно поглавље није прочитано</string>
-    <string name="channel_skipped">Прескочено</string>
     <string name="action_display_cover_only_grid">Мрежа насловница</string>
     <string name="pref_navigate_pan">Померај широке слике</string>
     <string name="pref_landscape_zoom">Аутоматски зумирај слике у пејзажном облику</string>
-    <string name="action_faq_and_guides">Питања и водичи</string>
     <string name="save_chapter_as_cbz">Sačuvaj kao CBZ arhivu</string>
     <string name="rotation_reverse_portrait">Обрнути портрет</string>
     <string name="publishing_finished">Издавање завршено</string>
-    <string name="notification_update_skipped">%1$d ажурирања прескочено</string>
     <string name="skipped_reason_completed">Прескочено јер је наслов завршен</string>
     <string name="skipped_reason_not_caught_up">Прескочено јер има непрочитаних поглавља</string>
     <string name="disabled_nav">Onesposobljen</string>
@@ -718,7 +714,6 @@
     <string name="action_set_interval">Постави интервалу</string>
     <string name="action_filter_interval_dropped">Испуштено\? Задњих 20+ и 2 месеца</string>
     <string name="intervals_header">Интервали</string>
-    <string name="manga_modify_calculated_interval_title">Подеси интервал</string>
     <string name="track_delete_remote_text">Такође уклони из %s</string>
     <string name="track_activity_name">Запис праћења</string>
     <string name="manga_display_interval_title">Процени сваки</string>

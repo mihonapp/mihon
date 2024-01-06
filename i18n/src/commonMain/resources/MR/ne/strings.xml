@@ -376,7 +376,6 @@
     <string name="pref_zoom_start">जूम सुरु स्थिति</string>
     <string name="pref_auto_clear_chapter_cache">एप खोलेमा अध्याय क्यास खाली गर्नुहोस्</string>
     <string name="information_webview_outdated">राम्रो संगतताको लागि कृपया WebView एप अपडेट गर्नुहोस्</string>
-    <string name="pref_library_update_manga_restriction">इन्ट्री अपडेट गर्न छोड्नुहोस्</string>
     <string name="pref_update_only_completely_read">नपढेको अध्याय(हरू) सँग</string>
     <string name="pref_viewer_nav">ट्याप क्षेत्रहरू</string>
     <string name="pager_viewer">पृष्ठांकित</string>
@@ -542,7 +541,6 @@
     <string name="set_as_cover">आवरणको रूपमा सेट गर्नुहोस्</string>
     <string name="chapter_progress">पृष्ठ: %1$d</string>
     <string name="migrate">स्थानान्तरण</string>
-    <string name="action_faq_and_guides">बारम्बार सोधिएका प्रश्न उत्तर र गाइडहरू</string>
     <string name="manga_download">डाउनलोड</string>
     <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
@@ -558,7 +556,6 @@
     <string name="update_check_no_new_updates">कुनै नयाँ अपडेट उपलब्ध छैन</string>
     <string name="information_empty_category_dialog">तपाईंसँग अहिलेसम्म कुनै पनि वर्गहरू छैन।</string>
     <string name="chapter_settings_updated">पूर्वनिर्धारित अध्याय सेटिङहरू अपडेट गरियो</string>
-    <string name="channel_skipped">छोडियो</string>
     <string name="spen_next_page">अर्को पृष्ठ</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
@@ -579,7 +576,6 @@
     <string name="pref_navigate_pan">चौडा छविहरू प्यान गर्नुहोस्</string>
     <string name="pref_landscape_zoom">फराकिलो छविहरूमा स्वचालित रूपमा जूम गर्नुहोस्</string>
     <string name="notification_update_error">%1$d अपडेट(हरू) असफल भयो</string>
-    <string name="notification_update_skipped">%1$d अपडेट(हरू) छोडियो</string>
     <string name="disabled_nav">असक्षम</string>
     <string name="library_errors_help">पुस्तकालय अपडेट त्रुटिहरू कसरी समाधान गर्ने भन्ने बारे मद्दतको लागि, %1$s हेर्नुहोस्</string>
     <string name="action_sort_unread_count">नपढिएको संख्या</string>
@@ -714,7 +710,6 @@
     <string name="action_filter_interval_custom">कस्टम गरिएको ल्याउने अन्तराल</string>
     <string name="action_filter_interval_long">मासिक ल्याउनुहोस् (२८ दिन)</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
-    <string name="manga_modify_calculated_interval_title">अन्तराल कस्टम गर्नुहोस्</string>
     <string name="skipped_reason_not_in_release_period">छोडियो किनभने आज कुनै रिलीज अपेक्षित थिएन</string>
     <string name="intervals_header">अन्तरालहरू</string>
     <string name="action_filter_interval_late">ढिलो १०+ जाँच</string>
@@ -754,4 +749,6 @@
     <string name="pref_flash_page">पृष्ठ बदलिँदा स्क्रिनमा सेतो फ्ल्यास हुन्छ</string>
     <string name="label_data_storage">डेटा र भण्डारण</string>
     <string name="file_null_uri_error">फाइल पिकर एपमा फाइल फर्काउन असफल भयो</string>
+    <string name="selected">चयन गरिएको</string>
+    <string name="not_selected">चयन नगरिएको</string>
 </resources>

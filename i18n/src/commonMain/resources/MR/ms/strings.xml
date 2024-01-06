@@ -559,14 +559,12 @@
     <string name="clear_database_source_item_count">%1$d entri bukan pustaka dalam pangkalan data</string>
     <string name="extension_api_error">Gagal mendapatkan senarai sambungan</string>
     <string name="privacy_policy">Dasar privasi</string>
-    <string name="pref_library_update_manga_restriction">Langkau mengemas kini entri</string>
     <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="library_errors_help">Untuk bantuan cara menyelesaikan ralat kemas kini pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arkib CBZ</string>
     <string name="cancelled">Dibatalkan</string>
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="on_hiatus">Dalam hiatus</string>
-    <string name="action_faq_and_guides">Soalan Lazim dan Panduan</string>
     <string name="action_show_manga">Tunjuk entri</string>
     <string name="action_display_cover_only_grid">Cuma grid muka hadapan</string>
     <string name="skipped_reason_completed">Dilangkau kerana siri sudah lengkap</string>
@@ -576,8 +574,6 @@
     <string name="pref_landscape_zoom">Zum secara automatik pada imej lebar</string>
     <string name="pref_navigate_pan">Panorama imej lebar</string>
     <string name="notification_update_error">%1$d kemas kini gagal</string>
-    <string name="notification_update_skipped">%1$d kemas kini dilangkau</string>
-    <string name="channel_skipped">Dilangkau</string>
     <string name="learn_more">Ketik untuk ketahui selebihnya</string>
     <string name="rotation_reverse_portrait">Potret terbalik</string>
     <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>
@@ -719,7 +715,6 @@
     <string name="manga_display_modified_interval_title">Tetapkan untuk kemas kini setiap</string>
     <string name="skipped_reason_not_in_release_period">Dilangkau kerana tiada keluaran yang dijangkakan hari ini</string>
     <string name="intervals_header">Jarak masa</string>
-    <string name="manga_modify_calculated_interval_title">Tersuai jarak masa</string>
     <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
     <string name="action_filter_interval_passed">Melepasi tempoh semak</string>

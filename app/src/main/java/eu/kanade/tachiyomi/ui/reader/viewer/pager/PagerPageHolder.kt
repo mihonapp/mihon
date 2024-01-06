@@ -235,7 +235,7 @@ class PagerPageHolder(
      */
     private fun setError() {
         progressIndicator.hide()
-        showErrorLayout(withOpenInWebView = false)
+        showErrorLayout()
     }
 
     override fun onImageLoaded() {
@@ -248,8 +248,7 @@ class PagerPageHolder(
      */
     override fun onImageLoadError() {
         super.onImageLoadError()
-        progressIndicator.hide()
-        showErrorLayout(withOpenInWebView = true)
+        setError()
     }
 
     /**
@@ -260,23 +259,27 @@ class PagerPageHolder(
         viewer.activity.hideMenu()
     }
 
-    private fun showErrorLayout(withOpenInWebView: Boolean): ReaderErrorBinding {
+    private fun showErrorLayout(): ReaderErrorBinding {
         if (errorLayout == null) {
             errorLayout = ReaderErrorBinding.inflate(LayoutInflater.from(context), this, true)
             errorLayout?.actionRetry?.viewer = viewer
             errorLayout?.actionRetry?.setOnClickListener {
                 page.chapter.pageLoader?.retryPage(page)
             }
-            val imageUrl = page.imageUrl
-            if (imageUrl.orEmpty().startsWith("http", true)) {
+        }
+
+        val imageUrl = page.imageUrl
+        errorLayout?.actionOpenInWebView?.isVisible = imageUrl != null
+        if (imageUrl != null) {
+            if (imageUrl.startsWith("http", true)) {
                 errorLayout?.actionOpenInWebView?.viewer = viewer
                 errorLayout?.actionOpenInWebView?.setOnClickListener {
-                    val intent = WebViewActivity.newIntent(context, imageUrl!!)
+                    val intent = WebViewActivity.newIntent(context, imageUrl)
                     context.startActivity(intent)
                 }
             }
         }
-        errorLayout?.actionOpenInWebView?.isVisible = withOpenInWebView
+
         errorLayout?.root?.isVisible = true
         return errorLayout!!
     }
