@@ -41,6 +41,7 @@ internal class GuidesStep(
             }
 
             HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
 
