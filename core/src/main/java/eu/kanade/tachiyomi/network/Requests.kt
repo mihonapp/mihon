@@ -63,6 +63,19 @@ fun PUT(
         .cacheControl(cache)
         .build()
 }
+fun PATCH(
+    url: String,
+    headers: Headers = DEFAULT_HEADERS,
+    body: RequestBody = DEFAULT_BODY,
+    cache: CacheControl = DEFAULT_CACHE_CONTROL,
+): Request {
+    return Request.Builder()
+        .url(url)
+        .patch(body)
+        .headers(headers)
+        .cacheControl(cache)
+        .build()
+}
 
 fun DELETE(
     url: String,

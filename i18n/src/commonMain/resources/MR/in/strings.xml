@@ -123,9 +123,9 @@
     <string name="disabled">Tidak Aktif</string>
     <string name="last_read_chapter">Bab terakhir yang dibaca</string>
     <string name="second_to_last">Bab kedua dari terakhir dibaca</string>
-    <string name="third_to_last">Bab ketiga dari terakhir dibaca</string>
-    <string name="fourth_to_last">Bab keempat dari terakhir dibaca</string>
-    <string name="fifth_to_last">Bab kelima dari terakhir dibaca</string>
+    <string name="third_to_last">Chapter ketiga dari terakhir dibaca</string>
+    <string name="fourth_to_last">Chapter keempat dari terakhir dibaca</string>
+    <string name="fifth_to_last">Chapter kelima dari terakhir dibaca</string>
     <string name="pref_download_new">Unduh bab baru</string>
     <string name="services">Pelacakan</string>
     <string name="pref_create_backup">Buat cadangan</string>
@@ -140,7 +140,7 @@
     <string name="creating_backup">Membuat cadangan</string>
     <string name="pref_clear_chapter_cache">Hapus cache bab</string>
     <string name="used_cache">Terpakai: %1$s</string>
-    <string name="cache_deleted">Cache dibersihkan %1$d berkas telah dihapus</string>
+    <string name="cache_deleted">Cache dibersihkan, %1$d file dihapus</string>
     <string name="cache_delete_error">Terjadi kesalahan saat membersihkan</string>
     <string name="pref_clear_cookies">Hapus cookies</string>
     <string name="cookies_cleared">Cookies dihapus</string>
@@ -293,9 +293,9 @@
     <string name="action_sort_latest_chapter">Bab terbaru</string>
     <string name="action_view_chapters">Lihat bab</string>
     <string name="action_cancel_all">Batalkan semua</string>
-    <string name="theme_light">Mati</string>
-    <string name="theme_dark">Nyala</string>
-    <string name="theme_system">Ikuti sistem</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="theme_system">Sistem</string>
     <string name="pref_manage_notifications">Kelola notifikasi</string>
     <string name="pref_category_security">Keamanan dan privasi</string>
     <string name="action_menu">Menu</string>
@@ -413,7 +413,7 @@
     <string name="ext_nsfw_warning">Sumber dari ekstensi ini mungkin berisi konten DEWASA (18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Hapus bab yang ditandai</string>
-    <string name="pref_category_delete_chapters">Hapus bab</string>
+    <string name="pref_category_delete_chapters">Hapus chapter</string>
     <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau berpotensi salah ditandai untuk menampilkan konten NSFW (18+) di dalam aplikasi.</string>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
@@ -458,7 +458,7 @@
     <string name="nav_zone_right">Kanan</string>
     <string name="nav_zone_left">Kiri</string>
     <string name="nav_zone_next">Lanjut</string>
-    <string name="nav_zone_prev">Sblm</string>
+    <string name="nav_zone_prev">Sebelum</string>
     <string name="automatic_background">Otomatis</string>
     <string name="pref_create_folder_per_manga">Menyimpan halaman ke dalam folder terpisah</string>
     <string name="pref_create_folder_per_manga_summary">Membuat folder menurut judul entri</string>
@@ -509,7 +509,7 @@
     <string name="enhanced_tracking_info">Menyediakan fitur yang disempurnakan untuk sumber tertentu. Entri secara otomatis dilacak ketika ditambahkan ke perpustakaan Anda.</string>
     <string name="enhanced_services">Pelacak yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
-    <string name="theme_yotsuba">yotsuba</string>
+    <string name="theme_yotsuba">Yotsuba</string>
     <string name="theme_yinyang">Yin dan Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Stroberi Daiquiri</string>
@@ -528,7 +528,7 @@
     <string name="getting_started_guide">Panduan awal mulai</string>
     <string name="action_track">Lacak</string>
     <string name="theme_tealturquoise">Teal &amp; Pirus</string>
-    <string name="pref_category_appearance">Penampilan</string>
+    <string name="pref_category_appearance">Tampilan</string>
     <string name="confirm_lock_change">Autentikasi untuk mengonfirmasi perubahan</string>
     <string name="label_default">Bawaan</string>
     <string name="pref_remove_exclude_categories">Kategori yang dikecualikan</string>
@@ -558,7 +558,6 @@
     <string name="database_clean">Tidak ada yang perlu dibersihkan</string>
     <string name="clear_database_source_item_count">%1$d entri non-perpustakaan dalam database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
-    <string name="pref_library_update_manga_restriction">Lewati pembaruan entri</string>
     <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
     <string name="privacy_policy">Kebijakan privasi</string>
     <string name="publishing_finished">Penerbitan selesai</string>
@@ -566,7 +565,6 @@
     <string name="on_hiatus">Sedang Hiatus</string>
     <string name="library_errors_help">Untuk bantuan cara memperbaiki kesalahan pembaruan pustaka, lihat %1$s</string>
     <string name="save_chapter_as_cbz">Simpan sebagai arsip CBZ</string>
-    <string name="action_faq_and_guides">Tanya Jawab dan Panduan</string>
     <string name="action_show_manga">Lihat entri</string>
     <string name="action_display_cover_only_grid">Grid sampul saja</string>
     <string name="pref_update_only_started">Yang belum dibaca</string>
@@ -575,9 +573,7 @@
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
     <string name="pref_landscape_zoom">Secara otomatis melebarkan gambar</string>
     <string name="pref_navigate_pan">Geser gambar lebar</string>
-    <string name="notification_update_skipped">%1$d pembaruan terlewat</string>
     <string name="learn_more">Pelajari lebih lanjut</string>
-    <string name="channel_skipped">Terlewat</string>
     <string name="rotation_reverse_portrait">Layar tegak terbalik</string>
     <string name="notification_update_error">%1$d pembaruan gagal</string>
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
@@ -641,10 +637,10 @@
     <string name="action_search_hint">Cari…</string>
     <string name="pref_browse_summary">Sumber, ekstensi, pencarian global</string>
     <string name="pref_reader_summary">Mode membaca, tampilan, navigasi</string>
-    <string name="pref_tracking_summary">Sinkronisasi kemajuan satu arah, sinkronisasi yang ditingkatkan</string>
+    <string name="pref_tracking_summary">Sinkronisasi progres searah, sinkronisasi yang ditingkatkan</string>
     <string name="crash_screen_description">%s mengalami kesalahan tak terduga. Kami menyarankan Anda membagi log kerusakan di saluran dukungan kami di Discord.</string>
-    <string name="pref_downloads_summary">Unduh otomatis, unduh di depan</string>
-    <string name="pref_security_summary">Kunci aplikasi, layar aman</string>
+    <string name="pref_downloads_summary">Unduh otomatis, unduh terlebih dahulu</string>
+    <string name="pref_security_summary">Kunci aplikasi, amankan layar</string>
     <string name="pref_appearance_summary">Tema, format tanggal &amp; waktu</string>
     <string name="pref_library_summary">Kategori, pembaruan global, geser chapter</string>
     <string name="pref_backup_summary">Pencadangan manual &amp; otomatis, ruang penyimpanan</string>
@@ -695,7 +691,7 @@
     <string name="confirm_add_duplicate_manga">Kamu memiliki entri di pustaka dengan nama yang sama.
 \n
 \nApakah kamu ingin melanjutkan\?</string>
-    <string name="track_error">%1$seror%2$s</string>
+    <string name="track_error">%1$s eror: %2$s</string>
     <string name="information_required_plain">*dibutuhkan</string>
     <string name="pref_hide_in_library_items">Semua catatan tersembunyi sudah ada di perpustakaan</string>
     <string name="action_copy_to_clipboard">Salin ke papan klip</string>
@@ -714,7 +710,6 @@
     <string name="action_filter_interval_custom">Interval pengambilan disesuaikan</string>
     <string name="action_filter_interval_long">Ambil bulanan (28 hari)</string>
     <string name="action_filter_interval_late">Cek 10+ terlambat</string>
-    <string name="manga_modify_calculated_interval_title">Sesuaikan Interval</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
     <string name="action_filter_interval_dropped">Berkurang\? Akhir 20+ dan 2 bulan</string>
     <string name="action_filter_interval_passed">Melewati periode pemeriksaan</string>
@@ -768,4 +763,27 @@
     <string name="action_bar_up_description">Navigasi ke atas</string>
     <string name="pref_storage_location">Lokasi penyimpanan</string>
     <string name="pref_storage_location_info">Digunakan untuk pencadangan otomatis, pengunduhan bab, dan sumber lokal.</string>
+    <string name="onboarding_storage_action_select">Pilih direktori</string>
+    <string name="pref_onboarding_guide">Panduan awal</string>
+    <string name="onboarding_guides_new_user">Baru mengenal %s? Kami menyarankan Anda membaca panduan awal.</string>
+    <string name="onboarding_action_finish">Selesai</string>
+    <string name="onboarding_storage_selection_required">Harap pilih direktori terlebih dahulu</string>
+    <string name="onboarding_permission_notifications">Izin notifikasi</string>
+    <string name="onboarding_permission_install_apps">Izin pasang aplikasi</string>
+    <string name="onboarding_heading">Selamat Datang!</string>
+    <string name="onboarding_guides_returning_user">Sudah pernah menggunakan %s sebelumnya?</string>
+    <string name="onboarding_action_skip">Lewati</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Hindari gangguan pada pembaruan pustaka, pengunduhan, dan pemulihan cadangan yang berlangsung lama.</string>
+    <string name="onboarding_action_next">Selanjutnya</string>
+    <string name="onboarding_permission_ignore_battery_opts">Penggunaan baterai di latar belakang</string>
+    <string name="onboarding_permission_install_apps_description">Untuk memasang ekstensi.</string>
+    <string name="onboarding_description">Mari kita atur beberapa hal terlebih dahulu. Anda juga selalu dapat mengubahnya di menu pengaturan nanti.</string>
+    <string name="no_location_set">Lokasi penyimpanan belum ditentukan</string>
+    <string name="onboarding_permission_notifications_description">Dapatkan notifikasi untuk pembaruan pustaka dan sebagainya.</string>
+    <string name="onboarding_permission_action_grant">Izinkan</string>
+    <string name="onboarding_storage_info">Pilih direktori untuk menyimpan konten dari %1$s, termasuk unduhan chapter, data backup, dan lainnya.
+\n
+\nSebaiknya menggunakan direktori terpisah.
+\n
+\nDirektori yang dipilih: %2$s</string>
 </resources>

@@ -37,7 +37,6 @@ data class ExtensionDetailsScreen(
             state = state,
             onClickSourcePreferences = { navigator.push(SourcePreferencesScreen(it)) },
             onClickWhatsNew = { uriHandler.openUri(screenModel.getChangelogUrl()) },
-            onClickReadme = { uriHandler.openUri(screenModel.getReadmeUrl()) },
             onClickEnableAll = { screenModel.toggleSources(true) },
             onClickDisableAll = { screenModel.toggleSources(false) },
             onClickClearCookies = screenModel::clearCookies,

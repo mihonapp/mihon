@@ -390,8 +390,8 @@
     <string name="secure_screen_summary">Secure screen skryje obsah aplikace při přepínání aplikací a blokuje tvorbu snímků obrazovky</string>
     <string name="secure_screen">Chráněná obrazovka</string>
     <string name="lock_with_biometrics">Vyžadovat odemknutí</string>
-    <string name="theme_dark">Zapnuto</string>
-    <string name="theme_light">Vypnuto</string>
+    <string name="theme_dark">Tmavý</string>
+    <string name="theme_light">Světlý</string>
     <string name="pref_category_theme">Vzhled</string>
     <string name="action_move_to_top">Přesunout nahoru</string>
     <string name="action_desc">Sestupně</string>
@@ -558,22 +558,18 @@
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
     <string name="clear_database_source_item_count">%1$d neknihovní záznamy v databázi</string>
     <string name="pref_true_color_summary">Snižuje pruhování barev, ale může mít vliv na výkon</string>
-    <string name="pref_library_update_manga_restriction">Přeskočit aktualizování položek</string>
     <string name="pref_update_only_completely_read">S nepřečtenými kapitolami</string>
     <string name="database_clean">Nic k vyčištění</string>
     <string name="save_chapter_as_cbz">Uložit jako CBZ archiv</string>
     <string name="library_errors_help">Nápovědu k tomu, jak opravit chyby při aktualizaci knihovny, viz %1$s</string>
-    <string name="action_faq_and_guides">FAQ a Návody</string>
     <string name="publishing_finished">Zveřejnění dokončeno</string>
     <string name="cancelled">Zrušeno</string>
     <string name="action_show_manga">Zobrazit položku</string>
     <string name="action_display_cover_only_grid">Mřížka jen s přebaly</string>
     <string name="pref_update_only_started">Které nebyly rozečteny</string>
     <string name="notification_update_error">%1$d aktualizace(í) selhalo</string>
-    <string name="notification_update_skipped">%1$d aktualizace(í) přeskočena(y)</string>
     <string name="on_hiatus">Má pauzu</string>
     <string name="skipped_reason_not_caught_up">Přeskočeno, protože obsahuje nepřečtené kapitoly</string>
-    <string name="channel_skipped">Přeskočeno</string>
     <string name="action_move_to_top_all_for_series">Přesunout sérii na začátek</string>
     <string name="learn_more">Klepnutím se dozvíte více</string>
     <string name="skipped_reason_not_started">Přeskočeno, protože nebyly přečteny žádné kapitoly</string>
@@ -710,7 +706,6 @@
     <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
     <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
     <string name="pref_library_columns_per_row">%d na řádek</string>
-    <string name="manga_modify_calculated_interval_title">Přizpůsobit interval</string>
     <string name="action_filter_interval_passed">Uplynulé kontrolní období</string>
     <string name="action_filter_interval_custom">Přizpůsobený interval načítání</string>
     <string name="action_filter_interval_long">Načíst měsíčně (28 dní)</string>
@@ -761,4 +756,37 @@
     <string name="label_data_storage">Data a úložiště</string>
     <string name="file_null_uri_error">Nevybrán žádný soubor</string>
     <string name="exclude_scanlators">Vynechat překladatele</string>
+    <string name="onboarding_storage_action_select">Vybrat složku</string>
+    <string name="onboarding_heading">Vítejte!</string>
+    <string name="action_menu_overflow_description">Více možností</string>
+    <string name="onboarding_action_skip">Přeskočit</string>
+    <string name="onboarding_action_next">Další</string>
+    <string name="pref_storage_location">Umístění úložiště</string>
+    <string name="pref_onboarding_guide">Nástupní průvodce</string>
+    <string name="pref_storage_location_info">Používá se pro automatické zálohování, stahování kapitol a lokální zdroj.</string>
+    <string name="onboarding_guides_new_user">Jste v %s noví? Doporučujeme se podívat se na průvodce pro začátečníky.</string>
+    <string name="onboarding_action_finish">Začínáme</string>
+    <string name="onboarding_storage_selection_required">Složka musí být vybrána</string>
+    <string name="onboarding_permission_notifications">Povolení oznámení</string>
+    <string name="onboarding_permission_install_apps">Povolení stahovat aplikace</string>
+    <string name="available_disk_space_info">Dostupné: %1$s / Celkem: %2$s</string>
+    <string name="onboarding_guides_returning_user">Už jste použili %s dříve?</string>
+    <string name="selected">Vybráno</string>
+    <string name="not_selected">Nevybráno</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Vyhněte se přerušením dlouhých aktualizací knihovny, stahování a obnovení záloh.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Využití baterie na pozadí</string>
+    <string name="onboarding_permission_install_apps_description">K nainstalování rozšíření zdrojů.</string>
+    <string name="action_bar_up_description">Navigovat nahoru</string>
+    <string name="onboarding_description">Pojďme nastavit nějaké věci. Vždy můžete tyto změny později změnit v nastavení.</string>
+    <string name="action_sort_tracker_score">Skóre sledovače</string>
+    <string name="no_location_set">Není nastaveno umístění úložiště</string>
+    <string name="onboarding_permission_notifications_description">Buďte upozorněni na aktualizaci knihovny atd.</string>
+    <string name="ext_permission_install_apps_warning">K instalaci rozšíření je nutné povolení. Klepněte zde pro udělení povolení.</string>
+    <string name="private_settings">Zahrnout citlivé nastavení (např. přihlašovací tokeny sledovačů)</string>
+    <string name="onboarding_permission_action_grant">Udělit</string>
+    <string name="onboarding_storage_info">Vyberte složku, kde %1$s bude ukládat stahování kapitol, zálohy a další.
+\n
+\nJe doporučena vyhrazená složka.
+\n
+\nVybraná složka: %2$s</string>
 </resources>

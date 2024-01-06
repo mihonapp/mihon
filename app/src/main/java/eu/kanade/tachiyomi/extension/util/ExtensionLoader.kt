@@ -15,6 +15,7 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
 import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
+import eu.kanade.tachiyomi.util.system.isDevFlavor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -61,11 +62,6 @@ internal object ExtensionLoader {
 
     // inorichi's key
     private const val officialSignature = "7ce04da7773d41b489f4693a366c36bcd0a11fc39b547168553c285bd7348e23"
-
-    /**
-     * List of the trusted signatures.
-     */
-    var trustedSignatures = mutableSetOf(officialSignature) + preferences.trustedSignatures().get()
 
     private const val PRIVATE_EXTENSION_EXTENSION = "ext"
 
@@ -123,6 +119,12 @@ internal object ExtensionLoader {
      * @param context The application context.
      */
     fun loadExtensions(context: Context): List<LoadResult> {
+        // Always make users trust unknown extensions on cold starts in non-dev builds
+        // due to inherent security risks
+        if (!isDevFlavor) {
+            preferences.trustedSignatures().delete()
+        }
+
         val pkgManager = context.packageManager
 
         val installedPkgs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -329,8 +331,6 @@ internal object ExtensionLoader {
             libVersion = libVersion,
             lang = lang,
             isNsfw = isNsfw,
-            hasReadme = hasReadme,
-            hasChangelog = hasChangelog,
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
             isUnofficial = !isOfficiallySigned(signatures),
@@ -394,6 +394,11 @@ internal object ExtensionLoader {
     }
 
     private fun hasTrustedSignature(signatures: List<String>): Boolean {
+        if (officialSignature in signatures) {
+            return true
+        }
+
+        val trustedSignatures = preferences.trustedSignatures().get()
         return trustedSignatures.any { signatures.contains(it) }
     }
 

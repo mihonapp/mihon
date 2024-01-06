@@ -167,7 +167,7 @@
     <string name="creating_backup">S’està creant la còpia de seguretat</string>
     <string name="pref_clear_chapter_cache">Buida la memòria cau de capítols</string>
     <string name="used_cache">Ús: %1$s</string>
-    <string name="cache_deleted">S’ha buidat la memòria cau. S’han suprimit %1$d fitxers</string>
+    <string name="cache_deleted">S’ha buidat la memòria cau i s’han suprimit %1$d fitxers</string>
     <string name="cache_delete_error">S’ha produït un error en netejar</string>
     <string name="pref_clear_cookies">Esborra les galetes</string>
     <string name="cookies_cleared">S’han esborrat les galetes</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Dades</string>
     <string name="backup_restore_missing_sources">Manquen fonts:</string>
     <string name="invalid_backup_file_missing_manga">La còpia de seguretat no conté cap element de la biblioteca.</string>
-    <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid</string>
+    <string name="invalid_backup_file">Fitxer de còpia de seguretat invàlid:</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprova si hi ha noves portades o detalls en actualitzar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Refresca les metadades automàticament</string>
     <string name="action_display_comfortable_grid">Graella confortable</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_split">Divideix les pàgines amples</string>
     <string name="pref_dual_page_invert_summary">Si la ubicació de les pàgines amples dividides no encaixa amb la direcció de lectura</string>
     <string name="pref_dual_page_invert">Inverteix la ubicació de la divisió de pàgines</string>
-    <string name="backup_restore_content_full">Es restauraran les dades del fitxer de còpia de seguretat.
-\n
-\nCaldrà que instal·leu les extensions que manquin i que després inicieu la sessió als serveis de seguiment per a utilitzar-los.</string>
+    <string name="backup_restore_content_full">Caldrà que instal·leu les extensions que manquin i que després inicieu la sessió als serveis de seguiment per a utilitzar-los.</string>
     <string name="update_check_eol">Aquesta versió d’Android ja no està suportada</string>
     <string name="error_no_match">No s’ha trobat cap coincidència</string>
     <string name="source_unsupported">La font no està suportada</string>
@@ -553,8 +551,6 @@
     <string name="cancelled">Cancel·lada</string>
     <string name="library_errors_help">Per a obtenir ajuda per a resoldre errors d’actualització de la biblioteca, vegeu %1$s</string>
     <string name="extension_api_error">No s’ha pogut obtenir la llista d’extensions</string>
-    <string name="action_faq_and_guides">PMF i guies</string>
-    <string name="pref_library_update_manga_restriction">Omet les actualitzacions dels elements</string>
     <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
     <string name="backup_info">També hauríeu de desar còpies de les còpies de seguretat en altres llocs. Les còpies de seguretat poden contenir dades sensibles, incloent-hi les contrasenyes desades; aneu amb compte si les compartiu.</string>
@@ -576,9 +572,7 @@
     <string name="skipped_reason_not_started">S’ha omès perquè no hi ha cap capítol llegit</string>
     <string name="skipped_reason_not_caught_up">S’ha omès perquè hi ha capítols no llegits</string>
     <string name="learn_more">Premeu per a obtenir més informació</string>
-    <string name="channel_skipped">Omesa</string>
     <string name="notification_update_error">Han fallat %1$d actualitzacions</string>
-    <string name="notification_update_skipped">S’han omès %1$d actualitzacions</string>
     <string name="rotation_reverse_portrait">Vertical inversa</string>
     <string name="action_move_to_top_all_for_series">Mou la sèrie a dalt de tot</string>
     <string name="disabled_nav">Desactivat</string>
@@ -721,7 +715,6 @@
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
-    <string name="manga_modify_calculated_interval_title">Personalitza l’interval</string>
     <string name="track_delete_title">Voleu deixar de seguir %s\?</string>
     <string name="track_delete_remote_text">Elimina també de %s</string>
     <string name="track_delete_text">Se n’eliminarà el seguiment local.</string>
@@ -757,7 +750,7 @@
     <string name="last_auto_backup_info">Darrera còpia de seguretat automàtica: %s</string>
     <string name="no_scanlators_found">No s’ha trobat cap scanlator</string>
     <string name="scanlator">Scanlator</string>
-    <string name="pref_flash_page">Centelleig blanc en canviar de pàgina</string>
+    <string name="pref_flash_page">Centelleig en canviar de pàgina</string>
     <string name="pref_storage_usage">Ús de l’emmagatzematge</string>
     <string name="action_sort_tracker_score">Puntuació del servei de seguiment</string>
     <string name="label_data_storage">Dades i emmagatzematge</string>
@@ -784,4 +777,16 @@
 \nÉs recomanable fer servir una carpeta dedicada.
 \n
 \nCarpeta seleccionada: %2$s</string>
+    <string name="onboarding_permission_notifications">Permís de notificacions</string>
+    <string name="onboarding_permission_install_apps">Permís per a instal·lar aplicacions</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Eviteu interrupcions en actualitzacions de la biblioteca, baixades i restauracions de còpies de seguretat que tinguin una llarga durada.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Ús de la bateria en segon pla</string>
+    <string name="onboarding_permission_install_apps_description">Per a instal·lar extensions de fonts.</string>
+    <string name="onboarding_permission_notifications_description">Rebeu notificacions quan hi hagi actualitzacions de la biblioteca i més.</string>
+    <string name="onboarding_permission_action_grant">Permet</string>
+    <string name="available_disk_space_info">Disponible: %1$s / Total: %2$s</string>
+    <string name="manga_interval_expected_update">La pròxima actualització es farà pels volts de %s</string>
+    <string name="invalid_backup_file_error">Error complet:</string>
+    <string name="ext_permission_install_apps_warning">Calen permisos per a instal·lar extensions. Premeu aquí per a concedir-les.</string>
+    <string name="private_settings">Inclou-hi configuració sensible (per exemple, testimonis d’autenticació dels serveis de seguiment)</string>
 </resources>

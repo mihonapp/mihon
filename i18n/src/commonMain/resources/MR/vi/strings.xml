@@ -118,7 +118,7 @@
     <string name="services">Dịch vụ</string>
     <string name="pref_clear_chapter_cache">Dọn dẹp bộ nhớ đệm</string>
     <string name="used_cache">Đã sử dụng: %1$s</string>
-    <string name="cache_deleted">Bộ nhớ đệm đã được dọn dẹp. %1$d tập tin đã bị xóa</string>
+    <string name="cache_deleted">Bộ nhớ đệm đã được dọn dẹp, đã xoá %1$d tập tin</string>
     <string name="cache_delete_error">Lỗi xảy ra trong khi xóa</string>
     <string name="pref_clear_cookies">Dọn dẹp thông tin lưu trữ</string>
     <string name="cookies_cleared">Thông tin lưu trữ đã được xóa</string>
@@ -353,7 +353,7 @@
     <string name="action_enable_all">Bật tất cả</string>
     <string name="action_sort_date_added">Ngày thêm</string>
     <string name="invalid_backup_file_missing_manga">Bản sao lưu không chứa truyện nào.</string>
-    <string name="invalid_backup_file">Tệp sao lưu không hợp lệ</string>
+    <string name="invalid_backup_file">Tệp sao lưu không hợp lệ:</string>
     <string name="add_to_library">Thêm vào thư viện</string>
     <string name="ext_nsfw_warning">Nguồn truyền từ tiện ích mở rộng này có thể chứa nội dung NSFW 18+</string>
     <string name="ext_nsfw_short">18+</string>
@@ -438,9 +438,7 @@
     <string name="restore_in_progress">Đang trong quá trình phục hồi</string>
     <string name="creating_backup_error">Lưu trữ thất bại</string>
     <string name="restore_duration">%02d phút, %02d giây</string>
-    <string name="backup_restore_content_full">Dữ liệu từ tệp sao lưu sẽ được khôi phục.
-\n
-\nBạn sẽ cần cài đặt bất kỳ tiện ích mở rộng nào bị thiếu và đăng nhập vào các dịch vụ theo dõi sau đó để sử dụng chúng.</string>
+    <string name="backup_restore_content_full">Bạn sẽ cần cài đặt bất kỳ tiện ích mở rộng nào bị thiếu rồi đăng nhập vào các dịch vụ theo dõi để sử dụng chúng.</string>
     <string name="backup_restore_missing_trackers">Bộ theo dõi chưa được đăng nhập vào :</string>
     <string name="backup_restore_missing_sources">Nguồn không tìm thấy :</string>
     <string name="pref_download_new_categories_details">Truyện trong các danh mục bị loại trừ sẽ không được tải xuống.</string>
@@ -559,16 +557,13 @@
     <string name="database_clean">Không có gì để dọn</string>
     <string name="extension_api_error">Không tải được danh sách tiện ích mở rộng</string>
     <string name="privacy_policy">Chính sách quyền riêng tư</string>
-    <string name="pref_library_update_manga_restriction">Không cập nhật các truyện</string>
     <string name="pref_update_only_completely_read">Có chương chưa đọc</string>
     <string name="publishing_finished">Đã hoàn thành xuất bản</string>
     <string name="cancelled">Đã ngưng</string>
     <string name="on_hiatus">Đang tạm ngưng</string>
     <string name="library_errors_help">Để được trợ giúp về cách sửa lỗi cập nhật thư viện, hãy xem %1$s</string>
     <string name="save_chapter_as_cbz">Lưu dưới dạng lưu trữ CBZ</string>
-    <string name="action_faq_and_guides">Câu Hỏi Thờng Gặp và Hướng Dẫn</string>
     <string name="pref_update_only_started">Chưa bắt đầu đọc</string>
-    <string name="notification_update_skipped">%1$d cập nhật được bỏ qua</string>
     <string name="learn_more">Nhấn để tìm hiểu thêm</string>
     <string name="pref_landscape_zoom">Phóng ảnh phong cảnh tự động</string>
     <string name="action_show_manga">Hiển thị truyện</string>
@@ -579,7 +574,6 @@
     <string name="skipped_reason_completed">Đã bỏ qua vì bộ truyện đã hoàn thành</string>
     <string name="skipped_reason_not_caught_up">Đã bỏ qua vì vẫn còn chương chưa đọc</string>
     <string name="skipped_reason_not_started">Đã bỏ qua vì chưa chương được đọc</string>
-    <string name="channel_skipped">Bỏ qua</string>
     <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
     <string name="disabled_nav">Tắt</string>
     <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
@@ -748,7 +742,6 @@
     <string name="action_menu_overflow_description">Thêm tùy chọn</string>
     <string name="last_auto_backup_info">Lần cuối cùng tự động lưu: %s</string>
     <string name="onboarding_guides_returning_user">Đã sử dụng %s từ trước rồi sao?</string>
-    <string name="manga_modify_calculated_interval_title">Tùy chỉnh đoạn thời gian</string>
     <string name="selected">Được chọn</string>
     <string name="no_scanlators_found">Không tìm thấy máy quét nào</string>
     <string name="not_selected">Chưa chọn</string>
@@ -760,7 +753,6 @@
     <string name="onboarding_permission_ignore_battery_opts_description">Tránh gián đoạn quá trình cập nhật thư viện, tải xuống và khôi phục bản sao lưu trong thời gian dài.</string>
     <string name="exception_offline">Mất kết nối mạng</string>
     <string name="pref_storage_usage">Kho chứa chiếm dụng</string>
-    <string name="onboarding_permission_type_optional">Tùy ý</string>
     <string name="onboarding_action_next">Tiếp</string>
     <string name="onboarding_permission_ignore_battery_opts">Sử dụng pin nền</string>
     <string name="onboarding_permission_install_apps_description">Để cài đặt nguồn mở rộng.</string>
@@ -777,7 +769,6 @@
     <string name="file_null_uri_error">Không có tập tin được chọn</string>
     <string name="track_delete_title">Xóa bộ theo dõi %s?</string>
     <string name="track_delete_remote_text">Đồng thời xóa khỏi %s</string>
-    <string name="onboarding_permission_type_required">Bắt buộc</string>
     <string name="has_results">Có kết quả</string>
     <string name="manga_display_interval_title">Ước tính mỗi</string>
     <string name="track_delete_text">Điều này sẽ loại bỏ bộ theo dõi cục bộ.</string>
@@ -793,4 +784,9 @@
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>
     <string name="exception_unknown_host">Không thể truy cập %s</string>
     <string name="exclude_scanlators">Loại trừ máy quét</string>
+    <string name="manga_interval_expected_update">Lần cập nhật tiếp theo trong khoảng %s</string>
+    <string name="available_disk_space_info">Hiện có: %1$s / Tổng cộng: %2$s</string>
+    <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>
+    <string name="ext_permission_install_apps_warning">Cần phải cấp phép để cài đặt tiện ích mở rộng. Bấm đây để cấp.</string>
+    <string name="private_settings">Bao gồm những cài đặt nhạy cảm (ví dụ như token đăng nhập tracker)</string>
 </resources>

@@ -405,6 +405,11 @@ object Migrations {
                 // Deleting old download cache index files, but might as well clear it all out
                 context.cacheDir.deleteRecursively()
             }
+            if (oldVersion < 114) {
+                sourcePreferences.extensionRepos().getAndSet {
+                    it.map { "https://raw.githubusercontent.com/$it/repo" }.toSet()
+                }
+            }
             return true
         }
 

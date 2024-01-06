@@ -385,7 +385,6 @@
     <string name="pref_category_library">서재</string>
     <string name="add_to_library">서재에 추가</string>
     <string name="save_chapter_as_cbz">CBZ 파일로 저장</string>
-    <string name="pref_library_update_manga_restriction">항목 업데이트 건너뛰기</string>
     <string name="secure_screen_summary">화면 보안을 켜면 앱을 전환할 때 내용이 숨겨지며 스크린샷을 찍을 수 없습니다</string>
     <string name="in_library">서재에 추가됨</string>
     <string name="action_migrate">데이터 이전</string>
@@ -431,7 +430,6 @@
     <string name="database_clean">지울 것이 없습니다</string>
     <string name="learn_more">터치하여 자세히 알아보기</string>
     <string name="chapter_settings_updated">기본 회차 설정을 업데이트 했습니다</string>
-    <string name="channel_skipped">건너뜀</string>
     <string name="channel_new_chapters">회차 업데이트</string>
     <string name="include">포함: %s</string>
     <string name="label_background_activity">백그라운드 활동</string>
@@ -474,7 +472,6 @@
     <string name="notification_size_warning">대규모 업데이트는 소스에 피해를 입히고 업데이트가 느려지고 배터리 사용량이 증가할 수 있습니다. 탭하여 자세히 알아보기.</string>
     <string name="notification_chapters_single">%1$s화</string>
     <string name="notification_update_error">%1$d개의 업데이트가 실패했습니다</string>
-    <string name="notification_update_skipped">%1$d개의 업데이트를 건너 뛰었습니다</string>
     <string name="library_errors_help">서재 업데이트 오류를 해결하려면 %1$s를 참조하세요</string>
     <string name="skipped_reason_completed">완결된 만화를 건너 뛰었습니다</string>
     <string name="skipped_reason_not_started">읽지 않은 만화를 건너 뛰었습니다</string>
@@ -562,7 +559,6 @@
     <string name="cancel_all_for_series">이 만화의 항목을 모두 취소</string>
     <string name="action_webview_forward">앞으로</string>
     <string name="pref_create_folder_per_manga">각각의 폴더에 페이지 저장</string>
-    <string name="action_faq_and_guides">FAQ 및 설명서</string>
     <string name="pref_update_only_started">읽지 않음</string>
     <string name="action_move_to_top_all_for_series">이 시리즈를 맨 위로 이동</string>
     <string name="action_webview_refresh">새로고침</string>
@@ -714,7 +710,6 @@
     <string name="action_filter_interval_custom">사용자 지정 가져오기 간격</string>
     <string name="action_filter_interval_long">매월 가져오기 (28일)</string>
     <string name="intervals_header">간격</string>
-    <string name="manga_modify_calculated_interval_title">간격 설정</string>
     <string name="delete_downloaded">다운로드 삭제</string>
     <string name="has_results">결과가 있는 것만 보기</string>
     <string name="track_delete_text">이렇게 하면 로컬에서 동기화가 제거됩니다.</string>

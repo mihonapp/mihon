@@ -112,7 +112,6 @@
     <string name="action_webview_back">Tilbage</string>
     <string name="action_webview_refresh">Genindlæs</string>
     <string name="action_start_downloading_now">Start download nu</string>
-    <string name="action_faq_and_guides">FAQ og guides</string>
     <string name="loading">Loader…</string>
     <string name="app_not_available">App ikke tilgængelig</string>
     <string name="pref_category_general">Generelt</string>
@@ -170,7 +169,6 @@
     <string name="update_weekly">Ugentligt</string>
     <string name="charging">Kun under opladning</string>
     <string name="restrictions">Begrænsninger: %s</string>
-    <string name="pref_library_update_manga_restriction">Spring over opdatering af titler</string>
     <string name="pref_update_only_completely_read">Med ulæst kapitler</string>
     <string name="pref_update_only_non_completed">Med \"Færdig\" status</string>
     <string name="pref_update_only_started">Der ikke er blevet startet</string>
@@ -275,7 +273,6 @@
     <string name="pref_always_show_chapter_transition">Vis altid kapitelovergang</string>
     <string name="action_create">Opret</string>
     <string name="pref_restore_backup">Gendan sikkerhedskopi</string>
-    <string name="channel_skipped">Sprunget over</string>
     <string name="used_cache">Brugt: %1$s</string>
     <string name="pref_lowest">Laveste</string>
     <string name="rotation_type">Rotation</string>

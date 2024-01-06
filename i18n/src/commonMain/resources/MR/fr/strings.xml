@@ -114,7 +114,7 @@
     <string name="pref_download_new">Télécharger les nouveaux chapitres</string>
     <string name="services">Services</string>
     <string name="used_cache">Utilisé : %1$s</string>
-    <string name="cache_deleted">Cache effacé. %1$d fichiers ont été supprimés</string>
+    <string name="cache_deleted">Cache effacé, %1$d fichiers supprimés</string>
     <string name="cache_delete_error">Une erreur est survenue lors de l\'effacement du cache</string>
     <string name="pref_clear_cookies">Effacer les cookies</string>
     <string name="cookies_cleared">Cookies effacés</string>
@@ -301,9 +301,9 @@
     <string name="action_sort_latest_chapter">Dernier chapitre</string>
     <string name="action_view_chapters">Voir les chapitres</string>
     <string name="action_cancel_all">Tout annuler</string>
-    <string name="theme_light">Désactivé</string>
-    <string name="theme_dark">Activé</string>
-    <string name="theme_system">Par défaut du système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="theme_system">Système</string>
     <string name="pref_manage_notifications">Notifications</string>
     <string name="pref_category_security">Sécurité et confidentialité</string>
     <string name="lock_with_biometrics">Nécessite un déverrouillage</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_split">Diviser les pages larges</string>
     <string name="pref_dual_page_invert_summary">Si l\'emplacement des pages larges divisées ne correspond pas au sens de lecture</string>
     <string name="pref_dual_page_invert">Inverser le placement des pages divisées</string>
-    <string name="backup_restore_content_full">Les données du fichier de sauvegarde seront restaurées.
-\n
-\nVous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
+    <string name="backup_restore_content_full">Vous devrez installer les extensions manquantes et vous connecter ensuite aux services de suivi pour les utiliser.</string>
     <string name="nav_zone_prev">Précédent</string>
     <string name="pref_dns_over_https">DNS over HTTPS (DoH)</string>
     <string name="nav_zone_right">Droite</string>
@@ -559,14 +557,12 @@
     <string name="database_clean">Rien à effacer</string>
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
     <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="pref_library_update_manga_restriction">Ignorer la mise à jour</string>
     <string name="pref_update_only_completely_read">Avec des chapitres non lus</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
     <string name="on_hiatus">En pause</string>
     <string name="publishing_finished">Publication terminée</string>
     <string name="cancelled">Annulé</string>
-    <string name="action_faq_and_guides">FAQ et guides</string>
     <string name="action_show_manga">Afficher le titre</string>
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
     <string name="pref_navigate_pan">Panoramique des images larges</string>
@@ -576,9 +572,7 @@
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
     <string name="learn_more">Appuyez pour en savoir plus</string>
-    <string name="notification_update_skipped">%1$d mise(s) à jour ignorée(s)</string>
     <string name="notification_update_error">Échec de %1$d mise(s) à jour</string>
-    <string name="channel_skipped">Ignoré</string>
     <string name="rotation_reverse_portrait">Portrait inversé</string>
     <string name="action_move_to_top_all_for_series">Déplacer la série vers le haut</string>
     <string name="disabled_nav">Désactivé</string>
@@ -732,7 +726,6 @@
     <string name="manga_display_interval_title">Estimer chaque</string>
     <string name="exception_http">HTTP %d, consulter le site Web dans WebView</string>
     <string name="manga_display_modified_interval_title">Configurer pour mettre à jour tous les</string>
-    <string name="manga_modify_calculated_interval_title">Personnaliser l\'intervalle</string>
     <string name="action_move_to_bottom_all_for_series">Déplacer la série vers le bas</string>
     <string name="track_delete_remote_text">Supprimez également de %s</string>
     <string name="exception_unknown_host">Impossible de joindre %s</string>
@@ -745,11 +738,24 @@
     <string name="selected">Sélectionné</string>
     <string name="not_selected">Pas sélectionné(e)</string>
     <string name="scanlator">Scanlator</string>
-    <string name="pref_flash_page">Faire l\'écran clignoter sur le changement de page</string>
+    <string name="pref_flash_page">Flash lors du changement de page</string>
     <string name="action_bar_up_description">Naviguer vers le haut</string>
     <string name="action_sort_tracker_score">Score du service de suivi</string>
     <string name="label_data_storage">Données et stockage</string>
     <string name="sort_category_confirmation">Voulez-vous trier les catégories par ordre alphabétique ?</string>
     <string name="track_activity_name">Se connecter au service de suivi</string>
     <string name="pref_relative_format_summary">« %1$s » au lieu de « %2$s »</string>
+    <string name="pref_storage_location">Emplacement de stockage</string>
+    <string name="pref_flash_page_summ">Réduire le ghosting sur les écrans e-ink</string>
+    <string name="pref_storage_location_info">Utilisé pour les backups automatiques, téléchargements des chapitres et la source locale.</string>
+    <string name="onboarding_storage_selection_required">Un dossier doit être sélectionné</string>
+    <string name="available_disk_space_info">Disponible : %1$s / Total : %2$s</string>
+    <string name="onboarding_heading">Bienvenue !</string>
+    <string name="onboarding_action_skip">Passer</string>
+    <string name="pref_storage_usage">Utilisation du stockage</string>
+    <string name="onboarding_action_next">Suivant</string>
+    <string name="no_location_set">Aucun emplacement de stockage défini</string>
+    <string name="ext_permission_install_apps_warning">Des permissions sont nécessaires pour installer des extensions. Appuyer ici pour les accorder.</string>
+    <string name="onboarding_permission_action_grant">Accorder</string>
+    <string name="pref_relative_format">Durées relatives</string>
 </resources>

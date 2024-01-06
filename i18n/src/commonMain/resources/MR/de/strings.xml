@@ -140,7 +140,7 @@
     <string name="creating_backup">Datensicherung wird erstellt</string>
     <string name="pref_clear_chapter_cache">Kapitel-Zwischenspeicher leeren</string>
     <string name="used_cache">Belegt: %1$s</string>
-    <string name="cache_deleted">Zwischenspeicher geleert. %1$d Dateien wurden gelöscht</string>
+    <string name="cache_deleted">Zwischenspeicher geleert, %1$d Dateien gelöscht</string>
     <string name="cache_delete_error">Fehler während dem Leeren aufgetreten</string>
     <string name="pref_clear_cookies">Cookies löschen</string>
     <string name="cookies_cleared">Cookies gelöscht</string>
@@ -560,13 +560,11 @@
     <string name="extension_api_error">Herunterladen der Erweiterungsliste ist fehlgeschlagen</string>
     <string name="privacy_policy">Datenschutzbestimmungen</string>
     <string name="pref_update_only_completely_read">Mit ungelesenen Kapiteln</string>
-    <string name="pref_library_update_manga_restriction">Aktualisierung der Einträge überspringen</string>
     <string name="library_errors_help">Für Hilfe zum Beheben von Fehlern bei Bibliotheksaktualisierungen, siehe %1$s</string>
     <string name="save_chapter_as_cbz">Als CBZ-Archiv speichern</string>
     <string name="cancelled">Abgebrochen</string>
     <string name="on_hiatus">Unterbrochen</string>
     <string name="publishing_finished">Veröffentlichung abgeschlossen</string>
-    <string name="action_faq_and_guides">Häufige Fragen und Leitfäden</string>
     <string name="action_show_manga">Eintrag anzeigen</string>
     <string name="action_display_cover_only_grid">Nur-Cover-Kacheln</string>
     <string name="pref_landscape_zoom">Bei breiten Bildern automatisch hineinzoomen</string>
@@ -576,8 +574,6 @@
     <string name="skipped_reason_not_caught_up">Übersprungen, weil es ungelesene Kapitel gibt</string>
     <string name="skipped_reason_not_started">Übersprungen, weil keine Kapitel gelesen wurden</string>
     <string name="notification_update_error">%1$d Aktualisierung(en) fehlgeschlagen</string>
-    <string name="notification_update_skipped">%1$d Aktualisierung(en) übersprungen</string>
-    <string name="channel_skipped">Übersprungen</string>
     <string name="learn_more">Antippen, um mehr zu erfahren</string>
     <string name="rotation_reverse_portrait">Umgekehrtes Hochformat</string>
     <string name="action_move_to_top_all_for_series">Serie nach oben verschieben</string>
@@ -716,7 +712,6 @@
     <string name="action_filter_interval_long">Monatlich abrufen (28 Tage)</string>
     <string name="action_sort_next_updated">Nächste erwartete Aktualisierung</string>
     <string name="pref_update_only_in_release_period">Außerhalb des erwarteten Veröffentlichungszeitraums</string>
-    <string name="manga_modify_calculated_interval_title">Intervall anpassen</string>
     <string name="skipped_reason_not_in_release_period">Übersprungen, da heute keine Veröffentlichung erwartet wurde</string>
     <string name="manga_display_interval_title">Schätzt alle</string>
     <string name="manga_display_modified_interval_title">Aktualisiert alle</string>
@@ -752,7 +747,7 @@
     <string name="relative_time_span_never">Nie</string>
     <string name="pref_flash_page_summ">Reduziert Ghosting auf E-Papier-Displays</string>
     <string name="last_auto_backup_info">Zuletzt automatisch gesichert: %s</string>
-    <string name="pref_flash_page">Bei Umblättern weiß aufleuchten</string>
+    <string name="pref_flash_page">Bei Umblättern aufleuchten</string>
     <string name="label_data_storage">Daten und Speicher</string>
     <string name="action_create">Erstellen</string>
     <string name="action_apply">Anwenden</string>
@@ -784,4 +779,14 @@
 \nEin dedizierter Ordner wird empfohlen.
 \n
 \nAusgewählter Ordner: %2$s</string>
+    <string name="onboarding_permission_notifications">Berechtigung für Benachrichtigungen</string>
+    <string name="onboarding_permission_install_apps">Berechtigung zum Installieren von Apps</string>
+    <string name="available_disk_space_info">Verfügbar: %1$s / Insgesamt: %2$s</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Verhindere Unterbrechungen bei lang anhaltenden Bibliotheksaktualisierungen, Downloads und Sicherungswiederherstellungen.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Akkunutzung im Hintergrund</string>
+    <string name="onboarding_permission_install_apps_description">Zum Installieren von Quellenerweiterungen.</string>
+    <string name="onboarding_permission_notifications_description">Erhalte Benachrichtigungen für Bibliotheksaktualisierungen und mehr.</string>
+    <string name="ext_permission_install_apps_warning">Für das Installieren von Erweiterungen sind Berechtigungen erforderlich. Tippe hier, um sie zu gewähren.</string>
+    <string name="private_settings">Sensible Einstellungen einbeziehen (z. B. Login-Token für Tracker)</string>
+    <string name="onboarding_permission_action_grant">Zulassen</string>
 </resources>

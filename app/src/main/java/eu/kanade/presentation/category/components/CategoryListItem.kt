@@ -49,7 +49,7 @@ fun CategoryListItem(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = "")
+            Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
             Text(
                 text = category.name,
                 modifier = Modifier
@@ -61,13 +61,13 @@ fun CategoryListItem(
                 onClick = { onMoveUp(category) },
                 enabled = canMoveUp,
             ) {
-                Icon(imageVector = Icons.Outlined.ArrowDropUp, contentDescription = "")
+                Icon(imageVector = Icons.Outlined.ArrowDropUp, contentDescription = null)
             }
             IconButton(
                 onClick = { onMoveDown(category) },
                 enabled = canMoveDown,
             ) {
-                Icon(imageVector = Icons.Outlined.ArrowDropDown, contentDescription = "")
+                Icon(imageVector = Icons.Outlined.ArrowDropDown, contentDescription = null)
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onRename) {

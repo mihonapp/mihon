@@ -18,4 +18,10 @@
         <item quantity="many">%1$d дзён таму</item>
         <item quantity="other">%1$d дзён таму</item>
     </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Наступная непрачытаная глава</item>
+        <item quantity="few">Наступныя %d непрачытаныя главы</item>
+        <item quantity="many">Наступныя %d непрачытаных глав</item>
+        <item quantity="other">Наступныя %d непрачытаных глав</item>
+    </plurals>
 </resources>

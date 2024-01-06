@@ -167,7 +167,7 @@
     <string name="creating_backup">Δημιουργία αντιγράφων ασφαλείας</string>
     <string name="pref_clear_chapter_cache">Καθάρισμα προσωρινής μνήμης κεφαλαίου</string>
     <string name="used_cache">Χρησιμοποιήθηκε: %1$s</string>
-    <string name="cache_deleted">Η κρυφή μνήμη διαγράφηκε. %1$d αρχεία έχουν διαγραφεί</string>
+    <string name="cache_deleted">Η προσωρινή μνήμη διαγράφηκε, %1$d αρχεία διαγράφηκαν</string>
     <string name="cache_delete_error">Παρουσιάστηκε σφάλμα κατά την εκκαθάριση</string>
     <string name="pref_clear_cookies">Διαγραφή cookies</string>
     <string name="cookies_cleared">Τα cookies διαγράφηκαν</string>
@@ -559,14 +559,12 @@
     <string name="database_clean">Τίποτα προς εκκαθάριση</string>
     <string name="extension_api_error">Απέτυχε η λήψη λίστας επεκτάσεων</string>
     <string name="privacy_policy">Πολιτική απορρήτου</string>
-    <string name="pref_library_update_manga_restriction">Παράλειψη ενημέρωσης καταχωρήσεων</string>
     <string name="pref_update_only_completely_read">Με αδιάβαστο(α) κεφάλαιο(α)</string>
     <string name="library_errors_help">Για βοήθεια σχετικά με τον τρόπο διόρθωσης σφαλμάτων ενημέρωσης βιβλιοθήκης, ανατρέξτε στο %1$s</string>
     <string name="save_chapter_as_cbz">Αποθήκευση ως αρχείο CBZ</string>
     <string name="cancelled">Ακυρώθηκε</string>
     <string name="on_hiatus">Σε αναστολή</string>
     <string name="publishing_finished">Η έκδοση ολοκληρώθηκε</string>
-    <string name="action_faq_and_guides">Συχνές ερωτήσεις και οδηγοί</string>
     <string name="action_show_manga">Εμφάνιση καταχώρισης</string>
     <string name="pref_landscape_zoom">Αυτόματο ζουμ σε ευρείες εικόνες</string>
     <string name="action_display_cover_only_grid">Πλέγμα μόνο με εξώφυλλα</string>
@@ -577,8 +575,6 @@
     <string name="skipped_reason_not_started">Παραλείπεται επειδή δεν έχουν διαβαστεί κεφάλαια</string>
     <string name="notification_update_error">%1$d ενημέρωση(ες) απέτυχε(-αν)</string>
     <string name="learn_more">Πατήστε για να μάθετε περισσότερα</string>
-    <string name="channel_skipped">Παραλήφθηκαν</string>
-    <string name="notification_update_skipped">%1$d ενημέρωση(εις) παραλείφθηκε(-αν)</string>
     <string name="rotation_reverse_portrait">Αντίστροφο πορτρέτο</string>
     <string name="action_move_to_top_all_for_series">Μετακίνηση σειράς προς τα πάνω</string>
     <string name="disabled_nav">Απενεργοποιημένο</string>
@@ -721,7 +717,6 @@
     <string name="manga_display_modified_interval_title">Ρύθμιση για ενημέρωση κάθε</string>
     <string name="action_filter_interval_long">Ανάκτηση μηνιαίως (28 ημέρες)</string>
     <string name="action_sort_next_updated">Επόμενη αναμενόμενη ενημέρωση</string>
-    <string name="manga_modify_calculated_interval_title">Προσαρμογή διαστήματος</string>
     <string name="skipped_reason_not_in_release_period">Παραλείφθηκε επειδή δεν αναμενόταν κυκλοφορία σήμερα</string>
     <string name="action_ok">Εντάξει</string>
     <string name="track_delete_title">Κατάργηση παρακολούθησης %s;</string>
@@ -784,4 +779,14 @@
 \nΣυνιστάται ένας αποκλειστικός φάκελος.
 \n
 \nΕπιλεγμένος φάκελος: %2$s</string>
+    <string name="onboarding_permission_notifications">Άδεια ειδοποιήσεων</string>
+    <string name="onboarding_permission_install_apps">Άδεια εγκατάστασης εφαρμογών</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Αποφύγετε διακοπές σε μακροχρόνιες ενημερώσεις της βιβλιοθήκης, λήψεις και επαναφορές αντιγράφων ασφαλείας.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Χρήση μπαταρίας στο παρασκήνιο</string>
+    <string name="onboarding_permission_install_apps_description">Για εγκατάσταση επεκτάσεων πηγών.</string>
+    <string name="onboarding_permission_notifications_description">Ειδοποιηθείτε για ενημερώσεις της βιβλιοθήκης και άλλων.</string>
+    <string name="onboarding_permission_action_grant">Παραχώρηση</string>
+    <string name="available_disk_space_info">Διαθέσιμο: %1$s / Σύνολο: %2$s</string>
+    <string name="ext_permission_install_apps_warning">Απαιτούνται δικαιώματα για την εγκατάσταση επεκτάσεων. Πατήστε εδώ για παραχώρηση.</string>
+    <string name="private_settings">Συμπεριλάβετε ευαίσθητες ρυθμίσεις (π.χ. διακριτικά σύνδεσης παρακολούθησης)</string>
 </resources>

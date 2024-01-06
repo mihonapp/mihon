@@ -31,8 +31,6 @@ import uy.kohesive.injekt.api.get
 
 private const val URL_EXTENSION_COMMITS =
     "https://github.com/tachiyomiorg/tachiyomi-extensions/commits/master"
-private const val URL_EXTENSION_BLOB =
-    "https://github.com/tachiyomiorg/tachiyomi-extensions/blob/master"
 
 class ExtensionDetailsScreenModel(
     pkgName: String,
@@ -93,24 +91,9 @@ class ExtensionDetailsScreenModel(
 
         val pkgName = extension.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
         val pkgFactory = extension.pkgFactory
-        if (extension.hasChangelog) {
-            return createUrl(URL_EXTENSION_BLOB, pkgName, pkgFactory, "/CHANGELOG.md")
-        }
 
         // Falling back on GitHub commit history because there is no explicit changelog in extension
         return createUrl(URL_EXTENSION_COMMITS, pkgName, pkgFactory)
-    }
-
-    fun getReadmeUrl(): String {
-        val extension = state.value.extension ?: return ""
-
-        if (!extension.hasReadme) {
-            return "https://tachiyomi.org/docs/faq/browse/extensions"
-        }
-
-        val pkgName = extension.pkgName.substringAfter("eu.kanade.tachiyomi.extension.")
-        val pkgFactory = extension.pkgFactory
-        return createUrl(URL_EXTENSION_BLOB, pkgName, pkgFactory, "/README.md")
     }
 
     fun clearCookies() {
