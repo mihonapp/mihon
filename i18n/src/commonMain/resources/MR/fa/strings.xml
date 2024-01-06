@@ -465,7 +465,6 @@
     <string name="pref_navigate_pan">هنگام ضربه زدن تصاویر را عریض کنید</string>
     <string name="pref_landscape_zoom">بزرگنمایی تصویر چشم انداز</string>
     <string name="update_check_fdroid_migration_info">نسخه جدیدی از نسخه‌های رسمی موجود است. برای یادگیری نحوه انتقال از نسخه‌های غیررسمی اف دروید، ضربه بزنید.</string>
-    <string name="channel_skipped">رد شده</string>
     <string name="action_sort_last_manga_update">بررسی آخرین به روزرسانی</string>
     <string name="action_sort_unread_count">تعداد نخوانده‌ها</string>
     <string name="skipped_reason_completed">به دلیل کامل‌بودن سری، رد شد</string>
@@ -478,7 +477,6 @@
     <string name="action_order_by_chapter_number">بر اساس شماره‌ی قسمت</string>
     <string name="action_asc">صعودی</string>
     <string name="action_display_language_badge">زبان</string>
-    <string name="action_faq_and_guides">پرسش و پاسخ‌های متداول و راهنمایی‌ها</string>
     <string name="action_show_manga">نمایش ورودی</string>
     <string name="cancel_all_for_series">لغو همه برای این سری</string>
     <string name="pref_dark_theme_pure_black">حالت تاریک مشکی خالص</string>
@@ -498,7 +496,6 @@
     <string name="pref_update_only_started">که شروع نشده‌اند</string>
     <string name="restrictions">محدودیت‌ها: %s</string>
     <string name="pref_update_only_completely_read">با قسمت‌(های) خوانده‌نشده</string>
-    <string name="pref_library_update_manga_restriction">از به‌روزرسانی ورودی‌ها صرف‌نظر کنید</string>
     <string name="relative_time_today">امروز</string>
     <string name="update_72hour">هر 3 روز</string>
     <string name="connected_to_wifi">فقط روی Wi-Fi</string>
@@ -615,7 +612,6 @@
     <string name="download_queue_size_warning">هشدار: حجم زیاد بارگیری ممکن است باعث اهسته تر شدن سرعت ویا مسدود کردن Tachiyomi از منبع شود. برای اطلاعات بیشتر لمس کنید.</string>
     <string name="skipped_reason_not_always_update">به دلیل این که این مجموعه نیازی به به روز رسانی نداشت رد شد</string>
     <string name="skipped_reason_not_caught_up">به دلیل وجود چپتر های خوانده نشده رد شد</string>
-    <string name="notification_update_skipped">%1$d بزور رسانی رد شد</string>
     <string name="skipped_reason_not_started">به دلیل این که هیچ چپتری خوانده نشده بود رد شد</string>
     <string name="notification_update_error">%1$d بروز رسانی ناموفق</string>
     <string name="pref_relative_format_summary">\"%1$s\" به جای \"%2$s\"</string>

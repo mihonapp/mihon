@@ -159,7 +159,6 @@
     <string name="action_webview_forward">Алға</string>
     <string name="action_webview_refresh">Жаңарту</string>
     <string name="action_start_downloading_now">Жүктеуді қазір бастау</string>
-    <string name="action_faq_and_guides">ЖҚС пен Нұсқаулықтар</string>
     <string name="loading">Жүктелуде…</string>
     <string name="app_not_available">Қолданба қолжетімсіз</string>
     <string name="pref_category_general">Жалпы</string>
@@ -231,7 +230,6 @@
     <string name="pref_crop_borders">Кесу жиектері</string>
     <string name="extension_api_error">Кеңейтулер тізімін алу сәтсіз өтті</string>
     <string name="pref_cutout_short">Мазмұнды кесу аймағында көрсету</string>
-    <string name="pref_library_update_manga_restriction">Жазбаларды жаңартуды өткізіп жіберу</string>
     <string name="pref_update_only_started">Бұл басталған жоқ</string>
     <string name="pref_library_update_refresh_metadata_summary">Кітапхананы жаңарту кезінде жаңа мұқаба мен мәліметтерді тексеру</string>
     <string name="ext_updates_pending">Жаңартулар күтілуде</string>
@@ -518,7 +516,6 @@
     <string name="clear_history_confirmation">Сенімдісіз бе\? Бар тарих жоғалады.</string>
     <string name="source_empty_screen">Дереккөз табылмады</string>
     <string name="notification_update_error">%1$d жаңарту сәтсіз өтті</string>
-    <string name="notification_update_skipped">%1$d жаңарту өткізіп жіберілді</string>
     <string name="notification_cover_update_failed">Мұқаба жаңартылмады</string>
     <string name="update_check_notification_update_available">Жаңа нұсқа қолжетімді!</string>
     <string name="download_notifier_split_page_not_found">%d бет табылмады, бөлінгенде</string>
@@ -589,7 +586,6 @@
     <string name="update_check_eol">Бұл Android нұсқасы қолжетімсіз</string>
     <string name="download_notifier_unknown_error">Белгісіз қателіктің кесірінен тарау жүктеп алынбады</string>
     <string name="download_notifier_split_page_path_not_found">Бет файлының жолы %d табылмады</string>
-    <string name="channel_skipped">Өткізуп жіберілді</string>
     <string name="channel_new_chapters">Тарау жаңартулары</string>
     <string name="channel_app_updates">Қолданба жаңартулары</string>
     <string name="channel_ext_updates">Кеңейту жаңартулары</string>

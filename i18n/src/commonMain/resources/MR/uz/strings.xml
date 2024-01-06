@@ -78,7 +78,6 @@
     <string name="action_desc">Pasayish</string>
     <string name="action_install">O\'rnatish</string>
     <string name="action_save">Saqlash</string>
-    <string name="action_faq_and_guides">FAQ va Qo\'llanma</string>
     <string name="app_not_available">Hozir ilovaga kirish iloji yo\'q</string>
     <string name="pref_category_general">Asosiy</string>
     <string name="pref_category_reader">Rider</string>
@@ -229,7 +228,6 @@
     <string name="update_weekly">Har hafta</string>
     <string name="update_72hour">HAr 3 kunda</string>
     <string name="charging">Quvvatlanayotganda</string>
-    <string name="pref_library_update_manga_restriction">Qismlar yangilanishini o\'tkazib yuborish</string>
     <string name="ext_installer_shizuku_stopped">Shizuku ishlamayapti</string>
     <string name="pref_skip_filtered_chapters">Filtrlangan boblarni o\'tkazib yuborish</string>
     <string name="pref_skip_read_chapters">O\'qilgan boblarni o\'tkazib yuborish</string>

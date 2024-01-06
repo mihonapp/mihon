@@ -327,12 +327,10 @@
     <string name="ext_app_info">Аб дадатку</string>
     <string name="action_sort_count">Колькасць мангі</string>
     <string name="action_display_language_badge">Мова</string>
-    <string name="action_faq_and_guides">Часта задаваемые пытанні і кіраўніцтва</string>
     <string name="network_not_metered">Толькі ў безлемітнай сетцы</string>
     <string name="ext_info_language">Мова</string>
     <string name="theme_lavender">Лаванда</string>
     <string name="pref_app_language">Мова дадатку</string>
-    <string name="pref_library_update_manga_restriction">Прапусціць абнаўленні</string>
     <string name="pref_update_only_completely_read">Ёсць непрачытаныя главы</string>
     <string name="ext_installer_shizuku_stopped">Shizuku не працуе</string>
     <string name="action_close">Закрыць</string>

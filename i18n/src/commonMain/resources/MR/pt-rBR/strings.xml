@@ -78,7 +78,7 @@
     <string name="all">Todas</string>
     <string name="pref_library_update_restriction">Restrições do dispositivo para atualizações automáticas</string>
     <string name="charging">Quando carregando</string>
-    <string name="pref_update_only_non_completed">Com o estado \"Completo\"</string>
+    <string name="pref_update_only_non_completed">Pular itens com o estado \"Completo\"</string>
     <string name="pref_auto_update_manga_sync">Atualizar o progresso após a leitura</string>
     <string name="default_category">Categoria padrão</string>
     <string name="default_category_summary">Sempre perguntar</string>
@@ -142,7 +142,7 @@
     <string name="creating_backup">Criando backup</string>
     <string name="pref_clear_chapter_cache">Limpar o cache de capítulos</string>
     <string name="used_cache">Utilizado: %1$s</string>
-    <string name="cache_deleted">Cache limpo. %1$d arquivos foram excluídos</string>
+    <string name="cache_deleted">Cache limpo. %1$d arquivos excluídos</string>
     <string name="cache_delete_error">Ocorreu um erro ao limpar</string>
     <string name="pref_clear_cookies">Limpar os cookies</string>
     <string name="cookies_cleared">Cookies limpos</string>
@@ -243,11 +243,11 @@
     <string name="ext_untrusted">Não confiável</string>
     <string name="ext_uninstall">Desinstalar</string>
     <string name="untrusted_extension">Extensão não confiável</string>
-    <string name="untrusted_extension_message">Esta extensão foi assinada com um certificado não confiável e não foi ativada.
+    <string name="untrusted_extension_message">Esta extensão foi assinada por um autor desconhecido e não foi carregada.
 \n
-\nUma extensão maliciosa poderia ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
+\nExtensões maliciosas podem ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
 \n
-\nAo confiar neste certificado, você estará aceitando estes riscos.</string>
+\nAo confiar no certificado desta extensão, você estará aceitando estes riscos.</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animação do toque duplo</string>
     <string name="double_tap_anim_speed_0">Sem animação</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Dados</string>
     <string name="backup_restore_missing_sources">Fontes faltando:</string>
     <string name="invalid_backup_file_missing_manga">O backup não possui nenhum item da biblioteca.</string>
-    <string name="invalid_backup_file">Arquivo de backup inválido</string>
+    <string name="invalid_backup_file">Arquivo de backup inválido:</string>
     <string name="pref_library_update_refresh_metadata_summary">Verifica por novas capas e detalhes durante a atualização da biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Atualizar os metadados automaticamente</string>
     <string name="action_migrate">Migrar</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_split">Dividir as páginas longas</string>
     <string name="pref_dual_page_invert_summary">Se a posição das páginas longas divididas não se adequar ao modo de leitura</string>
     <string name="pref_dual_page_invert">Inverter a posição das páginas divididas</string>
-    <string name="backup_restore_content_full">Os dados do arquivo de backup serão restaurados.
-\n
-\nVocê precisará instalar quaisquer extensões que estejam faltando e depois realizar o login nos serviços de monitoramento para utilizá-los.</string>
+    <string name="backup_restore_content_full">Você precisará instalar quaisquer extensões que estejam faltando e depois realizar o login nos serviços de monitoramento para utilizá-los.</string>
     <string name="pref_show_navigation_mode_summary">Mostra rapidamente quando o leitor for aberto</string>
     <string name="pref_show_navigation_mode">Mostrar a sobreposição das zonas de toque</string>
     <string name="nav_zone_right">Direita</string>
@@ -559,24 +557,20 @@
     <string name="database_clean">Nada a ser limpo</string>
     <string name="extension_api_error">Erro ao obter a lista de extensões</string>
     <string name="privacy_policy">Política de privacidade</string>
-    <string name="pref_update_only_completely_read">Com capítulos não lidos</string>
-    <string name="pref_library_update_manga_restriction">Pular a atualização de itens</string>
+    <string name="pref_update_only_completely_read">Pular itens com capítulos não lidos</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
     <string name="save_chapter_as_cbz">Salvar como arquivo CBZ</string>
     <string name="publishing_finished">Publicação finalizada</string>
     <string name="cancelled">Cancelado</string>
     <string name="on_hiatus">Em hiato</string>
-    <string name="action_faq_and_guides">FAQ e Guias</string>
     <string name="action_show_manga">Mostrar o item</string>
     <string name="pref_navigate_pan">Navegar imagens longas</string>
     <string name="pref_landscape_zoom">Dar zoom automaticamente em imagens largas</string>
     <string name="action_display_cover_only_grid">Grade somente com capas</string>
-    <string name="pref_update_only_started">Que não tiveram a leitura iniciada</string>
+    <string name="pref_update_only_started">Pular itens que não tiveram a leitura iniciada</string>
     <string name="skipped_reason_completed">Pulado porque a série está finalizada</string>
     <string name="skipped_reason_not_caught_up">Pulado porque há capítulos não lidos</string>
     <string name="skipped_reason_not_started">Pulado porque nenhum capítulo foi lido</string>
-    <string name="notification_update_skipped">%1$d atualização(ões) pulada(s)</string>
-    <string name="channel_skipped">Puladas</string>
     <string name="notification_update_error">%1$d atualização(ões) falhou(aram)</string>
     <string name="learn_more">Toque para saber mais</string>
     <string name="rotation_reverse_portrait">Retrato invertido</string>
@@ -712,13 +706,12 @@
     <string name="pref_library_columns_per_row">%d por linha</string>
     <string name="action_filter_interval_late">Verificação dos últimos 10+</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
-    <string name="pref_update_only_in_release_period">Fora do intervalo de lançamento</string>
+    <string name="pref_update_only_in_release_period">Prever a data do próximo lançamento</string>
     <string name="action_set_interval">Definir intervalo</string>
     <string name="action_filter_interval_custom">Personalizar o intervalo de requisições</string>
     <string name="action_filter_interval_long">Requisitar mensalmente (28 dias)</string>
     <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
     <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
-    <string name="manga_modify_calculated_interval_title">Personalizar intervalo</string>
     <string name="skipped_reason_not_in_release_period">Pulado porque nenhum lançamento era esperado hoje</string>
     <string name="intervals_header">Intervalos</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
@@ -751,7 +744,7 @@
     <string name="file_null_uri_error">Nenhum arquivo selecionado</string>
     <string name="label_data_storage">Dados e armazenamento</string>
     <string name="pref_flash_page_summ">Reduz o efeito fantasma em telas e-ink</string>
-    <string name="pref_flash_page">Flash branco ao mudar de página</string>
+    <string name="pref_flash_page">Flash ao mudar de página</string>
     <string name="action_sort_tracker_score">Avaliação no monitorador</string>
     <string name="relative_time_span_never">Nunca</string>
     <string name="last_auto_backup_info">Último backup automático feito em: %s</string>
@@ -787,10 +780,25 @@
     <string name="onboarding_permission_notifications">Permissão de notificação</string>
     <string name="onboarding_permission_install_apps">Permissão de instalação de aplicativos</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Evite interrupções para tarefas longas como atualizações da biblioteca, downloads e restauração de backups.</string>
-    <string name="onboarding_permission_type_optional">Opcional</string>
     <string name="onboarding_permission_ignore_battery_opts">Uso de bateria em plano de fundo</string>
     <string name="onboarding_permission_install_apps_description">Para instalar extensões de fontes.</string>
     <string name="onboarding_permission_notifications_description">Seja notificado para atualizações da biblioteca e mais.</string>
-    <string name="onboarding_permission_type_required">Obrigatório</string>
     <string name="onboarding_permission_action_grant">Conceder</string>
+    <string name="available_disk_space_info">Disponível: %1$s / Total: %2$s</string>
+    <string name="ext_permission_install_apps_warning">Permissões são necessárias para instalar extensões. Toque aqui para conceder.</string>
+    <string name="private_settings">Incluir configurações sensíveis (tokens de login dos monitoradores, por exemplo)</string>
+    <string name="repo_extension_message">Esta extensão é de um repositório externo. Toque para visualizar o repositório.</string>
+    <string name="manga_interval_expected_update">Próxima atualização esperada em torno de %1$s, verificando em torno de cada %2$s</string>
+    <string name="manga_interval_custom_amount">Frequência de atualização personalizada:</string>
+    <string name="invalid_backup_file_error">Erro completo:</string>
+    <string name="error_repo_exists">Este repositório já existe!</string>
+    <string name="pref_library_update_smart_update">Atualização inteligente</string>
+    <string name="invalid_repo_name">Nome de repositório inválido</string>
+    <string name="action_add_repo_message">Adiciona repositórios adicionais ao Tachiyomi. O formato de um repositório é \"usuário/repositório\", onde \"usuário\" é o dono do repositório e \"repositório\" é o nome do repositório.</string>
+    <string name="delete_repo_confirmation">Você deseja deletar o repositório \"%s\"?</string>
+    <string name="action_delete_repo">Deletar repositório</string>
+    <string name="manga_interval_header">Próxima atualização</string>
+    <string name="action_add_repo">Adicionar repositório</string>
+    <string name="information_empty_repos">Você não tem repositórios definidos.</string>
+    <string name="label_extension_repos">Repositórios de extensões</string>
 </resources>

@@ -520,8 +520,6 @@
     <string name="label_warning">Varoitus</string>
     <string name="confirm_lock_change">Tunnistaudu vahvistaaksesi muutokset</string>
     <string name="action_display_language_badge">Kieli</string>
-    <string name="action_faq_and_guides">Usein kysytyt kysymykset ja oppaat</string>
-    <string name="pref_library_update_manga_restriction">Ohita päivitys</string>
     <string name="action_move_to_top_all_for_series">Siirrä sarja päällimmäiseksi</string>
     <string name="theme_tako">Tako</string>
     <string name="update_72hour">Joka 3. Päivä</string>
@@ -610,14 +608,12 @@
     <string name="pref_verbose_logging">Yksityiskohtainen kirjaaminen</string>
     <string name="cover_saved">Kansikuva tallennettu</string>
     <string name="error_saving_cover">Virhe tallentaessa kansikuvaa</string>
-    <string name="notification_update_skipped">%1$d päivitys(tä) ohitettu</string>
     <string name="loader_rar5_error">RARv5-muoto ei ole tuettu</string>
     <string name="skipped_reason_not_caught_up">Ohitettu, koska sarjassa on luettomia lukuja</string>
     <string name="skipped_reason_not_always_update">Ohitettu, koska sarja ei vaadi päivityksiä</string>
     <string name="remove_manga">Olet poistamassa \"%s\" kirjastostasi</string>
     <string name="update_check_fdroid_migration_info">Uusi versio on saatavilla viralliselta alustalta. Napauta saadaksesi tietää, miten siirtyä pois epävirallisesta F-Droid versiosta.</string>
     <string name="pref_verbose_logging_summary">Kirjoittaa yksityiskohtaiset lokit järjestelmälokiin (heikentää sovelluksen suorituskykyä)</string>
-    <string name="channel_skipped">Ohitettu</string>
     <string name="backup_info">Varmuuskopioita kannattaa säilyttää myös muissa paikoissa.</string>
     <string name="wish_list">Toivelista</string>
     <string name="cant_open_last_read_chapter">Viimeksi luettua lukua ei voitu avata</string>

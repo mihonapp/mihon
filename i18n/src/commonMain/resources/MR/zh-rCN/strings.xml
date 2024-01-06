@@ -560,13 +560,11 @@
     <string name="extension_api_error">无法获取插件列表</string>
     <string name="privacy_policy">隐私声明</string>
     <string name="pref_update_only_completely_read">有未读章节</string>
-    <string name="pref_library_update_manga_restriction">跳过更新以下作品</string>
     <string name="library_errors_help">关于书架更新出错的解决方法，请参阅 %1$s</string>
     <string name="save_chapter_as_cbz">保存为 CBZ 压缩包</string>
     <string name="publishing_finished">出版完毕</string>
     <string name="cancelled">已中止</string>
     <string name="on_hiatus">休刊中</string>
-    <string name="action_faq_and_guides">常见问题和指南</string>
     <string name="action_show_manga">显示作品</string>
     <string name="action_display_cover_only_grid">封面网格</string>
     <string name="pref_landscape_zoom">自动放大横向图片</string>
@@ -577,8 +575,6 @@
     <string name="skipped_reason_not_started">已跳过，因为尚未开始阅读</string>
     <string name="learn_more">点击了解详情</string>
     <string name="notification_update_error">%1$d 个更新失败了</string>
-    <string name="notification_update_skipped">已跳过 %1$d 个更新</string>
-    <string name="channel_skipped">已跳过</string>
     <string name="rotation_reverse_portrait">反向竖屏</string>
     <string name="action_move_to_top_all_for_series">将作品移到顶部</string>
     <string name="disabled_nav">关闭</string>
@@ -726,7 +722,6 @@
     <string name="intervals_header">间隔</string>
     <string name="manga_display_interval_title">估计每个</string>
     <string name="manga_display_modified_interval_title">设定更新为每</string>
-    <string name="manga_modify_calculated_interval_title">自定义间隔</string>
     <string name="skipped_reason_not_in_release_period">跳过，因为预计今天没有新发布</string>
     <string name="has_results">有结果</string>
     <string name="syncing_library">正在同步书架</string>
@@ -765,4 +760,11 @@
     <string name="action_menu_overflow_description">更多选项</string>
     <string name="selected">已选择</string>
     <string name="not_selected">未选择</string>
+    <string name="pref_onboarding_guide">新手上路指南</string>
+    <string name="onboarding_action_finish">开始使用</string>
+    <string name="onboarding_heading">欢迎！</string>
+    <string name="onboarding_action_skip">跳过</string>
+    <string name="onboarding_action_next">下一步</string>
+    <string name="action_bar_up_description">向上浏览</string>
+    <string name="onboarding_description">让我们先设置一些东西。你也可以稍后在设置中更改这些。</string>
 </resources>

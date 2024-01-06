@@ -188,7 +188,7 @@
     <string name="zoom_start_center">中間</string>
     <string name="pref_restore_backup_summ">由備份檔還原書櫃內容</string>
     <string name="used_cache">已使用：%1$s</string>
-    <string name="cache_deleted">已清除快取，%1$d 個檔案已被刪除</string>
+    <string name="cache_deleted">已清除快取，刪除了 %1$d 個檔案</string>
     <string name="cache_delete_error">清除時發生錯誤</string>
     <string name="cookies_cleared">已清除 Cookie</string>
     <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感訊息</string>
@@ -258,11 +258,11 @@
     <string name="ext_trust">信任</string>
     <string name="ext_untrusted">不信任</string>
     <string name="untrusted_extension">不信任的擴充套件</string>
-    <string name="untrusted_extension_message">簽署此擴充套件的憑證並不可靠，因此尚未被啟用。
+    <string name="untrusted_extension_message">此擴充套件的憑證是由不明的作者所簽署，因此尚未被載入。
 \n
-\n惡意的擴充套件可能會讀取任何已儲存的登入憑證或執行任意的程式碼。
+\n惡意的擴充套件可能會讀取任何已儲存的登入認證或執行任意的程式碼。
 \n
-\n若選擇信任該憑證，即表示你願意承擔上述風險。</string>
+\n若選擇信任該擴充套件的憑證，即表示你願意承擔上述風險。</string>
     <string name="last_read_chapter">最後閱畢的章節</string>
     <string name="clear_database_confirmation">您確定要這樣做嗎？未收藏的漫畫的閱讀進度和章節會被刪除</string>
     <string name="latest">新上架</string>
@@ -370,7 +370,7 @@
     <string name="action_cancel_all">全部取消</string>
     <string name="sort_by_upload_date">上傳日期</string>
     <string name="action_sort_latest_chapter">最新章節</string>
-    <string name="invalid_backup_file">無效的備份檔</string>
+    <string name="invalid_backup_file">無效的備份檔：</string>
     <string name="backup_in_progress">備份已在進行</string>
     <string name="restore_in_progress">還原已在進行</string>
     <string name="label_data">資料</string>
@@ -474,9 +474,7 @@
     <string name="action_show_errors">輕觸以檢視詳細資訊</string>
     <string name="update_check_eol">不再支援此 Android 版本</string>
     <string name="clipboard_copy_error">無法複製到剪貼簿</string>
-    <string name="backup_restore_content_full">即將還原備份中的資料。
-\n
-\n隨後請安裝所有遺失的擴充套件並重新登入各歷程平台。</string>
+    <string name="backup_restore_content_full">你可能需要安裝任何缺少的擴充套件並重新登入各歷程平台以開始使用。</string>
     <string name="pref_download_new_categories_details">類別同時屬於「排除」及「包含」的作品，將不會自動下載。</string>
     <string name="pref_create_folder_per_manga">儲存頁面至個別資料夾</string>
     <string name="pref_create_folder_per_manga_summary">根據作品標題建立資料夾</string>
@@ -551,7 +549,7 @@
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 天</string>
-    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源並 (或) 使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
+    <string name="download_queue_size_warning">警告：大量批次下載可能壅塞來源，甚至使其封鎖 Tachiyomi。輕觸以瞭解詳情。</string>
     <string name="ext_update_all">全部更新</string>
     <string name="channel_app_updates">應用程式更新</string>
     <string name="pref_auto_clear_chapter_cache">啟動應用程式時清除章節快取</string>
@@ -560,13 +558,11 @@
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
     <string name="pref_update_only_completely_read">有未讀章節</string>
-    <string name="pref_library_update_manga_restriction">欲略過更新的作品</string>
     <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
     <string name="on_hiatus">休刊中</string>
     <string name="cancelled">已取消</string>
     <string name="publishing_finished">出版完畢</string>
-    <string name="action_faq_and_guides">常見問題與指南</string>
     <string name="action_show_manga">顯示作品</string>
     <string name="pref_landscape_zoom">自動縮放寬頁</string>
     <string name="pref_navigate_pan">導覽寬頁時先平移後翻頁</string>
@@ -578,8 +574,6 @@
     <string name="rotation_reverse_portrait">顛倒直向</string>
     <string name="learn_more">瞭解詳情</string>
     <string name="notification_update_error">%1$d 項更新失敗</string>
-    <string name="notification_update_skipped">已略過 %1$d 項更新</string>
-    <string name="channel_skipped">略過</string>
     <string name="action_move_to_top_all_for_series">置頂此作品</string>
     <string name="disabled_nav">停用</string>
     <string name="empty_backup_error">書櫃中尚無項目可供備份</string>
@@ -726,7 +720,6 @@
     <string name="manga_display_interval_title">預計每個</string>
     <string name="pref_update_only_in_release_period">未臨出刊日</string>
     <string name="manga_display_modified_interval_title">設定為每個</string>
-    <string name="manga_modify_calculated_interval_title">自訂刊期</string>
     <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
@@ -751,8 +744,8 @@
     <string name="file_null_uri_error">未選擇檔案</string>
     <string name="relative_time_span_never">永不</string>
     <string name="pref_flash_page_summ">減少電子紙顯示器上的殘影</string>
-    <string name="last_auto_backup_info">最後一次自動備份：%s</string>
-    <string name="pref_flash_page">翻頁時閃爍白畫面</string>
+    <string name="last_auto_backup_info">上次自動備份於：%s</string>
+    <string name="pref_flash_page">翻頁時閃爍畫面</string>
     <string name="label_data_storage">資料與儲存空間</string>
     <string name="pref_storage_usage">儲存空間使用情形</string>
     <string name="action_sort_tracker_score">歷程平台評分</string>
@@ -787,10 +780,25 @@
     <string name="onboarding_permission_notifications">通知權限</string>
     <string name="onboarding_permission_install_apps">安裝應用程式權限</string>
     <string name="onboarding_permission_ignore_battery_opts_description">避免中斷書櫃更新、章節下載和還原備份等較為費時的作業。</string>
-    <string name="onboarding_permission_type_optional">選用</string>
     <string name="onboarding_permission_ignore_battery_opts">背景耗電量</string>
     <string name="onboarding_permission_install_apps_description">用以安裝來源擴充套件。</string>
     <string name="onboarding_permission_notifications_description">用以傳送書櫃更新等通知。</string>
-    <string name="onboarding_permission_type_required">必要</string>
     <string name="onboarding_permission_action_grant">授予</string>
+    <string name="available_disk_space_info">可用：%1$s / 總計：%2$s</string>
+    <string name="ext_permission_install_apps_warning">缺少安裝擴充套件所需的權限。輕觸此處以授予。</string>
+    <string name="private_settings">包含敏感設定 (如：歷程平台登入權杖)</string>
+    <string name="manga_interval_expected_update">預計再 %s左右出刊</string>
+    <string name="invalid_backup_file_error">完整錯誤訊息：</string>
+    <string name="repo_extension_message">此擴充套件來自外部儲存庫，輕觸以檢視該儲存庫。</string>
+    <string name="manga_interval_custom_amount">自訂更新頻率：</string>
+    <string name="label_add_repo_input">儲存庫網址</string>
+    <string name="error_repo_exists">已有該儲存庫！</string>
+    <string name="pref_library_update_smart_update">智慧型更新</string>
+    <string name="invalid_repo_name">無效的儲存庫網址</string>
+    <string name="action_add_repo_message">將額外的擴充套件儲存庫新增至 Tachiyomi。此處應填入一個結尾為「index.min.json」的網址。</string>
+    <string name="delete_repo_confirmation">確定要刪除儲存庫「%s」嗎？</string>
+    <string name="action_delete_repo">刪除儲存庫</string>
+    <string name="action_add_repo">新增儲存庫</string>
+    <string name="information_empty_repos">尚未新增任何儲存庫</string>
+    <string name="label_extension_repos">擴充套件儲存庫</string>
 </resources>

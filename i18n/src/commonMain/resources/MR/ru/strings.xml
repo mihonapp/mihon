@@ -44,7 +44,7 @@
     <string name="all">Все</string>
     <string name="black_background">Чёрный</string>
     <string name="cache_delete_error">Возникла ошибка при очистке</string>
-    <string name="cache_deleted">Кэш очищен. %1$d файлов было удалено</string>
+    <string name="cache_deleted">Кэш очищен, %1$d файлов удалено</string>
     <string name="chapter_downloading_progress">Загружается (%1$d/%2$d)</string>
     <string name="chapter_error">Ошибка</string>
     <string name="chapter_progress">Страница: %1$d</string>
@@ -141,7 +141,7 @@
     <string name="pref_remove_after_read">Удалять после прочтения</string>
     <string name="pref_rotation_type">Ориентация по умолчанию</string>
     <string name="pref_show_page_number">Номер страницы</string>
-    <string name="pref_update_only_non_completed">Серия завершена</string>
+    <string name="pref_update_only_non_completed">Пропускать завершённые серии</string>
     <string name="pref_viewer_type">Режим чтения</string>
     <string name="pref_zoom_start">Стартовая позиция увеличения</string>
     <string name="reading">Читаю</string>
@@ -242,11 +242,11 @@
     <string name="ext_untrusted">Ненадёжное</string>
     <string name="ext_uninstall">Удалить</string>
     <string name="untrusted_extension">Ненадёжное расширение</string>
-    <string name="untrusted_extension_message">Это расширение было подписано ненадёжным сертификатом и не было активировано.
+    <string name="untrusted_extension_message">Это расширение было подписано неизвестным автором и не было загружено.
 \n
-\nВредоносное расширение может считывать и хранить любые учётные данные для входа или выполнять произвольный код.
+\nВредоносные расширения могут считывать любые хранящиеся учётные данные для входа или выполнять произвольный код.
 \n
-\nДоверяя этому сертификату, вы принимаете эти риски.</string>
+\nДоверяя сертификату этого расширения, вы принимаете эти риски.</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
     <string name="double_tap_anim_speed_0">Без анимации</string>
     <string name="double_tap_anim_speed_normal">Нормальная</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Данные</string>
     <string name="backup_restore_missing_sources">Отсутствующие источники:</string>
     <string name="invalid_backup_file_missing_manga">Резервная копия не содержит серий.</string>
-    <string name="invalid_backup_file">Неверный файл резервной копии</string>
+    <string name="invalid_backup_file">Неверный файл резервной копии:</string>
     <string name="pref_library_update_refresh_metadata_summary">При обновлении библиотеки проверять наличие новой обложки и сведений</string>
     <string name="pref_library_update_refresh_metadata">Обновлять метаданные</string>
     <string name="action_display_comfortable_grid">Удобная сетка</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_split">Разделение широких страниц</string>
     <string name="pref_dual_page_invert">Разделение широких страниц наоборот</string>
     <string name="pref_dual_page_invert_summary">Если разделение широких страниц не соответствует направлению чтения</string>
-    <string name="backup_restore_content_full">Данные из файла резервной копии будут восстановлены.
-\n
-\nВам будет нужно установить все недостающие расширения и после этого авторизоваться в сервисах отслеживания для их использования.</string>
+    <string name="backup_restore_content_full">Вам будет нужно установить все недостающие расширения и после этого авторизоваться в сервисах отслеживания для их использования.</string>
     <string name="nav_zone_left">Слева</string>
     <string name="nav_zone_right">Справа</string>
     <string name="nav_zone_next">Следующая</string>
@@ -559,26 +557,22 @@
     <string name="database_clean">Нечего очищать</string>
     <string name="extension_api_error">Не удалось получить список расширений</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
-    <string name="pref_update_only_completely_read">Есть непрочитанные главы</string>
-    <string name="pref_library_update_manga_restriction">Пропускать обновления серий</string>
+    <string name="pref_update_only_completely_read">Пропускать серии с непрочитанными главами</string>
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки нажать %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
     <string name="on_hiatus">Перерыв</string>
     <string name="publishing_finished">Публикация завершена</string>
-    <string name="action_faq_and_guides">Руководства и FAQ</string>
     <string name="action_show_manga">Показать серию</string>
     <string name="action_display_cover_only_grid">Сетка без названия</string>
     <string name="pref_navigate_pan">Панорамирование широких изображений</string>
     <string name="pref_landscape_zoom">Автоматически увеличивать широкие изображения</string>
-    <string name="pref_update_only_started">Серия не начата</string>
+    <string name="pref_update_only_started">Пропускать не начатые серии</string>
     <string name="skipped_reason_completed">Пропущено, т.к серия завершена</string>
     <string name="skipped_reason_not_caught_up">Пропущено, т.к есть непрочитанные главы</string>
     <string name="skipped_reason_not_started">Пропущено, т.к серия не начата</string>
     <string name="learn_more">Нажать для подробностей</string>
-    <string name="channel_skipped">Пропущено</string>
     <string name="notification_update_error">%1$d обновление(ий) не удалось</string>
-    <string name="notification_update_skipped">%1$d обновления(ий) пропущено</string>
     <string name="rotation_reverse_portrait">Портретная наоборот</string>
     <string name="action_move_to_top_all_for_series">Переместить серию в начало</string>
     <string name="disabled_nav">Отключено</string>
@@ -715,12 +709,11 @@
     <string name="action_filter_interval_dropped">Заброшено\? Прошедшие 20+ дней и 2 месяца</string>
     <string name="intervals_header">Интервалы</string>
     <string name="manga_display_interval_title">Оценивать каждые</string>
-    <string name="manga_modify_calculated_interval_title">Настроить интервал</string>
     <string name="action_set_interval">Задать интервал</string>
     <string name="action_filter_interval_late">Проверка прошедших 10+ дней</string>
     <string name="action_filter_interval_passed">Срок проверки истёк</string>
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
-    <string name="pref_update_only_in_release_period">За пределами ожидаемого периода выпуска</string>
+    <string name="pref_update_only_in_release_period">Предсказать следующее время выпуска</string>
     <string name="manga_display_modified_interval_title">Задать обновления каждые</string>
     <string name="skipped_reason_not_in_release_period">Пропущено, т.к сегодня не ожидается выпуска</string>
     <string name="track_delete_title">Удалить отслеживание %s\?</string>
@@ -753,7 +746,7 @@
     <string name="relative_time_span_never">Никогда</string>
     <string name="pref_flash_page_summ">Уменьшает артефакты у экранов e-ink</string>
     <string name="last_auto_backup_info">Последнее автоматическое резервное копирование: %s</string>
-    <string name="pref_flash_page">Мигать экраном при смене страницы</string>
+    <string name="pref_flash_page">Мигать при смене страницы</string>
     <string name="pref_storage_usage">Использование хранилища</string>
     <string name="action_sort_tracker_score">Оценка сервиса отслеживания</string>
     <string name="action_create">Создать</string>
@@ -784,4 +777,29 @@
 \nРекомендуется использовать выделенную папку.
 \n
 \nВыбранная папка: %2$s</string>
+    <string name="onboarding_permission_notifications">Разрешения для уведомлений</string>
+    <string name="onboarding_permission_install_apps">Разрешения для установки приложений</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Позволит избежать прерывания длительных обновлений библиотеки, загрузок и восстановлений резервных копий.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Использование батареи в фоне</string>
+    <string name="onboarding_permission_install_apps_description">Позволит устанавливать расширения источников.</string>
+    <string name="onboarding_permission_notifications_description">Получать уведомления об обновлениях библиотеки и т.д.</string>
+    <string name="onboarding_permission_action_grant">Предоставить</string>
+    <string name="available_disk_space_info">Доступно: %1$s / Всего: %2$s</string>
+    <string name="ext_permission_install_apps_warning">Нужны разрешения для установки расширений. Нажмите сюда, чтобы их предоставить.</string>
+    <string name="private_settings">Включать конфиденциальные настройки (например, токены для входа в службы отслеживания)</string>
+    <string name="invalid_backup_file_error">Полная ошибка:</string>
+    <string name="manga_interval_expected_update">Следующее обновление ожидается через %1$s, проверяя каждые %2$s</string>
+    <string name="repo_extension_message">Это расширение из внешнего репозитория. Нажмите, чтобы просмотреть репозиторий.</string>
+    <string name="manga_interval_custom_amount">Настраиваемая частота обновления:</string>
+    <string name="error_repo_exists">Этот репозиторий уже существует!</string>
+    <string name="pref_library_update_smart_update">Умное обновление</string>
+    <string name="invalid_repo_name">Недопустимый URL-адрес репозитория</string>
+    <string name="action_add_repo_message">Добавить дополнительные репозиторий в Tachiyomi. Это должны быть URL-адреса которые заканчиваться на \"index.min.json\".</string>
+    <string name="delete_repo_confirmation">Хотите ли вы удалить репозиторий \"%s\"?</string>
+    <string name="action_delete_repo">Удалить репозиторий</string>
+    <string name="manga_interval_header">Следующее обновление</string>
+    <string name="action_add_repo">Добавить репозиторий</string>
+    <string name="information_empty_repos">У вас нет репозиториев.</string>
+    <string name="label_extension_repos">Репозитории расширений</string>
+    <string name="label_add_repo_input">URL-адрес репозитория</string>
 </resources>

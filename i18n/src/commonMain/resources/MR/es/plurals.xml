@@ -80,4 +80,9 @@
         <item quantity="many">%d días</item>
         <item quantity="other">%d días</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repositorio</item>
+        <item quantity="many">%d repositorios</item>
+        <item quantity="other">%d repositorios</item>
+    </plurals>
 </resources>

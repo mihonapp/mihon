@@ -127,7 +127,6 @@
     <string name="action_open_log">वृत्तम् उद्घाटयतु</string>
     <string name="action_webview_back">प्रतिगच्छतु</string>
     <string name="action_webview_forward">अग्रे गच्छतु</string>
-    <string name="action_faq_and_guides">सामान्यप्रश्नोत्तराणि मार्गदर्शनानि च</string>
     <string name="pref_category_general">सामान्यः</string>
     <string name="pref_category_reader">प्रदर्शकम्</string>
     <string name="pref_category_advanced">विस्तृतम्</string>
@@ -164,7 +163,6 @@
     <string name="update_12hour">प्रतिद्वादशघण्टा</string>
     <string name="update_weekly">प्रतिसप्ताहिकम्</string>
     <string name="pref_library_update_restriction">स्वयङ्कृतनवीकरणनाम् उपकरणनिर्बन्धाः</string>
-    <string name="pref_library_update_manga_restriction">ग्रन्थालयनवीकरणं लङ्घयतु</string>
     <string name="connected_to_wifi">केवलं वै-फ़ै माध्यमेन</string>
     <string name="pref_update_only_completely_read">अपठितान् अध्यायान् गृह्णाति</string>
     <string name="pref_update_only_non_completed">समापितधारावाहिकाः</string>
@@ -567,7 +565,6 @@
     <string name="notification_size_warning">पूर्वसूचना -- मूलेभ्यः महद्नवीकरणानि हानिकारकाणि भवन्ति तस्मात् नवीकरणानि मन्दानि भवेयुः अपि च विद्युत्कोषोपयोगः अधिकं भवेत्</string>
     <string name="notification_update_error">%1$d नवीकरणानि अनुत्तीर्णानि</string>
     <string name="learn_more">अधिकं जानातु</string>
-    <string name="notification_update_skipped">%1$d नवीकरणानि लङ्घितानि</string>
     <string name="action_move_to_top_all_for_series">धारावाहिकम् अग्रस्थानं चालयतु</string>
     <string name="rotation_reverse_portrait">विपरीतं लम्बदर्शनम्</string>
     <string name="label_local">स्थानीयम्</string>

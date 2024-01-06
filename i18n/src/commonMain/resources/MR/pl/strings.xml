@@ -182,7 +182,7 @@
     <string name="creating_backup">Tworzenie kopii zapasowej</string>
     <string name="pref_clear_chapter_cache">Wyczyść cache rozdziałów</string>
     <string name="used_cache">W użyciu: %1$s</string>
-    <string name="cache_deleted">Wyczyszczono cache. Usunięto plików: %1$d</string>
+    <string name="cache_deleted">Wyczyszczono cache, %1$d plików zostało usunięte</string>
     <string name="cache_delete_error">Podczas czyszczenia wystąpił błąd</string>
     <string name="pref_clear_cookies">Usuń ciasteczka</string>
     <string name="cookies_cleared">Ciasteczka usunięte</string>
@@ -314,8 +314,8 @@
     <string name="pref_category_security">Bezpieczeństwo i prywatność</string>
     <string name="pref_manage_notifications">Zarządzaj powiadomieniami</string>
     <string name="theme_system">Systemowy</string>
-    <string name="theme_dark">Włącz</string>
-    <string name="theme_light">Wyłącz</string>
+    <string name="theme_dark">Ciemny</string>
+    <string name="theme_light">Jasny</string>
     <string name="action_move_to_bottom">Przenieś na dół</string>
     <string name="action_move_to_top">Przenieś na górę</string>
     <string name="action_oldest">Najstarsze</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Dane</string>
     <string name="backup_restore_missing_sources">Brakujące źródła:</string>
     <string name="invalid_backup_file_missing_manga">Kopia zapasowa nie zawiera żadnych wpisów.</string>
-    <string name="invalid_backup_file">Nieprawidłowy plik kopii zapasowej</string>
+    <string name="invalid_backup_file">Nieprawidłowy plik kopii zapasowej:</string>
     <string name="pref_library_update_refresh_metadata_summary">Sprawdź, czy są nowe okładki i opisy podczas aktualizowania biblioteki</string>
     <string name="pref_library_update_refresh_metadata">Automatycznie odświeżaj metadane</string>
     <string name="action_display_comfortable_grid">Wygodna siatka</string>
@@ -564,9 +564,7 @@
     <string name="save_chapter_as_cbz">Zapisz jako archiwum CBZ</string>
     <string name="privacy_policy">Polityka prywatności</string>
     <string name="clear_database_source_item_count">%1$d wpisów spoza biblioteki w bazie danych</string>
-    <string name="pref_library_update_manga_restriction">Pomiń aktualizowanie tytułów</string>
     <string name="pref_update_only_completely_read">Posiada nieprzeczytane rozdziały</string>
-    <string name="action_faq_and_guides">FAQ i poradniki</string>
     <string name="pref_update_only_started">Brak przeczytanych rozdziałów</string>
     <string name="pref_landscape_zoom">Automatycznie przybliżaj poziome obrazy</string>
     <string name="action_show_manga">Pokaż</string>
@@ -575,8 +573,6 @@
     <string name="skipped_reason_not_started">Pominięto, ponieważ brak przeczytanych rozdziałów</string>
     <string name="skipped_reason_completed">Pominięto, ponieważ seria została ukończona</string>
     <string name="skipped_reason_not_caught_up">Pominięto, ponieważ istnieją nieprzeczytane rozdziały</string>
-    <string name="channel_skipped">Pominięty</string>
-    <string name="notification_update_skipped">%1$d pominięto aktualizację(-e)</string>
     <string name="notification_update_error">%1$d aktualizacja (aktualizacje) nie powiodła się</string>
     <string name="action_close">Zamknij</string>
     <string name="action_move_to_top_all_for_series">Przenieś serię na górę</string>
@@ -733,4 +729,23 @@
     <string name="action_apply">Zatwierdź</string>
     <string name="action_revert_to_default">Przywróć do domyślnych</string>
     <string name="action_move_to_bottom_all_for_series">Przenieś serię na dół</string>
+    <string name="relative_time_span_never">Nigdy</string>
+    <string name="onboarding_storage_action_select">Wybierz folder</string>
+    <string name="manga_interval_expected_update">Następna aktualizacja spodziewana za około %1$s, sprawdzanie co %2$s</string>
+    <string name="onboarding_storage_selection_required">Folder musi być wybrany</string>
+    <string name="onboarding_permission_notifications">Uprawnienia powiadomień</string>
+    <string name="action_sort_category">Sortuj kategorie</string>
+    <string name="onboarding_heading">Witaj!</string>
+    <string name="action_menu_overflow_description">Więcej opcji</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="onboarding_action_skip">Pomiń</string>
+    <string name="onboarding_action_next">Następny</string>
+    <string name="onboarding_permission_ignore_battery_opts">Zużycie baterii w tle</string>
+    <string name="notification_updating_progress">Aktualizowanie biblioteki... (%s)</string>
+    <string name="invalid_repo_name">Nieprawidłowa nazwa repozytorium</string>
+    <string name="sort_category_confirmation">Czy chciałbyś posortować kategorie alfabetycznie?</string>
+    <string name="source_settings">Ustawienia źródła</string>
+    <string name="app_settings">Ustawienia aplikacji</string>
+    <string name="action_delete_repo">Usuń repozytorium</string>
+    <string name="action_add_repo">Dodaj repozytorium</string>
 </resources>

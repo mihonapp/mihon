@@ -422,7 +422,6 @@
     <string name="pref_app_theme">აპლიკაციის თემა</string>
     <string name="label_warning">გაფრთხილება</string>
     <string name="confirm_lock_change">აუთენტიკაცია ცვლილების დასადასტურებლად</string>
-    <string name="action_faq_and_guides">ხდკ და სახელმძღვანელოები</string>
     <string name="pref_category_appearance">გარეგნობა</string>
     <string name="label_default">ნაგულისხმევი</string>
     <string name="action_show_errors">დააჭირე დეტალების სანახავად</string>

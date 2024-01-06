@@ -167,7 +167,7 @@
     <string name="creating_backup">Yedek oluşturuluyor</string>
     <string name="pref_clear_chapter_cache">Bölüm önbelleğini temizle</string>
     <string name="used_cache">Kullanılan: %1$s</string>
-    <string name="cache_deleted">Önbellek temizlendi. %1$d dosya silindi</string>
+    <string name="cache_deleted">Önbellek temizlendi, %1$d dosya silindi</string>
     <string name="cache_delete_error">Temizlenirken sorun oluştu</string>
     <string name="pref_clear_cookies">Çerezleri temizle</string>
     <string name="cookies_cleared">Çerezler temizlendi</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Veri</string>
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
     <string name="invalid_backup_file_missing_manga">Yedek bir kitaplık girdisi içermiyor.</string>
-    <string name="invalid_backup_file">Geçersiz yedekleme dosyası</string>
+    <string name="invalid_backup_file">Geçersiz yedekleme dosyası:</string>
     <string name="pref_library_update_refresh_metadata_summary">Kitaplığı güncellerken yeni kapağı ve ayrıntıları denetle</string>
     <string name="pref_library_update_refresh_metadata">Üst veriyi kendiliğinden yenile</string>
     <string name="action_migrate">Geçiş yap</string>
@@ -457,9 +457,7 @@
     <string name="pref_dual_page_split">Geniş sayfaları böl</string>
     <string name="pref_dual_page_invert_summary">Bölünmüş geniş sayfaların yerleşimi okuma yönüyle eşleşmiyorsa</string>
     <string name="pref_dual_page_invert">Bölünmüş sayfa yerleşimini ters çevir</string>
-    <string name="backup_restore_content_full">Yedek dosyadaki veriler geri yüklenecek.
-\n
-\nEksik uzantıları yüklemeniz ve daha sonra bunları kullanmak için izleme hizmetlerinde oturum açmanız gerekecektir.</string>
+    <string name="backup_restore_content_full">Eksik uzantıları yüklemeniz ve daha sonra bunları kullanmak için izleme hizmetlerinde oturum açmanız gerekecektir.</string>
     <string name="nav_zone_right">Sağ</string>
     <string name="nav_zone_left">Sol</string>
     <string name="nav_zone_next">Sonraki</string>
@@ -558,7 +556,6 @@
     <string name="clear_database_source_item_count">Veri tabanında %1$d kitaplık dışı girdi</string>
     <string name="database_clean">Temizlenecek bir şey yok</string>
     <string name="extension_api_error">Uzantı dizelgesi alınamadı</string>
-    <string name="pref_library_update_manga_restriction">Girdileri güncellemeyi atla</string>
     <string name="save_chapter_as_cbz">CBZ belgeliği olarak kaydet</string>
     <string name="publishing_finished">Yayımı tamamlandı</string>
     <string name="privacy_policy">Gizlilik politikası</string>
@@ -567,7 +564,6 @@
     <string name="action_show_manga">Girdiyi göster</string>
     <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
     <string name="action_display_cover_only_grid">Yalnızca kapağa ızgara</string>
-    <string name="action_faq_and_guides">SSS ve Kılavuzlar</string>
     <string name="pref_update_only_completely_read">Okunmayan bölümü olan</string>
     <string name="pref_update_only_started">Bu başlamadı</string>
     <string name="skipped_reason_completed">Dizi bitirildiği için atlandı</string>
@@ -576,9 +572,7 @@
     <string name="pref_navigate_pan">Geniş görüntüleri kaydır</string>
     <string name="pref_landscape_zoom">Geniş görselleri kendiliğinden yakınlaştır</string>
     <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
-    <string name="notification_update_skipped">%1$d güncelleme atlandı</string>
     <string name="learn_more">Daha çok bilgi edinmek için dokunun</string>
-    <string name="channel_skipped">Atlandı</string>
     <string name="rotation_reverse_portrait">Ters dikey</string>
     <string name="action_move_to_top_all_for_series">Diziyi en üste taşı</string>
     <string name="disabled_nav">Devre dışı</string>
@@ -722,7 +716,6 @@
     <string name="action_ok">TAMAM</string>
     <string name="manga_display_interval_title">Hepsini tahmin et</string>
     <string name="track_delete_title">%s izlemesi kaldırılsın mı\?</string>
-    <string name="manga_modify_calculated_interval_title">Aralığı özelleştir</string>
     <string name="skipped_reason_not_in_release_period">Atlandı çünkü bugün bir yayın beklenmiyordu</string>
     <string name="track_delete_text">Bu, izlemeyi yerel olarak kaldıracak.</string>
     <string name="track_delete_remote_text">Ayrıca şuradan da kaldır: %s</string>
@@ -756,7 +749,7 @@
     <string name="last_auto_backup_info">En son şu tarihte kendi yedekledi: %s</string>
     <string name="no_scanlators_found">Tareviriler bulunamadı</string>
     <string name="scanlator">Tareviri</string>
-    <string name="pref_flash_page">Sayfa değişiminde beyaz ışık çak</string>
+    <string name="pref_flash_page">Sayfa değişiminde ışık çak</string>
     <string name="pref_storage_usage">Depolama kullanımı</string>
     <string name="action_sort_tracker_score">İzleyici notu</string>
     <string name="label_data_storage">Veri ve depolama</string>
@@ -787,10 +780,13 @@
     <string name="onboarding_permission_notifications">Bildirim izni</string>
     <string name="onboarding_permission_install_apps">Uygulama kurma izni</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Uzun süreli kitaplık güncellemeleri, indirmeler ve yedekleme geri yüklemelerinin kesintiye uğramasını önleyin.</string>
-    <string name="onboarding_permission_type_optional">İsteğe bağlı</string>
     <string name="onboarding_permission_ignore_battery_opts">Arka planda pil kullanımı</string>
     <string name="onboarding_permission_install_apps_description">Kaynak uzantılarını kurmak için.</string>
     <string name="onboarding_permission_notifications_description">Kitaplık güncellemeleri ve daha fazlası için bildirim alın.</string>
-    <string name="onboarding_permission_type_required">Gerekli</string>
     <string name="onboarding_permission_action_grant">Ver</string>
+    <string name="available_disk_space_info">Kullanılabilir: %1$s / Toplam: %2$s</string>
+    <string name="ext_permission_install_apps_warning">Uzantıları kurmak için izin gerekli. İzin vermek için buraya dokunun.</string>
+    <string name="private_settings">Hassas ayarları dahil et (örn. izleyici oturum açma belirteçleri)</string>
+    <string name="manga_interval_expected_update">Gelecek güncelleme %s içinde bekleniyor</string>
+    <string name="invalid_backup_file_error">Tüm hata:</string>
 </resources>

@@ -55,7 +55,6 @@
     <string name="connected_to_wifi">Vetëm në Wi-Fi</string>
     <string name="network_not_metered">Vetëm në rrjet pa matje</string>
     <string name="charging">Gjatë karikimit</string>
-    <string name="pref_library_update_manga_restriction">Kapërceni përditësimin e elementeve</string>
     <string name="pref_update_only_completely_read">Me kapituj të palexuar</string>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolloni për kopertinë dhe detaje të reja kur përditësoni bibliotekën</string>
     <string name="default_category">Kategoria e parazgjedhur</string>
@@ -90,7 +89,6 @@
     <string name="channel_ext_updates">Përditësimet shtesë</string>
     <string name="channel_app_updates">Përditësimet e aplikacioneve</string>
     <string name="channel_new_chapters">Përditësimet e kapitullit</string>
-    <string name="channel_skipped">U anashkalua</string>
     <string name="download_notifier_cache_renewal">Shkarkimet e indeksimit</string>
     <string name="download_notifier_split_page_not_found">Faqja %d nuk u gjet gjatë ndarjes</string>
     <string name="download_notifier_downloader_title">Shkarkues</string>
@@ -138,7 +136,6 @@
     <string name="action_show_errors">Prekni për të parë detajet</string>
     <string name="action_webview_back">Mbrapa</string>
     <string name="action_start_downloading_now">Fillo shkarkimin tani</string>
-    <string name="action_faq_and_guides">FAQ dhe udhëzues</string>
     <string name="internal_error">Gabim i brendshëm: Kontrolloni regjistrat e përplasjeve për informacione të mëtejshme</string>
     <string name="pref_security_summary">Kyçja e aplikacionit, ekran i sigurt</string>
     <string name="theme_tealturquoise">Blu në Jeshile</string>
@@ -492,7 +489,6 @@
     <string name="notification_chapters_single_and_more">Kapitulli %1$s dhe %2$d më shumë</string>
     <string name="notification_chapters_multiple">Kapitujt %1$s</string>
     <string name="notification_chapters_single">Kapitulli %1$s</string>
-    <string name="notification_update_skipped">%1$d përditësim(e) u anashkalua</string>
     <string name="library_errors_help">Për ndihmë se si të rregulloni gabimet e përditësimit të bibliotekës, shihni %1$s</string>
     <string name="update_check_fdroid_migration_info">Një version i ri është në dispozicion nga publikimet zyrtare. Prekni për të mësuar se si të migroni nga publikimet jozyrtare të F-Droid.</string>
     <string name="pref_create_backup">Krijo kopje rezervë</string>

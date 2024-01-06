@@ -167,7 +167,7 @@
     <string name="creating_backup">Skapar säkerhetskopia</string>
     <string name="pref_clear_chapter_cache">Rensa kapitelcache</string>
     <string name="used_cache">Används: %1$s</string>
-    <string name="cache_deleted">Cache rensad. %1$d filer har tagits bort</string>
+    <string name="cache_deleted">Cache rensad, %1$d filer togs bort</string>
     <string name="cache_delete_error">Fel inträffade vid rensning</string>
     <string name="pref_clear_cookies">Radera cookies</string>
     <string name="cookies_cleared">Cookies rensade</string>
@@ -374,7 +374,7 @@
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Saknade källor:</string>
     <string name="invalid_backup_file_missing_manga">Säkerhetskopian innehåller inga biblioteksposter.</string>
-    <string name="invalid_backup_file">Ogiltig säkerhetskopia</string>
+    <string name="invalid_backup_file">Ogiltig säkerhetskopiafil:</string>
     <string name="unofficial_extension_message">Detta tillägg är inte från den officiella listan.</string>
     <string name="ext_unofficial">Inofficiell</string>
     <string name="pref_library_update_refresh_metadata_summary">Sök efter nytt omslag och detaljer när du uppdaterar biblioteket</string>
@@ -455,9 +455,7 @@
     <string name="right_and_left_nav">Höger och Vänster</string>
     <string name="action_display_show_number_of_items">Visa antal objekt</string>
     <string name="pref_dual_page_split">Delning av breda sidor</string>
-    <string name="backup_restore_content_full">Data från säkerhetskopian återställs.
-\n
-\nDu måste installera eventuella tillägg som saknas och logga in på spårningstjänster efteråt för att kunna använda dem.</string>
+    <string name="backup_restore_content_full">Du måste installera eventuella tillägg som saknas och logga in på spårningstjänster efteråt för att kunna använda dem.</string>
     <string name="nav_zone_right">Höger</string>
     <string name="nav_zone_left">Vänster</string>
     <string name="nav_zone_next">Nästa</string>
@@ -558,13 +556,11 @@
     <string name="clear_database_source_item_count">%1$d icke-biblioteksposter i databasen</string>
     <string name="database_clean">Inget att rensa</string>
     <string name="library_errors_help">För hjälp med att åtgärda fel i biblioteksuppdateringar, se %1$s</string>
-    <string name="pref_library_update_manga_restriction">Hoppa över uppdatering av poster</string>
     <string name="cancelled">Avbruten</string>
     <string name="on_hiatus">På uppehåll</string>
     <string name="publishing_finished">Publiceringen avslutad</string>
     <string name="save_chapter_as_cbz">Spara som CBZ-arkiv</string>
     <string name="privacy_policy">Integritetspolicy</string>
-    <string name="action_faq_and_guides">Vanliga frågor och guider</string>
     <string name="pref_update_only_completely_read">Med olästa kapitel</string>
     <string name="extension_api_error">Det gick inte att hämta tilläggslistan</string>
     <string name="action_show_manga">Visa inlägg</string>
@@ -577,8 +573,6 @@
     <string name="skipped_reason_not_started">Hoppade över eftersom inga kapitel läses</string>
     <string name="learn_more">Tryck på för att få veta mer</string>
     <string name="notification_update_error">%1$d uppdatering(ar) misslyckades</string>
-    <string name="notification_update_skipped">%1$d uppdatering(ar) hoppades över</string>
-    <string name="channel_skipped">Hoppat över</string>
     <string name="rotation_reverse_portrait">Omvänt porträtt</string>
     <string name="action_move_to_top_all_for_series">Flytta serien till toppen</string>
     <string name="disabled_nav">Inaktiverad</string>
@@ -701,7 +695,6 @@
     <string name="skipped_reason_not_in_release_period">Hoppades över eftersom ingen publicering förväntades idag</string>
     <string name="label_tracked_titles">Spårade inlägg</string>
     <string name="day_short">%dd</string>
-    <string name="manga_modify_calculated_interval_title">Anpassa intervall</string>
     <string name="track_error">%1$s fel: %2$s</string>
     <string name="action_filter_interval_dropped">Avhoppad\? Sen 20+ och 2 månader</string>
     <string name="action_filter_interval_passed">Godkänd kontrollperiod</string>
@@ -756,7 +749,7 @@
     <string name="last_auto_backup_info">Senaste automatiska säkerhetskopieringen: %s</string>
     <string name="no_scanlators_found">Inga scanlatorer hittades</string>
     <string name="scanlator">Scanlator</string>
-    <string name="pref_flash_page">Blinka vitt vid sidbyte</string>
+    <string name="pref_flash_page">Blinka vid sidbyte</string>
     <string name="pref_storage_usage">Lagringsanvändning</string>
     <string name="action_sort_tracker_score">Spårares betyg</string>
     <string name="label_data_storage">Data och lagring</string>
@@ -787,10 +780,13 @@
     <string name="onboarding_permission_notifications">Aviseringsbehörigheter</string>
     <string name="onboarding_permission_install_apps">Installera app behörigheter</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Undvik avbrott i långvariga biblioteksuppdateringar, nedladdningar och säkerhetskopieringsåterställningar.</string>
-    <string name="onboarding_permission_type_optional">Valfritt</string>
     <string name="onboarding_permission_ignore_battery_opts">Bakgrundsbatterianvändning</string>
     <string name="onboarding_permission_install_apps_description">För att installera källtillägg.</string>
     <string name="onboarding_permission_notifications_description">Få aviseringar om biblioteksuppdateringar och mer.</string>
-    <string name="onboarding_permission_type_required">Krävs</string>
     <string name="onboarding_permission_action_grant">Bevilja</string>
+    <string name="available_disk_space_info">Tillgängligt: %1$s / Totalt: %2$s</string>
+    <string name="ext_permission_install_apps_warning">Behörigheter krävs för att installera tillägg. Tryck här för att bevilja.</string>
+    <string name="private_settings">Inkludera känsliga inställningar (t.ex. spårningsinloggningstokens)</string>
+    <string name="manga_interval_expected_update">Nästa uppdatering förväntas om cirka %s</string>
+    <string name="invalid_backup_file_error">Fullständigt fel:</string>
 </resources>

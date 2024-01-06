@@ -558,16 +558,13 @@
     <string name="pref_auto_clear_chapter_cache">ऐप लॉन्च पर चैप्टर कैशे साफ़ करें</string>
     <string name="database_clean">साफ़ करने के लिए कुछ नहीं है</string>
     <string name="pref_update_only_completely_read">अपठित अध्याय हैं</string>
-    <string name="pref_library_update_manga_restriction">शीर्षक अद्यतन न करें</string>
     <string name="save_chapter_as_cbz">CBZ आर्कैव के रूप में सहेजें</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="library_errors_help">लाइब्रेरी अपडेट त्रुटियों को ठीक करने के तरीके पर सहायता के लिए, %1$s देखें</string>
     <string name="extension_api_error">एक्सटेंशन सूची प्राप्त करने में विफल</string>
-    <string name="action_faq_and_guides">सामान्य प्रश्नोत्तर और मार्गदर्शन</string>
     <string name="cancelled">रद्द किया गया</string>
     <string name="on_hiatus">अंतराल पर है</string>
     <string name="publishing_finished">प्रकाशन समाप्त</string>
-    <string name="channel_skipped">छोड़े गए</string>
     <string name="learn_more">अधिक जानकारी के लिए दबाए</string>
     <string name="skipped_reason_completed">छोड़े गए क्योंकि श्रृंखला पूरी हो गई है</string>
     <string name="skipped_reason_not_caught_up">छोड़ दिया गया क्योंकि वहाँ अपठित अध्याय हैं</string>
@@ -578,7 +575,6 @@
     <string name="disabled_nav">अक्षम</string>
     <string name="rotation_reverse_portrait">रिवर्स पोर्ट्रेट</string>
     <string name="notification_update_error">%1$d अपडेट विफल</string>
-    <string name="notification_update_skipped">%1$d अपडेट छोड़े गए</string>
     <string name="pref_navigate_pan">चौड़ी छवियां पैन करें</string>
     <string name="pref_landscape_zoom">ज़ूम लैंडस्केप इमेज</string>
     <string name="action_move_to_top_all_for_series">श्रृंखला को शीर्ष पर ले जाएं</string>

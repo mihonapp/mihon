@@ -168,7 +168,7 @@
     <string name="creating_backup">กำลังสร้างการสำรองข้อมูล</string>
     <string name="pref_clear_chapter_cache">ล้างแคชตอน</string>
     <string name="used_cache">ใช้ไปแล้ว: %1$s</string>
-    <string name="cache_deleted">ล้างแคชแล้ว แฟ้ม %1$d รายการได้ถูกลบ</string>
+    <string name="cache_deleted">ล้างแคชแล้ว %1$d แฟ้มถูกลบ</string>
     <string name="cache_delete_error">เกิดข้อผิดพลาดขณะกำลังล้าง</string>
     <string name="pref_clear_cookies">ล้างคุกกี้</string>
     <string name="cookies_cleared">ล้างคุกกี้แล้ว</string>
@@ -344,9 +344,9 @@
     <string name="pref_category_security">ความปลอดภัยและความเป็นส่วนตัว</string>
     <string name="pref_manage_notifications">จัดการการแจ้งเตือน</string>
     <string name="pref_date_format">รูปแบบวันที่</string>
-    <string name="theme_dark">เปิด</string>
-    <string name="theme_light">ปิด</string>
-    <string name="theme_system">ตามระบบ</string>
+    <string name="theme_dark">มืด</string>
+    <string name="theme_light">สว่าง</string>
+    <string name="theme_system">ระบบ</string>
     <string name="pref_category_theme">ธีม</string>
     <string name="pref_category_library">คลัง</string>
     <string name="action_webview_refresh">โหลดซ้ำ</string>
@@ -460,13 +460,11 @@
     <string name="creating_backup_error">การสำรองข้อมูลล้มเหลว</string>
     <string name="backup_in_progress">การสำรองข้อมูลกําลังดําเนินการอยู่แล้ว</string>
     <string name="restore_duration">%02d นาที %02d วินาที</string>
-    <string name="backup_restore_content_full">ข้อมูลจากแฟ้มข้อมูลสำรองจะถูกคืนค่า
-\n
-\nคุณจะต้องติดตั้งส่วนขยายที่ขาดหายไปและลงชื่อเข้าใช้บริการติดตามจึงจะสามารถใช้งานได้</string>
+    <string name="backup_restore_content_full">คุณจะต้องติดตั้งส่วนขยายที่ขาดหายไปและลงชื่อเข้าใช้บริการติดตามจึงจะสามารถใช้งานได้</string>
     <string name="backup_restore_missing_trackers">ตัวติดตามไม่ได้เข้าสู่ระบบ:</string>
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>
     <string name="invalid_backup_file_missing_manga">แฟ้มสํารองข้อมูลไม่มีรายการคลังใด ๆ</string>
-    <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง</string>
+    <string name="invalid_backup_file">ข้อมูลสำรองไม่ถูกต้อง:</string>
     <string name="tracking_info">ซิงค์ทางเดียวเพื่ออัปเดตความคืบหน้าของตอนกับตัวติดตามภายนอก ตั้งค่าการติดตามรายการในแต่ละรายการได้จากปุ่มติดตาม</string>
     <string name="pref_download_new_categories_details">รายการในหมวดหมู่ที่ยกเว้นไว้จะไม่ถูกดาวน์โหลดแม้ว่าจะอยู่ในหมวดหมู่ที่รวมอยู่ด้วยก็ตาม</string>
     <string name="pref_category_auto_download">ดาวน์โหลดอัตโนมัติ</string>
@@ -533,7 +531,6 @@
     <string name="database_clean">ไม่มีอะไรให้ต้องล้าง</string>
     <string name="about_dont_kill_my_app">ผู้ผลิตบางรายมีข้อจำกัดเพิ่มเติมของแอปที่ปิดบริการพื้นหลัง เว็บไซต์นี้มีข้อมูลเพิ่มเติมเกี่ยวกับวิธีการแก้ไข</string>
     <string name="pref_verbose_logging">การบันทึกอย่างละเอียด</string>
-    <string name="pref_library_update_manga_restriction">รายการที่ข้ามการอัปเดต</string>
     <string name="pref_category_appearance">ลักษณะ</string>
     <string name="pref_app_theme">ธีมแอพ</string>
     <string name="theme_monet">ไดนามิก</string>
@@ -566,7 +563,6 @@
     <string name="publishing_finished">เผยแพร่จบแล้ว</string>
     <string name="cancelled">ถูกยกเลิก</string>
     <string name="on_hiatus">อยู่ระหว่างพัก</string>
-    <string name="action_faq_and_guides">คำถามที่พบบ่อยและคู่มือ</string>
     <string name="pref_navigate_pan">แพนหน้ากว้าง</string>
     <string name="action_display_cover_only_grid">ตารางแสดงแค่หน้าปก</string>
     <string name="pref_landscape_zoom">ซูมภาพกว้างโดยอัตโนมัติ</string>
@@ -575,10 +571,8 @@
     <string name="action_show_manga">แสดงรายการ</string>
     <string name="pref_update_only_started">ที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
-    <string name="notification_update_skipped">อัปเดตข้ามแล้ว %1$d รายการ</string>
     <string name="learn_more">แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
-    <string name="channel_skipped">ข้ามแล้ว</string>
     <string name="rotation_reverse_portrait">แนวตั้งแบบกลับด้าน</string>
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
     <string name="disabled_nav">ปิดใช้งาน</string>
@@ -722,7 +716,6 @@
     <string name="manga_display_interval_title">ประมาณทุกๆ</string>
     <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
     <string name="intervals_header">ช่วงเวลา</string>
-    <string name="manga_modify_calculated_interval_title">ปรับแต่งช่วงเวลา</string>
     <string name="action_ok">ตกลง</string>
     <string name="track_delete_title">นำการติดตามของ %s ออกไหม\?</string>
     <string name="track_delete_text">การกระทำนี้จะเป็นการลบการติดตามภายในเครื่อง</string>
@@ -752,7 +745,7 @@
     <string name="relative_time_span_never">ไม่เลย</string>
     <string name="pref_flash_page_summ">ลดภาพซ้อนบนจอแสดงผล E-Ink</string>
     <string name="last_auto_backup_info">สำรองข้อมูลอัตโนมัติครั้งล่าสุด: %s</string>
-    <string name="pref_flash_page">แฟลชสีขาวเมื่อเปลี่ยนหน้า</string>
+    <string name="pref_flash_page">แฟลชเมื่อเปลี่ยนหน้า</string>
     <string name="pref_storage_usage">การใช้พื้นที่เก็บข้อมูล</string>
     <string name="label_data_storage">ข้อมูลและการจัดเก็บข้อมูล</string>
     <string name="action_create">สร้าง</string>
@@ -768,4 +761,32 @@
     <string name="selected">เลือกแล้ว</string>
     <string name="not_selected">ยังไม่ได้เลือก</string>
     <string name="action_bar_up_description">ขึ้นไปข้างบน</string>
+    <string name="onboarding_storage_action_select">เลือกโฟลเดอร์</string>
+    <string name="pref_onboarding_guide">คู่มือการเริ่มต้นใช้งาน</string>
+    <string name="onboarding_guides_new_user">เพิ่งรู้จัก %s? เราขอแนะนำให้ดูคู่มือการเริ่มต้นใช้งาน</string>
+    <string name="onboarding_action_finish">เริ่มต้น</string>
+    <string name="manga_interval_expected_update">คาดว่าจะมีการอัปเดตครั้งต่อไปในประมาณ %s</string>
+    <string name="onboarding_storage_selection_required">จำเป็นต้องเลือกโฟลเดอร์</string>
+    <string name="onboarding_permission_notifications">สิทธิ์ในการแจ้งเตือน</string>
+    <string name="onboarding_permission_install_apps">สิทธิ์ในการติดตั้งแอป</string>
+    <string name="available_disk_space_info">พร้อมใช้งาน: %1$s / ทั้งหมด: %2$s</string>
+    <string name="onboarding_heading">ยินดีต้อนรับ!</string>
+    <string name="onboarding_guides_returning_user">เคยใช้ %s มาก่อน?</string>
+    <string name="invalid_backup_file_error">ข้อผิดพลาดเต็ม:</string>
+    <string name="onboarding_action_skip">ข้าม</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">เพื่อหลีกเลี่ยงการหยุดชะงักใน การอัปเดตไลบรารี ดาวน์โหลด และการสำรองข้อมูลที่ใช้เวลานาน</string>
+    <string name="onboarding_action_next">ถัดไป</string>
+    <string name="onboarding_permission_ignore_battery_opts">การใช้แบตเตอรี่ในพื้นหลัง</string>
+    <string name="onboarding_permission_install_apps_description">ในการติดตั้งส่วนขยายแหล่งที่มา</string>
+    <string name="onboarding_description">มาตั้งค่าอะไรสักอย่างกันก่อน คุณสามารถเปลี่ยนสิ่งเหล่านี้ในการตั้งค่าในภายหลังได้</string>
+    <string name="no_location_set">ไม่มีการกำหนดตำแหน่งจัดเก็บ</string>
+    <string name="onboarding_permission_notifications_description">รับการแจ้งเตือนการอัปเดตคลังและอื่น ๆ</string>
+    <string name="ext_permission_install_apps_warning">จำเป็นต้องมีสิทธิ์ในการติดตั้งส่วนขยาย แตะที่นี่เพื่อให้สิทธิ์</string>
+    <string name="private_settings">รวมการตั้งค่าที่ละเอียดอ่อน (เช่น โทเค็นการเข้าสู่ระบบตัวติดตาม)</string>
+    <string name="onboarding_permission_action_grant">อนุญาต</string>
+    <string name="onboarding_storage_info">เลือกโฟลเดอร์ที่ %1$s จะจัดเก็บการดาวน์โหลดบท การสำรองข้อมูล และอื่นๆ
+\n
+\nแนะนำให้ใช้โฟลเดอร์เฉพาะ
+\n
+\nโฟลเดอร์ที่เลือก: %2$s</string>
 </resources>
