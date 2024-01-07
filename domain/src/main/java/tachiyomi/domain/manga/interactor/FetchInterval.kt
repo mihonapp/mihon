@@ -14,11 +14,11 @@ class FetchInterval(
     private val getChaptersByMangaId: GetChaptersByMangaId,
 ) {
 
-    suspend fun toMangaUpdateOrNull(
+    suspend fun toMangaUpdate(
         manga: Manga,
         dateTime: ZonedDateTime,
         window: Pair<Long, Long>,
-    ): MangaUpdate? {
+    ): MangaUpdate {
         val interval = manga.fetchInterval.takeIf { it < 0 } ?: calculateInterval(
             chapters = getChaptersByMangaId.await(manga.id, applyScanlatorFilter = true),
             zone = dateTime.zone,
@@ -30,11 +30,7 @@ class FetchInterval(
         }
         val nextUpdate = calculateNextUpdate(manga, interval, dateTime, currentWindow)
 
-        return if (manga.nextUpdate == nextUpdate && manga.fetchInterval == interval) {
-            null
-        } else {
-            MangaUpdate(id = manga.id, nextUpdate = nextUpdate, fetchInterval = interval)
-        }
+        return MangaUpdate(id = manga.id, nextUpdate = nextUpdate, fetchInterval = interval)
     }
 
     fun getWindow(dateTime: ZonedDateTime): Pair<Long, Long> {
@@ -96,34 +92,31 @@ class FetchInterval(
         dateTime: ZonedDateTime,
         window: Pair<Long, Long>,
     ): Long {
-        return if (
-            manga.nextUpdate !in window.first.rangeTo(window.second + 1) ||
-            manga.fetchInterval == 0
-        ) {
-            val latestDate = ZonedDateTime.ofInstant(
-                if (manga.lastUpdate > 0) Instant.ofEpochMilli(manga.lastUpdate) else Instant.now(),
-                dateTime.zone,
-            )
-                .toLocalDate()
-                .atStartOfDay()
-            val timeSinceLatest = ChronoUnit.DAYS.between(latestDate, dateTime).toInt()
-            val cycle = timeSinceLatest.floorDiv(
-                interval.absoluteValue.takeIf { interval < 0 }
-                    ?: doubleInterval(interval, timeSinceLatest, doubleWhenOver = 10),
-            )
-            latestDate.plusDays((cycle + 1) * interval.toLong()).toEpochSecond(dateTime.offset) * 1000
-        } else {
-            manga.nextUpdate
+        if (manga.nextUpdate in window.first.rangeTo(window.second + 1)) {
+            return manga.nextUpdate
         }
+
+        val latestDate = ZonedDateTime.ofInstant(
+            if (manga.lastUpdate > 0) Instant.ofEpochMilli(manga.lastUpdate) else Instant.now(),
+            dateTime.zone,
+        )
+            .toLocalDate()
+            .atStartOfDay()
+        val timeSinceLatest = ChronoUnit.DAYS.between(latestDate, dateTime).toInt()
+        val cycle = timeSinceLatest.floorDiv(
+            interval.absoluteValue.takeIf { interval < 0 }
+                ?: increaseInterval(interval, timeSinceLatest, increaseWhenOver = 10),
+        )
+        return latestDate.plusDays((cycle + 1) * interval.toLong()).toEpochSecond(dateTime.offset) * 1000
     }
 
-    private fun doubleInterval(delta: Int, timeSinceLatest: Int, doubleWhenOver: Int): Int {
+    private fun increaseInterval(delta: Int, timeSinceLatest: Int, increaseWhenOver: Int): Int {
         if (delta >= MAX_INTERVAL) return MAX_INTERVAL
 
         // double delta again if missed more than 9 check in new delta
         val cycle = timeSinceLatest.floorDiv(delta) + 1
-        return if (cycle > doubleWhenOver) {
-            doubleInterval(delta * 2, timeSinceLatest, doubleWhenOver)
+        return if (cycle > increaseWhenOver) {
+            increaseInterval(delta * 2, timeSinceLatest, increaseWhenOver)
         } else {
             delta
         }
