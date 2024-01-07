@@ -26,4 +26,3 @@ inline fun Any.logcat(
 
     logMessage.toString()
 }
-

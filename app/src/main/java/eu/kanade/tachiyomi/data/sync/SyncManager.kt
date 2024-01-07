@@ -263,7 +263,10 @@ class SyncManager(
 
         val minutes = elapsedTimeMillis / 60000
         val seconds = (elapsedTimeMillis % 60000) / 1000
-        logcat(LogPriority.DEBUG) { "Filtering completed in ${minutes}m ${seconds}s. Favorites found: ${favorites.size}, Non-favorites found: ${nonFavorites.size}" }
+        logcat(LogPriority.DEBUG) {
+            "Filtering completed in ${minutes}m ${seconds}s. Favorites found: ${favorites.size}, " +
+                "Non-favorites found: ${nonFavorites.size}"
+        }
 
         return Pair(favorites, nonFavorites)
     }
@@ -281,11 +284,13 @@ class SyncManager(
                 if (mangaLastUpdatedStatus || chaptersUpdatedStatus) {
                     mangas.add(manga)
                     logcat(LogPriority.DEBUG) {
-                        "Added ${manga.title} to the process list. Manga Last Updated: ${mangaLastUpdatedStatus}, Chapters Updated: ${chaptersUpdatedStatus}."
+                        "Added ${manga.title} to the process list. Manga Last Updated: $mangaLastUpdatedStatus, " +
+                            "Chapters Updated: $chaptersUpdatedStatus."
                     }
                 } else {
                     logcat(LogPriority.DEBUG) {
-                        "Skipped ${manga.title} as it has not been updated since the last sync (Last Modified: ${manga.lastModifiedAt * 1000L}, Last Sync: $lastSyncTimeStamp)."
+                        "Skipped ${manga.title} as it has not been updated since the last sync " +
+                            "(Last Modified: ${manga.lastModifiedAt * 1000L}, Last Sync: $lastSyncTimeStamp)."
                     }
                 }
             }
@@ -301,15 +306,15 @@ class SyncManager(
     private fun chaptersUpdatedAfterSync(manga: BackupManga, lastSyncTimeStamp: Long): Boolean {
         return manga.chapters.any { chapter ->
             val updated = chapter.lastModifiedAt * 1000L > lastSyncTimeStamp
-            if(updated) {
+            if (updated) {
                 logcat(LogPriority.DEBUG) {
-                    "Chapter ${chapter.name} of ${manga.title} updated after last sync (Chapter Last Modified: ${chapter.lastModifiedAt}, Last Sync: $lastSyncTimeStamp)."
+                    "Chapter ${chapter.name} of ${manga.title} updated after last sync " +
+                        "(Chapter Last Modified: ${chapter.lastModifiedAt}, Last Sync: $lastSyncTimeStamp)."
                 }
             }
             updated
         }
     }
-
 
     /**
      * Updates the non-favorite manga in the local database with their favorite status from the backup.
