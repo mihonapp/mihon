@@ -767,7 +767,7 @@
     <string name="onboarding_action_finish">Начать</string>
     <string name="onboarding_storage_selection_required">Необходимо выбрать папку</string>
     <string name="onboarding_heading">Добро пожаловать!</string>
-    <string name="onboarding_guides_returning_user">Уже использовали %s раньше?</string>
+    <string name="onboarding_guides_returning_user">Переустанавливаете %s?</string>
     <string name="onboarding_action_skip">Пропустить</string>
     <string name="onboarding_action_next">Следующее</string>
     <string name="onboarding_description">Давайте настроем парочку вещей. Вы всегда можете их поменять позже в настройках.</string>
@@ -802,4 +802,6 @@
     <string name="information_empty_repos">У вас нет репозиториев.</string>
     <string name="label_extension_repos">Репозитории расширений</string>
     <string name="label_add_repo_input">URL-адрес репозитория</string>
+    <string name="onboarding_storage_help_action">Руководство по хранению</string>
+    <string name="onboarding_storage_help_info">Обновляетесь со старой версии и не знаете, что выбрать? Обратите внимание на руководство по хранению для большей информации.</string>
 </resources>

@@ -21,6 +21,7 @@ import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
+import eu.kanade.domain.source.interactor.TrustExtension
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
@@ -170,6 +171,7 @@ class DomainModule : InjektModule {
         addFactory { ToggleLanguage(get()) }
         addFactory { ToggleSource(get()) }
         addFactory { ToggleSourcePin(get()) }
+        addFactory { TrustExtension(get()) }
 
         addFactory { CreateSourceRepo(get()) }
         addFactory { DeleteSourceRepo(get()) }

@@ -14,11 +14,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
 @Composable
-fun rememberRequestPackageInstallsPermissionState(): Boolean {
+fun rememberRequestPackageInstallsPermissionState(initialValue: Boolean = false): Boolean {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    var installGranted by remember { mutableStateOf(false) }
+    var installGranted by remember { mutableStateOf(initialValue) }
 
     DisposableEffect(lifecycleOwner.lifecycle) {
         val observer = object : DefaultLifecycleObserver {

@@ -557,7 +557,7 @@
     <string name="database_clean">Rien à effacer</string>
     <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
     <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="pref_update_only_completely_read">Avec des chapitres non lus</string>
+    <string name="pref_update_only_completely_read">Avec chapitre(s) non lu(s)</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
     <string name="on_hiatus">En pause</string>
@@ -709,7 +709,7 @@
     <string name="action_filter_interval_dropped">Abandonné \? En retard de 20+ et 2 mois</string>
     <string name="action_filter_interval_passed">Période de contrôle réussie</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
-    <string name="pref_update_only_in_release_period">Période de diffusion prévue</string>
+    <string name="pref_update_only_in_release_period">Prochaine sortie prévue dans :</string>
     <string name="action_set_interval">Définir l\'intervalle</string>
     <string name="action_ok">Valider</string>
     <string name="action_filter_interval_custom">Intervalle de recherche personnalisé</string>
@@ -758,4 +758,21 @@
     <string name="ext_permission_install_apps_warning">Des permissions sont nécessaires pour installer des extensions. Appuyer ici pour les accorder.</string>
     <string name="onboarding_permission_action_grant">Accorder</string>
     <string name="pref_relative_format">Durées relatives</string>
+    <string name="onboarding_permission_notifications">Permission de notifications</string>
+    <string name="onboarding_permission_ignore_battery_opts">Utilisation de la batterie en arrière-plan</string>
+    <string name="onboarding_permission_install_apps_description">Pour installer des extensions de source.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Évite les interruptions des longues mises à jour de bibliothèque, téléchargements de chapitres et restaurations de sauvegardes.</string>
+    <string name="onboarding_permission_install_apps">Permission d\'installer des applications</string>
+    <string name="onboarding_storage_help_info">Mise à jour depuis une ancienne version et pas sûr de quoi choisir ? Consultez le guide de stockage pour plus d\'informations.</string>
+    <string name="onboarding_storage_help_action">Guide de stockage</string>
+    <string name="onboarding_permission_notifications_description">Soyez notifié des mises à jour de la bibliothèque et autre.</string>
+    <string name="pref_library_update_smart_update">Mise à jour intelligente</string>
+    <string name="pref_onboarding_guide">Guide de démarrage</string>
+    <string name="onboarding_description">Commençons par paramétrer certaines choses. Vous pouvez toujours changer ces paramètres plus tard.</string>
+    <string name="onboarding_storage_info">Sélectionnez un dossier où %1$s stockera les chapitres téléchargés, les sauvegardes et plus encore.
+\n
+\nUn dossier dédié est recommandé.
+\n
+\nDossier sélectionné : %2$s</string>
+    <string name="onboarding_storage_action_select">Sélectionnez un dossier</string>
 </resources>
