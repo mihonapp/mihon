@@ -11,7 +11,7 @@ class CreateSourceRepo(private val preferences: SourcePreferences) {
             return Result.InvalidUrl
         }
 
-        preferences.extensionRepos() += name.substringBeforeLast("/index.min.json")
+        preferences.extensionRepos() += name.removeSuffix("/index.min.json")
 
         return Result.Success
     }

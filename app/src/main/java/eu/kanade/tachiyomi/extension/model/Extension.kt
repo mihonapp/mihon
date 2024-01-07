@@ -30,7 +30,7 @@ sealed class Extension {
         val isUnofficial: Boolean = false,
         val isShared: Boolean,
         val repoUrl: String? = null,
-        val isRepoSource: Boolean = false,
+        val isFromExternalRepo: Boolean = false,
     ) : Extension()
 
     data class Available(
@@ -45,7 +45,7 @@ sealed class Extension {
         val apkName: String,
         val iconUrl: String,
         val repoUrl: String,
-        val isRepoSource: Boolean,
+        val isFromExternalRepo: Boolean,
     ) : Extension() {
 
         data class Source(

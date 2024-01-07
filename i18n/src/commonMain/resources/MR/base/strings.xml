@@ -318,8 +318,8 @@
     <string name="untrusted_extension">Untrusted extension</string>
     <string name="untrusted_extension_message">This extension was signed by any unknown author and wasn\'t loaded.\n\nMalicious extensions can read any stored login credentials or execute arbitrary code.\n\nBy trusting this extension\'s certificate, you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available. It may not function properly and can cause issues with the app. Uninstalling it is recommended.</string>
-    <string name="unofficial_extension_message">This extension is not from the official list.</string>
-    <string name="extension_api_error">Failed to get extensions list</string>
+    <string name="unofficial_extension_message">This extension is not from the official repo.</string>
+    <string name="extension_api_error">Failed to fetch available extensions</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Language</string>
     <string name="ext_info_age_rating">Age rating</string>
