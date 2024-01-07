@@ -157,6 +157,7 @@ class LibraryScreenModel(
                     prefs.filterStarted,
                     prefs.filterBookmarked,
                     prefs.filterCompleted,
+                    prefs.filterIntervalCustom,
                 ) + trackFilter.values
                 ).any { it != TriState.DISABLED }
         }
@@ -178,12 +179,13 @@ class LibraryScreenModel(
     ): LibraryMap {
         val prefs = getLibraryItemPreferencesFlow().first()
         val downloadedOnly = prefs.globalFilterDownloaded
-        val filterDownloaded =
-            if (downloadedOnly) TriState.ENABLED_IS else prefs.filterDownloaded
+        val skipOutsideReleasePeriod = prefs.skipOutsideReleasePeriod
+        val filterDownloaded = if (downloadedOnly) TriState.ENABLED_IS else prefs.filterDownloaded
         val filterUnread = prefs.filterUnread
         val filterStarted = prefs.filterStarted
         val filterBookmarked = prefs.filterBookmarked
         val filterCompleted = prefs.filterCompleted
+        val filterIntervalCustom = prefs.filterIntervalCustom
 
         val isNotLoggedInAnyTrack = loggedInTrackers.isEmpty()
 
@@ -215,6 +217,14 @@ class LibraryScreenModel(
             applyFilter(filterCompleted) { it.libraryManga.manga.status.toInt() == SManga.COMPLETED }
         }
 
+        val filterFnIntervalCustom: (LibraryItem) -> Boolean = {
+            if (skipOutsideReleasePeriod) {
+                applyFilter(filterIntervalCustom) { it.libraryManga.manga.fetchInterval < 0 }
+            } else {
+                true
+            }
+        }
+
         val filterFnTracking: (LibraryItem) -> Boolean = tracking@{ item ->
             if (isNotLoggedInAnyTrack || trackFiltersIsIgnored) return@tracking true
 
@@ -225,7 +235,7 @@ class LibraryScreenModel(
             val isExcluded = excludedTracks.isNotEmpty() && mangaTracks.fastAny { it in excludedTracks }
             val isIncluded = includedTracks.isEmpty() || mangaTracks.fastAny { it in includedTracks }
 
-            return@tracking !isExcluded && isIncluded
+            !isExcluded && isIncluded
         }
 
         val filterFn: (LibraryItem) -> Boolean = {
@@ -234,6 +244,7 @@ class LibraryScreenModel(
                 filterFnStarted(it) &&
                 filterFnBookmarked(it) &&
                 filterFnCompleted(it) &&
+                filterFnIntervalCustom(it) &&
                 filterFnTracking(it)
         }
 
@@ -320,6 +331,7 @@ class LibraryScreenModel(
             libraryPreferences.downloadBadge().changes(),
             libraryPreferences.localBadge().changes(),
             libraryPreferences.languageBadge().changes(),
+            libraryPreferences.autoUpdateMangaRestrictions().changes(),
 
             preferences.downloadedOnly().changes(),
             libraryPreferences.filterDownloaded().changes(),
@@ -327,20 +339,22 @@ class LibraryScreenModel(
             libraryPreferences.filterStarted().changes(),
             libraryPreferences.filterBookmarked().changes(),
             libraryPreferences.filterCompleted().changes(),
-            transform = {
-                ItemPreferences(
-                    downloadBadge = it[0] as Boolean,
-                    localBadge = it[1] as Boolean,
-                    languageBadge = it[2] as Boolean,
-                    globalFilterDownloaded = it[3] as Boolean,
-                    filterDownloaded = it[4] as TriState,
-                    filterUnread = it[5] as TriState,
-                    filterStarted = it[6] as TriState,
-                    filterBookmarked = it[7] as TriState,
-                    filterCompleted = it[8] as TriState,
-                )
-            },
-        )
+            libraryPreferences.filterIntervalCustom().changes(),
+        ) {
+            ItemPreferences(
+                downloadBadge = it[0] as Boolean,
+                localBadge = it[1] as Boolean,
+                languageBadge = it[2] as Boolean,
+                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[3] as Set<*>),
+                globalFilterDownloaded = it[4] as Boolean,
+                filterDownloaded = it[5] as TriState,
+                filterUnread = it[6] as TriState,
+                filterStarted = it[7] as TriState,
+                filterBookmarked = it[8] as TriState,
+                filterCompleted = it[9] as TriState,
+                filterIntervalCustom = it[10] as TriState,
+            )
+        }
     }
 
     /**
@@ -699,6 +713,7 @@ class LibraryScreenModel(
         val downloadBadge: Boolean,
         val localBadge: Boolean,
         val languageBadge: Boolean,
+        val skipOutsideReleasePeriod: Boolean,
 
         val globalFilterDownloaded: Boolean,
         val filterDownloaded: TriState,
@@ -706,6 +721,7 @@ class LibraryScreenModel(
         val filterStarted: TriState,
         val filterBookmarked: TriState,
         val filterCompleted: TriState,
+        val filterIntervalCustom: TriState,
     )
 
     @Immutable
