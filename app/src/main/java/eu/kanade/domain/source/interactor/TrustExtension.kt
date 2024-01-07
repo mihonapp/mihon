@@ -24,4 +24,8 @@ class TrustExtension(
             }
         }
     }
+
+    fun revokeAll() {
+        preferences.trustedExtensions().delete()
+    }
 }
