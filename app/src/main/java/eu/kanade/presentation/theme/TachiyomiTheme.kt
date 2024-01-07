@@ -12,6 +12,7 @@ import eu.kanade.presentation.theme.colorscheme.GreenAppleColorScheme
 import eu.kanade.presentation.theme.colorscheme.LavenderColorScheme
 import eu.kanade.presentation.theme.colorscheme.MidnightDuskColorScheme
 import eu.kanade.presentation.theme.colorscheme.MonetColorScheme
+import eu.kanade.presentation.theme.colorscheme.NordColorScheme
 import eu.kanade.presentation.theme.colorscheme.StrawberryColorScheme
 import eu.kanade.presentation.theme.colorscheme.TachiyomiColorScheme
 import eu.kanade.presentation.theme.colorscheme.TakoColorScheme
@@ -47,6 +48,7 @@ private fun getThemeColorScheme(
         AppTheme.GREEN_APPLE -> GreenAppleColorScheme
         AppTheme.LAVENDER -> LavenderColorScheme
         AppTheme.MIDNIGHT_DUSK -> MidnightDuskColorScheme
+        AppTheme.NORD -> NordColorScheme
         AppTheme.STRAWBERRY_DAIQUIRI -> StrawberryColorScheme
         AppTheme.TAKO -> TakoColorScheme
         AppTheme.TEALTURQUOISE -> TealTurqoiseColorScheme
