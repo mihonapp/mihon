@@ -48,4 +48,7 @@
     <plurals name="day">
         <item quantity="other">%d 天</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="other">%d 仓库</item>
+    </plurals>
 </resources>
