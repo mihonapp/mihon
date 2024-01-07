@@ -766,7 +766,7 @@
     <string name="onboarding_guides_new_user">Novo no %s? Recomendamos dar uma olhada no guia de introdução.</string>
     <string name="onboarding_action_finish">Começar</string>
     <string name="onboarding_heading">Bem-vindo(a)!</string>
-    <string name="onboarding_guides_returning_user">Já utilizou o %s antes?</string>
+    <string name="onboarding_guides_returning_user">Reinstalando o %s?</string>
     <string name="onboarding_action_skip">Pular</string>
     <string name="onboarding_action_next">Próximo</string>
     <string name="onboarding_description">Vamos definir algumas coisas primeiro. Você sempre pode fazer alterações nas configurações depois também.</string>
@@ -793,12 +793,15 @@
     <string name="invalid_backup_file_error">Erro completo:</string>
     <string name="error_repo_exists">Este repositório já existe!</string>
     <string name="pref_library_update_smart_update">Atualização inteligente</string>
-    <string name="invalid_repo_name">Nome de repositório inválido</string>
-    <string name="action_add_repo_message">Adiciona repositórios adicionais ao Tachiyomi. O formato de um repositório é \"usuário/repositório\", onde \"usuário\" é o dono do repositório e \"repositório\" é o nome do repositório.</string>
+    <string name="invalid_repo_name">URL do repositório inválido</string>
+    <string name="action_add_repo_message">Adiciona repositórios adicionais ao Tachiyomi. Deve ser uma URL que termine com \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Você deseja deletar o repositório \"%s\"?</string>
     <string name="action_delete_repo">Deletar repositório</string>
     <string name="manga_interval_header">Próxima atualização</string>
     <string name="action_add_repo">Adicionar repositório</string>
     <string name="information_empty_repos">Você não tem repositórios definidos.</string>
     <string name="label_extension_repos">Repositórios de extensões</string>
+    <string name="label_add_repo_input">URL do repositório</string>
+    <string name="onboarding_storage_help_action">Guia de armazenamento</string>
+    <string name="onboarding_storage_help_info">Atualizando de uma versão anterior e não tem certeza do que selecionar? Consulte o guia de armazenamento para mais informações.</string>
 </resources>

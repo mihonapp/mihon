@@ -38,11 +38,14 @@ class SourcePreferences(
         SetMigrateSorting.Direction.ASCENDING,
     )
 
+    fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
+
     fun extensionRepos() = preferenceStore.getStringSet("extension_repos", emptySet())
 
     fun extensionUpdatesCount() = preferenceStore.getInt("ext_updates_count", 0)
 
-    fun trustedSignatures() = preferenceStore.getStringSet(Preference.appStateKey("trusted_signatures"), emptySet())
-
-    fun hideInLibraryItems() = preferenceStore.getBoolean("browse_hide_in_library_items", false)
+    fun trustedExtensions() = preferenceStore.getStringSet(
+        Preference.appStateKey("trusted_extensions"),
+        emptySet(),
+    )
 }

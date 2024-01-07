@@ -78,7 +78,7 @@
     <string name="all">Semua</string>
     <string name="pref_library_update_restriction">Pembatasan pembaruan otomatis</string>
     <string name="charging">Saat mengisi daya</string>
-    <string name="pref_update_only_non_completed">Dengan status \"Selesai\"</string>
+    <string name="pref_update_only_non_completed">Lewati daftar dengan status \"Selesai\"</string>
     <string name="pref_auto_update_manga_sync">Perbarui kemajuan setelah membaca</string>
     <string name="default_category">Kategori bawaan</string>
     <string name="default_category_summary">Selalu tanya</string>
@@ -241,11 +241,11 @@
     <string name="ext_untrusted">Tidak terpercaya</string>
     <string name="ext_uninstall">Lepas</string>
     <string name="untrusted_extension">Ekstensi tidak terpercaya</string>
-    <string name="untrusted_extension_message">Ekstensi ini ditandatangani dengan sertifikat tidak tepercaya dan tidak diaktifkan.
+    <string name="untrusted_extension_message">Ekstensi ini ditandatangani oleh author yang tidak dikenal dan tidak dimuat.
 \n
-\nEkstensi berbahaya dapat membaca kredensial login apa pun yang disimpan atau mengeksekusi kode arbitrer.
+\nEkstensi berbahaya dapat membaca semua kredensial login yang disimpan atau menjalankan kode berbahaya.
 \n
-\nDengan mempercayai sertifikat ini, Anda menerima risiko ini.</string>
+\nDengan mempercayai sertifikat ekstensi ini, Anda menerima risiko ini.</string>
     <string name="pref_double_tap_anim_speed">Kecepatan animasi ketukan dua kali</string>
     <string name="double_tap_anim_speed_0">Tanpa animasi</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -376,7 +376,7 @@
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Sumber yang hilang:</string>
     <string name="invalid_backup_file_missing_manga">Cadangan tidak berisi entri perpustakaan apa pun.</string>
-    <string name="invalid_backup_file">Berkas cadangan tidak valid</string>
+    <string name="invalid_backup_file">File cadangan tidak valid:</string>
     <string name="sort_by_upload_date">Menurut tanggal pengunggahan</string>
     <string name="action_display_comfortable_grid">Grid nyaman</string>
     <string name="tabs_header">Tab</string>
@@ -471,9 +471,7 @@
     <string name="pref_dns_over_https">DNS melalui HTTPS (DoH)</string>
     <string name="kindlish_nav">semacam Kindle</string>
     <string name="pref_category_auto_download">Unduh otomatis</string>
-    <string name="backup_restore_content_full">Data dari berkas cadangan akan dipulihkan.
-\n
-\nAnda perlu memasang ekstensi yang hilang dan masuk ke layanan pelacakan setelahnya untuk menggunakannya.</string>
+    <string name="backup_restore_content_full">Anda mungkin perlu memasang ulang ekstensi yang hilang dan log in ke layanan pelacakan setelahnya untuk menggunakannya.</string>
     <string name="notification_incognito_text">Matikan mode penyamaran</string>
     <string name="source_unsupported">Sumber tidak didukung</string>
     <string name="error_no_match">Tidak ditemukan kecocokan</string>
@@ -558,7 +556,7 @@
     <string name="database_clean">Tidak ada yang perlu dibersihkan</string>
     <string name="clear_database_source_item_count">%1$d entri non-perpustakaan dalam database</string>
     <string name="extension_api_error">Gagal mendapatkan daftar ekstensi</string>
-    <string name="pref_update_only_completely_read">Dengan bab yang belum dibaca</string>
+    <string name="pref_update_only_completely_read">Lewati daftar dengan chapter yang belum dibaca</string>
     <string name="privacy_policy">Kebijakan privasi</string>
     <string name="publishing_finished">Penerbitan selesai</string>
     <string name="cancelled">Dibatalkan</string>
@@ -567,7 +565,7 @@
     <string name="save_chapter_as_cbz">Simpan sebagai arsip CBZ</string>
     <string name="action_show_manga">Lihat entri</string>
     <string name="action_display_cover_only_grid">Grid sampul saja</string>
-    <string name="pref_update_only_started">Yang belum dibaca</string>
+    <string name="pref_update_only_started">Lewati dafter yang belum mulai dibaca</string>
     <string name="skipped_reason_completed">Dilewati karena seri telah selesai</string>
     <string name="skipped_reason_not_caught_up">Dilewati karena ada bab yang belum dibaca</string>
     <string name="skipped_reason_not_started">Dilewati karena tidak ada bab yang dibaca</string>
@@ -715,7 +713,7 @@
     <string name="action_filter_interval_passed">Melewati periode pemeriksaan</string>
     <string name="action_sort_next_updated">Pembaruan yang diharapkan berikutnya</string>
     <string name="intervals_header">Interval</string>
-    <string name="pref_update_only_in_release_period">Di luar periode rilis yang diharapkan</string>
+    <string name="pref_update_only_in_release_period">Prediksikan waktu rilis selanjutnya</string>
     <string name="manga_display_interval_title">Perkirakan setiap</string>
     <string name="manga_display_modified_interval_title">Atur untuk memperbarui setiap</string>
     <string name="track_delete_title">Hapus %s pelacakan\?</string>
@@ -752,7 +750,7 @@
     <string name="last_auto_backup_info">Terakhir dicadangkan secara otomatis: %s</string>
     <string name="no_scanlators_found">Tidak ditemukan pemindai</string>
     <string name="scanlator">Pemindai</string>
-    <string name="pref_flash_page">Berkedip putih pada perubahan halaman</string>
+    <string name="pref_flash_page">Perlihatkan kilatan saat halaman berubah</string>
     <string name="pref_storage_usage">Penggunaan penyimpanan</string>
     <string name="action_sort_tracker_score">Skor pelacak</string>
     <string name="label_data_storage">Data dan penyimpanan</string>
@@ -771,7 +769,7 @@
     <string name="onboarding_permission_notifications">Izin notifikasi</string>
     <string name="onboarding_permission_install_apps">Izin pasang aplikasi</string>
     <string name="onboarding_heading">Selamat Datang!</string>
-    <string name="onboarding_guides_returning_user">Sudah pernah menggunakan %s sebelumnya?</string>
+    <string name="onboarding_guides_returning_user">Install ulang %s?</string>
     <string name="onboarding_action_skip">Lewati</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Hindari gangguan pada pembaruan pustaka, pengunduhan, dan pemulihan cadangan yang berlangsung lama.</string>
     <string name="onboarding_action_next">Selanjutnya</string>
@@ -786,4 +784,24 @@
 \nSebaiknya menggunakan direktori terpisah.
 \n
 \nDirektori yang dipilih: %2$s</string>
+    <string name="onboarding_storage_help_action">Panduan penyimpanan</string>
+    <string name="pref_library_update_smart_update">Pembauan pintar</string>
+    <string name="onboarding_storage_help_info">Memperbarui dari versi lama dan tak yakin harus pilih mana? lihat panduan penyimpanan untuk informasi lebih lanjut.</string>
+    <string name="action_add_repo">Tambahkan repo</string>
+    <string name="action_add_repo_message">Tambahkan repo lain ke Tachiyomi. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
+    <string name="label_extension_repos">Repositori ekstensi</string>
+    <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
+    <string name="invalid_backup_file_error">Keseluruhan eror:</string>
+    <string name="error_repo_exists">Repositori ini sudah ada!</string>
+    <string name="manga_interval_header">Update selanjutnya</string>
+    <string name="label_add_repo_input">URL Repo</string>
+    <string name="invalid_repo_name">URL repo tidak valid</string>
+    <string name="repo_extension_message">Ekstensi ini dari repo eksternal. ketuk untuk lihat repo.</string>
+    <string name="private_settings">Sertakan pengaturan sensitif (contohnya, token login pelacak)</string>
+    <string name="ext_permission_install_apps_warning">Izin diperlukan untuk memasang ekstensi. Klik disini untuk memberi izin.</string>
+    <string name="action_delete_repo">Hapus repo</string>
+    <string name="delete_repo_confirmation">Apa Anda yakin ingin menghapus repo \"%s\"?</string>
+    <string name="manga_interval_expected_update">Update selanjutnya diperkirakan sekitar %1$s, memeriksa setiap sekitar %2$s</string>
+    <string name="available_disk_space_info">Tersedia:%1$s/Total:%2$s</string>
+    <string name="manga_interval_custom_amount">Keseringan pembaruan yang di kostumisasi:</string>
 </resources>
