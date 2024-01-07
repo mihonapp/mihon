@@ -180,11 +180,11 @@
     <string name="pref_fullscreen">Naka-fullscreen</string>
     <string name="unofficial_extension_message">Wala sa opisyal na listahan ang extension na ito.</string>
     <string name="obsolete_extension_message">Hindi na available ang extension na ito. Maaaring hindi ito gumana nang maayos at maaaring magdulot ng mga isyu sa app. Inirerekomenda ang pag-uninstall nito.</string>
-    <string name="untrusted_extension_message">Pinirmahan ang extension na ito gamit ang isang kaduda-dudang certificate at hindi muna pinagana.
+    <string name="untrusted_extension_message">Ang extension na ito ay nilagdaan ng sinumang hindi kilalang author at hindi na-load.
 \n
-\nMaaaring mabasa ng isang kaduda-dudang extension ang kahit anong nakatagong credentials sa pag-login o di kaya nama\'y magsimula ng delikadong code.
+\nMaaaring basahin ng mga nakakahamak na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code.
 \n
-\nTinatanggap mo ang mga bantang ito sa pagtiwala sa certificate na ito.</string>
+\nSa pamamagitan ng pagtitiwala sa certificate ng extension na ito, tinatanggap mo ang mga panganib na ito.</string>
     <string name="untrusted_extension">Di-pinagkakatiwalaang extension</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Tiwala</string>
@@ -203,7 +203,7 @@
     <string name="default_category">Default na kategorya</string>
     <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
     <string name="pref_library_update_refresh_metadata">Awtomatikong i-refresh ang metadata</string>
-    <string name="pref_update_only_non_completed">May \"Kumpleto\" na estado</string>
+    <string name="pref_update_only_non_completed">Laktawan ang mga entry na may katayuang \"Nakumpleto\"</string>
     <string name="charging">Kapag naka-charge</string>
     <string name="pref_library_update_restriction">Awtomatikong ina-update ang mga paghihigpit sa device</string>
     <string name="update_weekly">Linggo-linggo</string>
@@ -223,8 +223,8 @@
     <string name="secure_screen">Bantayan ang screen</string>
     <string name="pref_read_with_tapping_inverted">Baligtarin ang mga tap zone</string>
     <string name="backup_restore_missing_sources">Nawawalang mga source:</string>
-    <string name="invalid_backup_file_missing_manga">Hindi naglalaman ang backup ng kahit anong mga entry sa Aklatan.</string>
-    <string name="invalid_backup_file">Invalid na backup</string>
+    <string name="invalid_backup_file_missing_manga">Hindi naglalaman ang backup ng kahit anong mga entry sa aklatan.</string>
+    <string name="invalid_backup_file">Imbalidong backup file:</string>
     <string name="backup_created">Nai-backup na</string>
     <string name="pref_backup_interval">Awtomatikong dalas ng pag-backup</string>
     <string name="pref_restore_backup_summ">I-restore ang Aklatan mula sa backup</string>
@@ -389,7 +389,7 @@
     <string name="pref_clear_database_summary">Burahin ang nakaraan ng mga entry na hindi naka-save sa aklatan mo</string>
     <string name="pref_clear_database">Linisin ang database</string>
     <string name="cache_delete_error">Nagka-error habang nililinis</string>
-    <string name="cache_deleted">Nalinis na ang cache. Binura ang %1$d (na) file</string>
+    <string name="cache_deleted">Na-clear ang cache, na-delete ang %1$d na file</string>
     <string name="used_cache">Nagamit: %1$s</string>
     <string name="pref_clear_chapter_cache">Linisin ang cache ng kabanata</string>
     <string name="label_data">Data</string>
@@ -457,9 +457,7 @@
     <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga item</string>
     <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto sa direksyon ng pagbabasa ang paghahati sa malalapad na pahina</string>
     <string name="pref_dual_page_invert">Baligtarin ang paghahati sa pahina</string>
-    <string name="backup_restore_content_full">Ire-restore ang mga datos mula sa backup file.
-\n
-\nKailangan mong i-install muli ang mga nawawalang extension at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
+    <string name="backup_restore_content_full">Kailangan mong i-install muli ang mga nawawalang extension at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
     <string name="pref_dns_over_https">DNS kesa HTTPS (DoH)</string>
     <string name="pref_download_new_categories_details">Ang mga entry sa mga ibinukod na kategorya ay hindi mada-download kahit na sila ay kasama rin sa mga kategoryang kasama.</string>
     <string name="pref_category_auto_download">Kusang pag-download</string>
@@ -491,7 +489,7 @@
     <string name="restrictions">Restriksyon: %s</string>
     <string name="error_no_match">Walang nahanap na kapares</string>
     <string name="date">Petsa</string>
-    <string name="local_invalid_format">Invalid na format ng kabanata</string>
+    <string name="local_invalid_format">Imbalidong format ng kabanata</string>
     <string name="chapter_not_found">Hindi makita ang kabanata</string>
     <string name="source_unsupported">Di suportado ang source</string>
     <string name="unread">Di pa nabasa</string>
@@ -560,7 +558,7 @@
     <string name="extension_api_error">Bigong makuha ang listahan ng mga extension</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
     <string name="library_errors_help">Para sa tulong sa pag-aayos ng mga error sa pag-update ng aklatan, tingnan ang %1$s</string>
-    <string name="pref_update_only_completely_read">May di pa nababasang kabanata</string>
+    <string name="pref_update_only_completely_read">Laktawan ang mga entry na hindi pa nababasang kabanata</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
     <string name="publishing_finished">Tapos na\'ng mailathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
@@ -568,7 +566,7 @@
     <string name="action_show_manga">Ipakita ang entry</string>
     <string name="action_display_cover_only_grid">Pabalat lang</string>
     <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>
-    <string name="pref_update_only_started">Hindi pa nasisimulan</string>
+    <string name="pref_update_only_started">Laktawan ang hindi nasimulang mga entry</string>
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang mga kabanata</string>
     <string name="skipped_reason_not_started">Nilaktawan dahil wala pang nabasang mga kabanata</string>
     <string name="pref_landscape_zoom">Awtomatikong mag-zoom sa mga malalawak na larawan</string>
@@ -649,7 +647,7 @@
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
     <string name="invalid_location">Invalid na lugar: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
-    <string name="error_user_agent_string_invalid">Invalid na string ng user agent</string>
+    <string name="error_user_agent_string_invalid">Di-wastong string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
     <string name="download_notifier_cache_renewal">Tinitignan ang mga download</string>
     <string name="information_no_entries_found">Walang mga entry ang nahanap sa kategoryang ito</string>
@@ -715,7 +713,7 @@
     <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <string name="manga_display_interval_title">Tantyahin bawat</string>
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
-    <string name="pref_update_only_in_release_period">Sa labas ng inaasahang release period</string>
+    <string name="pref_update_only_in_release_period">Hulaan ang susunod na oras ng release</string>
     <string name="intervals_header">Mga pagitan</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
@@ -746,7 +744,7 @@
     <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
     <string name="label_data_storage">Data at storage</string>
     <string name="pref_flash_page_summ">Binabawasan ang ghosting sa mga e-ink na display</string>
-    <string name="pref_flash_page">Mag-flash ng puti kada pagbabago ng pahina</string>
+    <string name="pref_flash_page">Mag-flash kada pumalit ng pahina</string>
     <string name="relative_time_span_never">Hindi kailanman</string>
     <string name="last_auto_backup_info">Huling awtomatikong na-back up: %s</string>
     <string name="pref_storage_usage">Paggamit ng storage</string>
@@ -769,7 +767,7 @@
     <string name="onboarding_action_finish">Magsimula</string>
     <string name="onboarding_storage_selection_required">Dapat pumili ng isang folder</string>
     <string name="onboarding_heading">Maligayang pagdating!</string>
-    <string name="onboarding_guides_returning_user">Gumagamit ba ng %s dati?</string>
+    <string name="onboarding_guides_returning_user">Muling pag-install ng %s?</string>
     <string name="onboarding_action_skip">Laktawan</string>
     <string name="onboarding_action_next">Susunod</string>
     <string name="onboarding_description">Mag-set up muna tayo ng ilang bagay. Maaari mo ring baguhin ang mga ito anumang oras sa mga setting sa ibang pagkakataon.</string>
@@ -787,8 +785,23 @@
     <string name="onboarding_permission_notifications_description">Maabisuhan para sa mga update sa aklatan at higit pa.</string>
     <string name="onboarding_permission_action_grant">Payagan</string>
     <string name="available_disk_space_info">Na magagamit: %1$s / Kabuuan: %2$s</string>
-    <string name="manga_interval_expected_update">Inaasahan ang susunod na update sa humigit-kumulang %s</string>
+    <string name="manga_interval_expected_update">Inaasahan ang susunod na update sa humigit-kumulang %1$s, na tumitingin sa bawat %2$s</string>
     <string name="invalid_backup_file_error">Buong error:</string>
     <string name="ext_permission_install_apps_warning">Kinakailangan ng permiso para mag-install ng mga extension. I-tap upang mapayagan ito.</string>
     <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
+    <string name="onboarding_storage_help_info">Nag-a-update mula sa isang mas lumang bersyon at hindi sigurado kung ano ang pipiliin? Sumangguni sa gabay sa storage para sa higit pang impormasyon.</string>
+    <string name="pref_library_update_smart_update">Matalas na pag-update</string>
+    <string name="information_empty_repos">Wala kang na-set na repo.</string>
+    <string name="action_add_repo">Magdagdag ng repo</string>
+    <string name="label_extension_repos">Mga repo ng extension</string>
+    <string name="onboarding_storage_help_action">Gabay sa storage</string>
+    <string name="error_repo_exists">Umiiral na ang repo na ito!</string>
+    <string name="action_delete_repo">Tanggalin ang repo</string>
+    <string name="label_add_repo_input">URL ng repo</string>
+    <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa Tachiyomi. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
+    <string name="repo_extension_message">Ang extension na ito ay nagmula sa isang external na repo. I-tap para tignan ang repo.</string>
+    <string name="invalid_repo_name">Di-wastong URL ng repo</string>
+    <string name="manga_interval_header">Susunod na update</string>
+    <string name="delete_repo_confirmation">Gusto mo bang tanggalin ang repo na \"%s\"?</string>
+    <string name="manga_interval_custom_amount">Ipasadya ang update frequency:</string>
 </resources>

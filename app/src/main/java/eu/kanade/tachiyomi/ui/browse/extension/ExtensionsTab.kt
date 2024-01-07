@@ -61,7 +61,7 @@ fun extensionsTab(
                 },
                 onInstallExtension = extensionsScreenModel::installExtension,
                 onOpenExtension = { navigator.push(ExtensionDetailsScreen(it.pkgName)) },
-                onTrustExtension = { extensionsScreenModel.trustSignature(it.signatureHash) },
+                onTrustExtension = { extensionsScreenModel.trustExtension(it) },
                 onUninstallExtension = { extensionsScreenModel.uninstallExtension(it) },
                 onUpdateExtension = extensionsScreenModel::updateExtension,
                 onRefresh = extensionsScreenModel::findAvailableExtensions,

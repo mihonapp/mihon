@@ -31,6 +31,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.Date
+import kotlin.system.measureTimeMillis
 
 /**
  * A manager to handle synchronization tasks in the app, such as updating
@@ -122,8 +123,10 @@ class SyncManager(
             val (filteredFavorites, nonFavorites) = filterFavoritesAndNonFavorites(remoteBackup)
             updateNonFavorites(nonFavorites)
 
+            val mangas = processFavoriteManga(filteredFavorites)
+
             val newSyncData = backup.copy(
-                backupManga = filteredFavorites,
+                backupManga = mangas,
                 backupCategories = remoteBackup.backupCategories,
                 backupSources = remoteBackup.backupSources,
                 backupPreferences = remoteBackup.backupPreferences,
@@ -131,7 +134,7 @@ class SyncManager(
             )
 
             // It's local sync no need to restore data. (just update remote data)
-            if (filteredFavorites.isEmpty()) {
+            if (mangas.isEmpty()) {
                 // update the sync timestamp
                 syncPreferences.lastSyncTimestamp().set(Date().time)
                 return
@@ -150,6 +153,9 @@ class SyncManager(
                         library = true,
                     ),
                 )
+
+                // update the sync timestamp
+                syncPreferences.lastSyncTimestamp().set(Date().time)
             } else {
                 logcat(LogPriority.ERROR) { "Failed to write sync data to file" }
             }
@@ -185,10 +191,6 @@ class SyncManager(
         return localManga.source != remoteManga.source ||
             localManga.url != remoteManga.url ||
             localManga.title != remoteManga.title ||
-            localManga.artist != remoteManga.artist ||
-            localManga.author != remoteManga.author ||
-            localManga.description != remoteManga.description ||
-            localManga.genre != remoteManga.genre ||
             localManga.status.toInt() != remoteManga.status ||
             localManga.thumbnailUrl != remoteManga.thumbnailUrl ||
             localManga.dateAdded != remoteManga.dateAdded ||
@@ -217,15 +219,10 @@ class SyncManager(
             val localChapter = localChapterMap[remoteChapter.url]
             localChapter == null || // No corresponding local chapter
                 localChapter.url != remoteChapter.url ||
-                localChapter.name != remoteChapter.name ||
-                localChapter.scanlator != remoteChapter.scanlator ||
                 localChapter.read != remoteChapter.read ||
                 localChapter.bookmark != remoteChapter.bookmark ||
                 localChapter.last_page_read != remoteChapter.lastPageRead ||
-                localChapter.chapter_number != remoteChapter.chapterNumber ||
-                localChapter.source_order != remoteChapter.sourceOrder ||
-                localChapter.date_fetch != remoteChapter.dateFetch ||
-                localChapter.date_upload != remoteChapter.dateUpload
+                localChapter.chapter_number != remoteChapter.chapterNumber
         }
     }
 
@@ -235,24 +232,88 @@ class SyncManager(
      * @return a Pair of lists, where the first list contains different favorite manga and the second list contains non-favorite manga.
      */
     private suspend fun filterFavoritesAndNonFavorites(backup: Backup): Pair<List<BackupManga>, List<BackupManga>> {
-        val databaseMangaFavorites = getFavorites.await()
-        val localMangaMap = databaseMangaFavorites.associateBy { it.url }
         val favorites = mutableListOf<BackupManga>()
         val nonFavorites = mutableListOf<BackupManga>()
+        val elapsedTimeMillis = measureTimeMillis {
+            val databaseMangaFavorites = getFavorites.await()
+            val localMangaMap = databaseMangaFavorites.associateBy { it.url }
 
-        backup.backupManga.forEach { remoteManga ->
-            if (remoteManga.favorite) {
-                localMangaMap[remoteManga.url]?.let { localManga ->
-                    if (isMangaDifferent(localManga, remoteManga)) {
-                        favorites.add(remoteManga)
+            logcat(LogPriority.DEBUG) { "Starting to filter favorites and non-favorites from backup data." }
+
+            backup.backupManga.forEach { remoteManga ->
+                val localManga = localMangaMap[remoteManga.url]
+                when {
+                    // Checks if the manga is in favorites and needs updating or adding
+                    remoteManga.favorite -> {
+                        if (localManga == null || isMangaDifferent(localManga, remoteManga)) {
+                            logcat(LogPriority.DEBUG) { "Adding to favorites: ${remoteManga.title}" }
+                            favorites.add(remoteManga)
+                        } else {
+                            logcat(LogPriority.DEBUG) { "Already up-to-date favorite: ${remoteManga.title}" }
+                        }
                     }
-                } ?: favorites.add(remoteManga)
-            } else {
-                nonFavorites.add(remoteManga)
+                    // Handle non-favorites
+                    !remoteManga.favorite -> {
+                        logcat(LogPriority.DEBUG) { "Adding to non-favorites: ${remoteManga.title}" }
+                        nonFavorites.add(remoteManga)
+                    }
+                }
             }
         }
 
+        val minutes = elapsedTimeMillis / 60000
+        val seconds = (elapsedTimeMillis % 60000) / 1000
+        logcat(LogPriority.DEBUG) {
+            "Filtering completed in ${minutes}m ${seconds}s. Favorites found: ${favorites.size}, " +
+                "Non-favorites found: ${nonFavorites.size}"
+        }
+
         return Pair(favorites, nonFavorites)
+    }
+
+    private fun processFavoriteManga(backupManga: List<BackupManga>): List<BackupManga> {
+        val mangas = mutableListOf<BackupManga>()
+        val lastSyncTimeStamp = syncPreferences.lastSyncTimestamp().get()
+
+        val elapsedTimeMillis = measureTimeMillis {
+            logcat(LogPriority.DEBUG) { "Starting to process BackupMangas." }
+            backupManga.forEach { manga ->
+                val mangaLastUpdatedStatus = manga.lastModifiedAt * 1000L > lastSyncTimeStamp
+                val chaptersUpdatedStatus = chaptersUpdatedAfterSync(manga, lastSyncTimeStamp)
+
+                if (mangaLastUpdatedStatus || chaptersUpdatedStatus) {
+                    mangas.add(manga)
+                    logcat(LogPriority.DEBUG) {
+                        "Added ${manga.title} to the process list. Manga Last Updated: $mangaLastUpdatedStatus, " +
+                            "Chapters Updated: $chaptersUpdatedStatus."
+                    }
+                } else {
+                    logcat(LogPriority.DEBUG) {
+                        "Skipped ${manga.title} as it has not been updated since the last sync " +
+                            "(Last Modified: ${manga.lastModifiedAt * 1000L}, Last Sync: $lastSyncTimeStamp)."
+                    }
+                }
+            }
+        }
+
+        val minutes = elapsedTimeMillis / 60000
+        val seconds = (elapsedTimeMillis % 60000) / 1000
+        logcat(LogPriority.DEBUG) { "Processing completed in ${minutes}m ${seconds}s. Total Processed: ${mangas.size}" }
+
+        return mangas
+    }
+
+    private fun chaptersUpdatedAfterSync(manga: BackupManga, lastSyncTimeStamp: Long): Boolean {
+        return manga.chapters.any { chapter ->
+            val updated = chapter.lastModifiedAt * 1000L > lastSyncTimeStamp
+            if (updated) {
+                logcat(LogPriority.DEBUG) {
+                    "Chapter ${chapter.name} of ${manga.title} updated after last sync " +
+                        "(Chapter Last Modified: ${chapter.lastModifiedAt}, Last Sync: $lastSyncTimeStamp)."
+                }
+            }
+            updated
+        }
     }
 
     /**

@@ -80,7 +80,7 @@
     <string name="all">全部</string>
     <string name="pref_library_update_restriction">自動更新的裝置限制</string>
     <string name="charging">充電時</string>
-    <string name="pref_update_only_non_completed">連載已完結</string>
+    <string name="pref_update_only_non_completed">略過已完結的作品</string>
     <string name="default_category">預設類別</string>
     <string name="default_category_summary">總是詢問</string>
     <string name="ext_update">更新</string>
@@ -557,7 +557,7 @@
     <string name="database_clean">無須清理</string>
     <string name="extension_api_error">擴充套件清單取得失敗</string>
     <string name="privacy_policy">隱私權政策</string>
-    <string name="pref_update_only_completely_read">有未讀章節</string>
+    <string name="pref_update_only_completely_read">略過有未讀章節的作品</string>
     <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
     <string name="on_hiatus">休刊中</string>
@@ -567,7 +567,7 @@
     <string name="pref_landscape_zoom">自動縮放寬頁</string>
     <string name="pref_navigate_pan">導覽寬頁時先平移後翻頁</string>
     <string name="action_display_cover_only_grid">純封面格狀</string>
-    <string name="pref_update_only_started">無已讀章節</string>
+    <string name="pref_update_only_started">略過無已讀章節的作品</string>
     <string name="skipped_reason_completed">由於連載已完結，因此略過</string>
     <string name="skipped_reason_not_caught_up">由於有未讀章節，因此略過</string>
     <string name="skipped_reason_not_started">由於無已讀章節，因此略過</string>
@@ -718,7 +718,7 @@
     <string name="action_sort_next_updated">下次預期更新</string>
     <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_only_in_release_period">未臨出刊日</string>
+    <string name="pref_update_only_in_release_period">預估出刊日</string>
     <string name="manga_display_modified_interval_title">設定為每個</string>
     <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
     <string name="has_results">有結果</string>
@@ -767,7 +767,7 @@
     <string name="onboarding_action_finish">開始使用</string>
     <string name="onboarding_storage_selection_required">必須選擇一個資料夾</string>
     <string name="onboarding_heading">歡迎！</string>
-    <string name="onboarding_guides_returning_user">已是 %s 的既有使用者？</string>
+    <string name="onboarding_guides_returning_user">重新安裝 %s？</string>
     <string name="onboarding_action_skip">略過</string>
     <string name="onboarding_action_next">下一步</string>
     <string name="onboarding_description">讓我們先設定一些東西。稍後你隨時可至設定中變更這些選項。</string>
@@ -787,7 +787,7 @@
     <string name="available_disk_space_info">可用：%1$s / 總計：%2$s</string>
     <string name="ext_permission_install_apps_warning">缺少安裝擴充套件所需的權限。輕觸此處以授予。</string>
     <string name="private_settings">包含敏感設定 (如：歷程平台登入權杖)</string>
-    <string name="manga_interval_expected_update">預計再 %s左右出刊</string>
+    <string name="manga_interval_expected_update">預計 %1$s後出刊，每 %2$s檢查一次</string>
     <string name="invalid_backup_file_error">完整錯誤訊息：</string>
     <string name="repo_extension_message">此擴充套件來自外部儲存庫，輕觸以檢視該儲存庫。</string>
     <string name="manga_interval_custom_amount">自訂更新頻率：</string>
@@ -801,4 +801,6 @@
     <string name="action_add_repo">新增儲存庫</string>
     <string name="information_empty_repos">尚未新增任何儲存庫</string>
     <string name="label_extension_repos">擴充套件儲存庫</string>
+    <string name="onboarding_storage_help_action">儲存空間指南</string>
+    <string name="onboarding_storage_help_info">從舊版升級而不確定該如何選擇嗎？請參閱儲存空間指南以取得更多資訊。</string>
 </resources>

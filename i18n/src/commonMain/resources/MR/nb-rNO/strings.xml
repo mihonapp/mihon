@@ -767,7 +767,7 @@
     <string name="onboarding_action_finish">Kom i gang</string>
     <string name="onboarding_storage_selection_required">En mappe må velges</string>
     <string name="onboarding_heading">Velkommen!</string>
-    <string name="onboarding_guides_returning_user">Allerede brukt %s før?</string>
+    <string name="onboarding_guides_returning_user">Reinstallerer du %s?</string>
     <string name="onboarding_action_skip">Hopp over</string>
     <string name="onboarding_action_next">Neste</string>
     <string name="onboarding_description">La oss sette opp noen ting først. Du kan alltid endre disse i innstillingene senere også.</string>

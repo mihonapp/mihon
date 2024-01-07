@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import logcat.LogPriority
+import logcat.logcat
 import tachiyomi.domain.sync.SyncPreferences
 import java.time.Instant
 
@@ -92,37 +94,99 @@ abstract class SyncService(
         localMangaList: List<BackupManga>?,
         remoteMangaList: List<BackupManga>?,
     ): List<BackupManga> {
+        val logTag = "MergeMangaLists"
+
         // Convert null lists to empty to simplify logic
         val localMangaListSafe = localMangaList.orEmpty()
         val remoteMangaListSafe = remoteMangaList.orEmpty()
 
-        // Associate both local and remote manga by their unique keys (source and url)
-        val localMangaMap = localMangaListSafe.associateBy { Pair(it.source, it.url) }
-        val remoteMangaMap = remoteMangaListSafe.associateBy { Pair(it.source, it.url) }
+        logcat(logTag, LogPriority.DEBUG) {
+            "Starting merge. Local list size: ${localMangaListSafe.size}, Remote list size: ${remoteMangaListSafe.size}"
+        }
+
+        // Define a function to create a composite key from manga
+        fun mangaCompositeKey(manga: BackupManga): String {
+            return "${manga.source}|${manga.url}|${manga.title.lowercase().trim()}|${manga.author?.lowercase()?.trim()}"
+        }
+
+        // Create maps using composite keys
+        val localMangaMap = localMangaListSafe.associateBy { mangaCompositeKey(it) }
+        val remoteMangaMap = remoteMangaListSafe.associateBy { mangaCompositeKey(it) }
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Starting merge. Local list size: ${localMangaListSafe.size}, Remote list size: ${remoteMangaListSafe.size}"
+        }
 
         // Prepare to merge both sets of manga
-        return (localMangaMap.keys + remoteMangaMap.keys).mapNotNull { key ->
-            val local = localMangaMap[key]
-            val remote = remoteMangaMap[key]
+        val mergedList = (localMangaMap.keys + remoteMangaMap.keys).distinct().mapNotNull { compositeKey ->
+            val local = localMangaMap[compositeKey]
+            val remote = remoteMangaMap[compositeKey]
+
+            logcat(LogPriority.DEBUG, logTag) {
+                "Processing key: $compositeKey. Local favorite: ${local?.favorite}, " +
+                    "Remote favorite: ${remote?.favorite}"
+            }
 
             when {
-                local != null && remote == null -> local
-                local == null && remote != null -> remote
+                local != null && remote == null -> {
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Taking local manga: ${local.title} as it is not present remotely. " +
+                            "Favorite status: ${local.favorite}"
+                    }
+                    local
+                }
+                local == null && remote != null -> {
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Taking remote manga: ${remote.title} as it is not present locally. " +
+                            "Favorite status: ${remote.favorite}"
+                    }
+                    remote
+                }
                 local != null && remote != null -> {
-                    // Compare last modified times and merge chapters
-                    val localTime = Instant.ofEpochMilli(local.lastModifiedAt)
-                    val remoteTime = Instant.ofEpochMilli(remote.lastModifiedAt)
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Inspecting timestamps for ${local.title}. Local lastModifiedAt: ${local.lastModifiedAt}, " +
+                            "Remote lastModifiedAt: ${remote.lastModifiedAt}"
+                    }
+                    // Convert seconds to milliseconds for accurate time comparison
+                    val localTime = Instant.ofEpochMilli(local.lastModifiedAt * 1000L)
+                    val remoteTime = Instant.ofEpochMilli(remote.lastModifiedAt * 1000L)
                     val mergedChapters = mergeChapters(local.chapters, remote.chapters)
 
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Merging manga: ${local.title}. Local time: $localTime, Remote time: $remoteTime, " +
+                            "Local favorite: ${local.favorite}, Remote favorite: ${remote.favorite}"
+                    }
+
                     if (localTime >= remoteTime) {
+                        logcat(
+                            LogPriority.DEBUG,
+                            logTag,
+                        ) { "Keeping local version of ${local.title} with merged chapters." }
                         local.copy(chapters = mergedChapters)
                     } else {
+                        logcat(
+                            LogPriority.DEBUG,
+                            logTag,
+                        ) { "Keeping remote version of ${remote.title} with merged chapters." }
                         remote.copy(chapters = mergedChapters)
                     }
                 }
-                else -> null
+                else -> {
+                    logcat(LogPriority.DEBUG, logTag) { "No manga found for key: $compositeKey. Skipping." }
+                    null
+                }
             }
         }
+
+        // Counting favorites and non-favorites
+        val (favorites, nonFavorites) = mergedList.partition { it.favorite }
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Merge completed. Total merged manga: ${mergedList.size}, Favorites: ${favorites.size}, " +
+                "Non-Favorites: ${nonFavorites.size}"
+        }
+
+        return mergedList
     }
 
 /**
@@ -146,27 +210,64 @@ abstract class SyncService(
         localChapters: List<BackupChapter>,
         remoteChapters: List<BackupChapter>,
     ): List<BackupChapter> {
-        // Associate chapters by URL for both local and remote
-        val localChapterMap = localChapters.associateBy { it.url }
-        val remoteChapterMap = remoteChapters.associateBy { it.url }
+        val logTag = "MergeChapters"
+
+        // Define a function to create a composite key from a chapter
+        fun chapterCompositeKey(chapter: BackupChapter): String {
+            return "${chapter.url}|${chapter.name}|${chapter.chapterNumber}"
+        }
+
+        // Create maps using composite keys
+        val localChapterMap = localChapters.associateBy { chapterCompositeKey(it) }
+        val remoteChapterMap = remoteChapters.associateBy { chapterCompositeKey(it) }
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Starting chapter merge. Local chapters: ${localChapters.size}, Remote chapters: ${remoteChapters.size}"
+        }
 
         // Merge both chapter maps
-        return (localChapterMap.keys + remoteChapterMap.keys).mapNotNull { url ->
-            // Determine the most recent chapter by comparing lastModifiedAt, considering null as Instant.MIN
-            val localChapter = localChapterMap[url]
-            val remoteChapter = remoteChapterMap[url]
+        val mergedChapters = (localChapterMap.keys + remoteChapterMap.keys).distinct().mapNotNull { compositeKey ->
+            val localChapter = localChapterMap[compositeKey]
+            val remoteChapter = remoteChapterMap[compositeKey]
+
+            logcat(LogPriority.DEBUG, logTag) {
+                "Processing chapter key: $compositeKey. Local chapter: ${localChapter != null}, " +
+                    "Remote chapter: ${remoteChapter != null}"
+            }
 
             when {
-                localChapter != null && remoteChapter == null -> localChapter
-                localChapter == null && remoteChapter != null -> remoteChapter
-                localChapter != null && remoteChapter != null -> {
-                    val localInstant = localChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) } ?: Instant.MIN
-                    val remoteInstant = remoteChapter.lastModifiedAt.let { Instant.ofEpochMilli(it) } ?: Instant.MIN
-                    if (localInstant >= remoteInstant) localChapter else remoteChapter
+                localChapter != null && remoteChapter == null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Keeping local chapter: ${localChapter.name}." }
+                    localChapter
                 }
-                else -> null
+                localChapter == null && remoteChapter != null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Taking remote chapter: ${remoteChapter.name}." }
+                    remoteChapter
+                }
+                localChapter != null && remoteChapter != null -> {
+                    val localInstant = Instant.ofEpochMilli(localChapter.lastModifiedAt * 1000L)
+                    val remoteInstant = Instant.ofEpochMilli(remoteChapter.lastModifiedAt * 1000L)
+
+                    val chosenChapter = if (localInstant >= remoteInstant) localChapter else remoteChapter
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Merging chapter: ${chosenChapter.name}. Chosen from: ${if (localInstant >= remoteInstant) {
+                            "Local"
+                        } else {
+                            "Remote"
+                        }}."
+                    }
+                    chosenChapter
+                }
+                else -> {
+                    logcat(LogPriority.DEBUG, logTag) { "No chapter found for composite key: $compositeKey. Skipping." }
+                    null
+                }
             }
         }
+
+        logcat(LogPriority.DEBUG, logTag) { "Chapter merge completed. Total merged chapters: ${mergedChapters.size}" }
+
+        return mergedChapters
     }
 
     /**
