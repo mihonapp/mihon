@@ -195,8 +195,8 @@ class ExtensionsScreenModel(
         }
     }
 
-    fun trustSignature(signatureHash: String) {
-        extensionManager.trustSignature(signatureHash)
+    fun trustExtension(extension: Extension.Untrusted) {
+        extensionManager.trust(extension)
     }
 
     @Immutable

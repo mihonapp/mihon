@@ -410,6 +410,11 @@ object Migrations {
                     newKey = { Preference.privateKey(it) },
                 )
             }
+            if (oldVersion < 117) {
+                prefs.edit {
+                    remove(Preference.appStateKey("trusted_signatures"))
+                }
+            }
             return true
         }
 

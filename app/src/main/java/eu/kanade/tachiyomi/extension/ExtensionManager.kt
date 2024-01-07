@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.extension
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import eu.kanade.domain.source.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import logcat.LogPriority
-import tachiyomi.core.preference.plusAssign
 import tachiyomi.core.util.lang.launchNow
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
@@ -34,13 +34,11 @@ import java.util.Locale
  * To avoid malicious distribution, every extension must be signed and it will only be loaded if its
  * signature is trusted, otherwise the user will be prompted with a warning to trust it before being
  * loaded.
- *
- * @param context The application context.
- * @param preferences The application preferences.
  */
 class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences = Injekt.get(),
+    private val trustExtension: TrustExtension = Injekt.get(),
 ) {
 
     var isInitialized = false
@@ -249,18 +247,19 @@ class ExtensionManager(
     }
 
     /**
-     * Adds the given signature to the list of trusted signatures. It also loads in background the
-     * extensions that match this signature.
+     * Adds the given extension to the list of trusted extensions. It also loads in background the
+     * now trusted extensions.
      *
-     * @param signature The signature to whitelist.
+     * @param extension the extension to trust
      */
-    fun trustSignature(signature: String) {
-        val untrustedSignatures = _untrustedExtensionsFlow.value.map { it.signatureHash }.toSet()
-        if (signature !in untrustedSignatures) return
+    fun trust(extension: Extension.Untrusted) {
+        val untrustedPkgNames = _untrustedExtensionsFlow.value.map { it.pkgName }.toSet()
+        if (extension.pkgName !in untrustedPkgNames) return
 
-        preferences.trustedSignatures() += signature
+        trustExtension.trust(extension.pkgName, extension.versionCode, extension.signatureHash)
 
-        val nowTrustedExtensions = _untrustedExtensionsFlow.value.filter { it.signatureHash == signature }
+        val nowTrustedExtensions = _untrustedExtensionsFlow.value
+            .filter { it.pkgName == extension.pkgName && it.versionCode == extension.versionCode }
         _untrustedExtensionsFlow.value -= nowTrustedExtensions
 
         launchNow {

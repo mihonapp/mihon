@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
 import dalvik.system.PathClassLoader
+import eu.kanade.domain.source.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -15,7 +16,6 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.SourceFactory
 import eu.kanade.tachiyomi.util.lang.Hash
 import eu.kanade.tachiyomi.util.storage.copyAndSetReadOnlyTo
-import eu.kanade.tachiyomi.util.system.isDevFlavor
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -41,6 +41,7 @@ import java.io.File
 internal object ExtensionLoader {
 
     private val preferences: SourcePreferences by injectLazy()
+    private val trustExtension: TrustExtension by injectLazy()
     private val loadNsfwSource by lazy {
         preferences.showNsfwSource().get()
     }
@@ -49,8 +50,6 @@ internal object ExtensionLoader {
     private const val METADATA_SOURCE_CLASS = "tachiyomi.extension.class"
     private const val METADATA_SOURCE_FACTORY = "tachiyomi.extension.factory"
     private const val METADATA_NSFW = "tachiyomi.extension.nsfw"
-    private const val METADATA_HAS_README = "tachiyomi.extension.hasReadme"
-    private const val METADATA_HAS_CHANGELOG = "tachiyomi.extension.hasChangelog"
     const val LIB_VERSION_MIN = 1.4
     const val LIB_VERSION_MAX = 1.5
 
@@ -119,12 +118,6 @@ internal object ExtensionLoader {
      * @param context The application context.
      */
     fun loadExtensions(context: Context): List<LoadResult> {
-        // Always make users trust unknown extensions on cold starts in non-dev builds
-        // due to inherent security risks
-        if (!isDevFlavor) {
-            preferences.trustedSignatures().delete()
-        }
-
         val pkgManager = context.packageManager
 
         val installedPkgs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -262,7 +255,7 @@ internal object ExtensionLoader {
         if (signatures.isNullOrEmpty()) {
             logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
             return LoadResult.Error
-        } else if (!hasTrustedSignature(signatures)) {
+        } else if (!isTrusted(pkgInfo, signatures)) {
             val extension = Extension.Untrusted(
                 extName,
                 pkgName,
@@ -280,9 +273,6 @@ internal object ExtensionLoader {
             logcat(LogPriority.WARN) { "NSFW extension $pkgName not allowed" }
             return LoadResult.Error
         }
-
-        val hasReadme = appInfo.metaData.getInt(METADATA_HAS_README, 0) == 1
-        val hasChangelog = appInfo.metaData.getInt(METADATA_HAS_CHANGELOG, 0) == 1
 
         val classLoader = try {
             PathClassLoader(appInfo.sourceDir, null, context.classLoader)
@@ -393,13 +383,12 @@ internal object ExtensionLoader {
             ?.toList()
     }
 
-    private fun hasTrustedSignature(signatures: List<String>): Boolean {
+    private fun isTrusted(pkgInfo: PackageInfo, signatures: List<String>): Boolean {
         if (officialSignature in signatures) {
             return true
         }
 
-        val trustedSignatures = preferences.trustedSignatures().get()
-        return trustedSignatures.any { signatures.contains(it) }
+        return trustExtension.isTrusted(pkgInfo, signatures.last())
     }
 
     private fun isOfficiallySigned(signatures: List<String>): Boolean {
