@@ -17,7 +17,7 @@ class TrustExtension(
     fun trust(pkgName: String, versionCode: Long, signatureHash: String) {
         preferences.trustedExtensions().getAndSet { exts ->
             // Remove previously trusted versions
-            val removed = exts.filter { it.startsWith("$pkgName:") }.toMutableSet()
+            val removed = exts.filterNot { it.startsWith("$pkgName:") }.toMutableSet()
 
             removed.also {
                 it += "$pkgName:$versionCode:$signatureHash"
