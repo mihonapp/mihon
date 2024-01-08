@@ -41,7 +41,7 @@ class SourceRepositoryImpl(
     override fun getSourcesWithFavoriteCount(): Flow<List<Pair<DomainSource, Long>>> {
         return combine(
             handler.subscribeToList { mangasQueries.getSourceIdWithFavoriteCount() },
-            sourceManager.catalogueSources
+            sourceManager.catalogueSources,
         ) { sourceIdWithFavoriteCount, _ -> sourceIdWithFavoriteCount }
             .map {
                 it.map { (sourceId, count) ->
