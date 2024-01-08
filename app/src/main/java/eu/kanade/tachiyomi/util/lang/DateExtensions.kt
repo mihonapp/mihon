@@ -43,8 +43,6 @@ fun Long.toDateKey(): Date {
     return Date.from(instant.truncatedTo(ChronoUnit.DAYS))
 }
 
-private const val MILLISECONDS_IN_DAY = 86_400_000L
-
 fun Date.toRelativeString(
     context: Context,
     relative: Boolean = true,
@@ -69,6 +67,8 @@ fun Date.toRelativeString(
     }
 }
 
+private const val MILLISECONDS_IN_DAY = 86_400_000L
+
 private val Date.timeWithOffset: Long
     get() {
         return Calendar.getInstance().run {
@@ -78,6 +78,6 @@ private val Date.timeWithOffset: Long
         }
     }
 
-fun Long.floorNearest(to: Long): Long {
+private fun Long.floorNearest(to: Long): Long {
     return this.floorDiv(to) * to
 }
