@@ -30,6 +30,7 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.absoluteValue
 
 @Composable
 fun DeleteChaptersDialog(
@@ -85,7 +86,7 @@ fun SetIntervalDialog(
         title = { Text(stringResource(MR.strings.pref_library_update_smart_update)) },
         text = {
             Column {
-                if (nextUpdateDays != null && nextUpdateDays >= 0) {
+                if (nextUpdateDays != null && nextUpdateDays >= 0 && interval >= 0) {
                     Text(
                         stringResource(
                             MR.strings.manga_interval_expected_update,
@@ -96,8 +97,8 @@ fun SetIntervalDialog(
                             ),
                             pluralStringResource(
                                 MR.plurals.day,
-                                count = interval,
-                                interval,
+                                count = interval.absoluteValue,
+                                interval.absoluteValue,
                             ),
                         ),
                     )
@@ -105,7 +106,6 @@ fun SetIntervalDialog(
                     Spacer(Modifier.height(MaterialTheme.padding.small))
                 }
 
-                // TODO: selecting "1" then doesn't allow for future changes unless defaulting first?
                 if (onValueChanged != null && (isDevFlavor || isPreviewBuildType)) {
                     Text(stringResource(MR.strings.manga_interval_custom_amount))
 

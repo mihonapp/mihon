@@ -214,6 +214,9 @@ class WebtoonRecyclerView @JvmOverloads constructor(
             if (!isZooming && doubleTapZoom) {
                 if (scaleX != DEFAULT_RATE) {
                     zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
+                    layoutParams.height = originalHeight
+                    halfHeight = layoutParams.height / 2
+                    requestLayout()
                 } else {
                     val toScale = 2f
                     val toX = (halfWidth - ev.x) * (toScale - 1)

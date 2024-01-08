@@ -55,11 +55,7 @@
     <string name="action_filter_bookmarked">Bookmarked</string>
     <string name="action_filter_tracked">Tracked</string>
     <string name="action_filter_unread">Unread</string>
-    <string name="action_filter_interval_custom">Customized fetch interval</string>
-    <string name="action_filter_interval_long">Fetch monthly (28 days)</string>
-    <string name="action_filter_interval_late">Late 10+ check</string>
-    <string name="action_filter_interval_dropped">Dropped? Late 20+ and 2 months</string>
-    <string name="action_filter_interval_passed">Passed check period</string>
+    <string name="action_filter_interval_custom">Customized update frequency</string>
     <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
@@ -227,6 +223,7 @@
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
+    <string name="theme_nord">Nord</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_tealturquoise">Teal &amp; Turquoise</string>
@@ -326,8 +323,8 @@
     <string name="untrusted_extension">Untrusted extension</string>
     <string name="untrusted_extension_message">This extension was signed by any unknown author and wasn\'t loaded.\n\nMalicious extensions can read any stored login credentials or execute arbitrary code.\n\nBy trusting this extension\'s certificate, you accept these risks.</string>
     <string name="obsolete_extension_message">This extension is no longer available. It may not function properly and can cause issues with the app. Uninstalling it is recommended.</string>
-    <string name="unofficial_extension_message">This extension is not from the official list.</string>
-    <string name="extension_api_error">Failed to get extensions list</string>
+    <string name="unofficial_extension_message">This extension is not from the official repo.</string>
+    <string name="extension_api_error">Failed to fetch available extensions</string>
     <string name="ext_info_version">Version</string>
     <string name="ext_info_language">Language</string>
     <string name="ext_info_age_rating">Age rating</string>
@@ -342,6 +339,7 @@
     <string name="ext_installer_private" translatable="false">Private</string>
     <string name="ext_installer_shizuku_stopped">Shizuku is not running</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Install and start Shizuku to use Shizuku as extension installer.</string>
+    <string name="ext_revoke_trust">Revoke trusted unknown extensions</string>
 
     <!-- Extension repos -->
     <string name="label_extension_repos">Extension repos</string>
@@ -728,9 +726,9 @@
     <string name="display_mode_chapter">Chapter %1$s</string>
     <string name="manga_display_interval_title">Estimate every</string>
     <string name="manga_display_modified_interval_title">Set to update every</string>
-    <string name="manga_interval_header">Next update</string>
     <!-- "... around 2 days" -->
-    <string name="manga_interval_expected_update">Next update expected in around %1$s, checking around every %2$s</string>
+    <string name="manga_interval_expected_update">New chapters predicted to be released in around %1$s, checking around every %2$s.</string>
+    <string name="manga_interval_expected_update_soon">Soon</string>
     <string name="manga_interval_custom_amount">Custom update frequency:</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
     <string name="chapter_error">Error</string>

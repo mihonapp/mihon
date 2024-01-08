@@ -85,26 +85,6 @@ class LibraryPreferences(
         TriState.DISABLED,
     )
 
-    fun filterIntervalLong() = preferenceStore.getEnum(
-        "pref_filter_library_interval_long",
-        TriState.DISABLED,
-    )
-
-    fun filterIntervalLate() = preferenceStore.getEnum(
-        "pref_filter_library_interval_late",
-        TriState.DISABLED,
-    )
-
-    fun filterIntervalDropped() = preferenceStore.getEnum(
-        "pref_filter_library_interval_dropped",
-        TriState.DISABLED,
-    )
-
-    fun filterIntervalPassed() = preferenceStore.getEnum(
-        "pref_filter_library_interval_passed",
-        TriState.DISABLED,
-    )
-
     fun filterTracking(id: Int) = preferenceStore.getEnum(
         "pref_filter_library_tracked_${id}_v2",
         TriState.DISABLED,

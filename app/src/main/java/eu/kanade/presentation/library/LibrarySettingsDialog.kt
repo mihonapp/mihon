@@ -74,6 +74,8 @@ private fun ColumnScope.FilterPage(
 ) {
     val filterDownloaded by screenModel.libraryPreferences.filterDownloaded().collectAsState()
     val downloadedOnly by screenModel.preferences.downloadedOnly().collectAsState()
+    val autoUpdateMangaRestrictions by screenModel.libraryPreferences.autoUpdateMangaRestrictions().collectAsState()
+
     TriStateItem(
         label = stringResource(MR.strings.label_downloaded),
         state = if (downloadedOnly) {
@@ -108,6 +110,14 @@ private fun ColumnScope.FilterPage(
         state = filterCompleted,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
+    if (LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions) {
+        val filterIntervalCustom by screenModel.libraryPreferences.filterIntervalCustom().collectAsState()
+        TriStateItem(
+            label = stringResource(MR.strings.action_filter_interval_custom),
+            state = filterIntervalCustom,
+            onClick = { screenModel.toggleFilter(LibraryPreferences::filterIntervalCustom) },
+        )
+    }
 
     val trackers = remember { screenModel.trackers }
     when (trackers.size) {

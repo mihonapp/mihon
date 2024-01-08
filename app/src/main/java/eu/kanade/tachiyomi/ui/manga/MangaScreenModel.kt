@@ -378,12 +378,15 @@ class MangaScreenModel(
 
     fun setFetchInterval(manga: Manga, interval: Int) {
         screenModelScope.launchIO {
-            updateManga.awaitUpdateFetchInterval(
-                // Custom intervals are negative
-                manga.copy(fetchInterval = -interval),
-            )
-            val updatedManga = mangaRepository.getMangaById(manga.id)
-            updateSuccessState { it.copy(manga = updatedManga) }
+            if (
+                updateManga.awaitUpdateFetchInterval(
+                    // Custom intervals are negative
+                    manga.copy(fetchInterval = -interval),
+                )
+            ) {
+                val updatedManga = mangaRepository.getMangaById(manga.id)
+                updateSuccessState { it.copy(manga = updatedManga) }
+            }
         }
     }
 
