@@ -94,7 +94,7 @@ body:
           required: true
         - label: I have written a short but informative title.
           required: true
-        - label: If this is an issue with an extension, I should be opening an issue in the [extensions repository](https://github.com/tachiyomiorg/tachiyomi-extensions/issues/new/choose).
+        - label: If this is an issue with an official extension, I should be opening an issue in the [extensions repository](https://github.com/tachiyomiorg/extensions/issues/new/choose).
           required: true
         - label: I have gone through the [FAQ](https://tachiyomi.org/docs/faq/general) and [troubleshooting guide](https://tachiyomi.org/docs/guides/troubleshooting/).
           required: true

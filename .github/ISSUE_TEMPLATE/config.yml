@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: ⚠️ Extension/source issue
-    url: https://github.com/tachiyomiorg/tachiyomi-extensions/issues/new/choose
-    about: Issues and requests for extensions and sources should be opened in the tachiyomi-extensions repository instead
+    url: https://github.com/tachiyomiorg/extensions/issues/new/choose
+    about: Issues and requests for official extensions and sources should be opened in the extensions repository instead
   - name: 📦 Tachiyomi extensions
     url: https://tachiyomi.org/extensions/
     about: List of all available extensions with download links
