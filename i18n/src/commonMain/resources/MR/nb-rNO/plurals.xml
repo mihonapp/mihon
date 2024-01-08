@@ -64,4 +64,8 @@
         <item quantity="one">%d dag</item>
         <item quantity="other">%d dager</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d pakkebrønn</item>
+        <item quantity="other">%d pakkebrønner</item>
+    </plurals>
 </resources>

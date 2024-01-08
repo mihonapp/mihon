@@ -90,7 +90,6 @@
     <string name="action_previous_chapter">Antaŭa ĉapitro</string>
     <string name="ext_uninstall">Malinstali</string>
     <string name="ext_untrusted">Malfidanta</string>
-    <string name="ext_unofficial">Neoficiala</string>
     <string name="ext_trust">Fidi</string>
     <string name="ext_installed">Instalita</string>
     <string name="ext_installing">Instalata</string>
@@ -409,7 +408,6 @@
     <string name="pref_read_with_volume_keys_inverted">Inversigi laŭtec-butonojn</string>
     <string name="pref_inverted_colors">Inversigita</string>
     <string name="pref_dual_page_split">Du-paĝa divido</string>
-    <string name="unofficial_extension_message">Ĉi tiu kromaĵo ne estas de la oficiala Tachiyomi kromaĵlisto.</string>
     <string name="ext_pending">Atendantaj</string>
     <string name="pref_update_only_non_completed">Nur ĝisdatigi okazantaj mangaojn</string>
     <string name="restrictions">Limigoj: %s</string>
@@ -462,5 +460,25 @@
     <string name="label_downloaded">Elŝutita</string>
     <string name="action_set_interval">Meti intervalon</string>
     <string name="action_filter_interval_custom">Personaligita intervalo de elŝutoj</string>
-    <string name="action_filter_interval_long">Prenu ĉiumonate (28 tagoj)</string>
+    <string name="action_copy_to_clipboard">Kopii al tondujo</string>
+    <string name="delete_category">Forigi kategorion</string>
+    <string name="onboarding_storage_info">Elektu dosierujon kie %1$s estos konservonta ĉapitrajn elŝutojn, savkopiojn, kaj aliajn.
+\n
+\nDediĉita dosierujo estas rekomendita.
+\n
+\nElektita dosierujo: %2$s</string>
+    <string name="action_not_now">Ne nun</string>
+    <string name="action_display_language_badge">Lingvo</string>
+    <string name="onboarding_storage_action_select">Elekti dosierujon</string>
+    <string name="action_search_hint">Serĉi…</string>
+    <string name="delete_category_confirmation">Ĉu vi volas forigi la kategorion \"%s\"?</string>
+    <string name="action_apply">Apliki</string>
+    <string name="action_revert_to_default">Restarigi al defaŭltaj</string>
+    <string name="action_close">Fermi</string>
+    <string name="action_ok">Bone</string>
+    <string name="action_sort_category">Ordigi kategoriojn</string>
+    <string name="sort_category_confirmation">Ĉu vi volas ordigi la kategoriojn alfabete?</string>
+    <string name="action_remove_everything">Forigi ĉiojn</string>
+    <string name="onboarding_heading">Bonvenon!</string>
+    <string name="onboarding_action_skip">Preterpasi</string>
 </resources>

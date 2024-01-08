@@ -375,8 +375,6 @@
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži unose u biblioteci.</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u eksternoj usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
-    <string name="unofficial_extension_message">Ovo proširenje nije iz službenog popisa.</string>
-    <string name="ext_unofficial">Neslužbeno</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
     <string name="action_migrate">Migriraj</string>
@@ -708,7 +706,6 @@
     <string name="pref_chapter_swipe_end">Prelistaj udesno</string>
     <string name="action_set_interval">Postavi interval</string>
     <string name="action_filter_interval_custom">Prilagođeni interval dohvaćanja</string>
-    <string name="action_filter_interval_long">Mjesečno dohvaćanje (28 dana)</string>
     <string name="manga_display_interval_title">Procijeni svakih</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
     <string name="manga_display_modified_interval_title">Postavi za aktualiziranje svakih</string>
@@ -724,10 +721,7 @@
     <string name="syncing_library">Sinkroniziranje biblioteke</string>
     <string name="library_sync_complete">Sinkroniziranje biblioteke završeno</string>
     <string name="information_cloudflare_help">Dodirni ovdje za pomoć s Cloudflareom</string>
-    <string name="action_filter_interval_dropped">Ispušteno\? Zadnjih 20 dana i 2 mjeseca</string>
     <string name="track_activity_name">Prijava za uslugu praćenja</string>
-    <string name="action_filter_interval_passed">Prekoraöeno razdoblje provjere</string>
-    <string name="action_filter_interval_late">Provjera zadnjih 10 i više dana</string>
     <string name="download_cache_invalidated">Indeks preuzimanja poništen</string>
     <string name="create_backup_file_error">Nije bilo moguće stvoriti datoteku sigurnosne kopije</string>
     <string name="licensed_manga_chapters_error">Licencirano – Nema poglavlja za prikaz</string>

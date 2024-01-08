@@ -209,7 +209,6 @@
     <string name="ext_install">pasang</string>
     <string name="ext_installed">Ngetrap</string>
     <string name="ext_trust">Pracaya</string>
-    <string name="ext_unofficial">Ora resmi</string>
     <string name="untrusted_extension">Ekstensi ora kapracaya</string>
     <string name="default_category_summary">Tansah takon</string>
     <string name="pref_show_page_number">Tampilake nomer halaman</string>
@@ -251,7 +250,6 @@
 \n Ekstensi angkoro bisa maca kredensial login sing disimpen ing Tachiyomi utawa nglakokake kode sewenang-wenang.
 \n
 \n Kanthi percaya karo sertifikat iki, sampeyan nampa risiko kasebut.</string>
-    <string name="unofficial_extension_message">Ekstensi iki ora saka dhaptar ekstensi Tachiyomi resmi.</string>
     <string name="ext_downloading">Ndownload</string>
     <string name="pref_show_navigation_mode">Tampilake overlay zona tutul</string>
     <string name="pref_library_update_categories_details">Manga ing kategori sing ora kalebu ora bakal dianyari sanajan uga ana ing kategori sing kalebu.</string>

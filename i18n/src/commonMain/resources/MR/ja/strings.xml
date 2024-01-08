@@ -344,8 +344,6 @@
     <string name="filter_mode_multiply">乗算</string>
     <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
-    <string name="unofficial_extension_message">この拡張機能は公式リストに含まれていません。</string>
-    <string name="ext_unofficial">非公式</string>
     <string name="ext_updates_pending">更新あり</string>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>
     <string name="pref_library_update_refresh_metadata">メタデータを自動で更新</string>
@@ -706,7 +704,6 @@
     <string name="pref_double_tap_zoom">ダブルタップでズーム</string>
     <string name="action_set_interval">間隔を設定</string>
     <string name="action_filter_interval_custom">カスタマイズした取得間隔</string>
-    <string name="action_filter_interval_long">1か月毎に取得 (28日)</string>
     <string name="action_sort_next_updated">次の更新予定</string>
     <string name="pref_update_only_in_release_period">更新予定時間外</string>
     <string name="intervals_header">間隔</string>
@@ -718,9 +715,6 @@
     <string name="track_delete_text">ローカルの追跡が削除されます。</string>
     <string name="track_delete_remote_text">%s からも削除</string>
     <string name="delete_downloaded">ダウンロードを削除</string>
-    <string name="action_filter_interval_late">レイト10+チェック</string>
-    <string name="action_filter_interval_dropped">落選？ 20歳後半と2ヶ月</string>
-    <string name="action_filter_interval_passed">チェック期間を過ぎました</string>
     <string name="action_ok">OK</string>
     <string name="syncing_library">ライブラリを同期しています</string>
     <string name="library_sync_complete">ライブラリを同期しました</string>

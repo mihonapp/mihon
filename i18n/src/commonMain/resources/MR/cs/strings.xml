@@ -380,8 +380,6 @@
     <string name="tapping_inverted_none">Žádné</string>
     <string name="ext_nsfw_warning">Zdroje z tohoto rozšíření mohou obsahovat NSFW (18+) obsah</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Toto rozšíření není z oficiálního seznamu rozšíření.</string>
-    <string name="ext_unofficial">Neoficiální</string>
     <string name="pref_library_update_refresh_metadata_summary">Kontrolovat dostupnost nových přebalů a detailů při aktualizaci knihovny</string>
     <string name="pref_library_update_refresh_metadata">Automaticky obnovovat metadata</string>
     <string name="parental_controls_info">Toto nastavení nemůže zamezit neoficiálním nebo špatně označeným rozšířením v zobrazování NSFW (18+) obsahu v aplikaci.</string>
@@ -706,15 +704,11 @@
     <string name="pref_chapter_swipe_start">Přejetí prstem doleva</string>
     <string name="pref_double_tap_zoom">Přiblížení dvojitým klepnutím</string>
     <string name="pref_library_columns_per_row">%d na řádek</string>
-    <string name="action_filter_interval_passed">Uplynulé kontrolní období</string>
     <string name="action_filter_interval_custom">Přizpůsobený interval načítání</string>
-    <string name="action_filter_interval_long">Načíst měsíčně (28 dní)</string>
-    <string name="action_filter_interval_late">Pozdní kontrola 10+</string>
     <string name="action_sort_next_updated">Další očekávaná aktualizace</string>
     <string name="manga_display_interval_title">Odhadovat každý</string>
     <string name="manga_display_modified_interval_title">Nastavit aktualizaci každých</string>
     <string name="action_set_interval">Nastavit interval</string>
-    <string name="action_filter_interval_dropped">Opuštěný\? Pozdě 20+ a 2 měsíce</string>
     <string name="pref_update_only_in_release_period">Mimo očekávané období vydání</string>
     <string name="intervals_header">Intervaly</string>
     <string name="skipped_reason_not_in_release_period">Přeskočeno, protože dnes nebylo očekáváno žádné vydání</string>

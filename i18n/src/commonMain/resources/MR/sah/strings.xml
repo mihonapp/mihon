@@ -198,7 +198,6 @@
     <string name="pref_page_transitions">Хамсааһыннах, сирэй арыйыыта</string>
     <string name="pref_cutout_short">Быһыллыбыт хонууга баары көрдөр</string>
     <string name="pref_fullscreen">Толору экран</string>
-    <string name="unofficial_extension_message">Бу кэҥэтии официальнай Tachiyomi испииһэгиттэн буолбатах.</string>
     <string name="obsolete_extension_message">Бу кэҥэтии кыаллыбат буолла.</string>
     <string name="untrusted_extension_message">Бу кэҥэтии эрэлэ суох туоһу суругунан бэлиэтэммит уонна холбоммотох.
 \n
@@ -208,7 +207,6 @@
     <string name="untrusted_extension">Эрэлэ суох кэҥэтии</string>
     <string name="ext_uninstall">Сотон кэбис</string>
     <string name="ext_untrusted">Эрэлэ суох</string>
-    <string name="ext_unofficial">Официальнайа суох</string>
     <string name="ext_trust">Эрэллээх</string>
     <string name="ext_installed">Турда</string>
     <string name="ext_installing">ТуруорааҺын</string>

@@ -188,7 +188,6 @@
     <string name="pref_library_update_refresh_metadata">प्रदत्तांशं स्वयञ्चालितं नवीकरोतु</string>
     <string name="categorized_display_settings">प्रतिवर्गं विन्यासस्य प्रदर्शनस्य च कृते समायोजनानि</string>
     <string name="untrusted_extension">अविश्वस्तविस्तारः</string>
-    <string name="unofficial_extension_message">अयं विस्तारः टाचीयोमेः अधिकारिकविस्तारसूच्याः नास्ति।</string>
     <string name="extension_api_error">विस्तारसूच्याः प्राप्तिः अनुत्तीर्णा</string>
     <string name="pref_library_update_categories_details">माङ्गाः याः वर्जितवर्गेषु सन्ति ताः अन्तर्भूतवर्गेषु सन्ति चेदपि तासां नवीकरणं न भविष्यति।</string>
     <string name="obsolete_extension_message">अयं विस्तारः इतःपरं न उपलभ्यः।</string>
@@ -197,7 +196,6 @@
     <string name="ext_update">नवीकरोतु</string>
     <string name="ext_install">प्रतिस्थायतु</string>
     <string name="ext_pending">अपूर्णम्</string>
-    <string name="ext_unofficial">अनधिकारः</string>
     <string name="ext_uninstall">निष्कासयतु</string>
     <string name="ext_installer_shizuku_stopped">शिज़ुकुः न चलति</string>
     <string name="ext_installer_pref">प्रतिष्ठापनसहायकम्</string>

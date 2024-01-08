@@ -80,4 +80,9 @@
         <item quantity="many">%d dies</item>
         <item quantity="other">%d dies</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repositori</item>
+        <item quantity="many">%d repositoris</item>
+        <item quantity="other">%d repositoris</item>
+    </plurals>
 </resources>

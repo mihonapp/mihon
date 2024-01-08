@@ -368,8 +368,6 @@
     <string name="battery_optimization_setting_activity_not_found">Tidak dapat membuka pengaturan perangkat</string>
     <string name="pref_refresh_library_covers">Muat ulang sampul pustaka</string>
     <string name="tracking_info">Sinkronisasi satu arah untuk memperbarui kemajuan bab di layanan pelacak eksternal. Siapkan pelacakan untuk setiap entri dari tombol pelacaknya.</string>
-    <string name="unofficial_extension_message">Ekstensi ini bukan dari daftar resmi.</string>
-    <string name="ext_unofficial">Tidak resmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Periksa sampul dan detail baru saat memperbarui pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segarkan metadata secara otomatis</string>
     <string name="action_migrate">Pindah</string>
@@ -706,11 +704,7 @@
     <string name="pref_library_columns_per_row">%d per baris</string>
     <string name="action_set_interval">Tetapkan jeda waktu</string>
     <string name="action_filter_interval_custom">Interval pengambilan disesuaikan</string>
-    <string name="action_filter_interval_long">Ambil bulanan (28 hari)</string>
-    <string name="action_filter_interval_late">Cek 10+ terlambat</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
-    <string name="action_filter_interval_dropped">Berkurang\? Akhir 20+ dan 2 bulan</string>
-    <string name="action_filter_interval_passed">Melewati periode pemeriksaan</string>
     <string name="action_sort_next_updated">Pembaruan yang diharapkan berikutnya</string>
     <string name="intervals_header">Interval</string>
     <string name="pref_update_only_in_release_period">Prediksikan waktu rilis selanjutnya</string>
@@ -793,10 +787,8 @@
     <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
     <string name="invalid_backup_file_error">Keseluruhan eror:</string>
     <string name="error_repo_exists">Repositori ini sudah ada!</string>
-    <string name="manga_interval_header">Update selanjutnya</string>
     <string name="label_add_repo_input">URL Repo</string>
     <string name="invalid_repo_name">URL repo tidak valid</string>
-    <string name="repo_extension_message">Ekstensi ini dari repo eksternal. ketuk untuk lihat repo.</string>
     <string name="private_settings">Sertakan pengaturan sensitif (contohnya, token login pelacak)</string>
     <string name="ext_permission_install_apps_warning">Izin diperlukan untuk memasang ekstensi. Klik disini untuk memberi izin.</string>
     <string name="action_delete_repo">Hapus repo</string>

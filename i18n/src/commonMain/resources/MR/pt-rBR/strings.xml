@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as configurações do dispositivo</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços monitoradores externos. Configure o monitoramento para itens individuais a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
-    <string name="unofficial_extension_message">Esta extensão não é da lista oficial.</string>
-    <string name="ext_unofficial">Não oficial</string>
     <string name="sort_by_upload_date">Pela data de envio</string>
     <string name="label_data">Dados</string>
     <string name="backup_restore_missing_sources">Fontes faltando:</string>
@@ -555,7 +553,7 @@
     <string name="pref_auto_clear_chapter_cache">Limpar o cache de capítulos ao abrir o aplicativo</string>
     <string name="clear_database_source_item_count">%1$d itens que não estão na biblioteca no banco de dados</string>
     <string name="database_clean">Nada a ser limpo</string>
-    <string name="extension_api_error">Erro ao obter a lista de extensões</string>
+    <string name="extension_api_error">Erro ao obter as extensões disponíveis</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="pref_update_only_completely_read">Pular itens com capítulos não lidos</string>
     <string name="library_errors_help">Para obter ajuda sobre como corrigir erros de atualização da biblioteca, veja %1$s</string>
@@ -704,14 +702,10 @@
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
     <string name="pref_library_columns_per_row">%d por linha</string>
-    <string name="action_filter_interval_late">Verificação dos últimos 10+</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="pref_update_only_in_release_period">Prever a data do próximo lançamento</string>
     <string name="action_set_interval">Definir intervalo</string>
-    <string name="action_filter_interval_custom">Personalizar o intervalo de requisições</string>
-    <string name="action_filter_interval_long">Requisitar mensalmente (28 dias)</string>
-    <string name="action_filter_interval_dropped">Abandonado\? Últimos 20+ e 2 meses</string>
-    <string name="action_filter_interval_passed">Intervalo de verificação aprovado</string>
+    <string name="action_filter_interval_custom">Personalizar a frequência de atualizações</string>
     <string name="skipped_reason_not_in_release_period">Pulado porque nenhum lançamento era esperado hoje</string>
     <string name="intervals_header">Intervalos</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
@@ -787,8 +781,7 @@
     <string name="available_disk_space_info">Disponível: %1$s / Total: %2$s</string>
     <string name="ext_permission_install_apps_warning">Permissões são necessárias para instalar extensões. Toque aqui para conceder.</string>
     <string name="private_settings">Incluir configurações sensíveis (tokens de login dos monitoradores, por exemplo)</string>
-    <string name="repo_extension_message">Esta extensão é de um repositório externo. Toque para visualizar o repositório.</string>
-    <string name="manga_interval_expected_update">Próxima atualização esperada em torno de %1$s, verificando em torno de cada %2$s</string>
+    <string name="manga_interval_expected_update">Novos capítulos com previsão de serem lançados em torno de %1$s, verificando em torno de cada %2$s</string>
     <string name="manga_interval_custom_amount">Frequência de atualização personalizada:</string>
     <string name="invalid_backup_file_error">Erro completo:</string>
     <string name="error_repo_exists">Este repositório já existe!</string>
@@ -797,11 +790,13 @@
     <string name="action_add_repo_message">Adiciona repositórios adicionais ao Tachiyomi. Deve ser uma URL que termine com \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Você deseja deletar o repositório \"%s\"?</string>
     <string name="action_delete_repo">Deletar repositório</string>
-    <string name="manga_interval_header">Próxima atualização</string>
     <string name="action_add_repo">Adicionar repositório</string>
     <string name="information_empty_repos">Você não tem repositórios definidos.</string>
     <string name="label_extension_repos">Repositórios de extensões</string>
     <string name="label_add_repo_input">URL do repositório</string>
     <string name="onboarding_storage_help_action">Guia de armazenamento</string>
     <string name="onboarding_storage_help_info">Atualizando de uma versão anterior e não tem certeza do que selecionar? Consulte o guia de armazenamento para mais informações.</string>
+    <string name="manga_interval_expected_update_soon">Em breve</string>
+    <string name="theme_nord">Nord</string>
+    <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
 </resources>

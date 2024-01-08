@@ -95,18 +95,18 @@
     <string name="pref_library_update_interval">การอัปเดตอัตโนมัติ</string>
     <string name="update_never">ปิด</string>
     <string name="pref_library_update_restriction">อัปเดตข้อจำกัดของอุปกรณ์โดยอัตโนมัติ</string>
-    <string name="pref_update_only_non_completed">ที่มีสถานะ \"จบแล้ว\"</string>
+    <string name="pref_update_only_non_completed">ข้ามรายการที่มีสถานะ \"จบแล้ว\"</string>
     <string name="pref_auto_update_manga_sync">อัปเดตความคืบหน้าหลังอ่าน</string>
     <string name="default_category">หมวดหมู่เริ่มต้น</string>
     <string name="ext_trust">เชื่อถือได้</string>
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ถอนการติดตั้ง</string>
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
-    <string name="untrusted_extension_message">ส่วนขยายนี้ลงนามด้วยใบรับรองที่ไม่น่าเชื่อถือและจะไม่ถูกเปิดใช้งาน
+    <string name="untrusted_extension_message">ส่วนขยายนี้ลงนามด้วยผู้พัฒนาที่ไม่รู้จักและจะไม่ถูกเปิดใช้งาน
 \n
 \nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
 \n
-\nการเชื่อถือใบรับรองนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
+\nการเชื่อถือใบรับรองของส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
     <string name="pref_page_transitions">แสดงแอนิเมชั่นเมื่อเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วแอนิเมชั่นเมื่อแตะ 2 ครั้ง</string>
@@ -318,9 +318,7 @@
     <string name="pref_show_navigation_mode">แสดงตำแหน่งโซนการแตะ</string>
     <string name="ext_nsfw_warning">แหล่งที่มาจากส่วนขยายนี้อาจมีเนื้อหา NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">ส่วนขยายนี้ไม่ได้มาจากรายการทางการ</string>
     <string name="obsolete_extension_message">ส่วนขยายนี้ไม่สามารถใช้ได้อีกต่อไป แอปอาจทำงานไม่ถูกต้องและอาจทำให้เกิดปัญหากับแอปได้ ขอแนะนำให้ถอนการติดตั้งออก</string>
-    <string name="ext_unofficial">ไม่เป็นทางการ</string>
     <string name="ext_obsolete">ล้าสมัย</string>
     <string name="ext_updates_pending">อัปเดตที่รอดำเนินการ</string>
     <string name="exclude">ที่ยกเว้นไว้: %s</string>
@@ -487,7 +485,7 @@
     <string name="information_empty_category_dialog">คุณยังไม่มีหมวดหมู่</string>
     <string name="confirm_lock_change">ยืนยันการเปลี่ยนแปลง</string>
     <string name="relative_time_today">วันนี้</string>
-    <string name="pref_update_only_completely_read">มีตอนที่ยังไม่ได้อ่าน</string>
+    <string name="pref_update_only_completely_read">ข้ามรายการที่มีตอนที่ยังไม่ได้อ่าน</string>
     <string name="off">ปิด</string>
     <string name="on">เปิด</string>
     <string name="save_chapter_as_cbz">บันทึกเป็นแฟ้ม CBZ</string>
@@ -544,7 +542,7 @@
     <string name="pref_remove_exclude_categories">หมวดหมู่ที่ยกเว้นไว้</string>
     <string name="enhanced_tracking_info">ใช้สำหรับเฉพาะบางแหล่งที่มา รายการจะถูกติดตามโดยอัตโนมัติเมื่อเพิ่มลงในคลัง</string>
     <string name="ext_app_info">ข้อมูลแอพ</string>
-    <string name="extension_api_error">เกิดข้อผิดพลาดในการรับรายการส่วนขยาย</string>
+    <string name="extension_api_error">เกิดข้อผิดพลาดในการดึงรายการส่วนขยายที่พร้อมใช้งาน</string>
     <string name="pref_auto_clear_chapter_cache">ล้างแคชตอนในเมื่อเปิดแอพ</string>
     <string name="label_warning">คำเตือน</string>
     <string name="action_display_local_badge">แหล่งที่มาในเครื่อง</string>
@@ -569,7 +567,7 @@
     <string name="skipped_reason_not_caught_up">ถูกข้ามเนื่องจากมีตอนที่ยังไม่ได้อ่าน</string>
     <string name="skipped_reason_not_started">ถูกข้ามเนื่องจากยังไม่มีตอนใด ๆ ถูกอ่าน</string>
     <string name="action_show_manga">แสดงรายการ</string>
-    <string name="pref_update_only_started">ที่ยังไม่ได้เริ่มอ่าน</string>
+    <string name="pref_update_only_started">ข้ามรายการที่ยังไม่ได้เริ่มอ่าน</string>
     <string name="skipped_reason_completed">ถูกข้ามเนื่องจากเรื่องนี้จบแล้ว</string>
     <string name="learn_more">แตะเพื่อเรียนรู้เพิ่มเติม</string>
     <string name="notification_update_error">อัปเดตผิดพลาด %1$d รายการ</string>
@@ -705,13 +703,9 @@
     <string name="pref_double_tap_zoom">แตะสองครั้งเพื่อซูม</string>
     <string name="pref_library_columns_per_row">%d ต่อแถว</string>
     <string name="action_set_interval">กำหนดช่วงเวลา</string>
-    <string name="action_filter_interval_custom">กำหนดช่วงเวลาการดึงข้อมูล</string>
-    <string name="action_filter_interval_long">ดึงข้อมูลรายเดือน (ทุก 28 วัน)</string>
-    <string name="action_filter_interval_late">ตรวจสอบเรื่องล่าสุด 10+</string>
-    <string name="action_filter_interval_dropped">ดรอปแล้ว\? ตรวจสอบเรื่องล่าสุด 20+ และภายใน 2 เดือน</string>
-    <string name="action_filter_interval_passed">การตรวจสอบที่ผ่านมา</string>
+    <string name="action_filter_interval_custom">กำหนดความถี่ในการอัปเดต</string>
     <string name="action_sort_next_updated">การอัปเดตที่คาดไว้ต่อไป</string>
-    <string name="pref_update_only_in_release_period">ระยะเวลาการออกที่คาดไว้จากภายนอก</string>
+    <string name="pref_update_only_in_release_period">คาดการณ์เวลาออกครั้งต่อไป</string>
     <string name="skipped_reason_not_in_release_period">ข้ามไปเนื่องจากคาดว่าจะไม่มีการออกในวันนี้</string>
     <string name="manga_display_interval_title">ประมาณทุกๆ</string>
     <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
@@ -765,13 +759,13 @@
     <string name="pref_onboarding_guide">คู่มือการเริ่มต้นใช้งาน</string>
     <string name="onboarding_guides_new_user">เพิ่งรู้จัก %s? เราขอแนะนำให้ดูคู่มือการเริ่มต้นใช้งาน</string>
     <string name="onboarding_action_finish">เริ่มต้น</string>
-    <string name="manga_interval_expected_update">คาดว่าจะมีการอัปเดตครั้งต่อไปในประมาณ %s</string>
+    <string name="manga_interval_expected_update">ตอนใหม่คาดว่าจะออกในอีกประมาณ %1$s จะตรวจสอบทุก ๆ %2$s</string>
     <string name="onboarding_storage_selection_required">จำเป็นต้องเลือกโฟลเดอร์</string>
     <string name="onboarding_permission_notifications">สิทธิ์ในการแจ้งเตือน</string>
     <string name="onboarding_permission_install_apps">สิทธิ์ในการติดตั้งแอป</string>
     <string name="available_disk_space_info">พร้อมใช้งาน: %1$s / ทั้งหมด: %2$s</string>
     <string name="onboarding_heading">ยินดีต้อนรับ!</string>
-    <string name="onboarding_guides_returning_user">เคยใช้ %s มาก่อน?</string>
+    <string name="onboarding_guides_returning_user">กลับมาติดตั้ง %s ใหม่?</string>
     <string name="invalid_backup_file_error">ข้อผิดพลาดเต็ม:</string>
     <string name="onboarding_action_skip">ข้าม</string>
     <string name="onboarding_permission_ignore_battery_opts_description">เพื่อหลีกเลี่ยงการหยุดชะงักใน การอัปเดตไลบรารี ดาวน์โหลด และการสำรองข้อมูลที่ใช้เวลานาน</string>
@@ -789,4 +783,20 @@
 \nแนะนำให้ใช้โฟลเดอร์เฉพาะ
 \n
 \nโฟลเดอร์ที่เลือก: %2$s</string>
+    <string name="pref_library_update_smart_update">อัปเดตอัจฉริยะ</string>
+    <string name="label_extension_repos">รีโพส่วนขยาย</string>
+    <string name="error_repo_exists">มีรีโพนี้อยู่แล้ว!</string>
+    <string name="action_add_repo_message">เพิ่มรีโพเพิ่มเติมให้กับ Tachiyomi - ควรเป็น URL ที่ลงท้ายด้วย \"index.min.json\"</string>
+    <string name="manga_interval_custom_amount">ความถี่ในการอัปเดตกำหนดเอง:</string>
+    <string name="information_empty_repos">คุณไม่มีรีโพที่ตั้งค่าไว้</string>
+    <string name="onboarding_storage_help_action">คู่มือการจัดเก็บข้อมูล</string>
+    <string name="ext_revoke_trust">เพิกถอนส่วนขยายที่ไม่รู้จักที่เชื่อถือไว้</string>
+    <string name="action_add_repo">เพิ่มรีโพ</string>
+    <string name="action_delete_repo">ลบรีโพ</string>
+    <string name="invalid_repo_name">URL ของรีโพไม่ถูกต้อง</string>
+    <string name="manga_interval_expected_update_soon">เร็ว ๆ นี้</string>
+    <string name="onboarding_storage_help_info">กำลังอัปเดตจากเวอร์ชันเก่าและไม่แน่ใจว่าจะเลือกอะไรใช่ไหม? โปรดดูคู่มือการจัดเก็บข้อมูลสำหรับข้อมูลเพิ่มเติม</string>
+    <string name="theme_nord">นอร์ด</string>
+    <string name="label_add_repo_input">URL รีโพ</string>
+    <string name="delete_repo_confirmation">ต้องการจะลบรีโพ \"%s\" หรือไม่?</string>
 </resources>

@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">डिवाइस सेटिंग नहीं खोल सका</string>
     <string name="tracking_info">ट्रैकिंग सेवाओं में अध्याय की प्रगति को अद्यतन करने के लिए एकतरफा सिंक। अपने ट्रैकिंग बटन से व्यक्तिगत प्रविष्टियों के लिए ट्रैकिंग सेट अप करें।</string>
     <string name="pref_refresh_library_covers">रिफ्रेश पुस्तकालय मंगा कवर</string>
-    <string name="unofficial_extension_message">यह एक्सटेंशन आधिकारिक ताचियोमी एक्सटेंशन सूची से नहीं है।</string>
-    <string name="ext_unofficial">अनौपचारिक</string>
     <string name="sort_by_upload_date">अपलोड तिथि द्वारा</string>
     <string name="label_data">डेटा</string>
     <string name="backup_restore_missing_sources">अनुपलब्ध स्रोत:</string>
@@ -656,9 +654,6 @@
     <string name="pref_security_summary">ऐप लॉक, सुरक्षित स्क्रीन</string>
     <string name="action_set_interval">अंतराल निर्धारित करें</string>
     <string name="action_filter_interval_custom">अनुकूलित लाने का अंतराल</string>
-    <string name="action_filter_interval_long">मासिक प्राप्त करें (28 दिन)</string>
-    <string name="action_filter_interval_late">देर से 10+ की जाँच</string>
-    <string name="action_filter_interval_dropped">छोड़ा हुआ\? देर से 20+ और 2 महीने</string>
     <string name="intervals_header">अंतराल</string>
     <string name="pref_chapter_swipe_end">दाईं ओर स्वाइप करने पर</string>
     <string name="pref_chapter_swipe">अध्याय स्वाइप</string>

@@ -83,7 +83,7 @@
     <string name="all">Tümü</string>
     <string name="pref_library_update_restriction">Otomatik güncellemeler aygıt kısıtlamaları</string>
     <string name="charging">Şarj olurken</string>
-    <string name="pref_update_only_non_completed">\"Bitirilmiş\" durumda olan</string>
+    <string name="pref_update_only_non_completed">\"Bitirilmiş\" durumda olan girdileri atla</string>
     <string name="pref_auto_update_manga_sync">Okuyunca ilerlemeyi güncelle</string>
     <string name="default_category">Varsayılan ulam</string>
     <string name="default_category_summary">Her zaman sor</string>
@@ -97,11 +97,11 @@
     <string name="ext_untrusted">Güvenilmeyen</string>
     <string name="ext_uninstall">Kaldır</string>
     <string name="untrusted_extension">Güvenilmeyen uzantı</string>
-    <string name="untrusted_extension_message">Bu uzantı güvenilmeyen bir sertifika ile imzalanmış ve etkinleştirilmedi.
+    <string name="untrusted_extension_message">Bu uzantı bilinmeyen bir yazar tarafından imzalandı ve yüklenmedi.
 \n
-\nKötü niyetli bir uzantı, saklanan her giriş kimlik bilgisini okuyabilir veya rastgele kod yürütebilir.
+\nKötü niyetli uzantılar, saklanan oturum açma kimlik bilgilerini okuyabilir veya rastgele kod çalıştırabilir.
 \n
-\nBu sertifikaya güvenerek bu riskleri kabul etmiş oluyorsunuz.</string>
+\nBu uzantının sertifikasına güvenerek bu riskleri kabul etmiş olursunuz.</string>
     <string name="pref_fullscreen">Tam Ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini canlandır</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Aygıt ayarları açılamadı</string>
     <string name="tracking_info">Bölüm ilerlemesini, harici izleme hizmetlerinde güncellemek için tek yönlü eşitleme. Her girdinin izleme düğmesinden, izlemeyi ayarlayın.</string>
     <string name="pref_refresh_library_covers">Kitaplıktakilerin kapaklarını yenile</string>
-    <string name="unofficial_extension_message">Bu uzantı resmi dizelgeden değil.</string>
-    <string name="ext_unofficial">Resmi olmayan</string>
     <string name="sort_by_upload_date">Yükleme tarihine göre</string>
     <string name="label_data">Veri</string>
     <string name="backup_restore_missing_sources">Eksik kaynaklar:</string>
@@ -555,7 +553,7 @@
     <string name="pref_auto_clear_chapter_cache">Uygulama başlatıldığında bölüm önbelleğini temizle</string>
     <string name="clear_database_source_item_count">Veri tabanında %1$d kitaplık dışı girdi</string>
     <string name="database_clean">Temizlenecek bir şey yok</string>
-    <string name="extension_api_error">Uzantı dizelgesi alınamadı</string>
+    <string name="extension_api_error">Kullanılabilir uzantılar alınamadı</string>
     <string name="save_chapter_as_cbz">CBZ belgeliği olarak kaydet</string>
     <string name="publishing_finished">Yayımı tamamlandı</string>
     <string name="privacy_policy">Gizlilik politikası</string>
@@ -564,8 +562,8 @@
     <string name="action_show_manga">Girdiyi göster</string>
     <string name="library_errors_help">Kitaplık güncelleme hatalarının nasıl düzeltileceği konusunda yardım için bkz. %1$s</string>
     <string name="action_display_cover_only_grid">Yalnızca kapağa ızgara</string>
-    <string name="pref_update_only_completely_read">Okunmayan bölümü olan</string>
-    <string name="pref_update_only_started">Bu başlamadı</string>
+    <string name="pref_update_only_completely_read">Okunmayan bölümü olan girdileri atla</string>
+    <string name="pref_update_only_started">Başlamayan girdileri atla</string>
     <string name="skipped_reason_completed">Dizi bitirildiği için atlandı</string>
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
@@ -705,14 +703,10 @@
     <string name="pref_double_tap_zoom">Yakınlaştırmak için iki kez dokun</string>
     <string name="pref_library_columns_per_row">Satır başına %d</string>
     <string name="action_set_interval">Aralığı ayarlama</string>
-    <string name="action_filter_interval_custom">Özelleştirilmiş fetch aralığı</string>
-    <string name="action_filter_interval_long">Aylık getir (28 gün)</string>
+    <string name="action_filter_interval_custom">Özelleştirilmiş güncelleme aralığı</string>
     <string name="intervals_header">Zaman aralıkları</string>
-    <string name="action_filter_interval_late">Son 10+ kontrolü</string>
-    <string name="action_filter_interval_dropped">Bırakıldı mı\? Son 20+ ve 2 ay</string>
-    <string name="action_filter_interval_passed">Geçmiş denetim süresi</string>
     <string name="action_sort_next_updated">Sonraki beklenen güncelleme</string>
-    <string name="pref_update_only_in_release_period">Beklenen yayınlanma dönemi dışında</string>
+    <string name="pref_update_only_in_release_period">Bir sonraki yayın zamanını tahmin et</string>
     <string name="action_ok">TAMAM</string>
     <string name="manga_display_interval_title">Hepsini tahmin et</string>
     <string name="track_delete_title">%s izlemesi kaldırılsın mı\?</string>
@@ -767,7 +761,7 @@
     <string name="onboarding_action_finish">Başlayın</string>
     <string name="onboarding_storage_selection_required">Bir klasör seçilmelidir</string>
     <string name="onboarding_heading">Hoş geldiniz!</string>
-    <string name="onboarding_guides_returning_user">Daha önce %s kullandınız mı?</string>
+    <string name="onboarding_guides_returning_user">%s\'yi yeniden mi kuruyorsunuz?</string>
     <string name="onboarding_action_skip">Atla</string>
     <string name="onboarding_action_next">Sonraki</string>
     <string name="onboarding_description">Önce bazı şeyleri ayarlayalım. Bunları daha sonra ayarlardan da değiştirebilirsiniz.</string>
@@ -787,6 +781,22 @@
     <string name="available_disk_space_info">Kullanılabilir: %1$s / Toplam: %2$s</string>
     <string name="ext_permission_install_apps_warning">Uzantıları kurmak için izin gerekli. İzin vermek için buraya dokunun.</string>
     <string name="private_settings">Hassas ayarları dahil et (örn. izleyici oturum açma belirteçleri)</string>
-    <string name="manga_interval_expected_update">Gelecek güncelleme %s içinde bekleniyor</string>
+    <string name="manga_interval_expected_update">Sonraki bölümlerin %1$s içinde yayınlanacağı tahmin ediliyor, %2$s aralıklarla denetleniyor.</string>
     <string name="invalid_backup_file_error">Tüm hata:</string>
+    <string name="information_empty_repos">Hiç depo ayarlamadınız.</string>
+    <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
+    <string name="action_add_repo">Depo ekle</string>
+    <string name="label_add_repo_input">Depo URL\'si</string>
+    <string name="action_add_repo_message">Tachiyomi\'ye ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir URL olmalıdır.</string>
+    <string name="error_repo_exists">Bu depo zaten var!</string>
+    <string name="action_delete_repo">Depoyu sil</string>
+    <string name="invalid_repo_name">Geçersiz depo URL\'si</string>
+    <string name="delete_repo_confirmation">\"%s\" deposunu silmek istiyor musunuz?</string>
+    <string name="manga_interval_custom_amount">Özel güncelleme sıklığı:</string>
+    <string name="onboarding_storage_help_info">Eski bir sürümden güncelleme yapıyorsunuz ve neyi seçeceğinizden emin değil misiniz? Daha fazla bilgi için depolama kılavuzuna bakın.</string>
+    <string name="pref_library_update_smart_update">Akıllı güncelleme</string>
+    <string name="label_extension_repos">Uzantı depoları</string>
+    <string name="theme_nord">Nord</string>
+    <string name="ext_revoke_trust">Güvenilen bilinmeyen uzantıları iptal et</string>
+    <string name="manga_interval_expected_update_soon">Yakında</string>
 </resources>
