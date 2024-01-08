@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--https://www.nordtheme.com/docs/colors-and-palettes-->
+<!--for the light theme, the primary color is switched with the tertiary for better contrast in some case-->
+<resources>
+    <color name="nord_primary">#5E81AC</color>
+    <color name="nord_onPrimary">#000000</color>
+    <color name="nord_primaryContainer">#5E81AC</color>
+    <color name="nord_onPrimaryContainer">#000000</color>
+    <color name="nord_secondary">#81A1C1</color>
+    <color name="nord_onSecondary">#2E3440</color>
+    <color name="nord_secondaryContainer">#81A1C1</color>
+    <color name="nord_onSecondaryContainer">#2E3440</color>
+    <color name="nord_tertiary">#88C0D0</color>
+    <color name="nord_onTertiary">#2E3440</color>
+    <color name="nord_tertiaryContainer">#88C0D0</color>
+    <color name="nord_onTertiaryContainer">#2E3440</color>
+    <color name="nord_background">#ECEFF4</color>
+    <color name="nord_onBackground">#2E3440</color>
+    <color name="nord_surface">#E5E9F0</color>
+    <color name="nord_onSurface">#2E3440</color>
+    <color name="nord_surfaceVariant">#ffffff</color>
+    <color name="nord_onSurfaceVariant">#2E3440</color>
+    <color name="nord_outline">#4C566A</color>
+    <color name="nord_inverseOnSurface">#ECEFF4</color>
+    <color name="nord_inverseSurface">#3B4252</color>
+    <color name="nord_primaryInverse">#8CA8CD</color>
+    <color name="nord_elevationOverlay">#D8DEE9</color>
+    <color name="nord_onError">#ECEFF4</color>
+    <color name="nord_errorContainer">#BF616A</color>
+    <color name="nord_onErrorContainer">#000000</color>
+</resources>

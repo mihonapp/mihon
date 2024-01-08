@@ -40,7 +40,9 @@ fun DbTrack.toDomainTrack(idRequired: Boolean = true): Track? {
         lastChapterRead = last_chapter_read.toDouble(),
         totalChapters = total_chapters.toLong(),
         status = status.toLong(),
-        score = score.toDouble(),
+        // Jank workaround due to precision issues while converting
+        // See https://github.com/tachiyomiorg/tachiyomi/issues/10343
+        score = score.toString().toDouble(),
         remoteUrl = tracking_url,
         startDate = started_reading_date,
         finishDate = finished_reading_date,

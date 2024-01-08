@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
@@ -138,7 +139,7 @@ fun ExtensionDetailsScreen(
 private fun ExtensionDetails(
     contentPadding: PaddingValues,
     extension: Extension.Installed,
-    sources: List<ExtensionSourceItem>,
+    sources: ImmutableList<ExtensionSourceItem>,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
@@ -150,18 +151,24 @@ private fun ExtensionDetails(
         contentPadding = contentPadding,
     ) {
         when {
-            extension.isRepoSource ->
+            extension.isFromExternalRepo ->
                 item {
                     val uriHandler = LocalUriHandler.current
+                    val url = remember(extension) {
+                        val regex = """https://raw.githubusercontent.com/(.+?)/(.+?)/.+""".toRegex()
+                        regex.find(extension.repoUrl.orEmpty())
+                            ?.let {
+                                val (user, repo) = it.destructured
+                                "https://github.com/$user/$repo"
+                            }
+                            ?: extension.repoUrl
+                    }
+
                     WarningBanner(
                         MR.strings.repo_extension_message,
                         modifier = Modifier.clickable {
-                            extension.repoUrl ?: return@clickable
-                            uriHandler.openUri(
-                                extension.repoUrl
-                                    .replace("https://raw.githubusercontent.com", "https://github.com")
-                                    .removeSuffix("/repo/"),
-                            )
+                            url ?: return@clickable
+                            uriHandler.openUri(url)
                         },
                     )
                 }

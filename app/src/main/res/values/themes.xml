@@ -333,6 +333,37 @@
         <item name="colorPrimaryInverse">@color/tidalwave_primaryInverse</item>
     </style>
 
+    <!--== Nord Theme ==-->
+    <style name="Theme.Tachiyomi.Nord">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/nord_primary</item>
+        <item name="colorOnPrimary">@color/nord_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/nord_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/nord_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/nord_secondary</item>
+        <item name="colorOnSecondary">@color/nord_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/nord_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/nord_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/nord_tertiary</item>
+        <item name="colorOnTertiary">@color/nord_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/nord_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/nord_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/nord_background</item>
+        <item name="colorOnBackground">@color/nord_onBackground</item>
+        <item name="colorSurface">@color/nord_surface</item>
+        <item name="colorOnSurface">@color/nord_onSurface</item>
+        <item name="colorSurfaceVariant">@color/nord_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/nord_onSurfaceVariant</item>
+        <item name="colorOutline">@color/nord_outline</item>
+        <item name="colorOnSurfaceInverse">@color/nord_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/nord_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/nord_primaryInverse</item>
+        <item name="colorOnError">@color/nord_onError</item>
+        <item name="colorErrorContainer">@color/nord_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/nord_onErrorContainer</item>
+        <item name="elevationOverlayColor">@color/nord_elevationOverlay</item>
+    </style>
+    
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 
