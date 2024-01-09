@@ -210,7 +210,6 @@
     <string name="pref_show_page_number">نمایش شماره صفحه</string>
     <string name="pref_page_transitions">انمیشن‌های تغییر صفحه</string>
     <string name="pref_fullscreen">تمام صفحه</string>
-    <string name="unofficial_extension_message">این افزونه در لیست افزونه‌های رسمی تاچیومی نیست.</string>
     <string name="obsolete_extension_message">این افزونه دیگر در دسترس نیست. ممکن است به درستی کار نکند و باعث ایجاد مشکلاتی در برنامه شود. حذف نصب آن توصیه می شود.</string>
     <string name="untrusted_extension_message">این افزونه با یک گواهی نامطمئن امضا شده است و فعال نشده است.
 \n
@@ -220,7 +219,6 @@
     <string name="untrusted_extension">افزونه نامطمئن</string>
     <string name="ext_uninstall">حذف نصب</string>
     <string name="ext_untrusted">نامطمئن</string>
-    <string name="ext_unofficial">غیررسمی</string>
     <string name="ext_trust">مورد اعتماد</string>
     <string name="ext_installed">نصب شده</string>
     <string name="ext_installing">در حال نصب</string>

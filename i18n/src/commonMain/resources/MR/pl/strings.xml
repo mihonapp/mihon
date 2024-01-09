@@ -370,8 +370,6 @@
     <string name="restoring_backup_error">Przywracanie kopii zapasowej zakończone niepowodzeniem</string>
     <string name="creating_backup_error">Tworzenie kopii zapasowej zakończone niepowodzeniem</string>
     <string name="pref_category_reading">Czytane</string>
-    <string name="unofficial_extension_message">Te rozszerzenie nie jest na liście oficjalnych rozszerzeń.</string>
-    <string name="ext_unofficial">Nieoficjalne</string>
     <string name="sort_by_upload_date">Po dacie dodania</string>
     <string name="label_data">Dane</string>
     <string name="backup_restore_missing_sources">Brakujące źródła:</string>
@@ -723,7 +721,6 @@
     <string name="information_cloudflare_help">Naciśnij tutaj aby uzyskać pomoc dotyczącą Cloudflare</string>
     <string name="unlock_app_title">Odblokuj %s</string>
     <string name="action_filter_interval_custom">Dostosowany interwał aktualizacji</string>
-    <string name="action_filter_interval_long">W miesiącu (28 dni)</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_text">To usunie śledzenie lokalne.</string>
     <string name="action_apply">Zatwierdź</string>

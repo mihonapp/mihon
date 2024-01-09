@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures de la bibliothèque</string>
     <string name="tracking_info">Synchronisation à sens unique pour mettre à jour la progression du chapitre dans les services de suivi. Configurez le suivi des entrées individuelles à partir de leur bouton de suivi.</string>
-    <string name="unofficial_extension_message">Cette extension ne fait pas partie de la liste officielle.</string>
-    <string name="ext_unofficial">Non officiel</string>
     <string name="pref_library_update_refresh_metadata_summary">Vérifier s\'il y a une nouvelle couverture ou synopsis lors des mises à jour de la bibliothèque</string>
     <string name="sort_by_upload_date">Par date de téléversement</string>
     <string name="label_data">Donnée</string>
@@ -704,10 +702,6 @@
     <string name="pref_chapter_swipe">Glissement de chapitre</string>
     <string name="pref_chapter_swipe_end">Action de glisser à droite</string>
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
-    <string name="action_filter_interval_long">Recherche mensuelle (28 jours)</string>
-    <string name="action_filter_interval_late">Vérification tardive 10+</string>
-    <string name="action_filter_interval_dropped">Abandonné \? En retard de 20+ et 2 mois</string>
-    <string name="action_filter_interval_passed">Période de contrôle réussie</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
     <string name="pref_update_only_in_release_period">Prochaine sortie prévue dans :</string>
     <string name="action_set_interval">Définir l\'intervalle</string>

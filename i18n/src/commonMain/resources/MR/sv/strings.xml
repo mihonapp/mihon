@@ -375,8 +375,6 @@
     <string name="backup_restore_missing_sources">Saknade källor:</string>
     <string name="invalid_backup_file_missing_manga">Säkerhetskopian innehåller inga biblioteksposter.</string>
     <string name="invalid_backup_file">Ogiltig säkerhetskopiafil:</string>
-    <string name="unofficial_extension_message">Detta tillägg är inte från den officiella listan.</string>
-    <string name="ext_unofficial">Inofficiell</string>
     <string name="pref_library_update_refresh_metadata_summary">Sök efter nytt omslag och detaljer när du uppdaterar biblioteket</string>
     <string name="pref_library_update_refresh_metadata">Uppdatera metadata automatiskt</string>
     <string name="action_migrate">Migrera</string>
@@ -689,15 +687,11 @@
     <string name="manga_display_interval_title">Uppskatta varje</string>
     <string name="action_set_interval">Ange intervall</string>
     <string name="action_filter_interval_custom">Anpassat hämtningsintervall</string>
-    <string name="action_filter_interval_long">Hämta månadsvis (28 dagar)</string>
-    <string name="action_filter_interval_late">Sen 10+ check</string>
     <string name="action_sort_next_updated">Nästa förväntade uppdatering</string>
     <string name="skipped_reason_not_in_release_period">Hoppades över eftersom ingen publicering förväntades idag</string>
     <string name="label_tracked_titles">Spårade inlägg</string>
     <string name="day_short">%dd</string>
     <string name="track_error">%1$s fel: %2$s</string>
-    <string name="action_filter_interval_dropped">Avhoppad\? Sen 20+ och 2 månader</string>
-    <string name="action_filter_interval_passed">Godkänd kontrollperiod</string>
     <string name="pref_double_tap_zoom">Dubbeltryck för att zooma</string>
     <string name="track_remove_start_date_conf_text">Detta kommer att ta bort ditt tidigare valda startdatum från %s</string>
     <string name="track_delete_title">Ta bort %s spårning\?</string>

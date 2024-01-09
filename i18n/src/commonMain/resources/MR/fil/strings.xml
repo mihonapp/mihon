@@ -77,7 +77,7 @@
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para gumawa ng isa para sa pag-aayos ng iyong aklatan.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
     <string name="information_no_recent_manga">Walang binasa kamakailan</string>
-    <string name="information_no_recent">Walang bago</string>
+    <string name="information_no_recent">Walang kamakailang mga update</string>
     <string name="information_no_downloads">Walang dina-download</string>
     <string name="label_help">Tulong</string>
     <string name="label_extension_info">Tungkol sa extension</string>
@@ -178,7 +178,6 @@
     <string name="pref_page_transitions">I-animate ang paglipat-pahina</string>
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
-    <string name="unofficial_extension_message">Wala sa opisyal na listahan ang extension na ito.</string>
     <string name="obsolete_extension_message">Hindi na available ang extension na ito. Maaaring hindi ito gumana nang maayos at maaaring magdulot ng mga isyu sa app. Inirerekomenda ang pag-uninstall nito.</string>
     <string name="untrusted_extension_message">Ang extension na ito ay nilagdaan ng sinumang hindi kilalang author at hindi na-load.
 \n
@@ -189,7 +188,6 @@
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Tiwala</string>
     <string name="ext_untrusted">Kaduda-duda</string>
-    <string name="ext_unofficial">Di-opisyal</string>
     <string name="ext_installed">Naka-install</string>
     <string name="ext_installing">Ini-install</string>
     <string name="ext_downloading">Dina-download</string>
@@ -555,7 +553,7 @@
     <string name="clear_database_source_item_count">%1$d na entry sa database na wala sa aklatan</string>
     <string name="pref_auto_clear_chapter_cache">Linisin ang cache ng kabanata sa paglulunsad ng app</string>
     <string name="database_clean">Walang malilinis</string>
-    <string name="extension_api_error">Bigong makuha ang listahan ng mga extension</string>
+    <string name="extension_api_error">Bigong makuha ng mga available na extension</string>
     <string name="privacy_policy">Patakaran sa Pagkapribado</string>
     <string name="library_errors_help">Para sa tulong sa pag-aayos ng mga error sa pag-update ng aklatan, tingnan ang %1$s</string>
     <string name="pref_update_only_completely_read">Laktawan ang mga entry na hindi pa nababasang kabanata</string>
@@ -681,7 +679,7 @@
     <string name="label_stats">Istatistika</string>
     <string name="pref_skip_dupe_chapters">Laktawan ang mga magkaparehong kabanata</string>
     <string name="copied_to_clipboard_plain">Kinopya sa clipboard</string>
-    <string name="information_required_plain">*kailangan</string>
+    <string name="information_required_plain">*kinakailangan</string>
     <string name="enhanced_services_not_installed">Mayroon ngunit hindi naka-install ang source: %s</string>
     <string name="confirm_add_duplicate_manga">Mayroon kang entry sa iyong aklatan na magkapareho ng pangalan.
 \n
@@ -705,12 +703,8 @@
     <string name="pref_library_columns_per_row">%d kada hilera</string>
     <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
     <string name="action_set_interval">Itakda ang pagitan</string>
-    <string name="action_filter_interval_custom">Ipasadya ang fetch interval</string>
-    <string name="action_filter_interval_late">Huling 10+ pagsusuri</string>
+    <string name="action_filter_interval_custom">Ipasadya ang dalas ng pag-update</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
-    <string name="action_filter_interval_dropped">Itinigil\? Huli ng 20+ at 2 buwan</string>
-    <string name="action_filter_interval_passed">Lumipas ang check period</string>
-    <string name="action_filter_interval_long">Kunin kada buwan (kada ika-28 na araw)</string>
     <string name="manga_display_interval_title">Tantyahin bawat</string>
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
     <string name="pref_update_only_in_release_period">Hulaan ang susunod na oras ng release</string>
@@ -785,7 +779,7 @@
     <string name="onboarding_permission_notifications_description">Maabisuhan para sa mga update sa aklatan at higit pa.</string>
     <string name="onboarding_permission_action_grant">Payagan</string>
     <string name="available_disk_space_info">Na magagamit: %1$s / Kabuuan: %2$s</string>
-    <string name="manga_interval_expected_update">Inaasahan ang susunod na update sa humigit-kumulang %1$s, na tumitingin sa bawat %2$s</string>
+    <string name="manga_interval_expected_update">Mga bagong kabanata na hinulaang ipapalabas sa humigit-kumulang %1$s, na tumitingin sa bawat %2$s.</string>
     <string name="invalid_backup_file_error">Buong error:</string>
     <string name="ext_permission_install_apps_warning">Kinakailangan ng permiso para mag-install ng mga extension. I-tap upang mapayagan ito.</string>
     <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
@@ -799,9 +793,10 @@
     <string name="action_delete_repo">Tanggalin ang repo</string>
     <string name="label_add_repo_input">URL ng repo</string>
     <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa Tachiyomi. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
-    <string name="repo_extension_message">Ang extension na ito ay nagmula sa isang external na repo. I-tap para tignan ang repo.</string>
     <string name="invalid_repo_name">Di-wastong URL ng repo</string>
-    <string name="manga_interval_header">Susunod na update</string>
     <string name="delete_repo_confirmation">Gusto mo bang tanggalin ang repo na \"%s\"?</string>
     <string name="manga_interval_custom_amount">Ipasadya ang update frequency:</string>
+    <string name="theme_nord">Nord</string>
+    <string name="manga_interval_expected_update_soon">Malapit na</string>
+    <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
 </resources>

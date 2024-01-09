@@ -191,9 +191,7 @@
     <string name="pref_library_columns">आयटम प्रती पंक्ती</string>
     <string name="pref_category_display">दाखवा</string>
     <string name="hide_notification_content">सूचना सामग्री लपवा</string>
-    <string name="unofficial_extension_message">हा विस्तार अधिकृत ताचिओमी विस्तार सूचीतून नाही.</string>
     <string name="double_tap_anim_speed_normal">सामान्य</string>
-    <string name="ext_unofficial">अनधिकृत</string>
     <string name="pref_viewer_nav">नैविगेशन माध्य</string>
     <string name="nav_zone_right">उजवी</string>
     <string name="nav_zone_left">डावी</string>
@@ -216,6 +214,5 @@
     <string name="off">बंद</string>
     <string name="action_set_interval">मध्यांतर</string>
     <string name="action_filter_tracked">ट्रॅक केले</string>
-    <string name="action_filter_interval_long">मासिक फेच (२८ दिवस)</string>
     <string name="action_filter_interval_custom">कस्टमाईज्ड फेच इंटरवल</string>
 </resources>

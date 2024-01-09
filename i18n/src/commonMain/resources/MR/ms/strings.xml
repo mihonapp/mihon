@@ -375,8 +375,6 @@
     <string name="backup_restore_missing_sources">Tiada sumber:</string>
     <string name="invalid_backup_file_missing_manga">Sandaran tidak mengandungi apa-apa entri pustaka.</string>
     <string name="invalid_backup_file">Fail sandaran tidak sah</string>
-    <string name="unofficial_extension_message">Sambungan ini bukan daripada senarai yang rasmi.</string>
-    <string name="ext_unofficial">Tidak rasmi</string>
     <string name="pref_library_update_refresh_metadata_summary">Semak muka hadapan dan tentang baharu bila mengemaskini pustaka</string>
     <string name="pref_library_update_refresh_metadata">Segar semula metadata secara automatik</string>
     <string name="action_migrate">Pindah sumber</string>
@@ -708,16 +706,12 @@
     <string name="pref_chapter_swipe_start">Tindakan leret ke kiri</string>
     <string name="action_set_interval">Tetapkan jarak masa</string>
     <string name="action_filter_interval_custom">Jarak masa diambil tersuai</string>
-    <string name="action_filter_interval_long">Ambil bulanan (28 hari)</string>
-    <string name="action_filter_interval_late">Lewat semak 10+</string>
-    <string name="action_filter_interval_dropped">Diabaikan\? Lewat 20+ dan 2 bulan</string>
     <string name="action_sort_next_updated">Kemas kini seterusnya dijangka</string>
     <string name="manga_display_modified_interval_title">Tetapkan untuk kemas kini setiap</string>
     <string name="skipped_reason_not_in_release_period">Dilangkau kerana tiada keluaran yang dijangkakan hari ini</string>
     <string name="intervals_header">Jarak masa</string>
     <string name="pref_update_only_in_release_period">Diluar jangkaan masa keluaran</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
-    <string name="action_filter_interval_passed">Melepasi tempoh semak</string>
     <string name="track_delete_title">Buang penjejakan %s\?</string>
     <string name="track_delete_text">Ini akan membuang penjejakan secara lokal.</string>
     <string name="action_ok">OK</string>

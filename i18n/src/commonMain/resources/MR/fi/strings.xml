@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Laiteasetuksia ei voitu avata</string>
     <string name="tracking_info">Yksisuuntainen synkronointi lukujen seurantapalveluiden päivittämiseksi. Määritä yksittäisten mangamerkintöjen seuranta seurantapainikkeesta.</string>
     <string name="pref_refresh_library_covers">Päivitä kirjaston manga-kannet</string>
-    <string name="unofficial_extension_message">Tämä laajennus ei ole virallisesta Tachiyomi-laajennusluettelosta.</string>
-    <string name="ext_unofficial">Epävirallinen</string>
     <string name="sort_by_upload_date">Latauspäivämäärän mukaan</string>
     <string name="label_data">Tiedot</string>
     <string name="backup_restore_missing_sources">Puuttuvat lähteet:</string>

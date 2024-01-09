@@ -379,8 +379,6 @@
     <string name="action_migrate">Migrează</string>
     <string name="label_data">Date</string>
     <string name="invalid_backup_file">Fișierul de rezerva este invalid</string>
-    <string name="unofficial_extension_message">Aceasta extensie nu face parte din lista oficială de extensii Tachiyomi.</string>
-    <string name="ext_unofficial">Neoficial</string>
     <string name="page_list_empty_error">Nu s-au găsit pagini</string>
     <string name="tabs_header">Tab-uri</string>
     <string name="action_display_show_tabs">Afișează filele categoriei</string>
@@ -694,14 +692,10 @@
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>
     <string name="unlock_app_title">Deblochează %s</string>
     <string name="delete_downloaded">Șterge descărcările</string>
-    <string name="action_filter_interval_late">Verificare întârziată (10+)</string>
     <string name="action_set_interval">Setează intervalul</string>
-    <string name="action_filter_interval_passed">Perioada de control a trecut</string>
     <string name="scanlator">Scanlator</string>
     <string name="label_data_storage">Date și stocare</string>
-    <string name="action_filter_interval_dropped">Abandonat? Întârziat (20+ și 2 luni)</string>
     <string name="action_sort_next_updated">Următoarea actualizare așteptată</string>
-    <string name="action_filter_interval_long">Fetch lunar (28 de zile)</string>
     <string name="action_filter_interval_custom">Interval de preluare personalizat</string>
     <string name="pref_storage_location">Locație de stocare</string>
     <string name="information_cloudflare_help">Atinge aici pentru ajutor cu Cloudflare</string>

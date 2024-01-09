@@ -266,7 +266,6 @@
     <string name="gray_background">Grå</string>
     <string name="pref_relative_format_summary">\"%1$s\" i stedet for \"%2$s\"</string>
     <string name="action_sort_next_updated">Næste forventede opdatering</string>
-    <string name="ext_unofficial">Uofficiel</string>
     <string name="pref_browse_summary">Kilder, udvidelser, global søgning</string>
     <string name="nav_zone_left">Venstre</string>
     <string name="backup_created">Sikkerhedskopi oprettet</string>

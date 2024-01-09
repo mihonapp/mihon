@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Abertura de sas impostatziones de sistema fallida</string>
     <string name="tracking_info">Sincronizatzione a una diretzione ebbia pro agiornare su progressu in sos capìtulos in servìtzios de arrastamentu esternos. Imposta s\'arrastamentu pro sos elementos dae su butone de arrastamentu issoro.</string>
     <string name="pref_refresh_library_covers">Annoa sas coberteddas de sa biblioteca</string>
-    <string name="unofficial_extension_message">Custa estensione non benit dae sa lista ufitziale.</string>
-    <string name="ext_unofficial">No ufitziale</string>
     <string name="sort_by_upload_date">Pro data de carrigamentu</string>
     <string name="label_data">Datos</string>
     <string name="backup_restore_missing_sources">Fontes chi mancant:</string>
@@ -708,16 +706,12 @@
     <string name="pref_debug_info">Informatziones de depuratzione de còdighe</string>
     <string name="manga_display_interval_title">Càrcula cada</string>
     <string name="action_filter_interval_custom">Intervallu de recùperu personalizadu</string>
-    <string name="action_filter_interval_long">Recùpera cada mese (28 dies)</string>
-    <string name="action_filter_interval_dropped">Abbandonadu\? In ritardu de 20+ dies e 2 meses</string>
     <string name="action_sort_next_updated">Agiornamentu imbente prevìdidu</string>
     <string name="pref_update_only_in_release_period">Foras de su perìodu de publicatzione prevìdidu</string>
     <string name="intervals_header">Intervallos</string>
     <string name="manga_display_modified_interval_title">Imposta s\'agiornamentu pro cada</string>
     <string name="skipped_reason_not_in_release_period">Brincadu ca non bi fiat peruna publicatzione prevìdida oe</string>
     <string name="action_set_interval">Imposta s\'intervallu</string>
-    <string name="action_filter_interval_late">Verìfica in ritardu de 10+ dies</string>
-    <string name="action_filter_interval_passed">Perìodu de controllu coladu</string>
     <string name="action_ok">AB</string>
     <string name="track_delete_title">Bogare s\'arrastadore de %s\?</string>
     <string name="track_delete_text">Custu at a bogare s\'arrastamentu locale.</string>

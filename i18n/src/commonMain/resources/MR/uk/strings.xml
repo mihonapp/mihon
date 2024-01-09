@@ -354,8 +354,6 @@
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
     <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>
-    <string name="unofficial_extension_message">Це розширення не з офіційного списку.</string>
-    <string name="ext_unofficial">Неофіційне</string>
     <string name="pref_library_update_refresh_metadata_summary">Перевірити наявність нової обкладинки та подробиць при оновленні бібліотеки</string>
     <string name="pref_library_update_refresh_metadata">Автоматично оновлювати метадані</string>
     <string name="action_migrate">Мігрувати</string>
@@ -707,11 +705,7 @@
     <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
     <string name="pref_library_columns_per_row">%d на рядок</string>
     <string name="action_set_interval">Встановити інтервал</string>
-    <string name="action_filter_interval_late">Перевірка останніх 10+</string>
-    <string name="action_filter_interval_dropped">Покинуто\? Останні 20+ і 2 місяці</string>
-    <string name="action_filter_interval_passed">Пройдено період перевірки</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
-    <string name="action_filter_interval_long">Отримувати щомісяця (28 днів)</string>
     <string name="action_filter_interval_custom">Налаштувати інтервал отримання</string>
     <string name="pref_update_only_in_release_period">Поза очікуваним періодом випуску</string>
     <string name="action_sort_next_updated">Наступне очікуване оновлення</string>

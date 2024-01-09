@@ -185,7 +185,6 @@
     <string name="pref_fullscreen">Pilno ekrano rėžimas</string>
     <string name="ext_nsfw_warning">Šaltiniuose gali būti N18 turinio</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Šis plėtinys nėra iš oficialaus Tachiyomi sąrašo.</string>
     <string name="obsolete_extension_message">Šis plėtinys nebėra prieinamas. Plėtinys gali veikti netinkamai arba sukelti problemas programėlėje. Rekomenduojama išdiegti plėtinį.</string>
     <string name="untrusted_extension_message">Šis plėtinys buvo pasirašytas nepatikimu sertifikatu ir nebuvo aktyvuotas.
 \n
@@ -197,7 +196,6 @@
     <string name="ext_uninstall">Šalinti</string>
     <string name="ext_trust">Patikimas</string>
     <string name="ext_untrusted">Nepatikimas</string>
-    <string name="ext_unofficial">Neoficiali</string>
     <string name="ext_installed">Įdiegtas</string>
     <string name="ext_installing">Diegiasi</string>
     <string name="ext_downloading">Siunčiasi</string>

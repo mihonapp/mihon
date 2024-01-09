@@ -23,7 +23,7 @@
     <string name="action_add_category">Añadir categoría</string>
     <string name="action_edit_categories">Editar categorías</string>
     <string name="action_rename_category">Renombrar categoría</string>
-    <string name="action_move_category">Establecer categorías</string>
+    <string name="action_move_category">Asignar categorías</string>
     <string name="action_edit_cover">Editar la portada</string>
     <string name="action_pause">Pausar</string>
     <string name="action_previous_chapter">Capítulo anterior</string>
@@ -54,7 +54,7 @@
     <string name="update_48hour">Cada 2 días</string>
     <string name="pref_library_update_restriction">Restricciones de actualización automática del dispositivo</string>
     <string name="charging">Mientras se carga la batería</string>
-    <string name="pref_update_only_non_completed">Saltarse títulos cuya publicación haya concluido</string>
+    <string name="pref_update_only_non_completed">Saltarse títulos cuyo estado de publicación sea «completado»</string>
     <string name="pref_auto_update_manga_sync">Actualizar progreso al terminar un capítulo</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Transiciones de página animadas</string>
@@ -126,7 +126,7 @@
     <string name="download_unread">Sin leer</string>
     <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados\?</string>
     <string name="reading">Leyendo</string>
-    <string name="completed">Concluido</string>
+    <string name="completed">Completado</string>
     <string name="dropped">Abandonado</string>
     <string name="on_hold">En espera</string>
     <string name="plan_to_read">Para leer luego</string>
@@ -135,7 +135,7 @@
     <string name="status">Estado</string>
     <string name="chapters">Capítulos</string>
     <string name="dialog_with_checkbox_remove_description">Esto eliminará la fecha de lectura de este capítulo. ¿Estás seguro?</string>
-    <string name="dialog_with_checkbox_reset">Reiniciar todos los capítulos de este manga</string>
+    <string name="dialog_with_checkbox_reset">Reiniciar todos los capítulos de la serie actual</string>
     <string name="chapter_progress">Pág: %1$d</string>
     <string name="no_next_chapter">Siguiente capítulo no encontrado</string>
     <string name="decode_image_error">No se pudo cargar la imagen</string>
@@ -214,13 +214,13 @@
     <string name="delete_downloads_for_manga">¿Quieres borrar los capítulos descargados?</string>
     <string name="chapter_paused">Pausado</string>
     <string name="manga_tracking_tab">Seguimiento</string>
-    <string name="error_category_exists">¡Ya existe una categoría con este nombre!</string>
+    <string name="error_category_exists">Ya existe una categoría con este nombre</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
     <string name="snack_add_to_library">¿Añadir manga a la biblioteca\?</string>
     <string name="picture_saved">Imagen guardada</string>
     <string name="custom_filter">Filtro personalizado</string>
-    <string name="set_as_cover">Establecer como cubierta</string>
-    <string name="cover_updated">Cubierta actualizada</string>
+    <string name="set_as_cover">Poner como portada</string>
+    <string name="cover_updated">Se ha actualizado la portada de la serie</string>
     <string name="notification_cover_update_failed">Error al actualizar la portada</string>
     <string name="download_notifier_downloader_title">Descargador</string>
     <string name="action_global_search">Búsqueda global</string>
@@ -252,11 +252,9 @@
     <string name="transition_no_previous">No hay ningún capítulo anterior</string>
     <string name="migrate">Migrar</string>
     <string name="copy">Copiar</string>
-    <string name="untrusted_extension_message">Esta extensión tiene una firma de un autor desconocido y no se ha podido cargar.
+    <string name="untrusted_extension_message">Una extensión maliciosa puede leer credenciales de inicio guardadas o ejecutar cualquier tipo de código en tu dispositivo.
 \n
-\nUna extensión maliciosa puede leer credenciales de inicio guardadas o ejecutar cualquier tipo de código en tu dispositivo.
-\n
-\nAl confiar en este certificado aceptas estos riesgos.</string>
+\nAl marcar al autor como de confianza aceptas estos riesgos.</string>
     <string name="double_tap_anim_speed_0">Sin animación</string>
     <string name="manga_added_library">Añadido a biblioteca</string>
     <string name="manga_removed_library">Quitado de biblioteca</string>
@@ -371,8 +369,6 @@
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Actualizar las portadas de la biblioteca</string>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada elemento en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
-    <string name="unofficial_extension_message">Esta extensión no es de la lista oficial de extensiones.</string>
-    <string name="ext_unofficial">No oficial</string>
     <string name="label_data">Datos</string>
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
     <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningun elemento; la biblioteca está vacía.</string>
@@ -391,7 +387,7 @@
     <string name="action_start">Empezar</string>
     <string name="loader_not_implemented_error">No se ha encontrado la fuente</string>
     <string name="action_disable">Desactivar</string>
-    <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surja efecto</string>
+    <string name="requires_app_restart">Es necesario reiniciar la aplicación para que surta efecto</string>
     <string name="label_network">Red</string>
     <string name="unknown_status">Estado desconocido</string>
     <string name="tapping_inverted_both">Ambos</string>
@@ -501,9 +497,9 @@
     <string name="error_no_match">No se han encontrado coincidencias</string>
     <string name="source_unsupported">Fuente no soportada</string>
     <string name="unread">Sin leer</string>
-    <string name="error_sharing_cover">Error al compartir portada</string>
-    <string name="error_saving_cover">Error al guardar portada</string>
-    <string name="cover_saved">Portada guardada</string>
+    <string name="error_sharing_cover">Hubo un error al compartir la portada</string>
+    <string name="error_saving_cover">Hubo un error al guardar la portada</string>
+    <string name="cover_saved">Se ha guardado la portada</string>
     <string name="manga_cover">Portada</string>
     <string name="date">Fecha</string>
     <string name="local_filter_order_by">Ordenar por</string>
@@ -555,7 +551,7 @@
     <string name="pref_auto_clear_chapter_cache">Limpiar la caché de capítulos al abrir la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">%1$d títulos que no pertenecen a la biblioteca en la base de datos</string>
-    <string name="extension_api_error">No se pudo descargar el listado de extensiones</string>
+    <string name="extension_api_error">No se han podido obtener las extensiones disponibles</string>
     <string name="privacy_policy">Política de privacidad</string>
     <string name="pref_update_only_completely_read">Saltarse títulos con capítulos por leer</string>
     <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
@@ -616,7 +612,7 @@
     <string name="pref_user_agent_string">Identificarse como otro navegador web («user agent»)</string>
     <string name="pref_reset_user_agent_string">Volver a la identificación de navegador («user agent») original</string>
     <string name="action_remove_everything">Quitar todo</string>
-    <string name="loader_rar5_error">La app no soporta el formato RARv5</string>
+    <string name="loader_rar5_error">La aplicación no es capaz de leer el formato RARv5</string>
     <string name="appwidget_updates_description">Aquí aparecerá el contenido más reciente de tu biblioteca</string>
     <string name="appwidget_unavailable_locked">El widget no está disponible cuando el bloqueo de aplicación está activo</string>
     <string name="update_already_running">Ya se está actualizando</string>
@@ -673,7 +669,7 @@
     <string name="hour_short">%dh</string>
     <string name="minute_short">%dm</string>
     <string name="label_used">En uso</string>
-    <string name="not_applicable">No disponible</string>
+    <string name="not_applicable">¿?</string>
     <string name="label_tracked_titles">En servicios de seguimiento</string>
     <string name="label_downloaded">Descargados</string>
     <string name="label_stats">Estadísticas</string>
@@ -704,18 +700,14 @@
     <string name="pref_chapter_swipe_end">Deslizar a la derecha</string>
     <string name="pref_double_tap_zoom">Ampliar tocando dos veces la pantalla</string>
     <string name="pref_library_columns_per_row">%d por fila</string>
-    <string name="action_filter_interval_late">Tras 10 o más días</string>
     <string name="action_sort_next_updated">Próxima actualización prevista</string>
     <string name="pref_update_only_in_release_period">Intentar predecir cuándo sale el siguiente número</string>
     <string name="intervals_header">Intervalos</string>
-    <string name="action_filter_interval_passed">Ha pasado el período de comprobación</string>
     <string name="manga_display_interval_title">Estimar cada</string>
-    <string name="action_filter_interval_dropped">¿Abandonado\? Tras más de 20 días y 2 meses</string>
     <string name="manga_display_modified_interval_title">Forzar actualización cada</string>
     <string name="skipped_reason_not_in_release_period">No se ha comprobado ninguna actualización hoy al no prever ninguna</string>
     <string name="action_set_interval">Establecer intervalo</string>
-    <string name="action_filter_interval_custom">Intervalo de descarga personalizado</string>
-    <string name="action_filter_interval_long">Comprobar de forma mensual (28 días)</string>
+    <string name="action_filter_interval_custom">Frecuencia de actualización personalizada</string>
     <string name="action_ok">Aceptar</string>
     <string name="track_delete_title">¿Quieres desvincular %s?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
@@ -788,8 +780,7 @@
     <string name="ext_permission_install_apps_warning">Toca aquí para conceder los permisos necesarios para instalar extensiones.</string>
     <string name="private_settings">Incluir datos privados, como las claves de inicio de sesión en plataformas de seguimiento</string>
     <string name="invalid_backup_file_error">Descripción completa del problema:</string>
-    <string name="manga_interval_expected_update">Próxima actualización prevista en torno a %1$s, revisando cada %2$s</string>
-    <string name="repo_extension_message">Esta extensión proviene de un repositorio externo. Toca para verlo.</string>
+    <string name="manga_interval_expected_update">Se espera que se publiquen nuevos capítulos alrededor de %1$s, comprobando alrededor de cada %2$s.</string>
     <string name="manga_interval_custom_amount">Frecuencia de actualización personalizada:</string>
     <string name="error_repo_exists">El repositorio ya existe</string>
     <string name="pref_library_update_smart_update">Actualizaciones inteligentes</string>
@@ -797,11 +788,14 @@
     <string name="action_add_repo_message">Añade más repositorios a Tachiyomi; la dirección URL tiene que terminar en «index.min.json».</string>
     <string name="delete_repo_confirmation">¿Seguro que quieres borrar el repositorio «%s»?</string>
     <string name="action_delete_repo">Borrar repositorio</string>
-    <string name="manga_interval_header">Próxima actualización</string>
     <string name="action_add_repo">Añadir un repositorio</string>
     <string name="information_empty_repos">Todavía no has añadido ningún repositorio.</string>
     <string name="label_extension_repos">Repositorios de extensiones</string>
     <string name="label_add_repo_input">Dirección URL del repositorio</string>
     <string name="onboarding_storage_help_info">¿Acabas de actualizar desde una versión más antigua y no sabes qué hacer? Échale un vistazo a la guía de almacenamiento.</string>
     <string name="onboarding_storage_help_action">Guía de almacenamiento</string>
+    <string name="theme_nord">Nord</string>
+    <string name="manga_interval_expected_update_soon">Pronto</string>
+    <string name="ext_revoke_trust">Revocar extensiones desconocidas de confianza</string>
+    <string name="action_open_repo">Ver el código del repositorio</string>
 </resources>

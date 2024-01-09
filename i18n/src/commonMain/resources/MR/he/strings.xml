@@ -371,13 +371,11 @@
     <string name="pref_update_only_started">זה עוד לא התחיל</string>
     <string name="ext_update_all">עדכן הכל</string>
     <string name="ext_trust">האמן</string>
-    <string name="unofficial_extension_message">ההרחבה הזאת לא נמצאת ברשימת ההרחבות הרשמיות של Tachiyomi.</string>
     <string name="ext_nsfw_warning">עלול להכיל תוכן שלא מתאים למקום העבודה (18+)</string>
     <string name="ext_install_service_notif">מתקין הרחבה…</string>
     <string name="include">כלול: %s</string>
     <string name="pref_show_navigation_mode_summary">הראה לזמן קצר כשפותחים את מצב הקריאה</string>
     <string name="pref_show_reading_mode">הראה מצב קריאה</string>
-    <string name="ext_unofficial">בלתי רשמי</string>
     <string name="ext_app_info">פרטי האפליקצייה</string>
     <string name="extension_api_error">נכשל בקבלת רשימת ההרחבות</string>
     <string name="ext_nsfw_short">18+</string>
@@ -582,7 +580,6 @@
     <string name="theme_tidalwave">גלים</string>
     <string name="action_set_interval">קבע מרווח זמן</string>
     <string name="action_filter_interval_custom">קבע מרווח זמן מותאם מראש לטעינה</string>
-    <string name="action_filter_interval_long">טען חודשית (28 ימים)</string>
     <string name="unknown_title">כותרת לא מוכרת</string>
     <string name="download_notifier_downloader_title">מנהל ההורדות</string>
     <string name="exception_http">HTTP %d, בדוק באתר ב-WebView</string>
@@ -597,9 +594,6 @@
     <string name="action_not_now">לא עכשיו</string>
     <string name="download_notifier_cache_renewal">בודק הורדות</string>
     <string name="delete_downloaded">מחק הורדות</string>
-    <string name="action_filter_interval_late">בדוק 10+ באיחור</string>
-    <string name="action_filter_interval_dropped">נפל\? באיחור 20+ וחודשיים</string>
-    <string name="action_filter_interval_passed">תקופת בדיקה עברה</string>
     <string name="action_sort_next_updated">העדכון הצפוי הבא</string>
     <string name="pref_advanced_summary">הורד קבצי קריסה, אופטימיזציה לסוללה</string>
     <string name="theme_lavender">לבנדר</string>

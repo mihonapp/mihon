@@ -365,8 +365,6 @@
     <string name="pref_cutout_short">বিষয়বস্তু কাটআউটে দেখুন</string>
     <string name="ext_nsfw_warning">প্রাপ্তবয়স্কদের (18+) কন্টেন্ট থাকতে পারে</string>
     <string name="ext_nsfw_short">১৮+</string>
-    <string name="unofficial_extension_message">এক্সটেনশনটি তাচিওমির অনুমোদিত এক্সটেনশন তালিকায় নেই।</string>
-    <string name="ext_unofficial">অনুমোদনহীন</string>
     <string name="ext_updates_pending">অনিষ্পন্ন হালনাগাদ</string>
     <string name="pref_library_update_refresh_metadata_summary">সংগ্রহশালা হালনাগেদের সময় নতুন মোড়ক এবং বর্ণনা খুঁজুন</string>
     <string name="pinned_sources">গাঁথুনিকৃত</string>
@@ -625,7 +623,6 @@
     <string name="pref_onboarding_guide">অনবর্ডিং গাইড</string>
     <string name="onboarding_action_finish">শুরু করুন</string>
     <string name="action_apply">এপ্লাই</string>
-    <string name="action_filter_interval_passed">চেক করার সময় পার হয়েছে</string>
     <string name="onboarding_storage_selection_required">একটি ফোল্ডার অবশ্যই ঠিক করতে হবে</string>
     <string name="onboarding_permission_notifications">নোটিফিকেশনের পারমিশন</string>
     <string name="action_revert_to_default">সকল সেটিং ডিফল্ট করুন</string>
@@ -643,5 +640,4 @@
     <string name="sort_category_confirmation">আপনি কি বর্ণানুক্রমিকভাবে ফিল্টার করতে চান</string>
     <string name="action_ok">ঠিক আছে</string>
     <string name="action_sort_next_updated">পরবর্তী আপডেটের সম্ভাব্য সময়</string>
-    <string name="action_filter_interval_long">প্রতিমাসে রিফ্রেস করুন (২৮ দিন)</string>
 </resources>

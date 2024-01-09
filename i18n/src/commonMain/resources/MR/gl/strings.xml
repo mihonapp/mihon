@@ -79,7 +79,6 @@
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
-    <string name="unofficial_extension_message">Esta extensión non é da lista de extensións oficiais de Tachiyomi.</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
     <string name="untrusted_extension_message">Esta extensión foi firmada cun certificado non confiable e non se activou.
 \n
@@ -89,7 +88,6 @@
     <string name="untrusted_extension">Extensión non confiable</string>
     <string name="ext_untrusted">Non confiable</string>
     <string name="ext_uninstall">Desinstalar</string>
-    <string name="ext_unofficial">Non oficial</string>
     <string name="ext_trust">De confianza</string>
     <string name="ext_installed">Instaladas</string>
     <string name="ext_installing">Instalando</string>

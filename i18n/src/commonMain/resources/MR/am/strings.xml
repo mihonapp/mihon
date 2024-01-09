@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="unofficial_extension_message">ይህ ቅጥያ ከኦፊሴላዊው የታቺዮሚ ቅጥያዎች ዝርዝር አይደለም ፡፡</string>
     <string name="obsolete_extension_message">ይህ ቅጥያ ከእንግዲህ አይገኝም።</string>
     <string name="untrusted_extension_message">ይህ ቅጥያ ባልታመነ የእውቅና ማረጋገጫ ተፈርሟል እና አልነቃም።
 \n
@@ -10,7 +9,6 @@
     <string name="untrusted_extension">የማይታመን ቅጥያ</string>
     <string name="ext_uninstall">ማራገፍ</string>
     <string name="ext_untrusted">የማይታመን</string>
-    <string name="ext_unofficial">ኦፊሴላዊ ያልሆነ</string>
     <string name="ext_trust">አደራ</string>
     <string name="ext_installed">ተጭኗል</string>
     <string name="ext_installing">በመጫን ላይ</string>

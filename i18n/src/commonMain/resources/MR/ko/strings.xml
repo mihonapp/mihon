@@ -335,7 +335,6 @@
     <string name="tapping_inverted_horizontal">수평 반전</string>
     <string name="pref_grayscale">그레이스케일</string>
     <string name="pref_dual_page_split">넓은 페이지 분할</string>
-    <string name="ext_unofficial">비공식</string>
     <string name="action_display_comfortable_grid">보기 편한 격자</string>
     <string name="pref_dark_theme_pure_black">다크 모드에 검정색 사용</string>
     <string name="pref_app_theme">앱 테마</string>
@@ -528,7 +527,6 @@
     <string name="theme_strawberrydaiquiri">딸기 칵테일</string>
     <string name="extension_api_error">확장 앱 목록 가져오기 실패</string>
     <string name="exclude">제외: %s</string>
-    <string name="unofficial_extension_message">이 확장앱은 공식 확장앱이 아닙니다.</string>
     <string name="tracking_info">트래킹 서비스에 항목 진행 상황을 업데이트합니다. 트래킹 버튼을 이용하여 각각의 항목 별로 트래킹을 설정하세요.</string>
     <string name="tracking_guide">트래커 가이드</string>
     <string name="enhanced_services">향상된 트래킹 서비스</string>
@@ -708,7 +706,6 @@
     <string name="pref_double_tap_zoom">두 번 탭하여 줌</string>
     <string name="action_set_interval">간격 설정</string>
     <string name="action_filter_interval_custom">사용자 지정 가져오기 간격</string>
-    <string name="action_filter_interval_long">매월 가져오기 (28일)</string>
     <string name="intervals_header">간격</string>
     <string name="delete_downloaded">다운로드 삭제</string>
     <string name="has_results">결과가 있는 것만 보기</string>
@@ -717,12 +714,10 @@
     <string name="action_ok">OK</string>
     <string name="skipped_reason_not_in_release_period">오늘 연재가 예상되지 않았기 때문에 건너뛰었습니다</string>
     <string name="track_delete_title">%s 동기화를 삭제 하시겠습니까\?</string>
-    <string name="action_filter_interval_passed">체크 기간이 지났습니다</string>
     <string name="pref_update_only_in_release_period">연재 예정 기간 제외</string>
     <string name="download_cache_invalidated">다운로드 인덱스를 제거함</string>
     <string name="action_sort_next_updated">다음 업데이트 예정</string>
     <string name="information_cloudflare_help">탭하여 Cloudflare에 관한 도움말 보기</string>
-    <string name="action_filter_interval_late">일별 가져오기 (10일 이상)</string>
     <string name="unlock_app_title">%s를 잠금해제</string>
     <string name="manga_display_modified_interval_title">항상 업데이트 하도록 설정</string>
     <string name="syncing_library">서재를 동기화합니다</string>
@@ -731,7 +726,6 @@
     <string name="action_move_to_bottom_all_for_series">이 시리즈를 맨 아래로 이동</string>
     <string name="licensed_manga_chapters_error">라이센스 제한 - 회차를 표시할 수 없습니다</string>
     <string name="exception_offline">인터넷에 연결되지 않음</string>
-    <string name="action_filter_interval_dropped">포기했나요\? 20일 ~ 2달 이내</string>
     <string name="manga_display_interval_title">항상 평가하기</string>
     <string name="track_activity_name">트래킹 서비스 로그인</string>
     <string name="exception_http">HTTP %d, WebView의 웹 사이트를 확인해 주세요</string>

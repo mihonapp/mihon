@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.delay
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -24,12 +24,12 @@ import kotlin.time.Duration.Companion.seconds
 fun ExtensionRepoCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
-    categories: ImmutableList<String>,
+    repos: ImmutableSet<String>,
 ) {
     var name by remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
-    val nameAlreadyExists = remember(name) { categories.contains(name) }
+    val nameAlreadyExists = remember(name) { repos.contains(name) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,

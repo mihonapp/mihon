@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.pm.PackageInfoCompat
 import dalvik.system.PathClassLoader
-import eu.kanade.domain.source.interactor.TrustExtension
+import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -58,9 +58,6 @@ internal object ExtensionLoader {
         PackageManager.GET_META_DATA or
         PackageManager.GET_SIGNATURES or
         (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) PackageManager.GET_SIGNING_CERTIFICATES else 0)
-
-    // inorichi's key
-    private const val officialSignature = "7ce04da7773d41b489f4693a366c36bcd0a11fc39b547168553c285bd7348e23"
 
     private const val PRIVATE_EXTENSION_EXTENSION = "ext"
 
@@ -255,7 +252,7 @@ internal object ExtensionLoader {
         if (signatures.isNullOrEmpty()) {
             logcat(LogPriority.WARN) { "Package $pkgName isn't signed" }
             return LoadResult.Error
-        } else if (!isTrusted(pkgInfo, signatures)) {
+        } else if (!trustExtension.isTrusted(pkgInfo, signatures.last())) {
             val extension = Extension.Untrusted(
                 extName,
                 pkgName,
@@ -323,7 +320,6 @@ internal object ExtensionLoader {
             isNsfw = isNsfw,
             sources = sources,
             pkgFactory = appInfo.metaData.getString(METADATA_SOURCE_FACTORY),
-            isUnofficial = !isOfficiallySigned(signatures),
             icon = appInfo.loadIcon(pkgManager),
             isShared = extensionInfo.isShared,
         )
@@ -381,18 +377,6 @@ internal object ExtensionLoader {
         }
             ?.map { Hash.sha256(it.toByteArray()) }
             ?.toList()
-    }
-
-    private fun isTrusted(pkgInfo: PackageInfo, signatures: List<String>): Boolean {
-        if (officialSignature in signatures) {
-            return true
-        }
-
-        return trustExtension.isTrusted(pkgInfo, signatures.last())
-    }
-
-    private fun isOfficiallySigned(signatures: List<String>): Boolean {
-        return signatures.all { it == officialSignature }
     }
 
     /**

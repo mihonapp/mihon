@@ -263,10 +263,8 @@
     <string name="ext_updates_pending">Gaida atjauninājumu</string>
     <string name="ext_installed">Instalēts</string>
     <string name="ext_trust">Uzticams</string>
-    <string name="ext_unofficial">Neoficiāls</string>
     <string name="ext_untrusted">Neuzticams</string>
     <string name="obsolete_extension_message">Šis paplašinājums vairs nav pieejams. Tas var nedarboties pareizi un var radīt problēmas ar lietotni. Ieteicams to atinstalēt.</string>
-    <string name="unofficial_extension_message">Šis paplašinājums nav no oficiālā saraksta.</string>
     <string name="pref_dual_page_split">Sadalīt platas lapas</string>
     <string name="pref_dual_page_invert">Apvērst dalītās lapas izvietojumu</string>
     <string name="pref_cutout_short">Rādīt saturu izgriezuma apgabalā</string>
@@ -713,8 +711,6 @@
     <string name="manga_display_interval_title">Novērtēt katru</string>
     <string name="action_set_interval">Iestatīt intervālu</string>
     <string name="action_filter_interval_custom">Pielāgots datu iegūšanas intervāls</string>
-    <string name="action_filter_interval_long">Iegūt katru mēnesi (28 dienas)</string>
-    <string name="action_filter_interval_passed">Nokārtots pārbaudes periods</string>
     <string name="action_sort_next_updated">Nākamais gaidāmais atjauninājums</string>
     <string name="track_activity_name">Pieteikšanās izsekošana</string>
     <string name="syncing_library">Sinhronizē bibliotēku</string>
@@ -728,8 +724,6 @@
     <string name="pref_double_tap_zoom">Dubult-pieskarieties, lai tuvinātu</string>
     <string name="pref_library_columns_per_row">%d katrā rindā</string>
     <string name="unlock_app_title">Atbloķēt %s</string>
-    <string name="action_filter_interval_late">Par vēlu +10 pārbaudes</string>
-    <string name="action_filter_interval_dropped">Pametāt\? Par vēlu +20 un 2 mēnešus</string>
     <string name="pref_chapter_swipe">Vilkt nodaļas</string>
     <string name="manga_display_modified_interval_title">Atjaunināt katru</string>
     <string name="exception_http">HTTP %d, pārbaudiet vietni iekš WebView</string>
