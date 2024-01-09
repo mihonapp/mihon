@@ -106,14 +106,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
     override suspend fun pullSyncData(): SyncData? {
         val drive = googleDriveService.driveService
 
-        // Check if the Google Drive service is initialized
         if (drive == null) {
             logcat(LogPriority.ERROR) { "Google Drive service not initialized" }
-            throw Exception(context.getString(R.string.google_drive_not_signed_in))
+            throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
         }
 
-        val fileList = getFileList(drive)
-
+        val fileList = getAppDataFileList(drive)
         if (fileList.isEmpty()) {
             return null
         }
@@ -121,12 +119,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
         val outputStream = ByteArrayOutputStream()
         drive.files().get(gdriveFileId).executeMediaAndDownloadTo(outputStream)
-        val jsonString = withContext(Dispatchers.IO) {
-            val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
-            gzipInputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-        }
 
-        return json.decodeFromString(SyncData.serializer(), jsonString)
+        return withContext(Dispatchers.IO) {
+            val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
+            val gson = Gson()
+            gson.fromJson(gzipInputStream.reader(Charsets.UTF_8), SyncData::class.java)
+        }
     }
 
     override suspend fun pushSyncData(syncData: SyncData) {
