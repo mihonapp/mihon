@@ -100,7 +100,7 @@ abstract class SyncService(
         val localMangaListSafe = localMangaList.orEmpty()
         val remoteMangaListSafe = remoteMangaList.orEmpty()
 
-        logcat(logTag, LogPriority.DEBUG) {
+        logcat(LogPriority.DEBUG, logTag) {
             "Starting merge. Local list size: ${localMangaListSafe.size}, Remote list size: ${remoteMangaListSafe.size}"
         }
 
@@ -144,8 +144,9 @@ abstract class SyncService(
                 }
                 local != null && remote != null -> {
                     logcat(LogPriority.DEBUG, logTag) {
-                        "Inspecting timestamps for ${local.title}. Local lastModifiedAt: ${local.lastModifiedAt}, " +
-                            "Remote lastModifiedAt: ${remote.lastModifiedAt}"
+                        "Inspecting timestamps for ${local.title}. " +
+                            "Local lastModifiedAt: ${local.lastModifiedAt * 1000L}, " +
+                            "Remote lastModifiedAt: ${remote.lastModifiedAt * 1000L}"
                     }
                     // Convert seconds to milliseconds for accurate time comparison
                     val localTime = Instant.ofEpochMilli(local.lastModifiedAt * 1000L)
