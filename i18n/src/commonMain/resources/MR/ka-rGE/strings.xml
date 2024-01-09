@@ -117,7 +117,6 @@
     <string name="ext_installed">დაისნტალირებული</string>
     <string name="ext_downloading">იტვირთება</string>
     <string name="ext_pending">მოლოდინში</string>
-    <string name="ext_unofficial">არაოფიციცალური</string>
     <string name="ext_uninstall">წაშლა</string>
     <string name="pref_fullscreen">მთლიან ეკრანზე</string>
     <string name="pref_cutout_short">კონტენტის ჩვენება ჩამოჭრილ ადგილზე</string>
@@ -351,7 +350,6 @@
     <string name="ext_untrusted">არასანდო</string>
     <string name="untrusted_extension">არასანდო დამატება</string>
     <string name="obsolete_extension_message">დამატება ხელმისაწვდომი აღარაა. მან შეიძლება არასწორად იმუშაოს და აპლიკაციას პრობლემები შეუქმნას. გირჩევთ, წაშალოთ ის.</string>
-    <string name="unofficial_extension_message">დამატება არ არის Tachiyomi-ს ოფიციალური დამატებების სიიდან.</string>
     <string name="pref_double_tap_anim_speed">ორჯერ დაჭერისას ანიმაციის სისწრაფე</string>
     <string name="pref_true_color_summary">აუმჯობესებს ხარისხს, თუმცა ამცირებს წარმადობას</string>
     <string name="pref_custom_brightness">გამოიყენე პერსონალიზებული სიკაშკაშე</string>

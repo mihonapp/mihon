@@ -338,8 +338,6 @@
     <string name="vertical_plus_viewer">Dải dài có khoảng cách</string>
     <string name="pref_show_reading_mode_summary">Hiển thị ngắn gọn chế độ hiện tại khi mở trang đọc truyện</string>
     <string name="pref_show_reading_mode">Hiển thị chế độ đọc</string>
-    <string name="unofficial_extension_message">Tiện ích mở rộng này không nằm trong danh sách tiện ích mở rộng chính thức của Tachiyomi.</string>
-    <string name="ext_unofficial">Không chính thức</string>
     <string name="pref_library_update_refresh_metadata_summary">Kiểm tra ảnh bìa và chi tiết khi cập nhật thư viện</string>
     <string name="pref_category_theme">Chủ đề</string>
     <string name="action_unpin">Bỏ ghim</string>
@@ -711,10 +709,6 @@
     <string name="library_sync_complete">Hoàn tất đồng bộ hóa thư viện</string>
     <string name="delete_downloaded">Xóa các chương đã tải xuống</string>
     <string name="action_filter_interval_custom">Khoảng thời gian cập nhật tùy chỉnh</string>
-    <string name="action_filter_interval_long">Cập nhật hàng tháng (28 ngày)</string>
-    <string name="action_filter_interval_late">Kiểm tra sau +10</string>
-    <string name="action_filter_interval_dropped">Bỏ cuộc\? Trì hoãn 20+ và 2 tháng</string>
-    <string name="action_filter_interval_passed">Thời hạn kiểm tra đã qua</string>
     <string name="action_sort_next_updated">Cập nhật dự kiến tiếp theo</string>
     <string name="information_cloudflare_help">Nhấn vào đây để được trợ giúp về Cloudflare</string>
     <string name="pref_update_only_in_release_period">Chưa công bố</string>

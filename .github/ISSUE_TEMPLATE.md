@@ -3,10 +3,10 @@
 I acknowledge that:
 
 - I have updated:
-  - To the latest version of the app (stable is v0.15.1)
+  - To the latest version of the app (stable is v0.15.2)
   - All extensions
 - I have gone through the FAQ (https://tachiyomi.org/docs/faq/general) and troubleshooting guide (https://tachiyomi.org/docs/guides/troubleshooting/)
-- If this is an issue with an extension, that I should be opening an issue in https://github.com/tachiyomiorg/tachiyomi-extensions
+- If this is an issue with an official extension, that I should be opening an issue in https://github.com/tachiyomiorg/extensions
 - I have searched the existing issues and this is new ticket **NOT** a duplicate or related to another open or closed issue
 - I will fill out the title and the information in this template
 

@@ -189,7 +189,6 @@
     <string name="ext_installed">स्थापना गरियो</string>
     <string name="ext_trust">विश्वास</string>
     <string name="obsolete_extension_message">यो एक्सटेन्शन अब उपलब्ध छैन। यसले राम्ररी काम नगर्न सक्छ र एपमा समस्या ल्याउन सक्छ। यसलाई अनइन्स्टल गर्न सिफारिस गरिन्छ।</string>
-    <string name="unofficial_extension_message">यो एक्सटेन्शन आधिकारिक सूचीबाट होइन।</string>
     <string name="ext_nsfw_warning">यस एक्सटेन्शनको स्रोतहरूमा NSFW (१८+) सामग्री समावेश हुन सक्छ</string>
     <string name="ext_install_service_notif">एक्सटेन्शन स्थापना गर्दै…</string>
     <string name="ext_installer_shizuku_stopped">Shizuku चलिरहेको छैन</string>
@@ -219,7 +218,6 @@
     <string name="ext_downloading">डाउनलोड गर्दै</string>
     <string name="ext_installing">स्थापना गर्दै</string>
     <string name="ext_untrusted">अविश्वसनीय</string>
-    <string name="ext_unofficial">अनौपचारिक</string>
     <string name="ext_nsfw_short">१८+</string>
     <string name="filter_mode_overlay">ओभरले</string>
     <string name="pref_skip_filtered_chapters">फिल्टर गरिएका अध्यायहरू छोड्नुहोस्</string>
@@ -708,16 +706,12 @@
     <string name="pref_library_columns_per_row">%d प्रति पङ्क्ति</string>
     <string name="action_set_interval">अन्तराल सेट गर्नुहोस्</string>
     <string name="action_filter_interval_custom">कस्टम गरिएको ल्याउने अन्तराल</string>
-    <string name="action_filter_interval_long">मासिक ल्याउनुहोस् (२८ दिन)</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
     <string name="skipped_reason_not_in_release_period">छोडियो किनभने आज कुनै रिलीज अपेक्षित थिएन</string>
     <string name="intervals_header">अन्तरालहरू</string>
-    <string name="action_filter_interval_late">ढिलो १०+ जाँच</string>
-    <string name="action_filter_interval_passed">जाँच अवधि पार भयो</string>
     <string name="action_sort_next_updated">अर्को अपेक्षित अपडेट</string>
     <string name="pref_update_only_in_release_period">अपेक्षित रिलीज अवधि बाहिर</string>
     <string name="manga_display_interval_title">प्रत्येक अनुमान लगाउनुहोस्</string>
-    <string name="action_filter_interval_dropped">छोडियो\? ढिलो २०+ र २ महिना</string>
     <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो\?</string>
     <string name="track_delete_remote_text">%s बाट पनि हटाउनुहोस्</string>
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>

@@ -4,24 +4,24 @@ import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.download.interactor.DeleteDownload
+import eu.kanade.domain.extension.interactor.CreateExtensionRepo
+import eu.kanade.domain.extension.interactor.DeleteExtensionRepo
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
+import eu.kanade.domain.extension.interactor.GetExtensionRepos
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
+import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.interactor.UpdateManga
-import eu.kanade.domain.source.interactor.CreateSourceRepo
-import eu.kanade.domain.source.interactor.DeleteSourceRepo
 import eu.kanade.domain.source.interactor.GetEnabledSources
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
-import eu.kanade.domain.source.interactor.GetSourceRepos
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.SetMigrateSorting
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
-import eu.kanade.domain.source.interactor.TrustExtension
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
@@ -173,8 +173,8 @@ class DomainModule : InjektModule {
         addFactory { ToggleSourcePin(get()) }
         addFactory { TrustExtension(get()) }
 
-        addFactory { CreateSourceRepo(get()) }
-        addFactory { DeleteSourceRepo(get()) }
-        addFactory { GetSourceRepos(get()) }
+        addFactory { CreateExtensionRepo(get()) }
+        addFactory { DeleteExtensionRepo(get()) }
+        addFactory { GetExtensionRepos(get()) }
     }
 }

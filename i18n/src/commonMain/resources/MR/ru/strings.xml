@@ -242,11 +242,9 @@
     <string name="ext_untrusted">Ненадёжное</string>
     <string name="ext_uninstall">Удалить</string>
     <string name="untrusted_extension">Ненадёжное расширение</string>
-    <string name="untrusted_extension_message">Это расширение было подписано неизвестным автором и не было загружено.
+    <string name="untrusted_extension_message">Вредоносные расширения могут считывать любые хранящиеся учётные данные для входа или выполнять произвольный код.
 \n
-\nВредоносные расширения могут считывать любые хранящиеся учётные данные для входа или выполнять произвольный код.
-\n
-\nДоверяя сертификату этого расширения, вы принимаете эти риски.</string>
+\nДоверяя этому расширению, вы принимаете эти риски.</string>
     <string name="pref_double_tap_anim_speed">Скорость анимации при двойном нажатии</string>
     <string name="double_tap_anim_speed_0">Без анимации</string>
     <string name="double_tap_anim_speed_normal">Нормальная</string>
@@ -370,8 +368,6 @@
     <string name="battery_optimization_setting_activity_not_found">Не удалось открыть настройки устройства</string>
     <string name="pref_refresh_library_covers">Обновить обложки серий</string>
     <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сторонних сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
-    <string name="unofficial_extension_message">Это расширение не входит в официальный список расширений.</string>
-    <string name="ext_unofficial">Неофициальное</string>
     <string name="sort_by_upload_date">Дата добавления</string>
     <string name="label_data">Данные</string>
     <string name="backup_restore_missing_sources">Отсутствующие источники:</string>
@@ -555,7 +551,7 @@
     <string name="pref_auto_clear_chapter_cache">Очищать кэш глав при запуске приложения</string>
     <string name="clear_database_source_item_count">%1$d не библиотечных серий в базе данных</string>
     <string name="database_clean">Нечего очищать</string>
-    <string name="extension_api_error">Не удалось получить список расширений</string>
+    <string name="extension_api_error">Не удалось получить доступные расширения</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="pref_update_only_completely_read">Пропускать серии с непрочитанными главами</string>
     <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки нажать %1$s</string>
@@ -704,16 +700,12 @@
     <string name="pref_chapter_swipe_start">Проведите влево</string>
     <string name="pref_double_tap_zoom">Двойное нажатие для увеличения</string>
     <string name="pref_library_columns_per_row">%d в ряд</string>
-    <string name="action_filter_interval_custom">Настраиваемый интервал получения</string>
-    <string name="action_filter_interval_long">Месячная проверка (28 дней)</string>
-    <string name="action_filter_interval_dropped">Заброшено\? Прошедшие 20+ дней и 2 месяца</string>
+    <string name="action_filter_interval_custom">Настраиваемая частота обновления</string>
     <string name="intervals_header">Интервалы</string>
     <string name="manga_display_interval_title">Оценивать каждые</string>
     <string name="action_set_interval">Задать интервал</string>
-    <string name="action_filter_interval_late">Проверка прошедших 10+ дней</string>
-    <string name="action_filter_interval_passed">Срок проверки истёк</string>
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
-    <string name="pref_update_only_in_release_period">Предсказать следующее время выпуска</string>
+    <string name="pref_update_only_in_release_period">Ожидается выход новых глав</string>
     <string name="manga_display_modified_interval_title">Задать обновления каждые</string>
     <string name="skipped_reason_not_in_release_period">Пропущено, т.к сегодня не ожидается выпуска</string>
     <string name="track_delete_title">Удалить отслеживание %s\?</string>
@@ -788,8 +780,7 @@
     <string name="ext_permission_install_apps_warning">Нужны разрешения для установки расширений. Нажмите сюда, чтобы их предоставить.</string>
     <string name="private_settings">Включать конфиденциальные настройки (например, токены для входа в службы отслеживания)</string>
     <string name="invalid_backup_file_error">Полная ошибка:</string>
-    <string name="manga_interval_expected_update">Следующее обновление ожидается через %1$s, проверяя каждые %2$s</string>
-    <string name="repo_extension_message">Это расширение из внешнего репозитория. Нажмите, чтобы просмотреть репозиторий.</string>
+    <string name="manga_interval_expected_update">Выход новых глав ожидается примерно через %1$s, следующая проверка будет через %2$s.</string>
     <string name="manga_interval_custom_amount">Настраиваемая частота обновления:</string>
     <string name="error_repo_exists">Этот репозиторий уже существует!</string>
     <string name="pref_library_update_smart_update">Умное обновление</string>
@@ -797,11 +788,14 @@
     <string name="action_add_repo_message">Добавить дополнительные репозиторий в Tachiyomi. Это должны быть URL-адреса которые заканчиваться на \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Хотите ли вы удалить репозиторий \"%s\"?</string>
     <string name="action_delete_repo">Удалить репозиторий</string>
-    <string name="manga_interval_header">Следующее обновление</string>
     <string name="action_add_repo">Добавить репозиторий</string>
     <string name="information_empty_repos">У вас нет репозиториев.</string>
     <string name="label_extension_repos">Репозитории расширений</string>
     <string name="label_add_repo_input">URL-адрес репозитория</string>
     <string name="onboarding_storage_help_action">Руководство по хранению</string>
     <string name="onboarding_storage_help_info">Обновляетесь со старой версии и не знаете, что выбрать? Обратите внимание на руководство по хранению для большей информации.</string>
+    <string name="manga_interval_expected_update_soon">Скоро</string>
+    <string name="theme_nord">Север</string>
+    <string name="ext_revoke_trust">Не доверять неизвестным расширениям</string>
+    <string name="action_open_repo">Репозиторий open-source</string>
 </resources>

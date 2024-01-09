@@ -129,7 +129,6 @@
     <string name="ext_untrusted">Ikkje-tiltrudd</string>
     <string name="ext_uninstall">Avinstaller</string>
     <string name="untrusted_extension">Ikkje-tiltrudd utvidelse</string>
-    <string name="unofficial_extension_message">Denne utvidinga kjem ikkje frå den offisielle Tachiyomi-utvidingslista.</string>
     <string name="extension_api_error">Kunne ikkje henta utvidingslista</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_install_service_notif">Installerer utviding…</string>
@@ -236,7 +235,6 @@
     <string name="update_6hour">Kvar sjette time</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installer og start Shizuku for å bruka Shizuku som utvidingsinstallatør.</string>
     <string name="update_12hour">Kvar tolvte time</string>
-    <string name="ext_unofficial">Uoffisiell</string>
     <string name="obsolete_extension_message">Denne utvidinga er ikkje lengre tilgjengeleg.</string>
     <string name="ext_nsfw_warning">Kan innehalda NSFW (18+) innhald</string>
     <string name="pref_category_delete_chapters">Slett kapittel</string>

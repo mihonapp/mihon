@@ -83,7 +83,7 @@
     <string name="all">Tot</string>
     <string name="pref_library_update_restriction">Restriccions del dispositiu per a les actualitzacions automàtiques</string>
     <string name="charging">Quan s’estigui carregant</string>
-    <string name="pref_update_only_non_completed">Amb l’estat «Completat»</string>
+    <string name="pref_update_only_non_completed">Omet els elements amb l’estat «Completat»</string>
     <string name="pref_auto_update_manga_sync">Actualitza el progrés després de llegir</string>
     <string name="default_category">Categoria per defecte</string>
     <string name="default_category_summary">Demana-ho sempre</string>
@@ -96,12 +96,12 @@
     <string name="ext_trust">Confia-hi</string>
     <string name="ext_untrusted">No és de confiança</string>
     <string name="ext_uninstall">Desinstal·la</string>
-    <string name="untrusted_extension">Extensió no fiable</string>
-    <string name="untrusted_extension_message">Aquesta extensió s’ha signat amb un certificat que no és de confiança i no s’ha activat.
+    <string name="untrusted_extension">Extensió que no és de confiança</string>
+    <string name="untrusted_extension_message">Aquesta extensió l’ha signada algun autor desconegut i no s’ha carregat.
 \n
-\nUna extensió maliciosa podria llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
+\nLes extensions malicioses poden llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
 \n
-\nSi confieu en aquest certificat, accepteu aquests riscos.</string>
+\nSi confieu en el certificat d’aquesta extensió, accepteu aquests riscos.</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Anima les transicions de pàgina</string>
     <string name="pref_show_page_number">Mostra el número de pàgina</string>
@@ -370,8 +370,6 @@
     <string name="pref_true_color_summary">Redueix les bandes de colors, però pot afectar el rendiment</string>
     <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment externs. Configureu el seguiment d’elements individuals al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
-    <string name="unofficial_extension_message">Aquesta extensió no pertany a la llista d’extensions oficials.</string>
-    <string name="ext_unofficial">No oficial</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
     <string name="label_data">Dades</string>
     <string name="backup_restore_missing_sources">Manquen fonts:</string>
@@ -550,8 +548,8 @@
     <string name="clear_database_source_item_count">Hi ha %1$d elements a la base de dades que no són a la biblioteca</string>
     <string name="cancelled">Cancel·lada</string>
     <string name="library_errors_help">Per a obtenir ajuda per a resoldre errors d’actualització de la biblioteca, vegeu %1$s</string>
-    <string name="extension_api_error">No s’ha pogut obtenir la llista d’extensions</string>
-    <string name="pref_update_only_completely_read">Amb capítols no llegits</string>
+    <string name="extension_api_error">No s’han pogut obtenir les extensions disponibles</string>
+    <string name="pref_update_only_completely_read">Omet els elements amb capítols no llegits</string>
     <string name="save_chapter_as_cbz">Desa com a arxiu CBZ</string>
     <string name="backup_info">També hauríeu de desar còpies de les còpies de seguretat en altres llocs. Les còpies de seguretat poden contenir dades sensibles, incloent-hi les contrasenyes desades; aneu amb compte si les compartiu.</string>
     <string name="database_clean">No hi ha res que calgui buidar</string>
@@ -567,7 +565,7 @@
     <string name="action_show_manga">Mostra l’element</string>
     <string name="pref_navigate_pan">Fes panoràmiques les imatges amples</string>
     <string name="action_display_cover_only_grid">Graella només a la portada</string>
-    <string name="pref_update_only_started">Que no s’hagin començat</string>
+    <string name="pref_update_only_started">Omet els elements no començats</string>
     <string name="skipped_reason_completed">S’ha omès perquè la sèrie està completada</string>
     <string name="skipped_reason_not_started">S’ha omès perquè no hi ha cap capítol llegit</string>
     <string name="skipped_reason_not_caught_up">S’ha omès perquè hi ha capítols no llegits</string>
@@ -705,13 +703,10 @@
     <string name="pref_page_rotate">Rota les pàgines amples perquè s’ajustin a la pantalla</string>
     <string name="pref_debug_info">Informació de depuració</string>
     <string name="action_set_interval">Estableix l’interval</string>
-    <string name="action_filter_interval_custom">Interval d’obtenció personalitzat</string>
+    <string name="action_filter_interval_custom">Freqüència d’actualització personalitzat</string>
     <string name="action_sort_next_updated">Pròxima actualització prevista</string>
-    <string name="action_filter_interval_long">Obtén mensualment (28 dies)</string>
-    <string name="action_filter_interval_late">Endarrerit 10 o més dies</string>
-    <string name="action_filter_interval_dropped">Abandonat\? Endarrerit 20 o més dies i 2 mesos</string>
     <string name="action_ok">D’acord</string>
-    <string name="pref_update_only_in_release_period">Fora del període esperat de publicació</string>
+    <string name="pref_update_only_in_release_period">Preveu el moment del pròxim llançament</string>
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
@@ -719,7 +714,6 @@
     <string name="track_delete_remote_text">Elimina també de %s</string>
     <string name="track_delete_text">Se n’eliminarà el seguiment local.</string>
     <string name="skipped_reason_not_in_release_period">S’ha omès perquè no se n’espera cap publicació avui</string>
-    <string name="action_filter_interval_passed">Període de comprovació superat</string>
     <string name="delete_downloaded">Suprimeix els baixats</string>
     <string name="has_results">Té resultats</string>
     <string name="syncing_library">S’està sincronitzant la biblioteca</string>
@@ -767,7 +761,7 @@
     <string name="onboarding_action_finish">Comença</string>
     <string name="onboarding_storage_selection_required">Cal que seleccioneu una carpeta</string>
     <string name="onboarding_heading">Et donem la benvinguda!</string>
-    <string name="onboarding_guides_returning_user">Ja heu fet servir %s abans?</string>
+    <string name="onboarding_guides_returning_user">Heu reinstal·lat %s?</string>
     <string name="onboarding_action_skip">Omet</string>
     <string name="onboarding_action_next">Següent</string>
     <string name="onboarding_description">Primer cal configurar unes quantes coses. Sempre podràs canviar aquestes opcions a la configuració.</string>
@@ -785,8 +779,24 @@
     <string name="onboarding_permission_notifications_description">Rebeu notificacions quan hi hagi actualitzacions de la biblioteca i més.</string>
     <string name="onboarding_permission_action_grant">Permet</string>
     <string name="available_disk_space_info">Disponible: %1$s / Total: %2$s</string>
-    <string name="manga_interval_expected_update">La pròxima actualització es farà pels volts de %s</string>
+    <string name="manga_interval_expected_update">S’ha previst que se’n publicaran nous capítols pels volts de %1$s, es comprova cada %2$s.</string>
     <string name="invalid_backup_file_error">Error complet:</string>
     <string name="ext_permission_install_apps_warning">Calen permisos per a instal·lar extensions. Premeu aquí per a concedir-les.</string>
     <string name="private_settings">Inclou-hi configuració sensible (per exemple, testimonis d’autenticació dels serveis de seguiment)</string>
+    <string name="label_extension_repos">Repositoris d’extensions</string>
+    <string name="information_empty_repos">No heu definit cap repositori.</string>
+    <string name="action_delete_repo">Suprimeix el repositori</string>
+    <string name="action_add_repo_message">Afegiu repositoris addicionals al Tachiyomi. Ha de ser un URL que acabi amb «index.min.json».</string>
+    <string name="error_repo_exists">Aquest repositori ja existeix!</string>
+    <string name="invalid_repo_name">URL del repositori invàlid</string>
+    <string name="delete_repo_confirmation">Voleu suprimir el repositori «%s»?</string>
+    <string name="onboarding_storage_help_action">Guia d’emmagatzematge</string>
+    <string name="onboarding_storage_help_info">Heu actualitzat d’una versió més antiga i no sabeu què heu de seleccionar? Consulteu la guia d’emmagatzematge per a més informació.</string>
+    <string name="theme_nord">Nòrdic</string>
+    <string name="pref_library_update_smart_update">Actualitzacions intel·lgents</string>
+    <string name="ext_revoke_trust">Revoca les extensions de confiança desconegudes</string>
+    <string name="action_add_repo">Afegeix un repositori</string>
+    <string name="label_add_repo_input">URL del repositori</string>
+    <string name="manga_interval_expected_update_soon">Aviat</string>
+    <string name="manga_interval_custom_amount">Freqüència d’actualització personalitzada:</string>
 </resources>

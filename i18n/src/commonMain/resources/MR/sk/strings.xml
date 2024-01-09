@@ -459,7 +459,6 @@
     <string name="off">Vyp.</string>
     <string name="download_insufficient_space">Nepodarilo sa stiahnuť kapitoly z dôvodu nedostatku úložného priestoru</string>
     <string name="action_sort_count">Celkový počet</string>
-    <string name="ext_unofficial">Neoficiálne</string>
     <string name="ext_installer_legacy">Pôvodný</string>
     <string name="automatic_background">Automatický</string>
     <string name="tapping_inverted_none">Žiadne</string>
@@ -526,7 +525,6 @@
     <string name="manga_cover">Obal</string>
     <string name="cover_saved">Obal uložený</string>
     <string name="delete_category_confirmation">Prajete si vymazať kategóriu „%s“\?</string>
-    <string name="unofficial_extension_message">Toto rozšírenie nie je z oficiálneho zoznamu rozšírení Tachiyomi.</string>
     <string name="tapping_inverted_vertical">Vertikálne</string>
     <string name="backup_restore_missing_trackers">Sledovače, do ktorých nie ste prihlásení:</string>
     <string name="pref_dns_over_https">DNS cez HTTPS (DoH)</string>

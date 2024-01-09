@@ -377,8 +377,6 @@
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene alcuna voce di libreria.</string>
     <string name="invalid_backup_file">File di backup invalido</string>
-    <string name="unofficial_extension_message">Questa estensione non è dalla lista ufficiale.</string>
-    <string name="ext_unofficial">Non ufficiale</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove copertine e descrizioni durante l\'aggiornamento della libreria</string>
     <string name="pref_library_update_refresh_metadata">Ricarica metadati automaticamente</string>
     <string name="action_display_show_tabs">Mostra schede delle categorie</string>
@@ -707,14 +705,10 @@
     <string name="pref_chapter_swipe_start">Azione di scorrimento a sinistra</string>
     <string name="pref_library_columns_per_row">%d per riga</string>
     <string name="action_set_interval">Imposta intervallo</string>
-    <string name="action_filter_interval_long">Recupera mensilmente (28 giorni)</string>
-    <string name="action_filter_interval_dropped">Abbandonato\? In ritardo tra 20 giorni e 2 mesi</string>
     <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
     <string name="intervals_header">Intervalli</string>
     <string name="manga_display_interval_title">Stima ogni</string>
     <string name="action_filter_interval_custom">Intervallo di recupero personalizzato</string>
-    <string name="action_filter_interval_passed">Periodo di controllo superato</string>
-    <string name="action_filter_interval_late">In ritardo di 10+ giorni</string>
     <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
     <string name="manga_display_modified_interval_title">Imposta l\'aggiornamento ogni</string>
     <string name="skipped_reason_not_in_release_period">Saltato perché oggi non era previsto alcun rilascio</string>

@@ -182,7 +182,6 @@
     <string name="action_search_settings">Keresési beállítások</string>
     <string name="action_sort_date_added">Dátum hozzáadva</string>
     <string name="untrusted_extension">Nem megbízható bővítmény</string>
-    <string name="ext_unofficial">Nem hivatalos</string>
     <string name="ext_obsolete">Elavult</string>
     <string name="ext_updates_pending">Függőben lévő frissítések</string>
     <string name="pref_library_update_refresh_metadata_summary">Új borító és részletek keresése a könyvtár frissítésekor</string>
@@ -196,7 +195,6 @@
     <string name="pref_show_reading_mode">Olvasó mód mutatása</string>
     <string name="ext_nsfw_warning">Tartalmazhat felnőtt (18+) tartalmat</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="unofficial_extension_message">Ez a bővítmény nem a hivatalos Tachiyomi bővítménylistából származik.</string>
     <string name="obsolete_extension_message">Ez a bővítmény nem elérhető többé. Előfordulhat, hogy nem működik megfelelően, és problémákat okozhat az alkalmazásban. Az eltávolítása javasolt.</string>
     <string name="add_to_library">Könyvtárhoz adás</string>
     <string name="unknown_status">Ismeretlen állapot</string>
@@ -689,10 +687,6 @@
     <string name="pref_skip_dupe_chapters">Duplikált fejezetek átugrása</string>
     <string name="action_set_interval">Időköz állítása</string>
     <string name="action_filter_interval_custom">Egyedi lekérési időköz</string>
-    <string name="action_filter_interval_long">Lekérés hónaponta (28 nap)</string>
-    <string name="action_filter_interval_late">Késő 10+ ellenőrzés</string>
-    <string name="action_filter_interval_dropped">Dobott\? Késő 20+ és 2 hónap</string>
-    <string name="action_filter_interval_passed">Átment az ellenőrzési időszakon</string>
     <string name="action_sort_next_updated">Következő várt frissítés</string>
     <string name="pref_double_tap_zoom">Dupla koppintás a nagyításhoz</string>
     <string name="pref_hide_in_library_items">Már könyvtári bejegyzések elrejtése</string>

@@ -60,7 +60,6 @@
     <string name="dropped">Alde batera utzia</string>
     <string name="status">Egoera</string>
     <string name="untrusted_extension">Fidagarria ez den luzapena</string>
-    <string name="unofficial_extension_message">Luzapen hau ez da Tachiyomi-ren luzapenen zerrenda ofizialekoa.</string>
     <string name="obsolete_extension_message">Luzapen hau jada ez dago eskuragarri.</string>
     <string name="disabled">Desgaitua</string>
     <string name="invalid_backup_file">Babeskopia fitxategi baliogabea</string>
@@ -100,7 +99,6 @@
     <string name="ext_pending">Egiteke</string>
     <string name="ext_downloading">Deskargatzen</string>
     <string name="ext_installing">Instalatzen</string>
-    <string name="ext_unofficial">Ez-ofiziala</string>
     <string name="ext_nsfw_warning">NSFW (18+) edukia izan dezake</string>
     <string name="ext_installer_pref">Instalatzailea</string>
     <string name="pref_fullscreen">Pantaila osoa</string>
@@ -583,7 +581,6 @@
     <string name="label_started">Hasia</string>
     <string name="label_local">Lokala</string>
     <string name="label_downloaded">Deskargatuak</string>
-    <string name="action_filter_interval_long">Jaso hilabetero (28 egun)</string>
     <string name="action_copy_to_clipboard">Kopiatu arbelera</string>
     <string name="action_not_now">Orain ez</string>
     <string name="delete_downloaded">Ezabatu deskargatuak</string>

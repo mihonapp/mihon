@@ -187,12 +187,10 @@
     <string name="ext_installing">Pag-instalar</string>
     <string name="ext_installed">Gi-install</string>
     <string name="ext_trust">Pagsalig</string>
-    <string name="ext_unofficial">Dili opisyal</string>
     <string name="ext_untrusted">Dili kasaligan</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="untrusted_extension">Dili kasaligan nga extension</string>
     <string name="obsolete_extension_message">Kini nga extension dili na magamit.</string>
-    <string name="unofficial_extension_message">Kini nga extension dili gikan sa opisyal nga listahan sa mga extension sa Tachiyomi.</string>
     <string name="extension_api_error">Napakyas sa pagkuha sa listahan sa mga extension</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="ext_nsfw_warning">Ang mga tinubdan gikan niini nga extension mahimong adunay sulod nga NSFW (18+)</string>

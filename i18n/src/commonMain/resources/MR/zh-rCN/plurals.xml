@@ -28,13 +28,13 @@
         <item quantity="other">共 %1$s 章</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="other">%d 个记录平台</item>
+        <item quantity="other">%d个进度记录平台</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="other">跳过了 %d 章，可能是图源没有这些章节，或者被筛选规则排除了</item>
     </plurals>
     <plurals name="relative_time">
-        <item quantity="other">%1$d 天前</item>
+        <item quantity="other">%1$d天前</item>
     </plurals>
     <plurals name="next_unread_chapters">
         <item quantity="other">后续 %d 个未读章节</item>
@@ -43,10 +43,10 @@
         <item quantity="other">后续 %d 章</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="other">缺少 %1$s 章</item>
+        <item quantity="other">缺少%1$s章</item>
     </plurals>
     <plurals name="day">
-        <item quantity="other">%d 天</item>
+        <item quantity="other">%d天</item>
     </plurals>
     <plurals name="num_repos">
         <item quantity="other">%d 仓库</item>

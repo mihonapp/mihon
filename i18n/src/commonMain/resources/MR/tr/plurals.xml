@@ -64,4 +64,8 @@
         <item quantity="one">1 gün</item>
         <item quantity="other">%d gün</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d depo</item>
+        <item quantity="other">%d depo</item>
+    </plurals>
 </resources>

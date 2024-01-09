@@ -250,11 +250,9 @@
     <string name="label_help">Hjelp</string>
     <string name="action_display_download_badge">Last ned kapitler</string>
     <string name="pref_library_columns">Rutenettstørrelse</string>
-    <string name="untrusted_extension_message">Denne utvidelsen ble signert av en ukjent forfatter og ble dermed ikke lastet inn.
+    <string name="untrusted_extension_message">Skadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode.
 \n
-\nSkadelige utvidelser kan lese alle lagrede innloggingsdetaljer eller kjøre vilkårlig kode.
-\n
-\nVed å godta dette sertifikatet til utvidelsen, aksepterer du disse risikoene.</string>
+\nVed å godta denne utvidelsen, aksepterer du disse risikoene.</string>
     <string name="pref_double_tap_anim_speed">Animasjonshastighet ved dobbelklikk</string>
     <string name="pager_viewer">Sider</string>
     <string name="confirm_set_image_as_cover">Bruk dette bildet som omslag\?</string>
@@ -339,7 +337,6 @@
     <string name="hide_notification_content">Skjul merknadsinnhold</string>
     <string name="secure_screen_summary">Sikker skjerm skjuler programinnhold ved bytting av programmer og blokker skjermavbildninger</string>
     <string name="label_downloaded_only">Kun nedlastet</string>
-    <string name="ext_unofficial">Uoffisiell</string>
     <string name="viewer">Lesemodus</string>
     <string name="information_cloudflare_bypass_failure">Klarte ikke bypassere Cloudflare</string>
     <string name="updating_library">Oppdaterer bibliotek</string>
@@ -374,7 +371,6 @@
     <string name="restoring_backup_canceled">Avbrutt gjenoppretting</string>
     <string name="restore_in_progress">Gjenoppretting allerede underveis</string>
     <string name="pref_show_reading_mode">Vis lesemodus</string>
-    <string name="unofficial_extension_message">Denne utvidelsen kommer ikke fra den offisielle listen.</string>
     <string name="action_disable">deaktivere</string>
     <string name="action_disable_all">deaktiver alle</string>
     <string name="action_enable_all">aktiver alle</string>
@@ -569,7 +565,7 @@
     <string name="pref_navigate_pan">Panorer brede bilder</string>
     <string name="clear_database_source_item_count">%1$d ikke-bibliotek oppføringer i databasen</string>
     <string name="action_move_to_top_all_for_series">Flytt serien til toppen</string>
-    <string name="extension_api_error">Kunne ikke hente utvidelseslisten</string>
+    <string name="extension_api_error">Klarte ikke å hente tilgjengelige utvidelser</string>
     <string name="rotation_reverse_portrait">Omvendt portrett</string>
     <string name="pref_auto_clear_chapter_cache">Tøm kapittel hurtigbufferen ved oppstart av appen</string>
     <string name="notification_update_error">%1$d oppdatering(er) mislyktes</string>
@@ -633,7 +629,7 @@
     <string name="action_search_hint">Søk…</string>
     <string name="action_remove_everything">Fjern alt</string>
     <string name="ext_info_version">Versjon</string>
-    <string name="custom_cover">Tilpasset omslag</string>
+    <string name="custom_cover">Egendefinert omslag</string>
     <string name="popular">Populært</string>
     <string name="appwidget_updates_description">Se de nylig oppdaterte biblotekoppføringene dine</string>
     <string name="appwidget_unavailable_locked">Moduler er ikke tilgjengelig når applås er aktivert</string>
@@ -703,13 +699,9 @@
     <string name="manga_display_modified_interval_title">Sett til å oppdatere hver</string>
     <string name="skipped_reason_not_in_release_period">Hoppet over fordi ingen utgivelse var forventet i dag</string>
     <string name="pref_chapter_swipe">Kapittelsveip</string>
-    <string name="action_filter_interval_long">Oppdater månedlig (28 dager)</string>
     <string name="action_set_interval">Sett intervall</string>
-    <string name="action_filter_interval_custom">Tilpasset oppdateringsintervall</string>
-    <string name="action_filter_interval_late">Sen 10+ sjekk</string>
-    <string name="action_filter_interval_passed">Passert sjekkperiode</string>
+    <string name="action_filter_interval_custom">Egendefinert oppdateringsintervall</string>
     <string name="action_sort_next_updated">Neste forventede oppdatering</string>
-    <string name="action_filter_interval_dropped">Droppet\? Sen 20+ og 2 måneder</string>
     <string name="pref_chapter_swipe_end">Sveip til høyre handling</string>
     <string name="intervals_header">Intervaller</string>
     <string name="manga_display_interval_title">Anslå hver</string>
@@ -777,8 +769,7 @@
 \nEn dedikert mappe anbefales.
 \n
 \nValgt mappe: %2$s</string>
-    <string name="repo_extension_message">Denne utvidelsen er fra en ekstern pakkebrønn. Trykk for å se pakkebrønnen.</string>
-    <string name="manga_interval_expected_update">Neste oppdatering forventes om omtrent %1$s, sjekker omtrent hver %2$s</string>
+    <string name="manga_interval_expected_update">Nye kapitler forventes om omtrent %1$s, sjekker omtrent hver %2$s.</string>
     <string name="onboarding_permission_notifications">Tillat varslinger</string>
     <string name="onboarding_permission_install_apps">Tillat å installere apper</string>
     <string name="available_disk_space_info">Tilgjengelig: %1$s / Totalt: %2$s</string>
@@ -796,10 +787,15 @@
     <string name="ext_permission_install_apps_warning">Tillatelse er nødvendig for å installere utvidelser. Trykk her for å tillate.</string>
     <string name="delete_repo_confirmation">Ønsker du å slette pakkebrønnen \"%s\"?</string>
     <string name="action_delete_repo">Slett pakkebrønn</string>
-    <string name="manga_interval_header">Neste oppdatering</string>
     <string name="action_add_repo">Legg til pakkebrønn</string>
     <string name="private_settings">Inkluder sensitive innstillinger (f.eks., innloggingstoken for sporer)</string>
     <string name="information_empty_repos">Du har ingen pakkebrønner satt opp.</string>
     <string name="onboarding_permission_action_grant">Tillat</string>
     <string name="label_extension_repos">Utvidelsepakkebrønner</string>
+    <string name="onboarding_storage_help_info">Oppdaterer du fra en eldre versjon og er usikker på hva du skal velge? Sjekk lagringsguiden for mer informasjon.</string>
+    <string name="onboarding_storage_help_action">Lagringsguiden</string>
+    <string name="theme_nord">Nord</string>
+    <string name="manga_interval_expected_update_soon">Snart</string>
+    <string name="ext_revoke_trust">Fjern tilliten til ukjente utvidelser</string>
+    <string name="action_open_repo">Åpne pakkebrønnen</string>
 </resources>

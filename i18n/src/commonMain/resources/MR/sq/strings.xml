@@ -239,7 +239,6 @@
     <string name="appwidget_unavailable_locked">Miniaplikacioni nuk ofrohet kur kyçja e aplikacionit është aktivizuar</string>
     <string name="ext_pending">Në pritje</string>
     <string name="ext_installing">duke instaluar</string>
-    <string name="ext_unofficial">Jozyrtare</string>
     <string name="ext_untrusted">E pabesueshme</string>
     <string name="ext_app_info">Informacioni i aplikacionit</string>
     <string name="untrusted_extension">Shtesë pabesueshme</string>
@@ -289,7 +288,6 @@
     <string name="ext_trust">Besim</string>
     <string name="ext_downloading">Po shkarkohet</string>
     <string name="ext_uninstall">Çinstaloni</string>
-    <string name="unofficial_extension_message">Kjo shtesë nuk është nga lista zyrtare e shtesave Tachiyomi.</string>
     <string name="ext_installer_legacy">Trashëgimia</string>
     <string name="untrusted_extension_message">Kjo shtesë u nënshkrua me një certifikatë të pabesueshme dhe nuk u aktivizua.
 \n

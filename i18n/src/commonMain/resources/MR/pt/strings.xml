@@ -370,7 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as definições do aparelho</string>
     <string name="pref_refresh_library_covers">Atualizar capas da biblioteca</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços de monitoramento. Configure o monitoramento para itens individuais a partir dos botões de monitoramento deles.</string>
-    <string name="unofficial_extension_message">Esta extensão não vem da lista oficial de extensões do Tachiyomi.</string>
     <string name="pref_show_reading_mode_summary">Mostra brevemente o modo atual quando o leitor é aberto</string>
     <string name="page_list_empty_error">Nenhuma página encontrada</string>
     <string name="sort_by_upload_date">Por data de envio</string>
@@ -380,7 +379,6 @@
     <string name="invalid_backup_file_missing_manga">O backup não possui nenhum item da biblioteca.</string>
     <string name="invalid_backup_file">Ficheiro de cópia de segurança invalido</string>
     <string name="pref_show_reading_mode">Mostrar modo de leitura</string>
-    <string name="ext_unofficial">Não oficial</string>
     <string name="pref_library_update_refresh_metadata_summary">Procurar nova capa e detalhes quando a biblioteca atualizar</string>
     <string name="pref_library_update_refresh_metadata">Atualizar automaticamente os metadados</string>
     <string name="action_display_show_tabs">Mostrar abas de categoria</string>
@@ -704,7 +702,6 @@
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para aproximar</string>
     <string name="action_set_interval">Definir intervalo</string>
-    <string name="action_filter_interval_long">Buscar mensalmente (28 dias)</string>
     <string name="pref_update_only_in_release_period">Fora do período esperado de lançamento</string>
     <string name="pref_debug_info">Informações de depuração</string>
     <string name="pref_chapter_swipe">Trocar de capítulo</string>

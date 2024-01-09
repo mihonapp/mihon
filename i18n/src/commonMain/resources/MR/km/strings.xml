@@ -191,7 +191,6 @@
     <string name="label_backup">បម្រុងទុក និងស្ដារឡើងវិញ</string>
     <string name="delete_downloaded">លុបអ្វីដែលបានទាញហើយ</string>
     <string name="label_local">ក្នុងទូរស័ព្ទ</string>
-    <string name="action_filter_interval_passed">សូមឆែកមើលកំឡុងពេល</string>
     <string name="on">បើក</string>
     <string name="action_sort_category">តម្រៀបតាមថ្នាក់ក្រម</string>
     <string name="action_update_category">ធ្វើបច្ចុប្បន្នភាពថ្នាក់ក្រម</string>
@@ -211,5 +210,4 @@
     <string name="action_sort_last_manga_update">ពិនិត្យបច្ចុប្បន្នភាពចុងក្រោយ</string>
     <string name="delete_category">លុបថ្នាក់ក្រម</string>
     <string name="action_sort_next_updated">ភាគថ្មីរំពឹងទុកនៅ</string>
-    <string name="action_filter_interval_long">ទាញចូលប្រចាំខែ (28 ថ្ងៃ)</string>
 </resources>

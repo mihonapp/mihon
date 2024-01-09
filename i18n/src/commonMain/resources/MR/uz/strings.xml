@@ -207,7 +207,6 @@
     <string name="ext_downloading">Yuklanmoqda</string>
     <string name="ext_installing">O\'rnatilmoqda</string>
     <string name="obsolete_extension_message">Bu kangaytma boshqa mavjud emas. U noto\'g\'ri ishlashi, va ilovada muammolar keltirib chiqarishi mumkin.</string>
-    <string name="unofficial_extension_message">Usbu kengaytma Tachiyomi rasmiy kangaytmalari ro\'yhatiga kirmaydi.</string>
     <string name="extension_api_error">Kengaytmalar ro\'yhatini olib bo\'lmadi</string>
     <string name="pref_category_nsfw_content">NSFW (18+) manbaalari</string>
     <string name="secure_screen_summary">Ilova himoyasi dasturlar orasida almashishda ilova ekranini yashiradi, va skrinshot qilish imkonini cheklaydi</string>
@@ -220,7 +219,6 @@
     <string name="landscape">Landshaft</string>
     <string name="update_48hour">Har 2 kunda</string>
     <string name="ext_uninstall">O\'chirish</string>
-    <string name="ext_unofficial">Norasmiy</string>
     <string name="restrictions">Cheklovlar: %s</string>
     <string name="update_12hour">Har 12 soatda</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Shizukudan kengaytma o\'rnatishda foydalanish uchun, Shizukuni o\'rnating va ishga tushuring.</string>

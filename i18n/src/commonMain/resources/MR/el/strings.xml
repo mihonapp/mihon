@@ -370,8 +370,6 @@
     <string name="battery_optimization_setting_activity_not_found">Δεν ήταν δυνατό το άνοιγμα των ρυθμίσεων της συσκευής</string>
     <string name="tracking_info">Μονόδρομος συγχρονισμός για ενημέρωση των υπηρεσιών εξωτερικής παρακολούθησης προόδου κεφαλαίων. Ρυθμίστε την παρακολούθηση για μεμονωμένες καταχωρήσεις από το κουμπί παρακολούθησης τους.</string>
     <string name="pref_refresh_library_covers">Ανανέωση εξώφυλλων βιβλιοθήκης</string>
-    <string name="unofficial_extension_message">Αυτή η επέκταση δεν προέρχεται από την επίσημη λίστα.</string>
-    <string name="ext_unofficial">Ανεπίσημη</string>
     <string name="sort_by_upload_date">Από ημερομηνία μεταφόρτωσης</string>
     <string name="label_data">Δεδομένα</string>
     <string name="backup_restore_missing_sources">Πηγές που λείπουν:</string>
@@ -708,14 +706,10 @@
     <string name="pref_library_columns_per_row">%d ανά σειρά</string>
     <string name="action_set_interval">Ορισμός χρονικού διαστήματος</string>
     <string name="action_filter_interval_custom">Προσαρμοσμένο διάστημα ανάκτησης</string>
-    <string name="action_filter_interval_dropped">Dropped\? Αργά 20+ και 2 μήνες</string>
-    <string name="action_filter_interval_late">Αργός έλεγχος 10+</string>
-    <string name="action_filter_interval_passed">Πέρασε την περίοδο ελέγχου</string>
     <string name="pref_update_only_in_release_period">Εκτός αναμενόμενης περιόδου κυκλοφορίας</string>
     <string name="intervals_header">Διαστήματα</string>
     <string name="manga_display_interval_title">Εκτίμηση κάθε</string>
     <string name="manga_display_modified_interval_title">Ρύθμιση για ενημέρωση κάθε</string>
-    <string name="action_filter_interval_long">Ανάκτηση μηνιαίως (28 ημέρες)</string>
     <string name="action_sort_next_updated">Επόμενη αναμενόμενη ενημέρωση</string>
     <string name="skipped_reason_not_in_release_period">Παραλείφθηκε επειδή δεν αναμενόταν κυκλοφορία σήμερα</string>
     <string name="action_ok">Εντάξει</string>

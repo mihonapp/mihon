@@ -4,11 +4,11 @@ import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.domain.source.interactor.CreateSourceRepo
-import eu.kanade.domain.source.interactor.DeleteSourceRepo
-import eu.kanade.domain.source.interactor.GetSourceRepos
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
+import eu.kanade.domain.extension.interactor.CreateExtensionRepo
+import eu.kanade.domain.extension.interactor.DeleteExtensionRepo
+import eu.kanade.domain.extension.interactor.GetExtensionRepos
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -19,9 +19,9 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class ExtensionReposScreenModel(
-    private val getSourceRepos: GetSourceRepos = Injekt.get(),
-    private val createSourceRepo: CreateSourceRepo = Injekt.get(),
-    private val deleteSourceRepo: DeleteSourceRepo = Injekt.get(),
+    private val getExtensionRepos: GetExtensionRepos = Injekt.get(),
+    private val createExtensionRepo: CreateExtensionRepo = Injekt.get(),
+    private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -29,11 +29,11 @@ class ExtensionReposScreenModel(
 
     init {
         screenModelScope.launchIO {
-            getSourceRepos.subscribe()
+            getExtensionRepos.subscribe()
                 .collectLatest { repos ->
                     mutableState.update {
                         RepoScreenState.Success(
-                            repos = repos.toImmutableList(),
+                            repos = repos.toImmutableSet(),
                         )
                     }
                 }
@@ -47,8 +47,8 @@ class ExtensionReposScreenModel(
      */
     fun createRepo(name: String) {
         screenModelScope.launchIO {
-            when (createSourceRepo.await(name)) {
-                is CreateSourceRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
+            when (createExtensionRepo.await(name)) {
+                is CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
                 else -> {}
             }
         }
@@ -61,7 +61,7 @@ class ExtensionReposScreenModel(
      */
     fun deleteRepo(repo: String) {
         screenModelScope.launchIO {
-            deleteSourceRepo.await(repo)
+            deleteExtensionRepo.await(repo)
         }
     }
 
@@ -101,7 +101,7 @@ sealed class RepoScreenState {
 
     @Immutable
     data class Success(
-        val repos: ImmutableList<String>,
+        val repos: ImmutableSet<String>,
         val dialog: RepoDialog? = null,
     ) : RepoScreenState() {
 
