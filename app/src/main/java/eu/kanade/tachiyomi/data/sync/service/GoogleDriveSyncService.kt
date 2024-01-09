@@ -19,6 +19,8 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import eu.kanade.tachiyomi.R
+import com.google.gson.Gson
+import com.google.gson.stream.JsonWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -128,17 +130,21 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
     }
 
     override suspend fun pushSyncData(syncData: SyncData) {
-        val jsonData = json.encodeToString(syncData)
         val drive = googleDriveService.driveService
-            ?: throw Exception(context.getString(R.string.google_drive_not_signed_in))
+            ?: throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
 
         val fileList = getFileList(drive)
 
         val byteArrayOutputStream = ByteArrayOutputStream()
+
         withContext(Dispatchers.IO) {
             val gzipOutputStream = GZIPOutputStream(byteArrayOutputStream)
-            gzipOutputStream.write(jsonData.toByteArray(Charsets.UTF_8))
-            gzipOutputStream.close()
+            val jsonWriter = JsonWriter(OutputStreamWriter(gzipOutputStream, Charsets.UTF_8))
+            val gson = Gson()
+
+            jsonWriter.use { jWriter ->
+                gson.toJson(syncData, SyncData::class.java, jWriter)
+            }
         }
 
         val byteArrayContent = ByteArrayContent("application/octet-stream", byteArrayOutputStream.toByteArray())
@@ -154,6 +160,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                 val fileMetadata = File().apply {
                     name = remoteFileName
                     mimeType = "application/gzip"
+                    parents = listOf("appDataFolder")
                 }
                 val uploadedFile = drive.files().create(fileMetadata, byteArrayContent)
                     .setFields("id")
@@ -168,19 +175,20 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             deleteLockFile(drive)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR) { "Failed to push or update sync data: ${e.message}" }
+            throw Exception(context.stringResource(MR.strings.error_uploading_sync_data) + ": ${e.message}")
         }
     }
 
-    private fun getFileList(drive: Drive): MutableList<File> {
+    private fun getAppDataFileList(drive: Drive): MutableList<File> {
         try {
-            // Search for the existing file by name
-            val query = "mimeType='application/gzip' and trashed = false and name = '$remoteFileName'"
-            val fileList = drive.files().list().setQ(query).execute().files
-            Log.d("GoogleDrive", "File list: $fileList")
+            // Search for the existing file by name in the appData folder
+            val query = "mimeType='application/gzip' and name = '$remoteFileName'"
+            val fileList = drive.files().list().setSpaces("appDataFolder").setQ(query).setFields("files(id, name, createdTime)").execute().files
+            Log.d("GoogleDrive", "AppData folder file list: $fileList")
 
             return fileList
         } catch (e: Exception) {
-            Log.e("GoogleDrive", "Error no sync data found: ${e.message}")
+            Log.e("GoogleDrive", "Error no sync data found in appData folder: ${e.message}")
             return mutableListOf()
         }
     }
@@ -318,7 +326,7 @@ class GoogleDriveService(private val context: Context) {
             NetHttpTransport(),
             jsonFactory,
             secrets,
-            listOf(DriveScopes.DRIVE_FILE),
+            listOf(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_APPDATA),
         ).setAccessType("offline").build()
 
         return flow.newAuthorizationUrl()
