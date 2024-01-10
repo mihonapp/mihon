@@ -137,7 +137,8 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         return withContext(Dispatchers.IO) {
             try {
                 val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
-                val syncData = json.decodeFromString<SyncData>(gzipInputStream.reader(Charsets.UTF_8).readText())
+                val jsonString = gzipInputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val syncData = json.decodeFromString(SyncData.serializer(), jsonString)
                 logcat(LogPriority.DEBUG) { "JSON deserialized successfully" }
                 syncData
             } catch (e: Exception) {
@@ -157,10 +158,10 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         val byteArrayOutputStream = ByteArrayOutputStream()
 
         withContext(Dispatchers.IO) {
+            val jsonData = json.encodeToString(syncData)
             val gzipOutputStream = GZIPOutputStream(byteArrayOutputStream)
-            gzipOutputStream.writer(Charsets.UTF_8).use { writer ->
-                writer.write(json.encodeToString(syncData))
-            }
+            gzipOutputStream.write(jsonData.toByteArray(Charsets.UTF_8))
+            gzipOutputStream.close()
             logcat(LogPriority.DEBUG) { "JSON serialized successfully" }
         }
 
