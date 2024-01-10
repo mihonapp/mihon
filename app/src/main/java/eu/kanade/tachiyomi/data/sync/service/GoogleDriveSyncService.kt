@@ -67,40 +67,46 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
     private val googleDriveService = GoogleDriveService(context)
 
     override suspend fun beforeSync() {
-        googleDriveService.refreshToken()
-        val drive = googleDriveService.driveService ?: throw Exception("Google Drive service not initialized")
+        try {
+            googleDriveService.refreshToken()
+            val drive = googleDriveService.driveService ?: throw Exception("Google Drive service not initialized")
 
-        var backoff = 2000L // Start with 2 seconds
+            var backoff = 2000L
 
-        while (true) {
-            val lockFiles = findLockFile(drive) // Fetch the current list of lock files
+            while (true) {
+                val lockFiles = findLockFile(drive)
+                logcat(LogPriority.DEBUG) { "Found ${lockFiles.size} lock file(s)" }
 
-            when {
-                lockFiles.isEmpty() -> {
-                    // No lock file exists, try to create a new one
-                    createLockFile(drive)
-                }
-                lockFiles.size == 1 -> {
-                    // Exactly one lock file exists
-                    val lockFile = lockFiles.first()
-                    val createdTime = Instant.parse(lockFile.createdTime.toString())
-                    val ageMinutes = java.time.Duration.between(createdTime, Instant.now()).toMinutes()
-                    if (ageMinutes <= 3) {
-                        // Lock file is new and presumably held by this process, break the loop to proceed
-                        break
-                    } else {
-                        // Lock file is old, delete and attempt to create a new one
-                        deleteLockFile(drive)
+                when {
+                    lockFiles.isEmpty() -> {
+                        logcat(LogPriority.DEBUG) { "No lock file found, creating a new one" }
                         createLockFile(drive)
                     }
+                    lockFiles.size == 1 -> {
+                        val lockFile = lockFiles.first()
+                        val createdTime = Instant.parse(lockFile.createdTime.toString())
+                        val ageMinutes = java.time.Duration.between(createdTime, Instant.now()).toMinutes()
+                        logcat(LogPriority.DEBUG) { "Lock file age: $ageMinutes minutes" }
+                        if (ageMinutes <= 3) {
+                            logcat(LogPriority.DEBUG) { "Lock file is new, proceeding with sync" }
+                            break
+                        } else {
+                            logcat(LogPriority.DEBUG) { "Lock file is old, deleting and creating a new one" }
+                            deleteLockFile(drive)
+                            createLockFile(drive)
+                        }
+                    }
+                    else -> {
+                        logcat(LogPriority.DEBUG) { "Multiple lock files found, applying backoff" }
+                        delay(backoff) // Apply backoff strategy
+                        backoff = (backoff * 2).coerceAtMost(32000L)
+                        logcat(LogPriority.DEBUG) { "Backoff increased to $backoff milliseconds" }
+                    }
                 }
-                else -> {
-                    // More than one lock file exists, likely due to a race condition
-                    delay(backoff) // Apply backoff strategy
-                    backoff = (backoff * 2).coerceAtMost(32000L) // Max backoff of 32 seconds
-                }
+                logcat(LogPriority.DEBUG) { "Loop iteration complete, backoff time: $backoff" }
             }
-            // The loop continues until it can confirm that there's exactly one new lock file.
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "Error in GoogleDrive beforeSync: ${e.message}" }
         }
     }
 
@@ -199,9 +205,11 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
     private fun createLockFile(drive: Drive) {
         try {
-            val fileMetadata = File()
-            fileMetadata.name = lockFileName
-            fileMetadata.mimeType = "text/plain"
+            val fileMetadata = File().apply {
+                name = lockFileName
+                mimeType = "text/plain"
+                parents = listOf("appDataFolder")
+            }
 
             // Create an empty content to upload as the lock file
             val emptyContent = ByteArrayContent.fromString("text/plain", "")
