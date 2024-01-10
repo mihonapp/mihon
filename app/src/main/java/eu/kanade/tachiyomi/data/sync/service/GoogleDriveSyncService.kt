@@ -188,12 +188,12 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             // Search for the existing file by name in the appData folder
             val query = "mimeType='application/gzip' and name = '$remoteFileName'"
             val fileList = drive.files()
-                    .list()
-                    .setSpaces("appDataFolder")
-                    .setQ(query)
-                    .setFields("files(id, name, createdTime)")
-                    .execute()
-                    .files
+                .list()
+                .setSpaces("appDataFolder")
+                .setQ(query)
+                .setFields("files(id, name, createdTime)")
+                .execute()
+                .files
             Log.d("GoogleDrive", "AppData folder file list: $fileList")
 
             return fileList
@@ -277,7 +277,9 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             } else {
                 for (file in appDataFileList) {
                     drive.files().delete(file.id).execute()
-                    logcat(LogPriority.DEBUG) { "Deleted sync data file in appData folder of Google Drive with file ID: ${file.id}" }
+                    logcat(
+                        LogPriority.DEBUG,
+                    ) { "Deleted sync data file in appData folder of Google Drive with file ID: ${file.id}" }
                 }
                 DeleteSyncDataStatus.SUCCESS
             }
