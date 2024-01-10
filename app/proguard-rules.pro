@@ -81,6 +81,3 @@
 
 # Google OAuth
 -keep class com.google.api.client.** { *; }
-
-# Keep backup models, otherwise gson fails on release builds.
--keep class eu.kanade.tachiyomi.data.backup.models.** { *; }

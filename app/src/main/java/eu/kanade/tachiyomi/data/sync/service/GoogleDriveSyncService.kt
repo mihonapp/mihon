@@ -18,11 +18,10 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
-import com.google.gson.Gson
-import com.google.gson.stream.JsonWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.logcat
@@ -35,7 +34,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 import java.time.Instant
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
@@ -139,12 +137,11 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         return withContext(Dispatchers.IO) {
             try {
                 val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
-                val gson = Gson()
-                val syncData = gson.fromJson(gzipInputStream.reader(Charsets.UTF_8), SyncData::class.java)
-                logcat(LogPriority.DEBUG) { "JSON deserialized successfully" }
+                val syncData = json.decodeFromString<SyncData>(gzipInputStream.reader(Charsets.UTF_8).readText())
+                logcat(LogPriority.DEBUG) { "JSON deserialized successfully with kotlinx.serialization" }
                 syncData
             } catch (e: Exception) {
-                logcat(LogPriority.ERROR) { "Failed to convert json to sync data: ${e.message}" }
+                logcat(LogPriority.ERROR) { "Failed to convert json to sync data with kotlinx.serialization: ${e.message}" }
                 throw Exception(e.message)
             }
         }
@@ -159,12 +156,10 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
 
         withContext(Dispatchers.IO) {
             val gzipOutputStream = GZIPOutputStream(byteArrayOutputStream)
-            val jsonWriter = JsonWriter(OutputStreamWriter(gzipOutputStream, Charsets.UTF_8))
-            val gson = Gson().newBuilder().serializeNulls().create()
-
-            jsonWriter.use { jWriter ->
-                gson.toJson(syncData, SyncData::class.java, jWriter)
+            gzipOutputStream.writer(Charsets.UTF_8).use { writer ->
+                writer.write(json.encodeToString(syncData))
             }
+            logcat(LogPriority.DEBUG) { "JSON serialized successfully" }
         }
 
         val byteArrayContent = ByteArrayContent("application/octet-stream", byteArrayOutputStream.toByteArray())
