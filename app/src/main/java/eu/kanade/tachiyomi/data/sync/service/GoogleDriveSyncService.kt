@@ -71,7 +71,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             googleDriveService.refreshToken()
             val drive = googleDriveService.driveService ?: throw Exception("Google Drive service not initialized")
 
-            var backoff = 2000L
+            var backoff = 1000L
 
             while (true) {
                 val lockFiles = findLockFile(drive)
@@ -99,7 +99,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                     else -> {
                         logcat(LogPriority.DEBUG) { "Multiple lock files found, applying backoff" }
                         delay(backoff) // Apply backoff strategy
-                        backoff = (backoff * 2).coerceAtMost(32000L)
+                        backoff = (backoff * 2).coerceAtMost(16000L)
                         logcat(LogPriority.DEBUG) { "Backoff increased to $backoff milliseconds" }
                     }
                 }
