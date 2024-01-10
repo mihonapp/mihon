@@ -151,14 +151,13 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
     }
 
     override suspend fun pushSyncData(syncData: SyncData) {
+        val jsonData = json.encodeToString(syncData)
         val drive = googleDriveService.driveService
             ?: throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
 
         val fileList = getAppDataFileList(drive)
         val byteArrayOutputStream = ByteArrayOutputStream()
-
         withContext(Dispatchers.IO) {
-            val jsonData = json.encodeToString(syncData)
             val gzipOutputStream = GZIPOutputStream(byteArrayOutputStream)
             gzipOutputStream.write(jsonData.toByteArray(Charsets.UTF_8))
             gzipOutputStream.close()
