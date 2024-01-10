@@ -138,7 +138,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             try {
                 val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
                 val syncData = json.decodeFromString<SyncData>(gzipInputStream.reader(Charsets.UTF_8).readText())
-                logcat(LogPriority.DEBUG) { "JSON deserialized successfully with kotlinx.serialization" }
+                logcat(LogPriority.DEBUG) { "JSON deserialized successfully" }
                 syncData
             } catch (e: Exception) {
                 logcat(
