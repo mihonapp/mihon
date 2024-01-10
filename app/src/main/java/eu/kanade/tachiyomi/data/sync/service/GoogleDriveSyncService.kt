@@ -247,7 +247,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             }
         } catch (e: Exception) {
             Log.e("GoogleDrive", "Error deleting lock file: ${e.message}")
-            throw Exception(context.getString(R.string.error_deleting_google_drive_lock_file))
+            throw Exception(context.stringResource(MR.strings.error_deleting_google_drive_lock_file))
         }
     }
 
