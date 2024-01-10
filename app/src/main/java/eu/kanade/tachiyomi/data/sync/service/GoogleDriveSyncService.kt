@@ -141,7 +141,9 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                 logcat(LogPriority.DEBUG) { "JSON deserialized successfully with kotlinx.serialization" }
                 syncData
             } catch (e: Exception) {
-                logcat(LogPriority.ERROR) { "Failed to convert json to sync data with kotlinx.serialization: ${e.message}" }
+                logcat(
+                    LogPriority.ERROR,
+                ) { "Failed to convert json to sync data with kotlinx.serialization: ${e.message}" }
                 throw Exception(e.message)
             }
         }
