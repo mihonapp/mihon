@@ -114,23 +114,39 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         val drive = googleDriveService.driveService
 
         if (drive == null) {
-            logcat(LogPriority.ERROR) { "Google Drive service not initialized" }
+            logcat(LogPriority.DEBUG) { "Google Drive service not initialized" }
             throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
         }
 
         val fileList = getAppDataFileList(drive)
         if (fileList.isEmpty()) {
+            logcat(LogPriority.INFO) { "No files found in app data" }
             return null
         }
+
         val gdriveFileId = fileList[0].id
+        logcat(LogPriority.DEBUG) { "Google Drive File ID: $gdriveFileId" }
 
         val outputStream = ByteArrayOutputStream()
-        drive.files().get(gdriveFileId).executeMediaAndDownloadTo(outputStream)
+        try {
+            drive.files().get(gdriveFileId).executeMediaAndDownloadTo(outputStream)
+            logcat(LogPriority.DEBUG) { "File downloaded successfully" }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "Error downloading file: ${e.message}" }
+            return null
+        }
 
         return withContext(Dispatchers.IO) {
-            val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
-            val gson = Gson()
-            gson.fromJson(gzipInputStream.reader(Charsets.UTF_8), SyncData::class.java)
+            try {
+                val gzipInputStream = GZIPInputStream(ByteArrayInputStream(outputStream.toByteArray()))
+                val gson = Gson()
+                val syncData = gson.fromJson(gzipInputStream.reader(Charsets.UTF_8), SyncData::class.java)
+                logcat(LogPriority.DEBUG) { "JSON deserialized successfully" }
+                syncData
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Failed to convert json to sync data: ${e.message}" }
+                throw Exception(e.message)
+            }
         }
     }
 
