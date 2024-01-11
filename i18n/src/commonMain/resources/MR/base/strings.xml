@@ -561,6 +561,9 @@
     <string name="pref_sync_service_category">Sync</string>
     <string name="pref_sync_automatic_category">Automatic Synchronization</string>
     <string name="pref_sync_interval">Synchronization frequency</string>
+    <string name="pref_reset_sync_timestamp">Reset last sync timestamp</string>
+    <string name="pref_reset_sync_timestamp_subtitle">Reset the last sync timestamp to force a full sync</string>
+    <string name="success_reset_sync_timestamp">Last sync timestamp reset</string>
     <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>
     <string name="last_synchronization">Last Synchronization: %1$s</string>
