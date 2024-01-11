@@ -94,15 +94,6 @@ abstract class SyncService(
         )
     }
 
-    /**
-     * Merges two lists of BackupManga objects, selecting the most recent manga based on the lastModifiedAt value.
-     * If lastModifiedAt is null for a manga, it treats that manga as the oldest possible for comparison purposes.
-     * This function is designed to reconcile local and remote manga lists, ensuring the most up-to-date manga is retained.
-     *
-     * @param localMangaList The list of local BackupManga objects or null.
-     * @param remoteMangaList The list of remote BackupManga objects or null.
-     * @return A list of BackupManga objects, each representing the most recent version of the manga from either local or remote sources.
-     */
     private fun mergeMangaLists(
         localMangaList: List<BackupManga>?,
         remoteMangaList: List<BackupManga>?,
@@ -203,23 +194,6 @@ abstract class SyncService(
         return mergedList
     }
 
-/**
-     * Merges two lists of BackupChapter objects, selecting the most recent chapter based on the lastModifiedAt value.
-     * If lastModifiedAt is null for a chapter, it treats that chapter as the oldest possible for comparison purposes.
-     * This function is designed to reconcile local and remote chapter lists, ensuring the most up-to-date chapter is retained.
-     *
-     * @param localChapters The list of local BackupChapter objects.
-     * @param remoteChapters The list of remote BackupChapter objects.
-     * @return A list of BackupChapter objects, each representing the most recent version of the chapter from either local or remote sources.
-     *
-     * - This function is used in scenarios where local and remote chapter lists need to be synchronized.
-     * - It iterates over the union of the URLs from both local and remote chapters.
-     * - For each URL, it compares the corresponding local and remote chapters based on the lastModifiedAt value.
-     * - If only one source (local or remote) has the chapter for a URL, that chapter is used.
-     * - If both sources have the chapter, the one with the more recent lastModifiedAt value is chosen.
-     * - If lastModifiedAt is null or missing, the chapter is considered the oldest for safety, ensuring that any chapter with a valid timestamp is preferred.
-     * - The resulting list contains the most recent chapters from the combined set of local and remote chapters.
-     */
     private fun mergeChapters(
         localChapters: List<BackupChapter>,
         remoteChapters: List<BackupChapter>,
@@ -286,13 +260,6 @@ abstract class SyncService(
         return mergedChapters
     }
 
-    /**
-     * Merges two lists of SyncCategory objects, prioritizing the category with the most recent order value.
-     *
-     * @param localCategoriesList The list of local SyncCategory objects.
-     * @param remoteCategoriesList The list of remote SyncCategory objects.
-     * @return The merged list of SyncCategory objects.
-     */
     private fun mergeCategoriesLists(
         localCategoriesList: List<BackupCategory>?,
         remoteCategoriesList: List<BackupCategory>?,
