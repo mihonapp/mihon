@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.vectorResource
-import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.SwitchPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.R
@@ -60,14 +58,7 @@ fun MoreScreen(
                 ),
             ) {
                 if (isFDroid) {
-                    WarningBanner(
-                        textRes = MR.strings.fdroid_warning,
-                        modifier = Modifier.clickable {
-                            uriHandler.openUri(
-                                "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
-                            )
-                        },
-                    )
+                    // Don't really care about slow updaters now
                 }
             }
         },

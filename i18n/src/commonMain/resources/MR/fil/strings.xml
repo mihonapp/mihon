@@ -638,7 +638,7 @@
     <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
     <string name="pref_library_summary">Mga kategorya, panlahatang update, pag-swipe ng kabanata</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
-    <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
+    <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s.</string>
     <string name="crash_screen_title">Ay!</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
     <string name="invalid_location">Invalid na lugar: %s</string>

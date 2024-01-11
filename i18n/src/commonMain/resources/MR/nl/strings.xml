@@ -668,7 +668,7 @@
     <string name="track_remove_start_date_conf_text">Dit gaat je eerder geselcteerde startdatum %s verwijderen</string>
     <string name="delete_downloaded">Download verwijderen</string>
     <string name="skipped_reason_not_always_update">Overgeslagen omdat serie geen updates vereist.</string>
-    <string name="crash_screen_description">%s is een onverwachte fout tegengekomen. We raden u aan de crashlogboeken te delen in ons ondersteuningskanaal op Discord.</string>
+    <string name="crash_screen_description">%s is een onverwachte fout tegengekomen.</string>
     <string name="pref_debug_info">Foutopsporingsinformatie</string>
     <string name="label_completed_titles">Voltooide titels</string>
     <string name="pref_update_only_in_release_period">Buiten verwachte vrijgave periode</string>

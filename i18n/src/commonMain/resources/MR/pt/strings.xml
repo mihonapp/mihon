@@ -651,7 +651,7 @@
     <string name="updates_last_update_info_just_now">Agora mesmo</string>
     <string name="crash_screen_restart_application">Reinicie o aplicativo</string>
     <string name="crash_screen_title">Ops!</string>
-    <string name="crash_screen_description">%s encontrou um erro inesperado. Sugerimos que você compartilhe os registros de falha em nosso canal de suporte no Discord.</string>
+    <string name="crash_screen_description">%s encontrou um erro inesperado.</string>
     <string name="pref_downloads_summary">Descarga automática, descarga a frente</string>
     <string name="pref_tracking_summary">Sincronização de progresso unidirecional, sincronização aprimorada</string>
     <string name="pref_browse_summary">Fontes, extensões, pesquisa global</string>

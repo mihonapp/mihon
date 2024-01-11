@@ -614,7 +614,7 @@
     <string name="migration_help_guide">Udhëzuesi i migrimit të burimit</string>
     <string name="migration_selection_prompt">Zgjidhni një burim për të migruar</string>
     <string name="migrate">Migroni</string>
-    <string name="crash_screen_description">%s hasi në një gabim të papritur. Ne ju sugjerojmë që të fotografoni këtë mesazh, të hidhni regjistrat e aksidenteve dhe më pas ta shpërndani në kanalin tonë të mbështetjes në Discord.</string>
+    <string name="crash_screen_description">%s hasi në një gabim të papritur.</string>
     <string name="crash_screen_restart_application">Rinisni aplikacionin</string>
     <string name="download_insufficient_space">Kapitujt nuk mund të shkarkoheshin për shkak të hapësirës së ulët të ruajtjes</string>
     <string name="download_queue_size_warning">Paralajmërim: shkarkimet e mëdha me shumicë mund të çojnë në ngadalësimin e burimeve dhe/ose bllokimin e Tachiyomi. Trokit për të mësuar më shumë.</string>

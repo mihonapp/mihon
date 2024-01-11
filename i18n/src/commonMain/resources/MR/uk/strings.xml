@@ -627,7 +627,7 @@
     <string name="error_user_agent_string_blank">Рядок User agent не може бути пустим</string>
     <string name="popular">Популярне</string>
     <string name="auto_download_while_reading">Автоматичне завантаження під час читання</string>
-    <string name="crash_screen_description">%s зіткнулися з неочікуваною помилкою. Ми пропонуємо вам поділитися журналами збоїв у нашому каналі підтримки на Discord.</string>
+    <string name="crash_screen_description">%s зіткнулися з неочікуваною помилкою.</string>
     <string name="pref_appearance_summary">Тема, формат дати та часу</string>
     <string name="pref_library_summary">Категорії, глобальне оновлення, гортання розділів</string>
     <string name="pref_reader_summary">Режим читання, відображення, навігація</string>

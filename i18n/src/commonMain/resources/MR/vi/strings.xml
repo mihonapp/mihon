@@ -680,7 +680,7 @@
     <string name="pref_hide_in_library_items">Giấu những truyện đã có trong thư viện</string>
     <string name="minute_short">%d phút</string>
     <string name="download_notifier_cache_renewal">Đang kiểm tra những truyện đã tải xuống</string>
-    <string name="crash_screen_description">%s đã có lỗi. Bạn nên chia sẻ tệp báo lỗi tạm ở trong kênh hỗ trợ của chúng tôi trên Discord.</string>
+    <string name="crash_screen_description">%s đã có lỗi.</string>
     <string name="action_update_category">Cập nhật danh mục</string>
     <string name="confirm_add_duplicate_manga">Truyện này đã có sẵn trong thư viện bạn. 
 \n

@@ -638,7 +638,7 @@
     <string name="pref_advanced_summary">傾印當機記錄、電池效能最佳化</string>
     <string name="crash_screen_restart_application">重新啟動應用程式</string>
     <string name="crash_screen_title">哎呀！</string>
-    <string name="crash_screen_description">「%s」發生了未預期的錯誤。我們建議你將當機記錄分享至我們位於 Discord 上的 support 頻道。</string>
+    <string name="crash_screen_description">「%s」發生了未預期的錯誤。</string>
     <string name="pref_library_summary">類別、全域更新、目錄滑動動作</string>
     <string name="pref_browse_summary">來源、擴充套件、全域搜尋</string>
     <string name="invalid_location">無效的位置：%s</string>

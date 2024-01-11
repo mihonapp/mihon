@@ -640,7 +640,7 @@
     <string name="pref_downloads_summary">자동 다운로드, 미리 다운로드</string>
     <string name="crash_screen_title">앗!</string>
     <string name="crash_screen_restart_application">애플리케이션 재시작</string>
-    <string name="crash_screen_description">%s에 예기치 않은 오류가 발생했습니다. 충돌 로그를 공식 디스코드 채널에 공유하는 것을 추천합니다.</string>
+    <string name="crash_screen_description">%s에 예기치 않은 오류가 발생했습니다.</string>
     <string name="unknown_title">알 수 없는 제목</string>
     <string name="invalid_location">잘못된 위치: %s</string>
     <string name="error_user_agent_string_invalid">잘못된 사용자 에이전트 문자열</string>

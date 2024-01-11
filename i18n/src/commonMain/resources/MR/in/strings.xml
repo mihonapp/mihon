@@ -632,7 +632,7 @@
     <string name="pref_browse_summary">Sumber, ekstensi, pencarian global</string>
     <string name="pref_reader_summary">Mode membaca, tampilan, navigasi</string>
     <string name="pref_tracking_summary">Sinkronisasi progres searah, sinkronisasi yang ditingkatkan</string>
-    <string name="crash_screen_description">%s mengalami kesalahan tak terduga. Kami menyarankan Anda membagi log kerusakan di saluran dukungan kami di Discord.</string>
+    <string name="crash_screen_description">%s mengalami kesalahan tak terduga.</string>
     <string name="pref_downloads_summary">Unduh otomatis, unduh terlebih dahulu</string>
     <string name="pref_security_summary">Kunci aplikasi, amankan layar</string>
     <string name="pref_appearance_summary">Tema, format tanggal &amp; waktu</string>

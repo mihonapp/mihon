@@ -634,7 +634,7 @@
     <string name="skipped_reason_not_always_update">Saltato perché la serie non richiede aggiornamenti</string>
     <string name="action_search_hint">Ricerca…</string>
     <string name="pref_appearance_summary">Tema, formato data e ora</string>
-    <string name="crash_screen_description">%s ha riscontrato un errore imprevisto. Ti suggeriamo di condividere il registro degli arresti anomali nel nostro canale di supporto su Discord.</string>
+    <string name="crash_screen_description">%s ha riscontrato un errore imprevisto.</string>
     <string name="pref_library_summary">Categorie, aggiornamenti globali, azioni di scorrimento capitoli</string>
     <string name="pref_downloads_summary">Download automatico, download anticipato</string>
     <string name="pref_browse_summary">Fonti, estensioni, ricerca globale</string>

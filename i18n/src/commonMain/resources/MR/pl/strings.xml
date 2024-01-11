@@ -635,7 +635,7 @@
     <string name="label_local">Lokalne</string>
     <string name="label_downloaded">Pobrane</string>
     <string name="pref_invalidate_download_cache_summary">Wymuś ponowne sprawdzenie pobranych rozdziałów przez aplikację</string>
-    <string name="crash_screen_description">%s napotkał nieoczekiwany błąd. Sugerujemy podzielenie się logami crasha, a następnie udostępnienie ich na naszym kanale wsparcia na Discordzie.</string>
+    <string name="crash_screen_description">%s napotkał nieoczekiwany błąd.</string>
     <string name="pref_reader_summary">Tryb czytania, wyświetl, nawigacja</string>
     <string name="invalid_location">Nieprawidłowa lokalizacja: %s</string>
     <string name="action_display_show_continue_reading_button">Przycisk wznów czytanie</string>

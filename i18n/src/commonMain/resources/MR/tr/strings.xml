@@ -640,7 +640,7 @@
     <string name="pref_tracking_summary">Tek yönlü ilerleme eşitlemesi, gelişmiş eşitleme</string>
     <string name="crash_screen_restart_application">Uygulamayı yeniden başlat</string>
     <string name="crash_screen_title">Tüh!</string>
-    <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı. Çökme günlüklerini Discord\'daki destek kanalımızda paylaşmanızı öneririz.</string>
+    <string name="crash_screen_description">%s beklenmeyen bir hatayla karşılaştı.</string>
     <string name="unknown_title">Bilinmeyen başlık</string>
     <string name="invalid_location">Geçersiz konum: %s</string>
     <string name="error_user_agent_string_invalid">Geçersiz kullanıcı aracısı dizgesi</string>

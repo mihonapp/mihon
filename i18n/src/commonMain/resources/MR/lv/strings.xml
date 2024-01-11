@@ -671,7 +671,7 @@
     <string name="delete_category_confirmation">Vai vēlaties dzēst kategoriju \"%s\"\?</string>
     <string name="track_error">%1$s kļūda: %2$s</string>
     <string name="update_already_running">Atjauninājums jau darbojas</string>
-    <string name="crash_screen_description">%s radās neparedzēta kļūda. Mēs iesakām dalīties ar avārijas žurnālu mūsu atbalsta kanālā Discord lietotnē.</string>
+    <string name="crash_screen_description">%s radās neparedzēta kļūda.</string>
     <string name="pref_page_rotate">Pagrieziet platas lapas, lai tās ietilptu</string>
     <string name="pref_page_rotate_invert">Apvērst orientācija pagrieztām platām lapām</string>
     <string name="split_tall_images">Sadalīt augstus attēlus</string>

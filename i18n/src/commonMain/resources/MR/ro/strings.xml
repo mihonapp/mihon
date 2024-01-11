@@ -633,7 +633,7 @@
     <string name="pref_reset_user_agent_string">Restabilirea șirului implicit de agent al utilizatorului</string>
     <string name="updates_last_update_info_just_now">Chiar acum</string>
     <string name="pref_verbose_logging">Consemnare verbală</string>
-    <string name="crash_screen_description">%s a întâmpinat o eroare neașteptată. Vă sugerăm să faceți o captură de ecran a acestui mesaj, să descărcați registrele de erori și apoi să le partajați prin intermediul canalului nostru de asistență pe Discord.</string>
+    <string name="crash_screen_description">%s a întâmpinat o eroare neașteptată.</string>
     <string name="appwidget_unavailable_locked">Widgetul nu este disponibil atunci când este activată blocarea aplicației</string>
     <string name="pref_appearance_summary">Tema, formatul datei și al orei</string>
     <string name="pref_library_summary">Categorii, actualizări globale</string>

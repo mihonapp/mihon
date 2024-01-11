@@ -575,7 +575,7 @@
     <string name="are_you_sure">Сигурни ли сте\?</string>
     <string name="popular">Популярни</string>
     <string name="unfinished_list">Списък с незавършени</string>
-    <string name="crash_screen_description">%s се сблъска с неочаквана грешка. Препоръчваме да заснемете това съобщение, да запазите записите от крашовете и да ги споделите в нашия канал за поддръжка в Discord.</string>
+    <string name="crash_screen_description">%s се сблъска с неочаквана грешка.</string>
     <string name="updates_last_update_info">Последно обновяване на библиотеката: %1$s</string>
     <string name="reading_list">Списък за четене</string>
     <string name="cant_open_last_read_chapter">Не може да се отвори последната прочетена глава</string>
