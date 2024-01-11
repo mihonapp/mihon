@@ -102,11 +102,9 @@
     <string name="ext_untrusted">ไม่น่าเชื่อถือ</string>
     <string name="ext_uninstall">ถอนการติดตั้ง</string>
     <string name="untrusted_extension">ส่วนขยายที่ไม่น่าเชื่อถือ</string>
-    <string name="untrusted_extension_message">ส่วนขยายนี้ลงนามด้วยผู้พัฒนาที่ไม่รู้จักและจะไม่ถูกเปิดใช้งาน
+    <string name="untrusted_extension_message">ส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
 \n
-\nส่วนขยายที่เป็นอันตรายสามารถอ่านข้อมูลการเข้าสู่ระบบที่จัดเก็บไว้ หรือเรียกใช้โค้ดโดยอำเภอใจ
-\n
-\nการเชื่อถือใบรับรองของส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
+\nการเชื่อถือส่วนขยายนี้แสดงว่าคุณยอมรับความเสี่ยงเหล่านี้</string>
     <string name="pref_fullscreen">เต็มหน้าจอ</string>
     <string name="pref_page_transitions">แสดงแอนิเมชั่นเมื่อเปลี่ยนหน้า</string>
     <string name="pref_double_tap_anim_speed">ความเร็วแอนิเมชั่นเมื่อแตะ 2 ครั้ง</string>
@@ -799,4 +797,5 @@
     <string name="theme_nord">นอร์ด</string>
     <string name="label_add_repo_input">URL รีโพ</string>
     <string name="delete_repo_confirmation">ต้องการจะลบรีโพ \"%s\" หรือไม่?</string>
+    <string name="action_open_repo">เปิดที่มาของรีโพ</string>
 </resources>

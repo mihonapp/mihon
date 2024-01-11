@@ -80,4 +80,9 @@
         <item quantity="few">%d dny</item>
         <item quantity="other">%d dní</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repozitář</item>
+        <item quantity="few">%d repozitáře</item>
+        <item quantity="other">%d repozitářů</item>
+    </plurals>
 </resources>

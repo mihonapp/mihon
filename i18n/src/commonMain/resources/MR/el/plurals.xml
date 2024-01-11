@@ -64,4 +64,8 @@
         <item quantity="one">1 ημέρα</item>
         <item quantity="other">%d ημέρες</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d αποθετήριο</item>
+        <item quantity="other">%d αποθετήρια</item>
+    </plurals>
 </resources>

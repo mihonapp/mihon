@@ -64,4 +64,8 @@
         <item quantity="one">१ दिन</item>
         <item quantity="other">%d दिन</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d रेपो</item>
+        <item quantity="other">%d रेपोहरु</item>
+    </plurals>
 </resources>

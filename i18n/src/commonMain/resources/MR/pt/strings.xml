@@ -712,11 +712,11 @@
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="manga_display_modified_interval_title">Definido para atualizar a cada</string>
     <string name="skipped_reason_not_in_release_period">Pulado, pois nenhum lançamento é esperado para hoje</string>
-    <string name="delete_downloaded">Deletar dowloand</string>
+    <string name="delete_downloaded">Apagar download</string>
     <string name="selected">Selecionado</string>
     <string name="not_selected">Não selecionado</string>
     <string name="action_menu_overflow_description">Mais opções</string>
-    <string name="action_bar_up_description">Rolar para cima</string>
+    <string name="action_bar_up_description">Navegar para cima</string>
     <string name="unlock_app_title">Desbloquear %s</string>
     <string name="label_data_storage">Dados e armazenamento</string>
 </resources>

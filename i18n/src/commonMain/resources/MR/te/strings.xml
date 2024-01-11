@@ -163,7 +163,7 @@
     <string name="action_move_to_top_all_for_series">సిరీస్ పైన పెట్టండి</string>
     <string name="action_search_hint">అన్వేషించండి…</string>
     <string name="action_not_now">ఇప్పుడు కాదు</string>
-    <string name="action_open_random_manga">"ఏదైనా  తెరవండి"</string>
+    <string name="action_open_random_manga">ఏదైనా తెరవండి</string>
     <string name="internal_error">అంతర్గత లోపం: మరింత సమాచారం కోసం క్రాష్ లాగ్‌లను తనిఖీ చేయండి</string>
     <string name="pref_appearance_summary">థీమ్, తేదీ మరియు సమయ ఆకృతి</string>
     <string name="channel_errors">లోపాలూ</string>

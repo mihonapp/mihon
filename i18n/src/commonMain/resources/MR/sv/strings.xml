@@ -11,7 +11,7 @@
     <string name="label_library">Bibliotek</string>
     <string name="label_recent_manga">Historik</string>
     <string name="label_recent_updates">Uppdateringar</string>
-    <string name="label_backup">Säkerhetskopiering och återställning</string>
+    <string name="label_backup">Säkerhetskopiera och återställ</string>
     <string name="label_migration">Migrera</string>
     <string name="label_extensions">Tillägg</string>
     <string name="label_extension_info">Tilläggsinformation</string>
@@ -83,7 +83,7 @@
     <string name="all">Alla</string>
     <string name="pref_library_update_restriction">Automatiska uppdateringar av enhetsbegränsningar</string>
     <string name="charging">Vid laddning</string>
-    <string name="pref_update_only_non_completed">Med status \"Avslutat\"</string>
+    <string name="pref_update_only_non_completed">Hoppa över artiklar med status \"Avslutat\"</string>
     <string name="pref_auto_update_manga_sync">Uppdatera förlopp efter läsning</string>
     <string name="default_category">Standardkategori</string>
     <string name="default_category_summary">Fråga alltid</string>
@@ -97,11 +97,9 @@
     <string name="ext_untrusted">Opålitlig</string>
     <string name="ext_uninstall">Avinstallera</string>
     <string name="untrusted_extension">Opålitlig extension</string>
-    <string name="untrusted_extension_message">Detta tillägg tecknades med ett otillförlitligt certifikat och var inte aktiverat.
+    <string name="untrusted_extension_message">Ett skadligt tillägg kan läsa lagrade inloggningsuppgifter eller köra arbiträr kod.
 \n
-\nEtt skadligt tillägg kan läsa lagrade inloggningsuppgifter eller utföra godtycklig kod.
-\n
-\nGenom att lita på detta certifikat accepterar du dessa risker.</string>
+\nGenom att lita på detta tillägg accepterar du dessa risker.</string>
     <string name="pref_fullscreen">Fullskärm</string>
     <string name="pref_page_transitions">Animera sidbyten</string>
     <string name="pref_double_tap_anim_speed">Animationshastighet för dubbelklick</string>
@@ -559,11 +557,11 @@
     <string name="publishing_finished">Publiceringen avslutad</string>
     <string name="save_chapter_as_cbz">Spara som CBZ-arkiv</string>
     <string name="privacy_policy">Integritetspolicy</string>
-    <string name="pref_update_only_completely_read">Med olästa kapitel</string>
-    <string name="extension_api_error">Det gick inte att hämta tilläggslistan</string>
+    <string name="pref_update_only_completely_read">Hoppa över artiklar med olästa kapitel</string>
+    <string name="extension_api_error">Kunde inte hämta tillgängliga tillägg</string>
     <string name="action_show_manga">Visa inlägg</string>
     <string name="action_display_cover_only_grid">Endast omslags-rutnät</string>
-    <string name="pref_update_only_started">Som inte har startats</string>
+    <string name="pref_update_only_started">Hoppa över artiklar som ej är påbörjade</string>
     <string name="pref_navigate_pan">Panorera breda sidor</string>
     <string name="pref_landscape_zoom">Automatiskt zoomning i stora bilder</string>
     <string name="skipped_reason_completed">Hoppade över eftersom serien är klar</string>
@@ -686,7 +684,7 @@
     <string name="label_read_chapters">Läst</string>
     <string name="manga_display_interval_title">Uppskatta varje</string>
     <string name="action_set_interval">Ange intervall</string>
-    <string name="action_filter_interval_custom">Anpassat hämtningsintervall</string>
+    <string name="action_filter_interval_custom">Anpassat uppdateringsintervall</string>
     <string name="action_sort_next_updated">Nästa förväntade uppdatering</string>
     <string name="skipped_reason_not_in_release_period">Hoppades över eftersom ingen publicering förväntades idag</string>
     <string name="label_tracked_titles">Spårade inlägg</string>
@@ -718,7 +716,7 @@
     <string name="label_tracker_section">Spårare</string>
     <string name="information_cloudflare_help">Klicka här för hjälp med Cloudflare</string>
     <string name="action_ok">OK</string>
-    <string name="pref_update_only_in_release_period">Utanför förväntad releaseperiod</string>
+    <string name="pref_update_only_in_release_period">Förutspå nästa releaseperiod</string>
     <string name="intervals_header">Intervaller</string>
     <string name="create_backup_file_error">Kunde inte skapa en backup-fil</string>
     <string name="licensed_manga_chapters_error">Licensierad - Inga kapitel att visa</string>
@@ -761,7 +759,7 @@
     <string name="onboarding_action_finish">Kom igång</string>
     <string name="onboarding_storage_selection_required">En mapp måste väljas</string>
     <string name="onboarding_heading">Välkommen!</string>
-    <string name="onboarding_guides_returning_user">Redan använt %s förut?</string>
+    <string name="onboarding_guides_returning_user">Ominstalleras %s?</string>
     <string name="onboarding_action_skip">Hoppa över</string>
     <string name="onboarding_action_next">Nästa</string>
     <string name="onboarding_description">Låt oss ställa in några saker först. Du kan alltid ändra dessa i inställningarna senare.</string>
@@ -781,6 +779,9 @@
     <string name="available_disk_space_info">Tillgängligt: %1$s / Totalt: %2$s</string>
     <string name="ext_permission_install_apps_warning">Behörigheter krävs för att installera tillägg. Tryck här för att bevilja.</string>
     <string name="private_settings">Inkludera känsliga inställningar (t.ex. spårningsinloggningstokens)</string>
-    <string name="manga_interval_expected_update">Nästa uppdatering förväntas om cirka %s</string>
+    <string name="manga_interval_expected_update">Nya kapitel förväntas att släppas varje \"%1$s\", kontrollerar varje \"%2$s\".</string>
     <string name="invalid_backup_file_error">Fullständigt fel:</string>
+    <string name="onboarding_storage_help_info">Osäker på vad du ska välja då du uppdaterar från en äldre version? Se lagerhanteringsguiden för mer information.</string>
+    <string name="pref_library_update_smart_update">Smart uppdatering</string>
+    <string name="onboarding_storage_help_action">Lagerhanteringsguide</string>
 </resources>
