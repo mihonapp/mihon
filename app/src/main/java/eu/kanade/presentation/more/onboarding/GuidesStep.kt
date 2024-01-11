@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -61,7 +61,7 @@ const val GETTING_STARTED_URL = "https://tachiyomi.org/docs/guides/getting-start
 @PreviewLightDark
 @Composable
 private fun GuidesStepPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         GuidesStep(
             onRestoreBackup = {},
         ).Content()

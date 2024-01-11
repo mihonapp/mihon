@@ -17,7 +17,7 @@ import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.history.components.HistoryItem
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.ui.history.HistoryScreenModel
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.domain.history.model.HistoryWithRelations
@@ -143,7 +143,7 @@ internal fun HistoryScreenPreviews(
     @PreviewParameter(HistoryScreenModelStateProvider::class)
     historyState: HistoryScreenModel.State,
 ) {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         HistoryScreen(
             state = historyState,
             snackbarHostState = SnackbarHostState(),

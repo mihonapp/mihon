@@ -12,7 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.sp
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 
 @Composable
 fun PageIndicatorText(
@@ -51,7 +51,7 @@ fun PageIndicatorText(
 @PreviewLightDark
 @Composable
 private fun PageIndicatorTextPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface {
             PageIndicatorText(currentPage = 10, totalPages = 69)
         }

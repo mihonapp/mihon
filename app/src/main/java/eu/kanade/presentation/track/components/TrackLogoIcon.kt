@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.data.track.Tracker
 import tachiyomi.presentation.core.util.clickableNoIndication
 
@@ -49,7 +49,7 @@ private fun TrackLogoIconPreviews(
     @PreviewParameter(TrackLogoIconPreviewProvider::class)
     tracker: Tracker,
 ) {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         TrackLogoIcon(
             tracker = tracker,
             onClick = null,
