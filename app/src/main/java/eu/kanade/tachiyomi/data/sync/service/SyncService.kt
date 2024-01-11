@@ -70,7 +70,8 @@ abstract class SyncService(
         val mergedCategoriesList =
             mergeCategoriesLists(localSyncData.backup?.backupCategories, remoteSyncData.backup?.backupCategories)
 
-        val mergedSourcesList = mergeSourcesLists(localSyncData.backup?.backupSources, remoteSyncData.backup?.backupSources)
+        val mergedSourcesList =
+            mergeSourcesLists(localSyncData.backup?.backupSources, remoteSyncData.backup?.backupSources)
         val mergedPreferencesList =
             mergePreferencesLists(localSyncData.backup?.backupPreferences, remoteSyncData.backup?.backupPreferences)
         val mergedSourcePreferencesList = mergeSourcePreferencesLists(
@@ -331,7 +332,7 @@ abstract class SyncService(
 
     private fun mergeSourcesLists(
         localSources: List<BackupSource>?,
-        remoteSources: List<BackupSource>?
+        remoteSources: List<BackupSource>?,
     ): List<BackupSource> {
         val logTag = "MergeSources"
 
@@ -376,7 +377,7 @@ abstract class SyncService(
 
     private fun mergePreferencesLists(
         localPreferences: List<BackupPreference>?,
-        remotePreferences: List<BackupPreference>?
+        remotePreferences: List<BackupPreference>?,
     ): List<BackupPreference> {
         val logTag = "MergePreferences"
 
@@ -424,7 +425,7 @@ abstract class SyncService(
 
     private fun mergeSourcePreferencesLists(
         localPreferences: List<BackupSourcePreferences>?,
-        remotePreferences: List<BackupSourcePreferences>?
+        remotePreferences: List<BackupSourcePreferences>?,
     ): List<BackupSourcePreferences> {
         val logTag = "MergeSourcePreferences"
 
@@ -438,7 +439,8 @@ abstract class SyncService(
         }
 
         // Merge both source preferences maps
-        val mergedSourcePreferences = (localPreferencesMap.keys + remotePreferencesMap.keys).distinct().mapNotNull { sourceKey ->
+        val mergedSourcePreferences = (localPreferencesMap.keys + remotePreferencesMap.keys).distinct().mapNotNull {
+                sourceKey ->
             val localSourcePreference = localPreferencesMap[sourceKey]
             val remoteSourcePreference = remotePreferencesMap[sourceKey]
 
@@ -463,7 +465,8 @@ abstract class SyncService(
                 }
                 localSourcePreference != null && remoteSourcePreference != null -> {
                     // Merge the individual preferences within the source preferences
-                    val mergedPrefs = mergeIndividualPreferences(localSourcePreference.prefs, remoteSourcePreference.prefs)
+                    val mergedPrefs =
+                        mergeIndividualPreferences(localSourcePreference.prefs, remoteSourcePreference.prefs)
                     BackupSourcePreferences(sourceKey, mergedPrefs)
                 }
                 else -> null
@@ -479,7 +482,7 @@ abstract class SyncService(
 
     private fun mergeIndividualPreferences(
         localPrefs: List<BackupPreference>,
-        remotePrefs: List<BackupPreference>
+        remotePrefs: List<BackupPreference>,
     ): List<BackupPreference> {
         val mergedPrefsMap = (localPrefs + remotePrefs).associateBy { it.key }
         return mergedPrefsMap.values.toList()
