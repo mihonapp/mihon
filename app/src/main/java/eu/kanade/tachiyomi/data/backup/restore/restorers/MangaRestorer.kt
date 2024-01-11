@@ -57,22 +57,24 @@ class MangaRestorer(
         backupManga: BackupManga,
         backupCategories: List<BackupCategory>,
     ) {
-        val dbManga = findExistingManga(backupManga)
-        val manga = backupManga.getMangaImpl()
-        val restoredManga = if (dbManga == null) {
-            restoreNewManga(manga)
-        } else {
-            restoreExistingManga(manga, dbManga)
-        }
+        handler.await(inTransaction = true) {
+            val dbManga = findExistingManga(backupManga)
+            val manga = backupManga.getMangaImpl()
+            val restoredManga = if (dbManga == null) {
+                restoreNewManga(manga)
+            } else {
+                restoreExistingManga(manga, dbManga)
+            }
 
-        restoreMangaDetails(
-            manga = restoredManga,
-            chapters = backupManga.chapters,
-            categories = backupManga.categories,
-            backupCategories = backupCategories,
-            history = backupManga.history + backupManga.brokenHistory.map { it.toBackupHistory() },
-            tracks = backupManga.tracking,
-        )
+            restoreMangaDetails(
+                manga = restoredManga,
+                chapters = backupManga.chapters,
+                categories = backupManga.categories,
+                backupCategories = backupCategories,
+                history = backupManga.history + backupManga.brokenHistory.map { it.toBackupHistory() },
+                tracks = backupManga.tracking,
+            )
+        }
     }
 
     private suspend fun findExistingManga(backupManga: BackupManga): Manga? {
