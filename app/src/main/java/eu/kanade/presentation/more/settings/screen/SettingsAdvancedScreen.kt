@@ -63,6 +63,7 @@ import tachiyomi.core.util.lang.launchNonCancellable
 import tachiyomi.core.util.lang.withUIContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
+import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -142,6 +143,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     getNetworkGroup(networkPreferences = networkPreferences),
                     getLibraryGroup(),
                     getExtensionsGroup(basePreferences = basePreferences),
+                    getSyncGroup(),
                 ),
             )
         }
@@ -399,6 +401,25 @@ object SettingsAdvancedScreen : SearchableSettings {
                     onClick = {
                         trustExtension.revokeAll()
                         context.toast(MR.strings.requires_app_restart)
+                    },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getSyncGroup(): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val syncPreferences = remember { Injekt.get<SyncPreferences>() }
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.label_sync),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_reset_sync_timestamp),
+                    subtitle = stringResource(MR.strings.pref_reset_sync_timestamp_subtitle),
+                    onClick = {
+                        syncPreferences.lastSyncTimestamp().set(0)
+                        context.toast(MR.strings.success_reset_sync_timestamp)
                     },
                 ),
             ),

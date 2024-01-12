@@ -5,6 +5,9 @@ import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupPreference
+import eu.kanade.tachiyomi.data.backup.models.BackupSource
+import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
@@ -62,17 +65,27 @@ abstract class SyncService(
      * @param remoteSyncData The SData containing the remote sync data.
      * @return The JSON string containing the merged sync data.
      */
-    fun mergeSyncData(localSyncData: SyncData, remoteSyncData: SyncData): SyncData {
+    private fun mergeSyncData(localSyncData: SyncData, remoteSyncData: SyncData): SyncData {
         val mergedMangaList = mergeMangaLists(localSyncData.backup?.backupManga, remoteSyncData.backup?.backupManga)
         val mergedCategoriesList =
             mergeCategoriesLists(localSyncData.backup?.backupCategories, remoteSyncData.backup?.backupCategories)
+
+        val mergedSourcesList =
+            mergeSourcesLists(localSyncData.backup?.backupSources, remoteSyncData.backup?.backupSources)
+        val mergedPreferencesList =
+            mergePreferencesLists(localSyncData.backup?.backupPreferences, remoteSyncData.backup?.backupPreferences)
+        val mergedSourcePreferencesList = mergeSourcePreferencesLists(
+            localSyncData.backup?.backupSourcePreferences,
+            remoteSyncData.backup?.backupSourcePreferences,
+        )
 
         // Create the merged Backup object
         val mergedBackup = Backup(
             backupManga = mergedMangaList,
             backupCategories = mergedCategoriesList,
-            backupBrokenSources = localSyncData.backup?.backupBrokenSources ?: emptyList(),
-            backupSources = localSyncData.backup?.backupSources ?: emptyList(),
+            backupSources = mergedSourcesList,
+            backupPreferences = mergedPreferencesList,
+            backupSourcePreferences = mergedSourcePreferencesList,
         )
 
         // Create the merged SData object
@@ -81,15 +94,6 @@ abstract class SyncService(
         )
     }
 
-    /**
-     * Merges two lists of BackupManga objects, selecting the most recent manga based on the lastModifiedAt value.
-     * If lastModifiedAt is null for a manga, it treats that manga as the oldest possible for comparison purposes.
-     * This function is designed to reconcile local and remote manga lists, ensuring the most up-to-date manga is retained.
-     *
-     * @param localMangaList The list of local BackupManga objects or null.
-     * @param remoteMangaList The list of remote BackupManga objects or null.
-     * @return A list of BackupManga objects, each representing the most recent version of the manga from either local or remote sources.
-     */
     private fun mergeMangaLists(
         localMangaList: List<BackupManga>?,
         remoteMangaList: List<BackupManga>?,
@@ -190,23 +194,6 @@ abstract class SyncService(
         return mergedList
     }
 
-/**
-     * Merges two lists of BackupChapter objects, selecting the most recent chapter based on the lastModifiedAt value.
-     * If lastModifiedAt is null for a chapter, it treats that chapter as the oldest possible for comparison purposes.
-     * This function is designed to reconcile local and remote chapter lists, ensuring the most up-to-date chapter is retained.
-     *
-     * @param localChapters The list of local BackupChapter objects.
-     * @param remoteChapters The list of remote BackupChapter objects.
-     * @return A list of BackupChapter objects, each representing the most recent version of the chapter from either local or remote sources.
-     *
-     * - This function is used in scenarios where local and remote chapter lists need to be synchronized.
-     * - It iterates over the union of the URLs from both local and remote chapters.
-     * - For each URL, it compares the corresponding local and remote chapters based on the lastModifiedAt value.
-     * - If only one source (local or remote) has the chapter for a URL, that chapter is used.
-     * - If both sources have the chapter, the one with the more recent lastModifiedAt value is chosen.
-     * - If lastModifiedAt is null or missing, the chapter is considered the oldest for safety, ensuring that any chapter with a valid timestamp is preferred.
-     * - The resulting list contains the most recent chapters from the combined set of local and remote chapters.
-     */
     private fun mergeChapters(
         localChapters: List<BackupChapter>,
         remoteChapters: List<BackupChapter>,
@@ -260,7 +247,9 @@ abstract class SyncService(
                     chosenChapter
                 }
                 else -> {
-                    logcat(LogPriority.DEBUG, logTag) { "No chapter found for composite key: $compositeKey. Skipping." }
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "No chapter found for composite key: $compositeKey. Skipping."
+                    }
                     null
                 }
             }
@@ -271,13 +260,6 @@ abstract class SyncService(
         return mergedChapters
     }
 
-    /**
-     * Merges two lists of SyncCategory objects, prioritizing the category with the most recent order value.
-     *
-     * @param localCategoriesList The list of local SyncCategory objects.
-     * @param remoteCategoriesList The list of remote SyncCategory objects.
-     * @return The merged list of SyncCategory objects.
-     */
     private fun mergeCategoriesLists(
         localCategoriesList: List<BackupCategory>?,
         remoteCategoriesList: List<BackupCategory>?,
@@ -313,5 +295,163 @@ abstract class SyncService(
         }
 
         return mergedCategoriesMap.values.toList()
+    }
+
+    private fun mergeSourcesLists(
+        localSources: List<BackupSource>?,
+        remoteSources: List<BackupSource>?,
+    ): List<BackupSource> {
+        val logTag = "MergeSources"
+
+        // Create maps using sourceId as key
+        val localSourceMap = localSources?.associateBy { it.sourceId } ?: emptyMap()
+        val remoteSourceMap = remoteSources?.associateBy { it.sourceId } ?: emptyMap()
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Starting source merge. Local sources: ${localSources?.size}, Remote sources: ${remoteSources?.size}"
+        }
+
+        // Merge both source maps
+        val mergedSources = (localSourceMap.keys + remoteSourceMap.keys).distinct().mapNotNull { sourceId ->
+            val localSource = localSourceMap[sourceId]
+            val remoteSource = remoteSourceMap[sourceId]
+
+            logcat(LogPriority.DEBUG, logTag) {
+                "Processing source ID: $sourceId. Local source: ${localSource != null}, " +
+                    "Remote source: ${remoteSource != null}"
+            }
+
+            when {
+                localSource != null && remoteSource == null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Using local source: ${localSource.name}." }
+                    localSource
+                }
+                remoteSource != null && localSource == null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Using remote source: ${remoteSource.name}." }
+                    remoteSource
+                }
+                else -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Remote and local is not empty: $sourceId. Skipping." }
+                    null
+                }
+            }
+        }
+
+        logcat(LogPriority.DEBUG, logTag) { "Source merge completed. Total merged sources: ${mergedSources.size}" }
+
+        return mergedSources
+    }
+
+    private fun mergePreferencesLists(
+        localPreferences: List<BackupPreference>?,
+        remotePreferences: List<BackupPreference>?,
+    ): List<BackupPreference> {
+        val logTag = "MergePreferences"
+
+        // Create maps using key as the unique identifier
+        val localPreferencesMap = localPreferences?.associateBy { it.key } ?: emptyMap()
+        val remotePreferencesMap = remotePreferences?.associateBy { it.key } ?: emptyMap()
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Starting preferences merge. Local preferences: ${localPreferences?.size}, " +
+                "Remote preferences: ${remotePreferences?.size}"
+        }
+
+        // Merge both preferences maps
+        val mergedPreferences = (localPreferencesMap.keys + remotePreferencesMap.keys).distinct().mapNotNull { key ->
+            val localPreference = localPreferencesMap[key]
+            val remotePreference = remotePreferencesMap[key]
+
+            logcat(LogPriority.DEBUG, logTag) {
+                "Processing preference key: $key. Local preference: ${localPreference != null}, " +
+                    "Remote preference: ${remotePreference != null}"
+            }
+
+            when {
+                localPreference != null && remotePreference == null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Using local preference: ${localPreference.key}." }
+                    localPreference
+                }
+                remotePreference != null && localPreference == null -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Using remote preference: ${remotePreference.key}." }
+                    remotePreference
+                }
+                else -> {
+                    logcat(LogPriority.DEBUG, logTag) { "Both remote and local have keys. Skipping: $key" }
+                    null
+                }
+            }
+        }
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Preferences merge completed. Total merged preferences: ${mergedPreferences.size}"
+        }
+
+        return mergedPreferences
+    }
+
+    private fun mergeSourcePreferencesLists(
+        localPreferences: List<BackupSourcePreferences>?,
+        remotePreferences: List<BackupSourcePreferences>?,
+    ): List<BackupSourcePreferences> {
+        val logTag = "MergeSourcePreferences"
+
+        // Create maps using sourceKey as the unique identifier
+        val localPreferencesMap = localPreferences?.associateBy { it.sourceKey } ?: emptyMap()
+        val remotePreferencesMap = remotePreferences?.associateBy { it.sourceKey } ?: emptyMap()
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Starting source preferences merge. Local source preferences: ${localPreferences?.size}, " +
+                "Remote source preferences: ${remotePreferences?.size}"
+        }
+
+        // Merge both source preferences maps
+        val mergedSourcePreferences = (localPreferencesMap.keys + remotePreferencesMap.keys).distinct().mapNotNull {
+                sourceKey ->
+            val localSourcePreference = localPreferencesMap[sourceKey]
+            val remoteSourcePreference = remotePreferencesMap[sourceKey]
+
+            logcat(LogPriority.DEBUG, logTag) {
+                "Processing source preference key: $sourceKey. " +
+                    "Local source preference: ${localSourcePreference != null}, " +
+                    "Remote source preference: ${remoteSourcePreference != null}"
+            }
+
+            when {
+                localSourcePreference != null && remoteSourcePreference == null -> {
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Using local source preference: ${localSourcePreference.sourceKey}."
+                    }
+                    localSourcePreference
+                }
+                remoteSourcePreference != null && localSourcePreference == null -> {
+                    logcat(LogPriority.DEBUG, logTag) {
+                        "Using remote source preference: ${remoteSourcePreference.sourceKey}."
+                    }
+                    remoteSourcePreference
+                }
+                localSourcePreference != null && remoteSourcePreference != null -> {
+                    // Merge the individual preferences within the source preferences
+                    val mergedPrefs =
+                        mergeIndividualPreferences(localSourcePreference.prefs, remoteSourcePreference.prefs)
+                    BackupSourcePreferences(sourceKey, mergedPrefs)
+                }
+                else -> null
+            }
+        }
+
+        logcat(LogPriority.DEBUG, logTag) {
+            "Source preferences merge completed. Total merged source preferences: ${mergedSourcePreferences.size}"
+        }
+
+        return mergedSourcePreferences
+    }
+
+    private fun mergeIndividualPreferences(
+        localPrefs: List<BackupPreference>,
+        remotePrefs: List<BackupPreference>,
+    ): List<BackupPreference> {
+        val mergedPrefsMap = (localPrefs + remotePrefs).associateBy { it.key }
+        return mergedPrefsMap.values.toList()
     }
 }
