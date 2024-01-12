@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
@@ -63,7 +63,7 @@ fun CrashScreen(
 @PreviewLightDark
 @Composable
 private fun CrashScreenPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         CrashScreen(exception = RuntimeException("Dummy")) {}
     }
 }

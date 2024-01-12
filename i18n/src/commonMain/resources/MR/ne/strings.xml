@@ -745,4 +745,11 @@
     <string name="file_null_uri_error">फाइल पिकर एपमा फाइल फर्काउन असफल भयो</string>
     <string name="selected">चयन गरिएको</string>
     <string name="not_selected">चयन नगरिएको</string>
+    <string name="action_sort_tracker_score">ट्र्याकर मुल्यन्कन</string>
+    <string name="scanlator">स्क्यानलेतर</string>
+    <string name="action_menu_overflow_description">अरु मेनु</string>
+    <string name="onboarding_heading">स्वागत!</string>
+    <string name="onboarding_action_next">अर्को</string>
+    <string name="onboarding_action_finish">सुरु</string>
+    <string name="onboarding_action_skip">छोड</string>
 </resources>

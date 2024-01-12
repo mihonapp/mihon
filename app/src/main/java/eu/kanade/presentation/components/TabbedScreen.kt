@@ -101,6 +101,6 @@ data class TabContent(
     val titleRes: StringResource,
     val badgeNumber: Int? = null,
     val searchEnabled: Boolean = false,
-    val actions: ImmutableList<AppBar.Action> = persistentListOf(),
+    val actions: ImmutableList<AppBar.AppBarAction> = persistentListOf(),
     val content: @Composable (contentPadding: PaddingValues, snackbarHostState: SnackbarHostState) -> Unit,
 )

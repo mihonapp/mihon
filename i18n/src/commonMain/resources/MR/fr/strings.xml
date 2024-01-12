@@ -67,7 +67,7 @@
     <string name="all">Tout</string>
     <string name="pref_library_update_restriction">Restrictions matérielles pour les mises à jour automatiques</string>
     <string name="charging">Lors de la charge</string>
-    <string name="pref_update_only_non_completed">Ayant comme statut « Terminé »</string>
+    <string name="pref_update_only_non_completed">Exclure si le statut est « Terminé »</string>
     <string name="pref_auto_update_manga_sync">Synchroniser la progression après lecture</string>
     <string name="pref_fullscreen">Plein écran</string>
     <string name="pref_page_transitions">Activer les transitions</string>
@@ -183,7 +183,7 @@
     <string name="download_notifier_title_error">Erreur</string>
     <string name="download_notifier_text_only_wifi">Aucune connexion disponible</string>
     <string name="download_notifier_no_network">Aucune connexion disponible</string>
-    <string name="clear_database_confirmation">Êtes-vous sûr(e) \? Les chapitres lus et la progression des entrées non présentes dans la bibliothèque seront perdues</string>
+    <string name="clear_database_confirmation">Êtes-vous sûr(e) ? Les chapitres lus et la progression des entrées hors dans la bibliothèque seront perdues</string>
     <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés \?</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
@@ -239,11 +239,9 @@
     <string name="ext_installed">Installée</string>
     <string name="ext_uninstall">Désinstaller</string>
     <string name="untrusted_extension">Extension non reconnue</string>
-    <string name="untrusted_extension_message">Cette extension a été signée avec un certificat non fiable et n\'a pas été activée.
+    <string name="untrusted_extension_message">Une extension malveillante pourrait lire n\'importe quel identifiant de connexion stocké ou exécuter un code arbitraire.
 \n
-\nUne extension malveillante pourrait lire n\'importe quel identifiant de connexion stocké ou exécuter un code arbitraire.
-\n
-\nEn faisant confiance à ce certificat, vous acceptez ces risques.</string>
+\nEn faisant confiance à cette extension, vous acceptez ces risques.</string>
     <string name="pref_double_tap_anim_speed">Vitesse d\'animation du double-clic</string>
     <string name="double_tap_anim_speed_0">Sans animation</string>
     <string name="double_tap_anim_speed_normal">Normale</string>
@@ -375,7 +373,7 @@
     <string name="label_data">Donnée</string>
     <string name="backup_restore_missing_sources">Sources manquantes :</string>
     <string name="invalid_backup_file_missing_manga">La sauvegarde ne contient pas d\'entrées de bibliothèque.</string>
-    <string name="invalid_backup_file">Fichier de sauvegarde invalide</string>
+    <string name="invalid_backup_file">Fichier de sauvegarde invalide :</string>
     <string name="pref_library_update_refresh_metadata">Actualiser automatiquement les métadonnées</string>
     <string name="action_migrate">Migrer</string>
     <string name="action_display_comfortable_grid">Grille espacée</string>
@@ -536,7 +534,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en cours d\'exécution</string>
     <string name="ext_installer_legacy">Legacy</string>
-    <string name="ext_installer_pref">Installateur</string>
+    <string name="ext_installer_pref">installeur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Entrées totales</string>
     <string name="pref_verbose_logging">Rapports détaillés</string>
@@ -551,11 +549,11 @@
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
     <string name="pref_auto_clear_chapter_cache">Vider le cache de chapitre au lancement de l\'application</string>
-    <string name="clear_database_source_item_count">%1$d entrées qui ne sont pas dans la bibliothèque dans la base de données</string>
+    <string name="clear_database_source_item_count">%1$d entrées hors de la bibliothèque dans la base de données</string>
     <string name="database_clean">Rien à effacer</string>
-    <string name="extension_api_error">Échec de la récupération de la liste des extensions</string>
+    <string name="extension_api_error">Aucune extension trouvée</string>
     <string name="privacy_policy">Politique de confidentialité</string>
-    <string name="pref_update_only_completely_read">Avec chapitre(s) non lu(s)</string>
+    <string name="pref_update_only_completely_read">Exclure s\'il reste un/des chapitre(s) à lire</string>
     <string name="save_chapter_as_cbz">Enregistrer comme archive CBZ</string>
     <string name="library_errors_help">Pour savoir comment corriger les erreurs de mise à jour de la bibliothèque, voir %1$s</string>
     <string name="on_hiatus">En pause</string>
@@ -565,7 +563,7 @@
     <string name="action_display_cover_only_grid">Grille avec seulement la couverture</string>
     <string name="pref_navigate_pan">Panoramique des images larges</string>
     <string name="pref_landscape_zoom">Zoom automatique dans les images larges</string>
-    <string name="pref_update_only_started">Qui n\'ont pas encore commencé</string>
+    <string name="pref_update_only_started">Exclure si lecture pas encore débutée</string>
     <string name="skipped_reason_completed">Sauté car la série est terminée</string>
     <string name="skipped_reason_not_started">Sauté car aucun chapitre n\'est lu</string>
     <string name="skipped_reason_not_caught_up">Sauté car il y a des chapitres non lus</string>
@@ -703,10 +701,10 @@
     <string name="pref_chapter_swipe_end">Action de glisser à droite</string>
     <string name="pref_double_tap_zoom">Appuyez deux fois pour zoomer</string>
     <string name="action_sort_next_updated">Prochaine mise à jour prévue</string>
-    <string name="pref_update_only_in_release_period">Prochaine sortie prévue dans :</string>
+    <string name="pref_update_only_in_release_period">Prédiction de la prochaine date sortie</string>
     <string name="action_set_interval">Définir l\'intervalle</string>
     <string name="action_ok">Valider</string>
-    <string name="action_filter_interval_custom">Intervalle de recherche personnalisé</string>
+    <string name="action_filter_interval_custom">Fréquence de mise à jour personnalisée</string>
     <string name="information_cloudflare_help">Appuyez ici pour de l\'aide sur Cloudflare</string>
     <string name="unlock_app_title">Débloquer %s</string>
     <string name="syncing_library">Synchronisation de la bibliothèque</string>
@@ -755,13 +753,13 @@
     <string name="onboarding_permission_notifications">Permission de notifications</string>
     <string name="onboarding_permission_ignore_battery_opts">Utilisation de la batterie en arrière-plan</string>
     <string name="onboarding_permission_install_apps_description">Pour installer des extensions de source.</string>
-    <string name="onboarding_permission_ignore_battery_opts_description">Évite les interruptions des longues mises à jour de bibliothèque, téléchargements de chapitres et restaurations de sauvegardes.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Évite l\'interruption des mises à jour de bibliothèque, des téléchargements de chapitres, et des restaurations de sauvegardes.</string>
     <string name="onboarding_permission_install_apps">Permission d\'installer des applications</string>
     <string name="onboarding_storage_help_info">Mise à jour depuis une ancienne version et pas sûr de quoi choisir ? Consultez le guide de stockage pour plus d\'informations.</string>
     <string name="onboarding_storage_help_action">Guide de stockage</string>
     <string name="onboarding_permission_notifications_description">Soyez notifié des mises à jour de la bibliothèque et autre.</string>
     <string name="pref_library_update_smart_update">Mise à jour intelligente</string>
-    <string name="pref_onboarding_guide">Guide de démarrage</string>
+    <string name="pref_onboarding_guide">Guide de premier lancement</string>
     <string name="onboarding_description">Commençons par paramétrer certaines choses. Vous pouvez toujours changer ces paramètres plus tard.</string>
     <string name="onboarding_storage_info">Sélectionnez un dossier où %1$s stockera les chapitres téléchargés, les sauvegardes et plus encore.
 \n
@@ -769,4 +767,35 @@
 \n
 \nDossier sélectionné : %2$s</string>
     <string name="onboarding_storage_action_select">Sélectionnez un dossier</string>
+    <string name="onboarding_guides_returning_user">De retour sur %s ?</string>
+    <string name="track_delete_title">Annuler le suivi avec %s ?</string>
+    <string name="private_settings">Inclure des informations sensible (ex : jetons de connexion)</string>
+    <string name="manga_interval_expected_update">De nouveaux chapitres sont prédits dans environ %1$s, mise à jour prévu tous les %2$s.</string>
+    <string name="exclude_scanlators">Exclure la team de scantrad</string>
+    <string name="no_scanlators_found">Aucune team de scantrad trouvé</string>
+    <string name="relative_time_span_never">Jamais</string>
+    <string name="onboarding_guides_new_user">Nouveau sur %s ? Nous vous recommandons de jeter un œil au guide de démarrage.</string>
+    <string name="delete_repo_confirmation">Voulez-vous vraiment supprimer le répertoire « %s » ?</string>
+    <string name="manga_interval_custom_amount">Fréquence de mise à jour personnalisé :</string>
+    <string name="invalid_backup_file_error">Erreur complète :</string>
+    <string name="action_delete_repo">Supprimer le répertoire</string>
+    <string name="label_extension_repos">Répertoire d\'extension</string>
+    <string name="ext_revoke_trust">Révoquer les extensions provenant d\'un répertoire additionnel</string>
+    <string name="label_add_repo_input">URL du répertoire</string>
+    <string name="action_add_repo_message">Ajouter un répertoire additionnel à Tachiyomi. L\'URL devrait se terminer par « index.min.json ».</string>
+    <string name="error_repo_exists">Ce répertoire existe déjà !</string>
+    <string name="invalid_repo_name">L\'URL du répertoire est invalide</string>
+    <string name="manga_interval_expected_update_soon">Bientôt</string>
+    <string name="information_empty_repos">Vous n\'avez aucun répertoire.</string>
+    <string name="action_add_repo">Ajouter un répertoire</string>
+    <string name="action_open_repo">Répertoire open source</string>
+    <string name="theme_nord">Nord</string>
+    <string name="action_create">Créer</string>
+    <string name="track_delete_text">Cela arrêtera le suivi pour cette série.</string>
+    <string name="file_null_uri_error">Aucun fichier sélectionné</string>
+    <string name="notification_updating_progress">Mise a jour de la bibliothèque... (%s)</string>
+    <string name="onboarding_action_finish">Commencer</string>
+    <string name="create_backup_file_error">Impossible de créer un fichier de sauvegarde</string>
+    <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
+    <string name="source_settings">Paramètres sources</string>
 </resources>

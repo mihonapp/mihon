@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.manga.components.MangaCover
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import tachiyomi.domain.history.model.HistoryWithRelations
@@ -98,7 +98,7 @@ private fun HistoryItemPreviews(
     @PreviewParameter(HistoryWithRelationsProvider::class)
     historyWithRelations: HistoryWithRelations,
 ) {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface {
             HistoryItem(
                 history = historyWithRelations,

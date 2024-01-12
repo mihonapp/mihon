@@ -97,11 +97,9 @@
     <string name="ext_untrusted">Güvenilmeyen</string>
     <string name="ext_uninstall">Kaldır</string>
     <string name="untrusted_extension">Güvenilmeyen uzantı</string>
-    <string name="untrusted_extension_message">Bu uzantı bilinmeyen bir yazar tarafından imzalandı ve yüklenmedi.
+    <string name="untrusted_extension_message">Kötü niyetli uzantılar, saklanan oturum açma kimlik bilgilerini okuyabilir veya rastgele kod çalıştırabilir.
 \n
-\nKötü niyetli uzantılar, saklanan oturum açma kimlik bilgilerini okuyabilir veya rastgele kod çalıştırabilir.
-\n
-\nBu uzantının sertifikasına güvenerek bu riskleri kabul etmiş olursunuz.</string>
+\nBu uzantıya güvenerek bu riskleri kabul etmiş olursunuz.</string>
     <string name="pref_fullscreen">Tam Ekran</string>
     <string name="pref_page_transitions">Sayfa geçişlerini canlandır</string>
     <string name="pref_double_tap_anim_speed">Çift dokunma animasyon hızı</string>
@@ -781,7 +779,7 @@
     <string name="available_disk_space_info">Kullanılabilir: %1$s / Toplam: %2$s</string>
     <string name="ext_permission_install_apps_warning">Uzantıları kurmak için izin gerekli. İzin vermek için buraya dokunun.</string>
     <string name="private_settings">Hassas ayarları dahil et (örn. izleyici oturum açma belirteçleri)</string>
-    <string name="manga_interval_expected_update">Sonraki bölümlerin %1$s içinde yayınlanacağı tahmin ediliyor, %2$s aralıklarla denetleniyor.</string>
+    <string name="manga_interval_expected_update">Sonraki bölümlerin %1$s içinde yayınlanacağı tahmin ediliyor, her %2$s içinde bir denetleniyor.</string>
     <string name="invalid_backup_file_error">Tüm hata:</string>
     <string name="information_empty_repos">Hiç depo ayarlamadınız.</string>
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
@@ -799,4 +797,5 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Güvenilen bilinmeyen uzantıları iptal et</string>
     <string name="manga_interval_expected_update_soon">Yakında</string>
+    <string name="action_open_repo">Açık kaynaklı depo</string>
 </resources>

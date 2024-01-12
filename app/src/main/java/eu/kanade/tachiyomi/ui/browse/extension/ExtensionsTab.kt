@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.ui.browse.extension
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,6 +8,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.browse.ExtensionScreen
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.TabContent
+import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreen
 import eu.kanade.tachiyomi.ui.webview.WebViewScreen
@@ -29,10 +28,13 @@ fun extensionsTab(
         badgeNumber = state.updates.takeIf { it > 0 },
         searchEnabled = true,
         actions = persistentListOf(
-            AppBar.Action(
+            AppBar.OverflowAction(
                 title = stringResource(MR.strings.action_filter),
-                icon = Icons.Outlined.Translate,
                 onClick = { navigator.push(ExtensionFilterScreen()) },
+            ),
+            AppBar.OverflowAction(
+                title = stringResource(MR.strings.label_extension_repos),
+                onClick = { navigator.push(ExtensionReposScreen()) },
             ),
         ),
         content = { contentPadding, _ ->

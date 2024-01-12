@@ -243,11 +243,9 @@
     <string name="ext_untrusted">Não confiável</string>
     <string name="ext_uninstall">Desinstalar</string>
     <string name="untrusted_extension">Extensão não confiável</string>
-    <string name="untrusted_extension_message">Esta extensão foi assinada por um autor desconhecido e não foi carregada.
+    <string name="untrusted_extension_message">Extensões maliciosas podem ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
 \n
-\nExtensões maliciosas podem ler quaisquer credenciais de login armazenadas ou executar códigos arbitrários.
-\n
-\nAo confiar no certificado desta extensão, você estará aceitando estes riscos.</string>
+\nAo confiar nessa extensão, você estará aceitando estes riscos.</string>
     <string name="pref_double_tap_anim_speed">Velocidade da animação do toque duplo</string>
     <string name="double_tap_anim_speed_0">Sem animação</string>
     <string name="double_tap_anim_speed_normal">Normal</string>
@@ -781,7 +779,7 @@
     <string name="available_disk_space_info">Disponível: %1$s / Total: %2$s</string>
     <string name="ext_permission_install_apps_warning">Permissões são necessárias para instalar extensões. Toque aqui para conceder.</string>
     <string name="private_settings">Incluir configurações sensíveis (tokens de login dos monitoradores, por exemplo)</string>
-    <string name="manga_interval_expected_update">Novos capítulos com previsão de serem lançados em torno de %1$s, verificando em torno de cada %2$s</string>
+    <string name="manga_interval_expected_update">Novos capítulos com previsão de serem lançados em torno de %1$s, verificando em torno de cada %2$s.</string>
     <string name="manga_interval_custom_amount">Frequência de atualização personalizada:</string>
     <string name="invalid_backup_file_error">Erro completo:</string>
     <string name="error_repo_exists">Este repositório já existe!</string>
@@ -799,4 +797,5 @@
     <string name="manga_interval_expected_update_soon">Em breve</string>
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
+    <string name="action_open_repo">Abrir repositório da fonte</string>
 </resources>

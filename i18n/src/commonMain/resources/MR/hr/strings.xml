@@ -4,9 +4,7 @@
     <string name="lock_always">Uvijek</string>
     <string name="pref_fullscreen">Cjeloekranski prikaz</string>
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno. Možda neće ispravno funkcionirati i može uzrokovati probleme s aplikacijom. Preporučuje se deinstalacija.</string>
-    <string name="untrusted_extension_message">Ovo proširenje potpisano je nepovjerljivim certifikatom i nije aktivirano.
-\n
-\nZlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
+    <string name="untrusted_extension_message">Zlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
 \n
 \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
@@ -373,7 +371,7 @@
     <string name="label_data">Podaci</string>
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži unose u biblioteci.</string>
-    <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
+    <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije:</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u eksternoj usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
@@ -705,7 +703,7 @@
     <string name="pref_chapter_swipe">Prelistaj poglavlja</string>
     <string name="pref_chapter_swipe_end">Prelistaj udesno</string>
     <string name="action_set_interval">Postavi interval</string>
-    <string name="action_filter_interval_custom">Prilagođeni interval dohvaćanja</string>
+    <string name="action_filter_interval_custom">Prilagođeni interval preuzimanja</string>
     <string name="manga_display_interval_title">Procijeni svakih</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
     <string name="manga_display_modified_interval_title">Postavi za aktualiziranje svakih</string>
@@ -770,7 +768,7 @@
     <string name="onboarding_heading">Dobro došao, dobro došla!</string>
     <string name="pref_onboarding_guide">Vodič za početno pokretanje</string>
     <string name="onboarding_guides_new_user">Koristiš %s po prvi puta? Preporučujemo da pogledaš vodič za pokretanje.</string>
-    <string name="onboarding_guides_returning_user">Već si koristio/la %s?</string>
+    <string name="onboarding_guides_returning_user">Ponovo istalirati %s?</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Izbjegni prekide pri dugotrajnim aktualiziranjima biblioteke, preuzimanjima i obnavljanja sigurnosnih kopija.</string>
     <string name="onboarding_permission_ignore_battery_opts">Upotreba baterije u pozadini</string>
     <string name="onboarding_description">Hajdemo najprije postaviti neke stvari. Ako želiš možeš ih kasnije promijeniti u postavkama.</string>
@@ -780,4 +778,5 @@
 \nPreporučujemo koristiti zasebnu mapu.
 \n
 \nOdabrana mapa: %2$s</string>
+    <string name="theme_nord">Nord</string>
 </resources>

@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -15,7 +15,7 @@ import tachiyomi.presentation.core.screens.EmptyScreenAction
 @PreviewLightDark
 @Composable
 private fun NoActionPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface {
             EmptyScreen(
                 stringRes = MR.strings.empty_screen,
@@ -27,7 +27,7 @@ private fun NoActionPreview() {
 @PreviewLightDark
 @Composable
 private fun WithActionPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface {
             EmptyScreen(
                 stringRes = MR.strings.empty_screen,
