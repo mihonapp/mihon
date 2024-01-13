@@ -554,7 +554,7 @@
     <string name="extension_api_error">Не удалось получить доступные расширения</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="pref_update_only_completely_read">Пропускать серии с непрочитанными главами</string>
-    <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки нажать %1$s</string>
+    <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки, нажмите %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
     <string name="on_hiatus">Перерыв</string>

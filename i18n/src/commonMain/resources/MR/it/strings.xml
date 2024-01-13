@@ -708,7 +708,7 @@
     <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
     <string name="intervals_header">Intervalli</string>
     <string name="manga_display_interval_title">Stima ogni</string>
-    <string name="action_filter_interval_custom">Intervallo di recupero personalizzato</string>
+    <string name="action_filter_interval_custom">Intervallo di aggiornamento personalizzato</string>
     <string name="action_sort_next_updated">Prossimo aggiornamento previsto</string>
     <string name="manga_display_modified_interval_title">Imposta l\'aggiornamento ogni</string>
     <string name="skipped_reason_not_in_release_period">Saltato perché oggi non era previsto alcun rilascio</string>

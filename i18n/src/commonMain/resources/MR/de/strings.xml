@@ -781,8 +781,8 @@
     <string name="onboarding_permission_action_grant">Zulassen</string>
     <string name="invalid_backup_file_error">Vollständiger Fehler:</string>
     <string name="manga_interval_custom_amount">Benutzerdefinierte Aktualisierungshäufigkeit:</string>
-    <string name="label_extension_repos">Erweiterungs-Repositories</string>
-    <string name="information_empty_repos">Es wurden noch keine Repositories festgelegt.</string>
+    <string name="label_extension_repos">Erweiterungs-Repositorys</string>
+    <string name="information_empty_repos">Es wurden noch keine Repositorys festgelegt.</string>
     <string name="action_add_repo">Repository hinzufügen</string>
     <string name="error_repo_exists">Dieses Repository existiert bereits!</string>
     <string name="action_delete_repo">Repository löschen</string>
@@ -791,7 +791,7 @@
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositories zu Tachiyomi hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
+    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Tachiyomi hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
     <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Neue Kapitel vsl. in ca. %1$s, überprüfe ca. alle %2$s</string>
     <string name="theme_nord">Nord</string>

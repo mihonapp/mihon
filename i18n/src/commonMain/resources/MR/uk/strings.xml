@@ -83,7 +83,7 @@
     <string name="all">Всі</string>
     <string name="pref_library_update_restriction">Обмеження пристрою для автоматичних оновлень</string>
     <string name="charging">Коли заряджається</string>
-    <string name="pref_update_only_non_completed">З статусом \"Завершено\"</string>
+    <string name="pref_update_only_non_completed">Пропустити глави з статусом \"Завершено\"</string>
     <string name="pref_auto_update_manga_sync">Оновлювати прогрес після прочитання</string>
     <string name="default_category">Типова категорія</string>
     <string name="default_category_summary">Завжди запитувати</string>
@@ -97,11 +97,9 @@
     <string name="ext_untrusted">Ненадійне</string>
     <string name="ext_uninstall">Видалити</string>
     <string name="untrusted_extension">Ненадійне розширення</string>
-    <string name="untrusted_extension_message">Це розширення було підписано ненадійним сертифікатом та не було активовано.
+    <string name="untrusted_extension_message">Шкідливе розширення може зчитувати будь-які збережені облікові дані для входу або виконати довільний код.
 \n
-\nШкідливе розширення може зчитувати будь-які збережені облікові дані для входу або виконати довільний код.
-\n
-\nДовіряючи цьому сертифікату, ви приймаєте ці ризики.</string>
+\nДовіряючи цьому розширенню, ви приймаєте ці ризики.</string>
     <string name="pref_fullscreen">Повноекранний режим</string>
     <string name="pref_page_transitions">Анімація переходів сторінки</string>
     <string name="pref_double_tap_anim_speed">Швидкість анімації при подвійному натиснені</string>
@@ -167,7 +165,7 @@
     <string name="creating_backup">Створення резервної копії</string>
     <string name="pref_clear_chapter_cache">Очистити кеш розділів</string>
     <string name="used_cache">Використано: %1$s</string>
-    <string name="cache_deleted">Кеш очищено %1$d файлів було видалено</string>
+    <string name="cache_deleted">Кеш очищено, %1$d файлів видалено</string>
     <string name="cache_delete_error">Виникла помилка при видаленні кешу</string>
     <string name="pref_clear_cookies">Очистити куки</string>
     <string name="cookies_cleared">Куки очищено</string>
@@ -301,9 +299,9 @@
     <string name="action_sort_latest_chapter">Останній розділ</string>
     <string name="action_view_chapters">Подивитись розділи</string>
     <string name="action_cancel_all">Скасувати все</string>
-    <string name="theme_light">Вимкнено</string>
-    <string name="theme_dark">Увімкнено</string>
-    <string name="theme_system">Використовувати системну</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_system">Системна</string>
     <string name="pref_manage_notifications">Керування сповіщеннями</string>
     <string name="pref_category_security">Безпека і конфіденційність</string>
     <string name="lock_with_biometrics">Потрібно розблокувати</string>
@@ -374,7 +372,7 @@
     <string name="restore_duration">%02d хв, %02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодних записів бібліотеки.</string>
-    <string name="invalid_backup_file">Невірний файл резервної копії</string>
+    <string name="invalid_backup_file">Невірний файл резервної копії:</string>
     <string name="tracking_info">Одностороння синхронізація для оновлення прогресу розділу у зовнішніх сервісах стеження. Налаштуйте відстеження окремих записів за допомогою кнопки відстеження.</string>
     <string name="action_display_show_tabs">Показувати вкладки категорій</string>
     <string name="action_display_comfortable_grid">Зручна сітка</string>
@@ -455,9 +453,7 @@
     <string name="pref_dual_page_split">Розділення широких сторінок</string>
     <string name="pref_dual_page_invert_summary">Якщо розділення широких сторінок, не відповідає напрямку читання</string>
     <string name="pref_dual_page_invert">Інвертувати розділення широких сторінок</string>
-    <string name="backup_restore_content_full">Дані з файлу резервної копії буде відновлено.
-\n
-\nВам потрібно встановити розширення яких бракує та увійти в сервіси відстежування для їх використання.</string>
+    <string name="backup_restore_content_full">Вам потрібно встановити розширення яких бракує та увійти в сервіси відстежування для їх використання.</string>
     <string name="nav_zone_right">Зправа</string>
     <string name="nav_zone_left">Зліва</string>
     <string name="nav_zone_next">Наступний</string>
@@ -557,7 +553,7 @@
     <string name="clear_database_source_item_count">%1$d небібліотечних записів у базі даних</string>
     <string name="database_clean">Немає чого очищувати</string>
     <string name="privacy_policy">Політика конфіденційності</string>
-    <string name="pref_update_only_completely_read">Є непрочитаний(ні) розділ(и)</string>
+    <string name="pref_update_only_completely_read">Пропустити непрочитаний(ні) розділ(и)</string>
     <string name="save_chapter_as_cbz">Зберегти архів як CBZ</string>
     <string name="library_errors_help">Для допомоги в виправленні помилок оновлення бібліотеки, дивіться %1$s</string>
     <string name="publishing_finished">Публікація завершена</string>
@@ -565,7 +561,7 @@
     <string name="on_hiatus">Заморожено</string>
     <string name="action_show_manga">Показати запис</string>
     <string name="action_display_cover_only_grid">Сітка тільки з обкладинками</string>
-    <string name="pref_update_only_started">Серія не почата</string>
+    <string name="pref_update_only_started">Пропустити непочаті глави</string>
     <string name="action_move_to_top_all_for_series">Перемістити серію на початок</string>
     <string name="rotation_reverse_portrait">Портретна навпаки</string>
     <string name="notification_update_error">%1$d оновлення(нь) не вдалось</string>
@@ -706,8 +702,8 @@
     <string name="pref_library_columns_per_row">%d на рядок</string>
     <string name="action_set_interval">Встановити інтервал</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
-    <string name="action_filter_interval_custom">Налаштувати інтервал отримання</string>
-    <string name="pref_update_only_in_release_period">Поза очікуваним періодом випуску</string>
+    <string name="action_filter_interval_custom">Налаштувати інтервал оновленнь</string>
+    <string name="pref_update_only_in_release_period">Передбачити наступний випуск</string>
     <string name="action_sort_next_updated">Наступне очікуване оновлення</string>
     <string name="intervals_header">Інтервали</string>
     <string name="manga_display_modified_interval_title">Налаштовано на оновлення кожної</string>
@@ -751,4 +747,55 @@
     <string name="notification_updating_progress">Оновлення бібліотеки... (%s)</string>
     <string name="file_null_uri_error">Файл не вибрано</string>
     <string name="exclude_scanlators">Виключити перекладачів</string>
+    <string name="onboarding_permission_install_apps_description">Щоб встановити джерело розширеннь.</string>
+    <string name="onboarding_guides_returning_user">Перевстановлюєте %s?</string>
+    <string name="onboarding_permission_install_apps">Встановити дозволи додатка</string>
+    <string name="ext_permission_install_apps_warning">Потребуються дозволи для встановлення додатків. Натисніть сюди для отримання.</string>
+    <string name="invalid_backup_file_error">Повна помилка:</string>
+    <string name="private_settings">Включати конфіденційні налаштування (наприклад, токени для входу в трекери)</string>
+    <string name="available_disk_space_info">Доступні: %1$s / Усього: %2$s</string>
+    <string name="onboarding_permission_ignore_battery_opts">Використання батареї на фоні</string>
+    <string name="onboarding_storage_selection_required">Потрібно обрати папку</string>
+    <string name="onboarding_permission_notifications">Дозвіл на сповіщення</string>
+    <string name="onboarding_permission_notifications_description">Отримувати сповіщення про оновлення бібліотек та інше.</string>
+    <string name="pref_library_update_smart_update">Розумні оновлення</string>
+    <string name="information_empty_repos">У вас нема встановлених репозиторіїв.</string>
+    <string name="action_add_repo">Додати репозиторій</string>
+    <string name="label_extension_repos">Репозиторії розширень</string>
+    <string name="error_repo_exists">Цей репозиторій вже існує!</string>
+    <string name="label_add_repo_input">Посилання на репозиторій</string>
+    <string name="action_add_repo_message">Додати додаткові репозиторії до Tachiyomi. Це повинні бути посилання які закінчуються на \"index.min.json\".</string>
+    <string name="manga_interval_expected_update">Нові глави передбачено будуть випущені приблизно в %1$s, перевіряючи кожні %2$s.</string>
+    <string name="onboarding_storage_help_info">Оновлюєтесь з попередньої версії і не впевнені яку обрати? Перегляньте гайд по сховищу для додаткової інформації.</string>
+    <string name="onboarding_storage_help_action">Гайд по сховищу</string>
+    <string name="manga_interval_custom_amount">Своя частота оновлення:</string>
+    <string name="theme_nord">Північ</string>
+    <string name="invalid_repo_name">Недійсне посилання на репозиторій</string>
+    <string name="delete_repo_confirmation">Бажаєте видалити репозиторій \"%s\"?</string>
+    <string name="no_location_set">Не встановлено місце сховища</string>
+    <string name="pref_storage_location">Місце сховища</string>
+    <string name="onboarding_permission_action_grant">Отримати</string>
+    <string name="pref_storage_location_info">Використовується для автоматичних бекапів, завантажень глав, та локальних джерел.</string>
+    <string name="manga_interval_expected_update_soon">Незабаром</string>
+    <string name="ext_revoke_trust">Скинути довірені невідомі розширення</string>
+    <string name="action_delete_repo">Видалити репозиторій</string>
+    <string name="action_open_repo">Репозиторій з відкритим початковим кодом</string>
+    <string name="selected">Обрано</string>
+    <string name="not_selected">Не обрано</string>
+    <string name="action_menu_overflow_description">Більше опцій</string>
+    <string name="action_bar_up_description">Навігація вгору</string>
+    <string name="onboarding_guides_new_user">Новачки у %s? Ми рекомендуємо переглянути стартовий гайд.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Уникати переривань для довготривалих оновлень бібліотек, завантажень, та бекапів.</string>
+    <string name="onboarding_storage_action_select">Оберіть папку</string>
+    <string name="onboarding_heading">Вітаємо!</string>
+    <string name="onboarding_action_next">Далі</string>
+    <string name="onboarding_action_skip">Пропустити</string>
+    <string name="onboarding_storage_info">Оберіть папку де %1$s буде зберігати збережені глави, бекапи, та інше.
+\n
+\nРекомендуємо обрати окрему папку.
+\n
+\nОбрана папка: %2$s</string>
+    <string name="onboarding_action_finish">Почнемо</string>
+    <string name="onboarding_description">Давайте для початку налаштуємо дещо. Ви завжди зможете змінити ці налаштування потім.</string>
+    <string name="pref_onboarding_guide">Гайд новачка</string>
 </resources>

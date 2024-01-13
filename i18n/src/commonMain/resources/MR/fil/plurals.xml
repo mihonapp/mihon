@@ -9,8 +9,8 @@
         <item quantity="other">%d (na) kategorya</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
-        <item quantity="one">Ang extension ay available upang i-update</item>
-        <item quantity="other">Ang mga %d (na) extension ay available upang i-update</item>
+        <item quantity="one">Ang extension ay maaari nang i-update</item>
+        <item quantity="other">Ang mga %d (na) extension ay maaari nang i-update</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">Mga kabanata %1$s at isa pa</item>
@@ -38,7 +38,7 @@
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d na mga tracker</item>
+        <item quantity="other">%d mga tracker</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa source o na-filter ang mga ito</item>
@@ -63,5 +63,9 @@
     <plurals name="day">
         <item quantity="one">1 araw</item>
         <item quantity="other">%d (mga) araw</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d na repo</item>
+        <item quantity="other">%d na mga repo</item>
     </plurals>
 </resources>
