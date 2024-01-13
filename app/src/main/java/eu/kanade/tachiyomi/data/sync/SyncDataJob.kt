@@ -80,7 +80,6 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
                     TimeUnit.MINUTES,
                 )
                     .addTag(TAG_AUTO)
-                    // No initial delay is needed, remove the randomDelayMillis
                     .build()
 
                 context.workManager.enqueueUniquePeriodicWork(TAG_AUTO, ExistingPeriodicWorkPolicy.UPDATE, request)

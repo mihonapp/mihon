@@ -72,16 +72,17 @@ class SyncManager(
      * from the database using the BackupManager, then synchronizes the data with a sync service.
      */
     suspend fun syncData() {
+        val syncOptions = syncPreferences.getSyncOptions()
         val databaseManga = getAllMangaFromDB()
         val backupOptions = BackupOptions(
-            libraryEntries = true,
-            categories = true,
-            chapters = true,
-            tracking = true,
-            history = true,
-            appSettings = true,
-            sourceSettings = true,
-            privateSettings = true,
+            libraryEntries = syncOptions.libraryEntries,
+            categories = syncOptions.categories,
+            chapters = syncOptions.chapters,
+            tracking = syncOptions.tracking,
+            history = syncOptions.history,
+            appSettings = syncOptions.appSettings,
+            sourceSettings = syncOptions.sourceSettings,
+            privateSettings = syncOptions.privateSettings,
         )
         val backup = Backup(
             backupManga = backupCreator.backupMangas(databaseManga, backupOptions),
@@ -119,10 +120,17 @@ class SyncManager(
 
         val remoteBackup = syncService?.doSync(syncData)
 
+        // Stop the sync early if the remote backup is null or empty
+        if (remoteBackup?.backupManga?.size == 0) {
+            notifier.showSyncError("No data found on remote server.")
+            return
+        }
+
         // Check if it's first sync based on lastSyncTimestamp
         if (syncPreferences.lastSyncTimestamp().get() == 0L && databaseManga.isNotEmpty()) {
             // It's first sync no need to restore data. (just update remote data)
             syncPreferences.lastSyncTimestamp().set(Date().time)
+            notifier.showSyncSuccess("Updated remote data successfully")
             return
         }
 
@@ -130,10 +138,8 @@ class SyncManager(
             val (filteredFavorites, nonFavorites) = filterFavoritesAndNonFavorites(remoteBackup)
             updateNonFavorites(nonFavorites)
 
-            val mangas = processFavoriteManga(filteredFavorites)
-
             val newSyncData = backup.copy(
-                backupManga = mangas,
+                backupManga = filteredFavorites,
                 backupCategories = remoteBackup.backupCategories,
                 backupSources = remoteBackup.backupSources,
                 backupPreferences = remoteBackup.backupPreferences,
@@ -141,9 +147,10 @@ class SyncManager(
             )
 
             // It's local sync no need to restore data. (just update remote data)
-            if (mangas.isEmpty()) {
+            if (filteredFavorites.isEmpty()) {
                 // update the sync timestamp
                 syncPreferences.lastSyncTimestamp().set(Date().time)
+                notifier.showSyncSuccess("Sync completed successfully")
                 return
             }
 
@@ -328,6 +335,7 @@ class SyncManager(
         val favorites = mutableListOf<BackupManga>()
         val nonFavorites = mutableListOf<BackupManga>()
         val logTag = "filterFavoritesAndNonFavorites"
+
         val elapsedTimeMillis = measureTimeMillis {
             val databaseMangaFavorites = getFavorites.await()
             val localMangaMap = databaseMangaFavorites.associateBy {
@@ -366,51 +374,6 @@ class SyncManager(
         }
 
         return Pair(favorites, nonFavorites)
-    }
-
-    private fun processFavoriteManga(backupManga: List<BackupManga>): List<BackupManga> {
-        val mangas = mutableListOf<BackupManga>()
-        val lastSyncTimeStamp = syncPreferences.lastSyncTimestamp().get()
-
-        val elapsedTimeMillis = measureTimeMillis {
-            logcat(LogPriority.DEBUG) { "Starting to process BackupMangas." }
-            backupManga.forEach { manga ->
-                val mangaLastUpdatedStatus = manga.lastModifiedAt * 1000L > lastSyncTimeStamp
-                val chaptersUpdatedStatus = chaptersUpdatedAfterSync(manga, lastSyncTimeStamp)
-
-                if (mangaLastUpdatedStatus || chaptersUpdatedStatus) {
-                    mangas.add(manga)
-                    logcat(LogPriority.DEBUG) {
-                        "Added ${manga.title} to the process list. Manga Last Updated: $mangaLastUpdatedStatus, " +
-                            "Chapters Updated: $chaptersUpdatedStatus."
-                    }
-                } else {
-                    logcat(LogPriority.DEBUG) {
-                        "Skipped ${manga.title} as it has not been updated since the last sync " +
-                            "(Last Modified: ${manga.lastModifiedAt * 1000L}, Last Sync: $lastSyncTimeStamp)."
-                    }
-                }
-            }
-        }
-
-        val minutes = elapsedTimeMillis / 60000
-        val seconds = (elapsedTimeMillis % 60000) / 1000
-        logcat(LogPriority.DEBUG) { "Processing completed in ${minutes}m ${seconds}s. Total Processed: ${mangas.size}" }
-
-        return mangas
-    }
-
-    private fun chaptersUpdatedAfterSync(manga: BackupManga, lastSyncTimeStamp: Long): Boolean {
-        return manga.chapters.any { chapter ->
-            val updated = chapter.lastModifiedAt * 1000L > lastSyncTimeStamp
-            if (updated) {
-                logcat(LogPriority.DEBUG) {
-                    "Chapter ${chapter.name} of ${manga.title} updated after last sync " +
-                        "(Chapter Last Modified: ${chapter.lastModifiedAt * 1000L}, Last Sync: $lastSyncTimeStamp)."
-                }
-            }
-            updated
-        }
     }
 
     /**

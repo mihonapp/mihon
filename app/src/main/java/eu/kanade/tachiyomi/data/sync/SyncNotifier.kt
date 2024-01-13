@@ -72,4 +72,15 @@ class SyncNotifier(private val context: Context) {
             show(Notifications.ID_RESTORE_COMPLETE)
         }
     }
+
+    fun showSyncSuccess(message: String?) {
+        context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
+
+        with(completeNotificationBuilder) {
+            setContentTitle(context.getString(R.string.sync_complete))
+            setContentText(message)
+
+            show(Notifications.ID_RESTORE_COMPLETE)
+        }
+    }
 }

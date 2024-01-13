@@ -563,6 +563,7 @@
     <string name="pref_sync_interval">Synchronization frequency</string>
     <string name="pref_reset_sync_timestamp">Reset last sync timestamp</string>
     <string name="pref_reset_sync_timestamp_subtitle">Reset the last sync timestamp to force a full sync</string>
+    <string name="pref_choose_what_to_sync">Choose what to sync</string>
     <string name="success_reset_sync_timestamp">Last sync timestamp reset</string>
     <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>
@@ -582,7 +583,7 @@
     <string name="error_deleting_google_drive_lock_file">Error Deleting Google Drive Lock File</string>
     <string name="pref_purge_confirmation_title">Purge confirmation</string>
     <string name="pref_purge_confirmation_message">Purging sync data will delete all your sync data from Google Drive. Are you sure you want to continue?</string>
-
+    <string name="sync_library">Sync library</string>
 
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
