@@ -14,6 +14,7 @@ val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 
 android {
     namespace = "eu.kanade.tachiyomi"
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "eu.kanade.tachiyomi"
