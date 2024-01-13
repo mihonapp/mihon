@@ -97,11 +97,9 @@
     <string name="ext_untrusted">No és de confiança</string>
     <string name="ext_uninstall">Desinstal·la</string>
     <string name="untrusted_extension">Extensió que no és de confiança</string>
-    <string name="untrusted_extension_message">Aquesta extensió l’ha signada algun autor desconegut i no s’ha carregat.
+    <string name="untrusted_extension_message">Les extensions malicioses poden llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
 \n
-\nLes extensions malicioses poden llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
-\n
-\nSi confieu en el certificat d’aquesta extensió, accepteu aquests riscos.</string>
+\nSi confieu en aquesta extensió, accepteu aquests riscos.</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Anima les transicions de pàgina</string>
     <string name="pref_show_page_number">Mostra el número de pàgina</string>
@@ -779,7 +777,7 @@
     <string name="onboarding_permission_notifications_description">Rebeu notificacions quan hi hagi actualitzacions de la biblioteca i més.</string>
     <string name="onboarding_permission_action_grant">Permet</string>
     <string name="available_disk_space_info">Disponible: %1$s / Total: %2$s</string>
-    <string name="manga_interval_expected_update">S’ha previst que se’n publicaran nous capítols pels volts de %1$s, es comprova cada %2$s.</string>
+    <string name="manga_interval_expected_update">S’ha previst que se’n publicaran nous capítols d’aquí a %1$s, es comprova cada %2$s.</string>
     <string name="invalid_backup_file_error">Error complet:</string>
     <string name="ext_permission_install_apps_warning">Calen permisos per a instal·lar extensions. Premeu aquí per a concedir-les.</string>
     <string name="private_settings">Inclou-hi configuració sensible (per exemple, testimonis d’autenticació dels serveis de seguiment)</string>
@@ -793,10 +791,11 @@
     <string name="onboarding_storage_help_action">Guia d’emmagatzematge</string>
     <string name="onboarding_storage_help_info">Heu actualitzat d’una versió més antiga i no sabeu què heu de seleccionar? Consulteu la guia d’emmagatzematge per a més informació.</string>
     <string name="theme_nord">Nòrdic</string>
-    <string name="pref_library_update_smart_update">Actualitzacions intel·lgents</string>
+    <string name="pref_library_update_smart_update">Actualitzacions intel·ligents</string>
     <string name="ext_revoke_trust">Revoca les extensions de confiança desconegudes</string>
     <string name="action_add_repo">Afegeix un repositori</string>
     <string name="label_add_repo_input">URL del repositori</string>
     <string name="manga_interval_expected_update_soon">Aviat</string>
     <string name="manga_interval_custom_amount">Freqüència d’actualització personalitzada:</string>
+    <string name="action_open_repo">Obre el repositori d’origen</string>
 </resources>

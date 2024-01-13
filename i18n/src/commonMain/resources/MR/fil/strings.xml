@@ -21,12 +21,12 @@
     <string name="action_pin">I-pin</string>
     <string name="action_disable">Isara</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab ng kategorya</string>
-    <string name="action_display_download_badge">Bilang ng na-download</string>
-    <string name="action_display_comfortable_grid">Maginhawa</string>
+    <string name="action_display_download_badge">Bilang ng kabanatang na-download</string>
+    <string name="action_display_comfortable_grid">Maalwan na grid</string>
     <string name="action_display_list">Listahan</string>
-    <string name="action_display_grid">Siksik</string>
+    <string name="action_display_grid">Siksik na grid</string>
     <string name="action_display">Pagpapakita</string>
-    <string name="action_display_mode">Pagpapakita</string>
+    <string name="action_display_mode">Istilo ng pagpapakita</string>
     <string name="action_migrate">Ilipat</string>
     <string name="action_open_in_web_view">Buksan sa WebView</string>
     <string name="action_open_in_browser">Buksan sa browser</string>
@@ -72,7 +72,7 @@
     <string name="history">Nakaraan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
-    <string name="manga">Mga entry ng aklatan</string>
+    <string name="manga">Mga nilalaman ng aklatan</string>
     <string name="categories">Kategorya</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para gumawa ng isa para sa pag-aayos ng iyong aklatan.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
@@ -450,7 +450,7 @@
     <string name="action_filter_tracked">Sinusubaybayan</string>
     <string name="right_and_left_nav">Kaliwa at Kanan</string>
     <string name="pref_dual_page_split">Hatiin ang mga malalapad na pahina</string>
-    <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga item</string>
+    <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga aytem</string>
     <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto sa direksyon ng pagbabasa ang paghahati sa malalapad na pahina</string>
     <string name="pref_dual_page_invert">Baligtarin ang paghahati sa pahina</string>
     <string name="backup_restore_content_full">Kailangan mong i-install muli ang mga nawawalang extension at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
@@ -496,7 +496,7 @@
     <string name="off">Naka-off</string>
     <string name="on">Naka-on</string>
     <string name="action_display_local_badge">Lokal na source</string>
-    <string name="categorized_display_settings">Mga setting ng bawat kategorya para sa pag-aayos</string>
+    <string name="categorized_display_settings">Mga setting ng bawat kategorya para sa pagbubukod-bukod</string>
     <string name="information_empty_category_dialog">Wala ka pang kategorya.</string>
     <string name="tracking_guide">Gabay sa pag-track</string>
     <string name="action_start_downloading_now">I-download na</string>
@@ -709,7 +709,7 @@
     <string name="intervals_header">Mga pagitan</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
-    <string name="delete_downloaded">Tanggalin ang na-download</string>
+    <string name="delete_downloaded">Burahin ang na-download</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Tanggalin ang %s tracking\?</string>
     <string name="track_delete_text">Tatanggalin nito ang lokal na pag-track.</string>
@@ -734,7 +734,7 @@
     <string name="source_settings">Mga setting ng source</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Walang napiling file</string>
-    <string name="label_data_storage">Data at storage</string>
+    <string name="label_data_storage">Datos at storage</string>
     <string name="pref_flash_page_summ">Binabawasan ang ghosting sa mga e-ink na display</string>
     <string name="pref_flash_page">Mag-flash kada pumalit ng pahina</string>
     <string name="relative_time_span_never">Hindi kailanman</string>

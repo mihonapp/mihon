@@ -52,4 +52,20 @@
         <item quantity="one">Следващата непрочетена глава</item>
         <item quantity="other">Следващите %d непрочетени глави</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="one">1 ден</item>
+        <item quantity="other">%d дни</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Липсваща %1$s глава</item>
+        <item quantity="other">Липсващи %1$s глави</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Следваща глава</item>
+        <item quantity="other">Следващи %d глави</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d хранилище</item>
+        <item quantity="other">%d хранилища</item>
+    </plurals>
 </resources>
