@@ -4,9 +4,7 @@
     <string name="lock_always">Uvijek</string>
     <string name="pref_fullscreen">Cjeloekranski prikaz</string>
     <string name="obsolete_extension_message">Ovo proširenje više nije dostupno. Možda neće ispravno funkcionirati i može uzrokovati probleme s aplikacijom. Preporučuje se deinstalacija.</string>
-    <string name="untrusted_extension_message">Ovo proširenje potpisano je nepovjerljivim certifikatom i nije aktivirano.
-\n
-\nZlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
+    <string name="untrusted_extension_message">Zlonamjerno proširenje može pročitati sve spremljene podatke za prijavu ili izvršiti proizvoljni kod.
 \n
 \nVjerujući ovom certifikatu, prihvaćaš te rizike.</string>
     <string name="untrusted_extension">Nepovjerljivo proširenje</string>
@@ -24,7 +22,7 @@
     <string name="all">Sve</string>
     <string name="default_category_summary">Uvijek pitaj</string>
     <string name="default_category">Standardna kategorija</string>
-    <string name="pref_update_only_non_completed">Sa stanjem „Završeno“</string>
+    <string name="pref_update_only_non_completed">Preskoči unose sa stanjem „Završeno“</string>
     <string name="charging">Kad se puni</string>
     <string name="pref_library_update_restriction">Ograničenja uređaja za automatska aktualiziranja</string>
     <string name="update_weekly">Tjedno</string>
@@ -373,7 +371,7 @@
     <string name="label_data">Podaci</string>
     <string name="backup_restore_missing_sources">Nedostaju izvori:</string>
     <string name="invalid_backup_file_missing_manga">Sigurnosna kopija ne sadrži unose u biblioteci.</string>
-    <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
+    <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije:</string>
     <string name="tracking_info">Jednosmjerna sinkronizacija za aktualiziranje napretka poglavlja u eksternoj usluzi praćenja. Postavi praćenje pojedinačnih unosa manga putem gumba za praćenje.</string>
     <string name="pref_library_update_refresh_metadata_summary">Provjeri nove naslovnice i pojedinosti prilikom aktualiziranja biblioteke</string>
     <string name="pref_library_update_refresh_metadata">Automatski osvježi metapodatke</string>
@@ -452,9 +450,7 @@
     <string name="action_filter_tracked">Praćeno</string>
     <string name="right_and_left_nav">Desno i lijevo</string>
     <string name="action_display_show_number_of_items">Prikaži broj elemenata</string>
-    <string name="backup_restore_content_full">Podaci datoteke sigurnosne kopije će se obnoviti.
-\n
-\nZa upotrebu podataka, morat ćeš instalirati nedostajuća proširenja i nakon toga se prijaviti na usluge praćenja.</string>
+    <string name="backup_restore_content_full">Možda ćeš morati instalirati sva nedostajuća proširenja i naknadno se prijaviti na usluge praćenja za njihovo korištenje.</string>
     <string name="pref_dual_page_invert_summary">Ako se položaj rastavljenih širokih stranica ne podudara sa smjerom čitanja</string>
     <string name="pref_dual_page_invert">Obrni položaj rastavljene stranice</string>
     <string name="pref_dual_page_split">Rastavi široke stranice</string>
@@ -546,12 +542,12 @@
     <string name="pref_auto_clear_chapter_cache">Izbriši predmemoriju poglavlja tijekom pokretanja aplikacije</string>
     <string name="channel_app_updates">Ažuriranja aplikacije</string>
     <string name="database_clean">Nema se što raščistiti</string>
-    <string name="pref_update_only_completely_read">S nepročitanim poglavljima</string>
+    <string name="pref_update_only_completely_read">Preskoči unose s nepročitanim poglavljima</string>
     <string name="enhanced_services">Poboljšane usluge praćenja</string>
     <string name="enhanced_tracking_info">Pruža poboljšane značajke za određene izvore. Unosi se automatski prate kada se dodaju u biblioteku.</string>
     <string name="action_track">Prati</string>
     <string name="privacy_policy">Politika privatnosti</string>
-    <string name="extension_api_error">Neuspjelo preuzimanje popisa proširenja</string>
+    <string name="extension_api_error">Neuspjelo preuzimanje dostupnih proširenja</string>
     <string name="ext_installer_pref">Instalacijski program</string>
     <string name="ext_installer_legacy">Stari način</string>
     <string name="pref_highest">Najviša</string>
@@ -567,7 +563,7 @@
     <string name="action_display_cover_only_grid">Samo naslovnice</string>
     <string name="pref_navigate_pan">Panoramski prikaz širokih slika</string>
     <string name="pref_landscape_zoom">Automatski zumiraj u široke slike</string>
-    <string name="pref_update_only_started">Koja još nisu pokrenuta</string>
+    <string name="pref_update_only_started">Preskoči nepokrenute unose</string>
     <string name="skipped_reason_completed">Preskočeno, jer je serija kompletna</string>
     <string name="skipped_reason_not_started">Preskočeno, jer nijedno poglavlje nije pročitano</string>
     <string name="skipped_reason_not_caught_up">Preskočeno, jer postoje nepročitana poglavlja</string>
@@ -605,7 +601,7 @@
     <string name="ext_info_age_rating">Dobna granica</string>
     <string name="download_ahead">Preuzmi unaprijed</string>
     <string name="multi_lang">Višejezičnost</string>
-    <string name="missing_storage_permission">Dozvole za spremanje nisu odobrena</string>
+    <string name="missing_storage_permission">Dozvole za spremište nisu odobrena</string>
     <string name="theme_tidalwave">Tsunami</string>
     <string name="invalid_location">Nevažeće mjesto: %s</string>
     <string name="pref_advanced_summary">Zapisnici iznenadnog gašenja aplikacije, optimizacije baterije</string>
@@ -613,7 +609,7 @@
     <string name="label_local">Lokalno</string>
     <string name="action_search_hint">Traži …</string>
     <string name="pref_library_summary">Kategorije, globalno ažuriranje, prelistavanje poglavlja</string>
-    <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije, memorija</string>
+    <string name="pref_backup_summary">Ručne i automatske sigurnosne kopije, količina spremišta</string>
     <string name="label_stats">Statistike</string>
     <string name="label_downloaded">Preuzeto</string>
     <string name="action_display_show_continue_reading_button">Gumb za nastavljanje čitanja</string>
@@ -705,12 +701,12 @@
     <string name="pref_chapter_swipe">Prelistaj poglavlja</string>
     <string name="pref_chapter_swipe_end">Prelistaj udesno</string>
     <string name="action_set_interval">Postavi interval</string>
-    <string name="action_filter_interval_custom">Prilagođeni interval dohvaćanja</string>
+    <string name="action_filter_interval_custom">Prilagođeni interval preuzimanja</string>
     <string name="manga_display_interval_title">Procijeni svakih</string>
     <string name="action_sort_next_updated">Sljedeće očekivano aktualiziranje</string>
     <string name="manga_display_modified_interval_title">Postavi za aktualiziranje svakih</string>
     <string name="action_ok">U redu</string>
-    <string name="pref_update_only_in_release_period">Izvan očekivanog razdoblja izdavanja</string>
+    <string name="pref_update_only_in_release_period">Predvidi vrijeme sljedećeg izdanja</string>
     <string name="intervals_header">Intervali</string>
     <string name="track_delete_title">Ukloniti praćenje %s\?</string>
     <string name="skipped_reason_not_in_release_period">Preskočeno, jer se danas nije očekivalo izdanje</string>
@@ -742,16 +738,16 @@
     <string name="relative_time_span_never">Nikada</string>
     <string name="pref_flash_page_summ">Smanjuje artefakte na ekranima s e-tintom</string>
     <string name="last_auto_backup_info">Zadnja automatska sigurnosna kopija: %s</string>
-    <string name="pref_flash_page">Zabljesni prilikom mijenjanja stranice</string>
+    <string name="pref_flash_page">Zabljesni prilikom listanja</string>
     <string name="action_create">Stvori</string>
     <string name="action_apply">Primijeni</string>
     <string name="action_revert_to_default">Obnovi standardne vrijednosti</string>
     <string name="no_scanlators_found">Nije pronađen nijedan amaterski prevoditelj</string>
     <string name="scanlator">Amaterski prevoditelj</string>
-    <string name="pref_storage_usage">Korištenje memorije</string>
+    <string name="pref_storage_usage">Korištenje spremišta</string>
     <string name="action_sort_tracker_score">Rezultat tragača</string>
     <string name="exclude_scanlators">Isključi amaterske prevoditelje</string>
-    <string name="pref_storage_location">Mjesto spremanja</string>
+    <string name="pref_storage_location">Mjesto spremišta</string>
     <string name="pref_storage_location_info">Koristi se za automatske sigurnosne kopije, preuzimanje poglavlja i lokalni izvor.</string>
     <string name="action_menu_overflow_description">Više opcija</string>
     <string name="selected">Odabrano</string>
@@ -770,14 +766,36 @@
     <string name="onboarding_heading">Dobro došao, dobro došla!</string>
     <string name="pref_onboarding_guide">Vodič za početno pokretanje</string>
     <string name="onboarding_guides_new_user">Koristiš %s po prvi puta? Preporučujemo da pogledaš vodič za pokretanje.</string>
-    <string name="onboarding_guides_returning_user">Već si koristio/la %s?</string>
+    <string name="onboarding_guides_returning_user">Ponovo istalirati %s?</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Izbjegni prekide pri dugotrajnim aktualiziranjima biblioteke, preuzimanjima i obnavljanja sigurnosnih kopija.</string>
     <string name="onboarding_permission_ignore_battery_opts">Upotreba baterije u pozadini</string>
     <string name="onboarding_description">Hajdemo najprije postaviti neke stvari. Ako želiš možeš ih kasnije promijeniti u postavkama.</string>
-    <string name="no_location_set">Nije postavljeno mjesto za spremanje podataka</string>
+    <string name="no_location_set">Nije postavljeno mjesto spremišta</string>
     <string name="onboarding_storage_info">Odaberi mapu u koju će %1$s spremati preuzimanja poglavlja, sigurnosne kopije i drugo.
 \n
 \nPreporučujemo koristiti zasebnu mapu.
 \n
 \nOdabrana mapa: %2$s</string>
+    <string name="theme_nord">Nord</string>
+    <string name="ext_permission_install_apps_warning">Za instaliranje proširenja su potrebne dozvole. Dodirni ovdje za odobrenje.</string>
+    <string name="invalid_backup_file_error">Potpuna greška:</string>
+    <string name="label_extension_repos">Repozitoriji proširenja</string>
+    <string name="information_empty_repos">Nemaš postavljenih reopzitorija.</string>
+    <string name="onboarding_storage_help_info">Aktualiziraš sa starije verzije i ne znaš što odabrati? Potraži informacije u vodiču spremišta.</string>
+    <string name="onboarding_storage_help_action">Vodič spremišta</string>
+    <string name="error_repo_exists">Ovaj repozitorij već postoji!</string>
+    <string name="manga_interval_custom_amount">Prilagođena učestalost aktualiziranja:</string>
+    <string name="pref_library_update_smart_update">Pametno aktualiziranje</string>
+    <string name="action_add_repo">Dodaj repozitorij</string>
+    <string name="action_delete_repo">Izbriši repozitorij</string>
+    <string name="label_add_repo_input">URL repozitorija</string>
+    <string name="action_add_repo_message">Dodaj dodatne repozitorije u Tachiyomi. To bi trebao biti URL koji završava s „index.min.json”.</string>
+    <string name="invalid_repo_name">Neispravan URL repozitorija</string>
+    <string name="ext_revoke_trust">Opozovi pouzdana nepoznata proširenja</string>
+    <string name="delete_repo_confirmation">Želiš li izbrisati repozitorij „%s”?</string>
+    <string name="action_open_repo">Otvori repozitorij izvora</string>
+    <string name="private_settings">Omogući osjetljive postavke (kao što su tokeni za prijavu za usluge praćenja)</string>
+    <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti objavljena za oko %1$s, provjera svakih %2$s.</string>
+    <string name="manga_interval_expected_update_soon">Uskoro</string>
+    <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
 </resources>

@@ -563,6 +563,7 @@
     <string name="pref_sync_interval">Synchronization frequency</string>
     <string name="pref_reset_sync_timestamp">Reset last sync timestamp</string>
     <string name="pref_reset_sync_timestamp_subtitle">Reset the last sync timestamp to force a full sync</string>
+    <string name="pref_choose_what_to_sync">Choose what to sync</string>
     <string name="success_reset_sync_timestamp">Last sync timestamp reset</string>
     <string name="syncyomi">SyncYomi</string>
     <string name="sync_completed_message">Done in %1$s</string>
@@ -589,6 +590,7 @@
     <string name="sync_on_app_start">Sync on App Start</string>
     <string name="sync_on_app_resume">Sync on App Resume</string>
     <string name="sync_on_library_update">Sync on Library Update</string>
+    <string name="sync_library">Sync library</string>
 
       <!-- Advanced section -->
     <string name="label_network">Networking</string>

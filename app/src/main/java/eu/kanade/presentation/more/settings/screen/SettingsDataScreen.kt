@@ -40,6 +40,7 @@ import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.screen.data.SyncOptionsScreen
+import eu.kanade.presentation.more.settings.screen.data.SyncSettingsSelector
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -463,24 +464,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     private fun getSyncNowPref(): Preference.PreferenceGroup {
-        val scope = rememberCoroutineScope()
-        var showDialog by remember { mutableStateOf(false) }
-        val context = LocalContext.current
-        if (showDialog) {
-            SyncConfirmationDialog(
-                onConfirm = {
-                    showDialog = false
-                    scope.launch {
-                        if (!SyncDataJob.isAnyJobRunning(context)) {
-                            SyncDataJob.startNow(context)
-                        } else {
-                            context.toast(MR.strings.sync_in_progress)
-                        }
-                    }
-                },
-                onDismissRequest = { showDialog = false },
-            )
-        }
+        val navigator = LocalNavigator.currentOrThrow
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_sync_now_group_title),
             preferenceItems = persistentListOf(
@@ -489,7 +473,7 @@ object SettingsDataScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_sync_now),
                     subtitle = stringResource(MR.strings.pref_sync_now_subtitle),
                     onClick = {
-                        showDialog = true
+                        navigator.push(SyncSettingsSelector())
                     },
                 ),
             ),
@@ -538,28 +522,6 @@ object SettingsDataScreen : SearchableSettings {
                     stringResource(MR.strings.last_synchronization, relativeTimeSpanString(lastSync)),
                 ),
             ),
-        )
-    }
-
-    @Composable
-    private fun SyncConfirmationDialog(
-        onConfirm: () -> Unit,
-        onDismissRequest: () -> Unit,
-    ) {
-        AlertDialog(
-            onDismissRequest = onDismissRequest,
-            title = { Text(text = stringResource(MR.strings.pref_sync_confirmation_title)) },
-            text = { Text(text = stringResource(MR.strings.pref_sync_confirmation_message)) },
-            dismissButton = {
-                TextButton(onClick = onDismissRequest) {
-                    Text(text = stringResource(MR.strings.action_cancel))
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = onConfirm) {
-                    Text(text = stringResource(MR.strings.action_ok))
-                }
-            },
         )
     }
 }

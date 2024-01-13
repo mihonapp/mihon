@@ -62,4 +62,39 @@ class SyncPreferences(
     fun isSyncEnabled(): Boolean {
         return syncService().get() != 0
     }
+
+    fun getSyncOptions(): SyncOptions {
+        return SyncOptions(
+            libraryEntries = preferenceStore.getBoolean("library_entries", true).get(),
+            categories = preferenceStore.getBoolean("categories", true).get(),
+            chapters = preferenceStore.getBoolean("chapters", true).get(),
+            tracking = preferenceStore.getBoolean("tracking", true).get(),
+            history = preferenceStore.getBoolean("history", true).get(),
+            appSettings = preferenceStore.getBoolean("appSettings", true).get(),
+            sourceSettings = preferenceStore.getBoolean("sourceSettings", true).get(),
+            privateSettings = preferenceStore.getBoolean("privateSettings", true).get(),
+        )
+    }
+
+    fun setSyncOptions(syncOptions: SyncOptions) {
+        preferenceStore.getBoolean("library_entries", true).set(syncOptions.libraryEntries)
+        preferenceStore.getBoolean("categories", true).set(syncOptions.categories)
+        preferenceStore.getBoolean("chapters", true).set(syncOptions.chapters)
+        preferenceStore.getBoolean("tracking", true).set(syncOptions.tracking)
+        preferenceStore.getBoolean("history", true).set(syncOptions.history)
+        preferenceStore.getBoolean("appSettings", true).set(syncOptions.appSettings)
+        preferenceStore.getBoolean("sourceSettings", true).set(syncOptions.sourceSettings)
+        preferenceStore.getBoolean("privateSettings", true).set(syncOptions.privateSettings)
+    }
 }
+
+data class SyncOptions(
+    val libraryEntries: Boolean = true,
+    val categories: Boolean = true,
+    val chapters: Boolean = true,
+    val tracking: Boolean = true,
+    val history: Boolean = true,
+    val appSettings: Boolean = true,
+    val sourceSettings: Boolean = true,
+    val privateSettings: Boolean = false,
+)

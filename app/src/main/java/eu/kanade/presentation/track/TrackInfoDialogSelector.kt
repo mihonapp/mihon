@@ -32,7 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
@@ -229,7 +229,7 @@ private fun BaseSelector(
 @PreviewLightDark
 @Composable
 private fun TrackStatusSelectorPreviews() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface {
             TrackStatusSelector(
                 selection = 1,

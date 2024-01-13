@@ -19,7 +19,7 @@ import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.ui.RichTextStyle
 import com.halilibo.richtext.ui.material3.RichText
 import com.halilibo.richtext.ui.string.RichTextStringStyle
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
@@ -69,7 +69,7 @@ fun NewUpdateScreen(
 @PreviewLightDark
 @Composable
 private fun NewUpdateScreenPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         NewUpdateScreen(
             versionName = "v0.99.9",
             changelogInfo = """

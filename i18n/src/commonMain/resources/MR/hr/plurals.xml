@@ -80,4 +80,9 @@
         <item quantity="few">%d dana</item>
         <item quantity="other">%d dana</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repozitorij</item>
+        <item quantity="few">%d repozitorija</item>
+        <item quantity="other">%d repozitorija</item>
+    </plurals>
 </resources>

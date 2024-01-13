@@ -29,8 +29,29 @@ fun TachiyomiTheme(
     amoled: Boolean? = null,
     content: @Composable () -> Unit,
 ) {
+    val uiPreferences = Injekt.get<UiPreferences>()
+    BaseTachiyomiTheme(
+        appTheme = appTheme ?: uiPreferences.appTheme().get(),
+        isAmoled = amoled ?: uiPreferences.themeDarkAmoled().get(),
+        content = content,
+    )
+}
+
+@Composable
+fun TachiyomiPreviewTheme(
+    appTheme: AppTheme = AppTheme.DEFAULT,
+    isAmoled: Boolean = false,
+    content: @Composable () -> Unit,
+) = BaseTachiyomiTheme(appTheme, isAmoled, content)
+
+@Composable
+private fun BaseTachiyomiTheme(
+    appTheme: AppTheme,
+    isAmoled: Boolean,
+    content: @Composable () -> Unit,
+) {
     MaterialTheme(
-        colorScheme = getThemeColorScheme(appTheme, amoled),
+        colorScheme = getThemeColorScheme(appTheme, isAmoled),
         content = content,
     )
 }
@@ -38,11 +59,10 @@ fun TachiyomiTheme(
 @Composable
 @ReadOnlyComposable
 private fun getThemeColorScheme(
-    appTheme: AppTheme?,
-    amoled: Boolean?,
+    appTheme: AppTheme,
+    isAmoled: Boolean,
 ): ColorScheme {
-    val uiPreferences = Injekt.get<UiPreferences>()
-    val colorScheme = when (appTheme ?: uiPreferences.appTheme().get()) {
+    val colorScheme = when (appTheme) {
         AppTheme.DEFAULT -> TachiyomiColorScheme
         AppTheme.MONET -> MonetColorScheme(LocalContext.current)
         AppTheme.GREEN_APPLE -> GreenAppleColorScheme
@@ -59,6 +79,6 @@ private fun getThemeColorScheme(
     }
     return colorScheme.getColorScheme(
         isSystemInDarkTheme(),
-        amoled ?: uiPreferences.themeDarkAmoled().get(),
+        isAmoled,
     )
 }

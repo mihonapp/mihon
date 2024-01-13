@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import eu.kanade.presentation.theme.TachiyomiTheme
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.ui.reader.model.ChapterTransition
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
@@ -306,7 +306,7 @@ private val FakeChapterLongTitle = previewChapter(
 @PreviewLightDark
 @Composable
 private fun TransitionTextPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface(modifier = Modifier.padding(48.dp)) {
             ChapterTransition(
                 transition = ChapterTransition.Next(ReaderChapter(FakeChapter), ReaderChapter(FakeChapter)),
@@ -320,7 +320,7 @@ private fun TransitionTextPreview() {
 @PreviewLightDark
 @Composable
 private fun TransitionTextLongTitlePreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface(modifier = Modifier.padding(48.dp)) {
             ChapterTransition(
                 transition = ChapterTransition.Next(ReaderChapter(FakeChapterLongTitle), ReaderChapter(FakeChapter)),
@@ -334,7 +334,7 @@ private fun TransitionTextLongTitlePreview() {
 @PreviewLightDark
 @Composable
 private fun TransitionTextWithGapPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface(modifier = Modifier.padding(48.dp)) {
             ChapterTransition(
                 transition = ChapterTransition.Next(ReaderChapter(FakeChapter), ReaderChapter(FakeGapChapter)),
@@ -348,7 +348,7 @@ private fun TransitionTextWithGapPreview() {
 @PreviewLightDark
 @Composable
 private fun TransitionTextNoNextPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface(modifier = Modifier.padding(48.dp)) {
             ChapterTransition(
                 transition = ChapterTransition.Next(ReaderChapter(FakeChapter), null),
@@ -362,7 +362,7 @@ private fun TransitionTextNoNextPreview() {
 @PreviewLightDark
 @Composable
 private fun TransitionTextNoPreviousPreview() {
-    TachiyomiTheme {
+    TachiyomiPreviewTheme {
         Surface(modifier = Modifier.padding(48.dp)) {
             ChapterTransition(
                 transition = ChapterTransition.Prev(ReaderChapter(FakeChapter), null),

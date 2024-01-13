@@ -73,7 +73,7 @@
     <string name="all">全て</string>
     <string name="pref_library_update_restriction">自動更新の条件</string>
     <string name="charging">充電中</string>
-    <string name="pref_update_only_non_completed">ステータスが「完結済み」</string>
+    <string name="pref_update_only_non_completed">ステータスが「完結済み」の作品をスキップ</string>
     <string name="pref_auto_update_manga_sync">読んだ後に読書進捗を更新</string>
     <string name="default_category">デフォルトカテゴリー</string>
     <string name="default_category_summary">毎回尋ねる</string>
@@ -158,11 +158,9 @@
     <string name="action_open_in_web_view">WebView で開く</string>
     <string name="pref_category_reader">ビューア</string>
     <string name="pref_category_tracking">同期</string>
-    <string name="untrusted_extension_message">この拡張機能は不明の作成者によりサインされているため、ロードされていません。
+    <string name="untrusted_extension_message">悪意のある拡張機能は保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
 \n
-\n悪意のある拡張機能は保存されているすべてのログイン情報を読み取ることや、任意コード実行をすることができます。
-\n
-\nこれらのリスクを受け入れ、この拡張機能の証明書を信頼しますか？</string>
+\nこれらのリスクを受け入れ、この拡張機能を信頼しますか？</string>
     <string name="pref_show_page_number">ページ数を表示</string>
     <string name="pref_keep_screen_on">画面を常にON</string>
     <string name="scale_type_fit_height">高さに合わせる</string>
@@ -553,9 +551,9 @@
     <string name="clear_database_source_item_count">データベースにはライブラリにない項目は%1$d件あります</string>
     <string name="pref_auto_clear_chapter_cache">アプリ起動時に章のキャッシュを消去</string>
     <string name="database_clean">消去できるものはありませんでした</string>
-    <string name="extension_api_error">拡張機能リストを取得できませんでした</string>
+    <string name="extension_api_error">利用可能な拡張機能を取得できませんでした</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="pref_update_only_completely_read">未読の章あり</string>
+    <string name="pref_update_only_completely_read">未読の章がある作品をスキップ</string>
     <string name="library_errors_help">ライブラリ更新エラーの修正については、%1$sをご覧ください</string>
     <string name="save_chapter_as_cbz">CBZアーカイブとして保存</string>
     <string name="publishing_finished">完結済み</string>
@@ -563,7 +561,7 @@
     <string name="on_hiatus">休載中</string>
     <string name="action_show_manga">項目を表示</string>
     <string name="action_display_cover_only_grid">表紙グリッド</string>
-    <string name="pref_update_only_started">読み始めていない</string>
+    <string name="pref_update_only_started">読み始めていない作品をスキップ</string>
     <string name="skipped_reason_not_caught_up">未読の章がある為スキップしました</string>
     <string name="pref_landscape_zoom">横長の画像に自動でズームイン</string>
     <string name="skipped_reason_completed">完結済みの為スキップしました</string>
@@ -703,9 +701,9 @@
     <string name="pref_chapter_swipe">章の間のスワイプ</string>
     <string name="pref_double_tap_zoom">ダブルタップでズーム</string>
     <string name="action_set_interval">間隔を設定</string>
-    <string name="action_filter_interval_custom">カスタマイズした取得間隔</string>
+    <string name="action_filter_interval_custom">カスタマイズした更新頻度</string>
     <string name="action_sort_next_updated">次の更新予定</string>
-    <string name="pref_update_only_in_release_period">更新予定時間外</string>
+    <string name="pref_update_only_in_release_period">次の更新時点を予測</string>
     <string name="intervals_header">間隔</string>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="has_results">結果あり</string>
@@ -761,7 +759,7 @@
     <string name="onboarding_action_finish">はじめる</string>
     <string name="onboarding_storage_selection_required">フォルダを選択してください</string>
     <string name="onboarding_heading">ようこそ！</string>
-    <string name="onboarding_guides_returning_user">%sを使ったことはもうありましたか？</string>
+    <string name="onboarding_guides_returning_user">%sを再インストールしていますか？</string>
     <string name="onboarding_action_skip">スキップ</string>
     <string name="onboarding_action_next">次へ</string>
     <string name="onboarding_description">はじめに初回設定をしていきましょう。このあとも「設定」にていつも変更できます。</string>
@@ -779,7 +777,25 @@
     <string name="onboarding_permission_notifications_description">ライブラリ更新などの通知を送信します。</string>
     <string name="onboarding_permission_action_grant">許可</string>
     <string name="available_disk_space_info">空き領域：%1$s/総計：%2$s</string>
-    <string name="manga_interval_expected_update">次のアップデートは%sに実行する予定です</string>
+    <string name="manga_interval_expected_update">新章は%1$sぐらいでリリースされると予測しており、%2$sごとに確認する予定です。</string>
     <string name="invalid_backup_file_error">詳細なエラー情報：</string>
     <string name="ext_permission_install_apps_warning">拡張機能をインストールするためには権限が必要です。タップで許可してください。</string>
+    <string name="error_repo_exists">このリポジトリは既に存在しています！</string>
+    <string name="manga_interval_custom_amount">カスタム更新頻度：</string>
+    <string name="action_delete_repo">リポジトリを削除</string>
+    <string name="delete_repo_confirmation">リポジトリ「%s」を削除してもよろしいですか？</string>
+    <string name="onboarding_storage_help_action">ストレージ ガイド</string>
+    <string name="private_settings">トラッカーログイン情報などの機密性の高い情報を含みます</string>
+    <string name="manga_interval_expected_update_soon">間もなく</string>
+    <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
+    <string name="label_extension_repos">拡張機能リポジトリ</string>
+    <string name="invalid_repo_name">リポジトリURLが無効です</string>
+    <string name="action_add_repo_message">Tachiyomiにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
+    <string name="action_add_repo">リポジトリを追加</string>
+    <string name="action_open_repo">ソース リポジトリを開く</string>
+    <string name="onboarding_storage_help_info">古いバージョンからバージョンアップしたばかりで、選択に悩んでいますか？ストレージ ガイドにご参照ください。</string>
+    <string name="information_empty_repos">リポジトリを設定していません。</string>
+    <string name="label_add_repo_input">リポジトリURL</string>
+    <string name="theme_nord">Nord</string>
+    <string name="pref_library_update_smart_update">スマート・アップデート</string>
 </resources>

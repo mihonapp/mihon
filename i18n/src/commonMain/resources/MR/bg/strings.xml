@@ -329,7 +329,7 @@
     <string name="restoring_backup_error">Възстановяването неуспешно</string>
     <string name="restore_in_progress">Възстановяването е в процес</string>
     <string name="creating_backup_error">Съхраняването неуспешно</string>
-    <string name="backup_in_progress">Копието вече се запазва</string>
+    <string name="backup_in_progress">Архивирането вече е в ход</string>
     <string name="restore_duration">%02d мин, %02d сек</string>
     <string name="pref_webtoon_side_padding">Странично разстояние</string>
     <string name="pref_category_reading">Четене</string>
@@ -344,7 +344,7 @@
     <string name="lock_never">Никога</string>
     <string name="lock_always">Винаги</string>
     <string name="lock_when_idle">Заключи при неактивност</string>
-    <string name="lock_with_biometrics">Изисквай отключване</string>
+    <string name="lock_with_biometrics">Изискване на отключване</string>
     <string name="pref_category_security">Сигурност</string>
     <string name="pref_manage_notifications">Уведомления</string>
     <string name="theme_system">Система на абонаментите</string>

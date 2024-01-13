@@ -554,7 +554,7 @@
     <string name="extension_api_error">Не удалось получить доступные расширения</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="pref_update_only_completely_read">Пропускать серии с непрочитанными главами</string>
-    <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки нажать %1$s</string>
+    <string name="library_errors_help">Для помощи в исправлении ошибок библиотеки, нажмите %1$s</string>
     <string name="save_chapter_as_cbz">Сохранить как архив CBZ</string>
     <string name="cancelled">Отменено</string>
     <string name="on_hiatus">Перерыв</string>
@@ -705,7 +705,7 @@
     <string name="manga_display_interval_title">Оценивать каждые</string>
     <string name="action_set_interval">Задать интервал</string>
     <string name="action_sort_next_updated">Следующее ожидамое обновление</string>
-    <string name="pref_update_only_in_release_period">Ожидается выход новых глав</string>
+    <string name="pref_update_only_in_release_period">Предсказать время выхода новых глав</string>
     <string name="manga_display_modified_interval_title">Задать обновления каждые</string>
     <string name="skipped_reason_not_in_release_period">Пропущено, т.к сегодня не ожидается выпуска</string>
     <string name="track_delete_title">Удалить отслеживание %s\?</string>
@@ -796,6 +796,6 @@
     <string name="onboarding_storage_help_info">Обновляетесь со старой версии и не знаете, что выбрать? Обратите внимание на руководство по хранению для большей информации.</string>
     <string name="manga_interval_expected_update_soon">Скоро</string>
     <string name="theme_nord">Север</string>
-    <string name="ext_revoke_trust">Не доверять неизвестным расширениям</string>
-    <string name="action_open_repo">Репозиторий open-source</string>
+    <string name="ext_revoke_trust">Убрать доверие к ненадёжным расширениям</string>
+    <string name="action_open_repo">Открыть репозиторий источника</string>
 </resources>

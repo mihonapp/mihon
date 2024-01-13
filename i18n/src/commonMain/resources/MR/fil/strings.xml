@@ -21,12 +21,12 @@
     <string name="action_pin">I-pin</string>
     <string name="action_disable">Isara</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab ng kategorya</string>
-    <string name="action_display_download_badge">Bilang ng na-download</string>
-    <string name="action_display_comfortable_grid">Maginhawa</string>
+    <string name="action_display_download_badge">Bilang ng kabanatang na-download</string>
+    <string name="action_display_comfortable_grid">Maalwan na grid</string>
     <string name="action_display_list">Listahan</string>
-    <string name="action_display_grid">Siksik</string>
+    <string name="action_display_grid">Siksik na grid</string>
     <string name="action_display">Pagpapakita</string>
-    <string name="action_display_mode">Pagpapakita</string>
+    <string name="action_display_mode">Istilo ng pagpapakita</string>
     <string name="action_migrate">Ilipat</string>
     <string name="action_open_in_web_view">Buksan sa WebView</string>
     <string name="action_open_in_browser">Buksan sa browser</string>
@@ -72,7 +72,7 @@
     <string name="history">Nakaraan</string>
     <string name="track">Tina-track</string>
     <string name="chapters">Mga Kabanata</string>
-    <string name="manga">Mga entry ng aklatan</string>
+    <string name="manga">Mga nilalaman ng aklatan</string>
     <string name="categories">Kategorya</string>
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para gumawa ng isa para sa pag-aayos ng iyong aklatan.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
@@ -179,15 +179,13 @@
     <string name="pref_cutout_short">Ipakita ang laman sa cutout area</string>
     <string name="pref_fullscreen">Naka-fullscreen</string>
     <string name="obsolete_extension_message">Hindi na available ang extension na ito. Maaaring hindi ito gumana nang maayos at maaaring magdulot ng mga isyu sa app. Inirerekomenda ang pag-uninstall nito.</string>
-    <string name="untrusted_extension_message">Ang extension na ito ay nilagdaan ng sinumang hindi kilalang author at hindi na-load.
+    <string name="untrusted_extension_message">Maaaring basahin ng mga mapanganib na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code.
 \n
-\nMaaaring basahin ng mga nakakahamak na extension ang anumang nakatagong kredensyal sa pag-log in o magsagawa ng arbitrary code.
-\n
-\nSa pamamagitan ng pagtitiwala sa certificate ng extension na ito, tinatanggap mo ang mga panganib na ito.</string>
+\nSa pamamagitan ng pagtitiwala sa extension na ito, tinatanggap mo ang mga panganib na ito.</string>
     <string name="untrusted_extension">Di-pinagkakatiwalaang extension</string>
     <string name="ext_uninstall">I-uninstall</string>
     <string name="ext_trust">Tiwala</string>
-    <string name="ext_untrusted">Kaduda-duda</string>
+    <string name="ext_untrusted">Hindi pinagkakatiwalaan</string>
     <string name="ext_installed">Naka-install</string>
     <string name="ext_installing">Ini-install</string>
     <string name="ext_downloading">Dina-download</string>
@@ -199,7 +197,7 @@
     <string name="all">Lahat</string>
     <string name="default_category_summary">Palaging tanungin</string>
     <string name="default_category">Default na kategorya</string>
-    <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng Aklatan</string>
+    <string name="pref_library_update_refresh_metadata_summary">Maghanap ng mga bagong cover at detalye kapag nag-a-update ng aklatan</string>
     <string name="pref_library_update_refresh_metadata">Awtomatikong i-refresh ang metadata</string>
     <string name="pref_update_only_non_completed">Laktawan ang mga entry na may katayuang \"Nakumpleto\"</string>
     <string name="charging">Kapag naka-charge</string>
@@ -266,7 +264,7 @@
     <string name="notification_first_add_to_library">Maaaring ilagay ang entry sa iyong library bago ito gawin</string>
     <string name="notification_cover_update_failed">Bigong mapalitan ang cover</string>
     <string name="notification_chapters_multiple">Mga kabanata %1$s</string>
-    <string name="notification_chapters_single_and_more">Kabanata %1$s at karagdagang %2$d pa</string>
+    <string name="notification_chapters_single_and_more">Kabanata %1$s at karagdagang %2$d iba pa</string>
     <string name="notification_chapters_single">Kabanata %1$s</string>
     <string name="notification_new_chapters">May mga bagong kabanata</string>
     <string name="download_insufficient_space">Di ma-download ang mga kabanata dahil sa mababang espasyo sa storage</string>
@@ -289,12 +287,12 @@
     <string name="transition_finished">Natapos:</string>
     <string name="viewer">Pagbasa</string>
     <string name="pref_category_for_this_series">Para sa seryeng ito</string>
-    <string name="confirm_set_image_as_cover">Gamiting cover ang larawang ito\?</string>
+    <string name="confirm_set_image_as_cover">Gamiting cover art ang larawang ito?</string>
     <string name="decode_image_error">Di mai-load ang larawan</string>
     <string name="no_next_chapter">Di makita ang susunod na kabanata</string>
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Napalitan na ang cover</string>
-    <string name="set_as_cover">Gawing cover</string>
+    <string name="set_as_cover">Gawin itong cover</string>
     <string name="custom_filter">Pinili kong filter</string>
     <string name="picture_saved">Na-save na ang larawan</string>
     <string name="dialog_with_checkbox_reset">I-reset ang lahat ng chapters sa entry na ito</string>
@@ -371,7 +369,7 @@
     <string name="label_downloaded_only">Mga na-download lang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
-    <string name="updated_version">Nai-update patungong bersyon %1$s</string>
+    <string name="updated_version">Na-update sa %1$s</string>
     <string name="check_for_updates">Maghanap ng update</string>
     <string name="licenses">Mga lisensiyang open-source</string>
     <string name="whats_new">Anong bago</string>
@@ -433,7 +431,7 @@
     <string name="migration_help_guide">Gabay sa Paglipat ng source</string>
     <string name="spen_next_page">Abante</string>
     <string name="spen_previous_page">Balik</string>
-    <string name="file_picker_error">Walang nakitang app para makapili</string>
+    <string name="file_picker_error">Walang nakitang file picker app</string>
     <string name="pref_show_nsfw_source">Ipakita sa mga listahan ng source at extension</string>
     <string name="pref_category_nsfw_content">Mga source na NSFW (18+)</string>
     <string name="myanimelist_relogin">Mag-login muli po sa MAL</string>
@@ -452,7 +450,7 @@
     <string name="action_filter_tracked">Sinusubaybayan</string>
     <string name="right_and_left_nav">Kaliwa at Kanan</string>
     <string name="pref_dual_page_split">Hatiin ang mga malalapad na pahina</string>
-    <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga item</string>
+    <string name="action_display_show_number_of_items">Ipakita ang bilang ng mga aytem</string>
     <string name="pref_dual_page_invert_summary">Kung sakaling hindi sumasakto sa direksyon ng pagbabasa ang paghahati sa malalapad na pahina</string>
     <string name="pref_dual_page_invert">Baligtarin ang paghahati sa pahina</string>
     <string name="backup_restore_content_full">Kailangan mong i-install muli ang mga nawawalang extension at mag-login muli sa mga tracker pagkatapos para magamit ang mga ito.</string>
@@ -491,14 +489,14 @@
     <string name="chapter_not_found">Hindi makita ang kabanata</string>
     <string name="source_unsupported">Di suportado ang source</string>
     <string name="unread">Di pa nabasa</string>
-    <string name="error_sharing_cover">Di maibahagi ang cover</string>
-    <string name="error_saving_cover">Di ma-save ang cover</string>
+    <string name="error_sharing_cover">Error sa pagbabahagi ng cover</string>
+    <string name="error_saving_cover">Error sa pag-save ng cover</string>
     <string name="cover_saved">Na-save na ang cover</string>
-    <string name="manga_cover">Takip ng manga</string>
+    <string name="manga_cover">Cover</string>
     <string name="off">Naka-off</string>
     <string name="on">Naka-on</string>
     <string name="action_display_local_badge">Lokal na source</string>
-    <string name="categorized_display_settings">Mga setting ng bawat kategorya para sa pag-aayos</string>
+    <string name="categorized_display_settings">Mga setting ng bawat kategorya para sa pagbubukod-bukod</string>
     <string name="information_empty_category_dialog">Wala ka pang kategorya.</string>
     <string name="tracking_guide">Gabay sa pag-track</string>
     <string name="action_start_downloading_now">I-download na</string>
@@ -562,7 +560,7 @@
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="action_show_manga">Ipakita ang entry</string>
-    <string name="action_display_cover_only_grid">Pabalat lang</string>
+    <string name="action_display_cover_only_grid">Cover-only na grid</string>
     <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>
     <string name="pref_update_only_started">Laktawan ang hindi nasimulang mga entry</string>
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang mga kabanata</string>
@@ -711,7 +709,7 @@
     <string name="intervals_header">Mga pagitan</string>
     <string name="skipped_reason_not_in_release_period">Nilaktawan dahil walang inaasahang release ngayong araw</string>
     <string name="has_results">May mga resulta</string>
-    <string name="delete_downloaded">Tanggalin ang na-download</string>
+    <string name="delete_downloaded">Burahin ang na-download</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_title">Tanggalin ang %s tracking\?</string>
     <string name="track_delete_text">Tatanggalin nito ang lokal na pag-track.</string>
@@ -735,8 +733,8 @@
     <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto\?</string>
     <string name="source_settings">Mga setting ng source</string>
     <string name="app_settings">Mga setting ng app</string>
-    <string name="file_null_uri_error">Ang file picker ay nabigo na ibalik ang file sa app</string>
-    <string name="label_data_storage">Data at storage</string>
+    <string name="file_null_uri_error">Walang napiling file</string>
+    <string name="label_data_storage">Datos at storage</string>
     <string name="pref_flash_page_summ">Binabawasan ang ghosting sa mga e-ink na display</string>
     <string name="pref_flash_page">Mag-flash kada pumalit ng pahina</string>
     <string name="relative_time_span_never">Hindi kailanman</string>
@@ -799,4 +797,5 @@
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
+    <string name="action_open_repo">Open source na repo</string>
 </resources>

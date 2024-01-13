@@ -9,8 +9,8 @@
         <item quantity="other">%1$d neue Kapitel</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">Kapitel %1$s und 1 mehr</item>
-        <item quantity="other">Kapitel %1$s und %2$d mehr</item>
+        <item quantity="one">Kapitel %1$s und 1 weiteres</item>
+        <item quantity="other">Kapitel %1$s und %2$d weitere</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">Für %d Eintrag</item>
@@ -29,7 +29,7 @@
         <item quantity="other">%d Kategorien</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="one">Erledigt in %1$s mit %2$s Fehler</item>
+        <item quantity="one">Erledigt in %1$s mit einem Fehler</item>
         <item quantity="other">Erledigt in %1$s mit %2$s Fehlern</item>
     </plurals>
     <plurals name="manga_num_chapters">
@@ -63,5 +63,9 @@
     <plurals name="day">
         <item quantity="one">1 Tag</item>
         <item quantity="other">%d Tage</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d Repository</item>
+        <item quantity="other">%d Repositorys</item>
     </plurals>
 </resources>
