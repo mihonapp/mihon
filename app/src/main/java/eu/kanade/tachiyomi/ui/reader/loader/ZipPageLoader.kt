@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
-import android.os.Build
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder

@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.widget
 
-import android.os.Build
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow

@@ -1,7 +1,5 @@
 package eu.kanade.presentation.util
 
-import android.os.Build
-import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
