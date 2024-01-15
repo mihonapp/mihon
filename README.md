@@ -28,7 +28,7 @@ Please make sure to read the full guidelines. Your issue may be closed without w
 
 <details><summary>Issues</summary>
 
-1. **Before reporting a new issue, take a look at the [FAQ](https://tachiyomi.org/docs/faq/general), the [changelog](https://tachiyomi.org/changelogs/) and the already opened [issues](https://github.com/tachiyomiorg/tachiyomi/issues).**
+1. **Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/tachiyomiorg/tachiyomi/issues).**
 2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/1195734228319617024.svg)](https://discord.gg/mihon)
 
 </details>
@@ -69,7 +69,7 @@ See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 ## FAQ
 
-[See our website.](https://tachiyomi.org/)
+[See our website.](https://mihon.app/)
 You can also reach out to us on [Discord](https://discord.gg/mihon).
 
 ## License

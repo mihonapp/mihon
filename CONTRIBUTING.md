@@ -34,7 +34,7 @@ To auto-fix some linting errors, run the `ktlintFormat` Gradle task.
 
 # Translations
 
-Translations are done externally via Weblate. See [our website](https://tachiyomi.org/docs/contribute#translation) for more details.
+Translations are done externally via Weblate. See [our website](https://mihon.app/docs/contribute#translation) for more details.
 
 
 # Forks

@@ -39,7 +39,7 @@ jobs:
                 "regex": ".*(?:fail(?:ed|ure|s)?|can\\s*(?:no|')?t|(?:not|un).*able|(?<!n[o']?t )blocked by|error) (?:to )?(?:get past|by ?pass|penetrate)?.*cloud ?fl?are.*",
                 "ignoreCase": true,
                 "labels": ["Cloudflare protected"],
-                "message": "Refer to the **Solving Cloudflare issues** section at https://tachiyomi.org/docs/guides/troubleshooting/#cloudflare. If it doesn't work, migrate to other sources or wait until they lower their protection."
+                "message": "Refer to the **Solving Cloudflare issues** section at https://mihon.app/docs/guides/troubleshooting/#cloudflare. If it doesn't work, migrate to other sources or wait until they lower their protection."
               }
             ]
           auto-close-ignore-label: do-not-autoclose

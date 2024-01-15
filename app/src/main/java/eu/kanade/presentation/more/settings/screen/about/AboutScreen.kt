@@ -102,7 +102,7 @@ object AboutScreen : Screen() {
                 item {
                     TextPreferenceWidget(
                         title = stringResource(MR.strings.privacy_policy),
-                        onPreferenceClick = { uriHandler.openUri("https://tachiyomi.org/privacy/") },
+                        onPreferenceClick = { uriHandler.openUri("https://mihon.app/privacy/") },
                     )
                 }
 
@@ -116,7 +116,7 @@ object AboutScreen : Screen() {
                         LinkIcon(
                             label = stringResource(MR.strings.website),
                             icon = Icons.Outlined.Public,
-                            url = "https://tachiyomi.org",
+                            url = "https://mihon.app",
                         )
                         LinkIcon(
                             label = "Discord",
