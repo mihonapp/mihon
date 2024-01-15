@@ -8,6 +8,10 @@ plugins {
     id("com.github.zellius.shortcut-helper")
 }
 
+if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
+    apply<com.google.gms.googleservices.GoogleServicesPlugin>()
+}
+
 shortcutHelper.setFilePath("./shortcuts.xml")
 
 val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -237,6 +241,9 @@ dependencies {
 
     // Logging
     implementation(libs.logcat)
+
+    // Crash reports/analytics
+    "standardImplementation"(libs.firebase.analytics)
 
     // Shizuku
     implementation(libs.bundles.shizuku)
