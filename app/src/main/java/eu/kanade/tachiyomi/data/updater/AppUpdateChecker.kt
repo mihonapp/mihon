@@ -44,9 +44,9 @@ class AppUpdateChecker {
 
 val GITHUB_REPO: String by lazy {
     if (BuildConfig.PREVIEW) {
-        "tachiyomiorg/tachiyomi-preview"
+        "mihonapp/mihon-preview"
     } else {
-        "tachiyomiorg/tachiyomi"
+        "mihonapp/mihon"
     }
 }
 
