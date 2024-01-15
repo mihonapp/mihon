@@ -1,1 +1,0 @@
-ALTER TABLE mangas ADD COLUMN calculate_interval INTEGER DEFAULT 0 NOT NULL;

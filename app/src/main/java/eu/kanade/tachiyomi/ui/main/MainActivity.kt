@@ -133,16 +133,7 @@ class MainActivity : BaseActivity() {
         val didMigration = if (isLaunch) {
             Migrations.upgrade(
                 context = applicationContext,
-                basePreferences = preferences,
-                uiPreferences = uiPreferences,
                 preferenceStore = Injekt.get(),
-                networkPreferences = Injekt.get(),
-                sourcePreferences = sourcePreferences,
-                securityPreferences = Injekt.get(),
-                libraryPreferences = libraryPreferences,
-                readerPreferences = Injekt.get(),
-                backupPreferences = Injekt.get(),
-                trackerManager = Injekt.get(),
             )
         } else {
             false
