@@ -108,3 +108,5 @@ jobs:
             mihon-x86_64-${{ env.VERSION_TAG }}.apk
           draft: true
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
