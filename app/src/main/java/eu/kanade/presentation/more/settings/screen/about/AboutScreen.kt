@@ -1,12 +1,15 @@
 package eu.kanade.presentation.more.settings.screen.about
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,10 +30,13 @@ import eu.kanade.presentation.util.LocalBackPress
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
+import eu.kanade.tachiyomi.data.updater.RELEASE_URL
+import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.lang.withUIContext
@@ -90,6 +96,54 @@ object AboutScreen : Screen() {
                             context.copyToClipboard("Debug information", deviceInfo)
                         },
                     )
+                }
+
+                if (BuildConfig.INCLUDE_UPDATER) {
+                    item {
+                        TextPreferenceWidget(
+                            title = stringResource(MR.strings.check_for_updates),
+                            widget = {
+                                AnimatedVisibility(visible = isCheckingUpdates) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(28.dp),
+                                        strokeWidth = 3.dp,
+                                    )
+                                }
+                            },
+                            onPreferenceClick = {
+                                if (!isCheckingUpdates) {
+                                    scope.launch {
+                                        isCheckingUpdates = true
+
+                                        checkVersion(
+                                            context = context,
+                                            onAvailableUpdate = { result ->
+                                                val updateScreen = NewUpdateScreen(
+                                                    versionName = result.release.version,
+                                                    changelogInfo = result.release.info,
+                                                    releaseLink = result.release.releaseLink,
+                                                    downloadLink = result.release.getDownloadLink(),
+                                                )
+                                                navigator.push(updateScreen)
+                                            },
+                                            onFinish = {
+                                                isCheckingUpdates = false
+                                            },
+                                        )
+                                    }
+                                }
+                            },
+                        )
+                    }
+                }
+
+                if (!BuildConfig.DEBUG) {
+                    item {
+                        TextPreferenceWidget(
+                            title = stringResource(MR.strings.whats_new),
+                            onPreferenceClick = { uriHandler.openUri(RELEASE_URL) },
+                        )
+                    }
                 }
 
                 item {
