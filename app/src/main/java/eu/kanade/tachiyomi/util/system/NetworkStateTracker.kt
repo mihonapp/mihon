@@ -17,11 +17,7 @@ data class NetworkState(
     val isValidated: Boolean,
     val isWifi: Boolean,
 ) {
-    val isOnline = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        isConnected && isValidated
-    } else {
-        isConnected
-    }
+    val isOnline = isConnected && isValidated
 }
 
 @Suppress("DEPRECATION")
@@ -34,34 +30,18 @@ fun Context.activeNetworkState(): NetworkState {
     )
 }
 
-@Suppress("DEPRECATION")
 fun Context.networkStateFlow() = callbackFlow {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        val networkCallback = object : NetworkCallback() {
-            override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-                trySend(activeNetworkState())
-            }
-            override fun onLost(network: Network) {
-                trySend(activeNetworkState())
-            }
+    val networkCallback = object : NetworkCallback() {
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            trySend(activeNetworkState())
         }
+        override fun onLost(network: Network) {
+            trySend(activeNetworkState())
+        }
+    }
 
-        connectivityManager.registerDefaultNetworkCallback(networkCallback)
-        awaitClose {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
-        }
-    } else {
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == ConnectivityManager.CONNECTIVITY_ACTION) {
-                    trySend(activeNetworkState())
-                }
-            }
-        }
-
-        registerReceiver(receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        awaitClose {
-            unregisterReceiver(receiver)
-        }
+    connectivityManager.registerDefaultNetworkCallback(networkCallback)
+    awaitClose {
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }

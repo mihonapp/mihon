@@ -13,18 +13,11 @@ import eu.kanade.domain.ui.model.ThemeMode
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-private val options = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-    mapOf(
-        ThemeMode.SYSTEM to MR.strings.theme_system,
-        ThemeMode.LIGHT to MR.strings.theme_light,
-        ThemeMode.DARK to MR.strings.theme_dark,
-    )
-} else {
-    mapOf(
-        ThemeMode.LIGHT to MR.strings.theme_light,
-        ThemeMode.DARK to MR.strings.theme_dark,
-    )
-}
+private val options = mapOf(
+    ThemeMode.SYSTEM to MR.strings.theme_system,
+    ThemeMode.LIGHT to MR.strings.theme_light,
+    ThemeMode.DARK to MR.strings.theme_dark,
+)
 
 @Composable
 internal fun AppThemeModePreferenceWidget(

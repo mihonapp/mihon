@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.util.system
 
-import android.annotation.TargetApi
-import android.os.Build
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -28,7 +26,6 @@ abstract class WebViewClientCompat : WebViewClient() {
     ) {
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     final override fun shouldOverrideUrlLoading(
         view: WebView,
         request: WebResourceRequest,

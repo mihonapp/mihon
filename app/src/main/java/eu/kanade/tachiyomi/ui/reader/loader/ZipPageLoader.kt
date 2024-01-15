@@ -14,11 +14,7 @@ import java.util.zip.ZipFile
  */
 internal class ZipPageLoader(file: File) : PageLoader() {
 
-    private val zip = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        ZipFile(file, StandardCharsets.ISO_8859_1)
-    } else {
-        ZipFile(file)
-    }
+    private val zip = ZipFile(file, StandardCharsets.ISO_8859_1)
 
     override var isLocal: Boolean = true
 

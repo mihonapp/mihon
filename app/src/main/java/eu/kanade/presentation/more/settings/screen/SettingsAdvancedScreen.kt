@@ -3,7 +3,6 @@ package eu.kanade.presentation.more.settings.screen
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import android.webkit.WebStorage
 import android.webkit.WebView
@@ -84,60 +83,48 @@ object SettingsAdvancedScreen : SearchableSettings {
         val basePreferences = remember { Injekt.get<BasePreferences>() }
         val networkPreferences = remember { Injekt.get<NetworkPreferences>() }
 
-        return buildList {
-            addAll(
-                listOf(
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.pref_dump_crash_logs),
-                        subtitle = stringResource(MR.strings.pref_dump_crash_logs_summary),
-                        onClick = {
-                            scope.launch {
-                                CrashLogUtil(context).dumpLogs()
-                            }
-                        },
-                    ),
-                    Preference.PreferenceItem.SwitchPreference(
-                        pref = networkPreferences.verboseLogging(),
-                        title = stringResource(MR.strings.pref_verbose_logging),
-                        subtitle = stringResource(MR.strings.pref_verbose_logging_summary),
-                        onValueChanged = {
-                            context.toast(MR.strings.requires_app_restart)
-                            true
-                        },
-                    ),
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.pref_debug_info),
-                        onClick = { navigator.push(DebugInfoScreen()) },
-                    ),
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.pref_onboarding_guide),
-                        onClick = { navigator.push(OnboardingScreen()) },
-                    ),
-                ),
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                add(
-                    Preference.PreferenceItem.TextPreference(
-                        title = stringResource(MR.strings.pref_manage_notifications),
-                        onClick = {
-                            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                            }
-                            context.startActivity(intent)
-                        },
-                    ),
-                )
-            }
-            addAll(
-                listOf(
-                    getBackgroundActivityGroup(),
-                    getDataGroup(),
-                    getNetworkGroup(networkPreferences = networkPreferences),
-                    getLibraryGroup(),
-                    getExtensionsGroup(basePreferences = basePreferences),
-                ),
-            )
-        }
+        return listOf(
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_dump_crash_logs),
+                subtitle = stringResource(MR.strings.pref_dump_crash_logs_summary),
+                onClick = {
+                    scope.launch {
+                        CrashLogUtil(context).dumpLogs()
+                    }
+                },
+            ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = networkPreferences.verboseLogging(),
+                title = stringResource(MR.strings.pref_verbose_logging),
+                subtitle = stringResource(MR.strings.pref_verbose_logging_summary),
+                onValueChanged = {
+                    context.toast(MR.strings.requires_app_restart)
+                    true
+                },
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_debug_info),
+                onClick = { navigator.push(DebugInfoScreen()) },
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_onboarding_guide),
+                onClick = { navigator.push(OnboardingScreen()) },
+            ),
+            Preference.PreferenceItem.TextPreference(
+                title = stringResource(MR.strings.pref_manage_notifications),
+                onClick = {
+                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    }
+                    context.startActivity(intent)
+                },
+            ),
+            getBackgroundActivityGroup(),
+            getDataGroup(),
+            getNetworkGroup(networkPreferences = networkPreferences),
+            getLibraryGroup(),
+            getExtensionsGroup(basePreferences = basePreferences),
+        )
     }
 
     @Composable

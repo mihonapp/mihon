@@ -23,12 +23,7 @@ fun rememberRequestPackageInstallsPermissionState(initialValue: Boolean = false)
     DisposableEffect(lifecycleOwner.lifecycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                installGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.packageManager.canRequestPackageInstalls()
-                } else {
-                    @Suppress("DEPRECATION")
-                    Settings.Secure.getInt(context.contentResolver, Settings.Secure.INSTALL_NON_MARKET_APPS) != 0
-                }
+                installGranted = context.packageManager.canRequestPackageInstalls()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)

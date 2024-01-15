@@ -169,22 +169,19 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     }
 
     override fun getPackageName(): String {
-        // This causes freezes in Android 6/7 for some reason
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                // Override the value passed as X-Requested-With in WebView requests
-                val stackTrace = Looper.getMainLooper().thread.stackTrace
-                val chromiumElement = stackTrace.find {
-                    it.className.equals(
-                        "org.chromium.base.BuildInfo",
-                        ignoreCase = true,
-                    )
-                }
-                if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
-                    return WebViewUtil.SPOOF_PACKAGE_NAME
-                }
-            } catch (_: Exception) {
+        try {
+            // Override the value passed as X-Requested-With in WebView requests
+            val stackTrace = Looper.getMainLooper().thread.stackTrace
+            val chromiumElement = stackTrace.find {
+                it.className.equals(
+                    "org.chromium.base.BuildInfo",
+                    ignoreCase = true,
+                )
             }
+            if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
+                return WebViewUtil.SPOOF_PACKAGE_NAME
+            }
+        } catch (_: Exception) {
         }
         return super.getPackageName()
     }
