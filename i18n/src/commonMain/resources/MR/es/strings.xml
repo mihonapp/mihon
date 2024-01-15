@@ -632,7 +632,7 @@
     <string name="pref_tracking_summary">Sincroniza tu progreso de lectura; unidireccional o mejorada</string>
     <string name="pref_downloads_summary">Descargas automáticas y por adelantado</string>
     <string name="pref_library_summary">Categorías, actualizaciones generales y acciones al deslizar el dedo</string>
-    <string name="crash_screen_description">%s se ha cerrado por un problema inesperado.</string>
+    <string name="crash_screen_description">%s se ha cerrado por un problema inesperado. Te sugerimos que compartas todos tus registros de depuración, enviándolos a nuestro canal de apoyo en Discord, en inglés.</string>
     <string name="pref_reader_summary">Modos de lectura, apariencia y navegación</string>
     <string name="pref_appearance_summary">Temas de colores y formatos de fecha</string>
     <string name="pref_advanced_summary">Volcar datos del cuelgue y estado de ahorro de batería</string>

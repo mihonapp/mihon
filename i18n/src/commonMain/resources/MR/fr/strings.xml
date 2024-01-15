@@ -640,7 +640,7 @@
     <string name="pref_library_summary">Catégories, mise à jour globale, faire glisser le chapitre</string>
     <string name="pref_reader_summary">Mode de lecture, affichage, navigation</string>
     <string name="pref_security_summary">Verrouillage des applications, écran sécurisé</string>
-    <string name="crash_screen_description">%s a rencontré une erreur inattendue.</string>
+    <string name="crash_screen_description">%s a rencontré une erreur inattendue. Nous vous suggérons de nous partager les rapports de plantage dans notre salon d\'assistance sur Discord.</string>
     <string name="invalid_location">Emplacement invalide : %s</string>
     <string name="error_user_agent_string_invalid">Chaîne d\'agent utilisateur invalide</string>
     <string name="unknown_title">Titre inconnu</string>

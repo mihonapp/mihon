@@ -573,7 +573,7 @@
     <string name="file_select_cover">Мұқаба таңдау</string>
     <string name="file_select_backup">Сақтық көшірме файлын таңдау</string>
     <string name="crash_screen_title">Ойбай!</string>
-    <string name="crash_screen_description">%s күтпеген қатеге ұшырады.</string>
+    <string name="crash_screen_description">%s күтпеген қатеге ұшырады. Жаңылыс журналдарын Discord сайтындағы қолдау арнамызда ортақ пайдалануды ұсынамыз.</string>
     <string name="crash_screen_restart_application">Қолданбаны өшіріп қосу</string>
     <string name="download_queue_error">Тараулар жүктелмеді. Жүктеулер кезегіне барып, сол жерден байқап көре аласыз</string>
     <string name="download_insufficient_space">Жадта орын аз болғандықтан тараулар жүктелмейді</string>

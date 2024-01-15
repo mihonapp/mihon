@@ -30,7 +30,7 @@ To auto-fix some linting errors, run the `ktlintFormat` Gradle task.
 
 ## Getting help
 
-No support is currently provided.
+- Join [the Discord server](https://discord.gg/tachiyomi) for online help and to ask questions while developing.
 
 # Translations
 

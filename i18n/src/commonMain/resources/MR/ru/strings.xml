@@ -640,7 +640,7 @@
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
     <string name="pref_advanced_summary">Выгрузка журнала с ошибками, оптимизация батареи</string>
     <string name="crash_screen_title">Ой, ошибочка вышла!</string>
-    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой.</string>
+    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем поделиться журналом с ошибками в нашем Discord сервере в ветке support.</string>
     <string name="unknown_title">Неизвестное название</string>
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>

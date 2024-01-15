@@ -633,7 +633,7 @@
     <string name="missing_storage_permission">Permissu de archiviatzione non cuntzessu</string>
     <string name="skipped_reason_not_always_update">Brincadu ca sa sèrie non tenet bisòngiu de agiornamentos</string>
     <string name="action_search_hint">Chirca…</string>
-    <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu.</string>
+    <string name="crash_screen_description">%s at tentu un\'errore non prevìdidu. Ti cussigiamus de cumpartzire sos registros de sas serraduras anòmalas in su canale de suportu nostru de Discord.</string>
     <string name="crash_screen_restart_application">Torra a allùghere s\'aplicatzione</string>
     <string name="pref_appearance_summary">Tema, data e formadu de s\'ora</string>
     <string name="pref_library_summary">Categorias, agiornamentos globales, iscurrimentu de capìtulos</string>

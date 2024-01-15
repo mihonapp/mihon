@@ -594,7 +594,7 @@
     <string name="pref_reset_viewer_flags_success">Сва подешавања читача су ресетована</string>
     <string name="pref_invalidate_download_cache_summary">Присили апликацију да поново провери преузета поглавља</string>
     <string name="not_installed">Није инсталирано</string>
-    <string name="crash_screen_description">%s је наишао на неочекивану грешку.</string>
+    <string name="crash_screen_description">%s је наишао на неочекивану грешку. Предлажемо да поделите запис о прекиду програма на нашем каналу за подршку на Discord-у.</string>
     <string name="appwidget_unavailable_locked">Widget није доступан када је омогућено закључавање апликације</string>
     <string name="pref_library_update_show_tab_badge">Прокажи број непрочитаних на икони ажурирања</string>
     <string name="wish_list">Листа жеља</string>

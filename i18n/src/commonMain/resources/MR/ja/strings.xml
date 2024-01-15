@@ -629,7 +629,7 @@
     <string name="missing_storage_permission">ストレージ権限を持っていません</string>
     <string name="skipped_reason_not_always_update">シリーズは更新を必要としないため、スキップされました</string>
     <string name="action_search_hint">検索…</string>
-    <string name="crash_screen_description">%sでは予期せぬエラーが発生しました。</string>
+    <string name="crash_screen_description">%sでは予期せぬエラーが発生しました。お手数ですが、クラッシュ ログを Discord のサポート チャネルで共有するようお願い致します。</string>
     <string name="invalid_location">無効な場所: %s</string>
     <string name="unknown_title">不明なタイトル</string>
     <string name="error_user_agent_string_invalid">ユーザー エージェント文字列が無効です</string>

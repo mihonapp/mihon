@@ -584,7 +584,7 @@
     <string name="manga_tracking_tab">En seguimento</string>
     <string name="reading">Lendo</string>
     <string name="download_notifier_text_only_wifi">Non hai ningunha conexión Wi-Fi dispoñible</string>
-    <string name="crash_screen_description">%s pechouse por un problema inesperado.</string>
+    <string name="crash_screen_description">%s pechouse por un problema inesperado. Aconsellámoste que compartas os rexistros de erros na canle de soporte no Discord (en inglés).</string>
     <string name="crash_screen_restart_application">Reinicia a aplicación</string>
     <string name="source_filter_empty_screen">Non se atopou ninguna fonte instalada</string>
     <string name="download_queue_size_warning">Advertencia: As baixadas grandes poden facer que as fontes se volvan máis lentas e/ou bloqueen Tachiyomi. Preme para saber máis.</string>

@@ -623,7 +623,7 @@
     <string name="delete_category">Slett kategori</string>
     <string name="internal_error">InternalError: Sjekk krasjlogger for mer informasjon</string>
     <string name="crash_screen_title">Oops!</string>
-    <string name="crash_screen_description">%s fikk en uventet feil.</string>
+    <string name="crash_screen_description">%s fikk en uventet feil. Vi foreslår at du deler krasjloggene i vår støttekanal på Discord.</string>
     <string name="pref_app_language">Appspråk</string>
     <string name="description_placeholder">Ingen beskrivelse</string>
     <string name="action_search_hint">Søk…</string>

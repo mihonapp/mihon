@@ -641,7 +641,7 @@
     <string name="unknown_title">Nepoznat naslov</string>
     <string name="updates_last_update_info">Zadnje aktualiziranje biblioteke: %s</string>
     <string name="are_you_sure">Sigurno\?</string>
-    <string name="crash_screen_description">%s je naišao na neočekivanu grešku.</string>
+    <string name="crash_screen_description">%s je naišao na neočekivanu grešku. Predlažemo da podijeliš zapis o prekidu programa u našem kanalu za podršku na Discordu.</string>
     <string name="label_overview_section">Pregled</string>
     <string name="label_completed_titles">Dovršene stavke</string>
     <string name="label_read_duration">Trajanje čitanja</string>

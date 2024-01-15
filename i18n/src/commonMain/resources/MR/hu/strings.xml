@@ -677,7 +677,7 @@
     <string name="pref_debug_info">Debug információ</string>
     <string name="popular">Felkapott</string>
     <string name="update_already_running">A frissités már folyamatban van</string>
-    <string name="crash_screen_description">%s hibába ütközött.</string>
+    <string name="crash_screen_description">%s hibába ütközött. A hiba üzenetet kérünk oszd meg velünk a Discord szerverünkön.</string>
     <string name="track_remove_date_conf_title">Dátum eltávolítása\?</string>
     <string name="crash_screen_restart_application">Applikáció újrainditása</string>
     <string name="label_titles_in_global_update">Globális frissités</string>

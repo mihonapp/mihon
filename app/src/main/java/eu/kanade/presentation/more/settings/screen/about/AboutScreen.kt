@@ -42,6 +42,7 @@ import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.icons.CustomIcons
+import tachiyomi.presentation.core.icons.Discord
 import tachiyomi.presentation.core.icons.Facebook
 import tachiyomi.presentation.core.icons.Github
 import tachiyomi.presentation.core.icons.Reddit
@@ -116,6 +117,11 @@ object AboutScreen : Screen() {
                             label = stringResource(MR.strings.website),
                             icon = Icons.Outlined.Public,
                             url = "https://tachiyomi.org",
+                        )
+                        LinkIcon(
+                            label = "Discord",
+                            icon = CustomIcons.Discord,
+                            url = "https://discord.gg/tachiyomi",
                         )
                         LinkIcon(
                             label = "X",

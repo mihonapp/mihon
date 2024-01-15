@@ -644,7 +644,7 @@
     <string name="error_user_agent_string_invalid">Netinkama naudotojo agento eilutė</string>
     <string name="unknown_title">Nežinomas pavadinimas</string>
     <string name="updates_last_update_info_just_now">Ką tik</string>
-    <string name="crash_screen_description">%s susidūrė su netikėta klaida.</string>
+    <string name="crash_screen_description">%s susidūrė su netikėta klaida. Siūlome padaryti šio pranešimo ekrano nuotrauką, išsisaugoti gedimų žurnalus ir pasidalyti tuo mūsų „Discord“ palaikymo kanale.</string>
     <string name="are_you_sure">Ar esate tikri\?</string>
     <string name="popular">Populiaru</string>
     <string name="crash_screen_title">Ups!</string>

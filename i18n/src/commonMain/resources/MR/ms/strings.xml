@@ -640,7 +640,7 @@
     <string name="crash_screen_title">Aduhai!</string>
     <string name="crash_screen_restart_application">Mulakan semula aplikasi</string>
     <string name="pref_browse_summary">Sumber, sambungan, carian keseluruhan</string>
-    <string name="crash_screen_description">%s mengalami ralat tidak dijangka.</string>
+    <string name="crash_screen_description">%s mengalami ralat tidak dijangka. Kami mencadangkan anda untuk kongsi log kerosakan pada Discord kami di saluran bantuan.</string>
     <string name="unknown_title">Tajuk tidak diketahui</string>
     <string name="invalid_location">Lokasi tidak sah: %s</string>
     <string name="error_user_agent_string_invalid">Rentetan ejen pengguna tidak sah</string>
