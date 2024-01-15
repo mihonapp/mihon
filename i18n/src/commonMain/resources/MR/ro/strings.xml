@@ -97,7 +97,7 @@
     <string name="untrusted_extension">Extensie nesigură</string>
     <string name="untrusted_extension_message">Extensia a fost semnată cu un certificat nesigur și nu a fost activată.
 \n
-\nO extensie periculoasă ar putea citi orice date de logare stocate în Tachiyomi sau executa cod periculos.
+\nO extensie periculoasă ar putea citi orice date de logare stocate în Mihon sau executa cod periculos.
 \n
 \nPrin acordarea încrederii acestui certificat acceptați riscurile menționate.</string>
     <string name="pref_fullscreen">Ecran complet</string>
@@ -346,7 +346,7 @@
     <string name="add_tracking">Urmărește</string>
     <string name="in_library">În bibliotecă</string>
     <string name="add_to_library">Adaugă în bibliotecă</string>
-    <string name="information_webview_required">WebView este necesar pentru Tachiyomi</string>
+    <string name="information_webview_required">WebView este necesar pentru Mihon</string>
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
     <string name="manga_info_collapse">Mai puțin</string>
     <string name="manga_info_expand">Mai mult</string>
@@ -505,7 +505,7 @@
     <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
     <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
     <string name="local_invalid_format">Format de capitol invalid</string>
-    <string name="download_queue_size_warning">Atentie : actualizarile mari la gramada vor face sursele mai incete si pot/vor bloca Tachiyomi. Apasa pentru mai multe informatii.</string>
+    <string name="download_queue_size_warning">Atentie : actualizarile mari la gramada vor face sursele mai incete si pot/vor bloca Mihon. Apasa pentru mai multe informatii.</string>
     <string name="getting_started_guide">Ghidul de inceput</string>
     <string name="notification_update_error">%1$d actualizari esuate</string>
     <string name="skipped_reason_not_caught_up">Ignorata deoarece sunt capitole necitite</string>

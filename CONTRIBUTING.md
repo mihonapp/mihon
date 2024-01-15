@@ -2,7 +2,7 @@ Looking to report an issue/bug or make a feature request? Please refer to the [R
 
 ---
 
-Thanks for your interest in contributing to Tachiyomi!
+Thanks for your interest in contributing to Mihon!
 
 
 # Code contributions
@@ -30,7 +30,7 @@ To auto-fix some linting errors, run the `ktlintFormat` Gradle task.
 
 ## Getting help
 
-- Join [the Discord server](https://discord.gg/tachiyomi) for online help and to ask questions while developing.
+- Join [the Discord server](https://discord.gg/mihon) for online help and to ask questions while developing.
 
 # Translations
 

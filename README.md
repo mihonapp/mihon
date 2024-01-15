@@ -1,9 +1,9 @@
 | Build | Stable | Weekly Preview | Contribute | Support Server |
 |-------|----------|---------|------------|---------|
-| [![CI](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml/badge.svg)](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/tachiyomiorg/tachiyomi.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi/releases) | [![latest preview build](https://img.shields.io/github/v/release/tachiyomiorg/tachiyomi-preview.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi-preview/releases) | [![Translation status](https://hosted.weblate.org/widgets/tachiyomi/-/svg-badge.svg)](https://hosted.weblate.org/engage/tachiyomi/?utm_source=widget) | [![Discord](https://img.shields.io/discord/349436576037732353.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/tachiyomi) |
+| [![CI](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml/badge.svg)](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/tachiyomiorg/tachiyomi.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi/releases) | [![latest preview build](https://img.shields.io/github/v/release/tachiyomiorg/tachiyomi-preview.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi-preview/releases) | [![Translation status](https://hosted.weblate.org/widgets/tachiyomi/-/svg-badge.svg)](https://hosted.weblate.org/engage/tachiyomi/?utm_source=widget) | [![Discord](https://img.shields.io/discord/1195734228319617024.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/mihon) |
 
-# ![app icon](./.github/readme-images/app-icon.png)Tachiyomi
-Tachiyomi is a free and open source manga reader for Android 6.0 and above.
+# ![app icon](./.github/readme-images/app-icon.png)Mihon
+Mihon is a free and open source manga reader for Android 6.0 and above.
 
 ## Features
 
@@ -29,7 +29,7 @@ Please make sure to read the full guidelines. Your issue may be closed without w
 <details><summary>Issues</summary>
 
 1. **Before reporting a new issue, take a look at the [FAQ](https://tachiyomi.org/docs/faq/general), the [changelog](https://tachiyomi.org/changelogs/) and the already opened [issues](https://github.com/tachiyomiorg/tachiyomi/issues).**
-2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/349436576037732353.svg)](https://discord.gg/tachiyomi)
+2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/1195734228319617024.svg)](https://discord.gg/mihon)
 
 </details>
 
@@ -70,7 +70,7 @@ See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 ## FAQ
 
 [See our website.](https://tachiyomi.org/)
-You can also reach out to us on [Discord](https://discord.gg/tachiyomi).
+You can also reach out to us on [Discord](https://discord.gg/mihon).
 
 ## License
 

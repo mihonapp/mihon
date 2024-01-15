@@ -536,7 +536,7 @@
     <string name="ext_installer_pref">Pemasang</string>
     <string name="action_sort_count">Total entri</string>
     <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan meningkatkan penggunaan baterai. Ketuk untuk mempelajari lebih lanjut.</string>
-    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Tachiyomi. Ketuk untuk mempelajari lebih lanjut.</string>
+    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Mihon. Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
     <string name="backup_info">Anda juga harus menyimpan salinan cadangan di tempat lain. Cadangan mungkin berisi data sensitif termasuk kata sandi yang tersimpan; berhati-hatilah jika berbagi.</string>
