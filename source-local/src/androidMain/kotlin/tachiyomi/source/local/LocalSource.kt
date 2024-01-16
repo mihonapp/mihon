@@ -1,6 +1,7 @@
 package tachiyomi.source.local
 
 import android.content.Context
+import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -285,7 +286,8 @@ actual class LocalSource(
             }
 
         // Copy the cover from the first chapter found if not available
-        if (manga.thumbnail_url.isNullOrBlank()) {
+        val cover = UniFile.fromUri(context, manga.thumbnail_url?.toUri())
+        if (cover?.let { ImageUtil.isImage(it.name) { it.openInputStream() } } != true) {
             chapters.lastOrNull()?.let { chapter ->
                 updateCover(chapter, manga)
             }
