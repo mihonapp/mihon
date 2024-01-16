@@ -88,25 +88,20 @@ class LibraryUpdateNotifier(
      * @param total the total progress.
      */
     fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
-        progressNotificationBuilder
-            .setContentTitle(
-                context.stringResource(
-                    MR.strings.notification_updating_progress,
-                    percentFormatter.format(current.toFloat() / total),
-                ),
-            )
-
-        if (!securityPreferences.hideNotificationContent().get()) {
-            val updatingText = manga.joinToString("\n") { it.title.chop(40) }
-            progressNotificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
-        }
-
-        context.notify(
-            Notifications.ID_LIBRARY_PROGRESS,
+        if (preferences.hideNotificationContent().get()) {
             progressNotificationBuilder
-                .setProgress(total, current, false)
-                .build(),
-        )
+                .setContentTitle(context.stringResource(MR.strings.notification_check_updates))
+                .setContentText("($current/$total)")
+        } else {
+            val updatingText = manga.joinToString("\n") { it.title.chop(40) }
+            progressNotificationBuilder
+                .setContentTitle(
+                    context.stringResource(
+                        MR.strings.notification_updating_progress,
+                        percentFormatter.format(current.toFloat() / total),
+                    ),
+                )
+                .setStyle(NotificationCompat.BigTextStyle().bigText(updatingText))
     }
 
     /**
