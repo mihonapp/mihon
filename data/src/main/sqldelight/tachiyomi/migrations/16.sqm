@@ -1,5 +1,0 @@
-CREATE TABLE sources(
-    _id INTEGER NOT NULL PRIMARY KEY,
-    lang TEXT NOT NULL,
-    name TEXT NOT NULL
-);

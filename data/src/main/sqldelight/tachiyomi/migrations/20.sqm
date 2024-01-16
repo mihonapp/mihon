@@ -1,1 +1,0 @@
-ALTER TABLE mangas ADD COLUMN update_strategy INTEGER NOT NULL DEFAULT 0;

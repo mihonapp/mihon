@@ -1,7 +1,5 @@
 package eu.kanade.presentation.util
 
-import android.os.Build
-import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -23,12 +21,7 @@ fun rememberRequestPackageInstallsPermissionState(initialValue: Boolean = false)
     DisposableEffect(lifecycleOwner.lifecycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                installGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.packageManager.canRequestPackageInstalls()
-                } else {
-                    @Suppress("DEPRECATION")
-                    Settings.Secure.getInt(context.contentResolver, Settings.Secure.INSTALL_NON_MARKET_APPS) != 0
-                }
+                installGranted = context.packageManager.canRequestPackageInstalls()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)

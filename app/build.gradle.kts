@@ -20,19 +20,16 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "eu.kanade.tachiyomi"
+        applicationId = "app.mihon"
 
-        versionCode = 118
-        versionName = "0.15.2"
+        versionCode = 1
+        versionName = "0.16.0"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
         buildConfigField("boolean", "INCLUDE_UPDATER", "false")
         buildConfigField("boolean", "PREVIEW", "false")
-
-        // Please disable ACRA or use your own instance in forked versions of the project
-        buildConfigField("String", "ACRA_URI", "\"https://tachiyomi.kanade.eu/crash_report\"")
 
         ndk {
             abiFilters += SUPPORTED_ABIS
@@ -246,7 +243,6 @@ dependencies {
     implementation(libs.logcat)
 
     // Crash reports/analytics
-    implementation(libs.bundles.acra)
     "standardImplementation"(libs.firebase.analytics)
 
     // Shizuku

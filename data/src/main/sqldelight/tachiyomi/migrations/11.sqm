@@ -1,2 +1,0 @@
-ALTER TABLE mangas
-ADD COLUMN next_update INTEGER DEFAULT 0;

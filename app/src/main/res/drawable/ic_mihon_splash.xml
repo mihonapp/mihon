@@ -3,6 +3,6 @@
     <item
         android:width="72dp"
         android:height="72dp"
-        android:drawable="@drawable/ic_tachi"
+        android:drawable="@drawable/ic_mihon"
         android:gravity="center" />
 </layer-list>

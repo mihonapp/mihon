@@ -149,11 +149,11 @@ internal class AppUpdateNotifier(private val context: Context) {
         with(notificationBuilder) {
             setContentTitle(context.stringResource(MR.strings.update_check_notification_update_available))
             setContentText(context.stringResource(MR.strings.update_check_fdroid_migration_info))
-            setSmallIcon(R.drawable.ic_tachi)
+            setSmallIcon(R.drawable.ic_mihon)
             setContentIntent(
                 NotificationHandler.openUrl(
                     context,
-                    "https://tachiyomi.org/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
+                    "https://mihon.app/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
                 ),
             )
         }

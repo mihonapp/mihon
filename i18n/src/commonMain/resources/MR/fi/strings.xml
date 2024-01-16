@@ -143,7 +143,7 @@
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
     <string name="untrusted_extension_message">Tämä laajennus on allekirjoitettu luottamattomalla sertifikaatilla ja sitä ei ole aktivoitu.
 \n
-\nHaitallinen laajennus voisi lukea mahdolliset kirjautumistiedot Tachiyomista tai suorittaa luvatonta koodia.
+\nHaitallinen laajennus voisi lukea mahdolliset kirjautumistiedot Mihonsta tai suorittaa luvatonta koodia.
 \n
 \nLuottamalla tähän sertifikaattiin hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
@@ -348,7 +348,7 @@
     <string name="action_pin">Kiinnitä</string>
     <string name="action_select_inverse">Valitse käänteinen</string>
     <string name="vertical_plus_viewer">Jatkuva pystysuora</string>
-    <string name="information_webview_required">WebView on pakollinen Tachiyomissa</string>
+    <string name="information_webview_required">WebView on pakollinen Mihonssa</string>
     <string name="restore_in_progress">Palautus on jo käynnissä</string>
     <string name="backup_in_progress">Varmuuskopiointi on jo käynnissä</string>
     <string name="pref_webtoon_side_padding">Sivuntäyttö</string>
@@ -495,7 +495,7 @@
     <string name="off">Pois päältä</string>
     <string name="on">Päällä</string>
     <string name="getting_started_guide">Aloitusopas</string>
-    <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Tachiyomin käytön. Napauta saadaksesi lisätietoja.</string>
+    <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Mihonn käytön. Napauta saadaksesi lisätietoja.</string>
     <string name="action_show_manga">Näytä manga</string>
     <string name="action_display_cover_only_grid">Kansikuva ruudukko</string>
     <string name="theme_monet">Dynaaminen</string>

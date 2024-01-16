@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.coil
 
-import android.os.Build
 import androidx.core.graphics.drawable.toDrawable
 import coil.ImageLoader
 import coil.decode.DecodeResult
@@ -48,8 +47,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
                 ImageUtil.findImageType(it)
             }
             return when (type) {
-                ImageUtil.ImageType.AVIF, ImageUtil.ImageType.JXL -> true
-                ImageUtil.ImageType.HEIF -> Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+                ImageUtil.ImageType.AVIF, ImageUtil.ImageType.JXL, ImageUtil.ImageType.HEIF -> true
                 else -> false
             }
         }

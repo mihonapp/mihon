@@ -1,9 +1,9 @@
-| Build | Stable | Weekly Preview | Contribute | Support Server |
-|-------|----------|---------|------------|---------|
-| [![CI](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml/badge.svg)](https://github.com/tachiyomiorg/tachiyomi/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/tachiyomiorg/tachiyomi.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi/releases) | [![latest preview build](https://img.shields.io/github/v/release/tachiyomiorg/tachiyomi-preview.svg?maxAge=3600&label=download)](https://github.com/tachiyomiorg/tachiyomi-preview/releases) | [![Translation status](https://hosted.weblate.org/widgets/tachiyomi/-/svg-badge.svg)](https://hosted.weblate.org/engage/tachiyomi/?utm_source=widget) | [![Discord](https://img.shields.io/discord/349436576037732353.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/tachiyomi) |
+| Build | Stable | Weekly Preview | Support Server |
+|-------|----------|---------|---------|
+| [![CI](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml/badge.svg)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon/releases) | [![latest preview build](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon-preview/releases) | [![Discord](https://img.shields.io/discord/1195734228319617024.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/mihon) |
 
-# ![app icon](./.github/readme-images/app-icon.png)Tachiyomi
-Tachiyomi is a free and open source manga reader for Android 6.0 and above.
+# ![app icon](./.github/readme-images/app-icon.png)Mihon
+Mihon is a free and open source manga reader for Android 8.0 and above.
 
 ## Features
 
@@ -18,9 +18,9 @@ Features include:
 * Create backups locally to read offline or to your desired cloud service
 
 ## Download
-Get the app from our [releases page](https://github.com/tachiyomiorg/tachiyomi/releases).
+Get the app from our [releases page](https://github.com/mihonapp/mihon/releases).
 
-If you want to try new features before they get to the stable release, you can download the preview version [here](https://github.com/tachiyomiorg/tachiyomi-preview/releases).
+If you want to try new features before they get to the stable release, you can download the preview version [here](https://github.com/mihonapp/mihon-preview/releases).
 
 ## Issues, Feature Requests and Contributing
 
@@ -28,8 +28,8 @@ Please make sure to read the full guidelines. Your issue may be closed without w
 
 <details><summary>Issues</summary>
 
-1. **Before reporting a new issue, take a look at the [FAQ](https://tachiyomi.org/docs/faq/general), the [changelog](https://tachiyomi.org/changelogs/) and the already opened [issues](https://github.com/tachiyomiorg/tachiyomi/issues).**
-2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/349436576037732353.svg)](https://discord.gg/tachiyomi)
+1. **Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues).**
+2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/1195734228319617024.svg)](https://discord.gg/mihon)
 
 </details>
 
@@ -42,10 +42,6 @@ Please make sure to read the full guidelines. Your issue may be closed without w
 * Include screenshot (if needed)
 * If it could be device-dependent, try reproducing on another device (if possible)
 * Don't group unrelated requests into one issue
-
-DO: https://github.com/tachiyomiorg/tachiyomi/issues/24 https://github.com/tachiyomiorg/tachiyomi/issues/71
-
-DON'T: https://github.com/tachiyomiorg/tachiyomi/issues/75
 
 </details>
 
@@ -69,8 +65,8 @@ See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
 
 ## FAQ
 
-[See our website.](https://tachiyomi.org/)
-You can also reach out to us on [Discord](https://discord.gg/tachiyomi).
+[See our website.](https://mihon.app/)
+You can also reach out to us on [Discord](https://discord.gg/mihon).
 
 ## License
 

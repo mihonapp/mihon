@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.PendingIntent
-import android.app.job.JobInfo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -43,8 +42,6 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.system.cancelNotification
-import eu.kanade.tachiyomi.util.system.isPreviewBuildType
-import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import eu.kanade.tachiyomi.util.system.notify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -52,13 +49,8 @@ import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
-import org.acra.config.httpSender
-import org.acra.config.scheduler
-import org.acra.ktx.initAcra
-import org.acra.sender.HttpSender
 import org.conscrypt.Conscrypt
 import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.preference.Preference
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
@@ -96,7 +88,6 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         Injekt.importModule(AppModule(this))
         Injekt.importModule(DomainModule())
 
-        setupAcra()
         setupNotificationChannels()
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
@@ -192,46 +183,21 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
     }
 
     override fun getPackageName(): String {
-        // This causes freezes in Android 6/7 for some reason
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                // Override the value passed as X-Requested-With in WebView requests
-                val stackTrace = Looper.getMainLooper().thread.stackTrace
-                val chromiumElement = stackTrace.find {
-                    it.className.equals(
-                        "org.chromium.base.BuildInfo",
-                        ignoreCase = true,
-                    )
-                }
-                if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
-                    return WebViewUtil.SPOOF_PACKAGE_NAME
-                }
-            } catch (_: Exception) {
+        try {
+            // Override the value passed as X-Requested-With in WebView requests
+            val stackTrace = Looper.getMainLooper().thread.stackTrace
+            val chromiumElement = stackTrace.find {
+                it.className.equals(
+                    "org.chromium.base.BuildInfo",
+                    ignoreCase = true,
+                )
             }
+            if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
+                return WebViewUtil.SPOOF_PACKAGE_NAME
+            }
+        } catch (_: Exception) {
         }
         return super.getPackageName()
-    }
-
-    private fun setupAcra() {
-        if (isPreviewBuildType || isReleaseBuildType) {
-            initAcra {
-                buildConfigClass = BuildConfig::class.java
-                excludeMatchingSharedPreferencesKeys = listOf(
-                    Preference.privateKey(".*"), ".*username.*", ".*password.*", ".*token.*",
-                )
-
-                httpSender {
-                    uri = BuildConfig.ACRA_URI
-                    httpMethod = HttpSender.Method.PUT
-                }
-
-                scheduler {
-                    requiresBatteryNotLow = true
-                    requiresDeviceIdle = true
-                    requiresNetworkType = JobInfo.NETWORK_TYPE_UNMETERED
-                }
-            }
-        }
     }
 
     private fun setupNotificationChannels() {
