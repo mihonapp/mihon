@@ -247,7 +247,7 @@
     <string name="pref_app_language">Bohoso aplikasi</string>
     <string name="untrusted_extension_message">Ekstensi iki ditandatangani nganggo sertifikat sing ora dipercaya lan ora diaktifake.
 \n
-\n Ekstensi angkoro bisa maca kredensial login sing disimpen ing Tachiyomi utawa nglakokake kode sewenang-wenang.
+\n Ekstensi angkoro bisa maca kredensial login sing disimpen ing Mihon utawa nglakokake kode sewenang-wenang.
 \n
 \n Kanthi percaya karo sertifikat iki, sampeyan nampa risiko kasebut.</string>
     <string name="ext_downloading">Ndownload</string>

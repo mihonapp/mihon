@@ -780,7 +780,7 @@
     <string name="pref_library_update_smart_update">Pembauan pintar</string>
     <string name="onboarding_storage_help_info">Memperbarui dari versi lama dan tak yakin harus pilih mana? lihat panduan penyimpanan untuk informasi lebih lanjut.</string>
     <string name="action_add_repo">Tambahkan repo</string>
-    <string name="action_add_repo_message">Tambahkan repo lain ke Tachiyomi. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
+    <string name="action_add_repo_message">Tambahkan repo lain ke Mihon. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
     <string name="label_extension_repos">Repositori ekstensi</string>
     <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
     <string name="invalid_backup_file_error">Keseluruhan eror:</string>
