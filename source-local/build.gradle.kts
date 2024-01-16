@@ -13,6 +13,7 @@ kotlin {
 
                 implementation(libs.unifile)
                 implementation(libs.junrar)
+                implementation(libs.bundles.sevenzip)
             }
         }
         val androidMain by getting {

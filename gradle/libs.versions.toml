@@ -31,6 +31,8 @@ jsoup = "org.jsoup:jsoup:1.17.2"
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:7c257e1c64"
 junrar = "com.github.junrar:junrar:7.5.5"
+common-compress = "org.apache.commons:commons-compress:1.25.0"
+xz = "org.tukaani:xz:1.9"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
@@ -105,3 +107,4 @@ sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
 richtext = ["richtext-commonmark", "richtext-m3"]
 test = ["junit", "kotest-assertions", "mockk"]
+sevenzip = ["common-compress", "xz"]

@@ -210,6 +210,7 @@ dependencies {
     implementation(libs.disklrucache)
     implementation(libs.unifile)
     implementation(libs.junrar)
+    implementation(libs.bundles.sevenzip)
 
     // Preferences
     implementation(libs.preferencektx)

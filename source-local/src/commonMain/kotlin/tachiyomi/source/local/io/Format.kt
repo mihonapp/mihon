@@ -6,6 +6,7 @@ import tachiyomi.core.storage.extension
 sealed interface Format {
     data class Directory(val file: UniFile) : Format
     data class Zip(val file: UniFile) : Format
+    data class SevenZip(val file: UniFile) : Format
     data class Rar(val file: UniFile) : Format
     data class Epub(val file: UniFile) : Format
 
@@ -17,6 +18,7 @@ sealed interface Format {
             when {
                 isDirectory -> Directory(this)
                 extension.equals("zip", true) || extension.equals("cbz", true) -> Zip(this)
+                extension.equals("7z", true) || extension.equals("cb7", true) -> SevenZip(this)
                 extension.equals("rar", true) || extension.equals("cbr", true) -> Rar(this)
                 extension.equals("epub", true) -> Epub(this)
                 else -> throw UnknownFormatException()
