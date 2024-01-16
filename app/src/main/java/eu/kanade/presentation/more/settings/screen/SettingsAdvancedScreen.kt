@@ -120,13 +120,13 @@ object SettingsAdvancedScreen : SearchableSettings {
                     context.startActivity(intent)
                 },
             ),
-                    getBackgroundActivityGroup(),
-                    getDataGroup(),
-                    getNetworkGroup(networkPreferences = networkPreferences),
-                    getLibraryGroup(),
-                    getExtensionsGroup(basePreferences = basePreferences),
-                    getSyncGroup(),
-                )
+            getBackgroundActivityGroup(),
+            getDataGroup(),
+            getNetworkGroup(networkPreferences = networkPreferences),
+            getLibraryGroup(),
+            getExtensionsGroup(basePreferences = basePreferences),
+            getSyncGroup(),
+        )
     }
 
     @Composable
