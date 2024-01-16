@@ -1,5 +1,5 @@
 name: ⭐ Feature request
-description: Suggest a feature to improve Tachiyomi
+description: Suggest a feature to improve Mihon
 labels: [Feature request]
 body:
 
@@ -7,7 +7,7 @@ body:
     id: feature-description
     attributes:
       label: Describe your suggested feature
-      description: How can Tachiyomi be improved?
+      description: How can Mihon be improved?
       placeholder: |
         Example:
           "It should work like this..."
