@@ -1,6 +1,6 @@
-| Build | Stable | Weekly Preview | Support Server |
-|-------|----------|---------|---------|
-| [![CI](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml/badge.svg)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon/releases) | [![latest preview build](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon-preview/releases) | [![Discord](https://img.shields.io/discord/1195734228319617024.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/mihon) |
+| Build | Stable | Weekly Beta | Support Server |
+|-------|--------|-------------|----------------|
+| [![CI](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml/badge.svg)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon/releases) | [![latest beta build](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon-preview/releases) | [![Discord](https://img.shields.io/discord/1195734228319617024.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/mihon) |
 
 # ![app icon](./.github/readme-images/app-icon.png)Mihon
 Mihon is a free and open source manga reader for Android 8.0 and above.
@@ -20,7 +20,7 @@ Features include:
 ## Download
 Get the app from our [releases page](https://github.com/mihonapp/mihon/releases).
 
-If you want to try new features before they get to the stable release, you can download the preview version [here](https://github.com/mihonapp/mihon-preview/releases).
+If you want to try new features before they get to the stable release, you can download the beta version [here](https://github.com/mihonapp/mihon-preview/releases).
 
 ## Issues, Feature Requests and Contributing
 
@@ -37,7 +37,7 @@ Please make sure to read the full guidelines. Your issue may be closed without w
 
 * Include version (More → About → Version)
  * If not latest, try updating, it may have already been solved
- * Preview version is equal to the number of commits as seen on the main page
+ * Beta version is equal to the number of commits as seen on the main page
 * Include steps to reproduce (if not obvious from description)
 * Include screenshot (if needed)
 * If it could be device-dependent, try reproducing on another device (if possible)
