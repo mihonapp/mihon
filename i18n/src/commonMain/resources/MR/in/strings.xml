@@ -192,7 +192,7 @@
     <string name="snack_add_to_library">Tambahkan ke pustaka\?</string>
     <string name="picture_saved">Gambar disimpan</string>
     <string name="custom_filter">Filter khusus</string>
-    <string name="set_as_cover">Tetapkan sebagai sampul</string>
+    <string name="set_as_cover">Terapkan sebagai sampul</string>
     <string name="cover_updated">Sampul telah diperbarui</string>
     <string name="chapter_progress">Halaman: %1$d</string>
     <string name="no_next_chapter">Bab berikutnya tak ditemukan</string>
@@ -406,15 +406,15 @@
     <string name="channel_progress">Kemajuan</string>
     <string name="channel_errors">Masalah</string>
     <string name="backup_restore_missing_trackers">Pelacakan tidak tersinkronisasi di:</string>
-    <string name="ext_nsfw_warning">Sumber dari ekstensi ini mungkin berisi konten DEWASA (18+)</string>
+    <string name="ext_nsfw_warning">Sumber dari ekstensi ini mungkin berisi konten DEWASA (NSFW 18+)</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="pref_remove_bookmarked_chapters">Hapus bab yang ditandai</string>
     <string name="pref_category_delete_chapters">Hapus chapter</string>
-    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi yang tidak resmi atau berpotensi salah ditandai untuk menampilkan konten NSFW (18+) di dalam aplikasi.</string>
+    <string name="parental_controls_info">Hal ini tidak mencegah ekstensi non-resmi atau konten DEWASA (NSFW 18+) yang tidak ditandai dengan benar muncul di dalam aplikasi.</string>
     <string name="no_chapters_error">Tidak ada bab yang ditemukan</string>
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
-    <string name="set_chapter_settings_as_default">Tetapkan sebagai bawaan</string>
-    <string name="also_set_chapter_settings_for_library">Juga terapkan untuk semua entri di pustaka saya</string>
+    <string name="set_chapter_settings_as_default">Terapkan sebagai bawaan</string>
+    <string name="also_set_chapter_settings_for_library">Terapkan pula untuk semua entri di pustaka saya</string>
     <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai bawaan\?</string>
     <string name="chapter_settings">Pengaturan bab</string>
     <string name="share_page_info">%1$s: %2$s, halaman %3$d</string>
@@ -573,7 +573,7 @@
     <string name="action_move_to_top_all_for_series">Pindahkan seri ke atas</string>
     <string name="update_check_fdroid_migration_info">Versi baru tersedia dari perilisan resmi. Ketuk untuk mempelajari migrasi dari perilisan non-resmi dari F-Droid.</string>
     <string name="disabled_nav">Dinonaktifkan</string>
-    <string name="error_saving_picture">Error menyimpan gambar</string>
+    <string name="error_saving_picture">Gagal menyimpan gambar</string>
     <string name="empty_backup_error">Tidak ada entri perpustakaan untuk dicadangkan</string>
     <string name="update_check_open">Buka di Github</string>
     <string name="pref_clear_webview_data">Membersihkan data WebView</string>
@@ -700,7 +700,7 @@
     <string name="pref_chapter_swipe_start">Geser kekiri</string>
     <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
     <string name="pref_library_columns_per_row">%d per baris</string>
-    <string name="action_set_interval">Tetapkan jeda waktu</string>
+    <string name="action_set_interval">Terapkan jeda waktu</string>
     <string name="action_filter_interval_custom">Frekuensi pembaruan yang disesuaikan</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
     <string name="action_sort_next_updated">Pembaruan yang diharapkan berikutnya</string>
@@ -783,7 +783,7 @@
     <string name="action_add_repo_message">Tambahkan repo lain ke Mihon. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
     <string name="label_extension_repos">Repositori ekstensi</string>
     <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
-    <string name="invalid_backup_file_error">Keseluruhan eror:</string>
+    <string name="invalid_backup_file_error">Kesalahan penuh:</string>
     <string name="error_repo_exists">Repositori ini sudah ada!</string>
     <string name="label_add_repo_input">URL Repo</string>
     <string name="invalid_repo_name">URL repo tidak valid</string>
@@ -793,9 +793,9 @@
     <string name="delete_repo_confirmation">Apa Anda yakin ingin menghapus repo \"%s\"?</string>
     <string name="manga_interval_expected_update">Bab baru diperkirakan akan dirils sekitar %1$s, diperiksa setiap sekitar %2$s.</string>
     <string name="available_disk_space_info">Tersedia:%1$s/Total:%2$s</string>
-    <string name="manga_interval_custom_amount">Keseringan pembaruan yang di kostumisasi:</string>
+    <string name="manga_interval_custom_amount">Frekuensi pembaruan khusus:</string>
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Segera</string>
-    <string name="ext_revoke_trust">Mencabut ekstensi tidak dikenal yang tepercaya</string>
+    <string name="ext_revoke_trust">Cabut izin ekstensi tidak dikenal yang tepercaya</string>
     <string name="action_open_repo">Repo sumber terbuka</string>
 </resources>
