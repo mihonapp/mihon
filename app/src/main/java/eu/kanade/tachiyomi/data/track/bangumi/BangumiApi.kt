@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -109,7 +110,7 @@ class BangumiApi(
         } else {
             0
         }
-        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.floatOrNull ?: -1f
+        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.doubleOrNull ?: -1.0
         return TrackSearch.create(trackId).apply {
             remote_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name_cn"]!!.jsonPrimitive.content

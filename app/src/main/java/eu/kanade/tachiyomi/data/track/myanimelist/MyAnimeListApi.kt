@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.float
 import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
@@ -120,7 +121,7 @@ class MyAnimeListApi(
                             title = obj["title"]!!.jsonPrimitive.content
                             summary = obj["synopsis"]?.jsonPrimitive?.content ?: ""
                             total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
-                            score = obj["mean"]?.jsonPrimitive?.floatOrNull ?: -1f
+                            score = obj["mean"]?.jsonPrimitive?.doubleOrNull ?: -1.0
                             cover_url =
                                 obj["main_picture"]?.jsonObject?.get("large")?.jsonPrimitive?.content
                                     ?: ""
@@ -250,7 +251,7 @@ class MyAnimeListApi(
             val isRereading = obj["is_rereading"]!!.jsonPrimitive.boolean
             status = if (isRereading) MyAnimeList.REREADING else getStatus(obj["status"]?.jsonPrimitive?.content)
             last_chapter_read = obj["num_chapters_read"]!!.jsonPrimitive.float
-            score = obj["score"]!!.jsonPrimitive.int.toFloat()
+            score = obj["score"]!!.jsonPrimitive.int.toDouble()
             obj["start_date"]?.let {
                 started_reading_date = parseDate(it.jsonPrimitive.content)
             }

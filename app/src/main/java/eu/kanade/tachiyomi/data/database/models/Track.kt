@@ -20,7 +20,7 @@ interface Track : Serializable {
 
     var total_chapters: Int
 
-    var score: Float
+    var score: Double
 
     var status: Int
 

@@ -28,7 +28,7 @@ class KitsuSearchManga(obj: JsonObject) {
         null
     }
     private val synopsis = obj["synopsis"]?.jsonPrimitive?.contentOrNull
-    private val rating = obj["averageRating"]?.jsonPrimitive?.contentOrNull?.toFloatOrNull()
+    private val rating = obj["averageRating"]?.jsonPrimitive?.contentOrNull?.toDoubleOrNull()
     private var startDate = obj["startDate"]?.jsonPrimitive?.contentOrNull?.let {
         val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         outputDf.format(Date(it.toLong() * 1000))
@@ -43,7 +43,7 @@ class KitsuSearchManga(obj: JsonObject) {
         cover_url = original ?: ""
         summary = synopsis ?: ""
         tracking_url = KitsuApi.mangaUrl(remote_id)
-        score = rating ?: -1f
+        score = rating ?: -1.0
         publishing_status = if (endDate == null) {
             "Publishing"
         } else {
@@ -82,7 +82,7 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
         started_reading_date = KitsuDateHelper.parse(startedAt)
         finished_reading_date = KitsuDateHelper.parse(finishedAt)
         status = toTrackStatus()
-        score = ratingTwenty?.let { it.toInt() / 2f } ?: 0f
+        score = ratingTwenty?.let { it.toInt() / 2.0 } ?: 0.0
         last_chapter_read = progress.toFloat()
     }
 

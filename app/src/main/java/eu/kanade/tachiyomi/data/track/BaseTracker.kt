@@ -40,8 +40,8 @@ abstract class BaseTracker(
         return track.score
     }
 
-    override fun indexToScore(index: Int): Float {
-        return index.toFloat()
+    override fun indexToScore(index: Int): Double {
+        return index.toDouble()
     }
 
     @CallSuper

@@ -62,8 +62,8 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         return (listOf("0") + IntRange(2, 20).map { df.format(it / 2f) }).toImmutableList()
     }
 
-    override fun indexToScore(index: Int): Float {
-        return if (index > 0) (index + 1) / 2f else 0f
+    override fun indexToScore(index: Int): Double {
+        return if (index > 0) (index + 1) / 2.0 else 0.0
     }
 
     override fun displayScore(track: DomainTrack): String {
@@ -110,7 +110,7 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
             update(track)
         } else {
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
-            track.score = 0F
+            track.score = 0.0
             add(track)
         }
     }

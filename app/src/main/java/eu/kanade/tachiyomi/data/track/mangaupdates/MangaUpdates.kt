@@ -67,7 +67,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
-    override fun indexToScore(index: Int): Float = if (index == 0) 0f else SCORE_LIST[index].toFloat()
+    override fun indexToScore(index: Int): Double = if (index == 0) 0.0 else SCORE_LIST[index].toDouble()
 
     override fun displayScore(track: DomainTrack): String = track.score.toString()
 
@@ -88,7 +88,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
             val (series, rating) = api.getSeriesListItem(track)
             track.copyFrom(series, rating)
         } catch (e: Exception) {
-            track.score = 0f
+            track.score = 0.0
             api.addSeriesToList(track, hasReadChapters)
             track
         }
@@ -108,7 +108,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     private fun Track.copyFrom(item: ListItem, rating: Rating?): Track = apply {
         item.copyTo(this)
-        score = rating?.rating ?: 0f
+        score = rating?.rating ?: 0.0
     }
 
     override suspend fun login(username: String, password: String) {

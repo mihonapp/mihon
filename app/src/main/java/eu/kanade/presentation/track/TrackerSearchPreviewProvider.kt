@@ -68,7 +68,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.title = lorem((1..10).random()).joinToString()
         it.last_chapter_read = (0..100).random().toFloat()
         it.total_chapters = (100..1000).random()
-        it.score = (0..10).random().toFloat()
+        it.score = (0..10).random().toDouble()
         it.status = Random.nextInt()
         it.started_reading_date = 0L
         it.finished_reading_date = 0L

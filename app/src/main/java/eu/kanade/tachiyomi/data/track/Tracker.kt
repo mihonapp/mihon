@@ -42,7 +42,7 @@ interface Tracker {
     // TODO: Store all scores as 10 point in the future maybe?
     fun get10PointScore(track: DomainTrack): Double
 
-    fun indexToScore(index: Int): Float
+    fun indexToScore(index: Int): Double
 
     fun displayScore(track: DomainTrack): String
 

@@ -64,7 +64,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         } else {
             // Set default fields if it's not found in the list
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
-            track.score = 0F
+            track.score = 0.0
             add(track)
             update(track)
         }

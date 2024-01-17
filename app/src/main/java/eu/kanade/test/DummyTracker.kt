@@ -56,7 +56,7 @@ data class DummyTracker(
 
     override fun get10PointScore(track: Track): Double = val10PointScore
 
-    override fun indexToScore(index: Int): Float = getScoreList()[index].toFloat()
+    override fun indexToScore(index: Int): Double = getScoreList()[index].toDouble()
 
     override fun displayScore(track: Track): String =
         track.score.toString()

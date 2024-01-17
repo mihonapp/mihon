@@ -133,7 +133,8 @@ class MangaUpdatesApi(
     }
 
     private suspend fun updateSeriesRating(track: Track) {
-        if (track.score != 0f) {
+        if (track.score < 0.0) return
+        if (track.score != 0.0) {
             val body = buildJsonObject {
                 put("rating", track.score)
             }
