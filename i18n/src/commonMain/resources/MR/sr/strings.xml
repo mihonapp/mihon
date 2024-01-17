@@ -15,6 +15,7 @@
     <string name="label_migration">Миграција</string>
     <string name="label_extensions">Додаци</string>
     <string name="label_extension_info">Информације о додатку</string>
+    <string name="label_data_storage">Складиштење и подаци</string>
     <string name="action_settings">Подешавања</string>
     <string name="action_filter">Филтер</string>
     <string name="action_filter_bookmarked">Забележено</string>
@@ -83,7 +84,7 @@
     <string name="all">Све</string>
     <string name="pref_library_update_restriction">Ограничења уређаја за аутоматска ажурирања</string>
     <string name="charging">Пуњење</string>
-    <string name="pref_update_only_non_completed">Са статусом \"Завршено\"</string>
+    <string name="pref_update_only_non_completed">Прескочи уносе са статусом \"Завршено\"</string>
     <string name="pref_auto_update_manga_sync">Ажурирај пратиоца након читања</string>
     <string name="default_category">Подразумевана категорија</string>
     <string name="default_category_summary">Увек питај</string>
@@ -428,7 +429,7 @@
     <string name="label_network">Мрежа</string>
     <string name="backup_restore_content_full">Подаци из датотеке резервне копије ће бити враћени.
 \n
-\nМораћете да инсталирате све додатке које недостају и да се после тога пријавите на трекере да бисте их користили.</string>
+\nМораћете да инсталирате све додатке које недостају и да се после тога пријавите на пратиоце да бисте их користили.</string>
     <string name="enhanced_tracking_info">Сервиси који пружају побољшане услуге за одређене изворе. Наслов се аутоматски прати када га додате у колекцију.</string>
     <string name="help_translate">Помозите у превођењу</string>
     <string name="pref_dump_crash_logs">Дели извештаје о паду</string>
@@ -535,7 +536,7 @@
     <string name="pref_remove_bookmarked_chapters">Дозволи брисање забележених поглавља</string>
     <string name="pref_remove_exclude_categories">Искључене категорије</string>
     <string name="pref_download_new_categories_details">Наслови у искљученим категоријама неће се преузимати иако су такође у укљученим категоријама.</string>
-    <string name="tracking_info">Једносмерна синхронизација за ажурирање броја прочитаних поглавља у трекерима. За појединачно праћење наслова додирни дугме за њихово праћење.</string>
+    <string name="tracking_info">Једносмерна синхронизација за ажурирање броја прочитаних поглавља у пратиоцима. За појединачно праћење наслова додирни дугме за њихово праћење.</string>
     <string name="label_data">Подаци</string>
     <string name="pref_incognito_mode">Инкогнито мод</string>
     <string name="cover_updated">Омот је ажуриран</string>
@@ -556,11 +557,11 @@
     <string name="extension_api_error">Преузимање листе додатака није успело</string>
     <string name="pref_auto_clear_chapter_cache">Испразни кеш меморију поглавља током покретања апликације</string>
     <string name="database_clean">Нема ништа за чишћење</string>
-    <string name="pref_update_only_completely_read">Sa neporcitanim poglavljem(ima)</string>
+    <string name="pref_update_only_completely_read">Прескочи уносе са непрочитаним поглављима</string>
     <string name="privacy_policy">Политика приватности</string>
     <string name="cancelled">Отказано</string>
     <string name="on_hiatus">На паузи</string>
-    <string name="pref_update_only_started">То није започето</string>
+    <string name="pref_update_only_started">Прескочи уносе који нису започети</string>
     <string name="action_show_manga">Прикажи наслов</string>
     <string name="action_move_to_top_all_for_series">Помакни наслов на врх</string>
     <string name="notification_update_error">%1$d ажурирање није успело</string>
@@ -681,7 +682,7 @@
     <string name="error_user_agent_string_blank">Низ корисничког агента не може бити празан</string>
     <string name="pref_reset_user_agent_string">Ресетуј подразумевани низ корисничког агента</string>
     <string name="label_tracked_titles">Праћени наслови</string>
-    <string name="label_tracker_section">Трекери</string>
+    <string name="label_tracker_section">Пратиоци</string>
     <string name="ext_info_age_rating">Рангирање по узрасту</string>
     <string name="custom_cover">Персонализовани омот</string>
     <string name="pref_reset_viewer_flags">Ресетуј подешавања читача по наслову</string>
@@ -708,7 +709,7 @@
     <string name="licensed_manga_chapters_error">Лиценцирано - Нема поглавља за приказ</string>
     <string name="has_results">Има резултата</string>
     <string name="skipped_reason_not_in_release_period">Прескочено јер данас није очекивано издање</string>
-    <string name="pref_update_only_in_release_period">Изван очекиваног периода изласка</string>
+    <string name="pref_update_only_in_release_period">Предвиди очекивано време изласка</string>
     <string name="action_set_interval">Постави интервалу</string>
     <string name="intervals_header">Интервали</string>
     <string name="track_delete_remote_text">Такође уклони из %s</string>
@@ -729,4 +730,59 @@
     <string name="exception_offline">Нема везе са интернетом</string>
     <string name="exception_http">HTTP %d, погледај веб сајт у WebView</string>
     <string name="exception_unknown_host">%s је недоступан</string>
+    <string name="pref_relative_format">Релативне временске ознаке</string>
+    <string name="pref_relative_format_summary">„%1$s” уместо „%2$s”</string>
+    <string name="pref_library_update_smart_update">Паметно ажурирање</string>
+    <string name="pref_flash_page">Забљесни приликом листања</string>
+    <string name="pref_flash_page_summ">Смањује артефакте на е-инк екранима</string>
+    <string name="label_extension_repos">Репозиторије екстензија</string>
+    <string name="pref_storage_location">Место складиштења</string>
+    <string name="pref_storage_location_info">Користи се за аутоматске резервне копије, преузимаље поглавља и локални извор.</string>
+    <string name="ext_revoke_trust">Опозови поверење непознатим екстензијама</string>
+    <string name="action_sort_tracker_score">Оцена на пратиоцу</string>
+    <string name="scanlator">Аматерски преводилац</string>
+    <string name="no_scanlators_found">Ниједан аматерски преводилац није пронађен</string>
+    <string name="exclude_scanlators">Не укључуј аматерске преводиоце</string>
+    <string name="manga_interval_expected_update">Предвиђа се да ће нова поглавља изаћи за %1$s, проверава се сваких %2$s.</string>
+    <string name="manga_interval_expected_update_soon">Ускоро</string>
+    <string name="available_disk_space_info">Доступно: %1$s / Укупно: %2$s</string>
+    <string name="information_empty_repos">Немате додатих репозиторија.</string>
+    <string name="action_add_repo">Додај репозиторију</string>
+    <string name="action_delete_repo">Избриши репозиторију</string>
+    <string name="label_add_repo_input">URL репозиторије</string>
+    <string name="action_add_repo_message">Додај додатне репозиторије у Михон. Треба да буде URL који се завршава са „index.min.json”.</string>
+    <string name="invalid_repo_name">Неисправан URL репозиторије</string>
+    <string name="delete_repo_confirmation">Да ли желиш да избришеш репозиторију „%s”?</string>
+    <string name="private_settings">Укључи и осетљива подешавања (нпр. токени за пријаву у пратиоце)</string>
+    <string name="onboarding_storage_action_select">Изабери путању</string>
+    <string name="onboarding_action_finish">Започни</string>
+    <string name="onboarding_storage_selection_required">Мораш да изабереш једну путању</string>
+    <string name="onboarding_permission_notifications">Дозвола за обавештења</string>
+    <string name="onboarding_permission_install_apps">Дозвола за инсталацију апликација</string>
+    <string name="onboarding_action_skip">Пресокочи</string>
+    <string name="onboarding_action_next">Следеће</string>
+    <string name="onboarding_permission_install_apps_description">За инсталирање екстензија.</string>
+    <string name="onboarding_permission_notifications_description">За примање обавештења о ажурурању библиотеке и др.</string>
+    <string name="onboarding_permission_action_grant">Одобри</string>
+    <string name="onboarding_heading">Добро дошли!</string>
+    <string name="pref_onboarding_guide">Водич за прво покретање</string>
+    <string name="onboarding_guides_new_user">Користш %s први пут? Препоручујемо да погледаш водич за покретање</string>
+    <string name="onboarding_guides_returning_user">Поново инсталираш %s?</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Избегни прекиде при дуготрајном ажурирању колекције, преузимању и обнављању резервне копије</string>
+    <string name="onboarding_permission_ignore_battery_opts">Коришћење батерије у позадини</string>
+    <string name="onboarding_description">Хајде да обавимо нека подешавања. Ако желиш можеш их касније променити у подешавањима.</string>
+    <string name="no_location_set">Није постављена локација за складиштење</string>
+    <string name="onboarding_storage_info">Одабери путању у коју ће %1$s чувати преузимања поглавља, резервне копије и друго.
+\n
+\nПрепоручујемо коришћење засебне путање
+\n
+\nОдабрана путања: %2$s</string>
+    <string name="theme_nord">Норд</string>
+    <string name="onboarding_storage_help_info">Ажурураш са старије верзије и не знаш шта да изабереш? Потражи информације у водичу складиштења.</string>
+    <string name="onboarding_storage_help_action">Водич складиштења</string>
+    <string name="ext_permission_install_apps_warning">За инсталацију екстензија потребне су дозволе. Додирни овде за одобрење</string>
+    <string name="invalid_backup_file_error">Грешка:</string>
+    <string name="error_repo_exists">Ова репозиторија већ постоји</string>
+    <string name="manga_interval_custom_amount">Прилагођена учесталост ажурирања:</string>
+    <string name="action_open_repo">Отвори репозиторију</string>
 </resources>
