@@ -544,7 +544,7 @@
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
     <string name="connected_to_wifi">Yalnızca kablosuz ağda</string>
-    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Mihon\'yi engellemesine neden olabilir. Daha çok öğrenmek için dokunun.</string>
+    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Mihon\'u engellemesine neden olabilir. Daha çok öğrenmek için dokunun.</string>
     <string name="update_72hour">3 günde bir</string>
     <string name="ext_update_all">Tümünü güncelle</string>
     <string name="channel_app_updates">Uygulama güncellemeleri</string>
@@ -755,11 +755,11 @@
     <string name="action_bar_up_description">Yukarı git</string>
     <string name="onboarding_storage_action_select">Klasör seç</string>
     <string name="pref_onboarding_guide">Başlangıç rehberi</string>
-    <string name="onboarding_guides_new_user">%s\'de yeni misiniz? Başlangıç rehberine göz atmanızı tavsiye ederiz.</string>
+    <string name="onboarding_guides_new_user">%s\'da yeni misiniz? Başlangıç rehberine göz atmanızı tavsiye ederiz.</string>
     <string name="onboarding_action_finish">Başlayın</string>
     <string name="onboarding_storage_selection_required">Bir klasör seçilmelidir</string>
     <string name="onboarding_heading">Hoş geldiniz!</string>
-    <string name="onboarding_guides_returning_user">%s\'yi yeniden mi kuruyorsunuz?</string>
+    <string name="onboarding_guides_returning_user">%s\'u yeniden mi kuruyorsunuz?</string>
     <string name="onboarding_action_skip">Atla</string>
     <string name="onboarding_action_next">Sonraki</string>
     <string name="onboarding_description">Önce bazı şeyleri ayarlayalım. Bunları daha sonra ayarlardan da değiştirebilirsiniz.</string>
@@ -785,7 +785,7 @@
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
     <string name="action_add_repo">Depo ekle</string>
     <string name="label_add_repo_input">Depo URL\'si</string>
-    <string name="action_add_repo_message">Mihon\'ye ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir URL olmalıdır.</string>
+    <string name="action_add_repo_message">Mihon\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir URL olmalıdır.</string>
     <string name="error_repo_exists">Bu depo zaten var!</string>
     <string name="action_delete_repo">Depoyu sil</string>
     <string name="invalid_repo_name">Geçersiz depo URL\'si</string>
