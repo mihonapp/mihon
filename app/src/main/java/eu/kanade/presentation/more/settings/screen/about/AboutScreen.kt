@@ -247,7 +247,7 @@ object AboutScreen : Screen() {
                 }
             }
             BuildConfig.PREVIEW -> {
-                "Preview r${BuildConfig.COMMIT_COUNT}".let {
+                "Beta r${BuildConfig.COMMIT_COUNT}".let {
                     if (withBuildDate) {
                         "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
                     } else {
