@@ -537,7 +537,8 @@ class ReaderViewModel @JvmOverloads constructor(
 
                 // Check if syncing is enabled for chapter read:
                 if (syncPreferences.isSyncEnabled() &&
-                    syncFlags and SyncPreferences.Flags.SYNC_ON_CHAPTER_READ == SyncPreferences.Flags.SYNC_ON_CHAPTER_READ
+                    syncFlags and
+                    SyncPreferences.Flags.SYNC_ON_CHAPTER_READ == SyncPreferences.Flags.SYNC_ON_CHAPTER_READ
                 ) {
                     SyncDataJob.startNow(Injekt.get<Application>())
                 }

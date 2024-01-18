@@ -480,7 +480,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val syncPreferences: SyncPreferences = Injekt.get()
 
             // Only proceed with SyncDataJob if sync is enabled and the specific sync on library update flag is set
-            if (syncPreferences.isSyncEnabled() && syncPreferences.syncFlags().get() and SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE == SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE) {
+            if (syncPreferences.isSyncEnabled() && syncPreferences.syncFlags().get() and
+                SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE == SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE
+            ) {
                 // Check if SyncDataJob is already running
                 if (wm.isRunning(SyncDataJob.TAG_MANUAL)) {
                     // SyncDataJob is already running
