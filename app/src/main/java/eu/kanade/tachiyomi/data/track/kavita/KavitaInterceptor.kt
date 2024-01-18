@@ -18,7 +18,7 @@ class KavitaInterceptor(private val kavita: Kavita) : Interceptor {
         // Add the authorization header to the original request.
         val authRequest = originalRequest.newBuilder()
             .addHeader("Authorization", "Bearer $jwtToken")
-            .header("User-Agent", "Mihon Kavita v${BuildConfig.VERSION_NAME}")
+            .header("User-Agent", "Mihon (${BuildConfig.APPLICATION_ID}) Kavita v${BuildConfig.VERSION_NAME}")
             .build()
 
         return chain.proceed(authRequest)
