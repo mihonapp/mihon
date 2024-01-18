@@ -263,7 +263,7 @@ class Downloader(
      *
      * @param manga the manga of the chapters to download.
      * @param chapters the list of chapters to download.
-     * @param autoStart whether to start the downloader after enqueing the chapters.
+     * @param autoStart whether to start the downloader after enqueueing the chapters.
      */
     fun queueChapters(manga: Manga, chapters: List<Chapter>, autoStart: Boolean) {
         if (chapters.isEmpty()) return
