@@ -42,4 +42,8 @@ fun DisplayRefreshHost(
             drawRect(Color.Black)
         }
     }
+    else{
+        // Don't draw anything to clear the canvas
+        Canvas(modifier = modifier.fillMaxSize()) {}
+    }
 }
