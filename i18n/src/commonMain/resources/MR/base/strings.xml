@@ -776,6 +776,7 @@
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
     <string name="loader_rar5_error">RARv5 format is not supported</string>
+    <string name="loader_ppmd_error">PPMd compression is not supported</string>
 
     <!-- Updates -->
     <string name="updating_library">Updating library</string>

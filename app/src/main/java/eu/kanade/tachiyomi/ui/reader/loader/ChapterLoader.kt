@@ -7,6 +7,7 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import org.apache.commons.compress.archivers.dump.UnsupportedCompressionAlgorithmException
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.storage.UniFileTempFileManager
 import tachiyomi.core.util.lang.withIOContext
@@ -98,7 +99,11 @@ class ChapterLoader(
                 when (format) {
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Zip -> ZipPageLoader(tempFileManager.createTempFile(format.file))
-                    is Format.SevenZip -> SevenZipPageLoader(tempFileManager.createTempFile(format.file))
+                    is Format.SevenZip -> try {
+                        SevenZipPageLoader(tempFileManager.createTempFile(format.file))
+                    } catch (e: UnsupportedCompressionAlgorithmException) {
+                        error(context.stringResource(MR.strings.loader_ppmd_error))
+                    }
                     is Format.Rar -> try {
                         RarPageLoader(tempFileManager.createTempFile(format.file))
                     } catch (e: UnsupportedRarV5Exception) {
