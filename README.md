@@ -39,8 +39,7 @@
 
 <h3>Features include</h3>
 <ul>
-    <li>Online reading from a variety of sources</li>
-    <li>Local reading of downloaded content</li>
+    <li>Local reading of content</li>
     <li>A configurable reader with multiple viewers, reading directions and other settings.</li>
     <li>Tracker support: <a target="_blank" href="https://myanimelist.net/">MyAnimeList</a>, <a target="_blank" href="https://anilist.co/">AniList</a>, <a target="_blank" href="https://kitsu.io/">Kitsu</a>, <a target="_blank" href="https://mangaupdates.com">MangaUpdates</a>, <a target="_blank" href="https://shikimori.one">Shikimori</a>, and <a target="_blank" href="https://bgm.tv/">Bangumi</a> support</li>
     <li>Categories to organize your library</li>
