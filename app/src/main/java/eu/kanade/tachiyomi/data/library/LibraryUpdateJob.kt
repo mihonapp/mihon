@@ -19,6 +19,7 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -64,7 +65,6 @@ import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
-import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -480,9 +480,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val syncPreferences: SyncPreferences = Injekt.get()
 
             // Only proceed with SyncDataJob if sync is enabled and the specific sync on library update flag is set
-            if (syncPreferences.isSyncEnabled() && syncPreferences.syncFlags().get() and
-                SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE == SyncPreferences.Flags.SYNC_ON_LIBRARY_UPDATE
-            ) {
+            val syncTriggerOpt = syncPreferences.getSyncTriggerOptions()
+            if (syncPreferences.isSyncEnabled() && syncTriggerOpt.syncOnLibraryUpdate) {
                 // Check if SyncDataJob is already running
                 if (wm.isRunning(SyncDataJob.TAG_MANUAL)) {
                     // SyncDataJob is already running

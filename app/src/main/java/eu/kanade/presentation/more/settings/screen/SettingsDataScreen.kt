@@ -35,12 +35,13 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
-import eu.kanade.presentation.more.settings.screen.data.SyncOptionsScreen
 import eu.kanade.presentation.more.settings.screen.data.SyncSettingsSelector
+import eu.kanade.presentation.more.settings.screen.data.SyncTriggerOptionsScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -65,7 +66,6 @@ import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.storage.service.StoragePreferences
-import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -443,13 +443,13 @@ object SettingsDataScreen : SearchableSettings {
             Preference.PreferenceItem.EditTextPreference(
                 title = stringResource(MR.strings.pref_sync_host),
                 subtitle = stringResource(MR.strings.pref_sync_host_summ),
-                pref = syncPreferences.syncHost(),
+                pref = syncPreferences.clientHost(),
                 onValueChanged = { newValue ->
                     scope.launch {
                         // Trim spaces at the beginning and end, then remove trailing slash if present
                         val trimmedValue = newValue.trim()
                         val modifiedValue = trimmedValue.trimEnd { it == '/' }
-                        syncPreferences.syncHost().set(modifiedValue)
+                        syncPreferences.clientHost().set(modifiedValue)
                     }
                     true
                 },
@@ -457,7 +457,7 @@ object SettingsDataScreen : SearchableSettings {
             Preference.PreferenceItem.EditTextPreference(
                 title = stringResource(MR.strings.pref_sync_api_key),
                 subtitle = stringResource(MR.strings.pref_sync_api_key_summ),
-                pref = syncPreferences.syncAPIKey(),
+                pref = syncPreferences.clientAPIKey(),
             ),
         )
     }
@@ -486,7 +486,7 @@ object SettingsDataScreen : SearchableSettings {
         return Preference.PreferenceItem.TextPreference(
             title = stringResource(MR.strings.pref_sync_options),
             subtitle = stringResource(MR.strings.pref_sync_options_summ),
-            onClick = { navigator.push(SyncOptionsScreen()) },
+            onClick = { navigator.push(SyncTriggerOptionsScreen()) },
         )
     }
 

@@ -23,6 +23,7 @@ import coil.disk.DiskCache
 import coil.util.DebugLogger
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
 import eu.kanade.tachiyomi.crash.CrashActivity
@@ -52,7 +53,6 @@ import logcat.LogcatLogger
 import org.conscrypt.Conscrypt
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
 import uy.kohesive.injekt.Injekt
@@ -133,10 +133,8 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         }
 
         val syncPreferences: SyncPreferences by injectLazy()
-        val syncFlags = syncPreferences.syncFlags().get()
-        if (syncPreferences.isSyncEnabled() && syncFlags and
-            SyncPreferences.Flags.SYNC_ON_APP_START == SyncPreferences.Flags.SYNC_ON_APP_START
-        ) {
+        val syncTriggerOpt = syncPreferences.getSyncTriggerOptions()
+        if (syncPreferences.isSyncEnabled() && syncTriggerOpt.syncOnAppStart) {
             SyncDataJob.startNow(this@App)
         }
     }
@@ -174,9 +172,8 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         SecureActivityDelegate.onApplicationStart()
 
         val syncPreferences: SyncPreferences by injectLazy()
-        val syncFlags = syncPreferences.syncFlags().get()
-        if (syncPreferences.isSyncEnabled() && syncFlags
-            and SyncPreferences.Flags.SYNC_ON_APP_RESUME == SyncPreferences.Flags.SYNC_ON_APP_RESUME
+        val syncTriggerOpt = syncPreferences.getSyncTriggerOptions()
+        if (syncPreferences.isSyncEnabled() && syncTriggerOpt.syncOnAppResume
         ) {
             SyncDataJob.startNow(this@App)
         }

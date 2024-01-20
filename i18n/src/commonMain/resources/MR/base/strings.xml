@@ -31,6 +31,7 @@
     <string name="label_data_storage">Data and storage</string>
     <string name="label_backup">Backup</string>
     <string name="label_sync">Sync</string>
+    <string name="label_triggers">Triggers</string>
     <string name="label_stats">Statistics</string>
     <string name="label_migration">Migrate</string>
     <string name="label_extensions">Extensions</string>
@@ -586,7 +587,7 @@
     <string name="pref_sync_options">Create sync triggers</string>
     <string name="pref_sync_options_summ">Can be used to set sync triggers</string>
     <string name="sync_on_chapter_read">Sync on Chapter Read</string>
-    <string name="sync_on_chapter_open">Sync on Every Chapter Page</string>
+    <string name="sync_on_chapter_open">Sync on Chapter Open</string>
     <string name="sync_on_app_start">Sync on App Start</string>
     <string name="sync_on_app_resume">Sync on App Resume</string>
     <string name="sync_on_library_update">Sync on Library Update</string>
