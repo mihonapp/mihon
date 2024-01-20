@@ -47,7 +47,7 @@
     <li>Schedule updating your library for new chapters</li>
     <li>Create backups locally to read offline or to your desired cloud service</li>
     <li>and much more...</li>
-<ul>
+</ul>
 
 <h2 align="center">Contributing</h2>
 
@@ -107,7 +107,7 @@ Source requests are not accepted.
 <h3 align="center">Credits</h3>
 
 <p align="center">Thank you to all the people who have already contributed!</p>
-<p align="right">
+<p align="center">
     <a href="https://github.com/mihonapp/mihon/graphs/contributors">
         <img src="https://contrib.rocks/image?repo=mihonapp/mihon" width="800"/>
     </a>
