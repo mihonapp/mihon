@@ -47,7 +47,7 @@
     <li>Schedule updating your library for new chapters</li>
     <li>Create backups locally to read offline or to your desired cloud service</li>
     <li>and much more...</li>
-<ul>
+</ul>
 
 <h2 align="center">Contributing</h2>
 
