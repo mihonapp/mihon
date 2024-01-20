@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.sync.service
 
 import android.content.Context
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
@@ -12,7 +13,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.logcat
-import tachiyomi.domain.sync.SyncPreferences
 import java.time.Instant
 
 @Serializable

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.sync.service
 
 import android.content.Context
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.sync.SyncNotifier
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.PATCH
@@ -17,7 +18,6 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.gzip
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.util.system.logcat
-import tachiyomi.domain.sync.SyncPreferences
 import java.util.concurrent.TimeUnit
 
 class SyncYomiSyncService(
@@ -72,8 +72,8 @@ class SyncYomiSyncService(
     )
 
     override suspend fun beforeSync() {
-        val host = syncPreferences.syncHost().get()
-        val apiKey = syncPreferences.syncAPIKey().get()
+        val host = syncPreferences.clientHost().get()
+        val apiKey = syncPreferences.clientAPIKey().get()
         val lockFileApi = "$host/api/sync/lock"
         val deviceId = syncPreferences.uniqueDeviceID()
         val client = OkHttpClient()
@@ -129,8 +129,8 @@ class SyncYomiSyncService(
     }
 
     override suspend fun pullSyncData(): SyncData? {
-        val host = syncPreferences.syncHost().get()
-        val apiKey = syncPreferences.syncAPIKey().get()
+        val host = syncPreferences.clientHost().get()
+        val apiKey = syncPreferences.clientAPIKey().get()
         val downloadUrl = "$host/api/sync/download"
 
         val client = OkHttpClient()
@@ -155,8 +155,8 @@ class SyncYomiSyncService(
     }
 
     override suspend fun pushSyncData(syncData: SyncData) {
-        val host = syncPreferences.syncHost().get()
-        val apiKey = syncPreferences.syncAPIKey().get()
+        val host = syncPreferences.clientHost().get()
+        val apiKey = syncPreferences.clientAPIKey().get()
         val uploadUrl = "$host/api/sync/upload"
 
         // Set timeout to 30 seconds

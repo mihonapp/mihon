@@ -18,6 +18,7 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import eu.kanade.domain.sync.SyncPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -26,7 +27,6 @@ import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import logcat.logcat
 import tachiyomi.core.i18n.stringResource
-import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

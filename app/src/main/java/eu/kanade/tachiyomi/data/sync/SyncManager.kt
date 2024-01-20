@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.sync
 
 import android.content.Context
 import android.net.Uri
+import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.backup.create.BackupCreator
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.Backup
@@ -24,7 +25,6 @@ import tachiyomi.data.manga.MangaMapper.mapManga
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.domain.sync.SyncPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
@@ -72,7 +72,7 @@ class SyncManager(
      * from the database using the BackupManager, then synchronizes the data with a sync service.
      */
     suspend fun syncData() {
-        val syncOptions = syncPreferences.getSyncOptions()
+        val syncOptions = syncPreferences.getSyncSettings()
         val databaseManga = getAllMangaFromDB()
         val backupOptions = BackupOptions(
             libraryEntries = syncOptions.libraryEntries,
