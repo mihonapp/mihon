@@ -7,6 +7,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.source.interactor.ToggleSource
+import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -36,6 +37,7 @@ class ExtensionDetailsScreenModel(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionSources: GetExtensionSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
+    private val preferences: SourcePreferences = Injekt.get(),
 ) : StateScreenModel<ExtensionDetailsScreenModel.State>(State()) {
 
     private val _events: Channel<ExtensionDetailsEvent> = Channel()
@@ -109,13 +111,25 @@ class ExtensionDetailsScreenModel(
     }
 
     fun toggleSource(sourceId: Long) {
-        toggleSource.await(sourceId)
+        toggleSource.awaitDisable(sourceId)
     }
 
     fun toggleSources(enable: Boolean) {
         state.value.extension?.sources
             ?.map { it.id }
-            ?.let { toggleSource.await(it, enable) }
+            ?.let { toggleSource.awaitDisable(it, enable) }
+    }
+
+    fun toggleIncognito(enableIncognito: Boolean) {
+        state.value.extension?.sources
+            ?.map { it.id }
+            ?.let { toggleSource.awaitIncognito(it, enableIncognito) }
+    }
+
+    fun isIncognito(): Boolean {
+        return state.value.extension?.sources
+            ?.first()
+            ?.id.toString() in preferences.incognitoSources().get()
     }
 
     @Immutable

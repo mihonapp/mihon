@@ -97,7 +97,7 @@ class BrowseSourceScreenModel(
             }
         }
 
-        if (!basePreferences.incognitoMode().get()) {
+        if (!(basePreferences.incognitoMode().get() || source.id.toString() in sourcePreferences.incognitoSources().get())) {
             sourcePreferences.lastUsedSource().set(source.id)
         }
     }
