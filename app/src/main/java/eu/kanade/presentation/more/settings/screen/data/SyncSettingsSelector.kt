@@ -10,6 +10,8 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.domain.sync.SyncPreferences
+import eu.kanade.domain.sync.models.SyncSettings
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.backup.create.BackupOptions
@@ -17,8 +19,6 @@ import eu.kanade.tachiyomi.data.sync.SyncDataJob
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.update
-import tachiyomi.domain.sync.SyncOptions
-import tachiyomi.domain.sync.SyncPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.LabeledCheckbox
 import tachiyomi.presentation.core.components.LazyColumnWithAction
@@ -95,12 +95,12 @@ class SyncSettingsSelector : Screen() {
 private class SyncSettingsSelectorModel(
     val syncPreferences: SyncPreferences = Injekt.get(),
 ) : StateScreenModel<SyncSettingsSelectorModel.State>(
-    State(syncOptionsToBackupOptions(syncPreferences.getSyncOptions())),
+    State(syncOptionsToBackupOptions(syncPreferences.getSyncSettings())),
 ) {
     fun toggle(setter: (BackupOptions, Boolean) -> BackupOptions, enabled: Boolean) {
         mutableState.update {
             val updatedOptions = setter(it.options, enabled)
-            syncPreferences.setSyncOptions(backupOptionsToSyncOptions(updatedOptions))
+            syncPreferences.setSyncSettings(backupOptionsToSyncOptions(updatedOptions))
             it.copy(options = updatedOptions)
         }
     }
@@ -113,21 +113,21 @@ private class SyncSettingsSelectorModel(
     data class State(
         val options: BackupOptions = BackupOptions(),
     ) companion object {
-        private fun syncOptionsToBackupOptions(syncOptions: SyncOptions): BackupOptions {
+        private fun syncOptionsToBackupOptions(syncSettings: SyncSettings): BackupOptions {
             return BackupOptions(
-                libraryEntries = syncOptions.libraryEntries,
-                categories = syncOptions.categories,
-                chapters = syncOptions.chapters,
-                tracking = syncOptions.tracking,
-                history = syncOptions.history,
-                appSettings = syncOptions.appSettings,
-                sourceSettings = syncOptions.sourceSettings,
-                privateSettings = syncOptions.privateSettings,
+                libraryEntries = syncSettings.libraryEntries,
+                categories = syncSettings.categories,
+                chapters = syncSettings.chapters,
+                tracking = syncSettings.tracking,
+                history = syncSettings.history,
+                appSettings = syncSettings.appSettings,
+                sourceSettings = syncSettings.sourceSettings,
+                privateSettings = syncSettings.privateSettings,
             )
         }
 
-        private fun backupOptionsToSyncOptions(backupOptions: BackupOptions): SyncOptions {
-            return SyncOptions(
+        private fun backupOptionsToSyncOptions(backupOptions: BackupOptions): SyncSettings {
+            return SyncSettings(
                 libraryEntries = backupOptions.libraryEntries,
                 categories = backupOptions.categories,
                 chapters = backupOptions.chapters,
