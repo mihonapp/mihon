@@ -8,7 +8,7 @@ class TrackSearch : Track {
 
     override var manga_id: Long = 0
 
-    override var tracker_id: Int = 0
+    override var tracker_id: Long = 0
 
     override var remote_id: Long = 0
 
@@ -55,14 +55,14 @@ class TrackSearch : Track {
 
     override fun hashCode(): Int {
         var result = manga_id.hashCode()
-        result = 31 * result + tracker_id
+        result = 31 * result + tracker_id.hashCode()
         result = 31 * result + remote_id.hashCode()
         return result
     }
 
     companion object {
         fun create(serviceId: Long): TrackSearch = TrackSearch().apply {
-            tracker_id = serviceId.toInt()
+            tracker_id = serviceId
         }
     }
 }

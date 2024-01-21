@@ -33,7 +33,7 @@ fun DbTrack.toDomainTrack(idRequired: Boolean = true): Track? {
     return Track(
         id = trackId,
         mangaId = manga_id,
-        trackerId = tracker_id.toLong(),
+        trackerId = tracker_id,
         remoteId = remote_id,
         libraryId = library_id,
         title = title,

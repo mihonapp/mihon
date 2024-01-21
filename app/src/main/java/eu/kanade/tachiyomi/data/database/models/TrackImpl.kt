@@ -6,7 +6,7 @@ class TrackImpl : Track {
 
     override var manga_id: Long = 0
 
-    override var tracker_id: Int = 0
+    override var tracker_id: Long = 0
 
     override var remote_id: Long = 0
 
