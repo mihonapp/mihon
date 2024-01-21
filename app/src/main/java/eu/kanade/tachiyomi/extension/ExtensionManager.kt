@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.extension.interactor.TrustExtension
+import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
@@ -38,6 +39,8 @@ import java.util.Locale
 class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences = Injekt.get(),
+    private val sourcePreferences: SourcePreferences = Injekt.get(),
+    private val toggleSource: ToggleSource = Injekt.get(),
     private val trustExtension: TrustExtension = Injekt.get(),
 ) {
 
@@ -299,6 +302,17 @@ class ExtensionManager(
         val mutInstalledExtensions = _installedExtensionsFlow.value.toMutableList()
         val oldExtension = mutInstalledExtensions.find { it.pkgName == extension.pkgName }
         if (oldExtension != null) {
+            // If a extension has incognito mode enabled we need to consider that sources change and update them
+            if (oldExtension.sources.first().id.toString() in sourcePreferences.incognitoSources().get()) {
+                oldExtension.sources
+                    .map { it.id }
+                    .let { toggleSource.awaitIncognito(it, false) }
+
+                extension.sources
+                    .map { it.id }
+                    .let { toggleSource.awaitIncognito(it, true) }
+            }
+
             mutInstalledExtensions -= oldExtension
         }
         mutInstalledExtensions += extension
