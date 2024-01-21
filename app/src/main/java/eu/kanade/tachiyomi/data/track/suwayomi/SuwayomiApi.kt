@@ -68,7 +68,7 @@ class SuwayomiApi(private val trackId: Long) {
             tracking_url = url
             total_chapters = manga.chapterCount.toInt()
             publishing_status = manga.status
-            last_chapter_read = manga.lastChapterRead?.chapterNumber ?: 0F
+            last_chapter_read = manga.lastChapterRead?.chapterNumber ?: 0.0
             status = when (manga.unreadCount) {
                 manga.chapterCount -> Suwayomi.UNREAD
                 0L -> Suwayomi.COMPLETED

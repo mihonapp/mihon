@@ -153,7 +153,7 @@ class BangumiApi(
             } else {
                 json.decodeFromString<Collection>(responseBody).let {
                     track.status = it.status?.id!!
-                    track.last_chapter_read = it.ep_status!!.toFloat()
+                    track.last_chapter_read = it.ep_status!!.toDouble()
                     track.score = it.rating!!
                     track
                 }

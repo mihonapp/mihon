@@ -16,7 +16,7 @@ class TrackSearch : Track {
 
     override lateinit var title: String
 
-    override var last_chapter_read: Float = 0F
+    override var last_chapter_read: Double = 0.0
 
     override var total_chapters: Int = 0
 

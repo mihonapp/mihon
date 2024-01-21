@@ -66,7 +66,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.remote_id = Random.nextLong()
         it.library_id = Random.nextLong()
         it.title = lorem((1..10).random()).joinToString()
-        it.last_chapter_read = (0..100).random().toFloat()
+        it.last_chapter_read = (0..100).random().toDouble()
         it.total_chapters = (100..1000).random()
         it.score = (0..10).random().toDouble()
         it.status = Random.nextInt()

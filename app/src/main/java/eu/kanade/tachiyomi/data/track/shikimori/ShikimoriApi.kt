@@ -120,7 +120,7 @@ class ShikimoriApi(
             remote_id = obj["id"]!!.jsonPrimitive.long
             total_chapters = mangas["chapters"]!!.jsonPrimitive.int
             library_id = obj["id"]!!.jsonPrimitive.long
-            last_chapter_read = obj["chapters"]!!.jsonPrimitive.float
+            last_chapter_read = obj["chapters"]!!.jsonPrimitive.double
             score = obj["score"]!!.jsonPrimitive.int.toDouble()
             status = toTrackStatus(obj["status"]!!.jsonPrimitive.content)
             tracking_url = baseUrl + mangas["url"]!!.jsonPrimitive.content

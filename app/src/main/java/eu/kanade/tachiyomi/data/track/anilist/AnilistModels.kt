@@ -61,7 +61,7 @@ data class ALUserManga(
         score = score_raw.toDouble()
         started_reading_date = start_date_fuzzy
         finished_reading_date = completed_date_fuzzy
-        last_chapter_read = chapters_read.toFloat()
+        last_chapter_read = chapters_read.toDouble()
         library_id = this@ALUserManga.library_id
         total_chapters = manga.total_chapters
     }

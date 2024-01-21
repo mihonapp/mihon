@@ -16,7 +16,7 @@ interface Track : Serializable {
 
     var title: String
 
-    var last_chapter_read: Float
+    var last_chapter_read: Double
 
     var total_chapters: Int
 
