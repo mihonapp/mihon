@@ -89,7 +89,7 @@ internal class RateLimitInterceptor(
                 while (requestQueue.size >= permits) { // queue is full, remove expired entries
                     val periodStart = SystemClock.elapsedRealtime() - rateLimitMillis
                     var hasRemovedExpired = false
-                    while (requestQueue.isEmpty().not() && requestQueue.first <= periodStart) {
+                    while (!requestQueue.isEmpty() && requestQueue.first <= periodStart) {
                         requestQueue.removeFirst()
                         hasRemovedExpired = true
                     }

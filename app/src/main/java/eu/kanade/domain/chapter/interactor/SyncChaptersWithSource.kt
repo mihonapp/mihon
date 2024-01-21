@@ -163,7 +163,7 @@ class SyncChaptersWithSource(
         var updatedToAdd = newChapters.map { toAddItem ->
             var chapter = toAddItem.copy(dateFetch = nowMillis + itemCount--)
 
-            if (chapter.isRecognizedNumber.not() || chapter.chapterNumber !in deletedChapterNumbers) return@map chapter
+            if (!chapter.isRecognizedNumber || chapter.chapterNumber !in deletedChapterNumbers) return@map chapter
 
             chapter = chapter.copy(
                 read = chapter.chapterNumber in deletedReadChapterNumbers,
