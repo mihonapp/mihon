@@ -412,14 +412,16 @@ class MangaRestorer(
      * @param excludedScanlators the excluded scanlators to restore.
      */
     private suspend fun restoreExcludedScanlators(manga: Manga, excludedScanlators: List<String>) {
+        if (excludedScanlators.isEmpty()) return
         val existingExcludedScanlators = handler.awaitList {
             excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
         }
+        val toInsert = excludedScanlators.filter { it !in existingExcludedScanlators }
+        if (toInsert.isEmpty()) return
         handler.await {
-            excludedScanlators.filter { it !in existingExcludedScanlators }
-                .forEach {
-                    excluded_scanlatorsQueries.insert(manga.id, it)
-                }
+            toInsert.forEach {
+                excluded_scanlatorsQueries.insert(manga.id, it)
+            }
         }
     }
 }
