@@ -103,7 +103,7 @@ class ShikimoriApi(
         return TrackSearch.create(trackId).apply {
             remote_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name"]!!.jsonPrimitive.content
-            total_chapters = obj["chapters"]!!.jsonPrimitive.int
+            total_chapters = obj["chapters"]!!.jsonPrimitive.long
             cover_url = baseUrl + obj["image"]!!.jsonObject["preview"]!!.jsonPrimitive.content
             summary = ""
             score = obj["score"]!!.jsonPrimitive.double
@@ -118,7 +118,7 @@ class ShikimoriApi(
         return Track.create(trackId).apply {
             title = mangas["name"]!!.jsonPrimitive.content
             remote_id = obj["id"]!!.jsonPrimitive.long
-            total_chapters = mangas["chapters"]!!.jsonPrimitive.int
+            total_chapters = mangas["chapters"]!!.jsonPrimitive.long
             library_id = obj["id"]!!.jsonPrimitive.long
             last_chapter_read = obj["chapters"]!!.jsonPrimitive.double
             score = obj["score"]!!.jsonPrimitive.int.toDouble()

@@ -18,7 +18,7 @@ interface Track : Serializable {
 
     var last_chapter_read: Double
 
-    var total_chapters: Int
+    var total_chapters: Long
 
     var score: Double
 

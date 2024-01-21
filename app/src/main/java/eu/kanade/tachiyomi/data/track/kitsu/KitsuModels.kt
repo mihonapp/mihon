@@ -12,6 +12,7 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -19,7 +20,7 @@ import java.util.Locale
 class KitsuSearchManga(obj: JsonObject) {
     val id = obj["id"]!!.jsonPrimitive.long
     private val canonicalTitle = obj["canonicalTitle"]!!.jsonPrimitive.content
-    private val chapterCount = obj["chapterCount"]?.jsonPrimitive?.intOrNull
+    private val chapterCount = obj["chapterCount"]?.jsonPrimitive?.longOrNull
     val subType = obj["subtype"]?.jsonPrimitive?.contentOrNull
     val original = try {
         obj["posterImage"]?.jsonObject?.get("original")?.jsonPrimitive?.content
@@ -57,7 +58,7 @@ class KitsuSearchManga(obj: JsonObject) {
 class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
     val id = manga["id"]!!.jsonPrimitive.int
     private val canonicalTitle = manga["attributes"]!!.jsonObject["canonicalTitle"]!!.jsonPrimitive.content
-    private val chapterCount = manga["attributes"]!!.jsonObject["chapterCount"]?.jsonPrimitive?.intOrNull
+    private val chapterCount = manga["attributes"]!!.jsonObject["chapterCount"]?.jsonPrimitive?.longOrNull
     val type = manga["attributes"]!!.jsonObject["mangaType"]?.jsonPrimitive?.contentOrNull.orEmpty()
     val original = manga["attributes"]!!.jsonObject["posterImage"]!!.jsonObject["original"]!!.jsonPrimitive.content
     private val synopsis = manga["attributes"]!!.jsonObject["synopsis"]!!.jsonPrimitive.content

@@ -16,7 +16,7 @@ class TrackImpl : Track {
 
     override var last_chapter_read: Double = 0.0
 
-    override var total_chapters: Int = 0
+    override var total_chapters: Long = 0
 
     override var score: Double = 0.0
 

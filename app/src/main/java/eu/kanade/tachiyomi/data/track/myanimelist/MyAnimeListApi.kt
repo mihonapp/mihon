@@ -121,7 +121,7 @@ class MyAnimeListApi(
                             remote_id = obj["id"]!!.jsonPrimitive.long
                             title = obj["title"]!!.jsonPrimitive.content
                             summary = obj["synopsis"]?.jsonPrimitive?.content ?: ""
-                            total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
+                            total_chapters = obj["num_chapters"]!!.jsonPrimitive.long
                             score = obj["mean"]?.jsonPrimitive?.doubleOrNull ?: -1.0
                             cover_url =
                                 obj["main_picture"]?.jsonObject?.get("large")?.jsonPrimitive?.content
@@ -189,7 +189,7 @@ class MyAnimeListApi(
                     .awaitSuccess()
                     .parseAs<JsonObject>()
                     .let { obj ->
-                        track.total_chapters = obj["num_chapters"]!!.jsonPrimitive.int
+                        track.total_chapters = obj["num_chapters"]!!.jsonPrimitive.long
                         obj.jsonObject["my_list_status"]?.jsonObject?.let {
                             parseMangaItem(it, track)
                         }

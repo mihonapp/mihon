@@ -57,7 +57,7 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
                 } else {
                     track.status = READING

@@ -106,7 +106,7 @@ class BangumiApi(
             ""
         }
         val totalChapters = if (obj["eps_count"] != null) {
-            obj["eps_count"]!!.jsonPrimitive.int
+            obj["eps_count"]!!.jsonPrimitive.long
         } else {
             0
         }

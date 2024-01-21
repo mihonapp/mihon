@@ -72,7 +72,7 @@ abstract class BaseTracker(
 
     override suspend fun setRemoteStatus(track: Track, status: Int) {
         track.status = status
-        if (track.status == getCompletionStatus() && track.total_chapters != 0) {
+        if (track.status == getCompletionStatus() && track.total_chapters != 0L) {
             track.last_chapter_read = track.total_chapters.toDouble()
         }
         updateRemote(track)
@@ -87,7 +87,7 @@ abstract class BaseTracker(
             track.status = getReadingStatus()
         }
         track.last_chapter_read = chapterNumber.toDouble()
-        if (track.total_chapters != 0 && track.last_chapter_read.toInt() == track.total_chapters) {
+        if (track.total_chapters != 0L && track.last_chapter_read.toLong() == track.total_chapters) {
             track.status = getCompletionStatus()
             track.finished_reading_date = System.currentTimeMillis()
         }

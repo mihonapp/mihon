@@ -19,7 +19,7 @@ data class ALManga(
     val format: String,
     val publishing_status: String,
     val start_date_fuzzy: Long,
-    val total_chapters: Int,
+    val total_chapters: Long,
     val average_score: Int,
 ) {
 

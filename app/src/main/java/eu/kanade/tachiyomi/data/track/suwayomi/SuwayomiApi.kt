@@ -66,7 +66,7 @@ class SuwayomiApi(private val trackId: Long) {
             cover_url = "$url/thumbnail"
             summary = manga.description.orEmpty()
             tracking_url = url
-            total_chapters = manga.chapterCount.toInt()
+            total_chapters = manga.chapterCount
             publishing_status = manga.status
             last_chapter_read = manga.lastChapterRead?.chapterNumber ?: 0.0
             status = when (manga.unreadCount) {
