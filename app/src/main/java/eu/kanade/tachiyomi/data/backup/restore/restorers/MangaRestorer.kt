@@ -73,6 +73,7 @@ class MangaRestorer(
                 backupCategories = backupCategories,
                 history = backupManga.history + backupManga.brokenHistory.map { it.toBackupHistory() },
                 tracks = backupManga.tracking,
+                excludedScanlators = backupManga.excludedScanlators,
             )
         }
     }
@@ -264,11 +265,13 @@ class MangaRestorer(
         backupCategories: List<BackupCategory>,
         history: List<BackupHistory>,
         tracks: List<BackupTracking>,
+        excludedScanlators: List<String>,
     ): Manga {
         restoreCategories(manga, categories, backupCategories)
         restoreChapters(manga, chapters)
         restoreTracking(manga, tracks)
         restoreHistory(history)
+        restoreExcludedScanlators(manga, excludedScanlators)
         updateManga.awaitUpdateFetchInterval(manga, now, currentFetchWindow)
         return manga
     }
@@ -401,4 +404,25 @@ class MangaRestorer(
     }
 
     private fun Track.forComparison() = this.copy(id = 0L, mangaId = 0L)
+
+    /**
+     * Restores the excluded scanlators for the manga.
+     *
+     * @param manga the manga whose excluded scanlators have to be restored.
+     * @param excludedScanlators the excluded scanlators to restore.
+     */
+    private suspend fun restoreExcludedScanlators(manga: Manga, excludedScanlators: List<String>) {
+        if (excludedScanlators.isEmpty()) return
+        val existingExcludedScanlators = handler.awaitList {
+            excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
+        }
+        val toInsert = excludedScanlators.filter { it !in existingExcludedScanlators }
+        if (toInsert.isNotEmpty()) {
+            handler.await {
+                toInsert.forEach {
+                    excluded_scanlatorsQueries.insert(manga.id, it)
+                }
+            }
+        }
+    }
 }
