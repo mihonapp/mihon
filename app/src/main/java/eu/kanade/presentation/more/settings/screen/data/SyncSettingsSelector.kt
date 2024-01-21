@@ -1,4 +1,3 @@
-
 package eu.kanade.presentation.more.settings.screen.data
 
 import android.content.Context
