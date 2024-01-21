@@ -34,8 +34,8 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         }
 
         return try {
-            //TODO: Uncomment this when the rest of sync PR is merged.
-//            SyncManager(context).syncData()
+            // TODO: Uncomment this when the rest of sync PR is merged.
+            //  SyncManager(context).syncData()
             Result.success()
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
