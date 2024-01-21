@@ -30,6 +30,10 @@ class MangaBackupCreator(
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
+        mangaObject.excludedScanlators = handler.awaitList {
+            excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
+        }
+
         if (options.chapters) {
             // Backup all the chapters
             handler.awaitList {
