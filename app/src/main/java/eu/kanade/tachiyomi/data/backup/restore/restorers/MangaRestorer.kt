@@ -417,10 +417,11 @@ class MangaRestorer(
             excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
         }
         val toInsert = excludedScanlators.filter { it !in existingExcludedScanlators }
-        if (toInsert.isEmpty()) return
-        handler.await {
-            toInsert.forEach {
-                excluded_scanlatorsQueries.insert(manga.id, it)
+        if (toInsert.isNotEmpty()) {
+            handler.await {
+                toInsert.forEach {
+                    excluded_scanlatorsQueries.insert(manga.id, it)
+                }
             }
         }
     }
