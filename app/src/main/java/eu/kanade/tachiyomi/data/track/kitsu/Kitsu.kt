@@ -19,11 +19,11 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     companion object {
-        const val READING = 1
-        const val COMPLETED = 2
-        const val ON_HOLD = 3
-        const val DROPPED = 4
-        const val PLAN_TO_READ = 5
+        const val READING = 1L
+        const val COMPLETED = 2L
+        const val ON_HOLD = 3L
+        const val DROPPED = 4L
+        const val PLAN_TO_READ = 5L
     }
 
     override val supportsReadingDates: Boolean = true
@@ -38,11 +38,11 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     override fun getLogoColor() = Color.rgb(51, 37, 50)
 
-    override fun getStatusList(): List<Int> {
+    override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
     }
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         READING -> MR.strings.reading
         PLAN_TO_READ -> MR.strings.plan_to_read
         COMPLETED -> MR.strings.completed
@@ -51,11 +51,11 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = -1
+    override fun getRereadingStatus(): Long = -1
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> {
         val df = DecimalFormat("0.#")

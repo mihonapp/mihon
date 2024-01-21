@@ -48,9 +48,9 @@ import tachiyomi.presentation.core.util.isScrolledToStart
 
 @Composable
 fun TrackStatusSelector(
-    selection: Int,
-    onSelectionChange: (Int) -> Unit,
-    selections: Map<Int, StringResource?>,
+    selection: Long,
+    onSelectionChange: (Long) -> Unit,
+    selections: Map<Long, StringResource?>,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -236,12 +236,12 @@ private fun TrackStatusSelectorPreviews() {
                 onSelectionChange = {},
                 selections = persistentMapOf(
                     // Anilist values
-                    1 to MR.strings.reading,
-                    2 to MR.strings.plan_to_read,
-                    3 to MR.strings.completed,
-                    4 to MR.strings.on_hold,
-                    5 to MR.strings.dropped,
-                    6 to MR.strings.repeating,
+                    1L to MR.strings.reading,
+                    2L to MR.strings.plan_to_read,
+                    3L to MR.strings.completed,
+                    4L to MR.strings.on_hold,
+                    5L to MR.strings.dropped,
+                    6L to MR.strings.repeating,
                 ),
                 onConfirm = {},
                 onDismissRequest = {},

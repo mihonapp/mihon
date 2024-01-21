@@ -22,7 +22,7 @@ class TrackSearch : Track {
 
     override var score: Double = -1.0
 
-    override var status: Int = 0
+    override var status: Long = 0
 
     override var started_reading_date: Long = 0
 

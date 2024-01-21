@@ -22,7 +22,7 @@ interface Track : Serializable {
 
     var score: Double
 
-    var status: Int
+    var status: Long
 
     var started_reading_date: Long
 

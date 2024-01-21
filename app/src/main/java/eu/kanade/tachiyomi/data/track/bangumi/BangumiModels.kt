@@ -25,7 +25,7 @@ data class Collection(
 
 @Serializable
 data class Status(
-    val id: Int? = 0,
+    val id: Long? = 0,
     val name: String? = "",
     val type: String? = "",
 )

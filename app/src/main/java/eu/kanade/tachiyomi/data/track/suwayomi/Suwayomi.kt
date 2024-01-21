@@ -23,25 +23,25 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
     override fun getLogoColor() = Color.rgb(255, 35, 35) // TODO
 
     companion object {
-        const val UNREAD = 1
-        const val READING = 2
-        const val COMPLETED = 3
+        const val UNREAD = 1L
+        const val READING = 2L
+        const val COMPLETED = 3L
     }
 
-    override fun getStatusList() = listOf(UNREAD, READING, COMPLETED)
+    override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         UNREAD -> MR.strings.unread
         READING -> MR.strings.reading
         COMPLETED -> MR.strings.completed
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = -1
+    override fun getRereadingStatus(): Long = -1
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> = persistentListOf()
 

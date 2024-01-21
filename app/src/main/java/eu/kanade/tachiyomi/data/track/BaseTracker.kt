@@ -70,7 +70,7 @@ abstract class BaseTracker(
         }
     }
 
-    override suspend fun setRemoteStatus(track: Track, status: Int) {
+    override suspend fun setRemoteStatus(track: Track, status: Long) {
         track.status = status
         if (track.status == getCompletionStatus() && track.total_chapters != 0L) {
             track.last_chapter_read = track.total_chapters.toDouble()

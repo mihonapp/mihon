@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class ListItem(
     val series: Series? = null,
     @SerialName("list_id")
-    val listId: Int? = null,
+    val listId: Long? = null,
     val status: Status? = null,
     val priority: Int? = null,
 )

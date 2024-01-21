@@ -19,11 +19,11 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
 
     companion object {
-        const val READING_LIST = 0
-        const val WISH_LIST = 1
-        const val COMPLETE_LIST = 2
-        const val UNFINISHED_LIST = 3
-        const val ON_HOLD_LIST = 4
+        const val READING_LIST = 0L
+        const val WISH_LIST = 1L
+        const val COMPLETE_LIST = 2L
+        const val UNFINISHED_LIST = 3L
+        const val ON_HOLD_LIST = 4L
 
         private val SCORE_LIST = (0..10)
             .flatMap { decimal ->
@@ -46,11 +46,11 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
 
     override fun getLogoColor(): Int = Color.rgb(146, 160, 173)
 
-    override fun getStatusList(): List<Int> {
+    override fun getStatusList(): List<Long> {
         return listOf(READING_LIST, COMPLETE_LIST, ON_HOLD_LIST, UNFINISHED_LIST, WISH_LIST)
     }
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         READING_LIST -> MR.strings.reading_list
         WISH_LIST -> MR.strings.wish_list
         COMPLETE_LIST -> MR.strings.complete_list
@@ -59,11 +59,11 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING_LIST
+    override fun getReadingStatus(): Long = READING_LIST
 
-    override fun getRereadingStatus(): Int = -1
+    override fun getRereadingStatus(): Long = -1
 
-    override fun getCompletionStatus(): Int = COMPLETE_LIST
+    override fun getCompletionStatus(): Long = COMPLETE_LIST
 
     override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 

@@ -69,7 +69,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.last_chapter_read = (0..100).random().toDouble()
         it.total_chapters = (100L..1000L).random()
         it.score = (0..10).random().toDouble()
-        it.status = Random.nextInt()
+        it.status = Random.nextLong()
         it.started_reading_date = 0L
         it.finished_reading_date = 0L
         it.tracking_url = "https://example.com/tracker-example"
