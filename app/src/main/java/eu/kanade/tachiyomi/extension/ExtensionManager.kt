@@ -328,6 +328,10 @@ class ExtensionManager(
     private fun unregisterExtension(pkgName: String) {
         val installedExtension = _installedExtensionsFlow.value.find { it.pkgName == pkgName }
         if (installedExtension != null) {
+            installedExtension.sources
+                .map { it.id }
+                .let { toggleSource.awaitIncognito(it, false)
+
             _installedExtensionsFlow.value -= installedExtension
         }
         val untrustedExtension = _untrustedExtensionsFlow.value.find { it.pkgName == pkgName }
