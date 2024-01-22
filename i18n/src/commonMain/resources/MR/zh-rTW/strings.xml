@@ -594,11 +594,11 @@
     <string name="ext_info_version">版本</string>
     <string name="ext_info_language">語言</string>
     <string name="ext_info_age_rating">分級</string>
-    <string name="unfinished_list">未成清單</string>
-    <string name="on_hold_list">擱置清單</string>
-    <string name="complete_list">閱畢清單</string>
-    <string name="wish_list">願望清單</string>
-    <string name="reading_list">閱讀清單</string>
+    <string name="unfinished_list">已拋棄</string>
+    <string name="on_hold_list">擱置中</string>
+    <string name="complete_list">已完結</string>
+    <string name="wish_list">準備讀</string>
+    <string name="reading_list">閱讀中</string>
     <string name="network_not_metered">僅透過非計量付費網路</string>
     <string name="cant_open_last_read_chapter">無法開啟上次閱讀章節</string>
     <string name="custom_cover">自訂封面</string>
@@ -784,7 +784,7 @@
     <string name="manga_interval_custom_amount">自訂更新頻率：</string>
     <string name="label_add_repo_input">儲存庫網址</string>
     <string name="error_repo_exists">已有該儲存庫！</string>
-    <string name="pref_library_update_smart_update">智慧型更新</string>
+    <string name="pref_library_update_smart_update">智慧更新</string>
     <string name="invalid_repo_name">無效的儲存庫網址</string>
     <string name="action_add_repo_message">將額外的擴充套件儲存庫新增至 Mihon。此處應填入一個結尾為「index.min.json」的網址。</string>
     <string name="delete_repo_confirmation">確定要刪除「%s」儲存庫嗎？</string>
