@@ -51,7 +51,9 @@ class KomgaApi(
                 }
 
                 val progress = client
-                    .newCall(GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi", headers))
+                    .newCall(
+                        GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi", headers),
+                    )
                     .awaitSuccess().let {
                         with(json) {
                             if (url.contains("/api/v1/series/")) {

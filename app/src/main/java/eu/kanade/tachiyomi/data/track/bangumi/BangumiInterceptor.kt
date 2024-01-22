@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Interceptor
-import okhttp3.Request
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
 
@@ -32,7 +31,10 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         }
 
         return originalRequest.newBuilder()
-            .header("User-Agent", "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)")
+            .header(
+                "User-Agent",
+                "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)",
+            )
             .apply {
                 if (originalRequest.method == "GET") {
                     val newUrl = originalRequest.url.newBuilder()
