@@ -210,7 +210,7 @@
     <string name="tapping_inverted_both">दुबै</string>
     <string name="pref_reader_actions">कार्यहरू</string>
     <string name="pref_read_with_long_tap">लामो ट्यापमा कार्यहरू देखाउनुहोस्</string>
-    <string name="pref_reader_theme">पृष्ठभूमि रङ</string>
+    <string name="pref_reader_theme">ब्याकग्राउण्ड रङ</string>
     <string name="gray_background">खैरो</string>
     <string name="black_background">कालो</string>
     <string name="automatic_background">स्वत</string>
@@ -752,4 +752,41 @@
     <string name="onboarding_action_next">अर्को</string>
     <string name="onboarding_action_finish">सुरु</string>
     <string name="onboarding_action_skip">छोड</string>
+    <string name="onboarding_storage_selection_required">एउटा फोल्डर चयन गर्नुपर्छ</string>
+    <string name="onboarding_storage_help_action">भण्डारण गाइड</string>
+    <string name="onboarding_permission_notifications">सूचना अनुमति</string>
+    <string name="onboarding_permission_action_grant">प्रदान गर्नुहोस्</string>
+    <string name="onboarding_guides_new_user">%s मा नयाँ हुनुहुन्छ? हामी स्टार्टिङ गाइड जाँच गर्न सिफारिस गर्छौं।</string>
+    <string name="theme_nord">नोर्ड</string>
+    <string name="pref_library_update_smart_update">स्मार्ट अपडेट</string>
+    <string name="error_repo_exists">यो रिपो पहिले नै अवस्थित छ!</string>
+    <string name="action_delete_repo">रिपो हटाउनुहोस्</string>
+    <string name="invalid_repo_name">रिपो URL अवैध छ</string>
+    <string name="action_bar_up_description">माथि नेभिगेट गर्नुहोस्</string>
+    <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
+    <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
+    <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिङहरूमा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
+    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ।
+\n
+\nएक समर्पित फोल्डर सिफारिस गरिएको छ।
+\n
+\nचयन गरिएको फोल्डर: %2$s</string>
+    <string name="onboarding_storage_action_select">फोल्डर चयन गर्नुहोस्</string>
+    <string name="onboarding_permission_install_apps">एप स्थापना गर्ने अनुमति</string>
+    <string name="onboarding_permission_install_apps_description">स्रोत एक्सटेन्शन स्थापना गर्न को लागि।</string>
+    <string name="onboarding_permission_notifications_description">पुस्तकालय अपडेट र थपका लागि सूचना प्राप्त गर्नुहोस्।</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">लामो समयदेखि चलिरहेको पुस्तकालय अपडेटहरू, डाउनलोडहरू, र ब्याकअप रिस्टोरमा अवरोधहरू बेवास्ता गर्नुहोस्।</string>
+    <string name="onboarding_storage_help_info">पुरानो संस्करणबाट अपडेट गर्दै र के चयन गर्ने निश्चित छैन? थप जानकारीको लागि भण्डारण गाइड हेर्नुहोस्।</string>
+    <string name="onboarding_permission_ignore_battery_opts">ब्याकग्राउण्ड ब्याट्री प्रयोग</string>
+    <string name="onboarding_guides_returning_user">%s पुन: स्थापना गर्दै हुनुहुन्छ?</string>
+    <string name="ext_permission_install_apps_warning">एक्सटेन्शनहरू स्थापना गर्न अनुमति आवश्यक छ। प्रदान गर्न यहाँ ट्याप गर्नुहोस्।</string>
+    <string name="ext_revoke_trust">विश्वसनीय अज्ञात एक्सटेन्शनहरू रद्द गर्नुहोस्</string>
+    <string name="information_empty_repos">तपाईंले कुनै पनि रिपो सेट गर्नु भएको छैन।</string>
+    <string name="label_add_repo_input">रिपो URL</string>
+    <string name="label_extension_repos">एक्सटेन्शन रिपो</string>
+    <string name="action_add_repo">रिपो थप्नुहोस्</string>
+    <string name="action_add_repo_message">Mihon मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
+    <string name="action_apply">अप्लाई</string>
+    <string name="delete_repo_confirmation">के तपाइँ रिपो \"%s\" हटाउन चाहनुहुन्छ?</string>
+    <string name="action_open_repo">खुला स्रोत रिपो</string>
 </resources>
