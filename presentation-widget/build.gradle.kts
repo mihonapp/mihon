@@ -21,10 +21,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":domain"))
-    implementation(project(":presentation-core"))
-    api(project(":i18n"))
+    implementation(projects.core)
+    implementation(projects.domain)
+    implementation(projects.presentationCore)
+    api(projects.i18n)
 
     implementation(compose.glance)
     lintChecks(compose.lintchecks)
