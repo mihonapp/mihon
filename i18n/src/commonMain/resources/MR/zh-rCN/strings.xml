@@ -780,7 +780,7 @@
     <string name="pref_library_update_smart_update">智能更新</string>
     <string name="onboarding_permission_notifications_description">用来发送书架更新等通知。</string>
     <string name="label_extension_repos">插件仓库</string>
-    <string name="information_empty_repos">尚未设置仓库。</string>
+    <string name="information_empty_repos">尚未设置仓库</string>
     <string name="label_add_repo_input">仓库网址</string>
     <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为“index.min.json”。</string>
     <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
