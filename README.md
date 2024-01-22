@@ -20,6 +20,9 @@
     <a title="CI" href="https://github.com/mihonapp/mihon/actions/workflows/build_push.yml">
         <img src="https://github.com/mihonapp/mihon/actions/workflows/build_push.yml/badge.svg">
     </a>
+    <a title="Translation status" href="https://hosted.weblate.org/engage/mihon/">
+        <img src="https://hosted.weblate.org/widget/mihon/svg-badge.svg" alt="Translation status" />
+    </a>
 </p>
 
 <h2 align="center">Download</h2>
