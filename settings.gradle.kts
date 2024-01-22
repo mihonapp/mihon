@@ -47,3 +47,5 @@ include(":presentation-widget")
 include(":presentation-core")
 include(":source-local")
 include(":core-metadata")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
