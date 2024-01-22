@@ -17,7 +17,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":i18n"))
+    implementation(projects.i18n)
 
     api(libs.logcat)
 
