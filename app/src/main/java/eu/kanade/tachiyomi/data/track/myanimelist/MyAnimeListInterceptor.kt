@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -34,6 +35,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var t
         // Add the authorization header to the original request
         val authRequest = originalRequest.newBuilder()
             .addHeader("Authorization", "Bearer ${oauth!!.access_token}")
+            .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
             .build()
 
         val response = chain.proceed(authRequest)
@@ -50,6 +52,7 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList, private var t
 
             val newRequest = originalRequest.newBuilder()
                 .addHeader("Authorization", "Bearer ${newToken.access_token}")
+                .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
                 .build()
 
             return chain.proceed(newRequest)
