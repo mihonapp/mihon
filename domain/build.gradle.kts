@@ -14,8 +14,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":source-api"))
-    implementation(project(":core"))
+    implementation(projects.sourceApi)
+    implementation(projects.core)
 
     implementation(platform(kotlinx.coroutines.bom))
     implementation(kotlinx.bundles.coroutines)
