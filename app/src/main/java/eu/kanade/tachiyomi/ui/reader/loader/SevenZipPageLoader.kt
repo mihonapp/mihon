@@ -9,14 +9,17 @@ import java.io.File
 /**
  * Loader used to load a chapter from a .7z or .cb7 file.
  */
-internal class SevenZipPageLoader(file: File) : PageLoader() {
+internal class SevenZipPageLoader(
+    private val file: File,
+    private val notifySlowArchive: (method: String) -> Unit
+) : PageLoader() {
 
     private val zip by lazy { SevenZFile(file) }
 
     override var isLocal: Boolean = true
 
     override suspend fun getPages(): List<ReaderPage> {
-        return zip.getImages()
+        return zip.getImages(notifySlowArchive)
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
                     stream = { entry.copyOf().inputStream() }

@@ -7,9 +7,13 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import org.apache.commons.compress.archivers.dump.UnsupportedCompressionAlgorithmException
 import tachiyomi.core.i18n.stringResource
 import tachiyomi.core.storage.UniFileTempFileManager
+import tachiyomi.core.util.lang.launchUI
 import tachiyomi.core.util.lang.withIOContext
 import tachiyomi.core.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
@@ -77,6 +81,7 @@ class ChapterLoader(
     /**
      * Returns the page loader to use for this [chapter].
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun getPageLoader(chapter: ReaderChapter): PageLoader {
         val dbChapter = chapter.chapter
         val isDownloaded = downloadManager.isChapterDownloaded(
@@ -101,8 +106,13 @@ class ChapterLoader(
                     is Format.Zip -> ZipPageLoader(tempFileManager.createTempFile(format.file))
                     is Format.SevenZip -> try {
                         SevenZipPageLoader(tempFileManager.createTempFile(format.file))
+                        {
+                            GlobalScope.launchUI{
+                                context.toast(context.stringResource(MR.strings.loader_7zip_slow_archives, it))
+                            }
+                        }
                     } catch (e: UnsupportedCompressionAlgorithmException) {
-                        error(context.stringResource(MR.strings.loader_ppmd_error))
+                        error(context.stringResource(MR.strings.loader_7zip_ppmd_error))
                     }
                     is Format.Rar -> try {
                         RarPageLoader(tempFileManager.createTempFile(format.file))
