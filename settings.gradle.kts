@@ -35,6 +35,8 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "Mihon"
 include(":app")
 include(":i18n")
@@ -48,4 +50,4 @@ include(":presentation-core")
 include(":source-local")
 include(":core-metadata")
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
