@@ -783,7 +783,7 @@
     <string name="information_empty_repos">尚未设置仓库</string>
     <string name="label_add_repo_input">仓库网址</string>
     <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为“index.min.json”。</string>
-    <string name="onboarding_storage_help_info">如果你是从旧版更新而来，请选择之前使用的“Mihon”目录。</string>
+    <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
     <string name="onboarding_storage_action_select">选择文件夹</string>
