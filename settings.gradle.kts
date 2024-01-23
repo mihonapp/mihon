@@ -49,5 +49,3 @@ include(":presentation-widget")
 include(":presentation-core")
 include(":source-local")
 include(":core-metadata")
-
-
