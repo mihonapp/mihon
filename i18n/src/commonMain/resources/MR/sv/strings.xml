@@ -445,7 +445,7 @@
     <string name="track_started_reading_date">Start datum</string>
     <string name="pref_viewer_nav">Tryckzoner</string>
     <string name="edge_nav">Kant</string>
-    <string name="kindlish_nav">Kindle-ish</string>
+    <string name="kindlish_nav">Kindle-lik</string>
     <string name="l_nav">L-formad</string>
     <string name="action_filter_tracked">Spåras</string>
     <string name="right_and_left_nav">Höger och Vänster</string>
@@ -616,7 +616,7 @@
     <string name="appwidget_updates_description">Se dina nyligen uppdaterade biblioteket inlägg</string>
     <string name="appwidget_unavailable_locked">Widget är inte tillgänglig när applåset är aktiverat</string>
     <string name="update_already_running">En uppdatering pågår redan</string>
-    <string name="multi_lang">Multi</string>
+    <string name="multi_lang">Flerspråkig</string>
     <string name="error_user_agent_string_blank">Strängen för användaragent kan inte vara tom</string>
     <string name="are_you_sure">Är du säker\?</string>
     <string name="updates_last_update_info">Biblioteket uppdaterades senast: %s</string>
@@ -740,7 +740,7 @@
     <string name="action_revert_to_default">Återgå till standard</string>
     <string name="last_auto_backup_info">Senaste automatiska säkerhetskopieringen: %s</string>
     <string name="no_scanlators_found">Inga scanlatorer hittades</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Översättare</string>
     <string name="pref_flash_page">Blinka vid sidbyte</string>
     <string name="pref_storage_usage">Lagringsanvändning</string>
     <string name="action_sort_tracker_score">Spårares betyg</string>
