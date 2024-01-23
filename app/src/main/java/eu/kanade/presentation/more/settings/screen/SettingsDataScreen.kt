@@ -7,8 +7,11 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -189,9 +192,11 @@ object SettingsDataScreen : SearchableSettings {
                             MultiChoiceSegmentedButtonRow(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .height(intrinsicSize = IntrinsicSize.Min)
                                     .padding(horizontal = PrefsHorizontalPadding),
                             ) {
                                 SegmentedButton(
+                                    modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = { navigator.push(CreateBackupScreen()) },
                                     shape = SegmentedButtonDefaults.itemShape(0, 2),
@@ -199,6 +204,7 @@ object SettingsDataScreen : SearchableSettings {
                                     Text(stringResource(MR.strings.pref_create_backup))
                                 }
                                 SegmentedButton(
+                                    modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
                                         if (!BackupRestoreJob.isRunning(context)) {
