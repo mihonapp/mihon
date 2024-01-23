@@ -32,8 +32,6 @@ subprojects {
     }
 
     plugins.withType<BasePlugin> {
-        plugins.apply("tachiyomi.lint")
-
         configure<BaseExtension> {
             compileSdkVersion(AndroidConfig.compileSdk)
             defaultConfig {

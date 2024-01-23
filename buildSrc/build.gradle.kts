@@ -5,7 +5,6 @@ plugins {
 dependencies {
     implementation(androidxLibs.gradle)
     implementation(kotlinLibs.gradle)
-    implementation(libs.ktlint)
     implementation(gradleApi())
 }
 
