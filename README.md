@@ -27,13 +27,13 @@ Discover and read manga, webtoons, comics, and more – easier than ever on your
 
 <div align="left">
 
-* Local reading of content
+* Local reading of content.
 * A configurable reader with multiple viewers, reading directions and other settings.
-* Tracker support: <a target="_blank" href="https://myanimelist.net/">MyAnimeList</a>, <a target="_blank" href="https://anilist.co/">AniList</a>, <a target="_blank" href="https://kitsu.io/">Kitsu</a>, <a target="_blank" href="https://mangaupdates.com">MangaUpdates</a>, <a target="_blank" href="https://shikimori.one">Shikimori</a>, and <a target="_blank" href="https://bgm.tv/">Bangumi</a> support
-* Categories to organize your library
-* Light and dark themes
-* Schedule updating your library for new chapters
-* Create backups locally to read offline or to your desired cloud service
+* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.io/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), and [Bangumi](https://bgm.tv/) support.
+* Categories to organize your library.
+* Light and dark themes.
+* Schedule updating your library for new chapters.
+* Create backups locally to read offline or to your desired cloud service.
 * Plus much more...
 
 </div>
