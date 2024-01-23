@@ -1,4 +1,5 @@
 
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
@@ -40,9 +41,21 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     }
 }
 
+tasks.register<DetektCreateBaselineTask>("detektMultiModuleBaseline") {
+    description = "Generate a baseline for the entire project source."
+    parallel = true
+    ignoreFailures = false
+    buildUponDefaultConfig = true
+    setSource(projectSource)
+    baseline.set(baselineFile)
+    config.setFrom(configFile)
+    include(kotlinFiles)
+    exclude(resourceFiles, buildFiles)
+}
+
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     jvmTarget = JavaVersion.VERSION_17.toString()
 }
-tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
+tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = JavaVersion.VERSION_17.toString()
 }
