@@ -180,7 +180,7 @@
     <string name="scale_type_fit_width">符合頁寬</string>
     <string name="scale_type_fit_height">符合頁高</string>
     <string name="scale_type_original_size">原始大小</string>
-    <string name="scale_type_smart_fit">智慧型填充</string>
+    <string name="scale_type_smart_fit">智慧填充</string>
     <string name="pref_zoom_start">縮放原點</string>
     <string name="zoom_start_automatic">自動</string>
     <string name="zoom_start_left">左邊</string>
