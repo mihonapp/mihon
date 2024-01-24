@@ -32,6 +32,7 @@ subprojects {
     }
 
     plugins.withType<BasePlugin> {
+        plugins.apply("detekt")
         configure<BaseExtension> {
             compileSdkVersion(AndroidConfig.compileSdk)
             defaultConfig {

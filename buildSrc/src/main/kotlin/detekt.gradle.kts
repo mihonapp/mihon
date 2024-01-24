@@ -12,7 +12,6 @@ dependencies {
     detektPlugins(libs.detekt.rules.compose)
 }
 
-private val projectSource = file("$rootDir")
 private val configFile = files("$rootDir/config/detekt/detekt.yml")
 private val baselineFile = file("$rootDir/config/detekt/baseline.xml")
 private val kotlinFiles = "**/*.kt"
@@ -28,7 +27,6 @@ detekt {
     ignoreFailures = false
     config.setFrom(configFile)
     baseline = file(baselineFile)
-    source.from(projectSource)
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
@@ -39,18 +37,6 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         xml.required.set(false)
         txt.required.set(false)
     }
-}
-
-tasks.register<DetektCreateBaselineTask>("detektMultiModuleBaseline") {
-    description = "Generate a baseline for the entire project source."
-    parallel = true
-    ignoreFailures = false
-    buildUponDefaultConfig = true
-    setSource(projectSource)
-    baseline.set(baselineFile)
-    config.setFrom(configFile)
-    include(kotlinFiles)
-    exclude(resourceFiles, buildFiles)
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {

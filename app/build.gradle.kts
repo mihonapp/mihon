@@ -6,7 +6,6 @@ plugins {
     kotlin("android")
     kotlin("plugin.serialization")
     id("com.github.zellius.shortcut-helper")
-    id("detekt")
 }
 
 if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
