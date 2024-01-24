@@ -94,13 +94,13 @@
 
                 See https://stackoverflow.com/a/31028507
                 -->
-                <data android:pathPattern=".*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.tachibk" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.tachibk" />
+                <data android:pathPattern=".*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\..*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.mihonbk" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.mihonbk" />
             </intent-filter>
 
             <!--suppress AndroidDomInspection -->

@@ -142,11 +142,11 @@ class BackupCreator(
 
     companion object {
         private const val MAX_AUTO_BACKUPS: Int = 4
-        private val FILENAME_REGEX = """${BuildConfig.APPLICATION_ID}_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.tachibk""".toRegex()
+        private val FILENAME_REGEX = """${BuildConfig.APPLICATION_ID}_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}.mihonbk""".toRegex()
 
         fun getFilename(): String {
             val date = SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.ENGLISH).format(Date())
-            return "${BuildConfig.APPLICATION_ID}_$date.tachibk"
+            return "${BuildConfig.APPLICATION_ID}_$date.mihonbk"
         }
     }
 }
