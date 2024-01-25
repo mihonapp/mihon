@@ -56,18 +56,22 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         NOT_INITIALIZED,
         NO_FILES,
         SUCCESS,
+        ERROR,
     }
 
-    private val remoteFileName = "tachiyomi_sync_data.gz"
+    private val appName = context.stringResource(MR.strings.app_name)
 
-    private val lockFileName = "tachiyomi_sync.lock"
+    private val remoteFileName = "${appName}_sync_data.gz"
+
+    private val lockFileName = "${appName}_sync.lock"
 
     private val googleDriveService = GoogleDriveService(context)
 
     override suspend fun beforeSync() {
         try {
             googleDriveService.refreshToken()
-            val drive = googleDriveService.driveService ?: throw Exception("Google Drive service not initialized")
+            val drive = googleDriveService.driveService
+                ?: throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
 
             var backoff = 1000L
 
@@ -105,6 +109,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR) { "Error in GoogleDrive beforeSync: ${e.message}" }
+            throw Exception(context.stringResource(MR.strings.error_before_sync_gdrive) + ": ${e.message}")
         }
     }
 
@@ -234,6 +239,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
             Log.d("GoogleDrive", "Created lock file with ID: ${file.id}")
         } catch (e: Exception) {
             Log.e("GoogleDrive", "Error creating lock file: ${e.message}")
+            throw Exception(e.message)
         }
     }
 
@@ -282,19 +288,24 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
         googleDriveService.refreshToken()
 
         return withContext(Dispatchers.IO) {
-            val appDataFileList = getAppDataFileList(drive)
+            try {
+                val appDataFileList = getAppDataFileList(drive)
 
-            if (appDataFileList.isEmpty()) {
-                logcat(LogPriority.DEBUG) { "No sync data file found in appData folder of Google Drive" }
-                DeleteSyncDataStatus.NO_FILES
-            } else {
-                for (file in appDataFileList) {
-                    drive.files().delete(file.id).execute()
-                    logcat(
-                        LogPriority.DEBUG,
-                    ) { "Deleted sync data file in appData folder of Google Drive with file ID: ${file.id}" }
+                if (appDataFileList.isEmpty()) {
+                    logcat(LogPriority.DEBUG) { "No sync data file found in appData folder of Google Drive" }
+                    DeleteSyncDataStatus.NO_FILES
+                } else {
+                    for (file in appDataFileList) {
+                        drive.files().delete(file.id).execute()
+                        logcat(
+                            LogPriority.DEBUG,
+                        ) { "Deleted sync data file in appData folder of Google Drive with file ID: ${file.id}" }
+                    }
+                    DeleteSyncDataStatus.SUCCESS
                 }
-                DeleteSyncDataStatus.SUCCESS
+            } catch (e: Exception) {
+                logcat(LogPriority.ERROR) { "Error occurred while interacting with Google Drive: ${e.message}" }
+                DeleteSyncDataStatus.ERROR
             }
         }
     }
@@ -441,7 +452,7 @@ class GoogleDriveService(private val context: Context) {
             NetHttpTransport(),
             jsonFactory,
             credential,
-        ).setApplicationName("Tachiyomi")
+        ).setApplicationName(context.stringResource(MR.strings.app_name))
             .build()
     }
 
