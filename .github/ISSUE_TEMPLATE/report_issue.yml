@@ -94,8 +94,6 @@ body:
           required: true
         - label: I have written a short but informative title.
           required: true
-        - label: If this is an issue with an official extension, I should be opening an issue in the [extensions repository](https://github.com/tachiyomiorg/extensions/issues/new/choose).
-          required: true
         - label: I have gone through the [FAQ](https://mihon.app/docs/faq/general) and [troubleshooting guide](https://mihon.app/docs/guides/troubleshooting/).
           required: true
         - label: I have updated the app to version **[0.16.1](https://github.com/mihonapp/mihon/releases/latest)**.
