@@ -14,7 +14,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":source-api"))
+    implementation(projects.sourceApi)
 
     implementation(kotlinx.bundles.serialization)
 }

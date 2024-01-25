@@ -315,13 +315,13 @@ class DownloadManager(
         val capitalizationChanged = oldFolder.name.equals(newName, ignoreCase = true)
         if (capitalizationChanged) {
             val tempName = newName + Downloader.TMP_DIR_SUFFIX
-            if (oldFolder.renameTo(tempName).not()) {
+            if (!oldFolder.renameTo(tempName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
                 return
             }
         }
 
-        if (oldFolder.renameTo(newName).not()) {
+        if (!oldFolder.renameTo(newName)) {
             logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
         }
     }

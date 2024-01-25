@@ -1,89 +1,113 @@
-| Build | Stable | Weekly Beta | Support Server |
-|-------|--------|-------------|----------------|
-| [![CI](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml/badge.svg)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml) | [![stable release](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon/releases) | [![latest beta build](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=download)](https://github.com/mihonapp/mihon-preview/releases) | [![Discord](https://img.shields.io/discord/1195734228319617024.svg?label=discord&labelColor=7289da&color=2c2f33&style=flat)](https://discord.gg/mihon) |
+<div align="center">
 
-# ![app icon](./.github/readme-images/app-icon.png)Mihon
-Mihon is a free and open source manga reader for Android 8.0 and above.
+<a href="https://mihon.app">
+    <img src="./.github/assets/logo.png" alt="Mihon logo" title="Mihon logo" width="80"/>
+</a>
+
+# Mihon [App](#)
+
+### Full-featured reader
+Discover and read manga, webtoons, comics, and more – easier than ever on your Android device.
+
+[![Discord server](https://img.shields.io/discord/1195734228319617024.svg?label=&labelColor=6A7EC2&color=7389D8&logo=discord&logoColor=FFFFFF)](https://discord.gg/mihon)
+[![GitHub downloads](https://img.shields.io/github/downloads/mihonapp/mihon/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/mihonapp/mihon/releases)
+
+[![CI](https://img.shields.io/github/actions/workflow/status/mihonapp/mihon/build_push.yml?labelColor=27303D)](https://github.com/mihonapp/mihon/actions/workflows/build_push.yml)
+[![License: Apache-2.0](https://img.shields.io/github/license/mihonapp/mihon?labelColor=27303D&color=0877d2)](/LICENSE)
+[![Translation status](https://img.shields.io/weblate/progress/mihon?labelColor=27303D&color=946300)](https://hosted.weblate.org/engage/mihon/)
+
+## Download
+
+[![Mihon Stable](https://img.shields.io/github/release/mihonapp/mihon.svg?maxAge=3600&label=Stable&labelColor=06599d&color=043b69)](https://github.com/mihonapp/mihon/releases)
+[![Mihon Beta](https://img.shields.io/github/v/release/mihonapp/mihon-preview.svg?maxAge=3600&label=Beta&labelColor=2c2c47&color=1c1c39)](https://github.com/mihonapp/mihon-preview/releases)
+
+*Requires Android 8.0 or higher.*
 
 ## Features
 
-Features include:
-* Online reading from a variety of sources
-* Local reading of downloaded content
+<div align="left">
+
+* Local reading of content.
 * A configurable reader with multiple viewers, reading directions and other settings.
-* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.io/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), and [Bangumi](https://bgm.tv/) support
-* Categories to organize your library
-* Light and dark themes
-* Schedule updating your library for new chapters
-* Create backups locally to read offline or to your desired cloud service
+* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.io/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), and [Bangumi](https://bgm.tv/) support.
+* Categories to organize your library.
+* Light and dark themes.
+* Schedule updating your library for new chapters.
+* Create backups locally to read offline or to your desired cloud service.
+* Plus much more...
 
-## Download
-Get the app from our [releases page](https://github.com/mihonapp/mihon/releases).
+</div>
 
-If you want to try new features before they get to the stable release, you can download the beta version [here](https://github.com/mihonapp/mihon-preview/releases).
+## Contributing
 
-## Issues, Feature Requests and Contributing
+[Code of conduct](./CODE_OF_CONDUCT.md) · [Contributing guide](./CONTRIBUTING.md)
 
-Please make sure to read the full guidelines. Your issue may be closed without warning if you do not.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-<details><summary>Issues</summary>
+If you got any questions, [join our Discord server](https://discord.gg/mihon).
 
-1. **Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues).**
-2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/1195734228319617024.svg)](https://discord.gg/mihon)
+<details align="center"><summary>Issues</summary><div align="left">
 
-</details>
+Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues).
 
-<details><summary>Bugs</summary>
+</div></details>
 
-* Include version (More → About → Version)
- * If not latest, try updating, it may have already been solved
- * Beta version is equal to the number of commits as seen on the main page
-* Include steps to reproduce (if not obvious from description)
-* Include screenshot (if needed)
-* If it could be device-dependent, try reproducing on another device (if possible)
+<details align="center"><summary>Bugs</summary><div align="left">
+
+* Include version (**More → About → Version**).
+* If not latest, try updating, it may have already been solved.
+* Beta version is equal to the number of commits as seen on the main page.
+* Include steps to reproduce (if not obvious from description).
+* Include screenshot (if needed).
+* If it could be device-dependent, try reproducing on another device (if possible).
 * Don't group unrelated requests into one issue
+- **DO:** [#24](https://git.mihon.dev/tachiyomi/tachiyomi/issues/24), [#71](https://git.mihon.dev/tachiyomi/tachiyomi/issues/71)
+- **DON'T:** [#75](https://git.mihon.dev/tachiyomi/tachiyomi/issues/75)
 
-</details>
+</div></details>
 
-<details><summary>Feature Requests</summary>
+<details align="center"><summary>Feature requests</summary><div align="left">
 
-* Write a detailed issue, explaining what it should do or how. Avoid writing just "like X app does"
+* Write a detailed issue, explaining what it should do or how.
+  * Avoid writing just "like X app does";
 * Include screenshot (if needed)
+* Source requests are not accepted.
 
-Source requests are not accepted.
-</details>
+</div></details>
 
-<details><summary>Contributing</summary>
+### Repositories
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
-</details>
+[![mihonapp/website - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=mihonapp&repo=website&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true)](https://github.com/mihonapp/website/)
 
-<details><summary>Code of Conduct</summary>
+### Credits
 
-See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
-</details>
+Thank you to all the people who have contributed!
 
-## FAQ
+<a href="https://github.com/mihonapp/mihon/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=mihonapp/mihon" alt="Mihon app contributors" title="Mihon app contributors" width="800"/>
+</a>
 
-[See our website.](https://mihon.app/)
-You can also reach out to us on [Discord](https://discord.gg/mihon).
+### Disclaimer
 
-## License
+The developer(s) of this application does not have any affiliation with the content providers available, and this application hosts zero content.
 
-    Copyright 2015 Javier Tomás
+### License
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+```
+Copyright © 2015 Javier Tomás
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-## Disclaimer
+Modifications Copyright © 2024 The Mihon Open Source Project
+```
 
-The developer of this application does not have any affiliation with the content providers available.
+</div>

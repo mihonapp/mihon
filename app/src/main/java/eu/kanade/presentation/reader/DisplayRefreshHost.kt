@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Stable
 class DisplayRefreshHost {
@@ -30,15 +31,15 @@ fun DisplayRefreshHost(
     val currentDisplayRefresh = hostState.currentDisplayRefresh
     LaunchedEffect(currentDisplayRefresh) {
         if (currentDisplayRefresh) {
-            delay(1500)
+            delay(1.5.seconds)
             hostState.currentDisplayRefresh = false
         }
     }
 
-    if (currentDisplayRefresh) {
-        Canvas(
-            modifier = modifier.fillMaxSize(),
-        ) {
+    Canvas(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        if (currentDisplayRefresh) {
             drawRect(Color.Black)
         }
     }

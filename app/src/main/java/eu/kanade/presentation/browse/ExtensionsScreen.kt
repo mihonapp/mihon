@@ -203,7 +203,13 @@ private fun ExtensionContent(
             items(
                 items = items,
                 contentType = { "item" },
-                key = { "extension-${it.hashCode()}" },
+                key = { item ->
+                    when (item.extension) {
+                        is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
+                        is Extension.Installed -> "extension-installed-${item.hashCode()}"
+                        is Extension.Available -> "extension-available-${item.hashCode()}"
+                    }
+                },
             ) { item ->
                 ExtensionItem(
                     modifier = Modifier.animateItemPlacement(),

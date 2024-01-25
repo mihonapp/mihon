@@ -29,7 +29,7 @@ fun Track.toDbTrack(): DbTrack = DbTrack.create(trackerId).also {
 }
 
 fun DbTrack.toDomainTrack(idRequired: Boolean = true): Track? {
-    val trackId = id ?: if (idRequired.not()) -1 else return null
+    val trackId = id ?: if (!idRequired) -1 else return null
     return Track(
         id = trackId,
         mangaId = manga_id,

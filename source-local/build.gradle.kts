@@ -8,8 +8,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":source-api"))
-                api(project(":i18n"))
+                implementation(projects.sourceApi)
+                api(projects.i18n)
 
                 implementation(libs.unifile)
                 implementation(libs.junrar)
@@ -17,11 +17,11 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(project(":core"))
-                implementation(project(":core-metadata"))
+                implementation(projects.core)
+                implementation(projects.coreMetadata)
 
                 // Move ChapterRecognition to separate module?
-                implementation(project(":domain"))
+                implementation(projects.domain)
 
                 implementation(kotlinx.bundles.serialization)
             }

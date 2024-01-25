@@ -412,7 +412,7 @@
     <string name="pref_category_delete_chapters">Suppression des chapitres</string>
     <string name="ext_nsfw_warning">Les sources de cette extension peuvent contenir du contenu NSFW (18+)</string>
     <string name="ext_nsfw_short">18+</string>
-    <string name="parental_controls_info">Ceci n\'empêche pas les extensions non officielles ou potentiellement mal signalées de diffuser du contenu +18 dans l\'application.</string>
+    <string name="parental_controls_info">Ceci n\'empêche pas les extensions de diffuser du contenu +18 dans l\'application.</string>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
     <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
     <string name="chapter_settings">Paramètres du chapitre</string>
@@ -534,7 +534,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Installez et démarrez Shizuku pour utiliser Shizuku comme installateur d\'extensions.</string>
     <string name="ext_installer_shizuku_stopped">Shizuku n\'est pas en cours d\'exécution</string>
     <string name="ext_installer_legacy">Legacy</string>
-    <string name="ext_installer_pref">installeur</string>
+    <string name="ext_installer_pref">Installeur</string>
     <string name="ext_install_service_notif">Installation de l\'extension…</string>
     <string name="action_sort_count">Entrées totales</string>
     <string name="pref_verbose_logging">Rapports détaillés</string>

@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
+import eu.kanade.tachiyomi.BuildConfig
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.Interceptor
@@ -29,22 +30,23 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
             }
         }
 
-        val authRequest = if (originalRequest.method == "GET") {
-            originalRequest.newBuilder()
-                .header("User-Agent", "Tachiyomi")
-                .url(
-                    originalRequest.url.newBuilder()
-                        .addQueryParameter("access_token", currAuth.access_token).build(),
-                )
-                .build()
-        } else {
-            originalRequest.newBuilder()
-                .post(addToken(currAuth.access_token, originalRequest.body as FormBody))
-                .header("User-Agent", "Tachiyomi")
-                .build()
-        }
-
-        return chain.proceed(authRequest)
+        return originalRequest.newBuilder()
+            .header(
+                "User-Agent",
+                "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)",
+            )
+            .apply {
+                if (originalRequest.method == "GET") {
+                    val newUrl = originalRequest.url.newBuilder()
+                        .addQueryParameter("access_token", currAuth.access_token)
+                        .build()
+                    url(newUrl)
+                } else {
+                    post(addToken(currAuth.access_token, originalRequest.body as FormBody))
+                }
+            }
+            .build()
+            .let(chain::proceed)
     }
 
     fun newAuth(oauth: OAuth?) {

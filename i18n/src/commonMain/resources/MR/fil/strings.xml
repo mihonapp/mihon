@@ -22,7 +22,7 @@
     <string name="action_disable">Isara</string>
     <string name="action_display_show_tabs">Ipakita ang mga tab ng kategorya</string>
     <string name="action_display_download_badge">Bilang ng kabanatang na-download</string>
-    <string name="action_display_comfortable_grid">Maalwan na grid</string>
+    <string name="action_display_comfortable_grid">Kumportableng grid</string>
     <string name="action_display_list">Listahan</string>
     <string name="action_display_grid">Siksik na grid</string>
     <string name="action_display">Pagpapakita</string>
@@ -114,7 +114,7 @@
     <string name="second_to_last">Pangalawa sa huling nabasa</string>
     <string name="last_read_chapter">Huling nabasang kabanata</string>
     <string name="disabled">Sarado</string>
-    <string name="pref_remove_after_marked_as_read">Pagkamarkahang nabasa na</string>
+    <string name="pref_remove_after_marked_as_read">Markahang nabasa na</string>
     <string name="pref_remove_after_read">Pagkatapos basahin, awtomatikong burahin</string>
     <string name="pref_webtoon_side_padding">Kapal ng gilid</string>
     <string name="pref_category_reading">Pagbabasa</string>
@@ -243,7 +243,7 @@
     <string name="channel_ext_updates">Mga update sa extension</string>
     <string name="tapping_inverted_none">Wala</string>
     <string name="channel_new_chapters">Mga update sa kabanata</string>
-    <string name="channel_common">Komon</string>
+    <string name="channel_common">Pangkaraniwan</string>
     <string name="download_notifier_download_paused">Nakahinto ang mga pag-download</string>
     <string name="download_notifier_no_network">Walang koneksyon sa Internet</string>
     <string name="download_notifier_text_only_wifi">Walang koneksyon sa Wifi</string>
@@ -291,7 +291,7 @@
     <string name="decode_image_error">Di mai-load ang larawan</string>
     <string name="no_next_chapter">Di makita ang susunod na kabanata</string>
     <string name="chapter_progress">Pahina: %1$d</string>
-    <string name="cover_updated">Napalitan na ang cover</string>
+    <string name="cover_updated">Napalitan ang cover</string>
     <string name="set_as_cover">Gawin itong cover</string>
     <string name="custom_filter">Pinili kong filter</string>
     <string name="picture_saved">Na-save na ang larawan</string>
@@ -556,7 +556,7 @@
     <string name="library_errors_help">Para sa tulong sa pag-aayos ng mga error sa pag-update ng aklatan, tingnan ang %1$s</string>
     <string name="pref_update_only_completely_read">Laktawan ang mga entry na hindi pa nababasang kabanata</string>
     <string name="save_chapter_as_cbz">I-save bilang CBZ archive</string>
-    <string name="publishing_finished">Tapos na\'ng mailathala</string>
+    <string name="publishing_finished">Tapos na ang paglalathala</string>
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="action_show_manga">Ipakita ang entry</string>
@@ -639,9 +639,9 @@
     <string name="pref_library_summary">Mga kategorya, panlahatang update, pag-swipe ng kabanata</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
     <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
-    <string name="crash_screen_title">Ay!</string>
+    <string name="crash_screen_title">Ay Naku!</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
-    <string name="invalid_location">Invalid na lugar: %s</string>
+    <string name="invalid_location">Imbalidong lugar: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
     <string name="error_user_agent_string_invalid">Di-wastong string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
@@ -693,7 +693,7 @@
     <string name="pref_page_rotate">I-rotate ang malalawak na pahina upang magkasya</string>
     <string name="pref_page_rotate_invert">I-flip ang oryentasyon ng mga pinaikot na malalawak na pahina</string>
     <string name="overlay_header">Nakapatong (Overlay)</string>
-    <string name="split_tall_images">Hatiin ang mga matatangkad na larawan</string>
+    <string name="split_tall_images">Hatiin ang mga matataas na larawan</string>
     <string name="pref_debug_info">Impormasyon sa pag-debug</string>
     <string name="pref_chapter_swipe_start">Mag-swipe ng pakaliwang pagkilos</string>
     <string name="pref_chapter_swipe">Mag swipe ng kabanata</string>
