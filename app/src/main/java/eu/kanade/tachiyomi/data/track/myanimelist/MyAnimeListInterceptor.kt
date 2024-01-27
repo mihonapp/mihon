@@ -86,4 +86,4 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
     }
 }
 
-class MALTokenExpired: IOException("MAL: Login has expired")
+class MALTokenExpired : IOException("MAL: Login has expired")
