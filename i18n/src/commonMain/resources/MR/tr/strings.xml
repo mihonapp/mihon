@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name">Ad</string>
-    <string name="categories">Ulamlar</string>
+    <string name="categories">Kategoriler</string>
     <string name="manga">Kitaplık girdileri</string>
     <string name="chapters">Bölümler</string>
     <string name="track">İzleme</string>
