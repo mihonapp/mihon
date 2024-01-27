@@ -67,7 +67,7 @@ class KomgaApi(
                 track.apply {
                     cover_url = "$url/thumbnail"
                     tracking_url = url
-                    total_chapters = progress.maxNumberSort.toInt()
+                    total_chapters = progress.maxNumberSort.toLong()
                     status = when (progress.booksCount) {
                         progress.booksUnreadCount -> Komga.UNREAD
                         progress.booksReadCount -> Komga.COMPLETED

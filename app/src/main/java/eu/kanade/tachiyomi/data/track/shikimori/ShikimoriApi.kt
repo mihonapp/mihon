@@ -15,6 +15,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.double
 import kotlinx.serialization.json.float
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
@@ -102,10 +103,10 @@ class ShikimoriApi(
         return TrackSearch.create(trackId).apply {
             remote_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name"]!!.jsonPrimitive.content
-            total_chapters = obj["chapters"]!!.jsonPrimitive.int
+            total_chapters = obj["chapters"]!!.jsonPrimitive.long
             cover_url = baseUrl + obj["image"]!!.jsonObject["preview"]!!.jsonPrimitive.content
             summary = ""
-            score = obj["score"]!!.jsonPrimitive.float
+            score = obj["score"]!!.jsonPrimitive.double
             tracking_url = baseUrl + obj["url"]!!.jsonPrimitive.content
             publishing_status = obj["status"]!!.jsonPrimitive.content
             publishing_type = obj["kind"]!!.jsonPrimitive.content
@@ -117,10 +118,10 @@ class ShikimoriApi(
         return Track.create(trackId).apply {
             title = mangas["name"]!!.jsonPrimitive.content
             remote_id = obj["id"]!!.jsonPrimitive.long
-            total_chapters = mangas["chapters"]!!.jsonPrimitive.int
+            total_chapters = mangas["chapters"]!!.jsonPrimitive.long
             library_id = obj["id"]!!.jsonPrimitive.long
-            last_chapter_read = obj["chapters"]!!.jsonPrimitive.float
-            score = (obj["score"]!!.jsonPrimitive.int).toFloat()
+            last_chapter_read = obj["chapters"]!!.jsonPrimitive.double
+            score = obj["score"]!!.jsonPrimitive.int.toDouble()
             status = toTrackStatus(obj["status"]!!.jsonPrimitive.content)
             tracking_url = baseUrl + mangas["url"]!!.jsonPrimitive.content
         }

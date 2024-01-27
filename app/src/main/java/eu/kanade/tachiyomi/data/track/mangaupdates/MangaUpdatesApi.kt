@@ -79,7 +79,7 @@ class MangaUpdatesApi(
             .let {
                 if (it.code == 200) {
                     track.status = status
-                    track.last_chapter_read = 1f
+                    track.last_chapter_read = 1.0
                 }
             }
     }
@@ -133,7 +133,8 @@ class MangaUpdatesApi(
     }
 
     private suspend fun updateSeriesRating(track: Track) {
-        if (track.score != 0f) {
+        if (track.score < 0.0) return
+        if (track.score != 0.0) {
             val body = buildJsonObject {
                 put("rating", track.score)
             }

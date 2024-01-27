@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Rating(
-    val rating: Float? = null,
+    val rating: Double? = null,
 )
 
 fun Rating.copyTo(track: Track): Track {
     return track.apply {
-        this.score = rating ?: 0f
+        this.score = rating ?: 0.0
     }
 }

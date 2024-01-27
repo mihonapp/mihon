@@ -8,7 +8,7 @@ class TrackSearch : Track {
 
     override var manga_id: Long = 0
 
-    override var tracker_id: Int = 0
+    override var tracker_id: Long = 0
 
     override var remote_id: Long = 0
 
@@ -16,13 +16,13 @@ class TrackSearch : Track {
 
     override lateinit var title: String
 
-    override var last_chapter_read: Float = 0F
+    override var last_chapter_read: Double = 0.0
 
-    override var total_chapters: Int = 0
+    override var total_chapters: Long = 0
 
-    override var score: Float = -1f
+    override var score: Double = -1.0
 
-    override var status: Int = 0
+    override var status: Long = 0
 
     override var started_reading_date: Long = 0
 
@@ -55,14 +55,14 @@ class TrackSearch : Track {
 
     override fun hashCode(): Int {
         var result = manga_id.hashCode()
-        result = 31 * result + tracker_id
+        result = 31 * result + tracker_id.hashCode()
         result = 31 * result + remote_id.hashCode()
         return result
     }
 
     companion object {
         fun create(serviceId: Long): TrackSearch = TrackSearch().apply {
-            tracker_id = serviceId.toInt()
+            tracker_id = serviceId
         }
     }
 }
