@@ -41,7 +41,7 @@
         <item quantity="other">%d сӑнану</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 сыпӑк ҫук</item>
+        <item quantity="one">%d сыпӑк ҫук</item>
         <item quantity="other">%d сыпӑк ҫук</item>
     </plurals>
     <plurals name="relative_time">
