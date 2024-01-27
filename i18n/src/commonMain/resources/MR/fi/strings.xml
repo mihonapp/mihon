@@ -645,5 +645,5 @@
     <string name="action_open_random_manga">Avaa satunnainen merkintä</string>
     <string name="sort_category_confirmation">Haluatko järjestää kategoriat aakkosjärjestykseen?</string>
     <string name="action_copy_to_clipboard">Kopioi leikepöydälle</string>
-    <string name="action_move_to_bottom_all_for_series">Siirrä sarja loppuun</string>
+    <string name="action_move_to_bottom_all_for_series">Siirrä sarja pohjimmaiseksi</string>
 </resources>
