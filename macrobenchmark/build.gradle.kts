@@ -1,6 +1,8 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("com.android.test")
-    id("base-setup")
+    id("tachiyomi.lint")
     kotlin("android")
 }
 
@@ -41,11 +43,19 @@ android {
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
+}
+
 dependencies {
     implementation(androidx.test.ext)
     implementation(androidx.test.espresso.core)
     implementation(androidx.test.uiautomator)
     implementation(androidx.benchmark.macro)
+    coreLibraryDesugaring(libs.desugar)
 }
 
 androidComponents {

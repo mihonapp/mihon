@@ -1,8 +1,9 @@
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("com.android.library")
-    id("base-setup")
+    id("tachiyomi.lint")
     kotlin("android")
 }
 
@@ -36,3 +37,9 @@ tasks.withType<Test> {
         events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
+
+val libs = the<LibrariesForLibs>()
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
+}
+
