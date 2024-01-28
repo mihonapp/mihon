@@ -25,7 +25,7 @@ workmanager = "androidx.work:work-runtime:2.9.0"
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 
-benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.2"
+benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.3"
 test-ext = "androidx.test.ext:junit-ktx:1.2.0-alpha02"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-alpha02"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0-beta01"
