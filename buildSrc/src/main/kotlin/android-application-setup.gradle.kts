@@ -1,3 +1,5 @@
+import gradle.kotlin.dsl.accessors._624aae704a5c30b505ab3598db099943.coreLibraryDesugaring
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -126,6 +128,12 @@ android {
         checkReleaseBuilds = false
     }
 
+    compileOptions {
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     composeOptions {
         val compilerVersion = versionCatalogs
             .named("compose")
@@ -155,6 +163,11 @@ androidComponents {
         // Layout Inspector's Compose tree
         it.packaging.resources.excludes.add("META-INF/*.version")
     }
+}
+
+val libs = the<LibrariesForLibs>()
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }
 
 tasks {

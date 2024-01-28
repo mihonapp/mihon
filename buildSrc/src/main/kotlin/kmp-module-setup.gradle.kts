@@ -1,3 +1,6 @@
+import gradle.kotlin.dsl.accessors._624aae704a5c30b505ab3598db099943.coreLibraryDesugaring
+import org.gradle.accessors.dm.LibrariesForLibs
+
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
@@ -20,6 +23,7 @@ android {
     compileOptions {
         sourceCompatibility = AndroidConfig.javaVersion
         targetCompatibility = AndroidConfig.javaVersion
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
@@ -31,4 +35,8 @@ kotlin {
             }
         }
     }
+}
+val libs = the<LibrariesForLibs>()
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }

@@ -30,6 +30,12 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     targetProjectPath = ":app"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
@@ -39,6 +45,7 @@ dependencies {
     implementation(androidx.test.espresso.core)
     implementation(androidx.test.uiautomator)
     implementation(androidx.benchmark.macro)
+    coreLibraryDesugaring(libs.desugar)
 }
 
 androidComponents {
