@@ -1,4 +1,4 @@
-
+import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.gradle.accessors.dm.LibrariesForLibs
 
@@ -29,7 +29,7 @@ detekt {
     baseline = file(baselineFile)
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<Detekt>().configureEach {
     include(kotlinFiles)
     exclude(resourceFiles, buildFiles, generatedFiles, scriptsFiles)
     reports {
@@ -39,7 +39,7 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     }
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<Detekt>().configureEach {
     jvmTarget = JavaVersion.VERSION_17.toString()
 }
 tasks.withType<DetektCreateBaselineTask>().configureEach {
