@@ -11,7 +11,7 @@ import java.io.File
  */
 internal class SevenZipPageLoader(
     private val file: File,
-    private val notifySlowArchive: (method: String) -> Unit
+    private val notifySlowArchive: (method: String) -> Unit,
 ) : PageLoader() {
 
     private val zip by lazy { SevenZFile(file) }
