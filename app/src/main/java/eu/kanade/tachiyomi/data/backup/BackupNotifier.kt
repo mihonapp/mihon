@@ -181,6 +181,7 @@ class BackupNotifier(private val context: Context) {
             }
 
             show(Notifications.ID_RESTORE_COMPLETE)
+            show("On your next start the changes will be applied to settings")
         }
     }
 }
