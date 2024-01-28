@@ -1,9 +1,10 @@
-import gradle.kotlin.dsl.accessors._624aae704a5c30b505ab3598db099943.coreLibraryDesugaring
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
+    id("tachiyomi.lint")
     kotlin("android")
 }
 
@@ -143,6 +144,8 @@ android {
         kotlinCompilerExtensionVersion = compilerVersion
     }
 
+
+
     kotlinOptions {
         jvmTarget = AndroidConfig.javaVersion.toString()
     }
@@ -168,6 +171,13 @@ androidComponents {
 val libs = the<LibrariesForLibs>()
 dependencies {
     coreLibraryDesugaring(libs.desugar)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }
 
 tasks {

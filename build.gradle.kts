@@ -1,3 +1,4 @@
+
 buildscript {
     dependencies {
         classpath(libs.android.shortcut.gradle)

@@ -1,7 +1,9 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("com.android.library")
+    id("tachiyomi.lint")
     kotlin("android")
 }
 
@@ -26,6 +28,13 @@ android {
 
     kotlinOptions {
         jvmTarget = AndroidConfig.javaVersion.toString()
+    }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
 
