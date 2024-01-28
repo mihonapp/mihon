@@ -1,11 +1,13 @@
 plugins {
-    kotlin("multiplatform")
+    id("kmp-module-setup")
     kotlin("plugin.serialization")
-    id("com.android.library")
+}
+
+android {
+    namespace = "eu.kanade.tachiyomi.source"
 }
 
 kotlin {
-    androidTarget()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -25,14 +27,6 @@ kotlin {
                 implementation(project.dependencies.platform(kotlinx.coroutines.bom))
             }
         }
-    }
-}
-
-android {
-    namespace = "eu.kanade.tachiyomi.source"
-
-    defaultConfig {
-        consumerProguardFile("consumer-proguard.pro")
     }
 }
 

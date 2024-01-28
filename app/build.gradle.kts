@@ -138,7 +138,6 @@ dependencies {
     implementation(libs.leakcanary.plumber)
 }
 
-
 buildscript {
     dependencies {
         classpath(kotlinx.gradle)

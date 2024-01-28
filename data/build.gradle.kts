@@ -7,10 +7,6 @@ plugins {
 android {
     namespace = "tachiyomi.data"
 
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
     sqldelight {
         databases {
             create("Database") {

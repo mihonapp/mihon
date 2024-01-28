@@ -1,10 +1,12 @@
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    id("kmp-module-setup")
+}
+
+android {
+    namespace = "tachiyomi.source.local"
 }
 
 kotlin {
-    androidTarget()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -26,15 +28,6 @@ kotlin {
                 implementation(kotlinx.bundles.serialization)
             }
         }
-    }
-}
-
-android {
-    namespace = "tachiyomi.source.local"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 }
 

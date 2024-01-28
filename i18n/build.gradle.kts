@@ -1,25 +1,6 @@
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    id("kmp-module-setup")
     id("dev.icerock.mobile.multiplatform-resources")
-}
-
-kotlin {
-    androidTarget()
-
-    applyDefaultHierarchyTemplate()
-
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.moko.core)
-            }
-        }
-
-        androidMain {
-            dependsOn(commonMain)  // https://github.com/icerockdev/moko-resources/issues/562
-        }
-    }
 }
 
 android {
@@ -33,6 +14,20 @@ android {
 
     lint {
         disable.addAll(listOf("MissingTranslation", "ExtraTranslation"))
+    }
+}
+
+kotlin {
+    applyDefaultHierarchyTemplate()
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(libs.moko.core)
+            }
+        }
+        val androidMain by getting {
+            dependsOn(commonMain) // https://github.com/icerockdev/moko-resources/issues/562
+        }
     }
 }
 

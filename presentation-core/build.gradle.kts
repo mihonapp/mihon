@@ -5,11 +5,6 @@ plugins {
 android {
     namespace = "tachiyomi.presentation.core"
 
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
     buildFeatures {
         compose = true
     }
