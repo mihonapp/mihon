@@ -5,26 +5,14 @@
     <ID>ComplexCondition:MangaScreenModel.kt$MangaScreenModel$(selectedItem.selected &amp;&amp; selected) || (!selectedItem.selected &amp;&amp; !selected)</ID>
     <ID>ComplexCondition:ReaderNavigationOverlayView.kt$ReaderNavigationOverlayView$isVisible || (!showOnStart &amp;&amp; firstLaunch) || navigation is DisabledNavigation</ID>
     <ID>ComplexCondition:ReaderPageImageView.kt$ReaderPageImageView$config != null &amp;&amp; config!!.landscapeZoom &amp;&amp; config!!.minimumScaleType == SCALE_TYPE_CENTER_INSIDE &amp;&amp; sWidth &gt; sHeight &amp;&amp; scale == minScale</ID>
-    <ID>ComposableFunctionName:Button.kt$@Composable fun TextButton( onClick: () -&gt; Unit, modifier: Modifier = Modifier, onLongClick: (() -&gt; Unit)? = null, enabled: Boolean = true, interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, elevation: ButtonElevation? = null, shape: Shape = M3ButtonDefaults.textShape, border: BorderStroke? = null, colors: ButtonColors = ButtonColors( containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.primary, disabledContainerColor = Color.Transparent, disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f), ), contentPadding: PaddingValues = M3ButtonDefaults.TextButtonContentPadding, content: @Composable RowScope.() -&gt; Unit, )</ID>
-    <ID>ComposableFunctionName:LibraryToolbar.kt$@Composable fun LibraryToolbar( hasActiveFilters: Boolean, selectedCount: Int, title: LibraryToolbarTitle, onClickUnselectAll: () -&gt; Unit, onClickSelectAll: () -&gt; Unit, onClickInvertSelection: () -&gt; Unit, onClickFilter: () -&gt; Unit, onClickRefresh: () -&gt; Unit, onClickGlobalUpdate: () -&gt; Unit, onClickOpenRandomManga: () -&gt; Unit, searchQuery: String?, onSearchQueryChange: (String?) -&gt; Unit, scrollBehavior: TopAppBarScrollBehavior?, )</ID>
-    <ID>ComposableFunctionName:MangaCover.kt$MangaCover$@Composable operator fun invoke( data: Any?, modifier: Modifier = Modifier, contentDescription: String = "", shape: Shape = MaterialTheme.shapes.extraSmall, onClick: (() -&gt; Unit)? = null, )</ID>
-    <ID>ComposableFunctionName:TachiyomiTheme.kt$@Composable fun TachiyomiPreviewTheme( appTheme: AppTheme = AppTheme.DEFAULT, isAmoled: Boolean = false, content: @Composable () -&gt; Unit, )</ID>
-    <ID>ComposableParametersOrdering:AdaptiveSheet.kt$tonalElevation: Dp = 1.dp</ID>
-    <ID>ComposableParametersOrdering:ChapterDownloadIndicator.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:ChapterSettingsDialog.kt$manga: Manga? = null</ID>
-    <ID>ComposableParametersOrdering:CommonMangaItem.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:LazyColumnWithAction.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:LazyGrid.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:LazyLibraryGrid.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:LazyList.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:MangaInfoHeader.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:PermissionStep.kt$PermissionStep$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:PullRefresh.kt$positionalThreshold: Dp = 64.dp</ID>
-    <ID>ComposableParametersOrdering:SettingsItems.kt$enabled: Boolean = true</ID>
-    <ID>ComposableParametersOrdering:SettingsSearchScreen.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:SourcePreferencesScreen.kt$SourcePreferencesScreen$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:SwitchPreferenceWidget.kt$modifier: Modifier = Modifier</ID>
-    <ID>ComposableParametersOrdering:TrackingPreferenceWidget.kt$modifier: Modifier = Modifier</ID>
+    <ID>ComposableParamOrder:ChapterSettingsDialog.kt$ChapterSettingsDialog</ID>
+    <ID>ComposableParamOrder:LazyLibraryGrid.kt$LazyLibraryGrid</ID>
+    <ID>ComposableParamOrder:SwitchPreferenceWidget.kt$SwitchPreferenceWidget</ID>
+    <ID>ComposableParamOrder:TrackingPreferenceWidget.kt$TrackingPreferenceWidget</ID>
+    <ID>ComposableParamOrder:TriStateListDialog.kt$TriStateListDialog</ID>
+    <ID>CompositionLocalAllowlist:Navigator.kt$LocalBackPress</ID>
+    <ID>CompositionLocalAllowlist:PreferenceItem.kt$LocalPreferenceHighlighted</ID>
+    <ID>CompositionLocalAllowlist:PreferenceItem.kt$LocalPreferenceMinHeight</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val average_score: Int</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val image_url_lge: String</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val publishing_status: String</ID>
@@ -177,26 +165,103 @@
     <ID>InstanceOfCheckForException:ReaderViewModel.kt$ReaderViewModel$e is CancellationException</ID>
     <ID>InstanceOfCheckForException:UncaughtExceptionInterceptor.kt$UncaughtExceptionInterceptor$e is IOException</ID>
     <ID>LargeClass:MangaScreenModel.kt$MangaScreenModel : StateScreenModel</ID>
+    <ID>LongMethod:AboutScreen.kt$AboutScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:AdaptiveSheet.kt$@Composable fun AdaptiveSheet( isTabletUi: Boolean, tonalElevation: Dp, enableSwipeDismiss: Boolean, onDismissRequest: () -&gt; Unit, modifier: Modifier = Modifier, content: @Composable () -&gt; Unit, )</ID>
     <ID>LongMethod:AnilistApi.kt$AnilistApi$suspend fun findLibManga(track: Track, userid: Int): Track?</ID>
+    <ID>LongMethod:AppBar.kt$@Composable fun AppBarActions( actions: ImmutableList&lt;AppBar.AppBarAction&gt;, )</ID>
+    <ID>LongMethod:AppBar.kt$@Composable fun SearchToolbar( searchQuery: String?, onChangeSearchQuery: (String?) -&gt; Unit, modifier: Modifier = Modifier, titleContent: @Composable () -&gt; Unit = {}, navigateUp: (() -&gt; Unit)? = null, searchEnabled: Boolean = true, placeholderText: String? = null, onSearch: (String) -&gt; Unit = {}, onClickCloseSearch: () -&gt; Unit = { onChangeSearchQuery(null) }, actions: @Composable RowScope.() -&gt; Unit = {}, scrollBehavior: TopAppBarScrollBehavior? = null, visualTransformation: VisualTransformation = VisualTransformation.None, interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, )</ID>
     <ID>LongMethod:AppModule.kt$AppModule$override fun InjektRegistrar.registerInjectables()</ID>
+    <ID>LongMethod:AppThemePreferenceWidget.kt$@Composable fun AppThemePreviewItem( selected: Boolean, onClick: () -&gt; Unit, )</ID>
+    <ID>LongMethod:BrowseSourceScreen.kt$@Composable fun BrowseSourceContent( source: Source?, mangaList: LazyPagingItems&lt;StateFlow&lt;Manga&gt;&gt;, columns: GridCells, displayMode: LibraryDisplayMode, snackbarHostState: SnackbarHostState, contentPadding: PaddingValues, onWebViewClick: () -&gt; Unit, onHelpClick: () -&gt; Unit, onLocalSourceHelpClick: () -&gt; Unit, onMangaClick: (Manga) -&gt; Unit, onMangaLongClick: (Manga) -&gt; Unit, )</ID>
+    <ID>LongMethod:BrowseSourceScreen.kt$BrowseSourceScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:BrowseSourceToolbar.kt$@Composable fun BrowseSourceToolbar( searchQuery: String?, onSearchQueryChange: (String?) -&gt; Unit, source: Source?, displayMode: LibraryDisplayMode, onDisplayModeChange: (LibraryDisplayMode) -&gt; Unit, navigateUp: () -&gt; Unit, onWebViewClick: () -&gt; Unit, onHelpClick: () -&gt; Unit, onSettingsClick: () -&gt; Unit, onSearch: (String) -&gt; Unit, scrollBehavior: TopAppBarScrollBehavior? = null, )</ID>
+    <ID>LongMethod:Button.kt$ButtonElevation$@Composable private fun animateElevation( enabled: Boolean, interactionSource: InteractionSource, ): State&lt;Dp&gt;</ID>
+    <ID>LongMethod:CategoryDialogs.kt$@Composable fun ChangeCategoryDialog( initialSelection: ImmutableList&lt;CheckboxState&lt;Category&gt;&gt;, onDismissRequest: () -&gt; Unit, onEditCategories: () -&gt; Unit, onConfirm: (List&lt;Long&gt;, List&lt;Long&gt;) -&gt; Unit, )</ID>
+    <ID>LongMethod:ChapterDownloadIndicator.kt$@Composable private fun DownloadingIndicator( enabled: Boolean, downloadState: Download.State, downloadProgressProvider: () -&gt; Int, onClick: (ChapterDownloadAction) -&gt; Unit, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:ChapterNavigator.kt$@Composable fun ChapterNavigator( isRtl: Boolean, onNextChapter: () -&gt; Unit, enabledNext: Boolean, onPreviousChapter: () -&gt; Unit, enabledPrevious: Boolean, currentPage: Int, totalPages: Int, onSliderValueChange: (Int) -&gt; Unit, )</ID>
+    <ID>LongMethod:ChapterSettingsDialog.kt$@Composable fun ChapterSettingsDialog( onDismissRequest: () -&gt; Unit, manga: Manga? = null, onDownloadFilterChanged: (TriState) -&gt; Unit, onUnreadFilterChanged: (TriState) -&gt; Unit, onBookmarkedFilterChanged: (TriState) -&gt; Unit, scanlatorFilterActive: Boolean, onScanlatorFilterClicked: (() -&gt; Unit), onSortModeChanged: (Long) -&gt; Unit, onDisplayModeChanged: (Long) -&gt; Unit, onSetAsDefault: (applyToExistingManga: Boolean) -&gt; Unit, onResetToDefault: () -&gt; Unit, )</ID>
+    <ID>LongMethod:ClearDatabaseScreen.kt$ClearDatabaseScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:ColorFilterPage.kt$@Composable internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)</ID>
+    <ID>LongMethod:CreateBackupScreen.kt$CreateBackupScreen$@Composable override fun Content()</ID>
     <ID>LongMethod:DomainModule.kt$DomainModule$override fun InjektRegistrar.registerInjectables()</ID>
     <ID>LongMethod:DownloadCache.kt$DownloadCache$private fun renewCache()</ID>
+    <ID>LongMethod:DownloadQueueScreen.kt$DownloadQueueScreen$@Composable override fun Content()</ID>
     <ID>LongMethod:Downloader.kt$Downloader$private suspend fun downloadChapter(download: Download)</ID>
+    <ID>LongMethod:EditTextPreferenceWidget.kt$@Composable fun EditTextPreferenceWidget( title: String, subtitle: String?, icon: ImageVector?, value: String, onConfirm: suspend (String) -&gt; Boolean, )</ID>
+    <ID>LongMethod:ExtensionDetailsScreen.kt$@Composable fun ExtensionDetailsScreen( navigateUp: () -&gt; Unit, state: ExtensionDetailsScreenModel.State, onClickSourcePreferences: (sourceId: Long) -&gt; Unit, onClickEnableAll: () -&gt; Unit, onClickDisableAll: () -&gt; Unit, onClickClearCookies: () -&gt; Unit, onClickUninstall: () -&gt; Unit, onClickSource: (sourceId: Long) -&gt; Unit, )</ID>
+    <ID>LongMethod:ExtensionDetailsScreen.kt$@Composable private fun DetailsHeader( extension: Extension, onClickAgeRating: () -&gt; Unit, onClickUninstall: () -&gt; Unit, onClickAppInfo: (() -&gt; Unit)?, )</ID>
     <ID>LongMethod:ExtensionLoader.kt$ExtensionLoader$private fun loadExtension(context: Context, extensionInfo: ExtensionInfo): LoadResult</ID>
+    <ID>LongMethod:ExtensionsScreen.kt$@Composable private fun ExtensionContent( state: ExtensionsScreenModel.State, contentPadding: PaddingValues, onLongClickItem: (Extension) -&gt; Unit, onClickItemCancel: (Extension) -&gt; Unit, onOpenWebView: (Extension.Available) -&gt; Unit, onInstallExtension: (Extension.Available) -&gt; Unit, onUninstallExtension: (Extension) -&gt; Unit, onUpdateExtension: (Extension.Installed) -&gt; Unit, onTrustExtension: (Extension.Untrusted) -&gt; Unit, onOpenExtension: (Extension.Installed) -&gt; Unit, onClickUpdateAll: () -&gt; Unit, )</ID>
+    <ID>LongMethod:ExtensionsScreen.kt$@Composable private fun ExtensionItemActions( extension: Extension, installStep: InstallStep, modifier: Modifier = Modifier, onClickItemCancel: (Extension) -&gt; Unit = {}, onClickItemAction: (Extension) -&gt; Unit = {}, onClickItemSecondaryAction: (Extension) -&gt; Unit = {}, )</ID>
+    <ID>LongMethod:GlobalSearchToolbar.kt$@Composable fun GlobalSearchToolbar( searchQuery: String?, progress: Int, total: Int, navigateUp: () -&gt; Unit, onChangeSearchQuery: (String?) -&gt; Unit, onSearch: (String) -&gt; Unit, sourceFilter: SourceFilter, onChangeSearchFilter: (SourceFilter) -&gt; Unit, onlyShowHasResults: Boolean, onToggleResults: () -&gt; Unit, scrollBehavior: TopAppBarScrollBehavior, )</ID>
+    <ID>LongMethod:HomeScreen.kt$HomeScreen$@Composable override fun Content()</ID>
     <ID>LongMethod:ImageUtil.kt$ImageUtil$fun chooseBackground(context: Context, imageStream: InputStream): Drawable</ID>
+    <ID>LongMethod:InfoScreen.kt$@Composable fun InfoScreen( icon: ImageVector, headingText: String, subtitleText: String, acceptText: String, onAcceptClick: () -&gt; Unit, canAccept: Boolean = true, rejectText: String? = null, onRejectClick: (() -&gt; Unit)? = null, content: @Composable ColumnScope.() -&gt; Unit, )</ID>
+    <ID>LongMethod:LibraryContent.kt$@Composable fun LibraryContent( categories: List&lt;Category&gt;, searchQuery: String?, selection: List&lt;LibraryManga&gt;, contentPadding: PaddingValues, currentPage: () -&gt; Int, hasActiveFilters: Boolean, showPageTabs: Boolean, onChangeCurrentPage: (Int) -&gt; Unit, onMangaClicked: (Long) -&gt; Unit, onContinueReadingClicked: ((LibraryManga) -&gt; Unit)?, onToggleSelection: (LibraryManga) -&gt; Unit, onToggleRangeSelection: (LibraryManga) -&gt; Unit, onRefresh: (Category?) -&gt; Boolean, onGlobalSearchClicked: () -&gt; Unit, getNumberOfMangaForCategory: (Category) -&gt; Int?, getDisplayMode: (Int) -&gt; PreferenceMutableState&lt;LibraryDisplayMode&gt;, getColumnsForOrientation: (Boolean) -&gt; PreferenceMutableState&lt;Int&gt;, getLibraryForPage: (Int) -&gt; List&lt;LibraryItem&gt;, )</ID>
+    <ID>LongMethod:LibraryPager.kt$@Composable fun LibraryPager( state: PagerState, contentPadding: PaddingValues, hasActiveFilters: Boolean, selectedManga: List&lt;LibraryManga&gt;, searchQuery: String?, onGlobalSearchClicked: () -&gt; Unit, getDisplayMode: (Int) -&gt; PreferenceMutableState&lt;LibraryDisplayMode&gt;, getColumnsForOrientation: (Boolean) -&gt; PreferenceMutableState&lt;Int&gt;, getLibraryForPage: (Int) -&gt; List&lt;LibraryItem&gt;, onClickManga: (LibraryManga) -&gt; Unit, onLongClickManga: (LibraryManga) -&gt; Unit, onClickContinueReading: ((LibraryManga) -&gt; Unit)?, )</ID>
     <ID>LongMethod:LibraryScreenModel.kt$LibraryScreenModel$private fun LibraryMap.applySort( // Map&lt;MangaId, List&lt;Track&gt;&gt; trackMap: Map&lt;Long, List&lt;Track&gt;&gt;, ): LibraryMap</ID>
     <ID>LongMethod:LibraryScreenModel.kt$LibraryScreenModel$private suspend fun LibraryMap.applyFilters( trackMap: Map&lt;Long, List&lt;Track&gt;&gt;, loggedInTrackers: Map&lt;Long, TriState&gt;, ): LibraryMap</ID>
+    <ID>LongMethod:LibrarySettingsDialog.kt$@Composable private fun ColumnScope.DisplayPage( screenModel: LibrarySettingsScreenModel, )</ID>
+    <ID>LongMethod:LibrarySettingsDialog.kt$@Composable private fun ColumnScope.FilterPage( screenModel: LibrarySettingsScreenModel, )</ID>
+    <ID>LongMethod:LibraryTab.kt$LibraryTab$@Composable override fun Content()</ID>
     <ID>LongMethod:LibraryUpdateJob.kt$LibraryUpdateJob$private suspend fun addMangaToQueue(categoryId: Long)</ID>
     <ID>LongMethod:LibraryUpdateJob.kt$LibraryUpdateJob$private suspend fun updateChapterList()</ID>
     <ID>LongMethod:MainActivity.kt$MainActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MainActivity.kt$MainActivity$private fun handleIntentAction(intent: Intent, navigator: Navigator): Boolean</ID>
+    <ID>LongMethod:MangaBottomActionMenu.kt$@Composable fun LibraryBottomActionMenu( visible: Boolean, onChangeCategoryClicked: () -&gt; Unit, onMarkAsReadClicked: () -&gt; Unit, onMarkAsUnreadClicked: () -&gt; Unit, onDownloadClicked: ((DownloadAction) -&gt; Unit)?, onDeleteClicked: () -&gt; Unit, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:MangaBottomActionMenu.kt$@Composable fun MangaBottomActionMenu( visible: Boolean, modifier: Modifier = Modifier, onBookmarkClicked: (() -&gt; Unit)? = null, onRemoveBookmarkClicked: (() -&gt; Unit)? = null, onMarkAsReadClicked: (() -&gt; Unit)? = null, onMarkAsUnreadClicked: (() -&gt; Unit)? = null, onMarkPreviousAsReadClicked: (() -&gt; Unit)? = null, onDownloadClicked: (() -&gt; Unit)? = null, onDeleteClicked: (() -&gt; Unit)? = null, )</ID>
+    <ID>LongMethod:MangaChapterListItem.kt$@Composable fun MangaChapterListItem( title: String, date: String?, readProgress: String?, scanlator: String?, read: Boolean, bookmark: Boolean, selected: Boolean, downloadIndicatorEnabled: Boolean, downloadStateProvider: () -&gt; Download.State, downloadProgressProvider: () -&gt; Int, chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction, chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction, onLongClick: () -&gt; Unit, onClick: () -&gt; Unit, onDownloadClick: ((ChapterDownloadAction) -&gt; Unit)?, onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -&gt; Unit, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:MangaCoverDialog.kt$@Composable fun MangaCoverDialog( coverDataProvider: () -&gt; Manga, isCustomCover: Boolean, snackbarHostState: SnackbarHostState, onShareClick: () -&gt; Unit, onSaveClick: () -&gt; Unit, onEditClick: ((EditCoverAction) -&gt; Unit)?, onDismissRequest: () -&gt; Unit, )</ID>
+    <ID>LongMethod:MangaDialogs.kt$@Composable fun SetIntervalDialog( interval: Int, nextUpdate: Instant?, onDismissRequest: () -&gt; Unit, onValueChanged: ((Int) -&gt; Unit)? = null, )</ID>
+    <ID>LongMethod:MangaInfoHeader.kt$@Composable fun ExpandableMangaDescription( defaultExpandState: Boolean, description: String?, tagsProvider: () -&gt; List&lt;String&gt;?, onTagSearch: (String) -&gt; Unit, onCopyTagToClipboard: (tag: String) -&gt; Unit, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:MangaInfoHeader.kt$@Composable private fun ColumnScope.MangaContentInfo( title: String, doSearch: (query: String, global: Boolean) -&gt; Unit, author: String?, artist: String?, status: Long, sourceName: String, isStubSource: Boolean, textAlign: TextAlign? = LocalTextStyle.current.textAlign, )</ID>
+    <ID>LongMethod:MangaInfoHeader.kt$@Composable private fun MangaSummary( expandedDescription: String, shrunkDescription: String, expanded: Boolean, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:MangaScreen.kt$@Composable fun MangaScreen( state: MangaScreenModel.State.Success, snackbarHostState: SnackbarHostState, nextUpdate: Instant?, isTabletUi: Boolean, chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction, chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction, onBackClicked: () -&gt; Unit, onChapterClicked: (Chapter) -&gt; Unit, onDownloadChapter: ((List&lt;ChapterList.Item&gt;, ChapterDownloadAction) -&gt; Unit)?, onAddToLibraryClicked: () -&gt; Unit, onWebViewClicked: (() -&gt; Unit)?, onWebViewLongClicked: (() -&gt; Unit)?, onTrackingClicked: () -&gt; Unit, // For tags menu onTagSearch: (String) -&gt; Unit, onFilterButtonClicked: () -&gt; Unit, onRefresh: () -&gt; Unit, onContinueReading: () -&gt; Unit, onSearch: (query: String, global: Boolean) -&gt; Unit, // For cover dialog onCoverClicked: () -&gt; Unit, // For top action menu onShareClicked: (() -&gt; Unit)?, onDownloadActionClicked: ((DownloadAction) -&gt; Unit)?, onEditCategoryClicked: (() -&gt; Unit)?, onEditFetchIntervalClicked: (() -&gt; Unit)?, onMigrateClicked: (() -&gt; Unit)?, // For bottom action menu onMultiBookmarkClicked: (List&lt;Chapter&gt;, bookmarked: Boolean) -&gt; Unit, onMultiMarkAsReadClicked: (List&lt;Chapter&gt;, markAsRead: Boolean) -&gt; Unit, onMarkPreviousAsReadClicked: (Chapter) -&gt; Unit, onMultiDeleteClicked: (List&lt;Chapter&gt;) -&gt; Unit, // For chapter swipe onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -&gt; Unit, // Chapter selection onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -&gt; Unit, onAllChapterSelected: (Boolean) -&gt; Unit, onInvertSelection: () -&gt; Unit, )</ID>
+    <ID>LongMethod:MangaScreen.kt$@Composable fun MangaScreenLargeImpl( state: MangaScreenModel.State.Success, snackbarHostState: SnackbarHostState, nextUpdate: Instant?, chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction, chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction, onBackClicked: () -&gt; Unit, onChapterClicked: (Chapter) -&gt; Unit, onDownloadChapter: ((List&lt;ChapterList.Item&gt;, ChapterDownloadAction) -&gt; Unit)?, onAddToLibraryClicked: () -&gt; Unit, onWebViewClicked: (() -&gt; Unit)?, onWebViewLongClicked: (() -&gt; Unit)?, onTrackingClicked: () -&gt; Unit, // For tags menu onTagSearch: (String) -&gt; Unit, onCopyTagToClipboard: (tag: String) -&gt; Unit, onFilterButtonClicked: () -&gt; Unit, onRefresh: () -&gt; Unit, onContinueReading: () -&gt; Unit, onSearch: (query: String, global: Boolean) -&gt; Unit, // For cover dialog onCoverClicked: () -&gt; Unit, // For top action menu onShareClicked: (() -&gt; Unit)?, onDownloadActionClicked: ((DownloadAction) -&gt; Unit)?, onEditCategoryClicked: (() -&gt; Unit)?, onEditIntervalClicked: (() -&gt; Unit)?, onMigrateClicked: (() -&gt; Unit)?, // For bottom action menu onMultiBookmarkClicked: (List&lt;Chapter&gt;, bookmarked: Boolean) -&gt; Unit, onMultiMarkAsReadClicked: (List&lt;Chapter&gt;, markAsRead: Boolean) -&gt; Unit, onMarkPreviousAsReadClicked: (Chapter) -&gt; Unit, onMultiDeleteClicked: (List&lt;Chapter&gt;) -&gt; Unit, // For swipe actions onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -&gt; Unit, // Chapter selection onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -&gt; Unit, onAllChapterSelected: (Boolean) -&gt; Unit, onInvertSelection: () -&gt; Unit, )</ID>
+    <ID>LongMethod:MangaScreen.kt$@Composable private fun MangaScreenSmallImpl( state: MangaScreenModel.State.Success, snackbarHostState: SnackbarHostState, nextUpdate: Instant?, chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction, chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction, onBackClicked: () -&gt; Unit, onChapterClicked: (Chapter) -&gt; Unit, onDownloadChapter: ((List&lt;ChapterList.Item&gt;, ChapterDownloadAction) -&gt; Unit)?, onAddToLibraryClicked: () -&gt; Unit, onWebViewClicked: (() -&gt; Unit)?, onWebViewLongClicked: (() -&gt; Unit)?, onTrackingClicked: () -&gt; Unit, // For tags menu onTagSearch: (String) -&gt; Unit, onCopyTagToClipboard: (tag: String) -&gt; Unit, onFilterClicked: () -&gt; Unit, onRefresh: () -&gt; Unit, onContinueReading: () -&gt; Unit, onSearch: (query: String, global: Boolean) -&gt; Unit, // For cover dialog onCoverClicked: () -&gt; Unit, // For top action menu onShareClicked: (() -&gt; Unit)?, onDownloadActionClicked: ((DownloadAction) -&gt; Unit)?, onEditCategoryClicked: (() -&gt; Unit)?, onEditIntervalClicked: (() -&gt; Unit)?, onMigrateClicked: (() -&gt; Unit)?, // For bottom action menu onMultiBookmarkClicked: (List&lt;Chapter&gt;, bookmarked: Boolean) -&gt; Unit, onMultiMarkAsReadClicked: (List&lt;Chapter&gt;, markAsRead: Boolean) -&gt; Unit, onMarkPreviousAsReadClicked: (Chapter) -&gt; Unit, onMultiDeleteClicked: (List&lt;Chapter&gt;) -&gt; Unit, // For chapter swipe onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -&gt; Unit, // Chapter selection onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -&gt; Unit, onAllChapterSelected: (Boolean) -&gt; Unit, onInvertSelection: () -&gt; Unit, )</ID>
+    <ID>LongMethod:MangaScreen.kt$MangaScreen$@Composable override fun Content()</ID>
     <ID>LongMethod:MangaScreen.kt$private fun LazyListScope.sharedChapterItems( manga: Manga, chapters: List&lt;ChapterList&gt;, isAnyChapterSelected: Boolean, chapterSwipeStartAction: LibraryPreferences.ChapterSwipeAction, chapterSwipeEndAction: LibraryPreferences.ChapterSwipeAction, onChapterClicked: (Chapter) -&gt; Unit, onDownloadChapter: ((List&lt;ChapterList.Item&gt;, ChapterDownloadAction) -&gt; Unit)?, onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -&gt; Unit, onChapterSwipe: (ChapterList.Item, LibraryPreferences.ChapterSwipeAction) -&gt; Unit, )</ID>
+    <ID>LongMethod:MangaToolbar.kt$@Composable fun MangaToolbar( title: String, titleAlphaProvider: () -&gt; Float, hasFilters: Boolean, onBackClicked: () -&gt; Unit, onClickFilter: () -&gt; Unit, onClickShare: (() -&gt; Unit)?, onClickDownload: ((DownloadAction) -&gt; Unit)?, onClickEditCategory: (() -&gt; Unit)?, onClickRefresh: () -&gt; Unit, onClickMigrate: (() -&gt; Unit)?, // For action mode actionModeCounter: Int, onSelectAll: () -&gt; Unit, onInvertSelection: () -&gt; Unit, modifier: Modifier = Modifier, backgroundAlphaProvider: () -&gt; Float = titleAlphaProvider, )</ID>
+    <ID>LongMethod:MigrateDialog.kt$@Composable internal fun MigrateDialog( oldManga: Manga, newManga: Manga, screenModel: MigrateDialogScreenModel, onDismissRequest: () -&gt; Unit, onClickTitle: () -&gt; Unit, onPopScreen: () -&gt; Unit, )</ID>
     <ID>LongMethod:MigrateDialog.kt$MigrateDialogScreenModel$private suspend fun migrateMangaInternal( oldSource: Source?, newSource: Source, oldManga: Manga, newManga: Manga, sourceChapters: List&lt;SChapter&gt;, replace: Boolean, flags: Int, )</ID>
+    <ID>LongMethod:MoreScreen.kt$@Composable fun MoreScreen( downloadQueueStateProvider: () -&gt; DownloadQueueState, downloadedOnly: Boolean, onDownloadedOnlyChange: (Boolean) -&gt; Unit, incognitoMode: Boolean, onIncognitoModeChange: (Boolean) -&gt; Unit, isFDroid: Boolean, onClickDownloadQueue: () -&gt; Unit, onClickCategories: () -&gt; Unit, onClickStats: () -&gt; Unit, onClickDataAndStorage: () -&gt; Unit, onClickSettings: () -&gt; Unit, onClickAbout: () -&gt; Unit, )</ID>
     <ID>LongMethod:Notifications.kt$Notifications$fun createChannels(context: Context)</ID>
+    <ID>LongMethod:PreferenceItem.kt$@Composable internal fun PreferenceItem( item: Preference.PreferenceItem&lt;*&gt;, highlightKey: String?, )</ID>
     <ID>LongMethod:ReaderActivity.kt$ReaderActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:ReaderActivity.kt$ReaderActivity$private fun initializeMenu()</ID>
+    <ID>LongMethod:ReaderAppBars.kt$@Composable fun ReaderAppBars( visible: Boolean, fullscreen: Boolean, mangaTitle: String?, chapterTitle: String?, navigateUp: () -&gt; Unit, onClickTopAppBar: () -&gt; Unit, bookmarked: Boolean, onToggleBookmarked: () -&gt; Unit, onOpenInWebView: (() -&gt; Unit)?, onShare: (() -&gt; Unit)?, viewer: Viewer?, onNextChapter: () -&gt; Unit, enabledNext: Boolean, onPreviousChapter: () -&gt; Unit, enabledPrevious: Boolean, currentPage: Int, totalPages: Int, onSliderValueChange: (Int) -&gt; Unit, readingMode: ReadingMode, onClickReadingMode: () -&gt; Unit, orientation: ReaderOrientation, onClickOrientation: () -&gt; Unit, cropEnabled: Boolean, onClickCropBorder: () -&gt; Unit, onClickSettings: () -&gt; Unit, )</ID>
+    <ID>LongMethod:ReadingModePage.kt$@Composable private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenModel)</ID>
+    <ID>LongMethod:Scaffold.kt$@Composable private fun ScaffoldLayout( fabPosition: FabPosition, topBar: @Composable () -&gt; Unit, startBar: @Composable () -&gt; Unit, content: @Composable (PaddingValues) -&gt; Unit, snackbar: @Composable () -&gt; Unit, fab: @Composable () -&gt; Unit, contentWindowInsets: WindowInsets, bottomBar: @Composable () -&gt; Unit, )</ID>
+    <ID>LongMethod:ScanlatorFilterDialog.kt$@Composable fun ScanlatorFilterDialog( availableScanlators: Set&lt;String&gt;, excludedScanlators: Set&lt;String&gt;, onDismissRequest: () -&gt; Unit, onConfirm: (Set&lt;String&gt;) -&gt; Unit, )</ID>
+    <ID>LongMethod:SettingsAdvancedScreen.kt$SettingsAdvancedScreen$@Composable private fun getExtensionsGroup( basePreferences: BasePreferences, ): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsAdvancedScreen.kt$SettingsAdvancedScreen$@Composable private fun getNetworkGroup( networkPreferences: NetworkPreferences, ): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsDataScreen.kt$SettingsDataScreen$@Composable private fun getBackupAndRestoreGroup(backupPreferences: BackupPreferences): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsLibraryScreen.kt$SettingsLibraryScreen$@Composable private fun getGlobalUpdateGroup( allCategories: List&lt;Category&gt;, libraryPreferences: LibraryPreferences, ): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsMainScreen.kt$SettingsMainScreen$@Composable fun Content(twoPane: Boolean)</ID>
+    <ID>LongMethod:SettingsReaderScreen.kt$SettingsReaderScreen$@Composable private fun getPagedGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsReaderScreen.kt$SettingsReaderScreen$@Composable private fun getWebtoonGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup</ID>
+    <ID>LongMethod:SettingsSearchScreen.kt$@Composable private fun SearchResult( searchKey: String, modifier: Modifier = Modifier, listState: LazyListState = rememberLazyListState(), contentPadding: PaddingValues = PaddingValues(), onItemClick: (SearchResultItem) -&gt; Unit, )</ID>
+    <ID>LongMethod:SettingsSearchScreen.kt$SettingsSearchScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:SettingsTrackingScreen.kt$SettingsTrackingScreen$@Composable override fun getPreferences(): List&lt;Preference&gt;</ID>
+    <ID>LongMethod:SettingsTrackingScreen.kt$SettingsTrackingScreen$@Composable private fun TrackingLoginDialog( tracker: Tracker, uNameStringRes: StringResource, onDismissRequest: () -&gt; Unit, )</ID>
+    <ID>LongMethod:SourceFilterDialog.kt$@Composable private fun FilterItem(filter: Filter&lt;*&gt;, onUpdate: () -&gt; Unit)</ID>
+    <ID>LongMethod:SourceSearchScreen.kt$SourceSearchScreen$@Composable override fun Content()</ID>
     <ID>LongMethod:SyncChaptersWithSource.kt$SyncChaptersWithSource$suspend fun await( rawSourceChapters: List&lt;SChapter&gt;, manga: Manga, source: Source, manualFetch: Boolean = false, fetchWindow: Pair&lt;Long, Long&gt; = Pair(0, 0), ): List&lt;Chapter&gt;</ID>
+    <ID>LongMethod:TrackInfoDialog.kt$TrackInfoDialogHomeScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:TrackInfoDialog.kt$TrackerRemoveScreen$@Composable override fun Content()</ID>
+    <ID>LongMethod:TrackInfoDialogHome.kt$@Composable private fun TrackInfoItem( title: String, tracker: Tracker, status: StringResource?, onStatusClick: () -&gt; Unit, chapters: String, onChaptersClick: () -&gt; Unit, score: String?, onScoreClick: (() -&gt; Unit)?, startDate: String?, onStartDateClick: (() -&gt; Unit)?, endDate: String?, onEndDateClick: (() -&gt; Unit)?, onNewSearch: () -&gt; Unit, onOpenInBrowser: () -&gt; Unit, onRemoved: () -&gt; Unit, )</ID>
+    <ID>LongMethod:TrackerSearch.kt$@Composable fun TrackerSearch( query: TextFieldValue, onQueryChange: (TextFieldValue) -&gt; Unit, onDispatchQuery: () -&gt; Unit, queryResult: Result&lt;List&lt;TrackSearch&gt;&gt;?, selected: TrackSearch?, onSelectedChange: (TrackSearch) -&gt; Unit, onConfirmSelection: () -&gt; Unit, onDismissRequest: () -&gt; Unit, )</ID>
+    <ID>LongMethod:TrackerSearch.kt$@Composable private fun SearchResultItem( trackSearch: TrackSearch, selected: Boolean, onClick: () -&gt; Unit, )</ID>
+    <ID>LongMethod:TriStateListDialog.kt$@Composable fun &lt;T&gt; TriStateListDialog( title: String, message: String? = null, items: List&lt;T&gt;, initialChecked: List&lt;T&gt;, initialInversed: List&lt;T&gt;, itemLabel: @Composable (T) -&gt; String, onDismissRequest: () -&gt; Unit, onValueChanged: (newIncluded: List&lt;T&gt;, newExcluded: List&lt;T&gt;) -&gt; Unit, )</ID>
+    <ID>LongMethod:UpdatesScreen.kt$@Composable fun UpdateScreen( state: UpdatesScreenModel.State, snackbarHostState: SnackbarHostState, lastUpdated: Long, onClickCover: (UpdatesItem) -&gt; Unit, onSelectAll: (Boolean) -&gt; Unit, onInvertSelection: () -&gt; Unit, onUpdateLibrary: () -&gt; Boolean, onDownloadChapter: (List&lt;UpdatesItem&gt;, ChapterDownloadAction) -&gt; Unit, onMultiBookmarkClicked: (List&lt;UpdatesItem&gt;, bookmark: Boolean) -&gt; Unit, onMultiMarkAsReadClicked: (List&lt;UpdatesItem&gt;, read: Boolean) -&gt; Unit, onMultiDeleteClicked: (List&lt;UpdatesItem&gt;) -&gt; Unit, onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -&gt; Unit, onOpenChapter: (UpdatesItem) -&gt; Unit, )</ID>
+    <ID>LongMethod:UpdatesTab.kt$UpdatesTab$@Composable override fun Content()</ID>
+    <ID>LongMethod:UpdatesUiItem.kt$@Composable private fun UpdatesUiItem( update: UpdatesWithRelations, selected: Boolean, readProgress: String?, onClick: () -&gt; Unit, onLongClick: () -&gt; Unit, onClickCover: (() -&gt; Unit)?, onDownloadChapter: ((ChapterDownloadAction) -&gt; Unit)?, // Download Indicator downloadStateProvider: () -&gt; Download.State, downloadProgressProvider: () -&gt; Int, modifier: Modifier = Modifier, )</ID>
+    <ID>LongMethod:UpdatesWidget.kt$@Composable fun UpdatesWidget( data: ImmutableList&lt;Pair&lt;Long, Bitmap?&gt;&gt;?, contentColor: ColorProvider, topPadding: Dp, bottomPadding: Dp, modifier: GlanceModifier = GlanceModifier, )</ID>
+    <ID>LongMethod:VerticalFastScroller.kt$@Composable fun VerticalFastScroller( listState: LazyListState, modifier: Modifier = Modifier, thumbAllowed: () -&gt; Boolean = { true }, thumbColor: Color = MaterialTheme.colorScheme.primary, topContentPadding: Dp = Dp.Hairline, bottomContentPadding: Dp = Dp.Hairline, endContentPadding: Dp = Dp.Hairline, content: @Composable () -&gt; Unit, )</ID>
+    <ID>LongMethod:VerticalFastScroller.kt$@Composable fun VerticalGridFastScroller( state: LazyGridState, columns: GridCells, arrangement: Arrangement.Horizontal, contentPadding: PaddingValues, modifier: Modifier = Modifier, thumbAllowed: () -&gt; Boolean = { true }, thumbColor: Color = MaterialTheme.colorScheme.primary, topContentPadding: Dp = Dp.Hairline, bottomContentPadding: Dp = Dp.Hairline, endContentPadding: Dp = Dp.Hairline, content: @Composable () -&gt; Unit, )</ID>
+    <ID>LongMethod:WebViewScreenContent.kt$@Composable fun WebViewScreenContent( onNavigateUp: () -&gt; Unit, initialTitle: String?, url: String, onShare: (String) -&gt; Unit, onOpenInBrowser: (String) -&gt; Unit, onClearCookies: (String) -&gt; Unit, headers: Map&lt;String, String&gt; = emptyMap(), onUrlChange: (String) -&gt; Unit = {}, )</ID>
     <ID>LongMethod:WebtoonRecyclerView.kt$WebtoonRecyclerView.Detector$override fun onTouchEvent(ev: MotionEvent): Boolean</ID>
+    <ID>LongMethod:WheelPicker.kt$@Composable private fun &lt;T&gt; WheelPicker( items: ImmutableList&lt;T&gt;, modifier: Modifier = Modifier, startIndex: Int = 0, size: DpSize = DpSize(128.dp, 128.dp), onSelectionChanged: (index: Int) -&gt; Unit = {}, manualInputType: KeyboardType? = null, backgroundContent: (@Composable (size: DpSize) -&gt; Unit)? = { WheelPickerDefaults.Background(size = it) }, itemContent: @Composable LazyItemScope.(item: T) -&gt; Unit, )</ID>
     <ID>LongParameterList:BottomReaderBar.kt$( backgroundColor: Color, readingMode: ReadingMode, onClickReadingMode: () -&gt; Unit, orientation: ReaderOrientation, onClickOrientation: () -&gt; Unit, cropEnabled: Boolean, onClickCropBorder: () -&gt; Unit, onClickSettings: () -&gt; Unit, )</ID>
     <ID>LongParameterList:BrowseSourceScreen.kt$( source: Source?, mangaList: LazyPagingItems&lt;StateFlow&lt;Manga&gt;&gt;, columns: GridCells, displayMode: LibraryDisplayMode, snackbarHostState: SnackbarHostState, contentPadding: PaddingValues, onWebViewClick: () -&gt; Unit, onHelpClick: () -&gt; Unit, onLocalSourceHelpClick: () -&gt; Unit, onMangaClick: (Manga) -&gt; Unit, onMangaLongClick: (Manga) -&gt; Unit, )</ID>
     <ID>LongParameterList:BrowseSourceToolbar.kt$( searchQuery: String?, onSearchQueryChange: (String?) -&gt; Unit, source: Source?, displayMode: LibraryDisplayMode, onDisplayModeChange: (LibraryDisplayMode) -&gt; Unit, navigateUp: () -&gt; Unit, onWebViewClick: () -&gt; Unit, onHelpClick: () -&gt; Unit, onSettingsClick: () -&gt; Unit, onSearch: (String) -&gt; Unit, scrollBehavior: TopAppBarScrollBehavior? = null, )</ID>
@@ -661,23 +726,89 @@
     <ID>MaxLineLength:SpecificHostRateLimitInterceptor.kt$*</ID>
     <ID>MaxLineLength:WebViewUtil.kt$WebViewUtil$*</ID>
     <ID>MemberNameEqualsClassName:ExtensionInstaller.kt$ExtensionInstaller$private val extensionInstaller = Injekt.get&lt;BasePreferences&gt;().extensionInstaller()</ID>
-    <ID>ModifierHeightWithText:CommonMangaItem.kt$height(56.dp)</ID>
-    <ID>ModifierHeightWithText:TrackInfoDialogHome.kt$height(48.dp)</ID>
-    <ID>ModifierParameterPosition:ChapterDownloadIndicator.kt$@Composable private fun DownloadedIndicator( enabled: Boolean, modifier: Modifier = Modifier, onClick: (ChapterDownloadAction) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:ChapterDownloadIndicator.kt$@Composable private fun ErrorIndicator( enabled: Boolean, modifier: Modifier = Modifier, onClick: (ChapterDownloadAction) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:ChapterDownloadIndicator.kt$@Composable private fun NotDownloadedIndicator( enabled: Boolean, modifier: Modifier = Modifier, onClick: (ChapterDownloadAction) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:CommonMangaItem.kt$@Composable private fun ContinueReadingButton( modifier: Modifier = Modifier, onClickContinueReading: () -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:LazyColumnWithAction.kt$@Composable fun LazyColumnWithAction( contentPadding: PaddingValues, actionLabel: String, onClickAction: () -&gt; Unit, modifier: Modifier = Modifier, actionEnabled: Boolean = true, content: LazyListScope.() -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:LazyGrid.kt$@Composable fun FastScrollLazyVerticalGrid( columns: GridCells, modifier: Modifier = Modifier, state: LazyGridState = rememberLazyGridState(), thumbAllowed: () -&gt; Boolean = { true }, thumbColor: Color = MaterialTheme.colorScheme.primary, contentPadding: PaddingValues = PaddingValues(0.dp), topContentPadding: Dp = Dp.Hairline, bottomContentPadding: Dp = Dp.Hairline, endContentPadding: Dp = Dp.Hairline, reverseLayout: Boolean = false, verticalArrangement: Arrangement.Vertical = if (!reverseLayout) Arrangement.Top else Arrangement.Bottom, horizontalArrangement: Arrangement.Horizontal = Arrangement.Start, userScrollEnabled: Boolean = true, content: LazyGridScope.() -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:LazyLibraryGrid.kt$@Composable internal fun LazyLibraryGrid( modifier: Modifier = Modifier, columns: Int, contentPadding: PaddingValues, content: LazyGridScope.() -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:LazyList.kt$@Composable fun FastScrollLazyColumn( modifier: Modifier = Modifier, state: LazyListState = rememberLazyListState(), contentPadding: PaddingValues = PaddingValues(0.dp), reverseLayout: Boolean = false, verticalArrangement: Arrangement.Vertical = if (!reverseLayout) Arrangement.Top else Arrangement.Bottom, horizontalAlignment: Alignment.Horizontal = Alignment.Start, userScrollEnabled: Boolean = true, content: LazyListScope.() -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:LazyList.kt$@Composable fun ScrollbarLazyColumn( modifier: Modifier = Modifier, state: LazyListState = rememberLazyListState(), contentPadding: PaddingValues = PaddingValues(0.dp), reverseLayout: Boolean = false, verticalArrangement: Arrangement.Vertical = if (!reverseLayout) Arrangement.Top else Arrangement.Bottom, horizontalAlignment: Alignment.Horizontal = Alignment.Start, userScrollEnabled: Boolean = true, content: LazyListScope.() -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:MangaInfoHeader.kt$@Composable private fun TagsChip( text: String, modifier: Modifier = Modifier, onClick: () -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:PermissionStep.kt$PermissionStep$@Composable private fun PermissionItem( title: String, subtitle: String, granted: Boolean, modifier: Modifier = Modifier, onButtonClick: () -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:SettingsSearchScreen.kt$@Composable private fun SearchResult( searchKey: String, modifier: Modifier = Modifier, listState: LazyListState = rememberLazyListState(), contentPadding: PaddingValues = PaddingValues(), onItemClick: (SearchResultItem) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:SourcePreferencesScreen.kt$SourcePreferencesScreen$@Composable private fun FragmentContainer( fragmentManager: FragmentManager, modifier: Modifier = Modifier, commit: FragmentTransaction.(containerId: Int) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:SwitchPreferenceWidget.kt$@Composable fun SwitchPreferenceWidget( modifier: Modifier = Modifier, title: String, subtitle: String? = null, icon: ImageVector? = null, checked: Boolean = false, onCheckedChanged: (Boolean) -&gt; Unit, )</ID>
-    <ID>ModifierParameterPosition:TrackingPreferenceWidget.kt$@Composable fun TrackingPreferenceWidget( modifier: Modifier = Modifier, tracker: Tracker, checked: Boolean, onClick: (() -&gt; Unit)? = null, )</ID>
+    <ID>ModifierClickableOrder:ScanlatorFilterDialog.kt$clickable { if (isExcluded) { mutableExcludedScanlators.remove(scanlator) } else { mutableExcludedScanlators.add(scanlator) } }</ID>
+    <ID>ModifierMissing:AppBar.kt$AppBarActions</ID>
+    <ID>ModifierMissing:AppThemePreferenceWidget.kt$AppThemePreviewItem</ID>
+    <ID>ModifierMissing:BottomReaderBar.kt$BottomReaderBar</ID>
+    <ID>ModifierMissing:BrowseSourceComfortableGrid.kt$BrowseSourceComfortableGrid</ID>
+    <ID>ModifierMissing:BrowseSourceCompactGrid.kt$BrowseSourceCompactGrid</ID>
+    <ID>ModifierMissing:BrowseSourceList.kt$BrowseSourceList</ID>
+    <ID>ModifierMissing:BrowseSourceScreen.kt$BrowseSourceContent</ID>
+    <ID>ModifierMissing:BrowseSourceToolbar.kt$BrowseSourceToolbar</ID>
+    <ID>ModifierMissing:CategoryScreen.kt$CategoryScreen</ID>
+    <ID>ModifierMissing:ChapterNavigator.kt$ChapterNavigator</ID>
+    <ID>ModifierMissing:ChapterSettingsDialog.kt$ChapterSettingsDialog</ID>
+    <ID>ModifierMissing:ChapterSettingsDialog.kt$ScanlatorFilterItem</ID>
+    <ID>ModifierMissing:CollapsibleBox.kt$CollapsibleBox</ID>
+    <ID>ModifierMissing:CommonMangaItem.kt$MangaComfortableGridItem</ID>
+    <ID>ModifierMissing:CommonMangaItem.kt$MangaCompactGridItem</ID>
+    <ID>ModifierMissing:CommonMangaItem.kt$MangaListItem</ID>
+    <ID>ModifierMissing:CrashScreen.kt$CrashScreen</ID>
+    <ID>ModifierMissing:ExtensionDetailsScreen.kt$ExtensionDetailsScreen</ID>
+    <ID>ModifierMissing:ExtensionFilterScreen.kt$ExtensionFilterScreen</ID>
+    <ID>ModifierMissing:ExtensionReposScreen.kt$ExtensionReposScreen</ID>
+    <ID>ModifierMissing:ExtensionsScreen.kt$ExtensionScreen</ID>
+    <ID>ModifierMissing:GlobalSearchCardRow.kt$GlobalSearchCardRow</ID>
+    <ID>ModifierMissing:GlobalSearchResultItems.kt$GlobalSearchErrorResultItem</ID>
+    <ID>ModifierMissing:GlobalSearchResultItems.kt$GlobalSearchLoadingResultItem</ID>
+    <ID>ModifierMissing:GlobalSearchResultItems.kt$GlobalSearchResultItem</ID>
+    <ID>ModifierMissing:GlobalSearchScreen.kt$GlobalSearchScreen</ID>
+    <ID>ModifierMissing:GlobalSearchToolbar.kt$GlobalSearchToolbar</ID>
+    <ID>ModifierMissing:HistoryScreen.kt$HistoryScreen</ID>
+    <ID>ModifierMissing:HomeScreen.kt$HomeScreen$NavigationRailItem</ID>
+    <ID>ModifierMissing:InfoScreen.kt$InfoScreen</ID>
+    <ID>ModifierMissing:LibraryContent.kt$LibraryContent</ID>
+    <ID>ModifierMissing:LibraryPager.kt$LibraryPager</ID>
+    <ID>ModifierMissing:LibrarySettingsDialog.kt$LibrarySettingsDialog</ID>
+    <ID>ModifierMissing:LogoHeader.kt$LogoHeader</ID>
+    <ID>ModifierMissing:MangaCoverDialog.kt$MangaCoverDialog</ID>
+    <ID>ModifierMissing:MangaScreen.kt$MangaScreenLargeImpl</ID>
+    <ID>ModifierMissing:MigrateMangaScreen.kt$MigrateMangaScreen</ID>
+    <ID>ModifierMissing:MigrateSearchScreen.kt$MigrateSearchScreen</ID>
+    <ID>ModifierMissing:MigrateSourceScreen.kt$MigrateSourceScreen</ID>
+    <ID>ModifierMissing:ModeSelectionDialog.kt$ModeSelectionDialog</ID>
+    <ID>ModifierMissing:MoreScreen.kt$MoreScreen</ID>
+    <ID>ModifierMissing:NewUpdateScreen.kt$NewUpdateScreen</ID>
+    <ID>ModifierMissing:OnboardingScreen.kt$OnboardingScreen</ID>
+    <ID>ModifierMissing:PageIndicatorText.kt$PageIndicatorText</ID>
+    <ID>ModifierMissing:PreferenceGroupHeader.kt$PreferenceGroupHeader</ID>
+    <ID>ModifierMissing:PreferenceScaffold.kt$PreferenceScaffold</ID>
+    <ID>ModifierMissing:ReaderAppBars.kt$ReaderAppBars</ID>
+    <ID>ModifierMissing:ReaderPageActionsDialog.kt$ReaderPageActionsDialog</ID>
+    <ID>ModifierMissing:ReaderSettingsDialog.kt$ReaderSettingsDialog</ID>
+    <ID>ModifierMissing:SectionCard.kt$SectionCard</ID>
+    <ID>ModifierMissing:SettingsItems.kt$CheckboxItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$HeadingItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$IconItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$RadioItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$SelectItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$SettingsChipRow</ID>
+    <ID>ModifierMissing:SettingsItems.kt$SettingsIconGrid</ID>
+    <ID>ModifierMissing:SettingsItems.kt$SliderItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$SortItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$TextItem</ID>
+    <ID>ModifierMissing:SettingsItems.kt$TriStateItem</ID>
+    <ID>ModifierMissing:SettingsMainScreen.kt$SettingsMainScreen$Content</ID>
+    <ID>ModifierMissing:SourceFilterDialog.kt$SourceFilterDialog</ID>
+    <ID>ModifierMissing:SourcesFilterScreen.kt$SourcesFilterScreen</ID>
+    <ID>ModifierMissing:SourcesScreen.kt$SourcesScreen</ID>
+    <ID>ModifierMissing:StatsScreenContent.kt$StatsScreenContent</ID>
+    <ID>ModifierMissing:TabbedScreen.kt$TabbedScreen</ID>
+    <ID>ModifierMissing:Tabs.kt$TabText</ID>
+    <ID>ModifierMissing:TrackInfoDialogHome.kt$TrackInfoDialogHome</ID>
+    <ID>ModifierMissing:TrackInfoDialogSelector.kt$TrackChapterSelector</ID>
+    <ID>ModifierMissing:TrackInfoDialogSelector.kt$TrackDateSelector</ID>
+    <ID>ModifierMissing:TrackInfoDialogSelector.kt$TrackScoreSelector</ID>
+    <ID>ModifierMissing:TrackInfoDialogSelector.kt$TrackStatusSelector</ID>
+    <ID>ModifierMissing:TrackLogoIcon.kt$TrackLogoIcon</ID>
+    <ID>ModifierMissing:TrackerSearch.kt$TrackerSearch</ID>
+    <ID>ModifierMissing:UpdatesScreen.kt$UpdateScreen</ID>
+    <ID>ModifierMissing:WebViewScreenContent.kt$WebViewScreenContent</ID>
+    <ID>ModifierMissing:WheelPicker.kt$WheelPickerDefaults$Background</ID>
+    <ID>ModifierMissing:WheelPicker.kt$WheelPickerDefaults$Item</ID>
+    <ID>ModifierNotUsedAtRoot:DropdownMenu.kt$modifier = modifier</ID>
+    <ID>ModifierNotUsedAtRoot:MangaChapterListItem.kt$modifier = modifier .selectedBackground(selected) .combinedClickable( onClick = onClick, onLongClick = onLongClick, ) .padding(start = 16.dp, top = 12.dp, end = 8.dp, bottom = 12.dp)</ID>
+    <ID>ModifierNotUsedAtRoot:TrackingPreferenceWidget.kt$modifier = modifier .clickable(enabled = onClick != null, onClick = { onClick?.invoke() }) .fillMaxWidth() .padding(horizontal = PrefsHorizontalPadding, vertical = 8.dp)</ID>
     <ID>NestedBlockDepth:Anilist.kt$Anilist$override suspend fun update(track: Track, didReadChapter: Boolean): Track</ID>
     <ID>NestedBlockDepth:AppLanguageScreen.kt$AppLanguageScreen$private fun getLangs(context: Context): ImmutableList&lt;Language&gt;</ID>
     <ID>NestedBlockDepth:BackupRestorer.kt$BackupRestorer$private fun writeErrorLog(): File</ID>
@@ -701,8 +832,8 @@
     <ID>NestedBlockDepth:WebtoonRecyclerView.kt$WebtoonRecyclerView.Detector$override fun onTouchEvent(ev: MotionEvent): Boolean</ID>
     <ID>NewLineAtEndOfFile:Commands.kt$.Commands.kt</ID>
     <ID>NoConsecutiveBlankLines:LocalesConfigPlugin.kt$ </ID>
-    <ID>PublicComposablePreview:Scrollbar.kt$@Preview(widthDp = 400, heightDp = 400, showBackground = true) @Composable fun LazyListScrollbarPreview()</ID>
-    <ID>PublicComposablePreview:Scrollbar.kt$@Preview(widthDp = 400, showBackground = true) @Composable fun LazyListHorizontalScrollbarPreview()</ID>
+    <ID>PreviewPublic:Scrollbar.kt$LazyListHorizontalScrollbarPreview</ID>
+    <ID>PreviewPublic:Scrollbar.kt$LazyListScrollbarPreview</ID>
     <ID>RethrowCaughtException:LocalSource.kt$LocalSource$throw e</ID>
     <ID>ReturnCount:AndroidDatabaseHandler.kt$AndroidDatabaseHandler$private suspend fun &lt;T&gt; dispatch(inTransaction: Boolean, block: suspend Database.() -&gt; T): T</ID>
     <ID>ReturnCount:AndroidSourceManager.kt$AndroidSourceManager$private suspend fun createStubSource(id: Long): StubSource</ID>
@@ -1098,6 +1229,34 @@
     <ID>TopLevelPropertyNaming:WebtoonRecyclerView.kt$private const val DEFAULT_RATE = 1f</ID>
     <ID>TopLevelPropertyNaming:WebtoonRecyclerView.kt$private const val MAX_SCALE_RATE = 3f</ID>
     <ID>TopLevelPropertyNaming:WebtoonRecyclerView.kt$private const val MIN_RATE = 0.5f</ID>
+    <ID>UnstableCollections:CategoryScreen.kt$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:Commons.kt$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:Commons.kt$Set&lt;String&gt;</ID>
+    <ID>UnstableCollections:GlobalSearchCardRow.kt$List&lt;Manga&gt;</ID>
+    <ID>UnstableCollections:GlobalSearchScreen.kt$Map&lt;CatalogueSource, SearchItemResult&gt;</ID>
+    <ID>UnstableCollections:HistoryScreen.kt$List&lt;HistoryUiModel&gt;</ID>
+    <ID>UnstableCollections:LibraryComfortableGrid.kt$List&lt;LibraryItem&gt;</ID>
+    <ID>UnstableCollections:LibraryComfortableGrid.kt$List&lt;LibraryManga&gt;</ID>
+    <ID>UnstableCollections:LibraryCompactGrid.kt$List&lt;LibraryItem&gt;</ID>
+    <ID>UnstableCollections:LibraryCompactGrid.kt$List&lt;LibraryManga&gt;</ID>
+    <ID>UnstableCollections:LibraryContent.kt$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:LibraryContent.kt$List&lt;LibraryManga&gt;</ID>
+    <ID>UnstableCollections:LibraryList.kt$List&lt;LibraryItem&gt;</ID>
+    <ID>UnstableCollections:LibraryList.kt$List&lt;LibraryManga&gt;</ID>
+    <ID>UnstableCollections:LibraryPager.kt$List&lt;LibraryManga&gt;</ID>
+    <ID>UnstableCollections:LibraryTabs.kt$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:ListPreferenceWidget.kt$Map&lt;out T, String&gt;</ID>
+    <ID>UnstableCollections:MangaScreen.kt$List&lt;ChapterList.Item&gt;</ID>
+    <ID>UnstableCollections:MultiSelectListPreferenceWidget.kt$Set&lt;String&gt;</ID>
+    <ID>UnstableCollections:PreferenceScreen.kt$List&lt;Preference&gt;</ID>
+    <ID>UnstableCollections:ScanlatorFilterDialog.kt$Set&lt;String&gt;</ID>
+    <ID>UnstableCollections:SettingsDownloadScreen.kt$SettingsDownloadScreen$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:SettingsLibraryScreen.kt$SettingsLibraryScreen$List&lt;Category&gt;</ID>
+    <ID>UnstableCollections:TrackInfoDialogHome.kt$List&lt;TrackItem&gt;</ID>
+    <ID>UnstableCollections:TrackInfoDialogSelector.kt$Map&lt;Long, StringResource?&gt;</ID>
+    <ID>UnstableCollections:TriStateListDialog.kt$List&lt;T&gt;</ID>
+    <ID>UnstableCollections:UpdatesScreen.kt$List&lt;UpdatesItem&gt;</ID>
+    <ID>UnstableCollections:WebViewScreenContent.kt$Map&lt;String, String&gt;</ID>
     <ID>UnusedParameter:UpdatesRepositoryImpl.kt$UpdatesRepositoryImpl$dateUpload: Long</ID>
     <ID>UnusedPrivateMember:AppThemePreferenceWidget.kt$@PreviewLightDark @Composable private fun AppThemesListPreview()</ID>
     <ID>UnusedPrivateMember:ChapterTransition.kt$@PreviewLightDark @Composable private fun TransitionTextLongTitlePreview()</ID>
