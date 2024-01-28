@@ -31,7 +31,7 @@
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val remote_id: Long</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val start_date_fuzzy: Long</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val title_user_pref: String</ID>
-    <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val total_chapters: Int</ID>
+    <ID>ConstructorParameterNaming:AnilistModels.kt$ALManga$val total_chapters: Long</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALUserManga$val chapters_read: Int</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALUserManga$val completed_date_fuzzy: Long</ID>
     <ID>ConstructorParameterNaming:AnilistModels.kt$ALUserManga$val library_id: Long</ID>
@@ -281,9 +281,9 @@
     <ID>MagicNumber:Anilist.kt$Anilist$10f</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$18</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$20</ID>
-    <ID>MagicNumber:Anilist.kt$Anilist$20f</ID>
+    <ID>MagicNumber:Anilist.kt$Anilist$20.0</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$25</ID>
-    <ID>MagicNumber:Anilist.kt$Anilist$25f</ID>
+    <ID>MagicNumber:Anilist.kt$Anilist$25.0</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$35</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$5</ID>
     <ID>MagicNumber:Anilist.kt$Anilist$60</ID>
@@ -591,13 +591,14 @@
     <ID>MagicNumber:Tabs.kt$0.12f</ID>
     <ID>MagicNumber:TimeUtils.kt$4</ID>
     <ID>MagicNumber:TrackInfoDialog.kt$TrackChapterSelectorScreen.Model$10000</ID>
-    <ID>MagicNumber:TrackInfoDialogSelector.kt$3</ID>
-    <ID>MagicNumber:TrackInfoDialogSelector.kt$4</ID>
-    <ID>MagicNumber:TrackInfoDialogSelector.kt$5</ID>
-    <ID>MagicNumber:TrackInfoDialogSelector.kt$6</ID>
+    <ID>MagicNumber:TrackInfoDialogSelector.kt$3L</ID>
+    <ID>MagicNumber:TrackInfoDialogSelector.kt$4L</ID>
+    <ID>MagicNumber:TrackInfoDialogSelector.kt$5L</ID>
+    <ID>MagicNumber:TrackInfoDialogSelector.kt$6L</ID>
     <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$10</ID>
     <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$100</ID>
-    <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$1000</ID>
+    <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$1000L</ID>
+    <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$100L</ID>
     <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$30</ID>
     <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$365</ID>
     <ID>MagicNumber:TrackerSearchPreviewProvider.kt$TrackerSearchPreviewProvider$40</ID>
@@ -689,7 +690,7 @@
     <ID>NestedBlockDepth:ExtensionInstaller.kt$ExtensionInstaller$fun installApk(downloadId: Long, uri: Uri)</ID>
     <ID>NestedBlockDepth:ImageUtil.kt$ImageUtil$fun chooseBackground(context: Context, imageStream: InputStream): Drawable</ID>
     <ID>NestedBlockDepth:KavitaApi.kt$KavitaApi$fun getNewToken(apiUrl: String, apiKey: String): String?</ID>
-    <ID>NestedBlockDepth:KavitaApi.kt$KavitaApi$private fun getLatestChapterRead(url: String): Float</ID>
+    <ID>NestedBlockDepth:KavitaApi.kt$KavitaApi$private fun getLatestChapterRead(url: String): Double</ID>
     <ID>NestedBlockDepth:Kitsu.kt$Kitsu$override suspend fun update(track: Track, didReadChapter: Boolean): Track</ID>
     <ID>NestedBlockDepth:LibraryUpdateJob.kt$LibraryUpdateJob$private fun writeErrorFile(errors: List&lt;Pair&lt;Manga, String?&gt;&gt;): File</ID>
     <ID>NestedBlockDepth:LocalSource.kt$LocalSource$private fun copyComicInfoFileFromArchive(chapterArchives: List&lt;UniFile&gt;, folderPath: String?): File?</ID>
@@ -724,7 +725,7 @@
     <ID>ReturnCount:ImageUtil.kt$ImageUtil$fun isAnimatedAndSupported(stream: InputStream): Boolean</ID>
     <ID>ReturnCount:ImageUtil.kt$ImageUtil$fun splitTallImage(tmpDir: UniFile, imageFile: UniFile, filenamePrefix: String): Boolean</ID>
     <ID>ReturnCount:KavitaApi.kt$KavitaApi$fun getNewToken(apiUrl: String, apiKey: String): String?</ID>
-    <ID>ReturnCount:KavitaApi.kt$KavitaApi$private fun getLatestChapterRead(url: String): Float</ID>
+    <ID>ReturnCount:KavitaApi.kt$KavitaApi$private fun getLatestChapterRead(url: String): Double</ID>
     <ID>ReturnCount:KitsuDateHelper.kt$KitsuDateHelper$fun parse(dateString: String?): Long</ID>
     <ID>ReturnCount:LibraryUpdateJob.kt$LibraryUpdateJob$override suspend fun doWork(): Result</ID>
     <ID>ReturnCount:LocalSource.kt$LocalSource$private fun copyComicInfoFileFromArchive(chapterArchives: List&lt;UniFile&gt;, folderPath: String?): File?</ID>
@@ -1151,13 +1152,13 @@
     <ID>VariableNaming:SManga.kt$SManga$var thumbnail_url: String?</ID>
     <ID>VariableNaming:SManga.kt$SManga$var update_strategy: UpdateStrategy</ID>
     <ID>VariableNaming:Track.kt$Track$var finished_reading_date: Long</ID>
-    <ID>VariableNaming:Track.kt$Track$var last_chapter_read: Float</ID>
+    <ID>VariableNaming:Track.kt$Track$var last_chapter_read: Double</ID>
     <ID>VariableNaming:Track.kt$Track$var library_id: Long?</ID>
     <ID>VariableNaming:Track.kt$Track$var manga_id: Long</ID>
     <ID>VariableNaming:Track.kt$Track$var remote_id: Long</ID>
     <ID>VariableNaming:Track.kt$Track$var started_reading_date: Long</ID>
-    <ID>VariableNaming:Track.kt$Track$var total_chapters: Int</ID>
-    <ID>VariableNaming:Track.kt$Track$var tracker_id: Int</ID>
+    <ID>VariableNaming:Track.kt$Track$var total_chapters: Long</ID>
+    <ID>VariableNaming:Track.kt$Track$var tracker_id: Long</ID>
     <ID>VariableNaming:Track.kt$Track$var tracking_url: String</ID>
     <ID>VariableNaming:TrackSearch.kt$TrackSearch$var cover_url: String = ""</ID>
     <ID>VariableNaming:TrackSearch.kt$TrackSearch$var publishing_status: String = ""</ID>
