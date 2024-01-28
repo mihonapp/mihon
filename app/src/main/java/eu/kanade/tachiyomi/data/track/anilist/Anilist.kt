@@ -20,12 +20,12 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     companion object {
-        const val READING = 1
-        const val COMPLETED = 2
-        const val ON_HOLD = 3
-        const val DROPPED = 4
-        const val PLAN_TO_READ = 5
-        const val REREADING = 6
+        const val READING = 1L
+        const val COMPLETED = 2L
+        const val ON_HOLD = 3L
+        const val DROPPED = 4L
+        const val PLAN_TO_READ = 5L
+        const val REREADING = 6L
 
         const val POINT_100 = "POINT_100"
         const val POINT_10 = "POINT_10"
@@ -58,11 +58,11 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
     override fun getLogoColor() = Color.rgb(18, 25, 35)
 
-    override fun getStatusList(): List<Int> {
+    override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)
     }
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         READING -> MR.strings.reading
         PLAN_TO_READ -> MR.strings.plan_to_read
         COMPLETED -> MR.strings.completed
@@ -72,11 +72,11 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = REREADING
+    override fun getRereadingStatus(): Long = REREADING
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> {
         return when (scorePreference.get()) {
@@ -99,24 +99,24 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         return track.score / 10.0
     }
 
-    override fun indexToScore(index: Int): Float {
+    override fun indexToScore(index: Int): Double {
         return when (scorePreference.get()) {
             // 10 point
-            POINT_10 -> index * 10f
+            POINT_10 -> index * 10.0
             // 100 point
-            POINT_100 -> index.toFloat()
+            POINT_100 -> index.toDouble()
             // 5 stars
             POINT_5 -> when (index) {
-                0 -> 0f
-                else -> index * 20f - 10f
+                0 -> 0.0
+                else -> index * 20.0 - 10.0
             }
             // Smiley
             POINT_3 -> when (index) {
-                0 -> 0f
-                else -> index * 25f + 10f
+                0 -> 0.0
+                else -> index * 25.0 + 10.0
             }
             // 10 point decimal
-            POINT_10_DECIMAL -> index.toFloat()
+            POINT_10_DECIMAL -> index.toDouble()
             else -> throw Exception("Unknown score type")
         }
     }
@@ -153,12 +153,12 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
 
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
                     track.finished_reading_date = System.currentTimeMillis()
                 } else if (track.status != REREADING) {
                     track.status = READING
-                    if (track.last_chapter_read == 1F) {
+                    if (track.last_chapter_read == 1.0) {
                         track.started_reading_date = System.currentTimeMillis()
                     }
                 }
@@ -192,7 +192,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         } else {
             // Set default fields if it's not found in the list
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
-            track.score = 0F
+            track.score = 0.0
             add(track)
         }
     }

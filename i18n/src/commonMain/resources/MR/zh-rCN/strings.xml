@@ -288,7 +288,7 @@
     <string name="action_webview_refresh">刷新</string>
     <string name="pref_category_library">书架</string>
     <string name="ext_obsolete">废弃</string>
-    <string name="obsolete_extension_message">此插件已被废弃，可能无法正常运行或导致应用发生故障，建议卸载</string>
+    <string name="obsolete_extension_message">此插件已被废弃，可能无法正常运行或导致应用发生故障，建议卸载。</string>
     <string name="pref_date_format">日期格式</string>
     <string name="pref_category_library_update">全局更新</string>
     <string name="logout_title">要退出 %1$s 吗？</string>
@@ -624,12 +624,12 @@
     <string name="are_you_sure">你确定吗？</string>
     <string name="multi_lang">多语言</string>
     <string name="updates_last_update_info">书架更新时间：%s</string>
-    <string name="remove_manga">即将从书架中删除“%s”。</string>
+    <string name="remove_manga">即将从书架中删除“%s”</string>
     <string name="popular">热门</string>
     <string name="missing_storage_permission">未授予存储权限</string>
     <string name="skipped_reason_not_always_update">已跳过，因为作品无需更新</string>
     <string name="action_search_hint">搜索…</string>
-    <string name="crash_screen_title">哦豁</string>
+    <string name="crash_screen_title">哦豁！</string>
     <string name="crash_screen_description">%s 发生了意外错误。建议你反馈时提供崩溃日志。</string>
     <string name="crash_screen_restart_application">重启应用</string>
     <string name="pref_appearance_summary">主题 • 日期格式</string>
@@ -783,7 +783,7 @@
     <string name="information_empty_repos">尚未设置仓库</string>
     <string name="label_add_repo_input">仓库网址</string>
     <string name="action_add_repo_message">在 Mihon 中添加仓库，输入的网址结尾应为“index.min.json”。</string>
-    <string name="onboarding_storage_help_info">如果你是从旧版更新而来，请选择之前使用的“Mihon”目录。</string>
+    <string name="onboarding_storage_help_info">如果你是从旧版更新而来，可以查看存储指南了解详情。</string>
     <string name="onboarding_storage_help_action">存储指南</string>
     <string name="pref_storage_location">存储位置</string>
     <string name="onboarding_storage_action_select">选择文件夹</string>

@@ -745,4 +745,61 @@
     <string name="app_settings">Ustawienia aplikacji</string>
     <string name="action_delete_repo">Usuń repozytorium</string>
     <string name="action_add_repo">Dodaj repozytorium</string>
+    <string name="selected">Zaznaczone</string>
+    <string name="action_bar_up_description">Przewiń w górę</string>
+    <string name="onboarding_action_finish">Zaczynajmy</string>
+    <string name="onboarding_storage_help_action">Przewodnik po pamięci</string>
+    <string name="onboarding_permission_install_apps">Zainstaluj uprawnienia aplikacji</string>
+    <string name="onboarding_permission_install_apps_description">Do instalacji rozszerzeń.</string>
+    <string name="onboarding_permission_action_grant">Zezwól</string>
+    <string name="onboarding_guides_new_user">Pierwszy raz w %s? Zalecamy zapoznać się z poradnikiem.</string>
+    <string name="onboarding_guides_returning_user">Ponowna instalacja %s?</string>
+    <string name="label_extension_repos">Repozytoria rozszerzeń</string>
+    <string name="label_add_repo_input">Link repozytorium</string>
+    <string name="pref_storage_usage">Zużycie pamięci</string>
+    <string name="manga_interval_custom_amount">Niestandardowa częstotliwość aktualizacji:</string>
+    <string name="no_scanlators_found">Nie znaleziono skanlatorów</string>
+    <string name="file_null_uri_error">Nie wybrano pliku</string>
+    <string name="not_selected">Nie zaznaczone</string>
+    <string name="action_sort_tracker_score">Serwisy śledzące</string>
+    <string name="label_data_storage">Dane i pamięć</string>
+    <string name="pref_onboarding_guide">Szybka konfiguracja</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Unikaj przerywania długich operacji takich jak pobieranie rozdziałów, aktualizacje bibliotek lub przywracanie kopii zapasowej.</string>
+    <string name="onboarding_permission_notifications_description">Otrzymuj powiadomienia ze swojej biblioteki i więcej.</string>
+    <string name="theme_nord">Nord</string>
+    <string name="pref_relative_format">Użyj dat względnych</string>
+    <string name="pref_relative_format_summary">\"%1$s\" zamiast \"%2$s\"</string>
+    <string name="pref_library_update_smart_update">Inteligentna aktualizacja</string>
+    <string name="onboarding_description">Na początek ustawmy kilka rzeczy. Zawsze możesz je później zmienić w ustawieniach.</string>
+    <string name="onboarding_storage_help_info">Aktualizujesz ze starszej wersji i nie jesteś pewien co wybrać? Zobacz na przewodnik po pamięci.</string>
+    <string name="pref_update_only_in_release_period">Przewiduj następną aktualizację</string>
+    <string name="ext_permission_install_apps_warning">Uprawnienia są wymagane aby zainstalować rozszerzenia. Kliknij tutaj aby je przyznać.</string>
+    <string name="onboarding_storage_info">Wybierz folder gdzie %1$s będzie zapisywał pobrane rozdziały, kopie zapasowe i inne.
+\n
+\nZalecany jest dedykowany folder.
+\n
+\nWybrany folder:%2$s</string>
+    <string name="ext_revoke_trust">Unieważnij zaufanie nieznanym rozszerzeniom</string>
+    <string name="information_empty_repos">Nie masz ustawionych repozytoriów.</string>
+    <string name="action_add_repo_message">Dodaj repozytoria do Mihon. Powinien to być link z końcówką \"index.min.json\".</string>
+    <string name="error_repo_exists">To repozytorium jest już dodane!</string>
+    <string name="delete_repo_confirmation">Na pewno chcesz usunąć repozytorium \"%s\"?</string>
+    <string name="action_open_repo">Repozytorium open source</string>
+    <string name="pref_flash_page_summ">Redukuje ghosting na wyświetlaczach e-ink</string>
+    <string name="no_location_set">Brak ustawionej ścieżki pamięci</string>
+    <string name="pref_storage_location">Miejsce przechowywania danych</string>
+    <string name="pref_storage_location_info">Używane do automatycznych kopii zapasowych, pobierania rozdziałów i lokalnych źródeł.</string>
+    <string name="invalid_backup_file_error">Pełny błąd:</string>
+    <string name="track_activity_name">Login serwisu śledzącego</string>
+    <string name="action_create">Utwórz</string>
+    <string name="pref_flash_page">Włącz przerwy między stronami</string>
+    <string name="private_settings">Dołącz wrażliwe ustawienia (np. tokeny serwisu śledzącego)</string>
+    <string name="last_auto_backup_info">Ostatnia automatyczna kopia zapasowa: %s</string>
+    <string name="has_results">Ma wyniki</string>
+    <string name="manga_display_interval_title">Oszacuj co</string>
+    <string name="available_disk_space_info">Wolne: %1$s / Ogółem: %2$s</string>
+    <string name="manga_interval_expected_update_soon">Wkrótce</string>
+    <string name="licensed_manga_chapters_error">Licencjonowany - Brak rozdziałów</string>
+    <string name="skipped_reason_not_in_release_period">Pominięto, ponieważ nie spodziewano się dzisiaj żadnej publikacji</string>
+    <string name="exclude_scanlators">Wyklucz skanlatorów</string>
 </resources>

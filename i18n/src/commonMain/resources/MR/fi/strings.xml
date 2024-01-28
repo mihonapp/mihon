@@ -72,7 +72,7 @@
     <string name="label_extensions">Laajennukset</string>
     <string name="label_extension_info">Laajennuksen tiedot</string>
     <string name="action_filter">Suodatus</string>
-    <string name="action_filter_bookmarked">Kirjanmerkki</string>
+    <string name="action_filter_bookmarked">Kirjanmerkityt</string>
     <string name="action_filter_unread">Lukemattomat</string>
     <string name="action_filter_empty">Poista suodattimet</string>
     <string name="action_sort_alpha">Aakkosjärjestyksessä</string>
@@ -103,7 +103,7 @@
     <string name="action_install">Asenna</string>
     <string name="action_share">Jaa</string>
     <string name="action_save">Tallenna</string>
-    <string name="action_reset">Resetoi</string>
+    <string name="action_reset">Nollaa</string>
     <string name="action_undo">Kumoa</string>
     <string name="action_open_log">Avaa loki</string>
     <string name="action_restore">Palauta</string>
@@ -447,7 +447,7 @@
     <string name="pref_dump_crash_logs_summary">Tallentaa virhelokit tiedostoon jaettavaksi kehittäjien kanssa</string>
     <string name="action_desc">Laskeva</string>
     <string name="action_asc">Nouseva</string>
-    <string name="action_order_by_chapter_number">Luvunumeron mukaan</string>
+    <string name="action_order_by_chapter_number">Lukunumeron mukaan</string>
     <string name="action_order_by_upload_date">Lisäyspäivämäärän mukaan</string>
     <string name="action_filter_tracked">Seuratut</string>
     <string name="action_display_show_number_of_items">Näytä kohteiden määrä</string>
@@ -615,4 +615,35 @@
     <string name="backup_info">Varmuuskopioita kannattaa säilyttää myös muissa paikoissa.</string>
     <string name="wish_list">Toivelista</string>
     <string name="cant_open_last_read_chapter">Viimeksi luettua lukua ei voitu avata</string>
+    <string name="selected">Valitut</string>
+    <string name="scanlator">Skanlaattori</string>
+    <string name="label_data_storage">Data ja tallennustila</string>
+    <string name="label_stats">Tilastotiedot</string>
+    <string name="label_downloaded">Ladattu</string>
+    <string name="action_sort_next_updated">Seuraava odotettu päivitys</string>
+    <string name="action_sort_tracker_score">Seurannan pisteytys</string>
+    <string name="action_update_category">Päivitä kategoria</string>
+    <string name="action_sort_category">Järjestä kategoriat</string>
+    <string name="action_display_show_continue_reading_button">Jatka lukemista painike</string>
+    <string name="action_apply">Käytä</string>
+    <string name="action_ok">OK</string>
+    <string name="action_revert_to_default">Palauta oletus</string>
+    <string name="crash_screen_description">%s kohtasi odottamattoman virheen. Ehdotamme että jaat kaatumisen lokitiedot tukikanavallemme Discordissa.</string>
+    <string name="delete_downloaded">Poista ladatut</string>
+    <string name="create_backup_file_error">Varmuuskopiotiedoston luonti epäonnistui</string>
+    <string name="confirm_add_duplicate_manga">Kirjastossasi on jo samanniminen merkintä.
+\n
+\nHaluatko silti jatkaa?</string>
+    <string name="crash_screen_title">Hupsista!</string>
+    <string name="copied_to_clipboard_plain">Kopioitu leikepöydälle</string>
+    <string name="crash_screen_restart_application">Uudelleenkäynnistä applikaatio</string>
+    <string name="custom_cover">Mukautettu kansikuva</string>
+    <string name="not_selected">Ei valitut</string>
+    <string name="action_menu_overflow_description">Lisää asetuksia</string>
+    <string name="label_local">Paikallinen</string>
+    <string name="label_started">Aloitettu</string>
+    <string name="action_open_random_manga">Avaa satunnainen merkintä</string>
+    <string name="sort_category_confirmation">Haluatko järjestää kategoriat aakkosjärjestykseen?</string>
+    <string name="action_copy_to_clipboard">Kopioi leikepöydälle</string>
+    <string name="action_move_to_bottom_all_for_series">Siirrä sarja pohjimmaiseksi</string>
 </resources>

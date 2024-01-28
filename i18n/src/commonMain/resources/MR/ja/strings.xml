@@ -500,7 +500,7 @@
     <string name="rotation_landscape">横向き</string>
     <string name="rotation_portrait">縦向き</string>
     <string name="pref_dark_theme_pure_black">真っ黒モード</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">四つ葉</string>
     <string name="theme_yinyang">陰陽</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">ストロベリーダイキリ</string>
@@ -620,7 +620,7 @@
     <string name="theme_tidalwave">津波</string>
     <string name="download_ahead">事前ダウンロード</string>
     <string name="auto_download_while_reading">読書中に自動でダウンロード</string>
-    <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ有効です</string>
+    <string name="download_ahead_info">現在のと次の章は既にダウンロード済みの場合のみ有効です。</string>
     <string name="are_you_sure">本当に実行しますか？</string>
     <string name="multi_lang">多言語</string>
     <string name="updates_last_update_info">前回のライブラリ更新: %s</string>

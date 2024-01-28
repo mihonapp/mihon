@@ -728,7 +728,7 @@
     <string name="action_move_to_bottom_all_for_series">Pindahkan seri ke bawah</string>
     <string name="pref_relative_format">Penanda waktu</string>
     <string name="pref_relative_format_summary">\"%1$s\" seharusnya \"%2$s\"</string>
-    <string name="action_sort_category">Mengurutkan kategori</string>
+    <string name="action_sort_category">Urutkan kategori</string>
     <string name="notification_updating_progress">Memperbarui pustaka... (%s)</string>
     <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad\?</string>
     <string name="file_null_uri_error">Tidak ada file yang dipilih</string>
