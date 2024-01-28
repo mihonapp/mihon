@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("tachiyomi.lint")
     id("base-setup")
     kotlin("multiplatform")
 }

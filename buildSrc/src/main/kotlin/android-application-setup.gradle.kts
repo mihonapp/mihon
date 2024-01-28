@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
-    id("tachiyomi.lint")
     id("base-setup")
     kotlin("android")
 }
