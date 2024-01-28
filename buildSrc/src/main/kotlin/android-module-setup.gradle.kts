@@ -10,12 +10,13 @@ android {
     defaultConfig {
         minSdk = AndroidConfig.minSdk
         targetSdk = AndroidConfig.targetSdk
-        ndk {
-            version = AndroidConfig.ndk
-        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        ndk {
+            version = AndroidConfig.ndk
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -23,8 +24,13 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    val libs = the<LibrariesForLibs>()
-    dependencies {
-        add("coreLibraryDesugaring", libs.desugar)
+    kotlinOptions {
+        jvmTarget = AndroidConfig.javaVersion.toString()
     }
 }
+
+val libs = the<LibrariesForLibs>()
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
+}
+

@@ -6,9 +6,17 @@ plugins {
 android {
     namespace = "tachiyomi.macrobenchmark"
 
+    compileSdk = AndroidConfig.compileSdk
     defaultConfig {
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.enabledRules"] = "BaselineProfile"
+
+        ndk {
+            version = AndroidConfig.ndk
+        }
     }
 
     buildTypes {

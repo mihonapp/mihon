@@ -10,7 +10,12 @@ val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 android {
     namespace = AndroidConfig.namespace
 
+    compileSdk = AndroidConfig.compileSdk
+
     defaultConfig {
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
+
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
@@ -19,6 +24,7 @@ android {
 
         ndk {
             abiFilters += SUPPORTED_ABIS
+            version = AndroidConfig.ndk
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -127,6 +133,10 @@ android {
             .get().toString()
 
         kotlinCompilerExtensionVersion = compilerVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = AndroidConfig.javaVersion.toString()
     }
 }
 
