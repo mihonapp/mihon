@@ -1,10 +1,10 @@
-import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
     id("tachiyomi.lint")
+    id("base-setup")
     kotlin("android")
 }
 
@@ -165,18 +165,6 @@ androidComponents {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree
         it.packaging.resources.excludes.add("META-INF/*.version")
-    }
-}
-
-val libs = the<LibrariesForLibs>()
-dependencies {
-    coreLibraryDesugaring(libs.desugar)
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-    testLogging {
-        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     }
 }
 
