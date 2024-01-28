@@ -26,7 +26,7 @@ object SevenZUtil {
             .onEachIndexed { i, it ->
                 if (i > 0) return@onEachIndexed
                 val method = it.contentMethods.first().method
-                if(method !in GoodMethods) notifySlowArchives(method.name)
+                if (method !in GoodMethods) notifySlowArchives(method.name)
             }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .map(::getInputStream)
