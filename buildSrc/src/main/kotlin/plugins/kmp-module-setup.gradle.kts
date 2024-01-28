@@ -1,10 +1,12 @@
+package plugins
+
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("com.android.library")
     id("tachiyomi.lint")
-    kotlin("android")
+    kotlin("multiplatform")
 }
 
 android {
@@ -20,21 +22,21 @@ android {
             version = AndroidConfig.ndk
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
-    }
 
-    kotlinOptions {
-        jvmTarget = AndroidConfig.javaVersion.toString()
+    compileOptions {
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    testLogging {
-        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+kotlin {
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = AndroidConfig.javaVersion.toString()
+            }
+        }
     }
 }
 
@@ -43,3 +45,9 @@ dependencies {
     coreLibraryDesugaring(libs.desugar)
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
+}

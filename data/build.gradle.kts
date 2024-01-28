@@ -1,5 +1,5 @@
 plugins {
-    id("android-module-setup")
+    id("plugins.android-module-setup")
     kotlin("plugin.serialization")
     id("app.cash.sqldelight")
 }

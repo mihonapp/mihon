@@ -1,5 +1,5 @@
 plugins {
-    id("kmp-module-setup")
+    id("plugins.kmp-module-setup")
     id("dev.icerock.mobile.multiplatform-resources")
 }
 

@@ -1,5 +1,5 @@
 plugins {
-    id("android-application-setup")
+    id("plugins.android-application-setup")
     id("com.mikepenz.aboutlibraries.plugin")
     kotlin("plugin.serialization")
     id("com.github.zellius.shortcut-helper")
