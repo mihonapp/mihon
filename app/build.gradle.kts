@@ -22,8 +22,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 3
-        versionName = "0.16.2"
+        versionCode = 4
+        versionName = "0.16.3"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
