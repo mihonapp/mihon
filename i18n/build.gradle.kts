@@ -1,3 +1,5 @@
+import extensions.registerLocalesConfigTask
+
 plugins {
     id("plugins.kmp-module-setup")
     id("dev.icerock.mobile.multiplatform-resources")
