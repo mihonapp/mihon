@@ -20,6 +20,7 @@ import eu.kanade.presentation.more.settings.widget.AppThemeModePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.AppThemePreferenceWidget
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -114,6 +115,16 @@ object SettingsAppearanceScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_app_language),
                     onClick = { navigator.push(AppLanguageScreen()) },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = uiPreferences.fontSize(),
+                    title = stringResource(MR.strings.pref_font_size),
+                    entries = persistentMapOf(
+                        0.75f to stringResource(MR.strings.pref_font_size_small),
+                        1f to stringResource(MR.strings.pref_font_size_normal),
+                        1.25f to stringResource(MR.strings.pref_font_size_large),
+                        1.5f to stringResource(MR.strings.pref_font_size_huge),
+                    ),
                 ),
                 Preference.PreferenceItem.ListPreference(
                     pref = uiPreferences.tabletUiMode(),

@@ -30,6 +30,8 @@ class UiPreferences(
 
     fun tabletUiMode() = preferenceStore.getEnum("tablet_ui_mode", TabletUiMode.AUTOMATIC)
 
+    fun fontSize() = preferenceStore.getFloat("font_size", 1f)
+
     companion object {
         fun dateFormat(format: String): DateFormat = when (format) {
             "" -> DateFormat.getDateInstance(DateFormat.SHORT)
