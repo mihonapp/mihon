@@ -240,7 +240,9 @@ private fun DetailsHeader(
                             Shared: ${extension.isShared}
                             Repository: ${extension.repoUrl}
                         """.trimIndent()
-                    } else ""
+                    } else {
+                        ""
+                    }
                     context.copyToClipboard("Extension Debug information", extDebugInfo)
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
