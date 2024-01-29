@@ -1,7 +1,7 @@
 package tachiyomi.domain.backup.service
 
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 
 class BackupPreferences(
     private val preferenceStore: PreferenceStore,

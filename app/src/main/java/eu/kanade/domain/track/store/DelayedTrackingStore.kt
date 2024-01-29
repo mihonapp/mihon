@@ -3,7 +3,7 @@ package eu.kanade.domain.track.store
 import android.content.Context
 import androidx.core.content.edit
 import logcat.LogPriority
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 
 class DelayedTrackingStore(context: Context) {
 

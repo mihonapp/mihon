@@ -12,8 +12,8 @@ import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.source.sourcePreferences
-import tachiyomi.core.preference.AndroidPreferenceStore
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.AndroidPreferenceStore
+import tachiyomi.core.common.preference.PreferenceStore
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 

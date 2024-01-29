@@ -1,7 +1,7 @@
 package eu.kanade.domain.extension.interactor
 
 import eu.kanade.domain.source.service.SourcePreferences
-import tachiyomi.core.preference.plusAssign
+import tachiyomi.core.common.preference.plusAssign
 
 class CreateExtensionRepo(private val preferences: SourcePreferences) {
 

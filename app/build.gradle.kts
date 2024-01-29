@@ -140,7 +140,7 @@ android {
 
 dependencies {
     implementation(projects.i18n)
-    implementation(projects.core)
+    implementation(projects.core.common)
     implementation(projects.coreMetadata)
     implementation(projects.sourceApi)
     implementation(projects.sourceLocal)

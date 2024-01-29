@@ -16,7 +16,7 @@ import okhttp3.Dns
 import okhttp3.FormBody
 import okhttp3.Headers
 import okhttp3.OkHttpClient
-import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy

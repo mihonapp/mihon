@@ -50,11 +50,11 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import logcat.LogPriority
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.storage.displayablePath
-import tachiyomi.core.util.lang.launchNonCancellable
-import tachiyomi.core.util.lang.withUIContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.storage.displayablePath
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withUIContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.storage.service.StoragePreferences
@@ -100,7 +100,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     fun storageLocationPicker(
-        storageDirPref: tachiyomi.core.preference.Preference<String>,
+        storageDirPref: tachiyomi.core.common.preference.Preference<String>,
     ): ManagedActivityResultLauncher<Uri?, Uri?> {
         val context = LocalContext.current
 
@@ -122,7 +122,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     fun storageLocationText(
-        storageDirPref: tachiyomi.core.preference.Preference<String>,
+        storageDirPref: tachiyomi.core.common.preference.Preference<String>,
     ): String {
         val context = LocalContext.current
         val storageDir by storageDirPref.collectAsState()

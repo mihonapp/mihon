@@ -1,7 +1,7 @@
 package tachiyomi.domain.track.interactor
 
 import logcat.LogPriority
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.repository.TrackRepository
 
 class DeleteTrack(

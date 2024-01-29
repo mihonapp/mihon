@@ -26,10 +26,10 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.getBitmapOrNull
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
-import tachiyomi.core.Constants
-import tachiyomi.core.i18n.pluralStringResource
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.util.lang.launchUI
+import tachiyomi.core.common.Constants
+import tachiyomi.core.common.i18n.pluralStringResource
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga

@@ -27,7 +27,7 @@ import okio.Source
 import okio.buffer
 import okio.sink
 import okio.source
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaCover
 import tachiyomi.domain.source.service.SourceManager

@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import tachiyomi.core.preference.Preference
+import tachiyomi.core.common.preference.Preference
 
 /**
  * Common configuration for all viewers.

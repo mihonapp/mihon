@@ -2,8 +2,8 @@ package eu.kanade.domain.track.service
 
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
