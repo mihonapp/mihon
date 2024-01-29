@@ -1,9 +1,12 @@
 package plugins
 
+import config.AndroidConfig
+import extensions.getBuildTime
+import extensions.getCommitCount
+import extensions.getGitSha
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import extensions.*
 
 plugins {
     id("com.android.application")

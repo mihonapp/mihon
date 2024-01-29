@@ -1,3 +1,5 @@
+package config
+
 import org.gradle.api.JavaVersion
 
 object AndroidConfig {

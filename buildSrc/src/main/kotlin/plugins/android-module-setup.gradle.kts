@@ -1,5 +1,6 @@
 package plugins
 
+import config.AndroidConfig
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 

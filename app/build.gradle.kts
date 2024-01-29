@@ -1,3 +1,5 @@
+import config.AndroidConfig
+
 plugins {
     id("plugins.android-application-setup")
     id("com.mikepenz.aboutlibraries.plugin")
