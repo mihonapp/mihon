@@ -1,14 +1,26 @@
+import config.AndroidConfig
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("com.android.test")
+    id("plugins.detekt")
     kotlin("android")
 }
 
 android {
     namespace = "tachiyomi.macrobenchmark"
 
+    compileSdk = AndroidConfig.compileSdk
     defaultConfig {
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.enabledRules"] = "BaselineProfile"
+
+        ndk {
+            version = AndroidConfig.ndk
+        }
     }
 
     buildTypes {
@@ -22,8 +34,21 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     targetProjectPath = ":app"
     experimentalProperties["android.experimental.self-instrumenting"] = true
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }
 
 dependencies {
@@ -31,6 +56,7 @@ dependencies {
     implementation(androidx.test.espresso.core)
     implementation(androidx.test.uiautomator)
     implementation(androidx.benchmark.macro)
+    coreLibraryDesugaring(libs.desugar)
 }
 
 androidComponents {

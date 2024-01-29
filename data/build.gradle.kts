@@ -1,16 +1,11 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    id("plugins.android-module-setup")
     kotlin("plugin.serialization")
     id("app.cash.sqldelight")
 }
 
 android {
     namespace = "tachiyomi.data"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
 
     sqldelight {
         databases {

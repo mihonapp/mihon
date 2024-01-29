@@ -1,15 +1,9 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    id("plugins.android-module-setup")
 }
 
 android {
     namespace = "tachiyomi.presentation.widget"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 
     buildFeatures {
         compose = true

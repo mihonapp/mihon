@@ -1,3 +1,5 @@
+package extensions
+
 import org.gradle.api.Project
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat

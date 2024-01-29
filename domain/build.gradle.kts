@@ -1,16 +1,10 @@
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    id("plugins.android-module-setup")
     kotlin("plugin.serialization")
 }
 
 android {
     namespace = "tachiyomi.domain"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {
