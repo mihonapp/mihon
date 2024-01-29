@@ -228,20 +228,24 @@ private fun DetailsHeader(
                 )
                 .clickable {
                     val extDebugInfo = buildString {
-                        append("""
-                        Extension name: ${extension.name} (lang: ${extension.lang}; package: ${extension.pkgName})
-                        Extension version: ${extension.versionName} (lib: ${extension.libVersion}; version code: ${extension.versionCode})
-                        NSFW: ${extension.isNsfw}
-                        """.trimIndent())
+                        append(
+                            """
+                            Extension name: ${extension.name} (lang: ${extension.lang}; package: ${extension.pkgName})
+                            Extension version: ${extension.versionName} (lib: ${extension.libVersion}; version code: ${extension.versionCode})
+                            NSFW: ${extension.isNsfw}
+                            """.trimIndent()
+                        )
 
                         if (extension is Extension.Installed) {
                             append("\n\n")
-                            append("""
-                            Update available: ${extension.hasUpdate}
-                            Obsolete: ${extension.isObsolete}
-                            Shared: ${extension.isShared}
-                            Repository: ${extension.repoUrl} 
-                            """.trimIndent())
+                            append(
+                                """
+                                Update available: ${extension.hasUpdate}
+                                Obsolete: ${extension.isObsolete}
+                                Shared: ${extension.isShared}
+                                Repository: ${extension.repoUrl} 
+                                """.trimIndent()
+                            )
                         }
                     }
                     context.copyToClipboard("Extension Debug information", extDebugInfo)
