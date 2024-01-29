@@ -658,4 +658,22 @@
     <string name="information_empty_repos">شما هیچ مخزنی برای تنظیم ندارید.</string>
     <string name="action_open_repo">مخزن منبع باز</string>
     <string name="pref_flash_page_summ">مقدار رد باقی مانده در نمایش گر های E-ink کاهش میابد</string>
+    <string name="onboarding_storage_action_select">انتخاب یک پوشه</string>
+    <string name="onboarding_storage_selection_required">یک پوشه باید انتخاب شود</string>
+    <string name="onboarding_storage_help_action">راهنمای زخیره سازی</string>
+    <string name="onboarding_permission_install_apps">مجوز نصب برنامه ها</string>
+    <string name="action_create">ایجاد کردن</string>
+    <string name="invalid_backup_file_error">خطای کامل:</string>
+    <string name="app_settings">تنظیمات برنامه</string>
+    <string name="source_settings">تنظیمات منبع</string>
+    <string name="private_settings">حاوی تنظیمات حساس (یه عنوان مثال رمز ورود ناظر)</string>
+    <string name="create_backup_file_error">فایل پشتیبانی ایجاد نشد</string>
+    <string name="pref_storage_usage">استفاده از فظای زخیره سازی</string>
+    <string name="available_disk_space_info">در دسترس: %1$s / کل:%2$s</string>
+    <string name="pref_auto_clear_chapter_cache">هنگام راه‌اندازی برنامه، حافظه پنهان قسمت را پاک کنید</string>
+    <string name="syncing_library">درحال همگام سازی کتاب خانه</string>
+    <string name="pref_storage_location_info">قابل استفاده برای به روز رسانی خودکار، بارگیری قسمت ها، و منابع محلی.</string>
+    <string name="last_auto_backup_info">آخرین پشتیبان گیری خودکار: %s</string>
+    <string name="pref_dns_over_https">DNS بیش از HTTPS (DoH)</string>
+    <string name="library_sync_complete">همگام سازی کتاب خانه کامل شد</string>
 </resources>
