@@ -14,13 +14,13 @@ sealed interface Format {
 
     companion object {
 
-        fun valueOf(file: UniFile) = with(file) {
-            when {
-                isDirectory -> Directory(this)
-                extension.equals("zip", true) || extension.equals("cbz", true) -> Zip(this)
-                extension.equals("7z", true) || extension.equals("cb7", true) -> SevenZip(this)
-                extension.equals("rar", true) || extension.equals("cbr", true) -> Rar(this)
-                extension.equals("epub", true) -> Epub(this)
+        fun valueOf(file: UniFile): Format {
+            if (file.isDirectory) return Directory(file)
+            return when (file.extension?.lowercase()) {
+                "zip", "cbz" -> Zip(file)
+                "7z", "cb7" -> SevenZip(file)
+                "rar", "cbr" -> Rar(file)
+                "epub" -> Epub(file)
                 else -> throw UnknownFormatException()
             }
         }
