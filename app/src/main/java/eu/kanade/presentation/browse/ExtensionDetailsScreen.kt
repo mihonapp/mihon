@@ -227,21 +227,22 @@ private fun DetailsHeader(
                     bottom = MaterialTheme.padding.small,
                 )
                 .clickable {
-                    val extDebugInfo = """
+                    val extDebugInfo = buildString {
+                        append("""
                         Extension name: ${extension.name} (lang: ${extension.lang}; package: ${extension.pkgName})
                         Extension version: ${extension.versionName} (lib: ${extension.libVersion}; version code: ${extension.versionCode})
                         NSFW: ${extension.isNsfw}
-                    """.trimIndent() + if (extension is Extension.Installed) {
-                        // extra line to not continue in the last line of previous output
-                        """
-                            
+                        """.trimIndent())
+
+                        if (extension is Extension.Installed) {
+                            append("\n\n")
+                            append("""
                             Update available: ${extension.hasUpdate}
                             Obsolete: ${extension.isObsolete}
                             Shared: ${extension.isShared}
-                            Repository: ${extension.repoUrl}
-                        """.trimIndent()
-                    } else {
-                        ""
+                            Repository: ${extension.repoUrl} 
+                            """.trimIndent())
+                        }
                     }
                     context.copyToClipboard("Extension Debug information", extDebugInfo)
                 },
