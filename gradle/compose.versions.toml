@@ -1,7 +1,7 @@
 [versions]
 compiler = "1.5.8"
-compose-bom = "2024.01.00-alpha01"
-accompanist = "0.33.2-alpha"
+compose-bom = "2024.01.00-alpha03"
+accompanist = "0.34.0"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.8.2"
