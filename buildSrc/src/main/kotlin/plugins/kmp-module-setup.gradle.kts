@@ -5,7 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("com.android.library")
-    id("tachiyomi.lint")
+    id("plugins.detekt")
     kotlin("multiplatform")
 }
 

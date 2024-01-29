@@ -7,7 +7,7 @@ import extensions.*
 
 plugins {
     id("com.android.application")
-    id("tachiyomi.lint")
+    id("plugins.detekt")
     kotlin("android")
 }
 

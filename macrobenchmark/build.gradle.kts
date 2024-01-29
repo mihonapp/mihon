@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("com.android.test")
-    id("tachiyomi.lint")
+    id("plugins.detekt")
     kotlin("android")
 }
 
