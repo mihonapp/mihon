@@ -105,7 +105,7 @@ class ChapterLoader(
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Zip -> ZipPageLoader(tempFileManager.createTempFile(format.file))
                     is Format.SevenZip -> try {
-                        SevenZipPageLoader(tempFileManager.createTempFile(format.file)) {
+                        SevenZipPageLoader(format.file) {
                             GlobalScope.launchUI {
                                 context.toast(context.stringResource(MR.strings.loader_7zip_slow_archives, it))
                             }

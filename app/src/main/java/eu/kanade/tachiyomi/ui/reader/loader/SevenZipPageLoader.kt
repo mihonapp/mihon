@@ -1,20 +1,21 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.storage.SevenZUtil.getImages
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
-import java.io.File
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 
 /**
  * Loader used to load a chapter from a .7z or .cb7 file.
  */
 internal class SevenZipPageLoader(
-    private val file: File,
+    private val file: UniFile,
     private val notifySlowArchive: (method: String) -> Unit,
 ) : PageLoader() {
 
-    private val zip by lazy { SevenZFile(file) }
+    private val zip by lazy { SevenZFile(SeekableInMemoryByteChannel(file.openInputStream().readBytes())) }
 
     override var isLocal: Boolean = true
 
