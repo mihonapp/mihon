@@ -338,12 +338,14 @@ class ExtensionManager(
         }
 
         override fun onExtensionUntrusted(extension: Extension.Untrusted) {
-            _installedExtensionsFlow.value
+            val installedExtension = _installedExtensionsFlow.value
                 .find { it.pkgName == extension.pkgName }
-                ?.also {
-                    _installedExtensionsFlow.value -= it
-                }
-            _untrustedExtensionsFlow.value += extension
+
+            if (installedExtension != null) {
+                _installedExtensionsFlow.value -= installedExtension
+            } else {
+                _untrustedExtensionsFlow.value += extension
+            }
         }
 
         override fun onPackageUninstalled(pkgName: String) {
