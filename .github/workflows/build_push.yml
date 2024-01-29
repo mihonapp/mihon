@@ -99,7 +99,7 @@ jobs:
             | x86 | ${{ env.APK_X86_SHA }} |
             | x86_64 | ${{ env.APK_X86_64_SHA }} |
             
-            If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
+            ## If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
           files: |
             mihon-${{ env.VERSION_TAG }}.apk
             mihon-arm64-v8a-${{ env.VERSION_TAG }}.apk
