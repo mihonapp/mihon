@@ -91,10 +91,14 @@ class ExtensionsScreenModel(
                     itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_updates_pending)] = updates
                 }
 
-                val installed = _installed.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
                 val untrusted = _untrusted.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
-                if (installed.isNotEmpty() || untrusted.isNotEmpty()) {
-                    itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_installed)] = installed + untrusted
+                if (untrusted.isNotEmpty()) {
+                    itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_untrusted)] = untrusted
+                }
+
+                val installed = _installed.filter(queryFilter(searchQuery)).map(extensionMapper(downloads))
+                if (installed.isNotEmpty()) {
+                    itemsGroups[ExtensionUiModel.Header.Resource(MR.strings.ext_installed)] = installed
                 }
 
                 val languagesWithExtensions = _available
