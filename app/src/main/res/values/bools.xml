@@ -3,4 +3,5 @@
     <bool name="lightStatusBar">true</bool>
     <bool name="lightNavigationBar">false</bool>
     <bool name="elevationOverlayEnabled">false</bool>
+    <bool name="enablePredictiveBack">false</bool>
 </resources>
