@@ -669,7 +669,7 @@
     <string name="hour_short">%dh</string>
     <string name="minute_short">%dm</string>
     <string name="label_used">En uso</string>
-    <string name="not_applicable">¿?</string>
+    <string name="not_applicable">N/A</string>
     <string name="label_tracked_titles">En servicios de seguimiento</string>
     <string name="label_downloaded">Descargados</string>
     <string name="label_stats">Estadísticas</string>
