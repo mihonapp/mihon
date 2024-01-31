@@ -492,7 +492,7 @@
     <string name="error_saving_cover">Gagal menyimpan sampul</string>
     <string name="cover_saved">Sampul disimpan</string>
     <string name="manga_cover">Sampul</string>
-    <string name="off">Nonaktif</string>
+    <string name="off">Matikan</string>
     <string name="on">Aktif</string>
     <string name="tracking_guide">Panduan pelacakan</string>
     <string name="categorized_display_settings">Pengaturan per-kategori untuk urutan</string>
