@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
 
       - name: Setup Android SDK
         run: |
@@ -33,7 +33,7 @@ jobs:
           distribution: adopt
 
       - name: Build app and run unit tests
-        uses: gradle/gradle-command-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: detekt assembleStandardRelease testReleaseUnitTest
 
