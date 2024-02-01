@@ -32,10 +32,13 @@ jobs:
           java-version: 17
           distribution: adopt
 
-      - name: Build app and run unit tests
+      - name: Set up gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: detekt assembleStandardRelease testReleaseUnitTest
+          gradle-version: 8
+
+      - name: Build app and run unit tests
+        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
 
       # Sign APK and create release for tags
 
