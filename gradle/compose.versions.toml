@@ -1,7 +1,7 @@
 [versions]
 compiler = "1.5.8"
-compose-bom = "2023.12.00-alpha04"
-accompanist = "0.33.2-alpha"
+compose-bom = "2024.01.00-alpha03"
+accompanist = "0.34.0"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.8.2"
@@ -23,5 +23,3 @@ glance = "androidx.glance:glance-appwidget:1.0.0"
 
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-
-lintchecks = { module = "com.slack.lint.compose:compose-lint-checks", version = "1.2.0" }

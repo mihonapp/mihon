@@ -2,8 +2,8 @@ package eu.kanade.domain.track.service
 
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
@@ -19,9 +19,15 @@ class TrackPreferences(
         "",
     )
 
+    fun trackAuthExpired(tracker: Tracker) = preferenceStore.getBoolean(
+        Preference.privateKey("pref_tracker_auth_expired_${tracker.id}"),
+        false,
+    )
+
     fun setCredentials(tracker: Tracker, username: String, password: String) {
         trackUsername(tracker).set(username)
         trackPassword(tracker).set(password)
+        trackAuthExpired(tracker).set(false)
     }
 
     fun trackToken(tracker: Tracker) = preferenceStore.getString(Preference.privateKey("track_token_${tracker.id}"), "")

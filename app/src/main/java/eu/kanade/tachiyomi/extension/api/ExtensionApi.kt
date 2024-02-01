@@ -13,10 +13,10 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.time.Instant
 import kotlin.time.Duration.Companion.days

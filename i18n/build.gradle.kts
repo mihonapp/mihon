@@ -6,14 +6,18 @@ plugins {
 
 kotlin {
     androidTarget()
+
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
                 api(libs.moko.core)
             }
         }
-        val androidMain by getting {
-            dependsOn(commonMain) // https://github.com/icerockdev/moko-resources/issues/562
+
+        androidMain {
+            dependsOn(commonMain)  // https://github.com/icerockdev/moko-resources/issues/562
         }
     }
 }

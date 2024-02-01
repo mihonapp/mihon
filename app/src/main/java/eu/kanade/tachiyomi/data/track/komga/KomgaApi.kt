@@ -14,8 +14,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 
 private const val READLIST_API = "/api/v1/readlists"
@@ -67,7 +67,7 @@ class KomgaApi(
                 track.apply {
                     cover_url = "$url/thumbnail"
                     tracking_url = url
-                    total_chapters = progress.maxNumberSort.toInt()
+                    total_chapters = progress.maxNumberSort.toLong()
                     status = when (progress.booksCount) {
                         progress.booksUnreadCount -> Komga.UNREAD
                         progress.booksReadCount -> Komga.COMPLETED

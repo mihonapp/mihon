@@ -3,8 +3,8 @@ package eu.kanade.tachiyomi
 import android.content.Context
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 
 object Migrations {
 

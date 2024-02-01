@@ -88,7 +88,7 @@ fun TrackInfoDialogHome(
                 TrackInfoItem(
                     title = item.track.title,
                     tracker = item.tracker,
-                    status = item.tracker.getStatus(item.track.status.toInt()),
+                    status = item.tracker.getStatus(item.track.status),
                     onStatusClick = { onStatusClick(item) },
                     chapters = "${item.track.lastChapterRead.toInt()}".let {
                         val totalChapters = item.track.totalChapters

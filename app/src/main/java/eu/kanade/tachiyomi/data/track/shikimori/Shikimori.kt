@@ -18,12 +18,12 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     companion object {
-        const val READING = 1
-        const val COMPLETED = 2
-        const val ON_HOLD = 3
-        const val DROPPED = 4
-        const val PLAN_TO_READ = 5
-        const val REREADING = 6
+        const val READING = 1L
+        const val COMPLETED = 2L
+        const val ON_HOLD = 3L
+        const val DROPPED = 4L
+        const val PLAN_TO_READ = 5L
+        const val REREADING = 6L
 
         private val SCORE_LIST = IntRange(0, 10)
             .map(Int::toString)
@@ -49,7 +49,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
                 } else if (track.status != REREADING) {
                     track.status = READING
@@ -79,7 +79,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
         } else {
             // Set default fields if it's not found in the list
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
-            track.score = 0F
+            track.score = 0.0
             add(track)
         }
     }
@@ -101,11 +101,11 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     override fun getLogoColor() = Color.rgb(40, 40, 40)
 
-    override fun getStatusList(): List<Int> {
+    override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ, REREADING)
     }
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         READING -> MR.strings.reading
         PLAN_TO_READ -> MR.strings.plan_to_read
         COMPLETED -> MR.strings.completed
@@ -115,11 +115,11 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = REREADING
+    override fun getRereadingStatus(): Long = REREADING
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override suspend fun login(username: String, password: String) = login(password)
 

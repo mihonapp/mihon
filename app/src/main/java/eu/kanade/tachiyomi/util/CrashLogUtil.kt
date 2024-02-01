@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
-import tachiyomi.core.util.lang.withNonCancellableContext
-import tachiyomi.core.util.lang.withUIContext
+import tachiyomi.core.common.util.lang.withNonCancellableContext
+import tachiyomi.core.common.util.lang.withUIContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -21,7 +21,7 @@ class CrashLogUtil(
 
     suspend fun dumpLogs() = withNonCancellableContext {
         try {
-            val file = context.createFileInCacheDir("tachiyomi_crash_logs.txt")
+            val file = context.createFileInCacheDir("mihon_crash_logs.txt")
 
             file.appendText(getDebugInfo() + "\n\n")
             getExtensionsInfo()?.let { file.appendText("$it\n\n") }

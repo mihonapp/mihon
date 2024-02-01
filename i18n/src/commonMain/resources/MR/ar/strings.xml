@@ -232,7 +232,7 @@
     <string name="label_extensions">الإضافات</string>
     <string name="label_extension_info">معلومات الإضافة</string>
     <string name="action_display_download_badge">الفصول المحملة</string>
-    <string name="ext_update">تحديث</string>
+    <string name="ext_update">حدث</string>
     <string name="ext_install">تثبيت</string>
     <string name="ext_pending">المُعلقة</string>
     <string name="ext_downloading">جارى التنزيل</string>
@@ -242,11 +242,9 @@
     <string name="ext_untrusted">غير موثوق فيه</string>
     <string name="ext_uninstall">إلغاء التثبيت</string>
     <string name="untrusted_extension">إضافة ذات ريبة</string>
-    <string name="untrusted_extension_message">هذه اﻹضافة موقَّعة بشهادة ذات ريبة ولم تفعَّل.
+    <string name="untrusted_extension_message">يمكن للملحقات الخبيثة قراءة أي بيانات اعتماد مخزنة لتسجيل الدخول أو تنفيذ تعليمات برمجية عشوائية.
 \n
-\nيمكن لأي إضافة خبيثة قراءة بيانات اعتماد تسجيل الدخول المخزَّنة أو تنفيذ تعليمات برمجية عشوائية.
-\n
-\nأنت تقبل هذه المخاطر إن وثقت بالشهادة.</string>
+\nمن خلال الوثوق بهذا الامتداد، فإنك تقبل هذه المخاطر.</string>
     <string name="pref_double_tap_anim_speed">سرعة مؤثر النقر المزدوج</string>
     <string name="pager_viewer">عارض الصفحات</string>
     <string name="double_tap_anim_speed_0">لا مؤثرات</string>
@@ -372,7 +370,7 @@
     <string name="label_data">البيانات</string>
     <string name="backup_restore_missing_sources">المصادر المفقودة:</string>
     <string name="invalid_backup_file_missing_manga">النسخة الإحتياطية لا تحتوي على أيّة إدخالات المكتبة.</string>
-    <string name="invalid_backup_file">ملفُّ النسخ الاحتياطيِّ غير صالح</string>
+    <string name="invalid_backup_file">ملف النسخ الاحتياطي غير صالح:</string>
     <string name="tracking_info">مزامنة أحادية تُحدِّث قراءة الفصول في المتتبعات الخارجية، ولك تعيين التتبِّع لكلِّ مدخلة على حدى، وذلك من زرِّ التتبع فيهم.</string>
     <string name="pref_library_update_refresh_metadata_summary">تحقق من وجود غلاف جديد وتفاصيل جديدة عند تحديث المكتبة</string>
     <string name="pref_library_update_refresh_metadata">تحديث البيانات الوصفية تلقائياً</string>
@@ -456,9 +454,7 @@
     <string name="action_order_by_upload_date">حسب تاريخ الرفع</string>
     <string name="action_order_by_chapter_number">حسب رقم الفصل</string>
     <string name="pref_dns_over_https">إستخدام DNS عبر HTTPS (DoH)</string>
-    <string name="backup_restore_content_full">تم استيراد البيانات من ملف نسخ الاحتياطي.
-\n
-\nيتوجب تثبيت الإضافات المفقودة و تسجيل الدخول إلى منصات التعقب تالياً لاستعمالهم.</string>
+    <string name="backup_restore_content_full">قد تحتاج إلى تثبيت أي إضافات مفقودة وتسجيل الدخول إلى خدمات التتبع بعد ذلك لاستخدامها.</string>
     <string name="nav_zone_right">يمين</string>
     <string name="nav_zone_left">يسار</string>
     <string name="nav_zone_next">التالي</string>
@@ -773,4 +769,33 @@
 \nوالأحسن أن يكون المجلَّد مخصوصًا لذلك.
 \n
 \nالمجلَّد المحدَّد: %2$s</string>
+    <string name="onboarding_permission_install_apps">إذن تثبيت التطبيقات</string>
+    <string name="onboarding_permission_install_apps_description">لتثبيت ملحقات المصدر.</string>
+    <string name="onboarding_permission_notifications">إذن الإشعار</string>
+    <string name="onboarding_permission_notifications_description">احصل على تنبيهات لتحديثات المكتبة والمزيد.</string>
+    <string name="onboarding_permission_ignore_battery_opts">استخدام البطارية في الخلفية</string>
+    <string name="onboarding_permission_action_grant">منح</string>
+    <string name="ext_permission_install_apps_warning">الأذونات مطلوبة لتثبيت الإضافات. انقر هنا لمنحها.</string>
+    <string name="ext_revoke_trust">إبطال الإضافات غير المعروفة الموثوق بها</string>
+    <string name="label_extension_repos">مستودع الإضافات</string>
+    <string name="label_add_repo_input">رابط المستودع</string>
+    <string name="action_add_repo_message">إضافة مستودعات إضافية إلى ميهون. يجب أن يكون هذا الرابط ينتهي بـ \"index.min.json\".</string>
+    <string name="error_repo_exists">هذا المستودع موجود بالفعل!</string>
+    <string name="action_delete_repo">حذف المستودع</string>
+    <string name="invalid_repo_name">رابط المستودع غير صالح</string>
+    <string name="delete_repo_confirmation">هل ترغب في حذف \"1%s\" من المستودع؟</string>
+    <string name="action_open_repo">مستودع مفتوح المصدر</string>
+    <string name="invalid_backup_file_error">الخطأ الكامل:</string>
+    <string name="private_settings">تضمين إعدادات حساسة (على سبيل المثال، رموز تسجيل دخول المتتبع)</string>
+    <string name="manga_interval_expected_update_soon">قريباً</string>
+    <string name="manga_interval_custom_amount">تكرار تحديث مخصص:</string>
+    <string name="onboarding_storage_help_info">هل تقوم بالتحديث من إصدار أقدم ولست متأكداً مما تختاره؟ ارجع إلى دليل التخزين لمزيد من المعلومات.</string>
+    <string name="onboarding_storage_help_action">دليل التخزين</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">تجنّب الانقطاعات في تحديثات المكتبة الطويلة الأمد والتنزيلات واستعادة النسخ الاحتياطية.</string>
+    <string name="pref_library_update_smart_update">تحديث ذكي</string>
+    <string name="theme_nord">Nord</string>
+    <string name="information_empty_repos">لم يتم تعيين أي مستودع .</string>
+    <string name="action_add_repo">إضافة مستودع</string>
+    <string name="manga_interval_expected_update">من المتوقع أن يتم إصدار فصول جديدة في حوالي 1%1$s، والتحقق من كل 2%2$s .</string>
+    <string name="available_disk_space_info">متاح: %1$s / الكل: %2$s</string>
 </resources>

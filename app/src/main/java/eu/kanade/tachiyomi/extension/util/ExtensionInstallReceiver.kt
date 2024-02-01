@@ -14,8 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import logcat.LogPriority
-import tachiyomi.core.util.lang.launchNow
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.launchNow
+import tachiyomi.core.common.util.system.logcat
 
 /**
  * Broadcast receiver that listens for the system's packages installed, updated or removed, and only

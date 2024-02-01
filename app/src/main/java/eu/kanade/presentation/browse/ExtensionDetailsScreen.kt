@@ -53,6 +53,7 @@ import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
@@ -224,7 +225,31 @@ private fun DetailsHeader(
                     end = MaterialTheme.padding.medium,
                     top = MaterialTheme.padding.medium,
                     bottom = MaterialTheme.padding.small,
-                ),
+                )
+                .clickable {
+                    val extDebugInfo = buildString {
+                        append(
+                            """
+                            Extension name: ${extension.name} (lang: ${extension.lang}; package: ${extension.pkgName})
+                            Extension version: ${extension.versionName} (lib: ${extension.libVersion}; version code: ${extension.versionCode})
+                            NSFW: ${extension.isNsfw}
+                            """.trimIndent()
+                        )
+
+                        if (extension is Extension.Installed) {
+                            append("\n\n")
+                            append(
+                                """
+                                Update available: ${extension.hasUpdate}
+                                Obsolete: ${extension.isObsolete}
+                                Shared: ${extension.isShared}
+                                Repository: ${extension.repoUrl} 
+                                """.trimIndent()
+                            )
+                        }
+                    }
+                    context.copyToClipboard("Extension Debug information", extDebugInfo)
+                },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ExtensionIcon(

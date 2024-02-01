@@ -1,6 +1,6 @@
 package eu.kanade.tachiyomi
 
-import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.common.util.system.ImageUtil
 
 /**
  * Used by extensions.

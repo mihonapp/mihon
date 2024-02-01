@@ -17,7 +17,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(projects.core)
+                implementation(projects.core.common)
                 implementation(projects.coreMetadata)
 
                 // Move ChapterRecognition to separate module?

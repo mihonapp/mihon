@@ -35,7 +35,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
                 } else {
                     track.status = READING
@@ -64,7 +64,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         } else {
             // Set default fields if it's not found in the list
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
-            track.score = 0F
+            track.score = 0.0
             add(track)
             update(track)
         }
@@ -87,11 +87,11 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
 
     override fun getLogoColor() = Color.rgb(240, 145, 153)
 
-    override fun getStatusList(): List<Int> {
+    override fun getStatusList(): List<Long> {
         return listOf(READING, COMPLETED, ON_HOLD, DROPPED, PLAN_TO_READ)
     }
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         READING -> MR.strings.reading
         PLAN_TO_READ -> MR.strings.plan_to_read
         COMPLETED -> MR.strings.completed
@@ -100,11 +100,11 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = -1
+    override fun getRereadingStatus(): Long = -1
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override suspend fun login(username: String, password: String) = login(password)
 
@@ -137,11 +137,11 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     }
 
     companion object {
-        const val READING = 3
-        const val COMPLETED = 2
-        const val ON_HOLD = 4
-        const val DROPPED = 5
-        const val PLAN_TO_READ = 1
+        const val READING = 3L
+        const val COMPLETED = 2L
+        const val ON_HOLD = 4L
+        const val DROPPED = 5L
+        const val PLAN_TO_READ = 1L
 
         private val SCORE_LIST = IntRange(0, 10)
             .map(Int::toString)

@@ -19,10 +19,10 @@ fun Track.toDbTrack(): DbTrack = DbTrack.create(trackerId).also {
     it.remote_id = remoteId
     it.library_id = libraryId
     it.title = title
-    it.last_chapter_read = lastChapterRead.toFloat()
-    it.total_chapters = totalChapters.toInt()
-    it.status = status.toInt()
-    it.score = score.toFloat()
+    it.last_chapter_read = lastChapterRead
+    it.total_chapters = totalChapters
+    it.status = status
+    it.score = score
     it.tracking_url = remoteUrl
     it.started_reading_date = startDate
     it.finished_reading_date = finishDate
@@ -33,16 +33,14 @@ fun DbTrack.toDomainTrack(idRequired: Boolean = true): Track? {
     return Track(
         id = trackId,
         mangaId = manga_id,
-        trackerId = tracker_id.toLong(),
+        trackerId = tracker_id,
         remoteId = remote_id,
         libraryId = library_id,
         title = title,
-        lastChapterRead = last_chapter_read.toDouble(),
-        totalChapters = total_chapters.toLong(),
-        status = status.toLong(),
-        // Jank workaround due to precision issues while converting
-        // See https://github.com/tachiyomiorg/tachiyomi/issues/10343
-        score = score.toString().toDouble(),
+        lastChapterRead = last_chapter_read,
+        totalChapters = total_chapters,
+        status = status,
+        score = score,
         remoteUrl = tracking_url,
         startDate = started_reading_date,
         finishDate = finished_reading_date,

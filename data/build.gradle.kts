@@ -26,7 +26,7 @@ android {
 dependencies {
     implementation(projects.sourceApi)
     implementation(projects.domain)
-    implementation(projects.core)
+    implementation(projects.core.common)
 
     api(libs.bundles.sqldelight)
 }

@@ -180,7 +180,7 @@
     <string name="scale_type_fit_width">符合頁寬</string>
     <string name="scale_type_fit_height">符合頁高</string>
     <string name="scale_type_original_size">原始大小</string>
-    <string name="scale_type_smart_fit">智慧型填充</string>
+    <string name="scale_type_smart_fit">智慧填充</string>
     <string name="pref_zoom_start">縮放原點</string>
     <string name="zoom_start_automatic">自動</string>
     <string name="zoom_start_left">左邊</string>
@@ -304,7 +304,7 @@
     <string name="lock_always">立即</string>
     <string name="lock_when_idle">閒置時鎖定</string>
     <string name="lock_with_biometrics">上鎖應用程式</string>
-    <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面。</string>
+    <string name="secure_screen_summary">在切換應用程式時隱藏預覽，並禁止擷取螢幕畫面</string>
     <string name="secure_screen">防窺畫面</string>
     <string name="pref_category_security">隱私</string>
     <string name="hide_notification_content">隱藏通知內容</string>
@@ -790,7 +790,7 @@
     <string name="delete_repo_confirmation">確定要刪除「%s」儲存庫嗎？</string>
     <string name="action_delete_repo">刪除儲存庫</string>
     <string name="action_add_repo">新增儲存庫</string>
-    <string name="information_empty_repos">尚未新增任何儲存庫</string>
+    <string name="information_empty_repos">尚未新增任何儲存庫。</string>
     <string name="label_extension_repos">擴充套件儲存庫</string>
     <string name="onboarding_storage_help_action">儲存空間指南</string>
     <string name="onboarding_storage_help_info">從舊版升級而不確定該如何選擇嗎？請參閱儲存空間指南以取得更多資訊。</string>

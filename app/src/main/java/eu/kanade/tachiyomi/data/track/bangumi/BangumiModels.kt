@@ -16,7 +16,7 @@ data class Collection(
     val comment: String? = "",
     val ep_status: Int? = 0,
     val lasttouch: Int? = 0,
-    val rating: Float? = 0f,
+    val rating: Double? = 0.0,
     val status: Status? = Status(),
     val tag: List<String?>? = emptyList(),
     val user: User? = User(),
@@ -25,7 +25,7 @@ data class Collection(
 
 @Serializable
 data class Status(
-    val id: Int? = 0,
+    val id: Long? = 0,
     val name: String? = "",
     val type: String? = "",
 )

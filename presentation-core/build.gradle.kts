@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    api(projects.core)
+    api(projects.core.common)
     api(projects.i18n)
 
     // Compose
@@ -36,7 +36,6 @@ dependencies {
     debugImplementation(compose.ui.tooling)
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
-    lintChecks(compose.lintchecks)
 
     implementation(kotlinx.immutables)
 }

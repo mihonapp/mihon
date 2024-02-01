@@ -5,7 +5,7 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.source.repository.SourcePagingSourceType
 
 class SourceSearchPagingSource(source: CatalogueSource, val query: String, val filters: FilterList) :

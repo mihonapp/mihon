@@ -10,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -256,7 +256,7 @@ private fun Modifier.commonClickable(
         onClick = onClick,
         role = Role.Button,
         interactionSource = remember { MutableInteractionSource() },
-        indication = rememberRipple(
+        indication = ripple(
             bounded = false,
             radius = IconButtonTokens.StateLayerSize / 2,
         ),

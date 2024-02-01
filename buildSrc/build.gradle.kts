@@ -3,9 +3,10 @@ plugins {
 }
 
 dependencies {
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
     implementation(androidxLibs.gradle)
     implementation(kotlinLibs.gradle)
-    implementation(libs.ktlint)
+    implementation(libs.detekt.gradlePlugin)
     implementation(gradleApi())
 }
 

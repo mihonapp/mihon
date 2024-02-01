@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class ListItem(
     val series: Series? = null,
     @SerialName("list_id")
-    val listId: Int? = null,
+    val listId: Long? = null,
     val status: Status? = null,
     val priority: Int? = null,
 )
@@ -17,6 +17,6 @@ data class ListItem(
 fun ListItem.copyTo(track: Track): Track {
     return track.apply {
         this.status = listId ?: READING_LIST
-        this.last_chapter_read = this@copyTo.status?.chapter?.toFloat() ?: 0f
+        this.last_chapter_read = this@copyTo.status?.chapter?.toDouble() ?: 0.0
     }
 }

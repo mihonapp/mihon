@@ -8,10 +8,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.int
-import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -19,7 +19,7 @@ import java.util.Locale
 class KitsuSearchManga(obj: JsonObject) {
     val id = obj["id"]!!.jsonPrimitive.long
     private val canonicalTitle = obj["canonicalTitle"]!!.jsonPrimitive.content
-    private val chapterCount = obj["chapterCount"]?.jsonPrimitive?.intOrNull
+    private val chapterCount = obj["chapterCount"]?.jsonPrimitive?.longOrNull
     val subType = obj["subtype"]?.jsonPrimitive?.contentOrNull
     val original = try {
         obj["posterImage"]?.jsonObject?.get("original")?.jsonPrimitive?.content
@@ -28,7 +28,7 @@ class KitsuSearchManga(obj: JsonObject) {
         null
     }
     private val synopsis = obj["synopsis"]?.jsonPrimitive?.contentOrNull
-    private val rating = obj["averageRating"]?.jsonPrimitive?.contentOrNull?.toFloatOrNull()
+    private val rating = obj["averageRating"]?.jsonPrimitive?.contentOrNull?.toDoubleOrNull()
     private var startDate = obj["startDate"]?.jsonPrimitive?.contentOrNull?.let {
         val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         outputDf.format(Date(it.toLong() * 1000))
@@ -43,7 +43,7 @@ class KitsuSearchManga(obj: JsonObject) {
         cover_url = original ?: ""
         summary = synopsis ?: ""
         tracking_url = KitsuApi.mangaUrl(remote_id)
-        score = rating ?: -1f
+        score = rating ?: -1.0
         publishing_status = if (endDate == null) {
             "Publishing"
         } else {
@@ -57,7 +57,7 @@ class KitsuSearchManga(obj: JsonObject) {
 class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
     val id = manga["id"]!!.jsonPrimitive.int
     private val canonicalTitle = manga["attributes"]!!.jsonObject["canonicalTitle"]!!.jsonPrimitive.content
-    private val chapterCount = manga["attributes"]!!.jsonObject["chapterCount"]?.jsonPrimitive?.intOrNull
+    private val chapterCount = manga["attributes"]!!.jsonObject["chapterCount"]?.jsonPrimitive?.longOrNull
     val type = manga["attributes"]!!.jsonObject["mangaType"]?.jsonPrimitive?.contentOrNull.orEmpty()
     val original = manga["attributes"]!!.jsonObject["posterImage"]!!.jsonObject["original"]!!.jsonPrimitive.content
     private val synopsis = manga["attributes"]!!.jsonObject["synopsis"]!!.jsonPrimitive.content
@@ -82,8 +82,8 @@ class KitsuLibManga(obj: JsonObject, manga: JsonObject) {
         started_reading_date = KitsuDateHelper.parse(startedAt)
         finished_reading_date = KitsuDateHelper.parse(finishedAt)
         status = toTrackStatus()
-        score = ratingTwenty?.let { it.toInt() / 2f } ?: 0f
-        last_chapter_read = progress.toFloat()
+        score = ratingTwenty?.let { it.toInt() / 2.0 } ?: 0.0
+        last_chapter_read = progress.toDouble()
     }
 
     private fun toTrackStatus() = when (status) {

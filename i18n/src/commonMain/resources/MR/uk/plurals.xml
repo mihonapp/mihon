@@ -95,4 +95,10 @@
         <item quantity="many">%d днів</item>
         <item quantity="other">%d днів</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d репозиторій</item>
+        <item quantity="few">%d репозиторії</item>
+        <item quantity="many">%d репозиторіїв</item>
+        <item quantity="other">%d репозиторіїв</item>
+    </plurals>
 </resources>

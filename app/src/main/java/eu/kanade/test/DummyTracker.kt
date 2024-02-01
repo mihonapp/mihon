@@ -18,10 +18,10 @@ data class DummyTracker(
     override val isLoggedIn: Boolean = false,
     val valLogoColor: Int = Color.rgb(18, 25, 35),
     val valLogo: Int = R.drawable.ic_tracker_anilist,
-    val valStatuses: List<Int> = (1..6).toList(),
-    val valReadingStatus: Int = 1,
-    val valRereadingStatus: Int = 1,
-    val valCompletionStatus: Int = 2,
+    val valStatuses: List<Long> = (1L..6L).toList(),
+    val valReadingStatus: Long = 1L,
+    val valRereadingStatus: Long = 1L,
+    val valCompletionStatus: Long = 2L,
     val valScoreList: ImmutableList<String> = (0..10).map(Int::toString).toImmutableList(),
     val val10PointScore: Double = 5.4,
     val valSearchResults: List<TrackSearch> = listOf(),
@@ -34,29 +34,29 @@ data class DummyTracker(
 
     override fun getLogo(): Int = valLogo
 
-    override fun getStatusList(): List<Int> = valStatuses
+    override fun getStatusList(): List<Long> = valStatuses
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
-        1 -> MR.strings.reading
-        2 -> MR.strings.plan_to_read
-        3 -> MR.strings.completed
-        4 -> MR.strings.on_hold
-        5 -> MR.strings.dropped
-        6 -> MR.strings.repeating
+    override fun getStatus(status: Long): StringResource? = when (status) {
+        1L -> MR.strings.reading
+        2L -> MR.strings.plan_to_read
+        3L -> MR.strings.completed
+        4L -> MR.strings.on_hold
+        5L -> MR.strings.dropped
+        6L -> MR.strings.repeating
         else -> null
     }
 
-    override fun getReadingStatus(): Int = valReadingStatus
+    override fun getReadingStatus(): Long = valReadingStatus
 
-    override fun getRereadingStatus(): Int = valRereadingStatus
+    override fun getRereadingStatus(): Long = valRereadingStatus
 
-    override fun getCompletionStatus(): Int = valCompletionStatus
+    override fun getCompletionStatus(): Long = valCompletionStatus
 
     override fun getScoreList(): ImmutableList<String> = valScoreList
 
     override fun get10PointScore(track: Track): Double = val10PointScore
 
-    override fun indexToScore(index: Int): Float = getScoreList()[index].toFloat()
+    override fun indexToScore(index: Int): Double = getScoreList()[index].toDouble()
 
     override fun displayScore(track: Track): String =
         track.score.toString()
@@ -94,7 +94,7 @@ data class DummyTracker(
 
     override suspend fun setRemoteStatus(
         track: eu.kanade.tachiyomi.data.database.models.Track,
-        status: Int,
+        status: Long,
     ) = Unit
 
     override suspend fun setRemoteLastChapterRead(

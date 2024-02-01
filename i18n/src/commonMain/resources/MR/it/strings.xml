@@ -199,7 +199,7 @@
     <string name="update_weekly">Ogni settimana</string>
     <string name="default_category">Categoria predefinita</string>
     <string name="track">Tracking</string>
-    <string name="pref_category_tracking">Tracking</string>
+    <string name="pref_category_tracking">Tracciamento</string>
     <string name="default_category_summary">Chiedi sempre</string>
     <string name="pref_crop_borders">Ritaglia bordi</string>
     <string name="pref_read_with_volume_keys_inverted">Inverti i tasti del volume</string>
@@ -236,11 +236,9 @@
     <string name="ext_untrusted">Non attendibile</string>
     <string name="ext_uninstall">Disinstalla</string>
     <string name="untrusted_extension">Estensione non attendibile</string>
-    <string name="untrusted_extension_message">Questa estensione è stata firmata con un certificato non attendibile e non è stata attivata.
+    <string name="untrusted_extension_message">Le estensioni dannose possono leggere le credenziali di accesso memorizzate o eseguire codice arbitrario.
 \n
-\nUn\'estensione maliziosa potrebbe leggere credenziali di accesso salvate o eseguire codice dannoso.
-\n
-\nFidandoti di questo certificato accetti questi rischi.</string>
+\nFidandoti di questa estensione, accetti questi rischi.</string>
     <string name="pref_double_tap_anim_speed">Velocità animazioni doppio tocco</string>
     <string name="pager_viewer">Per pagina</string>
     <string name="double_tap_anim_speed_0">Senza animazione</string>
@@ -783,4 +781,23 @@
     <string name="private_settings">Includi impostazioni sensibili (es. token di login dei tracker)</string>
     <string name="onboarding_permission_action_grant">Consenti</string>
     <string name="exclude_scanlators">Escludi scanlator</string>
+    <string name="onboarding_storage_help_action">Guida all\'archiviazione</string>
+    <string name="label_extension_repos">Repository delle estensioni</string>
+    <string name="action_add_repo">Aggiungi repository</string>
+    <string name="label_add_repo_input">URL repository</string>
+    <string name="error_repo_exists">Questa repository esiste già!</string>
+    <string name="action_delete_repo">Elimina repository</string>
+    <string name="invalid_repo_name">URL repository non valida</string>
+    <string name="action_open_repo">Repository open source</string>
+    <string name="manga_interval_expected_update_soon">Presto</string>
+    <string name="manga_interval_custom_amount">Frequenza di aggiornamento personalizzata:</string>
+    <string name="onboarding_storage_help_info">State aggiornando da una versione precedente e non siete sicuri di cosa selezionare? Per ulteriori informazioni, consultare la guida all\'archiviazione</string>
+    <string name="theme_nord">Nord</string>
+    <string name="pref_library_update_smart_update">Aggiornamento intelligente</string>
+    <string name="ext_revoke_trust">Revoca le estensioni sconosciute affidabili</string>
+    <string name="information_empty_repos">Non hai repository impostate.</string>
+    <string name="action_add_repo_message">Aggiungi altri repository a Mihon. Questo dovrebbe essere un URL che termina con \"index.min.json\".</string>
+    <string name="delete_repo_confirmation">Vuoi eleminare la repository \"%s\"?</string>
+    <string name="invalid_backup_file_error">Errore completo:</string>
+    <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>
 </resources>
