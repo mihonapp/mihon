@@ -17,7 +17,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.gzip
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 import java.util.concurrent.TimeUnit
 
 class SyncYomiSyncService(
