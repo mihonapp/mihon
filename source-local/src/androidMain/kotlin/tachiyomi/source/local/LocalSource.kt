@@ -40,7 +40,6 @@ import tachiyomi.source.local.io.Format
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import tachiyomi.source.local.metadata.fillMetadata
 import uy.kohesive.injekt.injectLazy
-import java.io.File
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
@@ -146,8 +145,8 @@ actual class LocalSource(
 
         // Augment manga details based on metadata files
         try {
-            val mangaDir by lazy { fileSystem.getMangaDirectory(manga.url) }
-            val mangaDirFiles = fileSystem.getFilesInMangaDirectory(manga.url)
+            val mangaDir = fileSystem.getMangaDirectory(manga.url) ?: error("${manga.url} is not a valid directory")
+            val mangaDirFiles = mangaDir.listFiles().orEmpty()
 
             val comicInfoFile = mangaDirFiles
                 .firstOrNull { it.name == COMIC_INFO_FILE }
@@ -177,7 +176,7 @@ actual class LocalSource(
                     // Replace with ComicInfo.xml file
                     val comicInfo = manga.getComicInfo()
                     mangaDir
-                        ?.createFile(COMIC_INFO_FILE)
+                        .createFile(COMIC_INFO_FILE)
                         ?.openOutputStream()
                         ?.use {
                             val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
@@ -192,14 +191,12 @@ actual class LocalSource(
                         .filter(Archive::isSupported)
                         .toList()
 
-                    val folderPath = mangaDir?.filePath
-
-                    val copiedFile = copyComicInfoFileFromArchive(chapterArchives, folderPath)
+                    val copiedFile = copyComicInfoFileFromArchive(chapterArchives, mangaDir)
                     if (copiedFile != null) {
-                        setMangaDetailsFromComicInfoFile(copiedFile.inputStream(), manga)
+                        setMangaDetailsFromComicInfoFile(copiedFile.openInputStream(), manga)
                     } else {
                         // Avoid re-scanning
-                        mangaDir?.createFile(".noxml")
+                        mangaDir.createFile(".noxml")
                     }
                 }
             }
@@ -210,14 +207,14 @@ actual class LocalSource(
         return@withIOContext manga
     }
 
-    private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folderPath: String?): File? {
+    private fun copyComicInfoFileFromArchive(chapterArchives: List<UniFile>, folder: UniFile): UniFile? {
         for (chapter in chapterArchives) {
             when (Format.valueOf(chapter)) {
                 is Format.Zip -> {
                     ZipFile(tempFileManager.createTempFile(chapter)).use { zip: ZipFile ->
                         zip.getEntry(COMIC_INFO_FILE)?.let { comicInfoFile ->
                             zip.getInputStream(comicInfoFile).buffered().use { stream ->
-                                return copyComicInfoFile(stream, folderPath)
+                                return copyComicInfoFile(stream, folder)
                             }
                         }
                     }
@@ -226,7 +223,7 @@ actual class LocalSource(
                     JunrarArchive(tempFileManager.createTempFile(chapter)).use { rar ->
                         rar.fileHeaders.firstOrNull { it.fileName == COMIC_INFO_FILE }?.let { comicInfoFile ->
                             rar.getInputStream(comicInfoFile).buffered().use { stream ->
-                                return copyComicInfoFile(stream, folderPath)
+                                return copyComicInfoFile(stream, folder)
                             }
                         }
                     }
@@ -237,9 +234,9 @@ actual class LocalSource(
         return null
     }
 
-    private fun copyComicInfoFile(comicInfoFileStream: InputStream, folderPath: String?): File {
-        return File("$folderPath/$COMIC_INFO_FILE").apply {
-            outputStream().use { outputStream ->
+    private fun copyComicInfoFile(comicInfoFileStream: InputStream, folder: UniFile): UniFile? {
+        return folder.createFile(COMIC_INFO_FILE)?.apply {
+            openOutputStream().use { outputStream ->
                 comicInfoFileStream.use { it.copyTo(outputStream) }
             }
         }
