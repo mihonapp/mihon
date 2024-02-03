@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.image.decoder)
 
     implementation(libs.unifile)
+    implementation(libs.bundles.archive)
     implementation(libs.bundles.sevenzip)
 
     api(kotlinx.coroutines.core)
