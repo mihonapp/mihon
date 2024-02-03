@@ -445,7 +445,7 @@
     <string name="track_started_reading_date">Start datum</string>
     <string name="pref_viewer_nav">Tryckzoner</string>
     <string name="edge_nav">Kant</string>
-    <string name="kindlish_nav">Kindle-ish</string>
+    <string name="kindlish_nav">Kindle-lik</string>
     <string name="l_nav">L-formad</string>
     <string name="action_filter_tracked">Spåras</string>
     <string name="right_and_left_nav">Höger och Vänster</string>
@@ -616,7 +616,7 @@
     <string name="appwidget_updates_description">Se dina nyligen uppdaterade biblioteket inlägg</string>
     <string name="appwidget_unavailable_locked">Widget är inte tillgänglig när applåset är aktiverat</string>
     <string name="update_already_running">En uppdatering pågår redan</string>
-    <string name="multi_lang">Multi</string>
+    <string name="multi_lang">Flerspråkig</string>
     <string name="error_user_agent_string_blank">Strängen för användaragent kan inte vara tom</string>
     <string name="are_you_sure">Är du säker\?</string>
     <string name="updates_last_update_info">Biblioteket uppdaterades senast: %s</string>
@@ -740,7 +740,7 @@
     <string name="action_revert_to_default">Återgå till standard</string>
     <string name="last_auto_backup_info">Senaste automatiska säkerhetskopieringen: %s</string>
     <string name="no_scanlators_found">Inga scanlatorer hittades</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Översättare</string>
     <string name="pref_flash_page">Blinka vid sidbyte</string>
     <string name="pref_storage_usage">Lagringsanvändning</string>
     <string name="action_sort_tracker_score">Spårares betyg</string>
@@ -784,4 +784,18 @@
     <string name="onboarding_storage_help_info">Osäker på vad du ska välja då du uppdaterar från en äldre version? Se lagerhanteringsguiden för mer information.</string>
     <string name="pref_library_update_smart_update">Smart uppdatering</string>
     <string name="onboarding_storage_help_action">Lagerhanteringsguide</string>
+    <string name="theme_nord">Nord</string>
+    <string name="delete_repo_confirmation">Vill du ta bort förråd \"%s\"?</string>
+    <string name="ext_revoke_trust">Återkalla tillförlitliga okända tillägg</string>
+    <string name="label_extension_repos">Tilläggsförråd</string>
+    <string name="information_empty_repos">Du har inga förråd inställda.</string>
+    <string name="action_add_repo">Lägg till förråd</string>
+    <string name="label_add_repo_input">Förråd URL</string>
+    <string name="action_add_repo_message">Lägg till ytterliga förråd till Mihon. Detta ska vara en URL som slutar med \"index.min.json\".</string>
+    <string name="error_repo_exists">Detta förråd existerar redan!</string>
+    <string name="action_delete_repo">Ta bort förråd</string>
+    <string name="invalid_repo_name">Ogiltig förråds URL</string>
+    <string name="action_open_repo">Öppenkällkods förråd</string>
+    <string name="manga_interval_expected_update_soon">Snart</string>
+    <string name="manga_interval_custom_amount">Anpassad uppdateringsfrekvens:</string>
 </resources>

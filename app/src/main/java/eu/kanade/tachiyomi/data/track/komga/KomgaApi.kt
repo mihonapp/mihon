@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.data.track.komga
 
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
@@ -8,12 +9,13 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
+import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 
 private const val READLIST_API = "/api/v1/readlists"
@@ -23,6 +25,12 @@ class KomgaApi(
     private val client: OkHttpClient,
 ) {
 
+    private val headers: Headers by lazy {
+        Headers.Builder()
+            .add("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
+            .build()
+    }
+
     private val json: Json by injectLazy()
 
     suspend fun getTrackSearch(url: String): TrackSearch =
@@ -30,12 +38,12 @@ class KomgaApi(
             try {
                 val track = with(json) {
                     if (url.contains(READLIST_API)) {
-                        client.newCall(GET(url))
+                        client.newCall(GET(url, headers))
                             .awaitSuccess()
                             .parseAs<ReadListDto>()
                             .toTrack()
                     } else {
-                        client.newCall(GET(url))
+                        client.newCall(GET(url, headers))
                             .awaitSuccess()
                             .parseAs<SeriesDto>()
                             .toTrack()
@@ -43,7 +51,9 @@ class KomgaApi(
                 }
 
                 val progress = client
-                    .newCall(GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi"))
+                    .newCall(
+                        GET("${url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi", headers),
+                    )
                     .awaitSuccess().let {
                         with(json) {
                             if (url.contains("/api/v1/series/")) {
@@ -57,7 +67,7 @@ class KomgaApi(
                 track.apply {
                     cover_url = "$url/thumbnail"
                     tracking_url = url
-                    total_chapters = progress.maxNumberSort.toInt()
+                    total_chapters = progress.maxNumberSort.toLong()
                     status = when (progress.booksCount) {
                         progress.booksUnreadCount -> Komga.UNREAD
                         progress.booksReadCount -> Komga.COMPLETED
@@ -80,6 +90,7 @@ class KomgaApi(
         client.newCall(
             Request.Builder()
                 .url("${track.tracking_url.replace("/api/v1/series/", "/api/v2/series/")}/read-progress/tachiyomi")
+                .headers(headers)
                 .put(payload.toRequestBody("application/json".toMediaType()))
                 .build(),
         )

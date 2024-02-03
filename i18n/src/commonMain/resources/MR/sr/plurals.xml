@@ -26,9 +26,9 @@
         <item quantity="other">%d категорија</item>
     </plurals>
     <plurals name="relative_time">
-        <item quantity="one">Pre %1$d dan</item>
-        <item quantity="few">Pre %1$d dana</item>
-        <item quantity="other">Pre %1$d dana</item>
+        <item quantity="one">Пре %1$d дан</item>
+        <item quantity="few">Пре %1$d дана</item>
+        <item quantity="other">Пре %1$d дана</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Прескаче се %d поглавље, или не постоји у извору или је филтером издвојено</item>
@@ -79,5 +79,10 @@
         <item quantity="one">1 дан</item>
         <item quantity="few">%d дана</item>
         <item quantity="other">%d дана</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d репозиторија</item>
+        <item quantity="few">%d репозиторија</item>
+        <item quantity="other">%d репозиторија</item>
     </plurals>
 </resources>

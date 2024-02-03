@@ -1,7 +1,7 @@
 package tachiyomi.source.local.io
 
 import com.hippo.unifile.UniFile
-import tachiyomi.core.storage.extension
+import tachiyomi.core.common.storage.extension
 
 object Archive {
 

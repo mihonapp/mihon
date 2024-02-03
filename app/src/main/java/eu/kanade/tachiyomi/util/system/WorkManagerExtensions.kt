@@ -6,7 +6,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import kotlinx.coroutines.delay
 import logcat.LogPriority
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 
 val Context.workManager: WorkManager
     get() = WorkManager.getInstance(this)

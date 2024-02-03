@@ -12,8 +12,8 @@ import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -93,7 +93,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
      * Ignores volumes.
      * Volumes consisting of 1 file treated as chapter
      */
-    private fun getTotalChapters(url: String): Int {
+    private fun getTotalChapters(url: String): Long {
         val requestUrl = getApiVolumesUrl(url)
         try {
             val listVolumeDto = with(json) {
@@ -101,13 +101,13 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
                     .execute()
                     .parseAs<List<VolumeDto>>()
             }
-            var volumeNumber = 0
-            var maxChapterNumber = 0
+            var volumeNumber = 0L
+            var maxChapterNumber = 0L
             for (volume in listVolumeDto) {
                 if (volume.chapters.maxOf { it.number!!.toFloat() } == 0f) {
                     volumeNumber++
                 } else if (maxChapterNumber < volume.chapters.maxOf { it.number!!.toFloat() }) {
-                    maxChapterNumber = volume.chapters.maxOf { it.number!!.toFloat().toInt() }
+                    maxChapterNumber = volume.chapters.maxOf { it.number!!.toFloat().toLong() }
                 }
             }
 
@@ -118,17 +118,17 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
         }
     }
 
-    private fun getLatestChapterRead(url: String): Float {
+    private fun getLatestChapterRead(url: String): Double {
         val seriesId = getIdFromUrl(url)
         val requestUrl = "${getApiFromUrl(url)}/Tachiyomi/latest-chapter?seriesId=$seriesId"
         try {
             with(json) {
                 authClient.newCall(GET(requestUrl)).execute().use {
                     if (it.code == 200) {
-                        return it.parseAs<ChapterDto>().number!!.replace(",", ".").toFloat()
+                        return it.parseAs<ChapterDto>().number!!.replace(",", ".").toDouble()
                     }
                     if (it.code == 204) {
-                        return 0F
+                        return 0.0
                     }
                 }
             }
@@ -139,7 +139,7 @@ class KavitaApi(private val client: OkHttpClient, interceptor: KavitaInterceptor
             ) { "Exception getting latest chapter read. Could not get itemRequest: $requestUrl" }
             throw e
         }
-        return 0F
+        return 0.0
     }
 
     suspend fun getTrackSearch(url: String): TrackSearch = withIOContext {

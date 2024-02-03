@@ -1,7 +1,7 @@
 package eu.kanade.domain.source.interactor
 
 import eu.kanade.domain.source.service.SourcePreferences
-import tachiyomi.core.preference.getAndSet
+import tachiyomi.core.common.preference.getAndSet
 
 class ToggleLanguage(
     val preferences: SourcePreferences,

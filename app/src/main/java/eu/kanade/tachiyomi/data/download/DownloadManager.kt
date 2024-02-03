@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.storage.extension
-import tachiyomi.core.util.lang.launchIO
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.storage.extension
+import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -315,13 +315,13 @@ class DownloadManager(
         val capitalizationChanged = oldFolder.name.equals(newName, ignoreCase = true)
         if (capitalizationChanged) {
             val tempName = newName + Downloader.TMP_DIR_SUFFIX
-            if (oldFolder.renameTo(tempName).not()) {
+            if (!oldFolder.renameTo(tempName)) {
                 logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
                 return
             }
         }
 
-        if (oldFolder.renameTo(newName).not()) {
+        if (!oldFolder.renameTo(newName)) {
             logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
         }
     }

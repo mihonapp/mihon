@@ -5,14 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OAuth(
+    val token_type: String,
     val refresh_token: String,
     val access_token: String,
-    val token_type: String,
-    val created_at: Long = System.currentTimeMillis(),
     val expires_in: Long,
-)
-
-fun OAuth.isExpired() = System.currentTimeMillis() > created_at + (expires_in * 1000)
+    val created_at: Long = System.currentTimeMillis(),
+) {
+    // Assumes expired a minute earlier
+    private val adjustedExpiresIn: Long = (expires_in - 60) * 1000
+    fun isExpired() = created_at + adjustedExpiresIn < System.currentTimeMillis()
+}
 
 fun Track.toMyAnimeListStatus() = when (status) {
     MyAnimeList.READING -> "reading"

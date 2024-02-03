@@ -14,8 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import logcat.LogPriority
-import tachiyomi.core.util.lang.launchNow
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.launchNow
+import tachiyomi.core.common.util.system.logcat
 
 /**
  * Broadcast receiver that listens for the system's packages installed, updated or removed, and only
@@ -70,8 +70,7 @@ internal class ExtensionInstallReceiver(private val listener: Listener) :
                 launchNow {
                     when (val result = getExtensionFromIntent(context, intent)) {
                         is LoadResult.Success -> listener.onExtensionUpdated(result.extension)
-                        // Not needed as a package can't be upgraded if the signature is different
-                        // is LoadResult.Untrusted -> {}
+                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
                         else -> {}
                     }
                 }

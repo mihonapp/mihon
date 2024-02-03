@@ -7,7 +7,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.extension.util.ExtensionInstaller
 import eu.kanade.tachiyomi.ui.main.MainActivity
-import tachiyomi.core.Constants
+import tachiyomi.core.common.Constants
 
 /**
  * Class that manages [PendingIntent] of activity's

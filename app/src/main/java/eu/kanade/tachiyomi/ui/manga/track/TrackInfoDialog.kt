@@ -64,11 +64,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.util.lang.launchNonCancellable
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.lang.withUIContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withUIContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.DeleteTrack
@@ -285,13 +285,13 @@ private data class TrackStatusSelectorScreen(
     private class Model(
         private val track: Track,
         private val tracker: Tracker,
-    ) : StateScreenModel<Model.State>(State(track.status.toInt())) {
+    ) : StateScreenModel<Model.State>(State(track.status)) {
 
-        fun getSelections(): Map<Int, StringResource?> {
+        fun getSelections(): Map<Long, StringResource?> {
             return tracker.getStatusList().associateWith { tracker.getStatus(it) }
         }
 
-        fun setSelection(selection: Int) {
+        fun setSelection(selection: Long) {
             mutableState.update { it.copy(selection = selection) }
         }
 
@@ -303,7 +303,7 @@ private data class TrackStatusSelectorScreen(
 
         @Immutable
         data class State(
-            val selection: Int,
+            val selection: Long,
         )
     }
 }

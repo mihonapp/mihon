@@ -4,10 +4,10 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.track.TrackerManager
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.TriState
-import tachiyomi.core.preference.getAndSet
-import tachiyomi.core.util.lang.launchIO
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.TriState
+import tachiyomi.core.common.preference.getAndSet
+import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.category.interactor.SetDisplayMode
 import tachiyomi.domain.category.interactor.SetSortModeForCategory
 import tachiyomi.domain.category.model.Category

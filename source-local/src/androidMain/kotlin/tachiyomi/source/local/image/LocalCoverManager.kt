@@ -4,8 +4,8 @@ import android.content.Context
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.storage.DiskUtil
-import tachiyomi.core.storage.nameWithoutExtension
-import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.common.storage.nameWithoutExtension
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import java.io.InputStream
 

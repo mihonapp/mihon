@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.loader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
-import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.common.util.system.ImageUtil
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile

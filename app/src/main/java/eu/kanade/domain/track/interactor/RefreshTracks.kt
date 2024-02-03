@@ -30,9 +30,9 @@ class RefreshTracks(
                 .map { (track, service) ->
                     async {
                         return@async try {
-                            val updatedTrack = service!!.refresh(track.toDbTrack())
-                            insertTrack.await(updatedTrack.toDomainTrack()!!)
-                            syncChapterProgressWithTrack.await(mangaId, track, service)
+                            val updatedTrack = service!!.refresh(track.toDbTrack()).toDomainTrack()!!
+                            insertTrack.await(updatedTrack)
+                            syncChapterProgressWithTrack.await(mangaId, updatedTrack, service)
                             null
                         } catch (e: Throwable) {
                             service to e

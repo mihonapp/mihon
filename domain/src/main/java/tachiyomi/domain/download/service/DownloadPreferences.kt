@@ -1,6 +1,6 @@
 package tachiyomi.domain.download.service
 
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.PreferenceStore
 
 class DownloadPreferences(
     private val preferenceStore: PreferenceStore,

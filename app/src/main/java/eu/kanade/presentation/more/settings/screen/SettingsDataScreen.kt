@@ -7,8 +7,11 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -47,11 +50,11 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import logcat.LogPriority
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.storage.displayablePath
-import tachiyomi.core.util.lang.launchNonCancellable
-import tachiyomi.core.util.lang.withUIContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.storage.displayablePath
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.lang.withUIContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.storage.service.StoragePreferences
@@ -97,7 +100,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     fun storageLocationPicker(
-        storageDirPref: tachiyomi.core.preference.Preference<String>,
+        storageDirPref: tachiyomi.core.common.preference.Preference<String>,
     ): ManagedActivityResultLauncher<Uri?, Uri?> {
         val context = LocalContext.current
 
@@ -119,7 +122,7 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     fun storageLocationText(
-        storageDirPref: tachiyomi.core.preference.Preference<String>,
+        storageDirPref: tachiyomi.core.common.preference.Preference<String>,
     ): String {
         val context = LocalContext.current
         val storageDir by storageDirPref.collectAsState()
@@ -189,9 +192,11 @@ object SettingsDataScreen : SearchableSettings {
                             MultiChoiceSegmentedButtonRow(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .height(intrinsicSize = IntrinsicSize.Min)
                                     .padding(horizontal = PrefsHorizontalPadding),
                             ) {
                                 SegmentedButton(
+                                    modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = { navigator.push(CreateBackupScreen()) },
                                     shape = SegmentedButtonDefaults.itemShape(0, 2),
@@ -199,6 +204,7 @@ object SettingsDataScreen : SearchableSettings {
                                     Text(stringResource(MR.strings.pref_create_backup))
                                 }
                                 SegmentedButton(
+                                    modifier = Modifier.fillMaxHeight(),
                                     checked = false,
                                     onCheckedChange = {
                                         if (!BackupRestoreJob.isRunning(context)) {

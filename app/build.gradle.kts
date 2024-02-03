@@ -22,8 +22,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 1
-        versionName = "0.16.0"
+        versionCode = 4
+        versionName = "0.16.3"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -139,15 +139,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":i18n"))
-    implementation(project(":core"))
-    implementation(project(":core-metadata"))
-    implementation(project(":source-api"))
-    implementation(project(":source-local"))
-    implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":presentation-core"))
-    implementation(project(":presentation-widget"))
+    implementation(projects.i18n)
+    implementation(projects.core.common)
+    implementation(projects.coreMetadata)
+    implementation(projects.sourceApi)
+    implementation(projects.sourceLocal)
+    implementation(projects.data)
+    implementation(projects.domain)
+    implementation(projects.presentationCore)
+    implementation(projects.presentationWidget)
 
     // Compose
     implementation(platform(compose.bom))
@@ -163,7 +163,6 @@ dependencies {
     implementation(compose.ui.util)
     implementation(compose.accompanist.webview)
     implementation(compose.accompanist.systemuicontroller)
-    lintChecks(compose.lintchecks)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)

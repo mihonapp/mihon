@@ -10,7 +10,7 @@ import eu.kanade.tachiyomi.ui.reader.model.ViewerChapters
 import eu.kanade.tachiyomi.ui.reader.viewer.calculateChapterGap
 import eu.kanade.tachiyomi.util.system.createReaderThemeContext
 import eu.kanade.tachiyomi.widget.ViewPagerAdapter
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.system.logcat
 
 /**
  * Pager adapter used by this [viewer] to where [ViewerChapters] updates are posted.

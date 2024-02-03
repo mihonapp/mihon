@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
 
       - name: Setup Android SDK
         run: |
@@ -32,10 +32,11 @@ jobs:
           java-version: 17
           distribution: adopt
 
+      - name: Set up gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Build app and run unit tests
-        uses: gradle/gradle-command-action@v2
-        with:
-          arguments: ktlintCheck assembleStandardRelease testReleaseUnitTest
+        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
 
       # Sign APK and create release for tags
 
@@ -99,7 +100,7 @@ jobs:
             | x86 | ${{ env.APK_X86_SHA }} |
             | x86_64 | ${{ env.APK_X86_64_SHA }} |
             
-            If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
+            ## If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
           files: |
             mihon-${{ env.VERSION_TAG }}.apk
             mihon-arm64-v8a-${{ env.VERSION_TAG }}.apk

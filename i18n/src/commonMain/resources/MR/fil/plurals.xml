@@ -38,7 +38,7 @@
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d mga tracker</item>
+        <item quantity="other">%d na tracker</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa source o na-filter ang mga ito</item>
@@ -46,11 +46,11 @@
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Kahapon</item>
-        <item quantity="other">%1$d araw na ang makalipas</item>
+        <item quantity="other">%1$d araw na ang nakakalipas</item>
     </plurals>
     <plurals name="next_unread_chapters">
-        <item quantity="one">Susunod na hindi pa nababasa na kabanata</item>
-        <item quantity="other">Susunod na %d di pa nababasa na kabanata</item>
+        <item quantity="one">Susunod na hindi pa nababasang kabanata</item>
+        <item quantity="other">Susunod na %d hindi pa nababasang kabanata</item>
     </plurals>
     <plurals name="download_amount">
         <item quantity="one">Sunod na kabanata</item>
@@ -58,11 +58,11 @@
     </plurals>
     <plurals name="missing_chapters">
         <item quantity="one">Nawawalang %1$s na kabanata</item>
-        <item quantity="other">Nawawalang %1$s mga kabanata</item>
+        <item quantity="other">Nawawalang %1$s na mga kabanata</item>
     </plurals>
     <plurals name="day">
         <item quantity="one">1 araw</item>
-        <item quantity="other">%d (mga) araw</item>
+        <item quantity="other">%d (na) araw</item>
     </plurals>
     <plurals name="num_repos">
         <item quantity="one">%d na repo</item>

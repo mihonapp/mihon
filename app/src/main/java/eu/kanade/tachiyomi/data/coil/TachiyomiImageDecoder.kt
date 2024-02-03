@@ -9,7 +9,7 @@ import coil.decode.ImageSource
 import coil.fetch.SourceResult
 import coil.request.Options
 import okio.BufferedSource
-import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.decoder.ImageDecoder
 
 /**

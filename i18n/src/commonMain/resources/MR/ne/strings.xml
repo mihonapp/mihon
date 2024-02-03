@@ -210,7 +210,7 @@
     <string name="tapping_inverted_both">दुबै</string>
     <string name="pref_reader_actions">कार्यहरू</string>
     <string name="pref_read_with_long_tap">लामो ट्यापमा कार्यहरू देखाउनुहोस्</string>
-    <string name="pref_reader_theme">पृष्ठभूमि रङ</string>
+    <string name="pref_reader_theme">ब्याकग्राउण्ड रङ</string>
     <string name="gray_background">खैरो</string>
     <string name="black_background">कालो</string>
     <string name="automatic_background">स्वत</string>
@@ -595,7 +595,7 @@
     <string name="multi_lang">थुप्रै</string>
     <string name="pref_library_update_show_tab_badge">अपडेटहरू आइकनमा नपढिएको गणना देखाउनुहोस्</string>
     <string name="pref_skip_dupe_chapters">डुप्लिकेट अध्यायहरू छोड्नुहोस्</string>
-    <string name="action_display_show_continue_reading_button">जारी राख्नुहोस् बटन</string>
+    <string name="action_display_show_continue_reading_button">जारी राख्ने बटन</string>
     <string name="label_stats">तथ्याङ्क</string>
     <string name="label_started">सुरु गरिएको</string>
     <string name="label_local">लोकल</string>
@@ -705,7 +705,7 @@
     <string name="pref_double_tap_zoom">जूम गर्न डबल ट्याप गर्नुहोस्</string>
     <string name="pref_library_columns_per_row">%d प्रति पङ्क्ति</string>
     <string name="action_set_interval">अन्तराल सेट गर्नुहोस्</string>
-    <string name="action_filter_interval_custom">कस्टम गरिएको ल्याउने अन्तराल</string>
+    <string name="action_filter_interval_custom">कस्टम गरिएको अपडेट फ्रिक्वेन्सी</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
     <string name="skipped_reason_not_in_release_period">छोडियो किनभने आज कुनै रिलीज अपेक्षित थिएन</string>
     <string name="intervals_header">अन्तरालहरू</string>
@@ -715,8 +715,8 @@
     <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो\?</string>
     <string name="track_delete_remote_text">%s बाट पनि हटाउनुहोस्</string>
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
-    <string name="action_ok">ठीक छ</string>
-    <string name="delete_downloaded">डाउनलोड गरिएको मेट्नुहोस्</string>
+    <string name="action_ok">ठिक छ</string>
+    <string name="delete_downloaded">डाउनलोड गरिएको हटाउनुहोस्</string>
     <string name="has_results">परिणामहरू भएको</string>
     <string name="library_sync_complete">पुस्तकालय सिङ्क सम्पन्न भयो</string>
     <string name="syncing_library">पुस्तकालय सिङ्क गर्दै</string>
@@ -745,11 +745,61 @@
     <string name="file_null_uri_error">फाइल पिकर एपमा फाइल फर्काउन असफल भयो</string>
     <string name="selected">चयन गरिएको</string>
     <string name="not_selected">चयन नगरिएको</string>
-    <string name="action_sort_tracker_score">ट्र्याकर मुल्यन्कन</string>
-    <string name="scanlator">स्क्यानलेतर</string>
+    <string name="action_sort_tracker_score">ट्र्याकर मूल्याङ्कन</string>
+    <string name="scanlator">स्क्यानलेटर</string>
     <string name="action_menu_overflow_description">अरु मेनु</string>
-    <string name="onboarding_heading">स्वागत!</string>
+    <string name="onboarding_heading">स्वागत छ!</string>
     <string name="onboarding_action_next">अर्को</string>
     <string name="onboarding_action_finish">सुरु</string>
     <string name="onboarding_action_skip">छोड</string>
+    <string name="onboarding_storage_selection_required">एउटा फोल्डर चयन गर्नुपर्छ</string>
+    <string name="onboarding_storage_help_action">भण्डारण गाइड</string>
+    <string name="onboarding_permission_notifications">सूचना अनुमति</string>
+    <string name="onboarding_permission_action_grant">प्रदान गर्नुहोस्</string>
+    <string name="onboarding_guides_new_user">%s मा नयाँ हुनुहुन्छ? हामी स्टार्टिङ गाइड जाँच गर्न सिफारिस गर्छौं।</string>
+    <string name="theme_nord">नोर्ड</string>
+    <string name="pref_library_update_smart_update">स्मार्ट अपडेट</string>
+    <string name="error_repo_exists">यो रिपो पहिले नै अवस्थित छ!</string>
+    <string name="action_delete_repo">रिपो हटाउनुहोस्</string>
+    <string name="invalid_repo_name">रिपो URL अवैध छ</string>
+    <string name="action_bar_up_description">माथि नेभिगेट गर्नुहोस्</string>
+    <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
+    <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
+    <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिङहरूमा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
+    <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ।
+\n
+\nएक समर्पित फोल्डर सिफारिस गरिएको छ।
+\n
+\nचयन गरिएको फोल्डर: %2$s</string>
+    <string name="onboarding_storage_action_select">फोल्डर चयन गर्नुहोस्</string>
+    <string name="onboarding_permission_install_apps">एप स्थापना गर्ने अनुमति</string>
+    <string name="onboarding_permission_install_apps_description">स्रोत एक्सटेन्शन स्थापना गर्न को लागि।</string>
+    <string name="onboarding_permission_notifications_description">पुस्तकालय अपडेट र थपका लागि सूचना प्राप्त गर्नुहोस्।</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">लामो समयदेखि चलिरहेको पुस्तकालय अपडेटहरू, डाउनलोडहरू, र ब्याकअप रिस्टोरमा अवरोधहरू बेवास्ता गर्नुहोस्।</string>
+    <string name="onboarding_storage_help_info">पुरानो संस्करणबाट अपडेट गर्दै र के चयन गर्ने निश्चित छैन? थप जानकारीको लागि भण्डारण गाइड हेर्नुहोस्।</string>
+    <string name="onboarding_permission_ignore_battery_opts">ब्याकग्राउण्ड ब्याट्री प्रयोग</string>
+    <string name="onboarding_guides_returning_user">%s पुन: स्थापना गर्दै हुनुहुन्छ?</string>
+    <string name="ext_permission_install_apps_warning">एक्सटेन्शनहरू स्थापना गर्न अनुमति आवश्यक छ। प्रदान गर्न यहाँ ट्याप गर्नुहोस्।</string>
+    <string name="ext_revoke_trust">विश्वसनीय अज्ञात एक्सटेन्शनहरू रद्द गर्नुहोस्</string>
+    <string name="information_empty_repos">तपाईंले कुनै पनि रिपो सेट गर्नु भएको छैन।</string>
+    <string name="label_add_repo_input">रिपो URL</string>
+    <string name="label_extension_repos">एक्सटेन्शन रिपो</string>
+    <string name="action_add_repo">रिपो थप्नुहोस्</string>
+    <string name="action_add_repo_message">Mihon मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
+    <string name="action_apply">अप्लाई</string>
+    <string name="delete_repo_confirmation">के तपाइँ रिपो \"%s\" हटाउन चाहनुहुन्छ?</string>
+    <string name="action_open_repo">खुला स्रोत रिपो</string>
+    <string name="pref_storage_location">भण्डारण स्थान</string>
+    <string name="available_disk_space_info">उपलब्ध: %1$s / कुल: %2$s</string>
+    <string name="manga_interval_expected_update">नयाँ अध्यायहरू लगभग %1$s मा रिलीज हुने भविष्यवाणी गरिएको छ, हरेक %2$s को वरिपरि जाँच गर्दै।</string>
+    <string name="manga_interval_expected_update_soon">छिटै</string>
+    <string name="manga_interval_custom_amount">कस्टम अपडेट फ्रिक्वेन्सी:</string>
+    <string name="exclude_scanlators">स्क्यालेटरहरू समावेश नगर्नुहोस्</string>
+    <string name="no_scanlators_found">कुनै स्क्यालेटर फेला परेन</string>
+    <string name="pref_storage_usage">भण्डारण प्रयोग</string>
+    <string name="no_location_set">कुनै भण्डारण स्थान सेट गरिएको छैन</string>
+    <string name="pref_storage_location_info">स्वचालित ब्याकअप, अध्याय डाउनलोड, र स्थानीय स्रोतको लागि प्रयोग गरिन्छ।</string>
+    <string name="action_create">सिर्जना गर्नुहोस्</string>
+    <string name="invalid_backup_file_error">पूर्ण त्रुटि:</string>
+    <string name="private_settings">संवेदनशील सेटिङहरू समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
 </resources>
