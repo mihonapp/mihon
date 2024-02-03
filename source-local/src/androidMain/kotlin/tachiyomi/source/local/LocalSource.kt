@@ -1,7 +1,6 @@
 package tachiyomi.source.local
 
 import android.content.Context
-import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
@@ -343,8 +342,7 @@ actual class LocalSource(
                     }
                 }
                 is Format.SevenZip -> {
-                    val file = context.contentResolver.openFileDescriptor(format.file.uri, "r")
-                    SevenZFile(AutoCloseInputStream(file).channel).use { archive ->
+                    SevenZFile(format.file.openReadOnlyChannel(context)).use { archive ->
                         val entry = archive.getImages {}.firstOrNull()
                         entry?.let { coverManager.update(manga, it.inputStream()) }
                     }

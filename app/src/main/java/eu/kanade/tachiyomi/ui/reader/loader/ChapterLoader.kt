@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.loader
 
 import android.content.Context
-import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import com.github.junrar.exception.UnsupportedRarV5Exception
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.DownloadProvider
