@@ -4,7 +4,7 @@ import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import org.apache.commons.compress.archivers.dump.UnsupportedCompressionAlgorithmException
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod
-import tachiyomi.core.util.system.ImageUtil
+import tachiyomi.core.common.util.system.ImageUtil
 import java.io.IOException
 import java.io.InputStream
 

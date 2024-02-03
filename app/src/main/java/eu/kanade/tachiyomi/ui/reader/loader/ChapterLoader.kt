@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import org.apache.commons.compress.archivers.dump.UnsupportedCompressionAlgorithmException
-import tachiyomi.core.util.lang.launchUI
+import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
