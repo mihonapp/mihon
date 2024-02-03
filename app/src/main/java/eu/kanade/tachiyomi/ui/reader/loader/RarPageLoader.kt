@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import tachiyomi.core.common.util.system.ImageUtil
-import java.io.File
 import java.io.InputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
@@ -15,9 +14,9 @@ import java.util.concurrent.Executors
 /**
  * Loader used to load a chapter from a .rar or .cbr file.
  */
-internal class RarPageLoader(file: File) : PageLoader() {
+internal class RarPageLoader(inputStream: InputStream) : PageLoader() {
 
-    private val rar = Archive(file)
+    private val rar = Archive(inputStream)
 
     override var isLocal: Boolean = true
 

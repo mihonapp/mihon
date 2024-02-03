@@ -208,7 +208,7 @@ dependencies {
     // Disk
     implementation(libs.disklrucache)
     implementation(libs.unifile)
-    implementation(libs.junrar)
+    implementation(libs.bundles.archive)
 
     // Preferences
     implementation(libs.preferencektx)
