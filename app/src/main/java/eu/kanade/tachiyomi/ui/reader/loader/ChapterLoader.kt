@@ -104,8 +104,7 @@ class ChapterLoader(
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Zip -> ZipPageLoader(format.file.openReadOnlyChannel(context))
                     is Format.SevenZip -> try {
-                        val file = context.contentResolver.openFileDescriptor(format.file.uri, "r")
-                        SevenZipPageLoader(AutoCloseInputStream(file)) {
+                        SevenZipPageLoader(format.file.openReadOnlyChannel(context)) {
                             GlobalScope.launchUI {
                                 context.toast(context.stringResource(MR.strings.loader_7zip_slow_archives, it))
                             }

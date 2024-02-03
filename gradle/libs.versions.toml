@@ -34,7 +34,6 @@ disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:7c257e1c64"
 common-compress = "org.apache.commons:commons-compress:1.25.0"
 junrar = "com.github.junrar:junrar:7.5.5"
-common-compress = "org.apache.commons:commons-compress:1.25.0"
 xz = "org.tukaani:xz:1.9"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }

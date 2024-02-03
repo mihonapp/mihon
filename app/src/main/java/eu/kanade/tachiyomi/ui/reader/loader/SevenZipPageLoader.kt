@@ -4,17 +4,17 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.storage.SevenZUtil.getImages
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
-import java.io.FileInputStream
+import java.nio.channels.FileChannel
 
 /**
  * Loader used to load a chapter from a .7z or .cb7 file.
  */
 internal class SevenZipPageLoader(
-    private val file: FileInputStream,
+    private val file: FileChannel,
     private val notifySlowArchive: (method: String) -> Unit,
 ) : PageLoader() {
 
-    private val zip by lazy { SevenZFile(file.channel) }
+    private val zip by lazy { SevenZFile(file) }
 
     override var isLocal: Boolean = true
 
