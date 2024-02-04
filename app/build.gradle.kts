@@ -208,7 +208,6 @@ dependencies {
     // Disk
     implementation(libs.disklrucache)
     implementation(libs.unifile)
-    implementation(libs.bundles.sevenzip)
     implementation(libs.bundles.archive)
 
     // Preferences

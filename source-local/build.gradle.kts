@@ -12,7 +12,6 @@ kotlin {
                 api(projects.i18n)
 
                 implementation(libs.unifile)
-                implementation(libs.bundles.sevenzip)
                 implementation(libs.bundles.archive)
             }
         }

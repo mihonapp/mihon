@@ -33,7 +33,6 @@ dependencies {
 
     implementation(libs.unifile)
     implementation(libs.bundles.archive)
-    implementation(libs.bundles.sevenzip)
 
     api(kotlinx.coroutines.core)
     api(kotlinx.serialization.json)
