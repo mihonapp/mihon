@@ -22,9 +22,6 @@ actual class LocalSourceFileSystem(
     }
 
     actual fun getFilesInMangaDirectory(name: String): List<UniFile> {
-        return getBaseDirectory()
-            ?.findFile(name, true)
-            ?.takeIf { it.isDirectory }
-            ?.listFiles().orEmpty().toList()
+        return getMangaDirectory(name)?.listFiles().orEmpty().toList()
     }
 }
