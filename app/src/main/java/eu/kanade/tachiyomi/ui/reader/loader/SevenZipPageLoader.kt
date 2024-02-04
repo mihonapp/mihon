@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.storage.SevenZUtil.getImages
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
+import java.lang.Exception
 import java.nio.channels.FileChannel
 
 /**
@@ -11,6 +12,7 @@ import java.nio.channels.FileChannel
  */
 internal class SevenZipPageLoader(
     private val file: FileChannel,
+    private val unsupportedCompressionMethodException: Exception? = null,
     private val notifySlowArchive: (method: String) -> Unit,
 ) : PageLoader() {
 
@@ -19,7 +21,7 @@ internal class SevenZipPageLoader(
     override var isLocal: Boolean = true
 
     override suspend fun getPages(): List<ReaderPage> {
-        return zip.getImages(notifySlowArchive)
+        return zip.getImages(unsupportedCompressionMethodException, notifySlowArchive)
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
                     stream = { entry.copyOf().inputStream() }

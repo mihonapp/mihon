@@ -343,7 +343,7 @@ actual class LocalSource(
                 }
                 is Format.SevenZip -> {
                     SevenZFile(format.file.openReadOnlyChannel(context)).use { archive ->
-                        val entry = archive.getImages {}.firstOrNull()
+                        val entry = archive.getImages().firstOrNull()
                         entry?.let { coverManager.update(manga, it.inputStream()) }
                     }
                 }
