@@ -105,11 +105,11 @@ class ChapterLoader(
                     is Format.SevenZip -> try {
                         SevenZipPageLoader(format.file.openReadOnlyChannel(context)) {
                             GlobalScope.launchUI {
-                                context.toast(context.stringResource(MR.strings.loader_7zip_slow_archives, it))
+                                context.toast(context.stringResource(MR.strings.loader_7zip_slow_method, it))
                             }
                         }
                     } catch (e: UnsupportedCompressionAlgorithmException) {
-                        error(context.stringResource(MR.strings.loader_7zip_ppmd_error))
+                        error(context.stringResource(MR.strings.loader_7zip_unsupported))
                     }
                     is Format.Rar -> try {
                         RarPageLoader(format.file.openInputStream())
