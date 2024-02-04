@@ -325,7 +325,7 @@
     <string name="battery_optimization_disabled">Pil iyileştirme zaten devre dışı</string>
     <string name="email">E-posta adresi</string>
     <string name="pref_always_show_chapter_transition">Bölüm geçişini her zaman göster</string>
-    <string name="action_menu">Komut-Seçenek Dizelgesi</string>
+    <string name="action_menu">Menü</string>
     <string name="action_newest">En yeni</string>
     <string name="action_oldest">En eski</string>
     <string name="action_move_to_top">En üste taşı</string>
@@ -740,7 +740,7 @@
     <string name="action_revert_to_default">Varsayılana dön</string>
     <string name="last_auto_backup_info">En son şu tarihte kendi yedekledi: %s</string>
     <string name="no_scanlators_found">Tareviriler bulunamadı</string>
-    <string name="scanlator">Tareviri</string>
+    <string name="scanlator">Scanlator</string>
     <string name="pref_flash_page">Sayfa değişiminde ışık çak</string>
     <string name="pref_storage_usage">Depolama kullanımı</string>
     <string name="action_sort_tracker_score">İzleyici notu</string>
