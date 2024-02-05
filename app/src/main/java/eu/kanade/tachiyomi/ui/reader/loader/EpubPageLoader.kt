@@ -3,14 +3,14 @@ package eu.kanade.tachiyomi.ui.reader.loader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.storage.EpubFile
-import java.io.File
+import java.nio.channels.SeekableByteChannel
 
 /**
  * Loader used to load a chapter from a .epub file.
  */
-internal class EpubPageLoader(file: File) : PageLoader() {
+internal class EpubPageLoader(channel: SeekableByteChannel) : PageLoader() {
 
-    private val epub = EpubFile(file)
+    private val epub = EpubFile(channel)
 
     override var isLocal: Boolean = true
 
