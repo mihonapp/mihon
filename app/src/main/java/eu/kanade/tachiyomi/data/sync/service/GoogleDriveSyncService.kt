@@ -354,8 +354,10 @@ class GoogleDriveService(private val context: Context) {
     }
 
     /**
-     * Generates the authorization URL required for the user to grant the application permission to access their Google Drive account.
-     * Sets the approval prompt to "force" to ensure that the user is always prompted to grant access, even if they have previously granted access.
+     * Generates the authorization URL required for the user to grant the application
+     * permission to access their Google Drive account.
+     * Sets the approval prompt to "force" to ensure that the user is always prompted to grant access,
+     * even if they have previously granted access.
      * @return The authorization URL.
      */
     private fun generateAuthorizationUrl(): String {

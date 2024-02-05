@@ -327,9 +327,11 @@ class SyncManager(
     }
 
     /**
-     * Filters the favorite and non-favorite manga from the backup and checks if the favorite manga is different from the local database.
+     * Filters the favorite and non-favorite manga from the backup and checks
+     * if the favorite manga is different from the local database.
      * @param backup the Backup object containing the backup data.
-     * @return a Pair of lists, where the first list contains different favorite manga and the second list contains non-favorite manga.
+     * @return a Pair of lists, where the first list contains different favorite manga
+     * and the second list contains non-favorite manga.
      */
     private suspend fun filterFavoritesAndNonFavorites(backup: Backup): Pair<List<BackupManga>, List<BackupManga>> {
         val favorites = mutableListOf<BackupManga>()

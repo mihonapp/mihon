@@ -158,12 +158,13 @@ class SyncYomiSyncService(
         val host = syncPreferences.clientHost().get()
         val apiKey = syncPreferences.clientAPIKey().get()
         val uploadUrl = "$host/api/sync/upload"
+        val timeout = 30L
 
         // Set timeout to 30 seconds
         val client = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(timeout, TimeUnit.SECONDS)
+            .readTimeout(timeout, TimeUnit.SECONDS)
+            .writeTimeout(timeout, TimeUnit.SECONDS)
             .build()
 
         val headers = Headers.Builder().add(
