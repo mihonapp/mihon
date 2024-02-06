@@ -4,6 +4,7 @@
     "config:base"
   ],
   "schedule": ["every sunday"],
+  "labels": ["Dependencies"],
   "packageRules": [
     {
       // Compiler plugins are tightly coupled to Kotlin version
