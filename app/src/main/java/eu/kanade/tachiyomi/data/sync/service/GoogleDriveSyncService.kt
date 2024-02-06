@@ -74,8 +74,10 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                 ?: throw Exception(context.stringResource(MR.strings.google_drive_not_signed_in))
 
             var backoff = 1000L
+            var retries = 0 // Retry counter
+            val maxRetries = 10 // Maximum number of retries
 
-            while (true) {
+            while (retries < maxRetries) {
                 val lockFiles = findLockFile(drive)
                 logcat(LogPriority.DEBUG) { "Found ${lockFiles.size} lock file(s)" }
 
@@ -83,6 +85,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                     lockFiles.isEmpty() -> {
                         logcat(LogPriority.DEBUG) { "No lock file found, creating a new one" }
                         createLockFile(drive)
+                        break
                     }
                     lockFiles.size == 1 -> {
                         val lockFile = lockFiles.first()
@@ -96,6 +99,7 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                             logcat(LogPriority.DEBUG) { "Lock file is old, deleting and creating a new one" }
                             deleteLockFile(drive)
                             createLockFile(drive)
+                            break
                         }
                     }
                     else -> {
@@ -105,7 +109,13 @@ class GoogleDriveSyncService(context: Context, json: Json, syncPreferences: Sync
                         logcat(LogPriority.DEBUG) { "Backoff increased to $backoff milliseconds" }
                     }
                 }
-                logcat(LogPriority.DEBUG) { "Loop iteration complete, backoff time: $backoff" }
+                retries++ // Increment retry counter
+                logcat(LogPriority.DEBUG) { "Loop iteration complete, retry count: $retries, backoff time: $backoff" }
+            }
+
+            if (retries >= maxRetries) {
+                logcat(LogPriority.ERROR) { "Max retries reached, exiting sync process" }
+                throw Exception(context.stringResource(MR.strings.error_before_sync_gdrive) + ": Max retries reached.")
             }
         } catch (e: Exception) {
             logcat(LogPriority.ERROR) { "Error in GoogleDrive beforeSync: ${e.message}" }
