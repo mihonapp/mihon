@@ -5,15 +5,15 @@
         <item quantity="other">%d bővítményfrissítés érhető el</item>
     </plurals>
     <plurals name="lock_after_mins">
-        <item quantity="one">1 perc után</item>
-        <item quantity="other">%1$s percek után</item>
+        <item quantity="one">%1$s perc múlva</item>
+        <item quantity="other">%1$s perc múlva</item>
     </plurals>
     <plurals name="num_categories">
         <item quantity="one">%d kategória</item>
-        <item quantity="other">%d kategóriák</item>
+        <item quantity="other">%d kategória</item>
     </plurals>
     <plurals name="manga_num_chapters">
-        <item quantity="one">1 fejezet</item>
+        <item quantity="one">%1$s fejezet</item>
         <item quantity="other">%1$s fejezet</item>
     </plurals>
     <plurals name="notification_chapters_generic">
@@ -26,7 +26,7 @@
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
-        <item quantity="other">%d trackerek</item>
+        <item quantity="other">%d tracker</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">%d-nak/nek</item>
@@ -54,11 +54,11 @@
     </plurals>
     <plurals name="download_amount">
         <item quantity="one">Következő fejezet</item>
-        <item quantity="other">Következő %d fejezetek</item>
+        <item quantity="other">Következő %d fejezet</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="one">Hiányzó %1$s fejezet</item>
-        <item quantity="other">Hiányzó %1$s fejezetek</item>
+        <item quantity="one">%1$s fejezet hiányzik</item>
+        <item quantity="other">%1$s fejezet hiányzik</item>
     </plurals>
     <plurals name="day">
         <item quantity="one">1 nap</item>
