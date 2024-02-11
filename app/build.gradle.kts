@@ -158,6 +158,8 @@ dependencies {
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.animation.graphics)
+    implementation("junit:junit:4.12")
+    implementation(libs.core.ktx)
     debugImplementation(compose.ui.tooling)
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)

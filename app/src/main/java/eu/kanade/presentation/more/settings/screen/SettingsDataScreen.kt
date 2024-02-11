@@ -233,7 +233,7 @@ object SettingsDataScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_backup_interval),
                     entries = persistentMapOf(
                         0 to stringResource(MR.strings.off),
-                        6 to stringResource(MR.strings.update_6hour),
+                        6 to stringResource(MR.strings.update_1hour),
                         12 to stringResource(MR.strings.update_12hour),
                         24 to stringResource(MR.strings.update_24hour),
                         48 to stringResource(MR.strings.update_48hour),

@@ -10,6 +10,7 @@ sqlite = "2.4.0"
 voyager = "1.0.0"
 detekt = "1.23.1"
 detektCompose = "0.3.11"
+coreKtx = "1.5.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
@@ -99,6 +100,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 detekt-rules-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtx" }
 
 [bundles]
 archive = ["common-compress", "junrar"]

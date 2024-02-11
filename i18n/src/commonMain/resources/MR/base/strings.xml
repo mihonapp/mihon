@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Mihon</string>
+    <string name="app_name" translatable="false">Amachi</string>
 
     <!-- Generic strings -->
     <string name="on">On</string>
@@ -262,6 +262,7 @@
     <string name="pref_category_library_update">Global update</string>
     <string name="pref_library_update_interval">Automatic updates</string>
     <string name="update_never">Off</string>
+    <string name="update_1hour">Every 1 hour</string>
     <string name="update_6hour">Every 6 hours</string>
     <string name="update_12hour">Every 12 hours</string>
     <string name="update_24hour">Daily</string>
