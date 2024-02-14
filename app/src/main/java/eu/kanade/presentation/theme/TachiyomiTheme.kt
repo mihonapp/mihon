@@ -63,9 +63,10 @@ private fun getThemeColorScheme(
     appTheme: AppTheme,
     isAmoled: Boolean,
 ): ColorScheme {
-    val colorScheme = when (appTheme) {
-        AppTheme.MONET -> MonetColorScheme(LocalContext.current)
-        else -> colorSchemes.getOrDefault(appTheme, TachiyomiColorScheme)
+    val colorScheme = if (appTheme == AppTheme.MONET) {
+        MonetColorScheme(LocalContext.current)
+    } else {
+        colorSchemes.getOrDefault(appTheme, TachiyomiColorScheme)
     }
     return colorScheme.getColorScheme(
         isSystemInDarkTheme(),
