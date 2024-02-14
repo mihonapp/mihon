@@ -343,6 +343,11 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_double_tap_zoom),
                     enabled = true,
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.disableZoomOut(),
+                    title = stringResource(MR.strings.pref_disable_zoom_out),
+                    enabled = true,
+                )
             ),
         )
     }

@@ -73,4 +73,9 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         label = stringResource(MR.strings.pref_flash_page),
         pref = screenModel.preferences.flashOnPageChange(),
     )
+
+    CheckboxItem(
+        label = stringResource(MR.strings.pref_disable_zoom_out),
+        pref = screenModel.preferences.disableZoomOut(),
+    )
 }
