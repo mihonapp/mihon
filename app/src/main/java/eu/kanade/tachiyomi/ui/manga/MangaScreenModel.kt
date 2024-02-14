@@ -75,6 +75,7 @@ import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
@@ -366,6 +367,45 @@ class MangaScreenModel(
                     ),
                 )
             }
+        }
+    }
+
+    fun showEditInfoDialog() {
+        val manga = successState?.manga ?: return
+        screenModelScope.launch {
+            updateSuccessState { successState ->
+                successState.copy(
+                    dialog = Dialog.EditInfo(
+                        manga = manga,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun updateMangaInfo(
+        manga: Manga,
+    ) {
+        val state = successState ?: return
+
+        val newTitle = if (manga.title.isBlank()) manga.url else manga.title.trim()
+
+        screenModelScope.launchNonCancellable {
+            updateManga.await(
+                MangaUpdate(
+                    id = manga.id,
+                    title = newTitle,
+                    artist = manga.artist,
+                    author = manga.author,
+                    description = manga.description,
+                )
+            )
+        }
+
+        updateSuccessState { successState ->
+            successState.copy(
+                manga = manga
+            )
         }
     }
 
@@ -1004,6 +1044,7 @@ class MangaScreenModel(
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class EditInfo(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog

@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -23,6 +27,7 @@ import eu.kanade.tachiyomi.util.system.isDevFlavor
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.domain.manga.interactor.FetchInterval
+import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.WheelTextPicker
 import tachiyomi.presentation.core.components.material.padding
@@ -141,6 +146,80 @@ fun SetIntervalDialog(
         confirmButton = {
             TextButton(onClick = {
                 onValueChanged?.invoke(selectedInterval)
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(MR.strings.action_ok))
+            }
+        },
+    )
+}
+
+@Composable
+fun EditInfoDialog(
+    manga: Manga,
+    onDismissRequest: () -> Unit,
+    onConfirm: (manga: Manga) -> Unit,
+) {
+    var editedManga by remember { mutableStateOf(manga) }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = stringResource(MR.strings.action_edit_info))
+        },
+        text = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                OutlinedTextField(
+                    value = editedManga.title,
+                    onValueChange = {
+                        editedManga = editedManga.copy(title = it)
+                    },
+                    label = { Text(text = stringResource(MR.strings.title)) },
+                )
+
+                if (manga.author != null) {
+                    OutlinedTextField(
+                        value = manga.author!!,
+                        onValueChange = {
+                            editedManga = editedManga.copy(author = it)
+                        },
+                        label = { Text(text = stringResource(MR.strings.author)) },
+                    )
+                }
+
+                if (manga.artist != null) {
+                    OutlinedTextField(
+                        value = manga.artist!!,
+                        onValueChange = {
+                            editedManga = editedManga.copy(artist = it)
+                        },
+                        label = { Text(text = stringResource(MR.strings.artist)) },
+                    )
+                }
+
+                if (manga.description != null) {
+                    OutlinedTextField(
+                        value = manga.description!!,
+                        onValueChange = {
+                            editedManga = editedManga.copy(description = it)
+                        },
+                        label = { Text(text = stringResource(MR.strings.description)) },
+                    )
+                }
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onConfirm(editedManga)
                 onDismissRequest()
             }) {
                 Text(text = stringResource(MR.strings.action_ok))
