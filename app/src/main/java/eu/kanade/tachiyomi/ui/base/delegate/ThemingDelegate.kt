@@ -12,51 +12,10 @@ interface ThemingDelegate {
 
     companion object {
         fun getThemeResIds(appTheme: AppTheme, isAmoled: Boolean): List<Int> {
-            val resIds = mutableListOf<Int>()
-            when (appTheme) {
-                AppTheme.MONET -> {
-                    resIds += R.style.Theme_Tachiyomi_Monet
-                }
-                AppTheme.GREEN_APPLE -> {
-                    resIds += R.style.Theme_Tachiyomi_GreenApple
-                }
-                AppTheme.LAVENDER -> {
-                    resIds += R.style.Theme_Tachiyomi_Lavender
-                }
-                AppTheme.MIDNIGHT_DUSK -> {
-                    resIds += R.style.Theme_Tachiyomi_MidnightDusk
-                }
-                AppTheme.NORD -> {
-                    resIds += R.style.Theme_Tachiyomi_Nord
-                }
-                AppTheme.STRAWBERRY_DAIQUIRI -> {
-                    resIds += R.style.Theme_Tachiyomi_StrawberryDaiquiri
-                }
-                AppTheme.TAKO -> {
-                    resIds += R.style.Theme_Tachiyomi_Tako
-                }
-                AppTheme.TEALTURQUOISE -> {
-                    resIds += R.style.Theme_Tachiyomi_TealTurquoise
-                }
-                AppTheme.YINYANG -> {
-                    resIds += R.style.Theme_Tachiyomi_YinYang
-                }
-                AppTheme.YOTSUBA -> {
-                    resIds += R.style.Theme_Tachiyomi_Yotsuba
-                }
-                AppTheme.TIDAL_WAVE -> {
-                    resIds += R.style.Theme_Tachiyomi_TidalWave
-                }
-                else -> {
-                    resIds += R.style.Theme_Tachiyomi
-                }
+            return buildList(2) {
+                add(themeResources.getOrDefault(appTheme, R.style.Theme_Tachiyomi))
+                if (isAmoled) add(R.style.ThemeOverlay_Tachiyomi_Amoled)
             }
-
-            if (isAmoled) {
-                resIds += R.style.ThemeOverlay_Tachiyomi_Amoled
-            }
-
-            return resIds
         }
     }
 }
@@ -68,3 +27,17 @@ class ThemingDelegateImpl : ThemingDelegate {
             .forEach(activity::setTheme)
     }
 }
+
+private val themeResources: Map<AppTheme, Int> = mapOf(
+    AppTheme.MONET to R.style.Theme_Tachiyomi_Monet,
+    AppTheme.GREEN_APPLE to R.style.Theme_Tachiyomi_GreenApple,
+    AppTheme.LAVENDER to R.style.Theme_Tachiyomi_Lavender,
+    AppTheme.MIDNIGHT_DUSK to R.style.Theme_Tachiyomi_MidnightDusk,
+    AppTheme.NORD to R.style.Theme_Tachiyomi_Nord,
+    AppTheme.STRAWBERRY_DAIQUIRI to R.style.Theme_Tachiyomi_StrawberryDaiquiri,
+    AppTheme.TAKO to R.style.Theme_Tachiyomi_Tako,
+    AppTheme.TEALTURQUOISE to R.style.Theme_Tachiyomi_TealTurquoise,
+    AppTheme.YINYANG to R.style.Theme_Tachiyomi_YinYang,
+    AppTheme.YOTSUBA to R.style.Theme_Tachiyomi_Yotsuba,
+    AppTheme.TIDAL_WAVE to R.style.Theme_Tachiyomi_TidalWave,
+)
