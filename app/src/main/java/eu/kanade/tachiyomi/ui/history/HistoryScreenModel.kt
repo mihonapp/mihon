@@ -5,7 +5,9 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.presentation.history.HistoryUiModel
+import eu.kanade.presentation.updates.UpdatesUiModel
 import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +30,7 @@ import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.model.HistoryWithRelations
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.time.LocalDate
 import java.util.Date
 
 class HistoryScreenModel(
@@ -60,10 +63,10 @@ class HistoryScreenModel(
     private fun List<HistoryWithRelations>.toHistoryUiModels(): List<HistoryUiModel> {
         return map { HistoryUiModel.Item(it) }
             .insertSeparators { before, after ->
-                val beforeDate = before?.item?.readAt?.time?.toDateKey() ?: Date(0)
-                val afterDate = after?.item?.readAt?.time?.toDateKey() ?: Date(0)
+                val beforeDate = before?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
+                val afterDate = after?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
                 when {
-                    beforeDate.time != afterDate.time && afterDate.time != 0L -> HistoryUiModel.Header(afterDate)
+                    beforeDate.isAfter(afterDate) or afterDate.equals(LocalDate.MIN) or beforeDate.equals(LocalDate.MIN) -> HistoryUiModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
