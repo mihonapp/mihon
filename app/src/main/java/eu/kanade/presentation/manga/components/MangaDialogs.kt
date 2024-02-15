@@ -160,7 +160,13 @@ fun EditInfoDialog(
     onDismissRequest: () -> Unit,
     onConfirm: (manga: Manga) -> Unit,
 ) {
-    var editedManga by remember { mutableStateOf(manga) }
+    var editedManga by remember {
+        mutableStateOf(manga.copy(
+            author = manga.author ?: "",
+            artist = manga.artist ?: "",
+            description = manga.description ?: "",
+        ))
+    }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -181,35 +187,29 @@ fun EditInfoDialog(
                     label = { Text(text = stringResource(MR.strings.title)) },
                 )
 
-                if (manga.author != null) {
-                    OutlinedTextField(
-                        value = manga.author!!,
-                        onValueChange = {
-                            editedManga = editedManga.copy(author = it)
-                        },
-                        label = { Text(text = stringResource(MR.strings.author)) },
-                    )
-                }
+                OutlinedTextField(
+                    value = editedManga.author!!,
+                    onValueChange = {
+                        editedManga = editedManga.copy(author = it)
+                    },
+                    label = { Text(text = stringResource(MR.strings.author)) },
+                )
 
-                if (manga.artist != null) {
-                    OutlinedTextField(
-                        value = manga.artist!!,
-                        onValueChange = {
-                            editedManga = editedManga.copy(artist = it)
-                        },
-                        label = { Text(text = stringResource(MR.strings.artist)) },
-                    )
-                }
+                OutlinedTextField(
+                    value = editedManga.artist!!,
+                    onValueChange = {
+                        editedManga = editedManga.copy(artist = it)
+                    },
+                    label = { Text(text = stringResource(MR.strings.artist)) },
+                )
 
-                if (manga.description != null) {
-                    OutlinedTextField(
-                        value = manga.description!!,
-                        onValueChange = {
-                            editedManga = editedManga.copy(description = it)
-                        },
-                        label = { Text(text = stringResource(MR.strings.description)) },
-                    )
-                }
+                OutlinedTextField(
+                    value = editedManga.description!!,
+                    onValueChange = {
+                        editedManga = editedManga.copy(description = it)
+                    },
+                    label = { Text(text = stringResource(MR.strings.description)) },
+                )
             }
         },
         dismissButton = {
