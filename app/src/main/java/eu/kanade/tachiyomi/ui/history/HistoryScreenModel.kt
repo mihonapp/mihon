@@ -5,8 +5,6 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.presentation.history.HistoryUiModel
-import eu.kanade.presentation.updates.UpdatesUiModel
-import eu.kanade.tachiyomi.util.lang.toDateKey
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -31,7 +29,6 @@ import tachiyomi.domain.history.model.HistoryWithRelations
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.LocalDate
-import java.util.Date
 
 class HistoryScreenModel(
     private val getHistory: GetHistory = Injekt.get(),
