@@ -163,9 +163,9 @@ fun EditInfoDialog(
     var editedManga by remember {
         mutableStateOf(manga.copy(
             editedTitle = manga.editedTitle ?: manga.title,
-            editedAuthor = manga.editedAuthor ?: manga.author ?: "",
-            editedArtist = manga.editedArtist ?: manga.artist ?: "",
-            editedDescription = manga.editedDescription ?: manga.description ?: "",
+            editedAuthor = manga.editedAuthor ?: manga.author,
+            editedArtist = manga.editedArtist ?: manga.artist,
+            editedDescription = manga.editedDescription ?: manga.description,
         ))
     }
 
@@ -181,7 +181,7 @@ fun EditInfoDialog(
                     .verticalScroll(rememberScrollState()),
             ) {
                 OutlinedTextField(
-                    value = editedManga.editedTitle!!,
+                    value = editedManga.editedTitle.orEmpty(),
                     onValueChange = {
                         editedManga = editedManga.copy(editedTitle = it)
                     },
@@ -189,7 +189,7 @@ fun EditInfoDialog(
                 )
 
                 OutlinedTextField(
-                    value = editedManga.editedAuthor!!,
+                    value = editedManga.editedAuthor.orEmpty(),
                     onValueChange = {
                         editedManga = editedManga.copy(editedAuthor = it)
                     },
@@ -197,7 +197,7 @@ fun EditInfoDialog(
                 )
 
                 OutlinedTextField(
-                    value = editedManga.editedArtist!!,
+                    value = editedManga.editedArtist.orEmpty(),
                     onValueChange = {
                         editedManga = editedManga.copy(editedArtist = it)
                     },
@@ -205,7 +205,7 @@ fun EditInfoDialog(
                 )
 
                 OutlinedTextField(
-                    value = editedManga.editedDescription!!,
+                    value = editedManga.editedDescription.orEmpty(),
                     onValueChange = {
                         editedManga = editedManga.copy(editedDescription = it)
                     },
