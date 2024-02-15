@@ -269,7 +269,6 @@ object AboutScreen : Screen() {
 
     internal fun getFormattedBuildTime(): String {
         return try {
-
             val df = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
                 .withZone(ZoneId.of("UTC"))
             val buildTime = LocalDateTime.from(df.parse(BuildConfig.BUILD_TIME))

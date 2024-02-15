@@ -37,7 +37,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import java.time.LocalDate
-import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

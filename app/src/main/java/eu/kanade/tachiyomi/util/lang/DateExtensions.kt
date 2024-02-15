@@ -34,9 +34,8 @@ fun Long.convertEpochMillisZone(
         .toEpochMilli()
 }
 
-
 fun Long.toLocalDate(): LocalDate {
-    return LocalDate.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault());
+    return LocalDate.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
 }
 
 fun LocalDate.toRelativeSting(
@@ -47,8 +46,8 @@ fun LocalDate.toRelativeSting(
     if (!relative) {
         return dateFormat.format(this)
     }
-    val now = LocalDate.now();
-    val difference =  ChronoUnit.DAYS.between(this, now);
+    val now = LocalDate.now()
+    val difference = ChronoUnit.DAYS.between(this, now)
     return when {
         difference < 0 -> difference.toString()
         difference < 1 -> context.stringResource(MR.strings.relative_time_today)
@@ -60,4 +59,3 @@ fun LocalDate.toRelativeSting(
         else -> dateFormat.format(this)
     }
 }
-

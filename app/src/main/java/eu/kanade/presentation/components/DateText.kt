@@ -18,7 +18,11 @@ fun relativeDateText(
     dateEpochMillis: Long,
 ): String {
     return relativeDateText(
-        localDate = LocalDate.ofInstant(Instant.ofEpochMilli(dateEpochMillis), ZoneId.systemDefault()).takeIf { dateEpochMillis > 0L },
+        localDate = LocalDate.ofInstant(
+            Instant.ofEpochMilli(dateEpochMillis),
+            ZoneId.systemDefault(),
+        )
+            .takeIf { dateEpochMillis > 0L },
     )
 }
 
@@ -33,9 +37,9 @@ fun relativeDateText(
     val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
     return localDate?.toRelativeSting(
-            context = context,
-            relative = relativeTime,
-            dateFormat = dateFormat
-        )
+        context = context,
+        relative = relativeTime,
+        dateFormat = dateFormat,
+    )
         ?: stringResource(MR.strings.not_applicable)
 }

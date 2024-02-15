@@ -52,12 +52,10 @@ import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
+import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 private const val UnsetStatusTextAlpha = 0.5F
@@ -107,12 +105,11 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsScoring && item.track.score != 0.0 },
                     onScoreClick = { onScoreClick(item) }
                         .takeIf { supportsScoring },
-                    startDate = remember(item.track.startDate) {
-                                dateFormat.format(LocalDate.ofEpochDay(Duration.ofMillis(item.track.startDate).toDays())) }
+                    startDate = remember(item.track.startDate) { dateFormat.format(item.track.startDate.toLocalDate()) }
                         .takeIf { supportsReadingDates && item.track.startDate != 0L },
                     onStartDateClick = { onStartDateEdit(item) } // TODO
                         .takeIf { supportsReadingDates },
-                    endDate = dateFormat.format(LocalDate.ofEpochDay(Duration.ofMillis(item.track.finishDate).toDays()))
+                    endDate = dateFormat.format(item.track.finishDate.toLocalDate())
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },

@@ -154,12 +154,14 @@ class WorkerInfoScreen : Screen() {
                             "Next scheduled run: ${
                                 LocalDateTime.ofInstant(
                                     Instant.ofEpochMilli(workInfo.nextScheduleTimeMillis),
-                                    ZoneId.systemDefault())
-                                .toDateTimestampString(
-                                UiPreferences.dateFormat(
-                                    Injekt.get<UiPreferences>().dateFormat().get(),
-                                ),
-                            )}",
+                                    ZoneId.systemDefault(),
+                                )
+                                    .toDateTimestampString(
+                                        UiPreferences.dateFormat(
+                                            Injekt.get<UiPreferences>().dateFormat().get(),
+                                        ),
+                                    )
+                            }",
                         )
                         appendLine("Attempt #${workInfo.runAttemptCount + 1}")
                     }
