@@ -5,7 +5,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.test.DummyTracker
 import tachiyomi.domain.track.model.Track
-import java.text.DateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 internal class TrackInfoDialogHomePreviewProvider :
     PreviewParameterProvider<@Composable () -> Unit> {
@@ -46,7 +47,7 @@ internal class TrackInfoDialogHomePreviewProvider :
                 trackItemWithoutTrack,
                 trackItemWithTrack,
             ),
-            dateFormat = DateFormat.getDateInstance(),
+            dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
             onStatusClick = {},
             onChapterClick = {},
             onScoreClick = {},
@@ -61,7 +62,7 @@ internal class TrackInfoDialogHomePreviewProvider :
     private val noTrackers = @Composable {
         TrackInfoDialogHome(
             trackItems = listOf(),
-            dateFormat = DateFormat.getDateInstance(),
+            dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
             onStatusClick = {},
             onChapterClick = {},
             onScoreClick = {},
