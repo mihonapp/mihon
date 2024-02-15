@@ -103,4 +103,9 @@ class UpdateManga(
             MangaUpdate(id = mangaId, favorite = favorite, dateAdded = dateAdded),
         )
     }
+
+    suspend fun awaitUpdateEditInfo(mangaUpdate: MangaUpdate): Boolean {
+
+        return mangaRepository.updateOrInsertEditInfo(mangaUpdate)
+    }
 }

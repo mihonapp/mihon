@@ -391,7 +391,7 @@ class MangaScreenModel(
         val newTitle = if (manga.title.isBlank()) manga.url else manga.title.trim()
 
         screenModelScope.launchNonCancellable {
-            updateManga.await(
+            updateManga.awaitUpdateEditInfo(
                 MangaUpdate(
                     id = manga.id,
                     title = newTitle,
