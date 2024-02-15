@@ -6,8 +6,10 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import java.text.DateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
@@ -32,6 +34,11 @@ fun Long.convertEpochMillisZone(
         .toEpochMilli()
 }
 
+
+fun Long.toLocalDate(): LocalDate {
+    return LocalDate.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault());
+}
+
 /**
  * Get date as time key
  *
@@ -41,6 +48,28 @@ fun Long.convertEpochMillisZone(
 fun Long.toDateKey(): Date {
     val instant = Instant.ofEpochMilli(this)
     return Date.from(instant.truncatedTo(ChronoUnit.DAYS))
+}
+
+fun LocalDate.toRelativeSting(
+    context: Context,
+    relative: Boolean = true,
+    dateFormat: DateTimeFormatter = DateTimeFormatter.ISO_DATE,
+): String {
+    if (!relative) {
+        return dateFormat.format(this)
+    }
+    val now = LocalDate.now();
+    val difference =  ChronoUnit.DAYS.between(this, now);
+    return when {
+        difference < 0 -> difference.toString()
+        difference < 1 -> context.stringResource(MR.strings.relative_time_today)
+        difference < 7 -> context.pluralStringResource(
+            MR.plurals.relative_time,
+            difference.toInt(),
+            difference.toInt(),
+        )
+        else -> dateFormat.format(this)
+    }
 }
 
 fun Date.toRelativeString(
