@@ -1,0 +1,6 @@
+-- Add the manga edited info and the new function --
+
+ALTER TABLE mangas ADD COLUMN edited_artist TEXT;
+ALTER TABLE mangas ADD COLUMN edited_author TEXT;
+ALTER TABLE mangas ADD COLUMN edited_description TEXT;
+ALTER TABLE mangas ADD COLUMN edited_title TEXT;

@@ -162,9 +162,10 @@ fun EditInfoDialog(
 ) {
     var editedManga by remember {
         mutableStateOf(manga.copy(
-            author = manga.author ?: "",
-            artist = manga.artist ?: "",
-            description = manga.description ?: "",
+            editedTitle = manga.editedTitle ?: manga.title,
+            editedAuthor = manga.editedAuthor ?: manga.author ?: "",
+            editedArtist = manga.editedArtist ?: manga.artist ?: "",
+            editedDescription = manga.editedDescription ?: manga.description ?: "",
         ))
     }
 
@@ -180,33 +181,33 @@ fun EditInfoDialog(
                     .verticalScroll(rememberScrollState()),
             ) {
                 OutlinedTextField(
-                    value = editedManga.title,
+                    value = editedManga.editedTitle!!,
                     onValueChange = {
-                        editedManga = editedManga.copy(title = it)
+                        editedManga = editedManga.copy(editedTitle = it)
                     },
                     label = { Text(text = stringResource(MR.strings.title)) },
                 )
 
                 OutlinedTextField(
-                    value = editedManga.author!!,
+                    value = editedManga.editedAuthor!!,
                     onValueChange = {
-                        editedManga = editedManga.copy(author = it)
+                        editedManga = editedManga.copy(editedAuthor = it)
                     },
                     label = { Text(text = stringResource(MR.strings.author)) },
                 )
 
                 OutlinedTextField(
-                    value = editedManga.artist!!,
+                    value = editedManga.editedArtist!!,
                     onValueChange = {
-                        editedManga = editedManga.copy(artist = it)
+                        editedManga = editedManga.copy(editedArtist = it)
                     },
                     label = { Text(text = stringResource(MR.strings.artist)) },
                 )
 
                 OutlinedTextField(
-                    value = editedManga.description!!,
+                    value = editedManga.editedDescription!!,
                     onValueChange = {
-                        editedManga = editedManga.copy(description = it)
+                        editedManga = editedManga.copy(editedDescription = it)
                     },
                     label = { Text(text = stringResource(MR.strings.description)) },
                 )

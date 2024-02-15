@@ -160,27 +160,16 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun updateOrInsertEditInfo(update: MangaUpdate) : Boolean {
+    override suspend fun updateEditedInfo(update: MangaUpdate) : Boolean {
         handler.await(inTransaction = true) {
-            val updatedRows = mangasQueries.updateMangaEdit(
+            mangasQueries.updateMangaEdit(
                 artist = update.artist,
                 author = update.author,
                 description = update.description,
                 title = update.title,
                 mangaId = update.id
-            ).executeAsOne()
-
-            if (updatedRows == 0L) {
-                mangasQueries.insertMangaEdit(
-                    id = update.id,
-                    artist = update.artist,
-                    author = update.author,
-                    description = update.description,
-                    title = update.title,
-                ).executeAsOne()
-            }
+            )
         }
-
         return true
     }
 }

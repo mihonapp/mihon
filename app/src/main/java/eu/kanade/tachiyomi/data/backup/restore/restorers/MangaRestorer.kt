@@ -93,9 +93,9 @@ class MangaRestorer(
     private fun Manga.copyFrom(newer: Manga): Manga {
         return this.copy(
             favorite = this.favorite || newer.favorite,
-            author = newer.author,
-            artist = newer.artist,
-            description = newer.description,
+            ogAuthor = newer.author,
+            ogArtist = newer.artist,
+            ogDescription = newer.description,
             genre = newer.genre,
             thumbnailUrl = newer.thumbnailUrl,
             status = newer.status,

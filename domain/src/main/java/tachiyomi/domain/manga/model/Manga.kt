@@ -18,10 +18,10 @@ data class Manga(
     val chapterFlags: Long,
     val coverLastModified: Long,
     val url: String,
-    val title: String,
-    val artist: String?,
-    val author: String?,
-    val description: String?,
+    val ogTitle: String,
+    val ogArtist: String?,
+    val ogAuthor: String?,
+    val ogDescription: String?,
     val genre: List<String>?,
     val status: Long,
     val thumbnailUrl: String?,
@@ -29,7 +29,22 @@ data class Manga(
     val initialized: Boolean,
     val lastModifiedAt: Long,
     val favoriteModifiedAt: Long?,
+    val editedArtist: String?,
+    val editedAuthor: String?,
+    val editedDescription: String?,
+    val editedTitle: String?,
 ) : Serializable {
+    val title: String
+        get() = editedTitle ?: ogTitle
+
+    val author: String?
+        get() = editedAuthor ?: ogAuthor
+
+    val artist: String?
+        get() = editedArtist ?: ogArtist
+
+    val description: String?
+        get() = editedDescription ?: ogDescription
 
     val expectedNextUpdate: Instant?
         get() = nextUpdate
@@ -102,7 +117,8 @@ data class Manga(
         fun create() = Manga(
             id = -1L,
             url = "",
-            title = "",
+            ogTitle = "",
+            editedTitle = null,
             source = -1L,
             favorite = false,
             lastUpdate = 0L,
@@ -112,9 +128,12 @@ data class Manga(
             viewerFlags = 0L,
             chapterFlags = 0L,
             coverLastModified = 0L,
-            artist = null,
-            author = null,
-            description = null,
+            ogArtist = null,
+            editedArtist = null,
+            ogAuthor = null,
+            editedAuthor = null,
+            ogDescription = null,
+            editedDescription = null,
             genre = null,
             status = 0L,
             thumbnailUrl = null,

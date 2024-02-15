@@ -43,10 +43,10 @@ data class BackupManga(
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
             url = this@BackupManga.url,
-            title = this@BackupManga.title,
-            artist = this@BackupManga.artist,
-            author = this@BackupManga.author,
-            description = this@BackupManga.description,
+            ogTitle = this@BackupManga.title,
+            ogArtist = this@BackupManga.artist,
+            ogAuthor = this@BackupManga.author,
+            ogDescription = this@BackupManga.description,
             genre = this@BackupManga.genre,
             status = this@BackupManga.status.toLong(),
             thumbnailUrl = this@BackupManga.thumbnailUrl,

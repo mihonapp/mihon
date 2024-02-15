@@ -25,15 +25,11 @@ CREATE TABLE mangas(
     update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
     calculate_interval INTEGER DEFAULT 0 NOT NULL,
     last_modified_at INTEGER NOT NULL DEFAULT 0,
-    favorite_modified_at INTEGER
-);
-
-CREATE TABLE mangas_edits(
-    _id INTEGER NOT NULL PRIMARY KEY,
-    artist TEXT,
-    author TEXT,
-    description TEXT,
-    title TEXT
+    favorite_modified_at INTEGER,
+    edited_artist TEXT,
+    edited_author TEXT,
+    edited_description TEXT,
+    edited_title TEXT
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -57,31 +53,8 @@ BEGIN
 END;
 
 getMangaById:
-SELECT
-    mangas._id,
-    coalesce(mangas_edits.artist, mangas.artist) AS artist,
-    coalesce(mangas_edits.author, mangas.author) AS author,
-    coalesce(mangas_edits.description, mangas.description) AS description,
-    coalesce(mangas_edits.title, mangas.title) AS title,
-    mangas.source,
-    mangas.url,
-    mangas.genre,
-    mangas.status,
-    mangas.thumbnail_url,
-    mangas.favorite,
-    mangas.last_update,
-    mangas.next_update,
-    mangas.initialized,
-    mangas.viewer,
-    mangas.chapter_flags,
-    mangas.cover_last_modified,
-    mangas.date_added,
-    mangas.update_strategy,
-    mangas.calculate_interval,
-    mangas.last_modified_at,
-    mangas.favorite_modified_at
+SELECT *
 FROM mangas
-LEFT JOIN mangas_edits ON mangas._id = mangas_edits._id
 WHERE mangas._id = :id;
 
 -- TODO: this should ideally never really have more than 1 result
@@ -176,16 +149,10 @@ WHERE _id = :mangaId;
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
 
-insertMangaEdit:
-INSERT INTO mangas_edits(_id, artist, author, description, title)
-VALUES (:id, :artist, :author, :description, :title)
-RETURNING changes();
-
 updateMangaEdit:
-UPDATE mangas_edits SET
-    artist = :artist,
-    author = :author,
-    description = :description,
-    title = :title
-WHERE _id = :mangaId
-RETURNING changes();
+UPDATE mangas SET
+    edited_artist = :artist,
+    edited_author = :author,
+    edited_description = :description,
+    edited_title = :title
+WHERE _id = :mangaId;
