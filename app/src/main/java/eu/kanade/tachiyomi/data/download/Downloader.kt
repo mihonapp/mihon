@@ -272,7 +272,7 @@ class Downloader(
         val wasEmpty = queueState.value.isEmpty()
         val chaptersToQueue = chapters.asSequence()
             // Filter out those already downloaded.
-            .filter { provider.findChapterDir(it.name, it.scanlator, manga.title, source) == null }
+            .filter { provider.findChapterDir(it.name, it.scanlator, manga.ogTitle, source) == null }
             // Add chapters to queue from the start.
             .sortedByDescending { it.sourceOrder }
             // Filter out those already enqueued.
@@ -313,7 +313,7 @@ class Downloader(
      * @param download the chapter to be downloaded.
      */
     private suspend fun downloadChapter(download: Download) {
-        val mangaDir = provider.getMangaDir(download.manga.title, download.source)
+        val mangaDir = provider.getMangaDir(download.manga.ogTitle, download.source)
 
         val availSpace = DiskUtil.getAvailableStorageSpace(mangaDir)
         if (availSpace != -1L && availSpace < MIN_DISK_SPACE) {
@@ -321,7 +321,7 @@ class Downloader(
             notifier.onError(
                 context.stringResource(MR.strings.download_insufficient_space),
                 download.chapter.name,
-                download.manga.title,
+                download.manga.ogTitle,
             )
             return
         }
@@ -405,7 +405,7 @@ class Downloader(
             // If the page list threw, it will resume here
             logcat(LogPriority.ERROR, error)
             download.status = Download.State.ERROR
-            notifier.onError(error.message, download.chapter.name, download.manga.title)
+            notifier.onError(error.message, download.chapter.name, download.manga.ogTitle)
         }
     }
 
@@ -455,7 +455,7 @@ class Downloader(
             // Mark this page as error and allow to download the remaining
             page.progress = 0
             page.status = Page.State.ERROR
-            notifier.onError(e.message, download.chapter.name, download.manga.title)
+            notifier.onError(e.message, download.chapter.name, download.manga.ogTitle)
         }
     }
 

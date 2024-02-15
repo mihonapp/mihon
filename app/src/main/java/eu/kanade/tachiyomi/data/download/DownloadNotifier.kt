@@ -95,7 +95,7 @@ internal class DownloadNotifier(private val context: Context) {
                 setContentTitle(downloadingProgressText)
                 setContentText(null)
             } else {
-                val title = download.manga.title.chop(15)
+                val title = download.manga.ogTitle.chop(15)
                 val quotedTitle = Pattern.quote(title)
                 val chapter = download.chapter.name.replaceFirst(
                     "$quotedTitle[\\s]*[-]*[\\s]*".toRegex(RegexOption.IGNORE_CASE),

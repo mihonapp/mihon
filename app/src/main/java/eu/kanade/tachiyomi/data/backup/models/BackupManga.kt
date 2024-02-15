@@ -39,6 +39,11 @@ data class BackupManga(
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
+    // Bump to 800 like the forks did
+    @ProtoNumber(800) var editedTitle: String? = null,
+    @ProtoNumber(801) var editedArtist: String? = null,
+    @ProtoNumber(802) var editedAuthor: String? = null,
+    @ProtoNumber(804) var editedDescription: String? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -58,6 +63,10 @@ data class BackupManga(
             updateStrategy = this@BackupManga.updateStrategy,
             lastModifiedAt = this@BackupManga.lastModifiedAt,
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
+            editedTitle = this@BackupManga.editedTitle,
+            editedArtist = this@BackupManga.editedArtist,
+            editedAuthor = this@BackupManga.editedAuthor,
+            editedDescription = this@BackupManga.editedDescription,
         )
     }
 }

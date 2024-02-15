@@ -17,7 +17,7 @@ class NetworkToLocalManga(
             !localManga.favorite -> {
                 // if the manga isn't a favorite, set its display title from source
                 // if it later becomes a favorite, updated title will go to db
-                localManga.copy(ogTitle = manga.title)
+                localManga.copy(ogTitle = manga.ogTitle)
             }
             else -> {
                 localManga
