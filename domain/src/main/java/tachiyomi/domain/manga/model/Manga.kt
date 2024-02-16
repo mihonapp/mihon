@@ -29,22 +29,22 @@ data class Manga(
     val initialized: Boolean,
     val lastModifiedAt: Long,
     val favoriteModifiedAt: Long?,
-    val editedArtist: String?,
-    val editedAuthor: String?,
-    val editedDescription: String?,
-    val editedTitle: String?,
+    val customArtist: String?,
+    val customAuthor: String?,
+    val customDescription: String?,
+    val customTitle: String?,
 ) : Serializable {
     val title: String
-        get() = editedTitle ?: ogTitle
+        get() = customTitle ?: ogTitle
 
     val author: String?
-        get() = editedAuthor ?: ogAuthor
+        get() = customAuthor ?: ogAuthor
 
     val artist: String?
-        get() = editedArtist ?: ogArtist
+        get() = customArtist ?: ogArtist
 
     val description: String?
-        get() = editedDescription ?: ogDescription
+        get() = customDescription ?: ogDescription
 
     val expectedNextUpdate: Instant?
         get() = nextUpdate
@@ -118,7 +118,7 @@ data class Manga(
             id = -1L,
             url = "",
             ogTitle = "",
-            editedTitle = null,
+            customTitle = null,
             source = -1L,
             favorite = false,
             lastUpdate = 0L,
@@ -129,11 +129,11 @@ data class Manga(
             chapterFlags = 0L,
             coverLastModified = 0L,
             ogArtist = null,
-            editedArtist = null,
+            customArtist = null,
             ogAuthor = null,
-            editedAuthor = null,
+            customAuthor = null,
             ogDescription = null,
-            editedDescription = null,
+            customDescription = null,
             genre = null,
             status = 0L,
             thumbnailUrl = null,

@@ -386,10 +386,10 @@ class MangaScreenModel(
     fun updateMangaInfo(
         manga: Manga,
     ) {
-        val newTitle = if (manga.editedTitle.isNullOrBlank()) null else manga.editedTitle
-        val newAuthor = if (manga.editedAuthor.isNullOrBlank()) null else manga.editedAuthor
-        val newArtist = if (manga.editedArtist.isNullOrBlank()) null else manga.editedArtist
-        val newDescription = if (manga.editedDescription.isNullOrBlank()) null else manga.editedDescription
+        val newTitle = if (manga.customTitle.isNullOrBlank()) null else manga.customTitle
+        val newAuthor = if (manga.customAuthor.isNullOrBlank()) null else manga.customAuthor
+        val newArtist = if (manga.customArtist.isNullOrBlank()) null else manga.customArtist
+        val newDescription = if (manga.customDescription.isNullOrBlank()) null else manga.customDescription
 
         screenModelScope.launchNonCancellable {
             updateManga.awaitUpdateEditInfo(
@@ -406,10 +406,10 @@ class MangaScreenModel(
         updateSuccessState { successState ->
             successState.copy(
                 manga = manga.copy(
-                    editedTitle = newTitle,
-                    editedAuthor = newAuthor,
-                    editedArtist = newArtist,
-                    editedDescription = newDescription,
+                    customTitle = newTitle,
+                    customAuthor = newAuthor,
+                    customArtist = newArtist,
+                    customDescription = newDescription,
                 )
             )
         }

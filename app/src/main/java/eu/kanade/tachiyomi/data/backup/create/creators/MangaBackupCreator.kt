@@ -98,8 +98,8 @@ private fun Manga.toBackupManga() =
         updateStrategy = this.updateStrategy,
         lastModifiedAt = this.lastModifiedAt,
         favoriteModifiedAt = this.favoriteModifiedAt,
-        editedArtist = this.editedArtist,
-        editedAuthor = this.editedAuthor,
-        editedTitle = this.editedTitle,
-        editedDescription = this.editedDescription,
+        customArtist = this.customArtist,
+        customAuthor = this.customAuthor,
+        customTitle = this.customTitle,
+        customDescription = this.customDescription,
     )
