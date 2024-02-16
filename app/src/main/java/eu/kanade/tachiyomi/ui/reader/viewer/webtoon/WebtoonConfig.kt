@@ -79,7 +79,7 @@ class WebtoonConfig(
                 { imagePropertyChangedListener?.invoke() },
             )
 
-        readerPreferences.disableZoomOut()
+        readerPreferences.webtoonDisableZoomOut()
             .register(
                 { zoomOutDisabled = it },
                 { zoomPropertyChangedListener?.invoke(it) }

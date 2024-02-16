@@ -341,12 +341,10 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.webtoonDoubleTapZoomEnabled(),
                     title = stringResource(MR.strings.pref_double_tap_zoom),
-                    enabled = true,
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    pref = readerPreferences.disableZoomOut(),
-                    title = stringResource(MR.strings.pref_disable_zoom_out),
-                    enabled = true,
+                    pref = readerPreferences.webtoonDisableZoomOut(),
+                    title = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
                 )
             ),
         )

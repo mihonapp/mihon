@@ -72,7 +72,7 @@ class ReaderPreferences(
 
     fun skipDupe() = preferenceStore.getBoolean("skip_dupe", false)
 
-    fun disableZoomOut() = preferenceStore.getBoolean("disable_zoom_out", false)
+    fun webtoonDisableZoomOut() = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
     // endregion
 
