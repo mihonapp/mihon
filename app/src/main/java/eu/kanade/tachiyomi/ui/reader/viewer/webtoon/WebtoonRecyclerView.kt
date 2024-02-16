@@ -36,7 +36,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     var zoomOutDisabled = false
         set (value) {
             field = value
-            if (!value) {
+            if (currentScale < DEFAULT_RATE) {
                 zoom(currentScale, DEFAULT_RATE, x, 0f, y, 0f)
             }
         }
