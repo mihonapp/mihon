@@ -38,7 +38,7 @@ fun Long.toLocalDate(): LocalDate {
     return LocalDate.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
 }
 
-fun LocalDate.toRelativeSting(
+fun LocalDate.toRelativeString(
     context: Context,
     relative: Boolean = true,
     dateFormat: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT),

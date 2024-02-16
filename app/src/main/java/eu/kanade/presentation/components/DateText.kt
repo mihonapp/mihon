@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.domain.ui.UiPreferences
-import eu.kanade.tachiyomi.util.lang.toRelativeSting
+import eu.kanade.tachiyomi.util.lang.toRelativeString
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
@@ -36,7 +36,7 @@ fun relativeDateText(
     val relativeTime = remember { preferences.relativeTime().get() }
     val dateFormat = remember { UiPreferences.dateFormat(preferences.dateFormat().get()) }
 
-    return localDate?.toRelativeSting(
+    return localDate?.toRelativeString(
         context = context,
         relative = relativeTime,
         dateFormat = dateFormat,
