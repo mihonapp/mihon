@@ -39,7 +39,8 @@ data class BackupManga(
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
-    // Bump to 800 like the forks did
+    // Numbers to keep compatibility with fork edited manga fields 
+    // https://github.com/jobobby04/TachiyomiSY/blob/7e151ddb83d5d7e0ea553eca686a8c4aa3a1fa8c/app/src/main/java/eu/kanade/tachiyomi/data/backup/models/BackupManga.kt#L49
     @ProtoNumber(800) var editedTitle: String? = null,
     @ProtoNumber(801) var editedArtist: String? = null,
     @ProtoNumber(802) var editedAuthor: String? = null,
