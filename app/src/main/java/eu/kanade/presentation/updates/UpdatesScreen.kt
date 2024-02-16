@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.SelectAll
@@ -54,6 +55,7 @@ fun UpdateScreen(
     onMultiDeleteClicked: (List<UpdatesItem>) -> Unit,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
+    onCalendarClicked: () -> Unit
 ) {
     BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
 
@@ -61,6 +63,7 @@ fun UpdateScreen(
         topBar = { scrollBehavior ->
             UpdatesAppBar(
                 onUpdateLibrary = { onUpdateLibrary() },
+                onCalendarClicked = { onCalendarClicked() },
                 actionModeCounter = state.selected.size,
                 onSelectAll = { onSelectAll(true) },
                 onInvertSelection = { onInvertSelection() },
@@ -127,6 +130,7 @@ fun UpdateScreen(
 @Composable
 private fun UpdatesAppBar(
     onUpdateLibrary: () -> Unit,
+    onCalendarClicked: () -> Unit,
     // For action mode
     actionModeCounter: Int,
     onSelectAll: () -> Unit,
@@ -141,6 +145,11 @@ private fun UpdatesAppBar(
         actions = {
             AppBarActions(
                 persistentListOf(
+                    AppBar.Action(
+                        title = "View Update Calendar",
+                        icon = Icons.Outlined.CalendarMonth,
+                        onClick = onCalendarClicked
+                    ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_update_library),
                         icon = Icons.Outlined.Refresh,
