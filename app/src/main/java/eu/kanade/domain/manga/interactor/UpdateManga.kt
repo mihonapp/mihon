@@ -105,7 +105,6 @@ class UpdateManga(
     }
 
     suspend fun awaitUpdateEditInfo(mangaUpdate: MangaUpdate): Boolean {
-
         return mangaRepository.updateEditedInfo(mangaUpdate)
     }
 }

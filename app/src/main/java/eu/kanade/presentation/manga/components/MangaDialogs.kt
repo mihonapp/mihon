@@ -161,12 +161,14 @@ fun EditInfoDialog(
     onConfirm: (manga: Manga) -> Unit,
 ) {
     var editedManga by remember {
-        mutableStateOf(manga.copy(
-            editedTitle = manga.editedTitle ?: manga.title,
-            editedAuthor = manga.editedAuthor ?: manga.author,
-            editedArtist = manga.editedArtist ?: manga.artist,
-            editedDescription = manga.editedDescription ?: manga.description,
-        ))
+        mutableStateOf(
+            manga.copy(
+                editedTitle = manga.editedTitle ?: manga.title,
+                editedAuthor = manga.editedAuthor ?: manga.author,
+                editedArtist = manga.editedArtist ?: manga.artist,
+                editedDescription = manga.editedDescription ?: manga.description,
+            )
+        )
     }
 
     AlertDialog(
