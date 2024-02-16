@@ -345,7 +345,7 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.webtoonDisableZoomOut(),
                     title = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
-                )
+                ),
             ),
         )
     }
