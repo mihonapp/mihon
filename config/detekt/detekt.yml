@@ -10,6 +10,7 @@ complexity:
     functionThreshold: 6
     constructorThreshold: 7
     ignoreDefaultParameters: true
+    ignoreAnnotated: [ 'Composable' ]
 
 style:
   MagicNumber:
