@@ -161,7 +161,7 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun updateEditedInfo(update: MangaUpdate) : Boolean {
-        handler.await(inTransaction = true) {
+        handler.await {
             mangasQueries.updateMangaEdit(
                 artist = update.artist,
                 author = update.author,
