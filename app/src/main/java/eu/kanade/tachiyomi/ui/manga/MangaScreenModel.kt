@@ -405,7 +405,12 @@ class MangaScreenModel(
 
         updateSuccessState { successState ->
             successState.copy(
-                manga = manga
+                manga = manga.copy(
+                    editedTitle = newTitle,
+                    editedAuthor = newAuthor,
+                    editedArtist = newArtist,
+                    editedDescription = newDescription,
+                )
             )
         }
     }
