@@ -62,6 +62,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.source.local.LocalSource
 
 class MangaScreen(
     private val mangaId: Long,
@@ -149,7 +150,7 @@ class MangaScreen(
             onEditFetchIntervalClicked = screenModel::showSetFetchIntervalDialog.takeIf {
                 successState.manga.favorite
             },
-            onEditInfoClicked = screenModel::showEditInfoDialog.takeIf { successState.manga.favorite },
+            onEditInfoClicked = screenModel::showEditInfoDialog.takeIf { successState.manga.favorite && successState.manga.source != LocalSource.ID },
             onMigrateClicked = {
                 navigator.push(MigrateSearchScreen(successState.manga.id))
             }.takeIf { successState.manga.favorite },
