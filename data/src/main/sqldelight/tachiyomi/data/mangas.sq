@@ -55,7 +55,7 @@ END;
 getMangaById:
 SELECT *
 FROM mangas
-WHERE mangas._id = :id;
+WHERE _id = :id;
 
 -- TODO: this should ideally never really have more than 1 result
 getMangaByUrlAndSource:
