@@ -150,19 +150,16 @@ class WorkerInfoScreen : Screen() {
                     }
                     appendLine("State: ${workInfo.state}")
                     if (workInfo.state == WorkInfo.State.ENQUEUED) {
-                        appendLine(
-                            "Next scheduled run: ${
-                                LocalDateTime.ofInstant(
-                                    Instant.ofEpochMilli(workInfo.nextScheduleTimeMillis),
-                                    ZoneId.systemDefault(),
-                                )
-                                    .toDateTimestampString(
-                                        UiPreferences.dateFormat(
-                                            Injekt.get<UiPreferences>().dateFormat().get(),
-                                        ),
-                                    )
-                            }",
+                        val timestamp = LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(workInfo.nextScheduleTimeMillis),
+                            ZoneId.systemDefault(),
                         )
+                            .toDateTimestampString(
+                                UiPreferences.dateFormat(
+                                    Injekt.get<UiPreferences>().dateFormat().get(),
+                                ),
+                            )
+                        appendLine("Next scheduled run: $timestamp",)
                         appendLine("Attempt #${workInfo.runAttemptCount + 1}")
                     }
                     appendLine()
