@@ -25,7 +25,8 @@ CREATE TABLE mangas(
     update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
     calculate_interval INTEGER DEFAULT 0 NOT NULL,
     last_modified_at INTEGER NOT NULL DEFAULT 0,
-    favorite_modified_at INTEGER
+    favorite_modified_at INTEGER,
+    notes TEXT
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
