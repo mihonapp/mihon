@@ -91,8 +91,7 @@ fun CalenderHeader(
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape),
-
-                    ) {
+                ) {
                     Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
                 }
 
