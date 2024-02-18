@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.updates.calendar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -55,7 +56,9 @@ fun Calendar(
         CalenderHeader(month = today.month, year = today.year)
         Spacer(modifier = Modifier.padding(vertical = 4.dp))
         LazyVerticalGrid(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(302.dp),
             columns = GridCells.Fixed(7),
         ) {
             items(weekValue) { item ->

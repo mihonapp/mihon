@@ -65,6 +65,12 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun getUpcomingManga(): List<Manga> {
+        return handler.awaitList {
+            mangasQueries.getUpcomingManga(MangaMapper::mapManga)
+        }
+    }
+
     override suspend fun resetViewerFlags(): Boolean {
         return try {
             handler.await { mangasQueries.resetViewerFlags() }

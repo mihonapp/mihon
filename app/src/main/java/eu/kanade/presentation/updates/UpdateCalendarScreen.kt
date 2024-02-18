@@ -1,15 +1,11 @@
 package eu.kanade.presentation.updates
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.Icon
@@ -19,40 +15,38 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.DayPosition
 import eu.kanade.presentation.components.UpIcon
-import eu.kanade.tachiyomi.R
+import eu.kanade.presentation.components.relativeDateText
+import eu.kanade.presentation.history.HistoryUiModel
 import eu.kanade.tachiyomi.ui.updates.calendar.Calendar
+import eu.kanade.tachiyomi.ui.updates.calendar.UpdateCalendarScreenModel
+import tachiyomi.domain.manga.model.Manga
+import tachiyomi.presentation.core.components.FastScrollLazyColumn
+import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.material.Scaffold
-import tachiyomi.presentation.core.components.material.Surface
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
 
 @Composable
-fun UpdateCalendarScreen() {
+fun UpdateCalendarScreen(
+    state: UpdateCalendarScreenModel.State,
+) {
 
     Scaffold(
         topBar = {
             UpdateCalendarToolbar()
-        }
+        },
     ) { paddingValues ->
-        Surface(onClick = {}) {
-            UpdateCalendarContent(paddingValues)
+        state.items.let {
+            UpdateCalendarContent(it, paddingValues)
         }
     }
 }
@@ -78,20 +72,51 @@ internal fun UpdateCalendarToolbar(modifier: Modifier = Modifier) {
                 IconButton(onClick = { uriHandler.openUri(HELP_URL) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                        contentDescription = "Upcoming Guide"
+                        contentDescription = "Upcoming Guide",
                     )
                 }
             },
         )
     }
 }
-@Composable
-internal fun UpdateCalendarContent(contentPadding: PaddingValues) {
-    Column(modifier = Modifier.padding(contentPadding)) {
-        Calendar()
 
+@Composable
+internal fun UpdateCalendarContent(
+    upcoming: List<UpcomingUIModel>,
+    contentPadding: PaddingValues,
+) {
+    FastScrollLazyColumn(
+        contentPadding = contentPadding,
+    ) {
+        item { Calendar() }
+        items(
+            items = upcoming,
+            key = null,
+            contentType = {
+                when (it) {
+                    is UpcomingUIModel.Header -> "header"
+                    is UpcomingUIModel.Item -> "item"
+                }
+            },
+        ) { item ->
+            when (item) {
+                is UpcomingUIModel.Item -> {
+                    UpcomingItem(upcoming = item.item)
+                }
+
+                is UpcomingUIModel.Header -> {
+                    ListGroupHeader(
+                        modifier = Modifier.animateItemPlacement(),
+                        text = relativeDateText(item.date),
+                    )
+                }
+            }
+
+        }
     }
 }
+
+//Calendar()
 
 @Composable
 fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
@@ -101,39 +126,14 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }
 }
 
+sealed interface UpcomingUIModel {
+    data class Header(val date: LocalDate) : UpcomingUIModel
 
-@Composable
-private fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
-    Box(
-        modifier = Modifier.run {
-            aspectRatio(1f) // This is important for square-sizing!
-                .testTag("MonthDay")
-                .padding(6.dp)
-                .clip(CircleShape)
-                .background(color = Color.Transparent)
-                // Disable clicks on inDates/outDates
-                .clickable(
-                    enabled = day.position == DayPosition.MonthDate,
-                    onClick = { onClick(day) },
-                )
-        },
-        contentAlignment = Alignment.Center,
-    ) {
-        val textColor = when (day.position) {
-            // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) Color.White else Color.Unspecified
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.accent_blue)
-        }
-        Text(
-            text = day.date.dayOfMonth.toString(),
-            color = textColor,
-            fontSize = 14.sp,
-        )
-    }
+    data class Item(val item: Manga) : UpcomingUIModel
 }

@@ -100,6 +100,13 @@ WHERE favorite = 1
 AND LOWER(title) = :title
 AND _id != :id;
 
+getUpcomingManga:
+SELECT *
+FROM mangas
+WHERE next_update > 0
+AND (status == 1 OR status == 4)
+ORDER BY next_update ASC;
+
 resetViewerFlags:
 UPDATE mangas
 SET viewer = 0;
