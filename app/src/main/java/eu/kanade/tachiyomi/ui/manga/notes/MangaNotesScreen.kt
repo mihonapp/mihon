@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.manga.notes
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -32,11 +33,23 @@ class MangaNotesScreen(private val mangaId: Long) : Screen() {
 
         val successState = state as MangaNotesScreenState.Success
 
+        BackHandler(
+            onBack = {
+                if (!successState.editing) {
+                    navigator.pop()
+                    return@BackHandler
+                }
+
+                screenModel.endEditing()
+            },
+        )
+
         MangaNotesScreen(
             state = successState,
             navigateUp = navigator::pop,
             beginEditing = { screenModel.beginEditing() },
             endEditing = { screenModel.endEditing() },
+            onSave = { screenModel.saveText(it) }
         )
     }
 }
