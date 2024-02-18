@@ -113,7 +113,9 @@ internal fun UpdateUpcomingContent(
         state = listState,
         modifier = modifier,
     ) {
-        item {
+        item(
+            key = "upcoming-calendar",
+        ) {
             Calendar(
                 events = events,
                 screenWidth = configuration.screenWidthDp.dp,
@@ -127,7 +129,7 @@ internal fun UpdateUpcomingContent(
         }
         items(
             items = upcoming,
-            key = null,
+            key = { "upcoming-${it.hashCode()}" },
             contentType = {
                 when (it) {
                     is UpcomingUIModel.Header -> "header"
