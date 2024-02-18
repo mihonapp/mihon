@@ -1,6 +1,7 @@
 package eu.kanade.presentation.updates.components.calendar
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,26 +15,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.ceil
 
 private val CalenderPadding = 8.dp
 private val FontSize = 16.sp
-private val CalculatedHeight = 302.dp
+private const val ExtendedScale = 0.31f
+private const val MediumScale = 0.60f
+private const val HeightMultiplier = 68
 private const val DaysOfWeek = 7
 
 @Composable
 fun Calendar(
     events: ImmutableMap<LocalDate, Int>,
+    screenWidth: Dp,
     modifier: Modifier = Modifier,
     labelFormat: (DayOfWeek) -> String = {
         it.getDisplayName(
@@ -50,15 +58,18 @@ fun Calendar(
     val currentMonth = displayedMonth.value
     val currentYear = displayedYear.intValue
 
-    val daysInMonth = currentMonth.length(true)
-    val startDayOfMonth = LocalDate.of(currentYear, currentMonth, 1)
-    val firstDayOfMonth = startDayOfMonth.dayOfWeek
+    val widthModifier = when {
+        screenWidth > 840.dp -> ExtendedScale
+        screenWidth > 600.dp -> MediumScale
+        else -> 1.0f
+    }
 
     Column(
         modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth()
             .padding(all = CalenderPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CalenderHeader(
             month = currentMonth,
@@ -73,31 +84,65 @@ fun Calendar(
             },
         )
         Spacer(modifier = Modifier.padding(vertical = 4.dp))
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(CalculatedHeight),
-            columns = GridCells.Fixed(DaysOfWeek),
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp),
         ) {
-            items(weekValue) { item ->
-                Text(
-                    modifier = Modifier,
-                    text = labelFormat(item),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = FontSize,
-                )
-            }
+            CalendarGrid(
+                weekValue = weekValue,
+                labelFormat = labelFormat,
+                currentMonth = currentMonth,
+                currentYear = currentYear,
+                events = events,
+                widthModifier = widthModifier,
+                onClickDay = onClickDay,
+                modifier = Modifier.padding(horizontal = 8.dp),
+            )
+        }
+    }
+}
 
-            items((getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toList()) {
-                if (it > 0) {
-                    val localDate = LocalDate.of(currentYear, currentMonth, it)
-                    CalendarDay(
-                        date = localDate,
-                        onDayClick = onClickDay,
-                        events = events[localDate] ?: 0,
-                    )
-                }
+@Composable
+private fun CalendarGrid(
+    weekValue: Array<DayOfWeek>,
+    labelFormat: (DayOfWeek) -> String,
+    currentMonth: Month,
+    currentYear: Int,
+    events: ImmutableMap<LocalDate, Int>,
+    modifier: Modifier = Modifier,
+    onClickDay: (day: LocalDate) -> Unit = {},
+    widthModifier: Float = 1.0F,
+) {
+    val daysInMonth = currentMonth.length(true)
+    val startDayOfMonth = LocalDate.of(currentYear, currentMonth, 1)
+    val firstDayOfMonth = startDayOfMonth.dayOfWeek
+
+    val dayEntries = (getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toImmutableList()
+    val height = (((((dayEntries.size - 1) / DaysOfWeek) + ceil(1.0f - widthModifier)) * HeightMultiplier)).dp
+
+    LazyVerticalGrid(
+        modifier = modifier
+            .fillMaxWidth(widthModifier)
+            .height(height),
+        columns = GridCells.Fixed(DaysOfWeek),
+    ) {
+        items(weekValue) { item ->
+            Text(
+                modifier = Modifier,
+                text = labelFormat(item),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = FontSize,
+            )
+        }
+
+        items(dayEntries) {
+            if (it > 0) {
+                val localDate = LocalDate.of(currentYear, currentMonth, it)
+                CalendarDay(
+                    date = localDate,
+                    onDayClick = onClickDay,
+                    events = events[localDate] ?: 0,
+                )
             }
         }
     }

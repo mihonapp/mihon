@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBarTitle
@@ -104,6 +106,8 @@ internal fun UpdateUpcomingContent(
             .filter { it.value is UpcomingUIModel.Header }
             .associate { Pair((it.value as UpcomingUIModel.Header).date, it.index + 1) } // Offset 1 for Calendar
 
+    val configuration = LocalConfiguration.current
+
     FastScrollLazyColumn(
         contentPadding = contentPadding,
         state = listState,
@@ -112,6 +116,7 @@ internal fun UpdateUpcomingContent(
         item {
             Calendar(
                 events = events,
+                screenWidth = configuration.screenWidthDp.dp,
             ) { date ->
                 dateToHeaderMap[date]?.let {
                     coroutineScope.launch {
