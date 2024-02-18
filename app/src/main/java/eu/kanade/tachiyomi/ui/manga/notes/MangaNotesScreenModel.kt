@@ -53,6 +53,17 @@ class MangaNotesScreenModel(
             }
         }
     }
+
+    fun saveText(content: String) {
+        mutableState.update {
+            when (it) {
+                MangaNotesScreenState.Loading -> it
+                is MangaNotesScreenState.Success -> it.copy(content = content)
+            }
+        }
+
+        // do the magic to set it backend
+    }
 }
 
 sealed interface MangaNotesScreenState {
@@ -66,10 +77,5 @@ sealed interface MangaNotesScreenState {
         val title: String,
 
         val editing: Boolean = false,
-    ) : MangaNotesScreenState {
-
-        val isEmpty: Boolean
-            get() = content.isNullOrEmpty()
-    }
+    ) : MangaNotesScreenState
 }
-
