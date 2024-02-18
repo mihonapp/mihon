@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.updates.components.calendar.Calendar
-import eu.kanade.tachiyomi.ui.updates.calendar.UpdateCalendarScreenModel
+import eu.kanade.tachiyomi.ui.updates.calendar.UpdateUpcomingScreenModel
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -30,18 +30,18 @@ import java.time.LocalDate
 
 
 @Composable
-fun UpdateCalendarScreen(
-    state: UpdateCalendarScreenModel.State,
+fun UpdateUpcomingScreen(
+    state: UpdateUpcomingScreenModel.State,
     onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
 
     Scaffold(
         topBar = {
-            UpdateCalendarToolbar()
+            UpdateUpcomingToolbar()
         },
     ) { paddingValues ->
 
-        UpdateCalendarContent(
+        UpdateUpcomingContent(
             upcoming = state.items,
             events = state.events,
             contentPadding = paddingValues,
@@ -53,7 +53,7 @@ fun UpdateCalendarScreen(
 const val HELP_URL = "https://mihon.app/docs/faq/upcoming"
 
 @Composable
-internal fun UpdateCalendarToolbar(modifier: Modifier = Modifier) {
+internal fun UpdateUpcomingToolbar(modifier: Modifier = Modifier) {
     val navigator = LocalNavigator.currentOrThrow
     Column {
         TopAppBar(
@@ -80,7 +80,7 @@ internal fun UpdateCalendarToolbar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun UpdateCalendarContent(
+internal fun UpdateUpcomingContent(
     upcoming: List<UpcomingUIModel>,
     events: Map<LocalDate, Int> = mapOf(),
     onClickUpcoming: (manga: Manga) -> Unit,

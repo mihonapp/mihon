@@ -7,22 +7,22 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.Screen
-import eu.kanade.presentation.updates.UpdateCalendarScreen
+import eu.kanade.presentation.updates.UpdateUpcomingScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
-import eu.kanade.tachiyomi.ui.updates.calendar.UpdateCalendarScreenModel
+import eu.kanade.tachiyomi.ui.updates.calendar.UpdateUpcomingScreenModel
 
-class UpdateCalendarScreen : Screen() {
+class UpdateUpcomingScreen : Screen() {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
         val screenModel = rememberScreenModel {
-            UpdateCalendarScreenModel()
+            UpdateUpcomingScreenModel()
         }
         val state by screenModel.state.collectAsState()
 
-        UpdateCalendarScreen(
+        UpdateUpcomingScreen(
             state = state,
             onClickUpcoming = { navigator.push(MangaScreen(it.id)) },
         )

@@ -73,7 +73,7 @@ object UpdatesTab : Tab {
                 context.startActivity(intent)
             },
             onCalendarClicked = {
-                navigator.push(UpdateCalendarScreen())
+                navigator.push(UpdateUpcomingScreen())
             },
         )
 
