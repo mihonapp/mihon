@@ -6,6 +6,7 @@ import eu.kanade.core.util.insertSeparators
 import eu.kanade.presentation.updates.UpcomingUIModel
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetUpcomingManga
@@ -21,23 +22,28 @@ class UpdateCalendarScreenModel(
 
     init {
         screenModelScope.launch {
+            val manga = getUpcomingManga.await()
+            val items = manga.toUpcomingUIModels()
+            val events = manga.toEvents()
             mutableState.update {
-                it.copy(items = getUpcomingManga.await().toUpcomingUIModels())
+                it.copy(
+                    items = items,
+                    events = events,
+                )
             }
 
         }
     }
 
     private fun List<Manga>.toUpcomingUIModels(): List<UpcomingUIModel> {
-        return map { UpcomingUIModel.Item(it) }
+        return mapIndexed { i, item -> UpcomingUIModel.Item(item) }
             .insertSeparators { before, after ->
                 val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
                 val afterDate = after?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
                 when {
-                    (beforeDate.isBefore(afterDate)
-                        or afterDate.equals(LocalDate.MAX)
-                        or beforeDate.equals(LocalDate.MAX))
-                        and (!afterDate.equals(LocalDate.MIN) or !beforeDate.equals(LocalDate.MAX))
+                    beforeDate.isBefore(afterDate)
+                        or beforeDate.equals(LocalDate.MAX)
+                        and !afterDate.equals(LocalDate.MAX)
                     -> UpcomingUIModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
                     else -> null
@@ -45,7 +51,14 @@ class UpdateCalendarScreenModel(
             }
     }
 
+    private fun List<Manga>.toEvents(): Map<LocalDate, Int> {
+        return groupBy { it.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX }
+            .mapValues { it.value.size }
+    }
+
     data class State(
         val items: List<UpcomingUIModel> = persistentListOf(),
+        val events: Map<LocalDate, Int> = persistentMapOf(),
+        val headerIndexes: Map<LocalDate, Int> = persistentMapOf(),
     )
 }

@@ -12,7 +12,7 @@
 
     <plurals name="upcoming_relative_time">
         <item quantity="one">Tomorrow</item>
-        <item quantity="other">in %1$d day</item>
+        <item quantity="other">In %1$d days</item>
     </plurals>
 
     <plurals name="num_categories">

@@ -1,5 +1,14 @@
-package eu.kanade.tachiyomi.ui.updates.calendar
+package eu.kanade.presentation.updates.components.calendar
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +24,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,26 +46,48 @@ fun CalenderHeader(
     onNextClick: () -> Unit = {},
     arrowShown: Boolean = true
 ) {
+
+    var isNext by remember { mutableStateOf(true) }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(all = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+
+
         val titleText = remember(month, year) { getTitleText(month, year) }
 
-        Text(text = titleText,
-            style = MaterialTheme.typography.titleLarge)
+        AnimatedContent(
+            targetState = titleText,
+            transitionSpec = {
+                addAnimation(isNext = isNext).using(
+                    SizeTransform(clip = false),
+                )
+            },
+            label = "Change Month",
+        ) { targetText ->
+            Text(
+                text = targetText,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+
 
         if (arrowShown) {
             Row(
                 modifier = Modifier
                     .wrapContentSize()
                     .align(Alignment.CenterVertically),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
             ) {
-                IconButton(onClick = onPreviousClick,
+                IconButton(
+                    onClick = {
+                        isNext = false
+                        onPreviousClick()
+                    },
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape),
@@ -62,7 +96,11 @@ fun CalenderHeader(
                     Icon(Icons.Default.KeyboardArrowLeft, "Previous Month")
                 }
 
-                IconButton(onClick = onNextClick,
+                IconButton(
+                    onClick = {
+                        isNext = true
+                        onNextClick()
+                    },
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape),
@@ -76,6 +114,26 @@ fun CalenderHeader(
 
     }
 
+
+}
+
+/**
+ * Adds the animation to the content based on the given duration and direction.
+ *
+ * @param duration The duration of the animation in milliseconds.
+ * @param isNext Determines the direction of the animation.
+ * @return The content transformation with the specified animation.
+ */
+private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform {
+    return slideInVertically(
+        animationSpec = tween(durationMillis = duration),
+    ) { height -> if (isNext) height else -height } + fadeIn(
+        animationSpec = tween(durationMillis = duration),
+    ) togetherWith slideOutVertically(
+        animationSpec = tween(durationMillis = duration),
+    ) { height -> if (isNext) -height else height } + fadeOut(
+        animationSpec = tween(durationMillis = duration),
+    )
 
 }
 

@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.updates.calendar
+package eu.kanade.presentation.updates.components.calendar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -30,22 +31,22 @@ fun Calendar(
     labelFormat: (DayOfWeek) -> String = {
         it.getDisplayName(
             TextStyle.SHORT,
-            Locale.getDefault()
+            Locale.getDefault(),
         )
-    }
+    },
+    events: Map<LocalDate, Int>,
+    onClickDay: (day: LocalDate) -> Unit = {},
 ) {
-
-
     val today = LocalDate.now()
     val weekValue = remember { DayOfWeek.entries.toTypedArray() }
     val displayedMonth = remember { mutableStateOf(today.month) }
     val displayedYear = remember { mutableIntStateOf(today.year) }
     val currentMonth = displayedMonth.value
-    val currentYear = displayedYear.value
+    val currentYear = displayedYear.intValue
 
-    val daysInMonth = currentMonth.length(true);
+    val daysInMonth = currentMonth.length(true)
     val startDayOfMonth = LocalDate.of(currentYear, currentMonth, 1)
-    val firstDayOfMonth = startDayOfMonth.dayOfWeek;
+    val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
     Column(
         modifier = Modifier
@@ -53,7 +54,18 @@ fun Calendar(
             .fillMaxWidth()
             .padding(all = 8.dp)
     ) {
-        CalenderHeader(month = today.month, year = today.year)
+        CalenderHeader(
+            month = currentMonth,
+            year = currentYear,
+            onPreviousClick = {
+                displayedYear.intValue -= if (currentMonth == Month.JANUARY) 1 else 0
+                displayedMonth.value -= 1
+            },
+            onNextClick = {
+                displayedYear.intValue += if (currentMonth == Month.DECEMBER) 1 else 0
+                displayedMonth.value += 1
+            },
+        )
         Spacer(modifier = Modifier.padding(vertical = 4.dp))
         LazyVerticalGrid(
             modifier = Modifier
@@ -67,21 +79,20 @@ fun Calendar(
                     text = labelFormat(item),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
 
-            val selected = LocalDate.of(2024, 2, 15)
-
             items((getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toList()) {
                 if (it > 0 ) {
+                    val localDate = LocalDate.of(currentYear, currentMonth, it)
                     CalendarDay(
-                        date = LocalDate.of(currentYear, currentMonth, it),
-                        onDayClick = {},
-                        selectedDate = selected)
+                        date = localDate,
+                        onDayClick = onClickDay,
+                        events = events[localDate] ?: 0,
+                    )
                 }
             }
-
         }
     }
 }

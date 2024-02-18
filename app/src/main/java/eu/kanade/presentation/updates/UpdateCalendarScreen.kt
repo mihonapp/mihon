@@ -2,42 +2,37 @@ package eu.kanade.presentation.updates
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
-import eu.kanade.presentation.history.HistoryUiModel
-import eu.kanade.tachiyomi.ui.updates.calendar.Calendar
+import eu.kanade.presentation.updates.components.calendar.Calendar
 import eu.kanade.tachiyomi.ui.updates.calendar.UpdateCalendarScreenModel
+import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.material.Scaffold
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 
 @Composable
 fun UpdateCalendarScreen(
     state: UpdateCalendarScreenModel.State,
+    onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
 
     Scaffold(
@@ -45,9 +40,13 @@ fun UpdateCalendarScreen(
             UpdateCalendarToolbar()
         },
     ) { paddingValues ->
-        state.items.let {
-            UpdateCalendarContent(it, paddingValues)
-        }
+
+        UpdateCalendarContent(
+            upcoming = state.items,
+            events = state.events,
+            contentPadding = paddingValues,
+            onClickUpcoming = onClickUpcoming,
+        )
     }
 }
 
@@ -83,12 +82,35 @@ internal fun UpdateCalendarToolbar(modifier: Modifier = Modifier) {
 @Composable
 internal fun UpdateCalendarContent(
     upcoming: List<UpcomingUIModel>,
+    events: Map<LocalDate, Int> = mapOf(),
+    onClickUpcoming: (manga: Manga) -> Unit,
     contentPadding: PaddingValues,
 ) {
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val dateToHeaderMap =
+        upcoming.withIndex()
+            .filter { it.value is UpcomingUIModel.Header }
+            .associate { Pair((it.value as UpcomingUIModel.Header).date, it.index + 1) } // Offset 1 for Calendar
+
     FastScrollLazyColumn(
         contentPadding = contentPadding,
+        state = listState,
     ) {
-        item { Calendar() }
+        item {
+            Calendar(
+                events = events,
+                onClickDay = { date ->
+                    dateToHeaderMap[date]?.let {
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(it)
+                        }
+                    }
+                },
+            )
+        }
         items(
             items = upcoming,
             key = null,
@@ -101,7 +123,10 @@ internal fun UpdateCalendarContent(
         ) { item ->
             when (item) {
                 is UpcomingUIModel.Item -> {
-                    UpcomingItem(upcoming = item.item)
+                    UpcomingItem(
+                        upcoming = item.item,
+                        onClick = onClickUpcoming,
+                    )
                 }
 
                 is UpcomingUIModel.Header -> {
@@ -112,22 +137,6 @@ internal fun UpdateCalendarContent(
                 }
             }
 
-        }
-    }
-}
-
-//Calendar()
-
-@Composable
-fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        for (dayOfWeek in daysOfWeek) {
-            Text(
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
-                color = MaterialTheme.colorScheme.primary,
-            )
         }
     }
 }

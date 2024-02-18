@@ -4,9 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,10 +29,11 @@ private val UpcomingItemHeight = 96.dp
 fun UpcomingItem(
     upcoming: Manga,
     modifier: Modifier = Modifier,
+    onClick: (manga: Manga) -> Unit = {},
 ) {
     Row(
         modifier = modifier
-            .clickable(onClick = {})
+            .clickable(onClick = { onClick(upcoming) })
             .height(UpcomingItemHeight)
             .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         verticalAlignment = Alignment.CenterVertically,
@@ -37,7 +41,7 @@ fun UpcomingItem(
         MangaCover.Book(
             modifier = Modifier.fillMaxHeight(),
             data = upcoming.asMangaCover(),
-            onClick = {},
+            onClick = { onClick(upcoming) },
         )
 
         Column(
@@ -52,6 +56,14 @@ fun UpcomingItem(
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
             )
+        }
+
+        IconButton(onClick = { onClick(upcoming) }) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                contentDescription = "View Manga",
+
+                )
         }
     }
 }

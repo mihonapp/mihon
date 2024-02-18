@@ -1,14 +1,15 @@
-package eu.kanade.tachiyomi.ui.updates.calendar
+package eu.kanade.presentation.updates.components.calendar
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,9 +29,8 @@ fun CalendarDay(
     date: LocalDate,
     onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
-    selectedDate: LocalDate = date,
+    events: Int = 0,
 ) {
-    val selected = selectedDate == date
 
     val today = LocalDate.now()
 
@@ -41,15 +41,12 @@ fun CalendarDay(
     Column(
         modifier = modifier
             .border(
-                border = getBorder(currentDay, MaterialTheme.colorScheme.onBackground, selected),
+                border = getBorder(currentDay, MaterialTheme.colorScheme.onBackground),
                 shape = CircleShape,
             )
             .clip(shape = CircleShape)
-            .dayBackgroundColor(
-                selected,
-                MaterialTheme.colorScheme.primary,
-                date,
-            )
+            .background(color = Color.Transparent)
+            .clickable(onClick = { onDayClick(date) })
             .circleLayout()
             .wrapContentSize()
             .defaultMinSize(56.dp),
@@ -62,12 +59,24 @@ fun CalendarDay(
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = when {
-                selected -> MaterialTheme.colorScheme.onPrimary
-                inThePast -> MaterialTheme.colorScheme.onBackground.copy(ContentAlpha.disabled)
+                inThePast -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f)
                 else -> MaterialTheme.colorScheme.onBackground
             },
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+            fontWeight = FontWeight.SemiBold,
         )
+        Row {
+            val size = minOf(events, 3)
+            for (i in (1..size)) {
+                Row {
+                    CalendarIndicator(
+                        index = i - 1,
+                        size = 56.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+
+        }
     }
 }
 
@@ -76,13 +85,12 @@ fun CalendarDay(
  *
  * @param currentDay Whether the day is the current day.
  * @param color The color of the border.
- * @param selected Whether the day is selected.
  *
  * @return The border stroke to be applied.
  */
-private fun getBorder(currentDay: Boolean, color: Color, selected: Boolean): BorderStroke {
+private fun getBorder(currentDay: Boolean, color: Color): BorderStroke {
     val emptyBorder = BorderStroke(0.dp, Color.Transparent)
-    return if (currentDay && selected.not()) {
+    return if (currentDay) {
         BorderStroke(1.dp, color)
     } else {
         emptyBorder
@@ -105,29 +113,3 @@ private fun Modifier.circleLayout() =
             placeable.placeRelative((newDiameter - currentWidth) / 2, (newDiameter - currentHeight) / 2)
         }
     }
-
-private const val FULL_ALPHA = 1f
-private const val TOWNED_DOWN_ALPHA = 0.4F
-
-private fun Modifier.dayBackgroundColor(
-    selected: Boolean,
-    color: Color,
-    date: LocalDate,
-//    selectedRange: KalendarSelectedDayRange?
-): Modifier {
-//    val inRange = date == selectedRange?.start || date == selectedRange?.end
-
-    val backgroundColor = when {
-        selected -> color
-//        selectedRange != null && date in selectedRange.start..selectedRange.end -> {
-//            val alpha = if (inRange) FULL_ALPHA else TOWNED_DOWN_ALPHA
-//            color.copy(alpha = alpha)
-//        }
-
-        else -> Color.Transparent
-    }
-
-    return this.then(
-        background(backgroundColor),
-    )
-}
