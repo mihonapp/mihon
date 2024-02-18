@@ -63,9 +63,9 @@ class HistoryScreenModel(
                 val beforeDate = before?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
                 val afterDate = after?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
                 when {
-                    beforeDate.isAfter(afterDate)
-                        or afterDate.equals(LocalDate.MIN)
-                        or beforeDate.equals(LocalDate.MIN) -> HistoryUiModel.Header(afterDate)
+                    (beforeDate.equals(LocalDate.MIN)
+                        or beforeDate.isAfter(afterDate))
+                        and !afterDate.equals(LocalDate.MIN) -> HistoryUiModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
