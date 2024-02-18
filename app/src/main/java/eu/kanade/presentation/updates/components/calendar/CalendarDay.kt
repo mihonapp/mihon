@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
-private const val MAX_EVENTS = 3
+private const val MaxEvents = 3
 
 @Composable
 fun CalendarDay(
@@ -33,7 +33,6 @@ fun CalendarDay(
     modifier: Modifier = Modifier,
     events: Int = 0,
 ) {
-
     val today = LocalDate.now()
 
     val inThePast = date.isBefore(today)
@@ -67,7 +66,7 @@ fun CalendarDay(
             fontWeight = FontWeight.SemiBold,
         )
         Row {
-            val size = minOf(events, MAX_EVENTS)
+            val size = minOf(events, MaxEvents)
             for (i in (1..size)) {
                 Row {
                     CalendarIndicator(
@@ -77,7 +76,6 @@ fun CalendarDay(
                     )
                 }
             }
-
         }
     }
 }

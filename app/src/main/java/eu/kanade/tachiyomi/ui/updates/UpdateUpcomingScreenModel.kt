@@ -5,8 +5,12 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
 import eu.kanade.presentation.updates.UpcomingUIModel
 import eu.kanade.tachiyomi.util.lang.toLocalDate
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetUpcomingManga
@@ -14,7 +18,6 @@ import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.LocalDate
-
 
 class UpdateUpcomingScreenModel(
     private val getUpcomingManga: GetUpcomingManga = Injekt.get(),
@@ -31,12 +34,11 @@ class UpdateUpcomingScreenModel(
                     events = events,
                 )
             }
-
         }
     }
 
-    private fun List<Manga>.toUpcomingUIModels(): List<UpcomingUIModel> {
-        return mapIndexed { i, item -> UpcomingUIModel.Item(item) }
+    private fun List<Manga>.toUpcomingUIModels(): ImmutableList<UpcomingUIModel> {
+        return map { UpcomingUIModel.Item(it) }
             .insertSeparators { before, after ->
                 val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
                 val afterDate = after?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
@@ -49,16 +51,18 @@ class UpdateUpcomingScreenModel(
                     else -> null
                 }
             }
+            .toImmutableList()
     }
 
-    private fun List<Manga>.toEvents(): Map<LocalDate, Int> {
+    private fun List<Manga>.toEvents(): ImmutableMap<LocalDate, Int> {
         return groupBy { it.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX }
             .mapValues { it.value.size }
+            .toImmutableMap()
     }
 
     data class State(
-        val items: List<UpcomingUIModel> = persistentListOf(),
-        val events: Map<LocalDate, Int> = persistentMapOf(),
+        val items: ImmutableList<UpcomingUIModel> = persistentListOf(),
+        val events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
         val headerIndexes: Map<LocalDate, Int> = persistentMapOf(),
     )
 }

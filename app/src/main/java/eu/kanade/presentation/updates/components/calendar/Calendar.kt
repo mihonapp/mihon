@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.collections.immutable.ImmutableMap
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
@@ -28,17 +29,18 @@ import java.util.Locale
 private val CalenderPadding = 8.dp
 private val FontSize = 16.sp
 private val CalculatedHeight = 302.dp
-private const val DAYS_OF_WEEK = 7
+private const val DaysOfWeek = 7
 
 @Composable
 fun Calendar(
+    events: ImmutableMap<LocalDate, Int>,
+    modifier: Modifier = Modifier,
     labelFormat: (DayOfWeek) -> String = {
         it.getDisplayName(
             TextStyle.SHORT,
             Locale.getDefault(),
         )
     },
-    events: Map<LocalDate, Int>,
     onClickDay: (day: LocalDate) -> Unit = {},
 ) {
     val today = LocalDate.now()
@@ -53,7 +55,7 @@ fun Calendar(
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth()
             .padding(all = CalenderPadding),
@@ -75,7 +77,7 @@ fun Calendar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(CalculatedHeight),
-            columns = GridCells.Fixed(DAYS_OF_WEEK),
+            columns = GridCells.Fixed(DaysOfWeek),
         ) {
             items(weekValue) { item ->
                 Text(
@@ -88,7 +90,7 @@ fun Calendar(
             }
 
             items((getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toList()) {
-                if (it > 0 ) {
+                if (it > 0) {
                     val localDate = LocalDate.of(currentYear, currentMonth, it)
                     CalendarDay(
                         date = localDate,

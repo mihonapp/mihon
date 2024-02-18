@@ -6,8 +6,8 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.updates.UpdateUpcomingScreen
+import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 
 class UpdateUpcomingScreen : Screen() {
@@ -26,6 +26,4 @@ class UpdateUpcomingScreen : Screen() {
             onClickUpcoming = { navigator.push(MangaScreen(it.id)) },
         )
     }
-
-
 }

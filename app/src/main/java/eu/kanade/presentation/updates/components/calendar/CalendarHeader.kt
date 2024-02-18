@@ -39,7 +39,6 @@ import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 
-
 private val HEADER_PADDING = 8.dp
 
 @Composable
@@ -51,7 +50,6 @@ fun CalenderHeader(
     onNextClick: () -> Unit = {},
     arrowShown: Boolean = true,
 ) {
-
     var isNext by remember { mutableStateOf(true) }
 
     Row(
@@ -61,8 +59,6 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-
-
         val titleText = remember(month, year) { getTitleText(month, year) }
 
         AnimatedContent(
@@ -79,7 +75,6 @@ fun CalenderHeader(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-
 
         if (arrowShown) {
             Row(
@@ -109,17 +104,12 @@ fun CalenderHeader(
                     modifier = Modifier
                         .wrapContentSize()
                         .clip(CircleShape),
-
-                    ) {
+                ) {
                     Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
                 }
             }
         }
-
-
     }
-
-
 }
 
 /**
@@ -139,7 +129,6 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
     ) { height -> if (isNext) -height else height } + fadeOut(
         animationSpec = tween(durationMillis = duration),
     )
-
 }
 
 /**
@@ -159,9 +148,9 @@ private fun getTitleText(month: Month, year: Int): String {
 
 @Preview
 @Composable
-fun CalenderHeaderPreview() {
+private fun CalenderHeaderPreview() {
     CalenderHeader(
         month = Month.APRIL,
-        year = 2024
+        year = 2024,
     )
 }

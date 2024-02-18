@@ -40,7 +40,7 @@ fun Long.toLocalDate(): LocalDate {
 }
 
 fun Instant.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()): LocalDate {
-    return LocalDate.ofInstant(this, zoneId);
+    return LocalDate.ofInstant(this, zoneId)
 }
 
 fun LocalDate.toRelativeString(

@@ -62,8 +62,7 @@ fun UpcomingItem(
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                 contentDescription = "View Manga",
-
-                )
+            )
         }
     }
 }

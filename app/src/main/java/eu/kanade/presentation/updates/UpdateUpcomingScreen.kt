@@ -21,6 +21,9 @@ import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.updates.components.calendar.Calendar
 import eu.kanade.tachiyomi.ui.updates.UpdateUpcomingScreenModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -30,14 +33,14 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 
-
 @Composable
 fun UpdateUpcomingScreen(
     state: UpdateUpcomingScreenModel.State,
+    modifier: Modifier = Modifier,
     onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
-
     Scaffold(
+        modifier = modifier,
         topBar = {
             UpdateUpcomingToolbar()
         },
@@ -52,12 +55,16 @@ fun UpdateUpcomingScreen(
     }
 }
 
-const val HELP_URL = "https://mihon.app/docs/faq/upcoming"
+const val HelpUrl = "https://mihon.app/docs/faq/upcoming"
 
 @Composable
-internal fun UpdateUpcomingToolbar() {
+internal fun UpdateUpcomingToolbar(
+    modifier: Modifier = Modifier,
+) {
     val navigator = LocalNavigator.currentOrThrow
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         TopAppBar(
             navigationIcon = {
                 val canPop = remember { navigator.canPop }
@@ -70,7 +77,7 @@ internal fun UpdateUpcomingToolbar() {
             title = { AppBarTitle(stringResource(MR.strings.label_upcoming)) },
             actions = {
                 val uriHandler = LocalUriHandler.current
-                IconButton(onClick = { uriHandler.openUri(HELP_URL) }) {
+                IconButton(onClick = { uriHandler.openUri(HelpUrl) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
                         contentDescription = stringResource(MR.strings.upcoming_guide),
@@ -83,12 +90,12 @@ internal fun UpdateUpcomingToolbar() {
 
 @Composable
 internal fun UpdateUpcomingContent(
-    upcoming: List<UpcomingUIModel>,
-    events: Map<LocalDate, Int> = mapOf(),
-    onClickUpcoming: (manga: Manga) -> Unit,
+    upcoming: ImmutableList<UpcomingUIModel>,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
+    onClickUpcoming: (manga: Manga) -> Unit,
 ) {
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -100,18 +107,18 @@ internal fun UpdateUpcomingContent(
     FastScrollLazyColumn(
         contentPadding = contentPadding,
         state = listState,
+        modifier = modifier,
     ) {
         item {
             Calendar(
                 events = events,
-                onClickDay = { date ->
-                    dateToHeaderMap[date]?.let {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(it)
-                        }
+            ) { date ->
+                dateToHeaderMap[date]?.let {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(it)
                     }
-                },
-            )
+                }
+            }
         }
         items(
             items = upcoming,
@@ -138,7 +145,6 @@ internal fun UpdateUpcomingContent(
                     )
                 }
             }
-
         }
     }
 }
