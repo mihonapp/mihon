@@ -1,0 +1,89 @@
+package eu.kanade.presentation.manga
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import com.halilibo.richtext.markdown.Markdown
+import com.halilibo.richtext.ui.RichTextStyle
+import com.halilibo.richtext.ui.material3.RichText
+import com.halilibo.richtext.ui.string.RichTextStringStyle
+import eu.kanade.presentation.components.AppBar
+import eu.kanade.presentation.components.AppBarTitle
+import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
+import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
+import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.EmptyScreen
+
+@Composable
+fun MangaNotesScreen(
+    state: MangaNotesScreenState.Success,
+    navigateUp: () -> Unit,
+    beginEditing: () -> Unit,
+    endEditing: () -> Unit,
+) {
+    Scaffold(
+        topBar = { scrollBehavior ->
+            AppBar(
+                titleContent = {
+                    AppBarTitle(title = stringResource(MR.strings.action_notes), subtitle = state.title)
+                },
+                navigateUp = navigateUp,
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                true,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                ExtendedFloatingActionButton(
+                    text = {
+                        Text(text = stringResource(if (state.editing) MR.strings.action_apply else MR.strings.action_edit))
+                    },
+                    icon = { Icon(imageVector = if (state.editing) Icons.Filled.Check else Icons.Filled.Edit, contentDescription = null) },
+                    onClick = { if (state.editing) endEditing() else beginEditing() },
+                    expanded = true,
+                )
+            }
+        },
+    ) { paddingValues ->
+        if (state.isEmpty || state.content == null) {
+            EmptyScreen(
+                stringRes = MR.strings.information_no_notes,
+                modifier = Modifier.padding(paddingValues),
+            )
+            return@Scaffold
+        }
+
+        RichText(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = MaterialTheme.padding.small,
+                    vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.small,
+                ),
+            style = RichTextStyle(
+                stringStyle = RichTextStringStyle(
+                    linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                ),
+            ),
+        ) {
+            Markdown(content = state.content)
+        }
+    }
+}
