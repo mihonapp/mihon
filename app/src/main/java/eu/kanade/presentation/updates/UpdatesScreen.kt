@@ -36,7 +36,7 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import java.util.Date
+import java.time.LocalDate
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -206,6 +206,6 @@ private fun UpdatesBottomBar(
 }
 
 sealed interface UpdatesUiModel {
-    data class Header(val date: Date) : UpdatesUiModel
+    data class Header(val date: LocalDate) : UpdatesUiModel
     data class Item(val item: UpdatesItem) : UpdatesUiModel
 }

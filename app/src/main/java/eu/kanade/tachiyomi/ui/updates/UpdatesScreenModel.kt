@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
-import eu.kanade.tachiyomi.util.lang.toDateKey
+import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -45,8 +45,8 @@ import tachiyomi.domain.updates.interactor.GetUpdates
 import tachiyomi.domain.updates.model.UpdatesWithRelations
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.Date
 
 class UpdatesScreenModel(
     private val sourceManager: SourceManager = Injekt.get(),
@@ -374,12 +374,12 @@ class UpdatesScreenModel(
             return items
                 .map { UpdatesUiModel.Item(it) }
                 .insertSeparators { before, after ->
-                    val beforeDate = before?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
-                    val afterDate = after?.item?.update?.dateFetch?.toDateKey() ?: Date(0)
+                    val beforeDate = before?.item?.update?.dateFetch?.toLocalDate() ?: LocalDate.MIN
+                    val afterDate = after?.item?.update?.dateFetch?.toLocalDate() ?: LocalDate.MIN
                     when {
-                        beforeDate.time != afterDate.time && afterDate.time != 0L -> {
-                            UpdatesUiModel.Header(afterDate)
-                        }
+                        beforeDate.isAfter(afterDate)
+                            or afterDate.equals(LocalDate.MIN)
+                            or beforeDate.equals(LocalDate.MIN) -> UpdatesUiModel.Header(afterDate)
                         // Return null to avoid adding a separator between two items.
                         else -> null
                     }

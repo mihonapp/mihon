@@ -44,40 +44,13 @@ Discover and read manga, webtoons, comics, and more – easier than ever on your
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-If you got any questions, [join our Discord server](https://discord.gg/mihon).
+Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues); if you got any questions, join our [Discord server](https://discord.gg/mihon).
 
-<details align="center"><summary>Issues</summary><div align="left">
-
-Before reporting a new issue, take a look at the [FAQ](https://mihon.app/docs/faq/general), the [changelog](https://mihon.app/changelogs/) and the already opened [issues](https://github.com/mihonapp/mihon/issues).
-
-</div></details>
-
-<details align="center"><summary>Bugs</summary><div align="left">
-
-* Include version (**More → About → Version**).
-* If not latest, try updating, it may have already been solved.
-* Beta version is equal to the number of commits as seen on the main page.
-* Include steps to reproduce (if not obvious from description).
-* Include screenshot (if needed).
-* If it could be device-dependent, try reproducing on another device (if possible).
-* Don't group unrelated requests into one issue
-- **DO:** [#24](https://git.mihon.dev/tachiyomi/tachiyomi/issues/24), [#71](https://git.mihon.dev/tachiyomi/tachiyomi/issues/71)
-- **DON'T:** [#75](https://git.mihon.dev/tachiyomi/tachiyomi/issues/75)
-
-</div></details>
-
-<details align="center"><summary>Feature requests</summary><div align="left">
-
-* Write a detailed issue, explaining what it should do or how.
-  * Avoid writing just "like X app does";
-* Include screenshot (if needed)
-* Source requests are not accepted.
-
-</div></details>
 
 ### Repositories
 
 [![mihonapp/website - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=mihonapp&repo=website&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true)](https://github.com/mihonapp/website/)
+[![mihonapp/bitmap.kt - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=mihonapp&repo=bitmap.kt&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true)](https://github.com/mihonapp/bitmap.kt/)
 
 ### Credits
 
@@ -93,8 +66,10 @@ The developer(s) of this application does not have any affiliation with the cont
 
 ### License
 
-```
+<pre>
 Copyright © 2015 Javier Tomás
+Copyright © 2024 The Mihon Open Source Project
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -106,8 +81,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-Modifications Copyright © 2024 The Mihon Open Source Project
-```
+</pre>
 
 </div>
