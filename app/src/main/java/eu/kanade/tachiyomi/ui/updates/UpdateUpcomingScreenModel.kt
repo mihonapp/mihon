@@ -1,4 +1,4 @@
-package eu.kanade.tachiyomi.ui.updates.calendar
+package eu.kanade.tachiyomi.ui.updates
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope

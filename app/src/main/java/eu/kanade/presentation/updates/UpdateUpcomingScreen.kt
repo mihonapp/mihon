@@ -20,7 +20,7 @@ import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.updates.components.calendar.Calendar
-import eu.kanade.tachiyomi.ui.updates.calendar.UpdateUpcomingScreenModel
+import eu.kanade.tachiyomi.ui.updates.UpdateUpcomingScreenModel
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR

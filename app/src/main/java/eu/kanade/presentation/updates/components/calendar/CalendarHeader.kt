@@ -39,6 +39,9 @@ import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 
+
+private val HEADER_PADDING = 8.dp
+
 @Composable
 fun CalenderHeader(
     month: Month,
@@ -46,7 +49,7 @@ fun CalenderHeader(
     modifier: Modifier = Modifier,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
-    arrowShown: Boolean = true
+    arrowShown: Boolean = true,
 ) {
 
     var isNext by remember { mutableStateOf(true) }
@@ -55,7 +58,7 @@ fun CalenderHeader(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(all = 8.dp),
+            .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 

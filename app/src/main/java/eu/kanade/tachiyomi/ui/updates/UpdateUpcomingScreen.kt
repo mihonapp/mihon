@@ -9,7 +9,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.util.Screen
 import eu.kanade.presentation.updates.UpdateUpcomingScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
-import eu.kanade.tachiyomi.ui.updates.calendar.UpdateUpcomingScreenModel
 
 class UpdateUpcomingScreen : Screen() {
 

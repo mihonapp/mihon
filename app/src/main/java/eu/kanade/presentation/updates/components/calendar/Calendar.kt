@@ -25,6 +25,10 @@ import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 
+private val CalenderPadding = 8.dp
+private val FontSize = 16.sp
+private val CalculatedHeight = 302.dp
+private const val DAYS_OF_WEEK = 7
 
 @Composable
 fun Calendar(
@@ -52,7 +56,7 @@ fun Calendar(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(all = 8.dp)
+            .padding(all = CalenderPadding),
     ) {
         CalenderHeader(
             month = currentMonth,
@@ -70,8 +74,8 @@ fun Calendar(
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(302.dp),
-            columns = GridCells.Fixed(7),
+                .height(CalculatedHeight),
+            columns = GridCells.Fixed(DAYS_OF_WEEK),
         ) {
             items(weekValue) { item ->
                 Text(
@@ -79,7 +83,7 @@ fun Calendar(
                     text = labelFormat(item),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
+                    fontSize = FontSize,
                 )
             }
 
