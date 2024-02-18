@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,15 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.updates.components.calendar.Calendar
 import eu.kanade.tachiyomi.ui.updates.calendar.UpdateUpcomingScreenModel
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 
 
@@ -53,7 +55,7 @@ fun UpdateUpcomingScreen(
 const val HELP_URL = "https://mihon.app/docs/faq/upcoming"
 
 @Composable
-internal fun UpdateUpcomingToolbar(modifier: Modifier = Modifier) {
+internal fun UpdateUpcomingToolbar() {
     val navigator = LocalNavigator.currentOrThrow
     Column {
         TopAppBar(
@@ -65,13 +67,13 @@ internal fun UpdateUpcomingToolbar(modifier: Modifier = Modifier) {
                     }
                 }
             },
-            title = { Text(text = "Upcoming") },
+            title = { AppBarTitle(stringResource(MR.strings.label_upcoming)) },
             actions = {
                 val uriHandler = LocalUriHandler.current
                 IconButton(onClick = { uriHandler.openUri(HELP_URL) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                        contentDescription = "Upcoming Guide",
+                        contentDescription = stringResource(MR.strings.upcoming_guide),
                     )
                 }
             },

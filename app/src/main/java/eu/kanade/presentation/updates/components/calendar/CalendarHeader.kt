@@ -33,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
@@ -93,7 +95,7 @@ fun CalenderHeader(
                         .clip(CircleShape),
 
                     ) {
-                    Icon(Icons.Default.KeyboardArrowLeft, "Previous Month")
+                    Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
                 }
 
                 IconButton(
@@ -106,7 +108,7 @@ fun CalenderHeader(
                         .clip(CircleShape),
 
                     ) {
-                    Icon(Icons.Default.KeyboardArrowRight, "Next Month")
+                    Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
                 }
             }
         }
@@ -138,7 +140,7 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
 }
 
 /**
- * Returns the formatted title text for the Kalendar header.
+ * Returns the formatted title text for the Calendar header.
  *
  * @param month The current month.
  * @param year The current year.
