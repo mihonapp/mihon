@@ -47,7 +47,7 @@ fun UpcomingItem(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = MaterialTheme.padding.medium, end = MaterialTheme.padding.small),
+                .padding(start = MaterialTheme.padding.large, end = MaterialTheme.padding.small),
         ) {
             Text(
                 text = upcoming.title,
@@ -55,14 +55,8 @@ fun UpcomingItem(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-            )
-        }
 
-        IconButton(onClick = { onClick(upcoming) }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                contentDescription = "View Manga",
-            )
+                )
         }
     }
 }
