@@ -2,6 +2,10 @@ package eu.kanade.presentation.updates
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -14,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -31,12 +36,36 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.ListGroupHeader
+import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 
 @Composable
 fun UpdateUpcomingScreen(
+    state: UpdateUpcomingScreenModel.State,
+    modifier: Modifier = Modifier,
+    isTabletUi: Boolean = false,
+    onClickUpcoming: (manga: Manga) -> Unit = {},
+) {
+    if (!isTabletUi) {
+        UpdateUpcomingScreenSmallImpl(
+            state = state,
+            modifier = modifier,
+            onClickUpcoming = onClickUpcoming,
+        )
+    } else {
+        UpdateUpcomingScreenLargeImpl(
+            state = state,
+            isTabletUi = isTabletUi,
+            modifier = modifier,
+            onClickUpcoming = onClickUpcoming,
+        )
+    }
+}
+
+@Composable
+internal fun UpdateUpcomingScreenSmallImpl(
     state: UpdateUpcomingScreenModel.State,
     modifier: Modifier = Modifier,
     onClickUpcoming: (manga: Manga) -> Unit = {},
@@ -48,7 +77,7 @@ fun UpdateUpcomingScreen(
         },
     ) { paddingValues ->
 
-        UpdateUpcomingContent(
+        UpdateUpcomingSmallContent(
             upcoming = state.items,
             events = state.events,
             contentPadding = paddingValues,
@@ -91,7 +120,7 @@ internal fun UpdateUpcomingToolbar(
 }
 
 @Composable
-internal fun UpdateUpcomingContent(
+internal fun UpdateUpcomingSmallContent(
     upcoming: ImmutableList<UpcomingUIModel>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
@@ -127,6 +156,118 @@ internal fun UpdateUpcomingContent(
                 }
             }
         }
+        items(
+            items = upcoming,
+            key = { "upcoming-${it.hashCode()}" },
+            contentType = {
+                when (it) {
+                    is UpcomingUIModel.Header -> "header"
+                    is UpcomingUIModel.Item -> "item"
+                }
+            },
+        ) { item ->
+            when (item) {
+                is UpcomingUIModel.Item -> {
+                    UpcomingItem(
+                        upcoming = item.item,
+                        onClick = onClickUpcoming,
+                    )
+                }
+
+                is UpcomingUIModel.Header -> {
+                    ListGroupHeader(
+                        modifier = Modifier.animateItemPlacement(),
+                        text = relativeDateText(item.date),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun UpdateUpcomingScreenLargeImpl(
+    state: UpdateUpcomingScreenModel.State,
+    isTabletUi: Boolean,
+    modifier: Modifier = Modifier,
+    onClickUpcoming: (manga: Manga) -> Unit = {},
+) {
+    val layoutDirection = LocalLayoutDirection.current
+    val listState = rememberLazyListState()
+
+    Scaffold(
+        modifier = modifier,
+        topBar = { UpdateUpcomingToolbar() },
+    ) { contentPadding ->
+        TwoPanelBox(
+            modifier = Modifier.padding(
+                start = contentPadding.calculateStartPadding(layoutDirection),
+                end = contentPadding.calculateEndPadding(layoutDirection),
+            ),
+            startContent = {
+                UpdateUpcomingLargeCalendar(
+                    upcoming = state.items,
+                    listState = listState,
+                    isTabletUi = isTabletUi,
+                    events = state.events,
+                    modifier = Modifier.padding(contentPadding),
+                )
+            },
+            endContent = {
+                UpdateUpcomingLargeContent(
+                    upcoming = state.items,
+                    listState = listState,
+                    contentPadding = contentPadding,
+                    onClickUpcoming = onClickUpcoming,
+                )
+            },
+        )
+    }
+}
+
+@Composable
+internal fun UpdateUpcomingLargeCalendar(
+    upcoming: ImmutableList<UpcomingUIModel>,
+    isTabletUi: Boolean,
+    listState: LazyListState,
+    modifier: Modifier = Modifier,
+    events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
+) {
+    val configuration = LocalConfiguration.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val dateToHeaderMap =
+        upcoming.withIndex()
+            .filter { it.value is UpcomingUIModel.Header }
+            .associate { Pair((it.value as UpcomingUIModel.Header).date, it.index) }
+
+    Calendar(
+        modifier = modifier,
+        events = events,
+        isTabletUi = isTabletUi,
+        screenWidth = configuration.screenWidthDp.dp,
+    ) { date ->
+        dateToHeaderMap[date]?.let {
+            coroutineScope.launch {
+                listState.animateScrollToItem(it)
+            }
+        }
+    }
+}
+
+@Composable
+internal fun UpdateUpcomingLargeContent(
+    upcoming: ImmutableList<UpcomingUIModel>,
+    listState: LazyListState,
+    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
+    onClickUpcoming: (manga: Manga) -> Unit,
+) {
+    FastScrollLazyColumn(
+        contentPadding = contentPadding,
+        state = listState,
+        modifier = modifier,
+    ) {
         items(
             items = upcoming,
             key = { "upcoming-${it.hashCode()}" },

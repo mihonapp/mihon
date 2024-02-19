@@ -8,6 +8,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.updates.UpdateUpcomingScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 
 class UpdateUpcomingScreen : Screen() {
@@ -23,6 +24,7 @@ class UpdateUpcomingScreen : Screen() {
 
         UpdateUpcomingScreen(
             state = state,
+            isTabletUi = isTabletUi(),
             onClickUpcoming = { navigator.push(MangaScreen(it.id)) },
         )
     }

@@ -43,6 +43,7 @@ fun Calendar(
     events: ImmutableMap<LocalDate, Int>,
     screenWidth: Dp,
     modifier: Modifier = Modifier,
+    isTabletUi: Boolean = false,
     labelFormat: (DayOfWeek) -> String = {
         it.getDisplayName(
             TextStyle.SHORT,
@@ -59,6 +60,7 @@ fun Calendar(
     val currentYear = displayedYear.intValue
 
     val widthModifier = when {
+        isTabletUi -> 1.0f
         screenWidth > 840.dp -> ExtendedScale
         screenWidth > 600.dp -> MediumScale
         else -> 1.0f
@@ -92,6 +94,7 @@ fun Calendar(
                 labelFormat = labelFormat,
                 currentMonth = currentMonth,
                 currentYear = currentYear,
+                isTabletUi = isTabletUi,
                 events = events,
                 widthModifier = widthModifier,
                 onClickDay = onClickDay,
@@ -107,6 +110,7 @@ private fun CalendarGrid(
     labelFormat: (DayOfWeek) -> String,
     currentMonth: Month,
     currentYear: Int,
+    isTabletUi: Boolean,
     events: ImmutableMap<LocalDate, Int>,
     modifier: Modifier = Modifier,
     onClickDay: (day: LocalDate) -> Unit = {},
@@ -119,10 +123,18 @@ private fun CalendarGrid(
     val dayEntries = (getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toImmutableList()
     val height = (((((dayEntries.size - 1) / DaysOfWeek) + ceil(1.0f - widthModifier)) * HeightMultiplier)).dp
 
-    LazyVerticalGrid(
-        modifier = modifier
+    val modeModifier = if (isTabletUi) {
+        modifier
             .fillMaxWidth(widthModifier)
-            .height(height),
+            .wrapContentHeight()
+    } else {
+        modifier
+            .fillMaxWidth(widthModifier)
+            .height(height)
+    }
+
+    LazyVerticalGrid(
+        modifier = modeModifier,
         columns = GridCells.Fixed(DaysOfWeek),
     ) {
         items(weekValue) { item ->
