@@ -19,11 +19,11 @@ import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
 
 @Composable
 fun MangaNotesTextArea(
-    modifier: Modifier = Modifier,
     state: MangaNotesScreenState.Success,
     onSave: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    var text by remember { mutableStateOf(state.content.orEmpty()) }
+    var text by remember { mutableStateOf(state.notes.orEmpty()) }
     val focusRequester = remember { FocusRequester() }
 
     Column(
