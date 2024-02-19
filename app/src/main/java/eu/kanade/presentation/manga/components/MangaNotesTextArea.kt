@@ -1,9 +1,7 @@
 package eu.kanade.presentation.manga.components
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -30,17 +28,15 @@ fun MangaNotesTextArea(
     }
     val focusRequester = remember { FocusRequester() }
 
-    Column(
+    Box(
         modifier = modifier
-            .fillMaxSize()
-            .imePadding(),
+            .fillMaxSize(),
     ) {
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+                .fillMaxSize()
                 .focusRequester(focusRequester),
         )
     }
