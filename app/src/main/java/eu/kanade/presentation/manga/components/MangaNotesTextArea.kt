@@ -15,6 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
 
 @Composable
@@ -23,7 +25,9 @@ fun MangaNotesTextArea(
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var text by remember { mutableStateOf(state.notes.orEmpty()) }
+    var text by remember {
+        mutableStateOf(TextFieldValue(state.notes.orEmpty(), TextRange(Int.MAX_VALUE)))
+    }
     val focusRequester = remember { FocusRequester() }
 
     Column(
@@ -47,7 +51,7 @@ fun MangaNotesTextArea(
 
     DisposableEffect(Unit) {
         onDispose {
-            onSave(text)
+            onSave(text.text)
         }
     }
 }
