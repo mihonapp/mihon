@@ -115,6 +115,7 @@ fun MangaScreen(
     onEditFetchIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onNotesClicked: () -> Unit,
+    onNotesEditClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -164,6 +165,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onNotesClicked = onNotesClicked,
+            onNotesEditClicked = onNotesEditClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -200,6 +202,7 @@ fun MangaScreen(
             onEditIntervalClicked = onEditFetchIntervalClicked,
             onMigrateClicked = onMigrateClicked,
             onNotesClicked = onNotesClicked,
+            onNotesEditClicked = onNotesEditClicked,
             onMultiBookmarkClicked = onMultiBookmarkClicked,
             onMultiMarkAsReadClicked = onMultiMarkAsReadClicked,
             onMarkPreviousAsReadClicked = onMarkPreviousAsReadClicked,
@@ -246,6 +249,7 @@ private fun MangaScreenSmallImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onNotesClicked: () -> Unit,
+    onNotesEditClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -435,7 +439,7 @@ private fun MangaScreenSmallImpl(
                         contentType = MangaScreenItem.NOTES_SECTION,
                     ) {
                         MangaNotesSection(
-                            onClickNotes = onNotesClicked,
+                            onClickNotes = onNotesEditClicked,
                             content = state.manga.notes,
                         )
                     }
@@ -506,6 +510,7 @@ fun MangaScreenLargeImpl(
     onEditIntervalClicked: (() -> Unit)?,
     onMigrateClicked: (() -> Unit)?,
     onNotesClicked: () -> Unit,
+    onNotesEditClicked: () -> Unit,
 
     // For bottom action menu
     onMultiBookmarkClicked: (List<Chapter>, bookmarked: Boolean) -> Unit,
@@ -671,7 +676,7 @@ fun MangaScreenLargeImpl(
                             onCopyTagToClipboard = onCopyTagToClipboard,
                         )
                         MangaNotesSection(
-                            onClickNotes = onNotesClicked,
+                            onClickNotes = onNotesEditClicked,
                             content = state.manga.notes,
                         )
                     }

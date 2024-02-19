@@ -12,12 +12,20 @@ import eu.kanade.presentation.util.Screen
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.presentation.core.screens.LoadingScreen
 
-class MangaNotesScreen(private val manga: Manga) : Screen() {
+class MangaNotesScreen(
+    private val manga: Manga,
+    private val editing: Boolean = false,
+) : Screen() {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel { MangaNotesScreenModel(manga = manga) }
+        val screenModel = rememberScreenModel {
+            MangaNotesScreenModel(
+                manga = manga,
+                editing = editing,
+            )
+        }
         val state by screenModel.state.collectAsState()
 
         if (state is MangaNotesScreenState.Loading) {
