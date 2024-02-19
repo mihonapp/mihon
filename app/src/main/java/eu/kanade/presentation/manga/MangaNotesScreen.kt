@@ -68,7 +68,7 @@ fun MangaNotesScreen(
                     text = {
                         Text(
                             text = stringResource(
-                                if (state.editing) MR.strings.action_apply else MR.strings.action_edit
+                                if (state.editing) MR.strings.action_apply else MR.strings.action_edit,
                             ),
                         )
                     },
@@ -85,7 +85,11 @@ fun MangaNotesScreen(
         },
         modifier = modifier,
     ) { paddingValues ->
-        if (state.editing) {
+        AnimatedVisibility(
+            state.editing,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
             MangaNotesTextArea(
                 state = state,
                 onSave = onSave,
@@ -100,35 +104,40 @@ fun MangaNotesScreen(
                             .only(WindowInsetsSides.Bottom),
                     ),
             )
-
-            return@Scaffold
         }
 
-        if (state.notes.isNullOrBlank()) {
+        AnimatedVisibility(
+            !state.editing && state.notes.isNullOrBlank(),
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
             EmptyScreen(
                 stringRes = MR.strings.information_no_notes,
                 modifier = Modifier.padding(paddingValues),
             )
-            return@Scaffold
         }
 
-        RichText(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxWidth()
-                .padding(
-                    horizontal = MaterialTheme.padding.medium,
-                    vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.medium,
-                ),
-            style = RichTextStyle(
-                stringStyle = RichTextStringStyle(
-                    linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                ),
-            ),
+        AnimatedVisibility(
+            !state.editing && !state.notes.isNullOrBlank(),
+            enter = fadeIn(),
+            exit = fadeOut(),
         ) {
-            Markdown(content = state.notes)
+            RichText(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = MaterialTheme.padding.medium,
+                        vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.medium,
+                    ),
+                style = RichTextStyle(
+                    stringStyle = RichTextStringStyle(
+                        linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                    ),
+                ),
+            ) {
+                Markdown(content = state.notes.orEmpty())
+            }
         }
-
-        return@Scaffold
     }
 }
