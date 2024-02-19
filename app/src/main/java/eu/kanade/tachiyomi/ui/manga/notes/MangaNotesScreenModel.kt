@@ -12,6 +12,7 @@ import uy.kohesive.injekt.api.get
 
 class MangaNotesScreenModel(
     val manga: Manga,
+    editing: Boolean,
     private val setMangaNotes: SetMangaNotes = Injekt.get(),
 ) : StateScreenModel<MangaNotesScreenState>(MangaNotesScreenState.Loading) {
 
@@ -23,6 +24,7 @@ class MangaNotesScreenModel(
             MangaNotesScreenState.Success(
                 manga = manga,
                 notes = manga.notes,
+                editing = editing,
             )
         }
     }
