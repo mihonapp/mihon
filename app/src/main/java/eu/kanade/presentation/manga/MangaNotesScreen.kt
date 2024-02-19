@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
@@ -83,7 +84,8 @@ fun MangaNotesScreen(
                 )
             }
         },
-        modifier = modifier,
+        modifier = modifier
+            .imePadding(),
     ) { paddingValues ->
         AnimatedVisibility(
             state.editing,
