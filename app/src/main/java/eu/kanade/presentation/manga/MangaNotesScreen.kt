@@ -3,9 +3,14 @@ package eu.kanade.presentation.manga
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,12 +44,13 @@ fun MangaNotesScreen(
     beginEditing: () -> Unit,
     endEditing: () -> Unit,
     onSave: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = { scrollBehavior ->
             AppBar(
                 titleContent = {
-                    AppBarTitle(title = stringResource(MR.strings.action_notes), subtitle = state.title)
+                    AppBarTitle(title = stringResource(MR.strings.action_notes), subtitle = state.manga.title)
                 },
                 navigateUp = navigateUp,
                 scrollBehavior = scrollBehavior,
@@ -60,7 +66,11 @@ fun MangaNotesScreen(
             ) {
                 ExtendedFloatingActionButton(
                     text = {
-                        Text(text = stringResource(if (state.editing) MR.strings.action_apply else MR.strings.action_edit))
+                        Text(
+                            text = stringResource(
+                                if (state.editing) MR.strings.action_apply else MR.strings.action_edit
+                            ),
+                        )
                     },
                     icon = {
                         Icon(
@@ -73,22 +83,28 @@ fun MangaNotesScreen(
                 )
             }
         },
+        modifier = modifier,
     ) { paddingValues ->
         if (state.editing) {
             MangaNotesTextArea(
+                state = state,
+                onSave = onSave,
                 modifier = Modifier
                     .padding(
                         top = paddingValues.calculateTopPadding() + MaterialTheme.padding.small,
-                        bottom = MaterialTheme.padding.large,
+                        bottom = MaterialTheme.padding.small,
                     )
-                    .padding(horizontal = MaterialTheme.padding.small),
-                state = state,
-                onSave = onSave,
+                    .padding(horizontal = MaterialTheme.padding.small)
+                    .windowInsetsPadding(
+                        WindowInsets.navigationBars
+                            .only(WindowInsetsSides.Bottom),
+                    ),
             )
 
             return@Scaffold
         }
-        if (state.content == null) {
+
+        if (state.notes.isNullOrBlank()) {
             EmptyScreen(
                 stringRes = MR.strings.information_no_notes,
                 modifier = Modifier.padding(paddingValues),
@@ -101,8 +117,8 @@ fun MangaNotesScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
                 .padding(
-                    horizontal = MaterialTheme.padding.small,
-                    vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.small,
+                    horizontal = MaterialTheme.padding.medium,
+                    vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.medium,
                 ),
             style = RichTextStyle(
                 stringStyle = RichTextStringStyle(
@@ -110,7 +126,7 @@ fun MangaNotesScreen(
                 ),
             ),
         ) {
-            Markdown(content = state.content)
+            Markdown(content = state.notes)
         }
 
         return@Scaffold

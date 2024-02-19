@@ -149,6 +149,8 @@
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
     <string name="action_notes">Notes</string>
+    <string name="action_add_notes">Add Notes</string>
+    <string name="action_edit_notes">Edit Notes</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>

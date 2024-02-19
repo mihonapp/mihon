@@ -55,6 +55,7 @@ import eu.kanade.presentation.manga.components.MangaActionRow
 import eu.kanade.presentation.manga.components.MangaBottomActionMenu
 import eu.kanade.presentation.manga.components.MangaChapterListItem
 import eu.kanade.presentation.manga.components.MangaInfoBox
+import eu.kanade.presentation.manga.components.MangaNotesSection
 import eu.kanade.presentation.manga.components.MangaToolbar
 import eu.kanade.presentation.manga.components.MissingChapterCountListItem
 import eu.kanade.presentation.util.formatChapterNumber
@@ -421,6 +422,16 @@ private fun MangaScreenSmallImpl(
                             tagsProvider = { state.manga.genre },
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
+                        )
+                    }
+
+                    item(
+                        key = MangaScreenItem.NOTES_SECTION,
+                        contentType = MangaScreenItem.NOTES_SECTION,
+                    ) {
+                        MangaNotesSection(
+                            onClickNotes = onClickNotes,
+                            content = state.manga.notes,
                         )
                     }
 

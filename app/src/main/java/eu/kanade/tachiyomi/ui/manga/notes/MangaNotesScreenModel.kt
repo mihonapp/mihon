@@ -3,36 +3,27 @@ package eu.kanade.tachiyomi.ui.manga.notes
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import eu.kanade.tachiyomi.ui.category.CategoryEvent
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import tachiyomi.domain.manga.interactor.GetManga
+import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.manga.interactor.SetMangaNotes
+import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MangaNotesScreenModel(
-    val mangaId: Long,
-    getManga: GetManga = Injekt.get(),
-    setMangaNotes: SetMangaNotes = Injekt.get(),
+    val manga: Manga,
+    private val setMangaNotes: SetMangaNotes = Injekt.get(),
 ) : StateScreenModel<MangaNotesScreenState>(MangaNotesScreenState.Loading) {
 
-    private val _events: Channel<CategoryEvent> = Channel()
-    val events = _events.receiveAsFlow()
+    private val successState: MangaNotesScreenState.Success?
+        get() = state.value as? MangaNotesScreenState.Success
 
     init {
-        screenModelScope.launch {
-            getManga.subscribe(mangaId).collectLatest { manga ->
-                mutableState.update {
-                    MangaNotesScreenState.Success(
-                        content = manga.notes,
-                        title = manga.title,
-                    )
-                }
-            }
+        mutableState.update {
+            MangaNotesScreenState.Success(
+                manga = manga,
+                notes = manga.notes,
+            )
         }
     }
 
@@ -55,14 +46,21 @@ class MangaNotesScreenModel(
     }
 
     fun saveText(content: String) {
+        // don't save what isn't modified
+        if (content == successState?.notes) return
+
         mutableState.update {
             when (it) {
                 MangaNotesScreenState.Loading -> it
-                is MangaNotesScreenState.Success -> it.copy(content = content)
+                is MangaNotesScreenState.Success -> {
+                    it.copy(notes = content)
+                }
             }
         }
 
-        // do the magic to set it backend
+        screenModelScope.launchNonCancellable {
+            setMangaNotes.awaitSetNotes(manga, content)
+        }
     }
 }
 
@@ -73,8 +71,8 @@ sealed interface MangaNotesScreenState {
 
     @Immutable
     data class Success(
-        val content: String?,
-        val title: String,
+        val manga: Manga,
+        val notes: String?,
 
         val editing: Boolean = false,
     ) : MangaNotesScreenState
