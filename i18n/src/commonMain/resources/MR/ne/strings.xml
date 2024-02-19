@@ -111,7 +111,7 @@
     <string name="action_select_inverse">उल्टो चयन गर्नुहोस्</string>
     <string name="action_sort_date_added">राखिएको मिती</string>
     <string name="action_sort_chapter_fetch_date">अध्याय ल्याएको मिति</string>
-    <string name="action_sort_latest_chapter">सबैभन्दा नयाँ अध्याय</string>
+    <string name="action_sort_latest_chapter">नवीनतम अध्याय</string>
     <string name="pref_library_update_refresh_metadata_summary">पुस्तकालय अपडेट गर्दा नयाँ आवरण र विवरणहरूको लागि जाँच गर्नुहोस्</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा स्वतः रिफ्रेस गर्नुहोस्</string>
     <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको</string>
@@ -409,7 +409,7 @@
     <string name="other_source">अन्य</string>
     <string name="manga_from_library">पुस्तकालयबाट</string>
     <string name="tabs_header">ट्याबहरू</string>
-    <string name="latest">सबैभन्दा नयाँ</string>
+    <string name="latest">नवीनतम</string>
     <string name="local_filter_order_by">द्वारा अर्डर गर्नुहोस्</string>
     <string name="date">मिति</string>
     <string name="login_title">%1$s मा लगइन गर्नुहोस्</string>
