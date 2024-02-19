@@ -742,7 +742,7 @@
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
     <string name="action_sort_tracker_score">Puntuación del rastreador</string>
     <string name="action_apply">Aplicar</string>
-    <string name="action_revert_to_default">Volver a la configuración predeterminada</string>
+    <string name="action_revert_to_default">Restablecer</string>
     <string name="action_create">Crear</string>
     <string name="no_scanlators_found">No se ha encontrado ningún equipo de traducción</string>
     <string name="scanlator">Equipo de traducción</string>
