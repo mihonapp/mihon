@@ -681,7 +681,7 @@
     <string name="pref_library_update_show_tab_badge">Ver número de capítulos por leer en el icono de actualizaciones</string>
     <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
     <string name="pref_skip_dupe_chapters">Saltarse los capítulos repetidos</string>
-    <string name="enhanced_services_not_installed">Está disponible, pero la fuente todavía no se ha instalado: %s</string>
+    <string name="enhanced_services_not_installed">Están disponibles, pero las fuentes todavía no se han instalado: %s</string>
     <string name="confirm_add_duplicate_manga">Ya tienes un elemento en la biblioteca con este mismo nombre.
 \n
 \n¿Seguro que quieres continuar\?</string>
