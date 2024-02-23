@@ -47,7 +47,6 @@ class SyncManager(
         encodeDefaults = true
         ignoreUnknownKeys = true
     },
-    private val getFavorites: GetFavorites = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
 ) {
     private val backupCreator: BackupCreator = BackupCreator(context, false)
@@ -72,8 +71,15 @@ class SyncManager(
      * from the database using the BackupManager, then synchronizes the data with a sync service.
      */
     suspend fun syncData() {
+        // Reset isSyncing in case it was left over or failed syncing during restore.
+        handler.await(inTransaction = true) {
+            mangasQueries.resetIsSyncing()
+            chaptersQueries.resetIsSyncing()
+        }
+
         val syncOptions = syncPreferences.getSyncSettings()
-        val databaseManga = getAllMangaFromDB()
+        val databaseManga = getAllMangaThatNeedsSync()
+
         val backupOptions = BackupOptions(
             libraryEntries = syncOptions.libraryEntries,
             categories = syncOptions.categories,
@@ -198,132 +204,47 @@ class SyncManager(
         return handler.awaitList { mangasQueries.getAllManga(::mapManga) }
     }
 
+    private suspend fun getAllMangaThatNeedsSync(): List<Manga> {
+        return handler.awaitList { mangasQueries.getMangasWithFavoriteTimestamp(::mapManga) }
+    }
+
     private suspend fun isMangaDifferent(localManga: Manga, remoteManga: BackupManga): Boolean {
         val localChapters = handler.await { chaptersQueries.getChaptersByMangaId(localManga.id, 0).executeAsList() }
         val localCategories = getCategories.await(localManga.id).map { it.order }
-        val logTag = "isMangaDifferent"
 
-        // Logging the start of comparison
-        logcat(LogPriority.DEBUG, logTag) {
-            "Comparing local manga (Title: ${localManga.title}) with remote manga (Title: ${remoteManga.title})"
-        }
-
-        var isDifferent = false
-
-        // Compare each field and log if they are different
-        if (localManga.source != remoteManga.source) {
-            logDifference(logTag, "Source", localManga.source.toString(), remoteManga.source.toString())
-            isDifferent = true
-        }
-        if (localManga.url != remoteManga.url) {
-            logDifference(logTag, "URL", localManga.url, remoteManga.url)
-            isDifferent = true
-        }
-        if (localManga.favorite != remoteManga.favorite) {
-            logDifference(logTag, "Favorite", localManga.favorite.toString(), remoteManga.favorite.toString())
-            isDifferent = true
-        }
         if (areChaptersDifferent(localChapters, remoteManga.chapters)) {
-            logcat(LogPriority.DEBUG, logTag) {
-                "Chapters are different for manga: ${localManga.title}"
-            }
-            isDifferent = true
-        }
-
-        if (localCategories.toSet() != remoteManga.categories.toSet()) {
-            logcat(LogPriority.DEBUG, logTag) {
-                "Categories differ for manga: ${localManga.title}. " +
-                    "Local categories: ${localCategories.joinToString()}, " +
-                    "Remote categories: ${remoteManga.categories.joinToString()}"
-            }
-            isDifferent = true
-        }
-
-        // Log final result
-        logcat(LogPriority.DEBUG, logTag) {
-            "Manga difference check result for local manga (Title: ${localManga.title}): $isDifferent"
-        }
-
-        return isDifferent
-    }
-
-    private fun logDifference(tag: String, field: String, localValue: String, remoteValue: String) {
-        logcat(LogPriority.DEBUG, tag) {
-            "Difference found in $field. Local: $localValue, Remote: $remoteValue"
-        }
-    }
-
-    private fun areChaptersDifferent(localChapters: List<Chapters>, remoteChapters: List<BackupChapter>): Boolean {
-        val logTag = "areChaptersDifferent"
-
-        // Early return if the sizes are different
-        if (localChapters.size != remoteChapters.size) {
-            logcat(LogPriority.DEBUG, logTag) {
-                "Chapter lists differ in size. Local: ${localChapters.size}, Remote: ${remoteChapters.size}"
-            }
             return true
         }
 
-        // Convert all remote chapters to Chapter instances
-        val convertedRemoteChapters = remoteChapters.map { it.toChapterImpl() }
+        if (localManga.version != remoteManga.version) {
+            return true
+        }
 
-        // Create a map for the local chapters for efficient comparison
+        if (localCategories.toSet() != remoteManga.categories.toSet()) {
+            return true
+        }
+
+        return false
+    }
+
+    private fun areChaptersDifferent(localChapters: List<Chapters>, remoteChapters: List<BackupChapter>): Boolean {
         val localChapterMap = localChapters.associateBy { it.url }
+        val remoteChapterMap = remoteChapters.associateBy { it.url }
 
-        var isDifferent = false
-
-        // Check for any differences
-        for (remoteChapter in convertedRemoteChapters) {
-            val localChapter = localChapterMap[remoteChapter.url]
-
-            if (localChapter == null) {
-                logcat(LogPriority.DEBUG, logTag) {
-                    "Local chapter not found for URL: ${remoteChapter.url}"
-                }
-                isDifferent = true
-                continue
-            }
-
-            if (localChapter.url != remoteChapter.url) {
-                logDifference(logTag, "URL", localChapter.url, remoteChapter.url)
-                isDifferent = true
-            }
-            if (localChapter.read != remoteChapter.read) {
-                logDifference(logTag, "Read Status", localChapter.read.toString(), remoteChapter.read.toString())
-                isDifferent = true
-            }
-
-            if (localChapter.bookmark != remoteChapter.bookmark) {
-                logDifference(
-                    logTag,
-                    "Bookmark Status",
-                    localChapter.bookmark.toString(),
-                    remoteChapter.bookmark.toString(),
-                )
-                isDifferent = true
-            }
-
-            if (localChapter.last_page_read != remoteChapter.lastPageRead) {
-                logDifference(
-                    logTag,
-                    "Last Page Read",
-                    localChapter.last_page_read.toString(),
-                    remoteChapter.lastPageRead.toString(),
-                )
-                isDifferent = true
-            }
-
-            // Break the loop if a difference is found
-            if (isDifferent) break
+        if (localChapterMap.size != remoteChapterMap.size) {
+            return true
         }
 
-        if (!isDifferent) {
-            logcat(LogPriority.DEBUG, logTag) {
-                "No differences found in chapters."
+        for ((url, localChapter) in localChapterMap) {
+            val remoteChapter = remoteChapterMap[url]
+
+            // If a matching remote chapter doesn't exist, or the version numbers are different, consider them different
+            if (remoteChapter == null || localChapter.version != remoteChapter.version) {
+                return true
             }
         }
 
-        return isDifferent
+        return false
     }
 
     /**
@@ -339,8 +260,8 @@ class SyncManager(
         val logTag = "filterFavoritesAndNonFavorites"
 
         val elapsedTimeMillis = measureTimeMillis {
-            val databaseMangaFavorites = getFavorites.await()
-            val localMangaMap = databaseMangaFavorites.associateBy {
+            val databaseManga = getAllMangaFromDB()
+            val localMangaMap = databaseManga.associateBy {
                 Triple(it.source, it.url, it.title)
             }
 
@@ -384,10 +305,12 @@ class SyncManager(
      */
     private suspend fun updateNonFavorites(nonFavorites: List<BackupManga>) {
         val localMangaList = getAllMangaFromDB()
-        val localMangaMap = localMangaList.associateBy { it.url }
+
+        val localMangaMap = localMangaList.associateBy { Triple(it.source, it.url, it.title) }
 
         nonFavorites.forEach { nonFavorite ->
-            localMangaMap[nonFavorite.url]?.let { localManga ->
+            val key = Triple(nonFavorite.source, nonFavorite.url, nonFavorite.title)
+            localMangaMap[key]?.let { localManga ->
                 if (localManga.favorite != nonFavorite.favorite) {
                     val updatedManga = localManga.copy(favorite = nonFavorite.favorite)
                     mangaRestorer.updateManga(updatedManga)
