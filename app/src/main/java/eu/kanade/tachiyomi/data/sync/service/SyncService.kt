@@ -129,10 +129,16 @@ abstract class SyncService(
                 local != null && remote != null -> {
                     // Compare versions to decide which manga to keep
                     if (local.version >= remote.version) {
-                        logcat(LogPriority.DEBUG, logTag) { "Keeping local version of ${local.title} with merged chapters." }
+                        logcat(
+                            LogPriority.DEBUG,
+                            logTag
+                        ) { "Keeping local version of ${local.title} with merged chapters." }
                         local.copy(chapters = mergeChapters(local.chapters, remote.chapters))
                     } else {
-                        logcat(LogPriority.DEBUG, logTag) { "Keeping remote version of ${remote.title} with merged chapters." }
+                        logcat(
+                            LogPriority.DEBUG,
+                            logTag
+                        ) { "Keeping remote version of ${remote.title} with merged chapters." }
                         remote.copy(chapters = mergeChapters(local.chapters, remote.chapters))
                     }
                 }
