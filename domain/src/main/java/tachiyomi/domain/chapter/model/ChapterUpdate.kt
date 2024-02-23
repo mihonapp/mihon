@@ -13,6 +13,8 @@ data class ChapterUpdate(
     val dateUpload: Long? = null,
     val chapterNumber: Double? = null,
     val scanlator: String? = null,
+    val version: Long? = null,
+    val isSyncing: Long? = null,
 )
 
 fun Chapter.toChapterUpdate(): ChapterUpdate {
@@ -29,5 +31,7 @@ fun Chapter.toChapterUpdate(): ChapterUpdate {
         dateUpload,
         chapterNumber,
         scanlator,
+        version,
+        isSyncing
     )
 }
