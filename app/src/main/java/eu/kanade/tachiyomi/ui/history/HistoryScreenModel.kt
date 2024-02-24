@@ -28,7 +28,6 @@ import tachiyomi.domain.history.interactor.RemoveHistory
 import tachiyomi.domain.history.model.HistoryWithRelations
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.LocalDate
 
 class HistoryScreenModel(
     private val getHistory: GetHistory = Injekt.get(),
@@ -60,12 +59,10 @@ class HistoryScreenModel(
     private fun List<HistoryWithRelations>.toHistoryUiModels(): List<HistoryUiModel> {
         return map { HistoryUiModel.Item(it) }
             .insertSeparators { before, after ->
-                val beforeDate = before?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
-                val afterDate = after?.item?.readAt?.time?.toLocalDate() ?: LocalDate.MIN
+                val beforeDate = before?.item?.readAt?.time?.toLocalDate()
+                val afterDate = after?.item?.readAt?.time?.toLocalDate()
                 when {
-                    beforeDate.equals(LocalDate.MIN)
-                        or beforeDate.isAfter(afterDate)
-                        and !afterDate.equals(LocalDate.MIN) -> HistoryUiModel.Header(afterDate)
+                    (beforeDate != afterDate) and (afterDate != null) -> afterDate?.let(HistoryUiModel::Header)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
