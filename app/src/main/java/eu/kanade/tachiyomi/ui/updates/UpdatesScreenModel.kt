@@ -376,7 +376,7 @@ class UpdatesScreenModel(
                     val beforeDate = before?.item?.update?.dateFetch?.toLocalDate()
                     val afterDate = after?.item?.update?.dateFetch?.toLocalDate()
                     when {
-                        (beforeDate != afterDate) and (afterDate != null) -> afterDate?.let(UpdatesUiModel::Header)
+                        beforeDate != afterDate && afterDate != null -> UpdatesUiModel.Header(afterDate)
                         // Return null to avoid adding a separator between two items.
                         else -> null
                     }

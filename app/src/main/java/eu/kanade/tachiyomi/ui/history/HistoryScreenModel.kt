@@ -62,7 +62,7 @@ class HistoryScreenModel(
                 val beforeDate = before?.item?.readAt?.time?.toLocalDate()
                 val afterDate = after?.item?.readAt?.time?.toLocalDate()
                 when {
-                    (beforeDate != afterDate) and (afterDate != null) -> afterDate?.let(HistoryUiModel::Header)
+                    beforeDate != afterDate && afterDate != null -> HistoryUiModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
