@@ -25,8 +25,8 @@
         <item quantity="other">Por %d titoloj</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Preterpasas %d ĉapitron, aŭ ĝi mankas ĉe la fonto aŭ ĝi estis elfiltrita.</item>
-        <item quantity="other">Preterpasas %d ĉapitrojn, aŭ ili mankas ĉe la fonto aŭ ili estis elfiltritaj.</item>
+        <item quantity="one">Preterpasas %d ĉapitron, aŭ ĝi mankas ĉe la fonto aŭ ĝi estis elfiltrita</item>
+        <item quantity="other">Preterpasas %d ĉapitrojn, aŭ ili mankas ĉe la fonto aŭ ili estis elfiltritaj</item>
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">1 ŝanĝspurilo</item>
