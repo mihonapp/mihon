@@ -214,7 +214,7 @@
     <string name="delete_downloads_for_manga">¿Quieres borrar los capítulos descargados?</string>
     <string name="chapter_paused">Pausado</string>
     <string name="manga_tracking_tab">Seguimiento</string>
-    <string name="error_category_exists">Ya existe una categoría con este nombre</string>
+    <string name="error_category_exists">¡Ya existe una categoría con este nombre!</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
     <string name="snack_add_to_library">¿Añadir manga a la biblioteca\?</string>
     <string name="picture_saved">Imagen guardada</string>
@@ -758,15 +758,15 @@
     <string name="onboarding_guides_new_user">¿Es la primera vez que instalas %s? Te recomendamos leer la guía de introducción.</string>
     <string name="onboarding_action_finish">Comenzar</string>
     <string name="onboarding_storage_selection_required">Tienes que elegir una carpeta</string>
-    <string name="onboarding_heading">Te damos la bienvenida</string>
+    <string name="onboarding_heading">¡Bienvenid@s!</string>
     <string name="onboarding_guides_returning_user">¿No es la primera vez que instalas %s?</string>
     <string name="onboarding_action_skip">Saltar</string>
     <string name="onboarding_action_next">Siguiente</string>
     <string name="onboarding_description">Lo primero de todo es dejar las cosas a tu gusto. Siempre puedes volver a cambiarlas más tarde en los ajustes.</string>
     <string name="no_location_set">Todavía no has proporcionado ninguna carpeta</string>
-    <string name="onboarding_storage_info">Selecciona una carpeta donde %1$s guardará los capítulos descargados, las copias de seguridad y otras cosas.
+    <string name="onboarding_storage_info">Seleccione una carpeta donde %1$s almacenará las descargas de capítulos, copias de seguridad, etc.
 \n
-\nTe recomendamos que sea solo para %1$s.
+\nSe recomienda una carpeta dedicada.
 \n
 \nCarpeta seleccionada: %2$s</string>
     <string name="onboarding_permission_install_apps">Permiso para instalar aplicaciones</string>
@@ -782,7 +782,7 @@
     <string name="invalid_backup_file_error">Descripción completa del problema:</string>
     <string name="manga_interval_expected_update">Se espera que el siguiente número salga en aproximadamente %1$s, la aplicación busca actualizaciones cada %2$s.</string>
     <string name="manga_interval_custom_amount">Frecuencia de actualización personalizada:</string>
-    <string name="error_repo_exists">El repositorio ya existe</string>
+    <string name="error_repo_exists">¡Este repositorio ya existe!</string>
     <string name="pref_library_update_smart_update">Actualizaciones inteligentes</string>
     <string name="invalid_repo_name">La dirección URL del repositorio no parece ser correcta</string>
     <string name="action_add_repo_message">Añade más repositorios a Mihon; la dirección URL tiene que terminar en «index.min.json».</string>
@@ -798,4 +798,5 @@
     <string name="manga_interval_expected_update_soon">Pronto</string>
     <string name="ext_revoke_trust">Dejar de marcar todas la extensiones desconocidas como de confianza</string>
     <string name="action_open_repo">Abrir repositorio</string>
+    <string name="pref_webtoon_disable_zoom_out">Desactivar alejar</string>
 </resources>
