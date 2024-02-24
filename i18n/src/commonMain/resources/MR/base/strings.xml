@@ -453,6 +453,7 @@
     <string name="pref_high">High</string>
     <string name="pref_low">Low</string>
     <string name="pref_lowest">Lowest</string>
+    <string name="pref_webtoon_disable_zoom_out">Disable zoom out</string>
 
       <!-- Downloads section -->
     <string name="pref_category_delete_chapters">Delete chapters</string>
