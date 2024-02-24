@@ -214,7 +214,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                     else -> true
                 }
             }
-            .sortedBy { it.manga.fetchInterval }
+            .sortedBy { it.manga.nextUpdate }
 
         notifier.showQueueSizeWarningNotificationIfNeeded(mangaToUpdate)
 
