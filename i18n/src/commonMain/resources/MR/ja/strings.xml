@@ -785,7 +785,7 @@
     <string name="action_delete_repo">リポジトリを削除</string>
     <string name="delete_repo_confirmation">リポジトリ「%s」を削除してもよろしいですか？</string>
     <string name="onboarding_storage_help_action">ストレージ ガイド</string>
-    <string name="private_settings">トラッカーログイン情報などの機密性の高い情報を含みます</string>
+    <string name="private_settings">トラッカーログイン情報などの機密性の高い情報を含む</string>
     <string name="manga_interval_expected_update_soon">間もなく</string>
     <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
     <string name="label_extension_repos">拡張機能リポジトリ</string>

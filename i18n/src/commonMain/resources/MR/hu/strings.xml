@@ -130,8 +130,8 @@
     <string name="label_more">Több</string>
     <string name="label_sources">Források</string>
     <string name="pref_date_format">Dátum formátum</string>
-    <string name="theme_dark">Be</string>
-    <string name="theme_light">Ki</string>
+    <string name="theme_dark">Sötét</string>
+    <string name="theme_light">Világos</string>
     <string name="pref_category_library">Könyvtár</string>
     <string name="action_webview_refresh">Frissít</string>
     <string name="action_webview_forward">Előre</string>
@@ -175,7 +175,7 @@
     <string name="lock_always">Mindig</string>
     <string name="pref_category_security">Biztonság</string>
     <string name="pref_manage_notifications">Értesítések kezelése</string>
-    <string name="theme_system">Rendszerbeállítás követése</string>
+    <string name="theme_system">Rendszer</string>
     <string name="pref_category_theme">Téma</string>
     <string name="action_move_to_bottom">Ugrás legalulra</string>
     <string name="action_move_to_top">Ugrás legfelülre</string>
@@ -597,7 +597,7 @@
     <string name="pref_disable_battery_optimization_summary">Segít háttérbeli könyvtár frissítésben és a biztonsági mentésekben</string>
     <string name="battery_optimization_disabled">Akkumulátor optimalizálás már ki van kapcsolva</string>
     <string name="pref_verbose_logging">Bő feljegyzés</string>
-    <string name="pref_verbose_logging_summary">Bő feljegyzések rendszer feljegyzésbe való kiírása (csökkenti az app teljesítményét)</string>
+    <string name="pref_verbose_logging_summary">Részletes naplók irása a rendszernaplóba (csökkenti az alkalmazás teljesítményét)</string>
     <string name="whats_new">Újdonságok</string>
     <string name="help_translate">Segíts fordítani</string>
     <string name="privacy_policy">Adatvédelmi irányelvek</string>
@@ -740,4 +740,45 @@
     <string name="pref_relative_format_summary">\"%1$s\", ahelyett hogy \"%2$s\"</string>
     <string name="exception_unknown_host">%s nem elérhető</string>
     <string name="exclude_scanlators">Szkennelő-fordítók tiltása</string>
+    <string name="action_apply">Alkalmazás</string>
+    <string name="pref_onboarding_guide">Bevezetési útmutató</string>
+    <string name="onboarding_heading">Üdvözöljük!</string>
+    <string name="onboarding_action_next">Következő</string>
+    <string name="onboarding_action_finish">Kezdjünk hozzá</string>
+    <string name="onboarding_action_skip">Kihagyás</string>
+    <string name="onboarding_storage_info">Válasszon ki egy mappát, ahol a(z) %1$s a fejezetek letöltéseit, biztonsági mentéseket és egyebeket tárolja.
+\n
+\nAjánlott egy külön mappa használata.
+\n
+\nKiválasztott mappa: %2$s</string>
+    <string name="onboarding_storage_action_select">Válasszon ki egy mappát</string>
+    <string name="onboarding_storage_selection_required">Ki kell választani egy mappát</string>
+    <string name="onboarding_storage_help_info">Régebbi verzióról frissít, és nem tudja, mit válasszon? További információkért olvassa el a tárolási útmutatót.</string>
+    <string name="onboarding_storage_help_action">Tárolási útmutató</string>
+    <string name="onboarding_permission_install_apps">Alkalmazások telepítésének engedélyezése</string>
+    <string name="onboarding_permission_install_apps_description">A forrásbővítmények telepítéséhez.</string>
+    <string name="onboarding_permission_notifications">Értesítési engedély</string>
+    <string name="onboarding_permission_notifications_description">Értesüljön a könyvtári frissítésekről és egyéb információkról.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Háttérben lévő akkumulátor-használat</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Kerülje el a hosszan tartó könyvtárfrissítések, letöltések és biztonsági mentések helyreállításának megszakítását.</string>
+    <string name="onboarding_permission_action_grant">Engedélyezés</string>
+    <string name="onboarding_guides_new_user">Új a(z) %s az ön számára? Javasoljuk, hogy olvassa el a Kezdő útmutatót.</string>
+    <string name="onboarding_guides_returning_user">Újratelepíti a(z) %s?</string>
+    <string name="pref_library_update_smart_update">Intelligens frissítés</string>
+    <string name="ext_permission_install_apps_warning">A bővítmények telepítéséhez engedélyek szükségesek. Az engedélyezéshez koppintson ide.</string>
+    <string name="ext_revoke_trust">Megbízható ismeretlen kiterjesztések visszavonása</string>
+    <string name="label_extension_repos">Bővítmény tárolók</string>
+    <string name="information_empty_repos">Nincsenek beállítva tárolók.</string>
+    <string name="action_add_repo">Tároló felvétele</string>
+    <string name="label_add_repo_input">Tároló URL</string>
+    <string name="action_add_repo_message">További tárolók hozzáadása a Mihonhoz. Ennek az URL-nek \"index.min.json\"-ra végződő URL-nek kell lennie.</string>
+    <string name="error_repo_exists">Ez a tároló már létezik!</string>
+    <string name="action_delete_repo">Tároló törlése</string>
+    <string name="invalid_repo_name">Érvénytelen tároló URL</string>
+    <string name="delete_repo_confirmation">Szeretné törölni a(z) \"%s\" tárolót?</string>
+    <string name="action_open_repo">Nyílt forráskódú tároló</string>
+    <string name="no_location_set">Nincs tárolási hely beállítva</string>
+    <string name="action_create">Létrehoz</string>
+    <string name="invalid_backup_file_error">Teljes hiba:</string>
+    <string name="onboarding_description">Kezdetnek állítsunk be néhány dolgot. Ezeket később bármikor módosíthatja a beállításokban.</string>
 </resources>

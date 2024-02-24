@@ -728,7 +728,7 @@
     <string name="action_move_to_bottom_all_for_series">Przenieś serię na dół</string>
     <string name="relative_time_span_never">Nigdy</string>
     <string name="onboarding_storage_action_select">Wybierz folder</string>
-    <string name="manga_interval_expected_update">Następna aktualizacja spodziewana za około %1$s, sprawdzanie co %2$s</string>
+    <string name="manga_interval_expected_update">Następna aktualizacja spodziewana za około %1$s, sprawdzanie co %2$s.</string>
     <string name="onboarding_storage_selection_required">Folder musi być wybrany</string>
     <string name="onboarding_permission_notifications">Uprawnienia powiadomień</string>
     <string name="action_sort_category">Sortuj kategorie</string>
