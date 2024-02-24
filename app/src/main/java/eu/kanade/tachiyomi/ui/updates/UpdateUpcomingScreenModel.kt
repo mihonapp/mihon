@@ -40,13 +40,10 @@ class UpdateUpcomingScreenModel(
     private fun List<Manga>.toUpcomingUIModels(): ImmutableList<UpcomingUIModel> {
         return map { UpcomingUIModel.Item(it) }
             .insertSeparators { before, after ->
-                val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
-                val afterDate = after?.item?.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX
+                val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate()
+                val afterDate = after?.item?.expectedNextUpdate?.toLocalDate()
                 when {
-                    beforeDate.isBefore(afterDate)
-                        or beforeDate.equals(LocalDate.MAX)
-                        and !afterDate.equals(LocalDate.MAX)
-                    -> UpcomingUIModel.Header(afterDate)
+                    (beforeDate != afterDate) and (afterDate != null) -> afterDate?.let(UpcomingUIModel::Header)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
