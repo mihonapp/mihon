@@ -506,7 +506,7 @@
     <string name="local_invalid_format">El formato del capítulo no es correcto</string>
     <string name="chapter_not_found">No se ha encontrado el capítulo</string>
     <string name="notification_incognito_text">Desactivar el modo incógnito</string>
-    <string name="enhanced_tracking_info">Ofrece funciones mejoradas para ciertas fuentes. Se hace un seguimiento automático de los elementos al añadirlos a la biblioteca.</string>
+    <string name="enhanced_tracking_info">Ofrecen funciones mejoradas para ciertas fuentes. Se hace un seguimiento automático de los elementos al añadirlos a la biblioteca.</string>
     <string name="enhanced_services">Servicios de seguimiento mejorados</string>
     <string name="tracking_guide">Guía de seguimiento</string>
     <string name="automatic_background">Automático</string>
@@ -669,7 +669,7 @@
     <string name="hour_short">%dh</string>
     <string name="minute_short">%dm</string>
     <string name="label_used">En uso</string>
-    <string name="not_applicable">¿?</string>
+    <string name="not_applicable">N/D</string>
     <string name="label_tracked_titles">En servicios de seguimiento</string>
     <string name="label_downloaded">Descargados</string>
     <string name="label_stats">Estadísticas</string>
@@ -681,7 +681,7 @@
     <string name="pref_library_update_show_tab_badge">Ver número de capítulos por leer en el icono de actualizaciones</string>
     <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
     <string name="pref_skip_dupe_chapters">Saltarse los capítulos repetidos</string>
-    <string name="enhanced_services_not_installed">Está disponible, pero la fuente todavía no se ha instalado: %s</string>
+    <string name="enhanced_services_not_installed">Están disponibles, pero las fuentes todavía no se han instalado: %s</string>
     <string name="confirm_add_duplicate_manga">Ya tienes un elemento en la biblioteca con este mismo nombre.
 \n
 \n¿Seguro que quieres continuar\?</string>
@@ -742,7 +742,7 @@
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
     <string name="action_sort_tracker_score">Puntuación del rastreador</string>
     <string name="action_apply">Aplicar</string>
-    <string name="action_revert_to_default">Volver a la configuración predeterminada</string>
+    <string name="action_revert_to_default">Restablecer vista</string>
     <string name="action_create">Crear</string>
     <string name="no_scanlators_found">No se ha encontrado ningún equipo de traducción</string>
     <string name="scanlator">Equipo de traducción</string>
@@ -780,7 +780,7 @@
     <string name="ext_permission_install_apps_warning">Toca aquí para conceder los permisos necesarios para instalar extensiones.</string>
     <string name="private_settings">Incluir datos privados, como las claves de inicio de sesión en plataformas de seguimiento</string>
     <string name="invalid_backup_file_error">Descripción completa del problema:</string>
-    <string name="manga_interval_expected_update">Se espera que se publiquen nuevos capítulos en torno a %1$s, el ciclo aproximado de comprobación entre números es de %2$s.</string>
+    <string name="manga_interval_expected_update">Se espera que el siguiente número salga en aproximadamente %1$s, la aplicación busca actualizaciones cada %2$s.</string>
     <string name="manga_interval_custom_amount">Frecuencia de actualización personalizada:</string>
     <string name="error_repo_exists">El repositorio ya existe</string>
     <string name="pref_library_update_smart_update">Actualizaciones inteligentes</string>

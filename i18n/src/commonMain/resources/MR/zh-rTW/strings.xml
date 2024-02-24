@@ -191,7 +191,7 @@
     <string name="cache_deleted">已清除快取，刪除了 %1$d 個檔案</string>
     <string name="cache_delete_error">清除時發生錯誤</string>
     <string name="cookies_cleared">已清除 Cookie</string>
-    <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感訊息</string>
+    <string name="pref_acra_summary">協助我們修復錯誤，傳送的資料將不包含個人敏感資訊</string>
     <string name="login_title">登入 %1$s</string>
     <string name="username">使用者名稱</string>
     <string name="updating_category">正在更新類別</string>
@@ -460,7 +460,7 @@
     <string name="nav_zone_left">左邊</string>
     <string name="nav_zone_prev">上一頁</string>
     <string name="nav_zone_next">下一頁</string>
-    <string name="action_sort_chapter_fetch_date">章節獲取日期</string>
+    <string name="action_sort_chapter_fetch_date">章節擷取日期</string>
     <string name="nav_zone_right">右邊</string>
     <string name="rotation_landscape">橫向</string>
     <string name="pref_reader_actions">快顯選單</string>
