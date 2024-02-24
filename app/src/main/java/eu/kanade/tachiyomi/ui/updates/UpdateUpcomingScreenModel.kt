@@ -43,7 +43,7 @@ class UpdateUpcomingScreenModel(
                 val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate()
                 val afterDate = after?.item?.expectedNextUpdate?.toLocalDate()
                 when {
-                    (beforeDate != afterDate) and (afterDate != null) -> afterDate?.let(UpcomingUIModel::Header)
+                    beforeDate != afterDate && afterDate != null -> UpcomingUIModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
                     else -> null
                 }
