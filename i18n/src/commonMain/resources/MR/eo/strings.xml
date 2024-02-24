@@ -490,6 +490,19 @@
     <string name="onboarding_action_next">Sekva</string>
     <string name="onboarding_storage_selection_required">Dosierujo devas esti elektita</string>
     <string name="pref_appearance_summary">Eloso, dato &amp; tempoformo</string>
-    <string name="pref_security_summary">Apa</string>
+    <string name="pref_security_summary">Apa ŝlosado, sekura ekrano</string>
     <string name="unlock_app_title">Malŝlosi %s</string>
+    <string name="disabled_nav">Malŝaltita</string>
+    <string name="invalid_backup_file_error">Tuta eraro:</string>
+    <string name="source_settings">Agordoj de fonto</string>
+    <string name="app_settings">Apa agordoj</string>
+    <string name="theme_nord">Norda</string>
+    <string name="theme_tidalwave">Cunami</string>
+    <string name="pref_relative_format_summary">\"%1$s\" anstataŭ \"%2$s\"</string>
+    <string name="pref_app_language">Apa lingvo</string>
+    <string name="ext_update_all">Ĝisdatigi ĉiujn</string>
+    <string name="ext_info_version">Versio</string>
+    <string name="ext_info_language">Lingvo</string>
+    <string name="ext_installer_pref">Instalilo</string>
+    <string name="ext_installer_legacy">Malmoderna</string>
 </resources>
