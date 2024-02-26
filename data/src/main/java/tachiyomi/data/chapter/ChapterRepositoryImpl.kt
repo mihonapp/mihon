@@ -66,7 +66,7 @@ class ChapterRepositoryImpl(
                     dateUpload = chapterUpdate.dateUpload,
                     chapterId = chapterUpdate.id,
                     version = chapterUpdate.version,
-                    isSyncing = chapterUpdate.isSyncing,
+                    isSyncing = 0,
                 )
             }
         }
