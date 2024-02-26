@@ -184,8 +184,8 @@
 \nSa pamamagitan ng pagtitiwala sa extension na ito, tinatanggap mo ang mga panganib na ito.</string>
     <string name="untrusted_extension">Di-pinagkakatiwalaang extension</string>
     <string name="ext_uninstall">I-uninstall</string>
-    <string name="ext_trust">Tiwala</string>
-    <string name="ext_untrusted">Hindi pinagkakatiwalaan</string>
+    <string name="ext_trust">Itiwala</string>
+    <string name="ext_untrusted">Di pinagkakatiwalaan</string>
     <string name="ext_installed">Naka-install</string>
     <string name="ext_installing">Ini-install</string>
     <string name="ext_downloading">Dina-download</string>
@@ -798,4 +798,5 @@
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
+    <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
 </resources>
