@@ -23,8 +23,6 @@ interface Chapter : SChapter, Serializable {
     var last_modified: Long
 
     var version: Long
-
-    var isSyncing: Long
 }
 
 fun Chapter.toDomainChapter(): DomainChapter? {
@@ -44,6 +42,6 @@ fun Chapter.toDomainChapter(): DomainChapter? {
         scanlator = scanlator,
         lastModifiedAt = last_modified,
         version = version,
-        isSyncing = isSyncing,
+        isSyncing = 0
     )
 }
