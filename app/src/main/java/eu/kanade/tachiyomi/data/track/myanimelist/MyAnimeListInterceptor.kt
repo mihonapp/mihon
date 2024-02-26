@@ -32,7 +32,8 @@ class MyAnimeListInterceptor(private val myanimelist: MyAnimeList) : Interceptor
         // Add the authorization header to the original request
         val authRequest = originalRequest.newBuilder()
             .addHeader("Authorization", "Bearer ${oauth!!.access_token}")
-            .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
+            // TODO: Add back custom user agent when they stop blocking us for no apparent reason
+            // .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
             .build()
 
         return chain.proceed(authRequest)
