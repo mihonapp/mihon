@@ -53,8 +53,7 @@ object MangaMapper {
         initialized = initialized,
         lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
-        version = version,
-        isSyncing = isSyncing,
+        version = version
     )
 
     fun mapLibraryManga(

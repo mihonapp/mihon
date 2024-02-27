@@ -157,7 +157,6 @@ class ChapterRepositoryImpl(
         chapterNumber = chapterNumber,
         scanlator = scanlator,
         lastModifiedAt = lastModifiedAt,
-        version = version,
-        isSyncing = isSyncing,
+        version = version
     )
 }
