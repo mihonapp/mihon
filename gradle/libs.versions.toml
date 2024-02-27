@@ -8,7 +8,7 @@ shizuku_version = "12.2.0"
 sqldelight = "2.0.1"
 sqlite = "2.4.0"
 voyager = "1.0.0"
-detekt = "1.23.1"
+detekt = "1.23.5"
 detektCompose = "0.3.11"
 
 [libraries]
