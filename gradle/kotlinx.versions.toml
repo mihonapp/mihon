@@ -1,6 +1,6 @@
 [versions]
 kotlin_version = "1.9.22"
-serialization_version = "1.6.2"
+serialization_version = "1.6.3"
 xml_serialization_version = "0.86.3"
 
 [libraries]
@@ -9,7 +9,7 @@ gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "
 
 immutables = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.7" }
 
-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version = "1.7.3" }
+coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version = "1.8.0" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android" }
 coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava" }
