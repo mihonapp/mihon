@@ -46,6 +46,7 @@ fun Manga.toSManga(): SManga = SManga.create().also {
     it.description = description
     it.genre = genre.orEmpty().joinToString()
     it.status = status.toInt()
+    it.webUrls = webUrls.orEmpty().joinToString(", ")
     it.thumbnail_url = thumbnailUrl
     it.initialized = initialized
 }
@@ -59,6 +60,11 @@ fun Manga.copyFrom(other: SManga): Manga {
     } else {
         genre
     }
+    val webUrls  = if (other.webUrls != null) {
+        other.getWebUrls()
+    } else {
+        webUrls
+    }
     val thumbnailUrl = other.thumbnail_url ?: thumbnailUrl
     return this.copy(
         author = author,
@@ -67,6 +73,7 @@ fun Manga.copyFrom(other: SManga): Manga {
         genre = genres,
         thumbnailUrl = thumbnailUrl,
         status = other.status.toLong(),
+        webUrls = webUrls,
         updateStrategy = other.update_strategy,
         initialized = other.initialized && initialized,
     )
@@ -81,6 +88,7 @@ fun SManga.toDomainManga(sourceId: Long): Manga {
         description = description,
         genre = getGenres(),
         status = status.toLong(),
+        webUrls = getWebUrls(),
         thumbnailUrl = thumbnail_url,
         updateStrategy = update_strategy,
         initialized = initialized,
@@ -111,7 +119,16 @@ fun getComicInfo(
             ComicInfo.Number(it.toString())
         }
     },
-    web = ComicInfo.Web(urls.joinToString(" ")),
+    web = if (!manga.webUrls.isNullOrEmpty()) {
+        ComicInfo.Web(
+            manga.webUrls!!
+                .plus(urls)
+                .distinct()
+                .joinToString(" ")
+        )
+    } else {
+        ComicInfo.Web(urls.joinToString(" "))
+    },
     summary = manga.description?.let { ComicInfo.Summary(it) },
     writer = manga.author?.let { ComicInfo.Writer(it) },
     penciller = manga.artist?.let { ComicInfo.Penciller(it) },

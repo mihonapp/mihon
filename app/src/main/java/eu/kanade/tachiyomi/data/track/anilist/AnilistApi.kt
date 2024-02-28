@@ -189,6 +189,60 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
         }
     }
 
+    suspend fun findMangaById(mangaId: Long): List<TrackSearch> {
+        return withIOContext {
+            val query = """
+            |query (${'$'}manga_id: Int!) {
+                |Page (perPage: 1) {
+                    |media(id: ${'$'}manga_id, type: MANGA) {
+                        |id
+                        |title {
+                            |userPreferred
+                        |}
+                        |coverImage {
+                            |large
+                        |}
+                        |format
+                        |status
+                        |chapters
+                        |description
+                        |startDate {
+                            |year
+                            |month
+                            |day
+                        |}
+                        |averageScore  
+                    |}
+                |}
+            |}
+            |
+            """.trimMargin()
+            val payload = buildJsonObject {
+                put("query", query)
+                putJsonObject("variables") {
+                    put("manga_id", mangaId)
+                }
+            }
+            with(json) {
+                authClient.newCall(
+                    POST(
+                        apiUrl,
+                        body = payload.toString().toRequestBody(jsonMime),
+                    ),
+                )
+                    .awaitSuccess()
+                    .parseAs<JsonObject>()
+                    .let { response ->
+                        val data = response["data"]!!.jsonObject
+                        val page = data["Page"]!!.jsonObject
+                        val media = page["media"]!!.jsonArray
+                        val entries = media.map { jsonToALManga(it.jsonObject) }
+                        entries.map { it.toTrack() }
+                    }
+            }
+        }
+    }
+
     suspend fun findLibManga(track: Track, userid: Int): Track? {
         return withIOContext {
             val query = """
@@ -366,7 +420,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
     companion object {
         private const val clientId = "16329"
         private const val apiUrl = "https://graphql.anilist.co/"
-        private const val baseUrl = "https://anilist.co/api/v2/"
+        const val baseUrl = "https://anilist.co/api/v2/"
         private const val baseMangaUrl = "https://anilist.co/manga/"
 
         fun mangaUrl(mediaId: Long): String {

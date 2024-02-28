@@ -24,6 +24,7 @@ data class Manga(
     val description: String?,
     val genre: List<String>?,
     val status: Long,
+    val webUrls: List<String>?,
     val thumbnailUrl: String?,
     val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
@@ -122,6 +123,7 @@ data class Manga(
             initialized = false,
             lastModifiedAt = 0L,
             favoriteModifiedAt = null,
+            webUrls = null,
         )
     }
 }

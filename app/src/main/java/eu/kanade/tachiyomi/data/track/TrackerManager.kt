@@ -13,8 +13,12 @@ import eu.kanade.tachiyomi.data.track.suwayomi.Suwayomi
 class TrackerManager {
 
     companion object {
+        const val MY_ANIME_LIST = 1L
         const val ANILIST = 2L
         const val KITSU = 3L
+        const val SHIKIMORI = 4L
+        const val BANGUMI = 5L
+        const val MANGA_UPDATES = 7L
         const val KAVITA = 8L
     }
 
@@ -30,7 +34,13 @@ class TrackerManager {
 
     val trackers = listOf(myAnimeList, aniList, kitsu, shikimori, bangumi, komga, mangaUpdates, kavita, suwayomi)
 
+
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }
 
     fun get(id: Long) = trackers.find { it.id == id }
+
+    fun getTrackerItemFromUrl(url: String) {
+
+
+    }
 }

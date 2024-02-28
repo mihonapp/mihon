@@ -51,6 +51,7 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.TrackerChipElement
 import eu.kanade.tachiyomi.data.track.TrackerManager
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.util.lang.convertEpochMillisZone
@@ -90,6 +91,7 @@ data class TrackInfoDialogHomeScreen(
     private val mangaId: Long,
     private val mangaTitle: String,
     private val sourceId: Long,
+    private val webUrls: List<String>?,
 ) : Screen() {
 
     @Composable
@@ -160,7 +162,34 @@ data class TrackInfoDialogHomeScreen(
                     )
                 }
             },
+            onNewChipSearch = {
+                if (it.serviceId != null) {
+                    navigator.push(
+                        TrackerSearchScreen(
+                            mangaId = mangaId,
+                            initialQuery = it.searchQuery!!,
+                            currentUrl = null,
+                            serviceId = it.serviceId,
+                        ),
+                    )
+                }
+            },
+            onNewIdSearch = {
+                if (it.serviceId != null) {
+                    navigator.push(
+                        TrackerSearchScreen(
+                            mangaId = mangaId,
+                            initialQuery = "",
+                            currentUrl = null,
+                            serviceId = it.serviceId,
+                            mangaIdOnTracker = it.mangaId,
+                        ),
+                    )
+                }
+            },
             onOpenInBrowser = { openTrackerInBrowser(context, it) },
+            onOpenChipElementInBrowser = { openChipElementInBrowser(context, it) },
+            webUrlProvider = { webUrls },
             onRemoved = {
                 navigator.push(
                     TrackerRemoveScreen(
@@ -181,6 +210,10 @@ data class TrackInfoDialogHomeScreen(
         if (url.isNotBlank()) {
             context.openInBrowser(url)
         }
+    }
+
+    private fun openChipElementInBrowser(context: Context, chipElement: TrackerChipElement) {
+        context.openInBrowser(chipElement.url)
     }
 
     private class Model(
@@ -640,6 +673,7 @@ data class TrackerSearchScreen(
     private val initialQuery: String,
     private val currentUrl: String?,
     private val serviceId: Long,
+    private val mangaIdOnTracker: Long? = null,
 ) : Screen() {
 
     @Composable
@@ -651,6 +685,7 @@ data class TrackerSearchScreen(
                 currentUrl = currentUrl,
                 initialQuery = initialQuery,
                 tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
+                mangaIdOnTracker = mangaIdOnTracker,
             )
         }
 
@@ -677,12 +712,15 @@ data class TrackerSearchScreen(
         private val currentUrl: String? = null,
         initialQuery: String,
         private val tracker: Tracker,
+        private val mangaIdOnTracker: Long? = null,
     ) : StateScreenModel<Model.State>(State()) {
-
         init {
             // Run search on first launch
             if (initialQuery.isNotBlank()) {
                 trackingSearch(initialQuery)
+            }
+            else if (mangaIdOnTracker != null) {
+                idSearch(mangaIdOnTracker)
             }
         }
 
@@ -706,6 +744,29 @@ data class TrackerSearchScreen(
                     )
                 }
             }
+        }
+
+        fun idSearch(id: Long) {
+            screenModelScope.launch {
+                // To show loading state
+                mutableState.update { it.copy(queryResult = null, selected = null) }
+
+                val result = withIOContext {
+                    try {
+                        val results = tracker.searchId(id)
+                        Result.success(results)
+                    } catch (e: Throwable) {
+                        Result.failure(e)
+                    }
+                }
+                mutableState.update { oldState ->
+                    oldState.copy(
+                        queryResult = result,
+                        selected = result.getOrNull()?.find { it.tracking_url == currentUrl },
+                    )
+                }
+            }
+
         }
 
         fun registerTracking(item: TrackSearch) {

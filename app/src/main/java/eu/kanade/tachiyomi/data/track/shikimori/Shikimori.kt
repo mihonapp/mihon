@@ -15,9 +15,10 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
+class Shikimori(id: Long) : BaseTracker(id, NAME), DeletableTracker {
 
     companion object {
+        const val NAME = "Shikimori"
         const val READING = 1L
         const val COMPLETED = 2L
         const val ON_HOLD = 3L
@@ -86,6 +87,10 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
 
     override suspend fun search(query: String): List<TrackSearch> {
         return api.search(query)
+    }
+
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        return listOf(api.getMangaFromId(id))
     }
 
     override suspend fun refresh(track: Track): Track {

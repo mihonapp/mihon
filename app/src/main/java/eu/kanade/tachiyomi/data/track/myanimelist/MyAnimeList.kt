@@ -15,9 +15,10 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
+class MyAnimeList(id: Long) : BaseTracker(id, NAME), DeletableTracker {
 
     companion object {
+        const val NAME = "MyAnimeList"
         const val READING = 1L
         const val COMPLETED = 2L
         const val ON_HOLD = 3L
@@ -130,6 +131,11 @@ class MyAnimeList(id: Long) : BaseTracker(id, "MyAnimeList"), DeletableTracker {
         }
 
         return api.search(query)
+    }
+
+    //This should work but is technically untested since MyAnimeList is blocking Mihon at the moment
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        return listOf(api.getMangaDetails(id.toInt()))
     }
 
     override suspend fun refresh(track: Track): Track {

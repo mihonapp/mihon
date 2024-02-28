@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.source.model
 
 import java.io.Serializable
 
+
 interface SManga : Serializable {
 
     var url: String
@@ -18,6 +19,8 @@ interface SManga : Serializable {
 
     var status: Int
 
+    var webUrls: String?
+
     var thumbnail_url: String?
 
     var update_strategy: UpdateStrategy
@@ -27,6 +30,11 @@ interface SManga : Serializable {
     fun getGenres(): List<String>? {
         if (genre.isNullOrBlank()) return null
         return genre?.split(", ")?.map { it.trim() }?.filterNot { it.isBlank() }?.distinct()
+    }
+
+    fun getWebUrls(): List<String>? {
+        if (webUrls.isNullOrBlank()) return null
+        return webUrls?.split(", ")?.map { it.trim() }?.filterNot { it.isBlank() }?.distinct()
     }
 
     fun copy() = create().also {

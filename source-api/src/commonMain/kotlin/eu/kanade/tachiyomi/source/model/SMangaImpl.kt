@@ -16,6 +16,8 @@ class SMangaImpl : SManga {
 
     override var status: Int = 0
 
+    override var webUrls: String? = null
+
     override var thumbnail_url: String? = null
 
     override var update_strategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE

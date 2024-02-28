@@ -132,6 +132,17 @@ class BangumiApi(
         }
     }
 
+    suspend fun getMangaSearchById(id: Long): TrackSearch {
+        return withIOContext {
+            with(json) {
+                authClient.newCall(GET("$apiUrl/subject/${id}"))
+                    .awaitSuccess()
+                    .parseAs<JsonObject>()
+                    .let { jsonToSearch(it) }
+            }
+        }
+    }
+
     suspend fun statusLibManga(track: Track): Track? {
         return withIOContext {
             val urlUserRead = "$apiUrl/collection/${track.remote_id}"

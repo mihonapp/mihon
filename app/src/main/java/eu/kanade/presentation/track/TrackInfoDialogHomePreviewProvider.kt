@@ -56,6 +56,10 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onNewIdSearch = {},
+            onNewChipSearch = {},
+            onOpenChipElementInBrowser = {},
+            webUrlProvider = { listOf(aTrack.remoteUrl) },
         )
     }
 
@@ -71,6 +75,10 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onNewIdSearch = {},
+            onNewChipSearch = {},
+            onOpenChipElementInBrowser = {},
+            webUrlProvider = { listOf(aTrack.remoteUrl) },
         )
     }
 

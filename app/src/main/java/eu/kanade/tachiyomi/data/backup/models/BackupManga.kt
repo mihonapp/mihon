@@ -39,6 +39,7 @@ data class BackupManga(
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
+    @ProtoNumber(109) var webUrls: List<String>? = emptyList(),
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -49,6 +50,7 @@ data class BackupManga(
             description = this@BackupManga.description,
             genre = this@BackupManga.genre,
             status = this@BackupManga.status.toLong(),
+            webUrls = this@BackupManga.webUrls,
             thumbnailUrl = this@BackupManga.thumbnailUrl,
             favorite = this@BackupManga.favorite,
             source = this@BackupManga.source,

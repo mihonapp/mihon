@@ -16,9 +16,10 @@ import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker {
+class MangaUpdates(id: Long) : BaseTracker(id, NAME), DeletableTracker {
 
     companion object {
+        const val NAME = "MangaUpdates"
         const val READING_LIST = 0L
         const val WISH_LIST = 1L
         const val COMPLETE_LIST = 2L
@@ -99,6 +100,10 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
             .map {
                 it.toTrackSearch(id)
             }
+    }
+
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun refresh(track: Track): Track {

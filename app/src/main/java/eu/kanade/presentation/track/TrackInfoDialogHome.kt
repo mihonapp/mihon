@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,21 +18,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +59,12 @@ import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
 import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.data.track.TrackerChipElement
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.format.DateTimeFormatter
 
@@ -62,6 +72,7 @@ private const val UnsetStatusTextAlpha = 0.5F
 
 @Composable
 fun TrackInfoDialogHome(
+    webUrlProvider: () -> List<String>?,
     trackItems: List<TrackItem>,
     dateFormat: DateTimeFormatter,
     onStatusClick: (TrackItem) -> Unit,
@@ -70,7 +81,10 @@ fun TrackInfoDialogHome(
     onStartDateEdit: (TrackItem) -> Unit,
     onEndDateEdit: (TrackItem) -> Unit,
     onNewSearch: (TrackItem) -> Unit,
+    onNewIdSearch: (TrackerChipElement) -> Unit,
+    onNewChipSearch: (TrackerChipElement) -> Unit,
     onOpenInBrowser: (TrackItem) -> Unit,
+    onOpenChipElementInBrowser: (TrackerChipElement) -> Unit,
     onRemoved: (TrackItem) -> Unit,
 ) {
     Column(
@@ -82,6 +96,87 @@ fun TrackInfoDialogHome(
             .windowInsetsPadding(WindowInsets.systemBars),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
+        val trackerChipElements = webUrlProvider()
+            ?.map { TrackerChipElement(it, trackItems) }
+            ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null}
+            ?.sortedBy { it.serviceId }
+            ?.sortedWith(compareBy(nullsLast()) { it.serviceId })
+        if (!trackerChipElements.isNullOrEmpty()) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(end = 12.dp)
+                    .animateContentSize(),
+            ) {
+                val context = LocalContext.current
+                var showMenu by remember { mutableStateOf(false) }
+                var showBrowserConfirmationDialog by remember { mutableStateOf(false) }
+                var selectedChipElement: TrackerChipElement? by remember { mutableStateOf(null) }
+
+                if (showBrowserConfirmationDialog) {
+                    OpenBrowserConfirmationDialog(
+                        onDismissRequest = { showBrowserConfirmationDialog = false },
+                        onConfirmation = {
+                            showBrowserConfirmationDialog = false
+                            onOpenChipElementInBrowser(selectedChipElement!!)
+                        },
+                        url = selectedChipElement!!.url,
+                        host = selectedChipElement!!.hostName,
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false },
+                ) {
+                    if (selectedChipElement?.trackItem?.tracker != null) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(MR.strings.action_open_in_mihon)) },
+                            onClick = {
+                                if (selectedChipElement!!.mangaId != null) {
+                                    onNewIdSearch(selectedChipElement!!)
+                                }
+                                else if (selectedChipElement!!.searchQuery != null) {
+                                 onNewChipSearch(selectedChipElement!!)
+                                }
+                                showMenu = false
+                            },
+                        )
+                    }
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(MR.strings.action_copy_to_clipboard)) },
+                        onClick = {
+                            context.copyToClipboard(selectedChipElement?.url!!, selectedChipElement?.url!!)
+                            showMenu = false
+                        },
+                    )
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(MR.strings.action_open_in_browser)) },
+                        onClick = {
+                            if (selectedChipElement?.potentiallyUnsafeUrl == true) showBrowserConfirmationDialog = true
+                            else onOpenChipElementInBrowser(selectedChipElement!!)
+
+                            showMenu = false
+                        },
+                    )
+                }
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = MaterialTheme.padding.extraSmall),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                ) {
+                    items(items = trackerChipElements) { chipElement ->
+                        TrackerChip(
+                            trackerChipElement = chipElement,
+                            modifier = Modifier,
+                            onClick = {
+                                selectedChipElement = chipElement
+                                showMenu = true
+                           },
+                        )
+                    }
+                }
+            }
+        }
         trackItems.forEach { item ->
             if (item.track != null) {
                 val supportsScoring = item.tracker.getScoreList().isNotEmpty()
@@ -316,6 +411,56 @@ private fun TrackInfoItemMenu(
             )
         }
     }
+}
+
+@Composable fun TrackerChip(
+    trackerChipElement: TrackerChipElement,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+        SuggestionChip(
+            modifier = modifier,
+            onClick = onClick,
+            colors = SuggestionChipDefaults.suggestionChipColors().copy(),
+            icon = {
+                Icon(
+                    imageVector = trackerChipElement.icon,
+                    contentDescription = null,
+                )
+            },
+            label = {
+                Text(
+                    text = trackerChipElement.trackerName,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                )
+            },
+        )
+    }
+}
+
+@Composable
+private fun OpenBrowserConfirmationDialog (
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    url: String,
+    host: String,
+) {
+    AlertDialog(
+        title = { Text(text = stringResource(MR.strings.label_warning)) },
+        text = { Text(
+            text = stringResource(
+                MR.strings.potentially_unsafe_website_warning,
+                host,
+                url,
+            ),
+        )
+        },
+        onDismissRequest = { onDismissRequest() },
+        confirmButton = { TextButton(onClick = { onConfirmation() }) { Text(stringResource(MR.strings.action_confirm)) } },
+        dismissButton = { TextButton(onClick = { onDismissRequest() }) { Text(stringResource(MR.strings.action_cancel)) } },
+    )
 }
 
 @PreviewLightDark

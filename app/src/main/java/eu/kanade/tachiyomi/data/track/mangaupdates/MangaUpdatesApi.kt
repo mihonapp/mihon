@@ -38,7 +38,6 @@ class MangaUpdatesApi(
 ) {
     private val json: Json by injectLazy()
 
-    private val baseUrl = "https://api.mangaupdates.com"
     private val contentType = "application/vnd.api+json".toMediaType()
 
     private val authClient by lazy {
@@ -208,4 +207,8 @@ class MangaUpdatesApi(
                 }
         }
     }
+    companion object {
+        private const val baseUrl = "https://api.mangaupdates.com"
+    }
 }
+
