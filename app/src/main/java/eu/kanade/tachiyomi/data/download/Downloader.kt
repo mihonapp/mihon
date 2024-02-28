@@ -628,7 +628,6 @@ class Downloader(
         chapter: Chapter,
         source: HttpSource,
     ) {
-
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
         val translator = chapter.scanlator ?: sourceManager.get(manga.source)?.name
         val urls = listOf(source.getChapterUrl(chapter.toSChapter()))
