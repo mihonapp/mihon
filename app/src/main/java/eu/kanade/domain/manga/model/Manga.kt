@@ -100,7 +100,7 @@ fun getComicInfo(
     chapter: Chapter,
     urls: String,
     categories: List<String>?,
-    translator: String?,
+    translator: String,
 ) = ComicInfo(
     title = ComicInfo.Title(chapter.name),
     series = ComicInfo.Series(manga.title),
@@ -115,7 +115,7 @@ fun getComicInfo(
     summary = manga.description?.let { ComicInfo.Summary(it) },
     writer = manga.author?.let { ComicInfo.Writer(it) },
     penciller = manga.artist?.let { ComicInfo.Penciller(it) },
-    translator = translator?.let { ComicInfo.Translator(it) },
+    translator = ComicInfo.Translator(translator),
     genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
     publishingStatus = ComicInfo.PublishingStatusTachiyomi(
         ComicInfoPublishingStatus.toComicInfoValue(manga.status),
