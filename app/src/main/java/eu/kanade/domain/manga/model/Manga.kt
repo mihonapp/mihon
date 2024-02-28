@@ -98,7 +98,7 @@ fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
 fun getComicInfo(
     manga: Manga,
     chapter: Chapter,
-    urls: String,
+    urls: List<String>,
     categories: List<String>?,
     sourceName: String,
 ) = ComicInfo(
