@@ -111,7 +111,7 @@ fun getComicInfo(
             ComicInfo.Number(it.toString())
         }
     },
-    web = ComicInfo.Web(urls),
+    web = ComicInfo.Web(urls.joinToString(" ")),
     summary = manga.description?.let { ComicInfo.Summary(it) },
     writer = manga.author?.let { ComicInfo.Writer(it) },
     penciller = manga.artist?.let { ComicInfo.Penciller(it) },
