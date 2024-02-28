@@ -629,12 +629,12 @@ class Downloader(
         source: HttpSource,
     ) {
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
-        val urls = listOf(source.getChapterUrl(chapter.toSChapter()))
-            .plus(getTracks.await(manga.id).mapNotNull { it.remoteUrl.takeUnless { url -> url.isEmpty() } })
-            .map { it.trim() }
+        val urls = getTracks.await(manga.id)
+            .mapNotNull { track ->
+                track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
+             }
+            .plus(source.getChapterUrl(chapter.toSChapter()).trim())
             .distinct()
-            .joinToString(" ")
-            .trim()
 
         val comicInfo = getComicInfo(
             manga,
