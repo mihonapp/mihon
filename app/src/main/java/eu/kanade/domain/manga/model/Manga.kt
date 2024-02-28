@@ -95,7 +95,13 @@ fun Manga.hasCustomCover(coverCache: CoverCache = Injekt.get()): Boolean {
 /**
  * Creates a ComicInfo instance based on the manga and chapter metadata.
  */
-fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String, categories: List<String>?) = ComicInfo(
+fun getComicInfo(
+    manga: Manga,
+    chapter: Chapter,
+    urls: String,
+    categories: List<String>?,
+    translator: String?,
+) = ComicInfo(
     title = ComicInfo.Title(chapter.name),
     series = ComicInfo.Series(manga.title),
     number = chapter.chapterNumber.takeIf { it >= 0 }?.let {
@@ -105,11 +111,11 @@ fun getComicInfo(manga: Manga, chapter: Chapter, chapterUrl: String, categories:
             ComicInfo.Number(it.toString())
         }
     },
-    web = ComicInfo.Web(chapterUrl),
+    web = ComicInfo.Web(urls),
     summary = manga.description?.let { ComicInfo.Summary(it) },
     writer = manga.author?.let { ComicInfo.Writer(it) },
     penciller = manga.artist?.let { ComicInfo.Penciller(it) },
-    translator = chapter.scanlator?.let { ComicInfo.Translator(it) },
+    translator = translator?.let { ComicInfo.Translator(it) },
     genre = manga.genre?.let { ComicInfo.Genre(it.joinToString()) },
     publishingStatus = ComicInfo.PublishingStatusTachiyomi(
         ComicInfoPublishingStatus.toComicInfoValue(manga.status),
