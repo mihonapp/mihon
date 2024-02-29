@@ -632,7 +632,7 @@ class Downloader(
         val urls = getTracks.await(manga.id)
             .mapNotNull { track ->
                 track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
-             }
+            }
             .plus(source.getChapterUrl(chapter.toSChapter()).trim())
             .distinct()
 
