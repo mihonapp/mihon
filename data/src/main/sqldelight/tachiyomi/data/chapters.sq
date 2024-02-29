@@ -32,14 +32,20 @@ BEGIN
   WHERE _id = new._id;
 END;
 
-CREATE TRIGGER update_chapter_version AFTER UPDATE ON chapters
+CREATE TRIGGER update_chapter_and_manga_version AFTER UPDATE ON chapters
+WHEN new.is_syncing = 0 AND (
+    new.read != old.read OR
+    new.bookmark != old.bookmark OR
+    new.last_page_read != old.last_page_read
+)
 BEGIN
+    -- Update the chapter version
     UPDATE chapters SET version = version + 1
-    WHERE _id = new._id AND new.is_syncing = 0 AND (
-        new.read != old.read OR
-        new.bookmark != old.bookmark OR
-        new.last_page_read != old.last_page_read
-    );
+    WHERE _id = new._id;
+
+    -- Update the manga version
+    UPDATE mangas SET version = version + 1
+    WHERE _id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE _id = new.manga_id) = 0;
 END;
 
 getChapterById:
