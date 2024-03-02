@@ -84,7 +84,6 @@ class TrackerChipElement(
         private const val MANGA_UPDATES_BASE_URL = "https://www.mangaupdates.com"
         private val BANGUMI_BASE_URLs = listOf("https://bangumi.tv", "https://bgm.tv")
 
-
         private val ANILIST_ID_REGEX = Regex("""^/manga/(\d+)""")
         private val MY_ANIME_LIST_ID_REGEX = Regex("""^/manga/(\d+)""")
         private val SHIKIMORI_ID_REGEX = Regex("""^/mangas/(\d+)""")
@@ -92,6 +91,5 @@ class TrackerChipElement(
 
         private val KITSU_QUERY_REGEX = Regex("""^/manga/(.+)""")
         private val MANGA_UPDATES_QUERY_REGEX = Regex("""^/series/\w+/(.+)""")
-
     }
 }

@@ -718,8 +718,7 @@ data class TrackerSearchScreen(
             // Run search on first launch
             if (initialQuery.isNotBlank()) {
                 trackingSearch(initialQuery)
-            }
-            else if (mangaIdOnTracker != null) {
+            } else if (mangaIdOnTracker != null) {
                 idSearch(mangaIdOnTracker)
             }
         }
@@ -766,7 +765,6 @@ data class TrackerSearchScreen(
                     )
                 }
             }
-
         }
 
         fun registerTracking(item: TrackSearch) {

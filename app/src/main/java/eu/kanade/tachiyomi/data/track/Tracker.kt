@@ -56,7 +56,7 @@ interface Tracker {
 
     suspend fun login(username: String, password: String)
 
-    suspend fun searchId (id: Long) : List<TrackSearch>
+    suspend fun searchId(id: Long): List<TrackSearch>
 
     @CallSuper
     fun logout()

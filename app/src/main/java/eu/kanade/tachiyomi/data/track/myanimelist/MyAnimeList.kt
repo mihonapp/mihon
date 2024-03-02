@@ -133,7 +133,7 @@ class MyAnimeList(id: Long) : BaseTracker(id, NAME), DeletableTracker {
         return api.search(query)
     }
 
-    //This should work but is technically untested since MyAnimeList is blocking Mihon at the moment
+    // This should work but is technically untested since MyAnimeList is blocking Mihon at the moment
     override suspend fun searchId(id: Long): List<TrackSearch> {
         return listOf(api.getMangaDetails(id.toInt()))
     }

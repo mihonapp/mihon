@@ -60,7 +60,7 @@ fun Manga.copyFrom(other: SManga): Manga {
     } else {
         genre
     }
-    val webUrls  = if (other.webUrls != null) {
+    val webUrls = if (other.webUrls != null) {
         other.getWebUrls()
     } else {
         webUrls

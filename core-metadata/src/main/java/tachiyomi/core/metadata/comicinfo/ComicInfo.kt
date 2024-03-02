@@ -70,8 +70,6 @@ fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
         ?.filter { URLUtil.isNetworkUrl(it) }
         ?.takeIf { it.isNotEmpty() }
         ?.let { webUrls = it.joinToString(", ") }
-
-
 }
 
 // https://anansi-project.github.io/docs/comicinfo/schemas/v2.0

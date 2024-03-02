@@ -98,7 +98,7 @@ fun TrackInfoDialogHome(
     ) {
         val trackerChipElements = webUrlProvider()
             ?.map { TrackerChipElement(it, trackItems) }
-            ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null}
+            ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null }
             ?.sortedBy { it.serviceId }
             ?.sortedWith(compareBy(nullsLast()) { it.serviceId })
         if (!trackerChipElements.isNullOrEmpty()) {
@@ -135,9 +135,8 @@ fun TrackInfoDialogHome(
                             onClick = {
                                 if (selectedChipElement!!.mangaId != null) {
                                     onNewIdSearch(selectedChipElement!!)
-                                }
-                                else if (selectedChipElement!!.searchQuery != null) {
-                                 onNewChipSearch(selectedChipElement!!)
+                                } else if (selectedChipElement!!.searchQuery != null) {
+                                    onNewChipSearch(selectedChipElement!!)
                                 }
                                 showMenu = false
                             },
@@ -153,9 +152,11 @@ fun TrackInfoDialogHome(
                     DropdownMenuItem(
                         text = { Text(text = stringResource(MR.strings.action_open_in_browser)) },
                         onClick = {
-                            if (selectedChipElement?.potentiallyUnsafeUrl == true) showBrowserConfirmationDialog = true
-                            else onOpenChipElementInBrowser(selectedChipElement!!)
-
+                            if (selectedChipElement?.potentiallyUnsafeUrl == true) {
+                                showBrowserConfirmationDialog = true
+                            } else {
+                                onOpenChipElementInBrowser(selectedChipElement!!)
+                            }
                             showMenu = false
                         },
                     )
@@ -441,7 +442,7 @@ private fun TrackInfoItemMenu(
 }
 
 @Composable
-private fun OpenBrowserConfirmationDialog (
+private fun OpenBrowserConfirmationDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     url: String,
@@ -449,17 +450,34 @@ private fun OpenBrowserConfirmationDialog (
 ) {
     AlertDialog(
         title = { Text(text = stringResource(MR.strings.label_warning)) },
-        text = { Text(
-            text = stringResource(
-                MR.strings.potentially_unsafe_website_warning,
-                host,
-                url,
-            ),
-        )
+        text = {
+            Text(
+                text = stringResource(
+                    MR.strings.potentially_unsafe_website_warning,
+                    host,
+                    url,
+                ),
+            )
         },
         onDismissRequest = { onDismissRequest() },
-        confirmButton = { TextButton(onClick = { onConfirmation() }) { Text(stringResource(MR.strings.action_confirm)) } },
-        dismissButton = { TextButton(onClick = { onDismissRequest() }) { Text(stringResource(MR.strings.action_cancel)) } },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                },
+            ) {
+                Text(stringResource(MR.strings.action_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                },
+            ) {
+                Text(stringResource(MR.strings.action_cancel))
+            }
+        },
     )
 }
 

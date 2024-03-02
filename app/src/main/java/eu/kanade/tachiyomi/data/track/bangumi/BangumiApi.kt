@@ -135,7 +135,7 @@ class BangumiApi(
     suspend fun getMangaSearchById(id: Long): TrackSearch {
         return withIOContext {
             with(json) {
-                authClient.newCall(GET("$apiUrl/subject/${id}"))
+                authClient.newCall(GET("$apiUrl/subject/$id"))
                     .awaitSuccess()
                     .parseAs<JsonObject>()
                     .let { jsonToSearch(it) }

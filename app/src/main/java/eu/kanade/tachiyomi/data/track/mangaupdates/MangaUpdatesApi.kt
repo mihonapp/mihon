@@ -211,4 +211,3 @@ class MangaUpdatesApi(
         private const val baseUrl = "https://api.mangaupdates.com"
     }
 }
-
