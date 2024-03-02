@@ -304,6 +304,12 @@ tasks {
                     project.layout.buildDirectory.dir("compose_metrics").get().asFile.absolutePath,
             )
         }
+
+        // https://developer.android.com/jetpack/androidx/releases/compose-compiler#1.5.9
+        kotlinOptions.freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:nonSkippingGroupOptimization=true",
+        )
     }
 }
 
