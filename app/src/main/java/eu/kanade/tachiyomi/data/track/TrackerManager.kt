@@ -34,13 +34,7 @@ class TrackerManager {
 
     val trackers = listOf(myAnimeList, aniList, kitsu, shikimori, bangumi, komga, mangaUpdates, kavita, suwayomi)
 
-
     fun loggedInTrackers() = trackers.filter { it.isLoggedIn }
 
     fun get(id: Long) = trackers.find { it.id == id }
-
-    fun getTrackerItemFromUrl(url: String) {
-
-
-    }
 }
