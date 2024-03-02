@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
@@ -86,11 +87,13 @@ private fun NotDownloadedIndicator(
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     Box(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
                 enabled = enabled,
+                hapticFeedback = hapticFeedback,
                 onLongClick = { onClick(ChapterDownloadAction.START_NOW) },
                 onClick = { onClick(ChapterDownloadAction.START) },
             )
@@ -114,12 +117,14 @@ private fun DownloadingIndicator(
     onClick: (ChapterDownloadAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     var isMenuExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
                 enabled = enabled,
+                hapticFeedback = hapticFeedback,
                 onLongClick = { onClick(ChapterDownloadAction.CANCEL) },
                 onClick = { isMenuExpanded = true },
             ),
@@ -186,12 +191,14 @@ private fun DownloadedIndicator(
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     var isMenuExpanded by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
                 enabled = enabled,
+                hapticFeedback = hapticFeedback,
                 onLongClick = { isMenuExpanded = true },
                 onClick = { isMenuExpanded = true },
             ),
@@ -221,11 +228,13 @@ private fun ErrorIndicator(
     modifier: Modifier = Modifier,
     onClick: (ChapterDownloadAction) -> Unit,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     Box(
         modifier = modifier
             .size(IconButtonTokens.StateLayerSize)
             .commonClickable(
                 enabled = enabled,
+                hapticFeedback = hapticFeedback,
                 onLongClick = { onClick(ChapterDownloadAction.START) },
                 onClick = { onClick(ChapterDownloadAction.START) },
             ),
@@ -242,26 +251,23 @@ private fun ErrorIndicator(
 
 private fun Modifier.commonClickable(
     enabled: Boolean,
+    hapticFeedback: HapticFeedback,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
-) = composed {
-    val haptic = LocalHapticFeedback.current
-
-    Modifier.combinedClickable(
-        enabled = enabled,
-        onLongClick = {
-            onLongClick()
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        },
-        onClick = onClick,
-        role = Role.Button,
-        interactionSource = remember { MutableInteractionSource() },
-        indication = ripple(
-            bounded = false,
-            radius = IconButtonTokens.StateLayerSize / 2,
-        ),
-    )
-}
+) = this.combinedClickable(
+    enabled = enabled,
+    onLongClick = {
+        onLongClick()
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    },
+    onClick = onClick,
+    role = Role.Button,
+    interactionSource = null,
+    indication = ripple(
+        bounded = false,
+        radius = IconButtonTokens.StateLayerSize / 2,
+    ),
+)
 
 private val IndicatorSize = 26.dp
 private val IndicatorPadding = 2.dp
