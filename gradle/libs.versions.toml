@@ -43,10 +43,11 @@ preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
-coil-bom = { module = "io.coil-kt:coil-bom", version = "2.6.0" }
-coil-core = { module = "io.coil-kt:coil" }
-coil-gif = { module = "io.coil-kt:coil-gif" }
-coil-compose = { module = "io.coil-kt:coil-compose" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0-alpha06" }
+coil-core = { module = "io.coil-kt.coil3:coil" }
+coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:7e57335"
 image-decoder = "com.github.tachiyomiorg:image-decoder:fbd6601290"
@@ -105,7 +106,7 @@ archive = ["common-compress", "junrar"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
-coil = ["coil-core", "coil-gif", "coil-compose"]
+coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
