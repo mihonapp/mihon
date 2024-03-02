@@ -172,7 +172,7 @@ fun TrackInfoDialogHome(
                             onClick = {
                                 selectedChipElement = chipElement
                                 showMenu = true
-                           },
+                            },
                         )
                     }
                 }

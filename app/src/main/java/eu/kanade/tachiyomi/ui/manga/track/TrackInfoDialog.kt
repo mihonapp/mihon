@@ -712,7 +712,7 @@ data class TrackerSearchScreen(
         private val currentUrl: String? = null,
         initialQuery: String,
         private val tracker: Tracker,
-        private val mangaIdOnTracker: Long? = null,
+        mangaIdOnTracker: Long? = null,
     ) : StateScreenModel<Model.State>(State()) {
         init {
             // Run search on first launch
