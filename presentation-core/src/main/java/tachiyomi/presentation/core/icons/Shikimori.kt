@@ -15,11 +15,15 @@ val CustomIcons.Shikimori: ImageVector
         if (_shikimori != null) {
             return _shikimori!!
         }
-        _shikimori = Builder(name = "Shikimori", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-                viewportWidth = 24.0f, viewportHeight = 24.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                    pathFillType = NonZero) {
+        _shikimori = Builder(
+            name = "Shikimori", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f, viewportHeight = 24.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
+            ) {
                 moveTo(2.8025f, 0.0025f)
                 curveTo(2.7779f, 0.03f, 2.8332f, 0.1223f, 2.9834f, 0.3f)
                 curveToRelative(0.0981f, 0.1134f, 0.1594f, 0.2328f, 0.233f, 0.4444f)
@@ -457,7 +461,7 @@ val CustomIcons.Shikimori: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _shikimori!!
     }
 

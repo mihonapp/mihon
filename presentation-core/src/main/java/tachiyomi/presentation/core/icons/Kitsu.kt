@@ -15,11 +15,15 @@ val CustomIcons.Kitsu: ImageVector
         if (_kitsu != null) {
             return _kitsu!!
         }
-        _kitsu = Builder(name = "Kitsu", defaultWidth = 24.dp, defaultHeight = 24.dp,
-                viewportWidth = 24.0f, viewportHeight = 24.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                    pathFillType = NonZero) {
+        _kitsu = Builder(
+            name = "Kitsu", defaultWidth = 24.dp, defaultHeight = 24.dp,
+            viewportWidth = 24.0f, viewportHeight = 24.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
+            ) {
                 moveTo(1.429f, 5.441f)
                 arcToRelative(12.478f, 12.478f, 0.0f, false, false, 1.916f, 2.056f)
                 curveToRelative(0.011f, 0.011f, 0.022f, 0.011f, 0.022f, 0.022f)
@@ -103,7 +107,7 @@ val CustomIcons.Kitsu: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _kitsu!!
     }
 

@@ -15,11 +15,15 @@ val CustomIcons.Anilist: ImageVector
         if (_anilist != null) {
             return _anilist!!
         }
-        _anilist = Builder(name = "Anilist", defaultWidth = 24.0.dp,
-                defaultHeight = 24.0.dp, viewportWidth = 24.0f, viewportHeight = 24.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                    pathFillType = NonZero) {
+        _anilist = Builder(
+            name = "Anilist", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f, viewportHeight = 24.0f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
+            ) {
                 moveTo(6.361f, 2.943f)
                 lineTo(0.0f, 21.056f)
                 horizontalLineToRelative(4.942f)
@@ -44,7 +48,7 @@ val CustomIcons.Anilist: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _anilist!!
     }
 

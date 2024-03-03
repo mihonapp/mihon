@@ -15,12 +15,15 @@ public val CustomIcons.MyAnimeListStretched: ImageVector
         if (_myAnimeListStretched != null) {
             return _myAnimeListStretched!!
         }
-        _myAnimeListStretched = Builder(name = "MyAnimeList Stretched", defaultWidth = 24.0.dp,
-                defaultHeight = 18.716352.dp, viewportWidth = 24.0f, viewportHeight =
-                18.716352f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 1.39446f,
-                    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                    pathFillType = NonZero) {
+        _myAnimeListStretched = Builder(
+            name = "MyAnimeList Stretched", defaultWidth = 24.0.dp, defaultHeight = 18.716352.dp,
+            viewportWidth = 24.0f, viewportHeight = 18.716352f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 1.39446f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
+            ) {
                 moveTo(8.273f, 0.1167f)
                 lineTo(8.273f, 16.4957f)
                 lineTo(6.17f, 16.4898f)
@@ -67,7 +70,7 @@ public val CustomIcons.MyAnimeListStretched: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _myAnimeListStretched!!
     }
 

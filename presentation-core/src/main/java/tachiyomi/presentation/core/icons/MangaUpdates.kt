@@ -15,12 +15,15 @@ val CustomIcons.MangaUpdates: ImageVector
         if (_mangaUpdates != null) {
             return _mangaUpdates!!
         }
-        _mangaUpdates = Builder(name = "Manga Updates", defaultWidth =
-                24.dp, defaultHeight = 24.0.dp, viewportWidth = 381.0f, viewportHeight =
-                373.94443f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = SolidColor(Color(0x00000000)),
-                    strokeLineWidth = 0.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
-                    strokeLineMiter = 4.0f, pathFillType = EvenOdd) {
+        _mangaUpdates = Builder(
+            name = "Manga Updates", defaultWidth = 24.dp, defaultHeight = 24.0.dp,
+            viewportWidth = 381.0f, viewportHeight = 373.94443f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = SolidColor(Color(0x00000000)),
+                strokeLineWidth = 0.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f, pathFillType = EvenOdd
+            ) {
                 moveToRelative(277.859f, 18.375f)
                 curveToRelative(-0.265f, 0.43f, -1.169f, 0.781f, -2.007f, 0.781f)
                 curveToRelative(-8.873f, 0.0f, -20.251f, 13.114f, -28.809f, 33.203f)
@@ -181,7 +184,7 @@ val CustomIcons.MangaUpdates: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _mangaUpdates!!
     }
 

@@ -15,11 +15,15 @@ val CustomIcons.Bangumi: ImageVector
         if (_bangumi != null) {
             return _bangumi!!
         }
-        _bangumi = Builder(name = "Bangumi", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-                viewportWidth = 400.0f, viewportHeight = 400.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = SolidColor(Color(0x00000000)),
-                    strokeLineWidth = 0.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
-                    strokeLineMiter = 4.0f, pathFillType = EvenOdd) {
+        _bangumi = Builder(
+            name = "Bangumi", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+            viewportWidth = 400.0f, viewportHeight = 400.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = SolidColor(Color(0x00000000)),
+                strokeLineWidth = 0.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f, pathFillType = EvenOdd
+            ) {
                 moveToRelative(171.562f, 42.451f)
                 curveToRelative(-14.318f, 4.363f, -15.599f, 6.561f, -93.776f, 160.83f)
                 curveToRelative(-58.257f, 114.961f, -59.368f, 118.79f, -38.726f, 133.488f)
@@ -49,7 +53,7 @@ val CustomIcons.Bangumi: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _bangumi!!
     }
 

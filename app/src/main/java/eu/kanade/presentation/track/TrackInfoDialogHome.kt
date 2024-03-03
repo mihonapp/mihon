@@ -72,9 +72,9 @@ private const val UnsetStatusTextAlpha = 0.5F
 
 @Composable
 fun TrackInfoDialogHome(
-    webUrlProvider: () -> List<String>?,
     trackItems: List<TrackItem>,
     dateFormat: DateTimeFormatter,
+    webUrlProvider: () -> List<String>?,
     onStatusClick: (TrackItem) -> Unit,
     onChapterClick: (TrackItem) -> Unit,
     onScoreClick: (TrackItem) -> Unit,
@@ -96,88 +96,13 @@ fun TrackInfoDialogHome(
             .windowInsetsPadding(WindowInsets.systemBars),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        val trackerChipElements = webUrlProvider()
-            ?.map { TrackerChipElement(it, trackItems) }
-            ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null }
-            ?.sortedBy { it.serviceId }
-            ?.sortedWith(compareBy(nullsLast()) { it.serviceId })
-        if (!trackerChipElements.isNullOrEmpty()) {
-            Box(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(end = 12.dp)
-                    .animateContentSize(),
-            ) {
-                val context = LocalContext.current
-                var showMenu by remember { mutableStateOf(false) }
-                var showBrowserConfirmationDialog by remember { mutableStateOf(false) }
-                var selectedChipElement: TrackerChipElement? by remember { mutableStateOf(null) }
-
-                if (showBrowserConfirmationDialog) {
-                    OpenBrowserConfirmationDialog(
-                        onDismissRequest = { showBrowserConfirmationDialog = false },
-                        onConfirmation = {
-                            showBrowserConfirmationDialog = false
-                            onOpenChipElementInBrowser(selectedChipElement!!)
-                        },
-                        url = selectedChipElement!!.url,
-                        host = selectedChipElement!!.hostName,
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                ) {
-                    if (selectedChipElement?.trackItem?.tracker != null) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(MR.strings.action_open_in_mihon)) },
-                            onClick = {
-                                if (selectedChipElement!!.mangaId != null) {
-                                    onNewIdSearch(selectedChipElement!!)
-                                } else if (selectedChipElement!!.searchQuery != null) {
-                                    onNewChipSearch(selectedChipElement!!)
-                                }
-                                showMenu = false
-                            },
-                        )
-                    }
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(MR.strings.action_copy_to_clipboard)) },
-                        onClick = {
-                            context.copyToClipboard(selectedChipElement?.url!!, selectedChipElement?.url!!)
-                            showMenu = false
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(MR.strings.action_open_in_browser)) },
-                        onClick = {
-                            if (selectedChipElement?.potentiallyUnsafeUrl == true) {
-                                showBrowserConfirmationDialog = true
-                            } else {
-                                onOpenChipElementInBrowser(selectedChipElement!!)
-                            }
-                            showMenu = false
-                        },
-                    )
-                }
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = MaterialTheme.padding.extraSmall),
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                ) {
-                    items(items = trackerChipElements) { chipElement ->
-                        TrackerChip(
-                            trackerChipElement = chipElement,
-                            modifier = Modifier,
-                            onClick = {
-                                selectedChipElement = chipElement
-                                showMenu = true
-                            },
-                        )
-                    }
-                }
-            }
-        }
+        TrackerAndUrlRow(
+            trackItems,
+            webUrlProvider,
+            onNewChipSearch,
+            onNewIdSearch,
+            onOpenChipElementInBrowser,
+        )
         trackItems.forEach { item ->
             if (item.track != null) {
                 val supportsScoring = item.tracker.getScoreList().isNotEmpty()
@@ -217,6 +142,96 @@ fun TrackInfoDialogHome(
                 TrackInfoItemEmpty(
                     tracker = item.tracker,
                     onNewSearch = { onNewSearch(item) },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TrackerAndUrlRow(
+    trackItems: List<TrackItem>,
+    webUrlProvider: () -> List<String>?,
+    onNewIdSearch: (TrackerChipElement) -> Unit,
+    onNewChipSearch: (TrackerChipElement) -> Unit,
+    onOpenChipElementInBrowser: (TrackerChipElement) -> Unit,
+) {
+    val trackerChipElements = webUrlProvider()
+        ?.map { TrackerChipElement(it, trackItems) }
+        ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null }
+        ?.sortedBy { it.serviceId }
+        ?.sortedWith(compareBy(nullsLast()) { it.serviceId })
+    if (!trackerChipElements.isNullOrEmpty()) {
+        Box(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(end = 12.dp)
+                .animateContentSize(),
+        ) {
+            val context = LocalContext.current
+            var showMenu by remember { mutableStateOf(false) }
+            var showBrowserConfirmationDialog by remember { mutableStateOf(false) }
+            var selectedChipElement: TrackerChipElement? by remember { mutableStateOf(null) }
+            DropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false },
+            ) {
+                if (selectedChipElement?.trackItem?.tracker != null) {
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(MR.strings.action_open_in_mihon)) },
+                        onClick = {
+                            if (selectedChipElement!!.mangaId != null) {
+                                onNewIdSearch(selectedChipElement!!)
+                            } else if (selectedChipElement!!.searchQuery != null) {
+                                onNewChipSearch(selectedChipElement!!)
+                            }
+                            showMenu = false
+                        },
+                    )
+                }
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(MR.strings.action_copy_to_clipboard)) },
+                    onClick = {
+                        context.copyToClipboard(selectedChipElement?.url!!, selectedChipElement?.url!!)
+                        showMenu = false
+                    },
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(MR.strings.action_open_in_browser)) },
+                    onClick = {
+                        if (selectedChipElement?.potentiallyUnsafeUrl == true) {
+                            showBrowserConfirmationDialog = true
+                        } else {
+                            onOpenChipElementInBrowser(selectedChipElement!!)
+                        }
+                        showMenu = false
+                    },
+                )
+            }
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = MaterialTheme.padding.extraSmall),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            ) {
+                items(items = trackerChipElements) { chipElement ->
+                    TrackerChip(
+                        trackerChipElement = chipElement,
+                        modifier = Modifier,
+                        onClick = {
+                            selectedChipElement = chipElement
+                            showMenu = true
+                        },
+                    )
+                }
+            }
+            if (showBrowserConfirmationDialog) {
+                OpenBrowserConfirmationDialog(
+                    onDismissRequest = { showBrowserConfirmationDialog = false },
+                    onConfirmation = {
+                        showBrowserConfirmationDialog = false
+                        onOpenChipElementInBrowser(selectedChipElement!!)
+                    },
+                    url = selectedChipElement!!.url,
+                    host = selectedChipElement!!.hostName,
                 )
             }
         }
