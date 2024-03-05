@@ -5,6 +5,11 @@ import com.github.junrar.rarfile.FileHeader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import tachiyomi.core.common.util.system.ImageUtil
 import java.io.InputStream
 import java.io.PipedInputStream
@@ -30,8 +35,14 @@ internal class RarPageLoader(inputStream: InputStream) : PageLoader() {
             .filter { !it.isDirectory && ImageUtil.isImage(it.fileName) { rar.getInputStream(it) } }
             .sortedWith { f1, f2 -> f1.fileName.compareToCaseInsensitiveNaturalOrder(f2.fileName) }
             .mapIndexed { i, header ->
+                val imageBytesDeferred: Deferred<ByteArray> = CoroutineScope(Dispatchers.IO).async {
+                    getStream(header).buffered().use { stream ->
+                        stream.readBytes()
+                    }
+                }
+                val imageBytes by lazy { runBlocking { imageBytesDeferred.await() } }
                 ReaderPage(i).apply {
-                    stream = { getStream(header) }
+                    stream = { imageBytes.copyOf().inputStream() }
                     status = Page.State.READY
                 }
             }
