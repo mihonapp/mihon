@@ -22,7 +22,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
 
-private const val MAX_LENGTH = 10_000
+private const val MaxLength = 10_000
 
 @Composable
 fun MangaNotesTextArea(
@@ -41,12 +41,12 @@ fun MangaNotesTextArea(
     ) {
         OutlinedTextField(
             value = text,
-            onValueChange = { if (it.text.length <= MAX_LENGTH) text = it },
+            onValueChange = { if (it.text.length <= MaxLength) text = it },
             modifier = Modifier
                 .fillMaxSize()
                 .focusRequester(focusRequester),
             supportingText = {
-                val displayWarning = text.text.length > MAX_LENGTH / 10 * 9
+                val displayWarning = text.text.length > MaxLength / 10 * 9
                 if (!displayWarning) {
                     Text(
                         text = "0",
@@ -59,7 +59,7 @@ fun MangaNotesTextArea(
                     exit = fadeOut(),
                 ) {
                     Text(
-                        text = "${text.text.length} / $MAX_LENGTH",
+                        text = "${text.text.length} / $MaxLength",
                     )
                 }
             },
