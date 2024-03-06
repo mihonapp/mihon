@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -81,11 +80,11 @@ fun TrackInfoDialogHome(
     onStartDateEdit: (TrackItem) -> Unit,
     onEndDateEdit: (TrackItem) -> Unit,
     onNewSearch: (TrackItem) -> Unit,
+    onOpenInBrowser: (TrackItem) -> Unit,
+    onRemoved: (TrackItem) -> Unit,
     onNewIdSearch: (TrackerChipElement) -> Unit,
     onNewChipSearch: (TrackerChipElement) -> Unit,
-    onOpenInBrowser: (TrackItem) -> Unit,
     onOpenChipElementInBrowser: (TrackerChipElement) -> Unit,
-    onRemoved: (TrackItem) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -96,12 +95,12 @@ fun TrackInfoDialogHome(
             .windowInsetsPadding(WindowInsets.systemBars),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        TrackerAndUrlRow(
-            trackItems,
-            webUrlProvider,
-            onNewChipSearch,
-            onNewIdSearch,
-            onOpenChipElementInBrowser,
+        TrackerRow(
+            trackItems = trackItems,
+            webUrlProvider = webUrlProvider,
+            onNewIdSearch = onNewIdSearch,
+            onNewChipSearch = onNewChipSearch,
+            onOpenChipElementInBrowser = onOpenChipElementInBrowser,
         )
         trackItems.forEach { item ->
             if (item.track != null) {
@@ -149,7 +148,7 @@ fun TrackInfoDialogHome(
 }
 
 @Composable
-private fun TrackerAndUrlRow(
+private fun TrackerRow(
     trackItems: List<TrackItem>,
     webUrlProvider: () -> List<String>?,
     onNewIdSearch: (TrackerChipElement) -> Unit,
@@ -158,9 +157,9 @@ private fun TrackerAndUrlRow(
 ) {
     val trackerChipElements = webUrlProvider()
         ?.map { TrackerChipElement(it, trackItems) }
-        ?.filter { it.trackItem?.track?.remoteId != it.mangaId || it.trackItem?.track == null }
+        ?.filter { it.trackItem?.track?.remoteId != it.remoteId || it.trackItem?.track == null }
+        ?.filter { it.serviceId != null }
         ?.sortedBy { it.serviceId }
-        ?.sortedWith(compareBy(nullsLast()) { it.serviceId })
     if (!trackerChipElements.isNullOrEmpty()) {
         Box(
             modifier = Modifier
@@ -170,7 +169,6 @@ private fun TrackerAndUrlRow(
         ) {
             val context = LocalContext.current
             var showMenu by remember { mutableStateOf(false) }
-            var showBrowserConfirmationDialog by remember { mutableStateOf(false) }
             var selectedChipElement: TrackerChipElement? by remember { mutableStateOf(null) }
             DropdownMenu(
                 expanded = showMenu,
@@ -180,7 +178,7 @@ private fun TrackerAndUrlRow(
                     DropdownMenuItem(
                         text = { Text(text = stringResource(MR.strings.action_open_in_mihon)) },
                         onClick = {
-                            if (selectedChipElement!!.mangaId != null) {
+                            if (selectedChipElement!!.remoteId != null) {
                                 onNewIdSearch(selectedChipElement!!)
                             } else if (selectedChipElement!!.searchQuery != null) {
                                 onNewChipSearch(selectedChipElement!!)
@@ -199,11 +197,7 @@ private fun TrackerAndUrlRow(
                 DropdownMenuItem(
                     text = { Text(text = stringResource(MR.strings.action_open_in_browser)) },
                     onClick = {
-                        if (selectedChipElement?.potentiallyUnsafeUrl == true) {
-                            showBrowserConfirmationDialog = true
-                        } else {
-                            onOpenChipElementInBrowser(selectedChipElement!!)
-                        }
+                        onOpenChipElementInBrowser(selectedChipElement!!)
                         showMenu = false
                     },
                 )
@@ -222,17 +216,6 @@ private fun TrackerAndUrlRow(
                         },
                     )
                 }
-            }
-            if (showBrowserConfirmationDialog) {
-                OpenBrowserConfirmationDialog(
-                    onDismissRequest = { showBrowserConfirmationDialog = false },
-                    onConfirmation = {
-                        showBrowserConfirmationDialog = false
-                        onOpenChipElementInBrowser(selectedChipElement!!)
-                    },
-                    url = selectedChipElement!!.url,
-                    host = selectedChipElement!!.hostName,
-                )
             }
         }
     }
@@ -429,7 +412,8 @@ private fun TrackInfoItemMenu(
     }
 }
 
-@Composable fun TrackerChip(
+@Composable
+fun TrackerChip(
     trackerChipElement: TrackerChipElement,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
@@ -440,60 +424,24 @@ private fun TrackInfoItemMenu(
             onClick = onClick,
             colors = SuggestionChipDefaults.suggestionChipColors().copy(),
             icon = {
-                Icon(
-                    imageVector = trackerChipElement.icon,
-                    contentDescription = null,
-                )
+                trackerChipElement.icon?.let { icon ->
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                    )
+                }
             },
             label = {
-                Text(
-                    text = trackerChipElement.trackerName,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1,
-                )
+                trackerChipElement.trackerName?.let { name ->
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                    )
+                }
             },
         )
     }
-}
-
-@Composable
-private fun OpenBrowserConfirmationDialog(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    url: String,
-    host: String,
-) {
-    AlertDialog(
-        title = { Text(text = stringResource(MR.strings.label_warning)) },
-        text = {
-            Text(
-                text = stringResource(
-                    MR.strings.potentially_unsafe_website_warning,
-                    host,
-                    url,
-                ),
-            )
-        },
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                },
-            ) {
-                Text(stringResource(MR.strings.action_confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                },
-            ) {
-                Text(stringResource(MR.strings.action_cancel))
-            }
-        },
-    )
 }
 
 @PreviewLightDark

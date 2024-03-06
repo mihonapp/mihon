@@ -106,6 +106,7 @@ data class TrackInfoDialogHomeScreen(
         TrackInfoDialogHome(
             trackItems = state.trackItems,
             dateFormat = dateFormat,
+            webUrlProvider = { webUrls },
             onStatusClick = {
                 navigator.push(
                     TrackStatusSelectorScreen(
@@ -162,6 +163,29 @@ data class TrackInfoDialogHomeScreen(
                     )
                 }
             },
+            onOpenInBrowser = { openTrackerInBrowser(context, it) },
+            onRemoved = {
+                navigator.push(
+                    TrackerRemoveScreen(
+                        mangaId = mangaId,
+                        track = it.track!!,
+                        serviceId = it.tracker.id,
+                    ),
+                )
+            },
+            onNewIdSearch = {
+                if (it.serviceId != null) {
+                    navigator.push(
+                        TrackerSearchScreen(
+                            mangaId = mangaId,
+                            initialQuery = "",
+                            currentUrl = null,
+                            serviceId = it.serviceId,
+                            mangaIdOnTracker = it.remoteId,
+                        ),
+                    )
+                }
+            },
             onNewChipSearch = {
                 if (it.serviceId != null) {
                     navigator.push(
@@ -174,31 +198,7 @@ data class TrackInfoDialogHomeScreen(
                     )
                 }
             },
-            onNewIdSearch = {
-                if (it.serviceId != null) {
-                    navigator.push(
-                        TrackerSearchScreen(
-                            mangaId = mangaId,
-                            initialQuery = "",
-                            currentUrl = null,
-                            serviceId = it.serviceId,
-                            mangaIdOnTracker = it.mangaId,
-                        ),
-                    )
-                }
-            },
-            onOpenInBrowser = { openTrackerInBrowser(context, it) },
             onOpenChipElementInBrowser = { openChipElementInBrowser(context, it) },
-            webUrlProvider = { webUrls },
-            onRemoved = {
-                navigator.push(
-                    TrackerRemoveScreen(
-                        mangaId = mangaId,
-                        track = it.track!!,
-                        serviceId = it.tracker.id,
-                    ),
-                )
-            },
         )
     }
 

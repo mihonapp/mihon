@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.data.track
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Public
 import androidx.compose.ui.graphics.vector.ImageVector
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import eu.kanade.tachiyomi.data.track.anilist.AnilistApi
@@ -28,26 +26,26 @@ class TrackerChipElement(
 ) {
     val hostName: String = URL(url).host ?: "Could not detect hostname"
 
-    val trackerName: String = when (hostName) {
+    val trackerName: String? = when (hostName) {
         URL(AnilistApi.baseUrl).host -> Anilist.NAME
         URL(KitsuApi.baseUrl).host -> Kitsu.NAME
         URL(MY_ANIME_LIST_BASE_URL).host -> MyAnimeList.NAME
         URL(ShikimoriApi.baseUrl).host -> Shikimori.NAME
         in BANGUMI_BASE_URLs.map { URL(it).host } -> Bangumi.NAME
         URL(MANGA_UPDATES_BASE_URL).host -> MangaUpdates.NAME
-        else -> URL(url).host
+        else -> null
     }
 
     val trackItem: TrackItem? = trackItems.find { trackerName == it.tracker.name }
 
-    val icon: ImageVector = when (trackerName) {
+    val icon: ImageVector? = when (trackerName) {
         Anilist.NAME -> CustomIcons.Anilist
         Kitsu.NAME -> CustomIcons.Kitsu
         MyAnimeList.NAME -> CustomIcons.MyAnimeListStretched
         Shikimori.NAME -> CustomIcons.Shikimori
         Bangumi.NAME -> CustomIcons.Bangumi
         MangaUpdates.NAME -> CustomIcons.MangaUpdates
-        else -> Icons.Outlined.Public
+        else -> null
     }
 
     val serviceId = when (trackerName) {
@@ -60,7 +58,7 @@ class TrackerChipElement(
         else -> null
     }
 
-    val mangaId = when (trackerName) {
+    val remoteId = when (trackerName) {
         Anilist.NAME -> ANILIST_ID_REGEX.find(URL(url).path)?.groups?.get(1)?.value?.toLong()
         MyAnimeList.NAME -> MY_ANIME_LIST_ID_REGEX.find(URL(url).path)?.groups?.get(1)?.value?.toLong()
         Shikimori.NAME -> SHIKIMORI_ID_REGEX.find(URL(url).path)?.groups?.get(1)?.value?.toLong()
@@ -72,11 +70,6 @@ class TrackerChipElement(
         Kitsu.NAME -> KITSU_QUERY_REGEX.find(URL(url).path)?.groups?.get(1)?.value
         MangaUpdates.NAME -> MANGA_UPDATES_QUERY_REGEX.find(URL(url).path)?.groups?.get(1)?.value
         else -> null
-    }
-
-    val potentiallyUnsafeUrl = when (serviceId) {
-        null -> true
-        else -> false
     }
 
     companion object {

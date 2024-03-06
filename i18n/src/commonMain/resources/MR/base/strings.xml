@@ -131,7 +131,6 @@
     <string name="action_unpin">Unpin</string>
     <string name="action_apply">Apply</string>
     <string name="action_cancel">Cancel</string>
-    <string name="action_confirm">Confirm</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel_all">Cancel all</string>
     <string name="cancel_all_for_series">Cancel all for this series</string>
@@ -491,7 +490,6 @@
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="action_track">Track</string>
     <string name="track_activity_name">Tracker login</string>
-    <string name="potentially_unsafe_website_warning">You are about to visit a potentially unsafe website! Go back to Mihon if you do not fully trust %1$s\n\n%2$s</string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
