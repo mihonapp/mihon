@@ -156,10 +156,14 @@ private fun TrackerRow(
     onOpenChipElementInBrowser: (TrackerChipElement) -> Unit,
 ) {
     val trackerChipElements = webUrlProvider()
+        ?.asSequence()
         ?.map { TrackerChipElement(it, trackItems) }
         ?.filter { it.trackItem?.track?.remoteId != it.remoteId || it.trackItem?.track == null }
         ?.filter { it.serviceId != null }
         ?.sortedBy { it.serviceId }
+        ?.sortedWith(compareBy(nullsLast()) { it.trackItem?.tracker?.id })
+        ?.toList()
+
     if (!trackerChipElements.isNullOrEmpty()) {
         Box(
             modifier = Modifier
