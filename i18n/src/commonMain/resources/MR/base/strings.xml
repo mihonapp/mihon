@@ -160,6 +160,8 @@
     <string name="action_webview_refresh">Refresh</string>
     <string name="action_start_downloading_now">Start downloading now</string>
     <string name="action_not_now">Not now</string>
+    <string name="action_add_anyway">Add anyway</string>
+    <string name="action_migrate_duplicate">Migrate existing entry</string>
 
     <!-- Operations -->
     <string name="loading">Loading…</string>
