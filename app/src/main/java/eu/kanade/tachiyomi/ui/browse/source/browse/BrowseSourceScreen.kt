@@ -262,7 +262,6 @@ data class BrowseSourceScreen(
                     onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
                     onPopScreen = {
                         onDismissRequest()
-//                        navigator.push(MangaScreen(dialog.newManga.id))
                     },
                 )
             }

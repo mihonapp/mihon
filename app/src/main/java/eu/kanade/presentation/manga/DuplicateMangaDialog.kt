@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.SwapVert
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,7 +63,7 @@ fun DuplicateMangaDialog(
                 style = MaterialTheme.typography.bodyMedium,
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(PaddingSize))
 
             TextPreferenceWidget(
                 title = stringResource(MR.strings.action_show_manga),
@@ -73,6 +74,8 @@ fun DuplicateMangaDialog(
                 },
             )
 
+            HorizontalDivider()
+
             TextPreferenceWidget(
                 title = stringResource(MR.strings.action_migrate_duplicate),
                 icon = Icons.Outlined.SwapVert,
@@ -81,6 +84,8 @@ fun DuplicateMangaDialog(
                     onMigrate()
                 },
             )
+
+            HorizontalDivider()
 
             TextPreferenceWidget(
                 title = stringResource(MR.strings.action_add_anyway),
@@ -91,27 +96,31 @@ fun DuplicateMangaDialog(
                 },
             )
 
-            HorizontalDivider()
-
             Row(
                 modifier = Modifier
                     .sizeIn(minHeight = minHeight)
                     .clickable { onDismissRequest.invoke() }
+                    .padding(ButtonPadding)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Text(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp),
-                    text = stringResource(MR.strings.action_cancel),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 16.sp,
-                )
+                OutlinedButton(onClick = onDismissRequest, modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp),
+                        text = stringResource(MR.strings.action_cancel),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 16.sp,
+                    )
+                }
             }
         }
     }
 }
 
+private val PaddingSize = 16.dp
+
+private val ButtonPadding = PaddingValues(top = 16.dp, bottom = 16.dp)
 private val TitlePadding = PaddingValues(bottom = 16.dp, top = 8.dp)
