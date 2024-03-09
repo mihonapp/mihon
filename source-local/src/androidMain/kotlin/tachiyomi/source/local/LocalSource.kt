@@ -5,14 +5,15 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.UnmeteredSource
+import eu.kanade.tachiyomi.source.model.Filter
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.EpubFile
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
@@ -20,30 +21,46 @@ import mihon.core.common.extensions.toZipFile
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
-import tachiyomi.core.metadata.comicinfo.ComicInfo
-import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
-import tachiyomi.core.metadata.comicinfo.getComicInfo
-import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.storage.nameWithoutExtension
 import tachiyomi.core.common.storage.openReadOnlyChannel
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
+import tachiyomi.core.metadata.comicinfo.ComicInfo
+import tachiyomi.core.metadata.comicinfo.ComicInfoPublishingStatus
+import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
+import tachiyomi.core.metadata.comicinfo.getComicInfo
+import tachiyomi.core.metadata.tachiyomi.MangaDetails
 import tachiyomi.domain.chapter.service.ChapterRecognition
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.i18n.MR
+import tachiyomi.source.local.filter.ArtistFilter
+import tachiyomi.source.local.filter.ArtistGroup
+import tachiyomi.source.local.filter.ArtistTextSearch
+import tachiyomi.source.local.filter.AuthorFilter
+import tachiyomi.source.local.filter.AuthorGroup
+import tachiyomi.source.local.filter.AuthorTextSearch
+import tachiyomi.source.local.filter.GenreFilter
+import tachiyomi.source.local.filter.GenreGroup
+import tachiyomi.source.local.filter.GenreTextSearch
+import tachiyomi.source.local.filter.LocalSourceInfoHeader
 import tachiyomi.source.local.filter.OrderBy
+import tachiyomi.source.local.filter.Separator
+import tachiyomi.source.local.filter.StatusFilter
+import tachiyomi.source.local.filter.StatusGroup
+import tachiyomi.source.local.filter.TextSearchHeader
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.io.Archive
 import tachiyomi.source.local.io.Format
 import tachiyomi.source.local.io.LocalSourceFileSystem
 import tachiyomi.source.local.metadata.fillMetadata
 import uy.kohesive.injekt.injectLazy
+import java.io.File
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
-import kotlin.time.Duration.Companion.days
 import com.github.junrar.Archive as JunrarArchive
 import tachiyomi.domain.source.model.Source as DomainSource
 
@@ -55,6 +72,25 @@ actual class LocalSource(
 
     private val json: Json by injectLazy()
     private val xml: XML by injectLazy()
+    private val mangaRepository: MangaRepository by injectLazy()
+
+    private var mangaChunks: MutableList<List<SManga>> = mutableListOf()
+    private var mangaDirChunks: List<List<UniFile>> =
+        fileSystem.getFilesInBaseDirectory()
+            // Filter out files that are hidden and is not a folder
+            .asSequence()
+            .filter { it.isDirectory && it.name?.startsWith('.') == false }
+            .distinctBy { it.name }
+            .sortedBy { it.name }
+            .toList()
+            .chunked(CHUNK_SIZE)
+            .toList()
+
+    private var loadedPages = 0
+    private var currentlyLoadingPage: Int? = null
+    private var includedChunkIndex = -1
+    private var allMangaLoaded = false
+    private var isFilteredSearch = false
 
     private val POPULAR_FILTERS = FilterList(OrderBy.Popular(context))
     private val LATEST_FILTERS = FilterList(OrderBy.Latest(context))
@@ -69,46 +105,213 @@ actual class LocalSource(
 
     override val supportsLatest: Boolean = true
 
+    private fun checkForNewManga() {
+        if (!allMangaLoaded || currentlyLoadingPage != null) return
+
+        val newManga = fileSystem.getFilesInBaseDirectory()
+            // Filter out files that are hidden and is not a folder
+            .asSequence()
+            .filter { it.isDirectory && it.name?.startsWith('.') == false }
+            .filterNot { mangaDir -> mangaDirChunks.flatten().map { it }.contains(mangaDir) }
+            .distinctBy { it.name }
+            .sortedBy { it.lastModified() }
+            .toList()
+
+        if (newManga.isNotEmpty()) {
+            mangaDirChunks = mangaDirChunks
+                .flatten()
+                .plus(newManga)
+                .distinctBy { it.name }
+                .chunked(CHUNK_SIZE)
+
+            allMangaLoaded = false
+            if (mangaChunks.last().size % CHUNK_SIZE != 0) {
+                mangaChunks = mangaChunks.dropLast(1).toMutableList()
+                loadedPages--
+            }
+        }
+    }
+
+    private fun loadMangaForPage(page: Int) {
+        if (page != loadedPages + 1 || page == currentlyLoadingPage) return
+        currentlyLoadingPage = loadedPages + 1
+
+        val localMangaList = runBlocking { getMangaList() }
+        val mangaPage = mangaDirChunks[page - 1].map { mangaDir ->
+            SManga.create().apply manga@{
+                url = mangaDir.name.toString()
+                dirLastModifiedAt = mangaDir.lastModified()
+
+                mangaDir.name?.let { title = localMangaList[url]?.title ?: it }
+                author = localMangaList[url]?.author
+                artist = localMangaList[url]?.artist
+                description = localMangaList[url]?.description
+                genre = localMangaList[url]?.genre?.joinToString(", ") { it.trim() }
+                status = localMangaList[url]?.status?.toInt() ?: ComicInfoPublishingStatus.toSMangaValue("Unknown")
+
+                // Try to find the cover
+                coverManager.find(mangaDir.name.orEmpty())?.let {
+                    thumbnail_url = it.uri.toString()
+                }
+
+                // Fetch chapters and fill metadata
+                runBlocking {
+                    val chapters = getChapterList(this@manga)
+                    if (chapters.isNotEmpty()) {
+                        val chapter = chapters.last()
+
+                        // only read metadata from disk if it the mangaDir has been modified
+                        if (dirLastModifiedAt != localMangaList[url]?.dirLastModifiedAt) {
+                            when (val format = getFormat(chapter)) {
+                                is Format.Directory -> getMangaDetails(this@manga)
+                                is Format.Zip -> getMangaDetails(this@manga)
+                                is Format.Rar -> getMangaDetails(this@manga)
+                                is Format.Epub -> EpubFile(format.file.openReadOnlyChannel(context)).use { epub ->
+                                    epub.fillMetadata(this@manga, chapter)
+                                }
+                            }
+                        }
+                        // Copy the cover from the first chapter found if not available
+                        if (this@manga.thumbnail_url == null) {
+                            updateCover(chapter, this@manga)
+                        }
+                    }
+                }
+            }
+        }.toList()
+
+        mangaChunks.add(mangaPage)
+        loadedPages++
+        currentlyLoadingPage = null
+    }
+
     // Browse related
     override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", POPULAR_FILTERS)
 
     override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LATEST_FILTERS)
 
+    enum class OrderByPopular {
+        NOT_SET,
+        POPULAR_ASCENDING,
+        POPULAR_DESCENDING,
+    }
+    enum class OrderByLatest {
+        NOT_SET,
+        LATEST,
+        OLDEST,
+    }
+
     override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withIOContext {
-        val lastModifiedLimit = if (filters === LATEST_FILTERS) {
-            System.currentTimeMillis() - LATEST_THRESHOLD
-        } else {
-            0L
+        if (page == 1) checkForNewManga()
+        loadMangaForPage(page)
+
+        while (page == currentlyLoadingPage) {
+            runBlocking { delay(200) }
         }
 
-        var mangaDirs = fileSystem.getFilesInBaseDirectory()
-            // Filter out files that are hidden and is not a folder
-            .filter { it.isDirectory && !it.name.orEmpty().startsWith('.') }
-            .distinctBy { it.name }
-            .filter {
-                if (lastModifiedLimit == 0L && query.isBlank()) {
-                    true
-                } else if (lastModifiedLimit == 0L) {
-                    it.name.orEmpty().contains(query, ignoreCase = true)
-                } else {
-                    it.lastModified() >= lastModifiedLimit
-                }
+        var includedManga: MutableList<SManga>
+
+        var orderByPopular =
+            if (filters === POPULAR_FILTERS) {
+                OrderByPopular.POPULAR_ASCENDING
+            } else {
+                OrderByLatest.NOT_SET
             }
+        var orderByLatest =
+            if (filters === LATEST_FILTERS) {
+                OrderByLatest.LATEST
+            } else {
+                OrderByLatest.NOT_SET
+            }
+
+        val includedGenres = mutableListOf<String>()
+        val includedAuthors = mutableListOf<String>()
+        val includedArtists = mutableListOf<String>()
+        val includedStatuses = mutableListOf<String>()
+
+        val excludedGenres = mutableListOf<String>()
+        val excludedAuthors = mutableListOf<String>()
+        val excludedArtists = mutableListOf<String>()
 
         filters.forEach { filter ->
             when (filter) {
                 is OrderBy.Popular -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
+                    orderByPopular = if (filter.state!!.ascending) {
+                        OrderByPopular.POPULAR_ASCENDING
                     } else {
-                        mangaDirs.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.name.orEmpty() })
+                        OrderByPopular.POPULAR_DESCENDING
                     }
                 }
                 is OrderBy.Latest -> {
-                    mangaDirs = if (filter.state!!.ascending) {
-                        mangaDirs.sortedBy(UniFile::lastModified)
+                    orderByLatest = if (filter.state!!.ascending) {
+                        OrderByLatest.LATEST
                     } else {
-                        mangaDirs.sortedByDescending(UniFile::lastModified)
+                        OrderByLatest.OLDEST
+                    }
+                }
+
+                // included Filter
+                is GenreGroup -> {
+                    filter.state.forEach { genre ->
+                        when (genre.state) {
+                            Filter.TriState.STATE_INCLUDE -> {
+                                includedGenres.add(genre.name)
+                            }
+                        }
+                    }
+                }
+                is GenreTextSearch -> {
+                    val genreList = filter.state.takeIf { it.isNotBlank() }?.split(",")?.map { it.trim() }
+                    genreList?.forEach {
+                        when (it.first()) {
+                            '-' -> excludedGenres.add(it.drop(1).trim())
+                            else -> includedGenres.add(it)
+                        }
+                    }
+                }
+                is AuthorGroup -> {
+                    filter.state.forEach { author ->
+                        when (author.state) {
+                            Filter.TriState.STATE_INCLUDE -> {
+                                includedAuthors.add(author.name)
+                            }
+                        }
+                    }
+                }
+                is AuthorTextSearch -> {
+                    val authorList = filter.state.takeIf { it.isNotBlank() }?.split(",")?.map { it.trim() }
+                    authorList?.forEach {
+                        when (it.first()) {
+                            '-' -> excludedAuthors.add(it.drop(1).trim())
+                            else -> includedAuthors.add(it)
+                        }
+                    }
+                }
+                is ArtistGroup -> {
+                    filter.state.forEach { artist ->
+                        when (artist.state) {
+                            Filter.TriState.STATE_INCLUDE -> {
+                                includedArtists.add(artist.name)
+                            }
+                        }
+                    }
+                }
+                is ArtistTextSearch -> {
+                    val artistList = filter.state.takeIf { it.isNotBlank() }?.split(",")?.map { it.trim() }
+                    artistList?.forEach {
+                        when (it.first()) {
+                            '-' -> excludedArtists.add(it.drop(1).trim())
+                            else -> includedArtists.add(it)
+                        }
+                    }
+                }
+                is StatusGroup -> {
+                    filter.state.forEach { status ->
+                        when (status.state) {
+                            Filter.TriState.STATE_INCLUDE -> {
+                                includedStatuses.add(status.name)
+                            }
+                        }
                     }
                 }
                 else -> {
@@ -117,23 +320,176 @@ actual class LocalSource(
             }
         }
 
-        val mangas = mangaDirs
-            .map { mangaDir ->
-                async {
-                    SManga.create().apply {
-                        title = mangaDir.name.orEmpty()
-                        url = mangaDir.name.orEmpty()
+        includedManga = mangaChunks.flatten().filter { manga ->
+            (manga.title.contains(query, ignoreCase = true) || File(manga.url).name.contains(query, ignoreCase = true)) &&
+                areAllElementsInMangaEntry(includedGenres, manga.genre) &&
+                areAllElementsInMangaEntry(includedAuthors, manga.author) &&
+                areAllElementsInMangaEntry(includedArtists, manga.artist) &&
+                (if (includedStatuses.isNotEmpty()) includedStatuses.map { ComicInfoPublishingStatus.toSMangaValue(it) }.contains(manga.status) else true)
+        }.toMutableList()
 
-                        // Try to find the cover
-                        coverManager.find(mangaDir.name.orEmpty())?.let {
-                            thumbnail_url = it.uri.toString()
+        if (query.isBlank() &&
+            includedGenres.isEmpty() &&
+            includedAuthors.isEmpty() &&
+            includedArtists.isEmpty() &&
+            includedStatuses.isEmpty()
+        ) {
+            includedManga = mangaChunks.flatten().toMutableList()
+            isFilteredSearch = false
+        } else {
+            isFilteredSearch = true
+        }
+
+        filters.forEach { filter ->
+            when (filter) {
+                // excluded Filter
+                is GenreGroup -> {
+                    filter.state.forEach { genre ->
+                        when (genre.state) {
+                            Filter.TriState.STATE_EXCLUDE -> {
+                                excludedGenres.add(genre.name)
+                            }
                         }
                     }
                 }
-            }
-            .awaitAll()
+                is AuthorGroup -> {
+                    filter.state.forEach { author ->
+                        when (author.state) {
+                            Filter.TriState.STATE_EXCLUDE -> {
+                                excludedAuthors.add(author.name)
+                            }
+                        }
+                    }
+                }
+                is ArtistGroup -> {
+                    filter.state.forEach { artist ->
+                        when (artist.state) {
+                            Filter.TriState.STATE_EXCLUDE -> {
+                                excludedArtists.add(artist.name)
+                            }
+                        }
+                    }
+                }
+                is StatusGroup -> {
+                    filter.state.forEach { status ->
+                        when (status.state) {
+                            Filter.TriState.STATE_EXCLUDE -> {
+                                isFilteredSearch = true
+                                includedManga.removeIf { manga ->
+                                    ComicInfoPublishingStatus.toComicInfoValue(manga.status.toLong()) == status.name
+                                }
+                            }
+                        }
+                    }
+                }
 
-        MangasPage(mangas, false)
+                else -> {
+                    /* Do nothing */
+                }
+            }
+        }
+        excludedGenres.forEach { genre ->
+            isFilteredSearch = true
+            includedManga.removeIf { manga ->
+                manga.genre?.split(",")?.map { it.trim() }?.any { it.equals(genre, ignoreCase = true) } ?: false
+            }
+        }
+        excludedAuthors.forEach { author ->
+            isFilteredSearch = true
+            includedManga.removeIf { manga ->
+                manga.author?.split(",")?.map { it.trim() }?.any { it.equals(author, ignoreCase = true) } ?: false
+            }
+        }
+        excludedArtists.forEach { artist ->
+            isFilteredSearch = true
+            includedManga.removeIf { manga ->
+                manga.artist?.split(",")?.map { it.trim() }?.any { it.equals(artist, ignoreCase = true) } ?: false
+            }
+        }
+
+        when (orderByPopular) {
+            OrderByPopular.POPULAR_ASCENDING ->
+                includedManga = if (allMangaLoaded || isFilteredSearch) {
+                    includedManga.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
+                        .toMutableList()
+                } else {
+                    includedManga
+                }
+
+            OrderByPopular.POPULAR_DESCENDING ->
+                includedManga = if (allMangaLoaded || isFilteredSearch) {
+                    includedManga.sortedWith(compareByDescending(String.CASE_INSENSITIVE_ORDER) { it.title })
+                        .toMutableList()
+                } else {
+                    includedManga
+                }
+
+            OrderByPopular.NOT_SET -> Unit
+        }
+        when (orderByLatest) {
+            OrderByLatest.LATEST ->
+                includedManga = if (allMangaLoaded || isFilteredSearch) {
+                    includedManga.sortedBy { it.dirLastModifiedAt }
+                        .toMutableList()
+                } else {
+                    includedManga
+                }
+
+            OrderByLatest.OLDEST ->
+                includedManga = if (allMangaLoaded || isFilteredSearch) {
+                    includedManga.sortedByDescending { it.dirLastModifiedAt }
+                        .toMutableList()
+                } else {
+                    includedManga
+                }
+
+            OrderByLatest.NOT_SET -> Unit
+        }
+
+        val mangaPageList =
+            if (includedManga.isNotEmpty()) {
+                includedManga.toList().chunked(CHUNK_SIZE)
+            } else {
+                listOf(emptyList())
+            }
+
+        if (page == 1) includedChunkIndex = -1
+        if (includedChunkIndex < mangaPageList.lastIndex) {
+            includedChunkIndex++
+        } else {
+            includedChunkIndex = mangaPageList.lastIndex
+        }
+
+        val lastLocalMangaPageReached = (mangaDirChunks.lastIndex == page - 1)
+        if (lastLocalMangaPageReached) allMangaLoaded = true
+
+        val lastPage = (lastLocalMangaPageReached || (isFilteredSearch && includedChunkIndex == mangaPageList.lastIndex))
+
+        MangasPage(mangaPageList[includedChunkIndex], !lastPage)
+    }
+
+    private fun areAllElementsInMangaEntry(includedList: MutableList<String>, mangaEntry: String?): Boolean {
+        return if (includedList.isNotEmpty()) {
+            mangaEntry?.split(",")?.map { it.trim() }
+                ?.let { mangaEntryList ->
+                    includedList.all { includedEntry ->
+                        mangaEntryList.any { mangaEntry ->
+                            mangaEntry.equals(includedEntry, ignoreCase = true)
+                        }
+                    }
+                } ?: false
+        } else {
+            true
+        }
+    }
+
+    private suspend fun getMangaList(): Map<String?, Manga?> {
+        return fileSystem.getFilesInBaseDirectory().toList()
+            .filter { it.isDirectory && it.name?.startsWith('.') == false }
+            .map { file ->
+                file.name?.let { mangaRepository.getMangaByUrlAndSourceId(it, ID) }
+            }
+            .associateBy { it?.url }
     }
 
     // Manga details related
@@ -291,7 +647,49 @@ actual class LocalSource(
     }
 
     // Filters
-    override fun getFilterList() = FilterList(OrderBy.Popular(context))
+    override fun getFilterList(): FilterList {
+        val genres = mangaChunks.flatten().mapNotNull { it.genre?.split(",") }
+            .flatMap { it.map { genre -> genre.trim() } }.toSet()
+
+        val authors = mangaChunks.flatten().mapNotNull { it.author?.split(",") }
+            .flatMap { it.map { author -> author.trim() } }.toSet()
+
+        val artists = mangaChunks.flatten().mapNotNull { it.artist?.split(",") }
+            .flatMap { it.map { artist -> artist.trim() } }.toSet()
+
+        val filters = try {
+            mutableListOf<Filter<*>>(
+                OrderBy.Popular(context),
+                Separator(),
+                GenreGroup(context, genres.map { GenreFilter(it) }),
+                AuthorGroup(context, authors.map { AuthorFilter(it) }),
+                ArtistGroup(context, artists.map { ArtistFilter(it) }),
+                StatusGroup(
+                    context,
+                    listOf(
+                        context.getString(R.string.ongoing),
+                        context.getString(R.string.completed),
+                        context.getString(R.string.licensed),
+                        context.getString(R.string.publishing_finished),
+                        context.getString(R.string.cancelled),
+                        context.getString(R.string.on_hiatus),
+                        context.getString(R.string.unknown),
+                    ).map { StatusFilter(it) },
+                ),
+                Separator(),
+                TextSearchHeader(context),
+                GenreTextSearch(context),
+                AuthorTextSearch(context),
+                ArtistTextSearch(context),
+                Separator(),
+                LocalSourceInfoHeader(context),
+            )
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            emptyList()
+        }
+        return FilterList(filters)
+    }
 
     // Unused stuff
     override suspend fun getPageList(chapter: SChapter) = throw UnsupportedOperationException("Unused")
@@ -365,7 +763,7 @@ actual class LocalSource(
         const val ID = 0L
         const val HELP_URL = "https://mihon.app/docs/guides/local-source/"
 
-        private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
+        private const val CHUNK_SIZE = 10
     }
 }
 

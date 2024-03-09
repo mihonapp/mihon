@@ -28,6 +28,7 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        dirLastModifiedAt: Long?,
     ): Manga = Manga(
         id = id,
         source = source,
@@ -51,6 +52,7 @@ object MangaMapper {
         initialized = initialized,
         lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
+        dirLastModifiedAt = dirLastModifiedAt,
     )
 
     fun mapLibraryManga(
@@ -76,6 +78,7 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        dirLastModifiedAt: Long?,
         totalCount: Long,
         readCount: Double,
         latestUpload: Long,
@@ -107,6 +110,7 @@ object MangaMapper {
             calculateInterval,
             lastModifiedAt,
             favoriteModifiedAt,
+            dirLastModifiedAt,
         ),
         category = category,
         totalChapters = totalCount,
