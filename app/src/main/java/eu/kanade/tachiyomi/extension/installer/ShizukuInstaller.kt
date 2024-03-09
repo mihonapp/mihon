@@ -50,7 +50,6 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             try {
                 val size = service.getUriSize(entry.uri) ?: throw IllegalStateException()
                 service.contentResolver.openInputStream(entry.uri)!!.use {
-                    
                     val userId = Process.myUserHandle().hashCode()
                     val createCommand = "pm install-create --user $userId -r -i ${service.packageName} -S $size"
                     val createResult = exec(createCommand)
