@@ -51,9 +51,9 @@ fun Manga.toSManga(): SManga = SManga.create().also {
 }
 
 fun Manga.copyFrom(other: SManga): Manga {
-    val author = other.author ?: author
-    val artist = other.artist ?: artist
-    val description = other.description ?: description
+    val author = other.author ?: ogAuthor
+    val artist = other.artist ?: ogArtist
+    val description = other.description ?: ogDescription
     val genres = if (other.genre != null) {
         other.getGenres()
     } else {
@@ -61,9 +61,9 @@ fun Manga.copyFrom(other: SManga): Manga {
     }
     val thumbnailUrl = other.thumbnail_url ?: thumbnailUrl
     return this.copy(
-        author = author,
-        artist = artist,
-        description = description,
+        ogAuthor = author,
+        ogArtist = artist,
+        ogDescription = description,
         genre = genres,
         thumbnailUrl = thumbnailUrl,
         status = other.status.toLong(),
@@ -75,10 +75,10 @@ fun Manga.copyFrom(other: SManga): Manga {
 fun SManga.toDomainManga(sourceId: Long): Manga {
     return Manga.create().copy(
         url = url,
-        title = title,
-        artist = artist,
-        author = author,
-        description = description,
+        ogTitle = title,
+        ogArtist = artist,
+        ogAuthor = author,
+        ogDescription = description,
         genre = getGenres(),
         status = status.toLong(),
         thumbnailUrl = thumbnail_url,

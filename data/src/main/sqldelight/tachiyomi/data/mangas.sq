@@ -25,7 +25,11 @@ CREATE TABLE mangas(
     update_strategy INTEGER AS UpdateStrategy NOT NULL DEFAULT 0,
     calculate_interval INTEGER DEFAULT 0 NOT NULL,
     last_modified_at INTEGER NOT NULL DEFAULT 0,
-    favorite_modified_at INTEGER
+    favorite_modified_at INTEGER,
+    custom_artist TEXT,
+    custom_author TEXT,
+    custom_description TEXT,
+    custom_title TEXT
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -144,3 +148,11 @@ WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
+
+updateMangaEdit:
+UPDATE mangas SET
+    custom_artist = :artist,
+    custom_author = :author,
+    custom_description = :description,
+    custom_title = :title
+WHERE _id = :mangaId;

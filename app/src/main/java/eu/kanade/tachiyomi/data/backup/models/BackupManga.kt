@@ -39,14 +39,20 @@ data class BackupManga(
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
+    // Numbers to keep compatibility with fork edited manga fields
+    // https://github.com/jobobby04/TachiyomiSY/blob/7e151ddb83d5d7e0ea553eca686a8c4aa3a1fa8c/app/src/main/java/eu/kanade/tachiyomi/data/backup/models/BackupManga.kt#L49
+    @ProtoNumber(800) var customTitle: String? = null,
+    @ProtoNumber(801) var customArtist: String? = null,
+    @ProtoNumber(802) var customAuthor: String? = null,
+    @ProtoNumber(804) var customDescription: String? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
             url = this@BackupManga.url,
-            title = this@BackupManga.title,
-            artist = this@BackupManga.artist,
-            author = this@BackupManga.author,
-            description = this@BackupManga.description,
+            ogTitle = this@BackupManga.title,
+            ogArtist = this@BackupManga.artist,
+            ogAuthor = this@BackupManga.author,
+            ogDescription = this@BackupManga.description,
             genre = this@BackupManga.genre,
             status = this@BackupManga.status.toLong(),
             thumbnailUrl = this@BackupManga.thumbnailUrl,
@@ -58,6 +64,10 @@ data class BackupManga(
             updateStrategy = this@BackupManga.updateStrategy,
             lastModifiedAt = this@BackupManga.lastModifiedAt,
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
+            customTitle = this@BackupManga.customTitle,
+            customArtist = this@BackupManga.customArtist,
+            customAuthor = this@BackupManga.customAuthor,
+            customDescription = this@BackupManga.customDescription,
         )
     }
 }

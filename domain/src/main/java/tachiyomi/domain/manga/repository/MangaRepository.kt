@@ -34,4 +34,6 @@ interface MangaRepository {
     suspend fun update(update: MangaUpdate): Boolean
 
     suspend fun updateAll(mangaUpdates: List<MangaUpdate>): Boolean
+
+    suspend fun updateEditedInfo(update: MangaUpdate): Boolean
 }

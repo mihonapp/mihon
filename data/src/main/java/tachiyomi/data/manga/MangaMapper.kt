@@ -5,6 +5,7 @@ import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 
 object MangaMapper {
+    @Suppress("LongParameterList")
     fun mapManga(
         id: Long,
         source: Long,
@@ -28,6 +29,10 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        customArtist: String?,
+        customAuthor: String?,
+        customDescription: String?,
+        customTitle: String?,
     ): Manga = Manga(
         id = id,
         source = source,
@@ -40,10 +45,10 @@ object MangaMapper {
         chapterFlags = chapterFlags,
         coverLastModified = coverLastModified,
         url = url,
-        title = title,
-        artist = artist,
-        author = author,
-        description = description,
+        ogTitle = title,
+        ogArtist = artist,
+        ogAuthor = author,
+        ogDescription = description,
         genre = genre,
         status = status,
         thumbnailUrl = thumbnailUrl,
@@ -51,8 +56,13 @@ object MangaMapper {
         initialized = initialized,
         lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
+        customArtist = customArtist,
+        customAuthor = customAuthor,
+        customDescription = customDescription,
+        customTitle = customTitle,
     )
 
+    @Suppress("LongParameterList")
     fun mapLibraryManga(
         id: Long,
         source: Long,
@@ -76,6 +86,10 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        customArtist: String?,
+        customAuthor: String?,
+        customDescription: String?,
+        customTitle: String?,
         totalCount: Long,
         readCount: Double,
         latestUpload: Long,
@@ -107,6 +121,10 @@ object MangaMapper {
             calculateInterval,
             lastModifiedAt,
             favoriteModifiedAt,
+            customArtist,
+            customAuthor,
+            customDescription,
+            customTitle,
         ),
         category = category,
         totalChapters = totalCount,

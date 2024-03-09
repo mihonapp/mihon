@@ -159,4 +159,17 @@ class MangaRepositoryImpl(
             }
         }
     }
+
+    override suspend fun updateEditedInfo(update: MangaUpdate): Boolean {
+        handler.await {
+            mangasQueries.updateMangaEdit(
+                artist = update.artist,
+                author = update.author,
+                description = update.description,
+                title = update.title,
+                mangaId = update.id
+            )
+        }
+        return true
+    }
 }

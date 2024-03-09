@@ -124,7 +124,7 @@ class DownloadPendingDeleter(
     /**
      * Returns a manga entry from a manga model.
      */
-    private fun Manga.toEntry() = MangaEntry(id, url, title, source)
+    private fun Manga.toEntry() = MangaEntry(id, url, ogTitle, source)
 
     /**
      * Returns a chapter entry from a chapter model.
@@ -136,7 +136,7 @@ class DownloadPendingDeleter(
      */
     private fun MangaEntry.toModel() = Manga.create().copy(
         url = url,
-        title = title,
+        ogTitle = title,
         source = source,
         id = id,
     )

@@ -75,6 +75,7 @@ import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetMangaWithChapters
 import tachiyomi.domain.manga.interactor.SetMangaChapterFlags
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.model.applyFilter
 import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
@@ -369,6 +370,51 @@ class MangaScreenModel(
         }
     }
 
+    fun showEditInfoDialog() {
+        val manga = successState?.manga ?: return
+        screenModelScope.launch {
+            updateSuccessState { successState ->
+                successState.copy(
+                    dialog = Dialog.EditInfo(
+                        manga = manga,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun updateMangaInfo(
+        manga: Manga,
+    ) {
+        val newTitle = if (manga.customTitle.isNullOrBlank()) null else manga.customTitle
+        val newAuthor = if (manga.customAuthor.isNullOrBlank()) null else manga.customAuthor
+        val newArtist = if (manga.customArtist.isNullOrBlank()) null else manga.customArtist
+        val newDescription = if (manga.customDescription.isNullOrBlank()) null else manga.customDescription
+
+        screenModelScope.launchNonCancellable {
+            updateManga.awaitUpdateEditInfo(
+                MangaUpdate(
+                    id = manga.id,
+                    title = newTitle,
+                    artist = newArtist,
+                    author = newAuthor,
+                    description = newDescription,
+                )
+            )
+        }
+
+        updateSuccessState { successState ->
+            successState.copy(
+                manga = manga.copy(
+                    customTitle = newTitle,
+                    customAuthor = newAuthor,
+                    customArtist = newArtist,
+                    customDescription = newDescription,
+                )
+            )
+        }
+    }
+
     fun showSetFetchIntervalDialog() {
         val manga = successState?.manga ?: return
         updateSuccessState {
@@ -513,7 +559,7 @@ class MangaScreenModel(
             val downloaded = if (isLocal) {
                 true
             } else {
-                downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.title, manga.source)
+                downloadManager.isChapterDownloaded(chapter.name, chapter.scanlator, manga.ogTitle, manga.source)
             }
             val downloadState = when {
                 activeDownload != null -> activeDownload.status
@@ -1004,6 +1050,7 @@ class MangaScreenModel(
         data class DeleteChapters(val chapters: List<Chapter>) : Dialog
         data class DuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog
         data class SetFetchInterval(val manga: Manga) : Dialog
+        data class EditInfo(val manga: Manga) : Dialog
         data object SettingsSheet : Dialog
         data object TrackSheet : Dialog
         data object FullCover : Dialog
