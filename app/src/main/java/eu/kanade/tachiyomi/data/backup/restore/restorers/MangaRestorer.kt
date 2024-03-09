@@ -140,7 +140,7 @@ class MangaRestorer(
         return manga.copy(
             initialized = manga.description != null,
             id = insertManga(manga),
-            version = manga.version
+            version = manga.version,
         )
     }
 
