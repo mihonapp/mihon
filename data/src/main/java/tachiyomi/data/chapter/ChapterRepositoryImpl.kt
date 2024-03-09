@@ -29,7 +29,7 @@ class ChapterRepositoryImpl(
                         chapter.sourceOrder,
                         chapter.dateFetch,
                         chapter.dateUpload,
-                        chapter.version
+                        chapter.version,
                     )
                     val lastInsertId = chaptersQueries.selectLastInsertedRowId().executeAsOne()
                     chapter.copy(id = lastInsertId)
@@ -127,6 +127,7 @@ class ChapterRepositoryImpl(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun mapChapter(
         id: Long,
         mangaId: Long,
@@ -142,6 +143,7 @@ class ChapterRepositoryImpl(
         dateUpload: Long,
         lastModifiedAt: Long,
         version: Long,
+        @Suppress("UNUSED_PARAMETER")
         isSyncing: Long,
     ): Chapter = Chapter(
         id = id,
@@ -157,6 +159,6 @@ class ChapterRepositoryImpl(
         chapterNumber = chapterNumber,
         scanlator = scanlator,
         lastModifiedAt = lastModifiedAt,
-        version = version
+        version = version,
     )
 }
