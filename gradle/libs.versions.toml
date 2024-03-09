@@ -50,7 +50,7 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
 subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:7e57335"
-image-decoder = "com.github.tachiyomiorg:image-decoder:fbd6601290"
+image-decoder = "com.github.tachiyomiorg:image-decoder:398d3c074f"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
