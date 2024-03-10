@@ -366,6 +366,8 @@
     <string name="pref_show_reading_mode_summary">Briefly show current mode when reader is opened</string>
     <string name="pref_true_color">32-bit color</string>
     <string name="pref_true_color_summary">Reduces banding, but may impact performance</string>
+    <string name="pref_display_profile">Display profile</string>
+    <string name="pref_select_display_profile">Select ICC profile</string>
     <string name="pref_crop_borders">Crop borders</string>
     <string name="pref_custom_brightness">Custom brightness</string>
     <string name="pref_grayscale">Grayscale</string>
