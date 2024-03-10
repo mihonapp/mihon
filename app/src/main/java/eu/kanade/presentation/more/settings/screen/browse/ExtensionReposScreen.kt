@@ -14,6 +14,7 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRe
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.flow.collectLatest
+import okhttp3.OkHttpClient
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class ExtensionReposScreen(
@@ -66,8 +67,10 @@ class ExtensionReposScreen(
 
         LaunchedEffect(Unit) {
             screenModel.events.collectLatest { event ->
-                if (event is RepoEvent.LocalizedMessage) {
-                    context.toast(event.stringRes)
+                when (event) {
+                    is RepoEvent.LocalizedMessage -> {
+                        context.toast(event.stringRes)
+                    }
                 }
             }
         }

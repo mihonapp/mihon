@@ -1,0 +1,28 @@
+CREATE TABLE extension_repos (
+    base_url TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    short_name TEXT,
+    website TEXT NOT NULL,
+    fingerprint TEXT UNIQUE NOT NULL
+);
+
+findOne:
+SELECT *
+FROM extension_repos
+WHERE base_url = :base_url;
+
+findAll:
+SELECT *
+FROM extension_repos;
+
+upsert:
+INSERT INTO extension_repos(base_url, name, short_name, website, fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint)
+ON CONFLICT(base_url)
+DO UPDATE
+SET
+    name = :name,
+    short_name = :short_name,
+    website =: website,
+    fingerprint = :fingerprint
+WHERE base_url = base_url;
