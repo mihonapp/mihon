@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.more.settings.screen.browse.RepoScreenState
+import mihon.domain.extensionrepo.model.ExtensionRepo
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
@@ -23,6 +24,7 @@ import tachiyomi.presentation.core.util.plus
 fun ExtensionReposScreen(
     state: RepoScreenState.Success,
     onClickCreate: () -> Unit,
+    onClickOpen: (ExtensionRepo) -> Unit,
     onClickDelete: (String) -> Unit,
     navigateUp: () -> Unit,
 ) {
@@ -55,6 +57,7 @@ fun ExtensionReposScreen(
             lazyListState = lazyListState,
             paddingValues = paddingValues + topSmallPaddingValues +
                 PaddingValues(horizontal = MaterialTheme.padding.medium),
+            onClickOpen = onClickOpen,
             onClickDelete = onClickDelete,
         )
     }

@@ -5,9 +5,6 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.domain.extension.interactor.CreateExtensionRepoPreferences
-import eu.kanade.domain.extension.interactor.DeleteExtensionRepoPreferences
-import eu.kanade.domain.extension.interactor.GetExtensionReposPreferences
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -39,7 +36,6 @@ class ExtensionReposScreenModel(
     private val getExtensionRepo: GetExtensionRepo = Injekt.get(),
     private val createExtensionRepo: CreateExtensionRepo = Injekt.get(),
     private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
-    private val deleteExtensionRepoPreferences: DeleteExtensionRepoPreferences = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -124,17 +120,6 @@ class ExtensionReposScreenModel(
     private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()
 
     /**
-     * Deletes the given repo from shared preferences.
-     *
-     * @param repo The repo to delete.
-     */
-    fun deleteRepoPreferences(repo: String) {
-        screenModelScope.launchIO {
-            deleteExtensionRepoPreferences.await(repo)
-        }
-    }
-
-    /**
      * Deletes the given repo from the database
      */
     fun deleteRepo(baseUrl: String) {
@@ -165,8 +150,6 @@ class ExtensionReposScreenModel(
 sealed class RepoEvent {
     sealed class LocalizedMessage(val stringRes: StringResource) : RepoEvent()
     data object InvalidUrl : LocalizedMessage(MR.strings.invalid_repo_name)
-    data object MigrationFailed : LocalizedMessage(MR.strings.repo_migrate_failure)
-    data object MigrationSuccessful : LocalizedMessage(MR.strings.repo_migrate_success)
 }
 
 sealed class RepoDialog {

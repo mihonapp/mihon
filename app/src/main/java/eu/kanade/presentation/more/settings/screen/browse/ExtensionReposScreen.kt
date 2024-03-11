@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings.screen.browse
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -12,9 +13,11 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRe
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoDeleteDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionReposScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.collectLatest
+import mihon.domain.extensionrepo.model.ExtensionRepo
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class ExtensionReposScreen(
@@ -43,6 +46,7 @@ class ExtensionReposScreen(
         ExtensionReposScreen(
             state = successState,
             onClickCreate = { screenModel.showDialog(RepoDialog.Create) },
+            onClickOpen = { openInBrowser(context, it) },
             onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it)) },
             navigateUp = navigator::pop,
         )
@@ -74,5 +78,9 @@ class ExtensionReposScreen(
                 }
             }
         }
+    }
+
+    private fun openInBrowser(context: Context, extensionRepo: ExtensionRepo) {
+        context.openInBrowser(extensionRepo.website)
     }
 }

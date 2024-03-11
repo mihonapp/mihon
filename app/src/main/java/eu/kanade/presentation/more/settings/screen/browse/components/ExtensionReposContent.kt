@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ fun ExtensionReposContent(
     repos: ImmutableSet<ExtensionRepo>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
+    onClickOpen: (ExtensionRepo) -> Unit,
     onClickDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -46,6 +48,7 @@ fun ExtensionReposContent(
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
                     repo = it.name,
+                    onClick = { onClickOpen(it) },
                     onDelete = { onClickDelete(it.baseUrl) },
                 )
             }
@@ -56,6 +59,7 @@ fun ExtensionReposContent(
 @Composable
 private fun ExtensionRepoListItem(
     repo: String,
+    onClick: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -75,13 +79,24 @@ private fun ExtensionRepoListItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
-            Text(text = repo, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
+            Text(
+                text = repo,
+                modifier = Modifier.padding(start = MaterialTheme.padding.medium),
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
+            IconButton(onClick = onClick) {
+                Icon(
+                    imageVector = Icons.Outlined.OpenInBrowser,
+                    contentDescription = stringResource(MR.strings.action_open_in_browser),
+                )
+            }
+
             IconButton(
                 onClick = {
                     val url = "$repo/index.min.json"
