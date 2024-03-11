@@ -41,7 +41,6 @@ fun ExtensionReposContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         modifier = modifier,
     ) {
-
         repos.forEach {
             item {
                 ExtensionRepoListItem(

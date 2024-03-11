@@ -179,7 +179,6 @@ class DomainModule : InjektModule {
         addFactory { ToggleSourcePin(get()) }
         addFactory { TrustExtension(get()) }
 
-
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
         addFactory { GetExtensionRepo(get()) }
         addFactory { GetExtensionRepoCount(get()) }

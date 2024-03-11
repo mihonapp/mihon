@@ -10,5 +10,4 @@ class GetExtensionReposPreferences(
     fun subscribe(): Flow<Set<String>> {
         return preferences.extensionRepos().changes()
     }
-
 }

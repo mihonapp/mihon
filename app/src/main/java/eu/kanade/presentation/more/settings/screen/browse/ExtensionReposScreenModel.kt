@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
@@ -68,7 +67,7 @@ class ExtensionReposScreenModel(
 
     private suspend fun fetchRepoDetails(repo: String): ExtensionRepo? {
         return withIOContext {
-            val url = "${repo}/repo.json".toUri()
+            val url = "$repo/repo.json".toUri()
             with(json) {
                 client.newCall(GET(url.toString()))
                     .awaitSuccess()
@@ -119,7 +118,6 @@ class ExtensionReposScreenModel(
             } else {
                 _events.send(RepoEvent.InvalidUrl)
             }
-
         }
     }
 

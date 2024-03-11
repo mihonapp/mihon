@@ -1,7 +1,6 @@
 package eu.kanade.tachiyomi.extension.api
 
 import android.content.Context
-import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
