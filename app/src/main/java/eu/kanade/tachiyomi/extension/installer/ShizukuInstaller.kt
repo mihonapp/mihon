@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.extension.installer
 
 import android.app.Service
 import android.content.pm.PackageManager
+import android.os.Process
 import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.util.system.getUriSize
 import eu.kanade.tachiyomi.util.system.toast
@@ -49,7 +50,8 @@ class ShizukuInstaller(private val service: Service) : Installer(service) {
             try {
                 val size = service.getUriSize(entry.uri) ?: throw IllegalStateException()
                 service.contentResolver.openInputStream(entry.uri)!!.use {
-                    val createCommand = "pm install-create --user current -r -i ${service.packageName} -S $size"
+                    val userId = Process.myUserHandle().hashCode()
+                    val createCommand = "pm install-create --user $userId -r -i ${service.packageName} -S $size"
                     val createResult = exec(createCommand)
                     sessionId = SESSION_ID_REGEX.find(createResult.out)?.value
                         ?: throw RuntimeException("Failed to create install session")

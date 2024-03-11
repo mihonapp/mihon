@@ -52,7 +52,7 @@ tasks {
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi",
+            "-opt-in=coil3.annotation.ExperimentalCoilApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
         )
     }

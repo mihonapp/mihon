@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi.data.coil
 
-import androidx.core.graphics.drawable.toDrawable
-import coil.ImageLoader
-import coil.decode.DecodeResult
-import coil.decode.Decoder
-import coil.decode.ImageDecoderDecoder
-import coil.decode.ImageSource
-import coil.fetch.SourceResult
-import coil.request.Options
+import coil3.ImageLoader
+import coil3.asCoilImage
+import coil3.decode.DecodeResult
+import coil3.decode.Decoder
+import coil3.decode.ImageSource
+import coil3.fetch.SourceFetchResult
+import coil3.request.Options
+import coil3.request.allowRgb565
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.decoder.ImageDecoder
@@ -30,14 +30,14 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
         check(bitmap != null) { "Failed to decode image" }
 
         return DecodeResult(
-            drawable = bitmap.toDrawable(options.context.resources),
+            image = bitmap.asCoilImage(),
             isSampled = false,
         )
     }
 
     class Factory : Decoder.Factory {
 
-        override fun create(result: SourceResult, options: Options, imageLoader: ImageLoader): Decoder? {
+        override fun create(result: SourceFetchResult, options: Options, imageLoader: ImageLoader): Decoder? {
             if (!isApplicable(result.source.source())) return null
             return TachiyomiImageDecoder(result.source, options)
         }
@@ -52,7 +52,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             }
         }
 
-        override fun equals(other: Any?) = other is ImageDecoderDecoder.Factory
+        override fun equals(other: Any?) = other is Factory
 
         override fun hashCode() = javaClass.hashCode()
     }
