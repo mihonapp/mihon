@@ -710,7 +710,7 @@
     <string name="action_sort_next_updated">下次預期更新</string>
     <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_only_in_release_period">預估出刊日</string>
+    <string name="pref_update_only_in_release_period">自訂預估出刊日</string>
     <string name="manga_display_modified_interval_title">設定為每個</string>
     <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
     <string name="has_results">有結果</string>
@@ -798,4 +798,5 @@
     <string name="ext_revoke_trust">撤銷對不明擴充套件的信任</string>
     <string name="manga_interval_expected_update_soon">即將出刊</string>
     <string name="action_open_repo">開啟來源儲存庫</string>
+    <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
 </resources>
