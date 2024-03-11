@@ -15,6 +15,10 @@ findAll:
 SELECT *
 FROM extension_repos;
 
+count:
+SELECT COUNT(*)
+FROM extension_repos;
+
 upsert:
 INSERT INTO extension_repos(base_url, name, short_name, website, fingerprint)
 VALUES (:base_url, :name, :short_name, :website, :fingerprint)
@@ -26,3 +30,8 @@ SET
     website =: website,
     fingerprint = :fingerprint
 WHERE base_url = base_url;
+
+delete:
+DELETE FROM extension_repos
+WHERE
+    base_url = :base_url;

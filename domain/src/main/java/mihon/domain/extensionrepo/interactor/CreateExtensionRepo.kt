@@ -6,7 +6,7 @@ import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 class CreateExtensionRepo(
     private val extensionRepoRepository: ExtensionRepoRepository,
 ) {
-    suspend fun await(repo: ExtensionRepo) {
+    suspend fun await(repo: ExtensionRepo): Result {
         extensionRepoRepository.upsertRepository(
             repo.baseUrl,
             repo.name,
@@ -14,5 +14,12 @@ class CreateExtensionRepo(
             repo.website,
             repo.fingerprint,
         )
+
+        return Result.Success
+    }
+
+    sealed interface Result {
+        data object DuplicateFingerprint : Result
+        data object Success : Result
     }
 }

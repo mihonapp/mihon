@@ -7,7 +7,11 @@ interface ExtensionRepoRepository {
 
     fun subscribeAll(): Flow<List<ExtensionRepo>>
 
+    suspend fun getAll(): List<ExtensionRepo>
+
     suspend fun getRepository(baseUrl: String): ExtensionRepo?
+
+    suspend fun getCount(): Int
 
     suspend fun upsertRepository(
         baseUrl: String,
@@ -16,5 +20,7 @@ interface ExtensionRepoRepository {
         website: String,
         fingerprint: String,
     )
+
+    suspend fun deleteRepository(baseUrl: String)
 
 }

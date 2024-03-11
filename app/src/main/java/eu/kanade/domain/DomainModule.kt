@@ -4,10 +4,10 @@ import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.download.interactor.DeleteDownload
-import eu.kanade.domain.extension.interactor.CreateExtensionRepo
-import eu.kanade.domain.extension.interactor.DeleteExtensionRepo
+import eu.kanade.domain.extension.interactor.CreateExtensionRepoPreferences
+import eu.kanade.domain.extension.interactor.DeleteExtensionRepoPreferences
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
-import eu.kanade.domain.extension.interactor.GetExtensionRepos
+import eu.kanade.domain.extension.interactor.GetExtensionReposPreferences
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
@@ -27,7 +27,10 @@ import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
 import mihon.data.repository.ExtensionRepoRepositoryImpl
+import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
+import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
+import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
@@ -179,10 +182,12 @@ class DomainModule : InjektModule {
 
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
         addFactory { GetExtensionRepo(get()) }
-
-
+        addFactory { GetExtensionRepoCount(get()) }
         addFactory { CreateExtensionRepo(get()) }
         addFactory { DeleteExtensionRepo(get()) }
-        addFactory { GetExtensionRepos(get()) }
+
+        addFactory { CreateExtensionRepoPreferences(get()) }
+        addFactory { DeleteExtensionRepoPreferences(get()) }
+        addFactory { GetExtensionReposPreferences(get()) }
     }
 }

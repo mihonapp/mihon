@@ -8,4 +8,6 @@ class GetExtensionRepo(
     private val extensionRepoRepository: ExtensionRepoRepository,
 ) {
     fun subscribeAll(): Flow<List<ExtensionRepo>> = extensionRepoRepository.subscribeAll()
+
+    suspend fun getAll(): List<ExtensionRepo> = extensionRepoRepository.getAll()
 }

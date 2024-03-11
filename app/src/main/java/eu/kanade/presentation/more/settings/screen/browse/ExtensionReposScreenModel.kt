@@ -5,9 +5,9 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.domain.extension.interactor.CreateExtensionRepo
-import eu.kanade.domain.extension.interactor.DeleteExtensionRepo
-import eu.kanade.domain.extension.interactor.GetExtensionRepos
+import eu.kanade.domain.extension.interactor.CreateExtensionRepoPreferences
+import eu.kanade.domain.extension.interactor.DeleteExtensionRepoPreferences
+import eu.kanade.domain.extension.interactor.GetExtensionReposPreferences
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
@@ -20,12 +20,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
+import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -33,9 +38,9 @@ import uy.kohesive.injekt.injectLazy
 
 class ExtensionReposScreenModel(
     private val getExtensionRepo: GetExtensionRepo = Injekt.get(),
-    private val getExtensionRepos: GetExtensionRepos = Injekt.get(),
     private val createExtensionRepo: CreateExtensionRepo = Injekt.get(),
     private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
+    private val deleteExtensionRepoPreferences: DeleteExtensionRepoPreferences = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -54,29 +59,9 @@ class ExtensionReposScreenModel(
                 .collectLatest { repos ->
                     mutableState.update {
                         RepoScreenState.Success(
-                            repos = repos.map { it.baseUrl }.toImmutableSet(),
+                            repos = repos.toImmutableSet(),
                         )
                     }
-                }
-
-            getExtensionRepos.subscribe()
-                .collectLatest { repos ->
-                    for (repo in repos) {
-                        val extRepo = fetchRepoDetails(repo)
-                        if (extRepo != null) {
-                            createExtensionRepo
-                            deleteExtensionRepo.await(repo)
-                            _events.send(RepoEvent.MigrationSuccessful)
-                        } else {
-                            _events.send(RepoEvent.MigrationFailed)
-                        }
-                    }
-//
-//                    mutableState.update {
-//                        RepoScreenState.Success(
-//                            repos = repos.toImmutableSet(),
-//                        )
-//                    }
                 }
         }
     }
@@ -101,10 +86,10 @@ class ExtensionReposScreenModel(
         return try {
             ExtensionRepo(
                 baseUrl = baseUrl,
-                name = obj["name"]!!.toString(),
-                shortName = obj["shortName"]?.toString(),
-                website = obj["website"]!!.toString(),
-                fingerprint = obj["signingKeyFingerprint"]!!.toString(),
+                name = obj["name"]!!.jsonPrimitive.content,
+                shortName = obj["shortName"]?.jsonPrimitive?.content,
+                website = obj["website"]!!.jsonPrimitive.content,
+                fingerprint = obj["signingKeyFingerprint"]!!.jsonPrimitive.content,
             )
         } catch (_: NullPointerException) {
             null
@@ -118,21 +103,45 @@ class ExtensionReposScreenModel(
      */
     fun createRepo(name: String) {
         screenModelScope.launchIO {
-            when (createExtensionRepo.await(name)) {
-                is CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
-                else -> {}
+            if (!name.matches(repoRegex)) {
+                _events.send(RepoEvent.InvalidUrl)
             }
+
+            val url = name.removeSuffix("/index.min.json")
+            logcat { "MADDIE: $url" }
+            val extRepo = fetchRepoDetails(url)
+
+            if (extRepo != null) {
+                when (createExtensionRepo.await(extRepo)) {
+                    CreateExtensionRepo.Result.DuplicateFingerprint -> _events.send(RepoEvent.InvalidUrl)
+                    else -> {}
+                }
+            } else {
+                _events.send(RepoEvent.InvalidUrl)
+            }
+
+        }
+    }
+
+    private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()
+
+    /**
+     * Deletes the given repo from shared preferences.
+     *
+     * @param repo The repo to delete.
+     */
+    fun deleteRepoPreferences(repo: String) {
+        screenModelScope.launchIO {
+            deleteExtensionRepoPreferences.await(repo)
         }
     }
 
     /**
-     * Deletes the given repo from the database.
-     *
-     * @param repo The repo to delete.
+     * Deletes the given repo from the database
      */
-    fun deleteRepo(repo: String) {
+    fun deleteRepo(baseUrl: String) {
         screenModelScope.launchIO {
-            deleteExtensionRepo.await(repo)
+            deleteExtensionRepo.await(baseUrl)
         }
     }
 
@@ -174,7 +183,8 @@ sealed class RepoScreenState {
 
     @Immutable
     data class Success(
-        val repos: ImmutableSet<String>,
+        val repos: ImmutableSet<ExtensionRepo>,
+        val oldRepos: ImmutableSet<String>? = null,
         val dialog: RepoDialog? = null,
     ) : RepoScreenState() {
 

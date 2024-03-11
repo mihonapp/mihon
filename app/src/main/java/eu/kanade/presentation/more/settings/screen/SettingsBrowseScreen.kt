@@ -2,6 +2,7 @@ package eu.kanade.presentation.more.settings.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -13,6 +14,8 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.runBlocking
+import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
@@ -20,6 +23,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.coroutines.coroutineContext
 
 object SettingsBrowseScreen : SearchableSettings {
 
@@ -33,7 +37,11 @@ object SettingsBrowseScreen : SearchableSettings {
         val navigator = LocalNavigator.currentOrThrow
 
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
-        val reposCount by sourcePreferences.extensionRepos().collectAsState()
+        val getExtensionRepoCount = remember { Injekt.get<GetExtensionRepoCount>() }
+
+        // Run this blocking. It should be a quick operation and not cause issues
+        // However future enhancements may add a ViewState
+        val reposCount = remember { runBlocking { getExtensionRepoCount.await() } }
 
         return listOf(
             Preference.PreferenceGroup(
@@ -45,7 +53,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),
-                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.size, reposCount.size),
+                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
                         onClick = {
                             navigator.push(ExtensionReposScreen())
                         },

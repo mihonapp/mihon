@@ -2,9 +2,8 @@ package eu.kanade.domain.extension.interactor
 
 import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.flow.Flow
-import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 
-class GetExtensionRepos(
+class GetExtensionReposPreferences(
     private val preferences: SourcePreferences,
 ) {
 

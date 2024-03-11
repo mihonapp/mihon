@@ -13,8 +13,8 @@ import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRe
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionReposScreen
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.collectLatest
-import okhttp3.OkHttpClient
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class ExtensionReposScreen(
@@ -53,7 +53,7 @@ class ExtensionReposScreen(
                 ExtensionRepoCreateDialog(
                     onDismissRequest = screenModel::dismissDialog,
                     onCreate = { screenModel.createRepo(it) },
-                    repos = successState.repos,
+                    repos = successState.repos.map { it.baseUrl }.toImmutableSet(),
                 )
             }
             is RepoDialog.Delete -> {
