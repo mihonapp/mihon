@@ -27,7 +27,7 @@ CREATE TABLE mangas(
     last_modified_at INTEGER NOT NULL DEFAULT 0,
     favorite_modified_at INTEGER,
     version INTEGER NOT NULL DEFAULT 0,
-    is_syncing INTEGER NOT NULL DEFAULT 0
+    is_syncing INTEGER NOT NULL DEFAULT 0,
     web_urls TEXT AS List<String>
 );
 
@@ -159,7 +159,7 @@ UPDATE mangas SET
     update_strategy = coalesce(:updateStrategy, update_strategy),
     calculate_interval = coalesce(:calculateInterval, calculate_interval),
     version = coalesce(:version, version),
-    is_syncing = coalesce(:isSyncing, is_syncing)
+    is_syncing = coalesce(:isSyncing, is_syncing),
     web_urls = coalesce(:webUrls, web_urls)
 WHERE _id = :mangaId;
 

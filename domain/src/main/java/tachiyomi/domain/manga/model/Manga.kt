@@ -123,6 +123,7 @@ data class Manga(
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
             lastModifiedAt = 0L,
+            favoriteModifiedAt = null,
             version = 0L,
             webUrls = null,
         )
