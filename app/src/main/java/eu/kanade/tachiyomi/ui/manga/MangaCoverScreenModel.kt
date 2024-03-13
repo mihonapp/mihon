@@ -5,9 +5,9 @@ import android.net.Uri
 import androidx.compose.material3.SnackbarHostState
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.size.Size
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.size.Size
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.saver.Image
@@ -96,7 +96,7 @@ class MangaCoverScreenModel(
             .build()
 
         return withIOContext {
-            val result = context.imageLoader.execute(req).drawable
+            val result = context.imageLoader.execute(req).image?.asDrawable(context.resources)
 
             // TODO: Handle animated cover
             val bitmap = result?.getBitmapOrNull() ?: return@withIOContext null

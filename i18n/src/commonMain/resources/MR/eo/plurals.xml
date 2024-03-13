@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="lock_after_mins">
-        <item quantity="one">Post 1 minuto</item>
+        <item quantity="one">Post %1$s minuto</item>
         <item quantity="other">Post %1$s minutoj</item>
     </plurals>
     <plurals name="num_categories">
@@ -17,7 +17,7 @@
         <item quantity="other">Ĉapitroj %1$s kaj %2$d pli</item>
     </plurals>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 nova ĉapitro</item>
+        <item quantity="one">%1$d nova ĉapitro</item>
         <item quantity="other">%1$d novaj ĉapitroj</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
@@ -25,8 +25,8 @@
         <item quantity="other">Por %d titoloj</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">Mankas 1 ĉapitron</item>
-        <item quantity="other">Mankas %d ĉapitrojn</item>
+        <item quantity="one">Preterpasas %d ĉapitron, aŭ ĝi mankas ĉe la fonto aŭ ĝi estis elfiltrita</item>
+        <item quantity="other">Preterpasas %d ĉapitrojn, aŭ ili mankas ĉe la fonto aŭ ili estis elfiltritaj</item>
     </plurals>
     <plurals name="num_trackers">
         <item quantity="one">1 ŝanĝspurilo</item>
@@ -59,5 +59,13 @@
     <plurals name="next_unread_chapters">
         <item quantity="one">Sekva nelegita ĉapitro</item>
         <item quantity="other">Sekvaj %d nelegitaj ĉapitroj</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d deponejo</item>
+        <item quantity="other">%d deponejoj</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Disponebla ĝisdatigo de etendaĵo</item>
+        <item quantity="other">Disponeblaj ĝisdatigoj de %d etendaĵoj</item>
     </plurals>
 </resources>

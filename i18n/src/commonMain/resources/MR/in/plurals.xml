@@ -43,12 +43,15 @@
         <item quantity="other">berikutnya %d chapter</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="other">Bab %1$s yang hilang</item>
+        <item quantity="other">%1$s bab hilang</item>
     </plurals>
     <plurals name="day">
         <item quantity="other">%d hari</item>
     </plurals>
     <plurals name="num_repos">
         <item quantity="other">%d repo</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="other">Dalam %1$d hari</item>
     </plurals>
 </resources>

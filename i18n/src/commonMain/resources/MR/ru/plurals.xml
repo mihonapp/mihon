@@ -102,4 +102,10 @@
         <item quantity="many">%d репозиториев</item>
         <item quantity="other">%d репозиториев</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Завтра</item>
+        <item quantity="few">В течении %1$d дней</item>
+        <item quantity="many">В течении %1$d дней</item>
+        <item quantity="other">В течении %1$d дней</item>
+    </plurals>
 </resources>

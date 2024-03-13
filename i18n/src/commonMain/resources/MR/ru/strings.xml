@@ -798,4 +798,5 @@
     <string name="theme_nord">Север</string>
     <string name="ext_revoke_trust">Убрать доверие к ненадёжным расширениям</string>
     <string name="action_open_repo">Открыть репозиторий источника</string>
+    <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
 </resources>

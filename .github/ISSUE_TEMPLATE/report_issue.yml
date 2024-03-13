@@ -53,7 +53,7 @@ body:
       label: Mihon version
       description: You can find your Mihon version in **More → About**.
       placeholder: |
-        Example: "0.16.3"
+        Example: "0.16.4"
     validations:
       required: true
 
@@ -96,7 +96,7 @@ body:
           required: true
         - label: I have gone through the [FAQ](https://mihon.app/docs/faq/general) and [troubleshooting guide](https://mihon.app/docs/guides/troubleshooting/).
           required: true
-        - label: I have updated the app to version **[0.16.3](https://github.com/mihonapp/mihon/releases/latest)**.
+        - label: I have updated the app to version **[0.16.4](https://github.com/mihonapp/mihon/releases/latest)**.
           required: true
         - label: I have updated all installed extensions.
           required: true

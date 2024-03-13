@@ -45,7 +45,7 @@ class DelayedTrackingUpdateJob(private val context: Context, workerParams: Worke
                     logcat(LogPriority.DEBUG) {
                         "Updating delayed track item: ${track.mangaId}, last chapter read: ${track.lastChapterRead}"
                     }
-                    trackChapter.await(context, track.mangaId, track.lastChapterRead)
+                    trackChapter.await(context, track.mangaId, track.lastChapterRead, setupJobOnFailure = false)
                 }
         }
 

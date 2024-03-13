@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
-import coil.drawable.ScaleDrawable
+import coil3.gif.ScaleDrawable
 
 fun Drawable.getBitmapOrNull(): Bitmap? = when (this) {
     is BitmapDrawable -> bitmap

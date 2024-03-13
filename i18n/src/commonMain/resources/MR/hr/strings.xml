@@ -511,7 +511,7 @@
     <string name="pref_inverted_colors">Invertirano</string>
     <string name="relative_time_today">Danas</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
-    <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="theme_strawberrydaiquiri">Daiquiri jagoda</string>
     <string name="pref_category_appearance">Izgled</string>
     <string name="getting_started_guide">Vodič za pokretanje</string>
     <string name="confirm_lock_change">Ovjeri za potvrditi promjenu</string>
@@ -798,4 +798,5 @@
     <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti objavljena za oko %1$s, provjera svakih %2$s.</string>
     <string name="manga_interval_expected_update_soon">Uskoro</string>
     <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
+    <string name="pref_webtoon_disable_zoom_out">Deaktiviraj smanjivanje zumiranja</string>
 </resources>

@@ -5,7 +5,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import tachiyomi.domain.manga.model.Manga
 
-@Suppress("DEPRECATION")
+@Suppress(
+    "DEPRECATION",
+    "MagicNumber",
+)
 @Serializable
 data class BackupManga(
     // in 1.x some of these values have different names
@@ -40,7 +43,8 @@ data class BackupManga(
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     // Mihon values start here
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
-    @ProtoNumber(109) var notes: String? = null,
+    @ProtoNumber(109) var version: Long = 0,
+    @ProtoNumber(110) var notes: String? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -60,6 +64,7 @@ data class BackupManga(
             updateStrategy = this@BackupManga.updateStrategy,
             lastModifiedAt = this@BackupManga.lastModifiedAt,
             favoriteModifiedAt = this@BackupManga.favoriteModifiedAt,
+            version = this@BackupManga.version,
             notes = this@BackupManga.notes,
         )
     }

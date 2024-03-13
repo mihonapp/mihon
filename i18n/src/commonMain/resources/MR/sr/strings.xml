@@ -49,7 +49,7 @@
     <string name="action_remove">Уклони</string>
     <string name="action_resume">Настави</string>
     <string name="action_open_in_browser">Отвори у претраживачу</string>
-    <string name="action_display_mode">Режим дисплеја</string>
+    <string name="action_display_mode">Режим приказа</string>
     <string name="action_display">Екран</string>
     <string name="action_display_grid">Збијена мрежа</string>
     <string name="action_display_list">Листа</string>
@@ -62,7 +62,7 @@
     <string name="action_reset">Ресетуј</string>
     <string name="action_undo">Врати назад</string>
     <string name="action_open_log">Отвори записник</string>
-    <string name="action_restore">Врати се</string>
+    <string name="action_restore">Врати</string>
     <string name="loading">Учитавање…</string>
     <string name="app_not_available">Апликација није доступна</string>
     <string name="pref_category_general">Опште</string>
@@ -155,7 +155,7 @@
     <string name="fourth_to_last">Четири пре прочитаног поглавља</string>
     <string name="fifth_to_last">Пет пре прочитаног поглавља</string>
     <string name="pref_download_new">Преузми нова поглавља</string>
-    <string name="services">Сервиси</string>
+    <string name="services">Сервиси праћења</string>
     <string name="pref_create_backup">Направи резервну копију</string>
     <string name="pref_create_backup_summ">Може се користити за враћање на тренутно стање колекције</string>
     <string name="pref_restore_backup">Врати се на резервну копију</string>
@@ -235,8 +235,8 @@
     <string name="action_sort_latest_chapter">Последње поглавље</string>
     <string name="action_view_chapters">Погледај поглавља</string>
     <string name="action_cancel_all">Откажи све</string>
-    <string name="theme_light">Икључено</string>
-    <string name="theme_dark">Укључено</string>
+    <string name="theme_light">Светла</string>
+    <string name="theme_dark">Тамна</string>
     <string name="theme_system">По систему</string>
     <string name="pref_manage_notifications">Управљај обавештењима</string>
     <string name="pref_category_security">Безбедност и приватност</string>
@@ -280,7 +280,7 @@
     <string name="recent_manga_time">Погл. %1$s - %2$s</string>
     <string name="updating_library">Ажурирање колекције</string>
     <string name="transition_pages_error">Учитавање страница није успело: %1$s</string>
-    <string name="transition_pages_loading">Утитавање страница…</string>
+    <string name="transition_pages_loading">Учитавање страница…</string>
     <string name="transition_no_previous">Нема претходног поглавља</string>
     <string name="transition_no_next">Нема следећег поглавља</string>
     <string name="transition_previous">Претходно:</string>
@@ -321,7 +321,7 @@
     <string name="last_used_source">Последње коришћено</string>
     <string name="downloaded_only_summary">Филтрира све наслове у колекцији</string>
     <string name="check_for_updates">Провери ажурирања</string>
-    <string name="website">Sajt</string>
+    <string name="website">Вебсајт</string>
     <string name="restoring_backup_canceled">Враћање је отказано</string>
     <string name="restoring_backup_error">Враћање на резервну копију није успело</string>
     <string name="restore_in_progress">Враћање је већ у току</string>
@@ -395,7 +395,7 @@
     <string name="theme_yinyang">Јин и јанг</string>
     <string name="pref_dark_theme_pure_black">Потпуно црна тема</string>
     <string name="pref_category_nsfw_content">NSFW - извори за одрасле (18+)</string>
-    <string name="pref_show_nsfw_source">Показати у листи за изворе и додатке</string>
+    <string name="pref_show_nsfw_source">Покажи у листи за изворе и додатке</string>
     <string name="pref_category_reading_mode">Начин читања</string>
     <string name="ext_installer_pref">Инсталер</string>
     <string name="pref_category_auto_download">Аутоматско преузимање</string>
@@ -421,7 +421,7 @@
     <string name="tabs_header">Картице</string>
     <string name="unknown_status">Непознат статус</string>
     <string name="local_filter_order_by">Поређај по</string>
-    <string name="enhanced_services">Побољшани сервиси</string>
+    <string name="enhanced_services">Побољшани сервиси за праћење</string>
     <string name="invalid_backup_file">Неисправна датотека резервне копије</string>
     <string name="backup_restore_missing_sources">Недостају извори:</string>
     <string name="invalid_backup_file_missing_manga">Резервна копија не садржи ниједан наслов.</string>
@@ -549,7 +549,7 @@
     <string name="clear_history_completed">Историја је избрисана</string>
     <string name="clear_history_confirmation">Да ли сте сигурни\? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
-    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-ја. Додирни да сазнаш више.</string>
+    <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
     <string name="ext_update_all">Ажурирај све</string>
     <string name="channel_app_updates">Ажурирања апликације</string>
@@ -571,7 +571,7 @@
     <string name="action_display_cover_only_grid">Мрежа насловница</string>
     <string name="pref_navigate_pan">Померај широке слике</string>
     <string name="pref_landscape_zoom">Аутоматски зумирај слике у пејзажном облику</string>
-    <string name="save_chapter_as_cbz">Sačuvaj kao CBZ arhivu</string>
+    <string name="save_chapter_as_cbz">Сачувај као CBZ архиву</string>
     <string name="rotation_reverse_portrait">Обрнути портрет</string>
     <string name="publishing_finished">Издавање завршено</string>
     <string name="skipped_reason_completed">Прескочено јер је наслов завршен</string>
@@ -588,7 +588,7 @@
     <string name="pref_reader_summary">Режим читања, дисплеј, навигација</string>
     <string name="pref_downloads_summary">Аутоматско преузимање, преузимање унапред</string>
     <string name="pref_tracking_summary">Једносмерна синхронизација напретка, побољшана синхронизација</string>
-    <string name="pref_browse_summary">Извори, екстензије, глобална претрага</string>
+    <string name="pref_browse_summary">Извори, додаци, глобална претрага</string>
     <string name="pref_backup_summary">Ручне и аутоматске резервне копије</string>
     <string name="auto_download_while_reading">Преузми аутоматски током читања</string>
     <string name="copied_to_clipboard_plain">Копирано</string>
@@ -596,7 +596,7 @@
     <string name="pref_invalidate_download_cache_summary">Присили апликацију да поново провери преузета поглавља</string>
     <string name="not_installed">Није инсталирано</string>
     <string name="crash_screen_description">%s је наишао на неочекивану грешку. Предлажемо да поделите запис о прекиду програма на нашем каналу за подршку на Discord-у.</string>
-    <string name="appwidget_unavailable_locked">Widget није доступан када је омогућено закључавање апликације</string>
+    <string name="appwidget_unavailable_locked">Виџет није доступан када је омогућено закључавање апликације</string>
     <string name="pref_library_update_show_tab_badge">Прокажи број непрочитаних на икони ажурирања</string>
     <string name="wish_list">Листа жеља</string>
     <string name="enhanced_services_not_installed">Доступно, али извор није преузет: %s</string>
@@ -633,11 +633,11 @@
     <string name="label_mean_score">Просечна оцена</string>
     <string name="label_read_chapters">Прочитано</string>
     <string name="label_used">Коришћено</string>
-    <string name="day_short">%d дана</string>
-    <string name="hour_short">%d сати</string>
+    <string name="day_short">%d д</string>
+    <string name="hour_short">%dч</string>
     <string name="not_applicable">N/A</string>
-    <string name="minute_short">%d минута</string>
-    <string name="seconds_short">%d секунди</string>
+    <string name="minute_short">%dмин</string>
+    <string name="seconds_short">%dс</string>
     <string name="description_placeholder">Нема описа</string>
     <string name="action_display_show_continue_reading_button">Дугме за наставак читања</string>
     <string name="internal_error">InternalError: Провери записнике о прекиду програма за даље информације</string>
@@ -655,7 +655,7 @@
     <string name="pref_reset_viewer_flags_error">Није могуће ресетовати подешавања читача</string>
     <string name="remove_manga">Управо ћете уклонити \"%s\" из своје колекције</string>
     <string name="appwidget_updates_description">Погледај твоје недавно ажуриране наслове у колекцији</string>
-    <string name="pref_invalidate_download_cache">Неважећи индекс преузимања</string>
+    <string name="pref_invalidate_download_cache">Поништи индекс преузимања</string>
     <string name="action_sort_unread_count">Број непрочитаних</string>
     <string name="action_sort_last_manga_update">Последња провера ажурирања</string>
     <string name="delete_category">Обриши категорију</string>
@@ -710,7 +710,7 @@
     <string name="has_results">Има резултата</string>
     <string name="skipped_reason_not_in_release_period">Прескочено јер данас није очекивано издање</string>
     <string name="pref_update_only_in_release_period">Предвиди очекивано време изласка</string>
-    <string name="action_set_interval">Постави интервалу</string>
+    <string name="action_set_interval">Постави интервал</string>
     <string name="intervals_header">Интервали</string>
     <string name="track_delete_remote_text">Такође уклони из %s</string>
     <string name="track_activity_name">Запис праћења</string>
@@ -735,7 +735,7 @@
     <string name="pref_library_update_smart_update">Паметно ажурирање</string>
     <string name="pref_flash_page">Забљесни приликом листања</string>
     <string name="pref_flash_page_summ">Смањује артефакте на е-инк екранима</string>
-    <string name="label_extension_repos">Репозиторије екстензија</string>
+    <string name="label_extension_repos">Репозиторије додатака</string>
     <string name="pref_storage_location">Место складиштења</string>
     <string name="pref_storage_location_info">Користи се за аутоматске резервне копије, преузимаље поглавља и локални извор.</string>
     <string name="ext_revoke_trust">Опозови поверење непознатим екстензијама</string>
@@ -761,7 +761,7 @@
     <string name="onboarding_permission_install_apps">Дозвола за инсталацију апликација</string>
     <string name="onboarding_action_skip">Пресокочи</string>
     <string name="onboarding_action_next">Следеће</string>
-    <string name="onboarding_permission_install_apps_description">За инсталирање екстензија.</string>
+    <string name="onboarding_permission_install_apps_description">За инсталирање додатака.</string>
     <string name="onboarding_permission_notifications_description">За примање обавештења о ажурурању библиотеке и др.</string>
     <string name="onboarding_permission_action_grant">Одобри</string>
     <string name="onboarding_heading">Добро дошли!</string>
@@ -780,9 +780,27 @@
     <string name="theme_nord">Норд</string>
     <string name="onboarding_storage_help_info">Ажурураш са старије верзије и не знаш шта да изабереш? Потражи информације у водичу складиштења.</string>
     <string name="onboarding_storage_help_action">Водич складиштења</string>
-    <string name="ext_permission_install_apps_warning">За инсталацију екстензија потребне су дозволе. Додирни овде за одобрење</string>
+    <string name="ext_permission_install_apps_warning">За инсталацију додатака потребне су дозволе. Додирни овде за одобрење</string>
     <string name="invalid_backup_file_error">Грешка:</string>
     <string name="error_repo_exists">Ова репозиторија већ постоји</string>
     <string name="manga_interval_custom_amount">Прилагођена учесталост ажурирања:</string>
     <string name="action_open_repo">Отвори репозиторију</string>
+    <string name="not_selected">Није одабрано</string>
+    <string name="selected">Одабрано</string>
+    <string name="action_menu_overflow_description">Више опција</string>
+    <string name="action_bar_up_description">Навигација према горе</string>
+    <string name="action_sort_category">Сортирање категорија</string>
+    <string name="sort_category_confirmation">Да ли желиш да сортираш категорије по абецеди?</string>
+    <string name="action_move_to_bottom_all_for_series">Премести серију на крај</string>
+    <string name="app_settings">Подешавања апликације</string>
+    <string name="source_settings">Подешавања извора</string>
+    <string name="last_auto_backup_info">Последња аутоматска резервна копија:%s</string>
+    <string name="relative_time_span_never">Никада</string>
+    <string name="notification_updating_progress">Ажурирање библиотеке... (%s)</string>
+    <string name="pref_webtoon_disable_zoom_out">Онемогући умањивање</string>
+    <string name="action_create">Створи</string>
+    <string name="pref_storage_usage">Коришћење складишта</string>
+    <string name="file_null_uri_error">Ни једна датотека није одабрана</string>
+    <string name="action_apply">Примени</string>
+    <string name="action_revert_to_default">Врати на подразумевано</string>
 </resources>

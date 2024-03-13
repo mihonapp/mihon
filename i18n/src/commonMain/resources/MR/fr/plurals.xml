@@ -62,8 +62,8 @@
     </plurals>
     <plurals name="next_unread_chapters">
         <item quantity="one">Chapitre suivant non lu</item>
-        <item quantity="many">Les %d suivants non lus</item>
-        <item quantity="other">Les %d suivants non lus</item>
+        <item quantity="many">Les %d chapitres suivants non lus</item>
+        <item quantity="other">Les %d chapitres suivants non lus</item>
     </plurals>
     <plurals name="download_amount">
         <item quantity="one">Chapitre suivant</item>

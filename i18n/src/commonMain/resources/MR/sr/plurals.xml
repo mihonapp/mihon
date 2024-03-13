@@ -41,9 +41,9 @@
         <item quantity="other">Завршено у %1$s са %2$s грешака</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">%d трекер</item>
-        <item quantity="few">%d трекера</item>
-        <item quantity="other">%d трекера</item>
+        <item quantity="one">%d пратилац</item>
+        <item quantity="few">%d пратиоца</item>
+        <item quantity="other">%d пратилаца</item>
     </plurals>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s поглавље</item>
@@ -84,5 +84,10 @@
         <item quantity="one">%d репозиторија</item>
         <item quantity="few">%d репозиторија</item>
         <item quantity="other">%d репозиторија</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">За %1$d дан</item>
+        <item quantity="few">За %1$d дана</item>
+        <item quantity="other">За %1$d дана</item>
     </plurals>
 </resources>

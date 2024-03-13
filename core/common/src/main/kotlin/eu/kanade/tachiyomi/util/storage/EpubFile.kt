@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.util.storage
 
+import mihon.core.common.extensions.toZipFile
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
-import org.apache.commons.compress.archivers.zip.ZipFile
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.Closeable
@@ -17,7 +17,7 @@ class EpubFile(channel: SeekableByteChannel) : Closeable {
     /**
      * Zip file of this epub.
      */
-    private val zip = ZipFile(channel)
+    private val zip = channel.toZipFile()
 
     /**
      * Path separator used by this epub.

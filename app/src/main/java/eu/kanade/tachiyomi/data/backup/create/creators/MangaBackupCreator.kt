@@ -98,5 +98,6 @@ private fun Manga.toBackupManga() =
         updateStrategy = this.updateStrategy,
         lastModifiedAt = this.lastModifiedAt,
         favoriteModifiedAt = this.favoriteModifiedAt,
-        notes = notes,
+        version = this.version,
+        notes = this.notes,
     )

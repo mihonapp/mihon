@@ -753,4 +753,50 @@
     <string name="label_tracked_titles">Înregistrări monitorizate</string>
     <string name="exclude_scanlators">Exclude scanlator</string>
     <string name="pref_chapter_swipe">Glisare capitol</string>
+    <string name="pref_onboarding_guide">Ghid de îmbarcare</string>
+    <string name="onboarding_heading">Bine ați venit!</string>
+    <string name="onboarding_action_next">Următorul</string>
+    <string name="onboarding_action_skip">Omite</string>
+    <string name="onboarding_storage_action_select">Selectează un folder</string>
+    <string name="onboarding_storage_selection_required">Un folder trebuie selectat</string>
+    <string name="onboarding_storage_help_info">Actualizați de la o versiune mai veche și nu sunteți sigur ce să selectați? Pentru mai multe informații, consultați ghidul de stocare.</string>
+    <string name="onboarding_storage_help_action">Ghid de stocare</string>
+    <string name="onboarding_permission_install_apps">Permisiunea de a instala aplicații</string>
+    <string name="onboarding_permission_install_apps_description">Pentru a instala extensii sursă.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Utilizarea bateriei în fundal</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Evitați întreruperile actualizărilor bibliotecii, descărcărilor, și restaurărilor de lungă durată.</string>
+    <string name="onboarding_permission_action_grant">Acordă</string>
+    <string name="onboarding_guides_returning_user">Reinstalare %s?</string>
+    <string name="pref_library_update_smart_update">Actualizare inteligentă</string>
+    <string name="label_extension_repos">Repozitoriu extensii</string>
+    <string name="information_empty_repos">Nu aveți nici un repozitoriu configurat.</string>
+    <string name="action_add_repo">Adăugați repozitoriu</string>
+    <string name="action_add_repo_message">Adăugați repozitorii adiționale pentru Mihon. Acestea ar trebuii să fie URL-uri care se încheie cu \"index.min.json\".</string>
+    <string name="delete_repo_confirmation">Doriți să ștergeți repozitoriul \"%s\"?</string>
+    <string name="action_open_repo">Repozitoriu open source</string>
+    <string name="no_location_set">Nici o locație pentru stocare nu a fost setată</string>
+    <string name="invalid_backup_file_error">Eroarea completă:</string>
+    <string name="private_settings">Includeți setări sensibile (ex. tokeni de urmărire al logări)</string>
+    <string name="available_disk_space_info">Disponibil: %1$s / Total: %2$s</string>
+    <string name="manga_display_interval_title">Estimează la fiecare</string>
+    <string name="manga_display_modified_interval_title">Configurează actualizări la fiecare</string>
+    <string name="manga_interval_expected_update">Se preconizează că vor fi lansate noi capitole în aproximativ %1$s, verifică la fiecare %2$s.</string>
+    <string name="manga_interval_expected_update_soon">În curând</string>
+    <string name="manga_interval_custom_amount">Frecvența personalizată de actualizare:</string>
+    <string name="onboarding_description">Să configurăm câteva lucruri mai întâi. Le puteți schimba oricând în setări și mai târziu.</string>
+    <string name="onboarding_action_finish">Începe</string>
+    <string name="onboarding_storage_info">Selectează un folder unde %1$s va păstra capitolele descărcate, copiile de rezervă, și altele.
+\n
+\nSe recomanda folosirea unui folder dedicat.
+\n
+\nFolder-ul selectat: %2$s</string>
+    <string name="onboarding_permission_notifications">Permisiune de notificare</string>
+    <string name="onboarding_permission_notifications_description">Primiți notificări pentru actualizările bibliotecii și altele.</string>
+    <string name="onboarding_guides_new_user">Nou pe %s? Vă recomandăm să consultați ghidul introductiv.</string>
+    <string name="ext_permission_install_apps_warning">Sunt necesare permisiuni pentru instalarea de extensii. Atingeți aici pentru a permite.</string>
+    <string name="ext_revoke_trust">Revocați încrederea extensiilor necunoscute</string>
+    <string name="label_add_repo_input">URL repozitoriu</string>
+    <string name="error_repo_exists">Acest repozitoriu există deja!</string>
+    <string name="action_delete_repo">Șterge repozitoriu</string>
+    <string name="invalid_repo_name">URL repozitoriu invalid</string>
 </resources>

@@ -51,4 +51,7 @@
     <plurals name="num_repos">
         <item quantity="other">%d 个仓库</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="other">%1$d 天后</item>
+    </plurals>
 </resources>

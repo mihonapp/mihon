@@ -85,4 +85,9 @@
         <item quantity="few">%d repozitorija</item>
         <item quantity="other">%d repozitorija</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Sutra</item>
+        <item quantity="few">Za %1$d dana</item>
+        <item quantity="other">Za %1$d dana</item>
+    </plurals>
 </resources>

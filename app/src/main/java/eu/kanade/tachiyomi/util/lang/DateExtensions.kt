@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 import java.util.Date
+import kotlin.math.absoluteValue
 
 fun LocalDateTime.toDateTimestampString(dateTimeFormatter: DateTimeFormatter): String {
     val date = dateTimeFormatter.format(this)
@@ -49,13 +50,20 @@ fun LocalDate.toRelativeString(
     val now = LocalDate.now()
     val difference = ChronoUnit.DAYS.between(this, now)
     return when {
-        difference < 0 -> difference.toString()
+        difference < -7 -> dateFormat.format(this)
+        difference < 0 -> context.pluralStringResource(
+            MR.plurals.upcoming_relative_time,
+            difference.toInt().absoluteValue,
+            difference.toInt().absoluteValue,
+        )
+
         difference < 1 -> context.stringResource(MR.strings.relative_time_today)
         difference < 7 -> context.pluralStringResource(
             MR.plurals.relative_time,
             difference.toInt(),
             difference.toInt(),
         )
+
         else -> dateFormat.format(this)
     }
 }
