@@ -5,6 +5,7 @@ import eu.kanade.tachiyomi.network.interceptor.CloudflareInterceptor
 import eu.kanade.tachiyomi.network.interceptor.IgnoreGzipInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UncaughtExceptionInterceptor
 import eu.kanade.tachiyomi.network.interceptor.UserAgentInterceptor
+import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.brotli.BrotliInterceptor
@@ -60,6 +61,21 @@ class NetworkHelper(
             PREF_DOH_CONTROLD -> builder.dohControlD()
             PREF_DOH_NJALLA -> builder.dohNajalla()
             PREF_DOH_SHECAN -> builder.dohShecan()
+        }
+
+        if (preferences.enableProxyGlobally().get()) {
+            val proxyConfigurationPref = preferences.proxyConfig().get()
+
+            if (proxyConfigurationPref.isNotBlank()) {
+                val proxy = Json.decodeFromString<Proxy>(proxyConfigurationPref)
+                builder.proxy(proxy.getProxy() ?: Proxy.getBlackHoleProxy(context))
+
+                proxy.getAuthenticator()?.let { proxyAuthenticator ->
+                    builder.proxyAuthenticator(proxyAuthenticator)
+                }
+            } else {
+                builder.proxy(Proxy.getBlackHoleProxy(context))
+            }
         }
 
         builder.build()
