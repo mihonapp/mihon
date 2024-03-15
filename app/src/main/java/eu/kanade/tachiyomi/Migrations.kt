@@ -21,7 +21,7 @@ object Migrations {
      *
      * @return true if a migration is performed, false otherwise.
      */
-    @Suppress("SameReturnValue")
+    @Suppress("SameReturnValue", "MagicNumber")
     fun upgrade(
         context: Context,
         preferenceStore: PreferenceStore,
@@ -57,10 +57,7 @@ object Migrations {
                             )
                         } catch (ex: SQLiteException) {
                             ex.logcat(LogPriority.ERROR) { "Error Migrating Extension Repo with baseUrl: $source" }
-
-
                         }
-
                     }
                     sourcePreferences.extensionRepos().delete()
                 }
