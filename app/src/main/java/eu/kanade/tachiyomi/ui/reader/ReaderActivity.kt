@@ -40,6 +40,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
@@ -342,6 +343,10 @@ class ReaderActivity : BaseActivity() {
                     onChangeReadingMode = viewModel::setMangaReadingMode,
                     onChangeOrientation = viewModel::setMangaOrientationType,
                 )
+            }
+
+            if (!ifSourcesLoaded()) {
+                return@setComposeContent
             }
 
             val isHttpSource = viewModel.getSource() is HttpSource

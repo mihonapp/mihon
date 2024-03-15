@@ -16,6 +16,7 @@ import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 import logcat.LogPriority
@@ -41,8 +42,8 @@ class ExtensionManager(
     private val trustExtension: TrustExtension = Injekt.get(),
 ) {
 
-    var isInitialized = false
-        private set
+    private val _isInitialized = MutableStateFlow(false)
+    val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
 
     /**
      * API where all the available extensions can be found.
@@ -108,7 +109,7 @@ class ExtensionManager(
             .filterIsInstance<LoadResult.Untrusted>()
             .map { it.extension }
 
-        isInitialized = true
+        _isInitialized.value = true
     }
 
     /**
