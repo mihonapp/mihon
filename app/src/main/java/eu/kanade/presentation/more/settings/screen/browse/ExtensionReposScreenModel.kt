@@ -6,6 +6,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
@@ -26,7 +27,6 @@ import mihon.domain.extensionrepo.model.ExtensionRepo
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -42,9 +42,9 @@ class ExtensionReposScreenModel(
     val events = _events.receiveAsFlow()
 
     private val json: Json by injectLazy()
-    val networkService: NetworkHelper by injectLazy()
+    private val networkService: NetworkHelper by injectLazy()
 
-    val client: OkHttpClient
+    private val client: OkHttpClient
         get() = networkService.client
 
     init {
@@ -64,15 +64,20 @@ class ExtensionReposScreenModel(
     private suspend fun fetchRepoDetails(repo: String): ExtensionRepo? {
         return withIOContext {
             val url = "$repo/repo.json".toUri()
-            with(json) {
-                client.newCall(GET(url.toString()))
-                    .awaitSuccess()
-                    .parseAs<JsonObject>()
-                    .let {
-                        it["meta"]
-                            ?.jsonObject
-                            ?.let { it1 -> jsonToExtensionRepo(baseUrl = repo, it1) }
-                    }
+
+            try {
+                with(json) {
+                    client.newCall(GET(url.toString()))
+                        .awaitSuccess()
+                        .parseAs<JsonObject>()
+                        .let {
+                            it["meta"]
+                                ?.jsonObject
+                                ?.let { it1 -> jsonToExtensionRepo(baseUrl = repo, it1) }
+                        }
+                }
+            } catch (_: HttpException) {
+                null
             }
         }
     }
@@ -103,7 +108,6 @@ class ExtensionReposScreenModel(
             }
 
             val url = name.removeSuffix("/index.min.json")
-            logcat { "MADDIE: $url" }
             val extRepo = fetchRepoDetails(url)
 
             if (extRepo != null) {

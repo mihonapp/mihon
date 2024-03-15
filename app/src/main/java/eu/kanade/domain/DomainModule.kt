@@ -4,10 +4,7 @@ import eu.kanade.domain.chapter.interactor.GetAvailableScanlators
 import eu.kanade.domain.chapter.interactor.SetReadStatus
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.download.interactor.DeleteDownload
-import eu.kanade.domain.extension.interactor.CreateExtensionRepoPreferences
-import eu.kanade.domain.extension.interactor.DeleteExtensionRepoPreferences
 import eu.kanade.domain.extension.interactor.GetExtensionLanguages
-import eu.kanade.domain.extension.interactor.GetExtensionReposPreferences
 import eu.kanade.domain.extension.interactor.GetExtensionSources
 import eu.kanade.domain.extension.interactor.GetExtensionsByType
 import eu.kanade.domain.extension.interactor.TrustExtension
@@ -184,9 +181,5 @@ class DomainModule : InjektModule {
         addFactory { GetExtensionRepoCount(get()) }
         addFactory { CreateExtensionRepo(get()) }
         addFactory { DeleteExtensionRepo(get()) }
-
-        addFactory { CreateExtensionRepoPreferences(get()) }
-        addFactory { DeleteExtensionRepoPreferences(get()) }
-        addFactory { GetExtensionReposPreferences(get()) }
     }
 }
