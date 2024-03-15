@@ -211,9 +211,7 @@
     <string name="pref_page_transitions">انمیشن‌های تغییر صفحه</string>
     <string name="pref_fullscreen">تمام صفحه</string>
     <string name="obsolete_extension_message">این افزونه دیگر در دسترس نیست. ممکن است به درستی کار نکند و باعث ایجاد مشکلاتی در برنامه شود. حذف نصب آن توصیه می شود.</string>
-    <string name="untrusted_extension_message">این افزونه با یک گواهی نامطمئن امضا شده است و فعال نشده است.
-\n
-\nیک افزونه مخرب می تواند هر گونه طلاعات ورود به سیستم ذخیره شده تاچیومی را بخواند یا کدهای دلخواه(احتمالا خطرناک) را اجرا کند.
+    <string name="untrusted_extension_message">یک افزونه مخرب می تواند هر گونه طلاعات ورود به سیستم زخیره شده را بخواند یا اختیاری یک کد را اجرا کند.
 \n
 \nبا اعتماد به این گواهی شما این خطرات را می‌پذیرید.</string>
     <string name="untrusted_extension">افزونه نامطمئن</string>
