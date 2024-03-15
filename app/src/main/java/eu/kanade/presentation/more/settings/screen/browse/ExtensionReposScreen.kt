@@ -48,6 +48,7 @@ class ExtensionReposScreen(
             onClickCreate = { screenModel.showDialog(RepoDialog.Create) },
             onClickOpen = { openInBrowser(context, it) },
             onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it)) },
+            onClickRefresh = { screenModel.refreshRepos() },
             navigateUp = navigator::pop,
         )
 

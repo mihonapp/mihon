@@ -23,6 +23,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
 import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
+import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.launchIO
@@ -36,6 +37,7 @@ class ExtensionReposScreenModel(
     private val getExtensionRepo: GetExtensionRepo = Injekt.get(),
     private val createExtensionRepo: CreateExtensionRepo = Injekt.get(),
     private val deleteExtensionRepo: DeleteExtensionRepo = Injekt.get(),
+    private val updateExtensionRepo: UpdateExtensionRepo = Injekt.get(),
 ) : StateScreenModel<RepoScreenState>(RepoScreenState.Loading) {
 
     private val _events: Channel<RepoEvent> = Channel(Int.MAX_VALUE)
@@ -117,6 +119,16 @@ class ExtensionReposScreenModel(
                 }
             } else {
                 _events.send(RepoEvent.InvalidUrl)
+            }
+        }
+    }
+
+    fun refreshRepos() {
+        val status = state.value
+
+        if (status is RepoScreenState.Success) {
+            screenModelScope.launchIO {
+                status.repos.forEach { updateExtensionRepo.await(it) }
             }
         }
     }

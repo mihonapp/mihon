@@ -28,6 +28,7 @@ import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
 import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
+import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
@@ -181,5 +182,6 @@ class DomainModule : InjektModule {
         addFactory { GetExtensionRepoCount(get()) }
         addFactory { CreateExtensionRepo(get()) }
         addFactory { DeleteExtensionRepo(get()) }
+        addFactory { UpdateExtensionRepo(get(), get(), get()) }
     }
 }

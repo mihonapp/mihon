@@ -21,6 +21,16 @@ interface ExtensionRepoRepository {
         fingerprint: String,
     )
 
+    suspend fun upsertRepository(repo: ExtensionRepo) {
+        upsertRepository(
+            baseUrl = repo.baseUrl,
+            name = repo.name,
+            shortName = repo.shortName,
+            website = repo.website,
+            fingerprint = repo.fingerprint,
+        )
+    }
+
     suspend fun deleteRepository(baseUrl: String)
 
 }
