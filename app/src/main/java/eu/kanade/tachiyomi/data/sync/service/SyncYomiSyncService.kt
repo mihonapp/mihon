@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.sync.SyncNotifier
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.PATCH
 import eu.kanade.tachiyomi.network.POST
+import eu.kanade.tachiyomi.network.await
 import kotlinx.coroutines.delay
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -104,15 +105,15 @@ class SyncYomiSyncService(
         )
 
         // create lock file first
-        client.newCall(lockFileCreate).execute()
+        client.newCall(lockFileCreate).await()
         // update lock file acquired_by
-        client.newCall(lockFileUpdate).execute()
+        client.newCall(lockFileUpdate).await()
 
         var backoff = 2000L // Start with 2 seconds
         val maxBackoff = 32000L // Maximum backoff time e.g., 32 seconds
         var lockFile: LockFile
         do {
-            val response = client.newCall(lockFileRequest).execute()
+            val response = client.newCall(lockFileRequest).await()
             val responseBody = response.body.string()
             lockFile = json.decodeFromString<LockFile>(responseBody)
             logcat(LogPriority.DEBUG) { "SyncYomi lock file status: ${lockFile.status}" }
@@ -125,7 +126,7 @@ class SyncYomiSyncService(
         } while (lockFile.status != SyncStatus.Success)
 
         // update lock file acquired_by
-        client.newCall(lockFileUpdate).execute()
+        client.newCall(lockFileUpdate).await()
     }
 
     override suspend fun pullSyncData(): SyncData? {
@@ -141,16 +142,15 @@ class SyncYomiSyncService(
             headers = headers,
         )
 
-        client.newCall(downloadRequest).execute().use { response ->
-            val responseBody = response.body.string()
+        val response = client.newCall(downloadRequest).await()
+        val responseBody = response.body.string()
 
-            if (response.isSuccessful) {
-                return json.decodeFromString<SyncData>(responseBody)
-            } else {
-                notifier.showSyncError("Failed to download sync data: $responseBody")
-                responseBody.let { logcat(LogPriority.ERROR) { "SyncError:$it" } }
-                return null
-            }
+        return if (response.isSuccessful) {
+            json.decodeFromString<SyncData>(responseBody)
+        } else {
+            notifier.showSyncError("Failed to download sync data: $responseBody")
+            responseBody.let { logcat(LogPriority.ERROR) { "SyncError:$it" } }
+            null
         }
     }
 
@@ -183,7 +183,7 @@ class SyncYomiSyncService(
             body = body,
         )
 
-        client.newCall(uploadRequest).execute().use {
+        client.newCall(uploadRequest).await().use {
             if (it.isSuccessful) {
                 logcat(
                     LogPriority.DEBUG,

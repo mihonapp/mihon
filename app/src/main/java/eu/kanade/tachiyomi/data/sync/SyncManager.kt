@@ -19,6 +19,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import logcat.LogPriority
 import logcat.logcat
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.Chapters
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.manga.MangaMapper.mapManga
@@ -189,7 +190,7 @@ class SyncManager(
                 Uri.fromFile(cacheFile)
             }
         } catch (e: IOException) {
-            logcat(LogPriority.ERROR) { "Failed to write sync data to cache" }
+            logcat(LogPriority.ERROR, throwable = e) { "Failed to write sync data to cache" }
             null
         }
     }
