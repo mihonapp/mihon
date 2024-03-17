@@ -744,7 +744,7 @@
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Reverter para o padrão</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Scanner</string>
     <string name="exclude_scanlators">Excluir scanlators</string>
     <string name="action_create">Criar</string>
     <string name="selected">Selecionado</string>
@@ -798,4 +798,5 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
     <string name="action_open_repo">Abrir repositório da fonte</string>
+    <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
 </resources>
