@@ -816,7 +816,7 @@ class ReaderActivity : BaseActivity() {
                 }
                 .launchIn(lifecycleScope)
 
-            readerPreferences.displayProfile().changes()
+            preferences.displayProfile().changes()
                 .onEach { setDisplayProfile(it) }
                 .launchIn(lifecycleScope)
 

@@ -22,7 +22,6 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
     var doubleTapAnimDuration = 500
     var volumeKeysEnabled = false
     var volumeKeysInverted = false
-    var displayProfile = ""
     var alwaysShowChapterTransition = true
     var navigationMode = 0
         protected set
@@ -64,9 +63,6 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
         readerPreferences.alwaysShowChapterTransition()
             .register({ alwaysShowChapterTransition = it })
-
-        readerPreferences.displayProfile()
-            .register({ displayProfile = it }, { imagePropertyChangedListener?.invoke() })
 
         forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser().get()
         if (forceNavigationOverlay) {

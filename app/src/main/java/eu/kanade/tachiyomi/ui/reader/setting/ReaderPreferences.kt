@@ -23,8 +23,6 @@ class ReaderPreferences(
 
     fun showReadingMode() = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
-    fun displayProfile() = preferenceStore.getString("pref_display_profile_key", "")
-
     fun fullscreen() = preferenceStore.getBoolean("fullscreen", true)
 
     fun cutoutShort() = preferenceStore.getBoolean("cutout_short", true)

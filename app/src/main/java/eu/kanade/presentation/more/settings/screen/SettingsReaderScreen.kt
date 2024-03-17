@@ -1,14 +1,10 @@
 package eu.kanade.presentation.more.settings.screen
 
-import android.content.Intent
 import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
@@ -33,17 +29,6 @@ object SettingsReaderScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val readerPref = remember { Injekt.get<ReaderPreferences>() }
-        val context = LocalContext.current
-
-        val chooseColorProfile = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.OpenDocument(),
-        ) { uri ->
-            uri?.let {
-                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                context.contentResolver.takePersistableUriPermission(uri, flags)
-                readerPref.displayProfile().set(uri.toString())
-            }
-        }
 
         return listOf(
             Preference.PreferenceItem.ListPreference(
@@ -71,13 +56,6 @@ object SettingsReaderScreen : SearchableSettings {
                 pref = readerPref.showNavigationOverlayOnStart(),
                 title = stringResource(MR.strings.pref_show_navigation_mode),
                 subtitle = stringResource(MR.strings.pref_show_navigation_mode_summary),
-            ),
-            Preference.PreferenceItem.TextPreference(
-                title = stringResource(MR.strings.pref_display_profile),
-                subtitle = readerPref.displayProfile().get(),
-                onClick = {
-                    chooseColorProfile.launch(arrayOf("*/*"))
-                },
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = readerPref.pageTransitions(),
