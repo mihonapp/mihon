@@ -161,7 +161,6 @@
     <string name="filter_mode_overlay">Plustavolo</string>
     <string name="pref_custom_brightness">Adaptita lumeco</string>
     <string name="pref_crop_borders">Stuci borderojn</string>
-    <string name="pref_true_color">32-bitaj koloroj</string>
     <string name="pref_show_reading_mode">Legada reĝimo</string>
     <string name="pref_show_page_number">Montri numero de paĝo</string>
     <string name="pref_fullscreen">Plenekrano</string>

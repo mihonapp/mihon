@@ -212,8 +212,6 @@
     <string name="pref_show_page_number">पुटसङ्ख्यां दर्शयतु</string>
     <string name="pref_show_reading_mode">पठनदशां दर्शयतु</string>
     <string name="pref_show_reading_mode_summary">प्रदर्शकस्य उद्घाटने वर्तमानदशां सङ्क्षेपं दर्शयतु</string>
-    <string name="pref_true_color">३२-बिट् वर्णः</string>
-    <string name="pref_true_color_summary">बाञ्डिङ्गसमस्यां न्यूनी करिष्यति परन्तु प्रवृत्तिं प्रभाविष्यति</string>
     <string name="pref_crop_borders">सीमाः कर्तयतु</string>
     <string name="on">सशक्तं कुरु</string>
     <string name="off">अशक्तं कुरु</string>

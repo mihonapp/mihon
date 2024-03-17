@@ -272,7 +272,6 @@
     <string name="copy">Copier</string>
     <string name="pref_read_with_long_tap">Afficher les actions en appuyant longuement</string>
     <string name="action_open_in_web_view">Ouvrir dans WebView</string>
-    <string name="pref_true_color">Couleurs à 32 bits</string>
     <string name="pref_skip_read_chapters">Passer les chapitres marqués comme lus</string>
     <string name="filter_mode_multiply">Produit</string>
     <string name="filter_mode_screen">Écran</string>
@@ -363,7 +362,6 @@
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
-    <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
     <string name="viewer">Mode de lecture</string>
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures de la bibliothèque</string>

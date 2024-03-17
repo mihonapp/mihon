@@ -101,7 +101,6 @@
     <string name="pref_library_update_restriction">Enhetsbegrensninger for automatiske oppdateringer</string>
     <string name="pref_update_only_non_completed">Hopp over oppføringer med \"Fullført\" status</string>
     <string name="pref_auto_update_manga_sync">Oppdater fremdrift etter lesing</string>
-    <string name="pref_true_color">32-biters fargerom</string>
     <string name="pref_crop_borders">Beskjær kanter</string>
     <string name="pref_custom_brightness">Egendefinert lysstyrke</string>
     <string name="pref_custom_color_filter">Egendefinert fargefilter</string>
@@ -419,7 +418,6 @@
     <string name="backup_restore_missing_trackers">Sporingstjenester ikke logget inn i:</string>
     <string name="invalid_backup_file_missing_manga">Sikkerhetskopi inneholder ingen bibliotekoppføringer.</string>
     <string name="tracking_info">Enveissynkronisering for å oppdatere kapittelfremdrift i eksterne sporetjenester. Sett opp sporing for individuelle oppføringer med sporingsknappen.</string>
-    <string name="pref_true_color_summary">Reduserer sjattering, men koster ytelse</string>
     <string name="pref_webtoon_side_padding">Sidepolstring</string>
     <string name="spen_next_page">Neste side</string>
     <string name="spen_previous_page">Forrige side</string>

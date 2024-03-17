@@ -184,8 +184,6 @@
     <string name="pref_custom_color_filter">ಕಸ್ಟಮ್ ಬಣ್ಣಗಳ ಫಿಲ್ಟರ್</string>
     <string name="pref_custom_brightness">ಕಸ್ಟಮ್ ಬೆಳಕು</string>
     <string name="pref_crop_borders">ಗಡಿಗಳನ್ನು ಕತ್ತರಿಸಿ</string>
-    <string name="pref_true_color_summary">ಬ್ಯಾಂಡಿಂಗ್ ಅನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತದೆ, ಆದರೆ ಕಾರ್ಯಕ್ಷಮತೆಯ ಮೇಲೆ ಪರಿಣಾಮ ಬೀರುತ್ತದೆ</string>
-    <string name="pref_true_color">32-ಬಿಟ್ ಬಣ್ಣ</string>
     <string name="pref_show_page_number">ಪುಟ ಸಂಖ್ಯೆಯನ್ನು ತೋರಿಸಿ</string>
     <string name="pref_double_tap_anim_speed">ಡಬಲ್ ಟ್ಯಾಪ್ ಅನಿಮೇಷನ್ ವೇಗ</string>
     <string name="pref_page_transitions">ಪುಟ ಪರಿವರ್ತನೆಗಳನ್ನು ಅನಿಮೇಟ್ ಮಾಡಿ</string>

@@ -274,7 +274,6 @@
     <string name="transition_pages_error">पृष्ठों को लोड करने में विफल है: %1$s</string>
     <string name="pref_read_with_long_tap">लंबे टैप पर क्रियाएँ दिखाएँ</string>
     <string name="action_open_in_web_view">WebView में खोलें</string>
-    <string name="pref_true_color">32 बिट रंग</string>
     <string name="pref_skip_read_chapters">पढ़े हुए अध्यायों को छोड़ें</string>
     <string name="pref_color_filter_mode">रंग फिल्टर मिश्रण मोड</string>
     <string name="filter_mode_overlay">ओवरले</string>
@@ -366,7 +365,6 @@
     <string name="viewer">पढ़न मोड</string>
     <string name="pref_category_for_this_series">इस श्रृंखला के लिए</string>
     <string name="gray_background">ग्रे</string>
-    <string name="pref_true_color_summary">बैंडिंग को कम करता है, लेकिन प्रदर्शन को प्रभावित कर सकता है</string>
     <string name="battery_optimization_setting_activity_not_found">डिवाइस सेटिंग नहीं खोल सका</string>
     <string name="tracking_info">ट्रैकिंग सेवाओं में अध्याय की प्रगति को अद्यतन करने के लिए एकतरफा सिंक। अपने ट्रैकिंग बटन से व्यक्तिगत प्रविष्टियों के लिए ट्रैकिंग सेट अप करें।</string>
     <string name="pref_refresh_library_covers">रिफ्रेश पुस्तकालय मंगा कवर</string>

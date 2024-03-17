@@ -269,7 +269,6 @@
     <string name="transition_pages_loading">Memuat halaman…</string>
     <string name="transition_pages_error">Gagal memuat halaman: %1$s</string>
     <string name="action_open_in_web_view">Buka dalam WebView</string>
-    <string name="pref_true_color">Warna 32-bit</string>
     <string name="pref_skip_read_chapters">Lewati bab yang sudah dibaca</string>
     <string name="pref_read_with_long_tap">Tampilkan tindakan saat tekan lama</string>
     <string name="pref_color_filter_mode">Mode saringan warna campur</string>
@@ -360,7 +359,6 @@
     <string name="backup_in_progress">Pencadangan masih dalam proses</string>
     <string name="restore_duration">%02d menit, %02d detik</string>
     <string name="viewer">Mode membaca</string>
-    <string name="pref_true_color_summary">Mengurangi banding, namun berdampak pada performa</string>
     <string name="gray_background">Abu-abu</string>
     <string name="pref_category_for_this_series">Untuk seri ini</string>
     <string name="battery_optimization_setting_activity_not_found">Tidak dapat membuka pengaturan perangkat</string>
