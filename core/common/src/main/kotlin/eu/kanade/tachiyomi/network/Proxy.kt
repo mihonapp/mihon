@@ -17,7 +17,7 @@ import java.net.UnknownHostException
 import java.net.Proxy as JavaProxy
 
 @Serializable
-class Proxy(
+data class Proxy(
     var proxyType: Type? = null,
     var host: String? = null,
     var port: Int? = null,
@@ -42,28 +42,6 @@ class Proxy(
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (other == null) return false
-        if (this === other) return true
-        if (other !is Proxy) return false
-
-        if (proxyType?.name != other.proxyType?.name) return false
-        if (host != other.host) return false
-        if (port != other.port) return false
-        if (username != other.username) return false
-        if (password != other.password) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = proxyType?.hashCode() ?: 0
-        result = 31 * result + (host?.hashCode() ?: 0)
-        result = 31 * result + (port ?: 0)
-        result = 31 * result + username.hashCode()
-        result = 31 * result + password.hashCode()
-        return result
-    }
     companion object {
         suspend fun testHostValidity(host: String): Boolean = withIOContext {
             return@withIOContext try {
