@@ -48,7 +48,7 @@ jobs:
 
       - name: Sign APK
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
-        uses: r0adkll/sign-android-release@/349ebdef58775b1e0d8099458af0816dc79b6407 # v1
+        uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
         with:
           releaseDirectory: app/build/outputs/apk/standard/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
