@@ -461,6 +461,8 @@ private fun ProxyConfigDialog(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val newProxy by remember { mutableStateOf(proxy.copy()) }
+
     var host by remember { mutableStateOf(TextFieldValue(proxy.host ?: "")) }
     var port by remember { mutableStateOf(TextFieldValue(proxy.port?.toString() ?: "")) }
     var username by remember { mutableStateOf(TextFieldValue(proxy.username ?: "")) }
@@ -475,17 +477,6 @@ private fun ProxyConfigDialog(
         scope.launch {
             hostIsValid = Proxy.testHostValidity(host.text)
         }
-    }
-    val newProxy by remember {
-        mutableStateOf(
-            Proxy(
-                proxyType = proxyTypes[checked],
-                host = host.text,
-                port = port.text.takeIf { it.isNotBlank() && it.isDigitsOnly() }?.toInt(),
-                username = username.text,
-                password = password.text,
-            ),
-        )
     }
 
     AlertDialog(
