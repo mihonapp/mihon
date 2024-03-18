@@ -759,7 +759,7 @@
     <string name="onboarding_action_finish">Loslegen</string>
     <string name="onboarding_storage_selection_required">Es muss ein Ordner ausgewählt sein</string>
     <string name="onboarding_heading">Willkommen!</string>
-    <string name="onboarding_guides_returning_user">%s reinstallieren?</string>
+    <string name="onboarding_guides_returning_user">%s reinstalliert?</string>
     <string name="onboarding_action_skip">Überspringen</string>
     <string name="onboarding_action_next">Weiter</string>
     <string name="onboarding_description">Lass uns zuerst ein paar Dinge einrichten. Du kannst diese später in den Einstellungen jederzeit ändern.</string>
