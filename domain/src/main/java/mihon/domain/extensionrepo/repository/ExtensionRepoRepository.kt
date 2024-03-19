@@ -42,5 +42,4 @@ interface ExtensionRepoRepository {
     }
 
     suspend fun deleteRepository(baseUrl: String)
-
 }

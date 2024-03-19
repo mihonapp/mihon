@@ -6,4 +6,4 @@ data class ExtensionRepo(
     val shortName: String?,
     val website: String,
     val fingerprint: String,
-) {}
+)

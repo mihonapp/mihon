@@ -52,7 +52,6 @@ class ExtensionRepoRepositoryImpl(
         return handler.await { extension_reposQueries.delete(baseUrl) }
     }
 
-
     private fun mapExtensionRepo(
         baseUrl: String,
         name: String,
