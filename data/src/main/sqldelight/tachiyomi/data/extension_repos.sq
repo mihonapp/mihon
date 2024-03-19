@@ -11,6 +11,11 @@ SELECT *
 FROM extension_repos
 WHERE base_url = :base_url;
 
+findOneByFingerprint:
+SELECT *
+FROM extension_repos
+WHERE fingerprint = :fingerprint;
+
 findAll:
 SELECT *
 FROM extension_repos;
@@ -18,6 +23,10 @@ FROM extension_repos;
 count:
 SELECT COUNT(*)
 FROM extension_repos;
+
+insert:
+INSERT INTO extension_repos(base_url, name, short_name, website, fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint);
 
 upsert:
 INSERT INTO extension_repos(base_url, name, short_name, website, fingerprint)

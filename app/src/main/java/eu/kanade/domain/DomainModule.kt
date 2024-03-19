@@ -182,6 +182,6 @@ class DomainModule : InjektModule {
         addFactory { GetExtensionRepoCount(get()) }
         addFactory { CreateExtensionRepo(get()) }
         addFactory { DeleteExtensionRepo(get()) }
-        addFactory { UpdateExtensionRepo(get(), get(), get()) }
+        addFactory { UpdateExtensionRepo(get(), get()) }
     }
 }

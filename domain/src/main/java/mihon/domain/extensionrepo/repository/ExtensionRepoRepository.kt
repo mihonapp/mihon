@@ -11,7 +11,17 @@ interface ExtensionRepoRepository {
 
     suspend fun getRepository(baseUrl: String): ExtensionRepo?
 
+    suspend fun getRepositoryByFingerprint(fingerprint: String): ExtensionRepo?
+
     suspend fun getCount(): Int
+
+    suspend fun insertRepository(
+        baseUrl: String,
+        name: String,
+        shortName: String?,
+        website: String,
+        fingerprint: String,
+    )
 
     suspend fun upsertRepository(
         baseUrl: String,

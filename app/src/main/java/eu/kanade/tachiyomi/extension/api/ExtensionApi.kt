@@ -60,8 +60,8 @@ internal class ExtensionApi {
         }
     }
 
-    private suspend fun updateExtensionSources(): List<ExtensionRepo?> =
-        getExtensionRepo.getAll().map { updateExtensionRepo.await(it) }.toList()
+    private suspend fun updateExtensionSources() =
+        getExtensionRepo.getAll().forEach { updateExtensionRepo.await(it) }
 
     suspend fun checkForUpdates(
         context: Context,

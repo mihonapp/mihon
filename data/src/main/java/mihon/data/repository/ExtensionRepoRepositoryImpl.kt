@@ -20,8 +20,22 @@ class ExtensionRepoRepositoryImpl(
         return handler.awaitOneOrNull { extension_reposQueries.findOne(baseUrl, ::mapExtensionRepo) }
     }
 
+    override suspend fun getRepositoryByFingerprint(fingerprint: String): ExtensionRepo? {
+        return handler.awaitOneOrNull { extension_reposQueries.findOneByFingerprint(fingerprint, ::mapExtensionRepo) }
+    }
+
     override suspend fun getCount(): Int {
         return handler.awaitOne { extension_reposQueries.count() }.toInt()
+    }
+
+    override suspend fun insertRepository(
+        baseUrl: String,
+        name: String,
+        shortName: String?,
+        website: String,
+        fingerprint: String,
+    ) {
+        handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, fingerprint) }
     }
 
     override suspend fun upsertRepository(
