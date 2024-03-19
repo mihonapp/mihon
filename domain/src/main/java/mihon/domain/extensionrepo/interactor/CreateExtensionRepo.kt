@@ -49,14 +49,14 @@ class CreateExtensionRepo(
             extensionRepoRepository.getRepository(baseUrl = repo.baseUrl)
                 ?.let { Result.RepoAlreadyExists }
                 ?: extensionRepoRepository.getRepositoryByFingerprint(fingerprint = repo.fingerprint)
-                    ?.let { Result.DuplicateFingerprint }
+                    ?.let { Result.DuplicateFingerprint(it, repo) }
                 ?: Result.Error
         }
         return result
     }
 
     sealed interface Result {
-        data object DuplicateFingerprint : Result
+        data class DuplicateFingerprint(val oldRepo: ExtensionRepo, val newRepo: ExtensionRepo) : Result
         data object InvalidUrl : Result
         data object RepoAlreadyExists : Result
         data object Success : Result

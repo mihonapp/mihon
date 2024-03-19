@@ -40,6 +40,18 @@ SET
     fingerprint = :fingerprint
 WHERE base_url = base_url;
 
+replace:
+INSERT INTO extension_repos(base_url, name, short_name, website, fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint)
+ON CONFLICT(fingerprint)
+DO UPDATE
+SET
+    base_url = :base_url,
+    name = :name,
+    short_name = :short_name,
+    website =: website
+WHERE fingerprint = fingerprint;
+
 delete:
 DELETE FROM extension_repos
 WHERE

@@ -48,6 +48,18 @@ class ExtensionRepoRepositoryImpl(
         handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, fingerprint) }
     }
 
+    override suspend fun replaceRepository(newRepo: ExtensionRepo) {
+        handler.await {
+            extension_reposQueries.replace(
+                newRepo.baseUrl,
+                newRepo.name,
+                newRepo.shortName,
+                newRepo.website,
+                newRepo.fingerprint,
+            )
+        }
+    }
+
     override suspend fun deleteRepository(baseUrl: String) {
         return handler.await { extension_reposQueries.delete(baseUrl) }
     }
