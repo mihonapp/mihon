@@ -370,9 +370,7 @@
     <string name="tapping_inverted_horizontal">Horizontal</string>
     <string name="nav_zone_left">Esquerda</string>
     <string name="pref_landscape_zoom">Ampliar a imaxe en horizontal</string>
-    <string name="backup_restore_content_full">Restauraranse os datos da copia de seguridade.
-\n
-\nTerás que instalar as extensións que falten e iniciar sesión nos servizos de seguemento para usalos.</string>
+    <string name="backup_restore_content_full">Pode ser que debas instalar as extensións que falten e iniciar sesión nos servizos de seguemento para usalos.</string>
     <string name="label_data">Datos</string>
     <string name="pref_reset_viewer_flags_success">Restableceuse a configuración do lector</string>
     <string name="logout_title">Pechar a sesión en %1$s\?</string>
@@ -386,7 +384,7 @@
     <string name="pref_create_backup">Crear unha copia de seguridade</string>
     <string name="creating_backup_error">Non se puido facer a copia de seguridade</string>
     <string name="pref_refresh_library_covers">Actualizar as portadas da biblioteca</string>
-    <string name="invalid_backup_file">O arquivo da copia de seguridade non é válido</string>
+    <string name="invalid_backup_file">O arquivo da copia de seguridade non é válido:</string>
     <string name="invalid_backup_file_missing_manga">A copia de seguriade non contén ningún elemento da biblioteca.</string>
     <string name="pref_dns_over_https">DNS por HTTPS (DoH)</string>
     <string name="update_72hour">Cada 3 días</string>
@@ -769,4 +767,9 @@
     <string name="no_location_set">Aínda non seleccionaches ningunha localización de almacenamento</string>
     <string name="pref_webtoon_disable_zoom_out">Desactivar redución de zoom</string>
     <string name="exception_http">HTTP %d, comproba a páxina web no WebView</string>
+    <string name="pref_storage_location_info">Utilízase para as copias de seguridade automáticas, as descargas de capítulos e a fonte local.</string>
+    <string name="app_settings">Axustes da aplicación</string>
+    <string name="source_settings">Axustes da fonte</string>
+    <string name="action_create">Crear</string>
+    <string name="invalid_backup_file_error">Erro completo:</string>
 </resources>
