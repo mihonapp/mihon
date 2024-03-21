@@ -272,6 +272,7 @@
     <string name="channel_common">Κοινό</string>
     <string name="pref_read_with_long_tap">Εμφάνιση ενεργειών με παρατεταμένο πάτημα</string>
     <string name="action_open_in_web_view">Άνοιγμα στο WebView</string>
+    <string name="pref_true_color">Χρώμα 32-bit</string>
     <string name="pref_skip_read_chapters">Προσπέραση διαβασμένων κεφαλαίων</string>
     <string name="filter_mode_overlay">Επικάλυψη</string>
     <string name="filter_mode_multiply">Πολλαπλασιασμός</string>
@@ -361,6 +362,7 @@
     <string name="action_newest">Νεότερο</string>
     <string name="downloaded_only_summary">Φιλτράρει όλες τις καταχωρήσεις στη βιβλιοθήκη σας</string>
     <string name="gray_background">Γκρι</string>
+    <string name="pref_true_color_summary">Μειώνει το banding, αλλά μπορεί να επηρεάσει την απόδοση</string>
     <string name="viewer">Λειτουργία ανάγνωσης</string>
     <string name="pref_category_for_this_series">Για αυτήν τη σειρά</string>
     <string name="battery_optimization_setting_activity_not_found">Δεν ήταν δυνατό το άνοιγμα των ρυθμίσεων της συσκευής</string>

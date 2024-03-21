@@ -93,6 +93,7 @@
     <string name="pref_fullscreen">全螢幕</string>
     <string name="pref_double_tap_anim_speed">輕觸兩下動畫速度</string>
     <string name="pref_show_page_number">顯示頁碼</string>
+    <string name="pref_true_color">32 位元色彩</string>
     <string name="pref_custom_brightness">自訂亮度</string>
     <string name="pref_custom_color_filter">色彩濾鏡</string>
     <string name="pref_keep_screen_on">保持螢幕恆亮</string>
@@ -348,6 +349,7 @@
     <string name="pref_cutout_short">使用螢幕凹口區域</string>
     <string name="email">電子郵件地址</string>
     <string name="pref_skip_filtered_chapters">略過已篩選的章節</string>
+    <string name="pref_true_color_summary">減緩色調分離，但可能拖累效能</string>
     <string name="pref_show_reading_mode_summary">開始閱讀時，快顯闡明目前的模式</string>
     <string name="pref_show_reading_mode">閱讀模式提示</string>
     <string name="label_sources">來源</string>

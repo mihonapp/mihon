@@ -270,6 +270,7 @@
     <string name="transition_pages_loading">ページをロード中…</string>
     <string name="transition_pages_error">ページのロードに失敗: %1$s</string>
     <string name="pref_read_with_long_tap">長押しでアクションを表示</string>
+    <string name="pref_true_color">32ビットカラー</string>
     <string name="pref_skip_read_chapters">読み終わった章をスキップ</string>
     <string name="pref_color_filter_mode">ｶﾗｰﾌｨﾙﾀｰﾌﾞﾚﾝﾄﾞﾓｰﾄﾞ</string>
     <string name="filter_mode_overlay">オーバーレイ</string>
@@ -339,6 +340,7 @@
     <string name="filter_mode_darken">焼き込み/比較（暗）</string>
     <string name="filter_mode_lighten">覆い焼き/比較（明）</string>
     <string name="filter_mode_multiply">乗算</string>
+    <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
     <string name="ext_updates_pending">更新あり</string>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>

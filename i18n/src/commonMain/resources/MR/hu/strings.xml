@@ -190,6 +190,7 @@
     <string name="pref_category_display">Megjelenés</string>
     <string name="parental_controls_info">Ez nem akadályozza meg a nem hivatalos vagy az esetlegesen helytelenül megjelölt bővítményeket a 18+-os tartalmak megjelenítésétől az alkalmazáson belül.</string>
     <string name="pref_show_nsfw_source">Megjelenítés a forrás- és kiterjesztéseklistában</string>
+    <string name="pref_true_color">32 bites színmélység</string>
     <string name="pref_show_reading_mode_summary">Rövid ideig mutassa a jelenlegi módot az olvasó megnyitásakor</string>
     <string name="pref_show_reading_mode">Olvasó mód mutatása</string>
     <string name="ext_nsfw_warning">Tartalmazhat felnőtt (18+) tartalmat</string>
@@ -392,6 +393,7 @@
     <string name="pref_grayscale">Szürkeárnyalatos</string>
     <string name="off">Ki</string>
     <string name="on">Be</string>
+    <string name="pref_true_color_summary">Csökkenti a sávosodást, de befolyásolhatja a teljesítményt</string>
     <string name="pref_double_tap_anim_speed">Dupla koppintás animációjának sebessége</string>
     <string name="ext_installer_pref">Telepítő</string>
     <string name="ext_install_service_notif">Bővítmény telepítése…</string>

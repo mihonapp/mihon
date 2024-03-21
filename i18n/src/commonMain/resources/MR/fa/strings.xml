@@ -144,6 +144,7 @@
     <string name="scale_type_smart_fit">هم اندازه حالت هوشمند</string>
     <string name="filter_mode_multiply">Multiply</string>
     <string name="filter_mode_overlay">Overlay</string>
+    <string name="pref_true_color_summary">نوار نوار بودن صفحه را کاهش می‌دهد، ولی ممکن است در عملکرد تاثیر بگذارد</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="ext_install">نصب</string>
     <string name="action_bookmark">نشانک قسمت</string>
@@ -203,6 +204,7 @@
     <string name="pref_custom_color_filter">استفاده از فیلتر رنگ سفارشی</string>
     <string name="pref_custom_brightness">استفاده از سیستم روشنایی سفارشی</string>
     <string name="pref_crop_borders">بریدن حاشیه‌ها</string>
+    <string name="pref_true_color">رنگ ۳۲ بیتی</string>
     <string name="pref_show_reading_mode_summary">هنگام باز شدن کتابخوان ، حالت فعلی را به طور خلاصه نشان داده شود</string>
     <string name="pref_show_reading_mode">نمایش حالت خواندن</string>
     <string name="pref_show_page_number">نمایش شماره صفحه</string>

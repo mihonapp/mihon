@@ -207,6 +207,8 @@
     <string name="pref_custom_color_filter">Prilagođeni filtar boja</string>
     <string name="pref_custom_brightness">Prilagođena svjetlina</string>
     <string name="pref_crop_borders">Odreži rubove</string>
+    <string name="pref_true_color_summary">Smanjuje oštre prijelaze između nijansi, ali može utjecati na performansu</string>
+    <string name="pref_true_color">32-bitna boja</string>
     <string name="pref_show_page_number">Prikaži broj stranice</string>
     <string name="pref_double_tap_anim_speed">Brzina animacije dvostrukog dodira</string>
     <string name="pref_page_transitions">Animiraj prijelaze stranica</string>
