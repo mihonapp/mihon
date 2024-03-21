@@ -231,8 +231,6 @@
     <string name="pref_show_page_number">Rādīt lappušu numuru</string>
     <string name="pref_show_reading_mode">Rādīt lasīšanas režīmu</string>
     <string name="pref_show_reading_mode_summary">Pēc lasītāja atvēršanas īsi parādīt pašreizējo režīmu</string>
-    <string name="pref_true_color">32-bit krāsa</string>
-    <string name="pref_true_color_summary">Samazina grupēšanu, bet var ietekmēt veiktspēju</string>
     <string name="on">Ieslēgts</string>
     <string name="off">Izslēgts</string>
     <string name="pref_custom_brightness">Pielāgots spilgtums</string>

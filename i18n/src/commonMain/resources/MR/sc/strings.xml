@@ -274,7 +274,6 @@
     <string name="download_notifier_download_paused">Iscarrigamentos in pàusa</string>
     <string name="channel_common">Comunu</string>
     <string name="action_open_in_web_view">Aberi in WebView</string>
-    <string name="pref_true_color">Colore a 32 bit</string>
     <string name="pref_skip_read_chapters">Brinca sos capìtulos marcados comente lèghidos</string>
     <string name="pref_color_filter_mode">Modalidade de fusione de su filtru colore</string>
     <string name="filter_mode_overlay">Istratu superiore</string>
@@ -365,7 +364,6 @@
     <string name="downloaded_only_summary">Filtrat totu sos elementos in sa biblioteca tua</string>
     <string name="pref_category_for_this_series">Pro custa sèrie</string>
     <string name="gray_background">Murru</string>
-    <string name="pref_true_color_summary">Mìnimat sa creatzione de bandas, ma diat pòdere influentzare sas prestatziones</string>
     <string name="viewer">Modalidade de leghidura</string>
     <string name="battery_optimization_setting_activity_not_found">Abertura de sas impostatziones de sistema fallida</string>
     <string name="tracking_info">Sincronizatzione a una diretzione ebbia pro agiornare su progressu in sos capìtulos in servìtzios de arrastamentu esternos. Imposta s\'arrastamentu pro sos elementos dae su butone de arrastamentu issoro.</string>

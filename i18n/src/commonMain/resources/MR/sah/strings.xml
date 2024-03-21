@@ -191,8 +191,6 @@
     <string name="pref_custom_color_filter">Туттааччы өҥ биилтирэ</string>
     <string name="pref_custom_brightness">Туттааччы сырдыга</string>
     <string name="pref_crop_borders">Быһыллы кыраныыссата</string>
-    <string name="pref_true_color_summary">Тиэрбэс аҕыйыыр, ол гынан баран улэҕэ дьайар</string>
-    <string name="pref_true_color">32-бит өҥ</string>
     <string name="pref_show_page_number">Сирэй нүөмэрин көрдөр</string>
     <string name="pref_double_tap_anim_speed">Иккитэ баттыырга хамсааһын түргэнэ</string>
     <string name="pref_page_transitions">Хамсааһыннах, сирэй арыйыыта</string>

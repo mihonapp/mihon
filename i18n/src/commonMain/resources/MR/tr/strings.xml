@@ -272,7 +272,6 @@
     <string name="transition_pages_error">Sayfalar yüklenemedi: %1$s</string>
     <string name="pref_read_with_long_tap">Uzun dokununca eylemleri göster</string>
     <string name="action_open_in_web_view">WebView ile Aç</string>
-    <string name="pref_true_color">32-bit renk</string>
     <string name="pref_skip_read_chapters">Okundu olarak işaretli bölümleri atla</string>
     <string name="pref_color_filter_mode">Renk filtresi karışım modu</string>
     <string name="filter_mode_overlay">Kaplama</string>
@@ -362,7 +361,6 @@
     <string name="restore_duration">%02d dk, %02d sn</string>
     <string name="downloaded_only_summary">Kitaplığınızdaki tüm girdileri süzer</string>
     <string name="gray_background">Gri</string>
-    <string name="pref_true_color_summary">Renk şeritlenmesini azaltır, ancak performansı etkileyebilir</string>
     <string name="viewer">Okuma kipi</string>
     <string name="pref_category_for_this_series">Bu dizi için</string>
     <string name="battery_optimization_setting_activity_not_found">Aygıt ayarları açılamadı</string>

@@ -207,7 +207,6 @@
     <string name="pref_show_page_number">Ipakita ang numero sa panid</string>
     <string name="pref_show_reading_mode">Ipakita ang mode sa pagbasa</string>
     <string name="pref_show_reading_mode_summary">Sa daklit ipakita ang kasamtangan nga mode kung giablihan ang magbabasa</string>
-    <string name="pref_true_color">32-bit nga kolor</string>
     <string name="pref_crop_borders">Mga utlanan sa pananom</string>
     <string name="on">Sa</string>
     <string name="pref_grayscale">Grayscale</string>
@@ -238,7 +237,6 @@
     <string name="nav_zone_prev">Prev</string>
     <string name="pref_show_navigation_mode">Ipakita ang mga tap zone nga overlay</string>
     <string name="pref_show_navigation_mode_summary">Sa daklit ipakita kung giablihan ang magbabasa</string>
-    <string name="pref_true_color_summary">Pagpakunhod sa banding, apan mahimong makaapekto sa performance</string>
     <string name="pref_read_with_tapping_inverted">Balika ang mga tap zone</string>
     <string name="ext_obsolete">Karaan na</string>
     <string name="exclude">Dili iapil: %s</string>

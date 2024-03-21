@@ -271,7 +271,6 @@
     <string name="download_notifier_download_paused">Nedladdningar pausade</string>
     <string name="channel_common">Vanlig</string>
     <string name="action_open_in_web_view">Öppna i WebView</string>
-    <string name="pref_true_color">32-bitars färg</string>
     <string name="pref_skip_read_chapters">Hoppa över lästa kapitel</string>
     <string name="pref_read_with_long_tap">Visa åtgärder vid lång tryckning</string>
     <string name="pref_color_filter_mode">Färgfilterblandningsläge</string>
@@ -364,7 +363,6 @@
     <string name="viewer">Läsläge</string>
     <string name="pref_category_for_this_series">För denna serie</string>
     <string name="gray_background">Grå</string>
-    <string name="pref_true_color_summary">Minskar bandning, men kan påverka prestandan</string>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
     <string name="pref_refresh_library_covers">Uppdatera bibliotekets omslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitlets framsteg i externa spårningstjänster. Ställ in spårning för enskilda poster från deras spårningsknapp.</string>
