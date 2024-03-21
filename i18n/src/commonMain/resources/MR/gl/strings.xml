@@ -68,8 +68,6 @@
     <string name="pref_custom_color_filter">Filtro de cor personalizado</string>
     <string name="pref_custom_brightness">Brillo presonalizado</string>
     <string name="pref_crop_borders">Recortar bordes</string>
-    <string name="pref_true_color_summary">Reduce o anelado (\"banding\"), pero pode afectar ao rendemento</string>
-    <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_show_reading_mode_summary">Amosar brevemente o modo actual cando se abre o lector</string>
     <string name="pref_show_reading_mode">Amosar modo de lectura</string>
     <string name="pref_show_page_number">Amosar número de páxina</string>

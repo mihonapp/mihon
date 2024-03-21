@@ -169,8 +169,6 @@
     <string name="pref_custom_color_filter">Pinili kong filter ng kulay</string>
     <string name="pref_custom_brightness">Pinili kong liwanag</string>
     <string name="pref_crop_borders">Gupitin ang gilid</string>
-    <string name="pref_true_color_summary">Binabawasan ang banding, ngunit maaaring makaapekto ito sa performance</string>
-    <string name="pref_true_color">Totoong kulay (32-bit)</string>
     <string name="pref_show_reading_mode_summary">Mabilis na ipakita ang kasalukuyang ginagamit kapag nakabukas ang reader</string>
     <string name="pref_show_reading_mode">Ipakita ang paraan ng pagbasa</string>
     <string name="pref_show_page_number">Ipakita ang bilang ng pahina</string>

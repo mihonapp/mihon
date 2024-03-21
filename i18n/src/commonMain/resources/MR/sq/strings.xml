@@ -259,8 +259,6 @@
     <string name="pref_double_tap_anim_speed">Prekni dy herë shpejtësia e animacionit</string>
     <string name="pref_show_page_number">Shfaq numrin e faqes</string>
     <string name="pref_show_reading_mode">Shfaq modalitetin e leximit</string>
-    <string name="pref_true_color">Ngjyra 32-bit</string>
-    <string name="pref_true_color_summary">Redukton brezin, por mund të ndikojë në performancën</string>
     <string name="pref_custom_brightness">Shkëlqimi i personalizuar</string>
     <string name="pref_grayscale">Shkallëgri</string>
     <string name="pref_inverted_colors">I përmbysur</string>

@@ -170,8 +170,6 @@
     <string name="off">Išjungta</string>
     <string name="on">Įjungta</string>
     <string name="pref_crop_borders">Apkarpyti kraštus</string>
-    <string name="pref_true_color_summary">Sumažina spalvų gradientą, bet daro įtaką našumui</string>
-    <string name="pref_true_color">32-bitų spalva</string>
     <string name="pref_show_reading_mode_summary">Trumpai parodyti dabartinį rėžimą, kai skaitiniai yra atidaryti</string>
     <string name="pref_show_reading_mode">Parodyti skaitymo rėžimą</string>
     <string name="pref_show_page_number">Parodyti puslapio numerį</string>

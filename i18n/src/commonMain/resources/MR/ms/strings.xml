@@ -247,7 +247,6 @@
 \n
 \nDengan mempercayai sambungan ini, anda menerima risiko tersebut.</string>
     <string name="pref_double_tap_anim_speed">Kelajuan animasi ketik dua kali</string>
-    <string name="pref_true_color">32-bit warna</string>
     <string name="pref_skip_read_chapters">Langkau bab yang sudah dibaca</string>
     <string name="pref_read_with_long_tap">Tunjuk tindakan bila menahan ketik</string>
     <string name="pager_viewer">Muka surat</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Kelabu</string>
     <string name="viewer">Mod membaca</string>
     <string name="pref_category_for_this_series">Untuk siri ini</string>
-    <string name="pref_true_color_summary">Kurangkan jalinan, tapi memberi kesan kepada prestasi</string>
     <string name="battery_optimization_setting_activity_not_found">Tetapan peranti tidak dapat dibuka</string>
     <string name="tracking_info">Menyelaras satu hala untuk kemas kini bab kemajuan dalam sistem penjejak luaran. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>

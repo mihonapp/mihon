@@ -272,7 +272,6 @@
     <string name="channel_common">Звичайний</string>
     <string name="pref_read_with_long_tap">Показувати дії при довгому натисканні</string>
     <string name="action_open_in_web_view">Відкрити у WebView</string>
-    <string name="pref_true_color">32-бітний колір</string>
     <string name="pref_skip_read_chapters">Пропускати розділи, відмічені як прочитані</string>
     <string name="pref_color_filter_mode">Режим накладання кольорового фільтру</string>
     <string name="filter_mode_overlay">Оверлей</string>
@@ -351,7 +350,6 @@
     <string name="website">Сторінка</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
-    <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>
     <string name="pref_library_update_refresh_metadata_summary">Перевірити наявність нової обкладинки та подробиць при оновленні бібліотеки</string>
     <string name="pref_library_update_refresh_metadata">Автоматично оновлювати метадані</string>
     <string name="action_migrate">Мігрувати</string>

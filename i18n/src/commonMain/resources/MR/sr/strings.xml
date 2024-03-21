@@ -215,7 +215,6 @@
     <string name="download_unread">Непрочитано</string>
     <string name="confirm_delete_chapters">Да ли сте сигурни да желите да обришете следећа поглавља\?</string>
     <string name="action_open_in_web_view">Отвори у WebView</string>
-    <string name="pref_true_color">32-битна боја</string>
     <string name="pref_skip_read_chapters">Прескочи поглавља означена као прочитана</string>
     <string name="filter_mode_multiply">Помножи</string>
     <string name="filter_mode_screen">Екран</string>
@@ -487,7 +486,6 @@
     <string name="error_no_match">Ништа није пронађено</string>
     <string name="pref_dual_page_split">Раздели широке странице</string>
     <string name="none">Ништа</string>
-    <string name="pref_true_color_summary">Смањује оштре прелазе међу нијансама, али утиче на перформансе</string>
     <string name="date">Датум</string>
     <string name="pref_viewer_nav">Начин навигације</string>
     <string name="unknown_author">Непознат аутор</string>

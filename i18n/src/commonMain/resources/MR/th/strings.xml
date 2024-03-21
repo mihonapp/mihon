@@ -221,7 +221,6 @@
     <string name="score">คะแนน</string>
     <string name="pref_read_with_long_tap">แสดงการกระทำเมื่อแตะค้าง</string>
     <string name="action_open_in_web_view">เปิดใน WebView</string>
-    <string name="pref_true_color">สี 32 บิต</string>
     <string name="pref_skip_read_chapters">ข้ามตอนที่ทำเครื่องหมายว่าอ่านแล้ว</string>
     <string name="pref_color_filter_mode">โหมดผสมตัวกรองสี</string>
     <string name="filter_mode_overlay">ซ้อนทับ</string>
@@ -305,7 +304,6 @@
     <string name="pref_read_with_tapping_inverted">กลับด้านโซนการแตะ</string>
     <string name="pref_skip_filtered_chapters">ข้ามตอนที่กรองไว้</string>
     <string name="pref_grayscale">โทนสีเทา</string>
-    <string name="pref_true_color_summary">ลดปัญหาแถบสี แต่อาจส่งผลต่อประสิทธิภาพ</string>
     <string name="pref_show_reading_mode_summary">แสดงโหมดปัจจุบันสั้น ๆ เมื่อตัวอ่านเปิดขั้นมา</string>
     <string name="pref_show_reading_mode">แสดงโหมดการอ่าน</string>
     <string name="pref_cutout_short">แสดงเนื้อหาในพื้นที่ตัดออก</string>

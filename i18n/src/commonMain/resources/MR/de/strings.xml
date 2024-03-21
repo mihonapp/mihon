@@ -271,7 +271,6 @@
     <string name="transition_pages_loading">Lade Seiten…</string>
     <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
     <string name="action_open_in_web_view">In WebView öffnen</string>
-    <string name="pref_true_color">32-Bit-Farben</string>
     <string name="pref_skip_read_chapters">Gelesene Kapitel überspringen</string>
     <string name="pref_read_with_long_tap">Aktionen bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Overlay</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
     <string name="pref_category_for_this_series">Für diese Serie</string>
-    <string name="pref_true_color_summary">Reduziert Streifenbildung, könnte aber die Leistung beeinflussen</string>
     <string name="battery_optimization_setting_activity_not_found">Geräteeinstellungen konnten nicht geöffnet werden</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den externen Trackingdiensten. Richte Tracking für einzelne Einträge über deren jeweiligen Trackingbutton ein.</string>
     <string name="pref_refresh_library_covers">Bibliothekscover aktualisieren</string>
