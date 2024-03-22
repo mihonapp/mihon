@@ -29,6 +29,7 @@ object SettingsReaderScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val readerPref = remember { Injekt.get<ReaderPreferences>() }
+
         return listOf(
             Preference.PreferenceItem.ListPreference(
                 pref = readerPref.defaultReadingMode(),
@@ -55,11 +56,6 @@ object SettingsReaderScreen : SearchableSettings {
                 pref = readerPref.showNavigationOverlayOnStart(),
                 title = stringResource(MR.strings.pref_show_navigation_mode),
                 subtitle = stringResource(MR.strings.pref_show_navigation_mode_summary),
-            ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = readerPref.trueColor(),
-                title = stringResource(MR.strings.pref_true_color),
-                subtitle = stringResource(MR.strings.pref_true_color_summary),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = readerPref.pageTransitions(),
@@ -341,7 +337,10 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.webtoonDoubleTapZoomEnabled(),
                     title = stringResource(MR.strings.pref_double_tap_zoom),
-                    enabled = true,
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.webtoonDisableZoomOut(),
+                    title = stringResource(MR.strings.pref_webtoon_disable_zoom_out),
                 ),
             ),
         )

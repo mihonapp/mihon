@@ -1,5 +1,5 @@
 [versions]
-agp_version = "8.2.2"
+agp_version = "8.3.1"
 lifecycle_version = "2.7.0"
 paging_version = "3.2.1"
 
@@ -28,7 +28,7 @@ paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pag
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.3"
 test-ext = "androidx.test.ext:junit-ktx:1.2.0-alpha03"
 test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-alpha03"
-test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0-beta01"
+test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
 
 [bundles]
 lifecycle = ["lifecycle-common", "lifecycle-process", "lifecycle-runtimektx"]

@@ -3,7 +3,7 @@
     <plurals name="lock_after_mins">
         <item quantity="one">După %1$s minut</item>
         <item quantity="few">După %1$s minute</item>
-        <item quantity="other">După %1$s minute</item>
+        <item quantity="other">După %1$s de minute</item>
     </plurals>
     <plurals name="notification_chapters_generic">
         <item quantity="one">%1$d capitol nou</item>
@@ -33,7 +33,7 @@
     <plurals name="num_categories">
         <item quantity="one">%d categorie</item>
         <item quantity="few">%d categorii</item>
-        <item quantity="other">%d categorii</item>
+        <item quantity="other">%d de categorii</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">Gata în %1$s cu eroarea %2$s</item>
@@ -48,7 +48,7 @@
     <plurals name="num_trackers">
         <item quantity="one">%d tracker</item>
         <item quantity="few">%d trackere</item>
-        <item quantity="other">%d trackere</item>
+        <item quantity="other">%d de trackere</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">Omiterea %d capitol, fie că sursa lipsește, fie că a fost filtrată</item>
@@ -58,12 +58,12 @@
     <plurals name="relative_time">
         <item quantity="one">Ieri</item>
         <item quantity="few">Acum %1$d zile</item>
-        <item quantity="other">Acum %1$d zile</item>
+        <item quantity="other">Acum %1$d de zile</item>
     </plurals>
     <plurals name="next_unread_chapters">
         <item quantity="one">Următorul capitol necitit</item>
         <item quantity="few">Următoarele %d capitole necitite</item>
-        <item quantity="other">Următoarele %d capitole necitite</item>
+        <item quantity="other">Următoarele %d de capitole necitite</item>
     </plurals>
     <plurals name="download_amount">
         <item quantity="one">Următorul capitol</item>
@@ -79,5 +79,10 @@
         <item quantity="one">O zi</item>
         <item quantity="few">%d zile</item>
         <item quantity="other">%d zile</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repozitoriu</item>
+        <item quantity="few">%d repozitorii</item>
+        <item quantity="other">%d de repozitorii</item>
     </plurals>
 </resources>

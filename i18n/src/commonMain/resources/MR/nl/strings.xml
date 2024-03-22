@@ -744,4 +744,13 @@
     <string name="app_settings">App-instellingen</string>
     <string name="pref_relative_format">Relatieve tijdstempels</string>
     <string name="pref_relative_format_summary">\"%1$s\" in plaats van \"%2$s\"</string>
+    <string name="selected">Geselecteerd</string>
+    <string name="not_selected">Niet geselecteerd</string>
+    <string name="action_menu_overflow_description">Meer opties</string>
+    <string name="action_bar_up_description">Navigeer omhoog</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="action_apply">Toepassen</string>
+    <string name="action_revert_to_default">Naar standaard terugkeren</string>
+    <string name="pref_onboarding_guide">Onboarding gids</string>
+    <string name="onboarding_heading">Welkom!</string>
 </resources>

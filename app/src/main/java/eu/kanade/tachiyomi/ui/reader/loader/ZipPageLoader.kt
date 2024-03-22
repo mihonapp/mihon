@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.ui.reader.loader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
-import org.apache.commons.compress.archivers.zip.ZipFile
+import mihon.core.common.extensions.toZipFile
 import tachiyomi.core.common.util.system.ImageUtil
 import java.nio.channels.SeekableByteChannel
 
@@ -12,7 +12,7 @@ import java.nio.channels.SeekableByteChannel
  */
 internal class ZipPageLoader(channel: SeekableByteChannel) : PageLoader() {
 
-    private val zip = ZipFile(channel)
+    private val zip = channel.toZipFile()
 
     override var isLocal: Boolean = true
 

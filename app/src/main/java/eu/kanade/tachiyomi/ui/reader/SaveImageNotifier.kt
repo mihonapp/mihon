@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-import coil.imageLoader
-import coil.request.CachePolicy
-import coil.request.ImageRequest
+import coil3.imageLoader
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -37,7 +37,7 @@ class SaveImageNotifier(private val context: Context) {
             .memoryCachePolicy(CachePolicy.DISABLED)
             .size(720, 1280)
             .target(
-                onSuccess = { showCompleteNotification(uri, it.getBitmapOrNull()) },
+                onSuccess = { showCompleteNotification(uri, it.asDrawable(context.resources).getBitmapOrNull()) },
                 onError = { onError(null) },
             )
             .build()

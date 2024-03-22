@@ -15,12 +15,14 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.disk.DiskCache
-import coil.util.DebugLogger
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.allowRgb565
+import coil3.request.crossfade
+import coil3.util.DebugLogger
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -58,7 +60,7 @@ import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.security.Security
 
-class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
+class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory {
 
     private val basePreferences: BasePreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
@@ -131,24 +133,19 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
         }
     }
 
-    override fun newImageLoader(): ImageLoader {
+    override fun newImageLoader(context: Context): ImageLoader {
         return ImageLoader.Builder(this).apply {
-            val callFactoryInit = { Injekt.get<NetworkHelper>().client }
-            val diskCacheInit = { CoilDiskCache.get(this@App) }
+            val callFactoryLazy = lazy { Injekt.get<NetworkHelper>().client }
+            val diskCacheLazy = lazy { CoilDiskCache.get(this@App) }
             components {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
-                }
+                add(OkHttpNetworkFetcherFactory(callFactoryLazy::value))
                 add(TachiyomiImageDecoder.Factory())
-                add(MangaCoverFetcher.MangaFactory(lazy(callFactoryInit), lazy(diskCacheInit)))
-                add(MangaCoverFetcher.MangaCoverFactory(lazy(callFactoryInit), lazy(diskCacheInit)))
+                add(MangaCoverFetcher.MangaFactory(callFactoryLazy, diskCacheLazy))
+                add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy, diskCacheLazy))
                 add(MangaKeyer())
                 add(MangaCoverKeyer())
             }
-            callFactory(callFactoryInit)
-            diskCache(diskCacheInit)
+            diskCache(diskCacheLazy::value)
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(DeviceUtil.isLowRamDevice(this@App))
             if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
@@ -156,7 +153,6 @@ class App : Application(), DefaultLifecycleObserver, ImageLoaderFactory {
             // Coil spawns a new thread for every image load by default
             fetcherDispatcher(Dispatchers.IO.limitedParallelism(8))
             decoderDispatcher(Dispatchers.IO.limitedParallelism(2))
-            transformationDispatcher(Dispatchers.IO.limitedParallelism(2))
         }.build()
     }
 
