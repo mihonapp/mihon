@@ -146,9 +146,9 @@ private fun UpdatesAppBar(
             AppBarActions(
                 persistentListOf(
                     AppBar.Action(
-                        title = "View Update Calendar",
+                        title = stringResource(MR.strings.action_view_upcoming),
                         icon = Icons.Outlined.CalendarMonth,
-                        onClick = onCalendarClicked
+                        onClick = onCalendarClicked,
                     ),
                     AppBar.Action(
                         title = stringResource(MR.strings.action_update_library),

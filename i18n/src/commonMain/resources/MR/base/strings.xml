@@ -785,6 +785,7 @@
     <string name="updates_last_update_info">Library last updated: %s</string>
     <string name="updates_last_update_info_just_now">Just now</string>
     <string name="relative_time_span_never">Never</string>
+    <string name="action_view_upcoming">View Upcoming Updates</string>
 
     <!-- Upcoming -->
     <string name="upcoming_guide">Upcoming Guide</string>
