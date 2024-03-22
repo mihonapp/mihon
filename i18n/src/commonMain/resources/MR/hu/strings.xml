@@ -521,7 +521,7 @@
     <string name="invalid_backup_file_missing_manga">A biztonsági mentés nem tartalmaza a bejegyzéseket.</string>
     <string name="restoring_backup_canceled">Megszakított helyreállítás</string>
     <string name="manga_download">Letöltés</string>
-    <string name="publishing_finished">Befejezett</string>
+    <string name="publishing_finished">Publikálás befejezve</string>
     <string name="description_placeholder">Nincs leírás</string>
     <string name="chapter_downloading_progress">Letöltés (%1$d/%2$d)</string>
     <string name="add_tracking">Felvétel nyilvántartáshoz</string>
