@@ -33,7 +33,7 @@ fun ExtensionReposContent(
     repos: ImmutableSet<ExtensionRepo>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
-    onClickOpen: (ExtensionRepo) -> Unit,
+    onOpenWebsite: (ExtensionRepo) -> Unit,
     onClickDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,7 +48,7 @@ fun ExtensionReposContent(
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
                     repo = it.name,
-                    onOpenWebsite = { onClickOpen(it) },
+                    onOpenWebsite = { onOpenWebsite(it) },
                     onDelete = { onClickDelete(it.baseUrl) },
                 )
             }
