@@ -1,6 +1,5 @@
 package eu.kanade.presentation.more.settings.screen.browse
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,7 +17,6 @@ import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.collectLatest
-import mihon.domain.extensionrepo.model.ExtensionRepo
 import tachiyomi.presentation.core.screens.LoadingScreen
 
 class ExtensionReposScreen(

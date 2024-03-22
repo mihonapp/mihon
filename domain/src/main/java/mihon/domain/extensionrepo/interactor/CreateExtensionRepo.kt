@@ -2,8 +2,8 @@ package mihon.domain.extensionrepo.interactor
 
 import eu.kanade.tachiyomi.network.NetworkHelper
 import logcat.LogPriority
-import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.api.ExtensionRepoApi
+import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import okhttp3.OkHttpClient
