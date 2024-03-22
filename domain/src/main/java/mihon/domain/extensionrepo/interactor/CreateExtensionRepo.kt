@@ -47,9 +47,6 @@ class CreateExtensionRepo(
         }
     }
 
-    @Suppress("ReturnCount")
-    // Three returns is much cleaner than let + elvis chaining here.
-    // When matching does not work because we need to capture the result from getRepositoryByFingerprint
     /**
      * Error Handler for insert when there are trying to create new repositories
      *
@@ -60,6 +57,7 @@ class CreateExtensionRepo(
      *
      *  @param repo Extension Repo holder for passing to DB/Error Dialog
      */
+     @Suppress("ReturnCount")
     private suspend fun handleInsertionError(repo: ExtensionRepo): Result {
         val repoExists = extensionRepoRepository.getRepository(repo.baseUrl)
         if (repoExists != null) {

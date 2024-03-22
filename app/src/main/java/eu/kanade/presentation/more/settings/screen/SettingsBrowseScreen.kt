@@ -36,8 +36,7 @@ object SettingsBrowseScreen : SearchableSettings {
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
         val getExtensionRepoCount = remember { Injekt.get<GetExtensionRepoCount>() }
 
-        val reposFlow = remember { getExtensionRepoCount.subscribe() }
-        val reposCount by reposFlow.collectAsState(0)
+        val reposCount by getExtensionRepoCount.subscribe().collectAsState(0)
 
         return listOf(
             Preference.PreferenceGroup(
