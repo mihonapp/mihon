@@ -28,7 +28,7 @@ import tachiyomi.presentation.core.util.plus
 fun ExtensionReposScreen(
     state: RepoScreenState.Success,
     onClickCreate: () -> Unit,
-    onClickOpen: (ExtensionRepo) -> Unit,
+    onOpenWebsite: (ExtensionRepo) -> Unit,
     onClickDelete: (String) -> Unit,
     onClickRefresh: () -> Unit,
     navigateUp: () -> Unit,
@@ -70,7 +70,7 @@ fun ExtensionReposScreen(
             lazyListState = lazyListState,
             paddingValues = paddingValues + topSmallPaddingValues +
                 PaddingValues(horizontal = MaterialTheme.padding.medium),
-            onClickOpen = onClickOpen,
+            onOpenWebsite = onOpenWebsite,
             onClickDelete = onClickDelete,
         )
     }
