@@ -47,7 +47,7 @@ class ExtensionReposScreen(
         ExtensionReposScreen(
             state = successState,
             onClickCreate = { screenModel.showDialog(RepoDialog.Create) },
-            onClickOpen = { openInBrowser(context, it) },
+            onClickOpen = { context.openInBrowser(it.website) },
             onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it)) },
             onClickRefresh = { screenModel.refreshRepos() },
             navigateUp = navigator::pop,
@@ -82,16 +82,10 @@ class ExtensionReposScreen(
 
         LaunchedEffect(Unit) {
             screenModel.events.collectLatest { event ->
-                when (event) {
-                    is RepoEvent.LocalizedMessage -> {
-                        context.toast(event.stringRes)
-                    }
+                if (event is RepoEvent.LocalizedMessage) {
+                    context.toast(event.stringRes)
                 }
             }
         }
-    }
-
-    private fun openInBrowser(context: Context, extensionRepo: ExtensionRepo) {
-        context.openInBrowser(extensionRepo.website)
     }
 }
