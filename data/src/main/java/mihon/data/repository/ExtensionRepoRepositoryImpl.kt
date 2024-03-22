@@ -1,6 +1,8 @@
 package mihon.data.repository
 
+import android.database.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
+import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import tachiyomi.data.DatabaseHandler
@@ -35,7 +37,11 @@ class ExtensionRepoRepositoryImpl(
         website: String,
         fingerprint: String,
     ) {
-        handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, fingerprint) }
+        try {
+            handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, fingerprint) }
+        } catch (ex: SQLiteException) {
+            throw SaveExtensionRepoException(ex)
+        }
     }
 
     override suspend fun upsertRepository(
@@ -45,7 +51,11 @@ class ExtensionRepoRepositoryImpl(
         website: String,
         fingerprint: String,
     ) {
-        handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, fingerprint) }
+        try {
+            handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, fingerprint) }
+        } catch (ex: SQLiteException) {
+            throw SaveExtensionRepoException(ex)
+        }
     }
 
     override suspend fun replaceRepository(newRepo: ExtensionRepo) {

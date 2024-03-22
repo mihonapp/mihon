@@ -1,8 +1,8 @@
 package mihon.domain.extensionrepo.interactor
 
-import android.database.sqlite.SQLiteConstraintException
 import eu.kanade.tachiyomi.network.NetworkHelper
 import logcat.LogPriority
+import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.api.ExtensionRepoApi
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
@@ -41,7 +41,7 @@ class CreateExtensionRepo(
                 repo.fingerprint,
             )
             Result.Success
-        } catch (ex: SQLiteConstraintException) {
+        } catch (ex: SaveExtensionRepoException) {
             logcat(LogPriority.WARN, ex) { "SQL Conflict attempting to add new repository ${repo.baseUrl}" }
             // SQLDelight doesn't provide constraint info in exceptions.
             // First check if the conflict was on primary key. if so return RepoAlreadyExists

@@ -54,5 +54,4 @@ WHERE fingerprint = fingerprint;
 
 delete:
 DELETE FROM extension_repos
-WHERE
-    base_url = :base_url;
+WHERE base_url = :base_url;

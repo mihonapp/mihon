@@ -1,13 +1,13 @@
 package eu.kanade.tachiyomi
 
 import android.content.Context
-import android.database.sqlite.SQLiteException
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import logcat.LogPriority
+import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
@@ -55,7 +55,7 @@ object Migrations {
                                 source,
                                 "NOFINGERPRINT-${index + 1}",
                             )
-                        } catch (ex: SQLiteException) {
+                        } catch (ex: SaveExtensionRepoException) {
                             ex.logcat(LogPriority.ERROR) { "Error Migrating Extension Repo with baseUrl: $source" }
                         }
                     }
