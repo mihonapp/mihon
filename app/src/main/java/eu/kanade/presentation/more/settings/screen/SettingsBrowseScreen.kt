@@ -2,6 +2,7 @@ package eu.kanade.presentation.more.settings.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
@@ -37,7 +38,8 @@ object SettingsBrowseScreen : SearchableSettings {
 
         // Run this blocking. It should be a quick operation and not cause issues
         // However future enhancements may add a ViewState
-        val reposCount = remember { runBlocking { getExtensionRepoCount.await() } }
+        val reposFlow = remember { runBlocking { getExtensionRepoCount.subscribe() } }
+        val reposCount = reposFlow.collectAsState(0)
 
         return listOf(
             Preference.PreferenceGroup(
@@ -49,7 +51,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),
-                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
+                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.value, reposCount.value),
                         onClick = {
                             navigator.push(ExtensionReposScreen())
                         },

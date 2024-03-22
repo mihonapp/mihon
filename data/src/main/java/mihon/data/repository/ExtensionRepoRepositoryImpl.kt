@@ -2,6 +2,7 @@ package mihon.data.repository
 
 import android.database.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
@@ -26,8 +27,8 @@ class ExtensionRepoRepositoryImpl(
         return handler.awaitOneOrNull { extension_reposQueries.findOneByFingerprint(fingerprint, ::mapExtensionRepo) }
     }
 
-    override suspend fun getCount(): Int {
-        return handler.awaitOne { extension_reposQueries.count() }.toInt()
+    override suspend fun getCount(): Flow<Int> {
+        return handler.subscribeToOne { extension_reposQueries.count() }.map { it.toInt() }
     }
 
     override suspend fun insertRepository(

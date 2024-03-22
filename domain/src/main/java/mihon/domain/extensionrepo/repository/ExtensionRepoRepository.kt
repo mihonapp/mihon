@@ -13,7 +13,7 @@ interface ExtensionRepoRepository {
 
     suspend fun getRepositoryByFingerprint(fingerprint: String): ExtensionRepo?
 
-    suspend fun getCount(): Int
+    suspend fun getCount(): Flow<Int>
 
     suspend fun insertRepository(
         baseUrl: String,
