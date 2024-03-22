@@ -76,6 +76,10 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
         TODO("Not yet implemented: search")
     }
 
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun refresh(track: Track): Track {
         val remoteTrack = api.getTrackSearch(track.tracking_url)
         track.copyPersonalFrom(remoteTrack)

@@ -73,6 +73,10 @@ data class DummyTracker(
 
     override suspend fun search(query: String): List<TrackSearch> = valSearchResults
 
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun refresh(
         track: eu.kanade.tachiyomi.data.database.models.Track,
     ): eu.kanade.tachiyomi.data.database.models.Track = track

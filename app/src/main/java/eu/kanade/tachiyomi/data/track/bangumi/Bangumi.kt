@@ -14,7 +14,7 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
+class Bangumi(id: Long) : BaseTracker(id, NAME) {
 
     private val json: Json by injectLazy()
 
@@ -118,6 +118,10 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         }
     }
 
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        return listOf(api.getMangaSearchById(id))
+    }
+
     fun saveToken(oauth: OAuth?) {
         trackPreferences.trackToken(this).set(json.encodeToString(oauth))
     }
@@ -137,6 +141,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     }
 
     companion object {
+        const val NAME = "Bangumi"
         const val READING = 3L
         const val COMPLETED = 2L
         const val ON_HOLD = 4L

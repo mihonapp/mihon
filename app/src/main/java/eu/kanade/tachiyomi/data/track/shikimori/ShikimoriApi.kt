@@ -126,6 +126,22 @@ class ShikimoriApi(
         }
     }
 
+    suspend fun getMangaFromId(id: Long): TrackSearch {
+        return withIOContext {
+            val mangaUrl = "$apiUrl/mangas".toUri().buildUpon()
+                .appendPath(id.toString())
+                .build()
+            with(json) {
+                authClient.newCall(GET(mangaUrl.toString()))
+                    .awaitSuccess()
+                    .parseAs<JsonObject>()
+                    .let { response ->
+                        jsonToSearch(response)
+                    }
+            }
+        }
+    }
+
     suspend fun findLibManga(track: Track, userId: String): Track? {
         return withIOContext {
             val urlMangas = "$apiUrl/mangas".toUri().buildUpon()
@@ -195,7 +211,7 @@ class ShikimoriApi(
         private const val clientId = "PB9dq8DzI405s7wdtwTdirYqHiyVMh--djnP7lBUqSA"
         private const val clientSecret = "NajpZcOBKB9sJtgNcejf8OB9jBN1OYYoo-k4h2WWZus"
 
-        private const val baseUrl = "https://shikimori.one"
+        const val baseUrl = "https://shikimori.one"
         private const val apiUrl = "$baseUrl/api"
         private const val oauthUrl = "$baseUrl/oauth/token"
         private const val loginUrl = "$baseUrl/oauth/authorize"

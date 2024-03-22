@@ -138,7 +138,7 @@ class MangaScreen(
                 )
             }.takeIf { isHttpSource },
             onTrackingClicked = {
-                if (screenModel.loggedInTrackers.isEmpty()) {
+                if (screenModel.loggedInTrackers.isEmpty() && successState.manga.webUrls.isNullOrEmpty()) {
                     navigator.push(SettingsScreen(SettingsScreen.Destination.Tracking))
                 } else {
                     screenModel.showTrackDialog()
@@ -234,6 +234,7 @@ class MangaScreen(
                         mangaId = successState.manga.id,
                         mangaTitle = successState.manga.title,
                         sourceId = successState.source.id,
+                        webUrls = successState.manga.webUrls,
                     ),
                     enableSwipeDismiss = { it.lastItem is TrackInfoDialogHomeScreen },
                     onDismissRequest = onDismissRequest,

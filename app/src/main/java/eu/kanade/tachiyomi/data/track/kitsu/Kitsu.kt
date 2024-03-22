@@ -16,9 +16,10 @@ import uy.kohesive.injekt.injectLazy
 import java.text.DecimalFormat
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
+class Kitsu(id: Long) : BaseTracker(id, NAME), DeletableTracker {
 
     companion object {
+        const val NAME = "Kitsu"
         const val READING = 1L
         const val COMPLETED = 2L
         const val ON_HOLD = 3L
@@ -117,6 +118,10 @@ class Kitsu(id: Long) : BaseTracker(id, "Kitsu"), DeletableTracker {
 
     override suspend fun search(query: String): List<TrackSearch> {
         return api.search(query)
+    }
+
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun refresh(track: Track): Track {
