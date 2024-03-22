@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ElevatedCard
@@ -22,15 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.ImmutableSet
+import mihon.domain.extensionrepo.model.ExtensionRepo
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ExtensionReposContent(
-    repos: ImmutableSet<String>,
+    repos: ImmutableSet<ExtensionRepo>,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
+    onOpenWebsite: (ExtensionRepo) -> Unit,
     onClickDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -44,8 +47,9 @@ fun ExtensionReposContent(
             item {
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
-                    repo = it,
-                    onDelete = { onClickDelete(it) },
+                    repo = it.name,
+                    onOpenWebsite = { onOpenWebsite(it) },
+                    onDelete = { onClickDelete(it.baseUrl) },
                 )
             }
         }
@@ -55,6 +59,7 @@ fun ExtensionReposContent(
 @Composable
 private fun ExtensionRepoListItem(
     repo: String,
+    onOpenWebsite: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -74,13 +79,24 @@ private fun ExtensionRepoListItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
-            Text(text = repo, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
+            Text(
+                text = repo,
+                modifier = Modifier.padding(start = MaterialTheme.padding.medium),
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
+            IconButton(onClick = onOpenWebsite) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                    contentDescription = stringResource(MR.strings.action_open_in_browser),
+                )
+            }
+
             IconButton(
                 onClick = {
                     val url = "$repo/index.min.json"
