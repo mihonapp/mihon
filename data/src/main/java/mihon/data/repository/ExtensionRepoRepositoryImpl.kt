@@ -23,8 +23,10 @@ class ExtensionRepoRepositoryImpl(
         return handler.awaitOneOrNull { extension_reposQueries.findOne(baseUrl, ::mapExtensionRepo) }
     }
 
-    override suspend fun getRepositoryByFingerprint(fingerprint: String): ExtensionRepo? {
-        return handler.awaitOneOrNull { extension_reposQueries.findOneByFingerprint(fingerprint, ::mapExtensionRepo) }
+    override suspend fun getRepositoryBySigningKeyFingerprint(fingerprint: String): ExtensionRepo? {
+        return handler.awaitOneOrNull {
+            extension_reposQueries.findOneBySigningKeyFingerprint(fingerprint, ::mapExtensionRepo)
+        }
     }
 
     override fun getCount(): Flow<Int> {
@@ -36,10 +38,10 @@ class ExtensionRepoRepositoryImpl(
         name: String,
         shortName: String?,
         website: String,
-        fingerprint: String,
+        signingKeyFingerprint: String,
     ) {
         try {
-            handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, fingerprint) }
+            handler.await { extension_reposQueries.insert(baseUrl, name, shortName, website, signingKeyFingerprint) }
         } catch (ex: SQLiteException) {
             throw SaveExtensionRepoException(ex)
         }
@@ -50,10 +52,10 @@ class ExtensionRepoRepositoryImpl(
         name: String,
         shortName: String?,
         website: String,
-        fingerprint: String,
+        signingKeyFingerprint: String,
     ) {
         try {
-            handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, fingerprint) }
+            handler.await { extension_reposQueries.upsert(baseUrl, name, shortName, website, signingKeyFingerprint) }
         } catch (ex: SQLiteException) {
             throw SaveExtensionRepoException(ex)
         }
@@ -66,7 +68,7 @@ class ExtensionRepoRepositoryImpl(
                 newRepo.name,
                 newRepo.shortName,
                 newRepo.website,
-                newRepo.fingerprint,
+                newRepo.signingKeyFingerprint,
             )
         }
     }
@@ -80,12 +82,12 @@ class ExtensionRepoRepositoryImpl(
         name: String,
         shortName: String?,
         website: String,
-        fingerprint: String,
+        signingKeyFingerprint: String,
     ): ExtensionRepo = ExtensionRepo(
         baseUrl = baseUrl,
         name = name,
         shortName = shortName,
         website = website,
-        fingerprint = fingerprint,
+        signingKeyFingerprint = signingKeyFingerprint,
     )
 }

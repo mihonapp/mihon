@@ -27,16 +27,14 @@ class ExtensionRepoApi(
             val url = "$repo/repo.json".toUri()
 
             try {
-                with(json) {
+                val response = with(json) {
                     client.newCall(GET(url.toString()))
                         .awaitSuccess()
                         .parseAs<JsonObject>()
-                        .let {
-                            it["meta"]
-                                ?.jsonObject
-                                ?.let { it1 -> jsonToExtensionRepo(baseUrl = repo, it1) }
-                        }
                 }
+                response["meta"]
+                    ?.jsonObject
+                    ?.let { jsonToExtensionRepo(baseUrl = repo, it) }
             } catch (_: HttpException) {
                 null
             }
@@ -50,7 +48,7 @@ class ExtensionRepoApi(
                 name = obj["name"]!!.jsonPrimitive.content,
                 shortName = obj["shortName"]?.jsonPrimitive?.content,
                 website = obj["website"]!!.jsonPrimitive.content,
-                fingerprint = obj["signingKeyFingerprint"]!!.jsonPrimitive.content,
+                signingKeyFingerprint = obj["signingKeyFingerprint"]!!.jsonPrimitive.content,
             )
         } catch (_: NullPointerException) {
             null

@@ -9,9 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,7 +48,7 @@ fun ExtensionReposContent(
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
                     repo = it.name,
-                    onClick = { onClickOpen(it) },
+                    onOpenWebsite = { onClickOpen(it) },
                     onDelete = { onClickDelete(it.baseUrl) },
                 )
             }
@@ -59,7 +59,7 @@ fun ExtensionReposContent(
 @Composable
 private fun ExtensionRepoListItem(
     repo: String,
-    onClick: () -> Unit,
+    onOpenWebsite: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,9 +90,9 @@ private fun ExtensionRepoListItem(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            IconButton(onClick = onClick) {
+            IconButton(onClick = onOpenWebsite) {
                 Icon(
-                    imageVector = Icons.Outlined.OpenInBrowser,
+                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                     contentDescription = stringResource(MR.strings.action_open_in_browser),
                 )
             }

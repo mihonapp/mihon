@@ -11,7 +11,7 @@ interface ExtensionRepoRepository {
 
     suspend fun getRepository(baseUrl: String): ExtensionRepo?
 
-    suspend fun getRepositoryByFingerprint(fingerprint: String): ExtensionRepo?
+    suspend fun getRepositoryBySigningKeyFingerprint(fingerprint: String): ExtensionRepo?
 
     fun getCount(): Flow<Int>
 
@@ -20,7 +20,7 @@ interface ExtensionRepoRepository {
         name: String,
         shortName: String?,
         website: String,
-        fingerprint: String,
+        signingKeyFingerprint: String,
     )
 
     suspend fun upsertRepository(
@@ -28,7 +28,7 @@ interface ExtensionRepoRepository {
         name: String,
         shortName: String?,
         website: String,
-        fingerprint: String,
+        signingKeyFingerprint: String,
     )
 
     suspend fun upsertRepository(repo: ExtensionRepo) {
@@ -37,7 +37,7 @@ interface ExtensionRepoRepository {
             name = repo.name,
             shortName = repo.shortName,
             website = repo.website,
-            fingerprint = repo.fingerprint,
+            signingKeyFingerprint = repo.signingKeyFingerprint,
         )
     }
 

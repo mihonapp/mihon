@@ -9,6 +9,8 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
@@ -38,7 +40,10 @@ internal class ExtensionApi {
 
     suspend fun findExtensions(): List<Extension.Available> {
         return withIOContext {
-            getExtensionRepo.getAll().flatMap { getExtensions(it) }
+            getExtensionRepo.getAll()
+                .map { async { getExtensions(it) } }
+                .awaitAll()
+                .flatten()
         }
     }
 
@@ -60,9 +65,6 @@ internal class ExtensionApi {
         }
     }
 
-    private suspend fun updateExtensionSources() =
-        getExtensionRepo.getAll().forEach { updateExtensionRepo.await(it) }
-
     suspend fun checkForUpdates(
         context: Context,
         fromAvailableExtensionList: Boolean = false,
@@ -75,7 +77,7 @@ internal class ExtensionApi {
         }
 
         // Update extension repo details
-        updateExtensionSources()
+        updateExtensionRepo.awaitAll()
 
         val extensions = if (fromAvailableExtensionList) {
             extensionManager.availableExtensionsFlow.value

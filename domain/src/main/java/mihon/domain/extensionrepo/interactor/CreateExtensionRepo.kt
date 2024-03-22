@@ -38,11 +38,11 @@ class CreateExtensionRepo(
                 repo.name,
                 repo.shortName,
                 repo.website,
-                repo.fingerprint,
+                repo.signingKeyFingerprint,
             )
             Result.Success
-        } catch (ex: SaveExtensionRepoException) {
-            logcat(LogPriority.WARN, ex) { "SQL Conflict attempting to add new repository ${repo.baseUrl}" }
+        } catch (e: SaveExtensionRepoException) {
+            logcat(LogPriority.WARN, e) { "SQL Conflict attempting to add new repository ${repo.baseUrl}" }
             return handleInsertionError(repo)
         }
     }
@@ -63,7 +63,8 @@ class CreateExtensionRepo(
         if (repoExists != null) {
             return Result.RepoAlreadyExists
         }
-        val matchingFingerprintRepo = extensionRepoRepository.getRepositoryByFingerprint(repo.fingerprint)
+        val matchingFingerprintRepo =
+            extensionRepoRepository.getRepositoryBySigningKeyFingerprint(repo.signingKeyFingerprint)
         if (matchingFingerprintRepo != null) {
             return Result.DuplicateFingerprint(matchingFingerprintRepo, repo)
         }

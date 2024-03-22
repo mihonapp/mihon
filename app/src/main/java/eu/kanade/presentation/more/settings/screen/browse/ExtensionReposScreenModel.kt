@@ -48,11 +48,11 @@ class ExtensionReposScreenModel(
     /**
      * Creates and adds a new repo to the database.
      *
-     * @param name The name of the repo to create.
+     * @param baseUrl The baseUrl of the repo to create.
      */
-    fun createRepo(name: String) {
+    fun createRepo(baseUrl: String) {
         screenModelScope.launchIO {
-            when (val result = createExtensionRepo.await(name)) {
+            when (val result = createExtensionRepo.await(baseUrl)) {
                 CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
                 CreateExtensionRepo.Result.RepoAlreadyExists -> _events.send(RepoEvent.RepoAlreadyExists)
                 is CreateExtensionRepo.Result.DuplicateFingerprint -> {
@@ -64,7 +64,7 @@ class ExtensionReposScreenModel(
     }
 
     /**
-     * Inserts a repo to the database, replace a matching repo with the same fingerprint if found.
+     * Inserts a repo to the database, replace a matching repo with the same signing key fingerprint if found.
      *
      * @param newRepo The repo to insert
      */
@@ -82,7 +82,7 @@ class ExtensionReposScreenModel(
 
         if (status is RepoScreenState.Success) {
             screenModelScope.launchIO {
-                status.repos.forEach { updateExtensionRepo.await(it) }
+                updateExtensionRepo.awaitAll()
             }
         }
     }

@@ -57,7 +57,7 @@ class ExtensionReposScreen(
                 ExtensionRepoCreateDialog(
                     onDismissRequest = screenModel::dismissDialog,
                     onCreate = { screenModel.createRepo(it) },
-                    repos = successState.repos.map { it.baseUrl }.toImmutableSet(),
+                    repoUrls = successState.repos.map { it.baseUrl }.toImmutableSet(),
                 )
             }
             is RepoDialog.Delete -> {

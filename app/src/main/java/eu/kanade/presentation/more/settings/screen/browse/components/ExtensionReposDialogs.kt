@@ -25,12 +25,12 @@ import kotlin.time.Duration.Companion.seconds
 fun ExtensionRepoCreateDialog(
     onDismissRequest: () -> Unit,
     onCreate: (String) -> Unit,
-    repos: ImmutableSet<String>,
+    repoUrls: ImmutableSet<String>,
 ) {
     var name by remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
-    val nameAlreadyExists = remember(name) { repos.contains(name) }
+    val nameAlreadyExists = remember(name) { repoUrls.contains(name) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
