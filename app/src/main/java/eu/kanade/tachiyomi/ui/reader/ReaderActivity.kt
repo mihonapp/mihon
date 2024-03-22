@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.assist.AssistContent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
