@@ -13,11 +13,9 @@ class UpdateExtensionRepo(
     private val extensionRepoApi = ExtensionRepoApi(networkService.client)
 
     suspend fun await(repo: ExtensionRepo) {
-        val newRepo = extensionRepoApi.fetchRepoDetails(repo.baseUrl)
-        newRepo?.let {
-            if (repo.fingerprint.startsWith("NOFINGERPRINT") || repo.fingerprint == newRepo.fingerprint) {
-                extensionRepoRepository.upsertRepository(newRepo)
-            }
+        val newRepo = extensionRepoApi.fetchRepoDetails(repo.baseUrl) ?: return
+        if (repo.fingerprint.startsWith("NOFINGERPRINT") || repo.fingerprint == newRepo.fingerprint) {
+            extensionRepoRepository.upsertRepository(newRepo)
         }
     }
 }

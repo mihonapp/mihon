@@ -34,7 +34,6 @@ class ExtensionReposScreenModel(
 
     init {
         screenModelScope.launchIO {
-
             getExtensionRepo.subscribeAll()
                 .collectLatest { repos ->
                     mutableState.update {

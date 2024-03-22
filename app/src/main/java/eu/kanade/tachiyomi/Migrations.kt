@@ -55,8 +55,8 @@ object Migrations {
                                 source,
                                 "NOFINGERPRINT-${index + 1}",
                             )
-                        } catch (ex: SaveExtensionRepoException) {
-                            ex.logcat(LogPriority.ERROR) { "Error Migrating Extension Repo with baseUrl: $source" }
+                        } catch (e: SaveExtensionRepoException) {
+                            logcat(LogPriority.ERROR, e) { "Error Migrating Extension Repo with baseUrl: $source" }
                         }
                     }
                     sourcePreferences.extensionRepos().delete()

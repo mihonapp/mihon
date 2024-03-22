@@ -32,7 +32,7 @@ class CreateExtensionRepo(
     }
 
     private suspend fun insert(repo: ExtensionRepo): Result {
-        val result = try {
+        return try {
             extensionRepoRepository.insertRepository(
                 repo.baseUrl,
                 repo.name,
@@ -46,13 +46,16 @@ class CreateExtensionRepo(
             // SQLDelight doesn't provide constraint info in exceptions.
             // First check if the conflict was on primary key. if so return RepoAlreadyExists
             // Then check if the conflict was on fingerprint. if so Return DuplicateFingerprint
-            extensionRepoRepository.getRepository(baseUrl = repo.baseUrl)
-                ?.let { Result.RepoAlreadyExists }
-                ?: extensionRepoRepository.getRepositoryByFingerprint(fingerprint = repo.fingerprint)
-                    ?.let { Result.DuplicateFingerprint(it, repo) }
-                ?: Result.Error
+            when {
+                extensionRepoRepository.getRepository(baseUrl = repo.baseUrl) != null -> {
+                    Result.RepoAlreadyExists
+                }
+                extensionRepoRepository.getRepositoryByFingerprint(fingerprint = repo.fingerprint) != null -> {
+                    Result.DuplicateFingerprint(it, repo) 
+                }
+                else -> Result.Error
+            }
         }
-        return result
     }
 
     sealed interface Result {
