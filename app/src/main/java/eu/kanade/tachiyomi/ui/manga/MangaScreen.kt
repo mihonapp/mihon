@@ -194,7 +194,6 @@ class MangaScreen(
                     onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
                     onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
                     onMigrate = {
-                        logcat(priority = LogPriority.ERROR) { "MADDIE3: The fox jumps over smaller foxes" }
                         screenModel.showMigrateDialog(dialog.duplicate)
                     },
                 )
