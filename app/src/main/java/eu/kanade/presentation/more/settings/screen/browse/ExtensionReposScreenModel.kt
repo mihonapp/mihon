@@ -55,8 +55,9 @@ class ExtensionReposScreenModel(
             when (val result = createExtensionRepo.await(name)) {
                 CreateExtensionRepo.Result.InvalidUrl -> _events.send(RepoEvent.InvalidUrl)
                 CreateExtensionRepo.Result.RepoAlreadyExists -> _events.send(RepoEvent.RepoAlreadyExists)
-                is CreateExtensionRepo.Result.DuplicateFingerprint ->
+                is CreateExtensionRepo.Result.DuplicateFingerprint -> {
                     showDialog(RepoDialog.Conflict(result.oldRepo, result.newRepo))
+                }
                 else -> {}
             }
         }
