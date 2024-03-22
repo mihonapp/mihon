@@ -53,7 +53,7 @@
     <string name="version">Verzió</string>
     <string name="pref_enable_acra">Összeomlás-jelentések küldése</string>
     <string name="completed">Befejezett</string>
-    <string name="dropped">Dobott</string>
+    <string name="dropped">Eldobva</string>
     <string name="plan_to_read">Tervezett</string>
     <string name="score">Értékelés</string>
     <string name="title">Cím</string>
@@ -133,7 +133,7 @@
     <string name="theme_dark">Sötét</string>
     <string name="theme_light">Világos</string>
     <string name="pref_category_library">Könyvtár</string>
-    <string name="action_webview_refresh">Frissít</string>
+    <string name="action_webview_refresh">Frissítés</string>
     <string name="action_webview_forward">Előre</string>
     <string name="action_webview_back">Vissza</string>
     <string name="action_oldest">Legrégebbi</string>
@@ -180,7 +180,7 @@
     <string name="action_move_to_bottom">Ugrás legalulra</string>
     <string name="action_move_to_top">Ugrás legfelülre</string>
     <string name="action_search_settings">Keresési beállítások</string>
-    <string name="action_sort_date_added">Dátum hozzáadva</string>
+    <string name="action_sort_date_added">Hozzáadás dátuma</string>
     <string name="untrusted_extension">Nem megbízható bővítmény</string>
     <string name="ext_obsolete">Elavult</string>
     <string name="ext_updates_pending">Függőben lévő frissítések</string>
@@ -277,8 +277,8 @@
     <string name="exclude">Tiltott: %s</string>
     <string name="include">Kedvelt: %s</string>
     <string name="none">Semmi</string>
-    <string name="pref_download_new_categories_details">Bejegyzések a tiltott kategóriákban nem lesznek letöltve, még akkor se, ha a kedvelt kategóriában is vannak.</string>
-    <string name="pref_library_update_categories_details">Mangák a tiltott kategóriákban nem lesznek frissítve, még akkor se, ha a kedvelt kategóriákban is vannak.</string>
+    <string name="pref_download_new_categories_details">Elemek a tiltott kategóriákban nem lesznek letöltve, még akkor se, ha a kedvelt kategóriában is vannak.</string>
+    <string name="pref_library_update_categories_details">Elemek a tiltott kategóriákban nem lesznek frissítve, még akkor se, ha a kedvelt kategóriákban is vannak.</string>
     <string name="secure_screen">Biztonságos képernyő</string>
     <string name="lock_when_idle">Zárás tétlen állapotban</string>
     <string name="lock_with_biometrics">Biometrikus zár</string>
@@ -406,7 +406,7 @@
     <string name="tracking_info">Egyirányú szinkronizálás, hogy a fejezetben való előrehaladás frissítve legyen a követési szolgáltatásokban. Állíts be követést egyéni elemekre, a követés gomb lenyomásával.</string>
     <string name="update_72hour">3 naponta</string>
     <string name="connected_to_wifi">Csak Wi-Fi-n keresztül</string>
-    <string name="backup_info">Ajánlott az automatikus biztonsági mentése. Ezen kívül máshol is legyenek másolatok.</string>
+    <string name="backup_info">A biztonsági mentésekről más helyeken is érdemes másolatokat tartani. A biztonsági mentések érzékeny adatokat tartalmazhatnak, beleértve a tárolt jelszavakat is; legyen óvatos a megosztáskor.</string>
     <string name="empty_backup_error">Nincs könyvtári elem, amit menteni lehetne</string>
     <string name="local_source">Helyi forrás</string>
     <string name="latest">Legújabb</string>
@@ -711,7 +711,7 @@
     <string name="library_sync_complete">Könyvtár szinkronizálása elkészült</string>
     <string name="last_auto_backup_info">Utolsó automatikus biztonsági mentés: %s</string>
     <string name="selected">Kiválasztott</string>
-    <string name="no_scanlators_found">Nincs szkennelő-fordító találat</string>
+    <string name="no_scanlators_found">Nincsenek szkennelő-fordítók</string>
     <string name="not_selected">Nem kiválasztott</string>
     <string name="action_move_to_bottom_all_for_series">Sorozat alulra küldése</string>
     <string name="scanlator">Szkennelő-fordító</string>
@@ -788,7 +788,7 @@
     <string name="theme_nord">Nord</string>
     <string name="private_settings">Érzékeny beállítások megadása (Pl. szolgáltatások bejelentkezési tokenei)</string>
     <string name="pref_invalidate_download_cache">Letöltési index érvénytelenítése</string>
-    <string name="manga_interval_expected_update">Új fejezetek megjelenése %1$s múlva várható, ellenőrzési időköz: %2$s.</string>
+    <string name="manga_interval_expected_update">Új fejezetek megjelenése %1$s múlva várható, frissítési időköz: %2$s.</string>
     <string name="track_delete_title">Leállítja a(z) %s nyilvántartását?</string>
     <string name="label_tracked_titles">Nyilvántartott elemek</string>
     <string name="pref_webtoon_disable_zoom_out">Kicsinyítés letiltása</string>
@@ -797,4 +797,7 @@
     <string name="manga_display_interval_title">Mind becslése</string>
     <string name="manga_interval_expected_update_soon">Hamarosan</string>
     <string name="manga_interval_custom_amount">Egyedi frissítési időköz:</string>
+    <string name="action_add_anyway">Hozzáadás mindenképp</string>
+    <string name="action_migrate_duplicate">Meglévő elem áttelepítése</string>
+    <string name="pref_display_profile">Egyedi megjelenítési profil</string>
 </resources>
