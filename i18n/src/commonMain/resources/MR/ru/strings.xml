@@ -797,4 +797,7 @@
     <string name="ext_revoke_trust">Убрать доверие к ненадёжным расширениям</string>
     <string name="action_open_repo">Открыть репозиторий источника</string>
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
+    <string name="action_add_anyway">Добавить в любом случае</string>
+    <string name="pref_display_profile">Пользовательский профиль отображения</string>
+    <string name="action_migrate_duplicate">Перенести существующую серию</string>
 </resources>
