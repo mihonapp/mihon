@@ -27,7 +27,7 @@ class ExtensionRepoRepositoryImpl(
         return handler.awaitOneOrNull { extension_reposQueries.findOneByFingerprint(fingerprint, ::mapExtensionRepo) }
     }
 
-    override suspend fun getCount(): Flow<Int> {
+    override fun getCount(): Flow<Int> {
         return handler.subscribeToOne { extension_reposQueries.count() }.map { it.toInt() }
     }
 

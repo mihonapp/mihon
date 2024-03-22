@@ -3,6 +3,7 @@ package eu.kanade.presentation.more.settings.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
@@ -13,7 +14,6 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.runBlocking
 import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
@@ -36,10 +36,8 @@ object SettingsBrowseScreen : SearchableSettings {
         val sourcePreferences = remember { Injekt.get<SourcePreferences>() }
         val getExtensionRepoCount = remember { Injekt.get<GetExtensionRepoCount>() }
 
-        // Run this blocking. It should be a quick operation and not cause issues
-        // However future enhancements may add a ViewState
-        val reposFlow = remember { runBlocking { getExtensionRepoCount.subscribe() } }
-        val reposCount = reposFlow.collectAsState(0)
+        val reposFlow = remember { getExtensionRepoCount.subscribe() }
+        val reposCount by reposFlow.collectAsState(0)
 
         return listOf(
             Preference.PreferenceGroup(
@@ -51,7 +49,7 @@ object SettingsBrowseScreen : SearchableSettings {
                     ),
                     Preference.PreferenceItem.TextPreference(
                         title = stringResource(MR.strings.label_extension_repos),
-                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount.value, reposCount.value),
+                        subtitle = pluralStringResource(MR.plurals.num_repos, reposCount, reposCount),
                         onClick = {
                             navigator.push(ExtensionReposScreen())
                         },

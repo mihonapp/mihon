@@ -5,5 +5,5 @@ import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 class GetExtensionRepoCount(
     private val extensionRepoRepository: ExtensionRepoRepository,
 ) {
-    suspend fun subscribe() = extensionRepoRepository.getCount()
+    fun subscribe() = extensionRepoRepository.getCount()
 }
