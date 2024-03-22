@@ -1,4 +1,4 @@
-package mihon.domain.extensionrepo.api
+package mihon.domain.extensionrepo.service
 
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.network.GET
@@ -14,7 +14,7 @@ import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 
-class ExtensionRepoApi(
+class ExtensionRepoService(
     private val client: OkHttpClient,
 ) {
 

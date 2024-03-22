@@ -2,10 +2,10 @@ package mihon.domain.extensionrepo.interactor
 
 import eu.kanade.tachiyomi.network.NetworkHelper
 import logcat.LogPriority
-import mihon.domain.extensionrepo.api.ExtensionRepoApi
 import mihon.domain.extensionrepo.exception.SaveExtensionRepoException
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
+import mihon.domain.extensionrepo.service.ExtensionRepoService
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.system.logcat
 import uy.kohesive.injekt.injectLazy
@@ -20,7 +20,7 @@ class CreateExtensionRepo(
     private val client: OkHttpClient
         get() = networkService.client
 
-    private val extensionRepoApi = ExtensionRepoApi(client)
+    private val extensionRepoService = ExtensionRepoService(client)
 
     suspend fun await(repoUrl: String): Result {
         if (!repoUrl.matches(repoRegex)) {
@@ -28,7 +28,7 @@ class CreateExtensionRepo(
         }
 
         val baseUrl = repoUrl.removeSuffix("/index.min.json")
-        return extensionRepoApi.fetchRepoDetails(baseUrl)?.let { insert(it) } ?: Result.InvalidUrl
+        return extensionRepoService.fetchRepoDetails(baseUrl)?.let { insert(it) } ?: Result.InvalidUrl
     }
 
     private suspend fun insert(repo: ExtensionRepo): Result {
