@@ -41,6 +41,8 @@ import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.isLocalOrStub
 import eu.kanade.tachiyomi.source.online.HttpSource
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreen
 import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
@@ -191,11 +193,28 @@ class MangaScreen(
                     },
                 )
             }
-            is MangaScreenModel.Dialog.DuplicateManga -> DuplicateMangaDialog(
-                onDismissRequest = onDismissRequest,
-                onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
-                onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-            )
+
+            is MangaScreenModel.Dialog.DuplicateManga -> {
+                DuplicateMangaDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = { screenModel.toggleFavorite(onRemoved = {}, checkDuplicate = false) },
+                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
+                    onMigrate = {
+                        screenModel.showMigrateDialog(dialog.duplicate)
+                    },
+                )
+            }
+
+            is MangaScreenModel.Dialog.Migrate -> {
+                MigrateDialog(
+                    oldManga = dialog.oldManga,
+                    newManga = dialog.newManga,
+                    screenModel = MigrateDialogScreenModel(),
+                    onDismissRequest = onDismissRequest,
+                    onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
+                    onPopScreen = { navigator.replace(MangaScreen(dialog.newManga.id)) },
+                )
+            }
             MangaScreenModel.Dialog.SettingsSheet -> ChapterSettingsDialog(
                 onDismissRequest = onDismissRequest,
                 manga = successState.manga,
