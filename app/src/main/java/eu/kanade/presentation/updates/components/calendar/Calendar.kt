@@ -121,7 +121,7 @@ private fun CalendarGrid(
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
     val dayEntries = (getFirstDayOfMonth(firstDayOfMonth)..daysInMonth).toImmutableList()
-    val height = (((((dayEntries.size - 1) / DaysOfWeek) + ceil(1.0f - widthModifier)) * HeightMultiplier)).dp
+    val height = (((dayEntries.size - 1) / DaysOfWeek + ceil(1.0f - widthModifier)) * HeightMultiplier).dp
 
     val modeModifier = if (isTabletUi) {
         modifier

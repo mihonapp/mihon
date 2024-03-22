@@ -60,14 +60,12 @@ fun LocalDate.toRelativeString(
             difference.toInt().absoluteValue,
             difference.toInt().absoluteValue,
         )
-
         difference < 1 -> context.stringResource(MR.strings.relative_time_today)
         difference < 7 -> context.pluralStringResource(
             MR.plurals.relative_time,
             difference.toInt(),
             difference.toInt(),
         )
-
         else -> dateFormat.format(this)
     }
 }

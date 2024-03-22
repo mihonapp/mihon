@@ -173,7 +173,6 @@ internal fun UpdateUpcomingSmallContent(
                         onClick = onClickUpcoming,
                     )
                 }
-
                 is UpcomingUIModel.Header -> {
                     ListGroupHeader(
                         modifier = Modifier.animateItemPlacement(),
@@ -285,7 +284,6 @@ internal fun UpdateUpcomingLargeContent(
                         onClick = onClickUpcoming,
                     )
                 }
-
                 is UpcomingUIModel.Header -> {
                     ListGroupHeader(
                         modifier = Modifier.animateItemPlacement(),
@@ -299,6 +297,5 @@ internal fun UpdateUpcomingLargeContent(
 
 sealed interface UpcomingUIModel {
     data class Header(val date: LocalDate) : UpcomingUIModel
-
     data class Item(val item: Manga) : UpcomingUIModel
 }
