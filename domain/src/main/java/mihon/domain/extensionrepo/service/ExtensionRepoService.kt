@@ -2,19 +2,20 @@ package mihon.domain.extensionrepo.service
 
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.NetworkHelper
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import mihon.domain.extensionrepo.model.ExtensionRepo
-import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 
 class ExtensionRepoService(
-    private val client: OkHttpClient,
+    networkHelper: NetworkHelper,
     private val json: Json,
 ) {
+    val client = networkHelper.client
 
     @Suppress("TooGenericExceptionCaught")
     suspend fun fetchRepoDetails(
