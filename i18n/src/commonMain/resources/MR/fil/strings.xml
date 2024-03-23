@@ -797,4 +797,11 @@
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
+    <string name="action_replace_repo">Palitan</string>
+    <string name="action_add_anyway">Idagdag pa rin</string>
+    <string name="action_migrate_duplicate">Ilipat ang kasalukuyang entry</string>
+    <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
+    <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
+\nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
+    <string name="pref_display_profile">Ipasadya ang profile sa display</string>
 </resources>
