@@ -44,7 +44,7 @@ object Migrations {
 
             val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-            if (oldVersion < 6) {
+            if (oldVersion < 7) {
                 coroutineScope.launchIO {
                     for ((index, source) in sourcePreferences.extensionRepos().get().withIndex()) {
                         try {

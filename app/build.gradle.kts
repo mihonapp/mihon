@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 6
+        versionCode = 7
         versionName = "0.16.4"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
