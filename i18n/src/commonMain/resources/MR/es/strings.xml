@@ -800,4 +800,8 @@
     <string name="pref_display_profile">Perfil de visualización personalizado</string>
     <string name="action_add_anyway">Agregar de todos modos</string>
     <string name="action_migrate_duplicate">Migrar la entrada existente</string>
+    <string name="action_replace_repo">Reemplazar</string>
+    <string name="action_replace_repo_title">La huella digital de la clave de la firma ya existe</string>
+    <string name="action_replace_repo_message">El repositorio %1$s tiene la misma huella digital de clave de la firma que %2$s.
+\nSi esto es lo esperado, %2$s será reemplazado, de lo contrario contacte con quien mantiene su repositorio.</string>
 </resources>
