@@ -37,7 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import java.time.LocalDate
 import java.time.Month
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -53,7 +55,6 @@ fun CalenderHeader(
     arrowShown: Boolean = true,
 ) {
     var isNext by remember { mutableStateOf(true) }
-    val context = LocalContext.current
 
     Row(
         modifier = modifier
@@ -62,7 +63,7 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        val titleText = remember(month, year) { getTitleText(context, month, year) }
+        val titleText = remember(month, year) { getTitleText(month, year) }
 
         AnimatedContent(
             targetState = titleText,
@@ -142,12 +143,10 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
  * @param year The current year.
  * @return The formatted title text.
  */
-private fun getTitleText(context: Context, month: Month, year: Int): String {
-    val monthDisplayName = month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        .lowercase()
-        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-    val shortYear = year.toString().takeLast(2)
-    return context.resources.getString(MR.strings.calendar_title_format.resourceId, monthDisplayName, shortYear)
+private fun getTitleText(month: Month, year: Int): String {
+
+    val formatter = DateTimeFormatter.ofPattern("MMMM yy", Locale.getDefault())
+    return formatter.format(LocalDate.of(year, month, 1))
 }
 
 @Preview
