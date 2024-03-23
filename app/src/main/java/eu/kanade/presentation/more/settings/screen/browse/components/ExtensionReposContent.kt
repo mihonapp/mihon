@@ -47,7 +47,7 @@ fun ExtensionReposContent(
             item {
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
-                    repo = it.name,
+                    repo = it.baseUrl,
                     onOpenWebsite = { onOpenWebsite(it) },
                     onDelete = { onClickDelete(it.baseUrl) },
                 )
