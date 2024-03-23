@@ -27,12 +27,10 @@ class UpdateUpcomingScreenModel(
     init {
         screenModelScope.launch {
             getUpcomingManga.subscribe().collectLatest {
-                val items = it.toUpcomingUIModels()
-                val events = it.toEvents()
                 mutableState.update { state ->
                     state.copy(
-                        items = items,
-                        events = events,
+                        items = it.toUpcomingUIModels(),
+                        events = it.toEvents(),
                     )
                 }
             }

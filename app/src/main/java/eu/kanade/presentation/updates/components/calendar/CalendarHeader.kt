@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,19 +61,16 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        val titleText = remember(month, year) { getTitleText(month, year) }
-
         AnimatedContent(
-            targetState = titleText,
+            targetState = month to year,
             transitionSpec = {
-                addAnimation(isNext = isNext).using(
-                    SizeTransform(clip = false),
-                )
+                addAnimation(isNext = isNext)
+                    .using(SizeTransform(clip = false))
             },
             label = "Change Month",
-        ) { targetText ->
+        ) { (targetMonth, targetYear) ->
             Text(
-                text = targetText,
+                text = getTitleText(targetMonth, targetYear),
                 style = MaterialTheme.typography.titleLarge,
             )
         }
@@ -119,6 +117,7 @@ fun CalenderHeader(
  * @param isNext Determines the direction of the animation.
  * @return The content transformation with the specified animation.
  */
+@ReadOnlyComposable
 private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform {
     val enterTransition = slideInVertically(
         animationSpec = tween(durationMillis = duration),
@@ -140,6 +139,8 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
  * @param year The current year.
  * @return The formatted title text.
  */
+@Composable
+@ReadOnlyComposable
 private fun getTitleText(month: Month, year: Int): String {
     val formatter = DateTimeFormatter.ofPattern("MMMM yy", Locale.getDefault())
     return formatter.format(LocalDate.of(year, month, 1))

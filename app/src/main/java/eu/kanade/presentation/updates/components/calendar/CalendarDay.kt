@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +34,7 @@ fun CalendarDay(
     modifier: Modifier = Modifier,
     events: Int = 0,
 ) {
-    val today = LocalDate.now()
+    val today = remember { LocalDate.now() }
 
     val inThePast = date.isBefore(today)
 
@@ -66,11 +67,11 @@ fun CalendarDay(
             fontWeight = FontWeight.SemiBold,
         )
         Row {
-            val size = minOf(events, MaxEvents)
-            for (i in (1..size)) {
+            val size = events.coerceAtMost(MaxEvents)
+            for (index in 0 until size) {
                 Row {
                     CalendarIndicator(
-                        index = i - 1,
+                        index = index,
                         size = 56.dp,
                         color = MaterialTheme.colorScheme.primary,
                     )

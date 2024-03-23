@@ -1,7 +1,6 @@
 package eu.kanade.presentation.updates
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -40,18 +39,15 @@ fun UpcomingItem(
             onClick = { onClick(upcoming) },
         )
 
-        Column(
+        Text(
             modifier = Modifier
                 .weight(1f)
                 .padding(start = MaterialTheme.padding.large, end = MaterialTheme.padding.small),
-        ) {
-            Text(
-                text = upcoming.title,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
+            text = upcoming.title,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyMedium,
+        )
     }
 }

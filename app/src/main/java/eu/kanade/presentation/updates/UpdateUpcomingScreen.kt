@@ -14,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -33,6 +32,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.launch
+import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -51,7 +51,6 @@ fun UpdateUpcomingScreen(
     if (isTabletUi()) {
         UpdateUpcomingScreenLargeImpl(
             state = state,
-            isTabletUi = true,
             modifier = modifier,
             onClickUpcoming = onClickUpcoming,
         )
@@ -72,11 +71,8 @@ internal fun UpdateUpcomingScreenSmallImpl(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            UpdateUpcomingToolbar()
-        },
+        topBar = { UpdateUpcomingToolbar() },
     ) { paddingValues ->
-
         UpdateUpcomingSmallContent(
             upcoming = state.items,
             events = state.events,
@@ -85,8 +81,6 @@ internal fun UpdateUpcomingScreenSmallImpl(
         )
     }
 }
-
-const val HelpUrl = "https://mihon.app/docs/faq/upcoming"
 
 @Composable
 internal fun UpdateUpcomingToolbar(
@@ -98,17 +92,14 @@ internal fun UpdateUpcomingToolbar(
     ) {
         TopAppBar(
             navigationIcon = {
-                val canPop = remember { navigator.canPop }
-                if (canPop) {
-                    IconButton(onClick = navigator::pop) {
-                        UpIcon()
-                    }
+                IconButton(onClick = navigator::pop) {
+                    UpIcon()
                 }
             },
             title = { AppBarTitle(stringResource(MR.strings.label_upcoming)) },
             actions = {
                 val uriHandler = LocalUriHandler.current
-                IconButton(onClick = { uriHandler.openUri(HelpUrl) }) {
+                IconButton(onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
                         contentDescription = stringResource(MR.strings.upcoming_guide),
@@ -187,7 +178,6 @@ internal fun UpdateUpcomingSmallContent(
 @Composable
 internal fun UpdateUpcomingScreenLargeImpl(
     state: UpdateUpcomingScreenModel.State,
-    isTabletUi: Boolean,
     modifier: Modifier = Modifier,
     onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
@@ -207,7 +197,6 @@ internal fun UpdateUpcomingScreenLargeImpl(
                 UpdateUpcomingLargeCalendar(
                     upcoming = state.items,
                     listState = listState,
-                    isTabletUi = isTabletUi,
                     events = state.events,
                     modifier = Modifier.padding(contentPadding),
                 )
@@ -227,7 +216,6 @@ internal fun UpdateUpcomingScreenLargeImpl(
 @Composable
 internal fun UpdateUpcomingLargeCalendar(
     upcoming: ImmutableList<UpcomingUIModel>,
-    isTabletUi: Boolean,
     listState: LazyListState,
     modifier: Modifier = Modifier,
     events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
@@ -243,7 +231,6 @@ internal fun UpdateUpcomingLargeCalendar(
     Calendar(
         modifier = modifier,
         events = events,
-        isTabletUi = isTabletUi,
         screenWidth = configuration.screenWidthDp.dp,
     ) { date ->
         dateToHeaderMap[date]?.let {
