@@ -264,7 +264,7 @@ class ExtensionManager(
      *
      * @param extension the extension to trust
      */
-    fun trust(extension: Extension.Untrusted) {
+    suspend fun trust(extension: Extension.Untrusted) {
         _untrustedExtensionsMapFlow.value[extension.pkgName] ?: return
 
         trustExtension.trust(extension.pkgName, extension.versionCode, extension.signatureHash)

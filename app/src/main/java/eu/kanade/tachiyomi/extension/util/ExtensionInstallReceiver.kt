@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 
@@ -20,16 +23,12 @@ import tachiyomi.core.common.util.system.logcat
  */
 internal class ExtensionInstallReceiver(private val listener: Listener) : BroadcastReceiver() {
 
-    /**
-     * Registers this broadcast receiver
-     */
+    val scope = CoroutineScope(SupervisorJob())
+
     fun register(context: Context) {
         ContextCompat.registerReceiver(context, this, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
-    /**
-     * Returns the intent filter this receiver should subscribe to.
-     */
     private val filter = IntentFilter().apply {
         addAction(Intent.ACTION_PACKAGE_ADDED)
         addAction(Intent.ACTION_PACKAGE_REPLACED)
@@ -51,17 +50,21 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
             Intent.ACTION_PACKAGE_ADDED, ACTION_EXTENSION_ADDED -> {
                 if (isReplacing(intent)) return
 
-                when (val result = getExtensionFromIntent(context, intent)) {
-                    is LoadResult.Success -> listener.onExtensionInstalled(result.extension)
-                    is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                    else -> {}
+                scope.launch {
+                    when (val result = getExtensionFromIntent(context, intent)) {
+                        is LoadResult.Success -> listener.onExtensionInstalled(result.extension)
+                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
+                        else -> {}
+                    }
                 }
             }
             Intent.ACTION_PACKAGE_REPLACED, ACTION_EXTENSION_REPLACED -> {
-                when (val result = getExtensionFromIntent(context, intent)) {
-                    is LoadResult.Success -> listener.onExtensionUpdated(result.extension)
-                    is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
-                    else -> {}
+                scope.launch {
+                    when (val result = getExtensionFromIntent(context, intent)) {
+                        is LoadResult.Success -> listener.onExtensionUpdated(result.extension)
+                        is LoadResult.Untrusted -> listener.onExtensionUntrusted(result.extension)
+                        else -> {}
+                    }
                 }
             }
             Intent.ACTION_PACKAGE_REMOVED, ACTION_EXTENSION_REMOVED -> {
@@ -90,7 +93,7 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
      * @param context The application context.
      * @param intent The intent containing the package name of the extension.
      */
-    private fun getExtensionFromIntent(context: Context, intent: Intent?): LoadResult {
+    private suspend fun getExtensionFromIntent(context: Context, intent: Intent?): LoadResult {
         val pkgName = getPackageNameFromIntent(intent)
         if (pkgName == null) {
             logcat(LogPriority.WARN) { "Package name not found" }
