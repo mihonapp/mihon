@@ -8,17 +8,15 @@ import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import mihon.domain.extensionrepo.service.ExtensionRepoService
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.injectLazy
 
 class CreateExtensionRepo(
     private val extensionRepoRepository: ExtensionRepoRepository,
+    private val networkHelper: NetworkHelper,
 ) {
     private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()
 
-    private val networkService: NetworkHelper by injectLazy()
-
     private val client: OkHttpClient
-        get() = networkService.client
+        get() = networkHelper.client
 
     private val extensionRepoService = ExtensionRepoService(client)
 

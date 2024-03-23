@@ -181,7 +181,7 @@ class DomainModule : InjektModule {
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
         addFactory { GetExtensionRepo(get()) }
         addFactory { GetExtensionRepoCount(get()) }
-        addFactory { CreateExtensionRepo(get()) }
+        addFactory { CreateExtensionRepo(get(), get()) }
         addFactory { DeleteExtensionRepo(get()) }
         addFactory { ReplaceExtensionRepo(get()) }
         addFactory { UpdateExtensionRepo(get(), get()) }
