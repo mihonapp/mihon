@@ -5,28 +5,28 @@
         <item quantity="other">%d пухмӑш</item>
     </plurals>
     <plurals name="lock_after_mins">
-        <item quantity="one">1 минут хыҫҫӑн</item>
+        <item quantity="one">%1$s минут хыҫҫӑн</item>
         <item quantity="other">%1$s минут хыҫҫӑн</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="one">%1$s,%2$s йӑнӑшпа тӑвӑннӑ</item>
-        <item quantity="other">%1$s, %2$s йӑнӑшпа тӑвӑннӑ</item>
+        <item quantity="one">%1$s хушши %2$s йӑнӑшпа тӑвӑннӑ</item>
+        <item quantity="other">%1$s хушши %2$s йӑнӑшпа тӑвӑннӑ</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Хушма валли ҫӗнетӳ пур</item>
         <item quantity="other">%d хушма валли ҫӗнетӳ пур</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">%1$s сыпӑкӗсем</item>
-        <item quantity="other">%1$s сыпӑкӗсем тата ытти %2$d</item>
+        <item quantity="one">%1$s сыпӑкӗсем тата тепӗр 1</item>
+        <item quantity="other">%1$s сыпӑкӗсем тата тепӗр %2$d</item>
     </plurals>
     <plurals name="notification_chapters_generic">
-        <item quantity="one">1 ҫӗнӗ сыпӑк</item>
+        <item quantity="one">%1$d ҫӗнӗ сыпӑк</item>
         <item quantity="other">%1$d ҫӗнӗ сыпӑк</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Ҫӗнӗ сыпӑксем 1 хайлав валли тупӑннӑ</item>
-        <item quantity="other">Ҫӗнӗ сыпӑксем %d хайлав валли тупӑннӑ</item>
+        <item quantity="one">%d хайлав валли</item>
+        <item quantity="other">%d хайлав валли</item>
     </plurals>
     <plurals name="manga_num_chapters">
         <item quantity="one">%1$s сыпӑк</item>
@@ -37,8 +37,8 @@
         <item quantity="other">%1$s йулчӗ</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">1 сӑнану</item>
-        <item quantity="other">%d сӑнану</item>
+        <item quantity="one">%d йӗрлев</item>
+        <item quantity="other">%d йӗрлев</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d сыпӑк ҫук</item>
@@ -63,5 +63,9 @@
     <plurals name="download_amount">
         <item quantity="one">Тепӗр сыпӑк</item>
         <item quantity="other">Тепӗр %d сыпӑк</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d усрав</item>
+        <item quantity="other">%d усрав</item>
     </plurals>
 </resources>

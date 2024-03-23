@@ -18,6 +18,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -311,18 +312,12 @@ class DownloadCache(
             }
 
             // Try to wait until extensions and sources have loaded
-            var sources = getSources()
-            if (sources.isEmpty()) {
-                withTimeoutOrNull(30.seconds) {
-                    while (!extensionManager.isInitialized) {
-                        delay(2.seconds)
-                    }
+            var sources = emptyList<Source>()
+            withTimeoutOrNull(30.seconds) {
+                extensionManager.isInitialized.first { it }
+                sourceManager.isInitialized.first { it }
 
-                    while (extensionManager.availableExtensionsFlow.value.isNotEmpty() && sources.isEmpty()) {
-                        delay(2.seconds)
-                        sources = getSources()
-                    }
-                }
+                sources = getSources()
             }
 
             val sourceMap = sources.associate { provider.getSourceDirName(it).lowercase() to it.id }

@@ -29,6 +29,7 @@ data class Manga(
     val initialized: Boolean,
     val lastModifiedAt: Long,
     val favoriteModifiedAt: Long?,
+    val version: Long,
 ) : Serializable {
 
     val expectedNextUpdate: Instant?
@@ -122,6 +123,7 @@ data class Manga(
             initialized = false,
             lastModifiedAt = 0L,
             favoriteModifiedAt = null,
+            version = 0L,
         )
     }
 }

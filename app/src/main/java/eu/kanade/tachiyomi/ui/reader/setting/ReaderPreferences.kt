@@ -23,9 +23,6 @@ class ReaderPreferences(
 
     fun showReadingMode() = preferenceStore.getBoolean("pref_show_reading_mode", true)
 
-    // TODO: default this to true if reader long strip ever goes stable
-    fun trueColor() = preferenceStore.getBoolean("pref_true_color_key", false)
-
     fun fullscreen() = preferenceStore.getBoolean("fullscreen", true)
 
     fun cutoutShort() = preferenceStore.getBoolean("cutout_short", true)
@@ -71,6 +68,8 @@ class ReaderPreferences(
     fun skipFiltered() = preferenceStore.getBoolean("skip_filtered", true)
 
     fun skipDupe() = preferenceStore.getBoolean("skip_dupe", false)
+
+    fun webtoonDisableZoomOut() = preferenceStore.getBoolean("webtoon_disable_zoom_out", false)
 
     // endregion
 

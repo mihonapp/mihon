@@ -54,6 +54,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -78,6 +79,7 @@ class Downloader(
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val xml: XML = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val getTracks: GetTracks = Injekt.get(),
 ) {
 
     /**
@@ -626,9 +628,22 @@ class Downloader(
         chapter: Chapter,
         source: HttpSource,
     ) {
-        val chapterUrl = source.getChapterUrl(chapter.toSChapter())
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
-        val comicInfo = getComicInfo(manga, chapter, chapterUrl, categories)
+        val urls = getTracks.await(manga.id)
+            .mapNotNull { track ->
+                track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
+            }
+            .plus(source.getChapterUrl(chapter.toSChapter()).trim())
+            .distinct()
+
+        val comicInfo = getComicInfo(
+            manga,
+            chapter,
+            urls,
+            categories,
+            source.name
+        )
+
         // Remove the old file
         dir.findFile(COMIC_INFO_FILE, true)?.delete()
         dir.createFile(COMIC_INFO_FILE)!!.openOutputStream().use {
