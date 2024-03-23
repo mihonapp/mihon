@@ -47,7 +47,7 @@ fun ExtensionReposContent(
             item {
                 ExtensionRepoListItem(
                     modifier = Modifier.animateItemPlacement(),
-                    repo = it.name,
+                    repo = it,
                     onOpenWebsite = { onOpenWebsite(it) },
                     onDelete = { onClickDelete(it.baseUrl) },
                 )
@@ -58,7 +58,7 @@ fun ExtensionReposContent(
 
 @Composable
 private fun ExtensionRepoListItem(
-    repo: String,
+    repo: ExtensionRepo,
     onOpenWebsite: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -80,7 +80,7 @@ private fun ExtensionRepoListItem(
         ) {
             Icon(imageVector = Icons.AutoMirrored.Outlined.Label, contentDescription = null)
             Text(
-                text = repo,
+                text = repo.name,
                 modifier = Modifier.padding(start = MaterialTheme.padding.medium),
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -99,7 +99,7 @@ private fun ExtensionRepoListItem(
 
             IconButton(
                 onClick = {
-                    val url = "$repo/index.min.json"
+                    val url = "${repo.baseUrl}/index.min.json"
                     context.copyToClipboard(url, url)
                 },
             ) {
