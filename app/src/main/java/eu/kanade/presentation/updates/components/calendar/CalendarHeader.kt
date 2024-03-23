@@ -1,6 +1,5 @@
 package eu.kanade.presentation.updates.components.calendar
 
-import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
@@ -32,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
@@ -40,7 +38,6 @@ import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
 import java.util.Locale
 
 private val HEADER_PADDING = 8.dp
@@ -144,7 +141,6 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
  * @return The formatted title text.
  */
 private fun getTitleText(month: Month, year: Int): String {
-
     val formatter = DateTimeFormatter.ofPattern("MMMM yy", Locale.getDefault())
     return formatter.format(LocalDate.of(year, month, 1))
 }
