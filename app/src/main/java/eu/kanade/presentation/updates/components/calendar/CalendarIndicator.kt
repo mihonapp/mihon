@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 private const val IndicatorScale = 12
+private const val IndicatorAlphaMultiplier = 0.3f
 
 @Composable
 fun CalendarIndicator(
@@ -25,7 +26,7 @@ fun CalendarIndicator(
         modifier = modifier
             .padding(horizontal = 1.dp)
             .clip(shape = CircleShape)
-            .background(color = color.copy(alpha = (index + 1) * 0.3f))
+            .background(color = color.copy(alpha = (index + 1) * IndicatorAlphaMultiplier))
             .size(size = size.div(IndicatorScale)),
     )
 }

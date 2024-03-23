@@ -27,6 +27,7 @@ import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.updates.components.calendar.Calendar
+import eu.kanade.presentation.util.isTabletUi
 import eu.kanade.tachiyomi.ui.updates.UpdateUpcomingScreenModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -45,19 +46,18 @@ import java.time.LocalDate
 fun UpdateUpcomingScreen(
     state: UpdateUpcomingScreenModel.State,
     modifier: Modifier = Modifier,
-    isTabletUi: Boolean = false,
     onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
-    if (!isTabletUi) {
-        UpdateUpcomingScreenSmallImpl(
+    if (isTabletUi()) {
+        UpdateUpcomingScreenLargeImpl(
             state = state,
+            isTabletUi = true,
             modifier = modifier,
             onClickUpcoming = onClickUpcoming,
         )
     } else {
-        UpdateUpcomingScreenLargeImpl(
+        UpdateUpcomingScreenSmallImpl(
             state = state,
-            isTabletUi = isTabletUi,
             modifier = modifier,
             onClickUpcoming = onClickUpcoming,
         )

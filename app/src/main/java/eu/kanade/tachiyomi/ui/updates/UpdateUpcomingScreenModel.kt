@@ -11,6 +11,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.interactor.GetUpcomingManga
@@ -25,14 +26,15 @@ class UpdateUpcomingScreenModel(
 
     init {
         screenModelScope.launch {
-            val manga = getUpcomingManga.await()
-            val items = manga.toUpcomingUIModels()
-            val events = manga.toEvents()
-            mutableState.update {
-                it.copy(
-                    items = items,
-                    events = events,
-                )
+            getUpcomingManga.subscribe().collectLatest {
+                val items = it.toUpcomingUIModels()
+                val events = it.toEvents()
+                mutableState.update { state ->
+                    state.copy(
+                        items = items,
+                        events = events,
+                    )
+                }
             }
         }
     }

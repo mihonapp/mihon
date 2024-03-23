@@ -1,6 +1,7 @@
 package tachiyomi.domain.manga.interactor
 
 import eu.kanade.tachiyomi.source.model.SManga
+import kotlinx.coroutines.flow.Flow
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.repository.MangaRepository
 
@@ -13,7 +14,7 @@ class GetUpcomingManga(
         SManga.PUBLISHING_FINISHED.toLong(),
     )
 
-    suspend fun await(): List<Manga> {
+    suspend fun subscribe(): Flow<List<Manga>> {
         return mangaRepository.getUpcomingManga(includedStatuses)
     }
 }

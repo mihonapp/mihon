@@ -97,19 +97,18 @@ private fun getBorder(currentDay: Boolean, color: Color): BorderStroke {
     }
 }
 
-private fun Modifier.circleLayout() =
-    layout { measurable, constraints ->
-        // Measure the composable
-        val placeable = measurable.measure(constraints)
+private fun Modifier.circleLayout() = layout { measurable, constraints ->
+    // Measure the composable
+    val placeable = measurable.measure(constraints)
 
-        // get the current max dimension to assign width=height
-        val currentHeight = placeable.height
-        val currentWidth = placeable.width
-        val newDiameter = maxOf(currentHeight, currentWidth)
+    // get the current max dimension to assign width=height
+    val currentHeight = placeable.height
+    val currentWidth = placeable.width
+    val newDiameter = maxOf(currentHeight, currentWidth)
 
-        // assign the dimension and the center position
-        layout(newDiameter, newDiameter) {
-            // Where the composable gets placed
-            placeable.placeRelative((newDiameter - currentWidth) / 2, (newDiameter - currentHeight) / 2)
-        }
+    // assign the dimension and the center position
+    layout(newDiameter, newDiameter) {
+        // Where the composable gets placed
+        placeable.placeRelative((newDiameter - currentWidth) / 2, (newDiameter - currentHeight) / 2)
     }
+}

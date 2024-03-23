@@ -65,9 +65,9 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun getUpcomingManga(statues: Set<Long>): List<Manga> {
-        return handler.awaitList {
-            mangasQueries.getUpcomingManga(statues, MangaMapper::mapManga)
+    override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
+        return handler.subscribeToList {
+            mangasQueries.getUpcomingManga(statuses, MangaMapper::mapManga)
         }
     }
 

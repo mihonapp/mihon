@@ -1,5 +1,6 @@
 package eu.kanade.presentation.updates.components.calendar
 
+import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
@@ -51,6 +53,7 @@ fun CalenderHeader(
     arrowShown: Boolean = true,
 ) {
     var isNext by remember { mutableStateOf(true) }
+    val context = LocalContext.current
 
     Row(
         modifier = modifier
@@ -59,7 +62,7 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        val titleText = remember(month, year) { getTitleText(month, year) }
+        val titleText = remember(month, year) { getTitleText(context, month, year) }
 
         AnimatedContent(
             targetState = titleText,
@@ -119,15 +122,17 @@ fun CalenderHeader(
  * @return The content transformation with the specified animation.
  */
 private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform {
-    return slideInVertically(
+    val enterTransition = slideInVertically(
         animationSpec = tween(durationMillis = duration),
     ) { height -> if (isNext) height else -height } + fadeIn(
         animationSpec = tween(durationMillis = duration),
-    ) togetherWith slideOutVertically(
+    )
+    val exitTransition = slideOutVertically(
         animationSpec = tween(durationMillis = duration),
     ) { height -> if (isNext) -height else height } + fadeOut(
         animationSpec = tween(durationMillis = duration),
     )
+    return enterTransition togetherWith exitTransition
 }
 
 /**
@@ -137,12 +142,12 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
  * @param year The current year.
  * @return The formatted title text.
  */
-private fun getTitleText(month: Month, year: Int): String {
+private fun getTitleText(context: Context, month: Month, year: Int): String {
     val monthDisplayName = month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         .lowercase()
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     val shortYear = year.toString().takeLast(2)
-    return "$monthDisplayName '$shortYear"
+    return context.resources.getString(MR.strings.calendar_title_format.resourceId, monthDisplayName, shortYear)
 }
 
 @Preview

@@ -105,7 +105,7 @@ SELECT *
 FROM mangas
 WHERE next_update > 0
 AND favorite = 1
-AND status IN ?
+AND status IN :statuses
 ORDER BY next_update ASC;
 
 resetViewerFlags:
