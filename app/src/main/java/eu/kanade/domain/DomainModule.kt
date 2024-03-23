@@ -31,6 +31,7 @@ import mihon.domain.extensionrepo.interactor.GetExtensionRepoCount
 import mihon.domain.extensionrepo.interactor.ReplaceExtensionRepo
 import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
+import mihon.domain.extensionrepo.service.ExtensionRepoService
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
@@ -179,6 +180,7 @@ class DomainModule : InjektModule {
         addFactory { TrustExtension(get()) }
 
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
+        addFactory { ExtensionRepoService(get(), get()) }
         addFactory { GetExtensionRepo(get()) }
         addFactory { GetExtensionRepoCount(get()) }
         addFactory { CreateExtensionRepo(get(), get()) }

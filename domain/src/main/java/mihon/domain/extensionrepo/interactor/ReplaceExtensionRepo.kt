@@ -4,9 +4,9 @@ import mihon.domain.extensionrepo.model.ExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 
 class ReplaceExtensionRepo(
-    private val extensionRepoRepository: ExtensionRepoRepository,
+    private val repository: ExtensionRepoRepository,
 ) {
     suspend fun await(repo: ExtensionRepo) {
-        extensionRepoRepository.replaceRepository(repo)
+        repository.replaceRepo(repo)
     }
 }

@@ -10,13 +10,11 @@ import mihon.domain.extensionrepo.model.ExtensionRepo
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
-import uy.kohesive.injekt.injectLazy
 
 class ExtensionRepoService(
     private val client: OkHttpClient,
+    private val json: Json,
 ) {
-
-    private val json: Json by injectLazy()
 
     @Suppress("TooGenericExceptionCaught")
     suspend fun fetchRepoDetails(

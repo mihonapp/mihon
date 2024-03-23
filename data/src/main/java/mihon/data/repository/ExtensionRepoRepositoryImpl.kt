@@ -19,11 +19,11 @@ class ExtensionRepoRepositoryImpl(
         return handler.awaitList { extension_reposQueries.findAll(::mapExtensionRepo) }
     }
 
-    override suspend fun getRepository(baseUrl: String): ExtensionRepo? {
+    override suspend fun getRepo(baseUrl: String): ExtensionRepo? {
         return handler.awaitOneOrNull { extension_reposQueries.findOne(baseUrl, ::mapExtensionRepo) }
     }
 
-    override suspend fun getRepositoryBySigningKeyFingerprint(fingerprint: String): ExtensionRepo? {
+    override suspend fun getRepoBySigningKeyFingerprint(fingerprint: String): ExtensionRepo? {
         return handler.awaitOneOrNull {
             extension_reposQueries.findOneBySigningKeyFingerprint(fingerprint, ::mapExtensionRepo)
         }
@@ -33,7 +33,7 @@ class ExtensionRepoRepositoryImpl(
         return handler.subscribeToOne { extension_reposQueries.count() }.map { it.toInt() }
     }
 
-    override suspend fun insertRepository(
+    override suspend fun insertRepo(
         baseUrl: String,
         name: String,
         shortName: String?,
@@ -47,7 +47,7 @@ class ExtensionRepoRepositoryImpl(
         }
     }
 
-    override suspend fun upsertRepository(
+    override suspend fun upsertRepo(
         baseUrl: String,
         name: String,
         shortName: String?,
@@ -61,7 +61,7 @@ class ExtensionRepoRepositoryImpl(
         }
     }
 
-    override suspend fun replaceRepository(newRepo: ExtensionRepo) {
+    override suspend fun replaceRepo(newRepo: ExtensionRepo) {
         handler.await {
             extension_reposQueries.replace(
                 newRepo.baseUrl,
@@ -73,7 +73,7 @@ class ExtensionRepoRepositoryImpl(
         }
     }
 
-    override suspend fun deleteRepository(baseUrl: String) {
+    override suspend fun deleteRepo(baseUrl: String) {
         return handler.await { extension_reposQueries.delete(baseUrl) }
     }
 
