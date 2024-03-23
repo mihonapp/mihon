@@ -6,9 +6,6 @@ import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import mihon.domain.extensionrepo.model.ExtensionRepo
 import okhttp3.OkHttpClient
 import tachiyomi.core.common.util.lang.withIOContext
@@ -27,31 +24,15 @@ class ExtensionRepoService(
             val url = "$repo/repo.json".toUri()
 
             try {
-                val response = with(json) {
+                with(json) {
                     client.newCall(GET(url.toString()))
                         .awaitSuccess()
-                        .parseAs<JsonObject>()
+                        .parseAs<ExtensionRepoMetaDto>()
+                        .toExtensionRepo(baseUrl = repo)
                 }
-                response["meta"]
-                    ?.jsonObject
-                    ?.let { jsonToExtensionRepo(baseUrl = repo, it) }
             } catch (_: HttpException) {
                 null
             }
-        }
-    }
-
-    private fun jsonToExtensionRepo(baseUrl: String, obj: JsonObject): ExtensionRepo? {
-        return try {
-            ExtensionRepo(
-                baseUrl = baseUrl,
-                name = obj["name"]!!.jsonPrimitive.content,
-                shortName = obj["shortName"]?.jsonPrimitive?.content,
-                website = obj["website"]!!.jsonPrimitive.content,
-                signingKeyFingerprint = obj["signingKeyFingerprint"]!!.jsonPrimitive.content,
-            )
-        } catch (_: NullPointerException) {
-            null
         }
     }
 }
