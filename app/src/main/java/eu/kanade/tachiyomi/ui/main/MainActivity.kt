@@ -248,6 +248,7 @@ class MainActivity : BaseActivity() {
                     showChangelog = false
                     return@LaunchedEffect
                 }
+                @SuppressWarnings("SpreadOperator")
                 val didMigration = awaitAll(*migrations).reduce { acc, aBoolean -> acc || aBoolean }
                 showChangelog = didMigration && !BuildConfig.DEBUG
             }

@@ -8,7 +8,14 @@ import tachiyomi.core.common.util.system.logcat
 
 object Migrator {
 
-    fun migrate(old: Int, new: Int, migrations: List<Migration>, dryrun: Boolean = false, onMigrationComplete: () -> Unit): Array<Deferred<Boolean>> {
+    @SuppressWarnings("ReturnCount")
+    fun migrate(
+        old: Int,
+        new: Int,
+        migrations: List<Migration>,
+        dryrun: Boolean = false,
+        onMigrationComplete: () -> Unit
+    ): Array<Deferred<Boolean>> {
         val migrationContext = MigrationContext()
         val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -34,7 +41,12 @@ object Migrator {
     }
 
     context (CoroutineScope)
-    private fun MigrationContext.migrate(versions: List<Int>, migrationsByVersion: Map<Int, List<Migration>>, dryrun: Boolean): Array<Deferred<Boolean>> {
+    @SuppressWarnings("MaxLineLength")
+    private fun MigrationContext.migrate(
+        versions: List<Int>,
+        migrationsByVersion: Map<Int, List<Migration>>,
+        dryrun: Boolean
+    ): Array<Deferred<Boolean>> {
         return versions.sorted()
             .flatMap { version ->
                 (migrationsByVersion[version] ?: emptyList())

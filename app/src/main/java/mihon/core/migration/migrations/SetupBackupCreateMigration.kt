@@ -1,9 +1,9 @@
 package mihon.core.migration.migrations
 
-import mihon.core.migration.Migration
-import mihon.core.migration.MigrationContext
 import eu.kanade.tachiyomi.App
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
+import mihon.core.migration.Migration
+import mihon.core.migration.MigrationContext
 
 class SetupBackupCreateMigration : Migration {
     override val version: Float = Migration.ALWAYS

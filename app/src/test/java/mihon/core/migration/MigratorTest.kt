@@ -86,7 +86,8 @@ class MigratorTest {
             migrations = listOf(
                 Migration.of(Migration.ALWAYS) { true },
                 Migration.of(2f) { true },
-                Migration.of(3f) { true }),
+                Migration.of(3f) { true }
+            ),
             onMigrationComplete = spyk
         )
         verify { spyk() }
