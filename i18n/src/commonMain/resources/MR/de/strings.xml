@@ -55,7 +55,7 @@
     <string name="action_undo">Rückgängig machen</string>
     <string name="action_open_log">Protokoll öffnen</string>
     <string name="action_restore">Wiederherstellen</string>
-    <string name="loading">Wird geladen …</string>
+    <string name="loading">Wird geladen…</string>
     <string name="app_not_available">App nicht verfügbar</string>
     <string name="pref_category_general">Allgemein</string>
     <string name="pref_category_reader">Leser</string>
@@ -797,4 +797,11 @@
     <string name="manga_interval_expected_update_soon">Bald</string>
     <string name="ext_revoke_trust">Zertifikatsbestätigungen zurücknehmen</string>
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>
+    <string name="pref_display_profile">Benutzerdefiniertes Anzeigeprofil</string>
+    <string name="action_add_anyway">Trotzdem hinzufügen</string>
+    <string name="action_migrate_duplicate">Existierenden Eintrag migrieren</string>
+    <string name="action_replace_repo">Ersetzen</string>
+    <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
+    <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
+\nFalls das erwünscht ist, wird %2$s nun ersetzt. Falls nicht, kontaktiere den Repository-Maintainer.</string>
 </resources>
