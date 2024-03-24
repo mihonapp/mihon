@@ -11,49 +11,49 @@ class MigratorTest {
     @Test
     fun initialVersion() {
         val onMigrationComplete: () -> Unit = {}
-        val spyk = spyk(onMigrationComplete)
-        val migrations = Migrator.migrate(
+        val onMigrationCompleteSpy = spyk(onMigrationComplete)
+        val didMigration = Migrator.migrate(
             old = 0,
             new = 1,
-            migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }),
-            onMigrationComplete = spyk
+            migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { false }),
+            onMigrationComplete = onMigrationCompleteSpy
         )
-        verify { spyk() }
-        Assertions.assertEquals(1, migrations.size)
+        verify { onMigrationCompleteSpy() }
+        Assertions.assertTrue(didMigration)
     }
 
     @Test
     fun sameVersion() {
         val onMigrationComplete: () -> Unit = {}
-        val spyk = spyk(onMigrationComplete)
-        val migrations = Migrator.migrate(
+        val onMigrationCompleteSpy = spyk(onMigrationComplete)
+        val didMigration = Migrator.migrate(
             old = 1,
             new = 1,
             migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }),
-            onMigrationComplete = spyk
+            onMigrationComplete = onMigrationCompleteSpy
         )
-        verify { spyk wasNot Called }
-        Assertions.assertEquals(0, migrations.size)
+        verify { onMigrationCompleteSpy wasNot Called }
+        Assertions.assertFalse(didMigration)
     }
 
     @Test
     fun smallMigration() {
         val onMigrationComplete: () -> Unit = {}
-        val spyk = spyk(onMigrationComplete)
-        val migrations = Migrator.migrate(
+        val onMigrationCompleteSpy = spyk(onMigrationComplete)
+        val didMigration = Migrator.migrate(
             old = 1,
             new = 2,
             migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }),
-            onMigrationComplete = spyk
+            onMigrationComplete = onMigrationCompleteSpy
         )
-        verify { spyk() }
-        Assertions.assertEquals(2, migrations.size)
+        verify { onMigrationCompleteSpy() }
+        Assertions.assertTrue(didMigration)
     }
 
     @Test
     fun largeMigration() {
         val onMigrationComplete: () -> Unit = {}
-        val spyk = spyk(onMigrationComplete)
+        val onMigrationCompleteSpy = spyk(onMigrationComplete)
         val input = listOf(
             Migration.of(Migration.ALWAYS) { true },
             Migration.of(2f) { true },
@@ -66,31 +66,31 @@ class MigratorTest {
             Migration.of(9f) { true },
             Migration.of(10f) { true },
         )
-        val migrations = Migrator.migrate(
+        val didMigration = Migrator.migrate(
             old = 1,
             new = 10,
             migrations = input,
-            onMigrationComplete = spyk
+            onMigrationComplete = onMigrationCompleteSpy
         )
-        verify { spyk() }
-        Assertions.assertEquals(10, migrations.size)
+        verify { onMigrationCompleteSpy() }
+        Assertions.assertTrue(didMigration)
     }
 
     @Test
     fun withinRangeMigration() {
         val onMigrationComplete: () -> Unit = {}
-        val spyk = spyk(onMigrationComplete)
-        val migrations = Migrator.migrate(
+        val onMigrationCompleteSpy = spyk(onMigrationComplete)
+        val didMigration = Migrator.migrate(
             old = 1,
             new = 2,
             migrations = listOf(
                 Migration.of(Migration.ALWAYS) { true },
                 Migration.of(2f) { true },
-                Migration.of(3f) { true }
+                Migration.of(3f) { false }
             ),
-            onMigrationComplete = spyk
+            onMigrationComplete = onMigrationCompleteSpy
         )
-        verify { spyk() }
-        Assertions.assertEquals(2, migrations.size)
+        verify { onMigrationCompleteSpy() }
+        Assertions.assertTrue(didMigration)
     }
 }

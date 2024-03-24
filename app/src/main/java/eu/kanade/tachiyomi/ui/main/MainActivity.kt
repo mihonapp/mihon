@@ -131,7 +131,7 @@ class MainActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        val migrations = migrate()
+        val didMigration = migrate()
 
         // Do not let the launcher create a new activity http://stackoverflow.com/questions/16283079
         if (!isTaskRoot) {
@@ -242,17 +242,7 @@ class MainActivity : BaseActivity() {
                 ShowOnboarding()
             }
 
-            var showChangelog by remember { mutableStateOf(false) }
-            LaunchedEffect(Unit) {
-                if (migrations.isEmpty()) {
-                    showChangelog = false
-                    return@LaunchedEffect
-                }
-                @SuppressWarnings("SpreadOperator")
-                val didMigration = awaitAll(*migrations).reduce { acc, aBoolean -> acc || aBoolean }
-                showChangelog = didMigration && !BuildConfig.DEBUG
-            }
-
+            var showChangelog by remember { mutableStateOf(didMigration && !BuildConfig.DEBUG) }
             if (showChangelog) {
                 AlertDialog(
                     onDismissRequest = { showChangelog = false },
@@ -352,7 +342,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun migrate(): Array<Deferred<Boolean>> {
+    private fun migrate(): Boolean {
         val preferenceStore = Injekt.get<PreferenceStore>()
         val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
         logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE}" }

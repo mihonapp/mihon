@@ -23,7 +23,7 @@ private val scriptsFiles = "**/*.kts"
 detekt {
     buildUponDefaultConfig = true
     parallel = true
-    autoCorrect = true
+    autoCorrect = false
     ignoreFailures = false
     config.setFrom(configFile)
     baseline = file(baselineFile)

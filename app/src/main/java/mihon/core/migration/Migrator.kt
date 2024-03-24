@@ -1,9 +1,8 @@
 package mihon.core.migration
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import tachiyomi.core.common.util.system.logcat
 
 object Migrator {
@@ -15,7 +14,7 @@ object Migrator {
         migrations: List<Migration>,
         dryrun: Boolean = false,
         onMigrationComplete: () -> Unit
-    ): Array<Deferred<Boolean>> {
+    ): Boolean {
         val migrationContext = MigrationContext()
         val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -30,7 +29,7 @@ object Migrator {
         }
 
         if (old >= new) {
-            return emptyArray()
+            return false
         }
 
         onMigrationComplete()
@@ -46,20 +45,22 @@ object Migrator {
         versions: List<Int>,
         migrationsByVersion: Map<Int, List<Migration>>,
         dryrun: Boolean
-    ): Array<Deferred<Boolean>> {
-        return versions.sorted()
-            .flatMap { version ->
-                (migrationsByVersion[version] ?: emptyList())
-                    .sortedBy(Migration::version)
-                    .map { migration ->
-                        if (!dryrun) {
-                            logcat { "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
-                            return@map async { migration.action(this@migrate) }
-                        }
+    ): Boolean {
+        var aBoolean = false
+        for (version in versions.sorted()) {
+            val migrations = migrationsByVersion.getOrDefault(version, emptyList()).sortedBy(Migration::version)
+            for (migration in migrations) {
+                val success = runBlocking {
+                    if (!dryrun) {
+                        logcat { "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
+                    } else {
                         logcat { "(Dry-run) Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
-                        async { true }
                     }
+                    migration.action(this@migrate)
+                }
+                aBoolean = success || aBoolean
             }
-            .toTypedArray()
+        }
+        return aBoolean
     }
 }
