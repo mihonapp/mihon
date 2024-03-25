@@ -142,7 +142,7 @@ private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform
 @Composable
 @ReadOnlyComposable
 private fun getTitleText(month: Month, year: Int): String {
-    val formatter = DateTimeFormatter.ofPattern("MMMM yy", Locale.getDefault())
+    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
     return formatter.format(LocalDate.of(year, month, 1))
 }
 
