@@ -19,7 +19,8 @@ object Migrator {
             return migrationContext.migrate(
                 migrations = migrations.filter { it.isAlways() },
                 dryrun = dryrun
-            ).also { onMigrationComplete() }
+            )
+                .also { onMigrationComplete() }
         }
 
         if (old >= new) {
@@ -29,7 +30,8 @@ object Migrator {
         return migrationContext.migrate(
             migrations = migrations.filter { it.isAlways() || it.version.toInt() in (old + 1).. new },
             dryrun = dryrun
-        ).also { onMigrationComplete() }
+        )
+            .also { onMigrationComplete() }
     }
 
     private fun Migration.isAlways() = version == Migration.ALWAYS
@@ -40,7 +42,7 @@ object Migrator {
             .map { migration ->
                 if (!dryrun) {
                     logcat { "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
-                    runBlocking { migration.action(this@migrate) }
+                    runBlocking { migration(this@migrate) }
                 } else {
                     logcat { "(Dry-run) Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
                     true
