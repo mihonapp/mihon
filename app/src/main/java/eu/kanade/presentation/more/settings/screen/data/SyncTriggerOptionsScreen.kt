@@ -43,7 +43,7 @@ class SyncTriggerOptionsScreen : Screen() {
             LazyColumnWithAction(
                 contentPadding = contentPadding,
                 actionLabel = stringResource(MR.strings.action_save),
-                actionEnabled = state.options.anyEnabled(),
+                actionEnabled = true,
                 onClickAction = {
                     navigator.pop()
                 },

@@ -9,11 +9,14 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.isRunning
+import eu.kanade.tachiyomi.util.system.setForegroundSafely
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -27,11 +30,14 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
     private val notifier = SyncNotifier(context)
 
     override suspend fun doWork(): Result {
-        try {
-            setForeground(getForegroundInfo())
-        } catch (e: IllegalStateException) {
-            logcat(LogPriority.ERROR, e) { "Not allowed to run on foreground service" }
+        if (tags.contains(TAG_AUTO)) {
+            // Find a running manual worker. If exists, try again later
+            if (context.workManager.isRunning(TAG_MANUAL)) {
+                return Result.retry()
+            }
         }
+
+        setForegroundSafely()
 
         return try {
             SyncManager(context).syncData()
@@ -62,10 +68,8 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         private const val TAG_AUTO = "$TAG_JOB:auto"
         const val TAG_MANUAL = "$TAG_JOB:manual"
 
-        private val jobTagList = listOf(TAG_AUTO, TAG_MANUAL)
-
-        fun isAnyJobRunning(context: Context): Boolean {
-            return jobTagList.any { context.workManager.isRunning(it) }
+        fun isRunning(context: Context): Boolean {
+            return context.workManager.isRunning(TAG_JOB)
         }
 
         fun setupTask(context: Context, prefInterval: Int? = null) {
@@ -79,6 +83,7 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
                     10,
                     TimeUnit.MINUTES,
                 )
+                    .addTag(TAG_JOB)
                     .addTag(TAG_AUTO)
                     .build()
 
@@ -89,14 +94,33 @@ class SyncDataJob(private val context: Context, workerParams: WorkerParameters) 
         }
 
         fun startNow(context: Context) {
+            val wm = context.workManager
+            if (wm.isRunning(TAG_JOB)) {
+                // Already running either as a scheduled or manual job
+                return
+            }
             val request = OneTimeWorkRequestBuilder<SyncDataJob>()
+                .addTag(TAG_JOB)
                 .addTag(TAG_MANUAL)
                 .build()
             context.workManager.enqueueUniqueWork(TAG_MANUAL, ExistingWorkPolicy.KEEP, request)
         }
 
         fun stop(context: Context) {
-            context.workManager.cancelUniqueWork(TAG_MANUAL)
+            val wm = context.workManager
+            val workQuery = WorkQuery.Builder.fromTags(listOf(TAG_JOB, TAG_AUTO, TAG_MANUAL))
+                .addStates(listOf(WorkInfo.State.RUNNING))
+                .build()
+            wm.getWorkInfos(workQuery).get()
+                // Should only return one work but just in case
+                .forEach {
+                    wm.cancelWorkById(it.id)
+
+                    // Re-enqueue cancelled scheduled work
+                    if (it.tags.contains(TAG_AUTO)) {
+                        setupTask(context)
+                    }
+                }
         }
     }
 }

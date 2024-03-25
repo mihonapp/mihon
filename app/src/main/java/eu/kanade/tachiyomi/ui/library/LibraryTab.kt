@@ -138,7 +138,7 @@ object LibraryTab : Tab {
                         }
                     },
                     onClickSyncNow = {
-                        if (!SyncDataJob.isAnyJobRunning(context)) {
+                        if (!SyncDataJob.isRunning(context)) {
                             SyncDataJob.startNow(context)
                         } else {
                             context.toast(MR.strings.sync_in_progress)

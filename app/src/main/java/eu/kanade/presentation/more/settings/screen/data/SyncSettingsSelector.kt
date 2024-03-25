@@ -50,7 +50,7 @@ class SyncSettingsSelector : Screen() {
                 actionLabel = stringResource(MR.strings.label_sync),
                 actionEnabled = state.options.anyEnabled(),
                 onClickAction = {
-                    if (!SyncDataJob.isAnyJobRunning(context)) {
+                    if (!SyncDataJob.isRunning(context)) {
                         model.syncNow(context)
                         navigator.pop()
                     } else {

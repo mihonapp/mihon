@@ -486,7 +486,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             // Always sync the data before library update if syncing is enabled.
             if (syncPreferences.isSyncEnabled()) {
                 // Check if SyncDataJob is already running
-                if (wm.isRunning(SyncDataJob.TAG_MANUAL)) {
+                if (SyncDataJob.isRunning(context)) {
                     // SyncDataJob is already running
                     return false
                 }
