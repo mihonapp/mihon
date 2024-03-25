@@ -23,12 +23,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.util.isTabletUi
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
+import java.time.temporal.WeekFields
 import java.util.Locale
 import kotlin.math.ceil
 
@@ -46,19 +48,25 @@ fun Calendar(
     modifier: Modifier = Modifier,
     labelFormat: (DayOfWeek) -> String = {
         it.getDisplayName(
-            TextStyle.SHORT,
+            TextStyle.NARROW,
             Locale.getDefault(),
         )
     },
     onClickDay: (day: LocalDate) -> Unit = {},
 ) {
     val today = LocalDate.now()
-    val weekValue = remember { DayOfWeek.entries.toTypedArray() }
     val displayedMonth = remember { mutableStateOf(today.month) }
     val displayedYear = remember { mutableIntStateOf(today.year) }
     val currentMonth = displayedMonth.value
     val currentYear = displayedYear.intValue
     val isTabletUi = isTabletUi()
+
+    val localFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+    val weekDays = remember {
+        (0 until DaysOfWeek)
+            .map { DayOfWeek.of(((localFirstDayOfWeek - 1 + it) % DaysOfWeek) + 1) }
+            .toImmutableList()
+    }
 
     val widthModifier = when {
         isTabletUi -> 1.0f
@@ -91,7 +99,7 @@ fun Calendar(
             modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             CalendarGrid(
-                weekValue = weekValue,
+                weekDays = weekDays,
                 labelFormat = labelFormat,
                 currentMonth = currentMonth,
                 currentYear = currentYear,
@@ -107,7 +115,7 @@ fun Calendar(
 
 @Composable
 private fun CalendarGrid(
-    weekValue: Array<DayOfWeek>,
+    weekDays: ImmutableList<DayOfWeek>,
     labelFormat: (DayOfWeek) -> String,
     currentMonth: Month,
     currentYear: Int,
@@ -121,7 +129,8 @@ private fun CalendarGrid(
     val startDayOfMonth = LocalDate.of(currentYear, currentMonth, 1)
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
-    val dayEntries = (getCalendarDayOffset(firstDayOfMonth)..daysInMonth).toImmutableList()
+    // The lower bound for Calendar Days, between -5 and 1 to provide cell offset
+    val dayEntries = (-weekDays.indexOf(firstDayOfMonth) + 1..daysInMonth).toImmutableList()
     val height = (((dayEntries.size - 1) / DaysOfWeek + ceil(1.0f - widthModifier)) * HeightMultiplier).dp
 
     val modeModifier = if (isTabletUi) {
@@ -138,7 +147,7 @@ private fun CalendarGrid(
         modifier = modeModifier,
         columns = GridCells.Fixed(DaysOfWeek),
     ) {
-        items(weekValue) { item ->
+        items(weekDays) { item ->
             Text(
                 modifier = Modifier,
                 text = labelFormat(item),
@@ -147,7 +156,6 @@ private fun CalendarGrid(
                 fontSize = FontSize,
             )
         }
-
         items(dayEntries) {
             if (it > 0) {
                 val localDate = LocalDate.of(currentYear, currentMonth, it)
@@ -160,16 +168,3 @@ private fun CalendarGrid(
         }
     }
 }
-
-/**
- * Returns the lower bound of calendar items, based on the starting day of the week,with out calendar starting on
- *  monday.
- * Per DayOfWeek, Monday is 1 and Sunday is 7.
- * Ex. Monday = 1. Inverted to -1. +2 bring it back to 1, so we start with the first day of the calendar.
- * Ex. Thursday = 4. Inverted to -4. +2 brings it to -2. Including Zero as a skipped field, that gives three blank days
- *  which serves as the proper offset for the calendar.
- *
- *  @param firstDayOfMonth The DayOfWeek Enum presenting the current month's first day.
- *  @return The lower bound for Calendar Days, between -5 and 1
- */
-private fun getCalendarDayOffset(firstDayOfMonth: DayOfWeek) = -(firstDayOfMonth.value).minus(2)
