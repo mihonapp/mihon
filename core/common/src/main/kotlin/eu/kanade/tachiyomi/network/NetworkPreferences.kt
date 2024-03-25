@@ -27,9 +27,4 @@ class NetworkPreferences(
         Preference.privateKey("proxy_config"),
         ""
     )
-
-    fun enableProxyGlobally() = preferenceStore.getBoolean(
-        Preference.privateKey("enableProxyGlobally"),
-        false
-    )
 }

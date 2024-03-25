@@ -25,6 +25,7 @@ import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -56,6 +57,7 @@ import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
+import eu.kanade.presentation.more.settings.widget.TitleFontSize
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.library.MetadataUpdateJob
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -235,8 +237,6 @@ object SettingsAdvancedScreen : SearchableSettings {
         val userAgentPref = networkPreferences.defaultUserAgent()
         val userAgent by userAgentPref.collectAsState()
 
-        val enableProxyGloballyPref = networkPreferences.enableProxyGlobally()
-
         var showProxyDialog by rememberSaveable { mutableStateOf(false) }
 
         val proxyConfigPref = networkPreferences.proxyConfig()
@@ -310,15 +310,6 @@ object SettingsAdvancedScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_proxy_configuration),
                     onClick = { showProxyDialog = true },
-                ),
-                Preference.PreferenceItem.SwitchPreference(
-                    pref = enableProxyGloballyPref,
-                    title = stringResource(MR.strings.pref_enable_proxy),
-                    onValueChanged = {
-                        context.toast(MR.strings.requires_app_restart)
-                        true
-                    },
-                    enabled = proxyString.isNotBlank(),
                 ),
                 Preference.PreferenceItem.EditTextPreference(
                     pref = userAgentPref,
@@ -467,6 +458,7 @@ private fun ProxyConfigDialog(
     var port by remember { mutableStateOf(TextFieldValue(proxy.port?.toString() ?: "")) }
     var username by remember { mutableStateOf(TextFieldValue(proxy.username ?: "")) }
     var password by remember { mutableStateOf(TextFieldValue(proxy.password ?: "")) }
+    var enabled by remember { mutableStateOf(proxy.enabled) }
 
     val proxyTypes = java.net.Proxy.Type.entries.filter { it.name != java.net.Proxy.Type.DIRECT.name }
     var checked by remember { mutableIntStateOf(proxy.proxyType?.ordinal?.minus(1) ?: 0) }
@@ -489,17 +481,15 @@ private fun ProxyConfigDialog(
                 )
                 IconButton(
                     onClick = {
+                        if (proxy.enabled) context.toast(MR.strings.requires_app_restart)
                         networkPreferences.proxyConfig().set("")
-                        if (networkPreferences.enableProxyGlobally().get()) {
-                            context.toast(MR.strings.requires_app_restart)
-                            networkPreferences.enableProxyGlobally().set(false)
-                        }
 
                         host = TextFieldValue("")
                         port = TextFieldValue("")
                         username = TextFieldValue("")
                         password = TextFieldValue("")
                         checked = 0
+                        enabled = false
                     }
                 ) {
                     Icon(
@@ -616,6 +606,27 @@ private fun ProxyConfigDialog(
                     ),
                     singleLine = true,
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(MR.strings.pref_enable_proxy),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = TitleFontSize
+                    )
+                    Switch(
+                        checked = enabled,
+                        onCheckedChange = {
+                            enabled = !enabled
+                            newProxy.enabled = enabled
+
+                            proxyChanged = newProxy != proxy
+                        }
+                    )
+                }
             }
         },
         confirmButton = {
@@ -630,7 +641,7 @@ private fun ProxyConfigDialog(
                     if (runBlocking { Proxy.testHostValidity(newProxy.host!!) }) {
                         networkPreferences.proxyConfig().set(Json.encodeToString<Proxy>(newProxy))
 
-                        if (networkPreferences.enableProxyGlobally().get()) {
+                        if (newProxy.enabled || proxy.enabled) {
                             context.toast(MR.strings.requires_app_restart)
                         }
                         proxyChanged = false

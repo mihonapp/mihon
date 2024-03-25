@@ -63,18 +63,17 @@ class NetworkHelper(
             PREF_DOH_SHECAN -> builder.dohShecan()
         }
 
-        if (preferences.enableProxyGlobally().get()) {
-            val proxyConfigurationPref = preferences.proxyConfig().get()
+        val proxyConfigurationPref = preferences.proxyConfig().get()
 
-            if (proxyConfigurationPref.isNotBlank()) {
-                val proxy = Json.decodeFromString<Proxy>(proxyConfigurationPref)
+        if (proxyConfigurationPref.isNotBlank()) {
+            val proxy = Json.decodeFromString<Proxy>(proxyConfigurationPref)
+
+            if (proxy.enabled) {
                 builder.proxy(proxy.getProxy() ?: Proxy.getBlackHoleProxy(context))
 
                 proxy.getAuthenticator()?.let { proxyAuthenticator ->
                     builder.proxyAuthenticator(proxyAuthenticator)
                 }
-            } else {
-                builder.proxy(Proxy.getBlackHoleProxy(context))
             }
         }
 

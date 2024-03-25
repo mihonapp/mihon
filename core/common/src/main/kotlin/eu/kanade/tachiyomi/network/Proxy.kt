@@ -23,6 +23,7 @@ data class Proxy(
     var port: Int? = null,
     var username: String? = null,
     var password: String? = null,
+    var enabled: Boolean = false,
 ) {
     fun getProxy(): JavaProxy? {
         return if (host == null || port == null) {
