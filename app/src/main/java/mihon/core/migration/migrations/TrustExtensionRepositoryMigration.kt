@@ -12,7 +12,7 @@ import tachiyomi.core.common.util.system.logcat
 class TrustExtensionRepositoryMigration : Migration {
     override val version: Float = 7f
 
-    override suspend fun action(migrationContext: MigrationContext): Boolean = withIOContext {
+    override suspend fun invoke(migrationContext: MigrationContext): Boolean = withIOContext {
         val sourcePreferences = migrationContext.get<SourcePreferences>() ?: return@withIOContext false
         val extensionRepositoryRepository =
             migrationContext.get<ExtensionRepoRepository>() ?: return@withIOContext false

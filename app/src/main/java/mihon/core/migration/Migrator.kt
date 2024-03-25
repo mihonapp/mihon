@@ -28,7 +28,7 @@ object Migrator {
         }
 
         return migrationContext.migrate(
-            migrations = migrations.filter { it.isAlways() || it.version.toInt() in (old + 1).. new },
+            migrations = migrations.filter { it.isAlways() || it.version.toInt() in (old + 1)..new },
             dryrun = dryrun
         )
             .also { onMigrationComplete() }
@@ -50,5 +50,4 @@ object Migrator {
             }
             .reduce { acc, b -> acc || b }
     }
-
 }
