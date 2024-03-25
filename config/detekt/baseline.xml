@@ -85,6 +85,7 @@
     <ID>CyclomaticComplexMethod:RateLimitInterceptor.kt$RateLimitInterceptor$override fun intercept(chain: Interceptor.Chain): Response</ID>
     <ID>CyclomaticComplexMethod:ReaderActivity.kt$ReaderActivity$override fun onCreate(savedInstanceState: Bundle?)</ID>
     <ID>CyclomaticComplexMethod:ReaderActivity.kt$ReaderActivity$private fun initializeMenu()</ID>
+    <ID>CyclomaticComplexMethod:SettingsAdvancedScreen.kt$@Composable private fun ProxyConfigDialog( proxy: Proxy, networkPreferences: NetworkPreferences, onDismissRequest: () -&gt; Unit, )</ID>
     <ID>CyclomaticComplexMethod:Scaffold.kt$@Composable private fun ScaffoldLayout( fabPosition: FabPosition, topBar: @Composable () -&gt; Unit, startBar: @Composable () -&gt; Unit, content: @Composable (PaddingValues) -&gt; Unit, snackbar: @Composable () -&gt; Unit, fab: @Composable () -&gt; Unit, contentWindowInsets: WindowInsets, bottomBar: @Composable () -&gt; Unit, )</ID>
     <ID>CyclomaticComplexMethod:SourcesScreenModel.kt$SourcesScreenModel$private fun collectLatestSources(sources: List&lt;Source&gt;)</ID>
     <ID>CyclomaticComplexMethod:SyncChaptersWithSource.kt$SyncChaptersWithSource$suspend fun await( rawSourceChapters: List&lt;SChapter&gt;, manga: Manga, source: Source, manualFetch: Boolean = false, fetchWindow: Pair&lt;Long, Long&gt; = Pair(0, 0), ): List&lt;Chapter&gt;</ID>

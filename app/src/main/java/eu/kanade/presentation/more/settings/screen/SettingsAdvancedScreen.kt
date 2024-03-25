@@ -8,20 +8,50 @@ import android.webkit.WebStorage
 import android.webkit.WebView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
@@ -29,6 +59,7 @@ import eu.kanade.domain.extension.interactor.TrustExtension
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.advanced.ClearDatabaseScreen
 import eu.kanade.presentation.more.settings.screen.debug.DebugInfoScreen
+import eu.kanade.presentation.more.settings.widget.TitleFontSize
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.library.MetadataUpdateJob
 import eu.kanade.tachiyomi.network.NetworkHelper
@@ -45,6 +76,7 @@ import eu.kanade.tachiyomi.network.PREF_DOH_NJALLA
 import eu.kanade.tachiyomi.network.PREF_DOH_QUAD101
 import eu.kanade.tachiyomi.network.PREF_DOH_QUAD9
 import eu.kanade.tachiyomi.network.PREF_DOH_SHECAN
+import eu.kanade.tachiyomi.network.Proxy
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.system.isDevFlavor
@@ -57,6 +89,9 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import okhttp3.Headers
 import tachiyomi.core.common.util.lang.launchNonCancellable
@@ -64,11 +99,13 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.interactor.ResetViewerFlags
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.net.Proxy.Type as ProxyType
 
 object SettingsAdvancedScreen : SearchableSettings {
 
@@ -204,6 +241,23 @@ object SettingsAdvancedScreen : SearchableSettings {
         val userAgentPref = networkPreferences.defaultUserAgent()
         val userAgent by userAgentPref.collectAsState()
 
+        var showProxyDialog by rememberSaveable { mutableStateOf(false) }
+
+        val proxyConfigPref = networkPreferences.proxyConfig()
+        val proxyString by proxyConfigPref.collectAsState()
+
+        if (showProxyDialog) {
+            ProxyConfigDialog(
+                proxy = if (proxyString.isNotBlank()) {
+                    Json.decodeFromString<Proxy>(proxyString)
+                } else {
+                    Proxy()
+                },
+                networkPreferences = networkPreferences,
+                onDismissRequest = { showProxyDialog = false },
+            )
+        }
+
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.label_network),
             preferenceItems = persistentListOf(
@@ -256,6 +310,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                         context.toast(MR.strings.requires_app_restart)
                         true
                     },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.pref_proxy_configuration),
+                    onClick = { showProxyDialog = true },
                 ),
                 Preference.PreferenceItem.EditTextPreference(
                     pref = userAgentPref,
@@ -340,7 +398,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                         chooseColorProfile.launch(arrayOf("*/*"))
                     },
                 ),
-            )
+            ),
         )
     }
 
@@ -415,4 +473,221 @@ object SettingsAdvancedScreen : SearchableSettings {
             ),
         )
     }
+}
+
+@Composable
+private fun ProxyConfigDialog(
+    proxy: Proxy,
+    networkPreferences: NetworkPreferences,
+    onDismissRequest: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val newProxy by remember { mutableStateOf(proxy.copy()) }
+
+    var host by remember { mutableStateOf(TextFieldValue(proxy.host ?: "")) }
+    var port by remember { mutableStateOf(TextFieldValue(proxy.port?.toString() ?: "")) }
+    var username by remember { mutableStateOf(TextFieldValue(proxy.username ?: "")) }
+    var password by remember { mutableStateOf(TextFieldValue(proxy.password ?: "")) }
+    var enabled by remember { mutableStateOf(proxy.enabled) }
+
+    val proxyTypes = ProxyType.entries.filter { it.name != ProxyType.DIRECT.name }
+    var checked by remember { mutableIntStateOf(proxy.proxyType?.ordinal?.minus(1) ?: 0) }
+
+    var proxyChanged by remember { mutableStateOf(false) }
+    var hostIsValid: Boolean by remember { mutableStateOf(true) }
+    val getHostValidity = {
+        scope.launch {
+            hostIsValid = Proxy.testHostValidity(host.text)
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = stringResource(MR.strings.proxy_config),
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(
+                    onClick = {
+                        if (proxy.enabled) context.toast(MR.strings.requires_app_restart)
+                        networkPreferences.proxyConfig().set("")
+
+                        host = TextFieldValue("")
+                        port = TextFieldValue("")
+                        username = TextFieldValue("")
+                        password = TextFieldValue("")
+                        checked = 0
+                        enabled = false
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(MR.strings.action_delete),
+                    )
+                }
+                IconButton(onClick = onDismissRequest) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = stringResource(MR.strings.action_close),
+                    )
+                }
+            }
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                MultiChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    proxyTypes.forEachIndexed { index, type ->
+                        SegmentedButton(
+                            shape = SegmentedButtonDefaults.itemShape(index = index, count = proxyTypes.size),
+                            onCheckedChange = {
+                                checked = index
+
+                                newProxy.proxyType = proxyTypes[checked]
+                                proxyChanged = newProxy != proxy
+                            },
+                            checked = index == checked,
+                        ) {
+                            Text(type.name)
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .weight(2f)
+                            .onFocusChanged { getHostValidity.invoke() },
+                        value = host,
+                        onValueChange = {
+                            newProxy.host = it.text
+                            proxyChanged = newProxy != proxy
+
+                            host = it
+                        },
+
+                        label = { Text(text = stringResource(MR.strings.host)) },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        singleLine = true,
+                        isError = !hostIsValid,
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f),
+                        value = port,
+                        onValueChange = { textFieldValue ->
+                            newProxy.port = textFieldValue.text.takeIf { it.isNotBlank() && it.isDigitsOnly() }?.toInt()
+                            proxyChanged = newProxy != proxy
+
+                            port = textFieldValue
+                        },
+                        label = { Text(text = stringResource(MR.strings.port)) },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        singleLine = true,
+                        isError = !port.text.isDigitsOnly(),
+                    )
+                }
+                if (proxyTypes[checked] != ProxyType.SOCKS) {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = username,
+                        onValueChange = {
+                            newProxy.username = it.text
+                            proxyChanged = newProxy != proxy
+
+                            username = it
+                        },
+                        label = { Text(text = stringResource(MR.strings.username)) },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        singleLine = true,
+                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
+                    )
+                    var hidePassword by remember { mutableStateOf(true) }
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = password,
+                        onValueChange = {
+                            newProxy.password = it.text
+                            proxyChanged = newProxy != proxy
+
+                            password = it
+                        },
+                        label = { Text(text = stringResource(MR.strings.password)) },
+                        trailingIcon = {
+                            IconButton(onClick = { hidePassword = !hidePassword }) {
+                                Icon(
+                                    imageVector = if (hidePassword) {
+                                        Icons.Filled.Visibility
+                                    } else {
+                                        Icons.Filled.VisibilityOff
+                                    },
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        visualTransformation = if (hidePassword) {
+                            PasswordVisualTransformation()
+                        } else {
+                            VisualTransformation.None
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                        singleLine = true,
+                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                ) {
+                    Text(
+                        text = stringResource(MR.strings.pref_enable_proxy),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = TitleFontSize,
+                    )
+                    Switch(
+                        checked = enabled,
+                        onCheckedChange = {
+                            enabled = !enabled
+                            newProxy.enabled = enabled
+
+                            proxyChanged = newProxy != proxy
+                        },
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                enabled = host.text.isNotBlank() &&
+                    port.text.isNotBlank() &&
+                    port.text.isDigitsOnly() &&
+                    hostIsValid &&
+                    proxyChanged,
+                onClick = {
+                    if (runBlocking { Proxy.testHostValidity(newProxy.host!!) }) {
+                        networkPreferences.proxyConfig().set(Json.encodeToString<Proxy>(newProxy))
+
+                        if (newProxy.enabled || proxy.enabled) {
+                            context.toast(MR.strings.requires_app_restart)
+                        }
+                        proxyChanged = false
+                    } else {
+                        context.toast(MR.strings.invalid_host)
+                    }
+                },
+            ) {
+                Text(text = stringResource(MR.strings.action_save))
+            }
+        },
+    )
 }
