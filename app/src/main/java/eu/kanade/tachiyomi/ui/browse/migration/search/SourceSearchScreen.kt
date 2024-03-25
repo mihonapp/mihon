@@ -18,6 +18,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.components.SearchToolbar
 import eu.kanade.presentation.util.Screen
@@ -34,6 +35,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
 
 data class SourceSearchScreen(
@@ -44,6 +46,11 @@ data class SourceSearchScreen(
 
     @Composable
     override fun Content() {
+        if (!ifSourcesLoaded()) {
+            LoadingScreen()
+            return
+        }
+
         val uriHandler = LocalUriHandler.current
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
@@ -76,7 +83,7 @@ data class SourceSearchScreen(
         ) { paddingValues ->
             val pagingFlow by screenModel.mangaPagerFlowFlow.collectAsState()
             val openMigrateDialog: (Manga) -> Unit = {
-                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(it))
+                screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(newManga = it, oldManga = oldManga))
             }
             BrowseSourceContent(
                 source = screenModel.source,

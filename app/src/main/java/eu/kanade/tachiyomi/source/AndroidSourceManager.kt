@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -27,6 +29,9 @@ class AndroidSourceManager(
     private val extensionManager: ExtensionManager,
     private val sourceRepository: StubSourceRepository,
 ) : SourceManager {
+
+    private val _isInitialized = MutableStateFlow(false)
+    override val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
 
     private val downloadManager: DownloadManager by injectLazy()
 
@@ -60,6 +65,7 @@ class AndroidSourceManager(
                         }
                     }
                     sourcesMapFlow.value = mutableMap
+                    _isInitialized.value = true
                 }
         }
 

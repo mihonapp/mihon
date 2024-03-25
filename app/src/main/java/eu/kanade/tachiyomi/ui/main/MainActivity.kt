@@ -134,6 +134,8 @@ class MainActivity : BaseActivity() {
             Migrations.upgrade(
                 context = applicationContext,
                 preferenceStore = Injekt.get(),
+                sourcePreferences = Injekt.get(),
+                extensionRepoRepository = Injekt.get(),
             )
         } else {
             false

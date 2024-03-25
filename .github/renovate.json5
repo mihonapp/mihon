@@ -3,7 +3,7 @@
   "extends": [
     "config:base"
   ],
-  "schedule": ["every sunday"],
+  "schedule": ["every friday"],
   "labels": ["Dependencies"],
   "packageRules": [
     {

@@ -79,7 +79,7 @@ class ImageSaver(
             MediaStore.Images.Media.RELATIVE_PATH to relativePath,
             MediaStore.Images.Media.DISPLAY_NAME to image.name,
             MediaStore.Images.Media.MIME_TYPE to type.mime,
-            MediaStore.Images.Media.DATE_MODIFIED to Instant.now().toEpochMilli(),
+            MediaStore.Images.Media.DATE_MODIFIED to Instant.now().epochSecond,
         )
 
         val picture = findUriOrDefault(relativePath, filename) {

@@ -18,5 +18,7 @@ style:
     ignoreCompanionObjectPropertyDeclaration: true
   ReturnCount:
     excludeGuardClauses: true
+  SerialVersionUIDInSerializableClass:
+    active: false
   UnusedPrivateMember:
     ignoreAnnotated: [ 'Preview' ]
