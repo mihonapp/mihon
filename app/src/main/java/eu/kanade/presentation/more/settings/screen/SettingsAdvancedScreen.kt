@@ -105,6 +105,7 @@ import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.net.Proxy.Type as ProxyType
 
 object SettingsAdvancedScreen : SearchableSettings {
 
@@ -397,7 +398,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                         chooseColorProfile.launch(arrayOf("*/*"))
                     },
                 ),
-            )
+            ),
         )
     }
 
@@ -491,7 +492,7 @@ private fun ProxyConfigDialog(
     var password by remember { mutableStateOf(TextFieldValue(proxy.password ?: "")) }
     var enabled by remember { mutableStateOf(proxy.enabled) }
 
-    val proxyTypes = java.net.Proxy.Type.entries.filter { it.name != java.net.Proxy.Type.DIRECT.name }
+    val proxyTypes = ProxyType.entries.filter { it.name != ProxyType.DIRECT.name }
     var checked by remember { mutableIntStateOf(proxy.proxyType?.ordinal?.minus(1) ?: 0) }
 
     var proxyChanged by remember { mutableStateOf(false) }
@@ -521,11 +522,11 @@ private fun ProxyConfigDialog(
                         password = TextFieldValue("")
                         checked = 0
                         enabled = false
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Delete,
-                        contentDescription = stringResource(MR.strings.action_delete)
+                        contentDescription = stringResource(MR.strings.action_delete),
                     )
                 }
                 IconButton(onClick = onDismissRequest) {
@@ -590,63 +591,67 @@ private fun ProxyConfigDialog(
                         isError = !port.text.isDigitsOnly(),
                     )
                 }
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = username,
-                    onValueChange = {
-                        newProxy.username = it.text
-                        proxyChanged = newProxy != proxy
+                if (proxyTypes[checked] != ProxyType.SOCKS) {
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = username,
+                        onValueChange = {
+                            newProxy.username = it.text
+                            proxyChanged = newProxy != proxy
 
-                        username = it
-                    },
-                    label = { Text(text = stringResource(MR.strings.username)) },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    singleLine = true,
-                )
-                var hidePassword by remember { mutableStateOf(true) }
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = password,
-                    onValueChange = {
-                        newProxy.password = it.text
-                        proxyChanged = newProxy != proxy
+                            username = it
+                        },
+                        label = { Text(text = stringResource(MR.strings.username)) },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        singleLine = true,
+                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
+                    )
+                    var hidePassword by remember { mutableStateOf(true) }
+                    OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = password,
+                        onValueChange = {
+                            newProxy.password = it.text
+                            proxyChanged = newProxy != proxy
 
-                        password = it
-                    },
-                    label = { Text(text = stringResource(MR.strings.password)) },
-                    trailingIcon = {
-                        IconButton(onClick = { hidePassword = !hidePassword }) {
-                            Icon(
-                                imageVector = if (hidePassword) {
-                                    Icons.Filled.Visibility
-                                } else {
-                                    Icons.Filled.VisibilityOff
-                                },
-                                contentDescription = null,
-                            )
-                        }
-                    },
-                    visualTransformation = if (hidePassword) {
-                        PasswordVisualTransformation()
-                    } else {
-                        VisualTransformation.None
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                    singleLine = true,
-                )
+                            password = it
+                        },
+                        label = { Text(text = stringResource(MR.strings.password)) },
+                        trailingIcon = {
+                            IconButton(onClick = { hidePassword = !hidePassword }) {
+                                Icon(
+                                    imageVector = if (hidePassword) {
+                                        Icons.Filled.Visibility
+                                    } else {
+                                        Icons.Filled.VisibilityOff
+                                    },
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        visualTransformation = if (hidePassword) {
+                            PasswordVisualTransformation()
+                        } else {
+                            VisualTransformation.None
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                        singleLine = true,
+                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
+                    )
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
                     Text(
                         text = stringResource(MR.strings.pref_enable_proxy),
                         style = MaterialTheme.typography.titleLarge,
-                        fontSize = TitleFontSize
+                        fontSize = TitleFontSize,
                     )
                     Switch(
                         checked = enabled,
@@ -655,7 +660,7 @@ private fun ProxyConfigDialog(
                             newProxy.enabled = enabled
 
                             proxyChanged = newProxy != proxy
-                        }
+                        },
                     )
                 }
             }
