@@ -7,8 +7,12 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.reader.model.ReaderChapter
+import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.openReadOnlyChannel
+import tachiyomi.core.common.util.lang.launchUI
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.manga.model.Manga
@@ -75,6 +79,7 @@ class ChapterLoader(
     /**
      * Returns the page loader to use for this [chapter].
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun getPageLoader(chapter: ReaderChapter): PageLoader {
         val dbChapter = chapter.chapter
         val isDownloaded = downloadManager.isChapterDownloaded(
@@ -96,6 +101,14 @@ class ChapterLoader(
                 when (format) {
                     is Format.Directory -> DirectoryPageLoader(format.file)
                     is Format.Zip -> ZipPageLoader(format.file.openReadOnlyChannel(context))
+                    is Format.SevenZip -> SevenZipPageLoader(
+                        format.file.openReadOnlyChannel(context),
+                        Exception(context.stringResource(MR.strings.loader_7zip_unsupported)),
+                    ) {
+                        GlobalScope.launchUI {
+                            context.toast(context.stringResource(MR.strings.loader_7zip_slow_method, it))
+                        }
+                    }
                     is Format.Rar -> try {
                         RarPageLoader(format.file.openInputStream())
                     } catch (e: UnsupportedRarV5Exception) {

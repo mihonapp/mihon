@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import eu.kanade.tachiyomi.util.storage.EpubFile
+import eu.kanade.tachiyomi.util.storage.SevenZUtil.getImages
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.serialization.json.Json
@@ -20,6 +21,7 @@ import mihon.core.common.extensions.toZipFile
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.core.common.i18n.stringResource
+import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import tachiyomi.core.metadata.comicinfo.COMIC_INFO_FILE
 import tachiyomi.core.metadata.comicinfo.ComicInfo
 import tachiyomi.core.metadata.comicinfo.copyFromComicInfo
@@ -334,6 +336,12 @@ actual class LocalSource(
                             .find { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
 
                         entry?.let { coverManager.update(manga, zip.getInputStream(it)) }
+                    }
+                }
+                is Format.SevenZip -> {
+                    SevenZFile(format.file.openReadOnlyChannel(context)).use { archive ->
+                        val entry = archive.getImages().firstOrNull()
+                        entry?.let { coverManager.update(manga, it.inputStream()) }
                     }
                 }
                 is Format.Rar -> {
