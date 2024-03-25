@@ -798,4 +798,10 @@
     <string name="action_open_repo">開啟來源儲存庫</string>
     <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
     <string name="pref_display_profile">自訂顯示設定檔</string>
+    <string name="action_add_anyway">仍要新增</string>
+    <string name="action_migrate_duplicate">遷移現有作品</string>
+    <string name="action_replace_repo">取代</string>
+    <string name="action_replace_repo_title">已有相同的簽署金鑰指紋</string>
+    <string name="action_replace_repo_message">「%1$s」儲存庫的簽署金鑰指紋與「%2$s」相同。
+\n若此為預期現象，則「%2$s」將被取代，否則請聯絡該儲存庫的維護者。</string>
 </resources>
