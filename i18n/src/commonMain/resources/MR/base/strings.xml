@@ -790,7 +790,6 @@
     <string name="action_view_upcoming">View Upcoming Updates</string>
 
     <!-- Upcoming -->
-    <string name="calendar_title_format">%1$s %2$s</string>
     <string name="upcoming_guide">Upcoming Guide</string>
     <string name="upcoming_calendar_next">Next Month</string>
     <string name="upcoming_calendar_prev">Previous Month</string>

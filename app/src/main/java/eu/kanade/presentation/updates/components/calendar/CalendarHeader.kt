@@ -30,15 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-private val HEADER_PADDING = 8.dp
-private const val MonthYearChangeAnimationDuration = 200
 
 @Composable
 fun CalenderHeader(
@@ -51,7 +48,7 @@ fun CalenderHeader(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(all = HEADER_PADDING),
+            .padding(MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -90,6 +87,8 @@ fun CalenderHeader(
     }
 }
 
+private const val MonthYearChangeAnimationDuration = 200
+
 private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTransform {
     val movingForward = targetState > initialState
 
@@ -123,5 +122,9 @@ private fun getTitleText(monthYear: YearMonth): String {
 @Preview
 @Composable
 private fun CalenderHeaderPreview() {
-    CalenderHeader(YearMonth.now(), {}, {})
+    CalenderHeader(
+        yearMonth = YearMonth.now(),
+        onNextClick = {},
+        onPreviousClick = {},
+    )
 }

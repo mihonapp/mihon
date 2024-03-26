@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +28,7 @@ import eu.kanade.presentation.util.isTabletUi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
+import tachiyomi.presentation.core.components.material.padding
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -35,7 +37,6 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 import kotlin.math.ceil
 
-private val CalenderPadding = 8.dp
 private val FontSize = 16.sp
 private const val ExtendedScale = 0.31f
 private const val MediumScale = 0.60f
@@ -76,7 +77,7 @@ fun Calendar(
         modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .padding(all = CalenderPadding),
+            .padding(MaterialTheme.padding.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CalenderHeader(
@@ -148,7 +149,7 @@ private fun CalendarGrid(
                 val localDate = currentYearMonth.atDay(it)
                 CalendarDay(
                     date = localDate,
-                    onDayClick = onClickDay,
+                    onDayClick = { onClickDay(localDate) },
                     events = events[localDate] ?: 0,
                 )
             }

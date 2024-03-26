@@ -23,26 +23,31 @@ private val UpcomingItemHeight = 96.dp
 @Composable
 fun UpcomingItem(
     upcoming: Manga,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: (manga: Manga) -> Unit = {},
 ) {
     Row(
         modifier = modifier
-            .clickable(onClick = { onClick(upcoming) })
+            .clickable(onClick = onClick)
             .height(UpcomingItemHeight)
-            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+            .padding(
+                horizontal = MaterialTheme.padding.medium,
+                vertical = MaterialTheme.padding.small,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Book(
             modifier = Modifier.fillMaxHeight(),
             data = upcoming.asMangaCover(),
-            onClick = { onClick(upcoming) },
         )
 
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = MaterialTheme.padding.large, end = MaterialTheme.padding.small),
+                .padding(
+                    start = MaterialTheme.padding.large,
+                    end = MaterialTheme.padding.small,
+                ),
             text = upcoming.title,
             fontWeight = FontWeight.SemiBold,
             maxLines = 2,

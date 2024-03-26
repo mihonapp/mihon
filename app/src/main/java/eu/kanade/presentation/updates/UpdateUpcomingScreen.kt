@@ -44,9 +44,9 @@ import java.time.LocalDate
 
 @Composable
 fun UpdateUpcomingScreen(
+    onClickUpcoming: (manga: Manga) -> Unit,
     state: UpdateUpcomingScreenModel.State,
     modifier: Modifier = Modifier,
-    onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
     if (isTabletUi()) {
         UpdateUpcomingScreenLargeImpl(
@@ -65,9 +65,9 @@ fun UpdateUpcomingScreen(
 
 @Composable
 internal fun UpdateUpcomingScreenSmallImpl(
+    onClickUpcoming: (manga: Manga) -> Unit,
     state: UpdateUpcomingScreenModel.State,
     modifier: Modifier = Modifier,
-    onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -112,11 +112,11 @@ internal fun UpdateUpcomingToolbar(
 
 @Composable
 internal fun UpdateUpcomingSmallContent(
-    upcoming: ImmutableList<UpcomingUIModel>,
     contentPadding: PaddingValues,
+    onClickUpcoming: (manga: Manga) -> Unit,
+    upcoming: ImmutableList<UpcomingUIModel>,
     modifier: Modifier = Modifier,
     events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
-    onClickUpcoming: (manga: Manga) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -161,7 +161,7 @@ internal fun UpdateUpcomingSmallContent(
                 is UpcomingUIModel.Item -> {
                     UpcomingItem(
                         upcoming = item.item,
-                        onClick = onClickUpcoming,
+                        onClick = { onClickUpcoming(item.item) },
                     )
                 }
                 is UpcomingUIModel.Header -> {
@@ -268,7 +268,7 @@ internal fun UpdateUpcomingLargeContent(
                 is UpcomingUIModel.Item -> {
                     UpcomingItem(
                         upcoming = item.item,
-                        onClick = onClickUpcoming,
+                        onClick = { onClickUpcoming(item.item) },
                     )
                 }
                 is UpcomingUIModel.Header -> {

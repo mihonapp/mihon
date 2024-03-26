@@ -16,9 +16,7 @@ class UpdateUpcomingScreen : Screen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel {
-            UpdateUpcomingScreenModel()
-        }
+        val screenModel = rememberScreenModel { UpdateUpcomingScreenModel() }
         val state by screenModel.state.collectAsState()
 
         UpdateUpcomingScreen(

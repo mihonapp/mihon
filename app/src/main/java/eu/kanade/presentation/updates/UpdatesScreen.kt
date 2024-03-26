@@ -48,6 +48,7 @@ fun UpdateScreen(
     onClickCover: (UpdatesItem) -> Unit,
     onSelectAll: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    onCalendarClicked: () -> Unit,
     onUpdateLibrary: () -> Boolean,
     onDownloadChapter: (List<UpdatesItem>, ChapterDownloadAction) -> Unit,
     onMultiBookmarkClicked: (List<UpdatesItem>, bookmark: Boolean) -> Unit,
@@ -55,15 +56,14 @@ fun UpdateScreen(
     onMultiDeleteClicked: (List<UpdatesItem>) -> Unit,
     onUpdateSelected: (UpdatesItem, Boolean, Boolean, Boolean) -> Unit,
     onOpenChapter: (UpdatesItem) -> Unit,
-    onCalendarClicked: () -> Unit
 ) {
     BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
 
     Scaffold(
         topBar = { scrollBehavior ->
             UpdatesAppBar(
-                onUpdateLibrary = { onUpdateLibrary() },
                 onCalendarClicked = { onCalendarClicked() },
+                onUpdateLibrary = { onUpdateLibrary() },
                 actionModeCounter = state.selected.size,
                 onSelectAll = { onSelectAll(true) },
                 onInvertSelection = { onInvertSelection() },
@@ -129,8 +129,8 @@ fun UpdateScreen(
 
 @Composable
 private fun UpdatesAppBar(
-    onUpdateLibrary: () -> Unit,
     onCalendarClicked: () -> Unit,
+    onUpdateLibrary: () -> Unit,
     // For action mode
     actionModeCounter: Int,
     onSelectAll: () -> Unit,

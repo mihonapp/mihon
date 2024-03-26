@@ -30,9 +30,9 @@ private const val MaxEvents = 3
 @Composable
 fun CalendarDay(
     date: LocalDate,
-    onDayClick: (LocalDate) -> Unit,
+    events: Int,
+    onDayClick: () -> Unit,
     modifier: Modifier = Modifier,
-    events: Int = 0,
 ) {
     val today = remember { LocalDate.now() }
 
@@ -48,7 +48,7 @@ fun CalendarDay(
             )
             .clip(shape = CircleShape)
             .background(color = Color.Transparent)
-            .clickable(onClick = { onDayClick(date) })
+            .clickable(onClick = onDayClick)
             .circleLayout()
             .wrapContentSize()
             .defaultMinSize(56.dp),
