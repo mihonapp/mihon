@@ -1,6 +1,7 @@
 package eu.kanade.presentation.updates.components.calendar
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
@@ -36,12 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.LocalDate
 import java.time.Month
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private val HEADER_PADDING = 8.dp
+private const val MonthYearChangeAnimationDuration = 200
 
 @Composable
 fun CalenderHeader(
@@ -61,16 +63,16 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        val monthYeah = YearMonth.of(year, month)
         AnimatedContent(
-            targetState = month to year,
+            targetState = monthYeah,
             transitionSpec = {
-                addAnimation(isNext = isNext)
-                    .using(SizeTransform(clip = false))
+                getAnimation()
             },
             label = "Change Month",
-        ) { (targetMonth, targetYear) ->
+        ) { monthYear ->
             Text(
-                text = getTitleText(targetMonth, targetYear),
+                text = getTitleText(monthYear),
                 style = MaterialTheme.typography.titleLarge,
             )
         }
@@ -110,40 +112,35 @@ fun CalenderHeader(
     }
 }
 
-/**
- * Adds the animation to the content based on the given duration and direction.
- *
- * @param duration The duration of the animation in milliseconds.
- * @param isNext Determines the direction of the animation.
- * @return The content transformation with the specified animation.
- */
 @ReadOnlyComposable
-private fun addAnimation(duration: Int = 200, isNext: Boolean): ContentTransform {
+private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTransform {
+    val movingForward = targetState > initialState
+
     val enterTransition = slideInVertically(
-        animationSpec = tween(durationMillis = duration),
-    ) { height -> if (isNext) height else -height } + fadeIn(
-        animationSpec = tween(durationMillis = duration),
+        animationSpec = tween(durationMillis = MonthYearChangeAnimationDuration),
+    ) { height -> if (movingForward) height else -height } + fadeIn(
+        animationSpec = tween(durationMillis = MonthYearChangeAnimationDuration),
     )
     val exitTransition = slideOutVertically(
-        animationSpec = tween(durationMillis = duration),
-    ) { height -> if (isNext) -height else height } + fadeOut(
-        animationSpec = tween(durationMillis = duration),
+        animationSpec = tween(durationMillis = MonthYearChangeAnimationDuration),
+    ) { height -> if (movingForward) -height else height } + fadeOut(
+        animationSpec = tween(durationMillis = MonthYearChangeAnimationDuration),
     )
-    return enterTransition togetherWith exitTransition
+    return (enterTransition togetherWith exitTransition)
+        .using(SizeTransform(clip = false))
 }
 
 /**
  * Returns the formatted title text for the Calendar header.
  *
- * @param month The current month.
- * @param year The current year.
+ * @param monthYear The current month and year pair.
  * @return The formatted title text.
  */
 @Composable
 @ReadOnlyComposable
-private fun getTitleText(month: Month, year: Int): String {
+private fun getTitleText(monthYear: YearMonth): String {
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
-    return formatter.format(LocalDate.of(year, month, 1))
+    return formatter.format(monthYear)
 }
 
 @Preview
