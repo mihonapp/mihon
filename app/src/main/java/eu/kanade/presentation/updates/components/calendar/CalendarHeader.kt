@@ -33,8 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import java.time.Month
-import java.time.Year
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -45,10 +43,9 @@ private const val MonthYearChangeAnimationDuration = 200
 @Composable
 fun CalenderHeader(
     yearMonth: YearMonth,
+    onPreviousClick: () -> Unit,
+    onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onPreviousClick: () -> Unit = {},
-    onNextClick: () -> Unit = {},
-    arrowShown: Boolean = true,
 ) {
     Row(
         modifier = modifier
@@ -56,12 +53,11 @@ fun CalenderHeader(
             .wrapContentHeight()
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AnimatedContent(
             targetState = yearMonth,
-            transitionSpec = {
-                getAnimation()
-            },
+            transitionSpec = { getAnimation() },
             label = "Change Month",
         ) { monthYear ->
             Text(
@@ -69,41 +65,33 @@ fun CalenderHeader(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-
-        if (arrowShown) {
-            Row(
+        Row(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterVertically),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            IconButton(
+                onClick = onPreviousClick,
                 modifier = Modifier
                     .wrapContentSize()
-                    .align(Alignment.CenterVertically),
-                horizontalArrangement = Arrangement.End,
+                    .clip(CircleShape),
             ) {
-                IconButton(
-                    onClick = {
-                        onPreviousClick()
-                    },
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .clip(CircleShape),
-                ) {
-                    Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
-                }
+                Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
+            }
 
-                IconButton(
-                    onClick = {
-                        onNextClick()
-                    },
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .clip(CircleShape),
-                ) {
-                    Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
-                }
+            IconButton(
+                onClick = onNextClick,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clip(CircleShape),
+            ) {
+                Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
         }
     }
 }
 
-@ReadOnlyComposable
 private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTransform {
     val movingForward = targetState > initialState
 
@@ -137,7 +125,5 @@ private fun getTitleText(monthYear: YearMonth): String {
 @Preview
 @Composable
 private fun CalenderHeaderPreview() {
-    CalenderHeader(
-        YearMonth.of(Year.now().value, Month.APRIL),
-    )
+    CalenderHeader(YearMonth.now(), {}, {})
 }

@@ -113,8 +113,8 @@ private fun CalendarGrid(
     onClickDay: (day: LocalDate) -> Unit = {},
     widthModifier: Float = 1.0F,
 ) {
-    val daysInMonth = currentYearMonth.month.length(true)
-    val startDayOfMonth = LocalDate.of(currentYearMonth.year, currentYearMonth.monthValue, 1)
+    val daysInMonth = currentYearMonth.month.length(currentYearMonth.isLeapYear)
+    val startDayOfMonth = currentYearMonth.atDay(1)
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
     // The lower bound for Calendar Days, between -5 and 1 to provide cell offset
@@ -137,7 +137,6 @@ private fun CalendarGrid(
     ) {
         items(weekDays) { item ->
             Text(
-                modifier = Modifier,
                 text = labelFormat(item),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.SemiBold,
@@ -146,7 +145,7 @@ private fun CalendarGrid(
         }
         items(dayEntries) {
             if (it > 0) {
-                val localDate = LocalDate.of(currentYearMonth.year, currentYearMonth.month, it)
+                val localDate = currentYearMonth.atDay(it)
                 CalendarDay(
                     date = localDate,
                     onDayClick = onClickDay,
