@@ -4,11 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,65 +35,47 @@ fun CalendarDay(
 ) {
     val today = remember { LocalDate.now() }
 
-    val inThePast = date.isBefore(today)
-
-    val currentDay = today == date
-
-    Column(
+    Box(
         modifier = modifier
-            .border(
-                border = getBorder(currentDay, MaterialTheme.colorScheme.onBackground),
-                shape = CircleShape,
+            .then(
+                if (today == date) {
+                    Modifier.border(
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                        shape = CircleShape,
+                    )
+                } else {
+                    Modifier
+                },
             )
+            .background(Color.Transparent)
             .clip(shape = CircleShape)
-            .background(color = Color.Transparent)
             .clickable(onClick = onDayClick)
             .circleLayout()
-            .wrapContentSize()
             .defaultMinSize(56.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = date.dayOfMonth.toString(),
-            modifier = Modifier.wrapContentSize(),
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = when {
-                inThePast -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f)
+                date.isBefore(today) -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f)
                 else -> MaterialTheme.colorScheme.onBackground
             },
             fontWeight = FontWeight.SemiBold,
         )
-        Row {
+        Row(
+            modifier = Modifier.offset(y = 12.dp),
+        ) {
             val size = events.coerceAtMost(MaxEvents)
             for (index in 0 until size) {
-                Row {
-                    CalendarIndicator(
-                        index = index,
-                        size = 56.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
+                CalendarIndicator(
+                    index = index,
+                    size = 56.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
-    }
-}
-
-/**
- * Returns the border stroke based on the current day, color, and selected state.
- *
- * @param currentDay Whether the day is the current day.
- * @param color The color of the border.
- *
- * @return The border stroke to be applied.
- */
-private fun getBorder(currentDay: Boolean, color: Color): BorderStroke {
-    val emptyBorder = BorderStroke(0.dp, Color.Transparent)
-    return if (currentDay) {
-        BorderStroke(1.dp, color)
-    } else {
-        emptyBorder
     }
 }
 
