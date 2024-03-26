@@ -12,8 +12,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +55,7 @@ fun Calendar(
     },
     onClickDay: (day: LocalDate) -> Unit = {},
 ) {
-    val currentYearMonth = remember { mutableStateOf(YearMonth.now()) }
+    var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
     val isTabletUi = isTabletUi()
 
     val localFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
@@ -78,9 +80,9 @@ fun Calendar(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CalenderHeader(
-            yearMonth = currentYearMonth.value,
-            onPreviousClick = { currentYearMonth.value = currentYearMonth.value.minusMonths(1L) },
-            onNextClick = { currentYearMonth.value = currentYearMonth.value.plusMonths(1L) },
+            yearMonth = currentYearMonth,
+            onPreviousClick = { currentYearMonth = currentYearMonth.minusMonths(1L) },
+            onNextClick = { currentYearMonth = currentYearMonth.plusMonths(1L) },
         )
         Spacer(modifier = Modifier.padding(vertical = 4.dp))
         Row(
@@ -89,7 +91,7 @@ fun Calendar(
             CalendarGrid(
                 weekDays = weekDays,
                 labelFormat = labelFormat,
-                currentYearMonth = currentYearMonth.value,
+                currentYearMonth = currentYearMonth,
                 isTabletUi = isTabletUi,
                 events = events,
                 widthModifier = widthModifier,
