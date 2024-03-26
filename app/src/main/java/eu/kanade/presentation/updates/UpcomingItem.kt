@@ -40,7 +40,6 @@ fun UpcomingItem(
             modifier = Modifier.fillMaxHeight(),
             data = upcoming.asMangaCover(),
         )
-
         Text(
             modifier = Modifier
                 .weight(1f)

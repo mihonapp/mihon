@@ -43,7 +43,7 @@ fun CalenderHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.padding.medium, MaterialTheme.padding.small),
+            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -58,15 +58,10 @@ fun CalenderHeader(
             )
         }
         Row {
-            IconButton(
-                onClick = onPreviousClick,
-            ) {
+            IconButton(onClick = onPreviousClick) {
                 Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
             }
-
-            IconButton(
-                onClick = onNextClick,
-            ) {
+            IconButton(onClick = onNextClick) {
                 Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
         }

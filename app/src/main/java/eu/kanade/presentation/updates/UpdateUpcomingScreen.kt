@@ -48,18 +48,23 @@ fun UpdateUpcomingScreen(
     state: UpdateUpcomingScreenModel.State,
     modifier: Modifier = Modifier,
 ) {
-    if (isTabletUi()) {
-        UpdateUpcomingScreenLargeImpl(
-            state = state,
-            modifier = modifier,
-            onClickUpcoming = onClickUpcoming,
-        )
-    } else {
-        UpdateUpcomingScreenSmallImpl(
-            state = state,
-            modifier = modifier,
-            onClickUpcoming = onClickUpcoming,
-        )
+    Scaffold(
+        topBar = { UpdateUpcomingToolbar() },
+        modifier = modifier,
+    ) { paddingValues ->
+        if (isTabletUi()) {
+            UpdateUpcomingScreenLargeImpl(
+                onClickUpcoming = onClickUpcoming,
+                paddingValues = paddingValues,
+                state = state,
+            )
+        } else {
+            UpdateUpcomingScreenSmallImpl(
+                onClickUpcoming = onClickUpcoming,
+                paddingValues = paddingValues,
+                state = state,
+            )
+        }
     }
 }
 
@@ -67,19 +72,14 @@ fun UpdateUpcomingScreen(
 internal fun UpdateUpcomingScreenSmallImpl(
     onClickUpcoming: (manga: Manga) -> Unit,
     state: UpdateUpcomingScreenModel.State,
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
 ) {
-    Scaffold(
-        modifier = modifier,
-        topBar = { UpdateUpcomingToolbar() },
-    ) { paddingValues ->
-        UpdateUpcomingSmallContent(
-            upcoming = state.items,
-            events = state.events,
-            contentPadding = paddingValues,
-            onClickUpcoming = onClickUpcoming,
-        )
-    }
+    UpdateUpcomingSmallContent(
+        upcoming = state.items,
+        events = state.events,
+        contentPadding = paddingValues,
+        onClickUpcoming = onClickUpcoming,
+    )
 }
 
 @Composable
@@ -177,40 +177,35 @@ internal fun UpdateUpcomingSmallContent(
 
 @Composable
 internal fun UpdateUpcomingScreenLargeImpl(
+    onClickUpcoming: (manga: Manga) -> Unit,
+    paddingValues: PaddingValues,
     state: UpdateUpcomingScreenModel.State,
-    modifier: Modifier = Modifier,
-    onClickUpcoming: (manga: Manga) -> Unit = {},
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val listState = rememberLazyListState()
 
-    Scaffold(
-        modifier = modifier,
-        topBar = { UpdateUpcomingToolbar() },
-    ) { contentPadding ->
-        TwoPanelBox(
-            modifier = Modifier.padding(
-                start = contentPadding.calculateStartPadding(layoutDirection),
-                end = contentPadding.calculateEndPadding(layoutDirection),
-            ),
-            startContent = {
-                UpdateUpcomingLargeCalendar(
-                    upcoming = state.items,
-                    listState = listState,
-                    events = state.events,
-                    modifier = Modifier.padding(contentPadding),
-                )
-            },
-            endContent = {
-                UpdateUpcomingLargeContent(
-                    upcoming = state.items,
-                    listState = listState,
-                    contentPadding = contentPadding,
-                    onClickUpcoming = onClickUpcoming,
-                )
-            },
-        )
-    }
+    TwoPanelBox(
+        modifier = Modifier.padding(
+            start = paddingValues.calculateStartPadding(layoutDirection),
+            end = paddingValues.calculateEndPadding(layoutDirection),
+        ),
+        startContent = {
+            UpdateUpcomingLargeCalendar(
+                upcoming = state.items,
+                listState = listState,
+                events = state.events,
+                modifier = Modifier.padding(paddingValues),
+            )
+        },
+        endContent = {
+            UpdateUpcomingLargeContent(
+                upcoming = state.items,
+                listState = listState,
+                contentPadding = paddingValues,
+                onClickUpcoming = onClickUpcoming,
+            )
+        },
+    )
 }
 
 @Composable

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -75,7 +74,6 @@ fun Calendar(
 
     Column(
         modifier = modifier
-            .wrapContentHeight()
             .fillMaxWidth()
             .padding(MaterialTheme.padding.small),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,7 +112,7 @@ private fun CalendarGrid(
     onClickDay: (day: LocalDate) -> Unit = {},
     widthModifier: Float = 1.0F,
 ) {
-    val daysInMonth = currentYearMonth.month.length(currentYearMonth.isLeapYear)
+    val daysInMonth = currentYearMonth.lengthOfMonth()
     val startDayOfMonth = currentYearMonth.atDay(1)
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
@@ -125,7 +123,6 @@ private fun CalendarGrid(
     val modeModifier = if (isTabletUi) {
         modifier
             .fillMaxWidth(widthModifier)
-            .wrapContentHeight()
     } else {
         modifier
             .fillMaxWidth(widthModifier)
