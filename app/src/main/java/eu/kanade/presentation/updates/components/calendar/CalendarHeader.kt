@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -28,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.padding
@@ -47,8 +43,7 @@ fun CalenderHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(MaterialTheme.padding.small),
+            .padding(MaterialTheme.padding.medium, MaterialTheme.padding.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -62,24 +57,15 @@ fun CalenderHeader(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-        Row(
-            modifier = Modifier
-                .wrapContentSize(),
-        ) {
+        Row {
             IconButton(
                 onClick = onPreviousClick,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .clip(CircleShape),
             ) {
                 Icon(Icons.Default.KeyboardArrowLeft, stringResource(MR.strings.upcoming_calendar_prev))
             }
 
             IconButton(
                 onClick = onNextClick,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .clip(CircleShape),
             ) {
                 Icon(Icons.Default.KeyboardArrowRight, stringResource(MR.strings.upcoming_calendar_next))
             }
