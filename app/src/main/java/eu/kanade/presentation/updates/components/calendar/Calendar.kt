@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,7 +27,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
+import java.time.YearMonth
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -54,11 +53,7 @@ fun Calendar(
     },
     onClickDay: (day: LocalDate) -> Unit = {},
 ) {
-    val today = LocalDate.now()
-    val displayedMonth = remember { mutableStateOf(today.month) }
-    val displayedYear = remember { mutableIntStateOf(today.year) }
-    val currentMonth = displayedMonth.value
-    val currentYear = displayedYear.intValue
+    val currentYearMonth = remember { mutableStateOf(YearMonth.now()) }
     val isTabletUi = isTabletUi()
 
     val localFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
@@ -83,16 +78,9 @@ fun Calendar(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CalenderHeader(
-            month = currentMonth,
-            year = currentYear,
-            onPreviousClick = {
-                displayedYear.intValue -= if (currentMonth == Month.JANUARY) 1 else 0
-                displayedMonth.value -= 1
-            },
-            onNextClick = {
-                displayedYear.intValue += if (currentMonth == Month.DECEMBER) 1 else 0
-                displayedMonth.value += 1
-            },
+            yearMonth = currentYearMonth.value,
+            onPreviousClick = { currentYearMonth.value = currentYearMonth.value.minusMonths(1L) },
+            onNextClick = { currentYearMonth.value = currentYearMonth.value.plusMonths(1L) },
         )
         Spacer(modifier = Modifier.padding(vertical = 4.dp))
         Row(
@@ -101,8 +89,7 @@ fun Calendar(
             CalendarGrid(
                 weekDays = weekDays,
                 labelFormat = labelFormat,
-                currentMonth = currentMonth,
-                currentYear = currentYear,
+                currentYearMonth = currentYearMonth.value,
                 isTabletUi = isTabletUi,
                 events = events,
                 widthModifier = widthModifier,
@@ -117,16 +104,15 @@ fun Calendar(
 private fun CalendarGrid(
     weekDays: ImmutableList<DayOfWeek>,
     labelFormat: (DayOfWeek) -> String,
-    currentMonth: Month,
-    currentYear: Int,
+    currentYearMonth: YearMonth,
     isTabletUi: Boolean,
     events: ImmutableMap<LocalDate, Int>,
     modifier: Modifier = Modifier,
     onClickDay: (day: LocalDate) -> Unit = {},
     widthModifier: Float = 1.0F,
 ) {
-    val daysInMonth = currentMonth.length(true)
-    val startDayOfMonth = LocalDate.of(currentYear, currentMonth, 1)
+    val daysInMonth = currentYearMonth.month.length(true)
+    val startDayOfMonth = LocalDate.of(currentYearMonth.year, currentYearMonth.monthValue, 1)
     val firstDayOfMonth = startDayOfMonth.dayOfWeek
 
     // The lower bound for Calendar Days, between -5 and 1 to provide cell offset
@@ -158,7 +144,7 @@ private fun CalendarGrid(
         }
         items(dayEntries) {
             if (it > 0) {
-                val localDate = LocalDate.of(currentYear, currentMonth, it)
+                val localDate = LocalDate.of(currentYearMonth.year, currentYearMonth.month, it)
                 CalendarDay(
                     date = localDate,
                     onDayClick = onClickDay,

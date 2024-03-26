@@ -26,10 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.Month
+import java.time.Year
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -47,15 +44,12 @@ private const val MonthYearChangeAnimationDuration = 200
 
 @Composable
 fun CalenderHeader(
-    month: Month,
-    year: Int,
+    yearMonth: YearMonth,
     modifier: Modifier = Modifier,
     onPreviousClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
     arrowShown: Boolean = true,
 ) {
-    var isNext by remember { mutableStateOf(true) }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -63,9 +57,8 @@ fun CalenderHeader(
             .padding(all = HEADER_PADDING),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        val monthYeah = YearMonth.of(year, month)
         AnimatedContent(
-            targetState = monthYeah,
+            targetState = yearMonth,
             transitionSpec = {
                 getAnimation()
             },
@@ -86,7 +79,6 @@ fun CalenderHeader(
             ) {
                 IconButton(
                     onClick = {
-                        isNext = false
                         onPreviousClick()
                     },
                     modifier = Modifier
@@ -98,7 +90,6 @@ fun CalenderHeader(
 
                 IconButton(
                     onClick = {
-                        isNext = true
                         onNextClick()
                     },
                     modifier = Modifier
@@ -147,7 +138,6 @@ private fun getTitleText(monthYear: YearMonth): String {
 @Composable
 private fun CalenderHeaderPreview() {
     CalenderHeader(
-        month = Month.APRIL,
-        year = 2024,
+        YearMonth.of(Year.now().value, Month.APRIL),
     )
 }
