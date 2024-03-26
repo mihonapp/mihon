@@ -67,9 +67,7 @@ fun CalenderHeader(
         }
         Row(
             modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.CenterVertically),
-            horizontalArrangement = Arrangement.End,
+                .wrapContentSize(),
         ) {
             IconButton(
                 onClick = onPreviousClick,
