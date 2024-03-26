@@ -18,6 +18,7 @@ import eu.kanade.domain.manga.interactor.GetExcludedScanlators
 import eu.kanade.domain.manga.interactor.SetExcludedScanlators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.chaptersFiltered
+import eu.kanade.domain.manga.model.copyFrom
 import eu.kanade.domain.manga.model.downloadedFilter
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.domain.track.interactor.AddTracks
@@ -227,11 +228,18 @@ class MangaScreenModel(
 
             // Fetch info-chapters when needed
             if (screenModelScope.isActive) {
-                val fetchFromSourceTasks = listOf(
-                    async { if (needRefreshInfo) fetchMangaFromSource() },
-                    async { if (needRefreshChapter) fetchChaptersFromSource() },
-                )
-                fetchFromSourceTasks.awaitAll()
+                if (source?.isLocal() == true) {
+                    // `fetchChaptersFromSource` should be called before `fetchMangaFromSource`
+                    // because `LocalSource.getChapterList` has side effects since 82bdf63
+                    if (needRefreshChapter) fetchChaptersFromSource()
+                    if (needRefreshInfo) fetchMangaFromSource()
+                } else {
+                    val fetchFromSourceTasks = listOf(
+                        async { if (needRefreshInfo) fetchMangaFromSource() },
+                        async { if (needRefreshChapter) fetchChaptersFromSource() },
+                    )
+                    fetchFromSourceTasks.awaitAll()
+                }
             }
 
             // Initial loading finished
@@ -242,11 +250,18 @@ class MangaScreenModel(
     fun fetchAllFromSource(manualFetch: Boolean = true) {
         screenModelScope.launch {
             updateSuccessState { it.copy(isRefreshingData = true) }
-            val fetchFromSourceTasks = listOf(
-                async { fetchMangaFromSource(manualFetch) },
-                async { fetchChaptersFromSource(manualFetch) },
-            )
-            fetchFromSourceTasks.awaitAll()
+            if (source?.isLocal() == true) {
+                // `fetchChaptersFromSource` should be called before `fetchMangaFromSource`
+                // because `LocalSource.getChapterList` has side effects since 82bdf63
+                fetchChaptersFromSource(manualFetch)
+                fetchMangaFromSource(manualFetch)
+            } else {
+                val fetchFromSourceTasks = listOf(
+                    async { fetchMangaFromSource(manualFetch) },
+                    async { fetchChaptersFromSource(manualFetch) },
+                )
+                fetchFromSourceTasks.awaitAll()
+            }
             updateSuccessState { it.copy(isRefreshingData = false) }
         }
     }
@@ -537,7 +552,13 @@ class MangaScreenModel(
         val state = successState ?: return
         try {
             withIOContext {
-                val chapters = state.source.getChapterList(state.manga.toSManga())
+                val manga = state.manga.toSManga()
+                val chapters = state.source.getChapterList(manga)
+
+                // `LocalSource.getChapterList` has side effects since 82bdf63
+                if (state.source.isLocal()) {
+                    updateSuccessState { it.copy(manga = it.manga.copyFrom(manga)) }
+                }
 
                 val newChapters = syncChaptersWithSource.await(
                     chapters,
