@@ -69,7 +69,7 @@ fun UpcomingScreenContent(
 }
 
 @Composable
-internal fun UpcomingToolbar(
+private fun UpcomingToolbar(
     modifier: Modifier = Modifier,
 ) {
     val navigator = LocalNavigator.currentOrThrow
@@ -97,7 +97,7 @@ internal fun UpcomingToolbar(
 }
 
 @Composable
-internal fun UpcomingScreenSmallImpl(
+private fun UpcomingScreenSmallImpl(
     onClickUpcoming: (manga: Manga) -> Unit,
     state: UpcomingScreenModel.State,
     paddingValues: PaddingValues,
@@ -111,7 +111,7 @@ internal fun UpcomingScreenSmallImpl(
 }
 
 @Composable
-internal fun UpcomingSmallContent(
+private fun UpcomingSmallContent(
     contentPadding: PaddingValues,
     onClickUpcoming: (manga: Manga) -> Unit,
     upcoming: ImmutableList<UpcomingUIModel>,
@@ -176,7 +176,7 @@ internal fun UpcomingSmallContent(
 }
 
 @Composable
-internal fun UpcomingScreenLargeImpl(
+private fun UpcomingScreenLargeImpl(
     onClickUpcoming: (manga: Manga) -> Unit,
     paddingValues: PaddingValues,
     state: UpcomingScreenModel.State,
@@ -209,7 +209,7 @@ internal fun UpcomingScreenLargeImpl(
 }
 
 @Composable
-internal fun UpcomingLargeCalendar(
+private fun UpcomingLargeCalendar(
     upcoming: ImmutableList<UpcomingUIModel>,
     listState: LazyListState,
     modifier: Modifier = Modifier,
@@ -237,7 +237,7 @@ internal fun UpcomingLargeCalendar(
 }
 
 @Composable
-internal fun UpcomingLargeContent(
+private fun UpcomingLargeContent(
     upcoming: ImmutableList<UpcomingUIModel>,
     listState: LazyListState,
     contentPadding: PaddingValues,
