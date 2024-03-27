@@ -1,4 +1,4 @@
-package eu.kanade.presentation.updates.components.calendar
+package mihon.feature.upcoming.components.calendar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

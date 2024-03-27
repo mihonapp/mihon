@@ -1,4 +1,4 @@
-package eu.kanade.presentation.updates
+package mihon.feature.upcoming
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,13 +25,13 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.components.relativeDateText
-import eu.kanade.presentation.updates.components.calendar.Calendar
 import eu.kanade.presentation.util.isTabletUi
-import eu.kanade.tachiyomi.ui.updates.UpdateUpcomingScreenModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.launch
+import mihon.feature.upcoming.components.UpcomingItem
+import mihon.feature.upcoming.components.calendar.Calendar
 import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
@@ -43,23 +43,23 @@ import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 
 @Composable
-fun UpdateUpcomingScreen(
+fun UpcomingScreenContent(
     onClickUpcoming: (manga: Manga) -> Unit,
-    state: UpdateUpcomingScreenModel.State,
+    state: UpcomingScreenModel.State,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = { UpdateUpcomingToolbar() },
+        topBar = { UpcomingToolbar() },
         modifier = modifier,
     ) { paddingValues ->
         if (isTabletUi()) {
-            UpdateUpcomingScreenLargeImpl(
+            UpcomingScreenLargeImpl(
                 onClickUpcoming = onClickUpcoming,
                 paddingValues = paddingValues,
                 state = state,
             )
         } else {
-            UpdateUpcomingScreenSmallImpl(
+            UpcomingScreenSmallImpl(
                 onClickUpcoming = onClickUpcoming,
                 paddingValues = paddingValues,
                 state = state,
@@ -69,21 +69,7 @@ fun UpdateUpcomingScreen(
 }
 
 @Composable
-internal fun UpdateUpcomingScreenSmallImpl(
-    onClickUpcoming: (manga: Manga) -> Unit,
-    state: UpdateUpcomingScreenModel.State,
-    paddingValues: PaddingValues,
-) {
-    UpdateUpcomingSmallContent(
-        upcoming = state.items,
-        events = state.events,
-        contentPadding = paddingValues,
-        onClickUpcoming = onClickUpcoming,
-    )
-}
-
-@Composable
-internal fun UpdateUpcomingToolbar(
+internal fun UpcomingToolbar(
     modifier: Modifier = Modifier,
 ) {
     val navigator = LocalNavigator.currentOrThrow
@@ -111,7 +97,21 @@ internal fun UpdateUpcomingToolbar(
 }
 
 @Composable
-internal fun UpdateUpcomingSmallContent(
+internal fun UpcomingScreenSmallImpl(
+    onClickUpcoming: (manga: Manga) -> Unit,
+    state: UpcomingScreenModel.State,
+    paddingValues: PaddingValues,
+) {
+    UpcomingSmallContent(
+        upcoming = state.items,
+        events = state.events,
+        contentPadding = paddingValues,
+        onClickUpcoming = onClickUpcoming,
+    )
+}
+
+@Composable
+internal fun UpcomingSmallContent(
     contentPadding: PaddingValues,
     onClickUpcoming: (manga: Manga) -> Unit,
     upcoming: ImmutableList<UpcomingUIModel>,
@@ -176,10 +176,10 @@ internal fun UpdateUpcomingSmallContent(
 }
 
 @Composable
-internal fun UpdateUpcomingScreenLargeImpl(
+internal fun UpcomingScreenLargeImpl(
     onClickUpcoming: (manga: Manga) -> Unit,
     paddingValues: PaddingValues,
-    state: UpdateUpcomingScreenModel.State,
+    state: UpcomingScreenModel.State,
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val listState = rememberLazyListState()
@@ -190,7 +190,7 @@ internal fun UpdateUpcomingScreenLargeImpl(
             end = paddingValues.calculateEndPadding(layoutDirection),
         ),
         startContent = {
-            UpdateUpcomingLargeCalendar(
+            UpcomingLargeCalendar(
                 upcoming = state.items,
                 listState = listState,
                 events = state.events,
@@ -198,7 +198,7 @@ internal fun UpdateUpcomingScreenLargeImpl(
             )
         },
         endContent = {
-            UpdateUpcomingLargeContent(
+            UpcomingLargeContent(
                 upcoming = state.items,
                 listState = listState,
                 contentPadding = paddingValues,
@@ -209,7 +209,7 @@ internal fun UpdateUpcomingScreenLargeImpl(
 }
 
 @Composable
-internal fun UpdateUpcomingLargeCalendar(
+internal fun UpcomingLargeCalendar(
     upcoming: ImmutableList<UpcomingUIModel>,
     listState: LazyListState,
     modifier: Modifier = Modifier,
@@ -237,7 +237,7 @@ internal fun UpdateUpcomingLargeCalendar(
 }
 
 @Composable
-internal fun UpdateUpcomingLargeContent(
+internal fun UpcomingLargeContent(
     upcoming: ImmutableList<UpcomingUIModel>,
     listState: LazyListState,
     contentPadding: PaddingValues,

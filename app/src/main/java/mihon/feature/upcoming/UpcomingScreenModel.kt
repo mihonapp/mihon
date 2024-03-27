@@ -1,9 +1,8 @@
-package eu.kanade.tachiyomi.ui.updates
+package mihon.feature.upcoming
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
-import eu.kanade.presentation.updates.UpcomingUIModel
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -14,15 +13,15 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import tachiyomi.domain.manga.interactor.GetUpcomingManga
+import mihon.domain.manga.interactor.GetUpcomingManga
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.LocalDate
 
-class UpdateUpcomingScreenModel(
+class UpcomingScreenModel(
     private val getUpcomingManga: GetUpcomingManga = Injekt.get(),
-) : StateScreenModel<UpdateUpcomingScreenModel.State>(State()) {
+) : StateScreenModel<UpcomingScreenModel.State>(State()) {
 
     init {
         screenModelScope.launch {

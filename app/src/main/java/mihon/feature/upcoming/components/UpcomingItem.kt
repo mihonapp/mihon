@@ -1,4 +1,4 @@
-package eu.kanade.presentation.updates
+package mihon.feature.upcoming.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

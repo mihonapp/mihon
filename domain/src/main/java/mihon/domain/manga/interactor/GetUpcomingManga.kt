@@ -1,4 +1,4 @@
-package tachiyomi.domain.manga.interactor
+package mihon.domain.manga.interactor
 
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.coroutines.flow.Flow
