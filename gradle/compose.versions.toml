@@ -23,5 +23,4 @@ material-core = { module = "androidx.compose.material:material" }
 
 glance = "androidx.glance:glance-appwidget:1.0.0"
 
-accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
