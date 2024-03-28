@@ -1,5 +1,7 @@
 package mihon.feature.upcoming
 
+import androidx.compose.ui.util.fastMap
+import androidx.compose.ui.util.fastMapIndexedNotNull
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.insertSeparators
@@ -18,6 +20,7 @@ import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.time.LocalDate
+import java.time.YearMonth
 
 class UpcomingScreenModel(
     private val getUpcomingManga: GetUpcomingManga = Injekt.get(),
@@ -31,7 +34,7 @@ class UpcomingScreenModel(
                     state.copy(
                         items = upcomingItems,
                         events = it.toEvents(),
-                        headerIndexes = getHeaderIndexes(upcomingItems),
+                        headerIndexes = upcomingItems.getHeaderIndexes(),
                     )
                 }
             }
@@ -39,14 +42,15 @@ class UpcomingScreenModel(
     }
 
     private fun List<Manga>.toUpcomingUIModels(): ImmutableList<UpcomingUIModel> {
-        return map { UpcomingUIModel.Item(it) }
+        return fastMap { UpcomingUIModel.Item(it) }
             .insertSeparators { before, after ->
                 val beforeDate = before?.manga?.expectedNextUpdate?.toLocalDate()
                 val afterDate = after?.manga?.expectedNextUpdate?.toLocalDate()
-                when {
-                    beforeDate != afterDate && afterDate != null -> UpcomingUIModel.Header(afterDate)
-                    // Return null to avoid adding a separator between two items.
-                    else -> null
+
+                if (beforeDate != afterDate && afterDate != null) {
+                    UpcomingUIModel.Header(afterDate)
+                } else {
+                    null
                 }
             }
             .toImmutableList()
@@ -58,14 +62,24 @@ class UpcomingScreenModel(
             .toImmutableMap()
     }
 
-    private fun getHeaderIndexes(upcomingItems: List<UpcomingUIModel>): ImmutableMap<LocalDate, Int> {
-        return upcomingItems.withIndex()
-            .filter { it.value is UpcomingUIModel.Header }
-            .associate { Pair((it.value as UpcomingUIModel.Header).date, it.index) }
+    private fun List<UpcomingUIModel>.getHeaderIndexes(): ImmutableMap<LocalDate, Int> {
+        return fastMapIndexedNotNull { index, upcomingUIModel ->
+            if (upcomingUIModel is UpcomingUIModel.Header) {
+                upcomingUIModel.date to index
+            } else {
+                null
+            }
+        }
+            .toMap()
             .toImmutableMap()
     }
 
+    fun setSelectedYearMonth(yearMonth: YearMonth) {
+        mutableState.update { it.copy(selectedYearMonth = yearMonth) }
+    }
+
     data class State(
+        val selectedYearMonth: YearMonth = YearMonth.now(),
         val items: ImmutableList<UpcomingUIModel> = persistentListOf(),
         val events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
         val headerIndexes: ImmutableMap<LocalDate, Int> = persistentMapOf(),

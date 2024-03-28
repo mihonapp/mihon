@@ -1,6 +1,7 @@
 package mihon.feature.upcoming.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -35,18 +36,14 @@ fun UpcomingItem(
                 vertical = MaterialTheme.padding.small,
             ),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large),
     ) {
         MangaCover.Book(
             modifier = Modifier.fillMaxHeight(),
             data = upcoming.asMangaCover(),
         )
         Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(
-                    start = MaterialTheme.padding.large,
-                    end = MaterialTheme.padding.small,
-                ),
+            modifier = Modifier.weight(1f),
             text = upcoming.title,
             fontWeight = FontWeight.SemiBold,
             maxLines = 2,

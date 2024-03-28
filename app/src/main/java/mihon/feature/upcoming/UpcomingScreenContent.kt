@@ -2,8 +2,6 @@ package mihon.feature.upcoming
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -16,10 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBarTitle
@@ -40,28 +35,49 @@ import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun UpcomingScreenContent(
     state: UpcomingScreenModel.State,
+    setSelectedYearMonth: (YearMonth) -> Unit,
     onClickUpcoming: (manga: Manga) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+    val onClickDay: (LocalDate, Int) -> Unit = { date, offset ->
+        state.headerIndexes[date]?.let {
+            scope.launch {
+                listState.animateScrollToItem(it + offset)
+            }
+        }
+    }
     Scaffold(
         topBar = { UpcomingToolbar() },
         modifier = modifier,
     ) { paddingValues ->
         if (isTabletUi()) {
             UpcomingScreenLargeImpl(
-                onClickUpcoming = onClickUpcoming,
+                listState = listState,
+                items = state.items,
+                events = state.events,
                 paddingValues = paddingValues,
-                state = state,
+                selectedYearMonth = state.selectedYearMonth,
+                setSelectedYearMonth = setSelectedYearMonth,
+                onClickDay = { onClickDay(it, 0) },
+                onClickUpcoming = onClickUpcoming,
             )
         } else {
             UpcomingScreenSmallImpl(
-                onClickUpcoming = onClickUpcoming,
+                listState = listState,
+                items = state.items,
+                events = state.events,
                 paddingValues = paddingValues,
-                state = state,
+                selectedYearMonth = state.selectedYearMonth,
+                setSelectedYearMonth = setSelectedYearMonth,
+                onClickDay = { onClickDay(it, 1) },
+                onClickUpcoming = onClickUpcoming,
             )
         }
     }
@@ -95,14 +111,15 @@ private fun UpcomingToolbar(
 
 @Composable
 private fun UpcomingScreenSmallImpl(
-    onClickUpcoming: (manga: Manga) -> Unit,
-    state: UpcomingScreenModel.State,
+    listState: LazyListState,
+    items: ImmutableList<UpcomingUIModel>,
+    events: ImmutableMap<LocalDate, Int>,
     paddingValues: PaddingValues,
+    selectedYearMonth: YearMonth,
+    setSelectedYearMonth: (YearMonth) -> Unit,
+    onClickDay: (LocalDate) -> Unit,
+    onClickUpcoming: (manga: Manga) -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
-    val configuration = LocalConfiguration.current
     FastScrollLazyColumn(
         contentPadding = paddingValues,
         state = listState,
@@ -111,19 +128,14 @@ private fun UpcomingScreenSmallImpl(
             key = "upcoming-calendar",
         ) {
             Calendar(
-                events = state.events,
-                screenWidth = configuration.screenWidthDp.dp,
-                onClickDay = { date ->
-                    state.headerIndexes[date]?.let<Int, Unit> {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(it + 1)
-                        }
-                    }
-                },
+                selectedYearMonth = selectedYearMonth,
+                events = events,
+                setSelectedYearMonth = setSelectedYearMonth,
+                onClickDay = onClickDay,
             )
         }
         items(
-            items = state.items,
+            items = items,
             key = { "upcoming-${it.hashCode()}" },
             contentType = {
                 when (it) {
@@ -141,10 +153,7 @@ private fun UpcomingScreenSmallImpl(
                 }
 
                 is UpcomingUIModel.Header -> {
-                    ListGroupHeader(
-                        modifier = Modifier.animateItemPlacement(),
-                        text = relativeDateText(item.date),
-                    )
+                    ListGroupHeader(text = relativeDateText(item.date))
                 }
             }
         }
@@ -153,101 +162,53 @@ private fun UpcomingScreenSmallImpl(
 
 @Composable
 private fun UpcomingScreenLargeImpl(
-    state: UpcomingScreenModel.State,
-    onClickUpcoming: (manga: Manga) -> Unit,
+    listState: LazyListState,
+    items: ImmutableList<UpcomingUIModel>,
+    events: ImmutableMap<LocalDate, Int>,
     paddingValues: PaddingValues,
+    selectedYearMonth: YearMonth,
+    setSelectedYearMonth: (YearMonth) -> Unit,
+    onClickDay: (LocalDate) -> Unit,
+    onClickUpcoming: (manga: Manga) -> Unit,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-    val listState = rememberLazyListState()
-
     TwoPanelBox(
-        modifier = Modifier.padding(
-            start = paddingValues.calculateStartPadding(layoutDirection),
-            end = paddingValues.calculateEndPadding(layoutDirection),
-        ),
+        modifier = Modifier.padding(paddingValues),
         startContent = {
-            UpcomingLargeCalendar(
-                events = state.events,
-                headerIndexes = state.headerIndexes,
-                listState = listState,
-                modifier = Modifier.padding(paddingValues),
+            Calendar(
+                selectedYearMonth = selectedYearMonth,
+                events = events,
+                setSelectedYearMonth = setSelectedYearMonth,
+                onClickDay = onClickDay,
             )
         },
         endContent = {
-            UpcomingLargeContent(
-                upcoming = state.items,
-                listState = listState,
-                contentPadding = paddingValues,
-                onClickUpcoming = onClickUpcoming,
-            )
-        },
-    )
-}
+            FastScrollLazyColumn(state = listState) {
+                items(
+                    items = items,
+                    key = { "upcoming-${it.hashCode()}" },
+                    contentType = {
+                        when (it) {
+                            is UpcomingUIModel.Header -> "header"
+                            is UpcomingUIModel.Item -> "item"
+                        }
+                    },
+                ) { item ->
+                    when (item) {
+                        is UpcomingUIModel.Item -> {
+                            UpcomingItem(
+                                upcoming = item.manga,
+                                onClick = { onClickUpcoming(item.manga) },
+                            )
+                        }
 
-@Composable
-private fun UpcomingLargeCalendar(
-    events: ImmutableMap<LocalDate, Int>,
-    headerIndexes: ImmutableMap<LocalDate, Int>,
-    listState: LazyListState,
-    modifier: Modifier = Modifier,
-) {
-    val configuration = LocalConfiguration.current
-    val coroutineScope = rememberCoroutineScope()
-
-    Calendar(
-        modifier = modifier,
-        events = events,
-        screenWidth = configuration.screenWidthDp.dp,
-        onClickDay = { date ->
-            headerIndexes[date]?.let {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(it)
+                        is UpcomingUIModel.Header -> {
+                            ListGroupHeader(text = relativeDateText(item.date))
+                        }
+                    }
                 }
             }
         },
     )
-}
-
-@Composable
-private fun UpcomingLargeContent(
-    upcoming: ImmutableList<UpcomingUIModel>,
-    listState: LazyListState,
-    contentPadding: PaddingValues,
-    onClickUpcoming: (manga: Manga) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    FastScrollLazyColumn(
-        contentPadding = contentPadding,
-        state = listState,
-        modifier = modifier,
-    ) {
-        items(
-            items = upcoming,
-            key = { "upcoming-${it.hashCode()}" },
-            contentType = {
-                when (it) {
-                    is UpcomingUIModel.Header -> "header"
-                    is UpcomingUIModel.Item -> "item"
-                }
-            },
-        ) { item ->
-            when (item) {
-                is UpcomingUIModel.Item -> {
-                    UpcomingItem(
-                        upcoming = item.manga,
-                        onClick = { onClickUpcoming(item.manga) },
-                    )
-                }
-
-                is UpcomingUIModel.Header -> {
-                    ListGroupHeader(
-                        modifier = Modifier.animateItemPlacement(),
-                        text = relativeDateText(item.date),
-                    )
-                }
-            }
-        }
-    }
 }
 
 sealed interface UpcomingUIModel {
