@@ -198,7 +198,7 @@
     <string name="app_not_available">App non disponibile</string>
     <string name="update_weekly">Ogni settimana</string>
     <string name="default_category">Categoria predefinita</string>
-    <string name="track">Tracking</string>
+    <string name="track">Tracciamento</string>
     <string name="pref_category_tracking">Tracciamento</string>
     <string name="default_category_summary">Chiedi sempre</string>
     <string name="pref_crop_borders">Ritaglia bordi</string>
@@ -798,4 +798,12 @@
     <string name="delete_repo_confirmation">Vuoi eleminare la repository \"%s\"?</string>
     <string name="invalid_backup_file_error">Errore completo:</string>
     <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>
+    <string name="action_add_anyway">Aggiungere comunque</string>
+    <string name="action_migrate_duplicate">Migrare la voce esistente</string>
+    <string name="action_replace_repo_title">La Firma dell\'Impronta Digitale della Chiave Esiste Già</string>
+    <string name="pref_display_profile">Profilo di visualizzazione personalizzato</string>
+    <string name="action_replace_repo_message">La repository %1$s ha la stessa Firma d\'Impronta Digitale della Chiave %2$s.
+\nSe è quello che si desidera, %2$s verrà sostituita, altrimenti contatta il manutentore della repository.</string>
+    <string name="action_replace_repo">Sostituisci</string>
+    <string name="pref_webtoon_disable_zoom_out">Disattiva zoom indietro</string>
 </resources>
