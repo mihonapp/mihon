@@ -804,4 +804,9 @@
     <string name="action_replace_repo_title">Aláíró kulcs ujjlenyomat már létezik</string>
     <string name="action_replace_repo_message">A(z) %1$s tárolónak ugyanaz az aláíró kulcs ujjlenyomat, mint a(z) %2$s tárolónak.
 \nHa ez várható volt, akkor a(z) %2$s lecserélődik, ellenkező esetben lépjen kapcsolatba a tároló karbantartójával.</string>
+    <string name="label_upcoming">Közelgő</string>
+    <string name="upcoming_calendar_next">Következő hónap</string>
+    <string name="action_view_upcoming">Közelgő frissítések megtekintése</string>
+    <string name="upcoming_guide">Közelgő útmutató</string>
+    <string name="upcoming_calendar_prev">Előző hónap</string>
 </resources>
