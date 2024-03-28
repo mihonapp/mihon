@@ -50,8 +50,12 @@ import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
+import mihon.core.migration.Migrator
+import mihon.core.migration.migrations.migrations
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.widget.WidgetManager
@@ -131,6 +135,23 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         if (!LogcatLogger.isInstalled && networkPreferences.verboseLogging().get()) {
             LogcatLogger.install(AndroidLogcatLogger(LogPriority.VERBOSE))
         }
+
+        initializeMigrator()
+    }
+
+    private fun initializeMigrator() {
+        val preferenceStore = Injekt.get<PreferenceStore>()
+        val preference = preferenceStore.getInt(Preference.appStateKey("last_version_code"), 0)
+        logcat { "Migration from ${preference.get()} to ${BuildConfig.VERSION_CODE}" }
+        Migrator.initialize(
+            old = preference.get(),
+            new = BuildConfig.VERSION_CODE,
+            migrations = migrations,
+            onMigrationComplete = {
+                logcat { "Updating last version to ${BuildConfig.VERSION_CODE}" }
+                preference.set(BuildConfig.VERSION_CODE)
+            },
+        )
     }
 
     override fun newImageLoader(context: Context): ImageLoader {

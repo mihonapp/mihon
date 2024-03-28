@@ -1,59 +1,97 @@
 package mihon.core.migration
 
 import io.mockk.Called
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class MigratorTest {
 
-    @Test
-    fun initialVersion() {
-        val onMigrationComplete: () -> Unit = {}
-        val onMigrationCompleteSpy = spyk(onMigrationComplete)
-        val didMigration = Migrator.migrate(
-            old = 0,
-            new = 1,
-            migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { false }),
-            onMigrationComplete = onMigrationCompleteSpy
-        )
-        verify { onMigrationCompleteSpy() }
-        Assertions.assertTrue(didMigration)
+    lateinit var migrationCompletedListener: MigrationCompletedListener
+    lateinit var migrationContext: MigrationContext
+    lateinit var migrationJobFactory: MigrationJobFactory
+    lateinit var migrationStrategyFactory: MigrationStrategyFactory
+
+    @BeforeEach
+    fun initilize() {
+        migrationContext = MigrationContext(false)
+        migrationJobFactory = spyk(MigrationJobFactory(migrationContext, CoroutineScope(Dispatchers.Main + Job())))
+        migrationCompletedListener = spyk<() -> Unit>({})
+        migrationStrategyFactory = spyk(MigrationStrategyFactory(migrationJobFactory, migrationCompletedListener))
     }
 
     @Test
-    fun sameVersion() {
-        val onMigrationComplete: () -> Unit = {}
-        val onMigrationCompleteSpy = spyk(onMigrationComplete)
-        val didMigration = Migrator.migrate(
-            old = 1,
-            new = 1,
-            migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }),
-            onMigrationComplete = onMigrationCompleteSpy
-        )
-        verify { onMigrationCompleteSpy wasNot Called }
-        Assertions.assertFalse(didMigration)
+    fun initialVersion() = runBlocking {
+        val strategy = migrationStrategyFactory.create(0, 1)
+        assertInstanceOf(InitialMigrationStrategy::class.java, strategy)
+
+        val migrations = slot<List<Migration>>()
+        val execute = strategy(listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { false }))
+
+        execute.await()
+
+        verify { migrationJobFactory.create(capture(migrations)) }
+        assertEquals(1, migrations.captured.size)
+        verify { migrationCompletedListener() }
     }
 
     @Test
-    fun smallMigration() {
-        val onMigrationComplete: () -> Unit = {}
-        val onMigrationCompleteSpy = spyk(onMigrationComplete)
-        val didMigration = Migrator.migrate(
-            old = 1,
-            new = 2,
-            migrations = listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }),
-            onMigrationComplete = onMigrationCompleteSpy
-        )
-        verify { onMigrationCompleteSpy() }
-        Assertions.assertTrue(didMigration)
+    fun sameVersion() = runBlocking {
+        val strategy = migrationStrategyFactory.create(1, 1)
+        assertInstanceOf(NoopMigrationStrategy::class.java, strategy)
+
+        val execute = strategy(listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { false }))
+
+        val result = execute.await()
+        assertFalse(result)
+
+        verify { migrationJobFactory.create(any()) wasNot Called }
     }
 
     @Test
-    fun largeMigration() {
-        val onMigrationComplete: () -> Unit = {}
-        val onMigrationCompleteSpy = spyk(onMigrationComplete)
+    fun noMigrations() = runBlocking {
+        val strategy = migrationStrategyFactory.create(1, 2)
+        assertInstanceOf(VersionRangeMigrationStrategy::class.java, strategy)
+
+        val execute = strategy(emptyList())
+
+        val result = execute.await()
+        assertFalse(result)
+
+        verify { migrationJobFactory.create(any()) wasNot Called }
+    }
+
+    @Test
+    fun smallMigration() = runBlocking {
+        val strategy = migrationStrategyFactory.create(1, 2)
+        assertInstanceOf(VersionRangeMigrationStrategy::class.java, strategy)
+
+        val migrations = slot<List<Migration>>()
+        val execute = strategy(listOf(Migration.of(Migration.ALWAYS) { true }, Migration.of(2f) { true }))
+
+        execute.await()
+
+        verify { migrationJobFactory.create(capture(migrations)) }
+        assertEquals(2, migrations.captured.size)
+        verify { migrationCompletedListener() }
+    }
+
+    @Test
+    fun largeMigration() = runBlocking {
         val input = listOf(
             Migration.of(Migration.ALWAYS) { true },
             Migration.of(2f) { true },
@@ -66,31 +104,56 @@ class MigratorTest {
             Migration.of(9f) { true },
             Migration.of(10f) { true },
         )
-        val didMigration = Migrator.migrate(
-            old = 1,
-            new = 10,
-            migrations = input,
-            onMigrationComplete = onMigrationCompleteSpy
-        )
-        verify { onMigrationCompleteSpy() }
-        Assertions.assertTrue(didMigration)
+
+        val strategy = migrationStrategyFactory.create(1, 10)
+        assertInstanceOf(VersionRangeMigrationStrategy::class.java, strategy)
+
+        val migrations = slot<List<Migration>>()
+        val execute = strategy(input)
+
+        execute.await()
+
+        verify { migrationJobFactory.create(capture(migrations)) }
+        assertEquals(10, migrations.captured.size)
+        verify { migrationCompletedListener() }
     }
 
     @Test
-    fun withinRangeMigration() {
-        val onMigrationComplete: () -> Unit = {}
-        val onMigrationCompleteSpy = spyk(onMigrationComplete)
-        val didMigration = Migrator.migrate(
-            old = 1,
-            new = 2,
-            migrations = listOf(
+    fun withinRangeMigration() = runBlocking {
+        val strategy = migrationStrategyFactory.create(1, 2)
+        assertInstanceOf(VersionRangeMigrationStrategy::class.java, strategy)
+
+        val migrations = slot<List<Migration>>()
+        val execute = strategy(
+            listOf(
                 Migration.of(Migration.ALWAYS) { true },
                 Migration.of(2f) { true },
                 Migration.of(3f) { false }
-            ),
-            onMigrationComplete = onMigrationCompleteSpy
+            )
         )
-        verify { onMigrationCompleteSpy() }
-        Assertions.assertTrue(didMigration)
+
+        execute.await()
+
+        verify { migrationJobFactory.create(capture(migrations)) }
+        assertEquals(2, migrations.captured.size)
+        verify { migrationCompletedListener() }
+    }
+
+    companion object {
+
+        val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
+        @BeforeAll
+        @JvmStatic
+        fun setUp() {
+            Dispatchers.setMain(mainThreadSurrogate)
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun tearDown() {
+            Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
+            mainThreadSurrogate.close()
+        }
     }
 }
