@@ -273,7 +273,6 @@
     <string name="transition_pages_loading">Ładowanie stron…</string>
     <string name="transition_pages_error">Nie udało się załadować stron: %1$s</string>
     <string name="action_open_in_web_view">Otwórz używając WebView</string>
-    <string name="pref_true_color">Kolor 32-bitowy</string>
     <string name="pref_skip_read_chapters">Pomiń rozdziały ozn. jako przeczytane</string>
     <string name="pref_read_with_long_tap">Pokaż akcje po przytrzymaniu</string>
     <string name="pref_color_filter_mode">Tryb mieszania kolorów</string>
@@ -345,7 +344,6 @@
     <string name="restore_duration">%02d min, %02d s</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
-    <string name="pref_true_color_summary">Ogranicza banding, ale może mieć wpływ na wydajność</string>
     <string name="ext_updates_pending">Dostępne aktualizacje</string>
     <string name="secure_screen">Ukryj ekran</string>
     <string name="action_unpin">Odepnij</string>

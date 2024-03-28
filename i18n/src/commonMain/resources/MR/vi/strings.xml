@@ -274,7 +274,6 @@
     <string name="channel_common">Thường gặp</string>
     <string name="pref_read_with_long_tap">Nhấn giữ để mở mục hành động</string>
     <string name="action_open_in_web_view">Mở bằng WebView</string>
-    <string name="pref_true_color">Màu 32-bit</string>
     <string name="pref_skip_read_chapters">Bỏ qua chap đã đọc</string>
     <string name="pref_color_filter_mode">Chế độ hòa trộn bộ lọc màu</string>
     <string name="filter_mode_overlay">Phủ lên</string>
@@ -463,7 +462,6 @@
     <string name="tapping_inverted_none">Không</string>
     <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
     <string name="pref_grayscale">Độ xám</string>
-    <string name="pref_true_color_summary">Giảm lỗi hiện sai dải màu, nhưng có thể ảnh hưởng đến hiệu suất</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang rộng không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo ngược vị trí tách trang</string>
     <string name="pref_dual_page_split">Chia các trang đôi</string>

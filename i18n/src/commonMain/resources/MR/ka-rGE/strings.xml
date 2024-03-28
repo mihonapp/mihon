@@ -124,7 +124,6 @@
     <string name="pref_show_page_number">გვერდის ნომრის ჩვენება</string>
     <string name="pref_show_reading_mode">კითხვის რეჟიმის ჩვენება</string>
     <string name="pref_show_reading_mode_summary">მოკლედ აჩვენე ახლანდელი რეჟიმი როცა მკითხველი გახსნილია</string>
-    <string name="pref_true_color">32-bit ფერი</string>
     <string name="pref_crop_borders">კუთხეების ჩამოჭრა</string>
     <string name="filter_mode_multiply">გაამრავლე</string>
     <string name="filter_mode_screen">ეკრანი</string>
@@ -351,7 +350,6 @@
     <string name="untrusted_extension">არასანდო დამატება</string>
     <string name="obsolete_extension_message">დამატება ხელმისაწვდომი აღარაა. მან შეიძლება არასწორად იმუშაოს და აპლიკაციას პრობლემები შეუქმნას. გირჩევთ, წაშალოთ ის.</string>
     <string name="pref_double_tap_anim_speed">ორჯერ დაჭერისას ანიმაციის სისწრაფე</string>
-    <string name="pref_true_color_summary">აუმჯობესებს ხარისხს, თუმცა ამცირებს წარმადობას</string>
     <string name="pref_custom_brightness">გამოიყენე პერსონალიზებული სიკაშკაშე</string>
     <string name="pref_custom_color_filter">გამოიყენე პერსონალიზებული ფერთა ფილტრი</string>
     <string name="pref_color_filter_mode">ფერთა ფილტრის შეხამების რეჟიმი</string>

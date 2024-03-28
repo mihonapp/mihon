@@ -135,7 +135,6 @@
     <string name="ext_installer_pref">Installatør</string>
     <string name="ext_installer_shizuku_stopped">Shizuku køyrar ikkje</string>
     <string name="pref_show_page_number">Vis sidetal</string>
-    <string name="pref_true_color">32-bits farge</string>
     <string name="on">På</string>
     <string name="off">Av</string>
     <string name="pref_custom_brightness">Eigendefinert lysstyrke</string>

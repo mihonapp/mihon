@@ -262,7 +262,6 @@
     <string name="pref_custom_color_filter">מסנן צבע מותאם אישית</string>
     <string name="pref_custom_brightness">בהירות מותאמת אישית</string>
     <string name="pref_crop_borders">חתוך גבולות</string>
-    <string name="pref_true_color">צבע 32-סיביות</string>
     <string name="pref_show_page_number">הצג מספר עמוד</string>
     <string name="pref_double_tap_anim_speed">מהירות הנפשה בהקשה כפולה</string>
     <string name="pref_page_transitions">הנפשת מעברי דפים</string>
@@ -534,7 +533,6 @@
     <string name="skipped_reason_not_caught_up">דולג בגלל שיש פרקים שלא נקראו</string>
     <string name="skipped_reason_not_started">דולג בגלל שאין פרקים שנקראו</string>
     <string name="action_close">סגור</string>
-    <string name="pref_true_color_summary">מפחית פסים, אך עשוי להשפיע על הביצועים</string>
     <string name="channel_errors">שגיאות</string>
     <string name="pref_reset_viewer_flags">אפס את הגדרות מצב הקריאה של כל סדרה בנפרד</string>
     <string name="ext_installer_shizuku_stopped">Shizuku לא פועל</string>

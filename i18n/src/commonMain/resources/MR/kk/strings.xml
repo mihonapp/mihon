@@ -224,8 +224,6 @@
     <string name="pref_dual_page_invert">Қос бетті бөлуді инверттеу</string>
     <string name="action_display_grid">Ықшам кесте</string>
     <string name="pref_show_reading_mode_summary">Оқыма ашылғаннан кейін оқу түрін қысқаша көрсету</string>
-    <string name="pref_true_color">32-битті түс</string>
-    <string name="pref_true_color_summary">Жолақты азайтады, бірақ өнімділікке әсер етуі мүмкін</string>
     <string name="pref_crop_borders">Кесу жиектері</string>
     <string name="extension_api_error">Кеңейтулер тізімін алу сәтсіз өтті</string>
     <string name="pref_cutout_short">Мазмұнды кесу аймағында көрсету</string>

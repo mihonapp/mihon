@@ -68,4 +68,8 @@
         <item quantity="one">%d depo</item>
         <item quantity="other">%d depo</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Yarın</item>
+        <item quantity="other">%1$d gün içinde</item>
+    </plurals>
 </resources>

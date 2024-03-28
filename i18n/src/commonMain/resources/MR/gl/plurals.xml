@@ -60,4 +60,16 @@
         <item quantity="one">Falta %1$s capítulo</item>
         <item quantity="other">Faltan %1$s capítulos</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repositorio</item>
+        <item quantity="other">%d repositorios</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Mañá</item>
+        <item quantity="other">Dentro de %1$d días</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">Un día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
 </resources>

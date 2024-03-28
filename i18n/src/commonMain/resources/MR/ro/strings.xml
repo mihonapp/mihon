@@ -273,7 +273,6 @@
     <string name="download_notifier_download_paused">Descărcare întreruptă</string>
     <string name="channel_common">General</string>
     <string name="action_open_in_web_view">Deschide în WebView</string>
-    <string name="pref_true_color">Culoare 32-bit</string>
     <string name="pref_color_filter_mode">Mod filtru de culoare</string>
     <string name="filter_mode_overlay">Acoperire</string>
     <string name="filter_mode_multiply">Înmulțește</string>
@@ -366,7 +365,6 @@
     <string name="viewer">Mod de citire</string>
     <string name="pref_category_for_this_series">Pentru această serie</string>
     <string name="gray_background">Gri</string>
-    <string name="pref_true_color_summary">Reduce banding-ul, dar poate avea un impact asupra performanței</string>
     <string name="battery_optimization_setting_activity_not_found">Imposibil de deschis setările dispozitivului</string>
     <string name="tracking_info">Sincronizare unidirecțională pentru actualizarea progresului capitolului în cadrul serviciilor de urmărire. Configurați urmărirea pentru intrările individuale din butonul de urmărire al acestora.</string>
     <string name="pref_refresh_library_covers">Reîmprospătarea coperților bibliotecii</string>

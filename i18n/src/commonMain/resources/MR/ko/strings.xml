@@ -272,7 +272,6 @@
     <string name="channel_common">일반</string>
     <string name="pref_read_with_long_tap">길게 탭하여 액션 표시</string>
     <string name="action_open_in_web_view">WebView로 열기</string>
-    <string name="pref_true_color">32비트 컬러</string>
     <string name="pref_skip_read_chapters">읽음 표시된 회차 건너뛰기</string>
     <string name="pref_color_filter_mode">컬러 필터 블렌딩 모드</string>
     <string name="filter_mode_overlay">오버레이</string>
@@ -413,7 +412,6 @@
     <string name="pref_show_reading_mode_summary">뷰어가 켜질 때 현재 읽기 모드를 표시합니다</string>
     <string name="pref_show_navigation_mode">탭 영역 오버레이 표시</string>
     <string name="pref_show_navigation_mode_summary">뷰어가 열렸을 때 간략히 표시</string>
-    <string name="pref_true_color_summary">밴딩을 줄이지만 성능에 영향을 줄 수 있음</string>
     <string name="pref_category_display">디스플레이</string>
     <string name="pref_skip_filtered_chapters">필터링된 회차 건너뛰기</string>
     <string name="pref_highest">매우 높음</string>
