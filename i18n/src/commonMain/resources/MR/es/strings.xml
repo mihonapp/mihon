@@ -804,4 +804,9 @@
     <string name="action_replace_repo_title">La huella digital de la clave de la firma ya existe</string>
     <string name="action_replace_repo_message">El repositorio %1$s tiene la misma huella digital de clave de la firma que %2$s.
 \nSi esto es lo esperado, %2$s será reemplazado, de lo contrario contacte con quien mantiene su repositorio.</string>
+    <string name="label_upcoming">Próximo</string>
+    <string name="action_view_upcoming">Ver las próximas actualizaciones</string>
+    <string name="upcoming_guide">Próxima guía</string>
+    <string name="upcoming_calendar_next">Próximo mes</string>
+    <string name="upcoming_calendar_prev">Mes anterior</string>
 </resources>
