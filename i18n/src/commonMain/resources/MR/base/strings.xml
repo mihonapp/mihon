@@ -26,6 +26,7 @@
     <string name="label_download_queue">Download queue</string>
     <string name="label_library">Library</string>
     <string name="label_recent_updates">Updates</string>
+    <string name="label_upcoming">Upcoming</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
     <string name="label_backup">Backup and restore</string>
@@ -789,6 +790,12 @@
     <string name="updates_last_update_info">Library last updated: %s</string>
     <string name="updates_last_update_info_just_now">Just now</string>
     <string name="relative_time_span_never">Never</string>
+    <string name="action_view_upcoming">View Upcoming Updates</string>
+
+    <!-- Upcoming -->
+    <string name="upcoming_guide">Upcoming Guide</string>
+    <string name="upcoming_calendar_next">Next Month</string>
+    <string name="upcoming_calendar_prev">Previous Month</string>
 
     <!-- History -->
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
