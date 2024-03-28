@@ -1,6 +1,5 @@
 package mihon.feature.upcoming
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -10,15 +9,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import eu.kanade.presentation.components.AppBarTitle
-import eu.kanade.presentation.components.UpIcon
+import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.util.isTabletUi
 import kotlinx.collections.immutable.ImmutableList
@@ -84,29 +81,22 @@ fun UpcomingScreenContent(
 }
 
 @Composable
-private fun UpcomingToolbar(
-    modifier: Modifier = Modifier,
-) {
+private fun UpcomingToolbar() {
     val navigator = LocalNavigator.currentOrThrow
-    Column(modifier = modifier) {
-        TopAppBar(
-            actions = {
-                val uriHandler = LocalUriHandler.current
-                IconButton(onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
-                        contentDescription = stringResource(MR.strings.upcoming_guide),
-                    )
-                }
-            },
-            navigationIcon = {
-                IconButton(onClick = navigator::pop) {
-                    UpIcon()
-                }
-            },
-            title = { AppBarTitle(stringResource(MR.strings.label_upcoming)) },
-        )
-    }
+    val uriHandler = LocalUriHandler.current
+
+    AppBar(
+        title = stringResource(MR.strings.label_upcoming),
+        navigateUp = navigator::pop,
+        actions = {
+            IconButton(onClick = { uriHandler.openUri(Constants.URL_HELP_UPCOMING) }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+                    contentDescription = stringResource(MR.strings.upcoming_guide),
+                )
+            }
+        },
+    )
 }
 
 @Composable
@@ -124,9 +114,7 @@ private fun UpcomingScreenSmallImpl(
         contentPadding = paddingValues,
         state = listState,
     ) {
-        item(
-            key = "upcoming-calendar",
-        ) {
+        item(key = "upcoming-calendar") {
             Calendar(
                 selectedYearMonth = selectedYearMonth,
                 events = events,
@@ -151,7 +139,6 @@ private fun UpcomingScreenSmallImpl(
                         onClick = { onClickUpcoming(item.manga) },
                     )
                 }
-
                 is UpcomingUIModel.Header -> {
                     ListGroupHeader(text = relativeDateText(item.date))
                 }
@@ -200,7 +187,6 @@ private fun UpcomingScreenLargeImpl(
                                 onClick = { onClickUpcoming(item.manga) },
                             )
                         }
-
                         is UpcomingUIModel.Header -> {
                             ListGroupHeader(text = relativeDateText(item.date))
                         }
@@ -209,9 +195,4 @@ private fun UpcomingScreenLargeImpl(
             }
         },
     )
-}
-
-sealed interface UpcomingUIModel {
-    data class Header(val date: LocalDate) : UpcomingUIModel
-    data class Item(val manga: Manga) : UpcomingUIModel
 }
