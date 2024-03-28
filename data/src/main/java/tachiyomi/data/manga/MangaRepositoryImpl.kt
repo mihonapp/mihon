@@ -65,6 +65,12 @@ class MangaRepositoryImpl(
         }
     }
 
+    override suspend fun getUpcomingManga(statuses: Set<Long>): Flow<List<Manga>> {
+        return handler.subscribeToList {
+            mangasQueries.getUpcomingManga(statuses, MangaMapper::mapManga)
+        }
+    }
+
     override suspend fun resetViewerFlags(): Boolean {
         return try {
             handler.await { mangasQueries.resetViewerFlags() }
