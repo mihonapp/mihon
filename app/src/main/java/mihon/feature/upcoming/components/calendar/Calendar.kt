@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.util.isTabletUi
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.presentation.core.components.material.padding
@@ -58,13 +57,6 @@ fun Calendar(
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
     val isTabletUi = isTabletUi()
 
-    val localFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
-    val weekDays = remember {
-        (0 until DaysOfWeek)
-            .map { DayOfWeek.of(((localFirstDayOfWeek - 1 + it) % DaysOfWeek) + 1) }
-            .toImmutableList()
-    }
-
     val widthModifier = when {
         isTabletUi -> 1.0f
         screenWidth > 840.dp -> ExtendedScale
@@ -88,7 +80,6 @@ fun Calendar(
             modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             CalendarGrid(
-                weekDays = weekDays,
                 labelFormat = labelFormat,
                 currentYearMonth = currentYearMonth,
                 isTabletUi = isTabletUi,
@@ -103,34 +94,35 @@ fun Calendar(
 
 @Composable
 private fun CalendarGrid(
-    weekDays: ImmutableList<DayOfWeek>,
     labelFormat: (DayOfWeek) -> String,
     currentYearMonth: YearMonth,
     isTabletUi: Boolean,
     events: ImmutableMap<LocalDate, Int>,
+    onClickDay: (day: LocalDate) -> Unit,
+    widthModifier: Float,
     modifier: Modifier = Modifier,
-    onClickDay: (day: LocalDate) -> Unit = {},
-    widthModifier: Float = 1.0F,
 ) {
-    val daysInMonth = currentYearMonth.lengthOfMonth()
-    val startDayOfMonth = currentYearMonth.atDay(1)
-    val firstDayOfMonth = startDayOfMonth.dayOfWeek
-
-    // The lower bound for Calendar Days, between -5 and 1 to provide cell offset
-    val dayEntries = (-weekDays.indexOf(firstDayOfMonth) + 1..daysInMonth).toImmutableList()
-    val height = (((dayEntries.size - 1) / DaysOfWeek + ceil(1.0f - widthModifier)) * HeightMultiplier).dp
-
-    val modeModifier = if (isTabletUi) {
-        modifier
-            .fillMaxWidth(widthModifier)
-    } else {
-        modifier
-            .fillMaxWidth(widthModifier)
-            .height(height)
+    val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+    val weekDays = remember {
+        (0 until DaysOfWeek)
+            .map { DayOfWeek.of((localeFirstDayOfWeek - 1 + it) % DaysOfWeek + 1) }
+            .toImmutableList()
     }
 
+    val emptyFieldCount = weekDays.indexOf(currentYearMonth.atDay(1).dayOfWeek)
+    val daysInMonth = currentYearMonth.lengthOfMonth()
+
+    val height = (((emptyFieldCount + daysInMonth) / DaysOfWeek + ceil(1.0f - widthModifier)) * HeightMultiplier).dp
+
     LazyVerticalGrid(
-        modifier = modeModifier,
+        modifier = if (isTabletUi) {
+            modifier
+                .fillMaxWidth(widthModifier)
+        } else {
+            modifier
+                .fillMaxWidth(widthModifier)
+                .height(height)
+        },
         columns = GridCells.Fixed(DaysOfWeek),
     ) {
         items(weekDays) { item ->
@@ -141,15 +133,14 @@ private fun CalendarGrid(
                 fontSize = FontSize,
             )
         }
-        items(dayEntries) {
-            if (it > 0) {
-                val localDate = currentYearMonth.atDay(it)
-                CalendarDay(
-                    date = localDate,
-                    onDayClick = { onClickDay(localDate) },
-                    events = events[localDate] ?: 0,
-                )
-            }
+        items(emptyFieldCount) {}
+        items(daysInMonth) {
+            val localDate = currentYearMonth.atDay(it + 1)
+            CalendarDay(
+                date = localDate,
+                onDayClick = { onClickDay(localDate) },
+                events = events[localDate] ?: 0,
+            )
         }
     }
 }

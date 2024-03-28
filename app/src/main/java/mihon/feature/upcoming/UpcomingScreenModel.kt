@@ -13,7 +13,7 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mihon.domain.manga.interactor.GetUpcomingManga
+import mihon.domain.upcoming.interactor.GetUpcomingManga
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -27,9 +27,11 @@ class UpcomingScreenModel(
         screenModelScope.launch {
             getUpcomingManga.subscribe().collectLatest {
                 mutableState.update { state ->
+                    val upcomingItems = it.toUpcomingUIModels()
                     state.copy(
-                        items = it.toUpcomingUIModels(),
+                        items = upcomingItems,
                         events = it.toEvents(),
+                        headerIndexes = getHeaderIndexes(upcomingItems),
                     )
                 }
             }
@@ -39,8 +41,8 @@ class UpcomingScreenModel(
     private fun List<Manga>.toUpcomingUIModels(): ImmutableList<UpcomingUIModel> {
         return map { UpcomingUIModel.Item(it) }
             .insertSeparators { before, after ->
-                val beforeDate = before?.item?.expectedNextUpdate?.toLocalDate()
-                val afterDate = after?.item?.expectedNextUpdate?.toLocalDate()
+                val beforeDate = before?.manga?.expectedNextUpdate?.toLocalDate()
+                val afterDate = after?.manga?.expectedNextUpdate?.toLocalDate()
                 when {
                     beforeDate != afterDate && afterDate != null -> UpcomingUIModel.Header(afterDate)
                     // Return null to avoid adding a separator between two items.
@@ -56,9 +58,16 @@ class UpcomingScreenModel(
             .toImmutableMap()
     }
 
+    private fun getHeaderIndexes(upcomingItems: List<UpcomingUIModel>): ImmutableMap<LocalDate, Int> {
+        return upcomingItems.withIndex()
+            .filter { it.value is UpcomingUIModel.Header }
+            .associate { Pair((it.value as UpcomingUIModel.Header).date, it.index) }
+            .toImmutableMap()
+    }
+
     data class State(
         val items: ImmutableList<UpcomingUIModel> = persistentListOf(),
         val events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
-        val headerIndexes: Map<LocalDate, Int> = persistentMapOf(),
+        val headerIndexes: ImmutableMap<LocalDate, Int> = persistentMapOf(),
     )
 }

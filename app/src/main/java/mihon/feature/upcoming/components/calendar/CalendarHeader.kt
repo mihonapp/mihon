@@ -43,7 +43,10 @@ fun CalenderHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
+            .padding(
+                horizontal = MaterialTheme.padding.medium,
+                vertical = MaterialTheme.padding.small,
+            ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -87,12 +90,6 @@ private fun AnimatedContentTransitionScope<YearMonth>.getAnimation(): ContentTra
         .using(SizeTransform(clip = false))
 }
 
-/**
- * Returns the formatted title text for the Calendar header.
- *
- * @param monthYear The current month and year pair.
- * @return The formatted title text.
- */
 @Composable
 @ReadOnlyComposable
 private fun getTitleText(monthYear: YearMonth): String {
