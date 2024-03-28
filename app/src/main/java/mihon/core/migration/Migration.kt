@@ -5,6 +5,9 @@ interface Migration {
 
     suspend operator fun invoke(migrationContext: MigrationContext): Boolean
 
+    val isAlways: Boolean
+        get() = version == ALWAYS
+
     companion object {
         const val ALWAYS = -1f
 
