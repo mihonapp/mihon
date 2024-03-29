@@ -801,4 +801,12 @@
     <string name="pref_display_profile">Пользовательский профиль отображения</string>
     <string name="action_migrate_duplicate">Перенести существующую серию</string>
     <string name="action_replace_repo">Заменить</string>
+    <string name="action_replace_repo_message">Репозиторий %1$s имеет тот же подписанный ключ отпечатка, что и %2$s.
+\nЕсли это так и задумано, %2$s будет заменён, в противном случае, свяжитесь с сопровождающим вашего репозитория.</string>
+    <string name="action_replace_repo_title">Подписанный ключ отпечатка уже существует</string>
+    <string name="upcoming_calendar_prev">Предыдущий месяц</string>
+    <string name="action_view_upcoming">Просмотр предстоящих обновлений</string>
+    <string name="label_upcoming">Предстоящее</string>
+    <string name="upcoming_guide">Предстоящее руководство</string>
+    <string name="upcoming_calendar_next">Следующий месяц</string>
 </resources>
