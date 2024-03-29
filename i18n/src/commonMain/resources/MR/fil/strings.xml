@@ -804,4 +804,9 @@
     <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
 \nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
     <string name="pref_display_profile">Ipasadya ang profile sa display</string>
+    <string name="label_upcoming">Paparating</string>
+    <string name="upcoming_guide">Gabay sa Paparating</string>
+    <string name="upcoming_calendar_next">Susunod na Buwan</string>
+    <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
+    <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
 </resources>
