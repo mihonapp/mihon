@@ -799,4 +799,12 @@
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
     <string name="action_add_anyway">追加</string>
     <string name="action_migrate_duplicate">移行</string>
+    <string name="action_replace_repo">置き換える</string>
+    <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
+    <string name="upcoming_calendar_prev">前月</string>
+    <string name="upcoming_calendar_next">翌月</string>
+    <string name="label_upcoming">近々公開</string>
+    <string name="action_view_upcoming">今後のアップデート</string>
+    <string name="action_replace_repo_title">署名キーのフィンガープリントはすでに存在します</string>
+    <string name="upcoming_guide">今後のご案内</string>
 </resources>
