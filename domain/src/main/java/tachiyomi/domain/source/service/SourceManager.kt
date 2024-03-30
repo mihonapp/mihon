@@ -4,9 +4,12 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import tachiyomi.domain.source.model.StubSource
 
 interface SourceManager {
+
+    val isInitialized: StateFlow<Boolean>
 
     val catalogueSources: Flow<List<CatalogueSource>>
 

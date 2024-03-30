@@ -25,12 +25,12 @@
         <item quantity="other">%1$d napja</item>
     </plurals>
     <plurals name="num_trackers">
-        <item quantity="one">%d tracker</item>
-        <item quantity="other">%d tracker</item>
+        <item quantity="one">%d nyilvántartó</item>
+        <item quantity="other">%d nyilvántartó</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">%d-nak/nek</item>
-        <item quantity="other">%d-nak/nek</item>
+        <item quantity="one">%d elemnek</item>
+        <item quantity="other">%d elemeknek</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d fejezet kihagyása, hiányzik a forrás, vagy ki lett szűrve</item>
@@ -63,5 +63,13 @@
     <plurals name="day">
         <item quantity="one">1 nap</item>
         <item quantity="other">%d nap</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Holnap</item>
+        <item quantity="other">%1$d nap múlva</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repo</item>
+        <item quantity="other">%d repok</item>
     </plurals>
 </resources>

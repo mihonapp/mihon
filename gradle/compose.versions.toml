@@ -1,9 +1,11 @@
 [versions]
-compiler = "1.5.10"
+compiler = "1.5.11"
 compose-bom = "2024.02.00-alpha02"
 accompanist = "0.35.0-alpha"
 
 [libraries]
+compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
+
 activity = "androidx.activity:activity-compose:1.8.2"
 bom = { group = "dev.chrisbanes.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
@@ -21,5 +23,4 @@ material-core = { module = "androidx.compose.material:material" }
 
 glance = "androidx.glance:glance-appwidget:1.0.0"
 
-accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }

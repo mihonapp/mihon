@@ -36,20 +36,21 @@ class WebtoonLayoutManager(context: Context) : LinearLayoutManager(context) {
      */
     fun findLastEndVisibleItemPosition(): Int {
         ensureLayoutState()
-        @ViewBoundsCheck.ViewBounds val preferredBoundsFlag =
-            (ViewBoundsCheck.FLAG_CVE_LT_PVE or ViewBoundsCheck.FLAG_CVE_EQ_PVE)
-
-        val fromIndex = childCount - 1
-        val toIndex = -1
-
-        val child = if (mOrientation == HORIZONTAL) {
+        val callback = if (mOrientation == HORIZONTAL) {
             mHorizontalBoundCheck
-                .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
         } else {
             mVerticalBoundCheck
-                .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
+        }.mCallback
+        val start = callback.parentStart
+        val end = callback.parentEnd
+        for (i in childCount - 1 downTo 0) {
+            val child = getChildAt(i)!!
+            val childStart = callback.getChildStart(child)
+            val childEnd = callback.getChildEnd(child)
+            if (childEnd <= end || childStart < start) {
+                return getPosition(child)
+            }
         }
-
-        return if (child == null) NO_POSITION else getPosition(child)
+        return NO_POSITION
     }
 }

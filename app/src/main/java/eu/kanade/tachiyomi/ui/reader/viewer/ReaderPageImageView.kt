@@ -349,8 +349,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
             .diskCachePolicy(CachePolicy.DISABLED)
             .target(
                 onSuccess = { result ->
-                    setImageDrawable(result.asDrawable(context.resources))
-                    (result as? Animatable)?.start()
+                    val drawable = result.asDrawable(context.resources)
+                    setImageDrawable(drawable)
+                    (drawable as? Animatable)?.start()
                     isVisible = true
                     this@ReaderPageImageView.onImageLoaded()
                 },

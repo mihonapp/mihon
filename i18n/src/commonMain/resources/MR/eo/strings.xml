@@ -505,4 +505,16 @@
     <string name="ext_info_language">Lingvo</string>
     <string name="ext_installer_pref">Instalilo</string>
     <string name="ext_installer_legacy">Malmoderna</string>
+    <string name="available_disk_space_info">Libera: %1$s / Tuta: %2$s</string>
+    <string name="popular">Popularaj</string>
+    <string name="has_results">Havantaj rezultoj</string>
+    <string name="unknown_title">Nekonata titolo</string>
+    <string name="description_placeholder">Sen priskribo</string>
+    <string name="manga_interval_expected_update_soon">Baldaŭ</string>
+    <string name="are_you_sure">Ĉu vi certas?</string>
+    <string name="updates_last_update_info_just_now">Ĵus</string>
+    <string name="relative_time_span_never">Neniam</string>
+    <string name="track_error">%1$s eraro: %2$s</string>
+    <string name="source_empty_screen">Neniu fonto trovita</string>
+    <string name="crash_screen_title">Ups!</string>
 </resources>

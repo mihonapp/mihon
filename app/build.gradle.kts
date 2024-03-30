@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 6
+        versionCode = 7
         versionName = "0.16.4"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
@@ -161,7 +161,6 @@ dependencies {
     debugImplementation(compose.ui.tooling)
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
-    implementation(compose.accompanist.webview)
     implementation(compose.accompanist.systemuicontroller)
 
     implementation(androidx.paging.runtime)
@@ -237,6 +236,9 @@ dependencies {
     implementation(libs.bundles.voyager)
     implementation(libs.compose.materialmotion)
     implementation(libs.swipe)
+    implementation(libs.compose.webview)
+    implementation(libs.compose.grid)
+
 
     // Logging
     implementation(libs.logcat)
@@ -253,6 +255,8 @@ dependencies {
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
+
+    testImplementation(kotlinx.coroutines.test)
 }
 
 androidComponents {

@@ -28,4 +28,6 @@ class BasePreferences(
         SHIZUKU(MR.strings.ext_installer_shizuku, false),
         PRIVATE(MR.strings.ext_installer_private, false),
     }
+
+    fun displayProfile() = preferenceStore.getString("pref_display_profile_key", "")
 }

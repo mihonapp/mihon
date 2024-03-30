@@ -7,7 +7,6 @@ import coil3.decode.Decoder
 import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
-import coil3.request.allowRgb565
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.decoder.ImageDecoder
@@ -24,7 +23,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
 
-        val bitmap = decoder.decode(rgb565 = options.allowRgb565)
+        val bitmap = decoder.decode()
         decoder.recycle()
 
         check(bitmap != null) { "Failed to decode image" }

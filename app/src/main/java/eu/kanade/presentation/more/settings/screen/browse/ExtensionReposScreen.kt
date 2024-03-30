@@ -8,11 +8,14 @@ import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoConflictDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoDeleteDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionReposScreen
 import eu.kanade.presentation.util.Screen
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.collectLatest
 import tachiyomi.presentation.core.screens.LoadingScreen
 
@@ -42,17 +45,19 @@ class ExtensionReposScreen(
         ExtensionReposScreen(
             state = successState,
             onClickCreate = { screenModel.showDialog(RepoDialog.Create) },
+            onOpenWebsite = { context.openInBrowser(it.website) },
             onClickDelete = { screenModel.showDialog(RepoDialog.Delete(it)) },
+            onClickRefresh = { screenModel.refreshRepos() },
             navigateUp = navigator::pop,
         )
 
         when (val dialog = successState.dialog) {
             null -> {}
-            RepoDialog.Create -> {
+            is RepoDialog.Create -> {
                 ExtensionRepoCreateDialog(
                     onDismissRequest = screenModel::dismissDialog,
                     onCreate = { screenModel.createRepo(it) },
-                    repos = successState.repos,
+                    repoUrls = successState.repos.map { it.baseUrl }.toImmutableSet(),
                 )
             }
             is RepoDialog.Delete -> {
@@ -60,6 +65,15 @@ class ExtensionReposScreen(
                     onDismissRequest = screenModel::dismissDialog,
                     onDelete = { screenModel.deleteRepo(dialog.repo) },
                     repo = dialog.repo,
+                )
+            }
+
+            is RepoDialog.Conflict -> {
+                ExtensionRepoConflictDialog(
+                    onDismissRequest = screenModel::dismissDialog,
+                    onMigrate = { screenModel.replaceRepo(dialog.newRepo) },
+                    oldRepo = dialog.oldRepo,
+                    newRepo = dialog.newRepo,
                 )
             }
         }
