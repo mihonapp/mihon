@@ -2,6 +2,7 @@
 
 -keep,allowoptimization class eu.kanade.**
 -keep,allowoptimization class tachiyomi.**
+-keep,allowoptimization class mihon.**
 
 # Keep common dependencies used in extensions
 -keep,allowoptimization class androidx.preference.** { public protected *; }
