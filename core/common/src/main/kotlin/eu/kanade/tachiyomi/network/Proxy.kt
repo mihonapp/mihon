@@ -86,7 +86,7 @@ data class Proxy(
          */
         fun getBlackHoleProxy(context: Context): JavaProxy {
             context.toast(MR.strings.proxy_host_invalid_warning)
-            return JavaProxy(Type.SOCKS, InetSocketAddress(Inet6Address.getByName("100::"), 1))
+            return JavaProxy(Type.SOCKS, InetSocketAddress(Inet6Address.getByName("100::"), 65534))
         }
     }
 }
