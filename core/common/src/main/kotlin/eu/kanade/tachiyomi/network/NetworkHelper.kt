@@ -12,6 +12,7 @@ import okhttp3.brotli.BrotliInterceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.File
 import java.util.concurrent.TimeUnit
+import java.net.Proxy.Type as ProxyType
 
 class NetworkHelper(
     private val context: Context,
@@ -71,8 +72,18 @@ class NetworkHelper(
             if (proxy.enabled) {
                 builder.proxy(proxy.getProxy() ?: Proxy.getBlackHoleProxy(context))
 
-                proxy.getAuthenticator()?.let { proxyAuthenticator ->
-                    builder.proxyAuthenticator(proxyAuthenticator)
+                when (proxy.proxyType) {
+                    ProxyType.HTTP -> {
+                        proxy.getOkhttpAuthenticator()?.let { proxyAuthenticator ->
+                            builder.proxyAuthenticator(proxyAuthenticator)
+                        }
+                    }
+
+                    ProxyType.SOCKS -> {
+                        proxy.setSocksAuthentication()
+                    }
+
+                    else -> Unit
                 }
             }
         }

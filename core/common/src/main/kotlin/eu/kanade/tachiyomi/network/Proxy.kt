@@ -12,8 +12,10 @@ import tachiyomi.i18n.MR
 import java.net.Inet6Address
 import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.PasswordAuthentication
 import java.net.Proxy.Type
 import java.net.UnknownHostException
+import java.net.Authenticator as JavaAuthenticator
 import java.net.Proxy as JavaProxy
 
 @Serializable
@@ -33,7 +35,7 @@ data class Proxy(
         }
     }
 
-    fun getAuthenticator(): Authenticator? {
+    fun getOkhttpAuthenticator(): Authenticator? {
         if (username?.isBlank() == true && password?.isBlank() == true) return null
         return Authenticator { _, response ->
             val credential: String = Credentials.basic(username ?: "", password ?: "")
@@ -41,6 +43,28 @@ data class Proxy(
                 .header("Proxy-Authorization", credential)
                 .build()
         }
+    }
+
+    fun setSocksAuthentication() {
+        if (username?.isBlank() == true && password?.isBlank() == true) return
+
+        System.setProperty("java.net.socks.username", username)
+        System.setProperty("java.net.socks.password", password)
+
+        JavaAuthenticator.setDefault(
+            object : JavaAuthenticator() {
+                override fun getPasswordAuthentication(): PasswordAuthentication? {
+                    return if (
+                        requestingHost.equals(host, ignoreCase = true) &&
+                        requestingPort == port
+                    ) {
+                        PasswordAuthentication(username, password?.toCharArray())
+                    } else {
+                        null
+                    }
+                }
+            },
+        )
     }
 
     companion object {

@@ -584,6 +584,7 @@
     <string name="pref_verbose_logging_summary">Print verbose logs to system log (reduces app performance)</string>
     <string name="pref_debug_info">Debug info</string>
     <string name="pref_proxy_configuration">Proxy configuration</string>
+    <string name="pref_proxy_configuration_subtitle">Webview will not use this proxy</string>
     <string name="pref_enable_proxy">Enable Proxy</string>
     <string name="port">Port</string>
     <string name="host">Host</string>

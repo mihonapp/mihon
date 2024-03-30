@@ -313,6 +313,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_proxy_configuration),
+                    subtitle = stringResource(MR.strings.pref_proxy_configuration_subtitle),
                     onClick = { showProxyDialog = true },
                 ),
                 Preference.PreferenceItem.EditTextPreference(
@@ -591,57 +592,53 @@ private fun ProxyConfigDialog(
                         isError = !port.text.isDigitsOnly(),
                     )
                 }
-                if (proxyTypes[checked] != ProxyType.SOCKS) {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = username,
-                        onValueChange = {
-                            newProxy.username = it.text
-                            proxyChanged = newProxy != proxy
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = username,
+                    onValueChange = {
+                        newProxy.username = it.text
+                        proxyChanged = newProxy != proxy
 
-                            username = it
-                        },
-                        label = { Text(text = stringResource(MR.strings.username)) },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        singleLine = true,
-                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
-                    )
-                    var hidePassword by remember { mutableStateOf(true) }
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = password,
-                        onValueChange = {
-                            newProxy.password = it.text
-                            proxyChanged = newProxy != proxy
+                        username = it
+                    },
+                    label = { Text(text = stringResource(MR.strings.username)) },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    singleLine = true,
+                )
+                var hidePassword by remember { mutableStateOf(true) }
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = password,
+                    onValueChange = {
+                        newProxy.password = it.text
+                        proxyChanged = newProxy != proxy
 
-                            password = it
-                        },
-                        label = { Text(text = stringResource(MR.strings.password)) },
-                        trailingIcon = {
-                            IconButton(onClick = { hidePassword = !hidePassword }) {
-                                Icon(
-                                    imageVector = if (hidePassword) {
-                                        Icons.Filled.Visibility
-                                    } else {
-                                        Icons.Filled.VisibilityOff
-                                    },
-                                    contentDescription = null,
-                                )
-                            }
-                        },
-                        visualTransformation = if (hidePassword) {
-                            PasswordVisualTransformation()
-                        } else {
-                            VisualTransformation.None
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done,
-                        ),
-                        singleLine = true,
-                        enabled = proxyTypes[checked] != ProxyType.SOCKS,
-                    )
-                }
+                        password = it
+                    },
+                    label = { Text(text = stringResource(MR.strings.password)) },
+                    trailingIcon = {
+                        IconButton(onClick = { hidePassword = !hidePassword }) {
+                            Icon(
+                                imageVector = if (hidePassword) {
+                                    Icons.Filled.Visibility
+                                } else {
+                                    Icons.Filled.VisibilityOff
+                                },
+                                contentDescription = null,
+                            )
+                        }
+                    },
+                    visualTransformation = if (hidePassword) {
+                        PasswordVisualTransformation()
+                    } else {
+                        VisualTransformation.None
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                    ),
+                    singleLine = true,
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
