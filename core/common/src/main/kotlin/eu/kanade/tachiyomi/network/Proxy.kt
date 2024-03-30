@@ -71,6 +71,8 @@ data class Proxy(
     }
 
     companion object {
+        private const val BLACK_HOLE_PORT = 65534
+
         suspend fun testHostValidity(host: String): Boolean = withIOContext {
             return@withIOContext try {
                 InetAddress.getByName(host)
@@ -86,7 +88,7 @@ data class Proxy(
          */
         fun getBlackHoleProxy(context: Context): JavaProxy {
             context.toast(MR.strings.proxy_host_invalid_warning)
-            return JavaProxy(Type.SOCKS, InetSocketAddress(Inet6Address.getByName("100::"), 65534))
+            return JavaProxy(Type.SOCKS, InetSocketAddress(Inet6Address.getByName("100::"), BLACK_HOLE_PORT))
         }
     }
 }
