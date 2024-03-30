@@ -804,4 +804,9 @@
 \n若继续，%2$s 将被替换，否则请联系你的仓库维护员。</string>
     <string name="action_replace_repo_title">签名密钥指纹已存在</string>
     <string name="action_migrate_duplicate">迁移已存在条目</string>
+    <string name="action_view_upcoming">显示即将推出的更新</string>
+    <string name="upcoming_guide">即将推出的指南</string>
+    <string name="label_upcoming">即将推出</string>
+    <string name="upcoming_calendar_next">下个月</string>
+    <string name="upcoming_calendar_prev">上个月</string>
 </resources>
