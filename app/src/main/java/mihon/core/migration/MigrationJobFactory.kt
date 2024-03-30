@@ -2,6 +2,7 @@ package mihon.core.migration
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import tachiyomi.core.common.util.system.logcat
@@ -17,7 +18,7 @@ class MigrationJobFactory(
             .fold(CompletableDeferred(true)) { acc: Deferred<Boolean>, migration: Migration ->
                 if (!migrationContext.dryrun) {
                     logcat { "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
-                    async {
+                    async(start = CoroutineStart.UNDISPATCHED) {
                         val prev = acc.await()
                         migration(migrationContext) || prev
                     }
