@@ -804,4 +804,9 @@
     <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
     <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
 \nFalls das erwünscht ist, wird %2$s nun ersetzt. Falls nicht, kontaktiere den Repository-Maintainer.</string>
+    <string name="upcoming_calendar_next">Nächster Monat</string>
+    <string name="upcoming_calendar_prev">Vorheriger Monat</string>
+    <string name="label_upcoming">Bevorstehend</string>
+    <string name="action_view_upcoming">Bevorstehende Aktualisierungen ansehen</string>
+    <string name="upcoming_guide">Leitfaden für Bevorstehendes</string>
 </resources>
