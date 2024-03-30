@@ -48,8 +48,8 @@ data class Proxy(
     fun setSocksAuthentication() {
         if (username?.isBlank() == true && password?.isBlank() == true) return
 
-        System.setProperty("java.net.socks.username", username)
-        System.setProperty("java.net.socks.password", password)
+        System.setProperty("java.net.socks.username", username ?: "")
+        System.setProperty("java.net.socks.password", password ?: "")
 
         JavaAuthenticator.setDefault(
             object : JavaAuthenticator() {
@@ -58,7 +58,10 @@ data class Proxy(
                         requestingHost.equals(host, ignoreCase = true) &&
                         requestingPort == port
                     ) {
-                        PasswordAuthentication(username, password?.toCharArray())
+                        PasswordAuthentication(
+                            username ?: "",
+                            password?.toCharArray() ?: "".toCharArray(),
+                        )
                     } else {
                         null
                     }
