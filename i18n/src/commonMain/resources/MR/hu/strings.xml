@@ -245,8 +245,8 @@
     <string name="migrate">Áttelepítés</string>
     <string name="display_mode_chapter">%1$s. fejezet</string>
     <string name="information_webview_required">A Mihon működéséhez WebView szükséges</string>
-    <string name="notification_chapters_multiple">%1$s. fejezetek</string>
-    <string name="notification_chapters_single_and_more">A(z) %1$s. fejezet és %2$d egyéb fejezetek</string>
+    <string name="notification_chapters_multiple">%1$s fejezet</string>
+    <string name="notification_chapters_single_and_more">%1$s. fejezet és további %2$d</string>
     <string name="share_page_info">%1$s:%2$s, %3$d. oldal</string>
     <string name="repeating">Újraolvasás</string>
     <string name="confirm_delete_chapters">Biztosan törölni akarja a kijelölt fejezeteket\?</string>
