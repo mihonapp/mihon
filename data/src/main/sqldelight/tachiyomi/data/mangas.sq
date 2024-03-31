@@ -115,7 +115,7 @@ AND _id != :id;
 getUpcomingManga:
 SELECT *
 FROM mangas
-WHERE next_update > 0
+WHERE next_update >= :startOfDay
 AND favorite = 1
 AND status IN :statuses
 ORDER BY next_update ASC;
