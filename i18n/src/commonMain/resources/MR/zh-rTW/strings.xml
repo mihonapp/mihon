@@ -326,7 +326,7 @@
     <string name="logout_success">你已登出</string>
     <string name="logout">登出</string>
     <string name="last_used_source">最近使用</string>
-    <string name="local_source_help_guide">本機來源入門指南</string>
+    <string name="local_source_help_guide">本機來源指南</string>
     <string name="information_webview_outdated">請更新 WebView 以獲得更佳的相容性</string>
     <string name="information_webview_required">應用程式運作需要 WebView</string>
     <string name="action_select_inverse">反向選擇</string>
@@ -425,7 +425,7 @@
     <string name="pref_incognito_mode">無痕模式</string>
     <string name="file_picker_error">找不到檔案選擇器</string>
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
-    <string name="migration_help_guide">來源遷移說明</string>
+    <string name="migration_help_guide">來源遷移指南</string>
     <string name="spen_next_page">下一頁</string>
     <string name="spen_previous_page">上一頁</string>
     <string name="myanimelist_relogin">請重新登入 MAL</string>
@@ -501,7 +501,7 @@
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
     <string name="enhanced_tracking_info">為特定來源提供增強功能。當作品被加入書櫃時，將自動登錄閱讀歷程。</string>
     <string name="enhanced_services">增強式歷程平台</string>
-    <string name="tracking_guide">歷程平台說明</string>
+    <string name="tracking_guide">歷程平台指南</string>
     <string name="categorized_display_settings">獨立各類別的排序方式</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
@@ -804,4 +804,9 @@
     <string name="action_replace_repo_title">已有相同的簽署金鑰指紋</string>
     <string name="action_replace_repo_message">「%1$s」儲存庫的簽署金鑰指紋與「%2$s」相同。
 \n若此為預期現象，則「%2$s」將被取代，否則請聯絡該儲存庫的維護者。</string>
+    <string name="upcoming_guide">預告指南</string>
+    <string name="upcoming_calendar_next">下個月</string>
+    <string name="upcoming_calendar_prev">上個月</string>
+    <string name="label_upcoming">預告</string>
+    <string name="action_view_upcoming">檢視新刊預告</string>
 </resources>
