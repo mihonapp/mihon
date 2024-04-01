@@ -200,7 +200,6 @@
     <string name="pref_page_transitions">पृष्ठ ट्रान्जिसन एनिमेट गर्नुहोस्</string>
     <string name="pref_double_tap_anim_speed">एनिमेसनको गति डबल ट्याप गर्नुहोस्</string>
     <string name="pref_show_reading_mode_summary">रिडर खोल्दा छोटकरीमा हालको मोड देखाउनुहोस्</string>
-    <string name="pref_true_color_summary">ब्यान्डिङ घटाउँछ, तर कार्यसम्पादनलाई असर गर्न सक्छ</string>
     <string name="on">अन</string>
     <string name="pref_custom_brightness">कस्टम चमक</string>
     <string name="pref_skip_read_chapters">पढिएको चिन्ह लगाइएका अध्यायहरू छोड्नुहोस्</string>
@@ -256,7 +255,6 @@
     <string name="pref_dual_page_invert_summary">यदि विभाजित चौडा पृष्ठहरूको प्लेसमेन्ट पढ्ने दिशासँग मेल खाँदैन</string>
     <string name="pref_show_reading_mode">पढ्ने मोड देखाउनुहोस्</string>
     <string name="pref_show_page_number">पृष्ठ नम्बर देखाउनुहोस्</string>
-    <string name="pref_true_color">३२-बिट रङ</string>
     <string name="pref_crop_borders">सीमाना क्रप गर्नुहोस्</string>
     <string name="off">अफ</string>
     <string name="pref_grayscale">ग्रे-स्केल</string>
@@ -794,8 +792,8 @@
     <string name="manga_interval_expected_update">नयाँ अध्यायहरू लगभग %1$s मा रिलीज हुने भविष्यवाणी गरिएको छ, हरेक %2$s को वरिपरि जाँच गर्दै।</string>
     <string name="manga_interval_expected_update_soon">छिटै</string>
     <string name="manga_interval_custom_amount">कस्टम अपडेट फ्रिक्वेन्सी:</string>
-    <string name="exclude_scanlators">स्क्यालेटरहरू समावेश नगर्नुहोस्</string>
-    <string name="no_scanlators_found">कुनै स्क्यालेटर फेला परेन</string>
+    <string name="exclude_scanlators">स्क्यानलेटर समावेश नगर्नुहोस्</string>
+    <string name="no_scanlators_found">कुनै स्क्यानलेटर फेला परेन</string>
     <string name="pref_storage_usage">भण्डारण प्रयोग</string>
     <string name="no_location_set">कुनै भण्डारण स्थान सेट गरिएको छैन</string>
     <string name="pref_storage_location_info">स्वचालित ब्याकअप, अध्याय डाउनलोड, र स्थानीय स्रोतको लागि प्रयोग गरिन्छ।</string>
@@ -803,4 +801,11 @@
     <string name="invalid_backup_file_error">पूर्ण त्रुटि:</string>
     <string name="private_settings">संवेदनशील सेटिङहरू समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
+    <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
+    <string name="action_migrate_duplicate">अवस्थित इन्ट्री माइग्रेट गर्नुहोस्</string>
+    <string name="pref_display_profile">कस्टम प्रदर्शन प्रोफाइल</string>
+    <string name="action_replace_repo">रिप्लेस</string>
+    <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
+    <string name="action_replace_repo_message">रिपो %1$s सँग %2$s जस्तै साइन गर्ने की फिंगरप्रिन्ट छ।
+\nयदि यो अपेक्षित छ भने, %2$s प्रतिस्थापन गरिनेछ, अन्यथा आफ्नो रिपो प्रबन्धकलाई सम्पर्क गर्नुहोस्।</string>
 </resources>

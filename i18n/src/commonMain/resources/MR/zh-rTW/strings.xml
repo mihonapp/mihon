@@ -93,7 +93,6 @@
     <string name="pref_fullscreen">全螢幕</string>
     <string name="pref_double_tap_anim_speed">輕觸兩下動畫速度</string>
     <string name="pref_show_page_number">顯示頁碼</string>
-    <string name="pref_true_color">32 位元色彩</string>
     <string name="pref_custom_brightness">自訂亮度</string>
     <string name="pref_custom_color_filter">色彩濾鏡</string>
     <string name="pref_keep_screen_on">保持螢幕恆亮</string>
@@ -147,7 +146,7 @@
     <string name="update_check_notification_download_complete">輕觸即可更新</string>
     <string name="update_check_notification_download_error">更新下載失敗</string>
     <string name="update_check_notification_update_available">有可用的更新！</string>
-    <string name="information_no_downloads">無下載</string>
+    <string name="information_no_downloads">尚無下載作業</string>
     <string name="download_notifier_title_error">錯誤</string>
     <string name="download_notifier_text_only_wifi">沒有可用的 Wi-Fi 連線</string>
     <string name="download_notifier_no_network">尚未連接至網路</string>
@@ -327,7 +326,7 @@
     <string name="logout_success">你已登出</string>
     <string name="logout">登出</string>
     <string name="last_used_source">最近使用</string>
-    <string name="local_source_help_guide">本機來源入門指南</string>
+    <string name="local_source_help_guide">本機來源指南</string>
     <string name="information_webview_outdated">請更新 WebView 以獲得更佳的相容性</string>
     <string name="information_webview_required">應用程式運作需要 WebView</string>
     <string name="action_select_inverse">反向選擇</string>
@@ -349,7 +348,6 @@
     <string name="pref_cutout_short">使用螢幕凹口區域</string>
     <string name="email">電子郵件地址</string>
     <string name="pref_skip_filtered_chapters">略過已篩選的章節</string>
-    <string name="pref_true_color_summary">減緩色調分離，但可能拖累效能</string>
     <string name="pref_show_reading_mode_summary">開始閱讀時，快顯闡明目前的模式</string>
     <string name="pref_show_reading_mode">閱讀模式提示</string>
     <string name="label_sources">來源</string>
@@ -427,7 +425,7 @@
     <string name="pref_incognito_mode">無痕模式</string>
     <string name="file_picker_error">找不到檔案選擇器</string>
     <string name="share_page_info">《%1$s》：%2$s，第 %3$d 頁</string>
-    <string name="migration_help_guide">來源遷移說明</string>
+    <string name="migration_help_guide">來源遷移指南</string>
     <string name="spen_next_page">下一頁</string>
     <string name="spen_previous_page">上一頁</string>
     <string name="myanimelist_relogin">請重新登入 MAL</string>
@@ -503,7 +501,7 @@
     <string name="restore_miui_warning">若停用 MIUI 最佳化，備份與還原可能無法正確執行。</string>
     <string name="enhanced_tracking_info">為特定來源提供增強功能。當作品被加入書櫃時，將自動登錄閱讀歷程。</string>
     <string name="enhanced_services">增強式歷程平台</string>
-    <string name="tracking_guide">歷程平台說明</string>
+    <string name="tracking_guide">歷程平台指南</string>
     <string name="categorized_display_settings">獨立各類別的排序方式</string>
     <string name="pref_dark_theme_pure_black">純黑深色模式</string>
     <string name="theme_yotsuba">四葉</string>
@@ -710,7 +708,7 @@
     <string name="action_sort_next_updated">下次預期更新</string>
     <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_only_in_release_period">自訂預估出刊日</string>
+    <string name="pref_update_only_in_release_period">預估出刊日</string>
     <string name="manga_display_modified_interval_title">設定為每個</string>
     <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
     <string name="has_results">有結果</string>
@@ -799,4 +797,16 @@
     <string name="manga_interval_expected_update_soon">即將出刊</string>
     <string name="action_open_repo">開啟來源儲存庫</string>
     <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
+    <string name="pref_display_profile">自訂顯示設定檔</string>
+    <string name="action_add_anyway">仍要新增</string>
+    <string name="action_migrate_duplicate">遷移現有作品</string>
+    <string name="action_replace_repo">取代</string>
+    <string name="action_replace_repo_title">已有相同的簽署金鑰指紋</string>
+    <string name="action_replace_repo_message">「%1$s」儲存庫的簽署金鑰指紋與「%2$s」相同。
+\n若此為預期現象，則「%2$s」將被取代，否則請聯絡該儲存庫的維護者。</string>
+    <string name="upcoming_guide">預告指南</string>
+    <string name="upcoming_calendar_next">下個月</string>
+    <string name="upcoming_calendar_prev">上個月</string>
+    <string name="label_upcoming">預告</string>
+    <string name="action_view_upcoming">檢視新刊預告</string>
 </resources>

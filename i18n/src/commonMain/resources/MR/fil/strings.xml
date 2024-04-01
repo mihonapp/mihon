@@ -169,8 +169,6 @@
     <string name="pref_custom_color_filter">Pinili kong filter ng kulay</string>
     <string name="pref_custom_brightness">Pinili kong liwanag</string>
     <string name="pref_crop_borders">Gupitin ang gilid</string>
-    <string name="pref_true_color_summary">Binabawasan ang banding, ngunit maaaring makaapekto ito sa performance</string>
-    <string name="pref_true_color">Totoong kulay (32-bit)</string>
     <string name="pref_show_reading_mode_summary">Mabilis na ipakita ang kasalukuyang ginagamit kapag nakabukas ang reader</string>
     <string name="pref_show_reading_mode">Ipakita ang paraan ng pagbasa</string>
     <string name="pref_show_page_number">Ipakita ang bilang ng pahina</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
+    <string name="action_replace_repo">Palitan</string>
+    <string name="action_add_anyway">Idagdag pa rin</string>
+    <string name="action_migrate_duplicate">Ilipat ang kasalukuyang entry</string>
+    <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
+    <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
+\nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
+    <string name="pref_display_profile">Ipasadya ang profile sa display</string>
+    <string name="label_upcoming">Paparating</string>
+    <string name="upcoming_guide">Gabay sa Paparating</string>
+    <string name="upcoming_calendar_next">Susunod na Buwan</string>
+    <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
+    <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
 </resources>

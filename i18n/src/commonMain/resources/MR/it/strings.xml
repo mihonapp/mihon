@@ -198,7 +198,7 @@
     <string name="app_not_available">App non disponibile</string>
     <string name="update_weekly">Ogni settimana</string>
     <string name="default_category">Categoria predefinita</string>
-    <string name="track">Tracking</string>
+    <string name="track">Tracciamento</string>
     <string name="pref_category_tracking">Tracciamento</string>
     <string name="default_category_summary">Chiedi sempre</string>
     <string name="pref_crop_borders">Ritaglia bordi</string>
@@ -271,7 +271,6 @@
     <string name="transition_pages_loading">Caricamento pagine…</string>
     <string name="transition_pages_error">Caricamento pagine fallito: %1$s</string>
     <string name="action_open_in_web_view">Apri in WebView</string>
-    <string name="pref_true_color">Colori a 32 bit</string>
     <string name="pref_skip_read_chapters">Salta i capitoli segnati come letti</string>
     <string name="filter_mode_screen">Schermo</string>
     <string name="pref_read_with_long_tap">Mostra azioni con un tocco prolungato</string>
@@ -366,7 +365,6 @@
     <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento dei capitoli sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
-    <string name="pref_true_color_summary">Riduce il banding, ma potrebbe influire sulle prestazioni</string>
     <string name="gray_background">Grigio</string>
     <string name="page_list_empty_error">Nessuna pagina trovata</string>
     <string name="sort_by_upload_date">Per data di aggiunta</string>
@@ -800,4 +798,12 @@
     <string name="delete_repo_confirmation">Vuoi eleminare la repository \"%s\"?</string>
     <string name="invalid_backup_file_error">Errore completo:</string>
     <string name="manga_interval_expected_update">Si prevede che i nuovi capitoli saranno rilasciati tra circa %1$s, con controlli ogni %2$s.</string>
+    <string name="action_add_anyway">Aggiungere comunque</string>
+    <string name="action_migrate_duplicate">Migrare la voce esistente</string>
+    <string name="action_replace_repo_title">La Firma dell\'Impronta Digitale della Chiave Esiste Già</string>
+    <string name="pref_display_profile">Profilo di visualizzazione personalizzato</string>
+    <string name="action_replace_repo_message">La repository %1$s ha la stessa Firma d\'Impronta Digitale della Chiave %2$s.
+\nSe è quello che si desidera, %2$s verrà sostituita, altrimenti contatta il manutentore della repository.</string>
+    <string name="action_replace_repo">Sostituisci</string>
+    <string name="pref_webtoon_disable_zoom_out">Disattiva zoom indietro</string>
 </resources>

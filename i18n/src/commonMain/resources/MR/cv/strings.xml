@@ -231,8 +231,6 @@
     <string name="pref_custom_color_filter">Усӑҫ тӗс али</string>
     <string name="pref_custom_brightness">Усӑҫ йӑлтӑрлӑхӗ</string>
     <string name="pref_crop_borders">Касӑк чиккисем</string>
-    <string name="pref_true_color_summary">Йӑрӑм-йӑрӑм чакать, анчах тухӑҫлӑх ҫине витӗм кӳрет</string>
-    <string name="pref_true_color">32 битлӑ тӗс</string>
     <string name="pref_show_page_number">Ел шутне кӑтартни</string>
     <string name="pref_double_tap_anim_speed">Икӗ хут пуссан эним хӑвӑртлӑхӗ</string>
     <string name="pref_page_transitions">Елсем хушшипе енимлӗ куҫни</string>

@@ -272,7 +272,6 @@
     <string name="transition_pages_error">Falha ao carregar as páginas: %1$s</string>
     <string name="pref_read_with_long_tap">Mostrar as ações no toque longo</string>
     <string name="action_open_in_web_view">Abrir na WebView</string>
-    <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_skip_read_chapters">Pular os capítulos marcados como lidos</string>
     <string name="filter_mode_screen">Divisão</string>
     <string name="label_help">Ajuda</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
-    <string name="pref_true_color_summary">Reduz o efeito de anéis nos degradês, mas pode afetar o desempenho</string>
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as configurações do dispositivo</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços monitoradores externos. Configure o monitoramento para itens individuais a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
@@ -744,7 +742,7 @@
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Reverter para o padrão</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Scanner</string>
     <string name="exclude_scanlators">Excluir scanlators</string>
     <string name="action_create">Criar</string>
     <string name="selected">Selecionado</string>
@@ -798,4 +796,5 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
     <string name="action_open_repo">Abrir repositório da fonte</string>
+    <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
 </resources>

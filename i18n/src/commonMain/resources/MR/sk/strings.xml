@@ -108,7 +108,6 @@
     <string name="pref_page_transitions">Animácia prechodov strán</string>
     <string name="pref_double_tap_anim_speed">Rýchlosť animácie pre dvojité ťuknutie</string>
     <string name="pref_show_page_number">Zobraziť číslo strany</string>
-    <string name="pref_true_color">32-bitová farba</string>
     <string name="pref_crop_borders">Orezať okraje</string>
     <string name="pref_custom_brightness">Vlastný jas</string>
     <string name="pref_custom_color_filter">Vlastný farebný filter</string>
@@ -444,7 +443,6 @@
     <string name="information_empty_category_dialog">Zatiaľ nemáte žiadne kategórie.</string>
     <string name="ext_info_age_rating">Vekové hodnotenie</string>
     <string name="date">Dátum</string>
-    <string name="pref_true_color_summary">Znižuje pruhovanie farieb, ale môže ovplyvniť výkon</string>
     <string name="tapping_inverted_both">Obe</string>
     <string name="nav_zone_prev">Predchádzajúci</string>
     <string name="pref_high">Vysoké</string>

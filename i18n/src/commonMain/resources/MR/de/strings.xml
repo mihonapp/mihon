@@ -55,7 +55,7 @@
     <string name="action_undo">Rückgängig machen</string>
     <string name="action_open_log">Protokoll öffnen</string>
     <string name="action_restore">Wiederherstellen</string>
-    <string name="loading">Wird geladen …</string>
+    <string name="loading">Wird geladen…</string>
     <string name="app_not_available">App nicht verfügbar</string>
     <string name="pref_category_general">Allgemein</string>
     <string name="pref_category_reader">Leser</string>
@@ -271,7 +271,6 @@
     <string name="transition_pages_loading">Lade Seiten…</string>
     <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
     <string name="action_open_in_web_view">In WebView öffnen</string>
-    <string name="pref_true_color">32-Bit-Farben</string>
     <string name="pref_skip_read_chapters">Gelesene Kapitel überspringen</string>
     <string name="pref_read_with_long_tap">Aktionen bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Overlay</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
     <string name="pref_category_for_this_series">Für diese Serie</string>
-    <string name="pref_true_color_summary">Reduziert Streifenbildung, könnte aber die Leistung beeinflussen</string>
     <string name="battery_optimization_setting_activity_not_found">Geräteeinstellungen konnten nicht geöffnet werden</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den externen Trackingdiensten. Richte Tracking für einzelne Einträge über deren jeweiligen Trackingbutton ein.</string>
     <string name="pref_refresh_library_covers">Bibliothekscover aktualisieren</string>
@@ -759,7 +757,7 @@
     <string name="onboarding_action_finish">Loslegen</string>
     <string name="onboarding_storage_selection_required">Es muss ein Ordner ausgewählt sein</string>
     <string name="onboarding_heading">Willkommen!</string>
-    <string name="onboarding_guides_returning_user">%s reinstallieren?</string>
+    <string name="onboarding_guides_returning_user">%s reinstalliert?</string>
     <string name="onboarding_action_skip">Überspringen</string>
     <string name="onboarding_action_next">Weiter</string>
     <string name="onboarding_description">Lass uns zuerst ein paar Dinge einrichten. Du kannst diese später in den Einstellungen jederzeit ändern.</string>
@@ -799,4 +797,16 @@
     <string name="manga_interval_expected_update_soon">Bald</string>
     <string name="ext_revoke_trust">Zertifikatsbestätigungen zurücknehmen</string>
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>
+    <string name="pref_display_profile">Benutzerdefiniertes Anzeigeprofil</string>
+    <string name="action_add_anyway">Trotzdem hinzufügen</string>
+    <string name="action_migrate_duplicate">Existierenden Eintrag migrieren</string>
+    <string name="action_replace_repo">Ersetzen</string>
+    <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
+    <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
+\nFalls das erwünscht ist, wird %2$s nun ersetzt. Falls nicht, kontaktiere den Repository-Maintainer.</string>
+    <string name="upcoming_calendar_next">Nächster Monat</string>
+    <string name="upcoming_calendar_prev">Vorheriger Monat</string>
+    <string name="label_upcoming">Bevorstehend</string>
+    <string name="action_view_upcoming">Bevorstehende Aktualisierungen ansehen</string>
+    <string name="upcoming_guide">Leitfaden für Bevorstehendes</string>
 </resources>

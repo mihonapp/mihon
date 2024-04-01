@@ -273,7 +273,6 @@
     <string name="pref_read_with_long_tap">Показать действия при долгом нажатии</string>
     <string name="action_open_in_web_view">Открыть в WebView</string>
     <string name="pref_skip_read_chapters">Пропускать прочитанные главы</string>
-    <string name="pref_true_color">32-битный цвет</string>
     <string name="pref_color_filter_mode">Режим светофильтра</string>
     <string name="filter_mode_overlay">Наложение</string>
     <string name="filter_mode_multiply">Умножение</string>
@@ -364,7 +363,6 @@
     <string name="viewer">Режим чтения</string>
     <string name="pref_category_for_this_series">Для этой серии</string>
     <string name="gray_background">Серый</string>
-    <string name="pref_true_color_summary">Уменьшает полосатость, но может влиять на производительность</string>
     <string name="battery_optimization_setting_activity_not_found">Не удалось открыть настройки устройства</string>
     <string name="pref_refresh_library_covers">Обновить обложки серий</string>
     <string name="tracking_info">Односторонняя синхронизация для обновления прогресса в сторонних сервисах отслеживания. Настройте отслеживание при помощи кнопки «Отслеживание».</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">Убрать доверие к ненадёжным расширениям</string>
     <string name="action_open_repo">Открыть репозиторий источника</string>
     <string name="pref_webtoon_disable_zoom_out">Отключить уменьшение масштаба</string>
+    <string name="action_add_anyway">Добавить в любом случае</string>
+    <string name="pref_display_profile">Пользовательский профиль отображения</string>
+    <string name="action_migrate_duplicate">Перенести существующую серию</string>
+    <string name="action_replace_repo">Заменить</string>
+    <string name="action_replace_repo_message">Репозиторий %1$s имеет тот же подписанный ключ отпечатка, что и %2$s.
+\nЕсли это так и задумано, %2$s будет заменён, в противном случае, свяжитесь с сопровождающим вашего репозитория.</string>
+    <string name="action_replace_repo_title">Подписанный ключ отпечатка уже существует</string>
+    <string name="upcoming_calendar_prev">Предыдущий месяц</string>
+    <string name="action_view_upcoming">Просмотр предстоящих обновлений</string>
+    <string name="label_upcoming">Предстоящее</string>
+    <string name="upcoming_guide">Предстоящее руководство</string>
+    <string name="upcoming_calendar_next">Следующий месяц</string>
 </resources>

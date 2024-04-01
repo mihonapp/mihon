@@ -148,7 +148,6 @@
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
     <string name="pref_show_page_number">Näytä sivunumero</string>
-    <string name="pref_true_color">32-bittinen väri</string>
     <string name="pref_crop_borders">Rajaa reunat</string>
     <string name="pref_custom_brightness">Mukautettu kirkkaus</string>
     <string name="pref_custom_color_filter">Mukautettu värisuodatin</string>
@@ -363,7 +362,6 @@
     <string name="downloaded_only_summary">Suodattaa kaikki sarjat kirjastossasi</string>
     <string name="gray_background">Harmaa</string>
     <string name="pref_category_for_this_series">Tälle sarjalle</string>
-    <string name="pref_true_color_summary">Vähentää juovia, mutta vaikuttaa suorituskykyyn</string>
     <string name="viewer">Lukutila</string>
     <string name="battery_optimization_setting_activity_not_found">Laiteasetuksia ei voitu avata</string>
     <string name="tracking_info">Yksisuuntainen synkronointi lukujen seurantapalveluiden päivittämiseksi. Määritä yksittäisten mangamerkintöjen seuranta seurantapainikkeesta.</string>

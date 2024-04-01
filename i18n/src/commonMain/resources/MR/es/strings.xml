@@ -274,7 +274,6 @@
     <string name="pref_read_with_long_tap">Menú de pulsación prolongada</string>
     <string name="action_open_in_web_view">Abrir en WebView</string>
     <string name="pref_skip_read_chapters">Saltar capítulos leídos</string>
-    <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_color_filter_mode">Mezcla de colores</string>
     <string name="filter_mode_overlay">Superponer</string>
     <string name="filter_mode_multiply">Multiplicar</string>
@@ -365,7 +364,6 @@
     <string name="viewer">Modo de lectura</string>
     <string name="pref_category_for_this_series">Para esta serie</string>
     <string name="gray_background">Gris</string>
-    <string name="pref_true_color_summary">Reduce el efecto anillado en los degradados y mejora la calidad de los grises, pero puede afectar al rendimiento</string>
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Actualizar las portadas de la biblioteca</string>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada elemento en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">Dejar de marcar todas la extensiones desconocidas como de confianza</string>
     <string name="action_open_repo">Abrir repositorio</string>
     <string name="pref_webtoon_disable_zoom_out">Desactivar alejar</string>
+    <string name="pref_display_profile">Perfil de visualización personalizado</string>
+    <string name="action_add_anyway">Agregar de todos modos</string>
+    <string name="action_migrate_duplicate">Migrar la entrada existente</string>
+    <string name="action_replace_repo">Reemplazar</string>
+    <string name="action_replace_repo_title">La huella digital de la clave de la firma ya existe</string>
+    <string name="action_replace_repo_message">El repositorio %1$s tiene la misma huella digital de clave de la firma que %2$s.
+\nSi esto es lo esperado, %2$s será reemplazado, de lo contrario contacte con quien mantiene su repositorio.</string>
+    <string name="label_upcoming">Próximo</string>
+    <string name="action_view_upcoming">Ver las próximas actualizaciones</string>
+    <string name="upcoming_guide">Próxima guía</string>
+    <string name="upcoming_calendar_next">Próximo mes</string>
+    <string name="upcoming_calendar_prev">Mes anterior</string>
 </resources>
