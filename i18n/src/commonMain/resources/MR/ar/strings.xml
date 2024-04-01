@@ -679,7 +679,7 @@
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
     <string name="pref_skip_dupe_chapters">تجاوز الفصول المكررة</string>
     <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
-    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم. 
+    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم.
 \n
 \nهل مازلت ترغب في الاستمرار؟</string>
     <string name="copied_to_clipboard_plain">نسخ الى الحافظة</string>

@@ -309,7 +309,7 @@
     <string name="pref_rotation_type">Тып арыентацыі па змаўчанні</string>
     <string name="label_warning">папярэджанне</string>
     <string name="delete_category">Выдаліць катэгорыю</string>
-    <string name="delete_category_confirmation">Вы хочаце выдаліць катэгорыю \"%s\"\?</string>
+    <string name="delete_category_confirmation">Вы хочаце выдаліць катэгорыю \"%s\"?</string>
     <string name="internal_error">InternalError: Праверце журнал збояў для атрымання дадатковай інфармацыі</string>
     <string name="ext_update_all">Абнавіць усё</string>
     <string name="ext_info_age_rating">Узроставае абмежаванне</string>

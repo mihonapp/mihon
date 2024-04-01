@@ -211,7 +211,7 @@
     <string name="manga_tracking_tab">Nyilvántartás</string>
     <string name="copied_to_clipboard">Vágólapra másolva:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">Törli a kijelölt fejezeteket\?</string>
+    <string name="delete_downloads_for_manga">Törli a kijelölt fejezeteket?</string>
     <string name="spen_previous_page">Előző oldal</string>
     <string name="chapter_error">Hiba</string>
     <string name="website">Weboldal</string>
@@ -249,10 +249,10 @@
     <string name="notification_chapters_single_and_more">%1$s. fejezet és további %2$d</string>
     <string name="share_page_info">%1$s:%2$s, %3$d. oldal</string>
     <string name="repeating">Újraolvasás</string>
-    <string name="confirm_delete_chapters">Biztosan törölni akarja a kijelölt fejezeteket\?</string>
+    <string name="confirm_delete_chapters">Biztosan törölni akarja a kijelölt fejezeteket?</string>
     <string name="download_unread">Olvasatlan</string>
     <string name="chapter_paused">Szünetel</string>
-    <string name="snack_add_to_library">Manga könyvtárhoz adása\?</string>
+    <string name="snack_add_to_library">Manga könyvtárhoz adása?</string>
     <string name="source_not_installed">Forrás nincs telepítve: %1$s</string>
     <string name="ongoing">Folyamatban van</string>
     <string name="last_used_source">Utoljára használt</string>
@@ -283,7 +283,7 @@
     <string name="lock_when_idle">Zárás tétlen állapotban</string>
     <string name="lock_with_biometrics">Biometrikus zár</string>
     <string name="action_show_errors">Hibák mutatása</string>
-    <string name="logout_title">Kijelentkezel a következőből: %1$s\?</string>
+    <string name="logout_title">Kijelentkezel a következőből: %1$s?</string>
     <string name="browse">Böngészés</string>
     <string name="action_desc">Csökkenő</string>
     <string name="action_asc">Növekvő</string>
@@ -411,7 +411,7 @@
     <string name="local_source">Helyi forrás</string>
     <string name="latest">Legújabb</string>
     <string name="date">Dátum</string>
-    <string name="clear_history_confirmation">Biztos benne\? Minden előzmény elvész.</string>
+    <string name="clear_history_confirmation">Biztos benne? Minden előzmény elvész.</string>
     <string name="delete_category">Kategória törlése</string>
     <string name="pref_app_language">Alkalmazás nyelve</string>
     <string name="unread">Olvasatlan</string>
@@ -423,12 +423,12 @@
     <string name="no_results_found">Nincs találat</string>
     <string name="action_global_search_hint">Globális keresés…</string>
     <string name="sort_by_upload_date">Feltöltési dátum szerint</string>
-    <string name="dialog_with_checkbox_remove_description">Ez eltávolítja a fejezet olvasási dátumát. Biztos benne\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ez eltávolítja a fejezet olvasási dátumát. Biztos benne?</string>
     <string name="pref_update_only_completely_read">Olvasatlan fejezet(ek)et tartalmazó elemek kihagyása</string>
-    <string name="delete_category_confirmation">Törölni akarja a %s kategóriát \?</string>
+    <string name="delete_category_confirmation">Törölni akarja a %s kategóriát ?</string>
     <string name="internal_error">InternalError: Nézze meg a hibaüzenetet további információért</string>
     <string name="network_not_metered">Csak korlátlan hálózatokon</string>
-    <string name="backup_choice">Mit tartalmazzon a biztonsági mentés\?</string>
+    <string name="backup_choice">Mit tartalmazzon a biztonsági mentés?</string>
     <string name="restore_miui_warning">Biztonsági mentés/helyreállítás nem biztos,hogy működik ha a MIUI Optimalizáció ki van kapcsolva.</string>
     <string name="restore_in_progress">Helyreállítás folyamatban van</string>
     <string name="used_cache">Felhasznált gyorsítótár: %1$s</string>
@@ -446,7 +446,7 @@
     <string name="pref_clear_cookies">Sütik törlése</string>
     <string name="cache_deleted">Gyorsítótár törölve: %1$d fájl lett törölve</string>
     <string name="cache_delete_error">Hiba történt törlés közben</string>
-    <string name="clear_database_confirmation">Biztos benne\? Nem könyvtári elemek olvasott fejezetei elvesznek</string>
+    <string name="clear_database_confirmation">Biztos benne? Nem könyvtári elemek olvasott fejezetei elvesznek</string>
     <string name="file_picker_error">Nem található fájl választó alkalmazás</string>
     <string name="information_empty_category_dialog">Nincsenek még kategóriáid.</string>
     <string name="information_cloudflare_bypass_failure">Nem sikerült megkerülni a Cloudflare-t</string>
@@ -486,7 +486,7 @@
     <string name="clipboard_copy_error">Nem sikerült másolni</string>
     <string name="cover_saved">Fedlap elmentve</string>
     <string name="chapter_settings">Fejezet beállítások</string>
-    <string name="confirm_set_chapter_settings">Biztos, hogy ezeket a beállításokat alapértelmezettként akarod elmenteni\?</string>
+    <string name="confirm_set_chapter_settings">Biztos, hogy ezeket a beállításokat alapértelmezettként akarod elmenteni?</string>
     <string name="error_saving_cover">Hiba fedlap mentése közben</string>
     <string name="also_set_chapter_settings_for_library">Könyvtárban lévő tartalmakra is</string>
     <string name="pref_clear_history">Előzmények törlése</string>
@@ -605,7 +605,7 @@
     <string name="skipped_reason_completed">Átugorva, mivel a sorozat befejeződött</string>
     <string name="download_notifier_split_page_not_found">%d oldal nem található felosztás közben</string>
     <string name="download_notifier_split_page_path_not_found">Nem található az útvonal a %d-ik oldalhoz</string>
-    <string name="confirm_set_image_as_cover">Ez a kép legyen a fedlap\?</string>
+    <string name="confirm_set_image_as_cover">Ez a kép legyen a fedlap?</string>
     <string name="file_select_backup">Biztonsági mentési fájl kiválasztása</string>
     <string name="pref_user_agent_string">Alap hálózati kliens szöveg</string>
     <string name="pref_reset_user_agent_string">Alap hálózati kliens szöveg visszaállítása</string>
@@ -660,7 +660,7 @@
     <string name="missing_storage_permission">Tárhely engedély nincs megadva</string>
     <string name="label_used">Használt</string>
     <string name="track_error">%1$s hiba: %2$s</string>
-    <string name="are_you_sure">Biztos vagy benne\?</string>
+    <string name="are_you_sure">Biztos vagy benne?</string>
     <string name="information_no_manga_category">Kategória üres</string>
     <string name="track_remove_finish_date_conf_text">Ez eltávolítja az eddig kiválasztott befejezési dátumot a(z) %s szolgáltatásból</string>
     <string name="label_read_duration">Olvasási idő</string>
@@ -672,7 +672,7 @@
     <string name="popular">Felkapott</string>
     <string name="update_already_running">A frissités már folyamatban van</string>
     <string name="crash_screen_description">%s hibába ütközött. A hiba üzenetet kérünk oszd meg velünk a Discord szerverünkön.</string>
-    <string name="track_remove_date_conf_title">Dátum eltávolítása\?</string>
+    <string name="track_remove_date_conf_title">Dátum eltávolítása?</string>
     <string name="crash_screen_restart_application">Applikáció újrainditása</string>
     <string name="label_titles_in_global_update">Globális frissités</string>
     <string name="information_required_plain">*kötelező</string>

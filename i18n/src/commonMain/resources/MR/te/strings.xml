@@ -158,7 +158,7 @@
     <string name="action_sort_unread_count">చదవని లెక్క</string>
     <string name="action_sort_last_manga_update">చివరి అప్డేట్ తనిఖీ</string>
     <string name="action_remove_everything">మొత్తం తీసేయండి</string>
-    <string name="delete_category_confirmation">మీరు \"%s\" క్యాటగిరీ తీసివేయాలి అనుకుంటున్నారా\?</string>
+    <string name="delete_category_confirmation">మీరు \"%s\" క్యాటగిరీ తీసివేయాలి అనుకుంటున్నారా?</string>
     <string name="delete_category">క్యాటగిరీ తీసేయండి</string>
     <string name="action_move_to_top_all_for_series">సిరీస్ పైన పెట్టండి</string>
     <string name="action_search_hint">అన్వేషించండి…</string>

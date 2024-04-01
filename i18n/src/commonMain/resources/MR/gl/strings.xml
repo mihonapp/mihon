@@ -261,7 +261,7 @@
     <string name="rotation_landscape">Horizontal</string>
     <string name="split_tall_images_summary">Mellora o rendemento do lector</string>
     <string name="website">Páxina web</string>
-    <string name="confirm_set_chapter_settings">Estás seguro de querer gardar estes axustes como por defecto\?</string>
+    <string name="confirm_set_chapter_settings">Estás seguro de querer gardar estes axustes como por defecto?</string>
     <string name="picture_saved">Imaxe gardada</string>
     <string name="pref_restore_backup">Restaurar a copia de seguridade</string>
     <string name="pref_backup_interval">Frecuencia das copias de seguridade</string>
@@ -288,7 +288,7 @@
     <string name="download_ahead_info">Só funciona con elementos da biblioteca e se o capítulo actual e o seguinte xa están descargados.</string>
     <string name="restore_completed">Restauración completada</string>
     <string name="restore_duration">%02d min y %02d seg</string>
-    <string name="backup_choice">De que queres facer unha copia de seguridade\?</string>
+    <string name="backup_choice">De que queres facer unha copia de seguridade?</string>
     <string name="missing_storage_permission">Non se concederon os permisos de almacenamento</string>
     <string name="empty_backup_error">Ningún elemento na biblioteca co que facer a copia de seguridade</string>
     <string name="backup_info">Deberías gardar duplicados das copias de seguridade fora do teu dispositivo.</string>
@@ -305,12 +305,12 @@
     <string name="latest">Máis recente</string>
     <string name="add_to_library">Engadir á biblioteca</string>
     <string name="custom_cover">Portada personalizada</string>
-    <string name="confirm_delete_chapters">Estás seguro de querer eliminar os capítulos seleccionados\?</string>
+    <string name="confirm_delete_chapters">Estás seguro de querer eliminar os capítulos seleccionados?</string>
     <string name="chapter_settings">Axustes de capítulo</string>
     <string name="paused">Pausado</string>
     <string name="manga_cover">Portada</string>
     <string name="cover_saved">Portada gardada</string>
-    <string name="delete_category_confirmation">Queres eliminar a categoría \"%s\"\?</string>
+    <string name="delete_category_confirmation">Queres eliminar a categoría \"%s\"?</string>
     <string name="action_desc">Descendente</string>
     <string name="action_asc">Ascendente</string>
     <string name="pref_dual_page_invert_summary">Se a separación das páxinas anchas non coincide coa dirección de lectura</string>
@@ -371,7 +371,7 @@
     <string name="backup_restore_content_full">Pode ser que debas instalar as extensións que falten e iniciar sesión nos servizos de seguemento para usalos.</string>
     <string name="label_data">Datos</string>
     <string name="pref_reset_viewer_flags_success">Restableceuse a configuración do lector</string>
-    <string name="logout_title">Pechar a sesión en %1$s\?</string>
+    <string name="logout_title">Pechar a sesión en %1$s?</string>
     <string name="logout_success">Pechouse a sesión</string>
     <string name="publishing_finished">Publicación rematada</string>
     <string name="cancelled">Cancelada</string>
@@ -387,7 +387,7 @@
     <string name="pref_dns_over_https">DNS por HTTPS (DoH)</string>
     <string name="update_72hour">Cada 3 días</string>
     <string name="downloaded_only_summary">Filtra tódolos elementos da túa biblioteca</string>
-    <string name="snack_add_to_library">Engadir á biblioteca\?</string>
+    <string name="snack_add_to_library">Engadir á biblioteca?</string>
     <string name="description_placeholder">Sen descripción</string>
     <string name="status">Estado</string>
     <string name="restore_miui_warning">É posible que as opcións de copia de seguridade e de restauración non funcionen correctamente se a \"Optimización de MIUI\" está desactivada.</string>
@@ -497,7 +497,7 @@
     <string name="pref_clear_chapter_cache">Borrar a caché dos capítulos</string>
     <string name="cache_deleted">Borrouse a caché. Elimináronse %1$d ficheiros</string>
     <string name="pref_invalidate_download_cache_summary">Forzar á aplicación a comprobar de novo os capítulos descargados</string>
-    <string name="clear_database_confirmation">Estás seguro\? Perderanse os capítulos lidos e o progreso dos elementos que non estean na biblioteca</string>
+    <string name="clear_database_confirmation">Estás seguro? Perderanse os capítulos lidos e o progreso dos elementos que non estean na biblioteca</string>
     <string name="pref_reset_viewer_flags">Restablecer os axustes do lector en cada serie</string>
     <string name="pref_disable_battery_optimization">Desactivar a optimización de batería</string>
     <string name="battery_optimization_disabled">A optimización de batería xa está desactivada</string>
@@ -514,7 +514,7 @@
     <string name="sort_by_number">Por número de capítulo</string>
     <string name="manga_download">Descargar</string>
     <string name="track_finished_reading_date">Data de finalización</string>
-    <string name="track_remove_date_conf_title">Queres eliminar a data\?</string>
+    <string name="track_remove_date_conf_title">Queres eliminar a data?</string>
     <string name="track_started_reading_date">Data de comezo</string>
     <string name="decode_image_error">Non se puido cargar a imaxe</string>
     <string name="transition_no_previous">Non hai ningún capítulo anterior</string>
@@ -555,7 +555,7 @@
     <string name="transition_next">Seguinte:</string>
     <string name="confirm_add_duplicate_manga">Xa tes un elemento na túa biblioteca co mesmo nome.
 \n
-\nAínda queres continuar\?</string>
+\nAínda queres continuar?</string>
     <string name="copied_to_clipboard">Copiado ao portapapeis:
 \n%1$s</string>
     <string name="clipboard_copy_error">Non se puido copiar ao portapapeis</string>
@@ -590,7 +590,7 @@
     <string name="channel_progress">Progreso</string>
     <string name="update_check_notification_download_error">Erro na descarga</string>
     <string name="manga_info_collapse">Menos</string>
-    <string name="delete_downloads_for_manga">Eliminar os capítulos descargados\?</string>
+    <string name="delete_downloads_for_manga">Eliminar os capítulos descargados?</string>
     <string name="on_hold">En espera</string>
     <string name="transition_previous">Anterior:</string>
     <string name="transition_no_next">Non hai ningún capítulo máis</string>
@@ -652,16 +652,16 @@
     <string name="information_required_plain">*necesario</string>
     <string name="spen_previous_page">Páxina anterior</string>
     <string name="reading_list">Lista de lectura</string>
-    <string name="are_you_sure">Estás seguro\?</string>
+    <string name="are_you_sure">Estás seguro?</string>
     <string name="other_source">Outros</string>
     <string name="unknown_status">Estado descoñecido</string>
     <string name="source_not_installed">Fonte non instalada: %1$s</string>
     <string name="track_error">Erro %1$s: %2$s</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
-    <string name="dialog_with_checkbox_remove_description">Isto eliminará a data de lectura deste capítulo. Estás seguro\?</string>
+    <string name="dialog_with_checkbox_remove_description">Isto eliminará a data de lectura deste capítulo. Estás seguro?</string>
     <string name="unfinished_list">Lista de inacabados</string>
     <string name="error_no_match">Non se atoparon coincidencias</string>
-    <string name="confirm_set_image_as_cover">Queres usar esta imaxe como portada\?</string>
+    <string name="confirm_set_image_as_cover">Queres usar esta imaxe como portada?</string>
     <string name="error_category_exists">Xa hai unha categoría con este nome!</string>
     <string name="dialog_with_checkbox_reset">Reiniciar tódolos capítulos deste elemento</string>
     <string name="viewer">Modo de lectura</string>
@@ -669,7 +669,7 @@
     <string name="updating_library">Actualizando a biblioteca</string>
     <string name="updates_last_update_info">Última actualización da biblioteca: %s</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>
-    <string name="clear_history_confirmation">Estás seguro\? Perderás o historial.</string>
+    <string name="clear_history_confirmation">Estás seguro? Perderás o historial.</string>
     <string name="cant_open_last_read_chapter">Non se puido abrir o último capítulo lido</string>
     <string name="label_read_chapters">Lidos</string>
     <string name="seconds_short">%dseg</string>

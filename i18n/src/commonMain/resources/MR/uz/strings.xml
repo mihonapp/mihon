@@ -86,7 +86,7 @@
     <string name="pref_tracking_summary">Bir tomonlama sinxronlash, kengaytirilgan sinxronlash</string>
     <string name="theme_system">Tizimdagidek</string>
     <string name="theme_lavender">Lavanda</string>
-    <string name="delete_category_confirmation">\"%s\" toifasini o\'chirishni hohlaysizmi\?</string>
+    <string name="delete_category_confirmation">\"%s\" toifasini o\'chirishni hohlaysizmi?</string>
     <string name="action_previous_chapter">Oldingi bob</string>
     <string name="action_next_chapter">Keyingi bob</string>
     <string name="action_migrate">Ko\'chirish</string>

@@ -705,7 +705,7 @@
     <string name="intervals_header">間隔</string>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="has_results">結果あり</string>
-    <string name="track_delete_title">%s の追跡を削除しますか\?</string>
+    <string name="track_delete_title">%s の追跡を削除しますか?</string>
     <string name="manga_display_interval_title">毎に評価</string>
     <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
     <string name="track_delete_text">ローカルの追跡が削除されます。</string>

@@ -96,7 +96,7 @@
     <string name="remove_from_library">Odstranit z knihovny</string>
     <string name="manga_added_library">Přidáno do knihovny</string>
     <string name="manga_removed_library">Odstraněno z knihovny</string>
-    <string name="delete_downloads_for_manga">Smazat stažené kapitoly\?</string>
+    <string name="delete_downloads_for_manga">Smazat stažené kapitoly?</string>
     <string name="source_not_installed">Zdroj není nainstalován: %1$s</string>
     <string name="display_mode_chapter">Kapitola %1$s</string>
     <string name="chapter_downloading_progress">Stahování (%1$d/%2$d)</string>
@@ -105,7 +105,7 @@
     <string name="sort_by_source">Podle zdroje</string>
     <string name="manga_download">Stáhnout</string>
     <string name="download_unread">Stáhnout nepřečtené</string>
-    <string name="confirm_delete_chapters">Opravdu chcete smazat vybrané kapitoly\?</string>
+    <string name="confirm_delete_chapters">Opravdu chcete smazat vybrané kapitoly?</string>
     <string name="reading">Rozečtené</string>
     <string name="completed">Dokončeno</string>
     <string name="plan_to_read">Plánuji číst</string>
@@ -114,7 +114,7 @@
     <string name="title">Název</string>
     <string name="track_type">Typ</string>
     <string name="dialog_with_checkbox_reset">Obnovit všechny kapitoly pro tento záznam</string>
-    <string name="snack_add_to_library">Přidat do knihovny\?</string>
+    <string name="snack_add_to_library">Přidat do knihovny?</string>
     <string name="picture_saved">Obrázek uložen</string>
     <string name="custom_filter">Vlastní filtr</string>
     <string name="chapter_progress">Stránka: %1$d</string>
@@ -206,7 +206,7 @@
     <string name="pref_backup_interval">Frekvence automatických záloh</string>
     <string name="backup_created">Záloha vytvořena</string>
     <string name="restore_completed">Obnova dokončena</string>
-    <string name="backup_choice">Co chcete zálohovat\?</string>
+    <string name="backup_choice">Co chcete zálohovat?</string>
     <string name="restoring_backup">Obnovování zálohy</string>
     <string name="creating_backup">Vytváření zálohy</string>
     <string name="pref_clear_chapter_cache">Vymazat mezipaměť kapitol</string>
@@ -217,7 +217,7 @@
     <string name="cookies_cleared">Cookies vymazány</string>
     <string name="pref_clear_database">Vyčistit databázi</string>
     <string name="pref_clear_database_summary">Smazat historii položek, které nejsou uloženy ve vaší knihovně</string>
-    <string name="clear_database_confirmation">Jste si jistí\? Přečtené kapitoly a postup v položkách mimo knihovnu bude ztracen</string>
+    <string name="clear_database_confirmation">Jste si jistí? Přečtené kapitoly a postup v položkách mimo knihovnu bude ztracen</string>
     <string name="clear_database_completed">Položky byly smazány</string>
     <string name="version">Verze</string>
     <string name="pref_enable_acra">Odesílat hlášení o pádu</string>
@@ -257,8 +257,8 @@
     <string name="show_title">Název zdroje</string>
     <string name="show_chapter_number">Číslo kapitoly</string>
     <string name="error_category_exists">Kategorie s tímto jménem již existuje!</string>
-    <string name="dialog_with_checkbox_remove_description">Toto odstraní datum přečtení této kapitoly. Jste si jistý\?</string>
-    <string name="confirm_set_image_as_cover">Chcete tento obrázek nastavit jako obal\?</string>
+    <string name="dialog_with_checkbox_remove_description">Toto odstraní datum přečtení této kapitoly. Jste si jistý?</string>
+    <string name="confirm_set_image_as_cover">Chcete tento obrázek nastavit jako obal?</string>
     <string name="transition_pages_error">Chyba při načítání stránek: %1$s</string>
     <string name="migration_dialog_what_to_include">Vyberte data, která chcete zahrnout</string>
     <string name="notification_cover_update_failed">Chyba při aktualizaci obalu</string>
@@ -291,7 +291,7 @@
     <string name="logout">Odhlásit se</string>
     <string name="pref_date_format">Formát data</string>
     <string name="pref_category_library_update">Globální aktualizace</string>
-    <string name="logout_title">Odhlásit z %1$s\?</string>
+    <string name="logout_title">Odhlásit z %1$s?</string>
     <string name="logout_success">Nyní jste odhlášený</string>
     <string name="paused">Pozastaveno</string>
     <string name="label_more">Více</string>
@@ -312,7 +312,7 @@
     <string name="add_tracking">Přidat sledování</string>
     <string name="no_chapters_error">Nebyly nalezeny žádné kapitoly</string>
     <string name="set_chapter_settings_as_default">Nastavit jako výchozí</string>
-    <string name="confirm_set_chapter_settings">Jsi si jistý, že chceš tato nastavení uložit jako výchozí\?</string>
+    <string name="confirm_set_chapter_settings">Jsi si jistý, že chceš tato nastavení uložit jako výchozí?</string>
     <string name="chapter_settings">Nastavení kapitoly</string>
     <string name="sort_by_upload_date">Podle data nahrání</string>
     <string name="manga_info_collapse">Méně</string>
@@ -410,7 +410,7 @@
     <string name="notification_chapters_single">Kapitola %1$s</string>
     <string name="download_insufficient_space">Nelze stáhnout kapitoly kvůli nedostatku místa</string>
     <string name="migration_help_guide">Návod k přesunu zdrojů</string>
-    <string name="clear_history_confirmation">Jste si jistý/á\? Všechna historie bude navždy ztracena.</string>
+    <string name="clear_history_confirmation">Jste si jistý/á? Všechna historie bude navždy ztracena.</string>
     <string name="pref_clear_history">Vymazat historii</string>
     <string name="clear_history_completed">Historie vymazána</string>
     <string name="recent_manga_time">Kap. %1$s - %2$s</string>
@@ -604,7 +604,7 @@
     <string name="pref_app_language">Jazyk aplikace</string>
     <string name="description_placeholder">Bez popisu</string>
     <string name="theme_lavender">Levandule</string>
-    <string name="delete_category_confirmation">Přejete si smazat kategorii \"%s\"\?</string>
+    <string name="delete_category_confirmation">Přejete si smazat kategorii \"%s\"?</string>
     <string name="delete_category">Smazat kategorii</string>
     <string name="internal_error">InternalError: Zkontrolujte záznamy pádu pro další informace</string>
     <string name="pref_reset_user_agent_string">Obnovit výchozí řetězec pro user agent</string>
@@ -619,7 +619,7 @@
     <string name="download_ahead">Stáhování dopředu</string>
     <string name="auto_download_while_reading">Automatické stahování při čtení</string>
     <string name="download_ahead_info">Funguje pouze v případě, že aktuální kapitola + následující kapitola jsou již staženy.</string>
-    <string name="are_you_sure">Jste si jistí\?</string>
+    <string name="are_you_sure">Jste si jistí?</string>
     <string name="remove_manga">Chystáte se odstranit \"%s\" ze své knihovny</string>
     <string name="multi_lang">Více</string>
     <string name="updates_last_update_info">Poslední aktualizace knihovny: %s</string>
@@ -649,7 +649,7 @@
     <string name="fdroid_warning">F-Droid sestavení nejsou oficiálně podporovány.
 \nKlepnutím zobrazíte další informace.</string>
     <string name="action_display_show_continue_reading_button">Tlačítko Pokračovat ve čtení</string>
-    <string name="track_remove_date_conf_title">Odstranit datum\?</string>
+    <string name="track_remove_date_conf_title">Odstranit datum?</string>
     <string name="track_remove_finish_date_conf_text">Tím se odstraní dříve vybrané datum ukončení z %s</string>
     <string name="track_remove_start_date_conf_text">Tím se odstraní dříve vybrané datum zahájení z %s</string>
     <string name="pref_invalidate_download_cache">Zneplatnit index stahování</string>
@@ -682,7 +682,7 @@
     <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
     <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
 \n
-\nStále si přejete pokračovat\?</string>
+\nStále si přejete pokračovat?</string>
     <string name="track_error">%1$s chyba: %2$s</string>
     <string name="information_required_plain">*vyžadováno</string>
     <string name="pref_hide_in_library_items">Skrýt položky, které jsou již v knihovně</string>
@@ -709,7 +709,7 @@
     <string name="track_delete_text">Tím se lokálně odstraní sledování.</string>
     <string name="track_delete_remote_text">Odebrat také z %s</string>
     <string name="action_ok">OK</string>
-    <string name="track_delete_title">Odebrat sledování %s\?</string>
+    <string name="track_delete_title">Odebrat sledování %s?</string>
     <string name="delete_downloaded">Odstranit stažené</string>
     <string name="has_results">Má výsledky</string>
     <string name="syncing_library">Synchronizace knihovny</string>

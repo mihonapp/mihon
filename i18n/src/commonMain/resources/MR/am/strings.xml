@@ -268,7 +268,7 @@
     <string name="restore_in_progress">እነበረበት መልስ ቀድሞውኑ በሂደት ላይ ነው</string>
     <string name="creating_backup_error">ምትኬ አልተሳካም</string>
     <string name="creating_backup">ምትኬን መፍጠር</string>
-    <string name="backup_choice">ምትኬ ለማስቀመጥ ምን ይፈልጋሉ\?</string>
+    <string name="backup_choice">ምትኬ ለማስቀመጥ ምን ይፈልጋሉ?</string>
     <string name="backup_in_progress">ምትኬ ቀድሞውኑ በሂደት ላይ ነው</string>
     <string name="restore_duration">%02d ደቂቃ ፣ %02d ሰከንድ</string>
     <string name="restore_completed">እነበረበት መልስ ተጠናቅቋል</string>
