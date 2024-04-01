@@ -801,20 +801,4 @@
     <string name="file_null_uri_error">Ни једна датотека није одабрана</string>
     <string name="action_apply">Примени</string>
     <string name="action_revert_to_default">Врати на подразумевано</string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="action_replace_repo_message"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="action_add_anyway"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="action_migrate_duplicate"></string>
-    <string name="upcoming_guide"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="action_replace_repo"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="pref_display_profile"></string>
-    <string name="label_upcoming"></string>
-    <string name="upcoming_calendar_prev"></string>
 </resources>

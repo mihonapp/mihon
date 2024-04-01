@@ -809,9 +809,4 @@
     <string name="label_upcoming">即将推出</string>
     <string name="upcoming_calendar_next">下个月</string>
     <string name="upcoming_calendar_prev">上个月</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
 </resources>

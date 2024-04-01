@@ -797,24 +797,4 @@
     <string name="error_repo_exists">Acest repozitoriu există deja!</string>
     <string name="action_delete_repo">Șterge repozitoriu</string>
     <string name="invalid_repo_name">URL repozitoriu invalid</string>
-    <string name="pref_display_profile"></string>
-    <string name="action_add_anyway"></string>
-    <string name="action_migrate_duplicate"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="action_replace_repo"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="overlay_header"></string>
-    <string name="action_replace_repo_message"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="pref_webtoon_disable_zoom_out"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="upcoming_guide"></string>
-    <string name="pref_flash_page"></string>
-    <string name="theme_nord"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="label_upcoming"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="upcoming_calendar_next"></string>
 </resources>

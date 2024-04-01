@@ -809,9 +809,4 @@
     <string name="action_view_upcoming">Közelgő frissítések megtekintése</string>
     <string name="upcoming_guide">Közelgő útmutató</string>
     <string name="upcoming_calendar_prev">Előző hónap</string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
 </resources>

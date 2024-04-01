@@ -797,20 +797,4 @@
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
     <string name="action_open_repo">Abrir repositório da fonte</string>
     <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
-    <string name="action_migrate_duplicate"></string>
-    <string name="action_add_anyway"></string>
-    <string name="action_replace_repo"></string>
-    <string name="pref_display_profile"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="action_replace_repo_message"></string>
-    <string name="upcoming_guide"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="label_upcoming"></string>
 </resources>

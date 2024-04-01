@@ -770,47 +770,4 @@
     <string name="source_settings">Axustes da fonte</string>
     <string name="action_create">Crear</string>
     <string name="invalid_backup_file_error">Erro completo:</string>
-    <string name="create_backup_file_error"></string>
-    <string name="pref_storage_usage"></string>
-    <string name="track_delete_remote_text"></string>
-    <string name="download_cache_invalidated"></string>
-    <string name="has_results"></string>
-    <string name="file_null_uri_error"></string>
-    <string name="action_add_anyway"></string>
-    <string name="action_migrate_duplicate"></string>
-    <string name="available_disk_space_info"></string>
-    <string name="syncing_library"></string>
-    <string name="action_replace_repo_message"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="action_replace_repo"></string>
-    <string name="track_delete_title"></string>
-    <string name="skipped_reason_not_in_release_period"></string>
-    <string name="manga_interval_expected_update_soon"></string>
-    <string name="manga_interval_custom_amount"></string>
-    <string name="relative_time_span_never"></string>
-    <string name="manga_display_interval_title"></string>
-    <string name="action_bar_up_description"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="notification_updating_progress"></string>
-    <string name="library_sync_complete"></string>
-    <string name="exclude_scanlators"></string>
-    <string name="label_upcoming"></string>
-    <string name="private_settings"></string>
-    <string name="track_delete_text"></string>
-    <string name="manga_interval_expected_update"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="no_scanlators_found"></string>
-    <string name="last_auto_backup_info"></string>
-    <string name="upcoming_guide"></string>
-    <string name="intervals_header"></string>
-    <string name="manga_display_modified_interval_title"></string>
-    <string name="information_cloudflare_help"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="licensed_manga_chapters_error"></string>
-    <string name="pref_display_profile"></string>
 </resources>

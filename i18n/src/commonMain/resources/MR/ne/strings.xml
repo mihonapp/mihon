@@ -808,14 +808,4 @@
     <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
     <string name="action_replace_repo_message">रिपो %1$s सँग %2$s जस्तै साइन गर्ने की फिंगरप्रिन्ट छ।
 \nयदि यो अपेक्षित छ भने, %2$s प्रतिस्थापन गरिनेछ, अन्यथा आफ्नो रिपो प्रबन्धकलाई सम्पर्क गर्नुहोस्।</string>
-    <string name="label_upcoming"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="upcoming_guide"></string>
 </resources>

@@ -803,15 +803,4 @@
     <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>
     <string name="action_replace_repo_message">Repozitář %1$s má stejný otisk podepisovacího klíče jako %2$s
 \nPokud to tak je správně, bude%2$s nahrazen, v opačném případě kontaktujte správce repozitáře.</string>
-    <string name="app_name" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="label_upcoming"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="upcoming_guide"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="pref_display_profile"></string>
 </resources>

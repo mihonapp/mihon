@@ -781,38 +781,4 @@
     <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>
     <string name="ext_permission_install_apps_warning">Cần phải cấp phép để cài đặt tiện ích mở rộng. Bấm đây để cấp.</string>
     <string name="private_settings">Bao gồm những cài đặt nhạy cảm (ví dụ như token đăng nhập tracker)</string>
-    <string name="information_empty_repos"></string>
-    <string name="action_add_anyway"></string>
-    <string name="onboarding_storage_help_info"></string>
-    <string name="onboarding_storage_help_action"></string>
-    <string name="theme_nord"></string>
-    <string name="pref_library_update_smart_update"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_revoke_trust"></string>
-    <string name="label_extension_repos"></string>
-    <string name="label_add_repo_input"></string>
-    <string name="action_add_repo"></string>
-    <string name="action_delete_repo"></string>
-    <string name="error_repo_exists"></string>
-    <string name="pref_display_profile"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="label_upcoming"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="action_replace_repo_message"></string>
-    <string name="action_add_repo_message"></string>
-    <string name="manga_interval_custom_amount"></string>
-    <string name="action_open_repo"></string>
-    <string name="pref_webtoon_disable_zoom_out"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="invalid_repo_name"></string>
-    <string name="action_replace_repo"></string>
-    <string name="delete_repo_confirmation"></string>
-    <string name="manga_interval_expected_update_soon"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="upcoming_guide"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="action_migrate_duplicate"></string>
 </resources>

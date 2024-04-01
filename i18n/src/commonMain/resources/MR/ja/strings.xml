@@ -809,9 +809,4 @@
     <string name="upcoming_guide">今後のご案内</string>
     <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キーフィンガープリントを持っています。
 \nこれが予想される場合は %2$s が置き換えされますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
 </resources>

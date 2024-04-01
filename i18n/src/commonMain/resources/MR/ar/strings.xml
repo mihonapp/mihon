@@ -796,21 +796,4 @@
     <string name="action_add_repo">إضافة مستودع</string>
     <string name="manga_interval_expected_update">من المتوقع أن يتم إصدار فصول جديدة في حوالي 1%1$s، والتحقق من كل 2%2$s .</string>
     <string name="available_disk_space_info">متاح: %1$s / الكل: %2$s</string>
-    <string name="action_add_anyway"></string>
-    <string name="action_migrate_duplicate"></string>
-    <string name="ext_installer_shizuku" translatable="false"></string>
-    <string name="ext_installer_packageinstaller" translatable="false"></string>
-    <string name="ext_installer_private" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-    <string name="upcoming_guide"></string>
-    <string name="pref_display_profile"></string>
-    <string name="upcoming_calendar_prev"></string>
-    <string name="action_replace_repo"></string>
-    <string name="upcoming_calendar_next"></string>
-    <string name="pref_webtoon_disable_zoom_out"></string>
-    <string name="action_replace_repo_title"></string>
-    <string name="label_upcoming"></string>
-    <string name="action_view_upcoming"></string>
-    <string name="action_web_view" translatable="false"></string>
-    <string name="action_replace_repo_message"></string>
 </resources>
