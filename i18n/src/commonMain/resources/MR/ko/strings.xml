@@ -167,7 +167,7 @@
     <string name="remove_from_library">서재에서 제거</string>
     <string name="manga_added_library">서재에 추가되었습니다</string>
     <string name="manga_removed_library">서재에서 제거되었습니다</string>
-    <string name="delete_downloads_for_manga">다운로드된 회차를 삭제하시겠습니까\?</string>
+    <string name="delete_downloads_for_manga">다운로드된 회차를 삭제하시겠습니까?</string>
     <string name="source_not_installed">소스 미설치: %1$s</string>
     <string name="display_mode_chapter">%1$s화</string>
     <string name="chapter_downloading_progress">다운로드 중 (%1$d/%2$d)</string>
@@ -178,16 +178,16 @@
     <string name="sort_by_number">회차 번호 기준</string>
     <string name="manga_download">다운로드</string>
     <string name="download_unread">읽지 않은 회차</string>
-    <string name="confirm_delete_chapters">선택된 회차를 삭제하시겠습니까\?</string>
+    <string name="confirm_delete_chapters">선택된 회차를 삭제하시겠습니까?</string>
     <string name="manga_tracking_tab">동기화</string>
     <string name="score">평점</string>
     <string name="title">제목</string>
     <string name="status">상태</string>
     <string name="track_status">상태</string>
     <string name="snack_categories_deleted">카테고리 삭제됨</string>
-    <string name="dialog_with_checkbox_remove_description">이 회차의 읽은 기록을 삭제합니다. 계속하시겠습니까\?</string>
+    <string name="dialog_with_checkbox_remove_description">이 회차의 읽은 기록을 삭제합니다. 계속하시겠습니까?</string>
     <string name="dialog_with_checkbox_reset">모든 회차 기록 초기화</string>
-    <string name="snack_add_to_library">서재에 추가합니까\?</string>
+    <string name="snack_add_to_library">서재에 추가합니까?</string>
     <string name="picture_saved">사진 저장됨</string>
     <string name="custom_filter">이미지 필터</string>
     <string name="set_as_cover">표지로 설정</string>
@@ -195,7 +195,7 @@
     <string name="chapter_progress">페이지: %1$d</string>
     <string name="no_next_chapter">다음 화가 없습니다</string>
     <string name="decode_image_error">이미지를 로드할 수 없습니다</string>
-    <string name="confirm_set_image_as_cover">이 이미지를 표지로 사용합니까\?</string>
+    <string name="confirm_set_image_as_cover">이 이미지를 표지로 사용합니까?</string>
     <string name="transition_finished">완료:</string>
     <string name="transition_current">현재:</string>
     <string name="transition_next">다음:</string>
@@ -243,7 +243,7 @@
     <string name="third_to_last">끝에서 세번째 회차</string>
     <string name="fourth_to_last">끝에서 네번째 회차</string>
     <string name="fifth_to_last">끝에서 다섯번째 회차</string>
-    <string name="backup_choice">어떤 항목들을 백업하겠습니까\?</string>
+    <string name="backup_choice">어떤 항목들을 백업하겠습니까?</string>
     <string name="clear_database_completed">항목 삭제됨</string>
     <string name="local_source">로컬 저장소</string>
     <string name="other_source">기타</string>
@@ -272,7 +272,6 @@
     <string name="channel_common">일반</string>
     <string name="pref_read_with_long_tap">길게 탭하여 액션 표시</string>
     <string name="action_open_in_web_view">WebView로 열기</string>
-    <string name="pref_true_color">32비트 컬러</string>
     <string name="pref_skip_read_chapters">읽음 표시된 회차 건너뛰기</string>
     <string name="pref_color_filter_mode">컬러 필터 블렌딩 모드</string>
     <string name="filter_mode_overlay">오버레이</string>
@@ -287,7 +286,7 @@
     <string name="label_more">더 보기</string>
     <string name="label_sources">소스</string>
     <string name="channel_complete">완료</string>
-    <string name="confirm_set_chapter_settings">현재 설정을 기본값으로 설정하시겠습니까\?</string>
+    <string name="confirm_set_chapter_settings">현재 설정을 기본값으로 설정하시겠습니까?</string>
     <string name="chapter_settings">회차 설정</string>
     <string name="error_sharing_cover">표지 공유 오류</string>
     <string name="error_saving_cover">표지 저장 오류</string>
@@ -296,7 +295,7 @@
     <string name="sort_by_upload_date">업로드 날짜 기준</string>
     <string name="logout_success">로그아웃 되었습니다</string>
     <string name="logout">로그아웃</string>
-    <string name="logout_title">%1$s 에서 로그아웃 하시겠습니까\?</string>
+    <string name="logout_title">%1$s 에서 로그아웃 하시겠습니까?</string>
     <string name="notification_incognito_text">시크릿 모드 끄기</string>
     <string name="label_downloaded_only">다운로드가 완료된 항목만 표시</string>
     <string name="pref_incognito_mode">시크릿 모드</string>
@@ -413,7 +412,6 @@
     <string name="pref_show_reading_mode_summary">뷰어가 켜질 때 현재 읽기 모드를 표시합니다</string>
     <string name="pref_show_navigation_mode">탭 영역 오버레이 표시</string>
     <string name="pref_show_navigation_mode_summary">뷰어가 열렸을 때 간략히 표시</string>
-    <string name="pref_true_color_summary">밴딩을 줄이지만 성능에 영향을 줄 수 있음</string>
     <string name="pref_category_display">디스플레이</string>
     <string name="pref_skip_filtered_chapters">필터링된 회차 건너뛰기</string>
     <string name="pref_highest">매우 높음</string>
@@ -438,7 +436,7 @@
     <string name="pref_dump_crash_logs_summary">개발자와 공유할 수 있는 오류 로그 파일을 생성합니다</string>
     <string name="privacy_policy">개인정보 보호 정책</string>
     <string name="share_page_info">%1$s: %2$s, %3$d페이지</string>
-    <string name="clear_history_confirmation">계속하시겠습니까\? 모든 기록이 삭제됩니다.</string>
+    <string name="clear_history_confirmation">계속하시겠습니까? 모든 기록이 삭제됩니다.</string>
     <string name="disabled_nav">비활성화</string>
     <string name="backup_restore_missing_sources">없어진 소스:</string>
     <string name="backup_restore_missing_trackers">로그인 되지않은 트래커:</string>
@@ -593,7 +591,7 @@
     <string name="not_installed">설치되지 않음</string>
     <string name="theme_lavender">라벤더</string>
     <string name="network_not_metered">무제한 네트워크에서만</string>
-    <string name="delete_category_confirmation">\"%s\" 카테고리를 삭제하시겠습니까\?</string>
+    <string name="delete_category_confirmation">\"%s\" 카테고리를 삭제하시겠습니까?</string>
     <string name="delete_category">카테고리 삭제</string>
     <string name="internal_error">내부 오류: 더 자세한 정보를 보고 싶으면 충돌 로그를 확인하세요</string>
     <string name="description_placeholder">요약 없음</string>
@@ -626,7 +624,7 @@
     <string name="updates_last_update_info">마지막 서재 업데이트: %s</string>
     <string name="download_ahead_info">현재 회차 + 다음 회차가 이미 다운로드된 경우에만 작동됩니다.</string>
     <string name="popular">인기</string>
-    <string name="are_you_sure">정말로 실행합니까\?</string>
+    <string name="are_you_sure">정말로 실행합니까?</string>
     <string name="skipped_reason_not_always_update">만화에 업데이트가 필요하지 않음으로 건너뜀</string>
     <string name="action_search_hint">검색…</string>
     <string name="pref_library_summary">카테고리, 전역 업데이트, 회차 스와이프</string>
@@ -653,7 +651,7 @@
     <string name="action_display_show_continue_reading_button">계속 읽기 버튼</string>
     <string name="track_remove_finish_date_conf_text">%s에서 이전에 선택한 완료 날짜가 제거됩니다</string>
     <string name="pref_invalidate_download_cache">다운로드 인덱스 제거</string>
-    <string name="track_remove_date_conf_title">날짜를 제거 하시겠습니까\?</string>
+    <string name="track_remove_date_conf_title">날짜를 제거 하시겠습니까?</string>
     <string name="track_remove_start_date_conf_text">%s에서 이전에 선택한 시작 날짜가 제거됩니다</string>
     <string name="pref_invalidate_download_cache_summary">앱이 다운로드한 회차를 다시 확인하도록 강제</string>
     <string name="label_completed_titles">완료된 항목</string>
@@ -685,7 +683,7 @@
     <string name="track_error">%1$s 오류: %2$s</string>
     <string name="confirm_add_duplicate_manga">서재에 같은 이름의 항목이 있습니다.
 \n
-\n그래도 계속하시겠습니까\?</string>
+\n그래도 계속하시겠습니까?</string>
     <string name="information_required_plain">*필수</string>
     <string name="action_copy_to_clipboard">클립보드에 복사</string>
     <string name="pref_hide_in_library_items">이미 서재에 있는 항목 숨기기</string>
@@ -709,7 +707,7 @@
     <string name="track_delete_remote_text">%s에서도 제거</string>
     <string name="action_ok">OK</string>
     <string name="skipped_reason_not_in_release_period">오늘 연재가 예상되지 않았기 때문에 건너뛰었습니다</string>
-    <string name="track_delete_title">%s 동기화를 삭제 하시겠습니까\?</string>
+    <string name="track_delete_title">%s 동기화를 삭제 하시겠습니까?</string>
     <string name="pref_update_only_in_release_period">다음 연재 기간 예측</string>
     <string name="download_cache_invalidated">다운로드 인덱스를 제거함</string>
     <string name="action_sort_next_updated">다음 업데이트 예정</string>
@@ -728,7 +726,7 @@
     <string name="exception_unknown_host">%s에 연결할 수 없습니다</string>
     <string name="action_sort_category">카테고리 정렬</string>
     <string name="notification_updating_progress">서재 업데이트 중...(%s)</string>
-    <string name="sort_category_confirmation">카테고리를 알파벳 순으로 정렬하시겠습니까\?</string>
+    <string name="sort_category_confirmation">카테고리를 알파벳 순으로 정렬하시겠습니까?</string>
     <string name="source_settings">소스 설정</string>
     <string name="app_settings">앱 설정</string>
     <string name="onboarding_permission_install_apps_description">확장 앱 설치를 위해 필요합니다.</string>

@@ -135,7 +135,7 @@
     <string name="pref_backup_interval">Frekuensi pencadangan otomatis</string>
     <string name="backup_created">Cadangan dibuat</string>
     <string name="restore_completed">Pemulihan selesai</string>
-    <string name="backup_choice">Apa saja yang ingin Anda cadangkan\?</string>
+    <string name="backup_choice">Apa saja yang ingin Anda cadangkan?</string>
     <string name="restoring_backup">Memulihkan cadangan</string>
     <string name="creating_backup">Membuat cadangan</string>
     <string name="pref_clear_chapter_cache">Hapus cache bab</string>
@@ -146,7 +146,7 @@
     <string name="cookies_cleared">Cookies dihapus</string>
     <string name="pref_clear_database">Hapus database</string>
     <string name="pref_clear_database_summary">Hapus riwayat untuk entri yang tidak disimpan di perpustakaan Anda</string>
-    <string name="clear_database_confirmation">Apakah Anda yakin\? Bab yang sudah dibaca dan kemajuan entri non-perpustakaan akan hilang</string>
+    <string name="clear_database_confirmation">Apakah Anda yakin? Bab yang sudah dibaca dan kemajuan entri non-perpustakaan akan hilang</string>
     <string name="clear_database_completed">Entri dihapus</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Kirim laporan kerusakan</string>
@@ -164,7 +164,7 @@
     <string name="unknown">Tak diketahui</string>
     <string name="licensed">Berlisensi</string>
     <string name="remove_from_library">Hapus dari pustaka</string>
-    <string name="delete_downloads_for_manga">Hapus bab terunduh\?</string>
+    <string name="delete_downloads_for_manga">Hapus bab terunduh?</string>
     <string name="display_mode_chapter">Bab %1$s</string>
     <string name="chapter_downloading_progress">Mengunduh (%1$d/%2$d)</string>
     <string name="chapter_error">Kesalahan</string>
@@ -175,7 +175,7 @@
     <string name="sort_by_number">Nomor bab</string>
     <string name="manga_download">Unduh</string>
     <string name="download_unread">Belum dibaca</string>
-    <string name="confirm_delete_chapters">Yakin ingin menghapus bab yang dipilih\?</string>
+    <string name="confirm_delete_chapters">Yakin ingin menghapus bab yang dipilih?</string>
     <string name="manga_tracking_tab">Pelacakan</string>
     <string name="reading">Membaca</string>
     <string name="completed">Selesai</string>
@@ -187,9 +187,9 @@
     <string name="status">Status</string>
     <string name="error_category_exists">Kategori dengan nama ini sudah ada!</string>
     <string name="snack_categories_deleted">Kategori dihapus</string>
-    <string name="dialog_with_checkbox_remove_description">Ini akan menghapus tanggal baca bab ini. Apakah Anda yakin\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ini akan menghapus tanggal baca bab ini. Apakah Anda yakin?</string>
     <string name="dialog_with_checkbox_reset">Setel ulang semua bab untuk entri ini</string>
-    <string name="snack_add_to_library">Tambahkan ke pustaka\?</string>
+    <string name="snack_add_to_library">Tambahkan ke pustaka?</string>
     <string name="picture_saved">Gambar disimpan</string>
     <string name="custom_filter">Filter khusus</string>
     <string name="set_as_cover">Terapkan sebagai sampul</string>
@@ -197,7 +197,7 @@
     <string name="chapter_progress">Halaman: %1$d</string>
     <string name="no_next_chapter">Bab berikutnya tak ditemukan</string>
     <string name="decode_image_error">Gambar tidak dapat dimuat</string>
-    <string name="confirm_set_image_as_cover">Gunakan gambar ini sebagai sampul\?</string>
+    <string name="confirm_set_image_as_cover">Gunakan gambar ini sebagai sampul?</string>
     <string name="download_queue_error">Tidak dapat mengunduh bab. Anda bisa mencoba lagi di bagian unduhan</string>
     <string name="notification_new_chapters">Bab baru ditemukan</string>
     <string name="notification_cover_update_failed">Gagal memperbarui sampul</string>
@@ -269,7 +269,6 @@
     <string name="transition_pages_loading">Memuat halaman…</string>
     <string name="transition_pages_error">Gagal memuat halaman: %1$s</string>
     <string name="action_open_in_web_view">Buka dalam WebView</string>
-    <string name="pref_true_color">Warna 32-bit</string>
     <string name="pref_skip_read_chapters">Lewati bab yang sudah dibaca</string>
     <string name="pref_read_with_long_tap">Tampilkan tindakan saat tekan lama</string>
     <string name="pref_color_filter_mode">Mode saringan warna campur</string>
@@ -322,7 +321,7 @@
     <string name="battery_optimization_disabled">Optimalisasi baterai sudah dimatikan</string>
     <string name="email">Alamat surel</string>
     <string name="secure_screen">Amankan layar</string>
-    <string name="logout_title">Keluar dari %1$s\?</string>
+    <string name="logout_title">Keluar dari %1$s?</string>
     <string name="pref_category_display">Tampilan</string>
     <string name="notification_chapters_single">Bab %1$s</string>
     <string name="notification_chapters_single_and_more">Bab %1$s dan %2$d lainnya</string>
@@ -360,7 +359,6 @@
     <string name="backup_in_progress">Pencadangan masih dalam proses</string>
     <string name="restore_duration">%02d menit, %02d detik</string>
     <string name="viewer">Mode membaca</string>
-    <string name="pref_true_color_summary">Mengurangi banding, namun berdampak pada performa</string>
     <string name="gray_background">Abu-abu</string>
     <string name="pref_category_for_this_series">Untuk seri ini</string>
     <string name="battery_optimization_setting_activity_not_found">Tidak dapat membuka pengaturan perangkat</string>
@@ -415,7 +413,7 @@
     <string name="chapter_settings_updated">Pengaturan bab bawaan diperbarui</string>
     <string name="set_chapter_settings_as_default">Terapkan sebagai bawaan</string>
     <string name="also_set_chapter_settings_for_library">Terapkan pula untuk semua entri di pustaka saya</string>
-    <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai bawaan\?</string>
+    <string name="confirm_set_chapter_settings">Apakah anda yakin ingin menyimpan pengaturan ini sebagai bawaan?</string>
     <string name="chapter_settings">Pengaturan bab</string>
     <string name="share_page_info">%1$s: %2$s, halaman %3$d</string>
     <string name="action_search_settings">Cari pengaturan</string>
@@ -424,7 +422,7 @@
     <string name="pref_incognito_mode_summary">Jeda riwayat membaca</string>
     <string name="pref_incognito_mode">Mode penyamaran</string>
     <string name="pref_clear_history">Hapus riwayat</string>
-    <string name="clear_history_confirmation">Apakah anda yakin\? Semua riwayat akan terhapus.</string>
+    <string name="clear_history_confirmation">Apakah anda yakin? Semua riwayat akan terhapus.</string>
     <string name="clear_history_completed">Riwayat telah dihapus</string>
     <string name="pref_category_nsfw_content">Sumber NSFW (18+)</string>
     <string name="spen_next_page">Halaman selanjutnya</string>
@@ -606,7 +604,7 @@
     <string name="pref_app_language">Bahasa aplikasi</string>
     <string name="theme_lavender">lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
-    <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"\?</string>
+    <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"?</string>
     <string name="internal_error">InternalError: Periksa log kerusakan untuk informasi lebih lanjut</string>
     <string name="delete_category">Hapus kategori</string>
     <string name="pref_user_agent_string">String agen pengguna default</string>
@@ -624,7 +622,7 @@
     <string name="remove_manga">Kamu akan menghapus \"%s\" dari pustaka</string>
     <string name="updates_last_update_info">Pustaka terakhir diperbarui: %s</string>
     <string name="multi_lang">Semua</string>
-    <string name="are_you_sure">Apa kamu yakin\?</string>
+    <string name="are_you_sure">Apa kamu yakin?</string>
     <string name="popular">Populer</string>
     <string name="missing_storage_permission">Izin penyimpanan tidak diberikan</string>
     <string name="skipped_reason_not_always_update">Dilewati karena seri ini tidak memerlukan pembaruan</string>
@@ -651,7 +649,7 @@
     <string name="fdroid_warning">Build F-Droid tidak didukung secara resmi.
 \n Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Tombol lanjutkan membaca</string>
-    <string name="track_remove_date_conf_title">Hapus tanggal\?</string>
+    <string name="track_remove_date_conf_title">Hapus tanggal?</string>
     <string name="pref_invalidate_download_cache">Membatalkan indeks unduhan</string>
     <string name="pref_invalidate_download_cache_summary">Paksa aplikasi untuk mengecek ulang bab ter-unduh</string>
     <string name="track_remove_start_date_conf_text">Ini akan menghapus tanggal mulai yang Anda pilih sebelumnya dari %s</string>
@@ -684,7 +682,7 @@
     <string name="pref_skip_dupe_chapters">Melewati bab terduplikasi</string>
     <string name="confirm_add_duplicate_manga">Kamu memiliki entri di pustaka dengan nama yang sama.
 \n
-\nApakah kamu ingin melanjutkan\?</string>
+\nApakah kamu ingin melanjutkan?</string>
     <string name="track_error">%1$s eror: %2$s</string>
     <string name="information_required_plain">*dibutuhkan</string>
     <string name="pref_hide_in_library_items">Semua catatan tersembunyi sudah ada di perpustakaan</string>
@@ -708,7 +706,7 @@
     <string name="pref_update_only_in_release_period">Prediksikan waktu rilis selanjutnya</string>
     <string name="manga_display_interval_title">Perkirakan setiap</string>
     <string name="manga_display_modified_interval_title">Atur untuk memperbarui setiap</string>
-    <string name="track_delete_title">Hapus %s pelacakan\?</string>
+    <string name="track_delete_title">Hapus %s pelacakan?</string>
     <string name="action_ok">Oke</string>
     <string name="track_delete_text">Ini akan menghapus pelacakan lokal.</string>
     <string name="track_delete_remote_text">Hapus juga dari %s</string>
@@ -730,7 +728,7 @@
     <string name="pref_relative_format_summary">\"%1$s\" seharusnya \"%2$s\"</string>
     <string name="action_sort_category">Urutkan kategori</string>
     <string name="notification_updating_progress">Memperbarui pustaka... (%s)</string>
-    <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad\?</string>
+    <string name="sort_category_confirmation">Apakah Anda ingin mengurutkan kategori menurut abjad?</string>
     <string name="file_null_uri_error">Tidak ada file yang dipilih</string>
     <string name="source_settings">Pengaturan sumber</string>
     <string name="app_settings">Pengaturan aplikasi</string>

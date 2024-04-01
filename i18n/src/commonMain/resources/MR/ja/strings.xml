@@ -270,7 +270,6 @@
     <string name="transition_pages_loading">ページをロード中…</string>
     <string name="transition_pages_error">ページのロードに失敗: %1$s</string>
     <string name="pref_read_with_long_tap">長押しでアクションを表示</string>
-    <string name="pref_true_color">32ビットカラー</string>
     <string name="pref_skip_read_chapters">読み終わった章をスキップ</string>
     <string name="pref_color_filter_mode">ｶﾗｰﾌｨﾙﾀｰﾌﾞﾚﾝﾄﾞﾓｰﾄﾞ</string>
     <string name="filter_mode_overlay">オーバーレイ</string>
@@ -340,7 +339,6 @@
     <string name="filter_mode_darken">焼き込み/比較（暗）</string>
     <string name="filter_mode_lighten">覆い焼き/比較（明）</string>
     <string name="filter_mode_multiply">乗算</string>
-    <string name="pref_true_color_summary">バンディングを軽減しますが、パフォーマンスを影響するかもしれません</string>
     <string name="pref_cutout_short">画面の切り抜きエリアにも内容を表示</string>
     <string name="ext_updates_pending">更新あり</string>
     <string name="pref_library_update_refresh_metadata_summary">ライブラリを更新時、新しい表紙と情報を確認します</string>
@@ -682,7 +680,7 @@
     <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
     <string name="enhanced_services_not_installed">利用可能ですが未インストールのソース: %s</string>
     <string name="pref_skip_dupe_chapters">重複の章をスキップ</string>
-    <string name="confirm_add_duplicate_manga">ライブラリにはもう同名の項目が存在しています。
+    <string name="confirm_add_duplicate_manga">ライブラリには既に同名の項目が存在しています。
 \n
 \nそれでも続行しますか？</string>
     <string name="track_error">%1$s エラー: %2$s</string>
@@ -707,7 +705,7 @@
     <string name="intervals_header">間隔</string>
     <string name="skipped_reason_not_in_release_period">今日、連載更新が予想されていないためスキップしました</string>
     <string name="has_results">結果あり</string>
-    <string name="track_delete_title">%s の追跡を削除しますか\?</string>
+    <string name="track_delete_title">%s の追跡を削除しますか?</string>
     <string name="manga_display_interval_title">毎に評価</string>
     <string name="manga_display_modified_interval_title">ごとに更新するように設定する</string>
     <string name="track_delete_text">ローカルの追跡が削除されます。</string>
@@ -799,4 +797,16 @@
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">スマート・アップデート</string>
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
+    <string name="action_add_anyway">追加</string>
+    <string name="action_migrate_duplicate">移行</string>
+    <string name="action_replace_repo">置き換える</string>
+    <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
+    <string name="upcoming_calendar_prev">前月</string>
+    <string name="upcoming_calendar_next">翌月</string>
+    <string name="label_upcoming">近々公開</string>
+    <string name="action_view_upcoming">今後のアップデート</string>
+    <string name="action_replace_repo_title">署名キーのフィンガープリントはすでに存在します</string>
+    <string name="upcoming_guide">今後のご案内</string>
+    <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キーフィンガープリントを持っています。
+\nこれが予想される場合は %2$s が置き換えされますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
 </resources>

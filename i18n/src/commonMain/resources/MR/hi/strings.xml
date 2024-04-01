@@ -150,7 +150,7 @@
     <string name="cookies_cleared">कुकीज़ को साफ़ किया हुआ</string>
     <string name="pref_clear_database">डेटाबेस साफ़ करें</string>
     <string name="pref_clear_database_summary">उन आइटम का इतिहास हटाएं जो आपकी पुस्तकालय में सहेजी नहीं गई हैं</string>
-    <string name="clear_database_confirmation">क्या आपको यकीन है\? आपके द्वारा पढ़े गए अध्याय और गैर-पुस्तकालय आइटम की प्रगति खो जाएगी</string>
+    <string name="clear_database_confirmation">क्या आपको यकीन है? आपके द्वारा पढ़े गए अध्याय और गैर-पुस्तकालय आइटम की प्रगति खो जाएगी</string>
     <string name="clear_database_completed">प्रविष्टियां हटाई गईं</string>
     <string name="version">संस्करण</string>
     <string name="pref_enable_acra">क्रैश रिपोर्ट भेजें</string>
@@ -197,7 +197,7 @@
     <string name="snack_categories_deleted">श्रेणियाँ हटाई गयी</string>
     <string name="dialog_with_checkbox_remove_description">यह इस अध्याय की पठन तिथि को निकाल देगा क्या आप निश्चित है?</string>
     <string name="dialog_with_checkbox_reset">इस आइटम के लिए सभी अध्यायों को रीसेट करें</string>
-    <string name="snack_add_to_library">पुस्तकालय में जोड़ें\?</string>
+    <string name="snack_add_to_library">पुस्तकालय में जोड़ें?</string>
     <string name="picture_saved">चित्र सहेजा गया</string>
     <string name="custom_filter">इच्छा अनुसार फिल्टर</string>
     <string name="set_as_cover">कवर के रूप में सेट करें</string>
@@ -205,7 +205,7 @@
     <string name="chapter_progress">पृष्ठ: %1$d</string>
     <string name="no_next_chapter">अगले अध्याय नहीं मिला</string>
     <string name="decode_image_error">छवि को लोड नहीं किया जा सका</string>
-    <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें\?</string>
+    <string name="confirm_set_image_as_cover">कवर कला के रूप में इस छवि का उपयोग करें?</string>
     <string name="download_queue_error">अध्याय डाउनलोड नहीं कर सका। आप डाउनलोड अनुभाग में फिर से कोशिश कर सकते हैं</string>
     <string name="notification_new_chapters">नए अध्याय पाए गए</string>
     <string name="notification_cover_update_failed">कवर को अपडेट करने में विफल</string>
@@ -274,7 +274,6 @@
     <string name="transition_pages_error">पृष्ठों को लोड करने में विफल है: %1$s</string>
     <string name="pref_read_with_long_tap">लंबे टैप पर क्रियाएँ दिखाएँ</string>
     <string name="action_open_in_web_view">WebView में खोलें</string>
-    <string name="pref_true_color">32 बिट रंग</string>
     <string name="pref_skip_read_chapters">पढ़े हुए अध्यायों को छोड़ें</string>
     <string name="pref_color_filter_mode">रंग फिल्टर मिश्रण मोड</string>
     <string name="filter_mode_overlay">ओवरले</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">यह एक्सटेंशन अब उपलब्ध नहीं है। यह अब शायद ठीक से काम न करे और मसला खड़ा करे। इसे अनइंस्टॉल करने की सलाह दी गई है।</string>
     <string name="pref_date_format">दिनांक स्वरूप</string>
     <string name="pref_category_library_update">वैश्विक अपडेट</string>
-    <string name="logout_title">%1$s से लॉगआउट करें\?</string>
+    <string name="logout_title">%1$s से लॉगआउट करें?</string>
     <string name="logout">लॉग आउट</string>
     <string name="logout_success">अब आप लॉग आउट है</string>
     <string name="paused">रोका हुआ</string>
@@ -366,7 +365,6 @@
     <string name="viewer">पढ़न मोड</string>
     <string name="pref_category_for_this_series">इस श्रृंखला के लिए</string>
     <string name="gray_background">ग्रे</string>
-    <string name="pref_true_color_summary">बैंडिंग को कम करता है, लेकिन प्रदर्शन को प्रभावित कर सकता है</string>
     <string name="battery_optimization_setting_activity_not_found">डिवाइस सेटिंग नहीं खोल सका</string>
     <string name="tracking_info">ट्रैकिंग सेवाओं में अध्याय की प्रगति को अद्यतन करने के लिए एकतरफा सिंक। अपने ट्रैकिंग बटन से व्यक्तिगत प्रविष्टियों के लिए ट्रैकिंग सेट अप करें।</string>
     <string name="pref_refresh_library_covers">रिफ्रेश पुस्तकालय मंगा कवर</string>
@@ -419,7 +417,7 @@
     <string name="no_chapters_error">कोई अध्याय नहीं मिला</string>
     <string name="set_chapter_settings_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
     <string name="also_set_chapter_settings_for_library">मेरी पुस्तकालय में सभी एन्ट्री पर भी लागू करें</string>
-    <string name="confirm_set_chapter_settings">क्या आप वाकई इन सेटिंग्स को डिफ़ॉल्ट के रूप में सहेजना चाहते हैं\?</string>
+    <string name="confirm_set_chapter_settings">क्या आप वाकई इन सेटिंग्स को डिफ़ॉल्ट के रूप में सहेजना चाहते हैं?</string>
     <string name="chapter_settings">अध्याय सेटिंग्स</string>
     <string name="share_page_info">%1$s: %2$s, पृष्ठ %3$d</string>
     <string name="downloaded_chapters">डाउनलोड किए गए अध्याय</string>
@@ -428,7 +426,7 @@
     <string name="pref_incognito_mode_summary">इतिहास पढ़ने से रोक देता है</string>
     <string name="pref_incognito_mode">इंकॉग्निटो मोड</string>
     <string name="pref_clear_history">इतिहास मिटा दें</string>
-    <string name="clear_history_confirmation">क्या आपको यकीन है\? सारा इतिहास खो जाएगा।</string>
+    <string name="clear_history_confirmation">क्या आपको यकीन है? सारा इतिहास खो जाएगा।</string>
     <string name="clear_history_completed">इतिहास हटाया गया</string>
     <string name="spen_next_page">अगला पृष्ठ</string>
     <string name="spen_previous_page">पिछला पृष्ठ</string>
@@ -599,7 +597,7 @@
     <string name="pref_app_language">ऐप की भाषा</string>
     <string name="delete_category">श्रेणी हटाएँ</string>
     <string name="description_placeholder">कोई विवरण नहीं</string>
-    <string name="delete_category_confirmation">क्या आप %s कैटेगरी को हटाना चाहते हैं \?</string>
+    <string name="delete_category_confirmation">क्या आप %s कैटेगरी को हटाना चाहते हैं ?</string>
     <string name="pref_reset_viewer_flags">प्रति श्रृंखला रीडर सेटिंग्स को रीसेट करें</string>
     <string name="pref_reset_viewer_flags_summary">सभी श्रृंखलाओं के रीडिंग मोड और ओरिएंटेशन को रीसेट करता है</string>
     <string name="pref_reset_viewer_flags_success">सभी रीडर सेटिंग्स रीसेट करें</string>
@@ -623,7 +621,7 @@
     <string name="theme_tidalwave">टाइडल वेव्ह</string>
     <string name="error_user_agent_string_blank">यूजर एजेंट स्ट्रिंग (User Agent String) खाली नहीं रखा जा सकता</string>
     <string name="multi_lang">मल्टी</string>
-    <string name="are_you_sure">क्या आपको यकीन है \?</string>
+    <string name="are_you_sure">क्या आपको यकीन है ?</string>
     <string name="appwidget_unavailable_locked">ऐप लॉक लागू होने पर विजेट उपलब्ध नहीं होता</string>
     <string name="remove_manga">आप अपनी पुस्तकालय से \"%s\" को निकालने जा रहे हैं</string>
     <string name="update_already_running">एक अपडेट पहले से चल रहा है</string>

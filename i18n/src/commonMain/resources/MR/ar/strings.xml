@@ -272,7 +272,6 @@
     <string name="transition_pages_error">فشل تحميل الصّفحات: %1$s</string>
     <string name="pref_read_with_long_tap">أظهر الإجراءات عند الضغط المطوَّل</string>
     <string name="action_open_in_web_view">فتح في WebView</string>
-    <string name="pref_true_color">ألوان 32bit</string>
     <string name="pref_skip_read_chapters">تخطي الفصول المقروءة</string>
     <string name="filter_mode_overlay">التراكب</string>
     <string name="filter_mode_multiply">مضاعفة</string>
@@ -364,7 +363,6 @@
     <string name="pref_webtoon_side_padding">الإزاحة الجانبية</string>
     <string name="vertical_plus_viewer">شريط طويل بين أجزائه فجوات</string>
     <string name="gray_background">رمادي</string>
-    <string name="pref_true_color_summary">يزيد من سلاسة تدرج الالوان بالصور، ولكن قد يؤثر على الأداء</string>
     <string name="battery_optimization_setting_activity_not_found">تعذر فتح إعدادات الجهاز</string>
     <string name="action_migrate">نقل</string>
     <string name="label_data">البيانات</string>
@@ -681,7 +679,7 @@
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
     <string name="pref_skip_dupe_chapters">تجاوز الفصول المكررة</string>
     <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
-    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم. 
+    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم.
 \n
 \nهل مازلت ترغب في الاستمرار؟</string>
     <string name="copied_to_clipboard_plain">نسخ الى الحافظة</string>

@@ -192,7 +192,7 @@
     <string name="pref_acra_summary">Pomaga naprawiać błędy. Żadne wrażliwe dane nie będą wysyłane</string>
     <string name="backup_created">Utworzono kopię zapasową</string>
     <string name="restore_completed">Przywracanie ukończone</string>
-    <string name="clear_database_confirmation">Na pewno\? Przeczytane rozdziały i postęp w wpisach spoza biblioteki zostaną utracone</string>
+    <string name="clear_database_confirmation">Na pewno? Przeczytane rozdziały i postęp w wpisach spoza biblioteki zostaną utracone</string>
     <string name="clear_database_completed">Pozycje usunięte</string>
     <string name="login_success">Zalogowano</string>
     <string name="local_source">Źródło lokalne</string>
@@ -208,10 +208,10 @@
     <string name="snack_categories_deleted">Usunięto kategorie</string>
     <string name="dialog_with_checkbox_remove_description">To usunie datę przeczytania tego rozdziału. Na pewno?</string>
     <string name="dialog_with_checkbox_reset">Resetuj wszystkie rozdziały dla tego wpisu</string>
-    <string name="snack_add_to_library">Dodać do biblioteki\?</string>
+    <string name="snack_add_to_library">Dodać do biblioteki?</string>
     <string name="custom_filter">Filtr niestandardowy</string>
     <string name="decode_image_error">Nie udało się wczytać obrazka</string>
-    <string name="confirm_set_image_as_cover">Ustawić ten obrazek jako okładkę\?</string>
+    <string name="confirm_set_image_as_cover">Ustawić ten obrazek jako okładkę?</string>
     <string name="download_queue_error">Nie udało się pobrać rozdziałów. Możesz spróbować ponownie w sekcji pobierania</string>
     <string name="notification_cover_update_failed">Nie udało się zaktualizować okładki</string>
     <string name="notification_first_add_to_library">Zanim to zrobisz, dodaj ten wpis do biblioteki</string>
@@ -273,7 +273,6 @@
     <string name="transition_pages_loading">Ładowanie stron…</string>
     <string name="transition_pages_error">Nie udało się załadować stron: %1$s</string>
     <string name="action_open_in_web_view">Otwórz używając WebView</string>
-    <string name="pref_true_color">Kolor 32-bitowy</string>
     <string name="pref_skip_read_chapters">Pomiń rozdziały ozn. jako przeczytane</string>
     <string name="pref_read_with_long_tap">Pokaż akcje po przytrzymaniu</string>
     <string name="pref_color_filter_mode">Tryb mieszania kolorów</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">To rozszerzenie nie jest już dostępne i może nie funkcjonować prawidłowo, powodując problemy z aplikacją. Zalecamy odinstalowanie go.</string>
     <string name="pref_date_format">Format daty</string>
     <string name="pref_category_library_update">Globalna aktualizacja</string>
-    <string name="logout_title">Wylogować z %1$s\?</string>
+    <string name="logout_title">Wylogować z %1$s?</string>
     <string name="logout">Wyloguj</string>
     <string name="logout_success">Wylogowano</string>
     <string name="paused">Wstrzymane</string>
@@ -345,7 +344,6 @@
     <string name="restore_duration">%02d min, %02d s</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
-    <string name="pref_true_color_summary">Ogranicza banding, ale może mieć wpływ na wydajność</string>
     <string name="ext_updates_pending">Dostępne aktualizacje</string>
     <string name="secure_screen">Ukryj ekran</string>
     <string name="action_unpin">Odepnij</string>
@@ -417,7 +415,7 @@
     <string name="no_chapters_error">Nie znaleziono rozdziałów</string>
     <string name="set_chapter_settings_as_default">Ustaw jako domyślne</string>
     <string name="also_set_chapter_settings_for_library">Dodatkowo zastosuj do wszystkich wpisów w mojej bibliotece</string>
-    <string name="confirm_set_chapter_settings">Jesteś pewien, że chcesz zapisać te ustawienia jako domyślne\?</string>
+    <string name="confirm_set_chapter_settings">Jesteś pewien, że chcesz zapisać te ustawienia jako domyślne?</string>
     <string name="chapter_settings">Ustawienia rozdziałów</string>
     <string name="no_pinned_sources">Nie masz podpiętych źródeł</string>
     <string name="downloaded_chapters">Pobrane rozdziały</string>
@@ -425,7 +423,7 @@
     <string name="pref_incognito_mode_summary">Wstrzymuje zapisywanie do historii czytania</string>
     <string name="pref_incognito_mode">Tryb incognito</string>
     <string name="pref_clear_history">Wyczyść historię</string>
-    <string name="clear_history_confirmation">Jesteś pewien\? CAŁA historia zostanie usunięta.</string>
+    <string name="clear_history_confirmation">Jesteś pewien? CAŁA historia zostanie usunięta.</string>
     <string name="clear_history_completed">Historia usunięta</string>
     <string name="backup_restore_missing_trackers">Serwisy, do których nie zalogowono:</string>
     <string name="pref_remove_bookmarked_chapters">Usuwaj rozdziały dodane do zakładek</string>
@@ -612,7 +610,7 @@
     <string name="download_notifier_split_page_path_not_found">Nie można było znaleźć ścieżki %d strony</string>
     <string name="pref_user_agent_string">Domyślny user agent string</string>
     <string name="pref_reset_user_agent_string">Zresetuj domyślny user agent string</string>
-    <string name="delete_category_confirmation">Czy chcesz usunąć kategorię \"%s\"\?</string>
+    <string name="delete_category_confirmation">Czy chcesz usunąć kategorię \"%s\"?</string>
     <string name="delete_category">Usuń kategorię</string>
     <string name="internal_error">InternalError: sprawdź log błędów po więcej informacji</string>
     <string name="action_remove_everything">Usuń wszystko</string>
@@ -624,7 +622,7 @@
     <string name="auto_download_while_reading">Pobieraj podczas czytania</string>
     <string name="appwidget_updates_description">Zobacz ostatnio zaktualizowane wpisy</string>
     <string name="appwidget_unavailable_locked">Widżet nie jest dostępny kiedy blokada aplikacji jest włączona</string>
-    <string name="are_you_sure">Jesteś pewien\?</string>
+    <string name="are_you_sure">Jesteś pewien?</string>
     <string name="download_ahead_info">Działa tylko, jeśli aktualny i następny rozdział są już pobrane.</string>
     <string name="multi_lang">Wielojęzyczne</string>
     <string name="popular">Popularne</string>
@@ -653,7 +651,7 @@
     <string name="unknown_title">Nieznany tytuł</string>
     <string name="updates_last_update_info_just_now">Przed chwilą</string>
     <string name="crash_screen_title">Ups!</string>
-    <string name="track_remove_date_conf_title">Usunąć datę\?</string>
+    <string name="track_remove_date_conf_title">Usunąć datę?</string>
     <string name="track_remove_finish_date_conf_text">To spowoduje usunięcie wcześniej wybranej daty zakończenia z %s</string>
     <string name="error_user_agent_string_invalid">Nieprawidłowy ciąg agenta użytkownika</string>
     <string name="crash_screen_restart_application">Uruchom ponownie aplikację</string>
@@ -686,7 +684,7 @@
     <string name="copied_to_clipboard_plain">Skopiowano do schowka</string>
     <string name="confirm_add_duplicate_manga">Masz w swojej bibliotece pozycję o tej samej nazwie.
 \n
-\nCzy nadal chcesz kontynuować\?</string>
+\nCzy nadal chcesz kontynuować?</string>
     <string name="pref_skip_dupe_chapters">Pomiń zduplikowane rozdziały</string>
     <string name="enhanced_services_not_installed">Dostępne, ale źródło nie jest zainstalowane: %s</string>
     <string name="track_error">Błąd %1$s: %2$s</string>
@@ -714,7 +712,7 @@
     <string name="exception_http">HTTP %d, otwórz w WebView</string>
     <string name="exception_offline">Brak połączenia z internetem</string>
     <string name="exception_unknown_host">Nie można połączyć się z %s</string>
-    <string name="track_delete_title">Przestań śledzić %s\?</string>
+    <string name="track_delete_title">Przestań śledzić %s?</string>
     <string name="delete_downloaded">Usuń pobrane</string>
     <string name="library_sync_complete">Synchronizacja biblioteki zakończona</string>
     <string name="download_cache_invalidated">Indeksy pobrań unieważnione</string>

@@ -27,7 +27,6 @@
     <string name="black_background">Ireng</string>
     <string name="gray_background">Klawu</string>
     <string name="white_background">Putih</string>
-    <string name="pref_true_color">Werna 32-bit</string>
     <string name="pref_fullscreen">Layar wutuh</string>
     <string name="all">Kabeh</string>
     <string name="charging">Pas ngisi daya</string>
@@ -263,7 +262,7 @@
     <string name="pref_dual_page_split">Pamisahan kaca kaping pindho</string>
     <string name="pref_library_update_restriction">Nganyari otomatis watesan piranti</string>
     <string name="categorized_display_settings">Setelan saben kategori kanggo ngurutake lan tampilan</string>
-    <string name="delete_category_confirmation">Apa sampeyan pengin mbusak kategori \"%s\"\?</string>
+    <string name="delete_category_confirmation">Apa sampeyan pengin mbusak kategori \"%s\"?</string>
     <string name="delete_category">Busak kategori</string>
     <string name="pref_show_reading_mode_summary">Tampilake mode saiki kanthi ringkes nalika maca dibukak</string>
     <string name="internal_error">InternalError: Priksa log kacilakan kanggo informasi luwih lengkap</string>
@@ -272,7 +271,6 @@
     <string name="pref_crop_borders">Ketok pinggiran</string>
     <string name="pref_dual_page_invert">Ganti panggonan pamisah kaca kaping pindho</string>
     <string name="pref_dual_page_invert_summary">Yen panggonan pamisah kaca dobel ora cocog karo arah maca</string>
-    <string name="pref_true_color_summary">Nyuda banding, nanging bisa mengaruhi kinerja</string>
     <string name="off">Mati</string>
     <string name="pref_custom_brightness">Padhang khusus</string>
     <string name="pref_page_transitions">Animasi transisi kaca</string>

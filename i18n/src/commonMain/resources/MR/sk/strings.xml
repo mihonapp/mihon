@@ -108,7 +108,6 @@
     <string name="pref_page_transitions">Animácia prechodov strán</string>
     <string name="pref_double_tap_anim_speed">Rýchlosť animácie pre dvojité ťuknutie</string>
     <string name="pref_show_page_number">Zobraziť číslo strany</string>
-    <string name="pref_true_color">32-bitová farba</string>
     <string name="pref_crop_borders">Orezať okraje</string>
     <string name="pref_custom_brightness">Vlastný jas</string>
     <string name="pref_custom_color_filter">Vlastný farebný filter</string>
@@ -173,7 +172,7 @@
     <string name="pref_backup_interval">Frekvencia zálohovania</string>
     <string name="backup_created">Záloha bola vytvorená</string>
     <string name="restore_completed">Obnovenie dokončené</string>
-    <string name="backup_choice">Čo chcete zálohovať\?</string>
+    <string name="backup_choice">Čo chcete zálohovať?</string>
     <string name="restoring_backup">Obnovuje sa záloha</string>
     <string name="creating_backup">Vytvára sa záloha</string>
     <string name="pref_clear_chapter_cache">Vymazať vyrovnávaciu pamäť kapitol</string>
@@ -184,7 +183,7 @@
     <string name="cookies_cleared">Súbory cookie boli vymazané</string>
     <string name="pref_clear_database">Vymazať databázu</string>
     <string name="pref_clear_database_summary">Odstránenie histórie mangy, ktorá nie je uložená vo vašej knižnici</string>
-    <string name="clear_database_confirmation">Ste si istý\? Čítanie kapitol a pokrok v mangách mimo vašu knižnicu sa stratí</string>
+    <string name="clear_database_confirmation">Ste si istý? Čítanie kapitol a pokrok v mangách mimo vašu knižnicu sa stratí</string>
     <string name="action_webview_back">Späť</string>
     <string name="action_webview_forward">Vpred</string>
     <string name="action_webview_refresh">Obnoviť</string>
@@ -214,7 +213,7 @@
     <string name="remove_from_library">Odstrániť z knižnice</string>
     <string name="manga_added_library">Pridané do knižnice</string>
     <string name="manga_removed_library">Odstránené z knižnice</string>
-    <string name="delete_downloads_for_manga">Odstrániť stiahnuté kapitoly\?</string>
+    <string name="delete_downloads_for_manga">Odstrániť stiahnuté kapitoly?</string>
     <string name="copied_to_clipboard">Skopírované do schránky:
 \n%1$s</string>
     <string name="source_not_installed">Zdroj nie je nainštalovaný: %1$s</string>
@@ -228,7 +227,7 @@
     <string name="sort_by_number">Podľa čísla kapitoly</string>
     <string name="manga_download">Stiahnuť</string>
     <string name="download_unread">Neprečítané</string>
-    <string name="confirm_delete_chapters">Naozaj chcete odstrániť vybrané kapitoly\?</string>
+    <string name="confirm_delete_chapters">Naozaj chcete odstrániť vybrané kapitoly?</string>
     <string name="manga_tracking_tab">Sledovanie</string>
     <string name="reading">Čítanie</string>
     <string name="completed">Dokončený</string>
@@ -243,9 +242,9 @@
     <string name="track_type">Typ</string>
     <string name="error_category_exists">Kategória s týmto názvom už existuje!</string>
     <string name="snack_categories_deleted">Kategórie boli odstránené</string>
-    <string name="dialog_with_checkbox_remove_description">Týmto sa odstráni dátum prečítania tejto kapitoly. Si si istý\?</string>
+    <string name="dialog_with_checkbox_remove_description">Týmto sa odstráni dátum prečítania tejto kapitoly. Si si istý?</string>
     <string name="dialog_with_checkbox_reset">Resetovať všetky kapitoly mangy</string>
-    <string name="snack_add_to_library">Pridať mangu do knižnice\?</string>
+    <string name="snack_add_to_library">Pridať mangu do knižnice?</string>
     <string name="picture_saved">Obrázok bol uložený</string>
     <string name="custom_filter">Vlastný filter</string>
     <string name="set_as_cover">Nastaviť ako obal</string>
@@ -253,7 +252,7 @@
     <string name="chapter_progress">Strana: %1$d</string>
     <string name="no_next_chapter">Ďalšia kapitola nebola nájdená</string>
     <string name="decode_image_error">Obrázok sa nepodarilo načítať</string>
-    <string name="confirm_set_image_as_cover">Chcete použiť tento obrázok ako obal\?</string>
+    <string name="confirm_set_image_as_cover">Chcete použiť tento obrázok ako obal?</string>
     <string name="transition_finished">Dokončená:</string>
     <string name="transition_current">Aktuálna:</string>
     <string name="transition_next">Ďalšia:</string>
@@ -390,15 +389,15 @@
     <string name="error_user_agent_string_blank">Reťazec User-Agent nemôže byť prázdny</string>
     <string name="pref_reset_viewer_flags">Obnovenie nastavení čítačky pre jednotlivé série</string>
     <string name="clear_history_completed">História bola odstránená</string>
-    <string name="clear_history_confirmation">Ste si istý\? Celá história sa stratí.</string>
-    <string name="confirm_set_chapter_settings">Naozaj chcete tieto nastavenia uložiť ako predvolené\?</string>
+    <string name="clear_history_confirmation">Ste si istý? Celá história sa stratí.</string>
+    <string name="confirm_set_chapter_settings">Naozaj chcete tieto nastavenia uložiť ako predvolené?</string>
     <string name="add_to_library">Pridať do knižnice</string>
     <string name="pref_show_reading_mode_summary">Krátko zobrazí aktuálny režim pri otvorení čítačky</string>
     <string name="pref_grayscale">Odtiene šedej</string>
     <string name="pref_highest">Najvyššie</string>
     <string name="backup_in_progress">Zálohovanie už prebieha</string>
     <string name="pref_refresh_library_covers">Obnoviť obaly knižnice</string>
-    <string name="logout_title">Odhlásiť sa z %1$s\?</string>
+    <string name="logout_title">Odhlásiť sa z %1$s?</string>
     <string name="complete_list">Kompletný zoznam</string>
     <string name="file_picker_error">Nenašla sa žiadna aplikácia na výber súborov</string>
     <string name="channel_complete">Kompletný</string>
@@ -444,7 +443,6 @@
     <string name="information_empty_category_dialog">Zatiaľ nemáte žiadne kategórie.</string>
     <string name="ext_info_age_rating">Vekové hodnotenie</string>
     <string name="date">Dátum</string>
-    <string name="pref_true_color_summary">Znižuje pruhovanie farieb, ale môže ovplyvniť výkon</string>
     <string name="tapping_inverted_both">Obe</string>
     <string name="nav_zone_prev">Predchádzajúci</string>
     <string name="pref_high">Vysoké</string>
@@ -524,7 +522,7 @@
     <string name="pref_dump_crash_logs_summary">Uložiť logy o chybách do súboru na zdieľanie s vývojármi</string>
     <string name="manga_cover">Obal</string>
     <string name="cover_saved">Obal uložený</string>
-    <string name="delete_category_confirmation">Prajete si vymazať kategóriu „%s“\?</string>
+    <string name="delete_category_confirmation">Prajete si vymazať kategóriu „%s“?</string>
     <string name="tapping_inverted_vertical">Vertikálne</string>
     <string name="backup_restore_missing_trackers">Sledovače, do ktorých nie ste prihlásení:</string>
     <string name="pref_dns_over_https">DNS cez HTTPS (DoH)</string>
@@ -615,7 +613,7 @@
     <string name="custom_cover">Vlastný obal</string>
     <string name="action_move_to_top_all_for_series">Presunúť sériu na začiatok</string>
     <string name="privacy_policy">Zásady ochrany osobných údajov</string>
-    <string name="are_you_sure">Ste si istí\?</string>
+    <string name="are_you_sure">Ste si istí?</string>
     <string name="rotation_portrait">Na výšku</string>
     <string name="pref_user_agent_string">Predvolený reťazec pre User-Agent</string>
     <string name="myanimelist_relogin">Prihláste sa znova do MAL</string>

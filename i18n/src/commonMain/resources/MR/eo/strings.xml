@@ -161,7 +161,6 @@
     <string name="filter_mode_overlay">Plustavolo</string>
     <string name="pref_custom_brightness">Adaptita lumeco</string>
     <string name="pref_crop_borders">Stuci borderojn</string>
-    <string name="pref_true_color">32-bitaj koloroj</string>
     <string name="pref_show_reading_mode">Legada reĝimo</string>
     <string name="pref_show_page_number">Montri numero de paĝo</string>
     <string name="pref_fullscreen">Plenekrano</string>
@@ -220,7 +219,7 @@
     <string name="notification_new_chapters">Novaj ĉapitroj trovitaj</string>
     <string name="copy">Kopii</string>
     <string name="migrate">Migri</string>
-    <string name="clear_history_confirmation">Ĉu vi certas\? La tuta historio forigos.</string>
+    <string name="clear_history_confirmation">Ĉu vi certas? La tuta historio forigos.</string>
     <string name="clear_history_completed">Historio viŝita</string>
     <string name="pref_clear_history">Viŝi historion</string>
     <string name="recent_manga_time">Ĉap. %1$s - %2$s</string>
@@ -254,7 +253,7 @@
     <string name="no_chapters_error">Neniu ĉapitro trovita</string>
     <string name="set_chapter_settings_as_default">Agordi kiel defaŭlta</string>
     <string name="chapter_settings">Ĉapitrajn agordojn</string>
-    <string name="confirm_delete_chapters">Ĉu vi certe volas forigi elektitajn ĉapitrojn\?</string>
+    <string name="confirm_delete_chapters">Ĉu vi certe volas forigi elektitajn ĉapitrojn?</string>
     <string name="download_unread">Nelegitajn</string>
     <string name="manga_download">Elŝuti</string>
     <string name="sort_by_upload_date">Laŭ laŝutita dato</string>
@@ -266,12 +265,12 @@
     <string name="chapter_error">Eraro</string>
     <string name="chapter_downloading_progress">Elŝutas (%1$d/%2$d)</string>
     <string name="display_mode_chapter">Ĉapitro %1$s</string>
-    <string name="snack_add_to_library">Ĉu aldoni mangaon al biblioteko\?</string>
+    <string name="snack_add_to_library">Ĉu aldoni mangaon al biblioteko?</string>
     <string name="source_not_installed">Fonto ne instalita: %1$s</string>
     <string name="clipboard_copy_error">Kopiado al tondejo malsukcesis</string>
     <string name="copied_to_clipboard">Kopita al tondejo:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">Ĉu forigi elŝutitajn ĉapitrojn\?</string>
+    <string name="delete_downloads_for_manga">Ĉu forigi elŝutitajn ĉapitrojn?</string>
     <string name="manga_info_collapse">Malpli</string>
     <string name="manga_info_expand">Pli</string>
     <string name="manga_removed_library">Forigita de biblioteko</string>
@@ -294,7 +293,7 @@
     <string name="unknown_error">Nekonata eraro</string>
     <string name="logout_success">Vi nun estas elsalutita</string>
     <string name="logout">Elsaluti</string>
-    <string name="logout_title">Elsaluti el %1$s\?</string>
+    <string name="logout_title">Elsaluti el %1$s?</string>
     <string name="login_success">Ensalutita</string>
     <string name="login">Ensaluti</string>
     <string name="login_title">Ensaluti al %1$s</string>
@@ -316,7 +315,7 @@
     <string name="label_network">Reto</string>
     <string name="creating_backup_error">Kreado de savkopio fiaskis</string>
     <string name="creating_backup">Kreas savkopion</string>
-    <string name="backup_choice">Kion vi volas savkopii\?</string>
+    <string name="backup_choice">Kion vi volas savkopii?</string>
     <string name="restore_duration">%02d min, %02d sek</string>
     <string name="backup_restore_missing_sources">Mankantaj fontoj:</string>
     <string name="pref_category_auto_download">Aŭtomata elŝuto</string>
@@ -368,7 +367,7 @@
     <string name="on_hold">Haltetita</string>
     <string name="unread">Nelegita</string>
     <string name="also_set_chapter_settings_for_library">Ankaŭ apliki al ĉiuj mangaoj en mia biblioteko</string>
-    <string name="confirm_set_chapter_settings">Ĉu vi certe volas konservi ĉi-agordoj kiel defaŭltaj\?</string>
+    <string name="confirm_set_chapter_settings">Ĉu vi certe volas konservi ĉi-agordoj kiel defaŭltaj?</string>
     <string name="date">Dato</string>
     <string name="local_filter_order_by">Ordigi laŭ</string>
     <string name="local_invalid_format">Nevalida ĉapitra formato</string>
@@ -432,7 +431,7 @@
     <string name="lock_with_biometrics">Devigi malŝlosi</string>
     <string name="pref_refresh_library_covers">Refreŝi kovrilojn de mangaoj en biblioteko</string>
     <string name="file_select_cover">Elekti kovrilbildon</string>
-    <string name="confirm_set_image_as_cover">Ĉu uzi ĉi-bildon kiel kovrilo\?</string>
+    <string name="confirm_set_image_as_cover">Ĉu uzi ĉi-bildon kiel kovrilo?</string>
     <string name="notification_cover_update_failed">Aktualigo de kovrilo fiaskis</string>
     <string name="migration_dialog_what_to_include">Elekti datumon por inkluzivi</string>
     <string name="transition_pages_loading">Ŝargas paĝojn…</string>

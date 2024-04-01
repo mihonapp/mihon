@@ -41,7 +41,7 @@
     <string name="transition_next">הבא:</string>
     <string name="transition_current">נוכחי:</string>
     <string name="transition_finished">סיים:</string>
-    <string name="confirm_set_image_as_cover">האם להשתמש בתמונה זו כציור כריכה\?</string>
+    <string name="confirm_set_image_as_cover">האם להשתמש בתמונה זו כציור כריכה?</string>
     <string name="decode_image_error">לא ניתן היה לפענח את התמונה</string>
     <string name="no_next_chapter">הפרק הבא לא נמצא</string>
     <string name="chapter_progress">עמוד: %1$d</string>
@@ -50,7 +50,7 @@
     <string name="custom_filter">סנן מותאם אישית</string>
     <string name="picture_saved">התמונה נשמרה</string>
     <string name="dialog_with_checkbox_reset">אפס את כל הפרקים לפריט זה</string>
-    <string name="dialog_with_checkbox_remove_description">פעולה זו תסיר את התאריך הקריאה של פרק זה. האם אתה בטוח\?</string>
+    <string name="dialog_with_checkbox_remove_description">פעולה זו תסיר את התאריך הקריאה של פרק זה. האם אתה בטוח?</string>
     <string name="snack_categories_deleted">הקטגוריות נמחקו</string>
     <string name="error_category_exists">קטגוריה עם שם זה כבר קיימת!</string>
     <string name="track_type">סוג</string>
@@ -64,7 +64,7 @@
     <string name="on_hold">בהמתנה</string>
     <string name="dropped">הושמט</string>
     <string name="completed">הושלם</string>
-    <string name="confirm_delete_chapters">האם אתה בטוח שברצונך למחוק את הפרקים שנבחרו\?</string>
+    <string name="confirm_delete_chapters">האם אתה בטוח שברצונך למחוק את הפרקים שנבחרו?</string>
     <string name="download_unread">לא נקרא</string>
     <string name="sort_by_number">לפי מספר פרק</string>
     <string name="sort_by_source">לפי מקור</string>
@@ -74,9 +74,9 @@
     <string name="chapter_error">שגיאה</string>
     <string name="chapter_downloading_progress">מוריד (%1$d/%2$d)</string>
     <string name="display_mode_chapter">פרקים %1$s</string>
-    <string name="snack_add_to_library">להוסיף לספרייה\?</string>
+    <string name="snack_add_to_library">להוסיף לספרייה?</string>
     <string name="source_not_installed">המקור לא הותקן: %1$s</string>
-    <string name="delete_downloads_for_manga">למחוק פרקים שירדו\?</string>
+    <string name="delete_downloads_for_manga">למחוק פרקים שירדו?</string>
     <string name="manga_added_library">נוסף לספרייה</string>
     <string name="remove_from_library">הסר מהספרייה</string>
     <string name="manga_removed_library">הוסר מהספרייה</string>
@@ -92,7 +92,7 @@
     <string name="unknown_error">שגיאה לא ידועה</string>
     <string name="logout_success">אתה עכשיו מנותק</string>
     <string name="logout">התנתק</string>
-    <string name="logout_title">התנתק מ-%1$s\?</string>
+    <string name="logout_title">התנתק מ-%1$s?</string>
     <string name="login_success">מחובר</string>
     <string name="password">סיסמה</string>
     <string name="email">כתובת דוא\"ל</string>
@@ -190,7 +190,7 @@
     <string name="pref_disable_battery_optimization_summary">עוזר בעדכוני ספריות רקע וגיבויים</string>
     <string name="pref_disable_battery_optimization">השבתת האופטימיזציה של הסוללה</string>
     <string name="clear_database_completed">הרשומות נמחקו</string>
-    <string name="clear_database_confirmation">האם אתה בטוח\? פרקים שנקראו וההתקדמות של פריטים שאינם בספרייה יאבדו</string>
+    <string name="clear_database_confirmation">האם אתה בטוח? פרקים שנקראו וההתקדמות של פריטים שאינם בספרייה יאבדו</string>
     <string name="pref_clear_database_summary">מחק את היסטוריית הפריטים שאינם שמורים בספריה שלך</string>
     <string name="pref_clear_database">נקה את מסד הנתונים</string>
     <string name="cookies_cleared">עוגיות נוקו</string>
@@ -201,7 +201,7 @@
     <string name="pref_clear_chapter_cache">נקה את זיכרון המטמון של הפרקים</string>
     <string name="creating_backup">מייצר גיבוי</string>
     <string name="restoring_backup">משחזר גיבוי</string>
-    <string name="backup_choice">מה אתה רוצה לגבות\?</string>
+    <string name="backup_choice">מה אתה רוצה לגבות?</string>
     <string name="restore_completed">השחזור הושלם</string>
     <string name="backup_created">גיבוי נוצר</string>
     <string name="pref_backup_interval">תדירות גיבוי</string>
@@ -262,7 +262,6 @@
     <string name="pref_custom_color_filter">מסנן צבע מותאם אישית</string>
     <string name="pref_custom_brightness">בהירות מותאמת אישית</string>
     <string name="pref_crop_borders">חתוך גבולות</string>
-    <string name="pref_true_color">צבע 32-סיביות</string>
     <string name="pref_show_page_number">הצג מספר עמוד</string>
     <string name="pref_double_tap_anim_speed">מהירות הנפשה בהקשה כפולה</string>
     <string name="pref_page_transitions">הנפשת מעברי דפים</string>
@@ -498,7 +497,7 @@
     <string name="cancelled">בוטל/ה</string>
     <string name="in_library">בתוך הספרייה</string>
     <string name="chapter_settings">הגדרות פרק</string>
-    <string name="confirm_set_chapter_settings">האם אתה בטוח שאתה רוצה לשמור את ההגדרות האלה כברירת המחדל\?</string>
+    <string name="confirm_set_chapter_settings">האם אתה בטוח שאתה רוצה לשמור את ההגדרות האלה כברירת המחדל?</string>
     <string name="restore_in_progress">כבר מתרחש שחזור</string>
     <string name="page_list_empty_error">לא נמצאו עמודים</string>
     <string name="loader_not_implemented_error">מקור לא נמצא</string>
@@ -534,19 +533,18 @@
     <string name="skipped_reason_not_caught_up">דולג בגלל שיש פרקים שלא נקראו</string>
     <string name="skipped_reason_not_started">דולג בגלל שאין פרקים שנקראו</string>
     <string name="action_close">סגור</string>
-    <string name="pref_true_color_summary">מפחית פסים, אך עשוי להשפיע על הביצועים</string>
     <string name="channel_errors">שגיאות</string>
     <string name="pref_reset_viewer_flags">אפס את הגדרות מצב הקריאה של כל סדרה בנפרד</string>
     <string name="ext_installer_shizuku_stopped">Shizuku לא פועל</string>
     <string name="ext_installer_shizuku_unavailable_dialog">התקן והפעל את Shizuku כדי להשתמש בShizuku כמתקין ההרחבות.</string>
     <string name="pref_show_navigation_mode">הראה את פרישת מיקומי הלחיצה</string>
-    <string name="clear_history_confirmation">אתה בטוח\? כל ההיסטוריה תמחק.</string>
+    <string name="clear_history_confirmation">אתה בטוח? כל ההיסטוריה תמחק.</string>
     <string name="migration_help_guide">מדריך נדידת מקורות</string>
     <string name="download_insufficient_space">לא ניתן להוריד פרקים כי אין מספיק מקום אחסון</string>
     <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת Mihon. לחץ כדי ללמוד עוד.</string>
     <string name="local_invalid_format">פורמט פרק לא תקין</string>
     <string name="on_hiatus">בהפסקה</string>
-    <string name="delete_category_confirmation">האם תרצה למחוק את הקטגוריה %s\?</string>
+    <string name="delete_category_confirmation">האם תרצה למחוק את הקטגוריה %s?</string>
     <string name="pref_dual_page_split">פצל עמודים רחבים</string>
     <string name="kindlish_nav">כמו ספר אלקטרוני</string>
     <string name="ext_info_version">גרסה</string>
@@ -604,7 +602,7 @@
     <string name="download_notifier_split_page_path_not_found">נכשל במציאת כתובת עמוד %d</string>
     <string name="confirm_add_duplicate_manga">כבר קיים פריט בספריה בעל אותו שם.
 \n
-\nלהמשיך בכל זאת\?</string>
+\nלהמשיך בכל זאת?</string>
     <string name="pref_downloads_summary">הורדה אוטומטית, הורד את הבאים</string>
     <string name="pref_appearance_summary">נושא, פורמט תאריך וזמן</string>
     <string name="pref_library_summary">קטגוריות, עדכון כללי, החלקת פרק</string>
@@ -634,7 +632,7 @@
     <string name="split_tall_images">פצל תמונה מוארכת</string>
     <string name="pref_dump_crash_logs_summary">שומר דוח שגיאות לקובץ עבור שיתוף עם המפתחים</string>
     <string name="custom_cover">כריכה מותאמת אישית</string>
-    <string name="track_remove_date_conf_title">להסיר תאריך\?</string>
+    <string name="track_remove_date_conf_title">להסיר תאריך?</string>
     <string name="download_ahead">הורד הלאה</string>
     <string name="label_background_activity">פעילות רקע</string>
     <string name="label_tracked_titles">פריטים במעקב</string>
@@ -642,7 +640,7 @@
     <string name="pref_chapter_swipe">מעבר פרק</string>
     <string name="licensed_manga_chapters_error">בעל רישיון - אין פרקים להראות</string>
     <string name="copied_to_clipboard_plain">הועתק ללוח כתיבה</string>
-    <string name="are_you_sure">האם אתה בטוח\?</string>
+    <string name="are_you_sure">האם אתה בטוח?</string>
     <string name="source_unsupported">המקור לא נתמך</string>
     <string name="error_no_match">לא נמצאה התאמה</string>
     <string name="not_installed">לא מותקן</string>
@@ -676,7 +674,7 @@
     <string name="pref_tablet_ui_mode">ממשק משתמש טאבלט</string>
     <string name="fdroid_warning">F-Droid builds לא נתמכים באופן רשמי.
 \nלחץ כדי ללמוד עוד.</string>
-    <string name="track_delete_title">להסיר את %s ממעקב\?</string>
+    <string name="track_delete_title">להסיר את %s ממעקב?</string>
     <string name="track_delete_text">פעולה זו תסיר את המעקב שלך מקומית.</string>
     <string name="track_delete_remote_text">הסר גם מ-%s</string>
     <string name="also_set_chapter_settings_for_library">קבע גם עבור כל הפריטים בספריה</string>

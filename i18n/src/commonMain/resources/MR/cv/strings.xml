@@ -231,8 +231,6 @@
     <string name="pref_custom_color_filter">Усӑҫ тӗс али</string>
     <string name="pref_custom_brightness">Усӑҫ йӑлтӑрлӑхӗ</string>
     <string name="pref_crop_borders">Касӑк чиккисем</string>
-    <string name="pref_true_color_summary">Йӑрӑм-йӑрӑм чакать, анчах тухӑҫлӑх ҫине витӗм кӳрет</string>
-    <string name="pref_true_color">32 битлӑ тӗс</string>
     <string name="pref_show_page_number">Ел шутне кӑтартни</string>
     <string name="pref_double_tap_anim_speed">Икӗ хут пуссан эним хӑвӑртлӑхӗ</string>
     <string name="pref_page_transitions">Елсем хушшипе енимлӗ куҫни</string>
@@ -289,14 +287,14 @@
     <string name="transition_finished">Пӗтернӗ:</string>
     <string name="viewer">Вулав тытӑмӗ</string>
     <string name="pref_category_for_this_series">Ҫак серилӗх валли</string>
-    <string name="confirm_set_image_as_cover">Ҫак сӑна хуплашка пек усӑ курмалла-и\?</string>
+    <string name="confirm_set_image_as_cover">Ҫак сӑна хуплашка пек усӑ курмалла-и?</string>
     <string name="decode_image_error">Сӑн тийенмерӗ</string>
     <string name="no_next_chapter">Малалли сыпӑк тупӑнман</string>
     <string name="chapter_progress">%1$d-мӗш ел</string>
     <string name="cover_updated">Хуплашкана ҫӗнетнӗ</string>
     <string name="set_as_cover">Хуплашка пек ларт</string>
     <string name="picture_saved">Ӳкерчӗке упранӑ</string>
-    <string name="dialog_with_checkbox_remove_description">Ҫакӑ вара сыпӑка вулани вӑхӑта катертӗ. Чӑнах катертесшӗн-и\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ҫакӑ вара сыпӑка вулани вӑхӑта катертӗ. Чӑнах катертесшӗн-и?</string>
     <string name="snack_categories_deleted">Пухмӑшсем катертнӗ</string>
     <string name="error_category_exists">Ун пек ятпа пухмӑш пур ӗнтӗ!</string>
     <string name="track_type">Тӗс</string>
@@ -311,7 +309,7 @@
     <string name="dropped">Пӑрахнӑ</string>
     <string name="completed">Вӗҫленӗ</string>
     <string name="reading">Вулатӑп</string>
-    <string name="confirm_delete_chapters">Есӗ суйланӑ сыпӑксене катертесшӗнех-и\?</string>
+    <string name="confirm_delete_chapters">Есӗ суйланӑ сыпӑксене катертесшӗнех-и?</string>
     <string name="download_unread">Вуламанине</string>
     <string name="manga_download">Тиесе ил</string>
     <string name="sort_by_upload_date">Тиенӗ вӑхӑчӗпе</string>
@@ -322,11 +320,11 @@
     <string name="chapter_paused">Вӑхӑтлӑха чарнӑ</string>
     <string name="chapter_error">Йӑнӑш</string>
     <string name="chapter_downloading_progress">Тиенет (%1$d/%2$d)</string>
-    <string name="snack_add_to_library">Манкка вулавăша хушмалла-и\?</string>
+    <string name="snack_add_to_library">Манкка вулавăша хушмалла-и?</string>
     <string name="source_not_installed">Ҫӑл куҫа лартман: %1$s</string>
     <string name="copied_to_clipboard">Пайлашу буфере ӑтавланӑ:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">Тиенӗ сыпӑксене катертмелле-и\?</string>
+    <string name="delete_downloads_for_manga">Тиенӗ сыпӑксене катертмелле-и?</string>
     <string name="manga_info_collapse">Сахалрах</string>
     <string name="manga_info_expand">Ытларах</string>
     <string name="manga_removed_library">Вулавӑшран катерт</string>
@@ -355,7 +353,7 @@
     <string name="unknown_error">Паллӑ мар йӑнӑш</string>
     <string name="logout_success">Есӗ тухрӑн</string>
     <string name="logout">Тух</string>
-    <string name="logout_title">“%1$s тухмалла-и\?</string>
+    <string name="logout_title">“%1$s тухмалла-и?</string>
     <string name="login_success">Ӑнӑҫлӑ кӗни</string>
     <string name="login">Кӗр</string>
     <string name="password">Кӗме сӑмах</string>
@@ -375,7 +373,7 @@
     <string name="pref_backup_interval">Янтӑвлани тӑтӑшлӑхӗ</string>
     <string name="pref_refresh_library_covers">Вулавӑшри манкӑсен хуплашкисене ҫӗнет</string>
     <string name="clear_database_completed">Ҫыравсене катертнӗ</string>
-    <string name="clear_database_confirmation">Чӑнах катертесшӗн-и\? Вулавӑшри мар манкӑн вуланӑ сыпӑкӗсем тата вулав ӳсӗмӗ ҫухалӗ</string>
+    <string name="clear_database_confirmation">Чӑнах катертесшӗн-и? Вулавӑшри мар манкӑн вуланӑ сыпӑкӗсем тата вулав ӳсӗмӗ ҫухалӗ</string>
     <string name="pref_clear_database_summary">Санӑн вулавӑшра упранман манкӑн вуланӑ кун-ҫулне катерт</string>
     <string name="pref_clear_database">Пӗлӗмсен кӗлете тасат</string>
     <string name="cache_delete_error">Кеше тасатнӑ чух йӑнӑш тухрӗ</string>
@@ -389,7 +387,7 @@
     <string name="restore_in_progress">Тавӑрни пурнӑҫланать ӗнтӗ</string>
     <string name="creating_backup_error">Янтӑвлани йӑнӑшӗ</string>
     <string name="creating_backup">Янтӑв тӑвӑнать</string>
-    <string name="backup_choice">Мӗн эсӗ янтӑвласшӑн\?</string>
+    <string name="backup_choice">Мӗн эсӗ янтӑвласшӑн?</string>
     <string name="backup_in_progress">Янтӑ пурнӑҫланать ӗнтӗ</string>
     <string name="restore_completed">Тавӑрни вӗҫленнӗ</string>
     <string name="pref_create_backup_summ">Хальхи вулавăша тавӑрма усӑ курма пулать</string>
@@ -419,7 +417,7 @@
     <string name="also_set_chapter_settings_for_library">Тата манӑн вулавăшри пур манкӑ валли усӑ кур</string>
     <string name="chapter_settings_updated">Яланхилле сыпӑк ӗнерлев ҫӗнетнӗ</string>
     <string name="set_chapter_settings_as_default">Яланхилле</string>
-    <string name="confirm_set_chapter_settings">Ҫак ӗнерелевсене яланхилле упрасшӑнах-и\?</string>
+    <string name="confirm_set_chapter_settings">Ҫак ӗнерелевсене яланхилле упрасшӑнах-и?</string>
     <string name="share_page_info">%1$s: %2$s, %3$d-мӗш ел</string>
     <string name="chapter_settings">Сыпӑк ӗнерлеве</string>
     <string name="action_search_settings">Ӗнерӳ шыра</string>
@@ -429,7 +427,7 @@
     <string name="pref_clear_history">Кун-ҫул тасат</string>
     <string name="clear_history_completed">Кун-ҫула катертнӗ</string>
     <string name="pref_incognito_mode">Вӑрттӑнлӑх тытӑмӗ</string>
-    <string name="clear_history_confirmation">Чӑнах катертесшӗн-и\? Веҫ кун-ҫулӗ ҫухалӗ.</string>
+    <string name="clear_history_confirmation">Чӑнах катертесшӗн-и? Веҫ кун-ҫулӗ ҫухалӗ.</string>
     <string name="spen_next_page">Маллали сыпӑк</string>
     <string name="spen_previous_page">Умӗнхи эл</string>
     <string name="migration_help_guide">Ҫӑл куҫ куҫарассипе пулӑшу</string>

@@ -212,8 +212,6 @@
     <string name="pref_show_page_number">पुटसङ्ख्यां दर्शयतु</string>
     <string name="pref_show_reading_mode">पठनदशां दर्शयतु</string>
     <string name="pref_show_reading_mode_summary">प्रदर्शकस्य उद्घाटने वर्तमानदशां सङ्क्षेपं दर्शयतु</string>
-    <string name="pref_true_color">३२-बिट् वर्णः</string>
-    <string name="pref_true_color_summary">बाञ्डिङ्गसमस्यां न्यूनी करिष्यति परन्तु प्रवृत्तिं प्रभाविष्यति</string>
     <string name="pref_crop_borders">सीमाः कर्तयतु</string>
     <string name="on">सशक्तं कुरु</string>
     <string name="off">अशक्तं कुरु</string>
@@ -534,12 +532,12 @@
     <string name="pref_verbose_logging_summary">संविधावृत्तलेखं प्रति अतिविस्तीर्णवृत्तलेखान् मुद्रयतु (अनुप्रयोगप्रवृत्तिम् अल्पयति)</string>
     <string name="download_notifier_unknown_error">यादृच्छिकदोषकारणात् अध्यायस्य अवारोपणम् न शक्नुयात्</string>
     <string name="also_set_chapter_settings_for_library">अपि मम ग्रन्थालये सर्वाभ्यः माङ्गाभ्यः आचरतु</string>
-    <string name="clear_history_confirmation">त्वं निश्चितं किम् \? चरित्रं सर्वं लुप्तं भविष्यति।</string>
+    <string name="clear_history_confirmation">त्वं निश्चितं किम् ? चरित्रं सर्वं लुप्तं भविष्यति।</string>
     <string name="update_check_eol">एतत् आण्ड्रायिड्-संस्करणम् अधुना न भरितम्</string>
     <string name="information_webview_outdated">इतोऽपि उत्तमतरसङ्गतिं प्रप्तुं कृपया वेब्-व्यू-अनुप्रयोगं नवीकरोतु</string>
     <string name="downloaded_only_summary">तव ग्रन्थालये सर्वाः माङ्गाः शोधनीकरोति</string>
     <string name="pref_clear_database_summary">तव ग्रन्थालये न रक्षितानां माङ्गानां चरित्रं नाशय</string>
-    <string name="confirm_delete_chapters">त्वं निश्चितरूपेण सङ्गृहीतान् अध्यायान् नाशयितुम् इच्छसि किम् \?</string>
+    <string name="confirm_delete_chapters">त्वं निश्चितरूपेण सङ्गृहीतान् अध्यायान् नाशयितुम् इच्छसि किम् ?</string>
     <string name="clear_database_confirmation">त्वं निश्चितं किम्। पर-ग्रन्थालय-माङ्गानाम् अपिठाध्यायाः नष्टाः भविष्यन्ते</string>
     <string name="download_queue_size_warning">पूर्वसूचना -- महद्भाराणि अवारोपणानि कुर्यात् मूलानि मन्दानि। अपि च टाचीयोमिं निवारयेत्॥</string>
     <string name="pref_dump_crash_logs_summary">व्युत्पादकेभ्यः प्रसारयितुं दोषदत्तम् एकस्यां सञ्चिकायां रक्षति</string>

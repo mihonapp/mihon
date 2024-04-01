@@ -124,7 +124,7 @@
     <string name="sort_by_upload_date">Por fecha de subida</string>
     <string name="manga_download">Descargar</string>
     <string name="download_unread">Sin leer</string>
-    <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados\?</string>
+    <string name="confirm_delete_chapters">¿Seguro que quieres eliminar los capítulos seleccionados?</string>
     <string name="reading">Leyendo</string>
     <string name="completed">Completado</string>
     <string name="dropped">Abandonado</string>
@@ -170,7 +170,7 @@
     <string name="action_add">Añadir</string>
     <string name="download_notifier_no_network">No estás conectado a Internet</string>
     <string name="download_notifier_download_paused">Descarga pausada</string>
-    <string name="confirm_set_image_as_cover">¿Usar esta imagen como portada\?</string>
+    <string name="confirm_set_image_as_cover">¿Usar esta imagen como portada?</string>
     <string name="action_display">Apariencia</string>
     <string name="action_display_grid">Cuadrícula compacta</string>
     <string name="action_display_list">Lista</string>
@@ -206,7 +206,7 @@
     <string name="pref_backup_interval">Frecuencia de respaldo automático</string>
     <string name="backup_created">Copia de seguridad creada</string>
     <string name="restore_completed">Restauración completada</string>
-    <string name="backup_choice">¿De qué quieres hacer una copia de seguridad\?</string>
+    <string name="backup_choice">¿De qué quieres hacer una copia de seguridad?</string>
     <string name="restoring_backup">Restaurando copia de seguridad</string>
     <string name="creating_backup">Creando copia de seguridad</string>
     <string name="no_more_results">No hay más resultados</string>
@@ -216,7 +216,7 @@
     <string name="manga_tracking_tab">Seguimiento</string>
     <string name="error_category_exists">¡Ya existe una categoría con este nombre!</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
-    <string name="snack_add_to_library">¿Añadir manga a la biblioteca\?</string>
+    <string name="snack_add_to_library">¿Añadir manga a la biblioteca?</string>
     <string name="picture_saved">Imagen guardada</string>
     <string name="custom_filter">Filtro personalizado</string>
     <string name="set_as_cover">Poner como portada</string>
@@ -274,7 +274,6 @@
     <string name="pref_read_with_long_tap">Menú de pulsación prolongada</string>
     <string name="action_open_in_web_view">Abrir en WebView</string>
     <string name="pref_skip_read_chapters">Saltar capítulos leídos</string>
-    <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_color_filter_mode">Mezcla de colores</string>
     <string name="filter_mode_overlay">Superponer</string>
     <string name="filter_mode_multiply">Multiplicar</string>
@@ -295,7 +294,7 @@
     <string name="logout">Cerrar sesión</string>
     <string name="logout_success">Has cerrado sesión</string>
     <string name="paused">Pausado</string>
-    <string name="logout_title">¿Cerrar sesión en %1$s\?</string>
+    <string name="logout_title">¿Cerrar sesión en %1$s?</string>
     <string name="label_more">Más</string>
     <string name="action_sort_latest_chapter">Por capítulo más reciente</string>
     <string name="action_view_chapters">Ver capítulos</string>
@@ -365,7 +364,6 @@
     <string name="viewer">Modo de lectura</string>
     <string name="pref_category_for_this_series">Para esta serie</string>
     <string name="gray_background">Gris</string>
-    <string name="pref_true_color_summary">Reduce el efecto anillado en los degradados y mejora la calidad de los grises, pero puede afectar al rendimiento</string>
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Actualizar las portadas de la biblioteca</string>
     <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada elemento en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
@@ -417,7 +415,7 @@
     <string name="chapter_settings_updated">Se han actualizado los ajustes predeterminados de capítulo</string>
     <string name="set_chapter_settings_as_default">Establecer como predeterminado</string>
     <string name="also_set_chapter_settings_for_library">Aplicar también a todos los elementos en mi biblioteca</string>
-    <string name="confirm_set_chapter_settings">¿Seguro que quieres guardar estos ajustes como predeterminados\?</string>
+    <string name="confirm_set_chapter_settings">¿Seguro que quieres guardar estos ajustes como predeterminados?</string>
     <string name="chapter_settings">Ajustes de capítulo</string>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
     <string name="action_search_settings">Ajustes de búsqueda</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Pausa el historial de lectura</string>
     <string name="pref_incognito_mode">Modo incógnito</string>
     <string name="pref_clear_history">Borrar historial</string>
-    <string name="clear_history_confirmation">¿Estás seguro\? Perderás todo el historial.</string>
+    <string name="clear_history_confirmation">¿Estás seguro? Perderás todo el historial.</string>
     <string name="clear_history_completed">Historial eliminado</string>
     <string name="spen_next_page">Siguiente página</string>
     <string name="spen_previous_page">Página anterior</string>
@@ -607,7 +605,7 @@
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sin descripción</string>
     <string name="delete_category">Borrar categoría</string>
-    <string name="delete_category_confirmation">¿Quieres borrar la categoría «%s»\?</string>
+    <string name="delete_category_confirmation">¿Quieres borrar la categoría «%s»?</string>
     <string name="internal_error">ErrorInterno: Mira el registro de depuración para más información</string>
     <string name="pref_user_agent_string">Identificarse como otro navegador web («user agent»)</string>
     <string name="pref_reset_user_agent_string">Volver a la identificación de navegador («user agent») original</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead_info">Solo funciona si el capítulo actual y el que va después ya están descargados.</string>
     <string name="download_ahead">Descargar por adelantado</string>
     <string name="auto_download_while_reading">Descarga los capítulos siguientes mientras lees</string>
-    <string name="are_you_sure">¿Estás seguro\?</string>
+    <string name="are_you_sure">¿Estás seguro?</string>
     <string name="updates_last_update_info">La biblioteca se actualizó: %s</string>
     <string name="remove_manga">Estás a punto de borrar «%s» de tu biblioteca</string>
     <string name="popular">Populares</string>
@@ -648,11 +646,11 @@
     <string name="download_notifier_cache_renewal">Reindexando descargas</string>
     <string name="action_open_random_manga">Abrir un elemento al azar</string>
     <string name="information_no_entries_found">Parece que esta categoría está vacía</string>
-    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid. 
+    <string name="fdroid_warning">No damos soporte oficial a las versiones de F-Droid.
 \nToca para más información.</string>
     <string name="action_display_show_continue_reading_button">Mostrar el botón de seguir leyendo</string>
     <string name="track_remove_start_date_conf_text">Al hacer esto %s ya no aparecerá como empezado ese día</string>
-    <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha\?</string>
+    <string name="track_remove_date_conf_title">¿Quieres quitar esta fecha?</string>
     <string name="track_remove_finish_date_conf_text">Al hacer esto %s ya no aparecerá como terminado ese día</string>
     <string name="pref_invalidate_download_cache">Reconstruir el índice de descargas</string>
     <string name="pref_invalidate_download_cache_summary">Forzar a la aplicación a volver a comprobar los capítulos descargados</string>
@@ -684,7 +682,7 @@
     <string name="enhanced_services_not_installed">Están disponibles, pero las fuentes todavía no se han instalado: %s</string>
     <string name="confirm_add_duplicate_manga">Ya tienes un elemento en la biblioteca con este mismo nombre.
 \n
-\n¿Seguro que quieres continuar\?</string>
+\n¿Seguro que quieres continuar?</string>
     <string name="track_error">%1$s error: %2$s</string>
     <string name="information_required_plain">*necesaria</string>
     <string name="pref_hide_in_library_items">Saltar elementos que ya estén en la biblioteca</string>
@@ -732,7 +730,7 @@
     <string name="source_settings">Ajustes de la fuente</string>
     <string name="app_settings">Ajustes de la aplicación</string>
     <string name="action_sort_category">Ordenar categorías</string>
-    <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética\?</string>
+    <string name="sort_category_confirmation">¿Quieres ordenar las categorías de forma alfabética?</string>
     <string name="file_null_uri_error">No has elegido ningún archivo</string>
     <string name="relative_time_span_never">Nunca</string>
     <string name="pref_flash_page_summ">Esta transición minimiza las manchas y el efecto de retención de imagen en pantallas de tinta electrónica</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">Dejar de marcar todas la extensiones desconocidas como de confianza</string>
     <string name="action_open_repo">Abrir repositorio</string>
     <string name="pref_webtoon_disable_zoom_out">Desactivar alejar</string>
+    <string name="pref_display_profile">Perfil de visualización personalizado</string>
+    <string name="action_add_anyway">Agregar de todos modos</string>
+    <string name="action_migrate_duplicate">Migrar la entrada existente</string>
+    <string name="action_replace_repo">Reemplazar</string>
+    <string name="action_replace_repo_title">La huella digital de la clave de la firma ya existe</string>
+    <string name="action_replace_repo_message">El repositorio %1$s tiene la misma huella digital de clave de la firma que %2$s.
+\nSi esto es lo esperado, %2$s será reemplazado, de lo contrario contacte con quien mantiene su repositorio.</string>
+    <string name="label_upcoming">Próximo</string>
+    <string name="action_view_upcoming">Ver las próximas actualizaciones</string>
+    <string name="upcoming_guide">Próxima guía</string>
+    <string name="upcoming_calendar_next">Próximo mes</string>
+    <string name="upcoming_calendar_prev">Mes anterior</string>
 </resources>

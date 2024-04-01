@@ -160,7 +160,7 @@
     <string name="pref_backup_interval">Automatisk säkerhetskopieringsfrekvens</string>
     <string name="backup_created">Säkerhetskopia skapad</string>
     <string name="restore_completed">Återställning slutförd</string>
-    <string name="backup_choice">Vad vill du säkerhetskopiera\?</string>
+    <string name="backup_choice">Vad vill du säkerhetskopiera?</string>
     <string name="restoring_backup">Återställer säkerhetskopia</string>
     <string name="creating_backup">Skapar säkerhetskopia</string>
     <string name="pref_clear_chapter_cache">Rensa kapitelcache</string>
@@ -171,7 +171,7 @@
     <string name="cookies_cleared">Cookies rensade</string>
     <string name="pref_clear_database">Rensa databas</string>
     <string name="pref_clear_database_summary">Ta bort historik för inlägg som inte finns i ditt bibliotek</string>
-    <string name="clear_database_confirmation">Är du säker på det\? Lästa kapitel och framsteg för poster som inte finns i biblioteket kommer att gå förlorade</string>
+    <string name="clear_database_confirmation">Är du säker på det? Lästa kapitel och framsteg för poster som inte finns i biblioteket kommer att gå förlorade</string>
     <string name="clear_database_completed">Inlägg raderade</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Skicka kraschrapporter</string>
@@ -195,7 +195,7 @@
     <string name="remove_from_library">Ta bort från biblioteket</string>
     <string name="manga_added_library">Lades till i biblioteket</string>
     <string name="manga_removed_library">Togs bort från biblioteket</string>
-    <string name="delete_downloads_for_manga">Ta bort nedladdade kapitel\?</string>
+    <string name="delete_downloads_for_manga">Ta bort nedladdade kapitel?</string>
     <string name="copied_to_clipboard">Kopierat till urklipp:
 \n%1$s</string>
     <string name="source_not_installed">Källa inte installerad: %1$s</string>
@@ -209,7 +209,7 @@
     <string name="sort_by_number">Efter kapitelnummer</string>
     <string name="manga_download">Ladda ner</string>
     <string name="download_unread">Olästa</string>
-    <string name="confirm_delete_chapters">Är du säker på att du vill radera valda kapitel\?</string>
+    <string name="confirm_delete_chapters">Är du säker på att du vill radera valda kapitel?</string>
     <string name="manga_tracking_tab">Spårning</string>
     <string name="reading">Läser</string>
     <string name="completed">Färdig</string>
@@ -224,9 +224,9 @@
     <string name="track_type">Typ</string>
     <string name="error_category_exists">En kategori med detta namn finns redan!</string>
     <string name="snack_categories_deleted">Kategorier raderade</string>
-    <string name="dialog_with_checkbox_remove_description">Detta kommer att ta bort läs datumet för detta kapitel. Är du säker\?</string>
+    <string name="dialog_with_checkbox_remove_description">Detta kommer att ta bort läs datumet för detta kapitel. Är du säker?</string>
     <string name="dialog_with_checkbox_reset">Återställ alla kapitel för denna post</string>
-    <string name="snack_add_to_library">Lägg till i biblioteket\?</string>
+    <string name="snack_add_to_library">Lägg till i biblioteket?</string>
     <string name="picture_saved">Bild sparad</string>
     <string name="custom_filter">Anpassat filter</string>
     <string name="set_as_cover">Ställ in som omslag</string>
@@ -234,7 +234,7 @@
     <string name="chapter_progress">Sida: %1$d</string>
     <string name="no_next_chapter">Nästa kapitel kunde inte hittas</string>
     <string name="decode_image_error">Bilden kunde inte laddas</string>
-    <string name="confirm_set_image_as_cover">Sätt bild som omslag\?</string>
+    <string name="confirm_set_image_as_cover">Sätt bild som omslag?</string>
     <string name="transition_finished">Färdig:</string>
     <string name="transition_current">Nuvarande:</string>
     <string name="transition_next">Nästa:</string>
@@ -271,7 +271,6 @@
     <string name="download_notifier_download_paused">Nedladdningar pausade</string>
     <string name="channel_common">Vanlig</string>
     <string name="action_open_in_web_view">Öppna i WebView</string>
-    <string name="pref_true_color">32-bitars färg</string>
     <string name="pref_skip_read_chapters">Hoppa över lästa kapitel</string>
     <string name="pref_read_with_long_tap">Visa åtgärder vid lång tryckning</string>
     <string name="pref_color_filter_mode">Färgfilterblandningsläge</string>
@@ -291,7 +290,7 @@
     <string name="obsolete_extension_message">Detta tillägg är inte längre tillgängligt. Det kanske inte fungerar korrekt och kan orsaka problem med appen. Vi rekommenderar att du avinstallerar det.</string>
     <string name="pref_date_format">Datumformat</string>
     <string name="pref_category_library_update">Global uppdatering</string>
-    <string name="logout_title">Logga ut från %1$s\?</string>
+    <string name="logout_title">Logga ut från %1$s?</string>
     <string name="logout">Logga ut</string>
     <string name="logout_success">Du är nu utloggad</string>
     <string name="paused">Pausad</string>
@@ -364,7 +363,6 @@
     <string name="viewer">Läsläge</string>
     <string name="pref_category_for_this_series">För denna serie</string>
     <string name="gray_background">Grå</string>
-    <string name="pref_true_color_summary">Minskar bandning, men kan påverka prestandan</string>
     <string name="battery_optimization_setting_activity_not_found">Det gick inte att öppna enhetsinställningarna</string>
     <string name="pref_refresh_library_covers">Uppdatera bibliotekets omslag</string>
     <string name="tracking_info">Envägssynkronisering för att uppdatera kapitlets framsteg i externa spårningstjänster. Ställ in spårning för enskilda poster från deras spårningsknapp.</string>
@@ -414,7 +412,7 @@
     <string name="parental_controls_info">Detta förhindrar inte inofficiella eller potentiellt felaktigt flaggade tillägg från att visa NSFW(18+) innehåll i appen.</string>
     <string name="channel_errors">Fel</string>
     <string name="chapter_settings_updated">Uppdaterade standardinställningar för kapitel</string>
-    <string name="confirm_set_chapter_settings">Vill du spara de här inställningarna som standard\?</string>
+    <string name="confirm_set_chapter_settings">Vill du spara de här inställningarna som standard?</string>
     <string name="share_page_info">%1$s: %2$s, sida %3$d</string>
     <string name="no_chapters_error">Inga kapitel hittades</string>
     <string name="set_chapter_settings_as_default">Ange som standard</string>
@@ -425,7 +423,7 @@
     <string name="pref_incognito_mode_summary">Pausar läshistoriken</string>
     <string name="pref_incognito_mode">Inkognitoläge</string>
     <string name="pref_clear_history">Rensa historik</string>
-    <string name="clear_history_confirmation">Är du säker\? All historik kommer att försvinna.</string>
+    <string name="clear_history_confirmation">Är du säker? All historik kommer att försvinna.</string>
     <string name="clear_history_completed">Historiken har tagits bort</string>
     <string name="action_search_settings">Sök inställningar</string>
     <string name="spen_next_page">Nästa sida</string>
@@ -606,7 +604,7 @@
     <string name="theme_lavender">Lavendel</string>
     <string name="description_placeholder">Ingen beskrivning</string>
     <string name="pref_app_language">Appspråk</string>
-    <string name="delete_category_confirmation">Vill du radera kategorin \"%s\"\?</string>
+    <string name="delete_category_confirmation">Vill du radera kategorin \"%s\"?</string>
     <string name="internal_error">Interntfel: Kontrollera kraschloggar för ytterligare information</string>
     <string name="delete_category">Ta bort kategori</string>
     <string name="pref_user_agent_string">Standardsträng för användaragent</string>
@@ -618,7 +616,7 @@
     <string name="update_already_running">En uppdatering pågår redan</string>
     <string name="multi_lang">Flerspråkig</string>
     <string name="error_user_agent_string_blank">Strängen för användaragent kan inte vara tom</string>
-    <string name="are_you_sure">Är du säker\?</string>
+    <string name="are_you_sure">Är du säker?</string>
     <string name="updates_last_update_info">Biblioteket uppdaterades senast: %s</string>
     <string name="popular">Populära</string>
     <string name="remove_manga">Du är på väg att ta bort \"%s\" från ditt bibliotek</string>
@@ -676,8 +674,8 @@
     <string name="not_applicable">N/A</string>
     <string name="confirm_add_duplicate_manga">Du har en post i ditt bibliotek med samma namn.
 \n
-\nVill du fortfarande fortsätta\?</string>
-    <string name="track_remove_date_conf_title">Ta bort datum\?</string>
+\nVill du fortfarande fortsätta?</string>
+    <string name="track_remove_date_conf_title">Ta bort datum?</string>
     <string name="label_titles_section">Inlägg</string>
     <string name="label_titles_in_global_update">I global uppdatering</string>
     <string name="label_total_chapters">Totalt</string>
@@ -692,7 +690,7 @@
     <string name="track_error">%1$s fel: %2$s</string>
     <string name="pref_double_tap_zoom">Dubbeltryck för att zooma</string>
     <string name="track_remove_start_date_conf_text">Detta kommer att ta bort ditt tidigare valda startdatum från %s</string>
-    <string name="track_delete_title">Ta bort %s spårning\?</string>
+    <string name="track_delete_title">Ta bort %s spårning?</string>
     <string name="track_delete_text">Detta kommer att ta bort spårningen lokalt.</string>
     <string name="track_remove_finish_date_conf_text">Detta kommer att ta bort ditt tidigare valda slutdatum från %s</string>
     <string name="track_delete_remote_text">Ta även bort från %s</string>
@@ -728,7 +726,7 @@
     <string name="action_move_to_bottom_all_for_series">Flytta serien till botten</string>
     <string name="action_sort_category">Sortera kategorier</string>
     <string name="notification_updating_progress">Uppdaterar biblioteket... (%s)</string>
-    <string name="sort_category_confirmation">Vill du sortera kategorierna i alfabetisk ordning\?</string>
+    <string name="sort_category_confirmation">Vill du sortera kategorierna i alfabetisk ordning?</string>
     <string name="source_settings">Inställningar för källa</string>
     <string name="app_settings">Appinställningar</string>
     <string name="pref_relative_format">Relativa tidsstämplar</string>

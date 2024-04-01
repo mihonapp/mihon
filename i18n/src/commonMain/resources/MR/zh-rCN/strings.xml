@@ -272,7 +272,6 @@
     <string name="channel_common">通用</string>
     <string name="pref_read_with_long_tap">长按显示操作菜单</string>
     <string name="action_open_in_web_view">在 WebView 中打开</string>
-    <string name="pref_true_color">32 位色彩</string>
     <string name="pref_skip_read_chapters">跳过已读章节</string>
     <string name="pref_color_filter_mode">滤镜混合模式</string>
     <string name="label_help">帮助</string>
@@ -365,7 +364,6 @@
     <string name="pref_category_for_this_series">本作品</string>
     <string name="viewer">阅读模式</string>
     <string name="battery_optimization_setting_activity_not_found">打开系统设置失败</string>
-    <string name="pref_true_color_summary">缓解色带问题，但可能会影响性能</string>
     <string name="pref_refresh_library_covers">刷新书架封面</string>
     <string name="tracking_info">将阅读进度上传到第三方进度记录平台。在作品页面点击“进度记录”按钮即可设置。</string>
     <string name="sort_by_upload_date">按上传日期</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">撤销已信任的未知插件</string>
     <string name="action_open_repo">打开图源仓库</string>
     <string name="pref_webtoon_disable_zoom_out">禁用缩小</string>
+    <string name="action_add_anyway">依然添加</string>
+    <string name="action_replace_repo">替换</string>
+    <string name="pref_display_profile">自定义校色文件</string>
+    <string name="action_replace_repo_message">%1$s 仓库已经存在和 %2$s 仓库相同的签名密钥指纹。
+\n若继续，%2$s 将被替换，否则请联系你的仓库维护员。</string>
+    <string name="action_replace_repo_title">签名密钥指纹已存在</string>
+    <string name="action_migrate_duplicate">迁移已存在条目</string>
+    <string name="action_view_upcoming">显示即将推出的更新</string>
+    <string name="upcoming_guide">即将推出的指南</string>
+    <string name="label_upcoming">即将推出</string>
+    <string name="upcoming_calendar_next">下个月</string>
+    <string name="upcoming_calendar_prev">上个月</string>
 </resources>

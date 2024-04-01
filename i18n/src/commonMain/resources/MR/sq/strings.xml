@@ -215,7 +215,7 @@
     <string name="action_edit_categories">Redakto kategoritë</string>
     <string name="action_rename_category">Riemërto kategorinë</string>
     <string name="action_move_category">Vendosni kategori</string>
-    <string name="delete_category_confirmation">Dëshironi të fshini kategorinë \"%s\"\?</string>
+    <string name="delete_category_confirmation">Dëshironi të fshini kategorinë \"%s\"?</string>
     <string name="delete_category">Fshi kategorinë</string>
     <string name="action_edit_cover">Redakto kopertinën</string>
     <string name="action_view_chapters">Shiko kapitujt</string>
@@ -259,8 +259,6 @@
     <string name="pref_double_tap_anim_speed">Prekni dy herë shpejtësia e animacionit</string>
     <string name="pref_show_page_number">Shfaq numrin e faqes</string>
     <string name="pref_show_reading_mode">Shfaq modalitetin e leximit</string>
-    <string name="pref_true_color">Ngjyra 32-bit</string>
-    <string name="pref_true_color_summary">Redukton brezin, por mund të ndikojë në performancën</string>
     <string name="pref_custom_brightness">Shkëlqimi i personalizuar</string>
     <string name="pref_grayscale">Shkallëgri</string>
     <string name="pref_inverted_colors">I përmbysur</string>
@@ -405,7 +403,7 @@
     <string name="unknown_status">Status i panjohur</string>
     <string name="licensed">I licencuar</string>
     <string name="manga_removed_library">U hoq nga biblioteka</string>
-    <string name="delete_downloads_for_manga">Të fshihen kapitujt e shkarkuar\?</string>
+    <string name="delete_downloads_for_manga">Të fshihen kapitujt e shkarkuar?</string>
     <string name="clipboard_copy_error">Kopjimi në kujtesën e fragmenteve dështoi</string>
     <string name="source_not_installed">Burimi nuk është i instaluar: %1$s</string>
     <string name="sort_by_upload_date">Sipas datës së ngarkimit</string>
@@ -475,12 +473,12 @@
     <string name="chapter_progress">Faqe: %1$d</string>
     <string name="no_next_chapter">Kapitulli tjetër nuk u gjet</string>
     <string name="decode_image_error">Imazhi nuk mund të ngarkohej</string>
-    <string name="confirm_set_image_as_cover">Të përdoret ky imazh si kopertinë\?</string>
+    <string name="confirm_set_image_as_cover">Të përdoret ky imazh si kopertinë?</string>
     <string name="transition_finished">Përfunduar:</string>
     <string name="transition_current">Aktuale:</string>
     <string name="transition_previous">E mëparshme:</string>
     <string name="cant_open_last_read_chapter">I paafte për të hapur kapitullin e lexuar së fundi</string>
-    <string name="clear_history_confirmation">A je i sigurt\? E gjithë historia do të humbasë.</string>
+    <string name="clear_history_confirmation">A je i sigurt? E gjithë historia do të humbasë.</string>
     <string name="empty_screen">Epo, kjo është e sikletshme</string>
     <string name="not_installed">Nuk është instaluar</string>
     <string name="copy">Kopjo</string>
@@ -496,7 +494,7 @@
     <string name="backup_restore_missing_sources">Burimet që mungojnë:</string>
     <string name="restore_completed">Rivendosja përfundoi</string>
     <string name="backup_in_progress">Rezervimi është tashmë në proces</string>
-    <string name="backup_choice">Çfarë dëshironi të bëni rezervë\?</string>
+    <string name="backup_choice">Çfarë dëshironi të bëni rezervë?</string>
     <string name="creating_backup">Duke krijuar rezervë</string>
     <string name="creating_backup_error">Rezervimi dështoi</string>
     <string name="missing_storage_permission">Lejet e ruajtjes nuk janë dhënë</string>
@@ -538,7 +536,7 @@
     <string name="pref_incognito_mode">Modaliteti i fshehtë</string>
     <string name="pref_incognito_mode_summary">Ndalon leximin e historisë</string>
     <string name="downloaded_only_summary">Filtro të gjitha elementet në bibliotekën tuaj</string>
-    <string name="logout_title">Dil nga %1$s\?</string>
+    <string name="logout_title">Dil nga %1$s?</string>
     <string name="logout_success">Tani keni dalë nga llogaria</string>
     <string name="unknown_error">Gabim i panjohur</string>
     <string name="updating_category">Kategoria po përditësohet</string>
@@ -558,7 +556,7 @@
     <string name="in_library">Në bibliotekë</string>
     <string name="copied_to_clipboard">Kopjuar në kujtesën e fragmenteve:
 \n %1$s</string>
-    <string name="snack_add_to_library">Të shtohet në bibliotekë\?</string>
+    <string name="snack_add_to_library">Të shtohet në bibliotekë?</string>
     <string name="display_mode_chapter">Kapitulli %1$s</string>
     <string name="chapter_downloading_progress">Po shkarkohet (%1$d/%2$d)</string>
     <string name="chapter_error">Gabim</string>
@@ -571,11 +569,11 @@
     <string name="manga_cover">Kopertina</string>
     <string name="cover_saved">Kopertina u ruajt</string>
     <string name="error_sharing_cover">Gabim në ndarjen e kopertinës</string>
-    <string name="confirm_delete_chapters">Jeni i sigurt që dëshironi të fshini kapitujt e zgjedhur\?</string>
+    <string name="confirm_delete_chapters">Jeni i sigurt që dëshironi të fshini kapitujt e zgjedhur?</string>
     <string name="also_set_chapter_settings_for_library">Aplikoni gjithashtu për të gjitha elementet në bibliotekën time</string>
     <string name="set_chapter_settings_as_default">Vendose si parësore</string>
     <string name="no_chapters_error">Nuk u gjet asnjë kapitull</string>
-    <string name="are_you_sure">A je i sigurt\?</string>
+    <string name="are_you_sure">A je i sigurt?</string>
     <string name="reading">Leximi</string>
     <string name="completed">E përfunduar</string>
     <string name="on_hold">Ne pritje</string>
@@ -645,8 +643,8 @@
     <string name="remove_from_library">Hiqe nga biblioteka</string>
     <string name="error_saving_cover">Gabim gjatë ruajtjes së kopertinës</string>
     <string name="notification_first_add_to_library">Ju lutemi shtoni hyrjen në bibliotekën tuaj përpara se ta bëni këtë</string>
-    <string name="confirm_set_chapter_settings">Jeni i sigurt që dëshironi t\'i ruani këto cilësime si parazgjedhje\?</string>
-    <string name="dialog_with_checkbox_remove_description">Kjo do të heqë datën e leximit të këtij kapitulli. A je i sigurt\?</string>
+    <string name="confirm_set_chapter_settings">Jeni i sigurt që dëshironi t\'i ruani këto cilësime si parazgjedhje?</string>
+    <string name="dialog_with_checkbox_remove_description">Kjo do të heqë datën e leximit të këtij kapitulli. A je i sigurt?</string>
     <string name="track_remove_start_date_conf_text">Kjo do të heqë datën e fillimit të zgjedhur më parë nga %s</string>
     <string name="update_check_eol">Ky version Android nuk mbështetet më</string>
     <string name="website">Faqja e internetit</string>
@@ -689,7 +687,7 @@
     <string name="action_copy_to_clipboard">Kopjo në kujtesën e fragmenteve</string>
     <string name="confirm_add_duplicate_manga">Ju keni një hyrje në librarni me të njëjtin emër.
 \n
-\nDëshironi të vazhdoni\?</string>
+\nDëshironi të vazhdoni?</string>
     <string name="action_update_category">Përditëso kategorinë</string>
     <string name="track_error">%1$s gabim: %2$s</string>
     <string name="information_required_plain">*kërkohet</string>

@@ -239,8 +239,6 @@
     <string name="off">Выключаны</string>
     <string name="on">Уключаны</string>
     <string name="pref_crop_borders">Абрэзаць поля</string>
-    <string name="pref_true_color_summary">Памяншае акантоўку, але ўплывае на прадукцыйнасць</string>
-    <string name="pref_true_color">32-разрадны колер</string>
     <string name="pref_show_reading_mode_summary">Ненадоўга адлюстраваць бягучы рэжым пры адкрыцці чыталкі</string>
     <string name="pref_show_reading_mode">Паказаць рэжым чытання</string>
     <string name="pref_show_page_number">Паказаць нумар старонкі</string>
@@ -311,7 +309,7 @@
     <string name="pref_rotation_type">Тып арыентацыі па змаўчанні</string>
     <string name="label_warning">папярэджанне</string>
     <string name="delete_category">Выдаліць катэгорыю</string>
-    <string name="delete_category_confirmation">Вы хочаце выдаліць катэгорыю \"%s\"\?</string>
+    <string name="delete_category_confirmation">Вы хочаце выдаліць катэгорыю \"%s\"?</string>
     <string name="internal_error">InternalError: Праверце журнал збояў для атрымання дадатковай інфармацыі</string>
     <string name="ext_update_all">Абнавіць усё</string>
     <string name="ext_info_age_rating">Узроставае абмежаванне</string>

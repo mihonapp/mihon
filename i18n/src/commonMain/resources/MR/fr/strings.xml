@@ -152,9 +152,9 @@
     <string name="status">Statut</string>
     <string name="chapters">Chapitres</string>
     <string name="error_category_exists">Une catégorie avec ce nom existe déjà !</string>
-    <string name="dialog_with_checkbox_remove_description">Ceci enlèvera la date de lecture de ce chapitre. Êtes-vous sûr(e) \?</string>
+    <string name="dialog_with_checkbox_remove_description">Ceci enlèvera la date de lecture de ce chapitre. Êtes-vous sûr(e) ?</string>
     <string name="dialog_with_checkbox_reset">Réinitialiser tous les chapitres de ce titre</string>
-    <string name="snack_add_to_library">Ajouter à la bibliothèque \?</string>
+    <string name="snack_add_to_library">Ajouter à la bibliothèque ?</string>
     <string name="picture_saved">Image sauvegardée</string>
     <string name="custom_filter">Filtre personnalisé</string>
     <string name="set_as_cover">Ajouter comme couverture</string>
@@ -184,7 +184,7 @@
     <string name="download_notifier_text_only_wifi">Aucune connexion disponible</string>
     <string name="download_notifier_no_network">Aucune connexion disponible</string>
     <string name="clear_database_confirmation">Êtes-vous sûr(e) ? Les chapitres lus et la progression des entrées hors dans la bibliothèque seront perdues</string>
-    <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés \?</string>
+    <string name="confirm_delete_chapters">Supprimer les chapitres sélectionnés ?</string>
     <string name="download_notifier_unknown_error">Impossible de télécharger le chapitre en raison d\'une erreur inattendue</string>
     <string name="fifth_to_last">Cinquième chapitre avant le dernier lu</string>
     <string name="login_success">Connecté</string>
@@ -207,7 +207,7 @@
     <string name="action_open_log">Ouvrir le fichier</string>
     <string name="action_restore">Restaurer</string>
     <string name="restore_completed">Restauration terminée</string>
-    <string name="backup_choice">Que voulez-vous sauvegarder \?</string>
+    <string name="backup_choice">Que voulez-vous sauvegarder ?</string>
     <string name="delete_downloads_for_manga">Supprimer les chapitres téléchargés ?</string>
     <string name="track">Suivi</string>
     <string name="action_sort_total">Total de chapitres</string>
@@ -272,7 +272,6 @@
     <string name="copy">Copier</string>
     <string name="pref_read_with_long_tap">Afficher les actions en appuyant longuement</string>
     <string name="action_open_in_web_view">Ouvrir dans WebView</string>
-    <string name="pref_true_color">Couleurs à 32 bits</string>
     <string name="pref_skip_read_chapters">Passer les chapitres marqués comme lus</string>
     <string name="filter_mode_multiply">Produit</string>
     <string name="filter_mode_screen">Écran</string>
@@ -291,7 +290,7 @@
     <string name="action_webview_forward">Suivant</string>
     <string name="action_webview_refresh">Actualiser</string>
     <string name="ext_obsolete">Obsolète</string>
-    <string name="logout_title">Se déconnecter de %1$s \?</string>
+    <string name="logout_title">Se déconnecter de %1$s ?</string>
     <string name="logout">Se déconnecter</string>
     <string name="logout_success">Vous êtes maintenant déconnecté(e)</string>
     <string name="paused">En pause</string>
@@ -363,7 +362,6 @@
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>
     <string name="gray_background">Gris</string>
     <string name="pref_category_for_this_series">Pour cette série</string>
-    <string name="pref_true_color_summary">Réduit les bandes de couleur, mais peut impacter les performances</string>
     <string name="viewer">Mode de lecture</string>
     <string name="battery_optimization_setting_activity_not_found">Impossible d\'ouvrir les paramètres de l\'appareil</string>
     <string name="pref_refresh_library_covers">Actualiser les couvertures de la bibliothèque</string>
@@ -414,7 +412,7 @@
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Ceci n\'empêche pas les extensions de diffuser du contenu +18 dans l\'application.</string>
     <string name="no_chapters_error">Aucun chapitre trouvé</string>
-    <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut \?</string>
+    <string name="confirm_set_chapter_settings">Appliquer ce paramétrage par défaut ?</string>
     <string name="chapter_settings">Paramètres du chapitre</string>
     <string name="also_set_chapter_settings_for_library">S\'applique également à toutes les entrées de ma bibliothèque</string>
     <string name="set_chapter_settings_as_default">Appliquer par défaut</string>
@@ -423,7 +421,7 @@
     <string name="manga_from_library">De la bibliothèque</string>
     <string name="action_search_settings">Rechercher les paramètres</string>
     <string name="pref_incognito_mode_summary">Suspend l\'historique de lecture</string>
-    <string name="clear_history_confirmation">Êtes-vous sûr(e) \? Tout l\'historique sera effacé.</string>
+    <string name="clear_history_confirmation">Êtes-vous sûr(e) ? Tout l\'historique sera effacé.</string>
     <string name="pref_incognito_mode">Mode navigation privée</string>
     <string name="pref_clear_history">Effacer l\'historique</string>
     <string name="clear_history_completed">Historique supprimé</string>
@@ -607,7 +605,7 @@
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
-    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » \?</string>
+    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » ?</string>
     <string name="internal_error">ErreurInterne : Consultez vos rapports de plantage pour plus d\'informations</string>
     <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
     <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead">Téléchargement anticipé</string>
     <string name="auto_download_while_reading">Téléchargement anticipé pendant la lecture</string>
     <string name="download_ahead_info">Fonctionne seulement si le chapitre actuel et le suivant sont déjà téléchargés.</string>
-    <string name="are_you_sure">Êtes-vous sûr(e) \?</string>
+    <string name="are_you_sure">Êtes-vous sûr(e) ?</string>
     <string name="popular">Populaire</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Dernière mise à jour de la bibliothèque le : %s</string>
@@ -652,7 +650,7 @@
     <string name="download_notifier_cache_renewal">Vérification des téléchargements</string>
     <string name="action_display_show_continue_reading_button">Bouton \"Reprendre\"</string>
     <string name="track_remove_start_date_conf_text">Ceci supprimera la date de début que vous avez précédemment sélectionnée dans la base de données de %s</string>
-    <string name="track_remove_date_conf_title">Retirer la date \?</string>
+    <string name="track_remove_date_conf_title">Retirer la date ?</string>
     <string name="track_remove_finish_date_conf_text">Ceci supprimera la date de fin que vous aviez précédemment sélectionnée dans la base de données de %s</string>
     <string name="pref_invalidate_download_cache">Invalider l\'index des téléchargements</string>
     <string name="pref_invalidate_download_cache_summary">Forcer l\'application à revérifier les chapitres téléchargés</string>
@@ -683,7 +681,7 @@
     <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
     <string name="confirm_add_duplicate_manga">Un titre de votre bibliothèque porte le même nom.
 \n
-\nVoulez-vous vraiment continuer \?</string>
+\nVoulez-vous vraiment continuer ?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>

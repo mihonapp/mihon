@@ -184,8 +184,6 @@
     <string name="pref_custom_color_filter">ಕಸ್ಟಮ್ ಬಣ್ಣಗಳ ಫಿಲ್ಟರ್</string>
     <string name="pref_custom_brightness">ಕಸ್ಟಮ್ ಬೆಳಕು</string>
     <string name="pref_crop_borders">ಗಡಿಗಳನ್ನು ಕತ್ತರಿಸಿ</string>
-    <string name="pref_true_color_summary">ಬ್ಯಾಂಡಿಂಗ್ ಅನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತದೆ, ಆದರೆ ಕಾರ್ಯಕ್ಷಮತೆಯ ಮೇಲೆ ಪರಿಣಾಮ ಬೀರುತ್ತದೆ</string>
-    <string name="pref_true_color">32-ಬಿಟ್ ಬಣ್ಣ</string>
     <string name="pref_show_page_number">ಪುಟ ಸಂಖ್ಯೆಯನ್ನು ತೋರಿಸಿ</string>
     <string name="pref_double_tap_anim_speed">ಡಬಲ್ ಟ್ಯಾಪ್ ಅನಿಮೇಷನ್ ವೇಗ</string>
     <string name="pref_page_transitions">ಪುಟ ಪರಿವರ್ತನೆಗಳನ್ನು ಅನಿಮೇಟ್ ಮಾಡಿ</string>
@@ -266,7 +264,7 @@
     <string name="transition_finished">ಮುಗಿದಿದೆ:</string>
     <string name="viewer">ಓದುವಿಕೆ ರೀತಿ</string>
     <string name="pref_category_for_this_series">ಈ ಸರಣಿಗಾಗಿ</string>
-    <string name="confirm_set_image_as_cover">ಈ ಚಿತ್ರವನ್ನು ಕವರ್ ಆರ್ಟ್ ಆಗಿ ಬಳಸುವುದೇ\?</string>
+    <string name="confirm_set_image_as_cover">ಈ ಚಿತ್ರವನ್ನು ಕವರ್ ಆರ್ಟ್ ಆಗಿ ಬಳಸುವುದೇ?</string>
     <string name="decode_image_error">ಈ ಚಿತ್ರವನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ</string>
     <string name="no_next_chapter">ಮುಂದಿನ ಅಧ್ಯಾಯ ಕಂಡುಬಂದಿಲ್ಲ</string>
     <string name="chapter_progress">ಪುಟ: %1$d</string>
@@ -275,7 +273,7 @@
     <string name="custom_filter">ಕಸ್ಟಮ್ ಫಿಲ್ಟರ್</string>
     <string name="picture_saved">ಚಿತ್ರ ಉಳಿಸಲಾಗಿದೆ</string>
     <string name="dialog_with_checkbox_reset">ಈ ಮಾಂಗಾದ ಎಲ್ಲಾ ಅಧ್ಯಾಯಗಳನ್ನು ಮರುಹೊಂದಿಸಿ</string>
-    <string name="dialog_with_checkbox_remove_description">ಇದು ಈ ಅಧ್ಯಾಯದ ಓದುವ ದಿನಾಂಕವನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ. ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ\?</string>
+    <string name="dialog_with_checkbox_remove_description">ಇದು ಈ ಅಧ್ಯಾಯದ ಓದುವ ದಿನಾಂಕವನ್ನು ತೆಗೆದುಹಾಕುತ್ತದೆ. ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ?</string>
     <string name="snack_categories_deleted">ವರ್ಗಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="error_category_exists">ಈ ಹೆಸರಿನ ವರ್ಗವು ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!</string>
     <string name="track_type">ಮಾದರಿ</string>
@@ -292,7 +290,7 @@
     <string name="reading">ಓದುತ್ತಿರುವ</string>
     <string name="add_tracking">ಟ್ರ್ಯಾಕಿಂಗ್ ಸೇರಿಸಿ</string>
     <string name="manga_tracking_tab">ಟ್ರ್ಯಾಕಿಂಗ್</string>
-    <string name="confirm_delete_chapters">ಆಯ್ದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ\?</string>
+    <string name="confirm_delete_chapters">ಆಯ್ದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
     <string name="download_unread">ಓದದ</string>
     <string name="manga_download">ಡೌನ್‌ಲೋಡ್</string>
     <string name="sort_by_number">ಅಧ್ಯಾಯದ ಸಂಖ್ಯೆಯ ಪ್ರಕಾರ</string>
@@ -303,11 +301,11 @@
     <string name="chapter_error">ದೋಷ</string>
     <string name="chapter_downloading_progress">ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ (%1$d/%2$d)</string>
     <string name="display_mode_chapter">ಅಧ್ಯಾಯ %1$s</string>
-    <string name="snack_add_to_library">ಮಾಂಗಾವನ್ನು ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸುವುದೇ\?</string>
+    <string name="snack_add_to_library">ಮಾಂಗಾವನ್ನು ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸುವುದೇ?</string>
     <string name="source_not_installed">ಮೂಲವನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ: %1$s</string>
     <string name="copied_to_clipboard">ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸುವುದೇ\?</string>
+    <string name="delete_downloads_for_manga">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿದ ಅಧ್ಯಾಯಗಳನ್ನು ಅಳಿಸುವುದೇ?</string>
     <string name="manga_info_collapse">ಕಡಿಮೆ</string>
     <string name="manga_info_expand">ಹೆಚ್ಚು</string>
     <string name="manga_removed_library">ಗ್ರಂಥಾಲಯದಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ</string>
@@ -332,7 +330,7 @@
     <string name="unknown_error">ಅಜ್ಞಾತ ದೋಷ</string>
     <string name="logout_success">ನೀವು ಈಗ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ</string>
     <string name="logout">ಲಾಗ್ ಔಟ್</string>
-    <string name="logout_title">%1$s ನಿಂದ ಲಾಗ್ ಔಟ್ ಆಗುವುದೇ\?</string>
+    <string name="logout_title">%1$s ನಿಂದ ಲಾಗ್ ಔಟ್ ಆಗುವುದೇ?</string>
     <string name="login_success">ಲಾಗ್ ಇನ್ ಮಾಡಲಾಗಿದೆ</string>
     <string name="login">ಲಾಗಿನ್</string>
     <string name="password">ಪಾಸ್ ವರ್ಡ್</string>
@@ -353,7 +351,7 @@
     <string name="pref_disable_battery_optimization">ಬ್ಯಾಟರಿ ಆಪ್ಟಿಮೈಸೇಶನ್ ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿ</string>
     <string name="pref_refresh_library_covers">ಗ್ರಂಥಾಲಯದ ಮಾಂಗಾ ಕವರ್‌ಗಳನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ</string>
     <string name="clear_database_completed">ನಮೂದುಗಳನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
-    <string name="clear_database_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ\? ಅಧ್ಯಾಯಗಳು ಗ್ರಂಥಾಲಯೇತರ ಮಾಂಗಾದ ಓದು ಮತ್ತು ಪ್ರಗತಿ ಕಳೆದುಹೋಗುತ್ತದೆ</string>
+    <string name="clear_database_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ? ಅಧ್ಯಾಯಗಳು ಗ್ರಂಥಾಲಯೇತರ ಮಾಂಗಾದ ಓದು ಮತ್ತು ಪ್ರಗತಿ ಕಳೆದುಹೋಗುತ್ತದೆ</string>
     <string name="pref_clear_database_summary">ನಿಮ್ಮ ಗ್ರಂಥಾಲಯದಲ್ಲಿ ಇಲ್ಲದ ಮಾಂಗಾದ ಇತಿಹಾಸವನ್ನು ಅಳಿಸಿ</string>
     <string name="pref_clear_database">ಡೇಟಾಬೇಸ್ ತೆರವುಗೊಳಿಸಿ</string>
     <string name="cookies_cleared">ಕುಕೀಗಳನ್ನು ತೆರವುಗೊಳಿಸಲಾಗಿದೆ</string>
@@ -368,7 +366,7 @@
     <string name="restore_in_progress">ಮರುಸ್ಥಾಪನೆ ಈಗಾಗಲೇ ಪ್ರಗತಿಯಲ್ಲಿದೆ</string>
     <string name="creating_backup_error">ಬ್ಯಾಕಪ್ ವಿಫಲವಾಗಿದೆ</string>
     <string name="creating_backup">ಬ್ಯಾಕಪ್ ರಚಿಸಲಾಗುತ್ತಿದೆ</string>
-    <string name="backup_choice">ನೀವು ಏನು ಬ್ಯಾಕಪ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಿ\?</string>
+    <string name="backup_choice">ನೀವು ಏನು ಬ್ಯಾಕಪ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಿ?</string>
     <string name="backup_in_progress">ಬ್ಯಾಕಪ್ ಈಗಾಗಲೇ ಪ್ರಗತಿಯಲ್ಲಿದೆ</string>
     <string name="sort_by_upload_date">ಅಪ್‌ಲೋಡ್ ದಿನಾಂಕದ ಮೂಲಕ</string>
     <string name="label_data">ಡೇಟಾ</string>
@@ -415,7 +413,7 @@
     <string name="no_chapters_error">ಯಾವುದೇ ಅಧ್ಯಾಯಗಳು ಕಂಡುಬಂದಿಲ್ಲ</string>
     <string name="set_chapter_settings_as_default">ಡೀಫಾಲ್ಟ್ ಆಗಿ ಹೊಂದಿಸಿ</string>
     <string name="also_set_chapter_settings_for_library">ನನ್ನ ಗ್ರಂಥಾಲಯದಲ್ಲಿರುವ ಎಲ್ಲಾ ಮಾಂಗಾಗಳಿಗೂ ಅನ್ವಯಿಸಿ</string>
-    <string name="confirm_set_chapter_settings">ಈ ಸೆಟ್ಟಿಂಗ್ ಗಳನ್ನು ಡೀಫಾಲ್ಟ್ ರೂಪದಲ್ಲಿ ಉಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ\?</string>
+    <string name="confirm_set_chapter_settings">ಈ ಸೆಟ್ಟಿಂಗ್ ಗಳನ್ನು ಡೀಫಾಲ್ಟ್ ರೂಪದಲ್ಲಿ ಉಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
     <string name="chapter_settings">ಅಧ್ಯಾಯದ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
     <string name="downloaded_chapters">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿದ ಅಧ್ಯಾಯಗಳು</string>
     <string name="manga_from_library">ಗ್ರಂಥಾಲಯದಿಂದ ಮಾಂಗಾ</string>
@@ -433,7 +431,7 @@
     <string name="pref_incognito_mode_summary">ಓದುವ ಇತಿಹಾಸವನ್ನು ವಿರಾಮಗೊಳಿಸುತ್ತದೆ</string>
     <string name="pref_incognito_mode">ಅಜ್ಞಾತ ಮೋಡ್</string>
     <string name="pref_clear_history">ಇತಿಹಾಸವನ್ನು ತೆರವುಗೊಳಿಸಿ</string>
-    <string name="clear_history_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ\? ಎಲ್ಲಾ ಇತಿಹಾಸವೂ ಕಳೆದುಹೋಗುತ್ತದೆ.</string>
+    <string name="clear_history_confirmation">ನೀವು ಖಚಿತವಾಗಿರುವಿರಾ? ಎಲ್ಲಾ ಇತಿಹಾಸವೂ ಕಳೆದುಹೋಗುತ್ತದೆ.</string>
     <string name="clear_history_completed">ಇತಿಹಾಸವನ್ನು ಅಳಿಸಲಾಗಿದೆ</string>
     <string name="pref_show_nsfw_source">ಮೂಲಗಳ ಪಟ್ಟಿಯಲ್ಲಿ ತೋರಿಸಿ</string>
     <string name="pref_category_nsfw_content">ವಯಸ್ಕ (18+) ಮೂಲಗಳು</string>

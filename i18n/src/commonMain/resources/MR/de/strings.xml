@@ -55,7 +55,7 @@
     <string name="action_undo">Rückgängig machen</string>
     <string name="action_open_log">Protokoll öffnen</string>
     <string name="action_restore">Wiederherstellen</string>
-    <string name="loading">Wird geladen …</string>
+    <string name="loading">Wird geladen…</string>
     <string name="app_not_available">App nicht verfügbar</string>
     <string name="pref_category_general">Allgemein</string>
     <string name="pref_category_reader">Leser</string>
@@ -135,7 +135,7 @@
     <string name="pref_backup_interval">Automatische Sicherungshäufigkeit</string>
     <string name="backup_created">Datensicherung erstellt</string>
     <string name="restore_completed">Wiederherstellen abgeschlossen</string>
-    <string name="backup_choice">Was möchtest du sichern\?</string>
+    <string name="backup_choice">Was möchtest du sichern?</string>
     <string name="restoring_backup">Datensicherung wird wiederhergestellt</string>
     <string name="creating_backup">Datensicherung wird erstellt</string>
     <string name="pref_clear_chapter_cache">Kapitel-Zwischenspeicher leeren</string>
@@ -146,7 +146,7 @@
     <string name="cookies_cleared">Cookies gelöscht</string>
     <string name="pref_clear_database">Datenbank leeren</string>
     <string name="pref_clear_database_summary">Verlauf für Einträge löschen, die nicht in deiner Bibliothek gespeichert sind</string>
-    <string name="clear_database_confirmation">Bist du dir sicher\? Die gelesenen Kapitel und Fortschritte von Einträgen, die nicht in deiner Bibliothek sind, werden gelöscht</string>
+    <string name="clear_database_confirmation">Bist du dir sicher? Die gelesenen Kapitel und Fortschritte von Einträgen, die nicht in deiner Bibliothek sind, werden gelöscht</string>
     <string name="clear_database_completed">Einträge gelöscht</string>
     <string name="version">Version</string>
     <string name="pref_enable_acra">Fehlerberichte senden</string>
@@ -175,7 +175,7 @@
     <string name="sort_by_number">Kapitelnummer</string>
     <string name="manga_download">Herunterladen</string>
     <string name="download_unread">Ungelesen</string>
-    <string name="confirm_delete_chapters">Bist du sicher, dass du die ausgewählten Kapitel löschen willst\?</string>
+    <string name="confirm_delete_chapters">Bist du sicher, dass du die ausgewählten Kapitel löschen willst?</string>
     <string name="manga_tracking_tab">Tracking</string>
     <string name="reading">Am Lesen</string>
     <string name="completed">Abgeschlossen</string>
@@ -187,9 +187,9 @@
     <string name="status">Status</string>
     <string name="error_category_exists">Eine Kategorie mit diesem Namen existiert bereits!</string>
     <string name="snack_categories_deleted">Kategorien gelöscht</string>
-    <string name="dialog_with_checkbox_remove_description">Das Lesedatum dieses Kapitels wird gelöscht. Bist du sicher\?</string>
+    <string name="dialog_with_checkbox_remove_description">Das Lesedatum dieses Kapitels wird gelöscht. Bist du sicher?</string>
     <string name="dialog_with_checkbox_reset">Alle Kapitel dieses Eintrags zurücksetzen</string>
-    <string name="snack_add_to_library">Zur Bibliothek hinzufügen\?</string>
+    <string name="snack_add_to_library">Zur Bibliothek hinzufügen?</string>
     <string name="picture_saved">Bild gespeichert</string>
     <string name="custom_filter">Eigener Filter</string>
     <string name="set_as_cover">Als Vorschaubild festlegen</string>
@@ -197,7 +197,7 @@
     <string name="chapter_progress">Seite: %1$d</string>
     <string name="no_next_chapter">Nächstes Kapitel nicht gefunden</string>
     <string name="decode_image_error">Das Bild konnte nicht geladen werden</string>
-    <string name="confirm_set_image_as_cover">Dieses Bild als Vorschaubild setzen\?</string>
+    <string name="confirm_set_image_as_cover">Dieses Bild als Vorschaubild setzen?</string>
     <string name="download_queue_error">Fehler beim Herunterladen der Kapitel. Du kannst es in der Downloadsektion erneut versuchen</string>
     <string name="notification_new_chapters">Neue Kapitel gefunden</string>
     <string name="notification_cover_update_failed">Ändern des Vorschaubildes fehlgeschlagen</string>
@@ -271,7 +271,6 @@
     <string name="transition_pages_loading">Lade Seiten…</string>
     <string name="transition_pages_error">Seiten konnten nicht geladen werden: %1$s</string>
     <string name="action_open_in_web_view">In WebView öffnen</string>
-    <string name="pref_true_color">32-Bit-Farben</string>
     <string name="pref_skip_read_chapters">Gelesene Kapitel überspringen</string>
     <string name="pref_read_with_long_tap">Aktionen bei langem Antippen anzeigen</string>
     <string name="filter_mode_overlay">Overlay</string>
@@ -291,7 +290,7 @@
     <string name="obsolete_extension_message">Diese Erweiterung ist nicht länger verfügbar. Sie funktioniert möglicherweise nicht mehr ordnungsgemäß und kann Probleme mit der App verursachen. Es ist empfohlen, sie zu deinstallieren.</string>
     <string name="pref_date_format">Datumsformat</string>
     <string name="pref_category_library_update">Globale Aktualisierung</string>
-    <string name="logout_title">Aus %1$s abmelden\?</string>
+    <string name="logout_title">Aus %1$s abmelden?</string>
     <string name="logout">Abmelden</string>
     <string name="logout_success">Du bist jetzt abgemeldet</string>
     <string name="paused">Pausiert</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
     <string name="pref_category_for_this_series">Für diese Serie</string>
-    <string name="pref_true_color_summary">Reduziert Streifenbildung, könnte aber die Leistung beeinflussen</string>
     <string name="battery_optimization_setting_activity_not_found">Geräteeinstellungen konnten nicht geöffnet werden</string>
     <string name="tracking_info">Einweg-Synchronisation zum Aktualisieren der Kapitelfortschritte in den externen Trackingdiensten. Richte Tracking für einzelne Einträge über deren jeweiligen Trackingbutton ein.</string>
     <string name="pref_refresh_library_covers">Bibliothekscover aktualisieren</string>
@@ -417,7 +415,7 @@
     <string name="chapter_settings_updated">Standard-Kapiteleinstellungen aktualisiert</string>
     <string name="set_chapter_settings_as_default">Als Standard setzen</string>
     <string name="also_set_chapter_settings_for_library">Auch für alle Einträge in meiner Bibliothek anwenden</string>
-    <string name="confirm_set_chapter_settings">Bist du sicher, dass du diese Einstellungen als Standard speichern willst\?</string>
+    <string name="confirm_set_chapter_settings">Bist du sicher, dass du diese Einstellungen als Standard speichern willst?</string>
     <string name="chapter_settings">Kapiteleinstellungen</string>
     <string name="share_page_info">%1$s: %2$s, Seite %3$d</string>
     <string name="action_search_settings">Einstellungen durchsuchen</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Leseverlauf pausieren</string>
     <string name="pref_incognito_mode">Inkognito-Modus</string>
     <string name="pref_clear_history">Verlauf löschen</string>
-    <string name="clear_history_confirmation">Bist du sicher\? Der gesamte Verlauf wird gelöscht.</string>
+    <string name="clear_history_confirmation">Bist du sicher? Der gesamte Verlauf wird gelöscht.</string>
     <string name="clear_history_completed">Verlauf gelöscht</string>
     <string name="spen_next_page">Nächste Seite</string>
     <string name="spen_previous_page">Vorherige Seite</string>
@@ -606,7 +604,7 @@
     <string name="pref_app_language">App-Sprache</string>
     <string name="theme_lavender">Lavendel</string>
     <string name="description_placeholder">Keine Beschreibung</string>
-    <string name="delete_category_confirmation">Möchtest du die Kategorie „%s“ löschen\?</string>
+    <string name="delete_category_confirmation">Möchtest du die Kategorie „%s“ löschen?</string>
     <string name="delete_category">Kategorie löschen</string>
     <string name="internal_error">InternalError: Überprüfe die Absturzprotokolle für mehr Infos</string>
     <string name="pref_user_agent_string">Standard-User-Agent-Text</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead">Im Voraus herunterladen</string>
     <string name="auto_download_while_reading">Automatisch während des Lesens herunterladen</string>
     <string name="download_ahead_info">Funktioniert nur, wenn das aktuelle Kapitel sowie das darauf folgende bereits heruntergeladen sind.</string>
-    <string name="are_you_sure">Bist du dir sicher\?</string>
+    <string name="are_you_sure">Bist du dir sicher?</string>
     <string name="remove_manga">Du bist gerade dabei, „%s“ aus deiner Bibliothek zu entfernen</string>
     <string name="multi_lang">Mehrere Sprachen</string>
     <string name="updates_last_update_info">Bibliothek zuletzt aktualisiert: %s</string>
@@ -652,7 +650,7 @@
 \nTippe, um mehr zu erfahren.</string>
     <string name="action_display_show_continue_reading_button">Weiterlesen-Button</string>
     <string name="pref_invalidate_download_cache">Index der Downloads invalidieren</string>
-    <string name="track_remove_date_conf_title">Datum entfernen\?</string>
+    <string name="track_remove_date_conf_title">Datum entfernen?</string>
     <string name="track_remove_start_date_conf_text">Dies wird dein zuvor gewähltes Startdatum von %s entfernen</string>
     <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>
     <string name="pref_invalidate_download_cache_summary">App zwingen, heruntergeladene Kapitel erneut zu überprüfen</string>
@@ -684,7 +682,7 @@
     <string name="pref_skip_dupe_chapters">Doppelte Kapitel überspringen</string>
     <string name="confirm_add_duplicate_manga">In deiner Bibliothek gibt es einen Eintrag mit dem gleichen Namen.
 \n
-\nMöchtest du trotzdem fortfahren\?</string>
+\nMöchtest du trotzdem fortfahren?</string>
     <string name="track_error">%1$s-Fehler: %2$s</string>
     <string name="information_required_plain">*erforderlich</string>
     <string name="pref_hide_in_library_items">Einträge verbergen, die bereits in der Bibliothek sind</string>
@@ -711,7 +709,7 @@
     <string name="track_delete_text">Dies wird das lokale Tracking entfernen.</string>
     <string name="track_delete_remote_text">Auch aus %s entfernen</string>
     <string name="action_ok">OK</string>
-    <string name="track_delete_title">Tracking von %s entfernen\?</string>
+    <string name="track_delete_title">Tracking von %s entfernen?</string>
     <string name="delete_downloaded">Heruntergeladenes löschen</string>
     <string name="has_results">Hat Ergebnisse</string>
     <string name="syncing_library">Bibliothek wird synchronisiert</string>
@@ -732,7 +730,7 @@
     <string name="source_settings">Quelleneinstellungen</string>
     <string name="notification_updating_progress">Bibliothek wird aktualisiert… (%s)</string>
     <string name="action_sort_category">Kategorien sortieren</string>
-    <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren\?</string>
+    <string name="sort_category_confirmation">Möchtest du die Kategorien alphabetisch sortieren?</string>
     <string name="file_null_uri_error">Keine Datei ausgewählt</string>
     <string name="relative_time_span_never">Nie</string>
     <string name="pref_flash_page_summ">Reduziert Ghosting auf E-Papier-Displays</string>
@@ -759,7 +757,7 @@
     <string name="onboarding_action_finish">Loslegen</string>
     <string name="onboarding_storage_selection_required">Es muss ein Ordner ausgewählt sein</string>
     <string name="onboarding_heading">Willkommen!</string>
-    <string name="onboarding_guides_returning_user">%s reinstallieren?</string>
+    <string name="onboarding_guides_returning_user">%s reinstalliert?</string>
     <string name="onboarding_action_skip">Überspringen</string>
     <string name="onboarding_action_next">Weiter</string>
     <string name="onboarding_description">Lass uns zuerst ein paar Dinge einrichten. Du kannst diese später in den Einstellungen jederzeit ändern.</string>
@@ -799,4 +797,16 @@
     <string name="manga_interval_expected_update_soon">Bald</string>
     <string name="ext_revoke_trust">Zertifikatsbestätigungen zurücknehmen</string>
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>
+    <string name="pref_display_profile">Benutzerdefiniertes Anzeigeprofil</string>
+    <string name="action_add_anyway">Trotzdem hinzufügen</string>
+    <string name="action_migrate_duplicate">Existierenden Eintrag migrieren</string>
+    <string name="action_replace_repo">Ersetzen</string>
+    <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
+    <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
+\nFalls das erwünscht ist, wird %2$s nun ersetzt. Falls nicht, kontaktiere den Repository-Maintainer.</string>
+    <string name="upcoming_calendar_next">Nächster Monat</string>
+    <string name="upcoming_calendar_prev">Vorheriger Monat</string>
+    <string name="label_upcoming">Bevorstehend</string>
+    <string name="action_view_upcoming">Bevorstehende Aktualisierungen ansehen</string>
+    <string name="upcoming_guide">Leitfaden für Bevorstehendes</string>
 </resources>

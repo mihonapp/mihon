@@ -169,8 +169,6 @@
     <string name="pref_custom_color_filter">Pinili kong filter ng kulay</string>
     <string name="pref_custom_brightness">Pinili kong liwanag</string>
     <string name="pref_crop_borders">Gupitin ang gilid</string>
-    <string name="pref_true_color_summary">Binabawasan ang banding, ngunit maaaring makaapekto ito sa performance</string>
-    <string name="pref_true_color">Totoong kulay (32-bit)</string>
     <string name="pref_show_reading_mode_summary">Mabilis na ipakita ang kasalukuyang ginagamit kapag nakabukas ang reader</string>
     <string name="pref_show_reading_mode">Ipakita ang paraan ng pagbasa</string>
     <string name="pref_show_page_number">Ipakita ang bilang ng pahina</string>
@@ -296,7 +294,7 @@
     <string name="custom_filter">Pinili kong filter</string>
     <string name="picture_saved">Na-save na ang larawan</string>
     <string name="dialog_with_checkbox_reset">I-reset ang lahat ng chapters sa entry na ito</string>
-    <string name="dialog_with_checkbox_remove_description">Tatanggalin nito ang petsa ng pagbasa sa kabanatang ito. Sigurado ka ba\?</string>
+    <string name="dialog_with_checkbox_remove_description">Tatanggalin nito ang petsa ng pagbasa sa kabanatang ito. Sigurado ka ba?</string>
     <string name="snack_categories_deleted">Binura na ang mga kategorya</string>
     <string name="error_category_exists">Mayroong kapangalan ang kategoryang ito!</string>
     <string name="track_type">Uri</string>
@@ -313,7 +311,7 @@
     <string name="reading">Pagbabasa</string>
     <string name="add_tracking">Magdagdag ng tracker</string>
     <string name="manga_tracking_tab">Pagta-track</string>
-    <string name="confirm_delete_chapters">Sigurado ka bang gusto mong burahin ang mga napiling kabanata\?</string>
+    <string name="confirm_delete_chapters">Sigurado ka bang gusto mong burahin ang mga napiling kabanata?</string>
     <string name="download_unread">Babasahin</string>
     <string name="manga_download">I-download</string>
     <string name="sort_by_upload_date">Base sa petsa ng pag-upload</string>
@@ -325,11 +323,11 @@
     <string name="chapter_error">Nagka-error</string>
     <string name="chapter_downloading_progress">Dina-download (%1$d/%2$d)</string>
     <string name="display_mode_chapter">Kabanata %1$s</string>
-    <string name="snack_add_to_library">Idagdag sa Aklatan\?</string>
+    <string name="snack_add_to_library">Idagdag sa Aklatan?</string>
     <string name="source_not_installed">Di naka-install ang source: %1$s</string>
     <string name="copied_to_clipboard">Kinopya sa clipboard:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">Burahin ang mga na-download na kabanata\?</string>
+    <string name="delete_downloads_for_manga">Burahin ang mga na-download na kabanata?</string>
     <string name="manga_info_expand">Palawakin</string>
     <string name="manga_info_collapse">Bawasan</string>
     <string name="manga_removed_library">Tinanggal sa Aklatan</string>
@@ -358,7 +356,7 @@
     <string name="unknown_error">Di matukoy na error</string>
     <string name="logout_success">Naka-logout ka na</string>
     <string name="logout">Mag-logout</string>
-    <string name="logout_title">Mag-logout sa %1$s\?</string>
+    <string name="logout_title">Mag-logout sa %1$s?</string>
     <string name="login_success">Naka-login ka na</string>
     <string name="login">Mag-login</string>
     <string name="password">Password</string>
@@ -400,7 +398,7 @@
     <string name="restoring_backup">Rine-restore ang backup</string>
     <string name="creating_backup_error">Bigong ma-backup</string>
     <string name="creating_backup">Bina-backup</string>
-    <string name="backup_choice">Anong iba-backup mo\?</string>
+    <string name="backup_choice">Anong iba-backup mo?</string>
     <string name="backup_in_progress">Bina-backup na</string>
     <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
     <string name="no_pinned_sources">Wala kang naka-pin na source</string>
@@ -414,7 +412,7 @@
     <string name="ext_nsfw_warning">Posibleng may NSFW (18+) content ang mga source mula sa extension na ito</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="no_chapters_error">Walang nakitang kabanata</string>
-    <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito\?</string>
+    <string name="confirm_set_chapter_settings">Gusto mo bang i-save at ipagpaubaya ang pagsasaayos na ito?</string>
     <string name="set_chapter_settings_as_default">Ipagpaubaya</string>
     <string name="chapter_settings_updated">Ini-update na ang Ipagpaubaya</string>
     <string name="share_page_info">%1$s: %2$s, pahina %3$d</string>
@@ -427,7 +425,7 @@
     <string name="pref_incognito_mode">Nakatago</string>
     <string name="pref_clear_history">Linisin ang nakaraan</string>
     <string name="clear_history_completed">Nalinis na ang nakaraan</string>
-    <string name="clear_history_confirmation">Sigurado ka ba talaga\? Mawawala ang buong nakaraan.</string>
+    <string name="clear_history_confirmation">Sigurado ka ba talaga? Mawawala ang buong nakaraan.</string>
     <string name="migration_help_guide">Gabay sa Paglipat ng source</string>
     <string name="spen_next_page">Abante</string>
     <string name="spen_previous_page">Balik</string>
@@ -608,7 +606,7 @@
     <string name="description_placeholder">Walang paglalarawan</string>
     <string name="delete_category">Burahin ang kategorya</string>
     <string name="internal_error">InternalError: Tingnan ang mga crash log para sa karagdagang impormasyon</string>
-    <string name="delete_category_confirmation">Gusto mo bang burahin ang kategoryang \"%s\"\?</string>
+    <string name="delete_category_confirmation">Gusto mo bang burahin ang kategoryang \"%s\"?</string>
     <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
     <string name="pref_user_agent_string">Default na string ng user agent</string>
     <string name="action_remove_everything">Burahin lahat</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead">I-download agad</string>
     <string name="auto_download_while_reading">Kusang mag-download habang nagbabasa</string>
     <string name="download_ahead_info">Gumagana lamang sa kasalukuyang kabanata + ang susunod ay na-download na.</string>
-    <string name="are_you_sure">Sigurado ka ba\?</string>
+    <string name="are_you_sure">Sigurado ka ba?</string>
     <string name="multi_lang">Marami</string>
     <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa aklatan mo</string>
     <string name="updates_last_update_info">Huling update sa aklatan: %s</string>
@@ -651,7 +649,7 @@
     <string name="fdroid_warning">Ang mga build mula sa F-Droid ay hindi opisyal na sinusuportahan.
 \nI-tap para matuto pa.</string>
     <string name="action_display_show_continue_reading_button">Magpatuloy na bumasa na button</string>
-    <string name="track_remove_date_conf_title">Tanggalin ang petsa\?</string>
+    <string name="track_remove_date_conf_title">Tanggalin ang petsa?</string>
     <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang lahat ng mga nauna mong napiling petsa ng kayarian magmula sa %s</string>
     <string name="pref_invalidate_download_cache">Ipawalang-bisa ang indise ng mga download</string>
@@ -681,7 +679,7 @@
     <string name="enhanced_services_not_installed">Mayroon ngunit hindi naka-install ang source: %s</string>
     <string name="confirm_add_duplicate_manga">Mayroon kang entry sa iyong aklatan na magkapareho ng pangalan.
 \n
-\nGusto mo pa bang magpatuloy\?</string>
+\nGusto mo pa bang magpatuloy?</string>
     <string name="track_error">%1$s Kamalian: %2$s</string>
     <string name="day_short">%dd</string>
     <string name="hour_short">%dh</string>
@@ -711,7 +709,7 @@
     <string name="has_results">May mga resulta</string>
     <string name="delete_downloaded">Burahin ang na-download</string>
     <string name="action_ok">OK</string>
-    <string name="track_delete_title">Tanggalin ang %s tracking\?</string>
+    <string name="track_delete_title">Tanggalin ang %s tracking?</string>
     <string name="track_delete_text">Tatanggalin nito ang lokal na pag-track.</string>
     <string name="track_delete_remote_text">Tanggalin din mula sa %s</string>
     <string name="syncing_library">Nagsi-sync ang aklatan</string>
@@ -730,7 +728,7 @@
     <string name="pref_relative_format_summary">\"%1$s\" sa halip na \"%2$s\"</string>
     <string name="action_sort_category">Mag-ayos ng kategorya</string>
     <string name="notification_updating_progress">Nag-a-update ang aklatan... (%s)</string>
-    <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto\?</string>
+    <string name="sort_category_confirmation">Gusto mo bang mag-ayos ng kategorya ayon sa alpabeto?</string>
     <string name="source_settings">Mga setting ng source</string>
     <string name="app_settings">Mga setting ng app</string>
     <string name="file_null_uri_error">Walang napiling file</string>
@@ -799,4 +797,16 @@
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
     <string name="action_open_repo">Open source na repo</string>
     <string name="pref_webtoon_disable_zoom_out">Patayin ang pag-zoom out</string>
+    <string name="action_replace_repo">Palitan</string>
+    <string name="action_add_anyway">Idagdag pa rin</string>
+    <string name="action_migrate_duplicate">Ilipat ang kasalukuyang entry</string>
+    <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
+    <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
+\nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
+    <string name="pref_display_profile">Ipasadya ang profile sa display</string>
+    <string name="label_upcoming">Paparating</string>
+    <string name="upcoming_guide">Gabay sa Paparating</string>
+    <string name="upcoming_calendar_next">Susunod na Buwan</string>
+    <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
+    <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
 </resources>

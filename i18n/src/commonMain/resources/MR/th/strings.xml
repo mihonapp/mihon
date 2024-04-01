@@ -161,7 +161,7 @@
     <string name="pref_backup_interval">ความถี่ในการสำรองข้อมูลอัตโนมัติ</string>
     <string name="backup_created">สร้างการสำรองข้อมูลแล้ว</string>
     <string name="restore_completed">คืนค่าเสร็จสมบูรณ์</string>
-    <string name="backup_choice">ต้องการสำรองข้อมูลใดบ้าง\?</string>
+    <string name="backup_choice">ต้องการสำรองข้อมูลใดบ้าง?</string>
     <string name="restoring_backup">กำลังคืนค่าการสำรองข้อมูล</string>
     <string name="creating_backup">กำลังสร้างการสำรองข้อมูล</string>
     <string name="pref_clear_chapter_cache">ล้างแคชตอน</string>
@@ -172,7 +172,7 @@
     <string name="cookies_cleared">ล้างคุกกี้แล้ว</string>
     <string name="pref_clear_database">ล้างฐานข้อมูล</string>
     <string name="pref_clear_database_summary">ลบประวัติรายการที่ไม่ได้บันทึกไว้ในคลัง</string>
-    <string name="clear_database_confirmation">แน่ใจไหม\? ข้อมูลการอ่านของรายการที่ไม่ได้อยู่ในคลังจะหายไป</string>
+    <string name="clear_database_confirmation">แน่ใจไหม? ข้อมูลการอ่านของรายการที่ไม่ได้อยู่ในคลังจะหายไป</string>
     <string name="clear_database_completed">ลบรายการแล้ว</string>
     <string name="version">เวอร์ชัน</string>
     <string name="pref_enable_acra">ส่งรายงานความผิดพลาด</string>
@@ -196,7 +196,7 @@
     <string name="remove_from_library">นำออกจากคลัง</string>
     <string name="manga_added_library">เพิ่มไปยังคลังแล้ว</string>
     <string name="manga_removed_library">นำออกจากคลังแล้ว</string>
-    <string name="delete_downloads_for_manga">ลบตอนที่ดาวน์โหลดแล้วหรือไม่\?</string>
+    <string name="delete_downloads_for_manga">ลบตอนที่ดาวน์โหลดแล้วหรือไม่?</string>
     <string name="copied_to_clipboard">คัดลอกไปยังคลิปบอร์ดแล้ว:
 \n%1$s</string>
     <string name="source_not_installed">ไม่ได้ติดตั้งแหลงที่มา: %1$s</string>
@@ -210,7 +210,7 @@
     <string name="sort_by_number">ตามหมายเลขตอน</string>
     <string name="manga_download">ดาวน์โหลด</string>
     <string name="download_unread">ที่ยังไม่ได้อ่าน</string>
-    <string name="confirm_delete_chapters">แน่ใจหรือไม่ว่าต้องการลบตอนที่เลือก\?</string>
+    <string name="confirm_delete_chapters">แน่ใจหรือไม่ว่าต้องการลบตอนที่เลือก?</string>
     <string name="manga_tracking_tab">การติดตาม</string>
     <string name="reading">กำลังอ่าน</string>
     <string name="completed">จบแล้ว</string>
@@ -221,7 +221,6 @@
     <string name="score">คะแนน</string>
     <string name="pref_read_with_long_tap">แสดงการกระทำเมื่อแตะค้าง</string>
     <string name="action_open_in_web_view">เปิดใน WebView</string>
-    <string name="pref_true_color">สี 32 บิต</string>
     <string name="pref_skip_read_chapters">ข้ามตอนที่ทำเครื่องหมายว่าอ่านแล้ว</string>
     <string name="pref_color_filter_mode">โหมดผสมตัวกรองสี</string>
     <string name="filter_mode_overlay">ซ้อนทับ</string>
@@ -234,9 +233,9 @@
     <string name="track_type">ประเภท</string>
     <string name="error_category_exists">หมวดหมู่ที่มีชื่อนี้มีอยู่แล้ว!</string>
     <string name="snack_categories_deleted">หมวดหมู่ถูกลบแล้ว</string>
-    <string name="dialog_with_checkbox_remove_description">การดำเนินการนี้จะลบวันที่อ่านของตอนนี้ คุณแน่ใจไหม\?</string>
+    <string name="dialog_with_checkbox_remove_description">การดำเนินการนี้จะลบวันที่อ่านของตอนนี้ คุณแน่ใจไหม?</string>
     <string name="dialog_with_checkbox_reset">รีเซ็ตตอนทั้งหมดสำหรับรายการนี้</string>
-    <string name="snack_add_to_library">เพิ่มไปยังคลัง\?</string>
+    <string name="snack_add_to_library">เพิ่มไปยังคลัง?</string>
     <string name="picture_saved">บันทึกรูปภาพแล้ว</string>
     <string name="custom_filter">ตัวกรอง</string>
     <string name="set_as_cover">ตั้งเป็นปก</string>
@@ -244,7 +243,7 @@
     <string name="chapter_progress">หน้า: %1$d</string>
     <string name="no_next_chapter">ไม่พบตอนถัดไป</string>
     <string name="decode_image_error">ไม่สามารถโหลดภาพนี้ได้</string>
-    <string name="confirm_set_image_as_cover">ใช้ภาพนี้เป็นรูปปก\?</string>
+    <string name="confirm_set_image_as_cover">ใช้ภาพนี้เป็นรูปปก?</string>
     <string name="transition_finished">อ่านจบแล้ว:</string>
     <string name="transition_current">ปัจจุบัน:</string>
     <string name="transition_next">ตอนถัดไป:</string>
@@ -305,7 +304,6 @@
     <string name="pref_read_with_tapping_inverted">กลับด้านโซนการแตะ</string>
     <string name="pref_skip_filtered_chapters">ข้ามตอนที่กรองไว้</string>
     <string name="pref_grayscale">โทนสีเทา</string>
-    <string name="pref_true_color_summary">ลดปัญหาแถบสี แต่อาจส่งผลต่อประสิทธิภาพ</string>
     <string name="pref_show_reading_mode_summary">แสดงโหมดปัจจุบันสั้น ๆ เมื่อตัวอ่านเปิดขั้นมา</string>
     <string name="pref_show_reading_mode">แสดงโหมดการอ่าน</string>
     <string name="pref_cutout_short">แสดงเนื้อหาในพื้นที่ตัดออก</string>
@@ -389,7 +387,7 @@
     <string name="nav_zone_next">ถัดไป</string>
     <string name="edge_nav">ขอบ</string>
     <string name="migration_help_guide">คู่มือการโยกย้ายแหล่งที่มา</string>
-    <string name="clear_history_confirmation">แน่ใจไหม\? ประวัติทั้งหมดจะหายไป</string>
+    <string name="clear_history_confirmation">แน่ใจไหม? ประวัติทั้งหมดจะหายไป</string>
     <string name="clear_history_completed">ลบประวัติแล้ว</string>
     <string name="pref_clear_history">ล้างประวัติ</string>
     <string name="recent_manga_time">ตอน %1$s - %2$s</string>
@@ -407,7 +405,7 @@
     <string name="no_chapters_error">ไม่พบตอน</string>
     <string name="set_chapter_settings_as_default">ตั้งเป็นค่าเริ่มต้น</string>
     <string name="also_set_chapter_settings_for_library">นําไปใช้กับรายการทั้งหมดในคลังด้วย</string>
-    <string name="confirm_set_chapter_settings">แน่ใจหรือไม่ว่าต้องการบันทึกการตั้งค่าเหล่านี้เป็นค่าเริ่มต้น\?</string>
+    <string name="confirm_set_chapter_settings">แน่ใจหรือไม่ว่าต้องการบันทึกการตั้งค่าเหล่านี้เป็นค่าเริ่มต้น?</string>
     <string name="chapter_settings">การตั้งค่าตอน</string>
     <string name="sort_by_upload_date">ตามวันที่อัปโหลด</string>
     <string name="clipboard_copy_error">ไม่สามารถคัดลอกไปยังคลิปบอร์ด</string>
@@ -427,7 +425,7 @@
     <string name="manga_from_library">จากคลัง</string>
     <string name="logout_success">ออกจากระบบแล้ว</string>
     <string name="logout">ออกจากระบบ</string>
-    <string name="logout_title">ออกจากระบบจาก %1$s\?</string>
+    <string name="logout_title">ออกจากระบบจาก %1$s?</string>
     <string name="email">ที่อยู่อีเมล</string>
     <string name="downloaded_only_summary">กรองรายการทั้งหมดในคลังของคุณ</string>
     <string name="notification_incognito_text">ปิดใช้งานโหมดไม่ระบุตัวตน</string>
@@ -606,7 +604,7 @@
     <string name="pref_app_language">ภาษาของแอพ</string>
     <string name="description_placeholder">ไม่มีคำอธิบาย</string>
     <string name="theme_lavender">ลาเวนเดอร์</string>
-    <string name="delete_category_confirmation">ต้องการจะลบหมวดหมู่ \"%s\" ไหม\?</string>
+    <string name="delete_category_confirmation">ต้องการจะลบหมวดหมู่ \"%s\" ไหม?</string>
     <string name="delete_category">ลบหมวดหมู่</string>
     <string name="internal_error">InternalError: ตรวจสอบบันทึกการแครชสำหรับข้อมูลเพิ่มเติม</string>
     <string name="pref_user_agent_string">ตัวแทนผู้ใช้เริ่มต้น</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead">ดาวน์โหลดล่วงหน้า</string>
     <string name="auto_download_while_reading">ดาวน์โหลดอัตโนมัติขณะกำลังอ่าน</string>
     <string name="download_ahead_info">ใช้ได้เฉพาะกับตอนปัจจุบัน + ตอนถัด ๆ ไปดาวน์โหลดไว้อยู่แล้ว</string>
-    <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่\?</string>
+    <string name="are_you_sure">แน่ใจแล้วใช่หรือไม่?</string>
     <string name="multi_lang">หลายภาษา</string>
     <string name="updates_last_update_info">อัปเดตคลังล่าสุด: %s</string>
     <string name="remove_manga">คุณกำลังจะนำ \"%s\" ออกจากคลัง</string>
@@ -654,7 +652,7 @@
     <string name="pref_invalidate_download_cache">ดัชนีการดาวน์โหลดไม่ถูกต้อง</string>
     <string name="track_remove_start_date_conf_text">การกระทำนี้จะเป็นการนำวันที่เริ่มอ่านของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
     <string name="track_remove_finish_date_conf_text">การกระทำนี้จะเป็นการนำวันที่อ่านจบของรายการที่เลือกไว้ก่อนหน้าจาก %s ออก</string>
-    <string name="track_remove_date_conf_title">นำวันที่ออก\?</string>
+    <string name="track_remove_date_conf_title">นำวันที่ออก?</string>
     <string name="pref_invalidate_download_cache_summary">บังคับให้ตรวจสอบบทที่ดาวน์โหลดไว้</string>
     <string name="label_started">เริ่มต้น</string>
     <string name="label_downloaded">ดาวน์โหลดไว้แล้ว</string>
@@ -684,7 +682,7 @@
     <string name="enhanced_services_not_installed">พร้อมใช้งานแต่ไม่ได้ติดตั้งแหล่งที่มา: %s</string>
     <string name="confirm_add_duplicate_manga">มีรายการชื่อเดียวกันอยู่ในคลัง
 \n
-\nต้องการดำเนินการต่อหรือไม่\?</string>
+\nต้องการดำเนินการต่อหรือไม่?</string>
     <string name="track_error">%1$s ข้อผิดพลาด: %2$s</string>
     <string name="information_required_plain">*จำเป็น</string>
     <string name="pref_hide_in_library_items">ซ่อนรายการที่มีอยู่ในคลังอยู่แล้ว</string>
@@ -709,7 +707,7 @@
     <string name="manga_display_modified_interval_title">ตั้งค่าให้อัพเดตทุกๆ</string>
     <string name="intervals_header">ช่วงเวลา</string>
     <string name="action_ok">ตกลง</string>
-    <string name="track_delete_title">นำการติดตามของ %s ออกไหม\?</string>
+    <string name="track_delete_title">นำการติดตามของ %s ออกไหม?</string>
     <string name="track_delete_text">การกระทำนี้จะเป็นการลบการติดตามภายในเครื่อง</string>
     <string name="track_delete_remote_text">และลบออกจาก %s เช่นกัน</string>
     <string name="library_sync_complete">ซิงค์คลังเสร็จสมบูรณ์</string>
@@ -730,7 +728,7 @@
     <string name="pref_relative_format_summary">แสดง \"%1$s\" แทน \"%2$s\"</string>
     <string name="action_sort_category">จัดเรียงหมวดหมู่</string>
     <string name="notification_updating_progress">กำลังอัปเดตคลัง... (%s)</string>
-    <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่\?</string>
+    <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่?</string>
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
     <string name="file_null_uri_error">ไม่มีไฟล์ถูกเลือกไว้</string>

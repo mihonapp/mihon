@@ -124,7 +124,7 @@
     <string name="cookies_cleared">Thông tin lưu trữ đã được xóa</string>
     <string name="pref_clear_database">Dọn dẹp cơ sở dữ liệu</string>
     <string name="pref_clear_database_summary">Xóa lịch sử đọc truyện và các chương không nằm trong thư viện</string>
-    <string name="clear_database_confirmation">Bạn có chắc không\? Các chương đã đọc và tiến độ đọc các truyện không nằm trong thư viện sẽ bị mất</string>
+    <string name="clear_database_confirmation">Bạn có chắc không? Các chương đã đọc và tiến độ đọc các truyện không nằm trong thư viện sẽ bị mất</string>
     <string name="clear_database_completed">Các mục đã bị xóa</string>
     <string name="version">Phiên bản</string>
     <string name="pref_enable_acra">Gửi báo cáo lỗi</string>
@@ -166,7 +166,7 @@
     <string name="snack_categories_deleted">Danh mục đã bị xóa</string>
     <string name="dialog_with_checkbox_remove_description">Sẽ xóa ngày đọc các chương. Bạn chắc chứ?</string>
     <string name="dialog_with_checkbox_reset">Làm mới mọi chương của truyện này</string>
-    <string name="snack_add_to_library">Thêm truyện vào thư viện\?</string>
+    <string name="snack_add_to_library">Thêm truyện vào thư viện?</string>
     <string name="picture_saved">Đã lưu ảnh</string>
     <string name="custom_filter">Bộ lọc tùy chỉnh</string>
     <string name="set_as_cover">Đặt làm ảnh bìa</string>
@@ -242,7 +242,7 @@
     <string name="pref_backup_interval">Lịch sao lưu</string>
     <string name="backup_created">Sao lưu đã được tạo</string>
     <string name="restore_completed">Khôi phục hoàn tất</string>
-    <string name="backup_choice">Bạn có muốn sao lưu không\?</string>
+    <string name="backup_choice">Bạn có muốn sao lưu không?</string>
     <string name="restoring_backup">Khôi phục sao lưu</string>
     <string name="creating_backup">Đang tạo bản sao lưu</string>
     <string name="local_source">Nguồn cục bộ</string>
@@ -252,7 +252,7 @@
     <string name="browse">Duyệt</string>
     <string name="manga_added_library">Đã thêm vào thư viện</string>
     <string name="manga_removed_library">Đã xóa khỏi thư viện</string>
-    <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải\?</string>
+    <string name="delete_downloads_for_manga">Muốn xóa các chương đã tải?</string>
     <string name="copied_to_clipboard">Đã sao chép vào bảng tạm:
 \n%1$s</string>
     <string name="source_not_installed">Nguồn truyện không thể cài đặt: %1$s</string>
@@ -274,7 +274,6 @@
     <string name="channel_common">Thường gặp</string>
     <string name="pref_read_with_long_tap">Nhấn giữ để mở mục hành động</string>
     <string name="action_open_in_web_view">Mở bằng WebView</string>
-    <string name="pref_true_color">Màu 32-bit</string>
     <string name="pref_skip_read_chapters">Bỏ qua chap đã đọc</string>
     <string name="pref_color_filter_mode">Chế độ hòa trộn bộ lọc màu</string>
     <string name="filter_mode_overlay">Phủ lên</string>
@@ -290,7 +289,7 @@
     <string name="paused">Đã tạm ngưng</string>
     <string name="logout_success">Bạn đã đăng xuất</string>
     <string name="logout">Đăng xuất tài khoản</string>
-    <string name="logout_title">Đăng xuất khỏi %1$s\?</string>
+    <string name="logout_title">Đăng xuất khỏi %1$s?</string>
     <string name="email">Địa chỉ email</string>
     <string name="battery_optimization_disabled">Tối ưu pin đã được tắt</string>
     <string name="pref_disable_battery_optimization_summary">Giúp cập nhật và sao lưu thư viện nền</string>
@@ -361,7 +360,7 @@
     <string name="migration_help_guide">Hướng dẫn di chuyển nguồn</string>
     <string name="action_search_settings">Cài đặt tìm kiếm</string>
     <string name="backup_in_progress">Sao lưu đang trong quá trình thực hiện</string>
-    <string name="clear_history_confirmation">Bạn có chắc không\? Tất cả lịch sử sẽ bị xoá.</string>
+    <string name="clear_history_confirmation">Bạn có chắc không? Tất cả lịch sử sẽ bị xoá.</string>
     <string name="pref_library_update_categories_details">Truyện trong danh mục bị loại trừ sẽ không được cập nhật.</string>
     <string name="track_finished_reading_date">Ngày kết thúc</string>
     <string name="filter_mode_lighten">Chế độ làm sáng lên</string>
@@ -405,7 +404,7 @@
     <string name="no_chapters_error">Không tìm thấy chương</string>
     <string name="set_chapter_settings_as_default">Đặt mặc định</string>
     <string name="also_set_chapter_settings_for_library">Ngoài ra có hiệu lực với tất cả truyện trong thư viện</string>
-    <string name="confirm_set_chapter_settings">Bạn có chắc chắn muốn lưu lại tuỳ chỉnh này hay không\?</string>
+    <string name="confirm_set_chapter_settings">Bạn có chắc chắn muốn lưu lại tuỳ chỉnh này hay không?</string>
     <string name="chapter_settings">Tuỳ chỉnh chương</string>
     <string name="sort_by_upload_date">Bởi ngày đăng</string>
     <string name="clipboard_copy_error">Sao chép vào bảng tạm thất bại</string>
@@ -463,7 +462,6 @@
     <string name="tapping_inverted_none">Không</string>
     <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
     <string name="pref_grayscale">Độ xám</string>
-    <string name="pref_true_color_summary">Giảm lỗi hiện sai dải màu, nhưng có thể ảnh hưởng đến hiệu suất</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang rộng không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo ngược vị trí tách trang</string>
     <string name="pref_dual_page_split">Chia các trang đôi</string>
@@ -611,7 +609,7 @@
     <string name="download_notifier_split_page_path_not_found">Không thể tìm thấy đường dẫn của trang %d</string>
     <string name="pref_reset_user_agent_string">Cài lại chuỗi đại diện người dùng mặc định</string>
     <string name="description_placeholder">Không có mô tả</string>
-    <string name="delete_category_confirmation">Bạn có muốn xóa thể loại \"%s\"\?</string>
+    <string name="delete_category_confirmation">Bạn có muốn xóa thể loại \"%s\"?</string>
     <string name="custom_cover">Tùy chỉnh ảnh bìa</string>
     <string name="appwidget_unavailable_locked">Tiện ích không còn khả dụng khi khóa ứng dụng đang bật</string>
     <string name="appwidget_updates_description">Xem các bộ truyện được cập nhật gần đây</string>
@@ -623,7 +621,7 @@
     <string name="auto_download_while_reading">Tự động tải khi đang đọc</string>
     <string name="missing_storage_permission">Quyền truy cập lưu trữ không được thông qua</string>
     <string name="popular">Nổi Tiếng</string>
-    <string name="are_you_sure">Bạn chắc chứ\?</string>
+    <string name="are_you_sure">Bạn chắc chứ?</string>
     <string name="remove_manga">Bạn sẽ xóa bỏ \"%s\" này ra khỏi thư viện của bạn</string>
     <string name="updates_last_update_info">Thư viện lần cuối được cập nhật:%s</string>
     <string name="download_ahead">Tải Trước</string>
@@ -682,9 +680,9 @@
     <string name="download_notifier_cache_renewal">Đang kiểm tra những truyện đã tải xuống</string>
     <string name="crash_screen_description">%s đã có lỗi. Bạn nên chia sẻ tệp báo lỗi tạm ở trong kênh hỗ trợ của chúng tôi trên Discord.</string>
     <string name="action_update_category">Cập nhật danh mục</string>
-    <string name="confirm_add_duplicate_manga">Truyện này đã có sẵn trong thư viện bạn. 
+    <string name="confirm_add_duplicate_manga">Truyện này đã có sẵn trong thư viện bạn.
 \n
-\nBạn có muốn thêm lại không\?</string>
+\nBạn có muốn thêm lại không?</string>
     <string name="copied_to_clipboard_plain">Đã sao chép vào bảng tạm</string>
     <string name="action_copy_to_clipboard">Sao chép vào bảng tạm</string>
     <string name="seconds_short">%d giây</string>
@@ -692,7 +690,7 @@
     <string name="pref_page_rotate">Quay những trang rộng để vừa màn hình</string>
     <string name="pref_page_rotate_invert">Lật hướng của các trang rộng đã xoay</string>
     <string name="overlay_header">Phủ lên</string>
-    <string name="track_remove_date_conf_title">Loại bỏ ngày\?</string>
+    <string name="track_remove_date_conf_title">Loại bỏ ngày?</string>
     <string name="track_error">%1$s Lỗi: %2$s</string>
     <string name="not_applicable">N/A</string>
     <string name="information_required_plain">*bắt buộc</string>

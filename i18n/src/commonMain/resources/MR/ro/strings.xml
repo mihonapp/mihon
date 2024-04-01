@@ -162,7 +162,7 @@
     <string name="pref_backup_interval">Frecventă de creere a copiilor de rezervă</string>
     <string name="backup_created">Backup creat</string>
     <string name="restore_completed">Restaurare completă</string>
-    <string name="backup_choice">Doriți să creați o copie de rezervă\?</string>
+    <string name="backup_choice">Doriți să creați o copie de rezervă?</string>
     <string name="restoring_backup">Restaurând copia de rezervă</string>
     <string name="creating_backup">Creând copia de rezervă</string>
     <string name="pref_clear_chapter_cache">Curățare capitole depozitate</string>
@@ -197,7 +197,7 @@
     <string name="remove_from_library">Elimină din bibliotecă</string>
     <string name="manga_added_library">Adăugat la bibliotecă</string>
     <string name="manga_removed_library">Eliminat din bibliotecă</string>
-    <string name="delete_downloads_for_manga">Ștergeți capitolele descărcate\?</string>
+    <string name="delete_downloads_for_manga">Ștergeți capitolele descărcate?</string>
     <string name="copied_to_clipboard">Copiat în clipboard:
 \n%1$s</string>
     <string name="source_not_installed">Sursa nu este instalată:%1$s</string>
@@ -211,7 +211,7 @@
     <string name="sort_by_number">După numărul capitolului</string>
     <string name="manga_download">Descarcă</string>
     <string name="download_unread">Necitit</string>
-    <string name="confirm_delete_chapters">Sigur doriți să ștergeți capitolele selectate\?</string>
+    <string name="confirm_delete_chapters">Sigur doriți să ștergeți capitolele selectate?</string>
     <string name="manga_tracking_tab">Urmărite</string>
     <string name="reading">Citind</string>
     <string name="completed">Completată</string>
@@ -226,9 +226,9 @@
     <string name="track_type">Tip</string>
     <string name="error_category_exists">O categorie cu acest nume deja există!</string>
     <string name="snack_categories_deleted">Categoriile au fost șterse</string>
-    <string name="dialog_with_checkbox_remove_description">Acest lucru va șterge data citirii acestui capitol. Ești sigur\?</string>
+    <string name="dialog_with_checkbox_remove_description">Acest lucru va șterge data citirii acestui capitol. Ești sigur?</string>
     <string name="dialog_with_checkbox_reset">Resetați toate capitolele pentru această intrare</string>
-    <string name="snack_add_to_library">Adăugați la bibliotecă\?</string>
+    <string name="snack_add_to_library">Adăugați la bibliotecă?</string>
     <string name="picture_saved">Imagine salvată</string>
     <string name="custom_filter">Filtru personalizat</string>
     <string name="set_as_cover">Stabilește ca și copertă</string>
@@ -236,7 +236,7 @@
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Capitolul următor nu a fost găsit</string>
     <string name="decode_image_error">Imaginea nu a putut să se încarce</string>
-    <string name="confirm_set_image_as_cover">Folosiți această imagine ca și copertă\?</string>
+    <string name="confirm_set_image_as_cover">Folosiți această imagine ca și copertă?</string>
     <string name="transition_finished">Terminat:</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Următorul:</string>
@@ -273,7 +273,6 @@
     <string name="download_notifier_download_paused">Descărcare întreruptă</string>
     <string name="channel_common">General</string>
     <string name="action_open_in_web_view">Deschide în WebView</string>
-    <string name="pref_true_color">Culoare 32-bit</string>
     <string name="pref_color_filter_mode">Mod filtru de culoare</string>
     <string name="filter_mode_overlay">Acoperire</string>
     <string name="filter_mode_multiply">Înmulțește</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">Această extensie nu mai este disponibilă. Este posibil să nu funcționeze corect și poate cauza probleme cu aplicația. Se recomandă dezinstalarea acesteia.</string>
     <string name="pref_date_format">Formatul datei</string>
     <string name="pref_category_library_update">Actualizare globală</string>
-    <string name="logout_title">Deconectează-te de la %1$s\?</string>
+    <string name="logout_title">Deconectează-te de la %1$s?</string>
     <string name="logout">Deconectează-te</string>
     <string name="logout_success">Acum ești deconectat</string>
     <string name="paused">Întrerupt</string>
@@ -366,7 +365,6 @@
     <string name="viewer">Mod de citire</string>
     <string name="pref_category_for_this_series">Pentru această serie</string>
     <string name="gray_background">Gri</string>
-    <string name="pref_true_color_summary">Reduce banding-ul, dar poate avea un impact asupra performanței</string>
     <string name="battery_optimization_setting_activity_not_found">Imposibil de deschis setările dispozitivului</string>
     <string name="tracking_info">Sincronizare unidirecțională pentru actualizarea progresului capitolului în cadrul serviciilor de urmărire. Configurați urmărirea pentru intrările individuale din butonul de urmărire al acestora.</string>
     <string name="pref_refresh_library_covers">Reîmprospătarea coperților bibliotecii</string>
@@ -420,7 +418,7 @@
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="set_chapter_settings_as_default">Setați ca implicit</string>
     <string name="also_set_chapter_settings_for_library">Se aplică, de asemenea, tuturor intrărilor din biblioteca mea</string>
-    <string name="confirm_set_chapter_settings">Sigur doriți să salvați aceste setări ca implicite\?</string>
+    <string name="confirm_set_chapter_settings">Sigur doriți să salvați aceste setări ca implicite?</string>
     <string name="chapter_settings">Setările capitolului</string>
     <string name="downloaded_chapters">Capitole descărcate</string>
     <string name="manga_from_library">Din bibliotecă</string>
@@ -428,7 +426,7 @@
     <string name="pref_incognito_mode_summary">Întrerupe citirea istoricului</string>
     <string name="pref_incognito_mode">Modul incognito</string>
     <string name="pref_clear_history">Sterge istoricul</string>
-    <string name="clear_history_confirmation">Esti sigur\? Toată istoria va fi pierdută.</string>
+    <string name="clear_history_confirmation">Esti sigur? Toată istoria va fi pierdută.</string>
     <string name="clear_history_completed">Istoricul a fost șters</string>
     <string name="spen_next_page">Pagina următoare</string>
     <string name="spen_previous_page">Pagina anterioară</string>
@@ -525,7 +523,7 @@
     <string name="ext_installer_shizuku_unavailable_dialog">Instalați și porniți Shizuku pentru a utiliza Shizuku ca instalator de extensii.</string>
     <string name="clear_database_source_item_count">%1$d înregistrări în baza de datecare nu aparțin bibliotecii</string>
     <string name="download_notifier_split_page_not_found">Pagina %d nu a fost găsită în timpul divizării</string>
-    <string name="delete_category_confirmation">Doriți să ștergeți categoria \"%s\"\?</string>
+    <string name="delete_category_confirmation">Doriți să ștergeți categoria \"%s\"?</string>
     <string name="internal_error">InternalError: Verificați jurnalele de accident pentru informații suplimentare</string>
     <string name="theme_lavender">Lavandă</string>
     <string name="pref_dark_theme_pure_black">Mod întunecat negru pur</string>
@@ -580,7 +578,7 @@
     <string name="pref_create_folder_per_manga_summary">Creează dosare în funcție de titlul intrărilor</string>
     <string name="automatic_background">Automat</string>
     <string name="on">Pornit</string>
-    <string name="are_you_sure">Ești sigur\?</string>
+    <string name="are_you_sure">Ești sigur?</string>
     <string name="error_saving_picture">Eroare la salvarea imaginii</string>
     <string name="ext_update_all">Actualizează tot</string>
     <string name="disabled_nav">Deactivat</string>
@@ -654,7 +652,7 @@
     <string name="track_remove_finish_date_conf_text">Acest lucru va elimina data de finalizare selectată anterior din %s</string>
     <string name="pref_invalidate_download_cache">Indexul descărcărilor invalid</string>
     <string name="download_notifier_cache_renewal">Descărcări de indexare</string>
-    <string name="track_remove_date_conf_title">Eliminați data\?</string>
+    <string name="track_remove_date_conf_title">Eliminați data?</string>
     <string name="track_remove_start_date_conf_text">Acest lucru va elimina data de început selectată anterior din %s</string>
     <string name="fdroid_warning">Versiunile F-Droid nu sunt acceptate oficial.
 \nApăsați pentru a afla mai multe.</string>
@@ -686,7 +684,7 @@
     <string name="enhanced_services_not_installed">Disponibil, dar sursa nu este instalata: %s</string>
     <string name="confirm_add_duplicate_manga">Ai deja o intrare in librarie cu acelasi nume.
 \n
-\nEsti sigur ca vrei sa continui\?</string>
+\nEsti sigur ca vrei sa continui?</string>
     <string name="track_error">%1$s eroare: %2$s</string>
     <string name="information_required_plain">*necesar</string>
     <string name="copied_to_clipboard_plain">Copiat in clipboard</string>

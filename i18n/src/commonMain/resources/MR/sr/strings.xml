@@ -163,7 +163,7 @@
     <string name="pref_backup_interval">Учесталост прављења резервних копија</string>
     <string name="backup_created">Направљена је резервна копија</string>
     <string name="restore_completed">Враћање је завршено</string>
-    <string name="backup_choice">Шта све желите да буде у резервној копији\?</string>
+    <string name="backup_choice">Шта све желите да буде у резервној копији?</string>
     <string name="restoring_backup">Враћа се на резервну копију</string>
     <string name="creating_backup">Прави се резервна копија</string>
     <string name="pref_clear_chapter_cache">Испразни кеш меморију поглавља</string>
@@ -174,7 +174,7 @@
     <string name="cookies_cleared">Колачићи су избрисани</string>
     <string name="pref_clear_database">Избриши базу података</string>
     <string name="pref_clear_database_summary">Обриши историју за наслове који нису сачувани у твојој колекцији</string>
-    <string name="clear_database_confirmation">Да ли сте сигурни\? Изгубићете прочитана поглавља и статус наслова који нису у колекцији</string>
+    <string name="clear_database_confirmation">Да ли сте сигурни? Изгубићете прочитана поглавља и статус наслова који нису у колекцији</string>
     <string name="clear_database_completed">Уноси избрисани</string>
     <string name="version">Верзија</string>
     <string name="pref_enable_acra">Пошаљи извештаје грешака</string>
@@ -198,7 +198,7 @@
     <string name="remove_from_library">Обриши из колекције</string>
     <string name="manga_added_library">Додано у колекцији</string>
     <string name="manga_removed_library">Уклоњено из колекције</string>
-    <string name="delete_downloads_for_manga">Обриши преузета поглавља\?</string>
+    <string name="delete_downloads_for_manga">Обриши преузета поглавља?</string>
     <string name="copied_to_clipboard">Копирано:
 \n%1$s</string>
     <string name="source_not_installed">Извор није инсталиран: %1$s</string>
@@ -213,9 +213,8 @@
     <string name="sort_by_number">Према броју поглавља</string>
     <string name="manga_download">Преузми</string>
     <string name="download_unread">Непрочитано</string>
-    <string name="confirm_delete_chapters">Да ли сте сигурни да желите да обришете следећа поглавља\?</string>
+    <string name="confirm_delete_chapters">Да ли сте сигурни да желите да обришете следећа поглавља?</string>
     <string name="action_open_in_web_view">Отвори у WebView</string>
-    <string name="pref_true_color">32-битна боја</string>
     <string name="pref_skip_read_chapters">Прескочи поглавља означена као прочитана</string>
     <string name="filter_mode_multiply">Помножи</string>
     <string name="filter_mode_screen">Екран</string>
@@ -228,7 +227,7 @@
     <string name="obsolete_extension_message">Овај додатак није више доступан. Можда неће исправно функционисати и може изазвати проблеме са апликацијом. Препоручује се деинсталирање.</string>
     <string name="pref_date_format">Формат датума</string>
     <string name="pref_category_library_update">Глобално ажурирање</string>
-    <string name="logout_title">Излогуј се из %1$s\?</string>
+    <string name="logout_title">Излогуј се из %1$s?</string>
     <string name="logout">Излогуј се</string>
     <string name="logout_success">Сада сте излоговани</string>
     <string name="label_more">Више</string>
@@ -287,14 +286,14 @@
     <string name="transition_next">Следеће:</string>
     <string name="transition_current">Тренутно:</string>
     <string name="transition_finished">Завршено:</string>
-    <string name="confirm_set_image_as_cover">Користи ову слику као омот\?</string>
+    <string name="confirm_set_image_as_cover">Користи ову слику као омот?</string>
     <string name="decode_image_error">Није могуће учитати слику</string>
     <string name="no_next_chapter">Следеће поглавље није пронађено</string>
     <string name="chapter_progress">Страница: %1$d</string>
     <string name="custom_filter">Подесиви филтер</string>
     <string name="picture_saved">Слика је сачувана</string>
     <string name="dialog_with_checkbox_reset">Ресетуј сва поглавља овог наслова</string>
-    <string name="dialog_with_checkbox_remove_description">Ово ће уклонити датум читања овог поглавља. Да ли сте сигурни да то желите\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ово ће уклонити датум читања овог поглавља. Да ли сте сигурни да то желите?</string>
     <string name="snack_categories_deleted">Категорије обрисане</string>
     <string name="error_category_exists">Категорија са овим именом већ постоји!</string>
     <string name="track_type">Врста</string>
@@ -311,7 +310,7 @@
     <string name="reading">Читање</string>
     <string name="add_tracking">Додај праћење</string>
     <string name="manga_tracking_tab">Праћење</string>
-    <string name="snack_add_to_library">Додати у колекцију\?</string>
+    <string name="snack_add_to_library">Додати у колекцију?</string>
     <string name="manga_info_collapse">Мање</string>
     <string name="manga_info_expand">Више</string>
     <string name="in_library">У колекцији</string>
@@ -451,7 +450,7 @@
     <string name="cover_saved">Омот сачуван</string>
     <string name="error_sharing_cover">Грешка при дељењу омота</string>
     <string name="set_chapter_settings_as_default">Постави као подразумевано</string>
-    <string name="confirm_set_chapter_settings">Да ли сте сигурни да желите да сачувате ова подешавања као подразумевана\?</string>
+    <string name="confirm_set_chapter_settings">Да ли сте сигурни да желите да сачувате ова подешавања као подразумевана?</string>
     <string name="also_set_chapter_settings_for_library">Такође примени на све наслове у мојој колекцији</string>
     <string name="no_chapters_error">Није пронађено ни једно поглавље</string>
     <string name="track_started_reading_date">Датум почетка</string>
@@ -487,7 +486,6 @@
     <string name="error_no_match">Ништа није пронађено</string>
     <string name="pref_dual_page_split">Раздели широке странице</string>
     <string name="none">Ништа</string>
-    <string name="pref_true_color_summary">Смањује оштре прелазе међу нијансама, али утиче на перформансе</string>
     <string name="date">Датум</string>
     <string name="pref_viewer_nav">Начин навигације</string>
     <string name="unknown_author">Непознат аутор</string>
@@ -547,7 +545,7 @@
     <string name="loader_not_implemented_error">Извор није пронађен</string>
     <string name="pref_clear_history">Избриши историју</string>
     <string name="clear_history_completed">Историја је избрисана</string>
-    <string name="clear_history_confirmation">Да ли сте сигурни\? Цела историја ће бити изгубљена.</string>
+    <string name="clear_history_confirmation">Да ли сте сигурни? Цела историја ће бити изгубљена.</string>
     <string name="migration_help_guide">Водич за миграцију извора</string>
     <string name="download_queue_size_warning">Упозорење: велики број преузимања може довести до успоравања извора и/или блокирања Mihon-а. Додирни да сазнаш више.</string>
     <string name="notification_size_warning">Велика ажурирања штете изворима и могу довести до споријег ажурирања и повећања потрошње батерије. Кликни да сазнаш више.</string>
@@ -602,7 +600,7 @@
     <string name="enhanced_services_not_installed">Доступно, али извор није преузет: %s</string>
     <string name="fdroid_warning">F-Droid верзије нису званично подржане.
 \nДодирните да сазнате више.</string>
-    <string name="track_remove_date_conf_title">Уклони датум\?</string>
+    <string name="track_remove_date_conf_title">Уклони датум?</string>
     <string name="track_remove_start_date_conf_text">Овим уклањате претходно изабран почетни датум од %s</string>
     <string name="track_remove_finish_date_conf_text">Овим уклањате претходно изабран завршени датум од %s</string>
     <string name="updates_last_update_info">Последње ажурирање колекције било је: %s</string>
@@ -610,7 +608,7 @@
     <string name="update_already_running">Ажурирање је већ у току</string>
     <string name="confirm_add_duplicate_manga">Имате унос у колекцији са истим именом.
 \n
-\nДа ли још увек желите да наставите\?</string>
+\nДа ли још увек желите да наставите?</string>
     <string name="complete_list">Завршена листа</string>
     <string name="on_hold_list">Наслови на чекању</string>
     <string name="unfinished_list">Незавршени наслови</string>
@@ -625,7 +623,7 @@
     <string name="unknown_title">Непознат наслов</string>
     <string name="label_overview_section">Преглед</string>
     <string name="reading_list">Листа за читање</string>
-    <string name="are_you_sure">Да ли сте сигурни\?</string>
+    <string name="are_you_sure">Да ли сте сигурни?</string>
     <string name="label_read_duration">Трајање читања</string>
     <string name="label_titles_in_global_update">У глобалним ажурирањима</string>
     <string name="label_titles_section">Наслови</string>
@@ -659,7 +657,7 @@
     <string name="action_sort_unread_count">Број непрочитаних</string>
     <string name="action_sort_last_manga_update">Последња провера ажурирања</string>
     <string name="delete_category">Обриши категорију</string>
-    <string name="delete_category_confirmation">Желиш ли обрисати категорију \"%s\"\?</string>
+    <string name="delete_category_confirmation">Желиш ли обрисати категорију \"%s\"?</string>
     <string name="action_remove_everything">Уклони све</string>
     <string name="crash_screen_title">Упс!</string>
     <string name="crash_screen_restart_application">Поново покрени апликацију</string>
@@ -722,7 +720,7 @@
     <string name="action_ok">У реду</string>
     <string name="library_sync_complete">Синхронизовање колекције завршено</string>
     <string name="manga_display_modified_interval_title">Постави да ажурира сваки</string>
-    <string name="track_delete_title">Уклони праћење %s\?</string>
+    <string name="track_delete_title">Уклони праћење %s?</string>
     <string name="track_delete_text">Ово ће уклонити локално праћење.</string>
     <string name="action_sort_next_updated">Следеће очекивано ажурирање</string>
     <string name="syncing_library">Синхронизовање колекције</string>

@@ -124,7 +124,6 @@
     <string name="pref_show_page_number">გვერდის ნომრის ჩვენება</string>
     <string name="pref_show_reading_mode">კითხვის რეჟიმის ჩვენება</string>
     <string name="pref_show_reading_mode_summary">მოკლედ აჩვენე ახლანდელი რეჟიმი როცა მკითხველი გახსნილია</string>
-    <string name="pref_true_color">32-bit ფერი</string>
     <string name="pref_crop_borders">კუთხეების ჩამოჭრა</string>
     <string name="filter_mode_multiply">გაამრავლე</string>
     <string name="filter_mode_screen">ეკრანი</string>
@@ -194,7 +193,7 @@
     <string name="restore_completed">აღდგენა შესრულებულია</string>
     <string name="restore_duration">%02d წუთი, %02d წამი</string>
     <string name="backup_in_progress">მარქაფი უკვე მიმდინარეობს</string>
-    <string name="backup_choice">რას გსურს რომ შეუქმნა რეზერვი\?</string>
+    <string name="backup_choice">რას გსურს რომ შეუქმნა რეზერვი?</string>
     <string name="creating_backup">რეზერვის შექმნა</string>
     <string name="creating_backup_error">რეზერვის შექმნა ვერ მოხერხდა</string>
     <string name="restore_in_progress">აღდგენა უკვე მიმდინარეობს</string>
@@ -210,7 +209,7 @@
     <string name="cookies_cleared">Cookie -ები გასუფთავებულია</string>
     <string name="pref_clear_database">მონაცემთა ბაზის გასუფთავება</string>
     <string name="pref_clear_database_summary">ისტორიიდან წაიშლება ჩანაწერები, რომლებიც თქვენს ბიბლიოთეკაში არაა შენახული</string>
-    <string name="clear_database_confirmation">დარწმუნებული ბრძანდებით\? წაკითხული თავები და ბიბლიოთეკაში არ არსებული ჩანაწერების პროგრესი დაიკარგება</string>
+    <string name="clear_database_confirmation">დარწმუნებული ბრძანდებით? წაკითხული თავები და ბიბლიოთეკაში არ არსებული ჩანაწერების პროგრესი დაიკარგება</string>
     <string name="clear_database_completed">ჩანაწერები წაშლილია</string>
     <string name="pref_refresh_library_covers">ბიბლიოთეკის მანგების ყდის ცვლილება</string>
     <string name="battery_optimization_disabled">ელემენტის ოპტიმიზაცუა უკვე გამორთულია</string>
@@ -252,11 +251,11 @@
     <string name="manga_removed_library">წაშლილია ბიბლიოთეკიდან</string>
     <string name="manga_info_expand">მეტი ინფორმაციის ჩვენება</string>
     <string name="manga_info_collapse">ნაკლები ინფორმაციის ჩვენება</string>
-    <string name="delete_downloads_for_manga">წაიშალოს გადმოწერილი თავები\?</string>
+    <string name="delete_downloads_for_manga">წაიშალოს გადმოწერილი თავები?</string>
     <string name="copied_to_clipboard">დაკოპირებულია ბუფერში:
 \n%1$s</string>
     <string name="source_not_installed">წყარო არ არის დაინსტალირებული: %1$s</string>
-    <string name="snack_add_to_library">დავამატო ბიბლიოთეკაში\?</string>
+    <string name="snack_add_to_library">დავამატო ბიბლიოთეკაში?</string>
     <string name="display_mode_chapter">თავი %1$s</string>
     <string name="chapter_downloading_progress">მიმდინარეობს გადმოწერა (%1$d/%2$d)</string>
     <string name="chapter_error">შეცდომა</string>
@@ -351,7 +350,6 @@
     <string name="untrusted_extension">არასანდო დამატება</string>
     <string name="obsolete_extension_message">დამატება ხელმისაწვდომი აღარაა. მან შეიძლება არასწორად იმუშაოს და აპლიკაციას პრობლემები შეუქმნას. გირჩევთ, წაშალოთ ის.</string>
     <string name="pref_double_tap_anim_speed">ორჯერ დაჭერისას ანიმაციის სისწრაფე</string>
-    <string name="pref_true_color_summary">აუმჯობესებს ხარისხს, თუმცა ამცირებს წარმადობას</string>
     <string name="pref_custom_brightness">გამოიყენე პერსონალიზებული სიკაშკაშე</string>
     <string name="pref_custom_color_filter">გამოიყენე პერსონალიზებული ფერთა ფილტრი</string>
     <string name="pref_color_filter_mode">ფერთა ფილტრის შეხამების რეჟიმი</string>

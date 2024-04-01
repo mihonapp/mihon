@@ -200,7 +200,6 @@
     <string name="pref_page_transitions">पृष्ठ ट्रान्जिसन एनिमेट गर्नुहोस्</string>
     <string name="pref_double_tap_anim_speed">एनिमेसनको गति डबल ट्याप गर्नुहोस्</string>
     <string name="pref_show_reading_mode_summary">रिडर खोल्दा छोटकरीमा हालको मोड देखाउनुहोस्</string>
-    <string name="pref_true_color_summary">ब्यान्डिङ घटाउँछ, तर कार्यसम्पादनलाई असर गर्न सक्छ</string>
     <string name="on">अन</string>
     <string name="pref_custom_brightness">कस्टम चमक</string>
     <string name="pref_skip_read_chapters">पढिएको चिन्ह लगाइएका अध्यायहरू छोड्नुहोस्</string>
@@ -256,7 +255,6 @@
     <string name="pref_dual_page_invert_summary">यदि विभाजित चौडा पृष्ठहरूको प्लेसमेन्ट पढ्ने दिशासँग मेल खाँदैन</string>
     <string name="pref_show_reading_mode">पढ्ने मोड देखाउनुहोस्</string>
     <string name="pref_show_page_number">पृष्ठ नम्बर देखाउनुहोस्</string>
-    <string name="pref_true_color">३२-बिट रङ</string>
     <string name="pref_crop_borders">सीमाना क्रप गर्नुहोस्</string>
     <string name="off">अफ</string>
     <string name="pref_grayscale">ग्रे-स्केल</string>
@@ -302,7 +300,7 @@
     <string name="action_track">ट्र्याक</string>
     <string name="restore_completed">रिस्टोर सम्पन्न भयो</string>
     <string name="pref_clear_cookies">कुकीहरू खाली गर्नुहोस्</string>
-    <string name="backup_choice">तपाई के ब्याकअप गर्न चाहनुहुन्छ\?</string>
+    <string name="backup_choice">तपाई के ब्याकअप गर्न चाहनुहुन्छ?</string>
     <string name="creating_backup_error">ब्याकअप असफल भयो</string>
     <string name="pref_dns_over_https">HTTPS (DoH) माथि DNS</string>
     <string name="requires_app_restart">प्रभाव पार्न एप फेरि सुरु गर्न आवश्यक छ</string>
@@ -433,7 +431,7 @@
     <string name="username">युजरनेम</string>
     <string name="login">लगइन</string>
     <string name="login_success">लगइन हुनुहुन्छ</string>
-    <string name="logout_title">%1$s बाट लग-आउट गर्ने हो\?</string>
+    <string name="logout_title">%1$s बाट लग-आउट गर्ने हो?</string>
     <string name="logout">लग-आउट</string>
     <string name="logout_success">तपाई अब लग-आउट हुनुभएको छ</string>
     <string name="updating_category">वर्ग अपडेट गर्दै</string>
@@ -445,7 +443,7 @@
     <string name="licensed">लाइसेन्स प्राप्त</string>
     <string name="password">पासवर्ड</string>
     <string name="pref_clear_database_summary">पुस्तकालयमा नभएका इन्ट्रीको इतिहास हटाउनुहोस्</string>
-    <string name="clear_database_confirmation">के तपाईँ निश्चित हुनुहुन्छ\? तपाईंले पढ्नुभएको अध्यायहरू र गैर-पुस्तकालय इन्ट्रीहरूको प्रगति हराउनेछ</string>
+    <string name="clear_database_confirmation">के तपाईँ निश्चित हुनुहुन्छ? तपाईंले पढ्नुभएको अध्यायहरू र गैर-पुस्तकालय इन्ट्रीहरूको प्रगति हराउनेछ</string>
     <string name="database_clean">सफा गर्न केही छैन</string>
     <string name="version">संस्करण</string>
     <string name="website">वेबसाइट</string>
@@ -471,7 +469,7 @@
     <string name="page_list_empty_error">कुनै पृष्ठहरू फेला परेनन्</string>
     <string name="loader_not_implemented_error">स्रोत भेटिएन</string>
     <string name="clear_history_completed">इतिहास हटाइयो</string>
-    <string name="clear_history_confirmation">के तपाईँ निश्चित हुनुहुन्छ\? सबै इतिहास हराउनेछ।</string>
+    <string name="clear_history_confirmation">के तपाईँ निश्चित हुनुहुन्छ? सबै इतिहास हराउनेछ।</string>
     <string name="transition_pages_error">पृष्ठहरू लोड हुन असफल भयो: %1$s</string>
     <string name="source_not_installed">स्रोत स्थापना गरिएको छैन: %1$s</string>
     <string name="chapter_paused">रोकिएको</string>
@@ -483,10 +481,10 @@
     <string name="error_saving_cover">आवरण सेभ गर्दा त्रुटि भयो</string>
     <string name="action_display_cover_only_grid">आवरण मात्र ग्रिड</string>
     <string name="error_sharing_cover">आवरण साझा गर्दा त्रुटि भयो</string>
-    <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ\?</string>
+    <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ?</string>
     <string name="chapter_settings">अध्याय सेटिङ</string>
     <string name="set_chapter_settings_as_default">पूर्वनिर्धारित रूपमा सेट गर्नुहोस्</string>
-    <string name="confirm_set_image_as_cover">यो छवि आवरण को रूपमा राख्न चाहनुहुन्छ\?</string>
+    <string name="confirm_set_image_as_cover">यो छवि आवरण को रूपमा राख्न चाहनुहुन्छ?</string>
     <string name="dialog_with_checkbox_reset">यो इन्ट्रीको सबै अध्यायहरू रिसेट गर्नुहोस्</string>
     <string name="download_unread">नपढिएको</string>
     <string name="cover_saved">आवरण सेभ भयो</string>
@@ -498,17 +496,17 @@
     <string name="copied_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्:
 \n%1$s</string>
     <string name="clipboard_copy_error">क्लिपबोर्डमा प्रतिलिपि गर्न असफल</string>
-    <string name="delete_downloads_for_manga">डाउनलोड गरिएका अध्यायहरू हटाउनु\?</string>
+    <string name="delete_downloads_for_manga">डाउनलोड गरिएका अध्यायहरू हटाउनु?</string>
     <string name="pref_update_only_started">जो सुरु भएको छैन</string>
     <string name="cover_updated">आवरण अपडेट भयो</string>
     <string name="share_page_info">%1$s: %2$s, पृष्ठ %3$d</string>
     <string name="pref_clear_history">इतिहास हटाउनुहोस्</string>
-    <string name="snack_add_to_library">पुस्तकालयमा राख्ने\?</string>
+    <string name="snack_add_to_library">पुस्तकालयमा राख्ने?</string>
     <string name="transition_next">अर्को:</string>
     <string name="viewer">पढ्ने मोड</string>
     <string name="transition_finished">सकिएको:</string>
     <string name="updating_library">पुस्तकालय अपडेट गर्दै</string>
-    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिङहरूलाई पूर्वनिर्धारित रूपमा सेभ गर्न चाहनुहुन्छ\?</string>
+    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिङहरूलाई पूर्वनिर्धारित रूपमा सेभ गर्न चाहनुहुन्छ?</string>
     <string name="also_set_chapter_settings_for_library">मेरो पुस्तकालयका सबै इन्ट्रीहरूमा पनि लागू गर्नुहोस्</string>
     <string name="no_chapters_error">अध्यायहरू भेटिएन</string>
     <string name="track_status">स्थिति</string>
@@ -528,7 +526,7 @@
     <string name="source_unsupported">स्रोत समर्थित छैन</string>
     <string name="error_category_exists">सो नाम गरिएको वर्ग पहिले नै अवस्थित छ!</string>
     <string name="snack_categories_deleted">वर्गहरू हटाइयो</string>
-    <string name="dialog_with_checkbox_remove_description">यसले यस अध्यायको पढेको मिति हटाउनेछ। के तपाईँ निश्चित हुनुहुन्छ\?</string>
+    <string name="dialog_with_checkbox_remove_description">यसले यस अध्यायको पढेको मिति हटाउनेछ। के तपाईँ निश्चित हुनुहुन्छ?</string>
     <string name="track_type">प्रकार</string>
     <string name="no_next_chapter">अर्को अध्याय भेटिएन</string>
     <string name="transition_previous">पहिलेको:</string>
@@ -580,7 +578,7 @@
     <string name="action_close">बन्द गर्नुहोस्</string>
     <string name="pref_library_summary">वर्गहरू, ग्लोबल अपडेट, अध्याय स्वाइप</string>
     <string name="action_sort_last_manga_update">पछिल्लो अपडेट जाँच</string>
-    <string name="delete_category_confirmation">के तपाई \"%s\" वर्ग हटाउन चाहनु हुन्छ\?</string>
+    <string name="delete_category_confirmation">के तपाई \"%s\" वर्ग हटाउन चाहनु हुन्छ?</string>
     <string name="delete_category">वर्ग हटाउनुहोस्</string>
     <string name="action_search_hint">खोज्नुहोस्…</string>
     <string name="action_remove_everything">सबै हटाउनुहोस्</string>
@@ -612,7 +610,7 @@
     <string name="action_open_random_manga">जुनसुकै इन्ट्री खोल्नुहोस्</string>
     <string name="confirm_add_duplicate_manga">तपाईको पुस्तकालयमा एउटै नामको इन्ट्री छ।
 \n
-\nके तपाईं अझै जारी राख्न चाहनुहुन्छ\?</string>
+\nके तपाईं अझै जारी राख्न चाहनुहुन्छ?</string>
     <string name="reading_list">पढिरहेको सूची</string>
     <string name="updates_last_update_info">पुस्तकालय पछिल्लो पटक अपडेट गरिएको: %s</string>
     <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागि हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा क्र्यास लगहरू साझेदारी गर्न सुझाव दिन्छौं।</string>
@@ -654,14 +652,14 @@
     <string name="popular">लोकप्रिय</string>
     <string name="split_tall_images_summary">रिडर कार्यसम्पादन सुधार गर्दछ</string>
     <string name="pref_reset_viewer_flags">प्रति-श्रृङ्खला रिडर सेटिङहरू रिसेट गर्नुहोस्</string>
-    <string name="track_remove_date_conf_title">मिति हटाउने हो\?</string>
+    <string name="track_remove_date_conf_title">मिति हटाउने हो?</string>
     <string name="track_remove_start_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको सुरु मिति हटाउनेछ</string>
     <string name="track_remove_finish_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको समाप्त मिति हटाउनेछ</string>
     <string name="update_already_running">एउटा अपडेट पहिले नै जारी छ</string>
     <string name="empty_screen">ल, यो के भयो</string>
     <string name="not_installed">स्थापना गरिएको छैन</string>
     <string name="pref_reset_viewer_flags_summary">पढ्ने मोड र सबै श्रृङ्खलाहरूको अभिमुखीकरण रिसेट गर्दछ</string>
-    <string name="are_you_sure">के तपाईँ निश्चित हुनुहुन्छ\?</string>
+    <string name="are_you_sure">के तपाईँ निश्चित हुनुहुन्छ?</string>
     <string name="download_notifier_split_page_not_found">पृष्ठ विभाजन गर्दा %d फेला परेन</string>
     <string name="information_no_manga_category">वर्ग खाली छ</string>
     <string name="internal_error">आन्तरिक त्रुटि: थप जानकारीको लागि क्र्यास लगहरू जाँच गर्नुहोस्</string>
@@ -712,7 +710,7 @@
     <string name="action_sort_next_updated">अर्को अपेक्षित अपडेट</string>
     <string name="pref_update_only_in_release_period">अपेक्षित रिलीज अवधि बाहिर</string>
     <string name="manga_display_interval_title">प्रत्येक अनुमान लगाउनुहोस्</string>
-    <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो\?</string>
+    <string name="track_delete_title">%s ट्र्याकिङ हटाउने हो?</string>
     <string name="track_delete_remote_text">%s बाट पनि हटाउनुहोस्</string>
     <string name="track_delete_text">यसले लोकल रूपमा ट्र्याकिङ हटाउनेछ।</string>
     <string name="action_ok">ठिक छ</string>
@@ -732,7 +730,7 @@
     <string name="action_move_to_bottom_all_for_series">श्रृङ्खलालाई तल सार्नुहोस्</string>
     <string name="action_sort_category">वर्गहरू क्रमबद्ध गर्नुहोस्</string>
     <string name="notification_updating_progress">पुस्तकालय अपडेट गर्दै... (%s)</string>
-    <string name="sort_category_confirmation">के तपाई वर्गहरू वर्णमाला अनुसार क्रमबद्ध गर्न चाहनुहुन्छ\?</string>
+    <string name="sort_category_confirmation">के तपाई वर्गहरू वर्णमाला अनुसार क्रमबद्ध गर्न चाहनुहुन्छ?</string>
     <string name="source_settings">स्रोत सेटिङहरू</string>
     <string name="app_settings">एप सेटिङहरू</string>
     <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्पहरू</string>
@@ -794,8 +792,8 @@
     <string name="manga_interval_expected_update">नयाँ अध्यायहरू लगभग %1$s मा रिलीज हुने भविष्यवाणी गरिएको छ, हरेक %2$s को वरिपरि जाँच गर्दै।</string>
     <string name="manga_interval_expected_update_soon">छिटै</string>
     <string name="manga_interval_custom_amount">कस्टम अपडेट फ्रिक्वेन्सी:</string>
-    <string name="exclude_scanlators">स्क्यालेटरहरू समावेश नगर्नुहोस्</string>
-    <string name="no_scanlators_found">कुनै स्क्यालेटर फेला परेन</string>
+    <string name="exclude_scanlators">स्क्यानलेटर समावेश नगर्नुहोस्</string>
+    <string name="no_scanlators_found">कुनै स्क्यानलेटर फेला परेन</string>
     <string name="pref_storage_usage">भण्डारण प्रयोग</string>
     <string name="no_location_set">कुनै भण्डारण स्थान सेट गरिएको छैन</string>
     <string name="pref_storage_location_info">स्वचालित ब्याकअप, अध्याय डाउनलोड, र स्थानीय स्रोतको लागि प्रयोग गरिन्छ।</string>
@@ -803,4 +801,11 @@
     <string name="invalid_backup_file_error">पूर्ण त्रुटि:</string>
     <string name="private_settings">संवेदनशील सेटिङहरू समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
+    <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
+    <string name="action_migrate_duplicate">अवस्थित इन्ट्री माइग्रेट गर्नुहोस्</string>
+    <string name="pref_display_profile">कस्टम प्रदर्शन प्रोफाइल</string>
+    <string name="action_replace_repo">रिप्लेस</string>
+    <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
+    <string name="action_replace_repo_message">रिपो %1$s सँग %2$s जस्तै साइन गर्ने की फिंगरप्रिन्ट छ।
+\nयदि यो अपेक्षित छ भने, %2$s प्रतिस्थापन गरिनेछ, अन्यथा आफ्नो रिपो प्रबन्धकलाई सम्पर्क गर्नुहोस्।</string>
 </resources>

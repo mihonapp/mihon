@@ -160,7 +160,7 @@
     <string name="pref_backup_interval">Freqüència de la còpia de seguretat automàtica</string>
     <string name="backup_created">S’ha creat la còpia de seguretat</string>
     <string name="restore_completed">S’ha completat la restauració</string>
-    <string name="backup_choice">De què voleu fer una còpia de seguretat\?</string>
+    <string name="backup_choice">De què voleu fer una còpia de seguretat?</string>
     <string name="restoring_backup">S’està restaurant la còpia de seguretat</string>
     <string name="creating_backup">S’està creant la còpia de seguretat</string>
     <string name="pref_clear_chapter_cache">Buida la memòria cau de capítols</string>
@@ -171,7 +171,7 @@
     <string name="cookies_cleared">S’han esborrat les galetes</string>
     <string name="pref_clear_database">Buida la base de dades</string>
     <string name="pref_clear_database_summary">Suprimeix l’historial dels elements que no siguin a la biblioteca</string>
-    <string name="clear_database_confirmation">N’esteu segur\? Es perdrà el progrés i els capítols llegits dels elements que no siguin a la biblioteca</string>
+    <string name="clear_database_confirmation">N’esteu segur? Es perdrà el progrés i els capítols llegits dels elements que no siguin a la biblioteca</string>
     <string name="clear_database_completed">S’han suprimit les entrades</string>
     <string name="version">Versió</string>
     <string name="pref_enable_acra">Envia informes d’errors</string>
@@ -195,7 +195,7 @@
     <string name="remove_from_library">Elimina de la biblioteca</string>
     <string name="manga_added_library">S’ha afegit a la biblioteca</string>
     <string name="manga_removed_library">S’ha eliminat de la biblioteca</string>
-    <string name="delete_downloads_for_manga">Voleu suprimir els capítols baixats\?</string>
+    <string name="delete_downloads_for_manga">Voleu suprimir els capítols baixats?</string>
     <string name="copied_to_clipboard">S’ha copiat al porta-retalls:
 \n%1$s</string>
     <string name="source_not_installed">Font no instal·lada: %1$s</string>
@@ -209,7 +209,7 @@
     <string name="sort_by_number">Per número de capítol</string>
     <string name="manga_download">Baixa</string>
     <string name="download_unread">Els no llegits</string>
-    <string name="confirm_delete_chapters">Esteu segur que voleu suprimir els capítols seleccionats\?</string>
+    <string name="confirm_delete_chapters">Esteu segur que voleu suprimir els capítols seleccionats?</string>
     <string name="manga_tracking_tab">En seguiment</string>
     <string name="reading">Llegint</string>
     <string name="completed">Completats</string>
@@ -224,9 +224,9 @@
     <string name="track_type">Tipus</string>
     <string name="error_category_exists">Ja hi ha una categoria amb aquest nom!</string>
     <string name="snack_categories_deleted">S’han suprimit les categories</string>
-    <string name="dialog_with_checkbox_remove_description">S’eliminarà la data de lectura d’aquest capítol. N’esteu segur\?</string>
+    <string name="dialog_with_checkbox_remove_description">S’eliminarà la data de lectura d’aquest capítol. N’esteu segur?</string>
     <string name="dialog_with_checkbox_reset">Reinicia tots els capítols d’aquest element</string>
-    <string name="snack_add_to_library">Voleu afegir-lo a la biblioteca\?</string>
+    <string name="snack_add_to_library">Voleu afegir-lo a la biblioteca?</string>
     <string name="picture_saved">S’ha desat la imatge</string>
     <string name="custom_filter">Filtre personalitzat</string>
     <string name="set_as_cover">Defineix com a portada</string>
@@ -234,7 +234,7 @@
     <string name="chapter_progress">Pàgina: %1$d</string>
     <string name="no_next_chapter">No s’ha trobat el capítol següent</string>
     <string name="decode_image_error">No s’ha pogut carregar la imatge</string>
-    <string name="confirm_set_image_as_cover">Voleu fer servir aquesta imatge com a portada\?</string>
+    <string name="confirm_set_image_as_cover">Voleu fer servir aquesta imatge com a portada?</string>
     <string name="transition_finished">Finalitzat:</string>
     <string name="transition_current">Actual:</string>
     <string name="transition_next">Següent:</string>
@@ -272,7 +272,6 @@
     <string name="channel_common">General</string>
     <string name="pref_read_with_long_tap">Mostra les accions amb un toc llarg</string>
     <string name="action_open_in_web_view">Obre en una WebView</string>
-    <string name="pref_true_color">Color de 32 bits</string>
     <string name="pref_skip_read_chapters">Omet capítols marcats com a llegits</string>
     <string name="pref_color_filter_mode">Mode de mescla del filtre de color</string>
     <string name="filter_mode_overlay">Sobreposa</string>
@@ -291,7 +290,7 @@
     <string name="obsolete_extension_message">Aquesta extensió ja no està disponible. És possible que no funcioni correctament i pot causar problemes a l’aplicació. És recomanable que la desinstal·leu.</string>
     <string name="pref_date_format">Format de data</string>
     <string name="pref_category_library_update">Actualització global</string>
-    <string name="logout_title">Voleu tancar la sessió a %1$s\?</string>
+    <string name="logout_title">Voleu tancar la sessió a %1$s?</string>
     <string name="logout">Tanca la sessió</string>
     <string name="logout_success">S’ha tancat la sessió</string>
     <string name="paused">Pausat</string>
@@ -365,7 +364,6 @@
     <string name="viewer">Mode de lectura</string>
     <string name="pref_category_for_this_series">Per a aquesta sèrie</string>
     <string name="battery_optimization_setting_activity_not_found">No s’ha pogut obrir la configuració del dispositiu</string>
-    <string name="pref_true_color_summary">Redueix les bandes de colors, però pot afectar el rendiment</string>
     <string name="tracking_info">La sincronització és unidireccional per a actualitzar el progrés dels capítols als serveis de seguiment externs. Configureu el seguiment d’elements individuals al seu botó de seguiment.</string>
     <string name="pref_refresh_library_covers">Refresca les portades de la biblioteca</string>
     <string name="sort_by_upload_date">Per data de pujada</string>
@@ -417,13 +415,13 @@
     <string name="chapter_settings_updated">S’ha actualitzat la configuració per defecte dels capítols</string>
     <string name="set_chapter_settings_as_default">Estableix com a per defecte</string>
     <string name="also_set_chapter_settings_for_library">Aplica-ho també a tots els elements de la biblioteca</string>
-    <string name="confirm_set_chapter_settings">Esteu segur que voleu desar aquesta configuració com a configuració per defecte\?</string>
+    <string name="confirm_set_chapter_settings">Esteu segur que voleu desar aquesta configuració com a configuració per defecte?</string>
     <string name="chapter_settings">Configuració dels capítols</string>
     <string name="share_page_info">%1$s: %2$s, pàgina %3$d</string>
     <string name="action_search_settings">Configuració de la cerca</string>
     <string name="downloaded_chapters">Capítols baixats</string>
     <string name="manga_from_library">De la biblioteca</string>
-    <string name="clear_history_confirmation">N’esteu segur\? Es perdrà tot l’historial.</string>
+    <string name="clear_history_confirmation">N’esteu segur? Es perdrà tot l’historial.</string>
     <string name="pref_incognito_mode_summary">Pausa l’historial de lectura</string>
     <string name="pref_incognito_mode">Mode d’incògnit</string>
     <string name="pref_clear_history">Suprimeix l’historial</string>
@@ -604,7 +602,7 @@
     <string name="custom_cover">Portada personalitzada</string>
     <string name="not_installed">No instal·lat</string>
     <string name="pref_app_language">Llengua de l’aplicació</string>
-    <string name="delete_category_confirmation">Voleu eliminar la categoria «%s»\?</string>
+    <string name="delete_category_confirmation">Voleu eliminar la categoria «%s»?</string>
     <string name="delete_category">Elimina la categoria</string>
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sense descripció</string>
@@ -620,7 +618,7 @@
     <string name="error_user_agent_string_blank">La cadena de l’agent d’usuari no pot estar buida</string>
     <string name="pref_appearance_summary">Tema, formats de data i hora</string>
     <string name="pref_library_summary">Categories, actualitzacions globals i lliscament en capítols</string>
-    <string name="are_you_sure">N’esteu segur\?</string>
+    <string name="are_you_sure">N’esteu segur?</string>
     <string name="invalid_location">Ubicació invàlida: %s</string>
     <string name="auto_download_while_reading">Baixa automàticament mentre es llegeix</string>
     <string name="download_ahead_info">Només funciona si el capítol actual i el següent ja estan baixats.</string>
@@ -653,7 +651,7 @@
     <string name="action_display_show_continue_reading_button">Botó per a continuar llegint</string>
     <string name="pref_invalidate_download_cache">Invalida l’índex de baixades</string>
     <string name="track_remove_finish_date_conf_text">S’eliminarà la data de finalització seleccionada de %s</string>
-    <string name="track_remove_date_conf_title">Voleu eliminar-ne la data\?</string>
+    <string name="track_remove_date_conf_title">Voleu eliminar-ne la data?</string>
     <string name="track_remove_start_date_conf_text">S’eliminarà la data d’inici seleccionada de %s</string>
     <string name="pref_invalidate_download_cache_summary">Força que l’aplicació torni a comprovar els capítols baixats</string>
     <string name="label_stats">Estadístiques</string>
@@ -668,7 +666,7 @@
     <string name="enhanced_services_not_installed">Disponible però la font no està instal·lada: %s</string>
     <string name="confirm_add_duplicate_manga">Ja teniu un element a la biblioteca amb el mateix nom.
 \n
-\nVoleu continuar igualment\?</string>
+\nVoleu continuar igualment?</string>
     <string name="label_read_duration">Temps de lectura</string>
     <string name="label_titles_section">Elements</string>
     <string name="label_completed_titles">Elements completats</string>
@@ -708,7 +706,7 @@
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
-    <string name="track_delete_title">Voleu deixar de seguir %s\?</string>
+    <string name="track_delete_title">Voleu deixar de seguir %s?</string>
     <string name="track_delete_remote_text">Elimina també de %s</string>
     <string name="track_delete_text">Se n’eliminarà el seguiment local.</string>
     <string name="skipped_reason_not_in_release_period">S’ha omès perquè no se n’espera cap publicació avui</string>
@@ -730,7 +728,7 @@
     <string name="pref_relative_format_summary">«%1$s» en comptes de «%2$s»</string>
     <string name="action_sort_category">Ordena les categories</string>
     <string name="notification_updating_progress">S’està actualitzant la biblioteca… (%s)</string>
-    <string name="sort_category_confirmation">Voleu ordenar les categories alfabèticament\?</string>
+    <string name="sort_category_confirmation">Voleu ordenar les categories alfabèticament?</string>
     <string name="source_settings">Configuració de la font</string>
     <string name="app_settings">Configuració de l’aplicació</string>
     <string name="file_null_uri_error">No s’ha seleccionat cap fitxer</string>

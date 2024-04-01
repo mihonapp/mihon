@@ -209,8 +209,6 @@
     <string name="pref_custom_color_filter">ብጁ ቀለም ማጣሪያ</string>
     <string name="pref_custom_brightness">ብጁ ብሩህነት</string>
     <string name="pref_crop_borders">የሰብል ድንበሮች</string>
-    <string name="pref_true_color_summary">ማሰሪያን ይቀንሳል ፣ ግን በአፈፃፀም ላይ ተጽዕኖ ያሳድራል</string>
-    <string name="pref_true_color">32-ቢት ቀለም</string>
     <string name="pref_show_reading_mode_summary">አንባቢ ሲከፈት የአሁኑን ሁነታ በአጭሩ ያሳዩ</string>
     <string name="pref_show_reading_mode">የንባብ ሁነታን አሳይ</string>
     <string name="pref_show_page_number">የገጽ ቁጥርን አሳይ</string>
@@ -270,7 +268,7 @@
     <string name="restore_in_progress">እነበረበት መልስ ቀድሞውኑ በሂደት ላይ ነው</string>
     <string name="creating_backup_error">ምትኬ አልተሳካም</string>
     <string name="creating_backup">ምትኬን መፍጠር</string>
-    <string name="backup_choice">ምትኬ ለማስቀመጥ ምን ይፈልጋሉ\?</string>
+    <string name="backup_choice">ምትኬ ለማስቀመጥ ምን ይፈልጋሉ?</string>
     <string name="backup_in_progress">ምትኬ ቀድሞውኑ በሂደት ላይ ነው</string>
     <string name="restore_duration">%02d ደቂቃ ፣ %02d ሰከንድ</string>
     <string name="restore_completed">እነበረበት መልስ ተጠናቅቋል</string>
