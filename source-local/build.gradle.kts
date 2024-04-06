@@ -1,6 +1,6 @@
 plugins {
+    id("mihon.library")
     kotlin("multiplatform")
-    id("com.android.library")
 }
 
 kotlin {

@@ -1,3 +1,5 @@
+package mihon.buildlogic
+
 import org.gradle.api.Project
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
@@ -23,9 +25,9 @@ fun Project.getBuildTime(): String {
     return LocalDateTime.now(ZoneOffset.UTC).format(BUILD_TIME_FORMATTER)
 }
 
-fun Project.runCommand(command: String): String {
+private fun Project.runCommand(command: String): String {
     val byteOut = ByteArrayOutputStream()
-    project.exec {
+    exec {
         commandLine = command.split(" ")
         standardOutput = byteOut
     }

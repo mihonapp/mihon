@@ -1,7 +1,7 @@
 plugins {
+    id("mihon.library")
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("com.android.library")
 }
 
 kotlin {
