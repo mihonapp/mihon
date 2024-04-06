@@ -1,8 +1,8 @@
 import org.gradle.api.Project
 import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.TimeZone
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 // Git is needed in your system PATH for these commands to work.
 // If it's not installed, you can return a random value as a workaround
@@ -16,10 +16,11 @@ fun Project.getGitSha(): String {
     // return "1"
 }
 
+private val BUILD_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+@Suppress("UnusedReceiverParameter")
 fun Project.getBuildTime(): String {
-    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
-    df.timeZone = TimeZone.getTimeZone("UTC")
-    return df.format(Date())
+    return LocalDateTime.now(ZoneOffset.UTC).format(BUILD_TIME_FORMATTER)
 }
 
 fun Project.runCommand(command: String): String {
