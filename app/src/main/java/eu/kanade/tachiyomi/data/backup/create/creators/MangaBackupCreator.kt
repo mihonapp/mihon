@@ -29,16 +29,21 @@ class MangaBackupCreator(
             handler.awaitList {
                 manga_syncQueries.getTracks(backupTrackMapper)
             }.groupBy({ x -> x.first }, { x -> x.second })
-        } else null
+        } else {
+            null
+        }
 
         return mangas.map {
             backupManga(it, options, categoriesMap, trackingMap)
         }
     }
 
-    private suspend fun backupManga(manga: Manga, options: BackupOptions,
-                                    categoriesMap: Map<Long, List<Category>>?,
-                                    trackingMap: Map<Long, List<BackupTracking>>?): BackupManga {
+    private suspend fun backupManga(
+        manga: Manga,
+        options: BackupOptions,
+        categoriesMap: Map<Long, List<Category>>?,
+        trackingMap: Map<Long, List<BackupTracking>>?
+    ): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 

@@ -67,18 +67,21 @@ val backupTrackMapper = {
         startDate: Long,
         finishDate: Long,
     ->
-    Pair(mangaId, BackupTracking(
-        syncId = syncId.toInt(),
-        mediaId = mediaId,
-        // forced not null so its compatible with 1.x backup system
-        libraryId = libraryId ?: 0,
-        title = title,
-        lastChapterRead = lastChapterRead.toFloat(),
-        totalChapters = totalChapters.toInt(),
-        score = score.toFloat(),
-        status = status.toInt(),
-        startedReadingDate = startDate,
-        finishedReadingDate = finishDate,
-        trackingUrl = remoteUrl,
-    ))
+    Pair(
+        mangaId,
+        BackupTracking(
+            syncId = syncId.toInt(),
+            mediaId = mediaId,
+            // forced not null so its compatible with 1.x backup system
+            libraryId = libraryId ?: 0,
+            title = title,
+            lastChapterRead = lastChapterRead.toFloat(),
+            totalChapters = totalChapters.toInt(),
+            score = score.toFloat(),
+            status = status.toInt(),
+            startedReadingDate = startDate,
+            finishedReadingDate = finishDate,
+            trackingUrl = remoteUrl,
+        )
+    )
 }
