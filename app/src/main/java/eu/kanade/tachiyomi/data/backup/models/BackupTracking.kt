@@ -54,7 +54,7 @@ data class BackupTracking(
 
 val backupTrackMapper = {
         _: Long,
-        _: Long,
+        mangaId: Long,
         syncId: Long,
         mediaId: Long,
         libraryId: Long?,
@@ -67,7 +67,7 @@ val backupTrackMapper = {
         startDate: Long,
         finishDate: Long,
     ->
-    BackupTracking(
+    Pair(mangaId, BackupTracking(
         syncId = syncId.toInt(),
         mediaId = mediaId,
         // forced not null so its compatible with 1.x backup system
@@ -80,5 +80,5 @@ val backupTrackMapper = {
         startedReadingDate = startDate,
         finishedReadingDate = finishDate,
         trackingUrl = remoteUrl,
-    )
+    ))
 }

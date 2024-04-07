@@ -4,6 +4,7 @@ import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupHistory
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
+import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
@@ -24,13 +25,20 @@ class MangaBackupCreator(
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         val categoriesMap = if (options.categories) getCategories.awaitWithMangaId() else null
 
+        val trackingMap = if (options.tracking) {
+            handler.awaitList {
+                manga_syncQueries.getTracks(backupTrackMapper)
+            }.groupBy({ x -> x.first }, { x -> x.second })
+        } else null
+
         return mangas.map {
-            backupManga(it, options, categoriesMap)
+            backupManga(it, options, categoriesMap, trackingMap)
         }
     }
 
     private suspend fun backupManga(manga: Manga, options: BackupOptions,
-                                    categoriesMap: Map<Long, List<Category>>?): BackupManga {
+                                    categoriesMap: Map<Long, List<Category>>?,
+                                    trackingMap: Map<Long, List<BackupTracking>>?): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
@@ -61,8 +69,9 @@ class MangaBackupCreator(
         }
 
         if (options.tracking) {
-            val tracks = handler.awaitList { manga_syncQueries.getTracksByMangaId(manga.id, backupTrackMapper) }
-            if (tracks.isNotEmpty()) {
+            assert(trackingMap != null)
+            val tracks = trackingMap!![manga.id]
+            if (tracks?.isNotEmpty() == true) {
                 mangaObject.tracking = tracks
             }
         }
