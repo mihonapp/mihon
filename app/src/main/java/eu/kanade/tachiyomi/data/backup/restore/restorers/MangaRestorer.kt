@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.data.UpdateStrategyColumnAdapter
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.interactor.FetchInterval
@@ -36,6 +37,7 @@ class MangaRestorer(
 
     private var now = ZonedDateTime.now()
     private var currentFetchWindow = fetchInterval.getWindow(now)
+    private var dbCategoriesMapByNameCache: Map<String, Category>? = null
 
     init {
         now = ZonedDateTime.now()
@@ -295,8 +297,11 @@ class MangaRestorer(
         categories: List<Long>,
         backupCategories: List<BackupCategory>,
     ) {
-        val dbCategories = getCategories.await()
-        val dbCategoriesByName = dbCategories.associateBy { it.name }
+        if (this.dbCategoriesMapByNameCache == null) {
+            val dbCategories = getCategories.await()
+            this.dbCategoriesMapByNameCache = dbCategories.associateBy { it.name }
+        }
+        val dbCategoriesByName = this.dbCategoriesMapByNameCache!!
 
         val backupCategoriesByOrder = backupCategories.associateBy { it.order }
 
