@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
@@ -21,12 +22,15 @@ class MangaBackupCreator(
 ) {
 
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
+        val categoriesMap = if (options.categories) getCategories.awaitWithMangaId() else null
+
         return mangas.map {
-            backupManga(it, options)
+            backupManga(it, options, categoriesMap)
         }
     }
 
-    private suspend fun backupManga(manga: Manga, options: BackupOptions): BackupManga {
+    private suspend fun backupManga(manga: Manga, options: BackupOptions,
+                                    categoriesMap: Map<Long, List<Category>>?): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
@@ -48,9 +52,10 @@ class MangaBackupCreator(
         }
 
         if (options.categories) {
+            assert(categoriesMap != null)
             // Backup categories for this manga
-            val categoriesForManga = getCategories.await(manga.id)
-            if (categoriesForManga.isNotEmpty()) {
+            val categoriesForManga = categoriesMap!![manga.id]
+            if (categoriesForManga?.isNotEmpty() == true) {
                 mangaObject.categories = categoriesForManga.map { it.order }
             }
         }
