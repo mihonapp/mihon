@@ -18,12 +18,18 @@ import uy.kohesive.injekt.api.get
 
 class MangaBackupCreator(
     private val handler: DatabaseHandler = Injekt.get(),
-    private val getCategories: GetCategories = Injekt.get(),
     private val getHistory: GetHistory = Injekt.get(),
 ) {
-
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        val categoriesMap = if (options.categories) getCategories.awaitWithMangaId() else null
+        val categoriesMap: Map<Long, List<Category>>? = if (options.categories) {
+            handler.awaitList {
+                categoriesQueries.getCategoriesWithMangaId { mangaId, categoryId, name, order, flags ->
+                    Pair(mangaId, Category(categoryId, name, order, flags))
+                }
+            }.groupBy({ x -> x.first }, { x -> x.second })
+        } else {
+            null
+        }
 
         val trackingMap = if (options.tracking) {
             handler.awaitList {
