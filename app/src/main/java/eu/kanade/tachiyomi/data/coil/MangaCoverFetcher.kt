@@ -46,6 +46,7 @@ import java.io.IOException
  * Available request parameter:
  * - [USE_CUSTOM_COVER_KEY]: Use custom cover if set by user, default is true
  */
+@Suppress("LongParameterList")
 class MangaCoverFetcher(
     private val url: String?,
     private val isLibraryManga: Boolean,
@@ -55,7 +56,7 @@ class MangaCoverFetcher(
     private val diskCacheKeyLazy: Lazy<String>,
     private val sourceLazy: Lazy<HttpSource?>,
     private val callFactoryLazy: Lazy<Call.Factory>,
-    private val diskCacheLazy: Lazy<DiskCache>,
+    private val imageLoader: ImageLoader,
 ) : Fetcher {
 
     private val diskCacheKey: String
@@ -207,7 +208,7 @@ class MangaCoverFetcher(
     private fun moveSnapshotToCoverCache(snapshot: DiskCache.Snapshot, cacheFile: File?): File? {
         if (cacheFile == null) return null
         return try {
-            diskCacheLazy.value.run {
+            imageLoader.diskCache?.run {
                 fileSystem.source(snapshot.data).use { input ->
                     writeSourceToCoverCache(input, cacheFile)
                 }
@@ -248,7 +249,7 @@ class MangaCoverFetcher(
 
     private fun readFromDiskCache(): DiskCache.Snapshot? {
         return if (options.diskCachePolicy.readEnabled) {
-            diskCacheLazy.value.openSnapshot(diskCacheKey)
+            imageLoader.diskCache?.openSnapshot(diskCacheKey)
         } else {
             null
         }
@@ -257,9 +258,10 @@ class MangaCoverFetcher(
     private fun writeToDiskCache(
         response: Response,
     ): DiskCache.Snapshot? {
-        val editor = diskCacheLazy.value.openEditor(diskCacheKey) ?: return null
+        val diskCache = imageLoader.diskCache
+        val editor = diskCache?.openEditor(diskCacheKey) ?: return null
         try {
-            diskCacheLazy.value.fileSystem.write(editor.data) {
+            diskCache.fileSystem.write(editor.data) {
                 response.body.source().readAll(this)
             }
             return editor.commitAndOpenSnapshot()
@@ -299,7 +301,6 @@ class MangaCoverFetcher(
 
     class MangaFactory(
         private val callFactoryLazy: Lazy<Call.Factory>,
-        private val diskCacheLazy: Lazy<DiskCache>,
     ) : Fetcher.Factory<Manga> {
 
         private val coverCache: CoverCache by injectLazy()
@@ -312,17 +313,16 @@ class MangaCoverFetcher(
                 options = options,
                 coverFileLazy = lazy { coverCache.getCoverFile(data.thumbnailUrl) },
                 customCoverFileLazy = lazy { coverCache.getCustomCoverFile(data.id) },
-                diskCacheKeyLazy = lazy { MangaKeyer().key(data, options) },
+                diskCacheKeyLazy = lazy { imageLoader.components.key(data, options)!! },
                 sourceLazy = lazy { sourceManager.get(data.source) as? HttpSource },
                 callFactoryLazy = callFactoryLazy,
-                diskCacheLazy = diskCacheLazy,
+                imageLoader = imageLoader,
             )
         }
     }
 
     class MangaCoverFactory(
         private val callFactoryLazy: Lazy<Call.Factory>,
-        private val diskCacheLazy: Lazy<DiskCache>,
     ) : Fetcher.Factory<MangaCover> {
 
         private val coverCache: CoverCache by injectLazy()
@@ -335,10 +335,10 @@ class MangaCoverFetcher(
                 options = options,
                 coverFileLazy = lazy { coverCache.getCoverFile(data.url) },
                 customCoverFileLazy = lazy { coverCache.getCustomCoverFile(data.mangaId) },
-                diskCacheKeyLazy = lazy { MangaCoverKeyer().key(data, options) },
+                diskCacheKeyLazy = lazy { imageLoader.components.key(data, options)!! },
                 sourceLazy = lazy { sourceManager.get(data.sourceId) as? HttpSource },
                 callFactoryLazy = callFactoryLazy,
-                diskCacheLazy = diskCacheLazy,
+                imageLoader = imageLoader,
             )
         }
     }

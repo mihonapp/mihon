@@ -17,8 +17,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
-import coil3.disk.DiskCache
-import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.allowRgb565
 import coil3.request.crossfade
@@ -157,16 +155,14 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun newImageLoader(context: Context): ImageLoader {
         return ImageLoader.Builder(this).apply {
             val callFactoryLazy = lazy { Injekt.get<NetworkHelper>().client }
-            val diskCacheLazy = lazy { CoilDiskCache.get(this@App) }
             components {
                 add(OkHttpNetworkFetcherFactory(callFactoryLazy::value))
                 add(TachiyomiImageDecoder.Factory())
-                add(MangaCoverFetcher.MangaFactory(callFactoryLazy, diskCacheLazy))
-                add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy, diskCacheLazy))
+                add(MangaCoverFetcher.MangaFactory(callFactoryLazy))
+                add(MangaCoverFetcher.MangaCoverFactory(callFactoryLazy))
                 add(MangaKeyer())
                 add(MangaCoverKeyer())
             }
-            diskCache(diskCacheLazy::value)
             crossfade((300 * this@App.animatorDurationScale).toInt())
             allowRgb565(DeviceUtil.isLowRamDevice(this@App))
             if (networkPreferences.verboseLogging().get()) logger(DebugLogger())
@@ -240,24 +236,3 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 }
 
 private const val ACTION_DISABLE_INCOGNITO_MODE = "tachi.action.DISABLE_INCOGNITO_MODE"
-
-/**
- * Direct copy of Coil's internal SingletonDiskCache so that [MangaCoverFetcher] can access it.
- */
-private object CoilDiskCache {
-
-    private const val FOLDER_NAME = "image_cache"
-    private var instance: DiskCache? = null
-
-    @Synchronized
-    fun get(context: Context): DiskCache {
-        return instance ?: run {
-            val safeCacheDir = context.cacheDir.apply { mkdirs() }
-            // Create the singleton disk cache instance.
-            DiskCache.Builder()
-                .directory(safeCacheDir.resolve(FOLDER_NAME))
-                .build()
-                .also { instance = it }
-        }
-    }
-}
