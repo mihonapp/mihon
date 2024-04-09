@@ -17,7 +17,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,6 +35,8 @@ class BackupRestorer(
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
     private val mangaRestorer: MangaRestorer = MangaRestorer(),
+
+    private val getCategories: GetCategories = Injekt.get(),
 ) {
 
     private var restoreAmount = 0
@@ -112,12 +118,20 @@ class BackupRestorer(
         backupMangas: List<BackupManga>,
         backupCategories: List<BackupCategory>,
     ) = launch {
+        if (backupMangas.isEmpty()) {
+            return@launch
+        }
+
+        // prepare data:
+        val dbCategoriesByName: Map<String, Category> = getCategories.await()
+            .associateBy { it.name }
+
         mangaRestorer.sortByNew(backupMangas)
             .forEach {
                 ensureActive()
 
                 try {
-                    mangaRestorer.restoreManga(it, backupCategories)
+                    mangaRestorer.restoreManga(it, backupCategories, dbCategoriesByName)
                 } catch (e: Exception) {
                     val sourceName = sourceMapping[it.source] ?: it.source.toString()
                     errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
