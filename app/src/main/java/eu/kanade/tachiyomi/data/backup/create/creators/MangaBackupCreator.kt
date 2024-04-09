@@ -8,10 +8,11 @@ import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -19,25 +20,33 @@ import uy.kohesive.injekt.api.get
 class MangaBackupCreator(
     private val handler: DatabaseHandler = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
-    private val getHistory: GetHistory = Injekt.get(),
 ) {
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        val categoriesMap = if (options.categories) {
-            getCategories.awaitWithMangaId()
-        } else {
-            emptyMap()
+        if (mangas.isEmpty()) {
+            // skip all other SQL queries
+            return emptyList()
         }
 
-        val trackingMap = if (options.tracking) {
+        val categoriesMap = if (options.categories) {
+            getCategories.awaitWithMangaId()
+        } else emptyMap()
+
+        val tracksMap = if (options.tracking) {
             handler.awaitList {
                 manga_syncQueries.getTracks(backupTrackMapper)
             }.groupBy({ it.first }, { it.second })
-        } else {
-            emptyMap()
-        }
+        } else emptyMap()
+
+        val historiesMap = if (options.history) {
+            handler.awaitList {
+                historyQueries.listHistoriesWithMangaId { mangaId, url, lastRead, timeRead ->
+                    Pair(mangaId, BackupHistory(url, lastRead?.time ?: 0L, timeRead))
+                }
+            }.groupBy({ it.first }, { it.second })
+        } else emptyMap()
 
         return mangas.map {
-            backupManga(it, options, categoriesMap, trackingMap)
+            backupManga(it, options, categoriesMap, tracksMap, historiesMap)
         }
     }
 
@@ -45,7 +54,8 @@ class MangaBackupCreator(
         manga: Manga,
         options: BackupOptions,
         categoriesMap: Map<Long, List<Category>>,
-        trackingMap: Map<Long, List<BackupTracking>>
+        tracksMap: Map<Long, List<BackupTracking>>,
+        historiesMap: Map<Long, List<BackupHistory>>
     ): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
@@ -76,22 +86,16 @@ class MangaBackupCreator(
         }
 
         if (options.tracking) {
-            val tracks = trackingMap[manga.id]
+            val tracks = tracksMap[manga.id]
             if (tracks?.isNotEmpty() == true) {
                 mangaObject.tracking = tracks
             }
         }
 
         if (options.history) {
-            val historyByMangaId = getHistory.await(manga.id)
-            if (historyByMangaId.isNotEmpty()) {
-                val history = historyByMangaId.map { history ->
-                    val chapter = handler.awaitOne { chaptersQueries.getChapterById(history.chapterId) }
-                    BackupHistory(chapter.url, history.readAt?.time ?: 0L, history.readDuration)
-                }
-                if (history.isNotEmpty()) {
-                    mangaObject.history = history
-                }
+            val history = historiesMap[manga.id]
+            if (history?.isNotEmpty() == true) {
+                mangaObject.history = history
             }
         }
 
