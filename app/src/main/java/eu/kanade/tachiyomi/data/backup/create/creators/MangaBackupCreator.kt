@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.history.interactor.GetHistory
 import tachiyomi.domain.manga.model.Manga
@@ -17,15 +18,12 @@ import uy.kohesive.injekt.api.get
 
 class MangaBackupCreator(
     private val handler: DatabaseHandler = Injekt.get(),
+    private val getCategories: GetCategories = Injekt.get(),
     private val getHistory: GetHistory = Injekt.get(),
 ) {
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         val categoriesMap = if (options.categories) {
-            handler.awaitList {
-                categoriesQueries.getCategoriesWithMangaId { mangaId, categoryId, name, order, flags ->
-                    Pair(mangaId, Category(categoryId, name, order, flags))
-                }
-            }.groupBy({ it.first }, { it.second })
+            getCategories.awaitWithMangaId()
         } else {
             emptyMap()
         }
