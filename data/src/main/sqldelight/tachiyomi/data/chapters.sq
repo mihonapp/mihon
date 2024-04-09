@@ -119,3 +119,7 @@ WHERE _id = :chapterId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
+
+listAll:
+SELECT *
+FROM chapters;

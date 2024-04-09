@@ -8,6 +8,8 @@ import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import logcat.LogPriority
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
@@ -31,6 +33,16 @@ class MangaBackupCreator(
             }
         }.groupBy({ it.first }, { it.second })
 
+        logcat(LogPriority.DEBUG) { "Begin load chapters" }
+
+        val chaptersMap = if (options.chapters) {
+            handler.awaitList {
+                chaptersQueries.listAll(backupChapterMapper)
+            }.groupBy({ it.first }, { it.second })
+        } else emptyMap()
+
+        logcat(LogPriority.DEBUG) { "End load chapters, found ${chaptersMap.values.sumOf { it.size }}" }
+
         val categoriesMap = if (options.categories) {
             getCategories.awaitWithMangaId()
         } else emptyMap()
@@ -52,16 +64,18 @@ class MangaBackupCreator(
         return mangas.map {
             backupManga(it, options,
                 excludedScanlatorsMap,
+                chaptersMap,
                 categoriesMap,
                 tracksMap,
                 historiesMap)
         }
     }
 
-    private suspend fun backupManga(
+    private fun backupManga(
         manga: Manga,
         options: BackupOptions,
         excludedScanlatorsMap: Map<Long, List<String>>,
+        chaptersMap: Map<Long, List<BackupChapter>>,
         categoriesMap: Map<Long, List<Category>>,
         tracksMap: Map<Long, List<BackupTracking>>,
         historiesMap: Map<Long, List<BackupHistory>>
@@ -75,14 +89,8 @@ class MangaBackupCreator(
 
         if (options.chapters) {
             // Backup all the chapters
-            handler.awaitList {
-                chaptersQueries.getChaptersByMangaId(
-                    mangaId = manga.id,
-                    applyScanlatorFilter = 0, // false
-                    mapper = backupChapterMapper,
-                )
-            }
-                .takeUnless(List<BackupChapter>::isEmpty)
+            chaptersMap[manga.id]
+                ?.takeUnless(List<BackupChapter>::isNullOrEmpty)
                 ?.let { mangaObject.chapters = it }
         }
 

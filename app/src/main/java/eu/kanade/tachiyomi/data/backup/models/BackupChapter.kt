@@ -44,7 +44,7 @@ data class BackupChapter(
 
 val backupChapterMapper = {
         _: Long,
-        _: Long,
+        mangaId: Long,
         url: String,
         name: String,
         scanlator: String?,
@@ -59,18 +59,21 @@ val backupChapterMapper = {
         version: Long,
         _: Long,
     ->
-    BackupChapter(
-        url = url,
-        name = name,
-        chapterNumber = chapterNumber.toFloat(),
-        scanlator = scanlator,
-        read = read,
-        bookmark = bookmark,
-        lastPageRead = lastPageRead,
-        dateFetch = dateFetch,
-        dateUpload = dateUpload,
-        sourceOrder = sourceOrder,
-        lastModifiedAt = lastModifiedAt,
-        version = version,
+    Pair(
+        mangaId,
+        BackupChapter(
+            url = url,
+            name = name,
+            chapterNumber = chapterNumber.toFloat(),
+            scanlator = scanlator,
+            read = read,
+            bookmark = bookmark,
+            lastPageRead = lastPageRead,
+            dateFetch = dateFetch,
+            dateUpload = dateUpload,
+            sourceOrder = sourceOrder,
+            lastModifiedAt = lastModifiedAt,
+            version = version,
+        )
     )
 }
