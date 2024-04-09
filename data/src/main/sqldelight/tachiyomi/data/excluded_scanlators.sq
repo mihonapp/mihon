@@ -20,3 +20,7 @@ getExcludedScanlatorsByMangaId:
 SELECT scanlator
 FROM excluded_scanlators
 WHERE manga_id = :mangaId;
+
+listAll:
+SELECT *
+FROM excluded_scanlators;

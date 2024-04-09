@@ -8,8 +8,6 @@ import eu.kanade.tachiyomi.data.backup.models.BackupTracking
 import eu.kanade.tachiyomi.data.backup.models.backupChapterMapper
 import eu.kanade.tachiyomi.data.backup.models.backupTrackMapper
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
-import logcat.LogPriority
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.DatabaseHandler
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
@@ -26,6 +24,12 @@ class MangaBackupCreator(
             // skip all other SQL queries
             return emptyList()
         }
+
+        val excludedScanlatorsMap = handler.awaitList {
+            excluded_scanlatorsQueries.listAll { mangaId, scanlator ->
+                Pair(mangaId, scanlator)
+            }
+        }.groupBy({ it.first }, { it.second })
 
         val categoriesMap = if (options.categories) {
             getCategories.awaitWithMangaId()
@@ -46,13 +50,18 @@ class MangaBackupCreator(
         } else emptyMap()
 
         return mangas.map {
-            backupManga(it, options, categoriesMap, tracksMap, historiesMap)
+            backupManga(it, options,
+                excludedScanlatorsMap,
+                categoriesMap,
+                tracksMap,
+                historiesMap)
         }
     }
 
     private suspend fun backupManga(
         manga: Manga,
         options: BackupOptions,
+        excludedScanlatorsMap: Map<Long, List<String>>,
         categoriesMap: Map<Long, List<Category>>,
         tracksMap: Map<Long, List<BackupTracking>>,
         historiesMap: Map<Long, List<BackupHistory>>
@@ -60,8 +69,8 @@ class MangaBackupCreator(
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
 
-        mangaObject.excludedScanlators = handler.awaitList {
-            excluded_scanlatorsQueries.getExcludedScanlatorsByMangaId(manga.id)
+        excludedScanlatorsMap[manga.id]?.let {
+            mangaObject.excludedScanlators = it
         }
 
         if (options.chapters) {
