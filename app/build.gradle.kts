@@ -26,7 +26,7 @@ android {
         applicationId = "app.mihon"
 
         versionCode = 7
-        versionName = "0.16.4"
+        versionName = "0.16.5"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
