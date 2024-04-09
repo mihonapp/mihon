@@ -21,6 +21,7 @@ class CategoriesRestorer(
 
             val categories = backupCategories
                 .sortedBy { it.order }
+                .distinctBy { it.name }
                 .map {
                     val newOrder = nextOrder++
                     dbCategoriesByName[it.name]
