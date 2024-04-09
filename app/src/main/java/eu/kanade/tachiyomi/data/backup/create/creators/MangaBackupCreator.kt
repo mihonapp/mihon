@@ -20,22 +20,22 @@ class MangaBackupCreator(
     private val getHistory: GetHistory = Injekt.get(),
 ) {
     suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
-        val categoriesMap: Map<Long, List<Category>>? = if (options.categories) {
+        val categoriesMap = if (options.categories) {
             handler.awaitList {
                 categoriesQueries.getCategoriesWithMangaId { mangaId, categoryId, name, order, flags ->
                     Pair(mangaId, Category(categoryId, name, order, flags))
                 }
-            }.groupBy({ x -> x.first }, { x -> x.second })
+            }.groupBy({ it.first }, { it.second })
         } else {
-            null
+            emptyMap()
         }
 
         val trackingMap = if (options.tracking) {
             handler.awaitList {
                 manga_syncQueries.getTracks(backupTrackMapper)
-            }.groupBy({ x -> x.first }, { x -> x.second })
+            }.groupBy({ it.first }, { it.second })
         } else {
-            null
+            emptyMap()
         }
 
         return mangas.map {
@@ -46,8 +46,8 @@ class MangaBackupCreator(
     private suspend fun backupManga(
         manga: Manga,
         options: BackupOptions,
-        categoriesMap: Map<Long, List<Category>>?,
-        trackingMap: Map<Long, List<BackupTracking>>?
+        categoriesMap: Map<Long, List<Category>>,
+        trackingMap: Map<Long, List<BackupTracking>>
     ): BackupManga {
         // Entry for this manga
         val mangaObject = manga.toBackupManga()
@@ -70,17 +70,15 @@ class MangaBackupCreator(
         }
 
         if (options.categories) {
-            assert(categoriesMap != null)
             // Backup categories for this manga
-            val categoriesForManga = categoriesMap!![manga.id]
+            val categoriesForManga = categoriesMap[manga.id]
             if (categoriesForManga?.isNotEmpty() == true) {
                 mangaObject.categories = categoriesForManga.map { it.order }
             }
         }
 
         if (options.tracking) {
-            assert(trackingMap != null)
-            val tracks = trackingMap!![manga.id]
+            val tracks = trackingMap[manga.id]
             if (tracks?.isNotEmpty() == true) {
                 mangaObject.tracking = tracks
             }
