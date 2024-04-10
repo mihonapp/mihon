@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +37,7 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
+import eu.kanade.core.util.isInkBookEInkDevice
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
@@ -111,7 +114,12 @@ object SettingsDataScreen : SearchableSettings {
                 val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
-                context.contentResolver.takePersistableUriPermission(uri, flags)
+                // For some reason InkBook devices do not implement the SAF properly. Persistable URI grants do not
+                // work. However, simply retrieving the URI and using it works fine for these devices. Access is not
+                // revoked after the app is closed or the device is restarted.
+                if (!isInkBookEInkDevice()) {
+                    context.contentResolver.takePersistableUriPermission(uri, flags)
+                }
 
                 UniFile.fromUri(context, uri)?.let {
                     storageDirPref.set(it.uri.toString())
