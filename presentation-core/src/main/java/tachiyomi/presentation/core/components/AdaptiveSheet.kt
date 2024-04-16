@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -78,8 +77,7 @@ fun AdaptiveSheet(
         Box(
             modifier = Modifier
                 .clickable(
-                    enabled = true,
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
                 )
@@ -91,7 +89,7 @@ fun AdaptiveSheet(
                 modifier = Modifier
                     .requiredWidthIn(max = 460.dp)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         indication = null,
                         onClick = {},
                     )
@@ -129,7 +127,7 @@ fun AdaptiveSheet(
         Box(
             modifier = Modifier
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
                 )
@@ -147,7 +145,7 @@ fun AdaptiveSheet(
                 modifier = Modifier
                     .widthIn(max = 460.dp)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         indication = null,
                         onClick = {},
                     )

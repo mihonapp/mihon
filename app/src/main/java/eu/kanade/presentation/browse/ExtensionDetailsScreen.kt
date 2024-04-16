@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.DisplayMetrics
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -354,10 +353,8 @@ private fun InfoText(
     primaryTextStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     onClick: (() -> Unit)? = null,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-
     val clickableModifier = if (onClick != null) {
-        Modifier.clickable(interactionSource, indication = null) { onClick() }
+        Modifier.clickable(interactionSource = null, indication = null, onClick = onClick)
     } else {
         Modifier
     }
