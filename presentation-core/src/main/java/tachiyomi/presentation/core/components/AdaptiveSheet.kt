@@ -122,7 +122,7 @@ fun AdaptiveSheet(
             )
         }
         val internalOnDismissRequest = {
-            if (anchoredDraggableState.currentValue == 0) {
+            if (anchoredDraggableState.settledValue == 0) {
                 scope.launch { anchoredDraggableState.animateTo(1) }
             }
         }
@@ -192,7 +192,7 @@ fun AdaptiveSheet(
 
             LaunchedEffect(anchoredDraggableState) {
                 scope.launch { anchoredDraggableState.animateTo(0) }
-                snapshotFlow { anchoredDraggableState.currentValue }
+                snapshotFlow { anchoredDraggableState.settledValue }
                     .drop(1)
                     .filter { it == 1 }
                     .collectLatest {
