@@ -286,7 +286,6 @@ tasks {
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=coil3.annotation.ExperimentalCoilApi",
-            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
