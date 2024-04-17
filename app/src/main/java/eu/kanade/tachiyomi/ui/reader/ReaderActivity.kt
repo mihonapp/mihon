@@ -51,6 +51,7 @@ import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
@@ -872,7 +873,9 @@ class ReaderActivity : BaseActivity() {
                         input.copyTo(output)
                     }
                 }
-                SubsamplingScaleImageView.setDisplayProfile(outputStream.toByteArray())
+                val data = outputStream.toByteArray()
+                SubsamplingScaleImageView.setDisplayProfile(data)
+                TachiyomiImageDecoder.displayProfile = data
             }
         }
 
