@@ -7,11 +7,19 @@
   "labels": ["Dependencies"],
   "packageRules": [
     {
+      "groupName": "Compose BOM",
+      "matchPackageNames": [
+        "dev.chrisbanes.compose:compose-bom"
+      ],
+      "ignoreUnstable": false
+    },
+    {
       // Compiler plugins are tightly coupled to Kotlin version
       "groupName": "Kotlin",
       "matchPackagePrefixes": [
         "androidx.compose.compiler",
-        "org.jetbrains.kotlin",
+        "org.jetbrains.kotlin.",
+        "org.jetbrains.kotlin:"
       ],
     }
   ]
