@@ -24,11 +24,10 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.hippo.unifile.UniFile
 import logcat.LogPriority
+import okio.Buffer
+import okio.BufferedSource
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
-import java.io.BufferedInputStream
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URLConnection
 import java.util.Locale
@@ -76,9 +75,9 @@ object ImageUtil {
             ?: "jpg"
     }
 
-    fun isAnimatedAndSupported(stream: InputStream): Boolean {
+    fun isAnimatedAndSupported(source: BufferedSource): Boolean {
         return try {
-            val type = getImageType(stream) ?: return false
+            val type = getImageType(source.peek().inputStream()) ?: return false
             // https://coil-kt.github.io/coil/getting_started/#supported-image-formats
             when (type.format) {
                 Format.Gif -> true
@@ -125,18 +124,16 @@ object ImageUtil {
      *
      * @return true if the width is greater than the height
      */
-    fun isWideImage(imageStream: BufferedInputStream): Boolean {
-        val options = extractImageOptions(imageStream)
+    fun isWideImage(imageSource: BufferedSource): Boolean {
+        val options = extractImageOptions(imageSource)
         return options.outWidth > options.outHeight
     }
 
     /**
-     * Extract the 'side' part from imageStream and return it as InputStream.
+     * Extract the 'side' part from [BufferedSource] and return it as [BufferedSource].
      */
-    fun splitInHalf(imageStream: InputStream, side: Side): InputStream {
-        val imageBytes = imageStream.readBytes()
-
-        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    fun splitInHalf(imageSource: BufferedSource, side: Side): BufferedSource {
+        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -150,22 +147,20 @@ object ImageUtil {
         half.applyCanvas {
             drawBitmap(imageBitmap, part, singlePage, null)
         }
-        val output = ByteArrayOutputStream()
-        half.compress(Bitmap.CompressFormat.JPEG, 100, output)
+        val output = Buffer()
+        half.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
 
-        return ByteArrayInputStream(output.toByteArray())
+        return output
     }
 
-    fun rotateImage(imageStream: InputStream, degrees: Float): InputStream {
-        val imageBytes = imageStream.readBytes()
-
-        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    fun rotateImage(imageSource: BufferedSource, degrees: Float): BufferedSource {
+        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
         val rotated = rotateBitMap(imageBitmap, degrees)
 
-        val output = ByteArrayOutputStream()
-        rotated.compress(Bitmap.CompressFormat.JPEG, 100, output)
+        val output = Buffer()
+        rotated.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
 
-        return ByteArrayInputStream(output.toByteArray())
+        return output
     }
 
     private fun rotateBitMap(bitmap: Bitmap, degrees: Float): Bitmap {
@@ -176,10 +171,8 @@ object ImageUtil {
     /**
      * Split the image into left and right parts, then merge them into a new image.
      */
-    fun splitAndMerge(imageStream: InputStream, upperSide: Side): InputStream {
-        val imageBytes = imageStream.readBytes()
-
-        val imageBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    fun splitAndMerge(imageSource: BufferedSource, upperSide: Side): BufferedSource {
+        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
         val height = imageBitmap.height
         val width = imageBitmap.width
 
@@ -201,9 +194,9 @@ object ImageUtil {
             drawBitmap(imageBitmap, leftPart, bottomPart, null)
         }
 
-        val output = ByteArrayOutputStream()
-        result.compress(Bitmap.CompressFormat.JPEG, 100, output)
-        return ByteArrayInputStream(output.toByteArray())
+        val output = Buffer()
+        result.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
+        return output
     }
 
     enum class Side {
@@ -216,8 +209,8 @@ object ImageUtil {
      *
      * @return true if the height:width ratio is greater than 3.
      */
-    private fun isTallImage(imageStream: InputStream): Boolean {
-        val options = extractImageOptions(imageStream, resetAfterExtraction = false)
+    private fun isTallImage(imageSource: BufferedSource): Boolean {
+        val options = extractImageOptions(imageSource)
         return (options.outHeight / options.outWidth) > 3
     }
 
@@ -225,17 +218,18 @@ object ImageUtil {
      * Splits tall images to improve performance of reader
      */
     fun splitTallImage(tmpDir: UniFile, imageFile: UniFile, filenamePrefix: String): Boolean {
-        if (isAnimatedAndSupported(imageFile.openInputStream()) || !isTallImage(imageFile.openInputStream())) {
+        val imageSource = imageFile.openInputStream().use { Buffer().readFrom(it) }
+        if (isAnimatedAndSupported(imageSource) || !isTallImage(imageSource)) {
             return true
         }
 
-        val bitmapRegionDecoder = getBitmapRegionDecoder(imageFile.openInputStream())
+        val bitmapRegionDecoder = getBitmapRegionDecoder(imageSource.peek().inputStream())
         if (bitmapRegionDecoder == null) {
             logcat { "Failed to create new instance of BitmapRegionDecoder" }
             return false
         }
 
-        val options = extractImageOptions(imageFile.openInputStream(), resetAfterExtraction = false).apply {
+        val options = extractImageOptions(imageSource).apply {
             inJustDecodeBounds = false
         }
 
@@ -548,16 +542,9 @@ object ImageUtil {
     /**
      * Used to check an image's dimensions without loading it in the memory.
      */
-    private fun extractImageOptions(
-        imageStream: InputStream,
-        resetAfterExtraction: Boolean = true,
-    ): BitmapFactory.Options {
-        imageStream.mark(Int.MAX_VALUE)
-
-        val imageBytes = imageStream.readBytes()
+    private fun extractImageOptions(imageSource: BufferedSource): BitmapFactory.Options {
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
-        if (resetAfterExtraction) imageStream.reset()
+        BitmapFactory.decodeStream(imageSource.peek().inputStream(), null, options)
         return options
     }
 
