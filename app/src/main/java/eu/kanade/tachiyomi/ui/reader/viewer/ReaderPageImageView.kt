@@ -28,11 +28,10 @@ import coil3.size.Dimension
 import coil3.size.Precision
 import coil3.size.Size
 import coil3.size.SizeResolver
-import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_IN_OUT_QUAD
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.EASE_OUT_QUAD
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.Companion.EASE_IN_OUT_QUAD
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.Companion.EASE_OUT_QUAD
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.Companion.SCALE_TYPE_CENTER_INSIDE
 import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
@@ -99,26 +98,23 @@ open class ReaderPageImageView @JvmOverloads constructor(
             if (isReady) {
                 landscapeZoom(forward)
             } else {
-                setOnImageEventListener(
-                    object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                        override fun onReady() {
-                            setupZoom(config)
-                            landscapeZoom(forward)
-                            this@ReaderPageImageView.onImageLoaded()
-                        }
-                    },
-                )
+                setOnImageEventListener {
+                    setupZoom(config)
+                    landscapeZoom(forward)
+                    this@ReaderPageImageView.onImageLoaded()
+                }
             }
         }
     }
 
     private fun SubsamplingScaleImageView.landscapeZoom(forward: Boolean) {
+        @Suppress("ComplexCondition")
         if (
             config != null &&
             config!!.landscapeZoom &&
             config!!.minimumScaleType == SCALE_TYPE_CENTER_INSIDE &&
             sWidth > sHeight &&
-            scale == minScale
+            scale == getMinScale()
         ) {
             handler?.postDelayed(500) {
                 val point = when (config!!.zoomStartPosition) {
@@ -268,15 +264,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
         setDoubleTapZoomDuration(config.zoomDuration.getSystemScaledDuration())
         setMinimumScaleType(config.minimumScaleType)
         setMinimumDpi(1) // Just so that very small image will be fit for initial load
-        setOnImageEventListener(
-            object : SubsamplingScaleImageView.DefaultOnImageEventListener() {
-                override fun onReady() {
-                    setupZoom(config)
-                    if (isVisibleOnScreen()) landscapeZoom(true)
-                    this@ReaderPageImageView.onImageLoaded()
-                }
-            },
-        )
+        setOnImageEventListener {
+            setupZoom(config)
+            if (isVisibleOnScreen()) landscapeZoom(true)
+            this@ReaderPageImageView.onImageLoaded()
+        }
 
         val request = ImageRequest.Builder(context)
             .data(data)
@@ -285,7 +277,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             .target(
                 onSuccess = { result ->
                     val image = result as BitmapImage
-                    setImage(ImageSource.bitmap(image.bitmap))
+                    setImage(image.bitmap)
                     isVisible = true
                 },
                 onError = {
