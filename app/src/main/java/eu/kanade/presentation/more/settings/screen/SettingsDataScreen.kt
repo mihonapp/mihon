@@ -35,7 +35,6 @@ import androidx.core.net.toUri
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
-import eu.kanade.core.util.isInkBookEInkDevice
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
@@ -115,8 +114,12 @@ object SettingsDataScreen : SearchableSettings {
                 // For some reason InkBook devices do not implement the SAF properly. Persistable URI grants do not
                 // work. However, simply retrieving the URI and using it works fine for these devices. Access is not
                 // revoked after the app is closed or the device is restarted.
-                if (!isInkBookEInkDevice()) {
+                // This also holds for some Samsung devices. Thus, we simply execute inside of a try-catch block and
+                // ignore the exception if it is thrown.
+                try {
                     context.contentResolver.takePersistableUriPermission(uri, flags)
+                } catch (e: RuntimeException) {
+                    logcat(LogPriority.ERROR, e)
                 }
 
                 UniFile.fromUri(context, uri)?.let {
