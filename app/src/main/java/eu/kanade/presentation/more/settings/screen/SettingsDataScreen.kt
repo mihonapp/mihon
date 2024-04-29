@@ -111,7 +111,16 @@ object SettingsDataScreen : SearchableSettings {
                 val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
-                context.contentResolver.takePersistableUriPermission(uri, flags)
+                // For some reason InkBook devices do not implement the SAF properly. Persistable URI grants do not
+                // work. However, simply retrieving the URI and using it works fine for these devices. Access is not
+                // revoked after the app is closed or the device is restarted.
+                // This also holds for some Samsung devices. Thus, we simply execute inside of a try-catch block and
+                // ignore the exception if it is thrown.
+                try {
+                    context.contentResolver.takePersistableUriPermission(uri, flags)
+                } catch (e: RuntimeException) {
+                    logcat(LogPriority.ERROR, e)
+                }
 
                 UniFile.fromUri(context, uri)?.let {
                     storageDirPref.set(it.uri.toString())
