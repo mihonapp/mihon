@@ -190,6 +190,9 @@ dependencies {
     // RxJava
     implementation(libs.rxjava)
 
+    implementation(platform(libs.arrow.stack))
+    implementation(libs.arrow.fx.coroutines)
+
     // Networking
     implementation(libs.bundles.okhttp)
     implementation(libs.okio)

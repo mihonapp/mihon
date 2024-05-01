@@ -731,7 +731,7 @@ class MangaScreenModel(
      * Downloads the given list of chapters with the manager.
      * @param chapters the list of chapters to download.
      */
-    private fun downloadChapters(chapters: List<Chapter>) {
+    private suspend fun downloadChapters(chapters: List<Chapter>) {
         val manga = successState?.manga ?: return
         downloadManager.downloadChapters(manga, chapters)
         toggleAllSelection(false)
