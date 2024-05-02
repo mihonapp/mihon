@@ -174,6 +174,10 @@ class PagerPageHolder(
     }
 
     private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
+        if (viewer.config.flipHorizontally) {
+            return ImageUtil.flipImage(imageSource, true, false)
+        }
+
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }

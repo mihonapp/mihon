@@ -213,6 +213,10 @@ class WebtoonPageHolder(
     }
 
     private fun process(imageSource: BufferedSource): BufferedSource {
+        if (viewer.config.flipHorizontally) {
+            return ImageUtil.flipImage(imageSource, true, false)
+        }
+
         if (viewer.config.dualPageRotateToFit) {
             return rotateDualPage(imageSource)
         }

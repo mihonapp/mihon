@@ -44,6 +44,9 @@ class WebtoonConfig(
 
     val theme = readerPreferences.readerTheme().get()
 
+    var flipHorizontally = false
+        private set
+
     init {
         readerPreferences.cropBordersWebtoon()
             .register({ imageCropBorders = it }, { imagePropertyChangedListener?.invoke() })
@@ -96,6 +99,9 @@ class WebtoonConfig(
             .distinctUntilChanged()
             .onEach { themeChangedListener?.invoke() }
             .launchIn(scope)
+
+        readerPreferences.flipHorizontally()
+            .register({ flipHorizontally = it }, { imagePropertyChangedListener?.invoke() })
     }
 
     override var navigator: ViewerNavigation = defaultNavigation()
