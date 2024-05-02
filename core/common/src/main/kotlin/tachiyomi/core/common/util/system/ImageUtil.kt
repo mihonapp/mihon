@@ -163,8 +163,23 @@ object ImageUtil {
         return output
     }
 
+    fun flipImage(imageSource: BufferedSource, flipX: Boolean, flipY: Boolean): BufferedSource {
+        val imageBitmap = BitmapFactory.decodeStream(imageSource.inputStream())
+        val flipped = flipBitMap(imageBitmap, flipX, flipY)
+
+        val output = Buffer()
+        flipped.compress(Bitmap.CompressFormat.JPEG, 100, output.outputStream())
+
+        return output
+    }
+
     private fun rotateBitMap(bitmap: Bitmap, degrees: Float): Bitmap {
         val matrix = Matrix().apply { postRotate(degrees) }
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+    private fun flipBitMap(bitmap: Bitmap, flipX: Boolean, flipY: Boolean): Bitmap {
+        val matrix = Matrix().apply { postScale(if (flipX) -1f else 1f, if (flipY) -1f else 1f) }
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 

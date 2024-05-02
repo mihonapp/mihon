@@ -109,6 +109,8 @@ class ReaderPreferences(
 
     fun invertedColors() = preferenceStore.getBoolean("pref_inverted_colors", false)
 
+    fun flipHorizontally() = preferenceStore.getBoolean("flip_horizontally", false)
+
     // endregion
 
     // region Controls
