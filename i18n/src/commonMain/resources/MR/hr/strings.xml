@@ -798,4 +798,10 @@
     <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
     <string name="pref_webtoon_disable_zoom_out">Deaktiviraj smanjivanje zumiranja</string>
     <string name="pref_display_profile">Prilagođeni profil prikaza</string>
+    <string name="label_upcoming">Predstojeći</string>
+    <string name="action_migrate_duplicate">Migriraj postojeći unos</string>
+    <string name="action_add_anyway">Svejedno dodaj</string>
+    <string name="upcoming_calendar_prev">Prethodni mjesec</string>
+    <string name="action_replace_repo">Zamijeni</string>
+    <string name="upcoming_calendar_next">Sljedeći mjesec</string>
 </resources>
