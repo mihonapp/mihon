@@ -796,4 +796,8 @@
     <string name="create_backup_file_error">Impossible de créer un fichier de sauvegarde</string>
     <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
     <string name="source_settings">Paramètres sources</string>
+    <string name="action_add_anyway">Ajouter tout de même</string>
+    <string name="action_migrate_duplicate">Migrer l’entrée existante</string>
+    <string name="label_upcoming">À venir</string>
+    <string name="action_replace_repo">Remplacer</string>
 </resources>
