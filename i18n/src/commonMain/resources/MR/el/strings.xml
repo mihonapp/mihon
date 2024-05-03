@@ -797,4 +797,16 @@
     <string name="ext_revoke_trust">Ανάκληση αξιόπιστων άγνωστων επεκτάσεων</string>
     <string name="action_open_repo">Αποθετήριο ανοικτού κώδικα</string>
     <string name="pref_webtoon_disable_zoom_out">Απενεργοποίηση σμίκρυνσης εικόνας</string>
+    <string name="action_add_anyway">Προσθέστε ούτως ή άλλως</string>
+    <string name="action_replace_repo_message">Το αποθετήριο %1$s έχει το ίδιο δακτυλικό αποτύπωμα κλειδιού υπογραφής με το %2$s.
+\nΕάν αυτό είναι αναμενόμενο, το %2$s θα αντικατασταθεί, διαφορετικά επικοινωνήστε με τον συντηρητή του αποθετηρίου σας.</string>
+    <string name="label_upcoming">Ανερχόμενο</string>
+    <string name="action_migrate_duplicate">Μεταφορά υπάρχουσας καταχώρησης</string>
+    <string name="pref_display_profile">Προσαρμοσμένο προφίλ εμφάνισης</string>
+    <string name="action_view_upcoming">Δείτε τις επερχόμενες ενημερώσεις</string>
+    <string name="action_replace_repo">Αντικατάσταση</string>
+    <string name="action_replace_repo_title">Το δακτυλικό αποτύπωμα κλειδιού υπογραφής υπάρχει ήδη</string>
+    <string name="upcoming_guide">Οδηγός ανερχόμενων</string>
+    <string name="upcoming_calendar_next">Επόμενο μήνα</string>
+    <string name="upcoming_calendar_prev">Προηγούμενο Μήνα</string>
 </resources>
