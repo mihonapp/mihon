@@ -799,7 +799,7 @@
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
     <string name="action_add_anyway">追加</string>
     <string name="action_migrate_duplicate">移行</string>
-    <string name="action_replace_repo">置き換える</string>
+    <string name="action_replace_repo">交換</string>
     <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
     <string name="upcoming_calendar_prev">前月</string>
     <string name="upcoming_calendar_next">翌月</string>
@@ -807,6 +807,6 @@
     <string name="action_view_upcoming">今後のアップデート</string>
     <string name="action_replace_repo_title">署名キーのフィンガープリントはすでに存在します</string>
     <string name="upcoming_guide">今後のご案内</string>
-    <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キーフィンガープリントを持っています。
-\nこれが予想される場合は %2$s が置き換えされますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
+    <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キー指紋を持っています。
+\nこれが予想される場合は %2$s が置換されますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
 </resources>

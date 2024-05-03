@@ -307,4 +307,7 @@
     <string name="delete_downloaded">Ngehapus downloadan</string>
     <string name="selected">Dipilih</string>
     <string name="not_selected">Gak dipilih</string>
+    <string name="action_menu_overflow_description">Pilihan liane</string>
+    <string name="label_data_storage">Data lan penyimpanan</string>
+    <string name="label_upcoming">Bakal muncul</string>
 </resources>
