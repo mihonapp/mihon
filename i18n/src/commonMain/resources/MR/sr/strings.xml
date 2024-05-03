@@ -801,4 +801,9 @@
     <string name="file_null_uri_error">Ни једна датотека није одабрана</string>
     <string name="action_apply">Примени</string>
     <string name="action_revert_to_default">Врати на подразумевано</string>
+    <string name="action_add_anyway">Dodati svejedno</string>
+    <string name="label_upcoming">Predstojeći</string>
+    <string name="action_migrate_duplicate">Migrirajte postojeći unos</string>
+    <string name="action_replace_repo">Zameniti</string>
+    <string name="action_replace_repo_title">Otisak prsta za otključavanje već postoji</string>
 </resources>
