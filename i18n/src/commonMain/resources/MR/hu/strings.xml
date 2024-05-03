@@ -69,7 +69,7 @@
     <string name="action_filter_unread">Olvasatlan</string>
     <string name="action_filter_empty">Szűrők eltávolítása</string>
     <string name="action_sort_alpha">Betűrendben</string>
-    <string name="action_sort_total">Összes fejezet</string>
+    <string name="action_sort_total">Fejezetek száma</string>
     <string name="action_sort_last_read">Legutóbb olvasott</string>
     <string name="action_global_search">Globális keresés</string>
     <string name="action_mark_as_read">Olvasottnak jelölés</string>
@@ -431,11 +431,11 @@
     <string name="backup_choice">Mit tartalmazzon a biztonsági mentés?</string>
     <string name="restore_miui_warning">Biztonsági mentés/helyreállítás nem biztos,hogy működik ha a MIUI Optimalizáció ki van kapcsolva.</string>
     <string name="restore_in_progress">Helyreállítás folyamatban van</string>
-    <string name="used_cache">Felhasznált gyorsítótár: %1$s</string>
+    <string name="used_cache">Felhasznált: %1$s</string>
     <string name="pref_clear_database">Adatbázis törlése</string>
     <string name="pref_clear_database_summary">Nem könyvtári elemek előzményeinek törlése</string>
     <string name="clear_database_source_item_count">%1$d nem könyvtári manga az adatbázisban</string>
-    <string name="pref_auto_clear_chapter_cache">Fejezet gyorsítótár törlése kilépéskor</string>
+    <string name="pref_auto_clear_chapter_cache">Fejezet gyorsítótárának törlése kilépéskor</string>
     <string name="local_invalid_format">Helytelen fejezet formátum</string>
     <string name="label_network">Hálózat</string>
     <string name="download_queue_error">Nem lehetett a fejezeteket letölteni. Próbálja újra a letöltések menüpontban</string>
@@ -458,7 +458,7 @@
     <string name="pref_dump_crash_logs">Hibaüzenetetek törlése</string>
     <string name="pref_reset_viewer_flags">Sorozat beállításainak visszaállítása</string>
     <string name="about_dont_kill_my_app">Néhány gyártónak extra korlátozása van arra, hogy kikapcsolja a háttér folyamatokat. Ezen a web oldalon több információt találsz, hogy hogyan oldható meg.</string>
-    <string name="pref_incognito_mode_summary">Olvasási előzmények megállítása</string>
+    <string name="pref_incognito_mode_summary">Olvasási előzmények rögzítésének szüneteltetése</string>
     <string name="manga_cover">Fedlap</string>
     <string name="on_hold">Szüneteltetve</string>
     <string name="snack_categories_deleted">Kategóriák törölve</string>
@@ -663,7 +663,7 @@
     <string name="are_you_sure">Biztos vagy benne?</string>
     <string name="information_no_manga_category">Kategória üres</string>
     <string name="track_remove_finish_date_conf_text">Ez eltávolítja az eddig kiválasztott befejezési dátumot a(z) %s szolgáltatásból</string>
-    <string name="label_read_duration">Olvasási idő</string>
+    <string name="label_read_duration">Olvasási időtartam</string>
     <string name="information_no_entries_found">Nem található elem ebben a kategóriában</string>
     <string name="remove_manga">A/az \"%s\"-t elfogod távolítani a könyvtáradból</string>
     <string name="updates_last_update_info_just_now">Éppen most</string>
@@ -674,7 +674,7 @@
     <string name="crash_screen_description">%s hibába ütközött. A hiba üzenetet kérünk oszd meg velünk a Discord szerverünkön.</string>
     <string name="track_remove_date_conf_title">Dátum eltávolítása?</string>
     <string name="crash_screen_restart_application">Applikáció újrainditása</string>
-    <string name="label_titles_in_global_update">Globális frissités</string>
+    <string name="label_titles_in_global_update">Globális frissítésben</string>
     <string name="information_required_plain">*kötelező</string>
     <string name="pref_chapter_swipe">Fejezet csúsztatás</string>
     <string name="pref_chapter_swipe_start">Balra csúsztatási cselekmény</string>
@@ -721,7 +721,7 @@
     <string name="notification_updating_progress">Könyvtár frissítése ... (%s)</string>
     <string name="label_titles_section">Elemek</string>
     <string name="action_bar_up_description">Felnavigálás</string>
-    <string name="label_data_storage">Adat és tárolás</string>
+    <string name="label_data_storage">Adatok és tárolás</string>
     <string name="sort_category_confirmation">Szeretnéd a kategóriákat betűrendbe rendezni?</string>
     <string name="skipped_reason_not_in_release_period">Átlépve, mert ma nem várható kiadás</string>
     <string name="file_null_uri_error">Nincs fájl kiválasztva</string>
