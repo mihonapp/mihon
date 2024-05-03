@@ -80,6 +80,11 @@ class LibraryPreferences(
         TriState.DISABLED,
     )
 
+    fun filterError() = preferenceStore.getEnum(
+        "pref_filter_library_error_v2",
+        TriState.DISABLED,
+    )
+
     fun filterIntervalCustom() = preferenceStore.getEnum(
         "pref_filter_library_interval_custom",
         TriState.DISABLED,

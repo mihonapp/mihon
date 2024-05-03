@@ -61,6 +61,7 @@ import tachiyomi.domain.manga.interactor.FetchInterval
 import tachiyomi.domain.manga.interactor.GetLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.model.SourceNotInstalledException
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.i18n.MR
@@ -88,7 +89,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
-
     private val notifier = LibraryUpdateNotifier(context)
 
     private var mangaToUpdate: List<LibraryManga> = mutableListOf()
@@ -291,6 +291,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                                 MR.strings.loader_not_implemented_error,
                                             )
                                             else -> e.message
+                                        }
+                                        if (errorMessage != null) {
+                                            updateManga.awaitUpdateError(manga.id, errorMessage)
                                         }
                                         failedUpdates.add(manga to errorMessage)
                                     }

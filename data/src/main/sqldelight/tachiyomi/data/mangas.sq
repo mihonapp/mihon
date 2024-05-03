@@ -27,6 +27,7 @@ CREATE TABLE mangas(
     last_modified_at INTEGER NOT NULL DEFAULT 0,
     favorite_modified_at INTEGER,
     version INTEGER NOT NULL DEFAULT 0,
+    errorString TEXT,
     is_syncing INTEGER NOT NULL DEFAULT 0
 );
 
@@ -141,8 +142,8 @@ WHERE favorite = 0
 AND source IN :sourceIds;
 
 insert:
-INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version)
-VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version);
+INSERT INTO mangas(source, url, artist, author, description, genre, title, status, thumbnail_url, favorite, last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added, update_strategy, calculate_interval, last_modified_at, version, errorString)
+VALUES (:source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite, :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded, :updateStrategy, :calculateInterval, 0, :version, :errorString);
 
 update:
 UPDATE mangas SET
@@ -166,6 +167,7 @@ UPDATE mangas SET
     update_strategy = coalesce(:updateStrategy, update_strategy),
     calculate_interval = coalesce(:calculateInterval, calculate_interval),
     version = coalesce(:version, version),
+    errorString = coalesce(:errorString, errorString),
     is_syncing = coalesce(:isSyncing, is_syncing)
 WHERE _id = :mangaId;
 

@@ -30,6 +30,7 @@ object MangaMapper {
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
         version: Long,
+        errorString: String?,
         @Suppress("UNUSED_PARAMETER")
         isSyncing: Long,
     ): Manga = Manga(
@@ -56,6 +57,7 @@ object MangaMapper {
         lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
         version = version,
+        errorString = errorString,
     )
 
     @Suppress("LongParameterList")
@@ -83,6 +85,7 @@ object MangaMapper {
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
         version: Long,
+        errorString: String?,
         isSyncing: Long,
         totalCount: Long,
         readCount: Double,
@@ -116,6 +119,7 @@ object MangaMapper {
             lastModifiedAt,
             favoriteModifiedAt,
             version,
+            errorString,
             isSyncing,
         ),
         category = category,

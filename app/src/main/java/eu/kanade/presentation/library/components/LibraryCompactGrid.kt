@@ -48,6 +48,7 @@ internal fun LibraryCompactGrid(
                 coverBadgeStart = {
                     DownloadsBadge(count = libraryItem.downloadCount)
                     UnreadBadge(count = libraryItem.unreadCount)
+                    ErrorBadge(hasError = !libraryItem.libraryManga.manga.errorString.isNullOrEmpty())
                 },
                 coverBadgeEnd = {
                     LanguageBadge(

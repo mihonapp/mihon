@@ -112,6 +112,12 @@ private fun ColumnScope.FilterPage(
         state = filterCompleted,
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
+    val filterError by screenModel.libraryPreferences.filterError().collectAsState()
+    TriStateItem(
+        label = stringResource(MR.strings.download_notifier_title_error),
+        state = filterError,
+        onClick = { screenModel.toggleFilter(LibraryPreferences::filterError) },
+    )
     // TODO: re-enable when custom intervals are ready for stable
     if (
         (isDevFlavor || isPreviewBuildType) &&

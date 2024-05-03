@@ -1,0 +1,2 @@
+-- Add errorString to manga --
+ALTER TABLE mangas ADD COLUMN errorString TEXT;

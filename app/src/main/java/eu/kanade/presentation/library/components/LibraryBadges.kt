@@ -2,6 +2,7 @@ package eu.kanade.presentation.library.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,6 +25,16 @@ internal fun DownloadsBadge(count: Long) {
 internal fun UnreadBadge(count: Long) {
     if (count > 0) {
         Badge(text = "$count")
+    }
+}
+
+@Composable
+internal fun ErrorBadge(hasError: Boolean) {
+    if (hasError) {
+        Badge(
+            imageVector = Icons.Outlined.Close,
+            color = MaterialTheme.colorScheme.error,
+            )
     }
 }
 
@@ -54,6 +65,7 @@ private fun BadgePreview() {
         Column {
             DownloadsBadge(count = 10)
             UnreadBadge(count = 10)
+            ErrorBadge(hasError = true)
             LanguageBadge(isLocal = true, sourceLanguage = "EN")
             LanguageBadge(isLocal = false, sourceLanguage = "EN")
         }

@@ -185,6 +185,7 @@ class LibraryScreenModel(
         val filterStarted = prefs.filterStarted
         val filterBookmarked = prefs.filterBookmarked
         val filterCompleted = prefs.filterCompleted
+        val filterError = prefs.filterError
         val filterIntervalCustom = prefs.filterIntervalCustom
 
         val isNotLoggedInAnyTrack = loggedInTrackers.isEmpty()
@@ -217,6 +218,10 @@ class LibraryScreenModel(
             applyFilter(filterCompleted) { it.libraryManga.manga.status.toInt() == SManga.COMPLETED }
         }
 
+        val filterFnError: (LibraryItem) -> Boolean = {
+            applyFilter(filterError) { !it.libraryManga.manga.errorString.isNullOrEmpty() }
+        }
+
         val filterFnIntervalCustom: (LibraryItem) -> Boolean = {
             if (skipOutsideReleasePeriod) {
                 applyFilter(filterIntervalCustom) { it.libraryManga.manga.fetchInterval < 0 }
@@ -244,6 +249,7 @@ class LibraryScreenModel(
                 filterFnStarted(it) &&
                 filterFnBookmarked(it) &&
                 filterFnCompleted(it) &&
+                filterFnError(it) &&
                 filterFnIntervalCustom(it) &&
                 filterFnTracking(it)
         }
@@ -339,6 +345,7 @@ class LibraryScreenModel(
             libraryPreferences.filterStarted().changes(),
             libraryPreferences.filterBookmarked().changes(),
             libraryPreferences.filterCompleted().changes(),
+            libraryPreferences.filterError().changes(),
             libraryPreferences.filterIntervalCustom().changes(),
         ) {
             ItemPreferences(
@@ -352,7 +359,8 @@ class LibraryScreenModel(
                 filterStarted = it[7] as TriState,
                 filterBookmarked = it[8] as TriState,
                 filterCompleted = it[9] as TriState,
-                filterIntervalCustom = it[10] as TriState,
+                filterError = it[10] as TriState,
+                filterIntervalCustom = it[11] as TriState,
             )
         }
     }
@@ -721,6 +729,7 @@ class LibraryScreenModel(
         val filterStarted: TriState,
         val filterBookmarked: TriState,
         val filterCompleted: TriState,
+        val filterError: TriState,
         val filterIntervalCustom: TriState,
     )
 
