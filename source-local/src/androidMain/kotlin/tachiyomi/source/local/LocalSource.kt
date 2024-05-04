@@ -300,8 +300,8 @@ actual class LocalSource(
         try {
             val (mangaDirName, chapterName) = chapter.url.split('/', limit = 2)
             return fileSystem.getBaseDirectory()
-                ?.findFile(mangaDirName, true)
-                ?.findFile(chapterName, true)
+                ?.findFile(mangaDirName)
+                ?.findFile(chapterName)
                 ?.let(Format.Companion::valueOf)
                 ?: throw Exception(context.stringResource(MR.strings.chapter_not_found))
         } catch (e: Format.UnknownFormatException) {
