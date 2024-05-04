@@ -160,21 +160,12 @@ class DownloadProvider(
      */
     fun getValidChapterDirNames(chapterName: String, chapterScanlator: String?): List<String> {
         val chapterDirName = getChapterDirName(chapterName, chapterScanlator)
-        return buildList(4) {
+        return buildList(2) {
             // Folder of images
             add(chapterDirName)
 
             // Archived chapters
             add("$chapterDirName.cbz")
-
-            if (chapterScanlator.isNullOrBlank()) {
-                // Previously null scanlator fields were converted to "" due to a bug
-                add("_$chapterDirName")
-                add("_$chapterDirName.cbz")
-            } else {
-                // Legacy chapter directory name used in v0.9.2 and before
-                add(DiskUtil.buildValidFilename(chapterName))
-            }
         }
     }
 }
