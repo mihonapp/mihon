@@ -118,7 +118,7 @@ object SettingsDataScreen : SearchableSettings {
                 // ignore the exception if it is thrown.
                 try {
                     context.contentResolver.takePersistableUriPermission(uri, flags)
-                } catch (e: RuntimeException) {
+                } catch (e: SecurityException) {
                     logcat(LogPriority.ERROR, e)
                 }
 
