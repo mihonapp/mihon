@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -196,7 +197,9 @@ class ExtensionsScreenModel(
     }
 
     fun trustExtension(extension: Extension.Untrusted) {
-        extensionManager.trust(extension)
+        screenModelScope.launch {
+            extensionManager.trust(extension)
+        }
     }
 
     @Immutable
