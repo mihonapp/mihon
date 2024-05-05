@@ -349,7 +349,6 @@ class ExtensionManager(
         }
 
         override fun onPackageUninstalled(pkgName: String) {
-            var incognitoExtensions = sourcePreferences.incognitoSources().get()
             ExtensionLoader.uninstallPrivateExtension(context, pkgName)
             unregisterExtension(pkgName)
             updatePendingUpdatesCount()
