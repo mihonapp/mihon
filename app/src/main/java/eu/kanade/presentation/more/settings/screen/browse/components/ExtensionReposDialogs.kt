@@ -1,6 +1,7 @@
 package eu.kanade.presentation.more.settings.screen.browse.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -14,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.KeyboardType
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.delay
 import mihon.domain.extensionrepo.model.ExtensionRepo
@@ -74,6 +76,7 @@ fun ExtensionRepoCreateDialog(
                         Text(text = stringResource(msgRes))
                     },
                     isError = name.isNotEmpty() && nameAlreadyExists,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                     singleLine = true,
                 )
             }
