@@ -207,10 +207,8 @@
     <string name="pref_custom_color_filter">Prilagođeni filtar boja</string>
     <string name="pref_custom_brightness">Prilagođena svjetlina</string>
     <string name="pref_crop_borders">Odreži rubove</string>
-    <string name="pref_true_color_summary">Smanjuje oštre prijelaze između nijansi, ali može utjecati na performansu</string>
-    <string name="pref_true_color">32-bitna boja</string>
     <string name="pref_show_page_number">Prikaži broj stranice</string>
-    <string name="pref_double_tap_anim_speed">Brzina animacije dvostrukog dodira</string>
+    <string name="pref_double_tap_anim_speed">Brzina animacije dvostrukim dodirom</string>
     <string name="pref_page_transitions">Animiraj prijelaze stranica</string>
     <string name="pref_cutout_short">Prikaži sadržaj u izrezanom području</string>
     <string name="pref_reader_theme">Boja pozadine</string>
@@ -251,7 +249,7 @@
     <string name="transition_finished">Završeno:</string>
     <string name="viewer">Modus čitanja</string>
     <string name="pref_category_for_this_series">Za ovu seriju</string>
-    <string name="confirm_set_image_as_cover">Ovu sliku koristiti kao naslovnicu\?</string>
+    <string name="confirm_set_image_as_cover">Ovu sliku koristiti kao naslovnicu?</string>
     <string name="decode_image_error">Nije bilo moguće učitati sliku</string>
     <string name="no_next_chapter">Sljedeće poglavlje nije pronađeno</string>
     <string name="chapter_progress">Stranica: %1$d</string>
@@ -260,7 +258,7 @@
     <string name="custom_filter">Prilagođeni filtar</string>
     <string name="picture_saved">Slika spremljena</string>
     <string name="dialog_with_checkbox_reset">Obnovi sva poglavlja za ovaj unos</string>
-    <string name="dialog_with_checkbox_remove_description">Ovo će ukloniti datum čitanja ovog poglavlja. Je li to stvarno želiš\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ovo će ukloniti datum čitanja ovog poglavlja. Je li to stvarno želiš?</string>
     <string name="snack_categories_deleted">Izbrisane kategorije</string>
     <string name="error_category_exists">Kategorija s ovim imenom već postoji!</string>
     <string name="track_type">Vrsta</string>
@@ -277,7 +275,7 @@
     <string name="reading">Čitanje</string>
     <string name="add_tracking">Dodaj praćenje</string>
     <string name="manga_tracking_tab">Praćenje</string>
-    <string name="confirm_delete_chapters">Stvarno želiš izbrisati odabrana poglavlja\?</string>
+    <string name="confirm_delete_chapters">Stvarno želiš izbrisati odabrana poglavlja?</string>
     <string name="download_unread">Nepročitano</string>
     <string name="manga_download">Preuzmi</string>
     <string name="sort_by_number">Po broju poglavlja</string>
@@ -288,11 +286,11 @@
     <string name="chapter_error">Greška</string>
     <string name="chapter_downloading_progress">Preuzimanje (%1$d/%2$d)</string>
     <string name="display_mode_chapter">Poglavlje %1$s</string>
-    <string name="snack_add_to_library">Dodati u biblioteku\?</string>
+    <string name="snack_add_to_library">Dodati u biblioteku?</string>
     <string name="source_not_installed">Izvor nije instaliran: %1$s</string>
     <string name="copied_to_clipboard">Kopirano u međuspremnik:
 \n%1$s</string>
-    <string name="delete_downloads_for_manga">Izbrisati preuzeta poglavlja\?</string>
+    <string name="delete_downloads_for_manga">Izbrisati preuzeta poglavlja?</string>
     <string name="manga_info_collapse">Manje</string>
     <string name="manga_info_expand">Više</string>
     <string name="manga_removed_library">Uklonjeno iz biblioteke</string>
@@ -317,7 +315,7 @@
     <string name="unknown_error">Nepoznata greška</string>
     <string name="logout_success">Odjava uspjela</string>
     <string name="logout">Odjava</string>
-    <string name="logout_title">Odjaviti se iz %1$s\?</string>
+    <string name="logout_title">Odjaviti se iz %1$s?</string>
     <string name="login_success">Prijava uspjela</string>
     <string name="login">Prijava</string>
     <string name="password">Lozinka</string>
@@ -337,7 +335,7 @@
     <string name="pref_disable_battery_optimization_summary">Pomaže pri ažuriranju biblioteke u pozadini i spremanju sigurnosnih kopija</string>
     <string name="pref_disable_battery_optimization">Deaktiviraj optimiranje baterije</string>
     <string name="clear_database_completed">Unosi su izbrisani</string>
-    <string name="clear_database_confirmation">Sigurno\? Pročitana poglavlja i tijek unosa koji nisu u biblioteci će se izgubiti</string>
+    <string name="clear_database_confirmation">Sigurno? Pročitana poglavlja i tijek unosa koji nisu u biblioteci će se izgubiti</string>
     <string name="pref_clear_database_summary">Izbriši povijest za unose koji nisu spremljeni u biblioteci</string>
     <string name="pref_clear_database">Isprazni bazu podataka</string>
     <string name="cookies_cleared">Kolačići su izbrisani</string>
@@ -352,7 +350,7 @@
     <string name="restore_in_progress">Obnavljanje je već u tijeku</string>
     <string name="creating_backup_error">Sigurnosna kopija neuspjela</string>
     <string name="creating_backup">Stvaranje sigurnosne kopije</string>
-    <string name="backup_choice">Što želiš spremiti kao sigurnosnu kopiju\?</string>
+    <string name="backup_choice">Što želiš spremiti kao sigurnosnu kopiju?</string>
     <string name="backup_in_progress">Spremanje sigurnosne kopije je već u tijeku</string>
     <string name="information_cloudflare_bypass_failure">Neuspjelo zaobilaženje Cloudflare-a</string>
     <string name="information_webview_required">Za funkcioniranje programa je potreban WebView</string>
@@ -418,7 +416,7 @@
     <string name="share_page_info">%1$s: %2$s, %3$d. stranica</string>
     <string name="set_chapter_settings_as_default">Postavi kao standardno</string>
     <string name="also_set_chapter_settings_for_library">Također primijeni na sve unose u mojoj biblioteci</string>
-    <string name="confirm_set_chapter_settings">Stvarno želiš spremiti ove postavke kao standardne\?</string>
+    <string name="confirm_set_chapter_settings">Stvarno želiš spremiti ove postavke kao standardne?</string>
     <string name="chapter_settings">Postavke poglavlja</string>
     <string name="action_search_settings">Postavke pretrage</string>
     <string name="manga_from_library">Iz biblioteke</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode">Anonimni modus</string>
     <string name="pref_incognito_mode_summary">Zaustavlja čitanje povijesti</string>
     <string name="pref_clear_history">Izbriši povijest</string>
-    <string name="clear_history_confirmation">Sigurno\? Izgubit ćeš svu povijest.</string>
+    <string name="clear_history_confirmation">Sigurno? Izgubit ćeš svu povijest.</string>
     <string name="clear_history_completed">Povijest je izbrisana</string>
     <string name="spen_next_page">Sljedeća stranica</string>
     <string name="spen_previous_page">Prethodna stranica</string>
@@ -511,7 +509,7 @@
     <string name="pref_inverted_colors">Invertirano</string>
     <string name="relative_time_today">Danas</string>
     <string name="pref_dark_theme_pure_black">Potpuno crna tamna tema</string>
-    <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="theme_strawberrydaiquiri">Daiquiri jagoda</string>
     <string name="pref_category_appearance">Izgled</string>
     <string name="getting_started_guide">Vodič za pokretanje</string>
     <string name="confirm_lock_change">Ovjeri za potvrditi promjenu</string>
@@ -588,7 +586,7 @@
     <string name="network_not_metered">Samo na mrežom bez ograničenja</string>
     <string name="action_sort_unread_count">Broj nepročitanih</string>
     <string name="delete_category">Izbriši kategoriju</string>
-    <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”\?</string>
+    <string name="delete_category_confirmation">Želiš li izbrisati kategoriju „%s”?</string>
     <string name="auto_download_while_reading">Automatski preuzmi tijekom čitanja</string>
     <string name="internal_error">Interna greška: Provjeri zapisnike o prekidu programa za daljnje informacije</string>
     <string name="pref_app_language">Jezik aplikacije</string>
@@ -640,7 +638,7 @@
     <string name="empty_screen">Pa, ovo je nezgodno</string>
     <string name="unknown_title">Nepoznat naslov</string>
     <string name="updates_last_update_info">Zadnje aktualiziranje biblioteke: %s</string>
-    <string name="are_you_sure">Sigurno\?</string>
+    <string name="are_you_sure">Sigurno?</string>
     <string name="crash_screen_description">%s je naišao na neočekivanu grešku. Predlažemo da podijeliš zapis o prekidu programa u našem kanalu za podršku na Discordu.</string>
     <string name="label_overview_section">Pregled</string>
     <string name="label_completed_titles">Dovršene stavke</string>
@@ -655,7 +653,7 @@
     <string name="update_already_running">Ažuriranje je već pokrenuto</string>
     <string name="pref_reset_viewer_flags_error">Neuspjelo obnavljanje postavki čitača</string>
     <string name="pref_reset_viewer_flags_success">Sve postavke čitača su obnovljene</string>
-    <string name="track_remove_date_conf_title">Ukloniti datum\?</string>
+    <string name="track_remove_date_conf_title">Ukloniti datum?</string>
     <string name="track_remove_start_date_conf_text">Time ćete ukloniti prethodno odabrani datum početka iz %s</string>
     <string name="track_remove_finish_date_conf_text">Time ćete ukloniti prethodno odabrani datum završetka iz %s</string>
     <string name="source_filter_empty_screen">Nije pronađen instalirani izvor</string>
@@ -683,7 +681,7 @@
     <string name="enhanced_services_not_installed">Dostupne, ali izvor nije instaliran: %s</string>
     <string name="confirm_add_duplicate_manga">U tvojoj biblioteci imaš unos s istim imenom.
 \n
-\nŽeliš li svejedno nastaviti\?</string>
+\nŽeliš li svejedno nastaviti?</string>
     <string name="pref_skip_dupe_chapters">Preskoči dupla poglavlja</string>
     <string name="track_error">%1$s greška: %2$s</string>
     <string name="information_required_plain">*obavezno</string>
@@ -708,7 +706,7 @@
     <string name="action_ok">U redu</string>
     <string name="pref_update_only_in_release_period">Predvidi vrijeme sljedećeg izdanja</string>
     <string name="intervals_header">Intervali</string>
-    <string name="track_delete_title">Ukloniti praćenje %s\?</string>
+    <string name="track_delete_title">Ukloniti praćenje %s?</string>
     <string name="skipped_reason_not_in_release_period">Preskočeno, jer se danas nije očekivalo izdanje</string>
     <string name="track_delete_text">Ovo će ukloniti lokalno praćenje.</string>
     <string name="track_delete_remote_text">Također ukloni iz %s</string>
@@ -730,7 +728,7 @@
     <string name="pref_relative_format_summary">„%1$s” umjesto „%2$s”</string>
     <string name="action_sort_category">Razvrstaj kategorije</string>
     <string name="notification_updating_progress">Aktualiziranje biblioteke … (%s)</string>
-    <string name="sort_category_confirmation">Želiš li razvrstati kategorije po abecedi\?</string>
+    <string name="sort_category_confirmation">Želiš li razvrstati kategorije po abecedi?</string>
     <string name="file_null_uri_error">Nije odabrana nijedna datoteka</string>
     <string name="source_settings">Postavke izvora</string>
     <string name="app_settings">Postavke aplikacije</string>
@@ -798,4 +796,6 @@
     <string name="manga_interval_expected_update">Predviđa se da će nova poglavlja biti objavljena za oko %1$s, provjera svakih %2$s.</string>
     <string name="manga_interval_expected_update_soon">Uskoro</string>
     <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
+    <string name="pref_webtoon_disable_zoom_out">Deaktiviraj smanjivanje zumiranja</string>
+    <string name="pref_display_profile">Prilagođeni profil prikaza</string>
 </resources>

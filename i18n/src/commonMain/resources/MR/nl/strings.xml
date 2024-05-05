@@ -140,7 +140,7 @@
     <string name="sort_by_number">Op hoofdstuknummer</string>
     <string name="manga_download">Downloaden</string>
     <string name="download_unread">Ongelezen</string>
-    <string name="confirm_delete_chapters">Weet je zeker dat je de geselecteerde hoofdstukken wilt verwijderen\?</string>
+    <string name="confirm_delete_chapters">Weet je zeker dat je de geselecteerde hoofdstukken wilt verwijderen?</string>
     <string name="manga_tracking_tab">Tracking</string>
     <string name="completed">Voltooid</string>
     <string name="score">Score</string>
@@ -149,14 +149,14 @@
     <string name="error_category_exists">Er bestaat al een categorie met deze naam!</string>
     <string name="snack_categories_deleted">Categorieën verwijderd</string>
     <string name="dialog_with_checkbox_reset">Stel alle hoofdstukken voor dit item opnieuw in</string>
-    <string name="snack_add_to_library">Toevoegen aan bibliotheek\?</string>
+    <string name="snack_add_to_library">Toevoegen aan bibliotheek?</string>
     <string name="picture_saved">Afbeelding opgeslagen</string>
     <string name="custom_filter">Aangepast filter</string>
     <string name="set_as_cover">Instellen als omslagfoto</string>
     <string name="cover_updated">Omslagfoto bijgewerkt</string>
     <string name="chapter_progress">Pagina: %1$d</string>
     <string name="no_next_chapter">Volgend hoofdstuk niet gevonden</string>
-    <string name="confirm_set_image_as_cover">Deze afbeelding als omslagfoto gebruiken\?</string>
+    <string name="confirm_set_image_as_cover">Deze afbeelding als omslagfoto gebruiken?</string>
     <string name="notification_new_chapters">Nieuwe hoofdstukken gevonden</string>
     <string name="notification_first_add_to_library">Voeg de manga eerst aan je bibliotheek toe voordat je dit doet</string>
     <string name="file_select_cover">Selecteer omslagfoto</string>
@@ -206,14 +206,14 @@
     <string name="pref_update_only_non_completed">Gelezen series</string>
     <string name="pref_auto_update_manga_sync">Voortgang bijwerken na lezen</string>
     <string name="pref_keep_screen_on">Scherm aanhouden</string>
-    <string name="clear_database_confirmation">Weet je het zeker\? Gelezen hoofdstukken en voortgang voor items die niet in de bibliotheek zitten zullen verloren gaan</string>
+    <string name="clear_database_confirmation">Weet je het zeker? Gelezen hoofdstukken en voortgang voor items die niet in de bibliotheek zitten zullen verloren gaan</string>
     <string name="clear_database_completed">Database geleegd</string>
     <string name="ongoing">Lopend</string>
     <string name="delete_downloads_for_manga">Verwijder gedownloade hoofdstukken?</string>
     <string name="reading">Aan het lezen</string>
     <string name="dropped">Opgegeven</string>
     <string name="on_hold">Gepauzeerd</string>
-    <string name="dialog_with_checkbox_remove_description">Dit verwijdert de datum waarop het hoofdstuk is gelezen. Weet je het zeker\?</string>
+    <string name="dialog_with_checkbox_remove_description">Dit verwijdert de datum waarop het hoofdstuk is gelezen. Weet je het zeker?</string>
     <string name="decode_image_error">De afbeelding kon niet worden geladen</string>
     <string name="download_queue_error">Kon hoofdstukken niet downloaden. Je kan het opnieuw proberen in het downloadscherm</string>
     <string name="notification_cover_update_failed">Updaten van omslag mislukt</string>
@@ -274,7 +274,6 @@
     <string name="migrate">Migreren</string>
     <string name="copy">Kopiëren</string>
     <string name="action_open_in_web_view">Openen in WebView</string>
-    <string name="pref_true_color">32-bits kleuren</string>
     <string name="pref_skip_read_chapters">Gelezen hoofdstukken overslaan</string>
     <string name="filter_mode_overlay">Overlay</string>
     <string name="filter_mode_multiply">Vermenigvuldigen</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">Deze extensie is niet meer beschikbaar. Mogelijk zal deze niet meer naar behoren functioneren en kan problemen binnen de app veroorzaken. Het wordt aangeraden de extensie te verwijderen.</string>
     <string name="pref_date_format">Datumformaat</string>
     <string name="pref_category_library_update">Globaal bijwerken</string>
-    <string name="logout_title">Uitloggen bij %1$s\?</string>
+    <string name="logout_title">Uitloggen bij %1$s?</string>
     <string name="logout">Uitloggen</string>
     <string name="logout_success">U bent nu uitgelogd</string>
     <string name="paused">Gepauzeerd</string>
@@ -367,7 +366,6 @@
     <string name="battery_optimization_setting_activity_not_found">Kon de apparaatinstellingen niet openen</string>
     <string name="pref_webtoon_side_padding">Opvulling zijkant</string>
     <string name="gray_background">Grijs</string>
-    <string name="pref_true_color_summary">Vermindert kleurstrepen, maar beïnvloedt de prestaties</string>
     <string name="pref_refresh_library_covers">Omslagen van manga in bibliotheek bijwerken</string>
     <string name="tracking_info">Eenzijdige synchronisatie om voortang van hoofdstukken bij te werken bij externe trackerdiensten. Stel tracking in bij individuele items via de \"Tracking\"-knop.</string>
     <string name="pref_library_update_refresh_metadata_summary">Controleer bij het bijwerken van de bibliotheek op nieuwe omslag en details</string>
@@ -419,7 +417,7 @@
     <string name="chapter_settings_updated">Standaard hoofdstukinstellingen bijgewerkt</string>
     <string name="set_chapter_settings_as_default">Instellen als standaard</string>
     <string name="also_set_chapter_settings_for_library">Ook toepassen op alle items in mijn bibliotheek</string>
-    <string name="confirm_set_chapter_settings">Weet je zeker dat je deze instellingen als standaardinstellingen wilt opslaan\?</string>
+    <string name="confirm_set_chapter_settings">Weet je zeker dat je deze instellingen als standaardinstellingen wilt opslaan?</string>
     <string name="chapter_settings">Hoofdstukinstellingen</string>
     <string name="share_page_info">%1$s: %2$s, pagina %3$d</string>
     <string name="action_search_settings">Zoekinstellingen</string>
@@ -428,7 +426,7 @@
     <string name="pref_incognito_mode_summary">Pauzeert leesgeschiedenis</string>
     <string name="pref_incognito_mode">Incognitomodus</string>
     <string name="pref_clear_history">Geschiedenis wissen</string>
-    <string name="clear_history_confirmation">Weet je dit zeker\? Alle geschiedenis zal verloren gaan.</string>
+    <string name="clear_history_confirmation">Weet je dit zeker? Alle geschiedenis zal verloren gaan.</string>
     <string name="clear_history_completed">Geschiedenis verwijderd</string>
     <string name="spen_next_page">Volgende pagina</string>
     <string name="spen_previous_page">Vorige pagina</string>
@@ -587,7 +585,7 @@
     <string name="theme_lavender">Lavendel</string>
     <string name="action_sort_last_manga_update">Laatst gecontroleerd op updates</string>
     <string name="action_remove_everything">Alles verwijderen</string>
-    <string name="delete_category_confirmation">Wenst u categorie \"%s\" te verwijderen\?</string>
+    <string name="delete_category_confirmation">Wenst u categorie \"%s\" te verwijderen?</string>
     <string name="delete_category">Categorie verwijderen</string>
     <string name="action_close">Sluiten</string>
     <string name="theme_tidalwave">Vloedgolf</string>
@@ -626,10 +624,10 @@
     <string name="fdroid_warning">F-Droid versies worden niet officieel ondersteund.
 \nTik hier voor meer informatie.</string>
     <string name="pref_skip_dupe_chapters">Dubbele hoofdstukken overslaan</string>
-    <string name="are_you_sure">Weet je het zeker\?</string>
+    <string name="are_you_sure">Weet je het zeker?</string>
     <string name="confirm_add_duplicate_manga">Je hebt momenteel een item in je bibliotheek met dezelfde naam.
 \n
-\nWil je alsnog verdergaan\?</string>
+\nWil je alsnog verdergaan?</string>
     <string name="reading_list">Leeslijst</string>
     <string name="description_placeholder">Geen beschrijving</string>
     <string name="pref_reset_viewer_flags_summary">Zet de instellingen voor de leesmodus en het draaitype terug naar de standaardwaarden voor alle series</string>
@@ -645,7 +643,7 @@
     <string name="appwidget_updates_description">Recentelijk bijgewerkte items in de bibliotheek bekijken</string>
     <string name="track_error">%1$s-fout: %2$s</string>
     <string name="pref_reset_user_agent_string">User agent terugzetten naar standaardwaarde</string>
-    <string name="track_remove_date_conf_title">Datum verwijderen\?</string>
+    <string name="track_remove_date_conf_title">Datum verwijderen?</string>
     <string name="wish_list">Verlanglijst</string>
     <string name="custom_cover">Aangepaste omslag</string>
     <string name="invalid_location">Ongeldige locatie: %s</string>
@@ -695,7 +693,7 @@
     <string name="action_ok">OK</string>
     <string name="pref_chapter_swipe_start">Swipe naar de linker actie</string>
     <string name="intervals_header">Intervallen</string>
-    <string name="track_delete_title">Haal %s tracking weg\?</string>
+    <string name="track_delete_title">Haal %s tracking weg?</string>
     <string name="unlock_app_title">Ontgrendel %s</string>
     <string name="pref_chapter_swipe_end">Swipe naar de juiste actie</string>
     <string name="pref_library_columns_per_row">%d per rij</string>
@@ -738,10 +736,19 @@
     <string name="pref_storage_usage">Opslaggebruik</string>
     <string name="notification_updating_progress">Bibliotheek bijwerken... (%s)</string>
     <string name="label_data_storage">Data en opslag</string>
-    <string name="sort_category_confirmation">Wil je de categorieën sorteren op alfabetische volgorde\?</string>
+    <string name="sort_category_confirmation">Wil je de categorieën sorteren op alfabetische volgorde?</string>
     <string name="file_null_uri_error">Bestandskiezer gaf geen bestand terug aan de app</string>
     <string name="source_settings">Bron-instellingen</string>
     <string name="app_settings">App-instellingen</string>
     <string name="pref_relative_format">Relatieve tijdstempels</string>
     <string name="pref_relative_format_summary">\"%1$s\" in plaats van \"%2$s\"</string>
+    <string name="selected">Geselecteerd</string>
+    <string name="not_selected">Niet geselecteerd</string>
+    <string name="action_menu_overflow_description">Meer opties</string>
+    <string name="action_bar_up_description">Navigeer omhoog</string>
+    <string name="scanlator">Scanlator</string>
+    <string name="action_apply">Toepassen</string>
+    <string name="action_revert_to_default">Naar standaard terugkeren</string>
+    <string name="pref_onboarding_guide">Onboarding gids</string>
+    <string name="onboarding_heading">Welkom!</string>
 </resources>

@@ -124,7 +124,7 @@
     <string name="cookies_cleared">Бисквитки изчистени</string>
     <string name="pref_clear_database">Изчисти базата данни</string>
     <string name="pref_clear_database_summary">Изтрий историята на манги, които не са запазени в библиотеката</string>
-    <string name="clear_database_confirmation">Сигурни ли сте\? Прочетените глави и напредъкът на манги, които не са в библиотеката Ви, ще бъдат изгубени</string>
+    <string name="clear_database_confirmation">Сигурни ли сте? Прочетените глави и напредъкът на манги, които не са в библиотеката Ви, ще бъдат изгубени</string>
     <string name="clear_database_completed">Базата данни изчистена</string>
     <string name="version">Версия</string>
     <string name="pref_enable_acra">Изпращай данни за сривове</string>
@@ -165,7 +165,7 @@
     <string name="snack_categories_deleted">Категориите бяха изтрити</string>
     <string name="dialog_with_checkbox_remove_description">Това ще премахне датата на прочитане на главата. Сигурни ли сте?</string>
     <string name="dialog_with_checkbox_reset">Изчисти всички дати за тази манга</string>
-    <string name="snack_add_to_library">Добавяне на мангата към библиотеката\?</string>
+    <string name="snack_add_to_library">Добавяне на мангата към библиотеката?</string>
     <string name="picture_saved">Изображението запазено</string>
     <string name="custom_filter">Персонализиран филтър</string>
     <string name="set_as_cover">Постави за корица</string>
@@ -274,7 +274,6 @@
     <string name="transition_pages_error">Не бяха заредени успешно: %1$s страници</string>
     <string name="pref_read_with_long_tap">Покажи при задържане върху екрана</string>
     <string name="action_open_in_web_view">Отвори в WebView</string>
-    <string name="pref_true_color">32-битови цветове</string>
     <string name="pref_skip_read_chapters">Пропускай прочетените глави</string>
     <string name="pref_color_filter_mode">Режим на цветовия филтър</string>
     <string name="filter_mode_overlay">Наложен</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">Това разширение вече не е достъпно.</string>
     <string name="pref_date_format">Формат на датата</string>
     <string name="pref_category_library_update">Глобалния обновявания</string>
-    <string name="logout_title">Искате ли да излезете от %1$s\?</string>
+    <string name="logout_title">Искате ли да излезете от %1$s?</string>
     <string name="logout">Излез</string>
     <string name="logout_success">Излязохте успешно</string>
     <string name="paused">На пауза</string>
@@ -369,7 +368,6 @@
     <string name="pref_refresh_library_covers">Обнови кориците</string>
     <string name="tracking_info">Еднопосочна синхронизация на прочетените глави. Установи проследяване за отделни манги от индивидуалния бутон за проследяване.</string>
     <string name="gray_background">Сиво</string>
-    <string name="pref_true_color_summary">Намалява бандинга, но се отразява на производителността</string>
     <string name="action_migrate">Мигрирай</string>
     <string name="loader_not_implemented_error">Източникът не е намерен</string>
     <string name="page_list_empty_error">Няма намерени страници</string>
@@ -513,13 +511,13 @@
     <string name="downloaded_chapters">Изтеглени глави</string>
     <string name="clipboard_copy_error">Не можа да се копира върху клипборда</string>
     <string name="cover_saved">Корицата запазена</string>
-    <string name="confirm_set_chapter_settings">Сигурни ли сте, че искате да наложите тези настройки\?</string>
+    <string name="confirm_set_chapter_settings">Сигурни ли сте, че искате да наложите тези настройки?</string>
     <string name="also_set_chapter_settings_for_library">Също приложи към всяка манга в библиотеката ми</string>
     <string name="set_chapter_settings_as_default">Направи по подразбиране</string>
     <string name="track_started_reading_date">Дата на започване</string>
     <string name="pref_clear_history">Изчисти историята</string>
     <string name="clear_history_completed">Историята изтрита</string>
-    <string name="clear_history_confirmation">Напълно ли сте сигурен\? Всичката ви история ще бъде загубена.</string>
+    <string name="clear_history_confirmation">Напълно ли сте сигурен? Всичката ви история ще бъде загубена.</string>
     <string name="migration_help_guide">Наръчник за мигриране между източници</string>
     <string name="notification_size_warning">Предупреждение: големите актуализации вредят на източниците и могат да доведат до по-бавни актуализации, както и до повишено използване на батерията. Натиснете тук, за да научите повече.</string>
     <string name="file_picker_error">Не бе намерено приложение за подбор на файлове</string>
@@ -560,7 +558,7 @@
     <string name="download_queue_size_warning">Предупреждение: големите масови изтегляния могат да доведат до забавяне на източниците и/или блокиране на Mihon. Натиснете тук, за да научите повече.</string>
     <string name="action_show_manga">Покажи манга</string>
     <string name="action_display_cover_only_grid">Решетка само с корици</string>
-    <string name="delete_category_confirmation">Искате ли да изтриете категорията \"%s\"\?</string>
+    <string name="delete_category_confirmation">Искате ли да изтриете категорията \"%s\"?</string>
     <string name="internal_error">InternalError: Провери записите за крашове за повече информация</string>
     <string name="error_saving_picture">Грешка при запазването на изображението</string>
     <string name="update_already_running">Обновява се</string>
@@ -572,7 +570,7 @@
     <string name="description_placeholder">Няма описание</string>
     <string name="empty_backup_error">Няма заглавия в библиотеката за резервно копие</string>
     <string name="pref_reset_viewer_flags_summary">Нулирай режима на четене и ориентацията на всички поредици</string>
-    <string name="are_you_sure">Сигурни ли сте\?</string>
+    <string name="are_you_sure">Сигурни ли сте?</string>
     <string name="popular">Популярни</string>
     <string name="unfinished_list">Списък с незавършени</string>
     <string name="crash_screen_description">%s се сблъска с неочаквана грешка. Препоръчваме да заснемете това съобщение, да запазите записите от крашовете и да ги споделите в нашия канал за поддръжка в Discord.</string>

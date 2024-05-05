@@ -149,7 +149,7 @@
     <string name="cookies_cleared">Cookies dihapuskan</string>
     <string name="pref_clear_database">Hapus pangkalan data</string>
     <string name="pref_clear_database_summary">Hapus sejarah entri yang tidak disimpan di dalam pustaka</string>
-    <string name="clear_database_confirmation">Adakah anda pasti\? Bab dibaca dan kemajuan entri bukan-pustaka akan hilang</string>
+    <string name="clear_database_confirmation">Adakah anda pasti? Bab dibaca dan kemajuan entri bukan-pustaka akan hilang</string>
     <string name="clear_database_completed">Entri dihapuskan</string>
     <string name="version">Versi</string>
     <string name="pref_enable_acra">Hantar laporan ranap</string>
@@ -182,7 +182,7 @@
     <string name="sort_by_number">Mengikut nombor bab</string>
     <string name="manga_download">Muat turun</string>
     <string name="download_unread">Belum dibaca</string>
-    <string name="confirm_delete_chapters">Adakah anda pasti ingin memadamkan bab yang dipilih\?</string>
+    <string name="confirm_delete_chapters">Adakah anda pasti ingin memadamkan bab yang dipilih?</string>
     <string name="manga_tracking_tab">Penjejakan</string>
     <string name="reading">Sedang baca</string>
     <string name="completed">Selesai</string>
@@ -196,7 +196,7 @@
     <string name="snack_categories_deleted">Kategori dipadam</string>
     <string name="dialog_with_checkbox_remove_description">Tarikh bacaan bab ini akan dipadam. Adakah anda pasti?</string>
     <string name="dialog_with_checkbox_reset">Set semula semua bab bagi entri ini</string>
-    <string name="snack_add_to_library">Tambah ke pustaka\?</string>
+    <string name="snack_add_to_library">Tambah ke pustaka?</string>
     <string name="action_display_download_badge">Bab dimuat turun</string>
     <string name="picture_saved">Gambar disimpan</string>
     <string name="custom_filter">Tapisan tersuai</string>
@@ -205,7 +205,7 @@
     <string name="chapter_progress">Muka surat: %1$d</string>
     <string name="no_next_chapter">Bab seterusnya tidak dijumpai</string>
     <string name="decode_image_error">Imej tidak dapat dimuatkan</string>
-    <string name="confirm_set_image_as_cover">Guna imej ini sebagai muka hadapan\?</string>
+    <string name="confirm_set_image_as_cover">Guna imej ini sebagai muka hadapan?</string>
     <string name="download_queue_error">Memuat turun bab tidak berjaya. Anda boleh mencuba lagi di bahagian muat turun</string>
     <string name="notification_new_chapters">Bab baharu dijumpai</string>
     <string name="notification_cover_update_failed">Gagal untuk kemas kini muka hadapan</string>
@@ -247,7 +247,6 @@
 \n
 \nDengan mempercayai sambungan ini, anda menerima risiko tersebut.</string>
     <string name="pref_double_tap_anim_speed">Kelajuan animasi ketik dua kali</string>
-    <string name="pref_true_color">32-bit warna</string>
     <string name="pref_skip_read_chapters">Langkau bab yang sudah dibaca</string>
     <string name="pref_read_with_long_tap">Tunjuk tindakan bila menahan ketik</string>
     <string name="pager_viewer">Muka surat</string>
@@ -291,7 +290,7 @@
     <string name="obsolete_extension_message">Sambungan ini tidak lagi ada. Ia mungkin tidak berfungsi dengan betul dan boleh menyebabkan masalah dengan aplikasi. Mengenyahpasang adalah disarankan.</string>
     <string name="pref_date_format">Format tarikh</string>
     <string name="pref_category_library_update">Kemas kini keseluruhan</string>
-    <string name="logout_title">Log keluar daripada %1$s\?</string>
+    <string name="logout_title">Log keluar daripada %1$s?</string>
     <string name="logout">Log keluar</string>
     <string name="logout_success">Anda telah log keluar</string>
     <string name="paused">Ditangguh</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Kelabu</string>
     <string name="viewer">Mod membaca</string>
     <string name="pref_category_for_this_series">Untuk siri ini</string>
-    <string name="pref_true_color_summary">Kurangkan jalinan, tapi memberi kesan kepada prestasi</string>
     <string name="battery_optimization_setting_activity_not_found">Tetapan peranti tidak dapat dibuka</string>
     <string name="tracking_info">Menyelaras satu hala untuk kemas kini bab kemajuan dalam sistem penjejak luaran. Sediakan penjejakan untuk entri individu daripada butang penjejakan mereka.</string>
     <string name="pref_refresh_library_covers">Segar semula muka hadapan pustaka</string>
@@ -417,7 +415,7 @@
     <string name="chapter_settings_updated">Tetapan bab lalai dikemas kini</string>
     <string name="set_chapter_settings_as_default">Tetapkan sebagai lalai</string>
     <string name="also_set_chapter_settings_for_library">Gunakan juga untuk semua entri dalam pustaka</string>
-    <string name="confirm_set_chapter_settings">Adakah anda pasti ingin simpan tetapan ini sebagai lalai\?</string>
+    <string name="confirm_set_chapter_settings">Adakah anda pasti ingin simpan tetapan ini sebagai lalai?</string>
     <string name="chapter_settings">Tetapan bab</string>
     <string name="share_page_info">%1$s: %2$s, muka surat %3$d</string>
     <string name="action_search_settings">Carian tetapan</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Menjeda sejarah membaca</string>
     <string name="pref_incognito_mode">Mod inkognito</string>
     <string name="pref_clear_history">Padamkan sejarah</string>
-    <string name="clear_history_confirmation">Anda pasti\? Semua sejarah akan hilang.</string>
+    <string name="clear_history_confirmation">Anda pasti? Semua sejarah akan hilang.</string>
     <string name="clear_history_completed">Sejarah dipadamkan</string>
     <string name="spen_next_page">Muka surat seterusnya</string>
     <string name="spen_previous_page">Muka surat terdahulu</string>
@@ -606,7 +604,7 @@
     <string name="pref_app_language">Bahasa aplikasi</string>
     <string name="theme_lavender">Lavender</string>
     <string name="description_placeholder">Tiada deskripsi</string>
-    <string name="delete_category_confirmation">Adakah anda ingin padam kategori \"%s\"\?</string>
+    <string name="delete_category_confirmation">Adakah anda ingin padam kategori \"%s\"?</string>
     <string name="internal_error">RalatDalam: semak log kerosakan untuk maklumat lanjut</string>
     <string name="delete_category">Padam kategori</string>
     <string name="pref_user_agent_string">Untaian ejen pengguna lalai</string>
@@ -621,7 +619,7 @@
     <string name="theme_tidalwave">Tidal Wave</string>
     <string name="download_ahead">Muat turun maju</string>
     <string name="download_ahead_info">Hanya berguna sekiranya bab sekarang + seterusnya telah dimuat turun.</string>
-    <string name="are_you_sure">Adakah anda pasti\?</string>
+    <string name="are_you_sure">Adakah anda pasti?</string>
     <string name="multi_lang">Pelbagai</string>
     <string name="updates_last_update_info">Terakhir pustaka dikemas kini: %s</string>
     <string name="remove_manga">Anda akan membuang \"%s\" ini daripada pustaka anda</string>
@@ -652,7 +650,7 @@
 \nKetik untuk mengetahui lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Butang sambung membaca</string>
     <string name="pref_invalidate_download_cache">Membatalkan indeks muat turun</string>
-    <string name="track_remove_date_conf_title">Buang tarikh\?</string>
+    <string name="track_remove_date_conf_title">Buang tarikh?</string>
     <string name="track_remove_start_date_conf_text">Ini akan membuang tarikh mula yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="track_remove_finish_date_conf_text">Ini akan membuang tarikh selesai yang dipilih oleh anda sebelum ini dari %s</string>
     <string name="pref_invalidate_download_cache_summary">Memaksa aplikasi untuk semak semula bab dimuat turun</string>
@@ -685,7 +683,7 @@
     <string name="track_error">%1$s ralat: %2$s</string>
     <string name="confirm_add_duplicate_manga">Entri di dalam pustaka anda mempunyai nama yang sama.
 \n
-\nAdakah anda ingin meneruskan\?</string>
+\nAdakah anda ingin meneruskan?</string>
     <string name="information_required_plain">*diperlukan</string>
     <string name="pref_hide_in_library_items">Sembunyikan entri yang sudah ada di dalam pustaka</string>
     <string name="action_copy_to_clipboard">Salin ke papan keratan</string>
@@ -708,7 +706,7 @@
     <string name="intervals_header">Jarak masa</string>
     <string name="pref_update_only_in_release_period">Jangka masa keluaran seterusnya</string>
     <string name="manga_display_interval_title">Anggaran setiap</string>
-    <string name="track_delete_title">Buang penjejakan %s\?</string>
+    <string name="track_delete_title">Buang penjejakan %s?</string>
     <string name="track_delete_text">Ini akan membuang penjejakan secara lokal.</string>
     <string name="action_ok">OK</string>
     <string name="track_delete_remote_text">Juga buang daripada %s</string>

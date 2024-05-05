@@ -2,8 +2,8 @@ package eu.kanade.domain.base
 
 import android.content.Context
 import dev.icerock.moko.resources.StringResource
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.i18n.MR
 
 class BasePreferences(
@@ -28,4 +28,6 @@ class BasePreferences(
         SHIZUKU(MR.strings.ext_installer_shizuku, false),
         PRIVATE(MR.strings.ext_installer_private, false),
     }
+
+    fun displayProfile() = preferenceStore.getString("pref_display_profile_key", "")
 }

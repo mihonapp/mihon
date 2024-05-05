@@ -64,7 +64,7 @@ data class ChapterDataClass(
     val url: String,
     val name: String,
     val uploadDate: Long,
-    val chapterNumber: Float,
+    val chapterNumber: Double,
     val scanlator: String?,
     val mangaId: Int,
 

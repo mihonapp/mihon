@@ -163,7 +163,7 @@
     <string name="pref_backup_interval">Frecuèntzia de sarvatàgiu de sas còpias de seguresa</string>
     <string name="backup_created">Còpia de seguresa creada</string>
     <string name="restore_completed">Riprìstinu acabadu</string>
-    <string name="backup_choice">De ite cheres fàghere una còpia de seguresa\?</string>
+    <string name="backup_choice">De ite cheres fàghere una còpia de seguresa?</string>
     <string name="restoring_backup">Ripristinende sa còpia de seguresa</string>
     <string name="creating_backup">Creende sa còpia de seguresa</string>
     <string name="pref_clear_chapter_cache">Isbòida sa memòria temporànea de sos capìtulos</string>
@@ -174,7 +174,7 @@
     <string name="cookies_cleared">Cookies iscantzellados</string>
     <string name="pref_clear_database">Isbòida sa base de datos</string>
     <string name="pref_clear_database_summary">Iscantzella sa cronologia pro sos elementos chi non sunt sarvados in sa biblioteca tua</string>
-    <string name="clear_database_confirmation">Seguru ses\? Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
+    <string name="clear_database_confirmation">Seguru ses? Sos capìtulos lèghidos e su progressu de sos elementos chi non sunt in sa biblioteca s\'ant a pèrdere</string>
     <string name="clear_database_completed">Boghes iscantzelladas</string>
     <string name="version">Versione</string>
     <string name="pref_enable_acra">Imbia raportos a pitzu de sos arrestos anòmalos</string>
@@ -198,7 +198,7 @@
     <string name="remove_from_library">Boga dae sa biblioteca</string>
     <string name="manga_added_library">Annantu a sa biblioteca</string>
     <string name="manga_removed_library">Bogadu dae sa biblioteca</string>
-    <string name="delete_downloads_for_manga">Iscantzellare sos capìtulos iscarrigados\?</string>
+    <string name="delete_downloads_for_manga">Iscantzellare sos capìtulos iscarrigados?</string>
     <string name="copied_to_clipboard">Copiadu in punta de billete:
 \n%1$s</string>
     <string name="source_not_installed">Fonte no installada: %1$s</string>
@@ -212,7 +212,7 @@
     <string name="sort_by_number">Pro nùmeru de capìtulu</string>
     <string name="manga_download">Iscàrriga</string>
     <string name="download_unread">Non lèghidos</string>
-    <string name="confirm_delete_chapters">Ses seguru de chèrrere iscantzellare sos capìtulos ischertados\?</string>
+    <string name="confirm_delete_chapters">Ses seguru de chèrrere iscantzellare sos capìtulos ischertados?</string>
     <string name="manga_tracking_tab">Arrastamentu</string>
     <string name="reading">Leghende</string>
     <string name="completed">Acabadu</string>
@@ -227,9 +227,9 @@
     <string name="track_type">Casta</string>
     <string name="error_category_exists">Esistit giai una categoria cun custu nùmene!</string>
     <string name="snack_categories_deleted">Categorias iscantzelladas</string>
-    <string name="dialog_with_checkbox_remove_description">Custu at a bogare sa data de leghidura de custu capìtulu. Seguru ses\?</string>
+    <string name="dialog_with_checkbox_remove_description">Custu at a bogare sa data de leghidura de custu capìtulu. Seguru ses?</string>
     <string name="dialog_with_checkbox_reset">Reseta totu sos capìtulos pro custu elementu</string>
-    <string name="snack_add_to_library">Annànghere a sa biblioteca\?</string>
+    <string name="snack_add_to_library">Annànghere a sa biblioteca?</string>
     <string name="picture_saved">Immàgine sarvada</string>
     <string name="custom_filter">Filtru personalizadu</string>
     <string name="set_as_cover">Imposta comente cobertedda</string>
@@ -237,7 +237,7 @@
     <string name="chapter_progress">Pàgina: %1$d</string>
     <string name="no_next_chapter">Capìtulu imbeniente no agatadu</string>
     <string name="decode_image_error">No est istadu possìbile carrigare s\'immàgine</string>
-    <string name="confirm_set_image_as_cover">Cheres impostare custa immàgine comente cobertedda\?</string>
+    <string name="confirm_set_image_as_cover">Cheres impostare custa immàgine comente cobertedda?</string>
     <string name="transition_finished">Acabadu:</string>
     <string name="transition_current">Atuale:</string>
     <string name="transition_next">Imbeniente:</string>
@@ -274,7 +274,6 @@
     <string name="download_notifier_download_paused">Iscarrigamentos in pàusa</string>
     <string name="channel_common">Comunu</string>
     <string name="action_open_in_web_view">Aberi in WebView</string>
-    <string name="pref_true_color">Colore a 32 bit</string>
     <string name="pref_skip_read_chapters">Brinca sos capìtulos marcados comente lèghidos</string>
     <string name="pref_color_filter_mode">Modalidade de fusione de su filtru colore</string>
     <string name="filter_mode_overlay">Istratu superiore</string>
@@ -293,7 +292,7 @@
     <string name="obsolete_extension_message">Custa estensione no est prus a disponimentu. Diat pòdere non funtzionare prus comente si tocat e causare problemas cun s\'aplicatzione. Ti cussigiamus de la disinstallare.</string>
     <string name="pref_date_format">Formadu de sa data</string>
     <string name="pref_category_library_update">Agiornamentu globale</string>
-    <string name="logout_title">Essire dae %1$s\?</string>
+    <string name="logout_title">Essire dae %1$s?</string>
     <string name="logout">Essi</string>
     <string name="logout_success">Ses essidu</string>
     <string name="paused">In pàusa</string>
@@ -365,7 +364,6 @@
     <string name="downloaded_only_summary">Filtrat totu sos elementos in sa biblioteca tua</string>
     <string name="pref_category_for_this_series">Pro custa sèrie</string>
     <string name="gray_background">Murru</string>
-    <string name="pref_true_color_summary">Mìnimat sa creatzione de bandas, ma diat pòdere influentzare sas prestatziones</string>
     <string name="viewer">Modalidade de leghidura</string>
     <string name="battery_optimization_setting_activity_not_found">Abertura de sas impostatziones de sistema fallida</string>
     <string name="tracking_info">Sincronizatzione a una diretzione ebbia pro agiornare su progressu in sos capìtulos in servìtzios de arrastamentu esternos. Imposta s\'arrastamentu pro sos elementos dae su butone de arrastamentu issoro.</string>
@@ -419,7 +417,7 @@
     <string name="chapter_settings_updated">Impostatziones predefinidas de sos capìtulos agiornadas</string>
     <string name="set_chapter_settings_as_default">Imposta comente predefinidu</string>
     <string name="also_set_chapter_settings_for_library">Àplica fintzas a totu sos elementos in sa biblioteca mea</string>
-    <string name="confirm_set_chapter_settings">Ses seguru de chèrrere sarvare custas informatziones comente predefinidas\?</string>
+    <string name="confirm_set_chapter_settings">Ses seguru de chèrrere sarvare custas informatziones comente predefinidas?</string>
     <string name="chapter_settings">Impostatziones de sos capìtulos</string>
     <string name="share_page_info">%1$s: %2$s, pàgina %3$d</string>
     <string name="action_search_settings">Impostatziones de chirca</string>
@@ -428,7 +426,7 @@
     <string name="pref_incognito_mode_summary">Ponet in pàusa sa registratzione de sa cronologia de leghidura</string>
     <string name="pref_incognito_mode">Modalidade anònima</string>
     <string name="pref_clear_history">Isbòida sa cronologia</string>
-    <string name="clear_history_confirmation">Seguru ses\? As a pèrdere totu sa cronologia.</string>
+    <string name="clear_history_confirmation">Seguru ses? As a pèrdere totu sa cronologia.</string>
     <string name="clear_history_completed">Cronologia iscantzellada</string>
     <string name="spen_next_page">Pàgina imbeniente</string>
     <string name="spen_previous_page">Pàgina anteposta</string>
@@ -610,7 +608,7 @@
     <string name="pref_app_language">Limba de s\'aplicatzione</string>
     <string name="description_placeholder">Peruna descritzione</string>
     <string name="theme_lavender">Archemissa</string>
-    <string name="delete_category_confirmation">Boles iscantzellare sa categoria \"%s\"\?</string>
+    <string name="delete_category_confirmation">Boles iscantzellare sa categoria \"%s\"?</string>
     <string name="internal_error">Errore internu: verìfica sos registros de sas serradas improvisas pro àteras informatziones</string>
     <string name="delete_category">Iscantzella sa categoria</string>
     <string name="pref_user_agent_string">Istringa de agente de utente predefinida</string>
@@ -625,7 +623,7 @@
     <string name="download_ahead">Iscàrriga sos imbenientes</string>
     <string name="auto_download_while_reading">Iscàrriga in automàticu durante sa letura</string>
     <string name="download_ahead_info">Funtzionat petzi si su capìtulu atuale e s\'imbeniente sunt giai iscarrigados.</string>
-    <string name="are_you_sure">Seguru ses\?</string>
+    <string name="are_you_sure">Seguru ses?</string>
     <string name="remove_manga">As a bogare \"%s\" dae sa biblioteca tua</string>
     <string name="multi_lang">Mùltiplas</string>
     <string name="updates_last_update_info">Ùrtimu agiornamentu de sa biblioteca: %s</string>
@@ -655,7 +653,7 @@
     <string name="fdroid_warning">Sas versiones de F-Droid non sunt prus suportadas in manera ufitziale.
 \nToca pro nde ischire de prus.</string>
     <string name="action_display_show_continue_reading_button">Butone pro sighire a lèghere</string>
-    <string name="track_remove_date_conf_title">Bogare sa data\?</string>
+    <string name="track_remove_date_conf_title">Bogare sa data?</string>
     <string name="pref_invalidate_download_cache">Invàlida s\'ìnditze de sos iscarrigamentos</string>
     <string name="track_remove_start_date_conf_text">Custu at a bogare sa data de incumintzu seletzionada in antis dae %s</string>
     <string name="track_remove_finish_date_conf_text">Custu at a bogare sa data de fine seletzionada in antis dae %s</string>
@@ -686,7 +684,7 @@
     <string name="copied_to_clipboard_plain">Copiadu in punta de billete</string>
     <string name="confirm_add_duplicate_manga">Tenes giai un\'elementu in sa biblioteca tua cun su matessi nùmene.
 \n
-\nBoles sighire su matessi\?</string>
+\nBoles sighire su matessi?</string>
     <string name="pref_skip_dupe_chapters">Brinca sos capìtulos duplicados</string>
     <string name="enhanced_services_not_installed">A disponimentu ma sa fonte no est installada: %s</string>
     <string name="track_error">Errore %1$s: %2$s</string>
@@ -713,7 +711,7 @@
     <string name="skipped_reason_not_in_release_period">Brincadu ca non bi fiat peruna publicatzione prevìdida oe</string>
     <string name="action_set_interval">Imposta s\'intervallu</string>
     <string name="action_ok">AB</string>
-    <string name="track_delete_title">Bogare s\'arrastadore de %s\?</string>
+    <string name="track_delete_title">Bogare s\'arrastadore de %s?</string>
     <string name="track_delete_text">Custu at a bogare s\'arrastamentu locale.</string>
     <string name="track_delete_remote_text">Boga fintzas dae %s</string>
     <string name="delete_downloaded">Iscantzella sos iscarrigados</string>

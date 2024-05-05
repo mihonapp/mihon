@@ -3,7 +3,7 @@ package eu.kanade.domain.source.interactor
 import eu.kanade.domain.source.service.SourcePreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import tachiyomi.core.util.lang.compareToWithCollator
+import tachiyomi.core.common.util.lang.compareToWithCollator
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.repository.SourceRepository
 import tachiyomi.source.local.isLocal
@@ -34,15 +34,15 @@ class GetSourcesWithFavoriteCount(
             when (sorting) {
                 SetMigrateSorting.Mode.ALPHABETICAL -> {
                     when {
-                        a.first.isStub && b.first.isStub.not() -> -1
-                        b.first.isStub && a.first.isStub.not() -> 1
+                        a.first.isStub && !b.first.isStub -> -1
+                        b.first.isStub && !a.first.isStub -> 1
                         else -> a.first.name.lowercase().compareToWithCollator(b.first.name.lowercase())
                     }
                 }
                 SetMigrateSorting.Mode.TOTAL -> {
                     when {
-                        a.first.isStub && b.first.isStub.not() -> -1
-                        b.first.isStub && a.first.isStub.not() -> 1
+                        a.first.isStub && !b.first.isStub -> -1
+                        b.first.isStub && !a.first.isStub -> 1
                         else -> a.second.compareTo(b.second)
                     }
                 }

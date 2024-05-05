@@ -15,9 +15,9 @@ import eu.kanade.tachiyomi.util.storage.cacheImageDir
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import logcat.LogPriority
 import okio.IOException
-import tachiyomi.core.i18n.stringResource
-import tachiyomi.core.util.system.ImageUtil
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.core.common.util.system.ImageUtil
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.i18n.MR
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -79,7 +79,7 @@ class ImageSaver(
             MediaStore.Images.Media.RELATIVE_PATH to relativePath,
             MediaStore.Images.Media.DISPLAY_NAME to image.name,
             MediaStore.Images.Media.MIME_TYPE to type.mime,
-            MediaStore.Images.Media.DATE_MODIFIED to Instant.now().toEpochMilli(),
+            MediaStore.Images.Media.DATE_MODIFIED to Instant.now().epochSecond,
         )
 
         val picture = findUriOrDefault(relativePath, filename) {

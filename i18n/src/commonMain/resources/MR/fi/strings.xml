@@ -31,7 +31,7 @@
     <string name="chapter_progress">Sivu: %1$d</string>
     <string name="no_next_chapter">Seuraavaa lukua ei löydy</string>
     <string name="decode_image_error">Kuvaa ei voitu ladata</string>
-    <string name="confirm_set_image_as_cover">Käytetäänkö tätä kuvaa kansikuvana\?</string>
+    <string name="confirm_set_image_as_cover">Käytetäänkö tätä kuvaa kansikuvana?</string>
     <string name="transition_finished">Valmistunut:</string>
     <string name="transition_current">Nykyinen:</string>
     <string name="transition_next">Seuraava:</string>
@@ -72,7 +72,7 @@
     <string name="label_extensions">Laajennukset</string>
     <string name="label_extension_info">Laajennuksen tiedot</string>
     <string name="action_filter">Suodatus</string>
-    <string name="action_filter_bookmarked">Kirjanmerkki</string>
+    <string name="action_filter_bookmarked">Kirjanmerkityt</string>
     <string name="action_filter_unread">Lukemattomat</string>
     <string name="action_filter_empty">Poista suodattimet</string>
     <string name="action_sort_alpha">Aakkosjärjestyksessä</string>
@@ -103,7 +103,7 @@
     <string name="action_install">Asenna</string>
     <string name="action_share">Jaa</string>
     <string name="action_save">Tallenna</string>
-    <string name="action_reset">Resetoi</string>
+    <string name="action_reset">Nollaa</string>
     <string name="action_undo">Kumoa</string>
     <string name="action_open_log">Avaa loki</string>
     <string name="action_restore">Palauta</string>
@@ -141,16 +141,13 @@
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
-    <string name="untrusted_extension_message">Tämä laajennus on allekirjoitettu luottamattomalla sertifikaatilla ja sitä ei ole aktivoitu.
+    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia.
 \n
-\nHaitallinen laajennus voisi lukea mahdolliset kirjautumistiedot Mihonista tai suorittaa luvatonta koodia.
-\n
-\nLuottamalla tähän sertifikaattiin hyväksyt nämä riskit.</string>
+\nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
     <string name="pref_page_transitions">Animoi sivusiirtymät</string>
     <string name="pref_double_tap_anim_speed">Tuplanäpäytyksen animaation nopeus</string>
     <string name="pref_show_page_number">Näytä sivunumero</string>
-    <string name="pref_true_color">32-bittinen väri</string>
     <string name="pref_crop_borders">Rajaa reunat</string>
     <string name="pref_custom_brightness">Mukautettu kirkkaus</string>
     <string name="pref_custom_color_filter">Mukautettu värisuodatin</string>
@@ -201,13 +198,13 @@
     <string name="fourth_to_last">Neljänneksi viimeinen luku</string>
     <string name="fifth_to_last">Viidenneksi viimeinen luku</string>
     <string name="pref_download_new">Lataa uudet luvut</string>
-    <string name="services">Palvelut</string>
+    <string name="services">Seurantapalvelut</string>
     <string name="pref_create_backup_summ">Voidaan käyttää nykyisen kirjaston palauttamiseen</string>
     <string name="pref_restore_backup_summ">Palauta kirjasto varmuuskopiointi-tiedostosta</string>
     <string name="pref_backup_interval">Varmuuskopioinnin tiheys</string>
     <string name="backup_created">Varmuuskopio luotu</string>
     <string name="restore_completed">Palautus valmis</string>
-    <string name="backup_choice">Mitä haluat varmuuskopioida\?</string>
+    <string name="backup_choice">Mitä haluat varmuuskopioida?</string>
     <string name="restoring_backup">Palautetaan varmuuskopiota</string>
     <string name="creating_backup">Luodaan varmuuskopiota</string>
     <string name="pref_clear_chapter_cache">Tyhjennä lukujen välimuisti</string>
@@ -218,7 +215,7 @@
     <string name="cookies_cleared">Keksit tyhjennetty</string>
     <string name="pref_clear_database">Tyhjennä tietokanta</string>
     <string name="pref_clear_database_summary">Poista mangan historia, jota ei ole tallennettu kirjastoosi</string>
-    <string name="clear_database_confirmation">Oletko varma\? Luetut luvut ja eteneminen poistetaan muista kun kirjastossa olevista sarjoista</string>
+    <string name="clear_database_confirmation">Oletko varma? Luetut luvut ja eteneminen poistetaan muista kun kirjastossa olevista sarjoista</string>
     <string name="clear_database_completed">Tiedot poistettu</string>
     <string name="version">Versio</string>
     <string name="pref_enable_acra">Lähetä kaatumisilmoituksia</string>
@@ -232,7 +229,7 @@
     <string name="updating_category">Päivitetään kategoriaa</string>
     <string name="no_more_results">Ei enempää tuloksia</string>
     <string name="action_global_search_hint">Globaali haku…</string>
-    <string name="delete_downloads_for_manga">Poista ladatut luvut\?</string>
+    <string name="delete_downloads_for_manga">Poista ladatut luvut?</string>
     <string name="copied_to_clipboard">Kopioitu leikepöydälle
 \n%1$s</string>
     <string name="source_not_installed">Lähdettä ei ole asennettu: %1$s</string>
@@ -245,7 +242,7 @@
     <string name="sort_by_source">Lähteen mukaan</string>
     <string name="sort_by_number">Luvun numeron mukaan</string>
     <string name="manga_download">Lataa</string>
-    <string name="confirm_delete_chapters">Oletko varma että haluat poistaa valitut luvut\?</string>
+    <string name="confirm_delete_chapters">Oletko varma että haluat poistaa valitut luvut?</string>
     <string name="reading">Luettavana</string>
     <string name="completed">Päättynyt</string>
     <string name="score">Arvosana</string>
@@ -272,9 +269,9 @@
     <string name="on_hold">Pidossa</string>
     <string name="plan_to_read">Aikomus lukea</string>
     <string name="repeating">Uudelleenluettava</string>
-    <string name="dialog_with_checkbox_remove_description">Tämä poistaa luvun lukupäivän. Haluatko jatkaa\?</string>
+    <string name="dialog_with_checkbox_remove_description">Tämä poistaa luvun lukupäivän. Haluatko jatkaa?</string>
     <string name="dialog_with_checkbox_reset">Resetoi kaikki luvut tästä sarjasta</string>
-    <string name="snack_add_to_library">Lisää sarja kirjastoon\?</string>
+    <string name="snack_add_to_library">Lisää sarja kirjastoon?</string>
     <string name="picture_saved">Kuva tallennetu</string>
     <string name="pref_color_filter_mode">Värisuodattimen sekoitus tyyppi</string>
     <string name="filter_mode_overlay">Päällys</string>
@@ -290,10 +287,10 @@
     <string name="action_webview_refresh">Päivitä</string>
     <string name="pref_category_library">Kirjasto</string>
     <string name="ext_obsolete">Vanhentunut</string>
-    <string name="obsolete_extension_message">Tämä laajennus ei ole enää saatavilla.</string>
+    <string name="obsolete_extension_message">Tämä laajennos ei ole enää saatavilla. Se ei välttämättä toimi oikein ja voi aiheuttaa ongelmia Mihonin kanssa. Laajennoksen poistoa suositellaan.</string>
     <string name="pref_date_format">Päivämäärän muoto</string>
     <string name="pref_category_library_update">Globaali päivitys</string>
-    <string name="logout_title">Kirjaa ulos kohteesta %1$s\?</string>
+    <string name="logout_title">Kirjaa ulos kohteesta %1$s?</string>
     <string name="logout">Kirjaudu ulos</string>
     <string name="logout_success">Kirjauduttu ulos</string>
     <string name="paused">Pysäytetty</string>
@@ -365,7 +362,6 @@
     <string name="downloaded_only_summary">Suodattaa kaikki sarjat kirjastossasi</string>
     <string name="gray_background">Harmaa</string>
     <string name="pref_category_for_this_series">Tälle sarjalle</string>
-    <string name="pref_true_color_summary">Vähentää juovia, mutta vaikuttaa suorituskykyyn</string>
     <string name="viewer">Lukutila</string>
     <string name="battery_optimization_setting_activity_not_found">Laiteasetuksia ei voitu avata</string>
     <string name="tracking_info">Yksisuuntainen synkronointi lukujen seurantapalveluiden päivittämiseksi. Määritä yksittäisten mangamerkintöjen seuranta seurantapainikkeesta.</string>
@@ -374,7 +370,7 @@
     <string name="label_data">Tiedot</string>
     <string name="backup_restore_missing_sources">Puuttuvat lähteet:</string>
     <string name="invalid_backup_file_missing_manga">Varmuuskopio ei sisällä mangaa.</string>
-    <string name="invalid_backup_file">Virheellinen varmuuskopio</string>
+    <string name="invalid_backup_file">Virheellinen varmuuskopio:</string>
     <string name="pref_library_update_refresh_metadata_summary">Tarkista uusi kansi ja tiedot päivitettäessä kirjastoa</string>
     <string name="pref_library_update_refresh_metadata">Päivitä metatiedot automaattisesti</string>
     <string name="action_migrate">Siirrä</string>
@@ -412,14 +408,14 @@
     <string name="backup_restore_missing_trackers">Seurantapalvelimet joihin et ole kirjautunut sisään:</string>
     <string name="pref_remove_bookmarked_chapters">Poista kirjanmerkityt luvut</string>
     <string name="pref_category_delete_chapters">Poista luvut</string>
-    <string name="ext_nsfw_warning">Voi sisältää NSFW (18+) -sisältöä</string>
+    <string name="ext_nsfw_warning">Tämän laajennoksen lähteet voivat sisältää NSFW (18+) -sisältöä</string>
     <string name="ext_nsfw_short">18+</string>
     <string name="parental_controls_info">Tämä ei estä epävirallisia tai mahdollisesti väärin merkittyjä laajennuksia näyttämästä NSFW 18+ sisältöä sovelluksessa.</string>
     <string name="no_chapters_error">Lukuja ei löytynyt</string>
     <string name="chapter_settings_updated">Päivitetyt luvun oletusasetukset</string>
     <string name="set_chapter_settings_as_default">Aseta oletukseksi</string>
     <string name="also_set_chapter_settings_for_library">Koskee myös kaikkia kirjastoni mangoja</string>
-    <string name="confirm_set_chapter_settings">Haluatko varmasti tallentaa nämä asetukset oletuksena\?</string>
+    <string name="confirm_set_chapter_settings">Haluatko varmasti tallentaa nämä asetukset oletuksena?</string>
     <string name="chapter_settings">Luvun asetukset</string>
     <string name="share_page_info">%1$s: %2$s, sivu %3$d</string>
     <string name="action_search_settings">Hakuasetukset</string>
@@ -428,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Keskeyttää lukuhistorian</string>
     <string name="pref_incognito_mode">Incognito-tila</string>
     <string name="pref_clear_history">Tyhjennä historia</string>
-    <string name="clear_history_confirmation">Oletko varma\? Koko historia menetetään.</string>
+    <string name="clear_history_confirmation">Oletko varma? Koko historia menetetään.</string>
     <string name="clear_history_completed">Historia poistettu</string>
     <string name="spen_next_page">Seuraava sivu</string>
     <string name="spen_previous_page">Edellinen sivu</string>
@@ -447,7 +443,7 @@
     <string name="pref_dump_crash_logs_summary">Tallentaa virhelokit tiedostoon jaettavaksi kehittäjien kanssa</string>
     <string name="action_desc">Laskeva</string>
     <string name="action_asc">Nouseva</string>
-    <string name="action_order_by_chapter_number">Luvunumeron mukaan</string>
+    <string name="action_order_by_chapter_number">Lukunumeron mukaan</string>
     <string name="action_order_by_upload_date">Lisäyspäivämäärän mukaan</string>
     <string name="action_filter_tracked">Seuratut</string>
     <string name="action_display_show_number_of_items">Näytä kohteiden määrä</string>
@@ -538,7 +534,7 @@
     <string name="action_sort_last_manga_update">Viimeisin manga päivitys</string>
     <string name="action_sort_unread_count">Lukemattomien määrä</string>
     <string name="delete_category">Poista kategoria</string>
-    <string name="action_track">Jäljitä</string>
+    <string name="action_track">Seuraa</string>
     <string name="pref_low">Alhainen</string>
     <string name="pref_remove_exclude_categories">Poissuljetut kategoriat</string>
     <string name="pref_lowest">Alhaisin</string>
@@ -559,14 +555,14 @@
     <string name="download_ahead">Etukäteen lataus</string>
     <string name="auto_download_while_reading">Automaattinen lataus luetessa</string>
     <string name="split_tall_images_summary">Parantaa lukijan suorituskykyä</string>
-    <string name="delete_category_confirmation">Haluatko poistaa kategorian \"%s\"\?</string>
+    <string name="delete_category_confirmation">Haluatko poistaa kategorian \"%s\"?</string>
     <string name="download_ahead_info">Toimii vain kirjastossa oleville sarjoille joissa nykyinen ja seuraava luku on jo ladattu</string>
     <string name="restore_miui_warning">Varmuuskopiointi/palautus ei välttämättä toimi oikein, jos MIUI-optimointi on poistettu käytöstä.</string>
     <string name="popular">Suositut</string>
     <string name="publishing_finished">Julkaiseminen päättynyt</string>
     <string name="description_placeholder">Ei kuvausta</string>
     <string name="reading_list">Lukulista</string>
-    <string name="are_you_sure">Oletko varma\?</string>
+    <string name="are_you_sure">Oletko varma?</string>
     <string name="unfinished_list">Keskeneräiset</string>
     <string name="source_empty_screen">Lähdettä ei löydetty</string>
     <string name="missing_storage_permission">Tallennusoikeuksia ei myönnetty</string>
@@ -594,7 +590,7 @@
     <string name="pref_reset_viewer_flags_summary">Poista kaikkien sarjojen lukutila ja lukusuunta</string>
     <string name="cancelled">Peruttu</string>
     <string name="download_notifier_split_page_path_not_found">Sivun %d tiedostopolkua ei löytynyt</string>
-    <string name="enhanced_services">Parannetut palvelut</string>
+    <string name="enhanced_services">Parannetut seurantapalvelut</string>
     <string name="pref_reset_viewer_flags_error">Lukijan asetuksia ei voitu poistaa</string>
     <string name="local_filter_order_by">Järjestä</string>
     <string name="manga_cover">Kansikuva</string>
@@ -615,4 +611,70 @@
     <string name="backup_info">Varmuuskopioita kannattaa säilyttää myös muissa paikoissa.</string>
     <string name="wish_list">Toivelista</string>
     <string name="cant_open_last_read_chapter">Viimeksi luettua lukua ei voitu avata</string>
+    <string name="selected">Valitut</string>
+    <string name="scanlator">Skanlaattori</string>
+    <string name="label_data_storage">Data ja tallennustila</string>
+    <string name="label_stats">Tilastotiedot</string>
+    <string name="label_downloaded">Ladattu</string>
+    <string name="action_sort_next_updated">Seuraava odotettu päivitys</string>
+    <string name="action_sort_tracker_score">Seurannan pisteytys</string>
+    <string name="action_update_category">Päivitä kategoria</string>
+    <string name="action_sort_category">Järjestä kategoriat</string>
+    <string name="action_display_show_continue_reading_button">Jatka lukemista painike</string>
+    <string name="action_apply">Käytä</string>
+    <string name="action_ok">OK</string>
+    <string name="action_revert_to_default">Palauta oletus</string>
+    <string name="crash_screen_description">%s kohtasi odottamattoman virheen. Ehdotamme että jaat kaatumisen lokitiedot tukikanavallemme Discordissa.</string>
+    <string name="delete_downloaded">Poista ladatut</string>
+    <string name="create_backup_file_error">Varmuuskopiotiedoston luonti epäonnistui</string>
+    <string name="confirm_add_duplicate_manga">Kirjastossasi on jo samanniminen merkintä.
+\n
+\nHaluatko silti jatkaa?</string>
+    <string name="crash_screen_title">Hupsista!</string>
+    <string name="copied_to_clipboard_plain">Kopioitu leikepöydälle</string>
+    <string name="crash_screen_restart_application">Uudelleenkäynnistä applikaatio</string>
+    <string name="custom_cover">Mukautettu kansikuva</string>
+    <string name="not_selected">Ei valitut</string>
+    <string name="action_menu_overflow_description">Lisää asetuksia</string>
+    <string name="label_local">Paikallinen</string>
+    <string name="label_started">Aloitettu</string>
+    <string name="action_open_random_manga">Avaa satunnainen merkintä</string>
+    <string name="sort_category_confirmation">Haluatko järjestää kategoriat aakkosjärjestykseen?</string>
+    <string name="action_copy_to_clipboard">Kopioi leikepöydälle</string>
+    <string name="action_move_to_bottom_all_for_series">Siirrä sarja pohjimmaiseksi</string>
+    <string name="action_not_now">Ei nyt</string>
+    <string name="internal_error">Sisäinen virhe: Lisätietoja saat kaatumisen lokitiedoista</string>
+    <string name="onboarding_permission_ignore_battery_opts">Akun käyttö taustalla</string>
+    <string name="pref_reader_summary">Lukutila, näyttö, navigointi</string>
+    <string name="pref_browse_summary">Lähteet, laajennokset, globaali haku</string>
+    <string name="pref_backup_summary">Manuaaliset ja automaattiset varmuuskopiot, tallennustila</string>
+    <string name="pref_security_summary">Applikaation lukko, turvallinen ruutu</string>
+    <string name="pref_advanced_summary">Kaatumislokien vedos, akun optimoinnit</string>
+    <string name="theme_nord">Pohjoismainen</string>
+    <string name="pref_relative_format">Suhteelliset aikaleimat</string>
+    <string name="pref_relative_format_summary">Käytä muotoa \"%1$s\", kuin muotoa \"%2$s\"</string>
+    <string name="ext_permission_install_apps_warning">Laajennosten asentamiseen tarvitaan lupia. Napauta tästä myöntääksesi luvat.</string>
+    <string name="action_add_repo">Lisää laajennosten lähde</string>
+    <string name="label_add_repo_input">Laajennosten lähteen URL</string>
+    <string name="action_add_repo_message">Lisää laajennosten lähteitä Mihoniin. URL-osoitteen tulisi päättyä \"index.min.json\".</string>
+    <string name="error_repo_exists">Tämä laajennosten lähde on jo lisättynä!</string>
+    <string name="action_delete_repo">Poista laajennosten lähde</string>
+    <string name="invalid_repo_name">Epäkelpo laajennosten lähteen URL-osoite</string>
+    <string name="delete_repo_confirmation">Haluatko poistaa laajennosten lähteen \"%s\"?</string>
+    <string name="pref_page_rotate_invert">Peilaa käännetyt leveät sivut</string>
+    <string name="pref_double_tap_zoom">Tuplanapauta lähentääksesi</string>
+    <string name="pref_flash_page_summ">Vähentää haamujälkiä e-paperi näytöillä</string>
+    <string name="pref_skip_dupe_chapters">Ohita kaksoisluvut</string>
+    <string name="split_tall_images">Jaa korkeat kuvat</string>
+    <string name="action_create">Luo</string>
+    <string name="pref_page_rotate">Sovita leveät sivut kääntämällä</string>
+    <string name="pref_hide_threshold">Valikon piilottamisen herkkyys vierittäessä</string>
+    <string name="pref_flash_page">Väläytä näyttöä sivunvaihdon yhteydessä</string>
+    <string name="pref_storage_location_info">Käytetään automaattisille varmuuskopioille, lukujen latauksille ja paikallisille lähteille.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Vältä keskeytyksiä pitkään jatkuvissa toimenpiteissä, kuten kirjaston päivitys, lataukset, ja varmuuskopion palautukset.</string>
+    <string name="pref_library_columns_per_row">%d per rivi</string>
+    <string name="pref_appearance_summary">Teema, ajan ja päivämäärän formaatti</string>
+    <string name="pref_downloads_summary">Automaattinen lataus, ennakkolataus</string>
+    <string name="pref_tracking_summary">Yksisuuntainen synkronointi, paranneltu synkronointi</string>
+    <string name="pref_library_summary">Kategoriat, globaalit päivitykset, luvun pyyhkäisy</string>
 </resources>

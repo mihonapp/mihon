@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Moderate issues
-        uses: tachiyomiorg/issue-moderator-action@v2
+        uses: keiyoushi/issue-moderator-action@a017be83547db6e107431ce7575f53c1dfa3296a
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           duplicate-label: Duplicate
@@ -19,20 +19,10 @@ jobs:
           auto-close-rules: |
             [
               {
-                "type": "body",
-                "regex": ".*DELETE THIS SECTION IF YOU HAVE READ AND ACKNOWLEDGED IT.*",
-                "message": "The acknowledgment section was not removed."
-              },
-              {
-                "type": "body",
-                "regex": ".*\\* (Tachiyomi version|Android version|Device): \\?.*",
-                "message": "Requested information in the template was not filled out."
-              },
-              {
                 "type": "both",
                 "regex": "^(?!.*myanimelist.*).*(aniyomi|anime).*$",
                 "ignoreCase": true,
-                "message": "Tachiyomi does not support anime, and has no plans to support anime. In addition Tachiyomi is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
+                "message": "Mihon does not support anime, and has no plans to support anime. In addition Mihon is not affiliated with Aniyomi https://github.com/jmir1/aniyomi"
               },
               {
                 "type": "both",
@@ -40,6 +30,12 @@ jobs:
                 "ignoreCase": true,
                 "labels": ["Cloudflare protected"],
                 "message": "Refer to the **Solving Cloudflare issues** section at https://mihon.app/docs/guides/troubleshooting/#cloudflare. If it doesn't work, migrate to other sources or wait until they lower their protection."
+              },
+              {
+                "type": "both",
+                "regex": "^.*(myanimelist|mal).*$",
+                "ignoreCase": true,
+                "message": "For issues with linking MyAnimeList, please follow these steps:\n1. Update Mihon to version 0.16.4 or newer\n2. Change your default User-Agent (`More → Settings → Advanced → Default user agent string`)\n3. Close and restart Mihon\n4. Attempt to link MyAnimeList again\n\nIf you had MyAnimeList linked before, try to unlink it first before trying these steps."
               }
             ]
           auto-close-ignore-label: do-not-autoclose

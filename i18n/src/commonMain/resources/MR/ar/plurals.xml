@@ -128,4 +128,12 @@
         <item quantity="many">%d يومًا</item>
         <item quantity="other">%d يوم</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="zero">%d</item>
+        <item quantity="one">مستودع</item>
+        <item quantity="two">مستودعان</item>
+        <item quantity="few">%d مستودعات</item>
+        <item quantity="many">%d مستودعات</item>
+        <item quantity="other"></item>
+    </plurals>
 </resources>

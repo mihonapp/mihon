@@ -77,7 +77,7 @@
     <string name="restore_in_progress">Atjaunošana jau notiek</string>
     <string name="creating_backup_error">Dublēšana neizdevās</string>
     <string name="creating_backup">Izveido dublējumu</string>
-    <string name="backup_choice">Ko vēlaties dublēt\?</string>
+    <string name="backup_choice">Ko vēlaties dublēt?</string>
     <string name="backup_in_progress">Dublēšana jau notiek</string>
     <string name="restore_duration">%02d min, %02d sec</string>
     <string name="restore_completed">Atjaunošana pabeigta</string>
@@ -231,8 +231,6 @@
     <string name="pref_show_page_number">Rādīt lappušu numuru</string>
     <string name="pref_show_reading_mode">Rādīt lasīšanas režīmu</string>
     <string name="pref_show_reading_mode_summary">Pēc lasītāja atvēršanas īsi parādīt pašreizējo režīmu</string>
-    <string name="pref_true_color">32-bit krāsa</string>
-    <string name="pref_true_color_summary">Samazina grupēšanu, bet var ietekmēt veiktspēju</string>
     <string name="on">Ieslēgts</string>
     <string name="off">Izslēgts</string>
     <string name="pref_custom_brightness">Pielāgots spilgtums</string>
@@ -388,7 +386,7 @@
     <string name="label_network">Tīkls</string>
     <string name="label_data">Dati</string>
     <string name="used_cache">Izmantots: %1$s</string>
-    <string name="clear_database_confirmation">Vai esi pārliecināts\? Lasītās nodaļas un progress priekš ieraksta, kuras nav bibliotēkā, būs zudis</string>
+    <string name="clear_database_confirmation">Vai esi pārliecināts? Lasītās nodaļas un progress priekš ieraksta, kuras nav bibliotēkā, būs zudis</string>
     <string name="database_clean">Nav ko tīrīt</string>
     <string name="pref_disable_battery_optimization">Atspējot akumulatora optimizāciju</string>
     <string name="pref_restore_backup_summ">Atjaunot bibliotēku no dublējuma faila</string>
@@ -434,7 +432,7 @@
     <string name="downloaded_only_summary">Filtrēt visus ierakstus bibliotēkā</string>
     <string name="no_more_results">Vairāk rezultātu nav</string>
     <string name="login_success">Pieteicies</string>
-    <string name="logout_title">Izrakstīties no %1$s\?</string>
+    <string name="logout_title">Izrakstīties no %1$s?</string>
     <string name="login_title">Pieteikties %1$s</string>
     <string name="manga_from_library">No bibliotēkas</string>
     <string name="last_used_source">Pēdējo reizi izmantots</string>
@@ -486,7 +484,7 @@
     <string name="pref_clear_history">Notīrīt vēsturi</string>
     <string name="share_page_info">%1$s: %2$s, lapa %3$d</string>
     <string name="manga_added_library">Pievienots bibliotēkai</string>
-    <string name="snack_add_to_library">Pievienot bibliotēkai\?</string>
+    <string name="snack_add_to_library">Pievienot bibliotēkai?</string>
     <string name="show_title">Avota nosaukums</string>
     <string name="manga_cover">Vāks</string>
     <string name="on_hold">Aizturēts</string>
@@ -500,7 +498,7 @@
     <string name="channel_complete">Pabeigts</string>
     <string name="channel_errors">Kļūdas</string>
     <string name="myanimelist_relogin">Lūdzu, piesakieties MAL vēlreiz</string>
-    <string name="dialog_with_checkbox_remove_description">Tiks noņemts šīs nodaļas lasīšanas datums. Vai esi pārliecināts\?</string>
+    <string name="dialog_with_checkbox_remove_description">Tiks noņemts šīs nodaļas lasīšanas datums. Vai esi pārliecināts?</string>
     <string name="viewer">Lasīšanas režīms</string>
     <string name="no_next_chapter">Nākošā nodaļa nav atrasta</string>
     <string name="empty_screen">Nu, šis ir neveikli</string>
@@ -509,7 +507,7 @@
     <string name="update_check_notification_download_in_progress">Lejupielādē…</string>
     <string name="channel_progress">Progress</string>
     <string name="decode_image_error">Attēlu nevarēja ielādēt</string>
-    <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku\?</string>
+    <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
     <string name="pref_category_for_this_series">Priekš šīs sērijas</string>
     <string name="dropped">Pamests</string>
     <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē Mihon. Pieskarieties, lai uzzinātu vairāk.</string>
@@ -570,12 +568,12 @@
     <string name="pref_navigate_pan">Izplest platus attēlus</string>
     <string name="cant_open_last_read_chapter">Nevar atvērt pēdējo lasīto nodaļu</string>
     <string name="repeating">Pārlasīšana</string>
-    <string name="delete_downloads_for_manga">Vai dzēst lejupielādētās nodaļas\?</string>
+    <string name="delete_downloads_for_manga">Vai dzēst lejupielādētās nodaļas?</string>
     <string name="date">Datums</string>
     <string name="on_hiatus">Pārtraukumā</string>
     <string name="display_mode_chapter">Nodaļa %1$s</string>
     <string name="cover_saved">Vāks saglabāts</string>
-    <string name="clear_history_confirmation">Vai esat pārliecināts\? Visa vēsture tiks pazaudēta.</string>
+    <string name="clear_history_confirmation">Vai esat pārliecināts? Visa vēsture tiks pazaudēta.</string>
     <string name="source_empty_screen">Nav atrasts avots</string>
     <string name="source_filter_empty_screen">Neviens instalēts avots nav atrasts</string>
     <string name="update_check_notification_download_complete">Pieskarieties, lai instalētu atjauninājumu</string>
@@ -598,12 +596,12 @@
     <string name="loader_not_implemented_error">Avots nav atrasts</string>
     <string name="migration_help_guide">Avota migrācijas rokasgrāmata</string>
     <string name="migrate">Migrēt</string>
-    <string name="confirm_set_chapter_settings">Vai esat pārliecināts, ka šos iestatījumus vēlaties saglabāt kā noklusējuma\?</string>
+    <string name="confirm_set_chapter_settings">Vai esat pārliecināts, ka šos iestatījumus vēlaties saglabāt kā noklusējuma?</string>
     <string name="filter_mode_lighten">Dodge / Gaišāks</string>
     <string name="filter_mode_darken">Burn / Tumšāks</string>
     <string name="sort_by_upload_date">Pēc augšupielādes datuma</string>
     <string name="update_check_notification_download_error">Lejupielādēt kļūdu</string>
-    <string name="confirm_delete_chapters">Vai esat pārliecināts, ka vēlaties dzēst atlasītās nodaļas\?</string>
+    <string name="confirm_delete_chapters">Vai esat pārliecināts, ka vēlaties dzēst atlasītās nodaļas?</string>
     <string name="chapter_settings">Nodaļu iestatījumi</string>
     <string name="migration_selection_prompt">Izvēlieties avotu, no kura migrēt</string>
     <string name="download_queue_error">Nevarēja lejupielādēt nodaļas. Varat mēģināt vēlreiz lejupielādes sadaļā</string>
@@ -623,7 +621,7 @@
     <string name="download_ahead_info">Darbojas tikai ja pašreizējā nodaļa + nākošā nodaļa ir jau lejupielādēta.</string>
     <string name="confirm_add_duplicate_manga">Jūsu bibliotēkā ir ieraksts ar tādu pašu nosaukumu.
 \n
-\nVai joprojām vēlaties turpināt\?</string>
+\nVai joprojām vēlaties turpināt?</string>
     <string name="pref_invalidate_download_cache">Nederīgs lejupielāžu indekss</string>
     <string name="label_overview_section">Pārskats</string>
     <string name="label_stats">Statistika</string>
@@ -642,7 +640,7 @@
     <string name="minute_short">%dm</string>
     <string name="seconds_short">%ds</string>
     <string name="popular">Populārs</string>
-    <string name="are_you_sure">Vai tu esi pārliecināts\?</string>
+    <string name="are_you_sure">Vai tu esi pārliecināts?</string>
     <string name="updates_last_update_info_just_now">Tikko</string>
     <string name="action_update_category">Atjaunināt kategoriju</string>
     <string name="action_open_random_manga">Atvērt nejaušu ierakstu</string>
@@ -668,7 +666,7 @@
     <string name="loader_rar5_error">RARv5 formāts netiek atbalstīts</string>
     <string name="hour_short">%dh</string>
     <string name="internal_error">InternalError: Par plašāku informāciju skatiet avārijas žurnālu</string>
-    <string name="delete_category_confirmation">Vai vēlaties dzēst kategoriju \"%s\"\?</string>
+    <string name="delete_category_confirmation">Vai vēlaties dzēst kategoriju \"%s\"?</string>
     <string name="track_error">%1$s kļūda: %2$s</string>
     <string name="update_already_running">Atjauninājums jau darbojas</string>
     <string name="crash_screen_description">%s radās neparedzēta kļūda. Mēs iesakām dalīties ar avārijas žurnālu mūsu atbalsta kanālā Discord lietotnē.</string>
@@ -676,7 +674,7 @@
     <string name="pref_page_rotate_invert">Apvērst orientācija pagrieztām platām lapām</string>
     <string name="split_tall_images">Sadalīt augstus attēlus</string>
     <string name="pref_hide_in_library_items">Slēpt ierakstus, kas jau ir bibliotēkā</string>
-    <string name="track_remove_date_conf_title">Vai noņemt datumu\?</string>
+    <string name="track_remove_date_conf_title">Vai noņemt datumu?</string>
     <string name="information_no_manga_category">Kategorija ir tukša</string>
     <string name="appwidget_updates_description">Skatiet savus nesen atjauninātos bibliotēkas ierakstus</string>
     <string name="remove_manga">Jūs gatavojaties noņemt \"%s\" no savas bibliotēkas</string>
@@ -718,7 +716,7 @@
     <string name="intervals_header">Intervāli</string>
     <string name="track_delete_text">Šis noņems locālo izsekošanu.</string>
     <string name="delete_downloaded">Izdzēst lejupielādētos</string>
-    <string name="track_delete_title">Vai noņemt %s izsekošanu\?</string>
+    <string name="track_delete_title">Vai noņemt %s izsekošanu?</string>
     <string name="action_ok">OK</string>
     <string name="pref_update_only_in_release_period">Ārpus paredzamā izlaišanas perioda</string>
     <string name="pref_double_tap_zoom">Dubult-pieskarieties, lai tuvinātu</string>

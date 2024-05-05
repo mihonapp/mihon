@@ -12,8 +12,8 @@ import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.store.DelayedTrackingStore
 import eu.kanade.tachiyomi.util.system.workManager
 import logcat.LogPriority
-import tachiyomi.core.util.lang.withIOContext
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.track.interactor.GetTracks
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -45,7 +45,7 @@ class DelayedTrackingUpdateJob(private val context: Context, workerParams: Worke
                     logcat(LogPriority.DEBUG) {
                         "Updating delayed track item: ${track.mangaId}, last chapter read: ${track.lastChapterRead}"
                     }
-                    trackChapter.await(context, track.mangaId, track.lastChapterRead)
+                    trackChapter.await(context, track.mangaId, track.lastChapterRead, setupJobOnFailure = false)
                 }
         }
 

@@ -11,7 +11,7 @@ import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -21,7 +21,7 @@ import okhttp3.CacheControl
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -105,11 +105,11 @@ class BangumiApi(
             ""
         }
         val totalChapters = if (obj["eps_count"] != null) {
-            obj["eps_count"]!!.jsonPrimitive.int
+            obj["eps_count"]!!.jsonPrimitive.long
         } else {
             0
         }
-        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.floatOrNull ?: -1f
+        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.doubleOrNull ?: -1.0
         return TrackSearch.create(trackId).apply {
             remote_id = obj["id"]!!.jsonPrimitive.long
             title = obj["name_cn"]!!.jsonPrimitive.content
@@ -152,7 +152,7 @@ class BangumiApi(
             } else {
                 json.decodeFromString<Collection>(responseBody).let {
                     track.status = it.status?.id!!
-                    track.last_chapter_read = it.ep_status!!.toFloat()
+                    track.last_chapter_read = it.ep_status!!.toDouble()
                     track.score = it.rating!!
                     track
                 }
@@ -182,8 +182,8 @@ class BangumiApi(
     )
 
     companion object {
-        private const val clientId = "bgm10555cda0762e80ca"
-        private const val clientSecret = "8fff394a8627b4c388cbf349ec865775"
+        private const val clientId = "bgm291665acbd06a4c28"
+        private const val clientSecret = "43e5ce36b207de16e5d3cfd3e79118db"
 
         private const val apiUrl = "https://api.bgm.tv"
         private const val oauthUrl = "https://bgm.tv/oauth/access_token"

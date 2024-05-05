@@ -137,7 +137,7 @@
     <string name="pref_backup_interval">Frequência de backup automático</string>
     <string name="backup_created">Backup criado</string>
     <string name="restore_completed">Restauração concluída</string>
-    <string name="backup_choice">Do que você deseja fazer backup\?</string>
+    <string name="backup_choice">Do que você deseja fazer backup?</string>
     <string name="restoring_backup">Restaurando backup</string>
     <string name="creating_backup">Criando backup</string>
     <string name="pref_clear_chapter_cache">Limpar o cache de capítulos</string>
@@ -148,7 +148,7 @@
     <string name="cookies_cleared">Cookies limpos</string>
     <string name="pref_clear_database">Limpar o banco de dados</string>
     <string name="pref_clear_database_summary">Exclui o histórico de itens que não estão salvos em sua biblioteca</string>
-    <string name="clear_database_confirmation">Tem certeza\? Os capítulos lidos e o progresso em itens que não estão na sua biblioteca serão perdidos</string>
+    <string name="clear_database_confirmation">Tem certeza? Os capítulos lidos e o progresso em itens que não estão na sua biblioteca serão perdidos</string>
     <string name="clear_database_completed">Entradas excluídas</string>
     <string name="version">Versão</string>
     <string name="pref_enable_acra">Enviar relatórios de erro</string>
@@ -166,7 +166,7 @@
     <string name="unknown">Desconhecido</string>
     <string name="licensed">Licenciado</string>
     <string name="remove_from_library">Remover da biblioteca</string>
-    <string name="delete_downloads_for_manga">Excluir os capítulos disponíveis offline\?</string>
+    <string name="delete_downloads_for_manga">Excluir os capítulos disponíveis offline?</string>
     <string name="display_mode_chapter">Capítulo %1$s</string>
     <string name="chapter_downloading_progress">Fazendo download (%1$d/%2$d)</string>
     <string name="chapter_error">Erro</string>
@@ -177,7 +177,7 @@
     <string name="sort_by_number">Pelo número do capítulo</string>
     <string name="manga_download">Fazer download</string>
     <string name="download_unread">Não lidos</string>
-    <string name="confirm_delete_chapters">Você tem certeza que quer excluir os capítulos selecionados\?</string>
+    <string name="confirm_delete_chapters">Você tem certeza que quer excluir os capítulos selecionados?</string>
     <string name="manga_tracking_tab">Monitoramento</string>
     <string name="reading">Lendo</string>
     <string name="completed">Concluído</string>
@@ -189,9 +189,9 @@
     <string name="status">Estado</string>
     <string name="error_category_exists">Já existe uma categoria com este nome!</string>
     <string name="snack_categories_deleted">Categorias excluídas</string>
-    <string name="dialog_with_checkbox_remove_description">Isso irá remover a data de leitura deste capítulo. Você tem certeza\?</string>
+    <string name="dialog_with_checkbox_remove_description">Isso irá remover a data de leitura deste capítulo. Você tem certeza?</string>
     <string name="dialog_with_checkbox_reset">Redefinir todos os capítulos deste item</string>
-    <string name="snack_add_to_library">Adicionar à biblioteca\?</string>
+    <string name="snack_add_to_library">Adicionar à biblioteca?</string>
     <string name="picture_saved">Imagem salva</string>
     <string name="custom_filter">Filtro personalizado</string>
     <string name="set_as_cover">Usar como capa</string>
@@ -199,7 +199,7 @@
     <string name="chapter_progress">Página: %1$d</string>
     <string name="no_next_chapter">Próximo capítulo não encontrado</string>
     <string name="decode_image_error">A imagem não pôde ser carregada</string>
-    <string name="confirm_set_image_as_cover">Usar esta imagem como capa\?</string>
+    <string name="confirm_set_image_as_cover">Usar esta imagem como capa?</string>
     <string name="download_queue_error">Não foi possível fazer o download dos capítulos. Você pode tentar novamente na seção de downloads</string>
     <string name="notification_new_chapters">Novos capítulos encontrados</string>
     <string name="notification_cover_update_failed">Erro ao atualizar a capa</string>
@@ -272,7 +272,6 @@
     <string name="transition_pages_error">Falha ao carregar as páginas: %1$s</string>
     <string name="pref_read_with_long_tap">Mostrar as ações no toque longo</string>
     <string name="action_open_in_web_view">Abrir na WebView</string>
-    <string name="pref_true_color">Cor de 32 bits</string>
     <string name="pref_skip_read_chapters">Pular os capítulos marcados como lidos</string>
     <string name="filter_mode_screen">Divisão</string>
     <string name="label_help">Ajuda</string>
@@ -291,7 +290,7 @@
     <string name="migration_selection_prompt">Selecione uma fonte da qual migrar</string>
     <string name="pref_date_format">Formato de data</string>
     <string name="pref_category_library_update">Atualização global</string>
-    <string name="logout_title">Desconectar de %1$s\?</string>
+    <string name="logout_title">Desconectar de %1$s?</string>
     <string name="logout">Desconectar</string>
     <string name="logout_success">Você foi desconectado</string>
     <string name="paused">Pausado</string>
@@ -364,7 +363,6 @@
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>
-    <string name="pref_true_color_summary">Reduz o efeito de anéis nos degradês, mas pode afetar o desempenho</string>
     <string name="battery_optimization_setting_activity_not_found">Não foi possível abrir as configurações do dispositivo</string>
     <string name="tracking_info">Sincronização unidirecional para atualizar o progresso dos capítulos nos serviços monitoradores externos. Configure o monitoramento para itens individuais a partir de seus botões de monitoramento.</string>
     <string name="pref_refresh_library_covers">Atualizar as capas da biblioteca</string>
@@ -417,7 +415,7 @@
     <string name="chapter_settings_updated">Configurações padrões de capítulo atualizadas</string>
     <string name="set_chapter_settings_as_default">Definir como padrão</string>
     <string name="also_set_chapter_settings_for_library">Também aplicar a todos os itens na minha biblioteca</string>
-    <string name="confirm_set_chapter_settings">Você tem certeza que quer salvar como padrão essas configurações\?</string>
+    <string name="confirm_set_chapter_settings">Você tem certeza que quer salvar como padrão essas configurações?</string>
     <string name="chapter_settings">Configurações de capítulo</string>
     <string name="share_page_info">%1$s: %2$s, página %3$d</string>
     <string name="action_search_settings">Pesquisar nas configurações</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Pausa o histórico de leitura</string>
     <string name="pref_incognito_mode">Modo anônimo</string>
     <string name="pref_clear_history">Limpar o histórico</string>
-    <string name="clear_history_confirmation">Você tem certeza\? Todo o histórico será perdido.</string>
+    <string name="clear_history_confirmation">Você tem certeza? Todo o histórico será perdido.</string>
     <string name="clear_history_completed">Histórico excluído</string>
     <string name="spen_next_page">Próxima página</string>
     <string name="spen_previous_page">Página anterior</string>
@@ -607,7 +605,7 @@
     <string name="theme_lavender">Lavanda</string>
     <string name="description_placeholder">Sem descrição</string>
     <string name="delete_category">Deletar categoria</string>
-    <string name="delete_category_confirmation">Você deseja deletar a categoria \"%s\"\?</string>
+    <string name="delete_category_confirmation">Você deseja deletar a categoria \"%s\"?</string>
     <string name="internal_error">Erro interno: Verifique os registros de travamento para mais informações</string>
     <string name="pref_user_agent_string">User Agent padrão</string>
     <string name="pref_reset_user_agent_string">Redefinir o User Agent padrão</string>
@@ -621,7 +619,7 @@
     <string name="download_ahead">Fazer download a frente</string>
     <string name="auto_download_while_reading">Download automático durante a leitura</string>
     <string name="download_ahead_info">Funciona somente se o capítulo atual e próximo já estão disponíveis offline.</string>
-    <string name="are_you_sure">Você tem certeza\?</string>
+    <string name="are_you_sure">Você tem certeza?</string>
     <string name="multi_lang">Múltiplos</string>
     <string name="updates_last_update_info">Última atualização da biblioteca: %s</string>
     <string name="remove_manga">Você está prestes a remover \"%s\" de sua biblioteca</string>
@@ -651,7 +649,7 @@
     <string name="fdroid_warning">Compilações do F-Droid não são suportadas oficialmente.
 \nToque para saber mais.</string>
     <string name="action_display_show_continue_reading_button">Botão de continuar a leitura</string>
-    <string name="track_remove_date_conf_title">Remover data\?</string>
+    <string name="track_remove_date_conf_title">Remover data?</string>
     <string name="track_remove_start_date_conf_text">Isto irá remover sua data de início selecionada anteriormente no %s</string>
     <string name="track_remove_finish_date_conf_text">Isto irá remover sua data de término selecionada anteriormente no %s</string>
     <string name="pref_invalidate_download_cache">Invalidar o índice de downloads</string>
@@ -684,7 +682,7 @@
     <string name="pref_skip_dupe_chapters">Pular capítulos duplicados</string>
     <string name="confirm_add_duplicate_manga">Você possui um item na sua biblioteca com o mesmo nome.
 \n
-\nVocê ainda deseja continuar\?</string>
+\nVocê ainda deseja continuar?</string>
     <string name="track_error">Erro em %1$s: %2$s</string>
     <string name="information_required_plain">*obrigatório</string>
     <string name="pref_hide_in_library_items">Ocultar títulos que já estão na biblioteca</string>
@@ -709,7 +707,7 @@
     <string name="manga_display_modified_interval_title">Definido para atualizar todo</string>
     <string name="manga_display_interval_title">Estimar todo</string>
     <string name="action_ok">OK</string>
-    <string name="track_delete_title">Remover o monitoramento do %s\?</string>
+    <string name="track_delete_title">Remover o monitoramento do %s?</string>
     <string name="track_delete_text">Isso irá remover o monitoramento localmente.</string>
     <string name="track_delete_remote_text">Também remover do %s</string>
     <string name="delete_downloaded">Deletar os disponíveis offline</string>
@@ -732,7 +730,7 @@
     <string name="notification_updating_progress">Atualizando a biblioteca… (%s)</string>
     <string name="source_settings">Configurações das fontes</string>
     <string name="action_sort_category">Ordenar as categorias</string>
-    <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente\?</string>
+    <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente?</string>
     <string name="file_null_uri_error">Nenhum arquivo selecionado</string>
     <string name="label_data_storage">Dados e armazenamento</string>
     <string name="pref_flash_page_summ">Reduz o efeito fantasma em telas e-ink</string>
@@ -744,7 +742,7 @@
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Reverter para o padrão</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
-    <string name="scanlator">Scanlator</string>
+    <string name="scanlator">Scanner</string>
     <string name="exclude_scanlators">Excluir scanlators</string>
     <string name="action_create">Criar</string>
     <string name="selected">Selecionado</string>
@@ -798,4 +796,5 @@
     <string name="theme_nord">Nord</string>
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
     <string name="action_open_repo">Abrir repositório da fonte</string>
+    <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
 </resources>

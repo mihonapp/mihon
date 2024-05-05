@@ -2,6 +2,7 @@
 
 -keep,allowoptimization class eu.kanade.**
 -keep,allowoptimization class tachiyomi.**
+-keep,allowoptimization class mihon.**
 
 # Keep common dependencies used in extensions
 -keep,allowoptimization class androidx.preference.** { public protected *; }
@@ -71,6 +72,9 @@
 
 # XmlUtil
 -keep public enum nl.adaptivity.xmlutil.EventType { *; }
+
+# Apache Commons Compress
+-keep class * extends org.apache.commons.compress.archivers.zip.ZipExtraField { <init>(); }
 
 # Firebase
 -keep class com.google.firebase.installations.** { *; }

@@ -16,7 +16,7 @@ import okhttp3.Dns
 import okhttp3.FormBody
 import okhttp3.Headers
 import okhttp3.OkHttpClient
-import tachiyomi.core.util.lang.withIOContext
+import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
@@ -66,9 +66,9 @@ class SuwayomiApi(private val trackId: Long) {
             cover_url = "$url/thumbnail"
             summary = manga.description.orEmpty()
             tracking_url = url
-            total_chapters = manga.chapterCount.toInt()
+            total_chapters = manga.chapterCount
             publishing_status = manga.status
-            last_chapter_read = manga.lastChapterRead?.chapterNumber ?: 0F
+            last_chapter_read = manga.lastChapterRead?.chapterNumber ?: 0.0
             status = when (manga.unreadCount) {
                 manga.chapterCount -> Suwayomi.UNREAD
                 0L -> Suwayomi.COMPLETED

@@ -86,7 +86,7 @@
     <string name="pref_tracking_summary">Bir tomonlama sinxronlash, kengaytirilgan sinxronlash</string>
     <string name="theme_system">Tizimdagidek</string>
     <string name="theme_lavender">Lavanda</string>
-    <string name="delete_category_confirmation">\"%s\" toifasini o\'chirishni hohlaysizmi\?</string>
+    <string name="delete_category_confirmation">\"%s\" toifasini o\'chirishni hohlaysizmi?</string>
     <string name="action_previous_chapter">Oldingi bob</string>
     <string name="action_next_chapter">Keyingi bob</string>
     <string name="action_migrate">Ko\'chirish</string>
@@ -200,7 +200,6 @@
     <string name="pref_dual_page_invert">Keng sahifalarni teskarisiga ajratish</string>
     <string name="pref_crop_borders">Chetlarini kesish</string>
     <string name="pref_color_filter_mode">Rang filtri rejimi</string>
-    <string name="pref_true_color_summary">Chiziqlanishni kamaytiradi, lekin ishlashga ta\'sir ko\'rsatishi mumkin</string>
     <string name="all">Barchasi</string>
     <string name="pref_library_update_show_tab_badge">O\'qilmagan boblar soni «Yangilanishlar» ikonida</string>
     <string name="ext_pending">Kutilmoqda</string>
@@ -262,7 +261,6 @@
     <string name="ext_installed">O\'rnatildi</string>
     <string name="ext_info_version">Versiya</string>
     <string name="pref_double_tap_anim_speed">Ikki marta bosilganda animatsiya tezligi</string>
-    <string name="pref_true_color">32-bitli rang</string>
     <string name="pref_custom_brightness">Foydalanuvchi tanlagan yoruqlik</string>
     <string name="ext_info_age_rating">Yosh cheklovi</string>
     <string name="network_not_metered">Faqat cheksiz tarmoq orqali</string>

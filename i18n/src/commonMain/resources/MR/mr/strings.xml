@@ -22,7 +22,6 @@
     <string name="action_mark_as_unread">वाचले नाही अशी खुण करा</string>
     <string name="action_download">डाउनलोड</string>
     <string name="action_delete">हटवा</string>
-    <string name="pref_true_color">३२-बिट रंग</string>
     <string name="black_background">काळा</string>
     <string name="channel_common">सामान्य</string>
     <string name="action_menu">मेनू</string>
@@ -110,16 +109,15 @@
     <string name="action_webview_forward">पुढे</string>
     <string name="action_webview_back">मागे जा</string>
     <string name="pref_crop_borders">सीमानां कापा</string>
-    <string name="pref_true_color_summary">बॅन्डिंग कमी करते, परंतु कार्यप्रदर्शनावर परिणाम करते</string>
     <string name="pref_show_page_number">पृष्ठ क्रमांक दर्शवा</string>
     <string name="pref_double_tap_anim_speed">दोनदा टॅप साठी अ‍ॅनिमेशन गती</string>
     <string name="pref_page_transitions">पृष्ठ संक्रमण संजीवित करा</string>
     <string name="pref_cutout_short">कटआउट क्षेत्रात सामग्री दर्शवा</string>
     <string name="obsolete_extension_message">हे एक्सटेन्शन उपलब्ध नाही.</string>
-    <string name="untrusted_extension_message">हे एक्सटेन्शन एका अविश्वासू प्रमानपत्रासहित आले आहे म्हणून हे स्थापित होऊ शकले नाही. 
+    <string name="untrusted_extension_message">हे एक्सटेन्शन एका अविश्वासू प्रमानपत्रासहित आले आहे म्हणून हे स्थापित होऊ शकले नाही.
 \n
 \nअसे अविश्वासू एक्सटेन्शन आपले लॉगिन बाबत माहिती चोरू शकते.
-\n 
+\n
 \nव अश्या एक्सटेन्शन वर विश्वास करून तुम्ही ह्या सगद्या जोखीम घेत आहेत.</string>
     <string name="untrusted_extension">अविश्वासू एक्सटेन्शन</string>
     <string name="ext_uninstall">विस्थापित करा</string>

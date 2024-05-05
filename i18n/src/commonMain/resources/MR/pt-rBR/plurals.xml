@@ -85,4 +85,9 @@
         <item quantity="many">%d repositórios</item>
         <item quantity="other">%d repositórios</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Amanhã</item>
+        <item quantity="many">Em %1$d dias</item>
+        <item quantity="other">Em breve</item>
+    </plurals>
 </resources>

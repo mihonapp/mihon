@@ -64,4 +64,8 @@
         <item quantity="one">Nästa kapitel</item>
         <item quantity="other">Nästa %d kapitel</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d förråd</item>
+        <item quantity="other">%d flera förråd</item>
+    </plurals>
 </resources>

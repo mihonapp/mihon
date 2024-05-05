@@ -1,5 +1,7 @@
 package tachiyomi.domain.track.model
 
+import java.io.Serializable
+
 data class Track(
     val id: Long,
     val mangaId: Long,
@@ -14,4 +16,4 @@ data class Track(
     val remoteUrl: String,
     val startDate: Long,
     val finishDate: Long,
-)
+) : Serializable

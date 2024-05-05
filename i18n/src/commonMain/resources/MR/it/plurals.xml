@@ -80,4 +80,14 @@
         <item quantity="many">%d giorni</item>
         <item quantity="other">%d giorni</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Domani</item>
+        <item quantity="many">Tra %1$d giorni</item>
+        <item quantity="other">Tra %1$d giorni</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repository</item>
+        <item quantity="many">%d repository</item>
+        <item quantity="other">%d repository</item>
+    </plurals>
 </resources>

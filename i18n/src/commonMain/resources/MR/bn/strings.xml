@@ -150,7 +150,7 @@
     <string name="cookies_cleared">কুকিস পরিষ্কার হয়েছে</string>
     <string name="pref_clear_database">ডাটাবেজ পরিষ্কার করুন</string>
     <string name="pref_clear_database_summary">আপনার সংগ্রহশালাতে যেসব মাংগা সংরক্ষিত নেই সেগুলোর ইতিহাস মুছে ফেলুন</string>
-    <string name="clear_database_confirmation">আপনি কি নিশ্চিত\? পঠিত অধ্যায় এবং সংগ্রহশালাতে অনুপস্থিত মাংগার অগ্রগতি মুছে যাবে</string>
+    <string name="clear_database_confirmation">আপনি কি নিশ্চিত? পঠিত অধ্যায় এবং সংগ্রহশালাতে অনুপস্থিত মাংগার অগ্রগতি মুছে যাবে</string>
     <string name="clear_database_completed">এন্ট্রিগুলো মুছে ফেলা হয়েছে</string>
     <string name="version">সংস্করণ</string>
     <string name="pref_enable_acra">ক্র‍্যাশের প্রতিবেদন পাঠান</string>
@@ -197,7 +197,7 @@
     <string name="snack_categories_deleted">বিভাগগুলি মোছা হয়েছে</string>
     <string name="dialog_with_checkbox_remove_description">এটা এই অধ্যায়ের পড়ার সময়কাল সরিয়ে ফেলবে। আপনি নিশ্চিত?</string>
     <string name="dialog_with_checkbox_reset">এই মাংগার জন্য সব অধ্যায় পুনঃবিন্যাস করুন</string>
-    <string name="snack_add_to_library">সংগ্রহশালায় মাঙ্গা যোগ করবেন\?</string>
+    <string name="snack_add_to_library">সংগ্রহশালায় মাঙ্গা যোগ করবেন?</string>
     <string name="picture_saved">ছবি সংরক্ষিত হয়েছে</string>
     <string name="custom_filter">স্বনির্ধারিত ফিল্টার</string>
     <string name="set_as_cover">প্রচ্ছদ হিসাবে সংরক্ষণ করুন</string>
@@ -205,7 +205,7 @@
     <string name="chapter_progress">পৃষ্ঠা: %1$d</string>
     <string name="no_next_chapter">পরবর্তী অধ্যায় খুঁজে পাওয়া যায়নি</string>
     <string name="decode_image_error">ছবিটি লোড করা যাচ্ছে না</string>
-    <string name="confirm_set_image_as_cover">এই চিত্রটি কভার আর্ট হিসাবে ব্যবহার করবেন\?</string>
+    <string name="confirm_set_image_as_cover">এই চিত্রটি কভার আর্ট হিসাবে ব্যবহার করবেন?</string>
     <string name="download_queue_error">অধ্যায়গুলি ডাউনলোড করা যায়নি। ডাউনলোড বিভাগে আপনি আবার চেষ্টা করতে পারেন</string>
     <string name="notification_new_chapters">নতুন অধ্যায় পাওয়া গিয়েছে</string>
     <string name="notification_cover_update_failed">প্রচ্ছদ হালনাগাদ করতে ব্যর্থ</string>
@@ -274,7 +274,6 @@
     <string name="transition_pages_error">পৃষ্ঠাগুলো লোড করতে ব্যর্থ হয়েছে: %1$s</string>
     <string name="pref_read_with_long_tap">দীর্ঘ ট্যাপে দেখান</string>
     <string name="action_open_in_web_view">WebView তে খুলুন</string>
-    <string name="pref_true_color">৩২-বিট রং</string>
     <string name="pref_skip_read_chapters">পঠিত অধ্যায়গুলো এড়িয়ে যান</string>
     <string name="pref_color_filter_mode">রঙ ফিল্টার মিশ্রন মোড</string>
     <string name="filter_mode_overlay">আস্তরণ</string>
@@ -338,7 +337,7 @@
     <string name="lock_when_idle">কর্মহীন হলে লক করুন</string>
     <string name="chapter_settings_updated">হালনাগাদকৃত প্রকৃত শ্রেণির সেটিংস</string>
     <string name="set_chapter_settings_as_default">প্রকৃত হিসেবে সংরক্ষণ করুন</string>
-    <string name="confirm_set_chapter_settings">আপনি কি নিশ্চিত সেটিংসগুলো প্রকৃত হিসেবে সংরক্ষণ করবেন\?</string>
+    <string name="confirm_set_chapter_settings">আপনি কি নিশ্চিত সেটিংসগুলো প্রকৃত হিসেবে সংরক্ষণ করবেন?</string>
     <string name="label_data">তথ্য</string>
     <string name="requires_app_restart">কার্যকর করতে অ্যাপ পুনরারম্ভ করা লাগে</string>
     <string name="label_network">নেটওয়ার্ক</string>
@@ -361,7 +360,6 @@
     <string name="pref_show_reading_mode">পঠন ধরন দেখান</string>
     <string name="gray_background">ধূসর</string>
     <string name="pref_skip_filtered_chapters">ফিলটারড অধ্যায় গুলো এড়িয়ে যান</string>
-    <string name="pref_true_color_summary">ব্যানডিং কমায়, কিন্তু কর্মক্ষমতায় প্রভাভ ফেলে</string>
     <string name="pref_cutout_short">বিষয়বস্তু কাটআউটে দেখুন</string>
     <string name="ext_nsfw_warning">প্রাপ্তবয়স্কদের (18+) কন্টেন্ট থাকতে পারে</string>
     <string name="ext_nsfw_short">১৮+</string>
@@ -412,7 +410,7 @@
     <string name="manga_from_library">লাইব্রেরীর মাঙ্গা</string>
     <string name="logout_success">আপনি এখন প্রস্থান করেছেন</string>
     <string name="logout">প্রস্থান</string>
-    <string name="logout_title">প্রস্থান করবেন %1$s থেকে\?</string>
+    <string name="logout_title">প্রস্থান করবেন %1$s থেকে?</string>
     <string name="downloaded_only_summary">আপনার লাইব্রেরীর সব মাঙ্গা ফিলটার করে</string>
     <string name="pref_incognito_mode_summary">পড়ার ইতিহাসে বিরতি দেয়</string>
     <string name="pref_incognito_mode">ছদ্মবেশী মোড</string>
@@ -423,7 +421,7 @@
     <string name="whats_new">নতুন কি</string>
     <string name="website">ওয়েবসাইট</string>
     <string name="pref_clear_history">ইতিহাস সাফ করুন</string>
-    <string name="clear_history_confirmation">আপনি নিশ্চিত\? সব ইতিহাস মুছে যাবে।</string>
+    <string name="clear_history_confirmation">আপনি নিশ্চিত? সব ইতিহাস মুছে যাবে।</string>
     <string name="clear_history_completed">ইতিহাস মুছে ফেলা হয়েছে</string>
     <string name="battery_optimization_setting_activity_not_found">যন্ত্রের সেটিংস খোলা সম্ভব হয়নি</string>
     <string name="battery_optimization_disabled">ব্যাটারি অপ্টিমাইজেশন ইতিমধ্যে অক্ষম করা আছে</string>
@@ -563,9 +561,9 @@
     <string name="notification_update_error">%1$d আপডেট(গুলি) ব্যর্থ হয়েছে</string>
     <string name="publishing_finished">সম্পূর্ণ প্রকাশিত</string>
     <string name="action_sort_last_manga_update">সর্বশেষ হালনাগাদ চেক</string>
-    <string name="delete_category_confirmation">আপনি কি \"%s\" বিভাগটি মুছে ফেলতে চান\?</string>
+    <string name="delete_category_confirmation">আপনি কি \"%s\" বিভাগটি মুছে ফেলতে চান?</string>
     <string name="appwidget_updates_description">সম্প্রতি আপনার হালনাগাদকৃত মাঙ্গা দেখুন</string>
-    <string name="are_you_sure">আপনি কি নিশ্চিত\?</string>
+    <string name="are_you_sure">আপনি কি নিশ্চিত?</string>
     <string name="action_sort_unread_count">অপঠিত সংখ্যা</string>
     <string name="action_remove_everything">সবকিছু মুছুন</string>
     <string name="action_show_manga">লেখা দেখান</string>

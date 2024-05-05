@@ -26,7 +26,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.time.Instant
+import java.time.LocalDate
 
 object SettingsAppearanceScreen : SearchableSettings {
 
@@ -101,7 +101,7 @@ object SettingsAppearanceScreen : SearchableSettings {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        val now = remember { Instant.now().toEpochMilli() }
+        val now = remember { LocalDate.now() }
 
         val dateFormat by uiPreferences.dateFormat().collectAsState()
         val formattedNow = remember(dateFormat) {

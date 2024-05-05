@@ -22,9 +22,9 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
 
     companion object {
-        const val UNREAD = 1
-        const val READING = 2
-        const val COMPLETED = 3
+        const val UNREAD = 1L
+        const val READING = 2L
+        const val COMPLETED = 3L
     }
 
     var authentications: OAuth? = null
@@ -38,20 +38,20 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
 
     override fun getLogoColor() = Color.rgb(74, 198, 148)
 
-    override fun getStatusList() = listOf(UNREAD, READING, COMPLETED)
+    override fun getStatusList(): List<Long> = listOf(UNREAD, READING, COMPLETED)
 
-    override fun getStatus(status: Int): StringResource? = when (status) {
+    override fun getStatus(status: Long): StringResource? = when (status) {
         UNREAD -> MR.strings.unread
         READING -> MR.strings.reading
         COMPLETED -> MR.strings.completed
         else -> null
     }
 
-    override fun getReadingStatus(): Int = READING
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Int = -1
+    override fun getRereadingStatus(): Long = -1
 
-    override fun getCompletionStatus(): Int = COMPLETED
+    override fun getCompletionStatus(): Long = COMPLETED
 
     override fun getScoreList(): ImmutableList<String> = persistentListOf()
 
@@ -60,7 +60,7 @@ class Kavita(id: Long) : BaseTracker(id, "Kavita"), EnhancedTracker {
     override suspend fun update(track: Track, didReadChapter: Boolean): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
-                if (track.last_chapter_read.toInt() == track.total_chapters && track.total_chapters > 0) {
+                if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
                     track.status = COMPLETED
                 } else {
                     track.status = READING

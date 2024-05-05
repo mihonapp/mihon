@@ -27,22 +27,22 @@ interface Tracker {
     @DrawableRes
     fun getLogo(): Int
 
-    fun getStatusList(): List<Int>
+    fun getStatusList(): List<Long>
 
-    fun getStatus(status: Int): StringResource?
+    fun getStatus(status: Long): StringResource?
 
-    fun getReadingStatus(): Int
+    fun getReadingStatus(): Long
 
-    fun getRereadingStatus(): Int
+    fun getRereadingStatus(): Long
 
-    fun getCompletionStatus(): Int
+    fun getCompletionStatus(): Long
 
     fun getScoreList(): ImmutableList<String>
 
     // TODO: Store all scores as 10 point in the future maybe?
     fun get10PointScore(track: DomainTrack): Double
 
-    fun indexToScore(index: Int): Float
+    fun indexToScore(index: Int): Double
 
     fun displayScore(track: DomainTrack): String
 
@@ -70,7 +70,7 @@ interface Tracker {
     // TODO: move this to an interactor, and update all trackers based on common data
     suspend fun register(item: Track, mangaId: Long)
 
-    suspend fun setRemoteStatus(track: Track, status: Int)
+    suspend fun setRemoteStatus(track: Track, status: Long)
 
     suspend fun setRemoteLastChapterRead(track: Track, chapterNumber: Int)
 

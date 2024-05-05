@@ -26,8 +26,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import nl.adaptivity.xmlutil.XmlDeclMode
 import nl.adaptivity.xmlutil.core.XmlVersion
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.core.storage.AndroidStorageFolderProvider
-import tachiyomi.core.storage.UniFileTempFileManager
+import tachiyomi.core.common.storage.AndroidStorageFolderProvider
 import tachiyomi.data.AndroidDatabaseHandler
 import tachiyomi.data.Database
 import tachiyomi.data.DatabaseHandler
@@ -111,8 +110,6 @@ class AppModule(val app: Application) : InjektModule {
         addSingletonFactory<ProtoBuf> {
             ProtoBuf
         }
-
-        addSingletonFactory { UniFileTempFileManager(app) }
 
         addSingletonFactory { ChapterCache(app, get()) }
         addSingletonFactory { CoverCache(app) }

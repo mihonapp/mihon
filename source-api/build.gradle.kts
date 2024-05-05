@@ -1,7 +1,7 @@
 plugins {
+    id("mihon.library")
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("com.android.library")
 }
 
 kotlin {
@@ -17,7 +17,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(project(":core"))
+                implementation(projects.core.common)
                 api(libs.preferencektx)
 
                 // Workaround for https://youtrack.jetbrains.com/issue/KT-57605

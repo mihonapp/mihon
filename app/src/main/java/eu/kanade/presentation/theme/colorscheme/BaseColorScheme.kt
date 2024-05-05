@@ -9,18 +9,15 @@ internal abstract class BaseColorScheme {
     abstract val lightScheme: ColorScheme
 
     fun getColorScheme(isDark: Boolean, isAmoled: Boolean): ColorScheme {
-        return (if (isDark) darkScheme else lightScheme)
-            .let {
-                if (isDark && isAmoled) {
-                    it.copy(
-                        background = Color.Black,
-                        onBackground = Color.White,
-                        surface = Color.Black,
-                        onSurface = Color.White,
-                    )
-                } else {
-                    it
-                }
-            }
+        if (!isDark) return lightScheme
+
+        if (!isAmoled) return darkScheme
+
+        return darkScheme.copy(
+            background = Color.Black,
+            onBackground = Color.White,
+            surface = Color.Black,
+            onSurface = Color.White,
+        )
     }
 }

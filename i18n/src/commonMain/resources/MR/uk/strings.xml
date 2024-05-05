@@ -160,7 +160,7 @@
     <string name="pref_backup_interval">Частота автоматичних бекапів</string>
     <string name="backup_created">Резервна копія створена</string>
     <string name="restore_completed">Відновлення завершено</string>
-    <string name="backup_choice">Що ви хочете зберегти до резервної копії\?</string>
+    <string name="backup_choice">Що ви хочете зберегти до резервної копії?</string>
     <string name="restoring_backup">Відновлення резервної копії</string>
     <string name="creating_backup">Створення резервної копії</string>
     <string name="pref_clear_chapter_cache">Очистити кеш розділів</string>
@@ -171,7 +171,7 @@
     <string name="cookies_cleared">Куки очищено</string>
     <string name="pref_clear_database">Очистити базу даних</string>
     <string name="pref_clear_database_summary">Видалити історію для записів, котрі не знаходяться в вашій бібліотеці</string>
-    <string name="clear_database_confirmation">Ви впевнені\? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
+    <string name="clear_database_confirmation">Ви впевнені? Прочитані розділи та прогрес не бібліотечних записів будуть втрачені</string>
     <string name="clear_database_completed">Дані видалено</string>
     <string name="version">Версія</string>
     <string name="pref_enable_acra">Надсилати звіти про падіння</string>
@@ -195,7 +195,7 @@
     <string name="remove_from_library">Видалити з бібліотеки</string>
     <string name="manga_added_library">Додати до бібліотеки</string>
     <string name="manga_removed_library">Видалено з бібліотеки</string>
-    <string name="delete_downloads_for_manga">Видаляти завантажені розділи\?</string>
+    <string name="delete_downloads_for_manga">Видаляти завантажені розділи?</string>
     <string name="copied_to_clipboard">Скопійовано до буферу
 \n%1$s</string>
     <string name="source_not_installed">Джерело не встановлено: %1$s</string>
@@ -209,7 +209,7 @@
     <string name="sort_by_number">За номером розділу</string>
     <string name="manga_download">Завантажити</string>
     <string name="download_unread">Непрочитані</string>
-    <string name="confirm_delete_chapters">Ви впевнені, що бажаєте видалити вибрані розділи\?</string>
+    <string name="confirm_delete_chapters">Ви впевнені, що бажаєте видалити вибрані розділи?</string>
     <string name="manga_tracking_tab">Стежити</string>
     <string name="reading">В процесі читання</string>
     <string name="completed">Завершене</string>
@@ -224,9 +224,9 @@
     <string name="track_type">Тип</string>
     <string name="error_category_exists">Категорія з таким іменем вже існує!</string>
     <string name="snack_categories_deleted">Категорію видалено</string>
-    <string name="dialog_with_checkbox_remove_description">Ця дія видалить дату прочитання розділу. Ви впевнені\?</string>
+    <string name="dialog_with_checkbox_remove_description">Ця дія видалить дату прочитання розділу. Ви впевнені?</string>
     <string name="dialog_with_checkbox_reset">Скинути всіх розділи для цього запису</string>
-    <string name="snack_add_to_library">Додати до бібліотеки\?</string>
+    <string name="snack_add_to_library">Додати до бібліотеки?</string>
     <string name="picture_saved">Картинку збережено</string>
     <string name="custom_filter">Користувацький фільтр</string>
     <string name="set_as_cover">Встановити як обкладинку</string>
@@ -234,7 +234,7 @@
     <string name="chapter_progress">Сторінка %1$d</string>
     <string name="no_next_chapter">Наступний розділ не знайдено</string>
     <string name="decode_image_error">Зображення не вдалося завантажити</string>
-    <string name="confirm_set_image_as_cover">Ви бажаєте встановити цю картинку як обкладинку\?</string>
+    <string name="confirm_set_image_as_cover">Ви бажаєте встановити цю картинку як обкладинку?</string>
     <string name="transition_finished">Завершено:</string>
     <string name="transition_current">Поточна:</string>
     <string name="transition_next">Наступна:</string>
@@ -272,7 +272,6 @@
     <string name="channel_common">Звичайний</string>
     <string name="pref_read_with_long_tap">Показувати дії при довгому натисканні</string>
     <string name="action_open_in_web_view">Відкрити у WebView</string>
-    <string name="pref_true_color">32-бітний колір</string>
     <string name="pref_skip_read_chapters">Пропускати розділи, відмічені як прочитані</string>
     <string name="pref_color_filter_mode">Режим накладання кольорового фільтру</string>
     <string name="filter_mode_overlay">Оверлей</string>
@@ -291,7 +290,7 @@
     <string name="obsolete_extension_message">Це розширення більше не доступне. Воно може працювати невірно, а також викликати проблеми із застосунком. Рекомендується його видалити.</string>
     <string name="pref_date_format">Формат дати</string>
     <string name="pref_category_library_update">Глобальне оновлення</string>
-    <string name="logout_title">Вихід із %1$s\?</string>
+    <string name="logout_title">Вихід із %1$s?</string>
     <string name="logout">Вихід</string>
     <string name="logout_success">Ви вийшли з системи</string>
     <string name="paused">Призупинено</string>
@@ -351,7 +350,6 @@
     <string name="website">Сторінка</string>
     <string name="label_downloaded_only">Тільки завантажені</string>
     <string name="gray_background">Сірий</string>
-    <string name="pref_true_color_summary">Зменшує смугастість, але може вплинути на продуктивність</string>
     <string name="pref_library_update_refresh_metadata_summary">Перевірити наявність нової обкладинки та подробиць при оновленні бібліотеки</string>
     <string name="pref_library_update_refresh_metadata">Автоматично оновлювати метадані</string>
     <string name="action_migrate">Мігрувати</string>
@@ -418,7 +416,7 @@
     <string name="share_page_info">%1$s: %2$s, сторінка %3$d</string>
     <string name="set_chapter_settings_as_default">Зберегти налаштування</string>
     <string name="also_set_chapter_settings_for_library">Також застосувати для усіх записів в моїй бібліотеці</string>
-    <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування як основні\?</string>
+    <string name="confirm_set_chapter_settings">Ви впевнені, що бажаєте зберегти ці налаштування як основні?</string>
     <string name="chapter_settings">Налаштування розділу</string>
     <string name="downloaded_chapters">Завантажені розділи</string>
     <string name="manga_from_library">З бібліотеки</string>
@@ -426,7 +424,7 @@
     <string name="pref_incognito_mode_summary">Призупиняє історію читання</string>
     <string name="pref_incognito_mode">Режим інкогніто</string>
     <string name="pref_clear_history">Очистити історію</string>
-    <string name="clear_history_confirmation">Ви впевнені\? Всю історію буде втрачено.</string>
+    <string name="clear_history_confirmation">Ви впевнені? Всю історію буде втрачено.</string>
     <string name="clear_history_completed">Історію видалено</string>
     <string name="spen_next_page">Наступна сторінка</string>
     <string name="spen_previous_page">Попередня сторінка</string>
@@ -607,7 +605,7 @@
     <string name="update_check_open">Відкрити на GitHub</string>
     <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
     <string name="internal_error">InternalError: Перевірте журнал халеп задля додаткової інформації</string>
-    <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію \"%s\"\?</string>
+    <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію \"%s\"?</string>
     <string name="delete_category">Видалити категорію</string>
     <string name="appwidget_updates_description">Переглянути нещодавно оновлені записи бібліотеки</string>
     <string name="appwidget_unavailable_locked">Віджет не доступний при ввімкненому блокуванні застосунку</string>
@@ -622,7 +620,7 @@
     <string name="download_ahead_info">Працює, якщо поточний розділ + наступний вже завантажені.</string>
     <string name="remove_manga">Ви збираєтесь видалити \"%s\" з вашої бібліотеки</string>
     <string name="theme_tidalwave">Приливна Хвиля</string>
-    <string name="are_you_sure">Ви впевнені\?</string>
+    <string name="are_you_sure">Ви впевнені?</string>
     <string name="update_already_running">Оновлення вже розпочато</string>
     <string name="error_user_agent_string_blank">Рядок User agent не може бути пустим</string>
     <string name="popular">Популярне</string>
@@ -652,7 +650,7 @@
 \nТицьніть для того, щоб дізнатись більше.</string>
     <string name="pref_invalidate_download_cache_summary">Змусити застосунок повторно перевірити завантажені розділи</string>
     <string name="action_display_show_continue_reading_button">Кнопка \"Продовжити читання\"</string>
-    <string name="track_remove_date_conf_title">Видалити дату\?</string>
+    <string name="track_remove_date_conf_title">Видалити дату?</string>
     <string name="track_remove_start_date_conf_text">Це призведе до видалення вибраної раніше дати початку з %s</string>
     <string name="track_remove_finish_date_conf_text">Це призведе до видалення раніше вибраної дати завершення з %s</string>
     <string name="pref_invalidate_download_cache">Недійсний індекс завантажень</string>
@@ -684,7 +682,7 @@
     <string name="pref_skip_dupe_chapters">Пропуск повторюваних розділів</string>
     <string name="confirm_add_duplicate_manga">У бібліотеці є запис з такою ж назвою.
 \n
-\nВи все ще хочете продовжити\?</string>
+\nВи все ще хочете продовжити?</string>
     <string name="track_error">%1$s помилка: %2$s</string>
     <string name="information_required_plain">*необхідно</string>
     <string name="pref_hide_in_library_items">Приховати записи, які вже є в бібліотеці</string>
@@ -710,7 +708,7 @@
     <string name="skipped_reason_not_in_release_period">Пропущено, оскільки сьогодні не очікується жодного релізу</string>
     <string name="action_ok">ОК</string>
     <string name="track_delete_remote_text">Також видалити з %s</string>
-    <string name="track_delete_title">Видалити відстеження %s\?</string>
+    <string name="track_delete_title">Видалити відстеження %s?</string>
     <string name="track_delete_text">Це видалить відстеження локально.</string>
     <string name="delete_downloaded">Видалити завантажене</string>
     <string name="has_results">Має результати</string>

@@ -187,14 +187,14 @@ private fun ExtensionContent(
                             }
                         ExtensionHeader(
                             textRes = header.textRes,
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                             action = action,
                         )
                     }
                     is ExtensionUiModel.Header.Text -> {
                         ExtensionHeader(
                             text = header.text,
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
@@ -203,10 +203,16 @@ private fun ExtensionContent(
             items(
                 items = items,
                 contentType = { "item" },
-                key = { "extension-${it.hashCode()}" },
+                key = { item ->
+                    when (item.extension) {
+                        is Extension.Untrusted -> "extension-untrusted-${item.hashCode()}"
+                        is Extension.Installed -> "extension-installed-${item.hashCode()}"
+                        is Extension.Available -> "extension-available-${item.hashCode()}"
+                    }
+                },
             ) { item ->
                 ExtensionItem(
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier.animateItem(),
                     item = item,
                     onClickItem = {
                         when (it) {

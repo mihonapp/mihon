@@ -19,7 +19,7 @@ data class ALManga(
     val format: String,
     val publishing_status: String,
     val start_date_fuzzy: Long,
-    val total_chapters: Int,
+    val total_chapters: Long,
     val average_score: Int,
 ) {
 
@@ -29,7 +29,7 @@ data class ALManga(
         total_chapters = this@ALManga.total_chapters
         cover_url = image_url_lge
         summary = description?.htmlDecode() ?: ""
-        score = average_score.toFloat()
+        score = average_score.toDouble()
         tracking_url = AnilistApi.mangaUrl(remote_id)
         publishing_status = this@ALManga.publishing_status
         publishing_type = format
@@ -58,10 +58,10 @@ data class ALUserManga(
         remote_id = manga.remote_id
         title = manga.title_user_pref
         status = toTrackStatus()
-        score = score_raw.toFloat()
+        score = score_raw.toDouble()
         started_reading_date = start_date_fuzzy
         finished_reading_date = completed_date_fuzzy
-        last_chapter_read = chapters_read.toFloat()
+        last_chapter_read = chapters_read.toDouble()
         library_id = this@ALUserManga.library_id
         total_chapters = manga.total_chapters
     }

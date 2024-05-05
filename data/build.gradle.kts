@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
+    id("app.cash.sqldelight")
     kotlin("android")
     kotlin("plugin.serialization")
-    id("app.cash.sqldelight")
 }
 
 android {
@@ -24,9 +24,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":source-api"))
-    implementation(project(":domain"))
-    implementation(project(":core"))
+    implementation(projects.sourceApi)
+    implementation(projects.domain)
+    implementation(projects.core.common)
 
     api(libs.bundles.sqldelight)
 }

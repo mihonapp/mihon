@@ -1,8 +1,8 @@
 package tachiyomi.domain.storage.service
 
-import tachiyomi.core.preference.Preference
-import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.storage.FolderProvider
+import tachiyomi.core.common.preference.Preference
+import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.storage.FolderProvider
 
 class StoragePreferences(
     private val folderProvider: FolderProvider,

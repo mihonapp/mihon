@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
     kotlin("android")
     kotlin("plugin.serialization")
 }
@@ -14,7 +14,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":source-api"))
+    implementation(projects.sourceApi)
 
     implementation(kotlinx.bundles.serialization)
 }

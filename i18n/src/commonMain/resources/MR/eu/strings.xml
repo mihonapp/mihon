@@ -102,7 +102,6 @@
     <string name="ext_nsfw_warning">NSFW (18+) edukia izan dezake</string>
     <string name="ext_installer_pref">Instalatzailea</string>
     <string name="pref_fullscreen">Pantaila osoa</string>
-    <string name="pref_true_color">32 bit-eko kolorea</string>
     <string name="pref_grayscale">Gris-eskala</string>
     <string name="pref_inverted_colors">Alderantzikatua</string>
     <string name="pref_color_filter_mode">Kolore-iragazkia modu nahastuan</string>
@@ -119,7 +118,7 @@
     <string name="pref_category_delete_chapters">Ezabatu kapituluak</string>
     <string name="fourth_to_last">Atzetik hasita laugarren irakurritako kapitulua</string>
     <string name="backup_restore_missing_trackers">Saioa hasi gabeko jarraitzaileak:</string>
-    <string name="backup_choice">Zeren babeskopia nahi duzu\?</string>
+    <string name="backup_choice">Zeren babeskopia nahi duzu?</string>
     <string name="restore_in_progress">Berreskuratzea abian da</string>
     <string name="restoring_backup_error">Ezin izan da babeskopia berreskuratu</string>
     <string name="backup_info">Babeskopia automatikoak oso gomendagarriak dira. Kopiak beste leku batzuetan ere gorde beharko zenituzke.</string>
@@ -127,7 +126,7 @@
     <string name="label_data">Datuak</string>
     <string name="pref_clear_chapter_cache">Garbitu kapituluen cachea</string>
     <string name="pref_auto_clear_chapter_cache">Garbitu kapituluen cachea aplikazioa ixtean</string>
-    <string name="clear_database_confirmation">Ziur zaude\? Kapitulu iraurriak eta liburutegikoak ez diren manga-en aurrerapenak galduko dira</string>
+    <string name="clear_database_confirmation">Ziur zaude? Kapitulu iraurriak eta liburutegikoak ez diren manga-en aurrerapenak galduko dira</string>
     <string name="database_clean">Datu-basea garbi</string>
     <string name="pref_disable_battery_optimization">Desgaitu bateriaren optimizazioa</string>
     <string name="version">Bertsioa</string>
@@ -146,7 +145,7 @@
     <string name="date">Data</string>
     <string name="unknown_author">Egile ezezaguna</string>
     <string name="unknown_status">Egoera ezezaguna</string>
-    <string name="delete_downloads_for_manga">Deskargatutako kapituluak ezabatu nahi dituzu\?</string>
+    <string name="delete_downloads_for_manga">Deskargatutako kapituluak ezabatu nahi dituzu?</string>
     <string name="copied_to_clipboard">Arbelean kopiatu da:
 \n%1$s</string>
     <string name="chapter_paused">Gelditurik</string>
@@ -173,12 +172,12 @@
     <string name="color_filter_b_value">U</string>
     <string name="updated_version">v%1$s-ra eguneratua</string>
     <string name="login_success">Saioa hasia</string>
-    <string name="logout_title">Itxi saioa %1$s-n\?</string>
+    <string name="logout_title">Itxi saioa %1$s-n?</string>
     <string name="manga_added_library">Liburutegira gehitua</string>
-    <string name="confirm_delete_chapters">Ziur hautatutako kapituluak ezabatu nahi dituzula\?</string>
+    <string name="confirm_delete_chapters">Ziur hautatutako kapituluak ezabatu nahi dituzula?</string>
     <string name="track_finished_reading_date">Bukaera-data</string>
     <string name="track_started_reading_date">Hasiera-data</string>
-    <string name="dialog_with_checkbox_remove_description">Honek kapitulu honen irakurketa-data kenduko du. Ziur zaude\?</string>
+    <string name="dialog_with_checkbox_remove_description">Honek kapitulu honen irakurketa-data kenduko du. Ziur zaude?</string>
     <string name="transition_next">Hurrengoa:</string>
     <string name="pref_category_for_this_series">Argitalpen honetarako</string>
     <string name="transition_finished">Bukatua:</string>
@@ -285,7 +284,7 @@
     <string name="tabs_header">Fitxak</string>
     <string name="sort_by_number">Kapitulu zenbakiaren arabera</string>
     <string name="sort_by_upload_date">Igoera dataren arabera</string>
-    <string name="confirm_set_image_as_cover">Irudi hau azaleko arte gisa erabili\?</string>
+    <string name="confirm_set_image_as_cover">Irudi hau azaleko arte gisa erabili?</string>
     <string name="download_insufficient_space">Ezin izan dira kapituluak deskargatu memorian leku gutxi dagoelako</string>
     <string name="notification_size_warning">Eguneratze handiek bateriaren erabilera areagotzea eta iturriak motelagoak izatea eragin dezakete</string>
     <string name="download_notifier_download_paused">Deskarga pausatu da</string>
@@ -306,7 +305,7 @@
     <string name="myanimelist_relogin">Mesedez, hasi saioa berriro MAL-en</string>
     <string name="show_title">Iturriaren izenburua</string>
     <string name="sort_by_source">Iturriaren arabera</string>
-    <string name="confirm_set_chapter_settings">Ziur ezarpen hauek lehenetsi gisa gorde nahi dituzula\?</string>
+    <string name="confirm_set_chapter_settings">Ziur ezarpen hauek lehenetsi gisa gorde nahi dituzula?</string>
     <string name="information_webview_outdated">Mesedez, eguneratu WebView aplikazioa bateragarritasun hobea izateko</string>
     <string name="channel_complete">Bukatua</string>
     <string name="error_category_exists">Izen hori daukan kategoria bat badago dagoeneko!</string>
@@ -352,7 +351,7 @@
     <string name="manga_removed_library">Liburutegitik kendua</string>
     <string name="manga_info_collapse">Gutxiago</string>
     <string name="source_not_installed">Iturria ez dago instalatuta: %1$s</string>
-    <string name="snack_add_to_library">Manga liburutegira gehitu\?</string>
+    <string name="snack_add_to_library">Manga liburutegira gehitu?</string>
     <string name="file_select_backup">Hautatu babeskopia fitxategia</string>
     <string name="notification_cover_update_failed">Ezin izan da azala eguneratu</string>
     <string name="action_sort_date_added">Gehiketa data</string>
@@ -423,7 +422,7 @@
     <string name="other_source">Besteak</string>
     <string name="action_global_search_hint">Bilaketa globala…</string>
     <string name="clear_history_completed">Historia ezabatu da</string>
-    <string name="clear_history_confirmation">Ziur zaude\? Historia guztia galduko da.</string>
+    <string name="clear_history_confirmation">Ziur zaude? Historia guztia galduko da.</string>
     <string name="migration_help_guide">Iturrien migrazio gida</string>
     <string name="migration_dialog_what_to_include">Hautatu sartu nahi dituzun datuak</string>
     <string name="notification_new_chapters">Kapitulu berriak aurkituak</string>
@@ -439,7 +438,6 @@
     <string name="action_asc">Gorantz</string>
     <string name="action_desc">Beherantz</string>
     <string name="lock_never">Inoiz ere ez</string>
-    <string name="pref_true_color_summary">Kolore-marraketak murrizten ditu, baina errendimenduan eragina dauka</string>
     <string name="pref_crop_borders">Moztu ertzak</string>
     <string name="pref_read_with_volume_keys_inverted">Alderantzikatu bolumen-teklak</string>
     <string name="pref_read_with_tapping_inverted">Sakatzea alderantzikatu</string>
@@ -575,7 +573,7 @@
     <string name="pref_app_language">App hizkuntza</string>
     <string name="ext_info_language">Hizkuntza</string>
     <string name="action_search_hint">Bilatu…</string>
-    <string name="delete_category_confirmation">\"%s\" kategoria ezabatu nahi duzu\?</string>
+    <string name="delete_category_confirmation">\"%s\" kategoria ezabatu nahi duzu?</string>
     <string name="action_remove_everything">Guztia kendu</string>
     <string name="label_stats">Estatistikak</string>
     <string name="label_started">Hasia</string>
