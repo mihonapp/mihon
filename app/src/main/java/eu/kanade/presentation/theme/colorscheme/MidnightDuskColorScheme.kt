@@ -25,8 +25,8 @@ internal object MidnightDuskColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFF02475),
         secondary = Color(0xFFF02475), // Unread badge
         onSecondary = Color(0xFF16151D), // Unread badge text
-        secondaryContainer = Color(0xFFF02475), // Navigation bar selector pill
-        onSecondaryContainer = Color(0xFF281624), // Navigation bar selector icon
+        secondaryContainer = Color(0xFF801D4A), // Navigation bar selector pill & progress indicator (remaining)
+        onSecondaryContainer = Color(0xFFF02475), // Navigation bar selector icon
         tertiary = Color(0xFF55971C), // Downloaded badge
         onTertiary = Color(0xFF16151D), // Downloaded badge text
         tertiaryContainer = Color(0xFF386412),
@@ -35,7 +35,7 @@ internal object MidnightDuskColorScheme : BaseColorScheme() {
         onBackground = Color(0xFFE5E1E5),
         surface = Color(0xFF16151D),
         onSurface = Color(0xFFE5E1E5),
-        surfaceVariant = Color(0xFF281624), // Navigation bar background (ThemePrefWidget)
+        surfaceVariant = Color(0xFF591A38), // Navigation bar background (ThemePrefWidget)
         onSurfaceVariant = Color(0xFFD6C1C4),
         surfaceTint = Color(0xFFF02475),
         inverseSurface = Color(0xFF333043),
@@ -52,8 +52,8 @@ internal object MidnightDuskColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFFFB1C4),
         secondary = Color(0xFFBB0054), // Unread badge
         onSecondary = Color(0xFFFFFFFF), // Unread badge text
-        secondaryContainer = Color(0xFFD1377C), // Navigation bar selector pill
-        onSecondaryContainer = Color(0xFFF9E6F1), // Navigation bar selector icon
+        secondaryContainer = Color(0xFFEFBAD4), // Navigation bar selector pill
+        onSecondaryContainer = Color(0xFFD1377C), // Navigation bar selector icon
         tertiary = Color(0xFF006638), // Downloaded badge
         onTertiary = Color(0xFFFFFFFF), // Downloaded badge text
         tertiaryContainer = Color(0xFF00894b),
