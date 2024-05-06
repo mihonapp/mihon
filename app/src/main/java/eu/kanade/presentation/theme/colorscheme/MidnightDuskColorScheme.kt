@@ -52,7 +52,7 @@ internal object MidnightDuskColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFFFB1C4),
         secondary = Color(0xFFBB0054), // Unread badge
         onSecondary = Color(0xFFFFFFFF), // Unread badge text
-        secondaryContainer = Color(0xFFEFBAD4), // Navigation bar selector pill
+        secondaryContainer = Color(0xFFEFBAD4), // Navigation bar selector pill & progress indicator (remaining)
         onSecondaryContainer = Color(0xFFD1377C), // Navigation bar selector icon
         tertiary = Color(0xFF006638), // Downloaded badge
         onTertiary = Color(0xFFFFFFFF), // Downloaded badge text

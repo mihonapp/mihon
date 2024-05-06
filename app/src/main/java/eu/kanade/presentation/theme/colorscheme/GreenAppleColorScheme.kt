@@ -24,7 +24,7 @@ internal object GreenAppleColorScheme : BaseColorScheme() {
         onPrimaryContainer = Color(0xFFFFFFFF),
         secondary = Color(0xFF7ADB8F), // Unread badge
         onSecondary = Color(0xFF003917), // Unread badge text
-        secondaryContainer = Color(0xFF017737), // Navigation bar selector pill
+        secondaryContainer = Color(0xFF017737), // Navigation bar selector pill & progress indicator (remaining)
         onSecondaryContainer = Color(0xFFFFFFFF), // Navigation bar selected icon
         tertiary = Color(0xFFFFB3AC), // Downloaded badge
         onTertiary = Color(0xFF680008), // Downloaded badge text
@@ -62,7 +62,7 @@ internal object GreenAppleColorScheme : BaseColorScheme() {
         onPrimaryContainer = Color(0xFFFFFFFF),
         secondary = Color(0xFF005927), // Unread badge
         onSecondary = Color(0xFFFFFFFF), // Unread badge text
-        secondaryContainer = Color(0xFF97f7a9), // Navigation bar selector pill
+        secondaryContainer = Color(0xFF97f7a9), // Navigation bar selector pill & progress indicator (remaining)
         onSecondaryContainer = Color(0xFF000000), // Navigation bar selected icon
         tertiary = Color(0xFF9D0012), // Downloaded badge
         onTertiary = Color(0xFFFFFFFF), // Downloaded badge text
