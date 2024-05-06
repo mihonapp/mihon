@@ -23,8 +23,8 @@ internal object LavenderColorScheme : BaseColorScheme() {
         onPrimaryContainer = Color(0xFFFFFFFF),
         secondary = Color(0xFFA177FF), // Unread badge
         onSecondary = Color(0xFFFFFFFF), // Unread badge text
-        secondaryContainer = Color(0xFFA177FF), // Navigation bar selector pill
-        onSecondaryContainer = Color(0xFF1D193B), // Navigation bar selected icon
+        secondaryContainer = Color(0xFF423271), // Navigation bar selector pill & progress indicator (remaining)
+        onSecondaryContainer = Color(0xFFA177FF), // Navigation bar selected icon
         tertiary = Color(0xFFCDBDFF), // Downloaded badge
         onTertiary = Color(0xFF360096), // Downloaded badge text
         tertiaryContainer = Color(0xFF5512D8),
@@ -37,7 +37,7 @@ internal object LavenderColorScheme : BaseColorScheme() {
         onBackground = Color(0xFFE7E0EC),
         surface = Color(0xFF111129),
         onSurface = Color(0xFFE7E0EC),
-        surfaceVariant = Color(0xFF1D193B), // Navigation bar background (ThemePrefWidget)
+        surfaceVariant = Color(0xFF3D2F6B), // Navigation bar background (ThemePrefWidget)
         onSurfaceVariant = Color(0xFFCBC3D6),
         outline = Color(0xFF958E9F),
         outlineVariant = Color(0xFF4A4453),
@@ -61,8 +61,8 @@ internal object LavenderColorScheme : BaseColorScheme() {
         onPrimaryContainer = Color(0xFF130038),
         secondary = Color(0xFF7B46AF), // Unread badge
         onSecondary = Color(0xFFEDE2FF), // Unread badge text
-        secondaryContainer = Color(0xFF7B46AF), // Navigation bar selector pill
-        onSecondaryContainer = Color(0xFFE4D5F8), // Navigation bar selector icon
+        secondaryContainer = Color(0xFFC9B0E6), // Navigation bar selector pill & progress indicator (remaining)
+        onSecondaryContainer = Color(0xFF7B46AF), // Navigation bar selector icon
         tertiary = Color(0xFFEDE2FF), // Downloaded badge
         onTertiary = Color(0xFF7B46AF), // Downloaded badge text
         tertiaryContainer = Color(0xFF6D3BF0),
