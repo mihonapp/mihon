@@ -33,9 +33,7 @@ fun ReaderPageActionsDialog(
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
 
-    AdaptiveSheet(
-        onDismissRequest = onDismissRequest,
-    ) {
+    AdaptiveSheet(onDismissRequest = onDismissRequest) {
         Row(
             modifier = Modifier.padding(vertical = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),

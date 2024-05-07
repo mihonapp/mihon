@@ -223,13 +223,12 @@ fun AppThemePreviewItem(
             contentAlignment = Alignment.BottomCenter,
         ) {
             Surface(
-                tonalElevation = 3.dp,
+                color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Row(
                     modifier = Modifier
                         .height(32.dp)
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
                         .padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
