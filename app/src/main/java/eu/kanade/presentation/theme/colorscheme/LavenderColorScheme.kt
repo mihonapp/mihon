@@ -47,11 +47,11 @@ internal object LavenderColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFF6D41C8),
         surfaceDim = Color(0xFF111129),
         surfaceBright = Color(0xFF3B3841),
-        surfaceContainerLowest = Color(0xFF0F0D15),
-        surfaceContainerLow = Color(0xFF1D1A22),
+        surfaceContainerLowest = Color(0xFF15132d),
+        surfaceContainerLow = Color(0xFF171531),
         surfaceContainer = Color(0xFF1D193B), // Navigation bar background
-        surfaceContainerHigh = Color(0xFF2C2831),
-        surfaceContainerHighest = Color(0xFF37333C),
+        surfaceContainerHigh = Color(0xFF241f41),
+        surfaceContainerHighest = Color(0xFF282446),
     )
 
     override val lightScheme = lightColorScheme(
@@ -85,10 +85,10 @@ internal object LavenderColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFA177FF),
         surfaceDim = Color(0xFFDED7E3),
         surfaceBright = Color(0xFFEDE2FF),
-        surfaceContainerLowest = Color(0xFFFFFFFF),
-        surfaceContainerLow = Color(0xFFF8F1FD),
+        surfaceContainerLowest = Color(0xFFE9DCFD),
+        surfaceContainerLow = Color(0xFFE8DAFC),
         surfaceContainer = Color(0xFFE4D5F8), // Navigation bar background
-        surfaceContainerHigh = Color(0xFFEDE6F2),
-        surfaceContainerHighest = Color(0xFFE7E0EC),
+        surfaceContainerHigh = Color(0xFFECE2FA),
+        surfaceContainerHighest = Color(0xFFF1E9FC),
         )
 }
