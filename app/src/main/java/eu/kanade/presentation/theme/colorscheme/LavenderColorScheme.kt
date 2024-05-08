@@ -90,5 +90,5 @@ internal object LavenderColorScheme : BaseColorScheme() {
         surfaceContainer = Color(0xFFE4D5F8), // Navigation bar background
         surfaceContainerHigh = Color(0xFFECE2FA),
         surfaceContainerHighest = Color(0xFFF1E9FC),
-        )
+    )
 }

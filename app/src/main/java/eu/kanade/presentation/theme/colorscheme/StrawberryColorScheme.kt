@@ -91,6 +91,5 @@ internal object StrawberryColorScheme : BaseColorScheme() {
         surfaceContainer = Color(0xFFF6EAED), // Navigation bar background
         surfaceContainerHigh = Color(0xFFFDE2E3),
         surfaceContainerHighest = Color(0xFFF7DCDD),
-
-        )
+    )
 }
