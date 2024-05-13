@@ -41,7 +41,11 @@ internal object YotsubaColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFFEDE0DD),
         inverseOnSurface = Color(0xFF211A18),
         outline = Color(0xFFA08C87),
+        surfaceContainerLowest = Color(0xFFCFCFCF),
+        surfaceContainerLow = Color(0xFFDADADA),
         surfaceContainer = Color(0xFF332723), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFECECEC),
+        surfaceContainerHighest = Color(0xFFEFEFEF),
     )
 
     override val lightScheme = lightColorScheme(
@@ -68,6 +72,10 @@ internal object YotsubaColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF362F2D),
         inverseOnSurface = Color(0xFFFBEEEB),
         outline = Color(0xFF85736E),
+        surfaceContainerLowest = Color(0xFFCEC3BF),
+        surfaceContainerLow = Color(0xFFE0D5D2),
         surfaceContainer = Color(0xFFF6EBE7), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFFAF4F2),
+        surfaceContainerHighest = Color(0xFFFBF6F4),
     )
 }
