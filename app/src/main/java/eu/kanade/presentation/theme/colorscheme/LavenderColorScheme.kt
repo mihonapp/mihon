@@ -85,10 +85,10 @@ internal object LavenderColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFA177FF),
         surfaceDim = Color(0xFFDED7E3),
         surfaceBright = Color(0xFFEDE2FF),
-        surfaceContainerLowest = Color(0xFFE9DCFD),
-        surfaceContainerLow = Color(0xFFE8DAFC),
+        surfaceContainerLowest = Color(0xFFDACCEC),
+        surfaceContainerLow = Color(0xFFDED0F1),
         surfaceContainer = Color(0xFFE4D5F8), // Navigation bar background
-        surfaceContainerHigh = Color(0xFFECE2FA),
-        surfaceContainerHighest = Color(0xFFF1E9FC),
+        surfaceContainerHigh = Color(0xFFEADCFD),
+        surfaceContainerHighest = Color(0xFFEEE2FF),
     )
 }
