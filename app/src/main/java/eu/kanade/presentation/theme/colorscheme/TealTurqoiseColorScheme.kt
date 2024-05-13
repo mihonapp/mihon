@@ -33,7 +33,11 @@ internal object TealTurqoiseColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFFDFDEDA),
         inverseOnSurface = Color(0xFF202125),
         outline = Color(0xFF899391),
+        surfaceContainerLowest = Color(0xFF202C2E),
+        surfaceContainerLow = Color(0xFF222F31),
         surfaceContainer = Color(0xFF233133), // Navigation bar background
+        surfaceContainerHigh = Color(0xFF28383A),
+        surfaceContainerHighest = Color(0xFF2F4244),
     )
 
     override val lightScheme = lightColorScheme(
@@ -60,6 +64,10 @@ internal object TealTurqoiseColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF050505),
         inverseOnSurface = Color(0xFFFAFAFA),
         outline = Color(0xFF6F7977),
+        surfaceContainerLowest = Color(0xFFE1E9E7),
+        surfaceContainerLow = Color(0xFFE6EEEC),
         surfaceContainer = Color(0xFFEBF3F1), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFF0F8F6),
+        surfaceContainerHighest = Color(0xFFF7FFFD),
     )
 }
