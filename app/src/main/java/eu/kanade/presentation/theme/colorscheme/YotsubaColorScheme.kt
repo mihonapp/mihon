@@ -72,8 +72,8 @@ internal object YotsubaColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF362F2D),
         inverseOnSurface = Color(0xFFFBEEEB),
         outline = Color(0xFF85736E),
-        surfaceContainerLowest = Color(0xFFCEC3BF),
-        surfaceContainerLow = Color(0xFFE0D5D2),
+        surfaceContainerLowest = Color(0xFFECE3E0),
+        surfaceContainerLow = Color(0xFFF1E7E4),
         surfaceContainer = Color(0xFFF6EBE7), // Navigation bar background
         surfaceContainerHigh = Color(0xFFFAF4F2),
         surfaceContainerHighest = Color(0xFFFBF6F4),
