@@ -35,7 +35,11 @@ internal object YinYangColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFFE6E6E6),
         inverseOnSurface = Color(0xFF1E1E1E),
         outline = Color(0xFF999999),
+        surfaceContainerLowest = Color(0xFF2A2A2A),
+        surfaceContainerLow = Color(0xFF2D2D2D),
         surfaceContainer = Color(0xFF313131), // Navigation bar background
+        surfaceContainerHigh = Color(0xFF383838),
+        surfaceContainerHighest = Color(0xFF3F3F3F),
     )
 
     override val lightScheme = lightColorScheme(
@@ -62,6 +66,10 @@ internal object YinYangColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF333333),
         inverseOnSurface = Color(0xFFF4F4F4),
         outline = Color(0xFF838383),
+        surfaceContainerLowest = Color(0xFFCFCFCF),
+        surfaceContainerLow = Color(0xFFDADADA),
         surfaceContainer = Color(0xFFE8E8E8), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFECECEC),
+        surfaceContainerHighest = Color(0xFFEFEFEF),
     )
 }
