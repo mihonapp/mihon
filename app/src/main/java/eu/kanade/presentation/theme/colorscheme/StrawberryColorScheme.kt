@@ -48,11 +48,11 @@ internal object StrawberryColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFB61F40),
         surfaceDim = Color(0xFF1D1011),
         surfaceBright = Color(0xFF463536),
-        surfaceContainerLowest = Color(0xFF170B0C),
-        surfaceContainerLow = Color(0xFF261819),
+        surfaceContainerLowest = Color(0xFF2C2222),
+        surfaceContainerLow = Color(0xFF302525),
         surfaceContainer = Color(0xFF322727), // Navigation bar background
-        surfaceContainerHigh = Color(0xFF362627),
-        surfaceContainerHighest = Color(0xFF413132),
+        surfaceContainerHigh = Color(0xFF3C2F2F),
+        surfaceContainerHighest = Color(0xFF463737),
     )
 
     override val lightScheme = lightColorScheme(
@@ -86,10 +86,10 @@ internal object StrawberryColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFFFFB2B8),
         surfaceDim = Color(0xFFEED4D5),
         surfaceBright = Color(0xFFFFF8F7),
-        surfaceContainerLowest = Color(0xFFFFFFFF),
-        surfaceContainerLow = Color(0xFFFFF0F0),
+        surfaceContainerLowest = Color(0xFFF7DCDD),
+        surfaceContainerLow = Color(0xFFFDE2E3),
         surfaceContainer = Color(0xFFF6EAED), // Navigation bar background
-        surfaceContainerHigh = Color(0xFFFDE2E3),
-        surfaceContainerHighest = Color(0xFFF7DCDD),
+        surfaceContainerHigh = Color(0xFFFFF0F0),
+        surfaceContainerHighest = Color(0xFFFFFFFF),
     )
 }
