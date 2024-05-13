@@ -40,7 +40,11 @@ internal object TidalWaveColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFFffe3c4),
         inverseOnSurface = Color(0xFF001c3b),
         outline = Color(0xFF8a9296),
+        surfaceContainerLowest = Color(0xFF072642),
+        surfaceContainerLow = Color(0xFF072947),
         surfaceContainer = Color(0xFF082b4b), // Navigation bar background
+        surfaceContainerHigh = Color(0xFF093257),
+        surfaceContainerHighest = Color(0xFF0A3861),
     )
 
     override val lightScheme = lightColorScheme(
@@ -67,6 +71,10 @@ internal object TidalWaveColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF020400),
         inverseOnSurface = Color(0xFFffe3c4),
         outline = Color(0xFF70787c),
+        surfaceContainerLowest = Color(0xFFe2e8ec),
+        surfaceContainerLow = Color(0xFFe5ecf1),
         surfaceContainer = Color(0xFFe8eff5), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFedf4fA),
+        surfaceContainerHighest = Color(0xFFf5faff),
     )
 }
