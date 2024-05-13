@@ -39,7 +39,11 @@ internal object NordColorScheme : BaseColorScheme() {
         onError = Color(0xFF2E3440),
         errorContainer = Color(0xFFBF616A),
         onErrorContainer = Color(0xFF000000),
-        surfaceContainer = Color(0xFF414C5C), // Navigation bar background
+        surfaceContainerLowest = Color(0xFF373F4D),
+        surfaceContainerLow = Color(0xFF3E4756),
+        surfaceContainer = Color(0xFF414C5C),
+        surfaceContainerHigh = Color(0xFF4E5766),
+        surfaceContainerHighest = Color(0xFF505968),// Navigation bar background
     )
 
     override val lightScheme = lightColorScheme(
@@ -69,6 +73,10 @@ internal object NordColorScheme : BaseColorScheme() {
         onError = Color(0xFFECEFF4),
         errorContainer = Color(0xFFBF616A),
         onErrorContainer = Color(0xFF000000),
+        surfaceContainerLowest = Color(0xFFC8CED9),
+        surfaceContainerLow = Color(0xFFD1D7E1),
         surfaceContainer = Color(0xFFDAE0EA), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFE9EDF3),
+        surfaceContainerHighest = Color(0xFFF2F4F8),
     )
 }
