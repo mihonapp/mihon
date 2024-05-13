@@ -41,7 +41,11 @@ internal object TakoColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFFE5E1E6),
         inverseOnSurface = Color(0xFF1B1B1E),
         outline = Color(0xFF958F99),
+        surfaceContainerLowest = Color(0xFF20202E),
+        surfaceContainerLow = Color(0xFF262636),
         surfaceContainer = Color(0xFF2A2A3C), // Navigation bar background
+        surfaceContainerHigh = Color(0xFF303044),
+        surfaceContainerHighest = Color(0xFF36364D),
     )
 
     override val lightScheme = lightColorScheme(
@@ -68,6 +72,10 @@ internal object TakoColorScheme : BaseColorScheme() {
         inverseSurface = Color(0xFF313033),
         inverseOnSurface = Color(0xFFF3EFF4),
         outline = Color(0xFF7A757E),
+        surfaceContainerLowest = Color(0xFFD7D0DA),
+        surfaceContainerLow = Color(0xFFDFD8E2),
         surfaceContainer = Color(0xFFE8E0EB), // Navigation bar background
+        surfaceContainerHigh = Color(0xFFEEE6F1),
+        surfaceContainerHighest = Color(0xFFF7EEFA),
     )
 }
