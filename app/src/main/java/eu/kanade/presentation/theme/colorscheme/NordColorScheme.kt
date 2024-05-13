@@ -43,7 +43,7 @@ internal object NordColorScheme : BaseColorScheme() {
         surfaceContainerLow = Color(0xFF3E4756),
         surfaceContainer = Color(0xFF414C5C),
         surfaceContainerHigh = Color(0xFF4E5766),
-        surfaceContainerHighest = Color(0xFF505968),// Navigation bar background
+        surfaceContainerHighest = Color(0xFF505968), // Navigation bar background
     )
 
     override val lightScheme = lightColorScheme(
