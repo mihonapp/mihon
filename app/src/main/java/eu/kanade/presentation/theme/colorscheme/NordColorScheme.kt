@@ -73,8 +73,8 @@ internal object NordColorScheme : BaseColorScheme() {
         onError = Color(0xFFECEFF4),
         errorContainer = Color(0xFFBF616A),
         onErrorContainer = Color(0xFF000000),
-        surfaceContainerLowest = Color(0xFFC8CED9),
-        surfaceContainerLow = Color(0xFFD1D7E1),
+        surfaceContainerLowest = Color(0xFFD1D7E0),
+        surfaceContainerLow = Color(0xFFD6DCE6),
         surfaceContainer = Color(0xFFDAE0EA), // Navigation bar background
         surfaceContainerHigh = Color(0xFFE9EDF3),
         surfaceContainerHighest = Color(0xFFF2F4F8),
