@@ -1,6 +1,6 @@
 [versions]
 compiler = "1.5.12"
-compose-bom = "2024.05.00-alpha01"
+compose-bom = "2024.05.00-alpha02"
 accompanist = "0.35.0-alpha"
 
 [libraries]
