@@ -120,6 +120,7 @@ object SettingsDataScreen : SearchableSettings {
                     context.contentResolver.takePersistableUriPermission(uri, flags)
                 } catch (e: SecurityException) {
                     logcat(LogPriority.ERROR, e)
+                    context.toast(MR.strings.file_picker_no_uri_permission_supported)
                 }
 
                 UniFile.fromUri(context, uri)?.let {
