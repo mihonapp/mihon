@@ -809,4 +809,5 @@
     <string name="label_upcoming">Bevorstehend</string>
     <string name="action_view_upcoming">Bevorstehende Aktualisierungen ansehen</string>
     <string name="upcoming_guide">Leitfaden für Bevorstehendes</string>
+    <string name="file_picker_uri_permission_unsupported">Dauerhafter Ordnerzugriff konnte nicht erlangt werden. Die App kann sich unerwartet verhalten.</string>
 </resources>
