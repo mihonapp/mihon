@@ -809,4 +809,5 @@
     <string name="label_upcoming">Предстоящее</string>
     <string name="upcoming_guide">Предстоящее руководство</string>
     <string name="upcoming_calendar_next">Следующий месяц</string>
+    <string name="file_picker_uri_permission_unsupported">Не удалось получить постоянный доступ к папке. Приложение может работать некорректно.</string>
 </resources>
