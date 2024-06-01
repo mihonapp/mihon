@@ -869,6 +869,7 @@
     <string name="file_select_cover">Select cover image</string>
     <string name="file_select_backup">Select backup file</string>
     <string name="file_picker_error">No file picker app found</string>
+    <string name="file_picker_uri_permission_unsupported">Failed to acquire persistent folder access. The app may behave unexpectedly.</string>
     <string name="file_null_uri_error">No file selected</string>
 
     <!--UpdateCheck-->
