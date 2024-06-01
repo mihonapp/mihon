@@ -27,7 +27,7 @@ paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pag
 
 benchmark-macro = "androidx.benchmark:benchmark-macro-junit4:1.2.4"
 test-ext = "androidx.test.ext:junit-ktx:1.2.0-beta01"
-test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-beta01"
+test-espresso-core = "androidx.test.espresso:espresso-core:3.6.0-rc01"
 test-uiautomator = "androidx.test.uiautomator:uiautomator:2.3.0"
 
 [bundles]
