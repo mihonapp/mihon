@@ -92,7 +92,7 @@
     <string name="information_empty_library">तपाईंको पुस्तकालय खाली छ</string>
     <string name="information_no_recent_manga">हालै केहि पढेको छैन</string>
     <string name="information_no_recent">हालैका कुनै अपडेट छैन</string>
-    <string name="label_download_queue">डाउनलोड लाम</string>
+    <string name="label_download_queue">डाउनलोड सूची</string>
     <string name="information_no_downloads">कुनै डाउनलोडहरू छैन</string>
     <string name="label_help">मद्दत</string>
     <string name="label_extension_info">एक्सटेन्शनको जानकारी</string>
@@ -540,7 +540,7 @@
     <string name="manga_download">डाउनलोड</string>
     <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
-    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा ताचियोमीलाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा Mihon लाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्र्याक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
@@ -813,4 +813,5 @@
     <string name="upcoming_guide">आगामी गाइड</string>
     <string name="upcoming_calendar_next">अर्को महिना</string>
     <string name="upcoming_calendar_prev">अघिल्लो महिना</string>
+    <string name="file_picker_uri_permission_unsupported">लगातार फोल्डर पहुँच प्राप्त गर्न असफल। एपले अप्रत्याशित रूपमा व्यवहार गर्न सक्छ।</string>
 </resources>
