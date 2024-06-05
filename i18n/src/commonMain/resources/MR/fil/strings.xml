@@ -809,4 +809,5 @@
     <string name="upcoming_calendar_next">Susunod na Buwan</string>
     <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
     <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
+    <string name="file_picker_uri_permission_unsupported">Nabigong makakuha ng patuloy na pag-access ng folder. Ang app ay magkaroon ng di-inaasahang pagkilos.</string>
 </resources>
