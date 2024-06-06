@@ -18,6 +18,8 @@ class SMangaImpl : SManga {
 
     override var thumbnail_url: String? = null
 
+    override var dirLastModifiedAt: Long? = null
+
     override var update_strategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE
 
     override var initialized: Boolean = false

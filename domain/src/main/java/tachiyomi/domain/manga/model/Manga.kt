@@ -28,6 +28,7 @@ data class Manga(
     val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
     val lastModifiedAt: Long,
+    val dirLastModifiedAt: Long?,
     val favoriteModifiedAt: Long?,
     val version: Long,
 ) : Serializable {
@@ -122,6 +123,7 @@ data class Manga(
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
             lastModifiedAt = 0L,
+            dirLastModifiedAt = null,
             favoriteModifiedAt = null,
             version = 0L,
         )

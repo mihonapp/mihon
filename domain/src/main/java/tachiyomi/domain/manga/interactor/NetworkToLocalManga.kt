@@ -1,6 +1,8 @@
 package tachiyomi.domain.manga.interactor
 
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.manga.model.MangaUpdate
+import tachiyomi.domain.manga.model.toMangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 
 class NetworkToLocalManga(
@@ -8,19 +10,36 @@ class NetworkToLocalManga(
 ) {
 
     suspend fun await(manga: Manga): Manga {
-        val localManga = getManga(manga.url, manga.source)
+        val localDbManga = getManga(manga.url, manga.source)
+
+        if (localDbManga != null && localDbManga.dirLastModifiedAt != manga.dirLastModifiedAt) {
+            updateManga(
+                localDbManga.copy(
+                    url = manga.url,
+                    title = manga.title,
+                    artist = manga.artist,
+                    author = manga.author,
+                    description = manga.description,
+                    genre = manga.genre,
+                    status = manga.status,
+                    thumbnailUrl = manga.thumbnailUrl,
+                    dirLastModifiedAt = manga.dirLastModifiedAt,
+                ).toMangaUpdate(),
+            )
+        }
+
         return when {
-            localManga == null -> {
+            localDbManga == null -> {
                 val id = insertManga(manga)
                 manga.copy(id = id!!)
             }
-            !localManga.favorite -> {
+            !localDbManga.favorite -> {
                 // if the manga isn't a favorite, set its display title from source
                 // if it later becomes a favorite, updated title will go to db
-                localManga.copy(title = manga.title)
+                localDbManga.copy(title = manga.title)
             }
             else -> {
-                localManga
+                localDbManga
             }
         }
     }
@@ -31,5 +50,9 @@ class NetworkToLocalManga(
 
     private suspend fun insertManga(manga: Manga): Long? {
         return mangaRepository.insert(manga)
+    }
+
+    private suspend fun updateManga(mangaUpdate: MangaUpdate) {
+        mangaRepository.update(mangaUpdate)
     }
 }
