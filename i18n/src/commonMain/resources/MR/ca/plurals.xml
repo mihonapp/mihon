@@ -85,4 +85,9 @@
         <item quantity="many">%d repositoris</item>
         <item quantity="other">%d repositoris</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Demà</item>
+        <item quantity="many">D’aquí a %1$d dies</item>
+        <item quantity="other">D’aquí a %1$d dies</item>
+    </plurals>
 </resources>
