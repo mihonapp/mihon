@@ -809,4 +809,5 @@
     <string name="upcoming_guide">Próxima guía</string>
     <string name="upcoming_calendar_next">Próximo mes</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
+    <string name="file_picker_uri_permission_unsupported">No se ha podido obtener acceso a la carpeta persistente. La aplicación puede comportarse de forma inesperada.</string>
 </resources>
