@@ -52,16 +52,21 @@ object ChapterRecognition {
         // Remove unwanted white spaces.
         name = unwantedWhiteSpace.replace(name, "")
 
-        // Remove unwanted tags.
-        name = unwanted.replace(name, "")
+        val numberMatch = number.findAll(name)
 
-        // Check base case ch.xx
-        basic.find(name)?.let { return getChapterNumberFromMatch(it) }
+        when {
+            numberMatch.none() -> return chapterNumber ?: -1.0
+            numberMatch.count() > 1 -> {
+                // Remove unwanted tags.
+                name = unwanted.replace(name, "")
 
-        // Take the first number encountered.
-        number.find(name)?.let { return getChapterNumberFromMatch(it) }
+                // Check base case ch.xx
+                basic.find(name)?.let { return getChapterNumberFromMatch(it) }
+            }
+        }
 
-        return chapterNumber ?: -1.0
+        // return the first number encountered
+        return getChapterNumberFromMatch(numberMatch.first())
     }
 
     /**
