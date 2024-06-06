@@ -796,4 +796,18 @@
     <string name="manga_interval_expected_update_soon">Aviat</string>
     <string name="manga_interval_custom_amount">Freqüència d’actualització personalitzada:</string>
     <string name="action_open_repo">Obre el repositori d’origen</string>
+    <string name="file_picker_uri_permission_unsupported">No s’ha pogut obtenir accés persistent a la carpeta. És possible que l’aplicació es comporti de manera inesperada.</string>
+    <string name="label_upcoming">Pròxim</string>
+    <string name="upcoming_guide">Guia de pròximes actualitzacions</string>
+    <string name="upcoming_calendar_next">Mes següent</string>
+    <string name="action_add_anyway">Afegeix igualment</string>
+    <string name="action_migrate_duplicate">Migra l’element existent</string>
+    <string name="pref_webtoon_disable_zoom_out">Desactiva l’allunyament</string>
+    <string name="action_replace_repo">Substitueix</string>
+    <string name="action_replace_repo_title">L’empremta digital de la clau de xifratge ja existeix</string>
+    <string name="action_replace_repo_message">La clau de xifratge del repositori %1$s té la mateixa empremta digital que %2$s.
+\nSi espereu que sigui així, se substituirà %2$s. En cas contrari, contacteu amb el mantenidor del repositori.</string>
+    <string name="pref_display_profile">Perfil de visualització personalitzat</string>
+    <string name="action_view_upcoming">Mostra les pròximes actualitzacions</string>
+    <string name="upcoming_calendar_prev">Mes anterior</string>
 </resources>
