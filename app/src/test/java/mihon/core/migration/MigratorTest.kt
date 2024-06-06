@@ -1,6 +1,5 @@
 package mihon.core.migration
 
-import io.mockk.Called
 import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
@@ -59,7 +58,7 @@ class MigratorTest {
         val result = execute.await()
         assertFalse(result)
 
-        verify { migrationJobFactory.create(any()) wasNot Called }
+        verify(exactly = 0) { migrationJobFactory.create(any()) }
     }
 
     @Test
@@ -72,7 +71,7 @@ class MigratorTest {
         val result = execute.await()
         assertFalse(result)
 
-        verify { migrationJobFactory.create(any()) wasNot Called }
+        verify(exactly = 0) { migrationJobFactory.create(any()) }
     }
 
     @Test
