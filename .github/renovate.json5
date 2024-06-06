@@ -9,14 +9,6 @@
         "dev.chrisbanes.compose:compose-bom"
       ],
       "ignoreUnstable": false
-    },
-    {
-      "groupName": "Kotlin and Compose Compiler",
-      "matchPackagePrefixes": [
-        "androidx.compose.compiler",
-        "org.jetbrains.kotlin.",
-        "org.jetbrains.kotlin:",
-      ],
     }
   ]
 }

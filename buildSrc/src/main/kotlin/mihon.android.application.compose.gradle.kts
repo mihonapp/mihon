@@ -1,4 +1,3 @@
-import mihon.buildlogic.AndroidConfig
 import mihon.buildlogic.configureCompose
 
 plugins {
