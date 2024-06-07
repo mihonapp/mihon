@@ -797,4 +797,16 @@
     <string name="ext_revoke_trust">Revogar a confiabilidade de extensões desconhecidas</string>
     <string name="action_open_repo">Abrir repositório da fonte</string>
     <string name="pref_webtoon_disable_zoom_out">Desativar redução de zoom</string>
+    <string name="action_add_anyway">Adicionar de qualquer maneira</string>
+    <string name="action_replace_repo">Substituir</string>
+    <string name="label_upcoming">Próximo</string>
+    <string name="action_migrate_duplicate">Migrar entrada existente</string>
+    <string name="action_replace_repo_title">A impressão digital da chave de assinatura já existe</string>
+    <string name="action_replace_repo_message">O repositório %1$s tem a mesma impressão digital da chave de assinatura que %2$s.
+\nSe isso for esperado, %2$s será substituído, caso contrário, entre em contato com o mantenedor do repositório.</string>
+    <string name="pref_display_profile">Perfil de exibição personalizado</string>
+    <string name="action_view_upcoming">Exibir as próximas atualizações</string>
+    <string name="upcoming_guide">Guia de próximos lançamentos</string>
+    <string name="upcoming_calendar_next">Próximo mês</string>
+    <string name="upcoming_calendar_prev">Mês anterior</string>
 </resources>

@@ -797,4 +797,16 @@
     <string name="ext_revoke_trust">Cabut izin ekstensi tidak dikenal yang tepercaya</string>
     <string name="action_open_repo">Repo sumber terbuka</string>
     <string name="pref_webtoon_disable_zoom_out">Menonaktifkan zoom out</string>
+    <string name="label_upcoming">Yang akan datang</string>
+    <string name="action_migrate_duplicate">Migrasikan entri yang ada</string>
+    <string name="action_replace_repo_message">Repositori %1$s memiliki Signing Key Fingerprint yang sama dengan %2$s. 
+\nJika hal ini diharapkan, %2$s akan diganti, jika tidak, hubungi pengelola repo Anda.</string>
+    <string name="action_add_anyway">Tambahkan saja</string>
+    <string name="pref_display_profile">Profil tampilan khusus</string>
+    <string name="action_replace_repo">Ganti</string>
+    <string name="action_replace_repo_title">Signing Key Fingerprint sudah ada</string>
+    <string name="action_view_upcoming">Lihat Pembaruan Mendatang</string>
+    <string name="upcoming_guide">Panduan Mendatang</string>
+    <string name="upcoming_calendar_next">Bulan Depan</string>
+    <string name="upcoming_calendar_prev">Bulan Kemarin</string>
 </resources>

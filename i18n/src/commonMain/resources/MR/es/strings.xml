@@ -158,7 +158,7 @@
     <string name="download_notifier_unknown_error">No se ha podido descargar el capítulo debido a un error inesperado</string>
     <string name="download_notifier_text_only_wifi">No estás conectado a ninguna red Wi-Fi</string>
     <string name="categories">Categorías</string>
-    <string name="manga">Títulos en la biblioteca</string>
+    <string name="manga">Entradas de biblioteca</string>
     <string name="track">Seguimiento</string>
     <string name="history">Historial</string>
     <string name="action_filter_bookmarked">Favoritos</string>
@@ -508,8 +508,8 @@
     <string name="enhanced_services">Servicios de seguimiento mejorados</string>
     <string name="tracking_guide">Guía de seguimiento</string>
     <string name="automatic_background">Automático</string>
-    <string name="off">No</string>
-    <string name="on">Sí</string>
+    <string name="off">Apagado</string>
+    <string name="on">Encendido</string>
     <string name="categorized_display_settings">Establecer el tipo de orden para cada categoría</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Seguir</string>
@@ -679,7 +679,7 @@
     <string name="pref_library_update_show_tab_badge">Ver número de capítulos por leer en el icono de actualizaciones</string>
     <string name="copied_to_clipboard_plain">Se ha copiado al portapapeles</string>
     <string name="pref_skip_dupe_chapters">Saltarse los capítulos repetidos</string>
-    <string name="enhanced_services_not_installed">Están disponibles, pero las fuentes todavía no se han instalado: %s</string>
+    <string name="enhanced_services_not_installed">Disponible, pero fuente no instalada: %s</string>
     <string name="confirm_add_duplicate_manga">Ya tienes un elemento en la biblioteca con este mismo nombre.
 \n
 \n¿Seguro que quieres continuar?</string>
@@ -710,7 +710,7 @@
     <string name="track_delete_title">¿Quieres desvincular %s?</string>
     <string name="track_delete_text">Esto eliminará el seguimiento localmente.</string>
     <string name="track_delete_remote_text">Quitar también de %s</string>
-    <string name="delete_downloaded">Borrar los ya descargados</string>
+    <string name="delete_downloaded">Eliminar descargados</string>
     <string name="has_results">Con resultados</string>
     <string name="library_sync_complete">La biblioteca se ha sincronizado correctamente</string>
     <string name="syncing_library">Sincronizando la biblioteca</string>
@@ -740,15 +740,15 @@
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
     <string name="action_sort_tracker_score">Puntuación del rastreador</string>
     <string name="action_apply">Aplicar</string>
-    <string name="action_revert_to_default">Restablecer vista</string>
+    <string name="action_revert_to_default">Restablecer valor predeterminado</string>
     <string name="action_create">Crear</string>
     <string name="no_scanlators_found">No se ha encontrado ningún equipo de traducción</string>
     <string name="scanlator">Equipo de traducción</string>
     <string name="exclude_scanlators">Excluir equipo de traducción</string>
     <string name="selected">Seleccionado</string>
-    <string name="not_selected">Sin seleccionar</string>
+    <string name="not_selected">No seleccionado</string>
     <string name="action_menu_overflow_description">Más opciones</string>
-    <string name="action_bar_up_description">Subir un nivel</string>
+    <string name="action_bar_up_description">Navegar hacia arriba</string>
     <string name="pref_storage_location">Ubicación del almacenamiento</string>
     <string name="pref_storage_location_info">Se utiliza para las copias de seguridad automáticas, poder descargar capítulos y abrir los que ya tengas en tu dispositivo.</string>
     <string name="onboarding_storage_action_select">Elige una carpeta</string>
@@ -809,4 +809,5 @@
     <string name="upcoming_guide">Próxima guía</string>
     <string name="upcoming_calendar_next">Próximo mes</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
+    <string name="file_picker_uri_permission_unsupported">No se ha podido obtener acceso a la carpeta persistente. La aplicación puede comportarse de forma inesperada.</string>
 </resources>

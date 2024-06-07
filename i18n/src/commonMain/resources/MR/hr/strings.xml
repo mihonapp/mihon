@@ -798,4 +798,15 @@
     <string name="available_disk_space_info">Dostupno: %1$s / Ukupno: %2$s</string>
     <string name="pref_webtoon_disable_zoom_out">Deaktiviraj smanjivanje zumiranja</string>
     <string name="pref_display_profile">Prilagođeni profil prikaza</string>
+    <string name="label_upcoming">Predstojeći</string>
+    <string name="action_migrate_duplicate">Migriraj postojeći unos</string>
+    <string name="action_add_anyway">Svejedno dodaj</string>
+    <string name="upcoming_calendar_prev">Prethodni mjesec</string>
+    <string name="action_replace_repo">Zamijeni</string>
+    <string name="upcoming_calendar_next">Sljedeći mjesec</string>
+    <string name="action_view_upcoming">Pogledaj nadolazeća aktualizirane verzije</string>
+    <string name="upcoming_guide">Vodič za nadolazeće verzije</string>
+    <string name="action_replace_repo_title">Digitalni otisak prsta za potpisivanje već postoji</string>
+    <string name="action_replace_repo_message">Repozitorij %1$s ima isti digitalni otisak ključa za potpisivanje kao %2$s.
+\nAko se to očekuje, %2$s će se zamijeniti, u suprotnom se obrati svom održavatelju repozitorija.</string>
 </resources>

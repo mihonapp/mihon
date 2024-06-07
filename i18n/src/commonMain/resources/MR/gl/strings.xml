@@ -78,9 +78,9 @@
     <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
-    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardado en Mihon ou executar código arbitrario.
+    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código.
 \n
-\nConfiando neste certificado aceptas estes riscos.</string>
+\nSe confías nesta extensión, aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
     <string name="ext_untrusted">Non confiable</string>
     <string name="ext_uninstall">Desinstalar</string>
@@ -754,7 +754,7 @@
     <string name="pref_relative_format_summary">«%1$s» en lugar de «%2$s»</string>
     <string name="pref_update_only_in_release_period">Predicir cando sae o seguinte capítulo</string>
     <string name="ext_permission_install_apps_warning">Preme aquí para conceder os permisos para instalar extensións.</string>
-    <string name="ext_revoke_trust">Revogar as extensións de confianza de orixe descoñecido</string>
+    <string name="ext_revoke_trust">Revogar as extensións de confianza de orixe descoñecida</string>
     <string name="label_extension_repos">Repositorios de extensións</string>
     <string name="information_empty_repos">Aínda non engadiches ningún repositorio.</string>
     <string name="label_add_repo_input">Dirección URL do repositorio</string>
@@ -770,4 +770,43 @@
     <string name="source_settings">Axustes da fonte</string>
     <string name="action_create">Crear</string>
     <string name="invalid_backup_file_error">Erro completo:</string>
+    <string name="create_backup_file_error">Non se puido crear unha copia de seguridade</string>
+    <string name="pref_storage_usage">Almacenamento utilizado</string>
+    <string name="track_delete_remote_text">Eliminar tamén de %s</string>
+    <string name="download_cache_invalidated">Invalidouse o índice de descargas</string>
+    <string name="has_results">Ten resultados</string>
+    <string name="action_add_anyway">Engadir de todos modos</string>
+    <string name="action_migrate_duplicate">Migrar a entrada existente</string>
+    <string name="available_disk_space_info">Dispoñible: %1$s / Total: %2$s</string>
+    <string name="syncing_library">Sincronizando a biblioteca</string>
+    <string name="relative_time_span_never">Nunca</string>
+    <string name="label_upcoming">Proximamente</string>
+    <string name="action_replace_repo">Substituír</string>
+    <string name="action_replace_repo_title">A impresión dixital da chave da firma xa existe</string>
+    <string name="action_replace_repo_message">O repositorio %1$s ten a misma impresión dixital da chave da firma que %2$s.
+\nSe isto é o comportamento agardado, %2$s substituirase. Se no é así, contacta con quen mantén o repositorio.</string>
+    <string name="pref_display_profile">Perfil de visualización personalizado</string>
+    <string name="private_settings">Incluír configuracións sensibles, como as chaves de inicio de sesión en plataformas de seguemento</string>
+    <string name="action_bar_up_description">Navegar arriba</string>
+    <string name="library_sync_complete">A biblioteca sincronizouse correctamente</string>
+    <string name="intervals_header">Intervalos</string>
+    <string name="manga_display_interval_title">Estimar cada</string>
+    <string name="manga_interval_expected_update">Prevese que o seguinte capítulo saia en %1$s, compróbase cada %2$s.</string>
+    <string name="manga_interval_custom_amount">Frecuencia de actualización personalizada:</string>
+    <string name="track_delete_title">Queres deixar de seguir %s?</string>
+    <string name="notification_updating_progress">Actualizando a biblioteca… (%s)</string>
+    <string name="skipped_reason_not_in_release_period">Omitiuse porque hoxe non se esperaba ningunha publicación</string>
+    <string name="file_null_uri_error">Non se elixiu ningún arquivo</string>
+    <string name="last_auto_backup_info">Última copia de seguridade automática: %s</string>
+    <string name="licensed_manga_chapters_error">Licenciado: sen capítulos que mostrar</string>
+    <string name="manga_display_modified_interval_title">Actualizar cada</string>
+    <string name="manga_interval_expected_update_soon">Pronto</string>
+    <string name="exclude_scanlators">Excluír equipos de tradución</string>
+    <string name="no_scanlators_found">Non se atopou ningún equipo de tradución</string>
+    <string name="track_delete_text">Esto eliminará o seguimento local.</string>
+    <string name="action_view_upcoming">Ver as próximas actualizacións</string>
+    <string name="upcoming_guide">Guía dos próximos lanzamenos</string>
+    <string name="upcoming_calendar_next">Mes seguinte</string>
+    <string name="upcoming_calendar_prev">Mes anterior</string>
+    <string name="information_cloudflare_help">Preme aquí para obter axuda con Cloudflare</string>
 </resources>

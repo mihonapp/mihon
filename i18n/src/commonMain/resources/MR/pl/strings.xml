@@ -801,4 +801,11 @@
     <string name="skipped_reason_not_in_release_period">Pominięto, ponieważ nie spodziewano się dzisiaj żadnej publikacji</string>
     <string name="exclude_scanlators">Wyklucz skanlatorów</string>
     <string name="pref_webtoon_disable_zoom_out">Wyłącz oddalenie</string>
+    <string name="action_add_anyway">Dodaj mimo to</string>
+    <string name="action_migrate_duplicate">Zmigruj istniejący wpis</string>
+    <string name="action_replace_repo">Zamień</string>
+    <string name="action_view_upcoming">Pokaż nadchodzące aktualizacje</string>
+    <string name="upcoming_calendar_next">Następny miesiąc</string>
+    <string name="upcoming_calendar_prev">Poprzedni miesiąc</string>
+    <string name="label_upcoming">Nadchodzący</string>
 </resources>

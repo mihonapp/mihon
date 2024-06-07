@@ -796,4 +796,5 @@
     <string name="pref_flash_page_summ">Mengurangkan kesan \'ghosting\' pada skrin e-ink</string>
     <string name="last_auto_backup_info">Sandaran automatik terakhir:%s</string>
     <string name="notification_updating_progress">Mengemaskini pustaka… (%s)</string>
+    <string name="action_replace_repo">Ganti</string>
 </resources>

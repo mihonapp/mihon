@@ -95,11 +95,9 @@
     <string name="ext_untrusted">Nesigură</string>
     <string name="ext_uninstall">Dezinstalează</string>
     <string name="untrusted_extension">Extensie nesigură</string>
-    <string name="untrusted_extension_message">Extensia a fost semnată cu un certificat nesigur și nu a fost activată.
+    <string name="untrusted_extension_message">Extensiile rău intenționate pot citi orice credențiale de autentificare stocate sau pot executa cod arbitrar.
 \n
-\nO extensie periculoasă ar putea citi orice date de logare stocate în Mihon sau executa cod periculos.
-\n
-\nPrin acordarea încrederii acestui certificat acceptați riscurile menționate.</string>
+\nAcordând încredere acestei extensii, acceptați aceste riscuri.</string>
     <string name="pref_fullscreen">Ecran complet</string>
     <string name="pref_page_transitions">Animați tranzițiile de pagini</string>
     <string name="action_display_download_badge">Capitole descărcate</string>
@@ -119,7 +117,7 @@
     <string name="pref_viewer_type">Mod de citire implicit</string>
     <string name="left_to_right_viewer">De la stânga la dreapta</string>
     <string name="right_to_left_viewer">De la dreapta la stânga</string>
-    <string name="vertical_viewer">Vertical</string>
+    <string name="vertical_viewer">Paginat (vertical)</string>
     <string name="webtoon_viewer">Benzi desenate web</string>
     <string name="pager_viewer">Setări pagini</string>
     <string name="pref_image_scale_type">Tip de scalare</string>
@@ -376,7 +374,7 @@
     <string name="action_display_comfortable_grid">Grilă confortabilă</string>
     <string name="action_migrate">Migrează</string>
     <string name="label_data">Date</string>
-    <string name="invalid_backup_file">Fișierul de rezerva este invalid</string>
+    <string name="invalid_backup_file">Fișier de rezervă invalid:</string>
     <string name="page_list_empty_error">Nu s-au găsit pagini</string>
     <string name="tabs_header">Tab-uri</string>
     <string name="action_display_show_tabs">Afișează filele categoriei</string>
@@ -460,9 +458,7 @@
     <string name="l_nav">În formă de L</string>
     <string name="action_sort_chapter_fetch_date">Data obținerii capitolului</string>
     <string name="action_filter_tracked">Urmărit</string>
-    <string name="backup_restore_content_full">Datele din fișierul de rezervă vor fi restaurate.
-\n
-\nVa trebui să instalați toate extensiile lipsă și să vă conectați ulterior la serviciile de urmărire pentru a le utiliza.</string>
+    <string name="backup_restore_content_full">Este posibil să fie necesar să instalați extensiile lipsă și să vă conectați ulterior la serviciile de urmărire pentru a le utiliza.</string>
     <string name="pref_download_new_categories_details">Nu vor fi descărcate înscrierile din categoriile excluse, chiar dacă acestea se află și în categoriile incluse.</string>
     <string name="pref_category_auto_download">Descărcare automată</string>
     <string name="nav_zone_right">Dreapta</string>
@@ -797,4 +793,18 @@
     <string name="error_repo_exists">Acest repozitoriu există deja!</string>
     <string name="action_delete_repo">Șterge repozitoriu</string>
     <string name="invalid_repo_name">URL repozitoriu invalid</string>
+    <string name="label_upcoming">Viitoare</string>
+    <string name="theme_nord">Nord</string>
+    <string name="action_replace_repo_message">Repozitoriul %1$s are acceeași amprenta digitală a cheii de semnare ca și %2$s
+\nÎn cazul în care asta este la ce vă așteptați, %2$s va fi înlocuit, altfel contatati întreținătorul repozitoriului.</string>
+    <string name="pref_display_profile">Profil de afișare personalizat</string>
+    <string name="action_add_anyway">Adăugați oricum</string>
+    <string name="action_migrate_duplicate">Migrați intrare existentă</string>
+    <string name="action_replace_repo">Înlocuiți</string>
+    <string name="action_replace_repo_title">Amprenta digitală a cheii de semnare există deja</string>
+    <string name="pref_webtoon_disable_zoom_out">Dezactivați funcția de zoom-out</string>
+    <string name="action_view_upcoming">Vizualizați actualizările viitoare</string>
+    <string name="upcoming_guide">Ghidul viitor</string>
+    <string name="upcoming_calendar_next">Luna următoare</string>
+    <string name="upcoming_calendar_prev">Luna anterioară</string>
 </resources>

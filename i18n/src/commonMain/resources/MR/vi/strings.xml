@@ -781,4 +781,34 @@
     <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>
     <string name="ext_permission_install_apps_warning">Cần phải cấp phép để cài đặt tiện ích mở rộng. Bấm đây để cấp.</string>
     <string name="private_settings">Bao gồm những cài đặt nhạy cảm (ví dụ như token đăng nhập tracker)</string>
+    <string name="action_add_anyway">Luôn luôn thêm</string>
+    <string name="theme_nord">Phương bắc</string>
+    <string name="pref_library_update_smart_update">Cập nhật thông minh</string>
+    <string name="label_upcoming">Sắp tới</string>
+    <string name="action_migrate_duplicate">Chuyển vào các mục hiện có</string>
+    <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
+    <string name="action_add_repo_message">Thêm nguồn bổ sung vào Mihon. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
+    <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.
+\nNếu điều này là dự kiến, %2$s sẽ bị thay thế. Nếu không, vui lòng liên hệ với người quản lý kho lưu trữ của bạn.</string>
+    <string name="information_empty_repos">Bạn chưa có nguồn nào.</string>
+    <string name="ext_revoke_trust">Thu hồi quyền truy cập của tiện ích không xác định</string>
+    <string name="action_add_repo">Thêm nguồn</string>
+    <string name="error_repo_exists">Nguồn đã có rồi!</string>
+    <string name="action_delete_repo">Xóa nguồn</string>
+    <string name="onboarding_storage_help_action">Hướng dẫn</string>
+    <string name="label_extension_repos">Quản lý nguồn</string>
+    <string name="invalid_repo_name">URL nguồn không hợp lệ</string>
+    <string name="label_add_repo_input">URL nguồn</string>
+    <string name="delete_repo_confirmation">Bạn có muốn xóa nguồn \"%s\"?</string>
+    <string name="action_open_repo">Mở nguồn</string>
+    <string name="manga_interval_expected_update_soon">Sớm</string>
+    <string name="manga_interval_custom_amount">Tần suất cập nhật tùy chỉnh:</string>
+    <string name="pref_display_profile">Tùy chỉnh hồ sơ màn hình</string>
+    <string name="pref_webtoon_disable_zoom_out">Tắt thu nhỏ</string>
+    <string name="action_view_upcoming">Xem các cập nhật sắp tới</string>
+    <string name="upcoming_guide">Hướng dẫn sắp tới</string>
+    <string name="upcoming_calendar_next">Tháng tiếp theo</string>
+    <string name="upcoming_calendar_prev">Tháng trước</string>
+    <string name="action_replace_repo">Thay thế</string>
+    <string name="action_replace_repo_title">Dấu vân tay cho khóa ký đã được tạo trước đó.</string>
 </resources>

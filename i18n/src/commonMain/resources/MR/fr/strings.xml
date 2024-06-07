@@ -796,4 +796,14 @@
     <string name="create_backup_file_error">Impossible de créer un fichier de sauvegarde</string>
     <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
     <string name="source_settings">Paramètres sources</string>
+    <string name="action_add_anyway">Ajouter tout de même</string>
+    <string name="action_migrate_duplicate">Migrer l’entrée existante</string>
+    <string name="label_upcoming">À venir</string>
+    <string name="action_replace_repo">Remplacer</string>
+    <string name="pref_display_profile">Profil d\'affichage personnalisé</string>
+    <string name="pref_webtoon_disable_zoom_out">Désactiver le zoom arrière</string>
+    <string name="action_view_upcoming">Afficher les mises à jour à venir</string>
+    <string name="upcoming_guide">Guide à venir</string>
+    <string name="upcoming_calendar_next">Le mois prochain</string>
+    <string name="upcoming_calendar_prev">Le mois précédent</string>
 </resources>

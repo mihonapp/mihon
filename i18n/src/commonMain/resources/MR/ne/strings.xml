@@ -92,7 +92,7 @@
     <string name="information_empty_library">तपाईंको पुस्तकालय खाली छ</string>
     <string name="information_no_recent_manga">हालै केहि पढेको छैन</string>
     <string name="information_no_recent">हालैका कुनै अपडेट छैन</string>
-    <string name="label_download_queue">डाउनलोड लाम</string>
+    <string name="label_download_queue">डाउनलोड सूची</string>
     <string name="information_no_downloads">कुनै डाउनलोडहरू छैन</string>
     <string name="label_help">मद्दत</string>
     <string name="label_extension_info">एक्सटेन्शनको जानकारी</string>
@@ -351,7 +351,7 @@
     <string name="download_notifier_text_only_wifi">कुनै Wi-Fi जडान उपलब्ध छैन</string>
     <string name="download_notifier_download_paused">डाउनलोडहरू रोकियो</string>
     <string name="download_notifier_no_network">कुनै नेटवर्क जडान उपलब्ध छैन</string>
-    <string name="tracking_info">बाह्य ट्र्याकर सेवाहरूमा अध्याय प्रगति अपडेट गर्न एक-तर्फी सिङ्क। तिनीहरूको ट्र्याकिङ बटनबाट व्यक्तिगत इन्ट्रीहरूको लागि ट्र्याकिङ सेट अप गर्नुहोस्।</string>
+    <string name="tracking_info">बाह्य ट्र्याकर सेवाहरूमा अध्याय प्रगति अपडेट गर्न एकतर्फी सिंक। तिनीहरूको ट्र्याकिङ बटनबाट व्यक्तिगत इन्ट्रीहरूको लागि ट्र्याकिङ सेट अप गर्नुहोस्।</string>
     <string name="backup_restore_missing_trackers">ट्र्याकरहरूमा लगइन छैनन्:</string>
     <string name="backup_restore_missing_sources">छुटेको स्रोतहरू:</string>
     <string name="pref_clear_chapter_cache">अध्याय क्यास खाली गर्नुहोस्</string>
@@ -540,7 +540,7 @@
     <string name="manga_download">डाउनलोड</string>
     <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
-    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा ताचियोमीलाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा Mihon लाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्र्याक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
@@ -616,7 +616,7 @@
     <string name="crash_screen_description">%s एक अप्रत्याशित त्रुटिमा पर्यो। समर्थन को लागि हामी तपाईंलाई हाम्रो Discord को #support च्यानलमा क्र्यास लगहरू साझेदारी गर्न सुझाव दिन्छौं।</string>
     <string name="update_check_open">GitHub मा खोल्नुहोस्</string>
     <string name="pref_invalidate_download_cache_summary">डाउनलोड गरिएका अध्यायहरू पुन: जाँच गर्न एपलाई फोर्स गर्नुहोस्</string>
-    <string name="pref_tracking_summary">एकतर्फी प्रगति सिङ्क, परिष्कृत सिङ्क</string>
+    <string name="pref_tracking_summary">एकतर्फी प्रगति सिंक, परिष्कृत सिंक</string>
     <string name="pref_advanced_summary">क्र्यास लग डम्प, ब्याट्री अप्टिमाइजेसन</string>
     <string name="error_saving_picture">तस्वीर बचत गर्न त्रुटि भयो</string>
     <string name="updates_last_update_info_just_now">भर्खरै</string>
@@ -716,8 +716,8 @@
     <string name="action_ok">ठिक छ</string>
     <string name="delete_downloaded">डाउनलोड गरिएको हटाउनुहोस्</string>
     <string name="has_results">परिणामहरू भएको</string>
-    <string name="library_sync_complete">पुस्तकालय सिङ्क सम्पन्न भयो</string>
-    <string name="syncing_library">पुस्तकालय सिङ्क गर्दै</string>
+    <string name="library_sync_complete">पुस्तकालय सिंक सम्पन्न भयो</string>
+    <string name="syncing_library">पुस्तकालय सिंक गर्दै</string>
     <string name="download_cache_invalidated">डाउनलोड इन्डेक्स अवैध भयो</string>
     <string name="information_cloudflare_help">Cloudflare सम्बन्धित मद्दतको लागि यहाँ ट्याप गर्नुहोस्</string>
     <string name="track_activity_name">ट्र्याकर लगइन</string>
@@ -808,4 +808,10 @@
     <string name="action_replace_repo_title">साइन गर्ने की फिंगरप्रिन्ट पहिले नै अवस्थित छ</string>
     <string name="action_replace_repo_message">रिपो %1$s सँग %2$s जस्तै साइन गर्ने की फिंगरप्रिन्ट छ।
 \nयदि यो अपेक्षित छ भने, %2$s प्रतिस्थापन गरिनेछ, अन्यथा आफ्नो रिपो प्रबन्धकलाई सम्पर्क गर्नुहोस्।</string>
+    <string name="label_upcoming">आगामी</string>
+    <string name="action_view_upcoming">आगामी अपडेटहरू हेर्नुहोस्</string>
+    <string name="upcoming_guide">आगामी गाइड</string>
+    <string name="upcoming_calendar_next">अर्को महिना</string>
+    <string name="upcoming_calendar_prev">अघिल्लो महिना</string>
+    <string name="file_picker_uri_permission_unsupported">लगातार फोल्डर पहुँच प्राप्त गर्न असफल। एपले अप्रत्याशित रूपमा व्यवहार गर्न सक्छ।</string>
 </resources>

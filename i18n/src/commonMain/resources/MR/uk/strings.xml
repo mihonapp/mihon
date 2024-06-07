@@ -78,7 +78,7 @@
     <string name="update_6hour">Кожні 6 годин</string>
     <string name="update_12hour">Кожні 12 годин</string>
     <string name="update_24hour">Щодня</string>
-    <string name="update_48hour">Кожні 2 дні</string>
+    <string name="update_48hour">Що 2 дні</string>
     <string name="update_weekly">Щонеділі</string>
     <string name="all">Всі</string>
     <string name="pref_library_update_restriction">Обмеження пристрою для автоматичних оновлень</string>
@@ -796,4 +796,16 @@
     <string name="onboarding_action_finish">Почнемо</string>
     <string name="onboarding_description">Давайте для початку налаштуємо дещо. Ви завжди зможете змінити ці налаштування потім.</string>
     <string name="pref_onboarding_guide">Гайд новачка</string>
+    <string name="action_add_anyway">Додати у будь-якому разі</string>
+    <string name="action_replace_repo_title">Відбиток пальця для підпису ключа вже існує</string>
+    <string name="action_replace_repo_message">Репозиторій %1$s має такий самий відбиток ключа підпису, як і %2$s.
+\nЯкщо це очікувано, %2$s буде замінено, в іншому випадку зверніться до вашого обслуговуючого репозиторію.</string>
+    <string name="action_view_upcoming">Переглянути майбутні оновлення</string>
+    <string name="upcoming_calendar_prev">Попередній місяць</string>
+    <string name="action_migrate_duplicate">Перенести існуючий запис</string>
+    <string name="action_replace_repo">Замінити</string>
+    <string name="pref_display_profile">Власний профіль відображення</string>
+    <string name="pref_webtoon_disable_zoom_out">Вимкнути зменшення масштабу</string>
+    <string name="label_upcoming">Незабаром</string>
+    <string name="upcoming_calendar_next">Наступний місяць</string>
 </resources>

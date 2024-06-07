@@ -806,4 +806,9 @@
 \nSe è quello che si desidera, %2$s verrà sostituita, altrimenti contatta il manutentore della repository.</string>
     <string name="action_replace_repo">Sostituisci</string>
     <string name="pref_webtoon_disable_zoom_out">Disattiva zoom indietro</string>
+    <string name="label_upcoming">Prossimamente</string>
+    <string name="action_view_upcoming">Controlla i Prossimi Aggiornamenti</string>
+    <string name="upcoming_guide">Guida in arrivo</string>
+    <string name="upcoming_calendar_next">Mese prossimo</string>
+    <string name="upcoming_calendar_prev">Mese scorso</string>
 </resources>
