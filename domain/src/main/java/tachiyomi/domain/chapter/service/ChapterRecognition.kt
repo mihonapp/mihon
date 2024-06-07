@@ -62,6 +62,9 @@ object ChapterRecognition {
 
                 // Check base case ch.xx
                 basic.find(name)?.let { return getChapterNumberFromMatch(it) }
+
+                // need to find again first number might already removed
+                number.find(name)?.let { return getChapterNumberFromMatch(it) }
             }
         }
 
