@@ -238,6 +238,7 @@
     <string name="pref_date_format">Date format</string>
 
     <string name="pref_manage_notifications">Manage notifications</string>
+    <string name="pref_manage_notifications_not_support">Manage notifications not supported</string>
     <string name="pref_app_language">App language</string>
 
     <string name="pref_category_security">Security and privacy</string>
