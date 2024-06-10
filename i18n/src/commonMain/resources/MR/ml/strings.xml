@@ -99,4 +99,14 @@
     <string name="action_open_in_web_view">വെബ്‌വ്യൂവിൽ തുറക്കുക</string>
     <string name="action_migrate">മൈഗ്രേറ്റ് ചെയ്യുക</string>
     <string name="action_display_mode">ഡിസ്പ്ലേ മോഡ്</string>
+    <string name="action_oldest">ഏറ്റവും പഴയത്</string>
+    <string name="action_cancel">റദ്ദാക്കുക</string>
+    <string name="action_display_show_continue_reading_button">വായന തുടരുക ബട്ടൺ</string>
+    <string name="action_display_language_badge">ഭാഷ</string>
+    <string name="action_cancel_all">എല്ലാം റദ്ദാക്കുക</string>
+    <string name="action_ok">ശരി</string>
+    <string name="cancel_all_for_series">ഈ സീരീസിനായി എല്ലാം റദ്ദാക്കുക</string>
+    <string name="action_move_to_top">മുകളിലേക്ക് നീങ്ങുക</string>
+    <string name="action_order_by_chapter_number">അധ്യായ നമ്പർ പ്രകാരം</string>
+    <string name="action_newest">ഏറ്റവും പുതിയത്</string>
 </resources>
