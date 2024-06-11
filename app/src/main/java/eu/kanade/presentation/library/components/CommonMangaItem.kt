@@ -50,7 +50,13 @@ object CommonMangaItemDefaults {
     const val BrowseFavoriteCoverAlpha = 0.34f
 }
 
-private val ContinueReadingButtonSize = 28.dp
+private val ContinueReadingButtonSize = mapOf(
+    "Compact" to 28.dp,
+    "Comfortable" to 35.dp,
+    "CoverOnly" to 35.dp,
+    "List" to 28.dp
+)
+
 private val ContinueReadingButtonGridPadding = 6.dp
 private val ContinueReadingButtonListSpacing = 8.dp
 
@@ -98,7 +104,8 @@ fun MangaCompactGridItem(
                     ContinueReadingButton(
                         modifier = Modifier
                             .padding(ContinueReadingButtonGridPadding)
-                            .align(Alignment.BottomEnd),
+                            .align(Alignment.BottomEnd)
+                            .size(ContinueReadingButtonSize["CoverOnly"] ?: 28.dp),
                         onClickContinueReading = onClickContinueReading,
                     )
                 }
@@ -148,10 +155,13 @@ private fun BoxScope.CoverTextOverlay(
         )
         if (onClickContinueReading != null) {
             ContinueReadingButton(
-                modifier = Modifier.padding(
-                    end = ContinueReadingButtonGridPadding,
-                    bottom = ContinueReadingButtonGridPadding,
-                ),
+                modifier = Modifier
+                    .padding(
+                        end = ContinueReadingButtonGridPadding,
+                        bottom = ContinueReadingButtonGridPadding,
+                    )
+                .size(ContinueReadingButtonSize["Compact"] ?: 28.dp),  // Default to 28.dp if key not found),
+
                 onClickContinueReading = onClickContinueReading,
             )
         }
@@ -196,7 +206,8 @@ fun MangaComfortableGridItem(
                         ContinueReadingButton(
                             modifier = Modifier
                                 .padding(ContinueReadingButtonGridPadding)
-                                .align(Alignment.BottomEnd),
+                                .align(Alignment.BottomEnd)
+                                .size(ContinueReadingButtonSize["Comfortable"] ?: 28.dp),
                             onClickContinueReading = onClickContinueReading,
                         )
                     }
@@ -354,7 +365,9 @@ fun MangaListItem(
         BadgeGroup(content = badge)
         if (onClickContinueReading != null) {
             ContinueReadingButton(
-                modifier = Modifier.padding(start = ContinueReadingButtonListSpacing),
+                modifier = Modifier
+                    .padding(start = ContinueReadingButtonListSpacing)
+                    .size(ContinueReadingButtonSize["List"] ?: 28.dp),
                 onClickContinueReading = onClickContinueReading,
             )
         }
@@ -369,7 +382,6 @@ private fun ContinueReadingButton(
     Box(modifier = modifier) {
         FilledIconButton(
             onClick = onClickContinueReading,
-            modifier = Modifier.size(ContinueReadingButtonSize),
             shape = MaterialTheme.shapes.small,
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
