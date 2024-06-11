@@ -61,7 +61,7 @@
         <item quantity="other">%1$d പുതിയ അധ്യായങ്ങൾ</item>
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
-        <item quantity="one">അധ്യായങ്ങൾ %1$s-ഉം 1-ഉം</item>
+        <item quantity="one">അധ്യായങ്ങൾ %1$s-ഉം പിന്നെ 1-ഉം</item>
         <item quantity="other">%1$s-ഉം %2$d-ഉം അധ്യായങ്ങൾ</item>
     </plurals>
     <plurals name="num_repos">
