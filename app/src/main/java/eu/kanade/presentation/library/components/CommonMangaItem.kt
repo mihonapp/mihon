@@ -50,8 +50,8 @@ object CommonMangaItemDefaults {
     const val BrowseFavoriteCoverAlpha = 0.34f
 }
 
-private val ContinueReadingButtonSizeSmall = 28.dp //Used for Compact and List View Modes
-private val ContinueReadingButtonSizeLarge = 32.dp //Used for Comfortable and Cover Only View Modes
+private val ContinueReadingButtonSizeSmall = 28.dp // Used for Compact and List View Modes
+private val ContinueReadingButtonSizeLarge = 32.dp // Used for Comfortable and Cover Only View Modes
 
 private val ContinueReadingButtonGridPadding = 6.dp
 private val ContinueReadingButtonListSpacing = 8.dp
@@ -98,7 +98,7 @@ fun MangaCompactGridItem(
                     )
                 } else if (onClickContinueReading != null) {
                     ContinueReadingButton(
-                        modifier = Modifier //Modifiers of ContinueReadingButton() for Cover Only Display Mode
+                        modifier = Modifier // Modifiers of ContinueReadingButton() for Cover Only Display Mode
                             .padding(ContinueReadingButtonGridPadding)
                             .align(Alignment.BottomEnd)
                             .size(ContinueReadingButtonSizeLarge),
@@ -151,13 +151,12 @@ private fun BoxScope.CoverTextOverlay(
         )
         if (onClickContinueReading != null) {
             ContinueReadingButton(
-                modifier = Modifier //Modifiers of ContinueReadingButton() for Compact Display Mode
+                modifier = Modifier // Modifiers of ContinueReadingButton() for Compact Display Mode
                     .padding(
                         end = ContinueReadingButtonGridPadding,
                         bottom = ContinueReadingButtonGridPadding,
                     )
-                .size(ContinueReadingButtonSizeSmall),
-
+                    .size(ContinueReadingButtonSizeSmall),
                 onClickContinueReading = onClickContinueReading,
             )
         }
@@ -200,7 +199,7 @@ fun MangaComfortableGridItem(
                 content = {
                     if (onClickContinueReading != null) {
                         ContinueReadingButton(
-                            modifier = Modifier //Modifiers of ContinueReadingButton() for Comfortable Display Mode
+                            modifier = Modifier // Modifiers of ContinueReadingButton() for Comfortable Display Mode
                                 .padding(ContinueReadingButtonGridPadding)
                                 .align(Alignment.BottomEnd)
                                 .size(ContinueReadingButtonSizeLarge),
@@ -361,9 +360,9 @@ fun MangaListItem(
         BadgeGroup(content = badge)
         if (onClickContinueReading != null) {
             ContinueReadingButton(
-                modifier = Modifier //Modifiers of ContinueReadingButton() for List Display Mode
+                modifier = Modifier // Modifiers of ContinueReadingButton() for List Display Mode
                     .padding(start = ContinueReadingButtonListSpacing)
-                    .size(ContinueReadingButtonSizeSmall), //List
+                    .size(ContinueReadingButtonSizeSmall),
                 onClickContinueReading = onClickContinueReading,
             )
         }
