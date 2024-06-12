@@ -99,4 +99,25 @@
     <string name="action_open_in_web_view">വെബ്‌വ്യൂവിൽ തുറക്കുക</string>
     <string name="action_migrate">മൈഗ്രേറ്റ് ചെയ്യുക</string>
     <string name="action_display_mode">ഡിസ്പ്ലേ മോഡ്</string>
+    <string name="action_oldest">ഏറ്റവും പഴയത്</string>
+    <string name="action_cancel">റദ്ദാക്കുക</string>
+    <string name="action_display_show_continue_reading_button">വായന തുടരുക ബട്ടൺ</string>
+    <string name="action_display_language_badge">ഭാഷ</string>
+    <string name="action_cancel_all">എല്ലാം റദ്ദാക്കുക</string>
+    <string name="action_ok">ശരി</string>
+    <string name="cancel_all_for_series">ഈ സീരീസിനായി എല്ലാം റദ്ദാക്കുക</string>
+    <string name="action_move_to_top">മുകളിലേക്ക് നീങ്ങുക</string>
+    <string name="action_order_by_chapter_number">അധ്യായ നമ്പർ പ്രകാരം</string>
+    <string name="action_newest">ഏറ്റവും പുതിയത്</string>
+    <string name="action_show_manga">എൻട്രി കാണിക്കുക</string>
+    <string name="action_display_grid">കോംപാക്റ്റ് ഗ്രിഡ്</string>
+    <string name="action_display_comfortable_grid">സുഖപ്രദമായ ഗ്രിഡ്</string>
+    <string name="action_display_download_badge">ഡൌൺലോഡ് ചെയ്ത അധ്യായങ്ങൾ</string>
+    <string name="action_display_local_badge">ലോക്കൽ സോഴ്സ്</string>
+    <string name="action_disable">ഡിസേബിൾ</string>
+    <string name="action_pin">പിൻ ചെയ്യുക</string>
+    <string name="action_apply">അപ്ലൈ</string>
+    <string name="action_sort">സോർട്</string>
+    <string name="action_display_list">ലിസ്റ്റ്</string>
+    <string name="action_display_cover_only_grid">ചിത്രം മാത്രമുള്ള ഗ്രിഡ്</string>
 </resources>

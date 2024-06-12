@@ -809,4 +809,5 @@
     <string name="action_replace_repo_title">Digitalni otisak prsta za potpisivanje već postoji</string>
     <string name="action_replace_repo_message">Repozitorij %1$s ima isti digitalni otisak ključa za potpisivanje kao %2$s.
 \nAko se to očekuje, %2$s će se zamijeniti, u suprotnom se obrati svom održavatelju repozitorija.</string>
+    <string name="file_picker_uri_permission_unsupported">Neuspjelo dobivanje trajnog pristupa mapi. Aplikacija se može ponašati neočekivano.</string>
 </resources>
