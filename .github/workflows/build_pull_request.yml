@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
+        uses: gradle/actions/wrapper-validation@d9336dac04dea2507a617466bc058a3def92b18b # v3.4.0
 
       - name: Dependency Review
         uses: actions/dependency-review-action@72eb03d02c7872a771aacd928f3123ac62ad6d3a # v4.3.3
@@ -35,7 +35,7 @@ jobs:
           distribution: adopt
 
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
+        uses: gradle/actions/setup-gradle@d9336dac04dea2507a617466bc058a3def92b18b # v3.4.0
 
       - name: Build app and run unit tests
         run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
