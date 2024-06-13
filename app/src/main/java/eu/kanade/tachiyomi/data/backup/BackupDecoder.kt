@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.backup.models.Backup
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import kotlinx.serialization.protobuf.ProtoBuf
 import okio.buffer
 import okio.gzip
@@ -33,7 +32,7 @@ class BackupDecoder(
                 source
             }.use { it.readByteArray() }
 
-            parser.decodeFromByteArray(BackupSerializer, backupString)
+            parser.decodeFromByteArray(Backup.serializer(), backupString)
         }
     }
 }

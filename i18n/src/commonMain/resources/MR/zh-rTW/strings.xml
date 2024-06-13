@@ -809,4 +809,5 @@
     <string name="upcoming_calendar_prev">上個月</string>
     <string name="label_upcoming">預告</string>
     <string name="action_view_upcoming">檢視新刊預告</string>
+    <string name="file_picker_uri_permission_unsupported">無法取得永久性資料夾存取權，應用程式可能會表現異常。</string>
 </resources>

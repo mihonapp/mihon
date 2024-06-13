@@ -1,11 +1,7 @@
 package eu.kanade.tachiyomi.data.backup.models
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.protobuf.ProtoNumber
-
-@Serializer(forClass = Backup::class)
-object BackupSerializer
 
 @Serializable
 data class Backup(
