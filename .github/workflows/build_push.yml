@@ -36,7 +36,7 @@ jobs:
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
 
       - name: Build app and run unit tests
-        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
+        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
 
       # Sign APK and create release for tags
 
