@@ -120,4 +120,15 @@
     <string name="action_sort">സോർട്</string>
     <string name="action_display_list">ലിസ്റ്റ്</string>
     <string name="action_display_cover_only_grid">ചിത്രം മാത്രമുള്ള ഗ്രിഡ്</string>
+    <string name="action_reset">പുനഃസജ്ജമാക്കുക</string>
+    <string name="action_move_to_top_all_for_series">പരമ്പര മുകളിലേക്ക് നീക്കുക</string>
+    <string name="action_display_show_tabs">വിഭാഗം ടാബുകൾ കാണിക്കുക</string>
+    <string name="action_unpin">അൺപിൻ ചെയ്യുക</string>
+    <string name="action_order_by_upload_date">അപ്‌ലോഡ് തീയതി പ്രകാരം</string>
+    <string name="action_asc">ആരോഹണം</string>
+    <string name="action_desc">അവരോഹണം</string>
+    <string name="action_install">ഇൻസ്റ്റാൾ</string>
+    <string name="action_move_to_bottom">താഴേക്ക് നീക്കുക</string>
+    <string name="action_share">പങ്കിടുക</string>
+    <string name="action_display">പ്രദർശിപ്പിക്കുക</string>
 </resources>
