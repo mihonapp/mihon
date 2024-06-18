@@ -802,4 +802,12 @@
     <string name="pref_display_profile">Anpassad skärmprofil</string>
     <string name="label_upcoming">Kommande</string>
     <string name="upcoming_calendar_prev">Föregående månad</string>
+    <string name="upcoming_calendar_next">Nästa månad</string>
+    <string name="action_migrate_duplicate">Migrera existerande post</string>
+    <string name="action_replace_repo_title">Signeringsnyckel-fingeravtryck finns redan</string>
+    <string name="action_replace_repo_message">Förrådet %1$s har samma Signering av nyckelfingeravtryck som %2$s.
+\nOm detta förväntas kommer %2$s att ersättas, annars kontakta den förråds-ansvarige.</string>
+    <string name="action_view_upcoming">Visa kommande uppdateringar</string>
+    <string name="upcoming_guide">Kommande guide</string>
+    <string name="file_picker_uri_permission_unsupported">Misslyckades med att skaffa beständig mappåtkomst. Appen kan bete sig oväntat.</string>
 </resources>
