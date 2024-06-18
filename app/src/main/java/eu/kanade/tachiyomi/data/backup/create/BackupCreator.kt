@@ -113,27 +113,27 @@ class BackupCreator(
         }
     }
 
-    private suspend fun backupCategories(options: BackupOptions): List<BackupCategory> {
+    suspend fun backupCategories(options: BackupOptions): List<BackupCategory> {
         if (!options.categories) return emptyList()
 
         return categoriesBackupCreator.backupCategories()
     }
 
-    private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
+    suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
         return mangaBackupCreator.backupMangas(mangas, options)
     }
 
-    private fun backupSources(mangas: List<Manga>): List<BackupSource> {
+    fun backupSources(mangas: List<Manga>): List<BackupSource> {
         return sourcesBackupCreator.backupSources(mangas)
     }
 
-    private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
+    fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
         if (!options.appSettings) return emptyList()
 
         return preferenceBackupCreator.backupAppPreferences(includePrivatePreferences = options.privateSettings)
     }
 
-    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
+    fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
         if (!options.sourceSettings) return emptyList()
 
         return preferenceBackupCreator.backupSourcePreferences(includePrivatePreferences = options.privateSettings)

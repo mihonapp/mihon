@@ -30,7 +30,7 @@ class BackupRestorer(
 
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
-    private val mangaRestorer: MangaRestorer = MangaRestorer(),
+    private val mangaRestorer: MangaRestorer = MangaRestorer(isSync),
 ) {
 
     private var restoreAmount = 0

@@ -25,7 +25,7 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 7
+        versionCode = 8
         versionName = "0.16.5"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
@@ -251,6 +251,10 @@ dependencies {
     // For detecting memory leaks; see https://square.github.io/leakcanary/
     // debugImplementation(libs.leakcanary.android)
     implementation(libs.leakcanary.plumber)
+
+	// Sync
+    implementation(libs.google.api.services.drive)
+    implementation(libs.google.api.client.oauth)
 
     testImplementation(kotlinx.coroutines.test)
 }
