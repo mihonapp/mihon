@@ -84,6 +84,7 @@ class AppModule(val app: Application) : InjektModule {
                 ),
                 mangasAdapter = Mangas.Adapter(
                     genreAdapter = StringListColumnAdapter,
+                    web_urlsAdapter = StringListColumnAdapter,
                     update_strategyAdapter = UpdateStrategyColumnAdapter,
                 ),
             )

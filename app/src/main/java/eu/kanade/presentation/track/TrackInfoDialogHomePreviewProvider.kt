@@ -48,6 +48,7 @@ internal class TrackInfoDialogHomePreviewProvider :
                 trackItemWithTrack,
             ),
             dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
+            webUrlProvider = { listOf(aTrack.remoteUrl) },
             onStatusClick = {},
             onChapterClick = {},
             onScoreClick = {},
@@ -56,6 +57,9 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onNewIdSearch = {},
+            onNewChipSearch = {},
+            onOpenChipElementInBrowser = {},
         )
     }
 
@@ -63,6 +67,7 @@ internal class TrackInfoDialogHomePreviewProvider :
         TrackInfoDialogHome(
             trackItems = listOf(),
             dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
+            webUrlProvider = { listOf(aTrack.remoteUrl) },
             onStatusClick = {},
             onChapterClick = {},
             onScoreClick = {},
@@ -71,6 +76,9 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onNewIdSearch = {},
+            onNewChipSearch = {},
+            onOpenChipElementInBrowser = {},
         )
     }
 

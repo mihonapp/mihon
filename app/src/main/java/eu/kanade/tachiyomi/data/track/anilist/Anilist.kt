@@ -17,9 +17,10 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
+class Anilist(id: Long) : BaseTracker(id, NAME), DeletableTracker {
 
     companion object {
+        const val NAME = "AniList"
         const val READING = 1L
         const val COMPLETED = 2L
         const val ON_HOLD = 3L
@@ -32,6 +33,8 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         const val POINT_10_DECIMAL = "POINT_10_DECIMAL"
         const val POINT_5 = "POINT_5"
         const val POINT_3 = "POINT_3"
+
+        private const val SEARCH_ID_PREFIX = "id:"
     }
 
     private val json: Json by injectLazy()
@@ -198,7 +201,16 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
+        if (query.startsWith(SEARCH_ID_PREFIX)) {
+            query.substringAfter(SEARCH_ID_PREFIX).toLongOrNull()?.let { id ->
+                return (api.findMangaById(id))
+            }
+        }
         return api.search(query)
+    }
+
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        return api.findMangaById(id)
     }
 
     override suspend fun refresh(track: Track): Track {

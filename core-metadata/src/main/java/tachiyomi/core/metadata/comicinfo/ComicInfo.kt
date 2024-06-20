@@ -1,5 +1,6 @@
 package tachiyomi.core.metadata.comicinfo
 
+import android.webkit.URLUtil
 import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.serialization.Serializable
 import nl.adaptivity.xmlutil.serialization.XmlElement
@@ -17,9 +18,11 @@ fun SManga.getComicInfo() = ComicInfo(
     publishingStatus = ComicInfo.PublishingStatusTachiyomi(
         ComicInfoPublishingStatus.toComicInfoValue(status.toLong()),
     ),
+    web = webUrls?.let { urls ->
+        ComicInfo.Web(urls.split(", ").joinToString(" ") { it.trim() })
+    },
     title = null,
     number = null,
-    web = null,
     translator = null,
     inker = null,
     colorist = null,
@@ -59,6 +62,14 @@ fun SManga.copyFromComicInfo(comicInfo: ComicInfo) {
         ?.let { artist = it }
 
     status = ComicInfoPublishingStatus.toSMangaValue(comicInfo.publishingStatus?.value)
+
+    comicInfo.web?.value
+        ?.split(" ")
+        ?.map { it.trim() }
+        ?.distinct()
+        ?.filter { URLUtil.isNetworkUrl(it) }
+        ?.takeIf { it.isNotEmpty() }
+        ?.let { webUrls = it.joinToString(", ") }
 }
 
 // https://anansi-project.github.io/docs/comicinfo/schemas/v2.0

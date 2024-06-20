@@ -69,6 +69,10 @@ class Suwayomi(id: Long) : BaseTracker(id, "Suwayomi"), EnhancedTracker {
         TODO("Not yet implemented")
     }
 
+    override suspend fun searchId(id: Long): List<TrackSearch> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun refresh(track: Track): Track {
         val remoteTrack = api.getTrackSearch(track.tracking_url)
         track.copyPersonalFrom(remoteTrack)
