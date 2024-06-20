@@ -13,14 +13,10 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(libs.moko.core)
             }
-        }
-
-        androidMain {
-            dependsOn(commonMain)  // https://github.com/icerockdev/moko-resources/issues/562
         }
     }
 }
@@ -40,7 +36,7 @@ android {
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "tachiyomi.i18n"
+    resourcesPackage.set("tachiyomi.i18n")
 }
 
 tasks {
