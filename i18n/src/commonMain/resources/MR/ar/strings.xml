@@ -796,4 +796,13 @@
     <string name="action_add_repo">إضافة مستودع</string>
     <string name="manga_interval_expected_update">من المتوقع أن يتم إصدار فصول جديدة في حوالي 1%1$s، والتحقق من كل 2%2$s .</string>
     <string name="available_disk_space_info">متاح: %1$s / الكل: %2$s</string>
+    <string name="upcoming_calendar_prev">الشهر السابق</string>
+    <string name="upcoming_guide">الدليل القادم</string>
+    <string name="upcoming_calendar_next">الشهر القادم</string>
+    <string name="label_upcoming">القادم</string>
+    <string name="action_view_upcoming">عرض الثحديثات القادمة</string>
+    <string name="action_add_anyway">أضف على أي حال</string>
+    <string name="action_replace_repo">استبدل</string>
+    <string name="action_replace_repo_title">بصمة مفتاح الانخراط موجودة من قبل</string>
+    <string name="pref_webtoon_disable_zoom_out">تعطيل التصغير</string>
 </resources>

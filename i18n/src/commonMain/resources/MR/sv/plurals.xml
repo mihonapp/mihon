@@ -68,4 +68,8 @@
         <item quantity="one">%d förråd</item>
         <item quantity="other">%d flera förråd</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Imorgon</item>
+        <item quantity="other">Om %1$d dagar</item>
+    </plurals>
 </resources>
