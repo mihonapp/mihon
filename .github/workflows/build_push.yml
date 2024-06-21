@@ -38,6 +38,18 @@ jobs:
       - name: Build app and run unit tests
         run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
 
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm64-v8a-${{ github.sha }}
+          path: app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned.apk
+
+      - name: Upload mapping
+        uses: actions/upload-artifact@v4
+        with:
+          name: mapping-${{ github.sha }}
+          path: app/build/outputs/mapping/standardRelease
+
       # Sign APK and create release for tags
 
       - name: Get tag name
