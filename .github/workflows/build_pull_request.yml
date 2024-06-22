@@ -3,8 +3,8 @@ on:
   pull_request:
     paths-ignore:
       - '**.md'
-      - 'i18n/src/commonMain/resources/**/strings.xml'
-      - 'i18n/src/commonMain/resources/**/plurals.xml'
+      - 'i18n/src/commonMain/moko-resources/**/strings.xml'
+      - 'i18n/src/commonMain/moko-resources/**/plurals.xml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
