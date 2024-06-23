@@ -28,7 +28,10 @@ class DisplayRefreshHost {
     internal val flashMillis = readerPreferences.flashDurationMillis()
     internal val flashMode = readerPreferences.flashColor()
 
-    private val flashInterval = readerPreferences.flashPageInterval().get()
+    internal val flashIntervalPref = readerPreferences.flashPageInterval()
+
+    // Internal State for Flash
+    private var flashInterval = flashIntervalPref.get()
     private var timesCalled = 0
 
     fun flash() {
@@ -36,6 +39,11 @@ class DisplayRefreshHost {
             currentDisplayRefresh = true
         }
         timesCalled += 1
+    }
+
+    fun setInterval(interval: Int) {
+        flashInterval = interval;
+        timesCalled = 0;
     }
 }
 
@@ -47,6 +55,7 @@ fun DisplayRefreshHost(
     val currentDisplayRefresh = hostState.currentDisplayRefresh
     val refreshDuration by hostState.flashMillis.collectAsState()
     val flashMode by hostState.flashMode.collectAsState()
+    val flashInterval by hostState.flashIntervalPref.collectAsState()
 
     var bothColor by remember { mutableStateOf(Color.White) }
 
@@ -64,6 +73,10 @@ fun DisplayRefreshHost(
                 }
             }
         }
+    }
+
+    LaunchedEffect(flashInterval) {
+        hostState.setInterval(flashInterval)
     }
 
     Canvas(
