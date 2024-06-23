@@ -42,8 +42,8 @@ class DisplayRefreshHost {
     }
 
     fun setInterval(interval: Int) {
-        flashInterval = interval;
-        timesCalled = 0;
+        flashInterval = interval
+        timesCalled = 0
     }
 }
 
