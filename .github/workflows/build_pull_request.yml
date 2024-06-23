@@ -3,8 +3,8 @@ on:
   pull_request:
     paths-ignore:
       - '**.md'
-      - 'i18n/src/commonMain/resources/**/strings.xml'
-      - 'i18n/src/commonMain/resources/**/plurals.xml'
+      - 'i18n/src/commonMain/moko-resources/**/strings.xml'
+      - 'i18n/src/commonMain/moko-resources/**/plurals.xml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -38,7 +38,7 @@ jobs:
         uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
 
       - name: Build app and run unit tests
-        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest
+        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
