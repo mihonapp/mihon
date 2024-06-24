@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -57,21 +56,23 @@ fun DisplayRefreshHost(
     val flashMode by hostState.flashMode.collectAsState()
     val flashInterval by hostState.flashIntervalPref.collectAsState()
 
-    var bothColor by remember { mutableStateOf(Color.White) }
+    var currentColor by remember { mutableStateOf<Color?>(null) }
 
     LaunchedEffect(currentDisplayRefresh) {
         if (currentDisplayRefresh) {
-            launch {
-                delay(refreshDuration.milliseconds)
-                hostState.currentDisplayRefresh = false
+            val refreshDurationHalf = refreshDuration.milliseconds / 2
+            currentColor = if (flashMode == ReaderPreferences.FlashColor.BLACK) {
+                Color.Black
+            } else {
+                Color.White
             }
+            delay(refreshDurationHalf)
             if (flashMode == ReaderPreferences.FlashColor.WHITE_BLACK) {
-                launch {
-                    bothColor = Color.White
-                    delay(refreshDuration.milliseconds / 2)
-                    bothColor = Color.Black
-                }
+                currentColor = Color.Black
             }
+            delay(refreshDurationHalf)
+            currentColor = null
+            hostState.currentDisplayRefresh = false
         }
     }
 
@@ -82,12 +83,6 @@ fun DisplayRefreshHost(
     Canvas(
         modifier = modifier.fillMaxSize(),
     ) {
-        if (currentDisplayRefresh) {
-            when (flashMode) {
-                ReaderPreferences.FlashColor.BLACK -> drawRect(Color.Black)
-                ReaderPreferences.FlashColor.WHITE -> drawRect(Color.White)
-                ReaderPreferences.FlashColor.WHITE_BLACK -> drawRect(bothColor)
-            }
-        }
+        currentColor?.let { drawRect(it) }
     }
 }
