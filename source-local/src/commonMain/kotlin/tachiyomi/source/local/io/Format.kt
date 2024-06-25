@@ -2,7 +2,7 @@ package tachiyomi.source.local.io
 
 import com.hippo.unifile.UniFile
 import tachiyomi.core.common.storage.extension
-import tachiyomi.source.local.io.Archive.isSupported
+import tachiyomi.source.local.io.Archive.isSupported as isArchiveSupported
 
 sealed interface Format {
     data class Directory(val file: UniFile) : Format
@@ -16,7 +16,7 @@ sealed interface Format {
         fun valueOf(file: UniFile) = when {
             file.isDirectory -> Directory(file)
             file.extension.equals("epub", true) -> Epub(file)
-            isSupported(file) -> Archive(file)
+            isArchiveSupported(file) -> Archive(file)
             else -> throw UnknownFormatException()
         }
     }
