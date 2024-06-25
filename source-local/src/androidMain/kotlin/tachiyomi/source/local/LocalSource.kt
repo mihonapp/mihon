@@ -236,7 +236,7 @@ actual class LocalSource(
     override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
             // Only keep supported formats
-            .filter { it.isDirectory || Archive.isSupported(it) }
+            .filter { it.isDirectory || Archive.isSupported(it) || it.extension.equals("epub", true) }
             .map { chapterFile ->
                 SChapter.create().apply {
                     url = "${manga.url}/${chapterFile.name}"
