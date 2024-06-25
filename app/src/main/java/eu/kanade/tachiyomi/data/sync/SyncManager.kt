@@ -8,7 +8,6 @@ import eu.kanade.tachiyomi.data.backup.create.BackupOptions
 import eu.kanade.tachiyomi.data.backup.models.Backup
 import eu.kanade.tachiyomi.data.backup.models.BackupChapter
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.backup.restore.RestoreOptions
 import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
@@ -202,7 +201,7 @@ class SyncManager(
         val cacheFile = File(context.cacheDir, "tachiyomi_sync_data.proto.gz")
         return try {
             cacheFile.outputStream().use { output ->
-                output.write(ProtoBuf.encodeToByteArray(BackupSerializer, backup))
+                output.write(ProtoBuf.encodeToByteArray(Backup.serializer(), backup))
                 Uri.fromFile(cacheFile)
             }
         } catch (e: IOException) {

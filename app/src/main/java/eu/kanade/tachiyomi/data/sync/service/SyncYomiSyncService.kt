@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.sync.service
 import android.content.Context
 import eu.kanade.domain.sync.SyncPreferences
 import eu.kanade.tachiyomi.data.backup.models.Backup
-import eu.kanade.tachiyomi.data.backup.models.BackupSerializer
 import eu.kanade.tachiyomi.data.sync.SyncNotifier
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.PUT
@@ -104,7 +103,7 @@ class SyncYomiSyncService(
             }
 
             return try {
-                val backup = protoBuf.decodeFromByteArray(BackupSerializer, byteArray)
+                val backup = ProtoBuf.decodeFromByteArray(Backup.serializer(), byteArray)
                 return Pair(SyncData(backup = backup), newETag)
             } catch (_: SerializationException) {
                 logcat(LogPriority.INFO) {
@@ -147,7 +146,7 @@ class SyncYomiSyncService(
             .writeTimeout(timeout, TimeUnit.SECONDS)
             .build()
 
-        val byteArray = protoBuf.encodeToByteArray(BackupSerializer, backup)
+        val byteArray = ProtoBuf.encodeToByteArray(Backup.serializer(), backup)
         if (byteArray.isEmpty()) {
             throw IllegalStateException(context.stringResource(MR.strings.empty_backup_error))
         }
