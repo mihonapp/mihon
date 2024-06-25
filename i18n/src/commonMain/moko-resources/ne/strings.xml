@@ -663,7 +663,6 @@
     <string name="download_notifier_split_page_not_found">पृष्ठ विभाजन गर्दा %d फेला परेन</string>
     <string name="information_no_manga_category">वर्ग खाली छ</string>
     <string name="internal_error">आन्तरिक त्रुटि: थप जानकारीको लागि क्र्यास लगहरू जाँच गर्नुहोस्</string>
-    <string name="loader_rar5_error">RARv5 समर्थित छैन</string>
     <string name="label_completed_titles">पढिसकेका इन्ट्रीहरू</string>
     <string name="label_total_chapters">कुल</string>
     <string name="label_read_chapters">पढेको</string>

@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Standardsträng för användaragent</string>
     <string name="pref_reset_user_agent_string">Återställ standardsträngen för användaragent</string>
     <string name="action_remove_everything">Ta bort allt</string>
-    <string name="loader_rar5_error">RARv5 formatet stöds inte</string>
     <string name="appwidget_updates_description">Se dina nyligen uppdaterade biblioteket inlägg</string>
     <string name="appwidget_unavailable_locked">Widget är inte tillgänglig när applåset är aktiverat</string>
     <string name="update_already_running">En uppdatering pågår redan</string>

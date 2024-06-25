@@ -608,7 +608,6 @@
     <string name="empty_screen">खैर, यह अजीब है</string>
     <string name="internal_error">आंतरिक त्रुटि : अधिक जानकारी के लिए क्रैश लॉग की जाँच करें</string>
     <string name="network_not_metered">केवल अनमीटर्ड कनेक्शन पर</string>
-    <string name="loader_rar5_error">RARv5 प्रारूप समर्थित नहीं है</string>
     <string name="updates_last_update_info">पुस्तकालय पिछली बार अपडेट किया गया: %s</string>
     <string name="appwidget_updates_description">अपनी हाल ही में अपडेट की गई पुस्तकालय एन्ट्री देखें</string>
     <string name="download_ahead_info">केवल तभी काम करता है जब वर्तमान अध्याय + अगला पहले से ही डाउनलोड किया गया हो।</string>

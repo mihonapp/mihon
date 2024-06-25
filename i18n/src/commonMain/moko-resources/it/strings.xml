@@ -612,7 +612,6 @@
     <string name="pref_reset_user_agent_string">Ripristina la stringa «user agent» del browser</string>
     <string name="pref_user_agent_string">Stringa «user agent» del browser</string>
     <string name="action_remove_everything">Rimuovi tutto</string>
-    <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
     <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
     <string name="appwidget_updates_description">Vedi le voci aggiornate di recente</string>
     <string name="update_already_running">È già in corso un aggiornamento</string>

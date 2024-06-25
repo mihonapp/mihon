@@ -643,7 +643,6 @@
     <string name="multi_lang">Више језика</string>
     <string name="ext_info_language">Језик</string>
     <string name="pref_reset_viewer_flags_summary">Ресетуј режим читања и оријентацију свих серија</string>
-    <string name="loader_rar5_error">RARv5 формат није подржан</string>
     <string name="popular">Популарно</string>
     <string name="label_completed_titles">Завршени наслови</string>
     <string name="split_tall_images_summary">Побољшава перформансе читача</string>

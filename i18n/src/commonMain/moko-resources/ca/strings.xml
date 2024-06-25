@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Cadena d’agent d’usuari per defecte</string>
     <string name="pref_reset_user_agent_string">Restableix la cadena d’agent d’usuari per defecte</string>
     <string name="appwidget_unavailable_locked">El widget no està disponible quan hi ha activat el blocatge de l’aplicació</string>
-    <string name="loader_rar5_error">El format RARv5 no està suportat</string>
     <string name="appwidget_updates_description">Vegeu els elements de la biblioteca actualitzats recentment</string>
     <string name="action_remove_everything">Elimina-ho tot</string>
     <string name="update_already_running">Ja s’està executant una actualització</string>

@@ -1,13 +1,17 @@
 package tachiyomi.source.local.io
 
 import com.hippo.unifile.UniFile
-import tachiyomi.core.common.storage.extension
 
 object Archive {
 
-    private val SUPPORTED_ARCHIVE_TYPES = listOf("zip", "cbz", "rar", "cbr", "epub")
+    private val SUPPORTED_ARCHIVE_TYPES = listOf("zip", "rar", "7z", "tar", "epub")
 
     fun isSupported(file: UniFile): Boolean {
-        return file.extension in SUPPORTED_ARCHIVE_TYPES
+        val name = file.name?.lowercase() ?: return false
+        val extension = name.substringAfterLast('.')
+        val nameWithoutExtension = name.substringBeforeLast('.')
+        return extension in SUPPORTED_ARCHIVE_TYPES ||
+            extension.startsWith("cb") || // cbz, cbr, etc.
+            nameWithoutExtension.endsWith(".tar") // tar.gz, tar.bz2, etc.
     }
 }

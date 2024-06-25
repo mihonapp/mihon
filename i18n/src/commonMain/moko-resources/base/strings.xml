@@ -781,7 +781,6 @@
     <string name="transition_pages_error">Failed to load pages: %1$s</string>
     <string name="page_list_empty_error">No pages found</string>
     <string name="loader_not_implemented_error">Source not found</string>
-    <string name="loader_rar5_error">RARv5 format is not supported</string>
 
     <!-- Updates -->
     <string name="updating_library">Updating library</string>

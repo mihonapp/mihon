@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
     <string name="pref_user_agent_string">Default na string ng user agent</string>
     <string name="action_remove_everything">Burahin lahat</string>
-    <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang nai-update na entry sa iyong aklatan</string>
     <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
     <string name="update_already_running">May ina-update sa ngayon</string>

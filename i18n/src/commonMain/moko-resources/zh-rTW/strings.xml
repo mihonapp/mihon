@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">重設預設使用者代理字串</string>
     <string name="pref_user_agent_string">預設使用者代理字串</string>
     <string name="action_remove_everything">全部清除</string>
-    <string name="loader_rar5_error">不支援 RARv5 格式</string>
     <string name="appwidget_unavailable_locked">當需要解鎖才能存取應用程式時，無法使用小工具</string>
     <string name="appwidget_updates_description">查看書櫃中近期更新的作品</string>
     <string name="update_already_running">已在進行更新</string>

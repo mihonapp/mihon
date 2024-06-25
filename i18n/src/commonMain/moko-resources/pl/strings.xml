@@ -614,7 +614,6 @@
     <string name="delete_category">Usuń kategorię</string>
     <string name="internal_error">InternalError: sprawdź log błędów po więcej informacji</string>
     <string name="action_remove_everything">Usuń wszystko</string>
-    <string name="loader_rar5_error">Format RARv5 jest nieobsługiwany</string>
     <string name="error_user_agent_string_blank">Pole user agent nie może być puste</string>
     <string name="update_already_running">Aktualizacja już trwa</string>
     <string name="theme_tidalwave">Tsunami</string>
