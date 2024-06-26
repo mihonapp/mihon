@@ -40,6 +40,11 @@
         <item quantity="other">%d days</item>
     </plurals>
 
+    <plurals name="pref_pages">
+        <item quantity="one">1 page</item>
+        <item quantity="other">%1$s pages</item>
+    </plurals>
+
     <!-- Manga info -->
     <plurals name="missing_chapters">
         <item quantity="one">Missing %1$s chapter</item>

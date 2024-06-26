@@ -366,6 +366,13 @@
     <string name="pref_page_transitions">Animate page transitions</string>
     <string name="pref_flash_page">Flash on page change</string>
     <string name="pref_flash_page_summ">Reduces ghosting on e-ink displays</string>
+    <string name="pref_flash_duration">Flash duration</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Flash every</string>
+    <string name="pref_flash_with">Flash with</string>
+    <string name="pref_flash_style_black">Black</string>
+    <string name="pref_flash_style_white">White</string>
+    <string name="pref_flash_style_white_black">White and Black</string>
     <string name="pref_double_tap_anim_speed">Double tap animation speed</string>
     <string name="pref_show_page_number">Show page number</string>
     <string name="pref_show_reading_mode">Show reading mode</string>
