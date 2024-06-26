@@ -32,8 +32,7 @@ jsoup = "org.jsoup:jsoup:1.17.2"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
-common-compress = "org.apache.commons:commons-compress:1.26.2"
-junrar = "com.github.junrar:junrar:7.5.5"
+libarchive = "me.zhanghai.android.libarchive:library:1.1.0"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
@@ -104,7 +103,6 @@ detekt-rules-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatt
 detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 
 [bundles]
-archive = ["common-compress", "junrar"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]

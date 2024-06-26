@@ -3,26 +3,22 @@ package eu.kanade.tachiyomi.ui.reader.loader
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.ui.reader.model.ReaderPage
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
-import mihon.core.common.extensions.toZipFile
+import mihon.core.common.archive.ArchiveReader
 import tachiyomi.core.common.util.system.ImageUtil
-import java.nio.channels.SeekableByteChannel
 
 /**
- * Loader used to load a chapter from a .zip or .cbz file.
+ * Loader used to load a chapter from an archive file.
  */
-internal class ZipPageLoader(channel: SeekableByteChannel) : PageLoader() {
-
-    private val zip = channel.toZipFile()
-
+internal class ArchivePageLoader(private val reader: ArchiveReader) : PageLoader() {
     override var isLocal: Boolean = true
 
-    override suspend fun getPages(): List<ReaderPage> {
-        return zip.entries.asSequence()
-            .filter { !it.isDirectory && ImageUtil.isImage(it.name) { zip.getInputStream(it) } }
+    override suspend fun getPages(): List<ReaderPage> = reader.useEntries { entries ->
+        entries
+            .filter { it.isFile && ImageUtil.isImage(it.name) { reader.getInputStream(it.name)!! } }
             .sortedWith { f1, f2 -> f1.name.compareToCaseInsensitiveNaturalOrder(f2.name) }
             .mapIndexed { i, entry ->
                 ReaderPage(i).apply {
-                    stream = { zip.getInputStream(entry) }
+                    stream = { reader.getInputStream(entry.name)!! }
                     status = Page.State.READY
                 }
             }
@@ -35,6 +31,6 @@ internal class ZipPageLoader(channel: SeekableByteChannel) : PageLoader() {
 
     override fun recycle() {
         super.recycle()
-        zip.close()
+        reader.close()
     }
 }
