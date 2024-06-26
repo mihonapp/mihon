@@ -19,7 +19,7 @@ import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
-import tachiyomi.core.common.archive.archiveReader
+import mihon.core.common.archive.archiveReader
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.storage.nameWithoutExtension

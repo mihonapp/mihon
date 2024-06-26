@@ -40,7 +40,7 @@ import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
-import tachiyomi.core.common.archive.ZipWriter
+import mihon.core.common.archive.ZipWriter
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.util.lang.launchIO
@@ -592,8 +592,8 @@ class Downloader(
     ) {
         val zip = mangaDir.createFile("$dirname.cbz$TMP_DIR_SUFFIX")!!
         ZipWriter(context, zip).use { writer ->
-            tmpDir.listFiles()?.forEach { img ->
-                writer.write(img)
+            tmpDir.listFiles()?.forEach { file ->
+                writer.write(file)
             }
         }
         zip.renameTo("$dirname.cbz")

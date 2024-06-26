@@ -1,4 +1,4 @@
-package tachiyomi.core.common.archive
+package mihon.core.common.archive
 
 import me.zhanghai.android.libarchive.Archive
 import me.zhanghai.android.libarchive.ArchiveEntry

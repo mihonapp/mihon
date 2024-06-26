@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.util.storage
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import tachiyomi.core.common.archive.ArchiveReader
+import mihon.core.common.archive.ArchiveReader
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
