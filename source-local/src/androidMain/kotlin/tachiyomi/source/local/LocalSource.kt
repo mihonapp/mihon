@@ -17,9 +17,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
+import mihon.core.common.archive.archiveReader
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
-import mihon.core.common.archive.archiveReader
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
 import tachiyomi.core.common.storage.nameWithoutExtension
