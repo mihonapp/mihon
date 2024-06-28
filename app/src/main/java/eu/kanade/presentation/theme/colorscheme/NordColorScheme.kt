@@ -19,8 +19,8 @@ internal object NordColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFF397E91),
         secondary = Color(0xFF81A1C1), // Unread badge
         onSecondary = Color(0xFF2E3440), // Unread badge text
-        secondaryContainer = Color(0xFF81A1C1), // Navigation bar selector pill & progress indicator (remaining)
-        onSecondaryContainer = Color(0xFF2E3440), // Navigation bar selector icon
+        secondaryContainer = Color(0xFF506275), // Navigation bar selector pill & progress indicator (remaining)
+        onSecondaryContainer = Color(0xFF88C0D0), // Navigation bar selector icon
         tertiary = Color(0xFF5E81AC), // Downloaded badge
         onTertiary = Color(0xFF000000), // Downloaded badge text
         tertiaryContainer = Color(0xFF5E81AC),
@@ -54,7 +54,7 @@ internal object NordColorScheme : BaseColorScheme() {
         inversePrimary = Color(0xFF8CA8CD),
         secondary = Color(0xFF81A1C1), // Unread badge
         onSecondary = Color(0xFF2E3440), // Unread badge text
-        secondaryContainer = Color(0xFF81A1C1), // Navigation bar selector pill & progress indicator (remaining)
+        secondaryContainer = Color(0xFF91B4D7), // Navigation bar selector pill & progress indicator (remaining)
         onSecondaryContainer = Color(0xFF2E3440), // Navigation bar selector icon
         tertiary = Color(0xFF88C0D0), // Downloaded badge
         onTertiary = Color(0xFF2E3440), // Downloaded badge text
