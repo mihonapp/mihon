@@ -22,6 +22,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.unit.ColorProvider
 import coil3.annotation.ExperimentalCoilApi
+import coil3.asDrawable
 import coil3.executeBlocking
 import coil3.imageLoader
 import coil3.request.CachePolicy
