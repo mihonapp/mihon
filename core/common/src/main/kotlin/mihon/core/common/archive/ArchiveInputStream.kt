@@ -9,6 +9,7 @@ import kotlin.concurrent.Volatile
 
 class ArchiveInputStream(buffer: Long, size: Long) : InputStream() {
     private val lock = Any()
+    
     @Volatile
     private var isClosed = false
 
