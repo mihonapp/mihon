@@ -614,7 +614,6 @@
     <string name="pref_user_agent_string">Istringa de agente de utente predefinida</string>
     <string name="pref_reset_user_agent_string">Reseta s\'istringa de agente de utente predefinida</string>
     <string name="action_remove_everything">Boga totu</string>
-    <string name="loader_rar5_error">Su formadu RARv5 no est suportadu</string>
     <string name="appwidget_unavailable_locked">Su widget no est a disponimentu cando su blocu de s\'aplicatzione est abilitadu</string>
     <string name="appwidget_updates_description">Pòmpia sos elementos de biblioteca tuos agiornados dae pagu</string>
     <string name="update_already_running">B\'est giai un\'agiornamentu in cursu</string>

@@ -503,7 +503,6 @@
     <string name="cant_open_last_read_chapter">Ақырғы оқылған тарау ашылмай тұр</string>
     <string name="updates_last_update_info">Кітапхананың ақырғы жаңаруы: %s</string>
     <string name="loader_not_implemented_error">Дереккөз табылмады</string>
-    <string name="loader_rar5_error">RARv5 пішімі қолжетімсіз</string>
     <string name="myanimelist_relogin">MyAnimeList-ке қайтадан кіріңіз</string>
     <string name="error_no_match">Ұқсастық табылмады</string>
     <string name="source_unsupported">Дереккөз қолжетімсіз</string>

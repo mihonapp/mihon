@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="lock_after_mins">
-        <item quantity="one">Tras %1$s minutos</item>
+        <item quantity="one">Tras %1$s minuto</item>
         <item quantity="many">Tras %1$s minutos</item>
         <item quantity="other">Tras %1$s minutos</item>
     </plurals>
@@ -89,5 +89,10 @@
         <item quantity="one">Mañana</item>
         <item quantity="many">Dentro de %1$d días</item>
         <item quantity="other">Dentro de %1$d días</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 página</item>
+        <item quantity="many">%1$s páginas</item>
+        <item quantity="other">%1$s páginas</item>
     </plurals>
 </resources>

@@ -612,7 +612,6 @@
     <string name="pref_user_agent_string">Типовий user agent</string>
     <string name="action_remove_everything">Видалити все</string>
     <string name="pref_reset_user_agent_string">Скинути типовий user agent</string>
-    <string name="loader_rar5_error">Формат RARv5 не підтримується</string>
     <string name="multi_lang">Багатомовне</string>
     <string name="updates_last_update_info">Останнє оновлення бібліотеки: %s</string>
     <string name="missing_storage_permission">Доступ до файлової системи не надано</string>
