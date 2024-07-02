@@ -131,4 +131,13 @@
     <string name="action_move_to_bottom">താഴേക്ക് നീക്കുക</string>
     <string name="action_share">പങ്കിടുക</string>
     <string name="action_display">പ്രദർശിപ്പിക്കുക</string>
+    <string name="action_save">സേവ്</string>
+    <string name="onboarding_heading">സ്വാഗതം!</string>
+    <string name="onboarding_permission_install_apps">ആപ്പ് ഇൻസ്റ്റാൾ ചെയ്യാനുള്ള അനുവാദം</string>
+    <string name="action_start_downloading_now">ഡൌൺലോഡ് ചെയ്യാൻ തുടങ്ങുക</string>
+    <string name="onboarding_storage_action_select">ഒരു ഫോൾഡർ സെലക്ട് ചെയുക</string>
+    <string name="onboarding_storage_help_action">സ്റ്റോറേജ് ഗൈഡ്</string>
+    <string name="onboarding_permission_notifications">നോട്ടിഫിക്കേഷൻ കാണിക്കാനുള്ള അനുവാദം</string>
+    <string name="loading">ലോഡിങ്ങ്…</string>
+    <string name="onboarding_storage_selection_required">ഒരു ഫോൾഡർ തിരഞ്ഞെടുക്കണം</string>
 </resources>

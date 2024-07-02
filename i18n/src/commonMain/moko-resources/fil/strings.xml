@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
     <string name="pref_user_agent_string">Default na string ng user agent</string>
     <string name="action_remove_everything">Burahin lahat</string>
-    <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang nai-update na entry sa iyong aklatan</string>
     <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
     <string name="update_already_running">May ina-update sa ngayon</string>
@@ -810,4 +809,11 @@
     <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
     <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
     <string name="file_picker_uri_permission_unsupported">Nabigong makakuha ng patuloy na pag-access ng folder. Ang app ay magkaroon ng di-inaasahang pagkilos.</string>
+    <string name="pref_flash_page_interval">Mag-flash kada</string>
+    <string name="pref_flash_style_white_black">Puti at Itim</string>
+    <string name="pref_flash_duration">Tagal ng pag-flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_with">Mag-flash na may</string>
+    <string name="pref_flash_style_black">Itim</string>
+    <string name="pref_flash_style_white">Puti</string>
 </resources>

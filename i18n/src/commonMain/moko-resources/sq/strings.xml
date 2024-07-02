@@ -433,7 +433,6 @@
     <string name="no_results_found">Nuk u gjet asnjë rezultat</string>
     <string name="unknown_title">Titulli i panjohur</string>
     <string name="add_tracking">Shto gjurmimin</string>
-    <string name="loader_rar5_error">Formati RARv5 nuk mbështetet</string>
     <string name="migration_dialog_what_to_include">Zgjidhni të dhënat për të përfshirë</string>
     <string name="download_queue_error">Kapitujt nuk mund të shkarkoheshin. Mund të provoni përsëri në seksionin e shkarkimeve</string>
     <string name="notification_size_warning">Përditësimet e mëdha dëmtojnë burimet dhe mund të çojnë në përditësime më të ngadalta dhe gjithashtu rritje të përdorimit të baterisë. Trokit për të mësuar më shumë.</string>

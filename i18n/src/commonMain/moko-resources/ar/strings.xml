@@ -612,7 +612,6 @@
     <string name="appwidget_unavailable_locked">لا تتاح الأداة حال تمكين قفل التطبيق</string>
     <string name="appwidget_updates_description">اطَّلع على ما حُدِّث مؤخَّرًا في مكتبتك</string>
     <string name="action_remove_everything">حذف كل شيء</string>
-    <string name="loader_rar5_error">تنسيق RARv5 ليس مدعومًا</string>
     <string name="theme_tidalwave">موجة مد و جزر</string>
     <string name="multi_lang">متعدد</string>
     <string name="update_already_running">هنالك تحديث جارٍ بالفعل</string>

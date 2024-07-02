@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Untaian ejen pengguna lalai</string>
     <string name="pref_reset_user_agent_string">Set semula untaian ejen pengguna lalai</string>
     <string name="action_remove_everything">Buang semuanya</string>
-    <string name="loader_rar5_error">Format RARv5 tidak disokong</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia apabila kekunci aplikasi digunakan</string>
     <string name="appwidget_updates_description">Lihat kemas kini entri pustaka terkini anda</string>
     <string name="update_already_running">Kemas kini sedang berjalan</string>

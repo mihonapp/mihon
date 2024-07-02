@@ -612,7 +612,6 @@
     <string name="pref_reset_user_agent_string">Ripristina la stringa «user agent» del browser</string>
     <string name="pref_user_agent_string">Stringa «user agent» del browser</string>
     <string name="action_remove_everything">Rimuovi tutto</string>
-    <string name="loader_rar5_error">Il formato RARv5 non è supportato</string>
     <string name="appwidget_unavailable_locked">Widget non disponibile quando il blocco app è attivo</string>
     <string name="appwidget_updates_description">Vedi le voci aggiornate di recente</string>
     <string name="update_already_running">È già in corso un aggiornamento</string>
@@ -811,4 +810,12 @@
     <string name="upcoming_guide">Guida in arrivo</string>
     <string name="upcoming_calendar_next">Mese prossimo</string>
     <string name="upcoming_calendar_prev">Mese scorso</string>
+    <string name="pref_flash_duration">Durata del flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_with">Flash con</string>
+    <string name="pref_flash_style_black">Nero</string>
+    <string name="pref_flash_style_white">Bianco</string>
+    <string name="file_picker_uri_permission_unsupported">Non si è potuto ottenere l\'accesso permanente alle cartella. L\'applicazione potrebbe comportarsi inaspettatamente.</string>
+    <string name="pref_flash_page_interval">Flash ogni</string>
+    <string name="pref_flash_style_white_black">Bianco e Nero</string>
 </resources>

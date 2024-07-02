@@ -68,4 +68,8 @@
         <item quantity="one">%d റിപ്പോ</item>
         <item quantity="other">%d റിപ്പോകൾ</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 പേജ്</item>
+        <item quantity="other">%1$s പേജ്</item>
+    </plurals>
 </resources>
