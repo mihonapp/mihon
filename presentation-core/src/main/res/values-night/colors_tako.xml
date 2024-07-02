@@ -15,8 +15,8 @@
     <color name="tako_onPrimary">#38294E</color>
     <color name="tako_primaryContainer">#F3B375</color>
     <color name="tako_onPrimaryContainer">#38294E</color>
-    <color name="tako_secondary">#5C4D4B</color>
-    <color name="tako_onSecondary">#38294E</color>
+    <color name="tako_secondary">#F3B375</color>
+    <color name="tako_onSecondary">#5C4D4B</color>
     <color name="tako_secondaryContainer">#F3B375</color>
     <color name="tako_onSecondaryContainer">#38294E</color>
     <color name="tako_tertiary">#66577E</color>
