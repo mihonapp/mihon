@@ -693,6 +693,7 @@
     <string name="manga_display_modified_interval_title">Set to update every</string>
     <!-- "... around 2 days" -->
     <string name="manga_interval_expected_update">New chapters predicted to be released in around %1$s, checking around every %2$s.</string>
+    <string name="manga_interval_expected_update_null">This manga is either completed, or there is no predicted release date.</string>
     <string name="manga_interval_expected_update_soon">Soon</string>
     <string name="manga_interval_custom_amount">Custom update frequency:</string>
     <string name="chapter_downloading_progress">Downloading (%1$d/%2$d)</string>
