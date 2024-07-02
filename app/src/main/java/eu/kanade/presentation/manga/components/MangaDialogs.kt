@@ -102,7 +102,6 @@ fun SetIntervalDialog(
                             ),
                         ),
                     )
-
                 } else {
                     Text(
                         stringResource(MR.strings.manga_interval_expected_update_null),
