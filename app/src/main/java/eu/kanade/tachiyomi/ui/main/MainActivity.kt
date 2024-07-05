@@ -64,9 +64,11 @@ import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreStatus
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
+import eu.kanade.tachiyomi.data.sync.SyncStatus
 import eu.kanade.tachiyomi.data.updater.AppUpdateChecker
 import eu.kanade.tachiyomi.data.updater.RELEASE_URL
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
@@ -108,6 +110,11 @@ class MainActivity : BaseActivity() {
     private val libraryPreferences: LibraryPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
 
+    // KMK -->
+    private val backupRestoreStatus: BackupRestoreStatus by injectLazy()
+    private val syncStatus: SyncStatus by injectLazy()
+    // KMK <--
+
     private val downloadCache: DownloadCache by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
 
@@ -144,6 +151,10 @@ class MainActivity : BaseActivity() {
             var incognito by remember { mutableStateOf(getIncognitoState.await(null)) }
             val downloadOnly by preferences.downloadedOnly().collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
+            // KMK -->
+            val syncing by syncStatus.isRunning.collectAsState()
+            val restoring by backupRestoreStatus.isRunning.collectAsState()
+            // KMK <--
 
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
@@ -190,6 +201,10 @@ class MainActivity : BaseActivity() {
                             downloadedOnlyMode = downloadOnly,
                             incognitoMode = incognito,
                             indexing = indexing,
+                            // KMK -->
+                            restoring = restoring,
+                            syncing = syncing,
+                            // KMK <--
                             modifier = Modifier.windowInsetsPadding(scaffoldInsets),
                         )
                     },

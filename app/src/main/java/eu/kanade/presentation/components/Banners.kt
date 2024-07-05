@@ -63,6 +63,10 @@ fun AppStateBanners(
     downloadedOnlyMode: Boolean,
     incognitoMode: Boolean,
     indexing: Boolean,
+    // KMK -->
+    restoring: Boolean,
+    syncing: Boolean,
+    // KMK <--
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -71,12 +75,21 @@ fun AppStateBanners(
     SubcomposeLayout(modifier = modifier) { constraints ->
         val indexingPlaceable = subcompose(0) {
             AnimatedVisibility(
-                visible = indexing,
+                // KMK -->
+                visible = indexing || restoring || syncing,
+                // KMK <--
                 enter = expandVertically(),
                 exit = shrinkVertically(),
             ) {
                 IndexingDownloadBanner(
                     modifier = Modifier.windowInsetsPadding(mainInsets),
+                    // KMK -->
+                    text = when {
+                        syncing -> stringResource(MR.strings.syncing_library)
+                        restoring -> stringResource(MR.strings.restoring_backup)
+                        else -> stringResource(MR.strings.download_notifier_cache_renewal)
+                    },
+                    // KMK <--
                 )
             }
         }.fastMap { it.measure(constraints) }
@@ -155,7 +168,12 @@ private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun IndexingDownloadBanner(modifier: Modifier = Modifier) {
+private fun IndexingDownloadBanner(
+    modifier: Modifier = Modifier,
+    // KMK -->
+    text: String = stringResource(MR.strings.download_notifier_cache_renewal),
+    // KMK <--
+) {
     val density = LocalDensity.current
     Row(
         modifier = Modifier
@@ -173,7 +191,9 @@ private fun IndexingDownloadBanner(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = stringResource(MR.strings.download_notifier_cache_renewal),
+            // KMK -->
+            text = text,
+            // KMK <--
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,
