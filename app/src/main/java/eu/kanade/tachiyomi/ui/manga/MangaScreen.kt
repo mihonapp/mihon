@@ -138,7 +138,7 @@ class MangaScreen(
                 )
             }.takeIf { isHttpSource },
             onTrackingClicked = {
-                if (screenModel.loggedInTrackers.isEmpty()) {
+                if (successState.loggedInTracker.isEmpty()) {
                     navigator.push(SettingsScreen(SettingsScreen.Destination.Tracking))
                 } else {
                     screenModel.showTrackDialog()
