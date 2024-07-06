@@ -55,13 +55,14 @@ abstract class BaseTracker(
         get() = getUsername().isNotEmpty() &&
             getPassword().isNotEmpty()
 
-    override val isLoggedInFlow: Flow<Boolean>
-        get() = combine(
+    override val isLoggedInFlow: Flow<Boolean> by lazy {
+        combine(
             trackPreferences.trackUsername(this).changes(),
             trackPreferences.trackPassword(this).changes(),
         ) { username, password ->
             username.isNotEmpty() && password.isNotEmpty()
         }
+    }
 
     override fun getUsername() = trackPreferences.trackUsername(this).get()
 
