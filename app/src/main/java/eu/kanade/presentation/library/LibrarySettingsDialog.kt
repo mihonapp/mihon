@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -125,7 +126,7 @@ private fun ColumnScope.FilterPage(
         )
     }
 
-    val trackers = remember { screenModel.trackers }
+    val trackers by screenModel.trackersFlow.collectAsState()
     when (trackers.size) {
         0 -> {
             // No trackers
@@ -158,15 +159,15 @@ private fun ColumnScope.SortPage(
     category: Category?,
     screenModel: LibrarySettingsScreenModel,
 ) {
+    val trackers by screenModel.trackersFlow.collectAsState()
     val sortingMode = category.sort.type
     val sortDescending = !category.sort.isAscending
 
-    val trackerSortOption =
-        if (screenModel.trackers.isEmpty()) {
-            emptyList()
-        } else {
-            listOf(MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean)
-        }
+    val trackerSortOption = if (trackers.isEmpty()) {
+        emptyList()
+    } else {
+        listOf(MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean)
+    }
 
     listOf(
         MR.strings.action_sort_alpha to LibrarySort.Type.Alphabetical,
