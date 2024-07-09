@@ -273,6 +273,12 @@ object SettingsDataScreen : SearchableSettings {
                     stringResource(MR.strings.backup_info) + "\n\n" +
                         stringResource(MR.strings.last_auto_backup_info, relativeTimeSpanString(lastAutoBackup)),
                 ),
+                // KMK -->
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = backupPreferences.showRestoringProgressBanner(),
+                    title = stringResource(KMR.strings.pref_show_restoring_progress_banner),
+                ),
+                // KMK <--
             ),
         )
     }
@@ -341,6 +347,22 @@ object SettingsDataScreen : SearchableSettings {
             )
         }
 
+    @Composable
+    private fun getAdditionalPreferences(syncPreferences: SyncPreferences): List<Preference> {
+        return listOf(
+            getSyncNowPref(),
+            getAutomaticSyncGroup(syncPreferences),
+            // KMK -->
+            Preference.PreferenceItem.SwitchPreference(
+                pref = syncPreferences.showSyncingProgressBanner(),
+                title = stringResource(KMR.strings.pref_show_syncing_progress_banner),
+            ),
+            // KMK <--
+        )
+    }
+
+    @Composable
+    private fun getGoogleDrivePreferences(): List<Preference> {
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
         val getFavorites = remember { Injekt.get<GetFavorites>() }

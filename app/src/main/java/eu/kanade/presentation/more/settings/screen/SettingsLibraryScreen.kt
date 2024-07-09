@@ -209,6 +209,13 @@ object SettingsLibraryScreen : SearchableSettings {
                     preference = libraryPreferences.markDuplicateChapterRead(),
                     title = stringResource(MR.strings.pref_mark_duplicate_chapter_read),
                 ),
+                // SY <--
+                // KMK -->
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = libraryPreferences.showUpdatingProgressBanner(),
+                    title = stringResource(KMR.strings.pref_show_updating_progress_banner),
+                ),
+                // KMK <--
             ),
         )
     }
