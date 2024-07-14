@@ -177,6 +177,7 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
         MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
         MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
+        MR.strings.action_sort_download_count to LibrarySort.Type.DownloadCount,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
         SortItem(
             label = stringResource(titleRes),
