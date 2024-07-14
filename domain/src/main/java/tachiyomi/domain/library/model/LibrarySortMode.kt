@@ -16,6 +16,7 @@ data class LibrarySort(
     val isAscending: Boolean
         get() = direction == Direction.Ascending
 
+    @Suppress("MagicNumber")
     sealed class Type(
         override val flag: Long,
     ) : FlagWithMask {
@@ -92,6 +93,7 @@ data class LibrarySort(
             )
         }
 
+        @Suppress("CyclomaticComplexMethod")
         fun deserialize(serialized: String): LibrarySort {
             if (serialized.isEmpty()) return default
             return try {
