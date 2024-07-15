@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
+        uses: gradle/actions/wrapper-validation@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
 
       - name: Setup Android SDK
         run: |
@@ -33,7 +33,7 @@ jobs:
           distribution: adopt
 
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@dbbdc275be76ac10734476cc723d82dfe7ec6eda # v3.4.2
+        uses: gradle/actions/setup-gradle@d9c87d481d55275bb5441eef3fe0e46805f9ef70 # v3.5.0
 
       - name: Build app and run unit tests
         run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
