@@ -91,7 +91,7 @@ sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref 
 
 junit = "org.junit.jupiter:junit-jupiter:5.10.3"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
-mockk = "io.mockk:mockk:1.13.11"
+mockk = "io.mockk:mockk:1.13.12"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
