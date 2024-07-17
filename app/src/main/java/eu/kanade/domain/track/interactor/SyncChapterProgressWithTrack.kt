@@ -1,7 +1,10 @@
 package eu.kanade.domain.track.interactor
 
+import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.PageTracker
 import eu.kanade.tachiyomi.data.track.Tracker
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
@@ -38,9 +41,18 @@ class SyncChapterProgressWithTrack(
         val localLastRead = sortedChapters.takeWhile { it.read }.lastOrNull()?.chapterNumber ?: 0F
         val updatedTrack = remoteTrack.copy(lastChapterRead = localLastRead.toDouble())
 
+        val pageReadProgressUpdates = (tracker as? PageTracker)?.runCatching {
+            sortedChapters.filter { it.chapterNumber > remoteTrack.lastChapterRead && !it.read }
+                .map { it.toDbChapter() }
+                .let { tracker.batchGetChapterProgress(it) }
+                .mapNotNull { (chapter, page) ->
+                    if (page >= 0) chapter.toDomainChapter()?.copy(lastPageRead = page.toLong())?.toChapterUpdate() else null
+                }
+        }?.getOrNull() ?: listOf()
+        if (pageReadProgressUpdates.isNotEmpty()) logcat(LogPriority.ERROR) { pageReadProgressUpdates.toString() }
         try {
             tracker.update(updatedTrack.toDbTrack())
-            updateChapter.awaitAll(chapterUpdates)
+            updateChapter.awaitAll(chapterUpdates + pageReadProgressUpdates)
             insertTrack.await(updatedTrack)
         } catch (e: Throwable) {
             logcat(LogPriority.WARN, e)
