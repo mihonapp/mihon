@@ -49,7 +49,7 @@ class SyncChapterProgressWithTrack(
                     if (page >= 0) chapter.toDomainChapter()?.copy(lastPageRead = page.toLong())?.toChapterUpdate() else null
                 }
         }?.getOrNull() ?: listOf()
-        if (pageReadProgressUpdates.isNotEmpty()) logcat(LogPriority.ERROR) { pageReadProgressUpdates.toString() }
+        if (pageReadProgressUpdates.isNotEmpty()) logcat(LogPriority.INFO) { pageReadProgressUpdates.toString() }
         try {
             tracker.update(updatedTrack.toDbTrack())
             updateChapter.awaitAll(chapterUpdates + pageReadProgressUpdates)

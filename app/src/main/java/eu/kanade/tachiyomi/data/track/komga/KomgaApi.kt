@@ -132,6 +132,6 @@ class KomgaApi(
                 .patch("{\"page\": ${pageIndex + 1}}".toRequestBody("Application/json".toMediaType()))
                 .build()
         ).awaitSuccess()
-        logcat(LogPriority.ERROR) { "update progress to ${pageIndex + 1} with $resp"  }
+        logcat(LogPriority.DEBUG) { "update progress to ${pageIndex + 1} with $resp"  }
     }
 }
