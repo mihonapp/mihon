@@ -540,6 +540,7 @@ class ReaderViewModel @JvmOverloads constructor(
                 ),
             )
         }
+        updatePageReadProgress(readerChapter)
     }
 
     fun restartReadTimer() {
@@ -884,6 +885,17 @@ class ReaderViewModel @JvmOverloads constructor(
 
         viewModelScope.launchNonCancellable {
             trackChapter.await(context, manga.id, readerChapter.chapter.chapter_number.toDouble())
+        }
+    }
+
+    private fun updatePageReadProgress(readerChapter: ReaderChapter) {
+        if (incognitoMode) return
+        if (!trackPreferences.autoUpdateTrack().get()) return
+        if (!trackPreferences.chapterBasedTracking().get()) return
+
+        val manga = manga ?: return
+        viewModelScope.launchNonCancellable {
+            trackChapter.reportPageProgress(manga.id, readerChapter.chapter.url, chapterPageIndex)
         }
     }
 
