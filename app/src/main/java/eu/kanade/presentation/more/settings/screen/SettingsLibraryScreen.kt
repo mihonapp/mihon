@@ -79,6 +79,7 @@ object SettingsLibraryScreen : SearchableSettings {
             allCategories.fastMap { it.id.toInt() }
         val labels = listOf(stringResource(MR.strings.default_category_summary)) +
             allCategories.fastMap { it.visualName }
+        val selectedCategoryName = selectedCategory?.visualName?.replace("%", "%%")
 
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.categories),
@@ -95,7 +96,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.defaultCategory(),
                     title = stringResource(MR.strings.default_category),
-                    subtitle = selectedCategory?.visualName?.replace("%", "%%") ?: stringResource(MR.strings.default_category_summary),
+                    subtitle = selectedCategoryName ?: stringResource(MR.strings.default_category_summary),
                     entries = ids.zip(labels).toMap().toImmutableMap(),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
