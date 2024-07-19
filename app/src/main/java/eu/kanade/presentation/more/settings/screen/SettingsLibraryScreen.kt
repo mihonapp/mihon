@@ -95,7 +95,7 @@ object SettingsLibraryScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     pref = libraryPreferences.defaultCategory(),
                     title = stringResource(MR.strings.default_category),
-                    subtitle = selectedCategory?.visualName ?: stringResource(MR.strings.default_category_summary),
+                    subtitle = selectedCategory?.visualName?.replace("%", "%%") ?: stringResource(MR.strings.default_category_summary),
                     entries = ids.zip(labels).toMap().toImmutableMap(),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
