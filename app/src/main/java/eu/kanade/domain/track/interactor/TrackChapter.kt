@@ -58,14 +58,14 @@ class TrackChapter(
         }
     }
 
-    suspend fun reportPageProgress(mangaId: Long, chapterNumber: Double, chapterUrl: String, pageIndex: Int) {
+    suspend fun reportPageProgress(mangaId: Long, chapterUrl: String, pageIndex: Int) {
         withNonCancellableContext {
             val tracks = getTracks.await(mangaId)
             if (tracks.isEmpty()) return@withNonCancellableContext
 
             tracks.mapNotNull { track ->
                 val service = trackerManager.get(track.trackerId)
-                if (service == null || !service.isLoggedIn || chapterNumber <= track.lastChapterRead || service !is PageTracker) {
+                if (service == null || !service.isLoggedIn || service !is PageTracker) {
                     return@mapNotNull null
                 }
                 async {

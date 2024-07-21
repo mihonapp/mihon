@@ -1,11 +1,14 @@
 package eu.kanade.domain.track.interactor
 
+import android.app.Application
 import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.database.models.toDomainChapter
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
 import eu.kanade.tachiyomi.data.track.PageTracker
 import eu.kanade.tachiyomi.data.track.Tracker
+import eu.kanade.tachiyomi.util.system.toast
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
@@ -13,6 +16,8 @@ import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
@@ -49,10 +54,15 @@ class SyncChapterProgressWithTrack(
                     if (page >= 0) chapter.toDomainChapter()?.copy(lastPageRead = page.toLong())?.toChapterUpdate() else null
                 }
         }?.getOrNull() ?: listOf()
-        if (pageReadProgressUpdates.isNotEmpty()) logcat(LogPriority.INFO) { pageReadProgressUpdates.toString() }
         try {
             tracker.update(updatedTrack.toDbTrack())
             updateChapter.awaitAll(chapterUpdates + pageReadProgressUpdates)
+            if (pageReadProgressUpdates.isNotEmpty()) {
+                logcat(LogPriority.INFO) { pageReadProgressUpdates.toString() }
+                if (BuildConfig.APPLICATION_ID == "app.mihon.debug") {
+                    Injekt.get<Application>().toast("Updated page progress")
+                }
+            }
             insertTrack.await(updatedTrack)
         } catch (e: Throwable) {
             logcat(LogPriority.WARN, e)

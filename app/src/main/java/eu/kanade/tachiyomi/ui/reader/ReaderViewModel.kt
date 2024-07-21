@@ -894,7 +894,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
         val manga = manga ?: return
         viewModelScope.launchNonCancellable {
-            trackChapter.reportPageProgress(manga.id, readerChapter.chapter.chapter_number.toDouble(), readerChapter.chapter.url, chapterPageIndex)
+            trackChapter.reportPageProgress(manga.id, readerChapter.chapter.url, chapterPageIndex)
         }
     }
 
