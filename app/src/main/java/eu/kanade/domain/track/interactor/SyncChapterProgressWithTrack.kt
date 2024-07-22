@@ -106,7 +106,7 @@ class SyncChapterProgressWithTrack(
                     .let { tracker.batchGetChapterProgress(it) }
                     .entries.groupBy { resolveRemoteProgress(it.key, it.value) }
                 val updatesToLocal = remoteUpdatesMapping[RemoteProgressResolution.ACCEPT]?.mapNotNull {  (chapter, remote) ->
-                    if (remote.page > 1 && chapter.last_page_read != remote.page - 1 )
+                    if (remote.page > 1 && (chapter.last_page_read != remote.page - 1 || chapter.read != remote.completed) )
                         //In komga page starts from 1
                         chapter.toDomainChapter()?.copy(lastPageRead = remote.page.toLong() - 1, read = remote.completed)?.toChapterUpdate()
                     else null

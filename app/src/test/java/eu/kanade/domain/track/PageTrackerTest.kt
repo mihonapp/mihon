@@ -20,6 +20,7 @@ class PageTrackerTest {
                 createTestChapterEntry(7, false, 0, false, 0),
                 createTestChapterEntry(8, true, 100, false, 0), //local read, remote has not started reread
                 createTestChapterEntry(9, false, 0, false, -1),
+                createTestChapterEntry(10, true, 3, false, 5), //local read, but has reread history; remote reread
             )
         }
         
@@ -28,7 +29,7 @@ class PageTrackerTest {
 
         private fun PageTracker.ChapterReadProgress.compareWith(b: PageTracker.ChapterReadProgress): String {
             return StringBuilder("Update(").apply {
-                if (completed != b.completed) append("completed ${b.completed} -> $completed; ")
+                if (completed != b.completed) append("completed: ${b.completed} -> $completed; ")
                 if (page != b.page) append("page: ${b.page} ->  $page")
                 append(")")
             }.toString()
