@@ -68,7 +68,7 @@ private fun SourcesFilterContent(
                 contentType = "source-filter-header",
             ) {
                 SourcesFilterHeader(
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                     language = language,
                     enabled = enabled,
                     onClickItem = onClickLanguage,
@@ -81,7 +81,7 @@ private fun SourcesFilterContent(
                     contentType = { "source-filter-item" },
                 ) { source ->
                     SourcesFilterItem(
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                         source = source,
                         enabled = "${source.id}" !in state.disabledSources,
                         onClickItem = onClickSource,

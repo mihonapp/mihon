@@ -54,7 +54,7 @@ internal fun LazyListScope.updatesLastUpdatedItem(
     item(key = "updates-lastUpdated") {
         Box(
             modifier = Modifier
-                .animateItem()
+                .animateItem(fadeInSpec = null, fadeOutSpec = null)
                 .padding(horizontal = MaterialTheme.padding.medium, vertical = MaterialTheme.padding.small),
         ) {
             Text(
@@ -91,14 +91,14 @@ internal fun LazyListScope.updatesUiItems(
         when (item) {
             is UpdatesUiModel.Header -> {
                 ListGroupHeader(
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                     text = relativeDateText(item.date),
                 )
             }
             is UpdatesUiModel.Item -> {
                 val updatesItem = item.item
                 UpdatesUiItem(
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                     update = updatesItem.update,
                     selected = updatesItem.selected,
                     readProgress = updatesItem.update.lastPageRead

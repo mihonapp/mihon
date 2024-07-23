@@ -113,14 +113,14 @@ private fun HistoryScreenContent(
             when (item) {
                 is HistoryUiModel.Header -> {
                     ListGroupHeader(
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                         text = relativeDateText(item.date),
                     )
                 }
                 is HistoryUiModel.Item -> {
                     val value = item.item
                     HistoryItem(
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                         history = value,
                         onClickCover = { onClickCover(value) },
                         onClickResume = { onClickResume(value) },
