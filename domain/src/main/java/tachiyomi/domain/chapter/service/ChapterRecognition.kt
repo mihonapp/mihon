@@ -41,27 +41,35 @@ object ChapterRecognition {
         }
 
         // Get chapter title with lower case
-        var name = chapterName.lowercase()
+        val cleanChapterName = chapterName.lowercase()
+            // Remove manga title from chapter title.
+            .replace(mangaTitle.lowercase(), "").trim()
+            // Remove comma's or hyphens.
+            .replace(',', '.')
+            .replace('-', '.')
+            // Remove unwanted white spaces.
+            .replace(unwantedWhiteSpace, "")
 
-        // Remove manga title from chapter title.
-        name = name.replace(mangaTitle.lowercase(), "").trim()
+        val numberMatch = number.findAll(cleanChapterName)
 
-        // Remove comma's or hyphens.
-        name = name.replace(',', '.').replace('-', '.')
+        when {
+            numberMatch.none() -> {
+                return chapterNumber ?: -1.0
+            }
+            numberMatch.count() > 1 -> {
+                // Remove unwanted tags.
+                unwanted.replace(cleanChapterName, "").let { name ->
+                    // Check base case ch.xx
+                    basic.find(name)?.let { return getChapterNumberFromMatch(it) }
 
-        // Remove unwanted white spaces.
-        name = unwantedWhiteSpace.replace(name, "")
+                    // need to find again first number might already removed
+                    number.find(name)?.let { return getChapterNumberFromMatch(it) }
+                }
+            }
+        }
 
-        // Remove unwanted tags.
-        name = unwanted.replace(name, "")
-
-        // Check base case ch.xx
-        basic.find(name)?.let { return getChapterNumberFromMatch(it) }
-
-        // Take the first number encountered.
-        number.find(name)?.let { return getChapterNumberFromMatch(it) }
-
-        return chapterNumber ?: -1.0
+        // return the first number encountered
+        return getChapterNumberFromMatch(numberMatch.first())
     }
 
     /**

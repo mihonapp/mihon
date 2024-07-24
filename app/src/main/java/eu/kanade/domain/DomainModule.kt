@@ -179,7 +179,7 @@ class DomainModule : InjektModule {
         addFactory { ToggleLanguage(get()) }
         addFactory { ToggleSource(get()) }
         addFactory { ToggleSourcePin(get()) }
-        addFactory { TrustExtension(get()) }
+        addFactory { TrustExtension(get(), get()) }
 
         addSingletonFactory<ExtensionRepoRepository> { ExtensionRepoRepositoryImpl(get()) }
         addFactory { ExtensionRepoService(get(), get()) }

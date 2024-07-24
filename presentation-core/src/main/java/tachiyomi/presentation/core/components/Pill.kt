@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
@@ -18,9 +17,8 @@ import androidx.compose.ui.unit.dp
 fun Pill(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = MaterialTheme.colorScheme.onBackground,
-    elevation: Dp = 1.dp,
+    color: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
     fontSize: TextUnit = LocalTextStyle.current.fontSize,
 ) {
     Surface(
@@ -29,7 +27,6 @@ fun Pill(
         shape = MaterialTheme.shapes.extraLarge,
         color = color,
         contentColor = contentColor,
-        tonalElevation = elevation,
     ) {
         Box(
             modifier = Modifier

@@ -19,12 +19,13 @@ class CrashLogUtil(
     private val extensionManager: ExtensionManager = Injekt.get(),
 ) {
 
-    suspend fun dumpLogs() = withNonCancellableContext {
+    suspend fun dumpLogs(exception: Throwable? = null) = withNonCancellableContext {
         try {
             val file = context.createFileInCacheDir("mihon_crash_logs.txt")
 
             file.appendText(getDebugInfo() + "\n\n")
             getExtensionsInfo()?.let { file.appendText("$it\n\n") }
+            exception?.let { file.appendText("$it\n\n") }
 
             Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
 

@@ -8,7 +8,7 @@ private val emptyResourcesElement = "<resources>\\s*</resources>|<resources/>".t
 
 fun Project.getLocalesConfigTask(): TaskProvider<Task> {
     return tasks.register("generateLocalesConfig") {
-        val locales = fileTree("$projectDir/src/commonMain/resources/MR/")
+        val locales = fileTree("$projectDir/src/commonMain/moko-resources/")
             .matching { include("**/strings.xml") }
             .filterNot { it.readText().contains(emptyResourcesElement) }
             .map {

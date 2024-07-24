@@ -186,7 +186,7 @@ private fun TrackInfoItem(
             modifier = Modifier
                 .padding(top = 12.dp)
                 .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 .padding(8.dp)
                 .clip(RoundedCornerShape(6.dp)),
         ) {

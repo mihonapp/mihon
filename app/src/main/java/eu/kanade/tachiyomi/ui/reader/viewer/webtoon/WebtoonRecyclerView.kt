@@ -28,7 +28,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var atFirstPosition = false
     private var halfWidth = 0
     private var halfHeight = 0
-    private var originalHeight = 0
+    var originalHeight = 0
+        private set
     private var heightSet = false
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0

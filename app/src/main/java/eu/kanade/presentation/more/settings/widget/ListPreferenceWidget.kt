@@ -26,8 +26,6 @@ import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.util.isScrolledToEnd
-import tachiyomi.presentation.core.util.isScrolledToStart
 
 @Composable
 fun <T> ListPreferenceWidget(
@@ -69,8 +67,8 @@ fun <T> ListPreferenceWidget(
                             }
                         }
                     }
-                    if (!state.isScrolledToStart()) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
-                    if (!state.isScrolledToEnd()) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
+                    if (state.canScrollBackward) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
+                    if (state.canScrollForward) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
                 }
             },
             confirmButton = {

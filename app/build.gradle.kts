@@ -151,7 +151,6 @@ dependencies {
     implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
-    implementation(compose.material.core)
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.animation.graphics)
@@ -159,6 +158,8 @@ dependencies {
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
     implementation(compose.accompanist.systemuicontroller)
+    
+    implementation(androidx.interpolator)
 
     implementation(androidx.paging.runtime)
     implementation(androidx.paging.compose)
@@ -204,7 +205,6 @@ dependencies {
     // Disk
     implementation(libs.disklrucache)
     implementation(libs.unifile)
-    implementation(libs.bundles.archive)
 
     // Preferences
     implementation(libs.preferencektx)
@@ -275,7 +275,7 @@ androidComponents {
 tasks {
     // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
     withType<KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
+        compilerOptions.freeCompilerArgs.addAll(
             "-Xcontext-receivers",
             "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
@@ -286,7 +286,6 @@ tasks {
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
             "-opt-in=coil3.annotation.ExperimentalCoilApi",
-            "-opt-in=com.google.accompanist.permissions.ExperimentalPermissionsApi",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.coroutines.FlowPreview",
             "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",

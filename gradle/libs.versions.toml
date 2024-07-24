@@ -1,8 +1,8 @@
 [versions]
-aboutlib_version = "11.1.1"
-leakcanary = "2.13"
-moko = "0.23.0"
-okhttp_version = "5.0.0-alpha.12"
+aboutlib_version = "11.2.2"
+leakcanary = "2.14"
+moko = "0.24.1"
+okhttp_version = "5.0.0-alpha.14"
 richtext = "0.20.0"
 shizuku_version = "12.2.0"
 sqldelight = "2.0.2"
@@ -14,7 +14,7 @@ detektCompose = "0.3.12"
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
-google-services-gradle = "com.google.gms:google-services:4.4.1"
+google-services-gradle = "com.google.gms:google-services:4.4.2"
 
 rxjava = "io.reactivex:rxjava:1.3.8"
 
@@ -28,12 +28,11 @@ conscrypt-android = "org.conscrypt:conscrypt-android:2.5.2"
 
 quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
 
-jsoup = "org.jsoup:jsoup:1.17.2"
+jsoup = "org.jsoup:jsoup:1.18.1"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
-unifile = "com.github.tachiyomiorg:unifile:7c257e1c64"
-common-compress = "org.apache.commons:commons-compress:1.26.1"
-junrar = "com.github.junrar:junrar:7.5.5"
+unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
+libarchive = "me.zhanghai.android.libarchive:library:1.1.0"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
@@ -43,26 +42,26 @@ preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
 
-coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0-alpha06" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0-alpha08" }
 coil-core = { module = "io.coil-kt.coil3:coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
-subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:aeaa170036"
-image-decoder = "com.github.tachiyomiorg:image-decoder:e08e9be535"
+subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:b8e1b0ed2b"
+image-decoder = "com.github.tachiyomiorg:image-decoder:41c059e540"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
 
-material = "com.google.android.material:material:1.11.0"
+material = "com.google.android.material:material:1.12.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.2.0"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:2.0.1"
 compose-webview = "io.github.kevinnzou:compose-webview:0.33.6"
 compose-grid = "io.woong.compose.grid:grid:1.2.2"
 
@@ -73,7 +72,7 @@ moko-gradle = { module = "dev.icerock.moko:resources-generator", version.ref = "
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.6.1"
+firebase-analytics = "com.google.firebase:firebase-analytics:22.0.2"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlib_version" }
@@ -90,9 +89,9 @@ sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-ext
 sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.10.2"
-kotest-assertions = "io.kotest:kotest-assertions-core:5.8.1"
-mockk = "io.mockk:mockk:1.13.10"
+junit = "org.junit.jupiter:junit-jupiter:5.10.3"
+kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
+mockk = "io.mockk:mockk:1.13.12"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
@@ -104,7 +103,6 @@ detekt-rules-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatt
 detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 
 [bundles]
-archive = ["common-compress", "junrar"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]

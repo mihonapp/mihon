@@ -31,8 +31,6 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.util.isScrolledToEnd
-import tachiyomi.presentation.core.util.isScrolledToStart
 
 @Composable
 fun ScanlatorFilterDialog(
@@ -96,8 +94,8 @@ fun ScanlatorFilterDialog(
                         }
                     }
                 }
-                if (!state.isScrolledToStart()) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
-                if (!state.isScrolledToEnd()) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
+                if (state.canScrollBackward) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
+                if (state.canScrollForward) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
             }
         },
         properties = DialogProperties(

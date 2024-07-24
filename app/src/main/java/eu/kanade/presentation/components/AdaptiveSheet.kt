@@ -7,8 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
@@ -23,7 +21,6 @@ import tachiyomi.presentation.core.components.AdaptiveSheet as AdaptiveSheetImpl
 @Composable
 fun NavigatorAdaptiveSheet(
     screen: Screen,
-    tonalElevation: Dp = 1.dp,
     enableSwipeDismiss: (Navigator) -> Boolean = { true },
     onDismissRequest: () -> Unit,
 ) {
@@ -31,7 +28,6 @@ fun NavigatorAdaptiveSheet(
         screen = screen,
         content = { sheetNavigator ->
             AdaptiveSheet(
-                tonalElevation = tonalElevation,
                 enableSwipeDismiss = enableSwipeDismiss(sheetNavigator),
                 onDismissRequest = onDismissRequest,
             ) {
@@ -73,7 +69,6 @@ fun NavigatorAdaptiveSheet(
 fun AdaptiveSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    tonalElevation: Dp = 1.dp,
     enableSwipeDismiss: Boolean = true,
     content: @Composable () -> Unit,
 ) {
@@ -86,7 +81,6 @@ fun AdaptiveSheet(
         AdaptiveSheetImpl(
             modifier = modifier,
             isTabletUi = isTabletUi,
-            tonalElevation = tonalElevation,
             enableSwipeDismiss = enableSwipeDismiss,
             onDismissRequest = onDismissRequest,
         ) {

@@ -8,9 +8,12 @@ import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val Project.androidx get() = the<LibrariesForAndroidx>()
@@ -37,15 +40,18 @@ internal fun Project.configureAndroid(commonExtension: CommonExtension<*, *, *, 
     }
 
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = AndroidConfig.JavaVersion.toString()
-            // freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
-            // freeCompilerArgs += "-Xcontext-receivers"
+        compilerOptions {
+            jvmTarget.set(AndroidConfig.JvmTarget)
+            freeCompilerArgs.addAll(
+                "-opt-in=kotlin.RequiresOptIn",
+                "-Xcontext-receivers",
+            )
 
             // Treat all Kotlin warnings as errors (disabled by default)
             // Override by setting warningsAsErrors=true in your ~/.gradle/gradle.properties
-            // val warningsAsErrors: String? by project
-            // allWarningsAsErrors = warningsAsErrors.toBoolean()
+            val warningsAsErrors: String? by project
+            allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+
         }
     }
 
@@ -55,13 +61,11 @@ internal fun Project.configureAndroid(commonExtension: CommonExtension<*, *, *, 
 }
 
 internal fun Project.configureCompose(commonExtension: CommonExtension<*, *, *, *, *, *>) {
+    pluginManager.apply(kotlinx.plugins.compose.compiler.get().pluginId)
+
     commonExtension.apply {
         buildFeatures {
             compose = true
-        }
-
-        composeOptions {
-            kotlinCompilerExtensionVersion = compose.versions.compiler.get()
         }
 
         dependencies {
@@ -69,37 +73,29 @@ internal fun Project.configureCompose(commonExtension: CommonExtension<*, *, *, 
         }
     }
 
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            freeCompilerArgs += buildComposeMetricsParameters()
+    extensions.configure<ComposeCompilerGradlePluginExtension> {
+        // Enable strong skipping mode
+        enableStrongSkippingMode.set(true)
 
-            // Enable experimental compiler opts
-            // https://developer.android.com/jetpack/androidx/releases/compose-compiler#1.5.9
-            freeCompilerArgs += listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:nonSkippingGroupOptimization=true",
-            )
+        // Enable experimental compiler opts
+        // https://developer.android.com/jetpack/androidx/releases/compose-compiler#1.5.9
+        enableNonSkippingGroupOptimization.set(true)
+
+        val enableMetrics = project.providers.gradleProperty("enableComposeCompilerMetrics").orNull.toBoolean()
+        val enableReports = project.providers.gradleProperty("enableComposeCompilerReports").orNull.toBoolean()
+
+        val rootProjectDir = rootProject.layout.buildDirectory.asFile.get()
+        val relativePath = projectDir.relativeTo(rootDir)
+        if (enableMetrics) {
+            val buildDirPath = rootProjectDir.resolve("compose-metrics").resolve(relativePath)
+            metricsDestination.set(buildDirPath)
+        }
+        if (enableReports) {
+            val buildDirPath = rootProjectDir.resolve("compose-reports").resolve(relativePath)
+            reportsDestination.set(buildDirPath)
         }
     }
-}
 
-private fun Project.buildComposeMetricsParameters(): List<String> {
-    val rootProjectDir = rootProject.layout.buildDirectory.asFile.get()
-    val relativePath = projectDir.relativeTo(rootDir)
-
-    val enableMetrics = project.providers.gradleProperty("enableComposeCompilerMetrics").orNull.toBoolean()
-    val enableReports = project.providers.gradleProperty("enableComposeCompilerReports").orNull.toBoolean()
-
-    return listOfNotNull(
-        ("metricsDestination" to "compose-metrics").takeIf { enableMetrics },
-        ("reportsDestination" to "compose-reports").takeIf { enableReports },
-    ).flatMap { (flag, dirName) ->
-        val buildDirPath = rootProjectDir.resolve(dirName).resolve(relativePath).absolutePath
-        listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:$flag=$buildDirPath"
-        )
-    }
 }
 
 internal fun Project.configureTest() {

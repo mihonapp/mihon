@@ -36,7 +36,7 @@ class StatsScreenModel(
     private val trackerManager: TrackerManager = Injekt.get(),
 ) : StateScreenModel<StatsScreenState>(StatsScreenState.Loading) {
 
-    private val loggedInTrackers by lazy { trackerManager.trackers.fastFilter { it.isLoggedIn } }
+    private val loggedInTrackers by lazy { trackerManager.loggedInTrackers() }
 
     init {
         screenModelScope.launchIO {

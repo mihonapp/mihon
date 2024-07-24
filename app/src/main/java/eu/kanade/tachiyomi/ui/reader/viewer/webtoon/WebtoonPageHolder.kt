@@ -22,15 +22,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import kotlinx.coroutines.suspendCancellableCoroutine
 import logcat.LogPriority
+import okio.Buffer
+import okio.BufferedSource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
-import java.io.BufferedInputStream
-import java.io.InputStream
 
 /**
  * Holder of the webtoon reader for a single page of a chapter.
@@ -188,16 +187,14 @@ class WebtoonPageHolder(
         val streamFn = page?.stream ?: return
 
         try {
-            val (openStream, isAnimated) = withIOContext {
-                val stream = streamFn().buffered(16)
-                val openStream = process(stream)
-
-                val isAnimated = ImageUtil.isAnimatedAndSupported(stream)
-                Pair(openStream, isAnimated)
+            val (source, isAnimated) = withIOContext {
+                val source = streamFn().use { process(Buffer().readFrom(it)) }
+                val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                Pair(source, isAnimated)
             }
             withUIContext {
                 frame.setImage(
-                    openStream,
+                    source,
                     isAnimated,
                     ReaderPageImageView.Config(
                         zoomDuration = viewer.config.doubleTapAnimDuration,
@@ -207,10 +204,6 @@ class WebtoonPageHolder(
                 )
                 removeErrorLayout()
             }
-            // Suspend the coroutine to close the input stream only when the WebtoonPageHolder is recycled
-            suspendCancellableCoroutine<Nothing> { continuation ->
-                continuation.invokeOnCancellation { openStream.close() }
-            }
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
             withUIContext {
@@ -219,29 +212,29 @@ class WebtoonPageHolder(
         }
     }
 
-    private fun process(imageStream: BufferedInputStream): InputStream {
+    private fun process(imageSource: BufferedSource): BufferedSource {
         if (viewer.config.dualPageRotateToFit) {
-            return rotateDualPage(imageStream)
+            return rotateDualPage(imageSource)
         }
 
         if (viewer.config.dualPageSplit) {
-            val isDoublePage = ImageUtil.isWideImage(imageStream)
+            val isDoublePage = ImageUtil.isWideImage(imageSource)
             if (isDoublePage) {
                 val upperSide = if (viewer.config.dualPageInvert) ImageUtil.Side.LEFT else ImageUtil.Side.RIGHT
-                return ImageUtil.splitAndMerge(imageStream, upperSide)
+                return ImageUtil.splitAndMerge(imageSource, upperSide)
             }
         }
 
-        return imageStream
+        return imageSource
     }
 
-    private fun rotateDualPage(imageStream: BufferedInputStream): InputStream {
-        val isDoublePage = ImageUtil.isWideImage(imageStream)
+    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
+        val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
-            ImageUtil.rotateImage(imageStream, rotation)
+            ImageUtil.rotateImage(imageSource, rotation)
         } else {
-            imageStream
+            imageSource
         }
     }
 
