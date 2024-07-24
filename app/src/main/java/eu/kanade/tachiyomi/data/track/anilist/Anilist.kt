@@ -169,13 +169,24 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     }
 
     override suspend fun delete(track: DomainTrack) {
-        if (track.libraryId == null || track.libraryId == 0L) {
-            val libManga = api.findLibManga(track.toDbTrack(), getUsername().toInt()) ?: return
-            return api.deleteLibManga(track.copy(id = libManga.library_id!!))
+        try {
+            val libraryId = track.libraryId ?: 0L
+            if (libraryId == 0L) {
+                val libManga = api.findLibManga(track.toDbTrack(), getUsername().toInt())
+                if (libManga == null) {
+                    // Handle the case where the entry is not found
+                    return
+                }
+                api.deleteLibManga(track.copy(id = libManga.library_id!!))
+            } else {
+                api.deleteLibManga(track)
+            }
+        } catch (e: Exception) {
+            // Log the exception or handle it as needed
+            e.printStackTrace()
         }
-
-        api.deleteLibManga(track)
     }
+
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.findLibManga(track, getUsername().toInt())
