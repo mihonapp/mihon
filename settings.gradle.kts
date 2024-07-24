@@ -13,16 +13,6 @@ pluginManagement {
         mavenCentral()
         maven(url = "https://www.jitpack.io")
     }
-    // https://issuetracker.google.com/344363457
-    // TODO: Remove when AGP's bundled R8 is updated
-    buildscript {
-        repositories {
-            maven("https://storage.googleapis.com/r8-releases/raw")
-        }
-        dependencies {
-            classpath("com.android.tools:r8:8.5.21")
-        }
-    }
 }
 
 dependencyResolutionManagement {
