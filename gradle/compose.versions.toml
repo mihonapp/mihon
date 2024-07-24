@@ -3,7 +3,7 @@ compose-bom = "2024.07.00-alpha01"
 accompanist = "0.35.1-alpha"
 
 [libraries]
-activity = "androidx.activity:activity-compose:1.9.0"
+activity = "androidx.activity:activity-compose:1.9.1"
 bom = { group = "dev.chrisbanes.compose", name = "compose-bom", version.ref = "compose-bom" }
 foundation = { module = "androidx.compose.foundation:foundation" }
 animation = { module = "androidx.compose.animation:animation" }
