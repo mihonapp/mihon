@@ -24,7 +24,6 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
-import kotlin.reflect.KFunction1
 
 @Composable
 fun ReaderPageActionsDialog(
