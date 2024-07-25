@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Share
@@ -23,12 +24,14 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ActionButton
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import kotlin.reflect.KFunction1
 
 @Composable
 fun ReaderPageActionsDialog(
     onDismissRequest: () -> Unit,
     onSetAsCover: () -> Unit,
     onShare: () -> Unit,
+    onCopy: () -> Unit,
     onSave: () -> Unit,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
@@ -43,6 +46,15 @@ fun ReaderPageActionsDialog(
                 title = stringResource(MR.strings.set_as_cover),
                 icon = Icons.Outlined.Photo,
                 onClick = { showSetCoverDialog = true },
+            )
+            ActionButton(
+                modifier = Modifier.weight(1f),
+                title = stringResource(MR.strings.action_copy_to_clipboard),
+                icon = Icons.Outlined.ContentCopy,
+                onClick = {
+                    onCopy()
+                    onDismissRequest()
+                },
             )
             ActionButton(
                 modifier = Modifier.weight(1f),
