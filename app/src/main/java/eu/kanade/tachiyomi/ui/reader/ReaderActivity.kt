@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
@@ -728,9 +729,9 @@ class ReaderActivity : BaseActivity() {
 
     private fun onCopyImageResult(uri: Uri) {
         // Copy the URI to the clipboard
-        val clipboardManager = applicationContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboardManager = applicationContext.getSystemService<ClipboardManager>()
         val clipData = ClipData.newUri(applicationContext.contentResolver, "Image URI", uri)
-        clipboardManager.setPrimaryClip(clipData)
+        clipboardManager?.setPrimaryClip(clipData)
     }
 
     /**
