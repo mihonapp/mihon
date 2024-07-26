@@ -478,7 +478,6 @@ class ReaderActivity : BaseActivity() {
                         onDismissRequest = onDismissRequest,
                         onSetAsCover = viewModel::setAsCover,
                         onShare = viewModel::shareImage,
-                        onCopy = viewModel::copyImage,
                         onSave = viewModel::saveImage,
                     )
                 }

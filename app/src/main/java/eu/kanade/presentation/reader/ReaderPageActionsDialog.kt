@@ -29,8 +29,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun ReaderPageActionsDialog(
     onDismissRequest: () -> Unit,
     onSetAsCover: () -> Unit,
-    onShare: () -> Unit,
-    onCopy: () -> Unit,
+    onShare: (Boolean) -> Unit,
     onSave: () -> Unit,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
@@ -51,7 +50,7 @@ fun ReaderPageActionsDialog(
                 title = stringResource(MR.strings.action_copy_to_clipboard),
                 icon = Icons.Outlined.ContentCopy,
                 onClick = {
-                    onCopy()
+                    onShare(true)
                     onDismissRequest()
                 },
             )
@@ -60,7 +59,7 @@ fun ReaderPageActionsDialog(
                 title = stringResource(MR.strings.action_share),
                 icon = Icons.Outlined.Share,
                 onClick = {
-                    onShare()
+                    onShare(false)
                     onDismissRequest()
                 },
             )

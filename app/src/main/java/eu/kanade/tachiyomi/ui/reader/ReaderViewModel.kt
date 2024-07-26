@@ -809,7 +809,7 @@ class ReaderViewModel @JvmOverloads constructor(
      * get a path to the file and it has to be decompressed somewhere first. Only the last shared
      * image will be kept so it won't be taking lots of internal disk space.
      */
-    fun shareImage(copyToClipboard: Boolean = false) {
+    fun shareImage(copyToClipboard: Boolean) {
         val page = (state.value.dialog as? Dialog.PageActions)?.page
         if (page?.status != Page.State.READY) return
         val manga = manga ?: return
@@ -834,10 +834,6 @@ class ReaderViewModel @JvmOverloads constructor(
         } catch (e: Throwable) {
             logcat(LogPriority.ERROR, e)
         }
-    }
-
-    fun copyImage() {
-        shareImage(true)
     }
 
     /**
