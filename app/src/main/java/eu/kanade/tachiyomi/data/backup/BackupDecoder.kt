@@ -7,6 +7,8 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import okio.buffer
 import okio.gzip
 import okio.source
+import tachiyomi.core.common.i18n.stringResource
+import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -26,10 +28,13 @@ class BackupDecoder(
                 require(2)
             }
             val id1id2 = peeked.readShort()
-            val backupString = if (id1id2.toInt() == 0x1f8b) { // 0x1f8b is gzip magic bytes
-                source.gzip().buffer()
-            } else {
-                source
+            val backupString = when(id1id2.toInt()) {
+                0x1f8b -> source.gzip().buffer() // 0x1f8b is gzip magic bytes
+                0x7b7d, 0x7b22, 0x7b0a -> {
+                    // `{}` OR `{"` OR `{\n`
+                    throw Exception(context.stringResource(MR.strings.invalid_backup_file_json))
+                }
+                else -> source
             }.use { it.readByteArray() }
 
             parser.decodeFromByteArray(Backup.serializer(), backupString)
