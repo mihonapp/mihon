@@ -3,6 +3,8 @@ package eu.kanade.tachiyomi.ui.reader
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.assist.AssistContent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
@@ -222,6 +225,9 @@ class ReaderActivity : BaseActivity() {
                     }
                     is ReaderViewModel.Event.ShareImage -> {
                         onShareImageResult(event.uri, event.page)
+                    }
+                    is ReaderViewModel.Event.CopyImage -> {
+                        onCopyImageResult(event.uri)
                     }
                     is ReaderViewModel.Event.SetCoverResult -> {
                         onSetAsCoverResult(event.result)
@@ -719,6 +725,12 @@ class ReaderActivity : BaseActivity() {
             message = stringResource(MR.strings.share_page_info, manga.title, chapter.name, page.number),
         )
         startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
+    }
+
+    private fun onCopyImageResult(uri: Uri) {
+        val clipboardManager = applicationContext.getSystemService<ClipboardManager>() ?: return
+        val clipData = ClipData.newUri(applicationContext.contentResolver, "", uri)
+        clipboardManager.setPrimaryClip(clipData)
     }
 
     /**

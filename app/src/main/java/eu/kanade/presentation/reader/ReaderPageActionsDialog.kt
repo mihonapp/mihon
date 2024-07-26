@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Share
@@ -28,7 +29,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun ReaderPageActionsDialog(
     onDismissRequest: () -> Unit,
     onSetAsCover: () -> Unit,
-    onShare: () -> Unit,
+    onShare: (Boolean) -> Unit,
     onSave: () -> Unit,
 ) {
     var showSetCoverDialog by remember { mutableStateOf(false) }
@@ -46,10 +47,19 @@ fun ReaderPageActionsDialog(
             )
             ActionButton(
                 modifier = Modifier.weight(1f),
+                title = stringResource(MR.strings.action_copy_to_clipboard),
+                icon = Icons.Outlined.ContentCopy,
+                onClick = {
+                    onShare(true)
+                    onDismissRequest()
+                },
+            )
+            ActionButton(
+                modifier = Modifier.weight(1f),
                 title = stringResource(MR.strings.action_share),
                 icon = Icons.Outlined.Share,
                 onClick = {
-                    onShare()
+                    onShare(false)
                     onDismissRequest()
                 },
             )
