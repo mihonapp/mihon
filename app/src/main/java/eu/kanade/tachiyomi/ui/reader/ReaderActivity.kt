@@ -728,10 +728,9 @@ class ReaderActivity : BaseActivity() {
     }
 
     private fun onCopyImageResult(uri: Uri) {
-        // Copy the URI to the clipboard
-        val clipboardManager = applicationContext.getSystemService<ClipboardManager>()
-        val clipData = ClipData.newUri(applicationContext.contentResolver, "Image URI", uri)
-        clipboardManager?.setPrimaryClip(clipData)
+        val clipboardManager = applicationContext.getSystemService<ClipboardManager>() ?: return
+        val clipData = ClipData.newUri(applicationContext.contentResolver, "", uri)
+        clipboardManager.setPrimaryClip(clipData)
     }
 
     /**
