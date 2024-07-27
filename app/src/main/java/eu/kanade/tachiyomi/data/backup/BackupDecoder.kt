@@ -11,6 +11,7 @@ import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.IOException
 
 class BackupDecoder(
     private val context: Context,
@@ -32,7 +33,7 @@ class BackupDecoder(
                 0x1f8b -> source.gzip().buffer() // 0x1f8b is gzip magic bytes
                 0x7b7d, 0x7b22, 0x7b0a -> {
                     // `{}` OR `{"` OR `{\n`
-                    throw Exception(context.stringResource(MR.strings.invalid_backup_file_json))
+                    throw IOException(context.stringResource(MR.strings.invalid_backup_file_json))
                 }
                 else -> source
             }.use { it.readByteArray() }
