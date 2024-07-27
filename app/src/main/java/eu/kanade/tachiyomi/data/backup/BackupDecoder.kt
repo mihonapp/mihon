@@ -18,7 +18,6 @@ class BackupDecoder(
     private val context: Context,
     private val parser: ProtoBuf = Injekt.get(),
 ) {
-
     /**
      * Decode a potentially-gzipped backup.
      */
@@ -30,10 +29,9 @@ class BackupDecoder(
                 require(2)
             }
             val id1id2 = peeked.readShort()
-            val backupString = when(id1id2.toInt()) {
+            val backupString = when (id1id2.toInt()) {
                 0x1f8b -> source.gzip().buffer() // 0x1f8b is gzip magic bytes
-                0x7b7d, 0x7b22, 0x7b0a -> {
-                    // `{}` OR `{"` OR `{\n`
+                MAGIC_JSON_SIGNATURE1, MAGIC_JSON_SIGNATURE2, MAGIC_JSON_SIGNATURE3 -> {
                     throw IOException(context.stringResource(MR.strings.invalid_backup_file_json))
                 }
                 else -> source
@@ -44,7 +42,12 @@ class BackupDecoder(
             } catch (_: SerializationException) {
                 throw IOException(context.stringResource(MR.strings.invalid_backup_file_unknown))
             }
-
         }
+    }
+
+    companion object {
+        private const val MAGIC_JSON_SIGNATURE1 = 0x7b7d // `{}`
+        private const val MAGIC_JSON_SIGNATURE2 = 0x7b22 // `{"`
+        private const val MAGIC_JSON_SIGNATURE3 = 0x7b0a // `{\n`
     }
 }
