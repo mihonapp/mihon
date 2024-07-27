@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.backup
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.backup.models.Backup
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.protobuf.ProtoBuf
 import okio.buffer
 import okio.gzip
@@ -38,7 +39,12 @@ class BackupDecoder(
                 else -> source
             }.use { it.readByteArray() }
 
-            parser.decodeFromByteArray(Backup.serializer(), backupString)
+            try {
+                parser.decodeFromByteArray(Backup.serializer(), backupString)
+            } catch (_: SerializationException) {
+                throw IOException(context.stringResource(MR.strings.invalid_backup_file_unknown))
+            }
+
         }
     }
 }
