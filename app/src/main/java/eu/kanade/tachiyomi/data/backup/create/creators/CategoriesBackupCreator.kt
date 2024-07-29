@@ -11,7 +11,7 @@ class CategoriesBackupCreator(
     private val getCategories: GetCategories = Injekt.get(),
 ) {
 
-    suspend fun backupCategories(): List<BackupCategory> {
+    suspend operator fun invoke(): List<BackupCategory> {
         return getCategories.await()
             .filterNot(Category::isSystemCategory)
             .map(backupCategoryMapper)

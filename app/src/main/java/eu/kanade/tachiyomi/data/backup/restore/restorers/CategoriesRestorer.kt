@@ -13,7 +13,7 @@ class CategoriesRestorer(
     private val libraryPreferences: LibraryPreferences = Injekt.get(),
 ) {
 
-    suspend fun restoreCategories(backupCategories: List<BackupCategory>) {
+    suspend operator fun invoke(backupCategories: List<BackupCategory>) {
         if (backupCategories.isNotEmpty()) {
             val dbCategories = getCategories.await()
             val dbCategoriesByName = dbCategories.associateBy { it.name }

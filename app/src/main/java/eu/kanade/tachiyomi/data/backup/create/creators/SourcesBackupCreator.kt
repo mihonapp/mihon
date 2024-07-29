@@ -11,7 +11,7 @@ class SourcesBackupCreator(
     private val sourceManager: SourceManager = Injekt.get(),
 ) {
 
-    fun backupSources(mangas: List<BackupManga>): List<BackupSource> {
+    operator fun invoke(mangas: List<BackupManga>): List<BackupSource> {
         return mangas
             .asSequence()
             .map(BackupManga::source)

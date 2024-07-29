@@ -100,7 +100,7 @@ class BackupRestorer(
 
     private fun CoroutineScope.restoreCategories(backupCategories: List<BackupCategory>) = launch {
         ensureActive()
-        categoriesRestorer.restoreCategories(backupCategories)
+        categoriesRestorer(backupCategories)
 
         restoreProgress += 1
         notifier.showRestoreProgress(
@@ -120,7 +120,7 @@ class BackupRestorer(
                 ensureActive()
 
                 try {
-                    mangaRestorer.restoreManga(it, backupCategories)
+                    mangaRestorer.restore(it, backupCategories)
                 } catch (e: Exception) {
                     val sourceName = sourceMapping[it.source] ?: it.source.toString()
                     errors.add(Date() to "${it.title} [$sourceName]: ${e.message}")
@@ -133,7 +133,7 @@ class BackupRestorer(
 
     private fun CoroutineScope.restoreAppPreferences(preferences: List<BackupPreference>) = launch {
         ensureActive()
-        preferenceRestorer.restoreAppPreferences(preferences)
+        preferenceRestorer.restoreApp(preferences)
 
         restoreProgress += 1
         notifier.showRestoreProgress(
@@ -146,7 +146,7 @@ class BackupRestorer(
 
     private fun CoroutineScope.restoreSourcePreferences(preferences: List<BackupSourcePreferences>) = launch {
         ensureActive()
-        preferenceRestorer.restoreSourcePreferences(preferences)
+        preferenceRestorer.restoreSource(preferences)
 
         restoreProgress += 1
         notifier.showRestoreProgress(

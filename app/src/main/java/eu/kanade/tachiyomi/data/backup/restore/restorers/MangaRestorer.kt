@@ -53,7 +53,7 @@ class MangaRestorer(
             )
     }
 
-    suspend fun restoreManga(
+    suspend fun restore(
         backupManga: BackupManga,
         backupCategories: List<BackupCategory>,
     ) {
