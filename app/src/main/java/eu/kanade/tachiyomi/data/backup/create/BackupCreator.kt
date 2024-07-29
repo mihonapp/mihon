@@ -74,11 +74,11 @@ class BackupCreator(
                 throw IllegalStateException(context.stringResource(MR.strings.create_backup_file_error))
             }
 
-            val databaseManga = getFavorites.await()
+            val backupManga = backupMangas(getFavorites.await(), options)
             val backup = Backup(
-                backupManga = backupMangas(databaseManga, options),
+                backupManga = backupManga,
                 backupCategories = backupCategories(options),
-                backupSources = backupSources(databaseManga),
+                backupSources = backupSources(backupManga),
                 backupPreferences = backupAppPreferences(options),
                 backupSourcePreferences = backupSourcePreferences(options),
             )
@@ -120,10 +120,12 @@ class BackupCreator(
     }
 
     private suspend fun backupMangas(mangas: List<Manga>, options: BackupOptions): List<BackupManga> {
+        if (!options.libraryEntries) return emptyList()
+
         return mangaBackupCreator.backupMangas(mangas, options)
     }
 
-    private fun backupSources(mangas: List<Manga>): List<BackupSource> {
+    private fun backupSources(mangas: List<BackupManga>): List<BackupSource> {
         return sourcesBackupCreator.backupSources(mangas)
     }
 

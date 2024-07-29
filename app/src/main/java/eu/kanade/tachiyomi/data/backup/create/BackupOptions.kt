@@ -26,7 +26,7 @@ data class BackupOptions(
         privateSettings,
     )
 
-    fun anyEnabled() = libraryEntries || appSettings || sourceSettings
+    fun canCreate() = libraryEntries || categories || appSettings || sourceSettings
 
     companion object {
         val libraryOptions = persistentListOf(
@@ -34,12 +34,6 @@ data class BackupOptions(
                 label = MR.strings.manga,
                 getter = BackupOptions::libraryEntries,
                 setter = { options, enabled -> options.copy(libraryEntries = enabled) },
-            ),
-            Entry(
-                label = MR.strings.categories,
-                getter = BackupOptions::categories,
-                setter = { options, enabled -> options.copy(categories = enabled) },
-                enabled = { it.libraryEntries },
             ),
             Entry(
                 label = MR.strings.chapters,
@@ -58,6 +52,11 @@ data class BackupOptions(
                 getter = BackupOptions::history,
                 setter = { options, enabled -> options.copy(history = enabled) },
                 enabled = { it.libraryEntries },
+            ),
+            Entry(
+                label = MR.strings.categories,
+                getter = BackupOptions::categories,
+                setter = { options, enabled -> options.copy(categories = enabled) },
             ),
         )
 
