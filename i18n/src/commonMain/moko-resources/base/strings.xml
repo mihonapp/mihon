@@ -529,6 +529,7 @@
     <string name="backup_choice">What do you want to backup?</string>
     <string name="app_settings">App settings</string>
     <string name="source_settings">Source settings</string>
+    <string name="extensionRepo_settings">Extension Repos</string>
     <string name="private_settings">Include sensitive settings (e.g., tracker login tokens)</string>
     <string name="creating_backup">Creating backup</string>
     <string name="creating_backup_error">Backup failed</string>

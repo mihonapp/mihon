@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.backup.models
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
+@Suppress("MagicNumber")
 @Serializable
 data class Backup(
     @ProtoNumber(1) val backupManga: List<BackupManga>,
@@ -11,4 +12,5 @@ data class Backup(
     @ProtoNumber(101) var backupSources: List<BackupSource> = emptyList(),
     @ProtoNumber(104) var backupPreferences: List<BackupPreference> = emptyList(),
     @ProtoNumber(105) var backupSourcePreferences: List<BackupSourcePreferences> = emptyList(),
+    @ProtoNumber(106) var backupExtensionRepo: List<BackupExtensionRepos> = emptyList(),
 )
