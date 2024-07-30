@@ -6,7 +6,7 @@ import mihon.domain.extensionrepo.interactor.GetExtensionRepo
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
-class ExtensionRepoCreator(
+class ExtensionRepoBackupCreator(
     private val getExtensionRepos: GetExtensionRepo = Injekt.get(),
 ) {
 

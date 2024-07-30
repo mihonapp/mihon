@@ -6,7 +6,7 @@ import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.backup.BackupFileValidator
 import eu.kanade.tachiyomi.data.backup.create.creators.CategoriesBackupCreator
-import eu.kanade.tachiyomi.data.backup.create.creators.ExtensionRepoCreator
+import eu.kanade.tachiyomi.data.backup.create.creators.ExtensionRepoBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.MangaBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.PreferenceBackupCreator
 import eu.kanade.tachiyomi.data.backup.create.creators.SourcesBackupCreator
@@ -48,7 +48,7 @@ class BackupCreator(
     private val mangaBackupCreator: MangaBackupCreator = MangaBackupCreator(),
     private val preferenceBackupCreator: PreferenceBackupCreator = PreferenceBackupCreator(),
     private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
-    private val extensionRepoCreator: ExtensionRepoCreator = ExtensionRepoCreator(),
+    private val extensionRepoBackupCreator: ExtensionRepoBackupCreator = ExtensionRepoBackupCreator(),
 ) {
 
     suspend fun backup(uri: Uri, options: BackupOptions): String {
@@ -146,7 +146,7 @@ class BackupCreator(
     private suspend fun backupExtensionRepos(options: BackupOptions): List<BackupExtensionRepos> {
         if (!options.extensionRepoSettings) return emptyList()
 
-        return extensionRepoCreator()
+        return extensionRepoBackupCreator()
     }
 
     companion object {
