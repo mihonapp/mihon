@@ -79,10 +79,10 @@ class BackupRestorer(
         if (options.appSettings) {
             restoreAmount += 1
         }
-        if (options.sourceSettings) {
+        if (options.extensionRepoSettings) {
             restoreAmount += 1
         }
-        if (options.extensionRepoSettings) {
+        if (options.sourceSettings) {
             restoreAmount += 1
         }
 
@@ -172,7 +172,7 @@ class BackupRestorer(
 
         restoreProgress += 1
         notifier.showRestoreProgress(
-            context.stringResource(MR.strings.categories),
+            context.stringResource(MR.strings.extensionRepo_settings),
             restoreProgress,
             restoreAmount,
             isSync,

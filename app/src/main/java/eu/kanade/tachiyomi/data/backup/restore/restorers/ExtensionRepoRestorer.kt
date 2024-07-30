@@ -12,26 +12,25 @@ class ExtensionRepoRestorer(
 ) {
 
     suspend operator fun invoke(backupExtensionRepos: List<BackupExtensionRepos>) {
-        if (backupExtensionRepos.isNotEmpty()) {
-            val dbExtensionRepos = getExtensionRepos.getAll()
-            val dbExtensionReposByName = dbExtensionRepos.associateBy { it.name }
+        if (backupExtensionRepos.isEmpty()) return
+        val dbExtensionRepos = getExtensionRepos.getAll()
+        val dbExtensionReposByName = dbExtensionRepos.associateBy { it.name }
 
-            backupExtensionRepos
-                .sortedBy { it.signingKeyFingerprint }
-                .forEach { backupRepo ->
-                    val dbExtensionRepo = dbExtensionReposByName[backupRepo.name]
-                    if (dbExtensionRepo == null) {
-                        handler.await {
-                            extension_reposQueries.insert(
-                                backupRepo.baseUrl,
-                                backupRepo.name,
-                                backupRepo.shortName,
-                                backupRepo.website,
-                                backupRepo.signingKeyFingerprint
-                            )
-                        }
+        backupExtensionRepos
+            .sortedBy { it.signingKeyFingerprint }
+            .forEach { backupRepo ->
+                val dbExtensionRepo = dbExtensionReposByName[backupRepo.name]
+                if (dbExtensionRepo == null) {
+                    handler.await {
+                        extension_reposQueries.insert(
+                            backupRepo.baseUrl,
+                            backupRepo.name,
+                            backupRepo.shortName,
+                            backupRepo.website,
+                            backupRepo.signingKeyFingerprint
+                        )
                     }
                 }
-        }
+            }
     }
 }

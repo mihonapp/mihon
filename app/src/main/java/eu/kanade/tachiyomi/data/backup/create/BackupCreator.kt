@@ -47,8 +47,8 @@ class BackupCreator(
     private val categoriesBackupCreator: CategoriesBackupCreator = CategoriesBackupCreator(),
     private val mangaBackupCreator: MangaBackupCreator = MangaBackupCreator(),
     private val preferenceBackupCreator: PreferenceBackupCreator = PreferenceBackupCreator(),
-    private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
     private val extensionRepoBackupCreator: ExtensionRepoBackupCreator = ExtensionRepoBackupCreator(),
+    private val sourcesBackupCreator: SourcesBackupCreator = SourcesBackupCreator(),
 ) {
 
     suspend fun backup(uri: Uri, options: BackupOptions): String {
@@ -81,8 +81,8 @@ class BackupCreator(
                 backupCategories = backupCategories(options),
                 backupSources = backupSources(backupManga),
                 backupPreferences = backupAppPreferences(options),
-                backupSourcePreferences = backupSourcePreferences(options),
                 backupExtensionRepo = backupExtensionRepos(options),
+                backupSourcePreferences = backupSourcePreferences(options),
             )
 
             val byteArray = parser.encodeToByteArray(Backup.serializer(), backup)
@@ -137,16 +137,16 @@ class BackupCreator(
         return preferenceBackupCreator.createApp(includePrivatePreferences = options.privateSettings)
     }
 
-    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
-        if (!options.sourceSettings) return emptyList()
-
-        return preferenceBackupCreator.createSource(includePrivatePreferences = options.privateSettings)
-    }
-
     private suspend fun backupExtensionRepos(options: BackupOptions): List<BackupExtensionRepos> {
         if (!options.extensionRepoSettings) return emptyList()
 
         return extensionRepoBackupCreator()
+    }
+
+    private fun backupSourcePreferences(options: BackupOptions): List<BackupSourcePreferences> {
+        if (!options.sourceSettings) return emptyList()
+
+        return preferenceBackupCreator.createSource(includePrivatePreferences = options.privateSettings)
     }
 
     companion object {
