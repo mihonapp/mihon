@@ -13,13 +13,14 @@ class ExtensionRepoRestorer(
 
     suspend operator fun invoke(backupExtensionRepos: List<BackupExtensionRepos>) {
         if (backupExtensionRepos.isEmpty()) return
+
         val dbExtensionRepos = getExtensionRepos.getAll()
-        val dbExtensionReposByName = dbExtensionRepos.associateBy { it.name }
+        val dbExtensionReposBySHA = dbExtensionRepos.associateBy { it.signingKeyFingerprint }
 
         backupExtensionRepos
-            .sortedBy { it.signingKeyFingerprint }
+            .sortedBy { it.baseUrl }
             .forEach { backupRepo ->
-                val dbExtensionRepo = dbExtensionReposByName[backupRepo.name]
+                val dbExtensionRepo = dbExtensionReposBySHA[backupRepo.signingKeyFingerprint]
                 if (dbExtensionRepo == null) {
                     handler.await {
                         extension_reposQueries.insert(
@@ -30,6 +31,8 @@ class ExtensionRepoRestorer(
                             backupRepo.signingKeyFingerprint
                         )
                     }
+                } else {
+                    error("Extension Repo not added: ${backupRepo.name} has the same signature as an existing repo")
                 }
             }
     }

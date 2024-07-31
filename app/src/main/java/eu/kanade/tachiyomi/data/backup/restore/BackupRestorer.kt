@@ -168,7 +168,11 @@ class BackupRestorer(
 
     private fun CoroutineScope.restoreExtensionRepos(backupExtensionRepo: List<BackupExtensionRepos>) = launch {
         ensureActive()
-        extensionRepoRestorer(backupExtensionRepo)
+        try {
+            extensionRepoRestorer(backupExtensionRepo)
+        } catch (e: Exception) {
+            errors.add(Date() to "${e.message}")
+        }
 
         restoreProgress += 1
         notifier.showRestoreProgress(
