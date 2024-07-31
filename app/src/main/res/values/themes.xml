@@ -84,6 +84,33 @@
     <!-- Monet theme only support S+ -->
     <style name="Theme.Tachiyomi.Monet" />
 
+    <!--== Crayola Blue Theme ==-->
+    <style name="Theme.Tachiyomi.CrayolaBlue">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/crayolablue_primary</item>
+        <item name="colorOnPrimary">@color/crayolablue_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/crayolablue_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/crayolablue_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/crayolablue_secondary</item>
+        <item name="colorOnSecondary">@color/crayolablue_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/crayolablue_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/crayolablue_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/crayolablue_tertiary</item>
+        <item name="colorOnTertiary">@color/crayolablue_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/crayolablue_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/crayolablue_onTertiaryContainer</item>
+        <item name="android:colorBackground">@color/crayolablue_background</item>
+        <item name="colorOnBackground">@color/crayolablue_onBackground</item>
+        <item name="colorSurface">@color/crayolablue_surface</item>
+        <item name="colorOnSurface">@color/crayolablue_onSurface</item>
+        <item name="colorSurfaceVariant">@color/crayolablue_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/crayolablue_onSurfaceVariant</item>
+        <item name="colorOutline">@color/crayolablue_outline</item>
+        <item name="colorOnSurfaceInverse">@color/crayolablue_inverseOnSurface</item>
+        <item name="colorSurfaceInverse">@color/crayolablue_inverseSurface</item>
+        <item name="colorPrimaryInverse">@color/crayolablue_primaryInverse</item>
+      </style>
+
     <!--== Green Apple Theme ==-->
     <style name="Theme.Tachiyomi.GreenApple">
         <!-- Theme Colors -->

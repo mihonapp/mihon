@@ -11,6 +11,7 @@ enum class AppTheme(val titleRes: StringResource?) {
     GREEN_APPLE(MR.strings.theme_greenapple),
     LAVENDER(MR.strings.theme_lavender),
     MIDNIGHT_DUSK(MR.strings.theme_midnightdusk),
+    CRAYOLA_BLUE(MR.strings.theme_crayolablue),
 
     // TODO: re-enable for preview
     NORD(MR.strings.theme_nord.takeIf { isDevFlavor || isPreviewBuildType }),

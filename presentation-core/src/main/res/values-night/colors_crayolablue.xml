@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Colors for Crayola Blue theme
+  ~ Original color scheme by 1-minute-to-midnight
+  ~
+  ~ Key colors:
+  ~ Primary #3080ff
+  ~ Secondary #3080ff
+  ~ Tertiary #7A5733
+  ~ Neutral #16151D
+-->
+<resources>
+    <color name="crayolablue_primary">#3080ff</color>
+    <color name="crayolablue_onPrimary">#FFFFFF</color>
+    <color name="crayolablue_primaryContainer">#185bc7</color>
+    <color name="crayolablue_onPrimaryContainer">#FFFFFF</color>
+    <color name="crayolablue_secondary">#3080ff</color>
+    <color name="crayolablue_onSecondary">#FFFFFF</color>
+    <color name="crayolablue_secondaryContainer">#3080ff</color>
+    <color name="crayolablue_onSecondaryContainer">#FFFFFF</color>
+    <color name="crayolablue_tertiary">#55971C</color>
+    <color name="crayolablue_onTertiary">#FFFFFF</color>
+    <color name="crayolablue_tertiaryContainer">#386412</color>
+    <color name="crayolablue_onTertiaryContainer">#E5E1E5</color>
+    <color name="crayolablue_background">#16151D</color>
+    <color name="crayolablue_onBackground">#E5E1E5</color>
+    <color name="crayolablue_surface">#16151D</color>
+    <color name="crayolablue_onSurface">#E5E1E5</color>
+    <color name="crayolablue_surfaceVariant">#434352</color>
+    <color name="crayolablue_onSurfaceVariant">#c2c1d6</color>
+    <color name="crayolablue_outline">#8c8d9f</color>
+    <color name="crayolablue_inverseSurface">#333043</color>
+    <color name="crayolablue_inverseOnSurface">#FFFFFF</color>
+    <color name="crayolablue_primaryInverse">#3080ff</color>
+    <color name="crayolablue_elevationOverlay">#000C2C</color>
+</resources>
