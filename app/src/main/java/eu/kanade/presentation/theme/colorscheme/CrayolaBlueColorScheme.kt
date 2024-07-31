@@ -46,6 +46,7 @@ internal object CrayolaBlueColorScheme : BaseColorScheme() {
         onErrorContainer = Color(0xFFFFDAD6),
         outline = Color(0xFF8C8D9F),
         outlineVariant = Color(0xFF44464F),
+        surfaceContainer = Color(0xFF171C2F),
     )
 
     override val lightScheme = lightColorScheme(
@@ -77,5 +78,6 @@ internal object CrayolaBlueColorScheme : BaseColorScheme() {
         onErrorContainer = Color(0xFF410002),
         outline = Color(0xFF757780),
         outlineVariant = Color(0xFFC5C6D0),
+        surfaceContainer = Color(0xFFEBEDF9),
     )
 }
