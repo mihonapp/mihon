@@ -14,21 +14,21 @@ class ExtensionRepoRestorer(
     suspend operator fun invoke(
         backupRepo: BackupExtensionRepos,
     ) {
-        val dbExtensionRepos = getExtensionRepos.getAll()
-        val dbExtensionReposBySHA = dbExtensionRepos.associateBy { it.signingKeyFingerprint }
-        val dbExtensionReposByUrl = dbExtensionRepos.associateBy { it.baseUrl }
+        val dbRepos = getExtensionRepos.getAll()
+        val existingReposBySHA = dbRepos.associateBy { it.signingKeyFingerprint }
+        val existingReposByUrl = dbRepos.associateBy { it.baseUrl }
 
-        val dbExtensionRepoByUrl = dbExtensionReposByUrl[backupRepo.baseUrl]
-        val dbExtensionRepoBySHA = dbExtensionReposBySHA[backupRepo.signingKeyFingerprint]
+        val urlExists = existingReposByUrl[backupRepo.baseUrl]
+        val shaExists = existingReposBySHA[backupRepo.signingKeyFingerprint]
 
-        if (dbExtensionRepoByUrl != null) {
+        if (urlExists != null) {
             // URL exists, check fingerprint
-            if (dbExtensionRepoByUrl.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
+            if (urlExists.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
                 error("Already Exists with different signing key fingerprint")
             }
-        } else if (dbExtensionRepoBySHA != null) {
+        } else if (shaExists != null) {
             // URL does not exist, check if some other repo has the fingerprint
-            error("${dbExtensionRepoBySHA.name} has the same signing key fingerprint")
+            error("${shaExists.name} has the same signing key fingerprint")
         } else {
             // Restore backup
             handler.await {
