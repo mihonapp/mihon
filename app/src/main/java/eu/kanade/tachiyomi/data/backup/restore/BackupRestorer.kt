@@ -166,23 +166,27 @@ class BackupRestorer(
         )
     }
 
-    private fun CoroutineScope.restoreExtensionRepos(backupExtensionRepo: List<BackupExtensionRepos>) = launch {
-        ensureActive()
-        try {
-            extensionRepoRestorer(backupExtensionRepo) { error ->
-                errors.add(Date() to error)
-            }
-        } catch (e: Exception) {
-            errors.add(Date() to "${e.message}")
-        }
+    private fun CoroutineScope.restoreExtensionRepos(
+        backupExtensionRepo: List<BackupExtensionRepos>
+    ) = launch {
+        backupExtensionRepo
+            .forEach {
+                ensureActive()
 
-        restoreProgress += 1
-        notifier.showRestoreProgress(
-            context.stringResource(MR.strings.extensionRepo_settings),
-            restoreProgress,
-            restoreAmount,
-            isSync,
-        )
+                try {
+                    extensionRepoRestorer(it)
+                } catch (e: Exception) {
+                    errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
+                }
+
+                restoreProgress += 1
+                notifier.showRestoreProgress(
+                    context.stringResource(MR.strings.extensionRepo_settings),
+                    restoreProgress,
+                    restoreAmount,
+                    isSync,
+                )
+            }
     }
 
     private fun writeErrorLog(): File {

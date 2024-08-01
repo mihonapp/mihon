@@ -12,43 +12,33 @@ class ExtensionRepoRestorer(
 ) {
 
     suspend operator fun invoke(
-        backupExtensionRepos: List<BackupExtensionRepos>,
-        onError: (String) -> Unit
+        backupRepo: BackupExtensionRepos,
     ) {
-        if (backupExtensionRepos.isEmpty()) return
-
         val dbExtensionRepos = getExtensionRepos.getAll()
         val dbExtensionReposBySHA = dbExtensionRepos.associateBy { it.signingKeyFingerprint }
         val dbExtensionReposByUrl = dbExtensionRepos.associateBy { it.baseUrl }
 
-        backupExtensionRepos.forEach { backupRepo ->
-            try {
-                val dbExtensionRepoByUrl = dbExtensionReposByUrl[backupRepo.baseUrl]
-                val dbExtensionRepoBySHA = dbExtensionReposBySHA[backupRepo.signingKeyFingerprint]
+        val dbExtensionRepoByUrl = dbExtensionReposByUrl[backupRepo.baseUrl]
+        val dbExtensionRepoBySHA = dbExtensionReposBySHA[backupRepo.signingKeyFingerprint]
 
-                if (dbExtensionRepoByUrl != null) {
-                    // URL exists, check fingerprint
-                    if (dbExtensionRepoByUrl.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
-                        onError("Fingerprint mismatch for ${backupRepo.baseUrl}")
-                    }
-                } else if (dbExtensionRepoBySHA != null) {
-                    // URL does not exist, check if some other repo has the fingerprint
-                    onError("Fingerprint already exists for another repo: ${dbExtensionRepoBySHA.baseUrl}")
-                }
-                else {
-                    // Restore backup
-                    handler.await {
-                        extension_reposQueries.insert(
-                            backupRepo.baseUrl,
-                            backupRepo.name,
-                            backupRepo.shortName,
-                            backupRepo.website,
-                            backupRepo.signingKeyFingerprint
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                onError("Error restoring ${backupRepo.baseUrl}: ${e.message}")
+        if (dbExtensionRepoByUrl != null) {
+            // URL exists, check fingerprint
+            if (dbExtensionRepoByUrl.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
+                error("Already Exists with different signing key fingerprint")
+            }
+        } else if (dbExtensionRepoBySHA != null) {
+            // URL does not exist, check if some other repo has the fingerprint
+            error("${dbExtensionRepoBySHA.name} has the same signing key fingerprint")
+        } else {
+            // Restore backup
+            handler.await {
+                extension_reposQueries.insert(
+                    backupRepo.baseUrl,
+                    backupRepo.name,
+                    backupRepo.shortName,
+                    backupRepo.website,
+                    backupRepo.signingKeyFingerprint
+                )
             }
         }
     }
