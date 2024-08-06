@@ -201,6 +201,18 @@ class BrowseSourceScreenModel(
                 }
             }
         }
+        if (!genreExists) {
+            filter@ for (sourceFilter in defaultFilters) {
+                if (sourceFilter is SourceModelFilter.Text) {
+                    val pattern = "Tags".toRegex()
+                    if (pattern.matches(sourceFilter.name)) {
+                        sourceFilter.state = genreName
+                        genreExists = true
+                        break@filter
+                    }
+                }
+            }
+        }
 
         mutableState.update {
             val listing = if (genreExists) {
