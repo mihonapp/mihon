@@ -80,7 +80,7 @@ class BackupRestorer(
             restoreAmount += 1
         }
         if (options.extensionRepoSettings) {
-            restoreAmount += 1
+            restoreAmount += backup.backupExtensionRepo.size
         }
         if (options.sourceSettings) {
             restoreAmount += 1

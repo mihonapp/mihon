@@ -21,16 +21,11 @@ class ExtensionRepoRestorer(
         val urlExists = existingReposByUrl[backupRepo.baseUrl]
         val shaExists = existingReposBySHA[backupRepo.signingKeyFingerprint]
 
-        if (urlExists != null) {
-            // URL exists, check fingerprint
-            if (urlExists.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
-                error("Already Exists with different signing key fingerprint")
-            }
+        if (urlExists != null && urlExists.signingKeyFingerprint != backupRepo.signingKeyFingerprint) {
+            error("Already Exists with different signing key fingerprint")
         } else if (shaExists != null) {
-            // URL does not exist, check if some other repo has the fingerprint
             error("${shaExists.name} has the same signing key fingerprint")
         } else {
-            // Restore backup
             handler.await {
                 extension_reposQueries.insert(
                     backupRepo.baseUrl,
