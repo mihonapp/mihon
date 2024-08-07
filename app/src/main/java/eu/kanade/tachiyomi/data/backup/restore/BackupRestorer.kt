@@ -5,10 +5,12 @@ import android.net.Uri
 import eu.kanade.tachiyomi.data.backup.BackupDecoder
 import eu.kanade.tachiyomi.data.backup.BackupNotifier
 import eu.kanade.tachiyomi.data.backup.models.BackupCategory
+import eu.kanade.tachiyomi.data.backup.models.BackupExtensionRepos
 import eu.kanade.tachiyomi.data.backup.models.BackupManga
 import eu.kanade.tachiyomi.data.backup.models.BackupPreference
 import eu.kanade.tachiyomi.data.backup.models.BackupSourcePreferences
 import eu.kanade.tachiyomi.data.backup.restore.restorers.CategoriesRestorer
+import eu.kanade.tachiyomi.data.backup.restore.restorers.ExtensionRepoRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.MangaRestorer
 import eu.kanade.tachiyomi.data.backup.restore.restorers.PreferenceRestorer
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
@@ -30,6 +32,7 @@ class BackupRestorer(
 
     private val categoriesRestorer: CategoriesRestorer = CategoriesRestorer(),
     private val preferenceRestorer: PreferenceRestorer = PreferenceRestorer(context),
+    private val extensionRepoRestorer: ExtensionRepoRestorer = ExtensionRepoRestorer(),
     private val mangaRestorer: MangaRestorer = MangaRestorer(),
 ) {
 
@@ -76,6 +79,9 @@ class BackupRestorer(
         if (options.appSettings) {
             restoreAmount += 1
         }
+        if (options.extensionRepoSettings) {
+            restoreAmount += backup.backupExtensionRepo.size
+        }
         if (options.sourceSettings) {
             restoreAmount += 1
         }
@@ -92,6 +98,9 @@ class BackupRestorer(
             }
             if (options.libraryEntries) {
                 restoreManga(backup.backupManga, if (options.categories) backup.backupCategories else emptyList())
+            }
+            if (options.extensionRepoSettings) {
+                restoreExtensionRepos(backup.backupExtensionRepo)
             }
 
             // TODO: optionally trigger online library + tracker update
@@ -155,6 +164,29 @@ class BackupRestorer(
             restoreAmount,
             isSync,
         )
+    }
+
+    private fun CoroutineScope.restoreExtensionRepos(
+        backupExtensionRepo: List<BackupExtensionRepos>
+    ) = launch {
+        backupExtensionRepo
+            .forEach {
+                ensureActive()
+
+                try {
+                    extensionRepoRestorer(it)
+                } catch (e: Exception) {
+                    errors.add(Date() to "Error Adding Repo: ${it.name} : ${e.message}")
+                }
+
+                restoreProgress += 1
+                notifier.showRestoreProgress(
+                    context.stringResource(MR.strings.extensionRepo_settings),
+                    restoreProgress,
+                    restoreAmount,
+                    isSync,
+                )
+            }
     }
 
     private fun writeErrorLog(): File {
