@@ -9,7 +9,7 @@ sqldelight = "2.0.2"
 sqlite = "2.4.0"
 voyager = "1.0.0"
 detekt = "1.23.6"
-detektCompose = "0.3.12"
+detektCompose = "0.4.10"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
