@@ -2,6 +2,7 @@ package eu.kanade.presentation.manga.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -271,7 +272,8 @@ fun ExpandableMangaDescription(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(vertical = 12.dp)
-                    .animateContentSize(),
+                    .animateContentSize(animationSpec = spring())
+                    .fillMaxWidth(),
             ) {
                 var showMenu by remember { mutableStateOf(false) }
                 var tagSelected by remember { mutableStateOf("") }
