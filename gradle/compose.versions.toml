@@ -1,5 +1,5 @@
 [versions]
-compose-bom = "2024.07.00-alpha02"
+compose-bom = "2024.08.00-alpha01"
 accompanist = "0.35.1-alpha"
 
 [libraries]
