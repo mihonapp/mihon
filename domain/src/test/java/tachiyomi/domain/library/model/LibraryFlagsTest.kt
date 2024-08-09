@@ -12,7 +12,7 @@ class LibraryFlagsTest {
     @Test
     fun `Check the amount of flags`() {
         LibraryDisplayMode.values.size shouldBe 4
-        LibrarySort.types.size shouldBe 9
+        LibrarySort.types.size shouldBe 10
         LibrarySort.directions.size shouldBe 2
     }
 
