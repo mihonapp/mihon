@@ -580,7 +580,6 @@
     <string name="on_hold_list">Na popisu čekanja</string>
     <string name="unfinished_list">Popis nedovršenih</string>
     <string name="download_notifier_split_page_not_found">Stranica %d nije pronađena tijekom rastavljanja</string>
-    <string name="loader_rar5_error">RARv5 format nije podržan</string>
     <string name="download_ahead_info">Radi samo ako je trenutačno i sljedeće poglavlje već preuzeto.</string>
     <string name="action_sort_last_manga_update">Zadnja provjera aktualiziranja</string>
     <string name="network_not_metered">Samo na mrežom bez ograničenja</string>

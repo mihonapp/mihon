@@ -615,7 +615,6 @@
     <string name="cant_open_last_read_chapter">Nepavyko atidaryti paskutinio skaityto skyriaus</string>
     <string name="chapter_progress">Puslapis: %1$d</string>
     <string name="transition_next">Kitas:</string>
-    <string name="loader_rar5_error">RARv5 formatas nepalaikomas</string>
     <string name="source_filter_empty_screen">Įdiegtų šaltinių nerasta</string>
     <string name="theme_tidalwave">Potvynio banga</string>
     <string name="action_search_hint">Ieškoti…</string>

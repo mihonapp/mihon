@@ -611,7 +611,6 @@
     <string name="appwidget_updates_description">최근에 업데이트된 항목 보기</string>
     <string name="on_hold_list">보류 목록</string>
     <string name="download_notifier_split_page_not_found">분리 중 페이지 %d을 찾을 수 없습니다</string>
-    <string name="loader_rar5_error">RARv5 포맷은 지원되지 않습니다</string>
     <string name="appwidget_unavailable_locked">앱 잠금 사용 중에는 위젯을 이용할 수 없습니다</string>
     <string name="theme_tidalwave">파도</string>
     <string name="update_already_running">업데이트가 이미 실행 중입니다</string>

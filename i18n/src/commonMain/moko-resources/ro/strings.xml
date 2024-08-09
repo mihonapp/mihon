@@ -549,7 +549,6 @@
     <string name="restore_miui_warning">Este posibil să nu funcționeze corect backup/restaurare dacă MIUI Optimization este dezactivată.</string>
     <string name="update_72hour">La fiecare 3 zile</string>
     <string name="connected_to_wifi">Doar prin Wi Fi</string>
-    <string name="loader_rar5_error">Formatul RARv5 nu este acceptat</string>
     <string name="off">Oprit</string>
     <string name="ext_app_info">Informații despre aplicație</string>
     <string name="custom_cover">Copertă personalizată</string>

@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">User agent по умолчанию</string>
     <string name="pref_reset_user_agent_string">Сбросить user agent по умолчанию</string>
     <string name="action_remove_everything">Удалить всё</string>
-    <string name="loader_rar5_error">Формат RARv5 не поддерживается</string>
     <string name="appwidget_unavailable_locked">Виджет недоступен при включённой блокировке биометрией</string>
     <string name="appwidget_updates_description">Посмотреть недавно обновлённые серии в библиотеке</string>
     <string name="update_already_running">Обновление уже запущено</string>
@@ -810,4 +809,15 @@
     <string name="upcoming_guide">Предстоящее руководство</string>
     <string name="upcoming_calendar_next">Следующий месяц</string>
     <string name="file_picker_uri_permission_unsupported">Не удалось получить постоянный доступ к папке. Приложение может работать некорректно.</string>
+    <string name="pref_flash_duration">Продолжительность вспышки</string>
+    <string name="pref_flash_duration_summary">%1$s мс</string>
+    <string name="pref_flash_with">Вспышка с</string>
+    <string name="pref_flash_style_black">Чёрная</string>
+    <string name="pref_flash_style_white">Белая</string>
+    <string name="pref_flash_style_white_black">Белая и чёрная</string>
+    <string name="pref_flash_page_interval">Вспышка каждую</string>
+    <string name="manga_interval_expected_update_null">Эта серия либо завершена, либо дата ее выхода неизвестна.</string>
+    <string name="invalid_backup_file_unknown">Файл резервной копии поврежден</string>
+    <string name="invalid_backup_file_json">Резервное копирование в формате JSON не поддерживается</string>
+    <string name="extensionRepo_settings">Репозитории расширений</string>
 </resources>

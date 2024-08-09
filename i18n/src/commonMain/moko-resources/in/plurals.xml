@@ -54,4 +54,7 @@
     <plurals name="upcoming_relative_time">
         <item quantity="other">Dalam %1$d hari</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="other">%1$s halaman</item>
+    </plurals>
 </resources>

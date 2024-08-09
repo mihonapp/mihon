@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">String agen pengguna default</string>
     <string name="pref_reset_user_agent_string">Setel ulang string agen pengguna default</string>
     <string name="action_remove_everything">Hapus semuanya</string>
-    <string name="loader_rar5_error">Format RARv5 tidak didukung</string>
     <string name="appwidget_updates_description">Lihat entri pustaka Anda yang baru saja diperbarui</string>
     <string name="appwidget_unavailable_locked">Widget tidak tersedia saat kunci aplikasi diaktifkan</string>
     <string name="update_already_running">Pembaruan sudah berjalan</string>
@@ -799,7 +798,7 @@
     <string name="pref_webtoon_disable_zoom_out">Menonaktifkan zoom out</string>
     <string name="label_upcoming">Yang akan datang</string>
     <string name="action_migrate_duplicate">Migrasikan entri yang ada</string>
-    <string name="action_replace_repo_message">Repositori %1$s memiliki Signing Key Fingerprint yang sama dengan %2$s. 
+    <string name="action_replace_repo_message">Repositori %1$s memiliki Signing Key Fingerprint yang sama dengan %2$s.
 \nJika hal ini diharapkan, %2$s akan diganti, jika tidak, hubungi pengelola repo Anda.</string>
     <string name="action_add_anyway">Tambahkan saja</string>
     <string name="pref_display_profile">Profil tampilan khusus</string>
@@ -809,4 +808,13 @@
     <string name="upcoming_guide">Panduan Mendatang</string>
     <string name="upcoming_calendar_next">Bulan Depan</string>
     <string name="upcoming_calendar_prev">Bulan Kemarin</string>
+    <string name="manga_interval_expected_update_null">Manga ini sudah selesai, atau belum ada tanggal rilis yang diperkirakan.</string>
+    <string name="file_picker_uri_permission_unsupported">Gagal mendapatkan akses folder yang terus-menerus. Aplikasi mungkin berperilaku tak terduga.</string>
+    <string name="pref_flash_duration">Durasi lampu kilat</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Flash setiap</string>
+    <string name="pref_flash_with">Flash dengan</string>
+    <string name="pref_flash_style_black">Hitam</string>
+    <string name="pref_flash_style_white">Putih</string>
+    <string name="pref_flash_style_white_black">Hitam Putih</string>
 </resources>
