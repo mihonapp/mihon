@@ -90,8 +90,8 @@
     </plurals>
     <plurals name="relative_time">
         <item quantity="zero">الأمس</item>
-        <item quantity="one">منذ %1$d أيام</item>
-        <item quantity="two">منذ %1$d أيام</item>
+        <item quantity="one">منذ يوم</item>
+        <item quantity="two">منذ يومين</item>
         <item quantity="few">منذ %1$d أيام</item>
         <item quantity="many">منذ %1$d أيام</item>
         <item quantity="other">منذ %1$d أيام</item>
@@ -129,11 +129,27 @@
         <item quantity="other">%d يوم</item>
     </plurals>
     <plurals name="num_repos">
-        <item quantity="zero">%d</item>
+        <item quantity="zero">لا مستودعات</item>
         <item quantity="one">مستودع</item>
         <item quantity="two">مستودعان</item>
         <item quantity="few">%d مستودعات</item>
         <item quantity="many">%d مستودعات</item>
-        <item quantity="other"></item>
+        <item quantity="other">%d مستودعات</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="zero">%1$s صفحات</item>
+        <item quantity="one">صفحة</item>
+        <item quantity="two">صفحتان</item>
+        <item quantity="few">%1$s صفحات</item>
+        <item quantity="many">%1$s صفحات</item>
+        <item quantity="other">%1$s صفحات</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="zero">اليوم</item>
+        <item quantity="one">غداً</item>
+        <item quantity="two">بعد غد</item>
+        <item quantity="few">بعد %1$d أيام</item>
+        <item quantity="many">بعد %1$d أيام</item>
+        <item quantity="other">بعد %1$d أيام</item>
     </plurals>
 </resources>

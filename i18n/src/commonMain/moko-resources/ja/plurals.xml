@@ -54,4 +54,7 @@
     <plurals name="upcoming_relative_time">
         <item quantity="other">%1$d 日後</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="other">%1$s ページ</item>
+    </plurals>
 </resources>

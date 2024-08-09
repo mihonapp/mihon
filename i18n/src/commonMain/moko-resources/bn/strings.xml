@@ -589,7 +589,6 @@
     <string name="pref_reader_summary">পঠনের ধরন, ডিসপ্লে,নেভিগেশন</string>
     <string name="pref_backup_summary">ম্যানুয়াল ও সয়ংক্রিয় ব্যাকআপ</string>
     <string name="pref_security_summary">অ্যাপ লক,নিরাপদ পর্দা</string>
-    <string name="loader_rar5_error">RARv5 ধরন সমর্থিত নয়</string>
     <string name="skipped_reason_not_caught_up">অপঠিত অধ্যায় থাকায় এড়িয়ে যাওয়া হয়েছে</string>
     <string name="label_local">স্থানীয়</string>
     <string name="action_copy_to_clipboard">ক্লিপবোর্ডে কপি করুন</string>

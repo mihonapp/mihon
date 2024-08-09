@@ -614,7 +614,6 @@
     <string name="appwidget_unavailable_locked">Tiện ích không còn khả dụng khi khóa ứng dụng đang bật</string>
     <string name="appwidget_updates_description">Xem các bộ truyện được cập nhật gần đây</string>
     <string name="action_remove_everything">Loại bỏ tất cả mọi thứ</string>
-    <string name="loader_rar5_error">Định dạng RARv5 không được hỗ trợ</string>
     <string name="update_already_running">Có một cập nhật đang chạy sẵn</string>
     <string name="theme_tidalwave">Sóng Thủy Triều</string>
     <string name="error_user_agent_string_blank">Chuỗi đại diện người dùng không thể bỏ trống</string>

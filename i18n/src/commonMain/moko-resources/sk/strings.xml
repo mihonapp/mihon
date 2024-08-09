@@ -627,7 +627,6 @@
     <string name="skipped_reason_completed">Preskočené, pretože séria je dokončená</string>
     <string name="skipped_reason_not_caught_up">Preskočené, pretože obsahuje neprečítané kapitoly</string>
     <string name="skipped_reason_not_started">Preskočené, pretože neboli prečítané žiadne kapitoly</string>
-    <string name="loader_rar5_error">Formát RARv5 nie je podporovaný</string>
     <string name="label_local">Lokálna</string>
     <string name="label_downloaded">Stiahnuté</string>
     <string name="label_stats">Štatistiky</string>

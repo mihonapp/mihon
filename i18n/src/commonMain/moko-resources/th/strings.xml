@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">ตัวแทนผู้ใช้เริ่มต้น</string>
     <string name="pref_reset_user_agent_string">รีเซ็ตตัวแทนผู้ใช้</string>
     <string name="action_remove_everything">นำทุกอย่างออก</string>
-    <string name="loader_rar5_error">ไม่รับรองรูปแบบ RARv5</string>
     <string name="appwidget_updates_description">แสดงรายการในคลังที่อัปเดตล่าสุดของคุณ</string>
     <string name="appwidget_unavailable_locked">วิดเจ็ตไม่พร้อมใช้งานขณะการล็อกแอปเปิดไว้</string>
     <string name="error_user_agent_string_blank">สตริงตัวแทนผู้ใช้ไม่สามารถทิ้งว่างเปล่าไว้ได้</string>

@@ -77,12 +77,12 @@
     <string name="information_empty_category">Wala ka pang kategorya. Pindutin ang plus button para gumawa ng isa para sa pag-aayos ng iyong aklatan.</string>
     <string name="information_empty_library">Bakante ang Aklatan mo</string>
     <string name="information_no_recent_manga">Walang binasa kamakailan</string>
-    <string name="information_no_recent">Walang kamakailang mga update</string>
+    <string name="information_no_recent">Walang kamakailang update</string>
     <string name="information_no_downloads">Walang dina-download</string>
     <string name="label_help">Tulong</string>
     <string name="label_extension_info">Tungkol sa extension</string>
     <string name="label_extensions">Mga Extension</string>
-    <string name="label_migration">Lumipat</string>
+    <string name="label_migration">Maglipat</string>
     <string name="label_backup">Pag-backup at Pag-restore</string>
     <string name="label_sources">Mga Source</string>
     <string name="label_recent_manga">Nakaraan</string>
@@ -98,7 +98,7 @@
     <string name="lock_with_biometrics">Nangangailangang i-unlock</string>
     <string name="pref_manage_notifications">Pamahalaan ang mga abiso</string>
     <string name="pref_category_security">Seguridad at privacy</string>
-    <string name="pref_date_format">Ayos ng petsa</string>
+    <string name="pref_date_format">Pormat ng petsa</string>
     <string name="theme_dark">Madilim</string>
     <string name="theme_light">Maliwanag</string>
     <string name="theme_system">Sistema</string>
@@ -221,10 +221,10 @@
     <string name="invalid_backup_file">Imbalidong backup file:</string>
     <string name="backup_created">Nai-backup na</string>
     <string name="pref_backup_interval">Awtomatikong dalas ng pag-backup</string>
-    <string name="pref_restore_backup_summ">I-restore ang Aklatan mula sa backup</string>
+    <string name="pref_restore_backup_summ">I-restore ang aklatan mula sa backup file</string>
     <string name="pref_restore_backup">I-restore ang backup</string>
-    <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang Aklatan</string>
-    <string name="pref_create_backup">Mag-backup</string>
+    <string name="pref_create_backup_summ">Magagamit para ma-restore ang kasalukuyang aklatan</string>
+    <string name="pref_create_backup">Gumawa ng backup</string>
     <string name="tracking_info">Isahang pagsabay (sync) para mai-update ang progress sa mga kabanata sa mga external na tracking service. Ayusin ang pagta-track para sa mga indibidwal na entry gamit ang button na Pagta-track.</string>
     <string name="services">Mga Tracker</string>
     <string name="pref_auto_update_manga_sync">I-update ang progress pagkatapos basahin</string>
@@ -248,7 +248,7 @@
     <string name="download_notifier_unknown_error">Di ma-download ang kabanata dahil sa isang di-inaasahang error</string>
     <string name="download_notifier_title_error">Nagka-error</string>
     <string name="download_notifier_downloader_title">Taga-download</string>
-    <string name="information_webview_outdated">Paki-update po ang WebView app para sa mas maayos na paggana</string>
+    <string name="information_webview_outdated">Paki-update ang WebView app para sa mas mahusay na pagkakatugma</string>
     <string name="information_webview_required">Kinakailangan ng app ang WebView upang gumana ito</string>
     <string name="information_cloudflare_bypass_failure">Bigong ma-bypass ang Cloudflare</string>
     <string name="update_check_notification_update_available">May bagong bersyon!</string>
@@ -302,8 +302,8 @@
     <string name="status">Estado</string>
     <string name="title">Pamagat</string>
     <string name="score">Iskor</string>
-    <string name="repeating">Binabasa uli</string>
-    <string name="plan_to_read">Binabalak</string>
+    <string name="repeating">Binabasa muli</string>
+    <string name="plan_to_read">Binabalak na basahin</string>
     <string name="paused">Hininto</string>
     <string name="on_hold">Tinigil</string>
     <string name="completed">Kumpleto</string>
@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">I-reset ang default na string ng user agent</string>
     <string name="pref_user_agent_string">Default na string ng user agent</string>
     <string name="action_remove_everything">Burahin lahat</string>
-    <string name="loader_rar5_error">Di suportado ang format na RARv5</string>
     <string name="appwidget_updates_description">Tingnan ang mga kamakailang nai-update na entry sa iyong aklatan</string>
     <string name="appwidget_unavailable_locked">Di available ang widget kapag nakabukas ang lock</string>
     <string name="update_already_running">May ina-update sa ngayon</string>
@@ -775,7 +774,7 @@
     <string name="onboarding_permission_notifications_description">Maabisuhan para sa mga update sa aklatan at higit pa.</string>
     <string name="onboarding_permission_action_grant">Payagan</string>
     <string name="available_disk_space_info">Na magagamit: %1$s / Kabuuan: %2$s</string>
-    <string name="manga_interval_expected_update">Mga bagong kabanata na hinulaang ipapalabas sa humigit-kumulang %1$s, na tumitingin sa bawat %2$s.</string>
+    <string name="manga_interval_expected_update">Mga bagong kabanata na nahulaang ilalabas sa loob ng %1$s, na tumitingin sa bawat %2$s.</string>
     <string name="invalid_backup_file_error">Buong error:</string>
     <string name="ext_permission_install_apps_warning">Kinakailangan ng permiso para mag-install ng mga extension. I-tap upang mapayagan ito.</string>
     <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
@@ -810,4 +809,15 @@
     <string name="upcoming_calendar_prev">Nakaraang Buwan</string>
     <string name="action_view_upcoming">Tingnan ang mga Paparating na Update</string>
     <string name="file_picker_uri_permission_unsupported">Nabigong makakuha ng patuloy na pag-access ng folder. Ang app ay magkaroon ng di-inaasahang pagkilos.</string>
+    <string name="pref_flash_page_interval">Mag-flash kada</string>
+    <string name="pref_flash_style_white_black">Puti at Itim</string>
+    <string name="pref_flash_duration">Tagal ng pag-flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_with">Mag-flash na may</string>
+    <string name="pref_flash_style_black">Itim</string>
+    <string name="pref_flash_style_white">Puti</string>
+    <string name="manga_interval_expected_update_null">Ang manga na ito ay nakumpleto na, o walang nahulaang petsa ng paglabas.</string>
+    <string name="invalid_backup_file_json">Hindi suportado ang JSON backup</string>
+    <string name="invalid_backup_file_unknown">Nasira ang backup file</string>
+    <string name="extensionRepo_settings">Mga Repo ng Extension</string>
 </resources>

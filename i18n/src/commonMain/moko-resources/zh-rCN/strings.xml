@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">默认 User Agent 字符串</string>
     <string name="pref_reset_user_agent_string">恢复默认 User Agent 字符串</string>
     <string name="action_remove_everything">全部删除</string>
-    <string name="loader_rar5_error">不支持 RARv5 格式</string>
     <string name="appwidget_unavailable_locked">应用锁开启时，小部件不能使用</string>
     <string name="appwidget_updates_description">查看最近更新的作品</string>
     <string name="update_already_running">有其他更新尚未完成</string>
@@ -809,4 +808,15 @@
     <string name="label_upcoming">即将推出</string>
     <string name="upcoming_calendar_next">下个月</string>
     <string name="upcoming_calendar_prev">上个月</string>
+    <string name="manga_interval_expected_update_null">此漫画或已完结，或无发行日期。</string>
+    <string name="pref_flash_duration_summary">%1$s 毫秒</string>
+    <string name="pref_flash_duration">闪烁时间</string>
+    <string name="pref_flash_style_black">黑</string>
+    <string name="pref_flash_with">闪烁于</string>
+    <string name="pref_flash_style_white">白</string>
+    <string name="pref_flash_style_white_black">黑白</string>
+    <string name="file_picker_uri_permission_unsupported">获取永久文件存储权限失败，应用程序可能会出现异常。</string>
+    <string name="pref_flash_page_interval">闪烁时间间隔</string>
+    <string name="invalid_backup_file_json">不支持 JSON 备份</string>
+    <string name="invalid_backup_file_unknown">备份文件已损坏</string>
 </resources>

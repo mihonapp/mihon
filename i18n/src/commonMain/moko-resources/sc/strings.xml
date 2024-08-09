@@ -614,7 +614,6 @@
     <string name="pref_user_agent_string">Istringa de agente de utente predefinida</string>
     <string name="pref_reset_user_agent_string">Reseta s\'istringa de agente de utente predefinida</string>
     <string name="action_remove_everything">Boga totu</string>
-    <string name="loader_rar5_error">Su formadu RARv5 no est suportadu</string>
     <string name="appwidget_unavailable_locked">Su widget no est a disponimentu cando su blocu de s\'aplicatzione est abilitadu</string>
     <string name="appwidget_updates_description">Pòmpia sos elementos de biblioteca tuos agiornados dae pagu</string>
     <string name="update_already_running">B\'est giai un\'agiornamentu in cursu</string>
@@ -755,4 +754,71 @@
     <string name="source_settings">Impostatziones de sas fontes</string>
     <string name="app_settings">Impostatziones de s\'aplicatzione</string>
     <string name="exclude_scanlators">Esclude sos iscandutores (iscansidores+tradutores)</string>
+    <string name="manga_interval_expected_update_null">Custu manga est acabbadu o non b\'at una data de publicatzione previdida.</string>
+    <string name="file_picker_uri_permission_unsupported">Non s\'est pòdidu otènnere s\'atzessu permanente a sa cartella. S\'aplicatzione si diat pòdere cumportare in manera no isetada.</string>
+    <string name="ext_permission_install_apps_warning">B\'at bisòngiu de sos permissos pro installare estensiones. Toca inoghe pro los frunire.</string>
+    <string name="information_empty_repos">Non tenes galu depòsitos impostados.</string>
+    <string name="error_repo_exists">Custu depòsitu esistit giai!</string>
+    <string name="action_delete_repo">Iscantzella su depòsitu</string>
+    <string name="delete_repo_confirmation">Boles iscantzellare su depòsitu \"%s\"?</string>
+    <string name="action_open_repo">Depòsitu a còdighe abertu</string>
+    <string name="no_location_set">Perunu logu de archiviatzione isseberadu</string>
+    <string name="pref_flash_duration">Durada de su flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Flash cada</string>
+    <string name="pref_flash_with">Flash cun</string>
+    <string name="pref_flash_style_black">Nieddu</string>
+    <string name="pref_flash_style_white">Biancu</string>
+    <string name="pref_flash_style_white_black">Biancu e nieddu</string>
+    <string name="invalid_backup_file_error">Errore intreu:</string>
+    <string name="upcoming_guide">Ghia a sas atualizatziones imbenientes</string>
+    <string name="pref_onboarding_guide">Ghia de introdutzione</string>
+    <string name="onboarding_heading">Bene bènnidu!</string>
+    <string name="onboarding_action_next">Imbeniente</string>
+    <string name="onboarding_action_finish">Incumintzemus</string>
+    <string name="onboarding_action_skip">Brinca</string>
+    <string name="onboarding_storage_info">Seletziona una cartella in ue %1$s at a archiviare sos capìtulos iscarrigados, sas còpias de seguresa e àteru.
+\n
+\nSi cussìgiat una cartella dedicada.
+\n
+\nCartella seletzionada: %2$s</string>
+    <string name="onboarding_storage_help_info">Ses agiornende dae una versione betza e non ses seguru de ite seletzionare? Abbista·ti sa ghia a s\'archiviatzione pro àteras informatziones.</string>
+    <string name="onboarding_storage_help_action">Ghia a s\'archiviatzione</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Èvita interrutziones a agiornamentos longos de sa biblioteca, iscarrigamentos, e riprìstinos de còpias de seguresa.</string>
+    <string name="onboarding_permission_action_grant">Fruni</string>
+    <string name="onboarding_guides_new_user">Nou in %s? Ti cussigiamus de t\'abbistare sa ghia de introdutzione.</string>
+    <string name="theme_nord">Nord</string>
+    <string name="pref_library_update_smart_update">Agiornamentu inteligente</string>
+    <string name="action_add_repo">Annanghe unu depòsitu</string>
+    <string name="label_add_repo_input">URL de su depòsitu</string>
+    <string name="action_add_repo_message">Annanghe depòsitos additzionales a Mihon. Custu diat dèpere èssere un\'URL chi acabbat cun \"index.min.json\".</string>
+    <string name="private_settings">Include impostatziones sensìbiles ( a es. getones de intrada a sos arrastadores)</string>
+    <string name="manga_interval_expected_update_soon">Luego</string>
+    <string name="action_add_anyway">Annanghe su matessi</string>
+    <string name="action_migrate_duplicate">Tràmuda s\'elementu esistente</string>
+    <string name="pref_webtoon_disable_zoom_out">Istuda sa ridutzione de ismanniada</string>
+    <string name="onboarding_description">In antis de totus tocat a cunfigurare una paja de cosas. L\'as a pòdere semper modificare a pustis dae sas impostatziones.</string>
+    <string name="onboarding_storage_action_select">Seletziona una cartella</string>
+    <string name="onboarding_storage_selection_required">Depes seletzionare una cartella</string>
+    <string name="onboarding_permission_install_apps">Permissos pro installare s\'aplicatzione</string>
+    <string name="onboarding_permission_install_apps_description">Pro installare estensiones de fontes.</string>
+    <string name="onboarding_permission_notifications">Permissu pro sas notìficas</string>
+    <string name="onboarding_permission_notifications_description">Retzi notìficas pro agiornamentos de sa biblioteca e àteru.</string>
+    <string name="onboarding_permission_ignore_battery_opts">Impreu de sa bateria in s\'isfundu</string>
+    <string name="invalid_repo_name">URL de su depòsitu non vàlidu</string>
+    <string name="manga_interval_expected_update">Si pensat chi sos capìtulos los pùblichent pagu prus o mancu cada%1$s, cun verìficas cada %2$s.</string>
+    <string name="manga_interval_custom_amount">Frecuèntzia de agiornamentu personalizada:</string>
+    <string name="upcoming_calendar_next">Su mese chi intrat</string>
+    <string name="upcoming_calendar_prev">Su mese coladu</string>
+    <string name="onboarding_guides_returning_user">Ses torrende a installare %s?</string>
+    <string name="ext_revoke_trust">Rèvoca sas estensiones disconnotas afidàbiles</string>
+    <string name="label_extension_repos">Depòsitos de estensiones</string>
+    <string name="available_disk_space_info">A disponimentu: %1$s / Totale: %2$s</string>
+    <string name="action_replace_repo">Remplasa</string>
+    <string name="action_replace_repo_title">S\'imprenta digitale de sa crae de firma esistit giai</string>
+    <string name="action_replace_repo_message">Su depòsitu %1$s tenet sa matessi imprenta digitale de sa crae de firma de %2$s.
+\nSi custu est su chi t\'isetas, %2$s s\'at a sostituire, si nono cuntata su mantenidore de su depòsitu tuo.</string>
+    <string name="pref_display_profile">Profilu de visualizatzione predefinidu</string>
+    <string name="action_view_upcoming">Abbista·ti sos agiornamentos imbenientes</string>
+    <string name="label_upcoming">Imbeniente</string>
 </resources>

@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">デフォルトのユーザーエージェント文字列</string>
     <string name="pref_reset_user_agent_string">デフォルトのユーザーエージェント文字列をリセットする</string>
     <string name="action_remove_everything">全て削除</string>
-    <string name="loader_rar5_error">フォーマットRARv5は未対応です</string>
     <string name="appwidget_updates_description">最近更新されたライブラリの項目を見る</string>
     <string name="appwidget_unavailable_locked">アプリロックがONの時、ウィジェットは利用できません</string>
     <string name="update_already_running">アップデートはすでに進行中です</string>
@@ -809,4 +808,13 @@
     <string name="upcoming_guide">今後のご案内</string>
     <string name="action_replace_repo_message">リポジトリ %1$s は %2$s と同じ署名キー指紋を持っています。
 \nこれが予想される場合は %2$s が置換されますが、そうでない場合はリポジトリのメンテナーに連絡してください。</string>
+    <string name="pref_flash_duration">閃光時間</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">フラッシュ・エブリ</string>
+    <string name="pref_flash_with">フラッシュ</string>
+    <string name="pref_flash_style_black">ブラック</string>
+    <string name="pref_flash_style_white">ホワイト</string>
+    <string name="pref_flash_style_white_black">白と黒</string>
+    <string name="manga_interval_expected_update_null">このマンガは完結しているか、あるいは発売予定日が決まっていない。</string>
+    <string name="file_picker_uri_permission_unsupported">永続フォルダアクセスの取得に失敗しました。 アプリが予期しない動作をする可能性があります。</string>
 </resources>

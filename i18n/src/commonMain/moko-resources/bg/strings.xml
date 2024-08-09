@@ -626,7 +626,6 @@
     <string name="remove_manga">Искате да премахнете \"%s\" от библиотеката си</string>
     <string name="action_close">Затвори</string>
     <string name="pref_reset_viewer_flags_success">Всички настройки на четеца нулирани</string>
-    <string name="loader_rar5_error">Форматът RARv5 не се поддържа</string>
     <string name="pref_appearance_summary">Тема, формат на датата и времето</string>
     <string name="pref_library_summary">Категории, глобални обновления</string>
     <string name="pref_reader_summary">Режим на четене, показване, навигация</string>

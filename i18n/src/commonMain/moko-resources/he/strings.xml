@@ -563,7 +563,6 @@
     <string name="pref_dual_page_invert_summary">אם המקום של העמוד המפוצל לא תואם לכיוון הקריאה</string>
     <string name="tapping_inverted_none">כלום</string>
     <string name="pref_viewer_nav">איזורי נגיעה</string>
-    <string name="loader_rar5_error">הפורמט RARv5 לא נתמך</string>
     <string name="action_search_hint">חיפוש…</string>
     <string name="action_open_random_manga">פתיחת פריט אקראי</string>
     <string name="getting_started_guide">מדריך למתחיל</string>

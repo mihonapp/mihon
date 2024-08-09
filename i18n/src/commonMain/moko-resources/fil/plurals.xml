@@ -70,6 +70,10 @@
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Bukas</item>
-        <item quantity="other">Sa loob ng %1$d araw</item>
+        <item quantity="other">Sa loob ng %1$d na araw</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pahina</item>
+        <item quantity="other">%1$s na mga pahina</item>
     </plurals>
 </resources>

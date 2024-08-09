@@ -593,7 +593,6 @@
     <string name="pref_reset_viewer_flags">Repor as definições do leitor por série</string>
     <string name="pref_reset_viewer_flags_summary">Repõe o modo de leitura e orientação de todas as séries</string>
     <string name="download_notifier_split_page_path_not_found">Não foi possível encontrar o caminho do ficheiro da página %d</string>
-    <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
     <string name="multi_lang">Multi</string>
     <string name="auto_download_while_reading">Transferência automática durante leitura</string>
     <string name="delete_category_confirmation">Deseja apagar a categoria \"%s\"?</string>

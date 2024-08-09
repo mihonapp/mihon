@@ -108,4 +108,10 @@
         <item quantity="many">В течении %1$d дней</item>
         <item quantity="other">В течении %1$d дней</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 страница</item>
+        <item quantity="few">%1$s страницы</item>
+        <item quantity="many">%1$s страниц</item>
+        <item quantity="other">%1$s страниц</item>
+    </plurals>
 </resources>

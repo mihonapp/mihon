@@ -663,7 +663,6 @@
     <string name="pref_library_summary">Kategorijas, globāli atjauninājumi, nodaļu vilkšana</string>
     <string name="pref_library_update_show_tab_badge">Rādīt nelasīto skaitu uz atjauninājumu ikonas</string>
     <string name="appwidget_unavailable_locked">Logrīks nav pieejams, ja ir iespējota lietotņu bloķēšana</string>
-    <string name="loader_rar5_error">RARv5 formāts netiek atbalstīts</string>
     <string name="hour_short">%dh</string>
     <string name="internal_error">InternalError: Par plašāku informāciju skatiet avārijas žurnālu</string>
     <string name="delete_category_confirmation">Vai vēlaties dzēst kategoriju \"%s\"?</string>

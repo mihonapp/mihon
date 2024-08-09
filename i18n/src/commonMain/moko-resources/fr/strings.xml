@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
     <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
     <string name="action_remove_everything">Tout retirer</string>
-    <string name="loader_rar5_error">Le format RARv5 n\'est pas supporté</string>
     <string name="appwidget_updates_description">Voir les entrées de votre bibliothèque récemment mises à jour</string>
     <string name="appwidget_unavailable_locked">Le Widget n\'est pas disponible lorsque l\'application est verrouillée</string>
     <string name="error_user_agent_string_blank">La liste d\'agents utilisateurs ne peut être vide</string>

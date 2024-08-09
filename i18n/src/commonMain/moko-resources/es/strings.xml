@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Identificarse como otro navegador web («user agent»)</string>
     <string name="pref_reset_user_agent_string">Volver a la identificación de navegador («user agent») original</string>
     <string name="action_remove_everything">Quitar todo</string>
-    <string name="loader_rar5_error">La aplicación no es capaz de leer el formato RARv5</string>
     <string name="appwidget_updates_description">Aquí aparecerá el contenido más reciente de tu biblioteca</string>
     <string name="appwidget_unavailable_locked">El widget no está disponible cuando el bloqueo de aplicación está activo</string>
     <string name="update_already_running">Ya se está actualizando</string>
@@ -810,4 +809,15 @@
     <string name="upcoming_calendar_next">Próximo mes</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
     <string name="file_picker_uri_permission_unsupported">No se ha podido obtener acceso a la carpeta persistente. La aplicación puede comportarse de forma inesperada.</string>
+    <string name="pref_flash_page_interval">Flash cada</string>
+    <string name="pref_flash_with">Flash con</string>
+    <string name="pref_flash_style_white">Blanco</string>
+    <string name="pref_flash_style_white_black">Blanco y negro</string>
+    <string name="pref_flash_style_black">Negro</string>
+    <string name="pref_flash_duration">Duración del flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="manga_interval_expected_update_null">Este manga está terminado o no hay fecha de publicación prevista.</string>
+    <string name="invalid_backup_file_json">Copia de seguridad JSON no compatible</string>
+    <string name="invalid_backup_file_unknown">El archivo de la copia de seguridad está dañado</string>
+    <string name="extensionRepo_settings">Repositorios de extensiones</string>
 </resources>
