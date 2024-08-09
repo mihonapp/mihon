@@ -105,3 +105,34 @@ data class ReadProgressV2Dto(
     val lastReadContinuousNumberSort: Double,
     val maxNumberSort: Float,
 )
+
+@Serializable
+data class BookReadProgressDto(
+    val page: Int,
+    val completed: Boolean,
+    val readDate: String?,
+    val created: String?,
+    val lastModified: String?,
+    val deviceId: String?,
+    val deviceName: String?
+)
+
+@Serializable
+data class BookDtoPartial(
+    val id: String,
+    val seriesId: String,
+    val seriesTitle: String,
+    val name: String,
+    val url: String,
+    val readProgress: BookReadProgressDto?,
+    val fileHash: String
+)
+
+@Serializable
+data class SeriesBookListDtoPartial(
+    val totalElements: Long?,
+    val totalPages: Int?,
+    val size: Int?,
+    val content: List<BookDtoPartial>?,
+    val empty: Boolean?
+)

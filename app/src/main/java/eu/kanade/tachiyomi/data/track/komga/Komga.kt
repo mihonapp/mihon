@@ -3,9 +3,11 @@ package eu.kanade.tachiyomi.data.track.komga
 import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.Chapter
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
+import eu.kanade.tachiyomi.data.track.PageTracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.source.Source
 import kotlinx.collections.immutable.ImmutableList
@@ -16,7 +18,7 @@ import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.domain.track.model.Track as DomainTrack
 
-class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
+class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker, PageTracker {
 
     companion object {
         const val UNREAD = 1L
@@ -64,8 +66,7 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
                 }
             }
         }
-
-        return api.updateProgress(track)
+        return if (trackPreferences.chapterBasedTracking().get()) track else api.updateProgress(track)
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
@@ -111,4 +112,34 @@ class Komga(id: Long) : BaseTracker(id, "Komga"), EnhancedTracker {
         } else {
             null
         }
+
+    override suspend fun updatePageProgressWithUrl(chapterUrl: String, page: Int) {
+        api.updateBookProgress(chapterUrl, page)
+    }
+
+    override suspend fun batchUpdateRemoteProgress(chapters: List<Chapter>) {
+        chapters.forEach {
+            api.updateBookProgress(it.url, it.last_page_read, it.read)
+        }
+    }
+
+    override suspend fun getChapterProgress(chapter: Chapter): PageTracker.ChapterReadProgress {
+        val book = api.getBookInfo(chapter)
+        return PageTracker.ChapterReadProgress(book.readProgress?.completed ?: false, book.readProgress?.page ?: 0)
+    }
+
+    override suspend fun batchGetChapterProgress(chapters: List<Chapter>): Map<Chapter, PageTracker.ChapterReadProgress> {
+        if (chapters.isEmpty()) return mapOf()
+        val seriesId = api.getBookInfo(chapters[0]).seriesId
+        val urlBase = chapters[0].url.split("/books")[0]
+        val books = api.getAllBooksOfSeries(urlBase, seriesId)
+        return chapters.associateWith { chapter ->
+            val book = books.find { chapter.url.toBookId() == it.id }
+            return@associateWith PageTracker.ChapterReadProgress(book?.readProgress?.completed ?: false, book?.readProgress?.page ?: 0)
+        }
+    }
+
+    private fun String.toBookId():String? {
+        return Regex("/api/v1/books/(\\S+)").find(this)?.destructured?.let { (id) -> id }
+    }
 }

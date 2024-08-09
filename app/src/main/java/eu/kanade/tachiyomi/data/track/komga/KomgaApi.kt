@@ -6,6 +6,7 @@ import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
+import eu.kanade.tachiyomi.source.model.SChapter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
@@ -106,5 +107,33 @@ class KomgaApi(
 
     private fun ReadListDto.toTrack(): TrackSearch = TrackSearch.create(trackId).also {
         it.title = name
+    }
+
+    internal suspend fun getBookInfo(chapter: SChapter):BookDtoPartial {
+        with(json){
+            return client.newCall(GET(chapter.url, headers)).awaitSuccess().parseAs<BookDtoPartial>()
+        }
+    }
+
+    internal suspend fun getAllBooksOfSeries(v1UrlBase: String, seriesId: String): List<BookDtoPartial> {
+        with(json) {
+            return client.newCall(GET("$v1UrlBase/series/$seriesId/books?unpaged=true", headers)).awaitSuccess().parseAs<SeriesBookListDtoPartial>().content ?: listOf()
+        }
+    }
+
+    /**
+     * Komga book progress starts from 1.
+     *
+     * Komga API spec: page can be omitted if completed is set to true. completed can be omitted, and will be set accordingly depending on the page passed and the total number of pages in the book.
+     */
+    internal suspend fun updateBookProgress(bookUrl: String, pageIndex: Int = 0, complete: Boolean = false) {
+        //TODO: rate limit
+        val resp = client.newCall(
+            Request.Builder()
+                .url("${bookUrl}/read-progress")
+                .patch("{\"page\": ${pageIndex + 1}, \"completed\": $complete }".toRequestBody("Application/json".toMediaType()))
+                .build()
+        ).awaitSuccess()
+        logcat(LogPriority.DEBUG) { "update progress to ${pageIndex + 1} and complete status $complete with $resp"  }
     }
 }
