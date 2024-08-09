@@ -90,4 +90,9 @@
         <item quantity="many">D’aquí a %1$d dies</item>
         <item quantity="other">D’aquí a %1$d dies</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pàgina</item>
+        <item quantity="many">%1$s pàgines</item>
+        <item quantity="other">%1$s pàgines</item>
+    </plurals>
 </resources>

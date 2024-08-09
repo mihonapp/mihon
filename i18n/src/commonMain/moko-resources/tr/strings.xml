@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Öntanımlı kullanıcı aracısı dizgesi</string>
     <string name="pref_reset_user_agent_string">Öntanımlı kullanıcı aracısı dizgesini sıfırla</string>
     <string name="action_remove_everything">Her şeyi kaldır</string>
-    <string name="loader_rar5_error">RARv5 biçimi desteklenmiyor</string>
     <string name="appwidget_unavailable_locked">Uygulama kilidi etkinleştirildiğinde widget kullanılamıyor</string>
     <string name="appwidget_updates_description">Son güncellenen kitaplık girdilerinizi görün</string>
     <string name="update_already_running">Bir güncelleme zaten çalışıyor</string>

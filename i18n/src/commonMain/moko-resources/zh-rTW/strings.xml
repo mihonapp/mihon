@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">重設預設使用者代理字串</string>
     <string name="pref_user_agent_string">預設使用者代理字串</string>
     <string name="action_remove_everything">全部清除</string>
-    <string name="loader_rar5_error">不支援 RARv5 格式</string>
     <string name="appwidget_unavailable_locked">當需要解鎖才能存取應用程式時，無法使用小工具</string>
     <string name="appwidget_updates_description">查看書櫃中近期更新的作品</string>
     <string name="update_already_running">已在進行更新</string>
@@ -686,7 +685,7 @@
     <string name="track_error">%1$s 發生錯誤：%2$s</string>
     <string name="information_required_plain">*必填</string>
     <string name="pref_hide_in_library_items">隱藏已在書櫃的作品</string>
-    <string name="action_copy_to_clipboard">複製到剪貼簿</string>
+    <string name="action_copy_to_clipboard">複製</string>
     <string name="action_update_category">更新類別</string>
     <string name="split_tall_images">分割過高的圖片</string>
     <string name="overlay_header">封面附加元素</string>
@@ -810,4 +809,15 @@
     <string name="label_upcoming">預告</string>
     <string name="action_view_upcoming">檢視新刊預告</string>
     <string name="file_picker_uri_permission_unsupported">無法取得永久性資料夾存取權，應用程式可能會表現異常。</string>
+    <string name="pref_flash_style_white">白</string>
+    <string name="pref_flash_style_white_black">黑白</string>
+    <string name="manga_interval_expected_update_null">這部漫畫要麼已完結，又或是無預計發布日期。</string>
+    <string name="pref_flash_duration">閃爍時間</string>
+    <string name="pref_flash_duration_summary">%1$s 毫秒</string>
+    <string name="pref_flash_page_interval">閃爍間隔</string>
+    <string name="pref_flash_with">閃爍於</string>
+    <string name="pref_flash_style_black">黑</string>
+    <string name="invalid_backup_file_unknown">備份檔案已損壞</string>
+    <string name="invalid_backup_file_json">不支援 JSON 備份</string>
+    <string name="extensionRepo_settings">擴充套件儲存庫</string>
 </resources>

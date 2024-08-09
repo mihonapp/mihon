@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">User Agent padrão</string>
     <string name="pref_reset_user_agent_string">Redefinir o User Agent padrão</string>
     <string name="action_remove_everything">Remover tudo</string>
-    <string name="loader_rar5_error">O formato RARv5 não é suportado</string>
     <string name="appwidget_updates_description">Veja seus itens da biblioteca atualizados recentemente</string>
     <string name="appwidget_unavailable_locked">Widget não disponível quando o bloqueio do aplicativo está habilitado</string>
     <string name="update_already_running">Uma atualização já está em andamento</string>

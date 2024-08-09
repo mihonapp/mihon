@@ -149,7 +149,7 @@
     <string name="cookies_cleared">تم محو ملفات تعريف الارتباط</string>
     <string name="pref_clear_database">محو قاعدة البيانات</string>
     <string name="pref_clear_database_summary">مسح سجلّ الإدخالات التي ليست محفوظة في مكتبتك</string>
-    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ خسرتَ الفصول المقروءة و التقدم فى العنوانين الغير محفوظة فى المكتبة</string>
+    <string name="clear_database_confirmation">أمتأكِّد؟ إن فعلتَ سوف تخسر الفصول المقروءة و التقدم فى المدخلات الغير محفوظة فى المكتبة</string>
     <string name="clear_database_completed">تم حذف المدخلات</string>
     <string name="version">اﻹصدار</string>
     <string name="pref_enable_acra">إرسال تقارير الأعطال</string>
@@ -185,7 +185,7 @@
     <string name="confirm_delete_chapters">هل أنت متأكد من أنك تريد حذف الفصول المحددة؟</string>
     <string name="manga_tracking_tab">التتبع</string>
     <string name="reading">القراءة</string>
-    <string name="completed">تمَّت</string>
+    <string name="completed">مكتملة</string>
     <string name="dropped">متروكة</string>
     <string name="on_hold">معلَّقة</string>
     <string name="plan_to_read">أنوي قراءتها</string>
@@ -259,7 +259,7 @@
     <string name="track_status">الحالة</string>
     <string name="track_type">النوع</string>
     <string name="migration_dialog_what_to_include">اختر بيانات لتضمينها</string>
-    <string name="migrate">رحِّل</string>
+    <string name="migrate">نقل</string>
     <string name="copy">نسخ</string>
     <string name="information_empty_category">ليست لديك أيّة فئات، اضغط زر اﻹضافة لإنشاء واحدة لتنظيم مكتبتك.</string>
     <string name="transition_finished">تمَّ الانتهاء من:</string>
@@ -281,7 +281,7 @@
     <string name="filter_mode_lighten">مراوغة / تفتيح</string>
     <string name="filter_mode_darken">حرق / تغميق</string>
     <string name="no_results_found">لم يُعثر على أيِّ نتائج</string>
-    <string name="migration_selection_prompt">اختيار مصدر للترحيل من</string>
+    <string name="migration_selection_prompt">اختيار مصدر للنقل من</string>
     <string name="action_webview_back">عودة</string>
     <string name="action_webview_forward">تقدم</string>
     <string name="action_webview_refresh">تحديث</string>
@@ -343,7 +343,7 @@
     <string name="notification_chapters_single_and_more">الفصل %1$s و%2$d فصول أخرى</string>
     <string name="notification_chapters_single">الفصل %1$s</string>
     <string name="recent_manga_time">الفصل %1$s - %2$s</string>
-    <string name="updating_library">تُحدَّث المكتبة</string>
+    <string name="updating_library">تَحديثُ المكتبة</string>
     <string name="viewer">وضع القراءة</string>
     <string name="pref_category_for_this_series">القسم الخاص بهذه السلسلة</string>
     <string name="paused">متوقِّفة</string>
@@ -428,7 +428,7 @@
     <string name="pref_clear_history">مسح السجل</string>
     <string name="spen_next_page">الصفحة التالية</string>
     <string name="spen_previous_page">الصفحة السابقة</string>
-    <string name="migration_help_guide">دليل ترحيل المصدر</string>
+    <string name="migration_help_guide">دليل نقل المصدر</string>
     <string name="pref_category_nsfw_content">محتوى +18</string>
     <string name="pref_show_nsfw_source">اعرض في قوائم المصادر والامتدادات</string>
     <string name="myanimelist_relogin">رجاء سجل دخولك في MAL مجدداً</string>
@@ -442,7 +442,7 @@
     <string name="track_finished_reading_date">تاريخ انهاء القراءة</string>
     <string name="track_started_reading_date">تاريخ بدء القراءة</string>
     <string name="pref_dump_crash_logs_summary">يحفظ سجلات الأخطاء في ملف للمشاركة مع المطورين</string>
-    <string name="pref_dump_crash_logs">شارك سجلَّات الانهيار</string>
+    <string name="pref_dump_crash_logs">شارك سجلَّات الاعطال</string>
     <string name="right_and_left_nav">يميناً ويساراً</string>
     <string name="pref_dual_page_invert_summary">إذا كان موضع تقسيم الصفحات العريضة لا يتطابق مع اتجاه القراءة</string>
     <string name="pref_dual_page_invert">عكس موضع تقسيم الصفحة</string>
@@ -490,7 +490,7 @@
     <string name="error_sharing_cover">فشلت مشاركة الغلاف</string>
     <string name="error_saving_cover">خطأ في حفظ الغلاف</string>
     <string name="cover_saved">حُفظ الغلاف</string>
-    <string name="manga_cover">غطاء</string>
+    <string name="manga_cover">غُلاف</string>
     <string name="local_invalid_format">تنسيق الفصل غير صالح</string>
     <string name="tracking_guide">تعليمات التعقب</string>
     <string name="categorized_display_settings">إعدادات فرز كل صنف</string>
@@ -545,7 +545,7 @@
     <string name="ext_installer_shizuku_stopped">«Shizuku» لا يعمل</string>
     <string name="publishing_finished">انتهى النشر</string>
     <string name="cancelled">أُلغيت</string>
-    <string name="on_hiatus">منقطعة</string>
+    <string name="on_hiatus">متوقفة</string>
     <string name="library_errors_help">للحصول على المساعده في إصلاح أخطاء تحديث المكتبة، أنظر هنا%1$s</string>
     <string name="save_chapter_as_cbz">احفظ كأرشيف CBZ</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
@@ -562,15 +562,15 @@
     <string name="skipped_reason_not_started">تُخُطِّيت بسبب عدم وجود فصول قُرئت</string>
     <string name="skipped_reason_not_caught_up">تُخُطِّيت لوجود فصول لم تُقرأ</string>
     <string name="pref_update_only_started">لم يبدأ هذا بعد</string>
-    <string name="skipped_reason_completed">تُخُطِّيت لأنها تمِّت</string>
+    <string name="skipped_reason_completed">تُخُطِّيت لأنها مكتملة</string>
     <string name="pref_navigate_pan">حرِّك الصور الواسعة</string>
     <string name="pref_landscape_zoom">كبِّر الصور العريضة تلقائيًّا</string>
     <string name="error_saving_picture">خطأ أثناء حفظ الصورة</string>
     <string name="disabled_nav">معطل</string>
     <string name="rotation_reverse_portrait">رأسي بالعكس</string>
     <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
-    <string name="learn_more">اضغط لقراءة المزيد</string>
-    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية التحويل من إصدارات F-Droid غير الرسمية.</string>
+    <string name="learn_more">اضغط لمعرفة المزيد</string>
+    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية النقل من إصدارات F-Droid غير الرسمية.</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
     <string name="action_close">اغلاق</string>
@@ -612,7 +612,6 @@
     <string name="appwidget_unavailable_locked">لا تتاح الأداة حال تمكين قفل التطبيق</string>
     <string name="appwidget_updates_description">اطَّلع على ما حُدِّث مؤخَّرًا في مكتبتك</string>
     <string name="action_remove_everything">حذف كل شيء</string>
-    <string name="loader_rar5_error">تنسيق RARv5 ليس مدعومًا</string>
     <string name="theme_tidalwave">موجة مد و جزر</string>
     <string name="multi_lang">متعدد</string>
     <string name="update_already_running">هنالك تحديث جارٍ بالفعل</string>
@@ -727,7 +726,7 @@
     <string name="pref_relative_format">التوقيت النسبي</string>
     <string name="pref_relative_format_summary">«%1$s» بدلًا عن «%2$s»</string>
     <string name="action_sort_category">رتِّب الفئات</string>
-    <string name="notification_updating_progress">تُنعَش المكتبة… (%s)</string>
+    <string name="notification_updating_progress">تحديث المكتبة… (%s)</string>
     <string name="sort_category_confirmation">أتريد ترتيب الفئات حسب الحروف؟</string>
     <string name="source_settings">إعدادات المصادر</string>
     <string name="app_settings">إعدادات التطبيق</string>
@@ -805,4 +804,17 @@
     <string name="action_replace_repo">استبدل</string>
     <string name="action_replace_repo_title">بصمة مفتاح الانخراط موجودة من قبل</string>
     <string name="pref_webtoon_disable_zoom_out">تعطيل التصغير</string>
+    <string name="manga_interval_expected_update_null">المانجا اما منتهية او لا يوجد تاريخ اصدار متوقع.</string>
+    <string name="pref_flash_style_white_black">أبيض وأسود</string>
+    <string name="file_picker_uri_permission_unsupported">فشل في الحصول على الوصول المستمر إلى المجلد. قد يتصرف التطبيق بشكل غير متوقع.</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_duration">مدة الوميض</string>
+    <string name="pref_flash_page_interval">يومض كل(مدة)</string>
+    <string name="pref_flash_style_black">أسود</string>
+    <string name="pref_flash_style_white">أبيض</string>
+    <string name="pref_flash_with">يومض مع</string>
+    <string name="action_replace_repo_message">يحتوي المستودع %1$s على نفس بصمة مفتاح التوقيع الموجودة في %2$s.
+\n إذا كان هذا متوقعًا، فسيتم استبدال %2$s، وإلا فاتصل بمشرف الرابطالخاص بك.</string>
+    <string name="action_migrate_duplicate">نقل مَدْخَل موجود</string>
+    <string name="pref_display_profile">ملف تعريف عرض خاص</string>
 </resources>

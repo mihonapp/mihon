@@ -337,4 +337,19 @@
     <string name="action_remove_everything">Выдаліць усё</string>
     <string name="update_72hour">Кожныя 3 дні</string>
     <string name="connected_to_wifi">Толькі па Wi-Fi</string>
+    <string name="not_selected">Не выбрана</string>
+    <string name="action_bar_up_description">Перайсці ўверх</string>
+    <string name="unlock_app_title">Разблакіраваць %s</string>
+    <string name="label_started">Пачата</string>
+    <string name="selected">Выбрана</string>
+    <string name="action_menu_overflow_description">Другія опцыі</string>
+    <string name="delete_downloaded">Выдаліць загружанае</string>
+    <string name="label_data_storage">Даныя і хаванне</string>
+    <string name="label_stats">Статыстыка</string>
+    <string name="label_local">На ўстройстве</string>
+    <string name="action_set_interval">Задаць інтэрвал</string>
+    <string name="action_filter_interval_custom">Наладжвальная частата абнаўлення</string>
+    <string name="label_upcoming">Наступнае</string>
+    <string name="scanlator">Перакладчык</string>
+    <string name="label_downloaded">Загружана</string>
 </resources>

@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Προεπιλεγμένη συμβολοσειρά πράκτορα χρήστη</string>
     <string name="pref_reset_user_agent_string">Επαναφορά προεπιλεγμένης συμβολοσειράς πράκτορα χρήστη</string>
     <string name="action_remove_everything">Καταργήστε τα πάντα</string>
-    <string name="loader_rar5_error">Η μορφή RARv5 δεν υποστηρίζεται</string>
     <string name="appwidget_updates_description">Δείτε τις πρόσφατα ενημερωμένες καταχωρήσεις της βιβλιοθήκης σας</string>
     <string name="appwidget_unavailable_locked">Το widget δεν είναι διαθέσιμο όταν είναι ενεργοποιημένο το κλείδωμα εφαρμογών</string>
     <string name="update_already_running">Εκτελείται ήδη μια ενημέρωση</string>
@@ -809,4 +808,5 @@
     <string name="upcoming_guide">Οδηγός ανερχόμενων</string>
     <string name="upcoming_calendar_next">Επόμενο μήνα</string>
     <string name="upcoming_calendar_prev">Προηγούμενο Μήνα</string>
+    <string name="file_picker_uri_permission_unsupported">Αποτυχία απόκτησης μόνιμης πρόσβασης φακέλου. Η εφαρμογή μπορεί να συμπεριφέρεται απροσδόκητα.</string>
 </resources>

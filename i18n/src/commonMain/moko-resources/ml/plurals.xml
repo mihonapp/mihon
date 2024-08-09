@@ -62,10 +62,18 @@
     </plurals>
     <plurals name="notification_chapters_multiple_and_more">
         <item quantity="one">അധ്യായങ്ങൾ %1$s-ഉം പിന്നെ 1-ഉം</item>
-        <item quantity="other">%1$s-ഉം %2$d-ഉം അധ്യായങ്ങൾ</item>
+        <item quantity="other">%1$s അധ്യായങ്ങളും പിന്നെ %2$d-ഉം</item>
     </plurals>
     <plurals name="num_repos">
         <item quantity="one">%d റിപ്പോ</item>
         <item quantity="other">%d റിപ്പോകൾ</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 പേജ്</item>
+        <item quantity="other">%1$s പേജ്</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">%d എൻട്രിക്ക്</item>
+        <item quantity="other">%d എൻട്രികൾക്കായി</item>
     </plurals>
 </resources>

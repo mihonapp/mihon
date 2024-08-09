@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Standard-User-Agent-Text</string>
     <string name="pref_reset_user_agent_string">Standard-User-Agent-Text zurücksetzen</string>
     <string name="action_remove_everything">Alles entfernen</string>
-    <string name="loader_rar5_error">Das RARv5-Format wird nicht unterstützt</string>
     <string name="appwidget_updates_description">Deine kürzlich aktualisierten Bibliothekseinträge ansehen</string>
     <string name="appwidget_unavailable_locked">Widget ist nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
     <string name="update_already_running">Eine Aktualisierung ist bereits im Gange</string>
@@ -637,7 +636,7 @@
     <string name="crash_screen_title">Ups!</string>
     <string name="pref_advanced_summary">Absturzprotokolle ausgeben, Akkuverbrauch-Optimierung</string>
     <string name="pref_backup_summary">Manuelle und automatische Datensicherungen, Speicherplatz</string>
-    <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, die Absturzprotokolle in unserem Support-Kanal auf Discord zu teilen.</string>
+    <string name="crash_screen_description">%s ist auf einen unerwarteten Fehler gestoßen. Wir empfehlen dir, die Absturzprotokolle in unseren Support-Kanal auf Discord zu teilen.</string>
     <string name="pref_security_summary">App-Sperre, sicherer Bildschirm</string>
     <string name="unknown_title">Unbekannter Titel</string>
     <string name="invalid_location">Ungültiger Speicherort: %s</string>
@@ -810,4 +809,12 @@
     <string name="action_view_upcoming">Bevorstehende Aktualisierungen ansehen</string>
     <string name="upcoming_guide">Leitfaden für Bevorstehendes</string>
     <string name="file_picker_uri_permission_unsupported">Dauerhafter Ordnerzugriff konnte nicht erlangt werden. Die App kann sich unerwartet verhalten.</string>
+    <string name="manga_interval_expected_update_null">Dieser Manga ist entweder abgeschlossen, oder es existiert kein geschätztes Veröffentlichungsdatum.</string>
+    <string name="pref_flash_page_interval">Leuchte jede</string>
+    <string name="pref_flash_with">Leuchte mit</string>
+    <string name="pref_flash_style_black">Schwarz</string>
+    <string name="pref_flash_style_white">Weiß</string>
+    <string name="pref_flash_style_white_black">Weiß und Schwarz</string>
+    <string name="pref_flash_duration">Dauer des Leuchtens</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
 </resources>

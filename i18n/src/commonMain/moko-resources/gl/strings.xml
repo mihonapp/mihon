@@ -665,7 +665,6 @@
     <string name="error_category_exists">Xa hai unha categoría con este nome!</string>
     <string name="dialog_with_checkbox_reset">Reiniciar tódolos capítulos deste elemento</string>
     <string name="viewer">Modo de lectura</string>
-    <string name="loader_rar5_error">O formato RARv5 non está soportado</string>
     <string name="updating_library">Actualizando a biblioteca</string>
     <string name="updates_last_update_info">Última actualización da biblioteca: %s</string>
     <string name="recent_manga_time">Cap. %1$s - %2$s</string>

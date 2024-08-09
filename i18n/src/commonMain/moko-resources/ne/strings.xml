@@ -663,7 +663,6 @@
     <string name="download_notifier_split_page_not_found">पृष्ठ विभाजन गर्दा %d फेला परेन</string>
     <string name="information_no_manga_category">वर्ग खाली छ</string>
     <string name="internal_error">आन्तरिक त्रुटि: थप जानकारीको लागि क्र्यास लगहरू जाँच गर्नुहोस्</string>
-    <string name="loader_rar5_error">RARv5 समर्थित छैन</string>
     <string name="label_completed_titles">पढिसकेका इन्ट्रीहरू</string>
     <string name="label_total_chapters">कुल</string>
     <string name="label_read_chapters">पढेको</string>
@@ -814,4 +813,15 @@
     <string name="upcoming_calendar_next">अर्को महिना</string>
     <string name="upcoming_calendar_prev">अघिल्लो महिना</string>
     <string name="file_picker_uri_permission_unsupported">लगातार फोल्डर पहुँच प्राप्त गर्न असफल। एपले अप्रत्याशित रूपमा व्यवहार गर्न सक्छ।</string>
+    <string name="pref_flash_duration">फ्ल्यास अवधि</string>
+    <string name="pref_flash_style_white">सेतो</string>
+    <string name="pref_flash_style_white_black">सेतो र कालो</string>
+    <string name="pref_flash_with">सँग फ्ल्यास</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">फ्ल्यास हरेक</string>
+    <string name="pref_flash_style_black">कालो</string>
+    <string name="manga_interval_expected_update_null">यो माङ्गा या त समाप्त भयो, वा त्यहाँ कुनै अनुमानित रिलीज मिति छैन।</string>
+    <string name="extensionRepo_settings">एक्सटेन्शन रिपो</string>
+    <string name="invalid_backup_file_json">JSON ब्याकअप समर्थित छैन</string>
+    <string name="invalid_backup_file_unknown">ब्याकअप फाइल बिग्रिएको छ</string>
 </resources>
