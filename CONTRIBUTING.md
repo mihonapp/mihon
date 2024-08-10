@@ -26,7 +26,7 @@ Before you start, please note that the ability to use following technologies is 
 
 ## Linting
 
-To auto-fix some linting errors, run the `ktlintFormat` Gradle task.
+Run the `detekt` gradle task. If the build fails, a report of issues can be found in `app/build/reports/detekt/`. The report is availble in several formats and details each issue that needs attention. 
 
 ## Getting help
 
