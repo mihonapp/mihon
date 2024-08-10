@@ -171,7 +171,7 @@ data class TrackInfoDialogHomeScreen(
                     ),
                 )
             },
-            onCopyLink = { copyTrackerLink(context, it) },
+            onCopyLink = { context.copyTrackerLink(it) },
         )
     }
 
@@ -185,10 +185,10 @@ data class TrackInfoDialogHomeScreen(
         }
     }
 
-    private fun copyTrackerLink(context: Context, trackItem: TrackItem) {
+    private fun Context.copyTrackerLink(trackItem: TrackItem) {
         val url = trackItem.track?.remoteUrl ?: return
         if (url.isNotBlank()) {
-            context.copyToClipboard(url, url)
+            copyToClipboard(url, url)
         }
     }
 
