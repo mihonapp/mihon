@@ -314,7 +314,7 @@ private fun TrackInfoItemMenu(
                 },
             )
             DropdownMenuItem(
-                text = { Text(stringResource(MR.strings.action_copy_to_clipboard)) },
+                text = { Text(stringResource(MR.strings.action_copy_link)) },
                 onClick = {
                     onCopyLink()
                     expanded = false

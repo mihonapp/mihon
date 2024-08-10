@@ -110,6 +110,7 @@
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_show_manga">Show entry</string>
     <string name="action_copy_to_clipboard">Copy to clipboard</string>
+    <string name="action_copy_link">Copy link</string>
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
