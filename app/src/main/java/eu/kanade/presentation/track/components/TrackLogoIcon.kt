@@ -22,11 +22,13 @@ import tachiyomi.presentation.core.util.clickableNoIndication
 fun TrackLogoIcon(
     tracker: Tracker,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
 ) {
-    val modifier = if (onClick != null) {
-        Modifier.clickableNoIndication(onClick = onClick)
-    } else {
-        Modifier
+    val modifier = when {
+        onLongClick != null && onClick != null ->
+            Modifier.clickableNoIndication(onLongClick = onLongClick, onClick = onClick)
+        onClick != null -> Modifier.clickableNoIndication(onClick = onClick)
+        else -> Modifier
     }
 
     Box(
@@ -53,6 +55,7 @@ private fun TrackLogoIconPreviews(
         TrackLogoIcon(
             tracker = tracker,
             onClick = null,
+            onLongClick = null,
         )
     }
 }
