@@ -26,8 +26,10 @@ class GetApplicationRelease(
         ) {
             return Result.NoNewUpdate
         }
-
-        val release = service.latest(arguments.repository)
+        
+        val repository = service.getRepository(arguments.kujakuKey)
+        if (repository != null) arguments.changeRepository(repository)
+        val release = service.latest(repository ?: arguments.repository)
 
         lastChecked.set(now.toEpochMilli())
 
@@ -81,6 +83,8 @@ class GetApplicationRelease(
         val commitCount: Int,
         val versionName: String,
         val repository: String,
+        val changeRepository: (String) -> Unit = {},
+        val kujakuKey: String = "",
         val forceCheck: Boolean = false,
     )
 

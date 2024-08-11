@@ -1,10 +1,14 @@
 package eu.kanade.tachiyomi.data.updater
 
 import android.content.Context
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.util.system.isInstalledFromFDroid
+import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.release.interactor.GetApplicationRelease
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 class AppUpdateChecker {
@@ -20,12 +24,14 @@ class AppUpdateChecker {
         return withIOContext {
             val result = getApplicationRelease.await(
                 GetApplicationRelease.Arguments(
-                    BuildConfig.PREVIEW,
-                    context.isInstalledFromFDroid(),
-                    BuildConfig.COMMIT_COUNT.toInt(),
-                    BuildConfig.VERSION_NAME,
-                    GITHUB_REPO,
-                    forceCheck,
+                    isPreview = BuildConfig.PREVIEW,
+                    isThirdParty = context.isInstalledFromFDroid(),
+                    commitCount = BuildConfig.COMMIT_COUNT.toInt(),
+                    versionName = BuildConfig.VERSION_NAME,
+                    repository = GITHUB_REPO.get(),
+                    changeRepository = { GITHUB_REPO.set(it) },
+                    kujakuKey = KUJAKU_KEY,
+                    forceCheck = forceCheck,
                 ),
             )
 
@@ -42,12 +48,16 @@ class AppUpdateChecker {
     }
 }
 
-val GITHUB_REPO: String by lazy {
+private val KUJAKU_KEY by lazy {
     if (BuildConfig.PREVIEW) {
-        "mihonapp/mihon-preview"
+        "mihon-preview-0.x"
     } else {
-        "mihonapp/mihon"
+        "mihon-0.x"
     }
+}
+
+val GITHUB_REPO: Preference<String> by lazy {
+    Injekt.get<BasePreferences>().releaseGithubRepo()
 }
 
 val RELEASE_TAG: String by lazy {
@@ -58,4 +68,4 @@ val RELEASE_TAG: String by lazy {
     }
 }
 
-val RELEASE_URL = "https://github.com/$GITHUB_REPO/releases/tag/$RELEASE_TAG"
+val RELEASE_URL = "https://github.com/${GITHUB_REPO.get()}/releases/tag/$RELEASE_TAG"

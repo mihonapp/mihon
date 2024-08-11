@@ -2,6 +2,7 @@ package eu.kanade.domain.base
 
 import android.content.Context
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.tachiyomi.BuildConfig
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.i18n.MR
@@ -30,4 +31,13 @@ class BasePreferences(
     }
 
     fun displayProfile() = preferenceStore.getString("pref_display_profile_key", "")
+
+    fun releaseGithubRepo() = preferenceStore.getString(
+        Preference.appStateKey("pref_release_github_repo"),
+        if (BuildConfig.PREVIEW) {
+            "mihonapp/mihon-preview"
+        } else {
+            "mihonapp/mihon"
+        }
+    )
 }

@@ -13,6 +13,15 @@ class ReleaseServiceImpl(
     private val json: Json,
 ) : ReleaseService {
 
+    override suspend fun getRepository(key: String): String? {
+        return with(json) {
+            networkService.client
+                .newCall(GET("https://raw.githubusercontent.com/mihonapp/kujaku/main/release.json"))
+                .awaitSuccess()
+                .parseAs<Map<String, String>>()[key]
+        }
+    }
+
     override suspend fun latest(repository: String): Release {
         return with(json) {
             networkService.client
