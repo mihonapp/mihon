@@ -56,6 +56,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onCopyLink = {},
         )
     }
 
@@ -71,6 +72,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onNewSearch = {},
             onOpenInBrowser = {},
             onRemoved = {},
+            onCopyLink = {},
         )
     }
 
