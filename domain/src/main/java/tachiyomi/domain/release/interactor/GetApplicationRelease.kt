@@ -26,7 +26,7 @@ class GetApplicationRelease(
         ) {
             return Result.NoNewUpdate
         }
-        
+
         val repository = service.getRepository(arguments.kujakuKey)
         if (repository != null) arguments.changeRepository(repository)
         val release = service.latest(repository ?: arguments.repository)
