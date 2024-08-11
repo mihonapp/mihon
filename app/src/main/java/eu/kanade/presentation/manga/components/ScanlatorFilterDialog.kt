@@ -112,6 +112,13 @@ fun ScanlatorFilterDialog(
                         Text(text = stringResource(MR.strings.action_reset))
                     }
                     Spacer(modifier = Modifier.weight(1f))
+                    TextButton(onClick = {
+                        mutableExcludedScanlators.clear() // clear items already in the collection
+                        mutableExcludedScanlators.addAll(elements = availableScanlators) // add all items from list
+                    }) {
+                        Text(text = stringResource(MR.strings.action_select_all))
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                     TextButton(onClick = onDismissRequest) {
                         Text(text = stringResource(MR.strings.action_cancel))
                     }
