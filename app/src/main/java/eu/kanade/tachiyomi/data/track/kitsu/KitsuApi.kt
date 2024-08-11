@@ -270,10 +270,10 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
         private const val clientSecret =
             "54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151"
 
-        private const val baseUrl = "https://kitsu.io/api/edge/"
-        private const val loginUrl = "https://kitsu.io/api/oauth/token"
-        private const val baseMangaUrl = "https://kitsu.io/manga/"
-        private const val algoliaKeyUrl = "https://kitsu.io/api/edge/algolia-keys/media/"
+        private const val baseUrl = "https://kitsu.app/api/edge/"
+        private const val loginUrl = "https://kitsu.app/api/oauth/token"
+        private const val baseMangaUrl = "https://kitsu.app/manga/"
+        private const val algoliaKeyUrl = "https://kitsu.app/api/edge/algolia-keys/media/"
 
         private const val algoliaUrl =
             "https://AWQO5J657S-dsn.algolia.net/1/indexes/production_media/query/"
