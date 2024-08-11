@@ -108,8 +108,14 @@ fun ScanlatorFilterDialog(
                 }
             } else {
                 FlowRow {
-                    TextButton(onClick = mutableExcludedScanlators::clear) {
-                        Text(text = stringResource(MR.strings.action_reset))
+                    if (mutableExcludedScanlators.isEmpty()) {
+                        TextButton(onClick = { mutableExcludedScanlators.addAll(availableScanlators) }) {
+                            Text(text = stringResource(MR.strings.action_select_all))
+                        }
+                    } else {
+                        TextButton(onClick = mutableExcludedScanlators::clear) {
+                            Text(text = stringResource(MR.strings.action_reset))
+                        }
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(onClick = onDismissRequest) {
