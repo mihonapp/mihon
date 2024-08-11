@@ -129,12 +129,7 @@ class MyAnimeListApi(
                                 obj["status"]!!.jsonPrimitive.content.replace("_", " ")
                             publishing_type =
                                 obj["media_type"]!!.jsonPrimitive.content.replace("_", " ")
-                            start_date = try {
-                                val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                                outputDf.format(obj["start_date"]!!)
-                            } catch (e: Exception) {
-                                ""
-                            }
+                            start_date = obj["start_date"]?.jsonPrimitive?.content ?: ""
                         }
                     }
             }
