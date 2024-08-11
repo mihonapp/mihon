@@ -565,11 +565,9 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    private fun openChapterInBrowser(){
+    private fun openChapterInBrowser() {
         assistUrl?.let {
-            openInBrowser(it.toUri(),forceDefaultBrowser = false)
-            //val intent =
-            //startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_open_in_browser)))
+            openInBrowser(it.toUri(), forceDefaultBrowser = false)
         }
     }
 
