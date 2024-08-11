@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 object Migrator {
 
     private var result: Deferred<Boolean>? = null
-    val scope = CoroutineScope(Dispatchers.Main + Job())
+    val scope = CoroutineScope(Dispatchers.IO + Job())
 
     fun initialize(
         old: Int,
