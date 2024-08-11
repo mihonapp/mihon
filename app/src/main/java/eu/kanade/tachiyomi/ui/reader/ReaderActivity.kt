@@ -75,6 +75,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
@@ -389,6 +390,7 @@ class ReaderActivity : BaseActivity() {
                 onClickTopAppBar = ::openMangaScreen,
                 bookmarked = state.bookmarked,
                 onToggleBookmarked = viewModel::toggleChapterBookmark,
+                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
                 onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
                 onShare = ::shareChapter.takeIf { isHttpSource },
 
@@ -560,6 +562,12 @@ class ReaderActivity : BaseActivity() {
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 },
             )
+        }
+    }
+
+    private fun openChapterInBrowser() {
+        assistUrl?.let {
+            openInBrowser(it.toUri(), forceDefaultBrowser = false)
         }
     }
 

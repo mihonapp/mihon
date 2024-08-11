@@ -45,6 +45,7 @@ fun ReaderAppBars(
     onClickTopAppBar: () -> Unit,
     bookmarked: Boolean,
     onToggleBookmarked: () -> Unit,
+    onOpenInBrowser: (() -> Unit)?,
     onOpenInWebView: (() -> Unit)?,
     onShare: (() -> Unit)?,
 
@@ -119,6 +120,14 @@ fun ReaderAppBars(
                                         onClick = onToggleBookmarked,
                                     ),
                                 )
+                                onOpenInBrowser?.let {
+                                    add(
+                                        AppBar.OverflowAction(
+                                            title = stringResource(MR.strings.action_open_in_browser),
+                                            onClick = it,
+                                        ),
+                                    )
+                                }
                                 onOpenInWebView?.let {
                                     add(
                                         AppBar.OverflowAction(
