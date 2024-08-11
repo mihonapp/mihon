@@ -6,13 +6,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Record(
+data class MURecord(
     @SerialName("series_id")
     val seriesId: Long? = null,
     val title: String? = null,
     val url: String? = null,
     val description: String? = null,
-    val image: Image? = null,
+    val image: MUImage? = null,
     val type: String? = null,
     val year: String? = null,
     @SerialName("bayesian_rating")
@@ -23,7 +23,7 @@ data class Record(
     val latestChapter: Int? = null,
 )
 
-fun Record.toTrackSearch(id: Long): TrackSearch {
+fun MURecord.toTrackSearch(id: Long): TrackSearch {
     return TrackSearch.create(id).apply {
         remote_id = this@toTrackSearch.seriesId ?: 0L
         title = this@toTrackSearch.title?.htmlDecode() ?: ""

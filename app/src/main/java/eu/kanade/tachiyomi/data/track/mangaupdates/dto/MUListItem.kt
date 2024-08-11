@@ -6,15 +6,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ListItem(
-    val series: Series? = null,
+data class MUListItem(
+    val series: MUSeries? = null,
     @SerialName("list_id")
     val listId: Long? = null,
-    val status: Status? = null,
+    val status: MUStatus? = null,
     val priority: Int? = null,
 )
 
-fun ListItem.copyTo(track: Track): Track {
+fun MUListItem.copyTo(track: Track): Track {
     return track.apply {
         this.status = listId ?: READING_LIST
         this.last_chapter_read = this@copyTo.status?.chapter?.toDouble() ?: 0.0

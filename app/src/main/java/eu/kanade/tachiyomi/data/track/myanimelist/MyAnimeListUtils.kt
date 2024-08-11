@@ -1,20 +1,6 @@
 package eu.kanade.tachiyomi.data.track.myanimelist
 
 import eu.kanade.tachiyomi.data.database.models.Track
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class OAuth(
-    val token_type: String,
-    val refresh_token: String,
-    val access_token: String,
-    val expires_in: Long,
-    val created_at: Long = System.currentTimeMillis(),
-) {
-    // Assumes expired a minute earlier
-    private val adjustedExpiresIn: Long = (expires_in - 60) * 1000
-    fun isExpired() = created_at + adjustedExpiresIn < System.currentTimeMillis()
-}
 
 fun Track.toMyAnimeListStatus() = when (status) {
     MyAnimeList.READING -> "reading"
