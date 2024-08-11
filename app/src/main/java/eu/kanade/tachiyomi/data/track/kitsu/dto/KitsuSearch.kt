@@ -31,9 +31,9 @@ data class KitsuAlgoliaSearchItem(
     val subtype: String?,
     val posterImage: KitsuSearchItemCover?,
     val synopsis: String?,
-    val averageRating: String?,
-    val startDate: String?,
-    val endDate: String?,
+    val averageRating: Double?,
+    val startDate: Long?,
+    val endDate: Long?,
 ) {
     @Suppress("MagicNumber")
     fun toTrack(): TrackSearch {
@@ -44,12 +44,12 @@ data class KitsuAlgoliaSearchItem(
             cover_url = posterImage?.original ?: ""
             summary = synopsis ?: ""
             tracking_url = KitsuApi.mangaUrl(remote_id)
-            score = averageRating?.toDoubleOrNull() ?: -1.0
+            score = averageRating ?: -1.0
             publishing_status = if (endDate == null) "Publishing" else "Finished"
             publishing_type = subtype ?: ""
             start_date = startDate?.let {
                 val outputDf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                outputDf.format(Date(it.toLong() * 1000))
+                outputDf.format(Date(it * 1000))
             } ?: ""
         }
     }
