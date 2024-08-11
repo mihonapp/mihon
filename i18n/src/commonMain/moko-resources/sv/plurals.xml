@@ -66,10 +66,14 @@
     </plurals>
     <plurals name="num_repos">
         <item quantity="one">%d förråd</item>
-        <item quantity="other">%d flera förråd</item>
+        <item quantity="other">%d förråd</item>
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="one">Imorgon</item>
         <item quantity="other">Om %1$d dagar</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 sida</item>
+        <item quantity="other">%1$s sidor</item>
     </plurals>
 </resources>

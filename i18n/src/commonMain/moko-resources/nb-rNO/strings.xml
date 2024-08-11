@@ -592,7 +592,6 @@
     <string name="download_notifier_split_page_path_not_found">Kunne ikke finne filbanen til side %d</string>
     <string name="pref_security_summary">Applås, sikker skjerm</string>
     <string name="pref_advanced_summary">Dump krasjlogger, batterioptimaliseringer</string>
-    <string name="loader_rar5_error">RARv5-formatet støttes ikke</string>
     <string name="missing_storage_permission">Lagringstilgang er ikke gitt</string>
     <string name="error_user_agent_string_invalid">Ugyldig streng for brukeragent</string>
     <string name="wish_list">Ønskeliste</string>
@@ -796,4 +795,8 @@
     <string name="manga_interval_expected_update_soon">Snart</string>
     <string name="ext_revoke_trust">Fjern tilliten til ukjente utvidelser</string>
     <string name="action_open_repo">Åpne pakkebrønnen</string>
+    <string name="label_upcoming">Kommende</string>
+    <string name="action_add_anyway">Legg til likevel</string>
+    <string name="action_migrate_duplicate">Flytt eksisterende oppføring</string>
+    <string name="action_replace_repo">Erstatt</string>
 </resources>

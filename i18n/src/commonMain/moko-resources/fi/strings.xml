@@ -602,7 +602,6 @@
     <string name="pref_verbose_logging">Yksityiskohtainen kirjaaminen</string>
     <string name="cover_saved">Kansikuva tallennettu</string>
     <string name="error_saving_cover">Virhe tallentaessa kansikuvaa</string>
-    <string name="loader_rar5_error">RARv5-muoto ei ole tuettu</string>
     <string name="skipped_reason_not_caught_up">Ohitettu, koska sarjassa on luettomia lukuja</string>
     <string name="skipped_reason_not_always_update">Ohitettu, koska sarja ei vaadi päivityksiä</string>
     <string name="remove_manga">Olet poistamassa \"%s\" kirjastostasi</string>

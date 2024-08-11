@@ -610,7 +610,6 @@
     <string name="pref_user_agent_string">Cadena d’agent d’usuari per defecte</string>
     <string name="pref_reset_user_agent_string">Restableix la cadena d’agent d’usuari per defecte</string>
     <string name="appwidget_unavailable_locked">El widget no està disponible quan hi ha activat el blocatge de l’aplicació</string>
-    <string name="loader_rar5_error">El format RARv5 no està suportat</string>
     <string name="appwidget_updates_description">Vegeu els elements de la biblioteca actualitzats recentment</string>
     <string name="action_remove_everything">Elimina-ho tot</string>
     <string name="update_already_running">Ja s’està executant una actualització</string>
@@ -702,7 +701,7 @@
     <string name="action_filter_interval_custom">Freqüència d’actualització personalitzat</string>
     <string name="action_sort_next_updated">Pròxima actualització prevista</string>
     <string name="action_ok">D’acord</string>
-    <string name="pref_update_only_in_release_period">Preveu el moment del pròxim llançament</string>
+    <string name="pref_update_only_in_release_period">Preveu el moment de la pròxima publicació</string>
     <string name="intervals_header">Intervals</string>
     <string name="manga_display_interval_title">Estima cada</string>
     <string name="manga_display_modified_interval_title">S’actualitzarà cada</string>
@@ -810,4 +809,15 @@
     <string name="pref_display_profile">Perfil de visualització personalitzat</string>
     <string name="action_view_upcoming">Mostra les pròximes actualitzacions</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
+    <string name="pref_flash_duration">Durada del flaix</string>
+    <string name="pref_flash_style_white">Blanc</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_with">Flaix amb</string>
+    <string name="pref_flash_style_black">Negre</string>
+    <string name="pref_flash_page_interval">Flaix cada</string>
+    <string name="pref_flash_style_white_black">Blanc i negre</string>
+    <string name="manga_interval_expected_update_null">Aquest manga està completat o bé no té cap data de publicació prevista.</string>
+    <string name="invalid_backup_file_json">Còpia de seguretat en JSON no suportada</string>
+    <string name="invalid_backup_file_unknown">El fitxer de còpia de seguretat és corrupte</string>
+    <string name="extensionRepo_settings">Repositoris d’extensions</string>
 </resources>

@@ -610,7 +610,6 @@
     <string name="pref_reset_user_agent_string">Obnovit výchozí řetězec pro user agent</string>
     <string name="pref_user_agent_string">Výchozí řetězec pro user agent</string>
     <string name="action_remove_everything">Odstranit vše</string>
-    <string name="loader_rar5_error">Formát RARv5 není podporován</string>
     <string name="appwidget_unavailable_locked">Widget není k dispozici, když je povolen zámek aplikace</string>
     <string name="appwidget_updates_description">Podívejte se na své nedávno aktualizované záznamy v knihovně</string>
     <string name="update_already_running">Aktualizace již probíhá</string>
@@ -803,4 +802,16 @@
     <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>
     <string name="action_replace_repo_message">Repozitář %1$s má stejný otisk podepisovacího klíče jako %2$s
 \nPokud to tak je správně, bude%2$s nahrazen, v opačném případě kontaktujte správce repozitáře.</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_style_white">Bílou</string>
+    <string name="manga_interval_expected_update_null">Tato manga je buďto dokončená, nebo nemá přibližné datum vydání.</string>
+    <string name="label_upcoming">Nadcházející</string>
+    <string name="pref_flash_duration">Délka bliknutí</string>
+    <string name="pref_flash_page_interval">Bliknout každých</string>
+    <string name="pref_flash_with">Bliknout</string>
+    <string name="pref_flash_style_black">Černou</string>
+    <string name="pref_flash_style_white_black">Bílou a Černou</string>
+    <string name="pref_display_profile">Vlastní profil zobrazení</string>
+    <string name="action_view_upcoming">Zobrazit nadcházející aktualizace</string>
+    <string name="file_picker_uri_permission_unsupported">Nepodařilo se získat trvalý přístup ke složce. Aplikace se může chovat zvláštně.</string>
 </resources>

@@ -600,4 +600,9 @@
     <string name="sort_category_confirmation">Kategoriak alfabetikoki ordenatu nahi?</string>
     <string name="action_display_show_continue_reading_button">Jarraitu irakurtzen botoia</string>
     <string name="action_ok">OK</string>
+    <string name="reading_list">Irakurketa zerrenda</string>
+    <string name="unfinished_list">Bukatu gabeko zerrenda</string>
+    <string name="action_set_interval">Ezarri denbora-bitartea</string>
+    <string name="label_data_storage">Datu eta memoria</string>
+    <string name="action_sort_last_manga_update">Azkenengo egunearatze egiaztapena</string>
 </resources>

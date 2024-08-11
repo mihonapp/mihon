@@ -72,4 +72,8 @@
         <item quantity="one">Morgen</item>
         <item quantity="other">In %1$d Tagen</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 Seite</item>
+        <item quantity="other">%1$s Seiten</item>
+    </plurals>
 </resources>
