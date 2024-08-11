@@ -25,7 +25,7 @@ fun TrackLogoIcon(
     onLongClick: (() -> Unit)? = null,
 ) {
     val modifier = if (onClick != null) {
-        Modifier.clickableNoIndication(onLongClick = onLongClick, onClick = onClick)
+        Modifier.clickableNoIndication(onClick = onClick, onLongClick = onLongClick)
     } else {
         Modifier
     }
