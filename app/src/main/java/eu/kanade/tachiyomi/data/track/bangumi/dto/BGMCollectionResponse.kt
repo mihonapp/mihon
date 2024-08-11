@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BangumiCollectionResponse(
+data class BGMCollectionResponse(
     val code: Int?,
     val `private`: Int? = 0,
     val comment: String? = "",

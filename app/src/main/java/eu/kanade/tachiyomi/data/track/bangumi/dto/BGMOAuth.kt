@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BangumiOAuth(
+data class BGMOAuth(
     @SerialName("access_token")
     val accessToken: String,
     @SerialName("token_type")
@@ -22,4 +22,4 @@ data class BangumiOAuth(
 
 // Access token refresh before expired
 @Suppress("MagicNumber")
-fun BangumiOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)
+fun BGMOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)

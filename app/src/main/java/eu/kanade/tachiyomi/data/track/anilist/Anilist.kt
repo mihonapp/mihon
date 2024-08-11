@@ -138,7 +138,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
                 else -> "😊"
             }
 
-            else -> track.toAnilistScore()
+            else -> track.toApiScore()
         }
     }
 

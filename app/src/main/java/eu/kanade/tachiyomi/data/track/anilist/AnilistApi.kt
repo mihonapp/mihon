@@ -55,7 +55,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 putJsonObject("variables") {
                     put("mangaId", track.remote_id)
                     put("progress", track.last_chapter_read.toInt())
-                    put("status", track.toAnilistStatus())
+                    put("status", track.toApiStatus())
                 }
             }
             with(json) {
@@ -98,7 +98,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 putJsonObject("variables") {
                     put("listId", track.library_id)
                     put("progress", track.last_chapter_read.toInt())
-                    put("status", track.toAnilistStatus())
+                    put("status", track.toApiStatus())
                     put("score", track.score.toInt())
                     put("startedAt", createDate(track.started_reading_date))
                     put("completedAt", createDate(track.finished_reading_date))

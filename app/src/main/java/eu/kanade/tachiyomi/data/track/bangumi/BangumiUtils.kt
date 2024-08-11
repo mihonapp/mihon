@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.track.bangumi
 
 import eu.kanade.tachiyomi.data.database.models.Track
 
-fun Track.toBangumiStatus() = when (status) {
+fun Track.toApiStatus() = when (status) {
     Bangumi.READING -> "do"
     Bangumi.COMPLETED -> "collect"
     Bangumi.ON_HOLD -> "on_hold"

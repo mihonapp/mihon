@@ -5,7 +5,7 @@ import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiOAuth
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -119,13 +119,13 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         }
     }
 
-    fun saveToken(oauth: BangumiOAuth?) {
+    fun saveToken(oauth: BGMOAuth?) {
         trackPreferences.trackToken(this).set(json.encodeToString(oauth))
     }
 
-    fun restoreToken(): BangumiOAuth? {
+    fun restoreToken(): BGMOAuth? {
         return try {
-            json.decodeFromString<BangumiOAuth>(trackPreferences.trackToken(this).get())
+            json.decodeFromString<BGMOAuth>(trackPreferences.trackToken(this).get())
         } catch (e: Exception) {
             null
         }

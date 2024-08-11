@@ -3,10 +3,10 @@ package eu.kanade.tachiyomi.data.track.bangumi
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiCollectionResponse
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiOAuth
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiSearchItem
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiSearchResult
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMCollectionResponse
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMSearchItem
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMSearchResult
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
@@ -36,7 +36,7 @@ class BangumiApi(
         return withIOContext {
             val body = FormBody.Builder()
                 .add("rating", track.score.toInt().toString())
-                .add("status", track.toBangumiStatus())
+                .add("status", track.toApiStatus())
                 .build()
             authClient.newCall(POST("$API_URL/collection/${track.remote_id}/update", body = body))
                 .awaitSuccess()
@@ -49,7 +49,7 @@ class BangumiApi(
             // read status update
             val sbody = FormBody.Builder()
                 .add("rating", track.score.toInt().toString())
-                .add("status", track.toBangumiStatus())
+                .add("status", track.toApiStatus())
                 .build()
             authClient.newCall(POST("$API_URL/collection/${track.remote_id}/update", body = sbody))
                 .awaitSuccess()
@@ -77,7 +77,7 @@ class BangumiApi(
             with(json) {
                 authClient.newCall(GET(url.toString()))
                     .awaitSuccess()
-                    .parseAs<BangumiSearchResult>()
+                    .parseAs<BGMSearchResult>()
                     .let { result ->
                         if (result.code == 404) emptyList<TrackSearch>()
 
@@ -95,7 +95,7 @@ class BangumiApi(
             with(json) {
                 authClient.newCall(GET("$API_URL/subject/${track.remote_id}"))
                     .awaitSuccess()
-                    .parseAs<BangumiSearchItem>()
+                    .parseAs<BGMSearchItem>()
                     .toTrackSearch(trackId)
             }
         }
@@ -115,7 +115,7 @@ class BangumiApi(
             with(json) {
                 authClient.newCall(requestUserRead)
                     .awaitSuccess()
-                    .parseAs<BangumiCollectionResponse>()
+                    .parseAs<BGMCollectionResponse>()
                     .let {
                         if (it.code == 400) return@let null
 
@@ -128,7 +128,7 @@ class BangumiApi(
         }
     }
 
-    suspend fun accessToken(code: String): BangumiOAuth {
+    suspend fun accessToken(code: String): BGMOAuth {
         return withIOContext {
             with(json) {
                 client.newCall(accessTokenRequest(code))

@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.track.bangumi
 
 import eu.kanade.tachiyomi.BuildConfig
-import eu.kanade.tachiyomi.data.track.bangumi.dto.BangumiOAuth
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.bangumi.dto.isExpired
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
@@ -16,7 +16,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
     /**
      * OAuth object used for authenticated requests.
      */
-    private var oauth: BangumiOAuth? = bangumi.restoreToken()
+    private var oauth: BGMOAuth? = bangumi.restoreToken()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -26,7 +26,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         if (currAuth.isExpired()) {
             val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refreshToken!!))
             if (response.isSuccessful) {
-                newAuth(json.decodeFromString<BangumiOAuth>(response.body.string()))
+                newAuth(json.decodeFromString<BGMOAuth>(response.body.string()))
             } else {
                 response.close()
             }
@@ -51,11 +51,11 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
             .let(chain::proceed)
     }
 
-    fun newAuth(oauth: BangumiOAuth?) {
+    fun newAuth(oauth: BGMOAuth?) {
         this.oauth = if (oauth == null) {
             null
         } else {
-            BangumiOAuth(
+            BGMOAuth(
                 oauth.accessToken,
                 oauth.tokenType,
                 System.currentTimeMillis() / 1000,

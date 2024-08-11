@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.data.track.kitsu
 import eu.kanade.tachiyomi.data.database.models.Track
 
 @Suppress("TooGenericExceptionThrown")
-fun Track.toKitsuStatus() = when (status) {
+fun Track.toApiStatus() = when (status) {
     Kitsu.READING -> "current"
     Kitsu.COMPLETED -> "completed"
     Kitsu.ON_HOLD -> "on_hold"
@@ -12,6 +12,6 @@ fun Track.toKitsuStatus() = when (status) {
     else -> throw Exception("Unknown status")
 }
 
-fun Track.toKitsuScore(): String? {
+fun Track.toApiScore(): String? {
     return if (score > 0) (score * 2).toInt().toString() else null
 }
