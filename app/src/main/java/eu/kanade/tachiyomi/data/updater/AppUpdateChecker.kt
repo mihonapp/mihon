@@ -28,8 +28,8 @@ class AppUpdateChecker {
                     isThirdParty = context.isInstalledFromFDroid(),
                     commitCount = BuildConfig.COMMIT_COUNT.toInt(),
                     versionName = BuildConfig.VERSION_NAME,
-                    repository = GITHUB_REPO.get(),
-                    changeRepository = { GITHUB_REPO.set(it) },
+                    repository = githubRepoPref.get(),
+                    changeRepository = { githubRepoPref.set(it) },
                     kujakuKey = KUJAKU_KEY,
                     forceCheck = forceCheck,
                 ),
@@ -56,11 +56,11 @@ private val KUJAKU_KEY by lazy {
     }
 }
 
-val GITHUB_REPO: Preference<String> by lazy {
+private val githubRepoPref: Preference<String> by lazy {
     Injekt.get<BasePreferences>().releaseGithubRepo()
 }
 
-val RELEASE_TAG: String by lazy {
+private val RELEASE_TAG: String by lazy {
     if (BuildConfig.PREVIEW) {
         "r${BuildConfig.COMMIT_COUNT}"
     } else {
@@ -68,4 +68,4 @@ val RELEASE_TAG: String by lazy {
     }
 }
 
-val RELEASE_URL = "https://github.com/${GITHUB_REPO.get()}/releases/tag/$RELEASE_TAG"
+val RELEASE_URL = "https://github.com/${githubRepoPref.get()}/releases/tag/$RELEASE_TAG"
