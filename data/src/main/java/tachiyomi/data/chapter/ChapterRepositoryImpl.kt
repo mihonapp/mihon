@@ -127,6 +127,12 @@ class ChapterRepositoryImpl(
         }
     }
 
+    override suspend fun getChapterCountByMangaIdAndChapterNumber(mangaId: Long, chapterNumber: Double): Long {
+        return handler.awaitOne {
+            chaptersQueries.getChapterCountByMangaIdAndChapterNumber(mangaId, chapterNumber)
+        }
+    }
+
     private fun mapChapter(
         id: Long,
         mangaId: Long,
