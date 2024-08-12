@@ -63,13 +63,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android SDK 35 API collision (@AntsyLich)
 
 ## [v0.16.5] - 2024-04-09
-## Added
+### Added
 - Setting to install custom color profiles to get true colors (@wwww-wwww)
 
-## Changed
+### Changed
 - Permanently enable 32-bit color mode (@wwww-wwww)
 
-## Fixed
+### Fixed
 - Fix wrong dates in Updates and History tab due to time zone issues (@sirlag)
 - Fix app infinitely retries tracker update instead of failing after 3 tries (@MajorTanya)
 - Fix crash on Pixel devices
@@ -79,31 +79,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix colors getting distorted when opening CMYK jpeg images (@wwww-wwww)
 
 ## [v0.16.4] - 2024-02-26
-## Fixed
+### Fixed
 - Circumvent MAL block (@AntsyLich)
 
 ## [v0.16.3] - 2024-01-30
-## Added
+### Added
 - Copy extension debug info when clicking logo or name in the extension details screen (@MajorTanya)
 
-## Changed
+### Changed
 - Rename extension update error file to `mihon_update_errors.txt` (@m-jishnu)
 - Hide display cutoff setting in reader settings sheet if fullscreen is off (@Riztard)
 
-## Fixed
+### Fixed
 - Fix bottom sheet display issues on non-Tablet UI (@theolm)
 - Fix crash when switching screen while a list is scrolling (@theolm)
 - Fix newly installed extensions not being recognized by Mihon (@AwkwardPeak7)
 - Fix error handling when refreshing MAL OAuth token (@AntsyLich)
 
 ## [v0.16.2] - 2024-01-28
-## Added
+### Added
 - Scanlator filter is now part of Backup (@jobobby04)
 
-## Changed
+### Changed
 - Rename crash log filename to `mihon_crash_logs.txt` (@MajorTanya)
 
-## Fixed
+### Fixed
 - "Flash screen on page change" Making the screen goes blank (@AntsyLich)
 - App icon scaling (@AntsyLich)
 - Updating extension not reflecting correctly (@AntsyLich)
@@ -112,7 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - And various tracker related fixes (@AntsyLich, @Secozzi)
 
 ## [v0.16.1] - 2024-01-18
-## Fixed
+### Fixed
 - App Icon not filled (@AntsyLich)
 - MangaUpdates default score being set to -1.0 (@AntsyLich)
 
