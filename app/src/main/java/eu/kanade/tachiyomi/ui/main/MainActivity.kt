@@ -117,6 +117,8 @@ class MainActivity : BaseActivity() {
     private val preferences: BasePreferences by injectLazy()
 
     // KMK -->
+    private val backupPreferences: BackupPreferences by injectLazy()
+    private val syncPreferences: SyncPreferences by injectLazy()
     private val backupRestoreStatus: BackupRestoreStatus by injectLazy()
     private val syncStatus: SyncStatus by injectLazy()
     private val libraryUpdateStatus: LibraryUpdateStatus by injectLazy()
@@ -159,9 +161,15 @@ class MainActivity : BaseActivity() {
             val downloadOnly by preferences.downloadedOnly().collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
             // KMK -->
-            val restoring by backupRestoreStatus.isRunning.collectAsState()
-            val syncing by syncStatus.isRunning.collectAsState()
-            val updating by libraryUpdateStatus.isRunning.collectAsState()
+            val restoringState by backupRestoreStatus.isRunning.collectAsState()
+            val syncingState by syncStatus.isRunning.collectAsState()
+            val updatingState by libraryUpdateStatus.isRunning.collectAsState()
+            val restoringProgressBanner by backupPreferences.showRestoringProgressBanner().collectAsState()
+            val syncingProgressBanner by syncPreferences.showSyncingProgressBanner().collectAsState()
+            val updatingProgressBanner by libraryPreferences.showUpdatingProgressBanner().collectAsState()
+            val restoring = restoringState && restoringProgressBanner
+            val syncing = syncingState && syncingProgressBanner
+            val updating = updatingState && updatingProgressBanner
             val restoringProgress by backupRestoreStatus.progress.collectAsState()
             val syncingProgress by syncStatus.progress.collectAsState()
             val updatingProgress by libraryUpdateStatus.progress.collectAsState()
