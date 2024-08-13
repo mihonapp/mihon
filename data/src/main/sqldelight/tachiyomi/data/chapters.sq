@@ -120,8 +120,9 @@ WHERE _id = :chapterId;
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
 
-getChapterCountByMangaIdAndChapterNumber:
+getReadChapterCountByMangaIdAndChapterNumber:
 SELECT COUNT(*)
 FROM chapters
 WHERE manga_id = :mangaId
-AND chapter_number =:chapterNumber;
+AND chapter_number =:chapterNumber
+AND read = 1;
