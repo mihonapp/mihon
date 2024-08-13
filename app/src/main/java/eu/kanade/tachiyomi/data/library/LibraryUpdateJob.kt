@@ -39,6 +39,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
@@ -88,6 +89,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
+    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber = Injekt.get();
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -271,7 +273,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
                                         if (newChapters.isNotEmpty()) {
                                             val categoryIds = getCategories.await(manga.id).map { it.id }
-                                            if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
+
+                                            // TODO Add preference
+                                            val unreadChapters = newChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
+
+                                            if (unreadChapters.isNotEmpty() && manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
                                                 downloadChapters(manga, newChapters)
                                                 hasDownloads.set(true)
                                             }
