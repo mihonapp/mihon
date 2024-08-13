@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Key "extension-XXX-YYY" was already used` crash (@AntsyLich)
 - Navigation layout tap zones shifting after zooming out in webtoon readers (@FooIbar)
 - Some extension not loading due to missing classes (@AwkwardPeak7)
-- Theme colors in accordance to upstream changes (@CrepeTF)
+- Theme colors in accordance to upstream changes (@CrepeTF, @AntsyLich)
 - Crash when requesting folder access on non-conforming devices (@mainrs)
 - Bugged color for Date/Scanlator in chapter list for read chapters (@ivaniskandar)
 - Categories having same `order` after restoring backup (@Cologler)

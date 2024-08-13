@@ -14,6 +14,7 @@
     <color name="tidalwave_onPrimary">#003544</color>
     <color name="tidalwave_primaryContainer">#004d61</color>
     <color name="tidalwave_onPrimaryContainer">#b8eaff</color>
+    <color name="tidalwave_inversePrimary">#a12b03</color>
     <color name="tidalwave_secondary">#5ed4fc</color>
     <color name="tidalwave_onSecondary">#003544</color>
     <color name="tidalwave_secondaryContainer">#004d61</color>
@@ -26,11 +27,15 @@
     <color name="tidalwave_onBackground">#d5e3ff</color>
     <color name="tidalwave_surface">#001c3b</color>
     <color name="tidalwave_onSurface">#d5e3ff</color>
-    <color name="tidalwave_surfaceVariant">#40484c</color>
+    <color name="tidalwave_surfaceVariant">#082b4b</color>
     <color name="tidalwave_onSurfaceVariant">#bfc8cc</color>
-    <color name="tidalwave_outline">#8a9296</color>
-    <color name="tidalwave_inverseOnSurface">#001c3b</color>
+    <color name="tidalwave_surfaceTint">#5ed4fc</color>
     <color name="tidalwave_inverseSurface">#ffe3c4</color>
-    <color name="tidalwave_primaryInverse">#a12b03</color>
-
+    <color name="tidalwave_inverseOnSurface">#001c3b</color>
+    <color name="tidalwave_outline">#8a9296</color>
+    <color name="tidalwave_surfaceContainerLowest">#072642</color>
+    <color name="tidalwave_surfaceContainerLow">#072947</color>
+    <color name="tidalwave_surfaceContainer">#082b4b</color>
+    <color name="tidalwave_surfaceContainerHigh">#093257</color>
+    <color name="tidalwave_surfaceContainerHighest">#0A3861</color>
 </resources>

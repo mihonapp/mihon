@@ -15,6 +15,7 @@
     <color name="yotsuba_onPrimary">#5F1600</color>
     <color name="yotsuba_primaryContainer">#862200</color>
     <color name="yotsuba_onPrimaryContainer">#FFDBCF</color>
+    <color name="yotsuba_inversePrimary">#AE3200</color>
     <color name="yotsuba_secondary">#FFB59D</color>
     <color name="yotsuba_onSecondary">#5F1600</color>
     <color name="yotsuba_secondaryContainer">#862200</color>
@@ -27,10 +28,15 @@
     <color name="yotsuba_onBackground">#EDE0DD</color>
     <color name="yotsuba_surface">#211A18</color>
     <color name="yotsuba_onSurface">#EDE0DD</color>
-    <color name="yotsuba_surfaceVariant">#53433F</color>
+    <color name="yotsuba_surfaceVariant">#332723</color>
     <color name="yotsuba_onSurfaceVariant">#D8C2BC</color>
-    <color name="yotsuba_outline">#A08C87</color>
-    <color name="yotsuba_inverseOnSurface">#211A18</color>
+    <color name="yotsuba_surfaceTint">#FFB59D</color>
     <color name="yotsuba_inverseSurface">#EDE0DD</color>
-    <color name="yotsuba_primaryInverse">#AE3200</color>
+    <color name="yotsuba_inverseOnSurface">#211A18</color>
+    <color name="yotsuba_outline">#A08C87</color>
+    <color name="yotsuba_surfaceContainerLowest">#2E221F</color>
+    <color name="yotsuba_surfaceContainerLow">#312521</color>
+    <color name="yotsuba_surfaceContainer">#332723</color>
+    <color name="yotsuba_surfaceContainerHigh">#413531</color>
+    <color name="yotsuba_surfaceContainerHighest">#4C403D</color>
 </resources>

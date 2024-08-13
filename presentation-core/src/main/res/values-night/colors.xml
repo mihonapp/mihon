@@ -2,11 +2,6 @@
 <resources>
     <color name="splash">#202125</color>
 
-    <color name="error">#FFB4A9</color>
-    <color name="errorContainer">#930006</color>
-    <color name="onError">#680003</color>
-    <color name="onErrorContainer">#FFDAD4</color>
-
     <!-- Default Theme -->
     <color name="divider_default">@color/md_white_1000_12</color>
 </resources>
