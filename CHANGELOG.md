@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Improvement
 - Long strip reader performance (@FooIbar, @wwww-wwww) (#687)
 - Performance when looking up specific files (@raxod502) (#728)
-- Chapter number parsing (@Naputt1) (#871, 6a80305)
+- Chapter number parsing (@Naputt1) (6a80305)
 - Error message on restoring if backup decoding fails (@vetleledaal) (#1056)
 
 ### Fixed
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Theme colors in accordance to upstream changes (@CrepeTF, @AntsyLich) (#766, #963, #976)
 - Crash when requesting folder access on non-conforming devices (@mainrs) (#726)
 - Bugged color for Date/Scanlator in chapter list for read chapters (@ivaniskandar) (15d9992)
-- Categories having same `order` after restoring backup (@Cologler) (#635, 119bcbf)
+- Categories having same `order` after restoring backup (@Cologler) (119bcbf)
 - Filter by "Tracking" temporarily stuck after signing out of tracker (@AntsyLich) (#987)
 - JXL image downloading and loading (@FooIbar) (#993)
 - Crash when using `%` in category name (@Animeboynz, @FooIbar) (#1030)
@@ -108,7 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updating extension not reflecting correctly (@AntsyLich) (cb06898)
 - Inconsistent button height with some languages in "Data and storage" (@theolm) (#202)
 - Fix chapter not being marked as read in some cases with Enhanced Trackers (@Secozzi) (#219) 
-- And various tracker related fixes (@AntsyLich, @kitsumed @Secozzi) (a024218, e3f33e2, 05efc4e, 32188f9)
+- And various tracker related fixes (@AntsyLich, @kitsumed @Secozzi) (a024218, e3f33e2, 32188f9)
 
 ## [v0.16.1] - 2024-01-18
 ### Fixed
