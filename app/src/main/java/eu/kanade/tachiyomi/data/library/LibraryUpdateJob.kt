@@ -314,8 +314,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     }
 
     /**
-     * Handles new chapters for the given manga.
-     *
      * This function handles the new chapters for a given manga, checks the download preferences,
      * and initiates the download if necessary. It also updates the new updates list and the
      * hasDownloads flag.
