@@ -155,7 +155,7 @@ object SettingsDownloadScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadUnreadChaptersOnlyPref,
-                    title = "Download only unread chapters", // TODO stringResource
+                    title = stringResource(MR.strings.pref_download_unready_chapters_only),
                     enabled = downloadNewChapters,
                 ),
                 Preference.PreferenceItem.TextPreference(
