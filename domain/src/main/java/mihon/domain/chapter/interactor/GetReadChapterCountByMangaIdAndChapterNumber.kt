@@ -10,7 +10,9 @@ class GetReadChapterCountByMangaIdAndChapterNumber(
 
     suspend fun await(mangaId: Long, chapterNumber: Double): Long {
         return try {
-            chapterRepository.getReadChapterCountByMangaIdAndChapterNumber(mangaId, chapterNumber)
+            val readChapters = chapterRepository.getReadChapterCountByMangaIdAndChapterNumber(mangaId, chapterNumber)
+            logcat(LogPriority.DEBUG, message = { "Read chapters $readChapters - Manga: $mangaId - Chapter: $chapterNumber" }) // TODO Remove this!
+            return readChapters
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             0
