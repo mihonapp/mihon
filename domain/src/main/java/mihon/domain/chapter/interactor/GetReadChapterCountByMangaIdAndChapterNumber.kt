@@ -1,5 +1,6 @@
 package mihon.domain.chapter.interactor
 
+import android.database.sqlite.SQLiteException
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.repository.ChapterRepository
@@ -11,12 +12,16 @@ class GetReadChapterCountByMangaIdAndChapterNumber(
     suspend fun await(mangaId: Long, chapterNumber: Double): Long {
         return try {
             val readChapters = chapterRepository.getReadChapterCountByMangaIdAndChapterNumber(mangaId, chapterNumber)
-            logcat(LogPriority.DEBUG, message = { "Read chapters $readChapters - Manga: $mangaId - Chapter: $chapterNumber" }) // TODO Remove this!
+
+            // TODO Remove this!
+            logcat(
+                LogPriority.DEBUG,
+                message = { "Read chapters $readChapters - Manga: $mangaId - Chapter: $chapterNumber" }
+            )
             return readChapters
-        } catch (e: Exception) {
+        } catch (e: SQLiteException) {
             logcat(LogPriority.ERROR, e)
             0
         }
     }
 }
-

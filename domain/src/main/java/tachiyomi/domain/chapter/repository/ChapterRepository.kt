@@ -28,5 +28,5 @@ interface ChapterRepository {
 
     suspend fun getChapterByUrlAndMangaId(url: String, mangaId: Long): Chapter?
 
-    suspend fun getReadChapterCountByMangaIdAndChapterNumber(mangaId: Long, chapterNumber: Double) : Long
+    suspend fun getReadChapterCountByMangaIdAndChapterNumber(mangaId: Long, chapterNumber: Double): Long
 }
