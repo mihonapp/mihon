@@ -316,14 +316,14 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     /**
      * Handles new chapters for the given manga.
      *
-     * This function checks if the manga should download new chapters based on user preferences,
-     * filters the chapters based on whether they are unread, and initiates the download if applicable.
-     * It also updates the library's new updates count and adds the manga with new chapters to the new updates list.
+     * This function handles the new chapters for a given manga, checks the download preferences,
+     * and initiates the download if necessary. It also updates the new updates list and the
+     * hasDownloads flag.
      *
      * @param manga The manga for which new chapters are being handled.
-     * @param newChapters A list of new chapters available for the manga.
+     * @param newChapters A list of new chapters for the manga.
      * @param newUpdates A thread-safe list that stores pairs of manga and their respective new chapters.
-     * @param hasDownloads An atomic boolean that is set to true if any new chapters will be downloaded.
+     * @param hasDownloads A flag indicating whether there are any chapters to download.
      */
     private suspend fun handleNewChapters(
         manga: Manga,
