@@ -89,7 +89,7 @@ sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-ext
 sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.10.3"
+junit = "org.junit.jupiter:junit-jupiter:5.11.0"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
 mockk = "io.mockk:mockk:1.13.12"
 
