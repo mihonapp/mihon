@@ -272,20 +272,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
-                                            val categoryIds = getCategories.await(manga.id).map { it.id }
-
-                                            // TODO Add preference
-                                            val unreadChapters = newChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
-
-                                            if (unreadChapters.isNotEmpty() && manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
-                                                downloadChapters(manga, newChapters)
-                                                hasDownloads.set(true)
-                                            }
-
-                                            libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
-
-                                            // Convert to the manga that contains new chapters
-                                            newUpdates.add(manga to newChapters.toTypedArray())
+                                            handleNewChapters(manga, newChapters, newUpdates, hasDownloads)
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
@@ -324,6 +311,44 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 errorFile.getUriCompat(context),
             )
         }
+    }
+
+    /**
+     * Handles new chapters for the given manga.
+     *
+     * This function checks if the manga should download new chapters based on user preferences,
+     * filters the chapters based on whether they are unread, and initiates the download if applicable.
+     * It also updates the library's new updates count and adds the manga with new chapters to the new updates list.
+     *
+     * @param manga The manga for which new chapters are being handled.
+     * @param newChapters A list of new chapters available for the manga.
+     * @param newUpdates A thread-safe list that stores pairs of manga and their respective new chapters.
+     * @param hasDownloads An atomic boolean that is set to true if any new chapters will be downloaded.
+     */
+    private suspend fun handleNewChapters(
+        manga: Manga,
+        newChapters: List<Chapter>,
+        newUpdates: CopyOnWriteArrayList<Pair<Manga, Array<Chapter>>>,
+        hasDownloads: AtomicBoolean
+    ) {
+        val categoryIds = getCategories.await(manga.id).map { it.id }
+        val onlyDownloadUnreadChapters = true // TODO Add preference
+
+        if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
+            val chaptersToDownload = if (onlyDownloadUnreadChapters) {
+                newChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
+            } else {
+                newChapters
+            }
+
+            if (chaptersToDownload.isNotEmpty()) {
+                downloadChapters(manga, chaptersToDownload)
+                hasDownloads.set(true)
+            }
+        }
+
+        libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
+        newUpdates.add(manga to newChapters.toTypedArray())
     }
 
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
