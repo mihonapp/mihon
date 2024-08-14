@@ -339,14 +339,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 newChapters
             }
 
-            // TODO Remove this!
-            if (newChapters.size != chaptersToDownload.size) {
-                logcat(LogPriority.DEBUG, message = {
-                    "Skip download duplicate chapter for ${manga.title}. " +
-                        "Downloaded ${chaptersToDownload.size} / ${newChapters.size}"
-                })
-            }
-
             if (chaptersToDownload.isNotEmpty()) {
                 downloadChapters(manga, chaptersToDownload)
                 hasDownloads.set(true)
