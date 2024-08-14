@@ -42,4 +42,6 @@ class DownloadPreferences(
         "download_new_categories_exclude",
         emptySet(),
     )
+
+    fun downloadUnreadChaptersOnly() = preferenceStore.getBoolean("download_unread_only", true)
 }

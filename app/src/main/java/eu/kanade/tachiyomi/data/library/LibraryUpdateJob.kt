@@ -332,7 +332,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         hasDownloads: AtomicBoolean
     ) {
         val categoryIds = getCategories.await(manga.id).map { it.id }
-        val onlyDownloadUnreadChapters = true // TODO Add preference
+        val onlyDownloadUnreadChapters = downloadPreferences.downloadUnreadChaptersOnly().get()
 
         if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
             val chaptersToDownload = if (onlyDownloadUnreadChapters) {
