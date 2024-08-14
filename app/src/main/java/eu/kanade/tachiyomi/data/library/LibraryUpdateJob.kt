@@ -89,7 +89,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
-    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber = Injekt.get();
+    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -339,6 +339,14 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 newChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
             } else {
                 newChapters
+            }
+
+            // TODO Remove this!
+            if (newChapters.size != chaptersToDownload.size) {
+                logcat(LogPriority.DEBUG, message = {
+                    "Skip download duplicate chapter for ${manga.title}. " +
+                        "Downloaded ${chaptersToDownload.size} / ${newChapters.size}"
+                })
             }
 
             if (chaptersToDownload.isNotEmpty()) {
