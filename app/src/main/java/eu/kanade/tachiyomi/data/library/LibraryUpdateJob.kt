@@ -39,6 +39,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import mihon.core.chapters.utils.filterChaptersToDownload
 import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
@@ -330,14 +331,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         hasDownloads: AtomicBoolean
     ) {
         val categoryIds = getCategories.await(manga.id).map { it.id }
-        val onlyDownloadUnreadChapters = downloadPreferences.downloadUnreadChaptersOnly().get()
 
         if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
-            val chaptersToDownload = if (onlyDownloadUnreadChapters) {
-                newChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
-            } else {
-                newChapters
-            }
+            val chaptersToDownload = newChapters
+                .filterChaptersToDownload(manga, getReadChapterCount, downloadPreferences)
 
             if (chaptersToDownload.isNotEmpty()) {
                 downloadChapters(manga, chaptersToDownload)
