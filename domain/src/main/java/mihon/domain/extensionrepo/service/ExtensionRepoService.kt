@@ -17,7 +17,6 @@ class ExtensionRepoService(
 ) {
     val client = networkHelper.client
 
-    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchRepoDetails(
         repo: String,
     ): ExtensionRepo? {

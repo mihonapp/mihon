@@ -36,7 +36,7 @@ jobs:
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
       - name: Build app and run unit tests
-        run: ./gradlew detekt assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
+        run: ./gradlew assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

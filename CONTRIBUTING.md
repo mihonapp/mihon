@@ -24,10 +24,6 @@ Before you start, please note that the ability to use following technologies is 
 - [Android Studio](https://developer.android.com/studio)
 - Emulator or phone with developer options enabled to test changes.
 
-## Linting
-
-Run the `detekt` gradle task. If the build fails, a report of issues can be found in `app/build/reports/detekt/`. The report is availble in several formats and details each issue that needs attention. 
-
 ## Getting help
 
 - Join [the Discord server](https://discord.gg/mihon) for online help and to ask questions while developing.

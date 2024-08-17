@@ -48,7 +48,6 @@ class CreateExtensionRepo(
      *
      * @param repo Extension Repo holder for passing to DB/Error Dialog
      */
-    @Suppress("ReturnCount")
     private suspend fun handleInsertionError(repo: ExtensionRepo): Result {
         val repoExists = repository.getRepo(repo.baseUrl)
         if (repoExists != null) {

@@ -12,7 +12,6 @@ class MigrationJobFactory(
     private val scope: CoroutineScope
 ) {
 
-    @SuppressWarnings("MaxLineLength")
     fun create(migrations: List<Migration>): Deferred<Boolean> = with(scope) {
         return migrations.sortedBy { it.version }
             .fold(CompletableDeferred(true)) { acc: Deferred<Boolean>, migration: Migration ->

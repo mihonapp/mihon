@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import tachiyomi.domain.chapter.model.Chapter
 
-@Suppress("MagicNumber")
 @Serializable
 data class BackupChapter(
     // in 1.x some of these values have different names

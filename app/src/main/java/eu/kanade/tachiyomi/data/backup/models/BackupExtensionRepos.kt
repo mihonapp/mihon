@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 import mihon.domain.extensionrepo.model.ExtensionRepo
 
-@Suppress("MagicNumber")
 @Serializable
 class BackupExtensionRepos(
     @ProtoNumber(1) var baseUrl: String,
