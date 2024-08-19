@@ -91,7 +91,6 @@ class ShikimoriApi(
         }
     }
 
-    @Suppress("TooGenericExceptionThrown")
     suspend fun findLibManga(track: Track, userId: String): Track? {
         return withIOContext {
             val urlMangas = "$API_URL/mangas".toUri().buildUpon()

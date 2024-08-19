@@ -18,5 +18,4 @@ data class SMOAuth(
 )
 
 // Access token lives 1 day
-@Suppress("MagicNumber")
 fun SMOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)

@@ -9,7 +9,6 @@ data class BGMOAuth(
     val accessToken: String,
     @SerialName("token_type")
     val tokenType: String,
-    @Suppress("MagicNumber")
     @SerialName("created_at")
     val createdAt: Long = System.currentTimeMillis() / 1000,
     @SerialName("expires_in")
@@ -21,5 +20,4 @@ data class BGMOAuth(
 )
 
 // Access token refresh before expired
-@Suppress("MagicNumber")
 fun BGMOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)

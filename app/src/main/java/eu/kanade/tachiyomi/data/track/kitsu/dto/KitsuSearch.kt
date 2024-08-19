@@ -35,7 +35,6 @@ data class KitsuAlgoliaSearchItem(
     val startDate: Long?,
     val endDate: Long?,
 ) {
-    @Suppress("MagicNumber")
     fun toTrack(): TrackSearch {
         return TrackSearch.create(TrackerManager.KITSU).apply {
             remote_id = this@KitsuAlgoliaSearchItem.id

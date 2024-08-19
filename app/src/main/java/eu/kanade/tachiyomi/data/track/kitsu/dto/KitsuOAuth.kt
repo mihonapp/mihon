@@ -17,5 +17,4 @@ data class KitsuOAuth(
     val refreshToken: String?,
 )
 
-@Suppress("MagicNumber")
 fun KitsuOAuth.isExpired() = (System.currentTimeMillis() / 1000) > (createdAt + expiresIn - 3600)

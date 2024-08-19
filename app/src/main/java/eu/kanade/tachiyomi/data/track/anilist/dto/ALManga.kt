@@ -20,7 +20,6 @@ data class ALManga(
     val totalChapters: Long,
     val averageScore: Int,
 ) {
-    @Suppress("SwallowedException")
     fun toTrack() = TrackSearch.create(TrackerManager.ANILIST).apply {
         remote_id = remoteId
         title = this@ALManga.title

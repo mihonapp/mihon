@@ -17,7 +17,6 @@ fun Track.toApiStatus() = when (status) {
 
 private val preferences: TrackPreferences by injectLazy()
 
-@Suppress("MagicNumber", "CyclomaticComplexMethod")
 fun DomainTrack.toApiScore(): String = when (preferences.anilistScoreType().get()) {
     // 10 point
     "POINT_10" -> (score.toInt() / 10).toString()

@@ -66,7 +66,6 @@ class BangumiApi(
         }
     }
 
-    @Suppress("MagicNumber")
     suspend fun search(search: String): List<TrackSearch> {
         return withIOContext {
             val url = "$API_URL/search/subject/${URLEncoder.encode(search, StandardCharsets.UTF_8.name())}"
@@ -101,7 +100,6 @@ class BangumiApi(
         }
     }
 
-    @Suppress("MagicNumber")
     suspend fun statusLibManga(track: Track): Track? {
         return withIOContext {
             val urlUserRead = "$API_URL/collection/${track.remote_id}"

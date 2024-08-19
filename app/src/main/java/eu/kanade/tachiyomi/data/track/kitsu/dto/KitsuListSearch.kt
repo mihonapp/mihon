@@ -12,7 +12,6 @@ data class KitsuListSearchResult(
     val data: List<KitsuListSearchItemData>,
     val included: List<KitsuListSearchItemIncluded>,
 ) {
-    @Suppress("CyclomaticComplexMethod", "TooGenericExceptionThrown")
     fun firstToTrack(): TrackSearch {
         require(data.isNotEmpty()) { "Missing data from Kitsu" }
 

@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.track.kitsu
 
 import eu.kanade.tachiyomi.data.database.models.Track
 
-@Suppress("TooGenericExceptionThrown")
 fun Track.toApiStatus() = when (status) {
     Kitsu.READING -> "current"
     Kitsu.COMPLETED -> "completed"

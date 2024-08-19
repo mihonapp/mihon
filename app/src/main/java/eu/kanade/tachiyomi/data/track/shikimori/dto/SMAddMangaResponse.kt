@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SMAddMangaResponse(
-    val id: Long
+    val id: Long,
 )
