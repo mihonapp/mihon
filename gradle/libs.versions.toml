@@ -24,7 +24,7 @@ okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
 okio = "com.squareup.okio:okio:3.9.0"
 
-conscrypt-android = "org.conscrypt:conscrypt-android:2.5.2"
+conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
 quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
 
