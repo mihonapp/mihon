@@ -820,4 +820,5 @@
     <string name="invalid_backup_file_unknown">Файл резервной копии поврежден</string>
     <string name="invalid_backup_file_json">Резервное копирование в формате JSON не поддерживается</string>
     <string name="extensionRepo_settings">Репозитории расширений</string>
+    <string name="action_copy_link">Копировать ссылку</string>
 </resources>

@@ -819,4 +819,5 @@
     <string name="pref_flash_page_interval">闪烁时间间隔</string>
     <string name="invalid_backup_file_json">不支持 JSON 备份</string>
     <string name="invalid_backup_file_unknown">备份文件已损坏</string>
+    <string name="action_copy_link">复制链接</string>
 </resources>

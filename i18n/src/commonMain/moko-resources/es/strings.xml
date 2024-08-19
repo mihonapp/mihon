@@ -820,4 +820,5 @@
     <string name="invalid_backup_file_json">Copia de seguridad JSON no compatible</string>
     <string name="invalid_backup_file_unknown">El archivo de la copia de seguridad está dañado</string>
     <string name="extensionRepo_settings">Repositorios de extensiones</string>
+    <string name="action_copy_link">Copiar el enlace</string>
 </resources>

@@ -817,4 +817,8 @@
     <string name="pref_flash_style_black">Hitam</string>
     <string name="pref_flash_style_white">Putih</string>
     <string name="pref_flash_style_white_black">Hitam Putih</string>
+    <string name="action_copy_link">Salin link</string>
+    <string name="extensionRepo_settings">Repo Ekstensi</string>
+    <string name="invalid_backup_file_json">Pencadangan JSON tidak didukung</string>
+    <string name="invalid_backup_file_unknown">File cadangan rusak</string>
 </resources>

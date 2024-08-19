@@ -820,4 +820,5 @@
     <string name="invalid_backup_file_unknown">Säkerhetskopierings fil är korrupt</string>
     <string name="invalid_backup_file_json">JSON säkerhetskopering stöds inte</string>
     <string name="extensionRepo_settings">Tilläggsförråd</string>
+    <string name="action_copy_link">Kopiera länk</string>
 </resources>

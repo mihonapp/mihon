@@ -820,4 +820,5 @@
     <string name="invalid_backup_file_unknown">備份檔案已損壞</string>
     <string name="invalid_backup_file_json">不支援 JSON 備份</string>
     <string name="extensionRepo_settings">擴充套件儲存庫</string>
+    <string name="action_copy_link">複製連結</string>
 </resources>

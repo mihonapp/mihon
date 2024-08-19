@@ -26,7 +26,7 @@
     </plurals>
     <plurals name="num_categories">
         <item quantity="one">%d kategori</item>
-        <item quantity="other">%d kategoriler</item>
+        <item quantity="other">%d kategori</item>
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">%1$s içinde %2$s hatayla tamamlandı</item>
@@ -41,8 +41,8 @@
         <item quantity="other">%d izleyici</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">%d bölüm atlanıyor, ya kaynakta yok ya da süzgeçlenmiş</item>
-        <item quantity="other">%d bölüm atlanıyor, ya kaynakta yok ya da süzgeçlenmiş</item>
+        <item quantity="one">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="other">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
     </plurals>
     <plurals name="relative_time">
         <item quantity="one">Dün</item>
@@ -71,5 +71,9 @@
     <plurals name="upcoming_relative_time">
         <item quantity="one">Yarın</item>
         <item quantity="other">%1$d gün içinde</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 sayfa</item>
+        <item quantity="other">%1$s sayfa</item>
     </plurals>
 </resources>

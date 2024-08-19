@@ -817,4 +817,8 @@
     <string name="pref_flash_style_white_black">白と黒</string>
     <string name="manga_interval_expected_update_null">このマンガは完結しているか、あるいは発売予定日が決まっていない。</string>
     <string name="file_picker_uri_permission_unsupported">永続フォルダアクセスの取得に失敗しました。 アプリが予期しない動作をする可能性があります。</string>
+    <string name="action_copy_link">リンクをコピーする</string>
+    <string name="extensionRepo_settings">エクステンション・レポ</string>
+    <string name="invalid_backup_file_json">JSONバックアップはサポートされていません</string>
+    <string name="invalid_backup_file_unknown">バックアップファイルが壊れている</string>
 </resources>

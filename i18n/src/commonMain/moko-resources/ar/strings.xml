@@ -735,7 +735,7 @@
     <string name="relative_time_span_never">أبدًا</string>
     <string name="pref_flash_page_summ">يخفِّف الحرق في شاشات الحبر</string>
     <string name="last_auto_backup_info">آخر احتياط تلقائي: %s</string>
-    <string name="pref_flash_page">أشرق الشاشة بِيضًا إذا تغيرت الصفحة</string>
+    <string name="pref_flash_page">أشرق الشاشة إذا تغيرت الصفحة</string>
     <string name="pref_storage_usage">التخزين</string>
     <string name="action_sort_tracker_score">نقاط المتتبع</string>
     <string name="action_create">أنشئ</string>
@@ -747,7 +747,7 @@
     <string name="action_menu_overflow_description">خيارات أكثر</string>
     <string name="selected">محدَّد</string>
     <string name="not_selected">غير مُحدَّد</string>
-    <string name="action_bar_up_description">اصعد</string>
+    <string name="action_bar_up_description">إصعد</string>
     <string name="pref_storage_location">مكان التخزين</string>
     <string name="pref_storage_location_info">يُستخدَم في الاحتياط وتنزيل الفصول والمصدر المحليِّ.</string>
     <string name="onboarding_storage_action_select">حدِّد مجلَّدًا</string>
@@ -773,14 +773,14 @@
     <string name="onboarding_permission_ignore_battery_opts">استخدام البطارية في الخلفية</string>
     <string name="onboarding_permission_action_grant">منح</string>
     <string name="ext_permission_install_apps_warning">الأذونات مطلوبة لتثبيت الإضافات. انقر هنا لمنحها.</string>
-    <string name="ext_revoke_trust">إبطال الإضافات غير المعروفة الموثوق بها</string>
+    <string name="ext_revoke_trust">إبطال الإضافات غير الموثوق بها</string>
     <string name="label_extension_repos">مستودع الإضافات</string>
     <string name="label_add_repo_input">رابط المستودع</string>
     <string name="action_add_repo_message">إضافة مستودعات إضافية إلى ميهون. يجب أن يكون هذا الرابط ينتهي بـ \"index.min.json\".</string>
     <string name="error_repo_exists">هذا المستودع موجود بالفعل!</string>
     <string name="action_delete_repo">حذف المستودع</string>
     <string name="invalid_repo_name">رابط المستودع غير صالح</string>
-    <string name="delete_repo_confirmation">هل ترغب في حذف \"1%s\" من المستودع؟</string>
+    <string name="delete_repo_confirmation">هل ترغب في حذف \"%s\" من المستودع؟</string>
     <string name="action_open_repo">مستودع مفتوح المصدر</string>
     <string name="invalid_backup_file_error">الخطأ الكامل:</string>
     <string name="private_settings">تضمين إعدادات حساسة (على سبيل المثال، رموز تسجيل دخول المتتبع)</string>
@@ -802,19 +802,23 @@
     <string name="action_view_upcoming">عرض الثحديثات القادمة</string>
     <string name="action_add_anyway">أضف على أي حال</string>
     <string name="action_replace_repo">استبدل</string>
-    <string name="action_replace_repo_title">بصمة مفتاح الانخراط موجودة من قبل</string>
+    <string name="action_replace_repo_title">بصمة مفتاح التوقيع موجودة بالفعل</string>
     <string name="pref_webtoon_disable_zoom_out">تعطيل التصغير</string>
     <string name="manga_interval_expected_update_null">المانجا اما منتهية او لا يوجد تاريخ اصدار متوقع.</string>
     <string name="pref_flash_style_white_black">أبيض وأسود</string>
     <string name="file_picker_uri_permission_unsupported">فشل في الحصول على الوصول المستمر إلى المجلد. قد يتصرف التطبيق بشكل غير متوقع.</string>
-    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_duration_summary">%1$s مث</string>
     <string name="pref_flash_duration">مدة الوميض</string>
     <string name="pref_flash_page_interval">يومض كل(مدة)</string>
     <string name="pref_flash_style_black">أسود</string>
     <string name="pref_flash_style_white">أبيض</string>
     <string name="pref_flash_with">يومض مع</string>
     <string name="action_replace_repo_message">يحتوي المستودع %1$s على نفس بصمة مفتاح التوقيع الموجودة في %2$s.
-\n إذا كان هذا متوقعًا، فسيتم استبدال %2$s، وإلا فاتصل بمشرف الرابطالخاص بك.</string>
+\nإذا كان هذا متوقعًا، فسيتم استبدال %2$s، وإلا فاتصل بمشرف الرابطالخاص بك.</string>
     <string name="action_migrate_duplicate">نقل مَدْخَل موجود</string>
     <string name="pref_display_profile">ملف تعريف عرض خاص</string>
+    <string name="action_copy_link">نسخ الرابط</string>
+    <string name="extensionRepo_settings">مستودع الإضافات</string>
+    <string name="invalid_backup_file_unknown">ملف النسخة الإحتياطية معطل أو لا يعمل</string>
+    <string name="invalid_backup_file_json">لا يتم دعم النسخ الاحتياطي لـ JSON</string>
 </resources>

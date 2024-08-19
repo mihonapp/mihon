@@ -30,7 +30,7 @@
     <string name="action_migrate">Ilipat</string>
     <string name="action_open_in_web_view">Buksan sa WebView</string>
     <string name="action_open_in_browser">Buksan sa browser</string>
-    <string name="action_resume">Ituloy</string>
+    <string name="action_resume">Magpatuloy</string>
     <string name="action_start">Simulan</string>
     <string name="action_remove">Tanggalin</string>
     <string name="action_retry">Subukan muli</string>
@@ -820,4 +820,5 @@
     <string name="invalid_backup_file_json">Hindi suportado ang JSON backup</string>
     <string name="invalid_backup_file_unknown">Nasira ang backup file</string>
     <string name="extensionRepo_settings">Mga Repo ng Extension</string>
+    <string name="action_copy_link">Kopyahin ang link</string>
 </resources>

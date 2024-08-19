@@ -817,4 +817,8 @@
     <string name="pref_flash_style_white_black">Weiß und Schwarz</string>
     <string name="pref_flash_duration">Dauer des Leuchtens</string>
     <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="action_copy_link">Link kopieren</string>
+    <string name="extensionRepo_settings">Erweiterungsrepositorys</string>
+    <string name="invalid_backup_file_unknown">Sicherungsdatei ist beschädigt</string>
+    <string name="invalid_backup_file_json">JSON-Sicherung wird nicht unterstützt</string>
 </resources>
