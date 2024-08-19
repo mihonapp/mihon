@@ -8,7 +8,7 @@ import uy.kohesive.injekt.api.get
 
 class ExtensionRepoRestorer(
     private val handler: DatabaseHandler = Injekt.get(),
-    private val getExtensionRepos: GetExtensionRepo = Injekt.get()
+    private val getExtensionRepos: GetExtensionRepo = Injekt.get(),
 ) {
 
     suspend operator fun invoke(
@@ -32,7 +32,7 @@ class ExtensionRepoRestorer(
                     backupRepo.name,
                     backupRepo.shortName,
                     backupRepo.website,
-                    backupRepo.signingKeyFingerprint
+                    backupRepo.signingKeyFingerprint,
                 )
             }
         }

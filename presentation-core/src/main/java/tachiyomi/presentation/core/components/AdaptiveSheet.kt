@@ -152,7 +152,7 @@ fun AdaptiveSheet(
                             Modifier.nestedScroll(
                                 remember(anchoredDraggableState) {
                                     anchoredDraggableState.preUpPostDownNestedScrollConnection(
-                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } }
+                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } },
                                     )
                                 },
                             )
@@ -202,7 +202,7 @@ fun AdaptiveSheet(
 }
 
 private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
-    onFling: (velocity: Float) -> Unit
+    onFling: (velocity: Float) -> Unit,
 ) = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.toFloat()

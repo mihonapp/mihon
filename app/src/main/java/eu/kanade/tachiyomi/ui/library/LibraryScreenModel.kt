@@ -258,7 +258,7 @@ class LibraryScreenModel(
     private fun LibraryMap.applySort(
         // Map<MangaId, List<Track>>
         trackMap: Map<Long, List<Track>>,
-        loggedInTrackerIds: Set<Long>
+        loggedInTrackerIds: Set<Long>,
     ): LibraryMap {
         val sortAlphabetically: (LibraryItem, LibraryItem) -> Int = { i1, i2 ->
             i1.libraryManga.manga.title.lowercase().compareToWithCollator(i2.libraryManga.manga.title.lowercase())

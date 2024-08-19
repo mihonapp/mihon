@@ -40,8 +40,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import me.saket.swipe.SwipeableActionsBox
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.material.ReadItemAlpha
-import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
 
@@ -132,7 +132,7 @@ fun MangaChapterListItem(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textHeight = it.size.height },
-                        color = LocalContentColor.current.copy(alpha = if (read) ReadItemAlpha else 1f),
+                        color = LocalContentColor.current.copy(alpha = if (read) DISABLED_ALPHA else 1f),
                     )
                 }
 
@@ -140,7 +140,7 @@ fun MangaChapterListItem(
                     val subtitleStyle = MaterialTheme.typography.bodySmall
                         .merge(
                             color = LocalContentColor.current
-                                .copy(alpha = if (read) ReadItemAlpha else SecondaryItemAlpha)
+                                .copy(alpha = if (read) DISABLED_ALPHA else SECONDARY_ALPHA),
                         )
                     ProvideTextStyle(value = subtitleStyle) {
                         if (date != null) {
@@ -156,7 +156,7 @@ fun MangaChapterListItem(
                                 text = readProgress,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                color = LocalContentColor.current.copy(alpha = ReadItemAlpha),
+                                color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
                             )
                             if (scanlator != null) DotSeparatorText()
                         }

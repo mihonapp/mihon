@@ -182,7 +182,11 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
         setScaleRate(currentScale)
 
-        layoutParams.height = if (currentScale < 1) { (originalHeight / currentScale).toInt() } else { originalHeight }
+        layoutParams.height = if (currentScale < 1) {
+            (originalHeight / currentScale).toInt()
+        } else {
+            originalHeight
+        }
         halfHeight = layoutParams.height / 2
 
         if (currentScale != DEFAULT_RATE) {

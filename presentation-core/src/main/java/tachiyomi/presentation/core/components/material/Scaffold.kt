@@ -262,14 +262,13 @@ private fun ScaffoldLayout(
                 val fabOffsetDp = fabOffsetFromBottom?.toDp() ?: 0.dp
                 val bottomBarHeightPx = bottomBarHeight ?: 0
                 val innerPadding = PaddingValues(
-                    top =
-                    if (topBarPlaceables.isEmpty()) {
+                    top = if (topBarPlaceables.isEmpty()) {
                         insets.calculateTopPadding()
                     } else {
                         topBarHeight.toDp()
                     },
-                    bottom = // Tachiyomi: Also take account of fab height when providing inner padding
-                    if (bottomBarPlaceables.isEmpty() || bottomBarHeightPx == 0) {
+                    // Tachiyomi: Also take account of fab height when providing inner padding
+                    bottom = if (bottomBarPlaceables.isEmpty() || bottomBarHeightPx == 0) {
                         max(insets.calculateBottomPadding(), fabOffsetDp)
                     } else {
                         max(bottomBarHeightPx.toDp(), fabOffsetDp)

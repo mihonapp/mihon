@@ -189,13 +189,13 @@ private fun <T> WheelPicker(
                         }
                     },
                 state = lazyListState,
-                contentPadding = PaddingValues(vertical = size.height / RowCount * ((RowCount - 1) / 2)),
+                contentPadding = PaddingValues(vertical = size.height / ROW_COUNT * ((ROW_COUNT - 1) / 2)),
                 flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState),
             ) {
                 itemsIndexed(items) { index, item ->
                     Box(
                         modifier = Modifier
-                            .height(size.height / RowCount)
+                            .height(size.height / ROW_COUNT)
                             .width(size.width)
                             .alpha(
                                 calculateAnimatedAlpha(
@@ -233,7 +233,7 @@ private fun calculateAnimatedAlpha(
 ): Float {
     val distanceToIndexSnap = lazyListState.distanceToSnapForIndex(index).absoluteValue
     val viewPortHeight = lazyListState.layoutInfo.viewportSize.height.toFloat()
-    val singleViewPortHeight = viewPortHeight / RowCount
+    val singleViewPortHeight = viewPortHeight / ROW_COUNT
     return if (distanceToIndexSnap in 0..singleViewPortHeight.toInt()) {
         1.2f - (distanceToIndexSnap / singleViewPortHeight)
     } else {
@@ -252,7 +252,7 @@ object WheelPickerDefaults {
     fun Background(size: DpSize) {
         androidx.compose.material3.Surface(
             modifier = Modifier
-                .size(size.width, size.height / RowCount),
+                .size(size.width, size.height / ROW_COUNT),
             shape = RoundedCornerShape(MaterialTheme.padding.medium),
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
@@ -270,4 +270,4 @@ object WheelPickerDefaults {
     }
 }
 
-private const val RowCount = 3
+private const val ROW_COUNT = 3

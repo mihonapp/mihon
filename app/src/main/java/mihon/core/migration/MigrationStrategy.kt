@@ -12,7 +12,7 @@ interface MigrationStrategy {
 class DefaultMigrationStrategy(
     private val migrationJobFactory: MigrationJobFactory,
     private val migrationCompletedListener: MigrationCompletedListener,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) : MigrationStrategy {
 
     override operator fun invoke(migrations: List<Migration>): Deferred<Boolean> = with(scope) {
@@ -46,7 +46,7 @@ class NoopMigrationStrategy(val state: Boolean) : MigrationStrategy {
 
 class VersionRangeMigrationStrategy(
     private val versions: IntRange,
-    private val strategy: DefaultMigrationStrategy
+    private val strategy: DefaultMigrationStrategy,
 ) : MigrationStrategy {
 
     override operator fun invoke(migrations: List<Migration>): Deferred<Boolean> {

@@ -17,7 +17,7 @@ if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
 
 shortcutHelper.setFilePath("./shortcuts.xml")
 
-val SUPPORTED_ABIS = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+val supportedAbis = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 
 android {
     namespace = "eu.kanade.tachiyomi"
@@ -35,7 +35,7 @@ android {
         buildConfigField("boolean", "PREVIEW", "false")
 
         ndk {
-            abiFilters += SUPPORTED_ABIS
+            abiFilters += supportedAbis
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -45,7 +45,7 @@ android {
         abi {
             isEnable = true
             reset()
-            include(*SUPPORTED_ABIS.toTypedArray())
+            include(*supportedAbis.toTypedArray())
             isUniversalApk = true
         }
     }
@@ -158,7 +158,7 @@ dependencies {
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
     implementation(compose.accompanist.systemuicontroller)
-    
+
     implementation(androidx.interpolator)
 
     implementation(androidx.paging.runtime)
@@ -235,7 +235,6 @@ dependencies {
     implementation(libs.swipe)
     implementation(libs.compose.webview)
     implementation(libs.compose.grid)
-
 
     // Logging
     implementation(libs.logcat)

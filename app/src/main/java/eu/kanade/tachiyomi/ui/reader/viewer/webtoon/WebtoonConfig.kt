@@ -82,7 +82,7 @@ class WebtoonConfig(
         readerPreferences.webtoonDisableZoomOut()
             .register(
                 { zoomOutDisabled = it },
-                { zoomPropertyChangedListener?.invoke(it) }
+                { zoomPropertyChangedListener?.invoke(it) },
             )
 
         readerPreferences.webtoonDoubleTapZoomEnabled()

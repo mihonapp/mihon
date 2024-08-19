@@ -66,7 +66,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             with(json) {
                 authClient.newCall(
                     POST(
-                        "${baseUrl}library-entries",
+                        "${BASE_URL}library-entries",
                         headers = headersOf(
                             "Content-Type",
                             "application/vnd.api+json",
@@ -104,7 +104,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             with(json) {
                 authClient.newCall(
                     Request.Builder()
-                        .url("${baseUrl}library-entries/${track.remote_id}")
+                        .url("${BASE_URL}library-entries/${track.remote_id}")
                         .headers(
                             headersOf(
                                 "Content-Type",
@@ -130,7 +130,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
             authClient
                 .newCall(
                     DELETE(
-                        "${baseUrl}library-entries/${track.remoteId}",
+                        "${BASE_URL}library-entries/${track.remoteId}",
                         headers = headersOf(
                             "Content-Type",
                             "application/vnd.api+json",
@@ -143,7 +143,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     suspend fun search(query: String): List<TrackSearch> {
         return withIOContext {
             with(json) {
-                authClient.newCall(GET(algoliaKeyUrl))
+                authClient.newCall(GET(ALGOLIA_KEY_URL))
                     .awaitSuccess()
                     .parseAs<JsonObject>()
                     .let {
@@ -157,16 +157,16 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     private suspend fun algoliaSearch(key: String, query: String): List<TrackSearch> {
         return withIOContext {
             val jsonObject = buildJsonObject {
-                put("params", "query=${URLEncoder.encode(query, StandardCharsets.UTF_8.name())}$algoliaFilter")
+                put("params", "query=${URLEncoder.encode(query, StandardCharsets.UTF_8.name())}$ALGOLIA_FILTER")
             }
 
             with(json) {
                 client.newCall(
                     POST(
-                        algoliaUrl,
+                        ALGOLIA_URL,
                         headers = headersOf(
                             "X-Algolia-Application-Id",
-                            algoliaAppId,
+                            ALGOLIA_APP_ID,
                             "X-Algolia-API-Key",
                             key,
                         ),
@@ -187,7 +187,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
 
     suspend fun findLibManga(track: Track, userId: String): Track? {
         return withIOContext {
-            val url = "${baseUrl}library-entries".toUri().buildUpon()
+            val url = "${BASE_URL}library-entries".toUri().buildUpon()
                 .encodedQuery("filter[manga_id]=${track.remote_id}&filter[user_id]=$userId")
                 .appendQueryParameter("include", "manga")
                 .build()
@@ -210,7 +210,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
 
     suspend fun getLibManga(track: Track): Track {
         return withIOContext {
-            val url = "${baseUrl}library-entries".toUri().buildUpon()
+            val url = "${BASE_URL}library-entries".toUri().buildUpon()
                 .encodedQuery("filter[id]=${track.remote_id}")
                 .appendQueryParameter("include", "manga")
                 .build()
@@ -237,11 +237,11 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 .add("username", username)
                 .add("password", password)
                 .add("grant_type", "password")
-                .add("client_id", clientId)
-                .add("client_secret", clientSecret)
+                .add("client_id", CLIENT_ID)
+                .add("client_secret", CLIENT_SECRET)
                 .build()
             with(json) {
-                client.newCall(POST(loginUrl, body = formBody))
+                client.newCall(POST(LOGIN_URL, body = formBody))
                     .awaitSuccess()
                     .parseAs()
             }
@@ -250,7 +250,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
 
     suspend fun getCurrentUser(): String {
         return withIOContext {
-            val url = "${baseUrl}users".toUri().buildUpon()
+            val url = "${BASE_URL}users".toUri().buildUpon()
                 .encodedQuery("filter[self]=true")
                 .build()
             with(json) {
@@ -265,35 +265,31 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
     }
 
     companion object {
-        private const val clientId =
-            "dd031b32d2f56c990b1425efe6c42ad847e7fe3ab46bf1299f05ecd856bdb7dd"
-        private const val clientSecret =
-            "54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151"
+        private const val CLIENT_ID = "dd031b32d2f56c990b1425efe6c42ad847e7fe3ab46bf1299f05ecd856bdb7dd"
+        private const val CLIENT_SECRET = "54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151"
 
-        private const val baseUrl = "https://kitsu.app/api/edge/"
-        private const val loginUrl = "https://kitsu.app/api/oauth/token"
-        private const val baseMangaUrl = "https://kitsu.app/manga/"
-        private const val algoliaKeyUrl = "https://kitsu.app/api/edge/algolia-keys/media/"
+        private const val BASE_URL = "https://kitsu.app/api/edge/"
+        private const val LOGIN_URL = "https://kitsu.app/api/oauth/token"
+        private const val BASE_MANGA_URL = "https://kitsu.app/manga/"
+        private const val ALGOLIA_KEY_URL = "https://kitsu.app/api/edge/algolia-keys/media/"
 
-        private const val algoliaUrl =
-            "https://AWQO5J657S-dsn.algolia.net/1/indexes/production_media/query/"
-        private const val algoliaAppId = "AWQO5J657S"
-        private const val algoliaFilter =
-            "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=" +
-                "%5B%22synopsis%22%2C%22averageRating%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22" +
-                "posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
+        private const val ALGOLIA_APP_ID = "AWQO5J657S"
+        private const val ALGOLIA_URL = "https://$ALGOLIA_APP_ID-dsn.algolia.net/1/indexes/production_media/query/"
+        private const val ALGOLIA_FILTER = "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=" +
+            "%5B%22synopsis%22%2C%22averageRating%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22" +
+            "posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D"
 
         fun mangaUrl(remoteId: Long): String {
-            return baseMangaUrl + remoteId
+            return BASE_MANGA_URL + remoteId
         }
 
         fun refreshTokenRequest(token: String) = POST(
-            loginUrl,
+            LOGIN_URL,
             body = FormBody.Builder()
                 .add("grant_type", "refresh_token")
                 .add("refresh_token", token)
-                .add("client_id", clientId)
-                .add("client_secret", clientSecret)
+                .add("client_id", CLIENT_ID)
+                .add("client_secret", CLIENT_SECRET)
                 .build(),
         )
     }

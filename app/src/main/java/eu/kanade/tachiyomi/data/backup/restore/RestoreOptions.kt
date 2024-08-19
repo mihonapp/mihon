@@ -9,7 +9,7 @@ data class RestoreOptions(
     val categories: Boolean = true,
     val appSettings: Boolean = true,
     val extensionRepoSettings: Boolean = true,
-    val sourceSettings: Boolean = true
+    val sourceSettings: Boolean = true,
 ) {
 
     fun asBooleanArray() = booleanArrayOf(
@@ -17,7 +17,7 @@ data class RestoreOptions(
         categories,
         appSettings,
         extensionRepoSettings,
-        sourceSettings
+        sourceSettings,
     )
 
     fun canRestore() = libraryEntries || categories || appSettings || extensionRepoSettings || sourceSettings

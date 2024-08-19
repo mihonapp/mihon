@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName", "ktlint:standard:property-naming")
+
 package eu.kanade.tachiyomi.source.model
 
 class SChapterImpl : SChapter {

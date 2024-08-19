@@ -445,7 +445,7 @@
         <item name="colorSurfaceContainerLow">@color/nord_surfaceContainerLow</item>
         <item name="colorSurfaceContainerLowest">@color/nord_surfaceContainerLowest</item>
     </style>
-    
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

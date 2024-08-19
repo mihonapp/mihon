@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName", "ktlint:standard:function-naming")
+
 package eu.kanade.tachiyomi.network
 
 import okhttp3.CacheControl

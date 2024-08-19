@@ -49,7 +49,7 @@ import java.time.ZoneId
 class WorkerInfoScreen : Screen() {
 
     companion object {
-        const val title = "Worker info"
+        const val TITLE = "Worker info"
     }
 
     @Composable
@@ -65,7 +65,7 @@ class WorkerInfoScreen : Screen() {
         Scaffold(
             topBar = {
                 AppBar(
-                    title = title,
+                    title = TITLE,
                     navigateUp = navigator::pop,
                     actions = {
                         AppBarActions(
@@ -74,7 +74,7 @@ class WorkerInfoScreen : Screen() {
                                     title = stringResource(MR.strings.action_copy_to_clipboard),
                                     icon = Icons.Default.ContentCopy,
                                     onClick = {
-                                        context.copyToClipboard(title, enqueued + finished + running)
+                                        context.copyToClipboard(TITLE, enqueued + finished + running)
                                     },
                                 ),
                             ),
@@ -159,7 +159,7 @@ class WorkerInfoScreen : Screen() {
                                     Injekt.get<UiPreferences>().dateFormat().get(),
                                 ),
                             )
-                        appendLine("Next scheduled run: $timestamp",)
+                        appendLine("Next scheduled run: $timestamp")
                         appendLine("Attempt #${workInfo.runAttemptCount + 1}")
                     }
                     appendLine()

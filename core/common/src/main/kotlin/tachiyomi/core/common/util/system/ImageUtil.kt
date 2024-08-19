@@ -500,16 +500,20 @@ object ImageUtil {
             darkBG -> {
                 return ColorDrawable(blackColor)
             }
-            topIsBlackStreak || (
-                topCornersIsDark && topOffsetCornersIsDark &&
-                    (topMidIsDark || overallBlackPixels > 9)
-                ) -> {
+            topIsBlackStreak ||
+                (
+                    topCornersIsDark &&
+                        topOffsetCornersIsDark &&
+                        (topMidIsDark || overallBlackPixels > 9)
+                    ) -> {
                 intArrayOf(blackColor, blackColor, whiteColor, whiteColor)
             }
-            bottomIsBlackStreak || (
-                botCornersIsDark && botOffsetCornersIsDark &&
-                    (bottomCenterPixel.isDark() || overallBlackPixels > 9)
-                ) -> {
+            bottomIsBlackStreak ||
+                (
+                    botCornersIsDark &&
+                        botOffsetCornersIsDark &&
+                        (bottomCenterPixel.isDark() || overallBlackPixels > 9)
+                    ) -> {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
             else -> {

@@ -32,7 +32,7 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 
 private val FontSize = 16.sp
-private const val DaysOfWeek = 7
+private const val DAYS_OF_WEEK = 7
 
 @Composable
 fun Calendar(
@@ -54,7 +54,7 @@ fun Calendar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.padding.small)
-                .padding(start = MaterialTheme.padding.medium)
+                .padding(start = MaterialTheme.padding.medium),
         )
         CalendarGrid(
             selectedYearMonth = selectedYearMonth,
@@ -72,8 +72,8 @@ private fun CalendarGrid(
 ) {
     val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
     val weekDays = remember {
-        (0 until DaysOfWeek)
-            .map { DayOfWeek.of((localeFirstDayOfWeek - 1 + it) % DaysOfWeek + 1) }
+        (0 until DAYS_OF_WEEK)
+            .map { DayOfWeek.of((localeFirstDayOfWeek - 1 + it) % DAYS_OF_WEEK + 1) }
             .toImmutableList()
     }
 
@@ -81,12 +81,12 @@ private fun CalendarGrid(
     val daysInMonth = selectedYearMonth.lengthOfMonth()
 
     VerticalGrid(
-        columns = SimpleGridCells.Fixed(DaysOfWeek),
+        columns = SimpleGridCells.Fixed(DAYS_OF_WEEK),
         modifier = if (isMediumWidthWindow() && !isExpandedWidthWindow()) {
             Modifier.widthIn(max = 360.dp)
         } else {
             Modifier
-        }
+        },
     ) {
         weekDays.fastForEach { item ->
             Text(

@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
@@ -73,7 +73,7 @@ private fun RowScope.BaseStatsItem(
             style = subtitleStyle
                 .copy(
                     color = MaterialTheme.colorScheme.onSurface
-                        .copy(alpha = SecondaryItemAlpha),
+                        .copy(alpha = SECONDARY_ALPHA),
                 ),
             textAlign = TextAlign.Center,
         )
