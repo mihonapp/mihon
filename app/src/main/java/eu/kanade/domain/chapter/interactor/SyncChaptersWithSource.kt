@@ -110,7 +110,10 @@ class SyncChaptersWithSource(
                 if (shouldUpdateDbChapter.await(dbChapter, chapter)) {
                     val shouldRenameChapter = downloadProvider.isChapterDirNameChanged(dbChapter, chapter) &&
                         downloadManager.isChapterDownloaded(
-                            dbChapter.name, dbChapter.scanlator, manga.title, manga.source,
+                            dbChapter.name,
+                            dbChapter.scanlator,
+                            manga.title,
+                            manga.source,
                         )
 
                     if (shouldRenameChapter) {

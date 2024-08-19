@@ -167,7 +167,7 @@ class BackupRestorer(
     }
 
     private fun CoroutineScope.restoreExtensionRepos(
-        backupExtensionRepo: List<BackupExtensionRepos>
+        backupExtensionRepo: List<BackupExtensionRepos>,
     ) = launch {
         backupExtensionRepo
             .forEach {

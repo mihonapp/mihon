@@ -17,7 +17,7 @@ object Migrator {
         new: Int,
         migrations: List<Migration>,
         dryrun: Boolean = false,
-        onMigrationComplete: () -> Unit
+        onMigrationComplete: () -> Unit,
     ) {
         val migrationContext = MigrationContext(dryrun)
         val migrationJobFactory = MigrationJobFactory(migrationContext, scope)

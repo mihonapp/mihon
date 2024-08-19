@@ -127,8 +127,8 @@ class MigratorTest {
             listOf(
                 Migration.of(Migration.ALWAYS) { true },
                 Migration.of(2f) { true },
-                Migration.of(3f) { false }
-            )
+                Migration.of(3f) { false },
+            ),
         )
 
         execute.await()

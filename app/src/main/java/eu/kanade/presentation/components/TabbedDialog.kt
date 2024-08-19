@@ -79,7 +79,7 @@ fun TabbedDialog(
                 modifier = Modifier.animateContentSize(),
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
-                pageContent = { page -> content(page) }
+                pageContent = { page -> content(page) },
             )
         }
     }

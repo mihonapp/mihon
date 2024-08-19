@@ -55,8 +55,11 @@ actual class LocalSource(
     private val json: Json by injectLazy()
     private val xml: XML by injectLazy()
 
-    private val POPULAR_FILTERS = FilterList(OrderBy.Popular(context))
-    private val LATEST_FILTERS = FilterList(OrderBy.Latest(context))
+    @Suppress("PrivatePropertyName", "ktlint:standard:property-naming")
+    private val PopularFilters = FilterList(OrderBy.Popular(context))
+
+    @Suppress("PrivatePropertyName", "ktlint:standard:property-naming")
+    private val LatestFilters = FilterList(OrderBy.Latest(context))
 
     override val name: String = context.stringResource(MR.strings.local_source)
 
@@ -69,12 +72,12 @@ actual class LocalSource(
     override val supportsLatest: Boolean = true
 
     // Browse related
-    override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", POPULAR_FILTERS)
+    override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", PopularFilters)
 
-    override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LATEST_FILTERS)
+    override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LatestFilters)
 
     override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withIOContext {
-        val lastModifiedLimit = if (filters === LATEST_FILTERS) {
+        val lastModifiedLimit = if (filters === LatestFilters) {
             System.currentTimeMillis() - LATEST_THRESHOLD
         } else {
             0L

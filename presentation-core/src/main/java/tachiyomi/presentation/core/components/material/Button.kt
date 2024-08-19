@@ -60,7 +60,7 @@ fun TextButton(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.primary,
         disabledContainerColor = Color.Transparent,
-        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
     ),
     contentPadding: PaddingValues = M3ButtonDefaults.TextButtonContentPadding,
     content: @Composable RowScope.() -> Unit,
@@ -145,7 +145,7 @@ object ButtonDefaults {
         containerColor: Color = MaterialTheme.colorScheme.primary,
         contentColor: Color = MaterialTheme.colorScheme.onPrimary,
         disabledContainerColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-        disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        disabledContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
     ): ButtonColors = ButtonColors(
         containerColor = containerColor,
         contentColor = contentColor,

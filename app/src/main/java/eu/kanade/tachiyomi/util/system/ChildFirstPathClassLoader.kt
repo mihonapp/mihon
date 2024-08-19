@@ -15,7 +15,7 @@ import java.util.Enumeration
 class ChildFirstPathClassLoader(
     dexPath: String,
     librarySearchPath: String?,
-    parent: ClassLoader
+    parent: ClassLoader,
 ) : PathClassLoader(dexPath, librarySearchPath, parent) {
 
     private val systemClassLoader: ClassLoader? = getSystemClassLoader()

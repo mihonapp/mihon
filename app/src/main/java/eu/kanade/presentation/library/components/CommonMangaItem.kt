@@ -62,7 +62,7 @@ private val ContinueReadingButtonIconSizeLarge = 20.dp
 private val ContinueReadingButtonGridPadding = 6.dp
 private val ContinueReadingButtonListSpacing = 8.dp
 
-private const val GridSelectedCoverAlpha = 0.76f
+private const val GRID_SELECTED_COVER_ALPHA = 0.76f
 
 /**
  * Layout of grid list item with title overlaying the cover.
@@ -90,7 +90,7 @@ fun MangaCompactGridItem(
                 MangaCover.Book(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(if (isSelected) GridSelectedCoverAlpha else coverAlpha),
+                        .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                     data = coverData,
                 )
             },
@@ -197,7 +197,7 @@ fun MangaComfortableGridItem(
                     MangaCover.Book(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .alpha(if (isSelected) GridSelectedCoverAlpha else coverAlpha),
+                            .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                         data = coverData,
                     )
                 },
@@ -371,7 +371,7 @@ fun MangaListItem(
                 size = ContinueReadingButtonSizeSmall,
                 iconSize = ContinueReadingButtonIconSizeSmall,
                 onClick = onClickContinueReading,
-                modifier = Modifier.padding(start = ContinueReadingButtonListSpacing)
+                modifier = Modifier.padding(start = ContinueReadingButtonListSpacing),
             )
         }
     }
@@ -392,7 +392,7 @@ private fun ContinueReadingButton(
                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
                 contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
             ),
-            modifier = Modifier.size(size)
+            modifier = Modifier.size(size),
         ) {
             Icon(
                 imageVector = Icons.Filled.PlayArrow,

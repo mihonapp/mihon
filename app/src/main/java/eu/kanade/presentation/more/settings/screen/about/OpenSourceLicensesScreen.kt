@@ -37,7 +37,7 @@ class OpenSourceLicensesScreen : Screen() {
                             name = it.name,
                             website = it.website,
                             license = it.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
-                        )
+                        ),
                     )
                 },
             )

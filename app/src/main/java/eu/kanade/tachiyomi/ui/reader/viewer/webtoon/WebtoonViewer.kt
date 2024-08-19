@@ -79,7 +79,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             .threshold
 
     init {
-        recycler.setItemViewCacheSize(RecyclerViewCacheSize)
+        recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         recycler.isFocusable = false
@@ -362,4 +362,4 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
 }
 
 // Double the cache size to reduce rebinds/recycles incurred by the extra layout space on scroll direction changes
-private const val RecyclerViewCacheSize = 4
+private const val RECYCLER_VIEW_CACHE_SIZE = 4

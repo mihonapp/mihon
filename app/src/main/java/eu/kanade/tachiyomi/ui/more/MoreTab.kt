@@ -87,8 +87,8 @@ private class MoreScreenModel(
     var downloadedOnly by preferences.downloadedOnly().asState(screenModelScope)
     var incognitoMode by preferences.incognitoMode().asState(screenModelScope)
 
-    private var _state: MutableStateFlow<DownloadQueueState> = MutableStateFlow(DownloadQueueState.Stopped)
-    val downloadQueueState: StateFlow<DownloadQueueState> = _state.asStateFlow()
+    private var _downloadQueueState: MutableStateFlow<DownloadQueueState> = MutableStateFlow(DownloadQueueState.Stopped)
+    val downloadQueueState: StateFlow<DownloadQueueState> = _downloadQueueState.asStateFlow()
 
     init {
         // Handle running/paused status change and queue progress updating
@@ -99,7 +99,7 @@ private class MoreScreenModel(
             ) { isRunning, downloadQueue -> Pair(isRunning, downloadQueue.size) }
                 .collectLatest { (isDownloading, downloadQueueSize) ->
                     val pendingDownloadExists = downloadQueueSize != 0
-                    _state.value = when {
+                    _downloadQueueState.value = when {
                         !pendingDownloadExists -> DownloadQueueState.Stopped
                         !isDownloading -> DownloadQueueState.Paused(downloadQueueSize)
                         else -> DownloadQueueState.Downloading(downloadQueueSize)

@@ -85,7 +85,7 @@ class MangaCoverFetcher(
             source = ImageSource(
                 file = file.toOkioPath(),
                 fileSystem = FileSystem.SYSTEM,
-                diskCacheKey = diskCacheKey
+                diskCacheKey = diskCacheKey,
             ),
             mimeType = "image/*",
             dataSource = DataSource.DISK,

@@ -32,7 +32,7 @@ class LibrarySettingsScreenModel(
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(5.seconds.inWholeMilliseconds),
-            initialValue = trackerManager.loggedInTrackers()
+            initialValue = trackerManager.loggedInTrackers(),
         )
 
     fun toggleFilter(preference: (LibraryPreferences) -> Preference<TriState>) {

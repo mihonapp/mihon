@@ -31,11 +31,11 @@ class DebugInfoScreen : Screen() {
             itemsProvider = {
                 listOf(
                     Preference.PreferenceItem.TextPreference(
-                        title = WorkerInfoScreen.title,
+                        title = WorkerInfoScreen.TITLE,
                         onClick = { navigator.push(WorkerInfoScreen()) },
                     ),
                     Preference.PreferenceItem.TextPreference(
-                        title = BackupSchemaScreen.title,
+                        title = BackupSchemaScreen.TITLE,
                         onClick = { navigator.push(BackupSchemaScreen()) },
                     ),
                     getAppInfoGroup(),
