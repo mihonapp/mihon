@@ -3,6 +3,8 @@ import mihon.buildlogic.configureTest
 
 plugins {
     id("com.android.library")
+
+    id("mihon.code.lint")
 }
 
 android {
