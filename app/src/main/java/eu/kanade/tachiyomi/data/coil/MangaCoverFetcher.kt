@@ -45,7 +45,6 @@ import java.io.IOException
  * Available request parameter:
  * - [USE_CUSTOM_COVER_KEY]: Use custom cover if set by user, default is true
  */
-@Suppress("LongParameterList")
 class MangaCoverFetcher(
     private val url: String?,
     private val isLibraryManga: Boolean,

@@ -127,7 +127,6 @@ class ChapterRepositoryImpl(
         }
     }
 
-    @Suppress("LongParameterList")
     private fun mapChapter(
         id: Long,
         mangaId: Long,

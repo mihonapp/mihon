@@ -174,7 +174,6 @@ class LibraryScreenModel(
     /**
      * Applies library filters to the given map of manga.
      */
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
     private suspend fun LibraryMap.applyFilters(
         trackMap: Map<Long, List<Track>>,
         trackingFiler: Map<Long, TriState>,
@@ -256,7 +255,6 @@ class LibraryScreenModel(
     /**
      * Applies library sorting to the given map of manga.
      */
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
     private fun LibraryMap.applySort(
         // Map<MangaId, List<Track>>
         trackMap: Map<Long, List<Track>>,

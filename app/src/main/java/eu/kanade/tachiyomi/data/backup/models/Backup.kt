@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.backup.models
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
-@Suppress("MagicNumber")
 @Serializable
 data class Backup(
     @ProtoNumber(1) val backupManga: List<BackupManga>,
