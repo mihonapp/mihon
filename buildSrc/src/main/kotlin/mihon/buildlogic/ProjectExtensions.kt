@@ -15,6 +15,7 @@ import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.File
 
 val Project.androidx get() = the<LibrariesForAndroidx>()
 val Project.compose get() = the<LibrariesForCompose>()
@@ -106,3 +107,5 @@ internal fun Project.configureTest() {
         }
     }
 }
+
+val Project.generatedBuildDir: File get() = project.layout.buildDirectory.asFile.get().resolve("generated/mihon")
