@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
+import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import tachiyomi.data.chapter.ChapterSanitizer
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
@@ -19,6 +20,7 @@ import tachiyomi.domain.chapter.model.NoChaptersException
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.chapter.service.ChapterRecognition
+import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.isLocal
 import java.lang.Long.max
@@ -34,6 +36,8 @@ class SyncChaptersWithSource(
     private val updateChapter: UpdateChapter,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val getExcludedScanlators: GetExcludedScanlators,
+    private val downloadPreferences: DownloadPreferences,
+    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber,
 ) {
 
     /**
@@ -42,7 +46,12 @@ class SyncChaptersWithSource(
      * @param rawSourceChapters the chapters from the source.
      * @param manga the manga the chapters belong to.
      * @param source the source the manga belongs to.
-     * @return Newly added chapters
+     * @param manualFetch A flag indicating if this fetch was manually triggered. Defaults to `false`.
+     * @param fetchWindow A time window to determine if a fetch should be performed. Defaults to `(0, 0)`.
+     * @return A pair of lists:
+     *  - First: List of chapters that were added or updated after filtering out re-added or excluded scanlator chapters.
+     *  - Second: List of chapters that are eligible for download, based on the unread chapters-only preference.
+     *  @throws NoChaptersException If the source is not local and there are no chapters in `rawSourceChapters`.
      */
     suspend fun await(
         rawSourceChapters: List<SChapter>,
@@ -50,7 +59,7 @@ class SyncChaptersWithSource(
         source: Source,
         manualFetch: Boolean = false,
         fetchWindow: Pair<Long, Long> = Pair(0, 0),
-    ): List<Chapter> {
+    ): Pair<List<Chapter>, List<Chapter>> {
         if (rawSourceChapters.isEmpty() && !source.isLocal()) {
             throw NoChaptersException()
         }
@@ -142,7 +151,7 @@ class SyncChaptersWithSource(
                     fetchWindow,
                 )
             }
-            return emptyList()
+            return Pair(emptyList(), emptyList())
         }
 
         val reAdded = mutableListOf<Chapter>()
@@ -206,8 +215,16 @@ class SyncChaptersWithSource(
 
         val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
 
-        return updatedToAdd.filterNot {
+        val nonExcludedChapters = updatedToAdd.filterNot {
             it.url in reAddedUrls || it.scanlator in excludedScanlators
         }
+
+        val chaptersToDownload = if (downloadPreferences.downloadUnreadChaptersOnly().get()) {
+            nonExcludedChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
+        } else {
+            nonExcludedChapters
+        }
+
+        return Pair(nonExcludedChapters, chaptersToDownload)
     }
 }
