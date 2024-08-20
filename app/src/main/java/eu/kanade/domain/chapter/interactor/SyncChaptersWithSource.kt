@@ -10,6 +10,7 @@ import eu.kanade.tachiyomi.data.download.DownloadProvider
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.online.HttpSource
+import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import tachiyomi.data.chapter.ChapterSanitizer
 import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.interactor.ShouldUpdateDbChapter
@@ -36,6 +37,7 @@ class SyncChaptersWithSource(
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val getExcludedScanlators: GetExcludedScanlators,
     private val downloadPreferences: DownloadPreferences,
+    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber,
 ) {
 
     /**
@@ -218,10 +220,7 @@ class SyncChaptersWithSource(
         }
 
         val chaptersToDownload = if (downloadPreferences.downloadUnreadChaptersOnly().get()) {
-            val groupedDbChapters = dbChapters.groupBy { it.chapterNumber }
-            nonExcludedChapters.filter { chapter ->
-                groupedDbChapters[chapter.chapterNumber]?.none { it.read } ?: true
-            }
+            nonExcludedChapters.filter { getReadChapterCount.await(manga.id, it.chapterNumber) == 0L }
         } else {
             nonExcludedChapters
         }

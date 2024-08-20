@@ -27,4 +27,6 @@ interface ChapterRepository {
     suspend fun getChapterByMangaIdAsFlow(mangaId: Long, applyScanlatorFilter: Boolean = false): Flow<List<Chapter>>
 
     suspend fun getChapterByUrlAndMangaId(url: String, mangaId: Long): Chapter?
+
+    suspend fun getReadChapterCountByMangaIdAndChapterNumber(mangaId: Long, chapterNumber: Double): Long
 }
