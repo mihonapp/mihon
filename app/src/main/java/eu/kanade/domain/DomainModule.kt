@@ -24,7 +24,6 @@ import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.interactor.SyncChapterProgressWithTrack
 import eu.kanade.domain.track.interactor.TrackChapter
 import mihon.data.repository.ExtensionRepoRepositoryImpl
-import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import mihon.domain.extensionrepo.interactor.CreateExtensionRepo
 import mihon.domain.extensionrepo.interactor.DeleteExtensionRepo
 import mihon.domain.extensionrepo.interactor.GetExtensionRepo
@@ -151,9 +150,8 @@ class DomainModule : InjektModule {
         addFactory { UpdateChapter(get()) }
         addFactory { SetReadStatus(get(), get(), get(), get()) }
         addFactory { ShouldUpdateDbChapter() }
-        addFactory { SyncChaptersWithSource(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+        addFactory { SyncChaptersWithSource(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
         addFactory { GetAvailableScanlators(get()) }
-        addFactory { GetReadChapterCountByMangaIdAndChapterNumber(get()) }
 
         addSingletonFactory<HistoryRepository> { HistoryRepositoryImpl(get()) }
         addFactory { GetHistory(get()) }
