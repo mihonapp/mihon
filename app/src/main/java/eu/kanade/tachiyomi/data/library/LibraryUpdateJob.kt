@@ -39,6 +39,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import mihon.core.chapters.utils.filterChaptersToDownload
+import mihon.domain.chapter.interactor.GetReadChapterCountByMangaIdAndChapterNumber
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
@@ -88,6 +90,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
+    private val getReadChapterCount: GetReadChapterCountByMangaIdAndChapterNumber = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -266,16 +269,11 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                     manga,
                                 ) {
                                     try {
-                                        val (newChapters, chaptersToDownload) = updateManga(manga, fetchWindow)
+                                        val newChapters = updateManga(manga, fetchWindow)
+                                            .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
-                                            handleNewChapters(
-                                                manga,
-                                                newChapters,
-                                                chaptersToDownload,
-                                                newUpdates,
-                                                hasDownloads
-                                            )
+                                            handleNewChapters(manga, newChapters, newUpdates, hasDownloads)
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
@@ -317,33 +315,35 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     }
 
     /**
-     * Processes new chapters for a given manga and handles related updates, such as downloading
-     * new chapters and updating the notification states.
+     * This function handles the new chapters for a given manga, checks the download preferences,
+     * and initiates the download based on the user preferences. It also adds the new chapters to the new updates list
+     * and updates the hasDownloads flag.
      *
      * @param manga The manga for which new chapters are being handled.
      * @param newChapters A list of new chapters for the manga.
-     * @param chaptersToDownload A list of chapters to be downloaded based on user preferences.
      * @param newUpdates A thread-safe list that stores pairs of manga and their respective new chapters.
      * @param hasDownloads A flag indicating whether there are any chapters to download.
      */
     private suspend fun handleNewChapters(
         manga: Manga,
         newChapters: List<Chapter>,
-        chaptersToDownload: List<Chapter>,
         newUpdates: CopyOnWriteArrayList<Pair<Manga, Array<Chapter>>>,
         hasDownloads: AtomicBoolean
     ) {
         val categoryIds = getCategories.await(manga.id).map { it.id }
-        if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences) && chaptersToDownload.isNotEmpty()) {
-            downloadChapters(manga, chaptersToDownload)
-            hasDownloads.set(true)
+
+        if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
+            val chaptersToDownload = newChapters
+                .filterChaptersToDownload(manga, getReadChapterCount, downloadPreferences)
+
+            if (chaptersToDownload.isNotEmpty()) {
+                downloadChapters(manga, chaptersToDownload)
+                hasDownloads.set(true)
+            }
         }
 
         libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
-        val sortedChapters = newChapters.sortedByDescending { it.sourceOrder }
-
-        // Convert to the manga that contains new chapters
-        newUpdates.add(manga to sortedChapters.toTypedArray())
+        newUpdates.add(manga to newChapters.toTypedArray())
     }
 
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
@@ -355,13 +355,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     /**
      * Updates the chapters for the given manga and adds them to the database.
      *
-     * @param manga The manga to be updated.
-     * @param fetchWindow A time window defining the interval for fetching chapters, represented as a pair of timestamps.
-     * @return A pair of lists:
-     *  - First: List of chapters that were added or updated after filtering out re-added or excluded scanlator chapters.
-     *  - Second: List of chapters that are eligible for download, based on the unread chapters-only preference.
+     * @param manga the manga to update.
+     * @return a pair of the inserted and removed chapters.
      */
-    private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): Pair<List<Chapter>, List<Chapter>> {
+    private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
         // Update manga metadata if needed
@@ -374,7 +371,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
         // Get manga from database to account for if it was removed during the update and
         // to get latest data so it doesn't get overwritten later on
-        val dbManga = getManga.await(manga.id)?.takeIf { it.favorite } ?: return Pair(emptyList(), emptyList())
+        val dbManga = getManga.await(manga.id)?.takeIf { it.favorite } ?: return emptyList()
 
         return syncChaptersWithSource.await(chapters, dbManga, source, false, fetchWindow)
     }
