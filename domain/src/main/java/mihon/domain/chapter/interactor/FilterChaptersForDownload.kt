@@ -24,61 +24,46 @@ class FilterChaptersForDownload(
      *
      * @param manga The manga for which chapters may be downloaded.
      * @param newChapters The list of new chapters available for the manga.
-     * @return A list of chapters that should be downloaded. If new chapters should not be downloaded,
-     * returns an empty list.
+     * @return A list of chapters that should be downloaded
      */
     suspend fun await(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
-        if (!shouldDownloadNewChapters(manga)) {
+        if (!manga.shouldDownloadNewChapters()) {
             return emptyList()
         }
 
-        val downloadNewUnreadChaptersOnly = downloadPreferences.downloadNewUnreadChaptersOnly().get()
-        return if (downloadNewUnreadChaptersOnly) {
-            getUnreadChapters(manga, newChapters)
-        } else {
-            newChapters
-        }
-    }
+        if (!downloadPreferences.downloadNewUnreadChaptersOnly().get()) return newChapters
 
-    /**
-     * Filters out chapters that have already been read.
-     *
-     * @param manga The manga whose chapters are being checked.
-     * @param newChapters The list of new chapters to filter.
-     * @return A list of unread chapters that are present in `newChapters`.
-     */
-    private suspend fun getUnreadChapters(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
-        val dbChapters = getChaptersByMangaId.await(manga.id)
-        val unreadChapters = dbChapters
-            .groupBy { it.chapterNumber }
-            .filterValues { chapters -> chapters.none { it.read } }
+        val readChapterNumbers = getChaptersByMangaId.await(manga.id)
+            .filter { it.read && it.isRecognizedNumber }
+            .map { it.chapterNumber }
 
-        return newChapters.filter { it.chapterNumber in unreadChapters }
+        return newChapters.filterNot { it.chapterNumber in readChapterNumbers  }
     }
 
     /**
      * Determines whether new chapters should be downloaded for the manga based on user preferences and the
      * categories to which the manga belongs.
      *
-     * @param manga The manga to check for download eligibility.
-     * @return `true` if new chapters should be downloaded; otherwise `false`.
+     * @return `true` if chapters of the manga should be downloaded
      */
-    private suspend fun shouldDownloadNewChapters(manga: Manga): Boolean {
-        if (!manga.favorite) return false
+    private suspend fun Manga.shouldDownloadNewChapters(): Boolean {
+        if (!this.favorite) return false
 
-        // Boolean to determine if user wants to automatically download new chapters.
-        val downloadNewChapters = downloadPreferences.downloadNewChapters().get()
-        if (!downloadNewChapters) return false
+        if (!downloadPreferences.downloadNewChapters().get()) return false
 
-        val categories = getCategories.await(manga.id).map { it.id }.ifEmpty { listOf(DEFAULT_CATEGORY_ID) }
+        val categories = getCategories.await(this.id).map { it.id }.ifEmpty { listOf(DEFAULT_CATEGORY_ID) }
         val includedCategories = downloadPreferences.downloadNewChapterCategories().get().map { it.toLong() }
         val excludedCategories = downloadPreferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
 
         return when {
-            includedCategories.isEmpty() && excludedCategories.isEmpty() -> true // Default Download from all categories
-            categories.any { it in excludedCategories } -> false // In excluded category
-            includedCategories.isEmpty() -> true // Included category not selected
-            else -> categories.any { it in includedCategories } // In included category
+            // Default Download from all categories
+            includedCategories.isEmpty() && excludedCategories.isEmpty() -> true
+            // In excluded category
+            categories.any { it in excludedCategories } -> false
+            // Included category not selected
+            includedCategories.isEmpty() -> true
+            // In included category
+            else -> categories.any { it in includedCategories }
         }
     }
 
