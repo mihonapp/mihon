@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default user agent ([@AntsyLich](https://github.com/AntsyLich)) ([`8160b47`](https://github.com/mihonapp/mihon/commit/8160b47ff5fbbd9b32caeb462b5be881fabd3449))
 - Wait for sources to be initialized before performing source related tasks ([@jobobby04](https://github.com/jobobby04)) ([`a08e03f`](https://github.com/mihonapp/mihon/commit/a08e03f5cbf3f4e6be1de35f97ef8ebb26a1210e))
 - Duplicate entry dialog UI ([@sirlag](https://github.com/sirlag)) ([#492](https://github.com/mihonapp/mihon/pull/492))
-- Extension trust system ([@AntsyLich](https://github.com/AntsyLich)) ([#570](https://github.com/mihonapp/mihon/pull/570))
+- Extension trust system ([@AntsyLich](https://github.com/AntsyLich), [@Animeboynz](https://github.com/Animeboynz) ([#570](https://github.com/mihonapp/mihon/pull/570), [#1057](https://github.com/mihonapp/mihon/pull/1057))
 - Make category backup/restore not dependant on library backup ([@AntsyLich](https://github.com/AntsyLich)) ([`56fb4f6`](https://github.com/mihonapp/mihon/commit/56fb4f62a152e87a71892aa68c78cac51a2c8596))
 - Kitsu domain to `kitsu.app` ([@MajorTanya](https://github.com/MajorTanya)) ([#1106](https://github.com/mihonapp/mihon/pull/1106))
 
