@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import logcat.LogPriority
-import mihon.domain.chapter.interactor.GetChaptersToDownload
+import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.TriState
@@ -107,7 +107,7 @@ class MangaScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val mangaRepository: MangaRepository = Injekt.get(),
-    private val getChaptersToDownload: GetChaptersToDownload = Injekt.get(),
+    private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) : StateScreenModel<MangaScreenModel.State>(State.Loading) {
 
@@ -770,7 +770,7 @@ class MangaScreenModel(
     private fun downloadNewChapters(chapters: List<Chapter>) {
         screenModelScope.launchNonCancellable {
             val manga = successState?.manga ?: return@launchNonCancellable
-            val chaptersToDownload = getChaptersToDownload.await(manga, chapters)
+            val chaptersToDownload = filterChaptersForDownload.await(manga, chapters)
 
             if (chaptersToDownload.isNotEmpty()) {
                 downloadChapters(chaptersToDownload)

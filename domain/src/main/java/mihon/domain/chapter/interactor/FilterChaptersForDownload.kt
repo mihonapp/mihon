@@ -1,61 +1,59 @@
 package mihon.domain.chapter.interactor
 
-import android.database.sqlite.SQLiteException
-import logcat.LogPriority
-import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.chapter.repository.ChapterRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 
 /**
  * Interactor responsible for determining which chapters of a manga should be downloaded.
  *
- * @property chapterRepository The repository for accessing chapter data.
+ * @property getChaptersByMangaId Interactor for retrieving chapters by manga ID.
  * @property downloadPreferences User preferences related to chapter downloads.
  * @property getCategories Interactor for retrieving categories associated with a manga.
  */
-class GetChaptersToDownload(
-    private val chapterRepository: ChapterRepository,
+class FilterChaptersForDownload(
+    private val getChaptersByMangaId: GetChaptersByMangaId,
     private val downloadPreferences: DownloadPreferences,
     private val getCategories: GetCategories,
 ) {
 
     /**
-     * Determines chapters that should be downloaded based on user preferences.
+     * Determines which chapters of a manga should be downloaded based on user preferences.
      *
      * @param manga The manga for which chapters may be downloaded.
      * @param newChapters The list of new chapters available for the manga.
-     * @return A list of chapters that should be downloaded.
+     * @return A list of chapters that should be downloaded. If new chapters should not be downloaded,
+     * returns an empty list.
      */
     suspend fun await(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
         if (!shouldDownloadNewChapters(manga)) {
             return emptyList()
         }
 
-        val downloadUnreadChapters = downloadPreferences.downloadUnreadChaptersOnly().get()
-        return if (downloadUnreadChapters) {
-            newChapters.filter { isUnreadChapter(manga.id, it.chapterNumber) }
+        val downloadNewUnreadChaptersOnly = downloadPreferences.downloadNewUnreadChaptersOnly().get()
+        return if (downloadNewUnreadChaptersOnly) {
+            getUnreadChapters(manga, newChapters)
         } else {
             newChapters
         }
     }
 
     /**
-     * Checks if a chapter is unread based on its manga ID and chapter number.
+     * Filters out chapters that have already been read.
      *
-     * @param mangaId The ID of the manga to which the chapter belongs.
-     * @param chapterNumber The number of the chapter.
-     * @return `true` if the chapter is unread; otherwise `false`.
+     * @param manga The manga whose chapters are being checked.
+     * @param newChapters The list of new chapters to filter.
+     * @return A list of unread chapters that are present in `newChapters`.
      */
-    private suspend fun isUnreadChapter(mangaId: Long, chapterNumber: Double): Boolean {
-        return try {
-            chapterRepository.getReadChapterCountByMangaIdAndChapterNumber(mangaId, chapterNumber) == 0L
-        } catch (e: SQLiteException) {
-            logcat(LogPriority.ERROR, e)
-            true
-        }
+    private suspend fun getUnreadChapters(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
+        val dbChapters = getChaptersByMangaId.await(manga.id)
+        val unreadChapters = dbChapters
+            .groupBy { it.chapterNumber }
+            .filterValues { chapters -> chapters.none { it.read } }
+
+        return newChapters.filter { it.chapterNumber in unreadChapters }
     }
 
     /**
@@ -77,7 +75,7 @@ class GetChaptersToDownload(
         val excludedCategories = downloadPreferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
 
         return when {
-            includedCategories.isEmpty() && excludedCategories.isEmpty() -> true // Default: Download from all categories
+            includedCategories.isEmpty() && excludedCategories.isEmpty() -> true // Default Download from all categories
             categories.any { it in excludedCategories } -> false // In excluded category
             includedCategories.isEmpty() -> true // Included category not selected
             else -> categories.any { it in includedCategories } // In included category

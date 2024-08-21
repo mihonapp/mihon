@@ -38,7 +38,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
-import mihon.domain.chapter.interactor.GetChaptersToDownload
+import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
@@ -84,7 +84,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val updateManga: UpdateManga = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
-    private val getChaptersToDownload: GetChaptersToDownload = Injekt.get()
+    private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -267,7 +267,17 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
-                                            handleNewChapters(manga, newChapters, newUpdates, hasDownloads)
+                                            val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
+
+                                            if (chaptersToDownload.isNotEmpty()) {
+                                                downloadChapters(manga, chaptersToDownload)
+                                                hasDownloads.set(true)
+                                            }
+
+                                            libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
+
+                                            // Convert to the manga that contains new chapters
+                                            newUpdates.add(manga to newChapters.toTypedArray())
                                         }
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
@@ -306,32 +316,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 errorFile.getUriCompat(context),
             )
         }
-    }
-
-    /**
-     * Handles new chapters for a specific manga by determining which chapters should be downloaded based on
-     * user preferences. Updates relevant lists and flags to reflect the processed chapters.
-     *
-     * @param manga The manga for which new chapters are being handled.
-     * @param newChapters A list of new chapters for the manga.
-     * @param newUpdates A thread-safe list that stores pairs of manga and their respective new chapters.
-     * @param hasDownloads A flag indicating whether there are any chapters to download.
-     */
-    private suspend fun handleNewChapters(
-        manga: Manga,
-        newChapters: List<Chapter>,
-        newUpdates: CopyOnWriteArrayList<Pair<Manga, Array<Chapter>>>,
-        hasDownloads: AtomicBoolean
-    ) {
-        val chaptersToDownload = getChaptersToDownload.await(manga, newChapters)
-
-        if (chaptersToDownload.isNotEmpty()) {
-            downloadChapters(manga, chaptersToDownload)
-            hasDownloads.set(true)
-        }
-
-        libraryPreferences.newUpdatesCount().getAndSet { it + newChapters.size }
-        newUpdates.add(manga to newChapters.toTypedArray())
     }
 
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {

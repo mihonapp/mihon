@@ -43,5 +43,5 @@ class DownloadPreferences(
         emptySet(),
     )
 
-    fun downloadUnreadChaptersOnly() = preferenceStore.getBoolean("download_unread_only", true)
+    fun downloadNewUnreadChaptersOnly() = preferenceStore.getBoolean("download_new_unread_chapters_only", false)
 }
