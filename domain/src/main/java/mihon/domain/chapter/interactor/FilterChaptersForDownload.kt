@@ -27,15 +27,20 @@ class FilterChaptersForDownload(
      * @return A list of chapters that should be downloaded
      */
     suspend fun await(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
-        if (!manga.shouldDownloadNewChapters()) {
+        if (newChapters.isEmpty() ||
+            !downloadPreferences.downloadNewChapters().get() ||
+            !manga.shouldDownloadNewChapters()
+        ) {
             return emptyList()
         }
 
         if (!downloadPreferences.downloadNewUnreadChaptersOnly().get()) return newChapters
 
         val readChapterNumbers = getChaptersByMangaId.await(manga.id)
+            .asSequence()
             .filter { it.read && it.isRecognizedNumber }
             .map { it.chapterNumber }
+            .toSet()
 
         return newChapters.filterNot { it.chapterNumber in readChapterNumbers  }
     }
@@ -47,11 +52,9 @@ class FilterChaptersForDownload(
      * @return `true` if chapters of the manga should be downloaded
      */
     private suspend fun Manga.shouldDownloadNewChapters(): Boolean {
-        if (!this.favorite) return false
+        if (!favorite) return false
 
-        if (!downloadPreferences.downloadNewChapters().get()) return false
-
-        val categories = getCategories.await(this.id).map { it.id }.ifEmpty { listOf(DEFAULT_CATEGORY_ID) }
+        val categories = getCategories.await(id).map { it.id }.ifEmpty { listOf(DEFAULT_CATEGORY_ID) }
         val includedCategories = downloadPreferences.downloadNewChapterCategories().get().map { it.toLong() }
         val excludedCategories = downloadPreferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
 
