@@ -27,7 +27,8 @@ class FilterChaptersForDownload(
      * @return A list of chapters that should be downloaded
      */
     suspend fun await(manga: Manga, newChapters: List<Chapter>): List<Chapter> {
-        if (newChapters.isEmpty() ||
+        if (
+            newChapters.isEmpty() ||
             !downloadPreferences.downloadNewChapters().get() ||
             !manga.shouldDownloadNewChapters()
         ) {
