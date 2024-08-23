@@ -42,7 +42,7 @@ class FilterChaptersForDownload(
             .map { it.chapterNumber }
             .toSet()
 
-        return newChapters.filterNot { it.chapterNumber in readChapterNumbers  }
+        return newChapters.filterNot { it.chapterNumber in readChapterNumbers }
     }
 
     /**
