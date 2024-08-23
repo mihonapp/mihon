@@ -120,6 +120,7 @@ object SettingsDownloadScreen : SearchableSettings {
         allCategories: List<Category>,
     ): Preference.PreferenceGroup {
         val downloadNewChaptersPref = downloadPreferences.downloadNewChapters()
+        val downloadNewUnreadChaptersOnlyPref = downloadPreferences.downloadNewUnreadChaptersOnly()
         val downloadNewChapterCategoriesPref = downloadPreferences.downloadNewChapterCategories()
         val downloadNewChapterCategoriesExcludePref = downloadPreferences.downloadNewChapterCategoriesExclude()
 
@@ -151,6 +152,11 @@ object SettingsDownloadScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadNewChaptersPref,
                     title = stringResource(MR.strings.pref_download_new),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = downloadNewUnreadChaptersOnlyPref,
+                    title = stringResource(MR.strings.pref_download_new_unread_chapters_only),
+                    enabled = downloadNewChapters,
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.categories),
