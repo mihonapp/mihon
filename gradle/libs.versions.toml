@@ -72,7 +72,7 @@ moko-gradle = { module = "dev.icerock.moko:resources-generator", version.ref = "
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-firebase-analytics = "com.google.firebase:firebase-analytics:22.0.2"
+firebase-analytics = "com.google.firebase:firebase-analytics:22.1.0"
 
 aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlib_version" }
