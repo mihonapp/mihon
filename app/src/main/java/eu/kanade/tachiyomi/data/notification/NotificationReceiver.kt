@@ -497,7 +497,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 .putExtra(Constants.MANGA_EXTRA, mangaId)
                 .putExtra("notificationId", mangaId.hashCode())
-                    
+
             return PendingIntent.getActivity(
                 context,
                 mangaId.hashCode(),
