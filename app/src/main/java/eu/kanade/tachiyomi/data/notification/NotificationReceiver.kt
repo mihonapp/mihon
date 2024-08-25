@@ -493,11 +493,11 @@ class NotificationReceiver : BroadcastReceiver() {
          * @param mangaId id of the entry to open
          */
         internal fun openEntryPendingActivity(context: Context, mangaId: Long): PendingIntent {
-            val newIntent =
-                Intent(context, MainActivity::class.java).setAction(Constants.SHORTCUT_MANGA)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    .putExtra(Constants.MANGA_EXTRA, mangaId)
-                    .putExtra("notificationId", mangaId.hashCode())
+            val newIntent = Intent(context, MainActivity::class.java).setAction(Constants.SHORTCUT_MANGA)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(Constants.MANGA_EXTRA, mangaId)
+                .putExtra("notificationId", mangaId.hashCode())
+                    
             return PendingIntent.getActivity(
                 context,
                 mangaId.hashCode(),

@@ -86,7 +86,6 @@ internal class DownloadNotifier(private val context: Context) {
                 addAction(
                     R.drawable.ic_book_24dp,
                     context.stringResource(MR.strings.action_show_manga),
-
                     NotificationReceiver.openEntryPendingActivity(context, download.manga.id),
                 )
             }
@@ -181,7 +180,6 @@ internal class DownloadNotifier(private val context: Context) {
                 addAction(
                     R.drawable.ic_book_24dp,
                     context.stringResource(MR.strings.action_show_manga),
-
                     NotificationReceiver.openEntryPendingActivity(context, mangaId),
                 )
             }
@@ -218,7 +216,6 @@ internal class DownloadNotifier(private val context: Context) {
                 addAction(
                     R.drawable.ic_book_24dp,
                     context.stringResource(MR.strings.action_show_manga),
-
                     NotificationReceiver.openEntryPendingActivity(context, mangaId),
                 )
             }
