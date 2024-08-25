@@ -348,6 +348,7 @@
     <string name="action_delete_repo">Delete repo</string>
     <string name="invalid_repo_name">Invalid repo URL</string>
     <string name="delete_repo_confirmation">Do you wish to delete the repo \"%s\"?</string>
+    <string name="add_repo_confirmation">Do you wish to add the repo \"%s\"?</string>
     <string name="action_open_repo">Open source repo</string>
     <string name="action_replace_repo">Replace</string>
     <string name="action_replace_repo_title">Signing Key Fingerprint Already Exists</string>
