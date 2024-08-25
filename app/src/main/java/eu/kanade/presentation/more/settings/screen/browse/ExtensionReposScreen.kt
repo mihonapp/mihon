@@ -52,7 +52,6 @@ class ExtensionReposScreen(
             navigateUp = navigator::pop,
         )
 
-
         when (val dialog = successState.dialog) {
             null -> {}
             is RepoDialog.Create -> {
@@ -69,7 +68,6 @@ class ExtensionReposScreen(
                     repo = dialog.repo,
                 )
             }
-
             is RepoDialog.Conflict -> {
                 ExtensionRepoConflictDialog(
                     onDismissRequest = screenModel::dismissDialog,
@@ -78,7 +76,6 @@ class ExtensionReposScreen(
                     newRepo = dialog.newRepo,
                 )
             }
-
             is RepoDialog.Confirm -> {
                 ExtensionRepoConfirmDialog(
                     onDismissRequest = screenModel::dismissDialog,
