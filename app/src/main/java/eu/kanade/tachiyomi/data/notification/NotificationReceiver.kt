@@ -110,11 +110,6 @@ class NotificationReceiver : BroadcastReceiver() {
                     downloadChapters(urls, mangaId)
                 }
             }
-            // Open an entry's page
-//            ACTION_OPEN_ENTRY -> {
-//                val mangaId = intent.getLongExtra(EXTRA_MANGA_ID, -1)
-//                openEntry(context, mangaId)
-//            }
         }
     }
 
@@ -166,19 +161,6 @@ class NotificationReceiver : BroadcastReceiver() {
             context.toast(MR.strings.chapter_error)
         }
     }
-
-//    private fun openEntry(context: Context, mangaId: Long){ // TODO: open manga
-//        val manga = runBlocking { getManga.await(mangaId) }
-//        if (manga != null){
-//            val intent = Intent(context,MainActivity::class.java).apply {
-//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            }
-//            context.startActivity(intent)
-//        }
-//        else{
-//            context.toast(MR.strings.error_no_match)
-//        }
-//    }
 
     /**
      * Method called when user wants to stop a backup restore job.
