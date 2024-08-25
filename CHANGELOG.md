@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extension trust system ([@AntsyLich](https://github.com/AntsyLich), [@Animeboynz](https://github.com/Animeboynz) ([#570](https://github.com/mihonapp/mihon/pull/570), [#1057](https://github.com/mihonapp/mihon/pull/1057))
 - Make category backup/restore not dependant on library backup ([@AntsyLich](https://github.com/AntsyLich)) ([`56fb4f6`](https://github.com/mihonapp/mihon/commit/56fb4f62a152e87a71892aa68c78cac51a2c8596))
 - Kitsu domain to `kitsu.app` ([@MajorTanya](https://github.com/MajorTanya)) ([#1106](https://github.com/mihonapp/mihon/pull/1106))
+- Respect privacy settings in extension update notification ([@Animeboynz](https://github.com/Animeboynz)) ([#1156](https://github.com/mihonapp/mihon/pull/1156))
 
 ### Improvement
 - Long strip reader performance ([@FooIbar](https://github.com/FooIbar), [@wwww-wwww](https://github.com/wwww-wwww)) ([#687](https://github.com/mihonapp/mihon/pull/687))
