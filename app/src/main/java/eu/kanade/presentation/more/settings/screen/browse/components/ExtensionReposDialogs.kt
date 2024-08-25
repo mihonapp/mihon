@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.delay
 import mihon.domain.extensionrepo.model.ExtensionRepo
@@ -161,6 +162,15 @@ fun ExtensionRepoConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
+        title = {
+            Text(
+                text = stringResource(MR.strings.action_add_repo_confirm),
+                textAlign = TextAlign.Center,
+            )
+        },
+        text = {
+            Text(text = stringResource(MR.strings.add_repo_confirmation, repo))
+        },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -175,12 +185,6 @@ fun ExtensionRepoConfirmDialog(
             TextButton(onClick = onDismissRequest) {
                 Text(text = stringResource(MR.strings.action_cancel))
             }
-        },
-        title = {
-            Text(text = stringResource(MR.strings.action_add_repo))
-        },
-        text = {
-            Text(text = stringResource(MR.strings.add_repo_confirmation, repo))
         },
     )
 }
