@@ -302,7 +302,6 @@ class Downloader(
                         context.stringResource(MR.strings.download_queue_size_warning),
                         WARNING_NOTIF_TIMEOUT_MS,
                         NotificationHandler.openUrl(context, LibraryUpdateNotifier.HELP_WARNING_URL),
-                        manga.id,
                     )
                 }
                 DownloadJob.start(context)

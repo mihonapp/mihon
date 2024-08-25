@@ -15,7 +15,6 @@ import eu.kanade.tachiyomi.util.system.cancelNotification
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 import java.util.regex.Pattern
@@ -203,7 +202,7 @@ internal class DownloadNotifier(private val context: Context) {
      *
      * @param error string containing error information.
      * @param chapter string containing chapter title.
-     * @param mangaId the id of the entry that was errored on
+     * @param mangaId the id of the entry that the error occurred on
      */
     fun onError(error: String? = null, chapter: String? = null, mangaTitle: String? = null, mangaId: Long? = null) {
         // Create notification
