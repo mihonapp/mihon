@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoConfirmDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoConflictDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoCreateDialog
 import eu.kanade.presentation.more.settings.screen.browse.components.ExtensionRepoDeleteDialog
@@ -32,7 +33,7 @@ class ExtensionReposScreen(
         val state by screenModel.state.collectAsState()
 
         LaunchedEffect(url) {
-            url?.let { screenModel.createRepo(it) }
+            url?.let { screenModel.showDialog(RepoDialog.Confirm(it)) }
         }
 
         if (state is RepoScreenState.Loading) {
@@ -50,6 +51,7 @@ class ExtensionReposScreen(
             onClickRefresh = { screenModel.refreshRepos() },
             navigateUp = navigator::pop,
         )
+
 
         when (val dialog = successState.dialog) {
             null -> {}
@@ -74,6 +76,14 @@ class ExtensionReposScreen(
                     onMigrate = { screenModel.replaceRepo(dialog.newRepo) },
                     oldRepo = dialog.oldRepo,
                     newRepo = dialog.newRepo,
+                )
+            }
+
+            is RepoDialog.Confirm -> {
+                ExtensionRepoConfirmDialog(
+                    onDismissRequest = screenModel::dismissDialog,
+                    onCreate = { screenModel.createRepo(dialog.url) },
+                    repo = dialog.url,
                 )
             }
         }
