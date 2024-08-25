@@ -163,10 +163,7 @@ fun ExtensionRepoConfirmDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(
-                text = stringResource(MR.strings.action_add_repo_confirm),
-                textAlign = TextAlign.Center,
-            )
+            Text(text = stringResource(MR.strings.action_add_repo))
         },
         text = {
             Text(text = stringResource(MR.strings.add_repo_confirmation, repo))

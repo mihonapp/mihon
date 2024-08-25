@@ -342,7 +342,6 @@
     <string name="label_extension_repos">Extension repos</string>
     <string name="information_empty_repos">You have no repos set.</string>
     <string name="action_add_repo">Add repo</string>
-    <string name="action_add_repo_confirm">Add repo?</string>
     <string name="label_add_repo_input">Repo URL</string>
     <string name="action_add_repo_message">Add additional repos to Mihon. This should be a URL that ends with \"index.min.json\".</string>
     <string name="error_repo_exists">This repo already exists!</string>
