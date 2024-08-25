@@ -29,8 +29,8 @@ class ExtensionUpdateNotifier(
                     names.size,
                 ),
             )
-            val extNames = names.joinToString(", ")
             if (!securityPreferences.hideNotificationContent().get()) {
+                val extNames = names.joinToString(", ")
                 setContentText(extNames)
                 setStyle(NotificationCompat.BigTextStyle().bigText(extNames))
             }
