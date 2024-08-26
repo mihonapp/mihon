@@ -324,6 +324,7 @@ class Downloader(
                 context.stringResource(MR.strings.download_insufficient_space),
                 download.chapter.name,
                 download.manga.title,
+                download.manga.id,
             )
             return
         }
@@ -407,7 +408,7 @@ class Downloader(
             // If the page list threw, it will resume here
             logcat(LogPriority.ERROR, error)
             download.status = Download.State.ERROR
-            notifier.onError(error.message, download.chapter.name, download.manga.title)
+            notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
         }
     }
 
@@ -457,7 +458,7 @@ class Downloader(
             // Mark this page as error and allow to download the remaining
             page.progress = 0
             page.status = Page.State.ERROR
-            notifier.onError(e.message, download.chapter.name, download.manga.title)
+            notifier.onError(e.message, download.chapter.name, download.manga.title, download.manga.id)
         }
     }
 
