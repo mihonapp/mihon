@@ -37,7 +37,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.hippo.unifile.UniFile
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
-import eu.kanade.presentation.more.settings.screen.data.LibraryDebugListScreen
+import eu.kanade.presentation.more.settings.screen.data.LibraryListScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
@@ -323,8 +323,8 @@ object SettingsDataScreen : SearchableSettings {
             title = "Export",
             preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = LibraryDebugListScreen.TITLE,
-                    onClick = { navigator.push(LibraryDebugListScreen()) },
+                    title = LibraryListScreen.TITLE,
+                    onClick = { navigator.push(LibraryListScreen()) },
                 ),
             ),
         )
