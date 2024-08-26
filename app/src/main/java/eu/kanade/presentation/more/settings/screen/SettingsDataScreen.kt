@@ -39,6 +39,7 @@ import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.more.settings.screen.data.CreateBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.more.settings.screen.data.StorageInfo
+import eu.kanade.presentation.more.settings.screen.data.LibraryDebugListScreen
 import eu.kanade.presentation.more.settings.widget.BasePreferenceWidget
 import eu.kanade.presentation.more.settings.widget.PrefsHorizontalPadding
 import eu.kanade.presentation.util.relativeTimeSpanString
@@ -95,6 +96,7 @@ object SettingsDataScreen : SearchableSettings {
 
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
+            getExportGroup(),
         )
     }
 
@@ -308,6 +310,21 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     preference = libraryPreferences.autoClearChapterCache(),
                     title = stringResource(MR.strings.pref_auto_clear_chapter_cache),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getExportGroup(): Preference.PreferenceGroup {
+        val navigator = LocalNavigator.currentOrThrow
+
+        return Preference.PreferenceGroup(
+            title = "Export",
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = LibraryDebugListScreen.TITLE,
+                    onClick = { navigator.push(LibraryDebugListScreen()) },
                 ),
             ),
         )
