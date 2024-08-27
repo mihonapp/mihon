@@ -230,6 +230,7 @@ private fun SearchResultItem(
     val shape = RoundedCornerShape(16.dp)
     val borderColor = if (selected) MaterialTheme.colorScheme.outline else Color.Transparent
     var dropDownMenuExpanded by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -243,7 +244,10 @@ private fun SearchResultItem(
             )
             .combinedClickable(
                 onLongClick = { dropDownMenuExpanded = true },
-                onClick = onClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onClick()
+                },
             )
             .padding(12.dp),
     ) {
