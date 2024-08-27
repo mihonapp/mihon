@@ -224,6 +224,7 @@ private fun SearchResultItem(
 ) {
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val focusManager = LocalFocusManager.current
     val type = trackSearch.publishing_type.toLowerCase(Locale.current).capitalize(Locale.current)
     val status = trackSearch.publishing_status.toLowerCase(Locale.current).capitalize(Locale.current)
     val description = trackSearch.summary.trim()
@@ -243,7 +244,10 @@ private fun SearchResultItem(
             )
             .combinedClickable(
                 onLongClick = { dropDownMenuExpanded = true },
-                onClick = onClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onClick()
+                },
             )
             .padding(12.dp),
     ) {
