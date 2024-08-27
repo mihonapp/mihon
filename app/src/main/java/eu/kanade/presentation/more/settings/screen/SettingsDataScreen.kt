@@ -359,6 +359,8 @@ object SettingsDataScreen : SearchableSettings {
                         // Write CSV data to output stream
                         outputStream.write(csvData.toByteArray())
                         outputStream.flush()
+
+                        context.toast(MR.strings.library_exported)
                     }
                 }
             }
@@ -380,10 +382,10 @@ object SettingsDataScreen : SearchableSettings {
         }
 
         return Preference.PreferenceGroup(
-            title = "Export",
+            title = stringResource(MR.strings.export),
             preferenceItems = persistentListOf(
                 Preference.PreferenceItem.TextPreference(
-                    title = "Library List",
+                    title = stringResource(MR.strings.library_list),
                     onClick = { showDialog = true },
                 ),
             ),
@@ -391,7 +393,10 @@ object SettingsDataScreen : SearchableSettings {
     }
 
     private fun escapeCsvField(field: String): String {
-        return field.replace("\"", "\"\"").replace("\r\n", "\n").replace("\r", "\n")
+        return field
+            .replace("\"", "\"\"")
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
     }
 
     @Composable
@@ -409,7 +414,7 @@ object SettingsDataScreen : SearchableSettings {
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = {
-                Text(text = "Select Fields")
+                Text(text = stringResource(MR.strings.migration_dialog_what_to_include))
             },
             text = {
                 Column {
@@ -439,7 +444,7 @@ object SettingsDataScreen : SearchableSettings {
                             onCheckedChange = { authorSelected = it },
                             enabled = titleSelected,
                         )
-                        Text(text = "Author")
+                        Text(text = stringResource(MR.strings.author))
                     }
 
                     // Artist checkbox, disabled if Title is not selected
@@ -451,7 +456,7 @@ object SettingsDataScreen : SearchableSettings {
                             onCheckedChange = { artistSelected = it },
                             enabled = titleSelected,
                         )
-                        Text(text = "Artist")
+                        Text(text = stringResource(MR.strings.artist))
                     }
                 }
             },
@@ -462,7 +467,7 @@ object SettingsDataScreen : SearchableSettings {
                         onDismissRequest()
                     },
                 ) {
-                    Text(text = "Save")
+                    Text(text = stringResource(MR.strings.action_save))
                 }
             },
             dismissButton = {
