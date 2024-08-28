@@ -94,7 +94,7 @@ class Shikimori(id: Long) : BaseTracker(id, "Shikimori"), DeletableTracker {
             track.library_id = remoteTrack.library_id
             track.copyPersonalFrom(remoteTrack)
             track.total_chapters = remoteTrack.total_chapters
-        }
+        } ?: throw Exception("Could not find manga")
         return track
     }
 
