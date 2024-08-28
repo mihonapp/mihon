@@ -180,7 +180,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     .awaitSuccess()
                     .parseAs<KitsuListSearchResult>()
                     .let {
-                        if (it.data.isNotEmpty()) {
+                        if (it.data.isNotEmpty() && it.included.isNotEmpty()) {
                             it.firstToTrack()
                         } else {
                             null
@@ -201,7 +201,7 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                     .awaitSuccess()
                     .parseAs<KitsuListSearchResult>()
                     .let {
-                        if (it.data.isNotEmpty()) {
+                        if (it.data.isNotEmpty() && it.included.isNotEmpty()) {
                             it.firstToTrack()
                         } else {
                             throw Exception("Could not find manga")

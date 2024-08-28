@@ -10,10 +10,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class KitsuListSearchResult(
     val data: List<KitsuListSearchItemData>,
-    val included: List<KitsuListSearchItemIncluded>,
+    val included: List<KitsuListSearchItemIncluded> = emptyList(),
 ) {
     fun firstToTrack(): TrackSearch {
-        require(data.isNotEmpty()) { "Missing data from Kitsu" }
+        require(data.isNotEmpty()) { "Missing User data from Kitsu" }
+        require(included.isNotEmpty()) { "Missing Manga data from Kitsu" }
 
         val userData = data[0]
         val userDataAttrs = userData.attributes
