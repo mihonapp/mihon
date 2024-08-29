@@ -735,6 +735,7 @@ class MangaScreenModel(
                     message = "Update trackers to chapter $formattedChapterNumber?",
                     actionLabel = "Yes",
                     duration = SnackbarDuration.Short,
+                    withDismissAction = true,
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {
