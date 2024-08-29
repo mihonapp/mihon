@@ -189,6 +189,8 @@ class LibraryPreferences(
         ChapterSwipeAction.ToggleRead,
     )
 
+    fun updateMangaTitles() = preferenceStore.getBoolean("pref_update_library_manga_titles", false)
+
     // endregion
 
     enum class ChapterSwipeAction {
