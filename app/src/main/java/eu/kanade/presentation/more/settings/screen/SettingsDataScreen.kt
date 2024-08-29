@@ -344,7 +344,6 @@ object SettingsDataScreen : SearchableSettings {
             uri?.let {
                 coroutineScope.launch {
                     context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                        // Prepare CSV data
                         val csvData = buildString {
                             favoritesState.forEach { manga ->
                                 val title = if (titleSelected) escapeCsvField(manga.title) else ""
@@ -356,7 +355,6 @@ object SettingsDataScreen : SearchableSettings {
                                 appendLine(row)
                             }
                         }
-                        // Write CSV data to output stream
                         outputStream.write(csvData.toByteArray())
                         outputStream.flush()
 
@@ -418,7 +416,6 @@ object SettingsDataScreen : SearchableSettings {
             },
             text = {
                 Column {
-                    // Title checkbox
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -435,7 +432,6 @@ object SettingsDataScreen : SearchableSettings {
                         Text(text = stringResource(MR.strings.title))
                     }
 
-                    // Author checkbox, disabled if Title is not selected
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -447,7 +443,6 @@ object SettingsDataScreen : SearchableSettings {
                         Text(text = stringResource(MR.strings.author))
                     }
 
-                    // Artist checkbox, disabled if Title is not selected
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
