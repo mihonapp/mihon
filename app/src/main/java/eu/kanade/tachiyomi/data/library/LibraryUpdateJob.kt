@@ -343,7 +343,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         // Update manga metadata if needed
         if (libraryPreferences.autoUpdateMetadata().get()) {
             val networkManga = source.getMangaDetails(manga.toSManga())
-            updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
+            updateManga.awaitUpdateFromSource(source, manga, networkManga, manualFetch = false, coverCache)
         }
 
         val chapters = source.getChapterList(manga.toSManga())
