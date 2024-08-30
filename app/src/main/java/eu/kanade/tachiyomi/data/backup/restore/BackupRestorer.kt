@@ -67,7 +67,7 @@ class BackupRestorer(
         val backup = BackupDecoder(context).decode(uri)
 
         // Store source mapping for error messages
-        val backupMaps = backup.backupSources + backup.backupBrokenSources.map { it.toBackupSource() }
+        val backupMaps = backup.backupSources
         sourceMapping = backupMaps.associate { it.sourceId to it.name }
 
         if (options.libraryEntries) {

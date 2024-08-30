@@ -18,15 +18,3 @@ data class BackupHistory(
         )
     }
 }
-
-@Deprecated("Replaced with BackupHistory. This is retained for legacy reasons.")
-@Serializable
-data class BrokenBackupHistory(
-    @ProtoNumber(0) var url: String,
-    @ProtoNumber(1) var lastRead: Long,
-    @ProtoNumber(2) var readDuration: Long = 0,
-) {
-    fun toBackupHistory(): BackupHistory {
-        return BackupHistory(url, lastRead, readDuration)
-    }
-}
