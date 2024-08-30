@@ -56,4 +56,18 @@ class TrackChapter(
                 .forEach { logcat(LogPriority.WARN, it) }
         }
     }
+
+    suspend fun promptUpdate(mangaId: Long, chapterNumber: Double): Boolean {
+        val tracks = getTracks.await(mangaId)
+        if (tracks.isEmpty()) {
+            return false
+        }
+
+        tracks.map { track ->
+            if (chapterNumber > track.lastChapterRead) {
+                return true
+            }
+        }
+        return false
+    }
 }

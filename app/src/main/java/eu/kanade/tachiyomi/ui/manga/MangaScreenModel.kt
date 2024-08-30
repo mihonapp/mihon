@@ -722,9 +722,9 @@ class MangaScreenModel(
                 chapters = chapters.toTypedArray(),
             )
 
-            if (read) {
-                val maxChapterNumber = chapters.maxOf { it.chapterNumber }
+            val maxChapterNumber = chapters.maxOf { it.chapterNumber }
 
+            if (read && trackChapter.promptUpdate(mangaId, maxChapterNumber)) {
                 val formattedChapterNumber = maxChapterNumber.toInt()
 
                 val result = snackbarHostState.showSnackbar(
