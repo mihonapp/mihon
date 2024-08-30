@@ -14,6 +14,7 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
@@ -75,25 +76,20 @@ internal fun Project.configureCompose(commonExtension: CommonExtension<*, *, *, 
     }
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {
-        // Enable strong skipping mode
-        enableStrongSkippingMode.set(true)
-
-        // Enable experimental compiler opts
-        // https://developer.android.com/jetpack/androidx/releases/compose-compiler#1.5.9
-        enableNonSkippingGroupOptimization.set(true)
+        featureFlags.set(setOf(ComposeFeatureFlag.OptimizeNonSkippingGroups))
 
         val enableMetrics = project.providers.gradleProperty("enableComposeCompilerMetrics").orNull.toBoolean()
         val enableReports = project.providers.gradleProperty("enableComposeCompilerReports").orNull.toBoolean()
 
-        val rootProjectDir = rootProject.layout.buildDirectory.asFile.get()
+        val rootBuildDir = rootProject.layout.buildDirectory.asFile.get()
         val relativePath = projectDir.relativeTo(rootDir)
+
         if (enableMetrics) {
-            val buildDirPath = rootProjectDir.resolve("compose-metrics").resolve(relativePath)
-            metricsDestination.set(buildDirPath)
+            rootBuildDir.resolve("compose-metrics").resolve(relativePath).let(metricsDestination::set)
         }
+
         if (enableReports) {
-            val buildDirPath = rootProjectDir.resolve("compose-reports").resolve(relativePath)
-            reportsDestination.set(buildDirPath)
+            rootBuildDir.resolve("compose-reports").resolve(relativePath).let(reportsDestination::set)
         }
     }
 
