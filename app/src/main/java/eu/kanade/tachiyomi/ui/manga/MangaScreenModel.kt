@@ -79,6 +79,7 @@ import tachiyomi.domain.manga.repository.MangaRepository
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -725,15 +726,11 @@ class MangaScreenModel(
             if (read) {
                 val maxChapterNumber = chapters.maxOf { it.chapterNumber }
 
-                val formattedChapterNumber = if (maxChapterNumber % 1.0 == 0.0) {
-                    maxChapterNumber.toInt().toString()
-                } else {
-                    maxChapterNumber.toString()
-                }
+                val formattedChapterNumber = maxChapterNumber.toInt()
 
                 val result = snackbarHostState.showSnackbar(
-                    message = "Update trackers to chapter $formattedChapterNumber?",
-                    actionLabel = "Yes",
+                    message = context.stringResource(MR.strings.confirm_tracker_update, formattedChapterNumber),
+                    actionLabel = context.stringResource(MR.strings.yes),
                     duration = SnackbarDuration.Short,
                     withDismissAction = true,
                 )
