@@ -729,7 +729,7 @@ class MangaScreenModel(
 
                 val result = snackbarHostState.showSnackbar(
                     message = context.stringResource(MR.strings.confirm_tracker_update, formattedChapterNumber),
-                    actionLabel = context.stringResource(MR.strings.yes),
+                    actionLabel = context.stringResource(MR.strings.action_ok),
                     duration = SnackbarDuration.Short,
                     withDismissAction = true,
                 )

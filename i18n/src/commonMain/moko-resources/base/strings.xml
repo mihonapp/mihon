@@ -5,8 +5,6 @@
     <!-- Generic strings -->
     <string name="on">On</string>
     <string name="off">Off</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="selected">Selected</string>
     <string name="not_selected">Not selected</string>
     <string name="action_menu_overflow_description">More options</string>
