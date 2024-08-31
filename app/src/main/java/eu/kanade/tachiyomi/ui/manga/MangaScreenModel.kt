@@ -722,9 +722,13 @@ class MangaScreenModel(
                 chapters = chapters.toTypedArray(),
             )
 
+            val tracks = getTracks.await(mangaId)
             val maxChapterNumber = chapters.maxOf { it.chapterNumber }
+            val shouldPromptTrackingUpdate = tracks.any { track ->
+                maxChapterNumber > track.lastChapterRead
+            }
 
-            if (read && trackChapter.promptUpdate(mangaId, maxChapterNumber)) {
+            if (read && shouldPromptTrackingUpdate) {
                 val formattedChapterNumber = maxChapterNumber.toInt()
 
                 val result = snackbarHostState.showSnackbar(
