@@ -722,25 +722,24 @@ class MangaScreenModel(
                 chapters = chapters.toTypedArray(),
             )
 
+            if (!read) return@launchIO
             val tracks = getTracks.await(mangaId)
             val maxChapterNumber = chapters.maxOf { it.chapterNumber }
             val shouldPromptTrackingUpdate = tracks.any { track ->
                 maxChapterNumber > track.lastChapterRead
             }
 
-            if (read && shouldPromptTrackingUpdate) {
-                val formattedChapterNumber = maxChapterNumber.toInt()
+            if (!shouldPromptTrackingUpdate) return@launchIO
+            val formattedChapterNumber = maxChapterNumber.toInt()
+            val result = snackbarHostState.showSnackbar(
+                message = context.stringResource(MR.strings.confirm_tracker_update, formattedChapterNumber),
+                actionLabel = context.stringResource(MR.strings.action_ok),
+                duration = SnackbarDuration.Short,
+                withDismissAction = true,
+            )
 
-                val result = snackbarHostState.showSnackbar(
-                    message = context.stringResource(MR.strings.confirm_tracker_update, formattedChapterNumber),
-                    actionLabel = context.stringResource(MR.strings.action_ok),
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true,
-                )
-
-                if (result == SnackbarResult.ActionPerformed) {
-                    trackChapter.await(context, mangaId, maxChapterNumber)
-                }
+            if (result == SnackbarResult.ActionPerformed) {
+                trackChapter.await(context, mangaId, maxChapterNumber)
             }
         }
         toggleAllSelection(false)
