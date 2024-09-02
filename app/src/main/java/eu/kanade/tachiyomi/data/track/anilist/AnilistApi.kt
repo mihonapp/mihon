@@ -174,10 +174,8 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 )
                     .awaitSuccess()
                     .parseAs<ALSearchResult>()
-                    .let {
-                        it.data.page.media
-                            .map { item -> item.toALManga().toTrack() }
-                    }
+                    .data.page.media
+                    .map { it.toALManga().toTrack() }
             }
         }
     }
@@ -241,12 +239,10 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 )
                     .awaitSuccess()
                     .parseAs<ALUserListMangaQueryResult>()
-                    .let {
-                        it.data.page.mediaList
-                            .map { item -> item.toALUserManga() }
-                            .firstOrNull()
-                            ?.toTrack()
-                    }
+                    .data.page.mediaList
+                    .map { it.toALUserManga() }
+                    .firstOrNull()
+                    ?.toTrack()
             }
         }
     }

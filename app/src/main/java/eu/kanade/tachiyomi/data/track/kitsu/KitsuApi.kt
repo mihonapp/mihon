@@ -160,11 +160,9 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 )
                     .awaitSuccess()
                     .parseAs<KitsuAlgoliaSearchResult>()
-                    .let { result ->
-                        result.hits
-                            .filter { it.subtype != "novel" }
-                            .map { it.toTrack() }
-                    }
+                    .hits
+                    .filter { it.subtype != "novel" }
+                    .map { it.toTrack() }
             }
         }
     }
@@ -237,7 +235,8 @@ class KitsuApi(private val client: OkHttpClient, interceptor: KitsuInterceptor) 
                 authClient.newCall(GET(url.toString()))
                     .awaitSuccess()
                     .parseAs<KitsuCurrentUserResult>()
-                    .let { it.data[0].id }
+                    .data[0]
+                    .id
             }
         }
     }

@@ -83,14 +83,10 @@ class MyAnimeListApi(
                 authClient.newCall(GET(url.toString()))
                     .awaitSuccess()
                     .parseAs<MALSearchResult>()
-                    .let {
-                        it.data
-                            .map {
-                                async { getMangaDetails(it.node.id) }
-                            }
-                            .awaitAll()
-                            .filter { trackSearch -> !trackSearch.publishing_type.contains("novel") }
-                    }
+                    .data
+                    .map { async { getMangaDetails(it.node.id) } }
+                    .awaitAll()
+                    .filter { !it.publishing_type.contains("novel") }
             }
         }
     }

@@ -167,9 +167,8 @@ class MangaUpdatesApi(
             )
                 .awaitSuccess()
                 .parseAs<MUSearchResult>()
-                .let { result ->
-                    result.results.map { it.record }
-                }
+                .results
+                .map { it.record }
         }
     }
 
