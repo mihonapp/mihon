@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.track.anilist
 
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
+import eu.kanade.tachiyomi.data.track.anilist.dto.isExpired
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -13,7 +15,7 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
      * Anilist returns the date without milliseconds. We fix that and make the token expire 1 minute
      * before its original expiration date.
      */
-    private var oauth: OAuth? = null
+    private var oauth: ALOAuth? = null
         set(value) {
             field = value?.copy(expires = value.expires * 1000 - 60 * 1000)
         }
@@ -40,7 +42,7 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
 
         // Add the authorization header to the original request.
         val authRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", "Bearer ${oauth!!.access_token}")
+            .addHeader("Authorization", "Bearer ${oauth!!.accessToken}")
             .header("User-Agent", "Mihon v${BuildConfig.VERSION_NAME} (${BuildConfig.APPLICATION_ID})")
             .build()
 
@@ -51,8 +53,8 @@ class AnilistInterceptor(val anilist: Anilist, private var token: String?) : Int
      * Called when the user authenticates with Anilist for the first time. Sets the refresh token
      * and the oauth object.
      */
-    fun setAuth(oauth: OAuth?) {
-        token = oauth?.access_token
+    fun setAuth(oauth: ALOAuth?) {
+        token = oauth?.accessToken
         this.oauth = oauth
         anilist.saveOAuth(oauth)
     }
