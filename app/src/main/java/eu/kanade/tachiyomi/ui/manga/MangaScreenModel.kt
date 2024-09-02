@@ -716,6 +716,7 @@ class MangaScreenModel(
      * @param read whether to mark chapters as read or unread.
      */
     fun markChaptersRead(chapters: List<Chapter>, read: Boolean) {
+        toggleAllSelection(false)
         screenModelScope.launchIO {
             setReadStatus.await(
                 read = read,
@@ -741,7 +742,6 @@ class MangaScreenModel(
                 trackChapter.await(context, mangaId, maxChapterNumber)
             }
         }
-        toggleAllSelection(false)
     }
 
     /**
