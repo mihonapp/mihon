@@ -88,7 +88,9 @@ class MangaScreen(
         val haptic = LocalHapticFeedback.current
         val scope = rememberCoroutineScope()
         val lifecycleOwner = LocalLifecycleOwner.current
-        val screenModel = rememberScreenModel { MangaScreenModel(context, lifecycleOwner.lifecycle, mangaId, fromSource) }
+        val screenModel = rememberScreenModel {
+            MangaScreenModel(context, lifecycleOwner.lifecycle, mangaId, fromSource)
+        }
 
         val state by screenModel.state.collectAsStateWithLifecycle()
 
