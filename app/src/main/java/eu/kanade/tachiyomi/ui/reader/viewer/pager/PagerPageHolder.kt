@@ -45,7 +45,7 @@ class PagerPageHolder(
     /**
      * Loading progress bar to indicate the current progress.
      */
-    private val progressIndicator: ReaderProgressIndicator = ReaderProgressIndicator(readerThemedContext)
+    private var progressIndicator: ReaderProgressIndicator? = null // = ReaderProgressIndicator(readerThemedContext)
 
     /**
      * Error layout to show when the image fails to load.
@@ -60,7 +60,6 @@ class PagerPageHolder(
     private var loadJob: Job? = null
 
     init {
-        addView(progressIndicator)
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
@@ -72,6 +71,13 @@ class PagerPageHolder(
         super.onDetachedFromWindow()
         loadJob?.cancel()
         loadJob = null
+    }
+
+    private fun initProgressIndicator() {
+        if (progressIndicator == null) {
+            progressIndicator = ReaderProgressIndicator(context)
+            addView(progressIndicator)
+        }
     }
 
     /**
@@ -95,7 +101,7 @@ class PagerPageHolder(
                     Page.State.DOWNLOAD_IMAGE -> {
                         setDownloading()
                         page.progressFlow.collectLatest { value ->
-                            progressIndicator.setProgress(value)
+                            progressIndicator?.setProgress(value)
                         }
                     }
                     Page.State.READY -> setImage()
@@ -109,7 +115,8 @@ class PagerPageHolder(
      * Called when the page is queued.
      */
     private fun setQueued() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -117,7 +124,8 @@ class PagerPageHolder(
      * Called when the page is loading.
      */
     private fun setLoading() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -125,7 +133,8 @@ class PagerPageHolder(
      * Called when the page is downloading.
      */
     private fun setDownloading() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -133,7 +142,7 @@ class PagerPageHolder(
      * Called when the page is ready.
      */
     private suspend fun setImage() {
-        progressIndicator.setProgress(0)
+        progressIndicator?.setProgress(0)
 
         val streamFn = page.stream ?: return
 
@@ -234,13 +243,13 @@ class PagerPageHolder(
      * Called when the page has an error.
      */
     private fun setError() {
-        progressIndicator.hide()
+        progressIndicator?.hide()
         showErrorLayout()
     }
 
     override fun onImageLoaded() {
         super.onImageLoaded()
-        progressIndicator.hide()
+        progressIndicator?.hide()
     }
 
     /**
