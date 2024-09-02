@@ -56,7 +56,7 @@ import tachiyomi.presentation.core.util.clickableNoIndication
 
 @Composable
 fun MangaCoverDialog(
-    coverDataProvider: () -> Manga,
+    manga: Manga,
     isCustomCover: Boolean,
     snackbarHostState: SnackbarHostState,
     onShareClick: () -> Unit,
@@ -166,7 +166,7 @@ fun MangaCoverDialog(
                     },
                     update = { view ->
                         val request = ImageRequest.Builder(view.context)
-                            .data(coverDataProvider())
+                            .data(manga)
                             .size(Size.ORIGINAL)
                             .memoryCachePolicy(CachePolicy.DISABLED)
                             .target { image ->

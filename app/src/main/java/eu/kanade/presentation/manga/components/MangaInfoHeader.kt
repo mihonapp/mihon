@@ -75,6 +75,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.source.model.SManga
@@ -98,13 +100,9 @@ private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTIL
 fun MangaInfoBox(
     isTabletUi: Boolean,
     appBarPadding: Dp,
-    title: String,
-    author: String?,
-    artist: String?,
+    manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
-    coverDataProvider: () -> Manga,
-    status: Long,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -116,7 +114,10 @@ fun MangaInfoBox(
             MaterialTheme.colorScheme.background,
         )
         AsyncImage(
-            model = coverDataProvider(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(manga)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -136,28 +137,20 @@ fun MangaInfoBox(
             if (!isTabletUi) {
                 MangaAndSourceTitlesSmall(
                     appBarPadding = appBarPadding,
-                    coverDataProvider = coverDataProvider,
-                    onCoverClick = onCoverClick,
-                    title = title,
-                    doSearch = doSearch,
-                    author = author,
-                    artist = artist,
-                    status = status,
+                    manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    onCoverClick = onCoverClick,
+                    doSearch = doSearch,
                 )
             } else {
                 MangaAndSourceTitlesLarge(
                     appBarPadding = appBarPadding,
-                    coverDataProvider = coverDataProvider,
-                    onCoverClick = onCoverClick,
-                    title = title,
-                    doSearch = doSearch,
-                    author = author,
-                    artist = artist,
-                    status = status,
+                    manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    onCoverClick = onCoverClick,
+                    doSearch = doSearch,
                 )
             }
         }
@@ -338,15 +331,11 @@ fun ExpandableMangaDescription(
 @Composable
 private fun MangaAndSourceTitlesLarge(
     appBarPadding: Dp,
-    coverDataProvider: () -> Manga,
-    onCoverClick: () -> Unit,
-    title: String,
-    doSearch: (query: String, global: Boolean) -> Unit,
-    author: String?,
-    artist: String?,
-    status: Long,
+    manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    onCoverClick: () -> Unit,
+    doSearch: (query: String, global: Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -356,19 +345,22 @@ private fun MangaAndSourceTitlesLarge(
     ) {
         MangaCover.Book(
             modifier = Modifier.fillMaxWidth(0.65f),
-            data = coverDataProvider(),
+            data = ImageRequest.Builder(LocalContext.current)
+                .data(manga)
+                .crossfade(true)
+                .build(),
             contentDescription = stringResource(MR.strings.manga_cover),
             onClick = onCoverClick,
         )
         Spacer(modifier = Modifier.height(16.dp))
         MangaContentInfo(
-            title = title,
-            doSearch = doSearch,
-            author = author,
-            artist = artist,
-            status = status,
+            title = manga.title,
+            author = manga.author,
+            artist = manga.artist,
+            status = manga.status,
             sourceName = sourceName,
             isStubSource = isStubSource,
+            doSearch = doSearch,
             textAlign = TextAlign.Center,
         )
     }
@@ -377,15 +369,11 @@ private fun MangaAndSourceTitlesLarge(
 @Composable
 private fun MangaAndSourceTitlesSmall(
     appBarPadding: Dp,
-    coverDataProvider: () -> Manga,
-    onCoverClick: () -> Unit,
-    title: String,
-    doSearch: (query: String, global: Boolean) -> Unit,
-    author: String?,
-    artist: String?,
-    status: Long,
+    manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    onCoverClick: () -> Unit,
+    doSearch: (query: String, global: Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -398,7 +386,10 @@ private fun MangaAndSourceTitlesSmall(
             modifier = Modifier
                 .sizeIn(maxWidth = 100.dp)
                 .align(Alignment.Top),
-            data = coverDataProvider(),
+            data = ImageRequest.Builder(LocalContext.current)
+                .data(manga)
+                .crossfade(true)
+                .build(),
             contentDescription = stringResource(MR.strings.manga_cover),
             onClick = onCoverClick,
         )
@@ -406,13 +397,13 @@ private fun MangaAndSourceTitlesSmall(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             MangaContentInfo(
-                title = title,
-                doSearch = doSearch,
-                author = author,
-                artist = artist,
-                status = status,
+                title = manga.title,
+                author = manga.author,
+                artist = manga.artist,
+                status = manga.status,
                 sourceName = sourceName,
                 isStubSource = isStubSource,
+                doSearch = doSearch,
             )
         }
     }
@@ -421,12 +412,12 @@ private fun MangaAndSourceTitlesSmall(
 @Composable
 private fun ColumnScope.MangaContentInfo(
     title: String,
-    doSearch: (query: String, global: Boolean) -> Unit,
     author: String?,
     artist: String?,
     status: Long,
     sourceName: String,
     isStubSource: Boolean,
+    doSearch: (query: String, global: Boolean) -> Unit,
     textAlign: TextAlign? = LocalTextStyle.current.textAlign,
 ) {
     val context = LocalContext.current
