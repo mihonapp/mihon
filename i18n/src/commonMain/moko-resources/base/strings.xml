@@ -726,6 +726,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="exclude_scanlators">Exclude scanlators</string>
     <string name="no_scanlators_found">No scanlators found</string>
+    <string name="confirm_tracker_update">Update trackers to chapter %d?</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
