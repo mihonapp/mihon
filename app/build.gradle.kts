@@ -6,13 +6,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("mihon.android.application")
     id("mihon.android.application.compose")
-    id("com.mikepenz.aboutlibraries.plugin")
     id("com.github.zellius.shortcut-helper")
     kotlin("plugin.serialization")
+    alias(libs.plugins.aboutLibraries)
 }
 
 if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
-    apply<com.google.gms.googleservices.GoogleServicesPlugin>()
+    pluginManager.apply(libs.plugins.google.services.get().pluginId)
 }
 
 shortcutHelper.setFilePath("./shortcuts.xml")

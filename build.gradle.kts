@@ -1,15 +1,15 @@
 buildscript {
     dependencies {
         classpath(libs.android.shortcut.gradle)
-        classpath(libs.google.services.gradle)
-        classpath(libs.aboutLibraries.gradle)
-        classpath(libs.sqldelight.gradle)
-        classpath(libs.moko.gradle)
     }
 }
 
 plugins {
     alias(kotlinx.plugins.serialization) apply false
+    alias(libs.plugins.aboutLibraries) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.moko) apply false
+    alias(libs.plugins.sqldelight) apply false
 }
 
 tasks.register<Delete>("clean") {

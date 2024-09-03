@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("mihon.library")
-    id("dev.icerock.mobile.multiplatform-resources")
     kotlin("multiplatform")
+    alias(libs.plugins.moko)
 }
 
 kotlin {

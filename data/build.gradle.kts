@@ -1,8 +1,8 @@
 plugins {
     id("mihon.library")
-    id("app.cash.sqldelight")
     kotlin("android")
     kotlin("plugin.serialization")
+    alias(libs.plugins.sqldelight)
 }
 
 android {
