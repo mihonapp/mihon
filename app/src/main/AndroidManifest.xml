@@ -47,7 +47,7 @@
         tools:node="remove" />
 
     <uses-permission
-        android:name="ACCESS_ADSERVICES_AD_ID"
+        android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
         tools:node="remove" />
 
     <application
