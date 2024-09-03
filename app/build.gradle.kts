@@ -12,7 +12,10 @@ plugins {
 }
 
 if (gradle.startParameter.taskRequests.toString().contains("Standard")) {
-    pluginManager.apply(libs.plugins.google.services.get().pluginId)
+    pluginManager.apply {
+        apply(libs.plugins.google.services.get().pluginId)
+        apply(libs.plugins.firebase.crashlytics.get().pluginId)
+    }
 }
 
 shortcutHelper.setFilePath("./shortcuts.xml")
@@ -240,7 +243,9 @@ dependencies {
     implementation(libs.logcat)
 
     // Crash reports/analytics
+    "standardImplementation"(platform(libs.firebase.bom))
     "standardImplementation"(libs.firebase.analytics)
+    "standardImplementation"(libs.firebase.crashlytics)
 
     // Shizuku
     implementation(libs.bundles.shizuku)
