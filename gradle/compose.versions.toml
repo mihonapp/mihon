@@ -1,6 +1,6 @@
 [versions]
 compose-bom = "2024.09.00"
-accompanist = "0.35.1-alpha"
+accompanist = "0.36.0"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.9.1"
