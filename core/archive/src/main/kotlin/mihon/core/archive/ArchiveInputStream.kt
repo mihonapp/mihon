@@ -1,4 +1,4 @@
-package mihon.core.common.archive
+package mihon.core.archive
 
 import me.zhanghai.android.libarchive.Archive
 import me.zhanghai.android.libarchive.ArchiveEntry
@@ -7,7 +7,7 @@ import java.io.InputStream
 import java.nio.ByteBuffer
 import kotlin.concurrent.Volatile
 
-class ArchiveInputStream(buffer: Long, size: Long) : InputStream() {
+internal class ArchiveInputStream(buffer: Long, size: Long) : InputStream() {
     private val lock = Any()
 
     @Volatile

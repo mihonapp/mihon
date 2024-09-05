@@ -1,4 +1,4 @@
-package mihon.core.common.archive
+package mihon.core.archive
 
 class ArchiveEntry(
     val name: String,
