@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 
 CREATE TABLE manga_sync(
-    _id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
     sync_id INTEGER NOT NULL,
     remote_id INTEGER NOT NULL,
@@ -16,9 +16,11 @@ CREATE TABLE manga_sync(
     finish_date INTEGER NOT NULL,
     private INTEGER AS Boolean DEFAULT 0 NOT NULL,
     UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    FOREIGN KEY(manga_id) REFERENCES mangas(id)
     ON DELETE CASCADE
 );
+
+CREATE INDEX manga_sync_manga_id_index ON manga_sync(manga_id);
 
 delete:
 DELETE FROM manga_sync
@@ -31,7 +33,7 @@ FROM manga_sync;
 getTrackById:
 SELECT *
 FROM manga_sync
-WHERE _id = :id;
+WHERE id = :id;
 
 getTracksByMangaId:
 SELECT *
@@ -58,4 +60,4 @@ SET
     start_date = coalesce(:startDate, start_date),
     finish_date = coalesce(:finishDate, finish_date),
     private = coalesce(:private, private)
-WHERE _id = :id;
+WHERE id = :id;

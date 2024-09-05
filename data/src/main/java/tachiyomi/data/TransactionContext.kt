@@ -35,7 +35,7 @@ internal suspend fun AndroidDatabaseHandler.getCurrentDatabaseContext(): Corouti
  *
  * The dispatcher used to execute the given [block] will utilize threads from SQLDelight's query executor.
  */
-internal suspend fun <T> AndroidDatabaseHandler.withTransaction(block: suspend () -> T): T {
+internal suspend fun <T> AndroidDatabaseHandler.internalWithTransaction(block: suspend () -> T): T {
     // Use inherited transaction context if available, this allows nested suspending transactions.
     val transactionContext =
         coroutineContext[TransactionElement]?.transactionDispatcher ?: createTransactionContext()

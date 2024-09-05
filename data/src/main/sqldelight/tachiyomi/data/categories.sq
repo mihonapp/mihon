@@ -1,65 +1,54 @@
 CREATE TABLE categories(
-    _id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
-    sort INTEGER NOT NULL,
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    `order` INTEGER NOT NULL UNIQUE,
     flags INTEGER NOT NULL
 );
 
 -- Insert system category
-INSERT OR IGNORE INTO categories(_id, name, sort, flags) VALUES (0, "", -1, 0);
+INSERT OR IGNORE INTO categories(id, name, `order`, flags) VALUES (0, "", -1, 0);
 -- Disallow deletion of default category
 CREATE TRIGGER IF NOT EXISTS system_category_delete_trigger BEFORE DELETE
 ON categories
 BEGIN SELECT CASE
-    WHEN old._id <= 0 THEN
+    WHEN old.id <= 0 THEN
         RAISE(ABORT, "System category can't be deleted")
     END;
 END;
 
+insert:
+INSERT INTO categories(name, `order`, flags)
+VALUES(:name, max(`order`) + 1, :flags);
+
 getCategory:
 SELECT *
 FROM categories
-WHERE _id = :id
-LIMIT 1;
+WHERE id = :id;
 
 getCategories:
-SELECT
-_id AS id,
-name,
-sort AS `order`,
-flags
+SELECT *
 FROM categories
-ORDER BY sort;
+ORDER BY `order`;
 
-getCategoriesByMangaId:
-SELECT
-C._id AS id,
-C.name,
-C.sort AS `order`,
-C.flags
+getCategoriesOfManga:
+SELECT C.*
 FROM categories C
 JOIN mangas_categories MC
-ON C._id = MC.category_id
+ON C.id = MC.category_id
 WHERE MC.manga_id = :mangaId;
-
-insert:
-INSERT INTO categories(name, sort, flags)
-VALUES (:name, :order, :flags);
 
 delete:
 DELETE FROM categories
-WHERE _id = :categoryId;
+WHERE id = :id;
 
-update:
+updatePartial:
 UPDATE categories
-SET name = coalesce(:name, name),
-    sort = coalesce(:order, sort),
+SET
+    name = coalesce(:name, name),
+    `order` = coalesce(:order, `order`),
     flags = coalesce(:flags, flags)
-WHERE _id = :categoryId;
+WHERE id = :id;
 
-updateAllFlags:
-UPDATE categories SET
-flags = coalesce(?, flags);
-
-selectLastInsertedRowId:
-SELECT last_insert_rowid();
+updateFlagsForAll:
+UPDATE categories
+SET flags = :flags;
