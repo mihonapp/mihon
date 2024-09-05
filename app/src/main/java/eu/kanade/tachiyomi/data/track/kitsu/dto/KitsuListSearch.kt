@@ -40,7 +40,7 @@ data class KitsuListSearchResult(
                 "planned" -> Kitsu.PLAN_TO_READ
                 else -> throw Exception("Unknown status")
             }
-            score = userDataAttrs.ratingTwenty?.let { it.toInt() / 2.0 } ?: 0.0
+            score = userDataAttrs.ratingTwenty?.let { it / 2.0 } ?: 0.0
             last_chapter_read = userDataAttrs.progress.toDouble()
         }
     }
@@ -57,7 +57,7 @@ data class KitsuListSearchItemDataAttributes(
     val status: String,
     val startedAt: String?,
     val finishedAt: String?,
-    val ratingTwenty: String?,
+    val ratingTwenty: Int?,
     val progress: Int,
 )
 
