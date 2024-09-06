@@ -23,15 +23,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.util.isTabletUi
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -49,7 +53,7 @@ fun ChapterNavigator(
     onSliderValueChange: (Int) -> Unit,
 ) {
     val isTabletUi = isTabletUi()
-    val horizontalPadding = if (isTabletUi) 24.dp else 16.dp
+    val horizontalPadding = if (isTabletUi) 24.dp else 8.dp
     val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
     val haptic = LocalHapticFeedback.current
 
@@ -135,5 +139,23 @@ fun ChapterNavigator(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChapterNavigatorPreview() {
+    var currentPage by remember { mutableIntStateOf(1) }
+    TachiyomiPreviewTheme {
+        ChapterNavigator(
+            isRtl = false,
+            onNextChapter = {},
+            enabledNext = true,
+            onPreviousChapter = {},
+            enabledPrevious = true,
+            currentPage = currentPage,
+            totalPages = 10,
+            onSliderValueChange = { currentPage = it },
+        )
     }
 }
