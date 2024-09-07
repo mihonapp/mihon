@@ -264,6 +264,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                         try {
                             // OkHttp checks for valid values internally
                             Headers.Builder().add("User-Agent", it)
+                            context.toast(MR.strings.requires_app_restart)
                         } catch (_: IllegalArgumentException) {
                             context.toast(MR.strings.error_user_agent_string_invalid)
                             return@EditTextPreference false
