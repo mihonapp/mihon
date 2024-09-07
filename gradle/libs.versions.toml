@@ -40,7 +40,7 @@ sqlite-android = "com.github.requery:sqlite-android:3.45.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
-injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
+injekt-core = "uy.kohesive.injekt:injekt-core:1.16.1"
 
 coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0-alpha10" }
 coil-core = { module = "io.coil-kt.coil3:coil" }
