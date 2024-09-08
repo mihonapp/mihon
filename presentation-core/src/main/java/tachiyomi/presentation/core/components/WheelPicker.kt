@@ -149,34 +149,28 @@ private fun <T> WheelPicker(
             }
 
             val scope = rememberCoroutineScope()
+            val processManualInput: () -> Unit = {
+                scope.launch {
+                    items
+                        .indexOfFirst { it.toString() == value.text }
+                        .takeIf { it >= 0 }
+                        ?.apply {
+                            internalOnSelectionChanged(this)
+                            lazyListState.scrollToItem(this)
+                        }
+                    showManualInput = false
+                }
+            }
+
             BasicTextField(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .showSoftKeyboard(true)
                     .clearFocusOnSoftKeyboardHide {
-                        scope.launch {
-                            items
-                                .indexOfFirst { it.toString() == value.text }
-                                .takeIf { it >= 0 }
-                                ?.apply {
-                                    internalOnSelectionChanged(this)
-                                    lazyListState.scrollToItem(this)
-                                }
-
-                            showManualInput = false
-                        }
+                        processManualInput()
                     },
                 onKeyboardAction = {
-                    scope.launch {
-                        items
-                            .indexOfFirst { it.toString() == value.text }
-                            .takeIf { it >= 0 }
-                            ?.apply {
-                                internalOnSelectionChanged(this)
-                                lazyListState.scrollToItem(this)
-                            }
-                        showManualInput = false
-                    }
+                    processManualInput()
                 },
                 state = value,
                 lineLimits = TextFieldLineLimits.SingleLine,
