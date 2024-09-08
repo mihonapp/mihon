@@ -166,6 +166,18 @@ private fun <T> WheelPicker(
                             showManualInput = false
                         }
                     },
+                onKeyboardAction = {
+                    scope.launch {
+                        items
+                            .indexOfFirst { it.toString() == value.text }
+                            .takeIf { it >= 0 }
+                            ?.apply {
+                                internalOnSelectionChanged(this)
+                                lazyListState.scrollToItem(this)
+                            }
+                        showManualInput = false
+                    }
+                },
                 state = value,
                 lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
