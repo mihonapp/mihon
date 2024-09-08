@@ -21,6 +21,7 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.allowRgb565
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import dev.mihon.injekt.patchInjekt
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
@@ -73,6 +74,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     @SuppressLint("LaunchActivityFromNotification")
     override fun onCreate() {
         super<Application>.onCreate()
+        patchInjekt()
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
 

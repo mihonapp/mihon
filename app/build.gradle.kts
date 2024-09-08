@@ -214,7 +214,7 @@ dependencies {
     implementation(libs.preferencektx)
 
     // Dependency injection
-    implementation(libs.injekt.core)
+    implementation(libs.injekt)
 
     // Image loading
     implementation(platform(libs.coil.bom))
