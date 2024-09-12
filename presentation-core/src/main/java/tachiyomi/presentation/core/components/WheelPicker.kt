@@ -166,12 +166,8 @@ private fun <T> WheelPicker(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .showSoftKeyboard(true)
-                    .clearFocusOnSoftKeyboardHide {
-                        processManualInput()
-                    },
-                onKeyboardAction = {
-                    processManualInput()
-                },
+                    .clearFocusOnSoftKeyboardHide { processManualInput() },
+                onKeyboardAction = { processManualInput() },
                 state = value,
                 lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
