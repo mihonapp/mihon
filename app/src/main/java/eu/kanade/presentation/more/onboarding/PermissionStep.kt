@@ -34,15 +34,21 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import uy.kohesive.injekt.injectLazy
 
 internal class PermissionStep : OnboardingStep {
 
+    private val securityPreferences: SecurityPreferences by injectLazy()
+
     private var notificationGranted by mutableStateOf(false)
     private var batteryGranted by mutableStateOf(false)
+    private var allowCrashLogs by mutableStateOf(false)
+    private var allowAnalytics by mutableStateOf(false)
 
     override val isComplete: Boolean = true
 
@@ -109,6 +115,28 @@ internal class PermissionStep : OnboardingStep {
                     context.startActivity(intent)
                 },
             )
+
+            PermissionItem(
+                title = "Send crash logs",//i18n later
+                subtitle = "Send anonymised crash logs to the developers",
+                granted = allowCrashLogs,
+                onButtonClick = {
+                    // Toggle the granted state
+                    allowCrashLogs = !allowCrashLogs
+                    securityPreferences.crashlytics().set(allowCrashLogs)
+                }
+            )
+
+            PermissionItem(
+                title = "Allow analytics",//i18n later
+                subtitle = "Send anonymized usage data to improve app features.",
+                granted = allowAnalytics,
+                onButtonClick = {
+                    // Toggle the granted state
+                    allowAnalytics = !allowAnalytics
+                    securityPreferences.analytics().set(allowAnalytics)
+                }
+            )
         }
     }
 
@@ -140,7 +168,6 @@ internal class PermissionStep : OnboardingStep {
             supportingContent = { Text(text = subtitle) },
             trailingContent = {
                 OutlinedButton(
-                    enabled = !granted,
                     onClick = onButtonClick,
                 ) {
                     if (granted) {

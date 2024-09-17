@@ -66,6 +66,14 @@ object SettingsSecurityScreen : SearchableSettings {
                 },
             ),
             Preference.PreferenceItem.SwitchPreference(
+                pref = securityPreferences.crashlytics(),
+                title = "Allow sharing crash logs with devs",
+            ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = securityPreferences.analytics(),
+                title = "Allow sharing analytics data",
+            ),
+            Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
                 title = stringResource(MR.strings.hide_notification_content),
             ),
