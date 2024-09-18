@@ -117,8 +117,8 @@ internal class PermissionStep : OnboardingStep {
             )
 
             PermissionItem(
-                title = "Send crash logs",//i18n later
-                subtitle = "Send anonymised crash logs to the developers",
+                title = stringResource(MR.strings.onboarding_permission_crashlytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
                 granted = allowCrashLogs,
                 onButtonClick = {
                     // Toggle the granted state
@@ -128,8 +128,8 @@ internal class PermissionStep : OnboardingStep {
             )
 
             PermissionItem(
-                title = "Allow analytics",//i18n later
-                subtitle = "Send anonymized usage data to improve app features.",
+                title = stringResource(MR.strings.onboarding_permission_analytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
                 granted = allowAnalytics,
                 onButtonClick = {
                     // Toggle the granted state
