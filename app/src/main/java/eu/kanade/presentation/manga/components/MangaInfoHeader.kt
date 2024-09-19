@@ -597,13 +597,14 @@ private fun MangaSummary(
                 }
             },
             {
-                SelectionContainer {
-                    Column {
-                        MangaNotesSection(
-                            content = noteContent,
-                            expanded = expanded,
-                            onClickNotes = onNotesEditClicked,
-                        )
+
+                Column {
+                    MangaNotesSection(
+                        content = noteContent,
+                        expanded = expanded,
+                        onClickNotes = onNotesEditClicked,
+                    )
+                    SelectionContainer {
                         Text(
                             text = if (expanded) expandedDescription else shrunkDescription,
                             maxLines = Int.MAX_VALUE,
