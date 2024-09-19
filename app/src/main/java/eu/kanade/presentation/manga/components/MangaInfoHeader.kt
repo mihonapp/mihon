@@ -597,7 +597,6 @@ private fun MangaSummary(
                 }
             },
             {
-
                 Column {
                     MangaNotesSection(
                         content = noteContent,
