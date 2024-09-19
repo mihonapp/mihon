@@ -1,7 +1,12 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,8 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,49 +45,12 @@ fun MangaNotesSection(
     onClickNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxWidth()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
-            if (!content.isNullOrBlank()) {
-                Column(
-                    modifier = Modifier
-                        .animateContentSize(
-                            animationSpec = spring(),
-                            alignment = Alignment.Center,
-                        ),
-                ) {
-                    if (expanded) {
-                        Button(
-                            onClick = onClickNotes,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = MaterialTheme.colorScheme.primary,
-                            ),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 4.dp),
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(16.dp),
-                                )
-                                Text(
-                                    stringResource(MR.strings.action_edit_notes),
-                                )
-                            }
-                        }
-                    }
-                }
-
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        if (!content.isNullOrBlank()) {
+            SelectionContainer {
                 RichText(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -93,10 +62,52 @@ fun MangaNotesSection(
                 ) {
                     Markdown(content = content)
                 }
+            }
 
+            AnimatedVisibility(
+                visible = expanded,
+                enter = fadeIn(animationSpec = spring()) + expandVertically(animationSpec = spring()),
+                exit = fadeOut(animationSpec = spring()) + shrinkVertically(animationSpec = spring()),
+            ) {
+                Button(
+                    onClick = onClickNotes,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.EditNote,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(16.dp),
+                        )
+                        Text(
+                            stringResource(MR.strings.action_edit_notes),
+                        )
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .animateContentSize(
+                        animationSpec = spring(),
+                    ),
+            ) {
                 HorizontalDivider(
                     modifier = Modifier
-                        .padding(vertical = 16.dp),
+                        .padding(
+                            top = if (expanded) 0.dp else 12.dp,
+                            bottom = if (expanded) 16.dp else 12.dp,
+                        ),
                 )
             }
         }

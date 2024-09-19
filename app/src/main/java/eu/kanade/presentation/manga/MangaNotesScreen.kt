@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,12 +32,14 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarTitle
 import eu.kanade.presentation.manga.components.MangaNotesTextArea
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
+import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
+import tachiyomi.presentation.core.screens.EmptyScreenAction
 
 @Composable
 fun MangaNotesScreen(
@@ -116,6 +119,13 @@ fun MangaNotesScreen(
             EmptyScreen(
                 stringRes = MR.strings.information_no_notes,
                 modifier = Modifier.padding(paddingValues),
+                actions = persistentListOf(
+                    EmptyScreenAction(
+                        MR.strings.action_add_notes,
+                        Icons.Filled.EditNote,
+                        beginEditing,
+                    ),
+                ),
             )
         }
 
