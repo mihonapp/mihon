@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -123,21 +124,23 @@ fun MangaNotesScreen(
             enter = fadeIn(),
             exit = fadeOut(),
         ) {
-            RichText(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = MaterialTheme.padding.medium,
-                        vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.medium,
+            SelectionContainer {
+                RichText(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = MaterialTheme.padding.medium,
+                            vertical = paddingValues.calculateTopPadding() + MaterialTheme.padding.medium,
+                        ),
+                    style = RichTextStyle(
+                        stringStyle = RichTextStringStyle(
+                            linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
+                        ),
                     ),
-                style = RichTextStyle(
-                    stringStyle = RichTextStringStyle(
-                        linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                    ),
-                ),
-            ) {
-                Markdown(content = state.notes.orEmpty())
+                ) {
+                    Markdown(content = state.notes.orEmpty())
+                }
             }
         }
     }

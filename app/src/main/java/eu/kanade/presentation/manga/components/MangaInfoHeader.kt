@@ -236,8 +236,10 @@ fun ExpandableMangaDescription(
     defaultExpandState: Boolean,
     description: String?,
     tagsProvider: () -> List<String>?,
+    noteContent: String?,
     onTagSearch: (String) -> Unit,
     onCopyTagToClipboard: (tag: String) -> Unit,
+    onClickNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -255,6 +257,8 @@ fun ExpandableMangaDescription(
             expandedDescription = desc,
             shrunkDescription = trimmedDescription,
             expanded = expanded,
+            noteContent = noteContent,
+            onNotesEditClicked = onClickNotes,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 16.dp)
@@ -559,7 +563,9 @@ private fun ColumnScope.MangaContentInfo(
 private fun MangaSummary(
     expandedDescription: String,
     shrunkDescription: String,
+    noteContent: String?,
     expanded: Boolean,
+    onNotesEditClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val animProgress by animateFloatAsState(
@@ -571,25 +577,41 @@ private fun MangaSummary(
         contents = listOf(
             {
                 Text(
-                    text = "\n\n", // Shows at least 3 lines
+                    // Shows at least 3 lines if no notes
+                    // when there are notes show 6
+                    text = if (noteContent.isNullOrBlank()) "\n\n" else "\n\n\n\n\n",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             },
             {
-                Text(
-                    text = expandedDescription,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Column {
+                    MangaNotesSection(
+                        content = noteContent,
+                        expanded = true,
+                        onClickNotes = onNotesEditClicked,
+                    )
+                    Text(
+                        text = expandedDescription,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             },
             {
                 SelectionContainer {
-                    Text(
-                        text = if (expanded) expandedDescription else shrunkDescription,
-                        maxLines = Int.MAX_VALUE,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.secondaryItemAlpha(),
-                    )
+                    Column {
+                        MangaNotesSection(
+                            content = noteContent,
+                            expanded = expanded,
+                            onClickNotes = onNotesEditClicked,
+                        )
+                        Text(
+                            text = if (expanded) expandedDescription else shrunkDescription,
+                            maxLines = Int.MAX_VALUE,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.secondaryItemAlpha(),
+                        )
+                    }
                 }
             },
             {
