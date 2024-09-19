@@ -1,5 +1,7 @@
 package eu.kanade.presentation.manga.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,8 +34,9 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MangaNotesSection(
-    onClickNotes: () -> Unit,
     content: String?,
+    expanded: Boolean,
+    onClickNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier.fillMaxWidth()) {
@@ -42,10 +46,45 @@ fun MangaNotesSection(
                 .fillMaxWidth(),
         ) {
             if (!content.isNullOrBlank()) {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize(
+                            animationSpec = spring(),
+                            alignment = Alignment.Center,
+                        ),
+                ) {
+                    if (expanded) {
+                        Button(
+                            onClick = onClickNotes,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 4.dp),
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(16.dp),
+                                )
+                                Text(
+                                    stringResource(MR.strings.action_edit_notes),
+                                )
+                            }
+                        }
+                    }
+                }
+
                 RichText(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.padding.medium),
+                        .fillMaxWidth(),
                     style = RichTextStyle(
                         stringStyle = RichTextStringStyle(
                             linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
@@ -54,38 +93,11 @@ fun MangaNotesSection(
                 ) {
                     Markdown(content = content)
                 }
-            }
 
-            Button(
-                onClick = onClickNotes,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(16.dp),
-                    )
-                    Text(
-                        stringResource(
-                            if (content.isNullOrBlank()) {
-                                MR.strings.action_add_notes
-                            } else {
-                                MR.strings.action_edit_notes
-                            },
-                        ),
-                    )
-                }
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp),
+                )
             }
         }
     }
@@ -96,6 +108,7 @@ fun MangaNotesSection(
 private fun MangaNotesSectionPreview() {
     MangaNotesSection(
         onClickNotes = {},
+        expanded = true,
         content = "# Hello world\ntest1234 hi there!",
     )
 }
