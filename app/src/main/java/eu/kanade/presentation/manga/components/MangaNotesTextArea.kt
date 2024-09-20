@@ -89,21 +89,21 @@ fun MangaNotesTextArea(
                     .padding(top = 4.dp),
             ) {
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = { richTextState.toggleSpanStyle(SpanStyle(fontWeight = FontWeight.Bold)) },
                         isSelected = richTextState.currentSpanStyle.fontWeight == FontWeight.Bold,
                         icon = Icons.Outlined.FormatBold,
                     )
                 }
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = { richTextState.toggleSpanStyle(SpanStyle(fontStyle = FontStyle.Italic)) },
                         isSelected = richTextState.currentSpanStyle.fontStyle == FontStyle.Italic,
                         icon = Icons.Outlined.FormatItalic,
                     )
                 }
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = {
                             richTextState.toggleSpanStyle(SpanStyle(textDecoration = TextDecoration.Underline))
                         },
@@ -119,14 +119,14 @@ fun MangaNotesTextArea(
                     )
                 }
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = { richTextState.toggleUnorderedList() },
                         isSelected = richTextState.isUnorderedList,
                         icon = Icons.AutoMirrored.Outlined.FormatListBulleted,
                     )
                 }
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = { richTextState.toggleOrderedList() },
                         isSelected = richTextState.isOrderedList,
                         icon = Icons.Outlined.FormatListNumbered,
@@ -139,7 +139,7 @@ fun MangaNotesTextArea(
                     )
                 }
                 item {
-                    SlackDemoPanelButton(
+                    MangaNotesTextAreaButton(
                         onClick = { richTextState.toggleSpanStyle(SpanStyle(fontSize = largeFontSize)) },
                         isSelected = richTextState.currentSpanStyle.fontSize == largeFontSize,
                         icon = Icons.Outlined.FormatSize,
@@ -162,7 +162,7 @@ fun MangaNotesTextArea(
 }
 
 @Composable
-fun SlackDemoPanelButton(
+fun MangaNotesTextAreaButton(
     onClick: () -> Unit,
     icon: ImageVector,
     isSelected: Boolean,
