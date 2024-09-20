@@ -19,7 +19,6 @@ import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatItalic
 import androidx.compose.material.icons.outlined.FormatListNumbered
-import androidx.compose.material.icons.outlined.FormatSize
 import androidx.compose.material.icons.outlined.FormatUnderlined
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,13 +41,27 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-private const val MAX_LENGTH = 10_000
+private const val MAX_LENGTH = 250
+
+private fun RichTextState.render(): String {
+    var current: String
+    var mutated = this.toMarkdown().replace("\n<br>\n<br>", "")
+
+    do {
+        current = mutated
+        mutated = mutated.trim { it.isWhitespace() || it == '\n' }
+        mutated = mutated.removeSuffix("<br>").removePrefix("<br>")
+    } while (mutated != current)
+
+    return current
+}
 
 @Composable
 fun MangaNotesTextArea(
@@ -61,18 +74,28 @@ fun MangaNotesTextArea(
     richTextState.config.listIndent = 15
     val focusRequester = remember { FocusRequester() }
 
-    val largeFontSize = MaterialTheme.typography.headlineMedium.fontSize
-
     Column(
         modifier = modifier
             .fillMaxSize(),
     ) {
         RichTextEditor(
             state = richTextState,
-            textStyle = MaterialTheme.typography.bodyMedium,
+            textStyle = MaterialTheme.typography.bodyLarge,
             maxLength = MAX_LENGTH,
             placeholder = {
                 Text(text = stringResource(MR.strings.notes_placeholder))
+            },
+            supportingText = {
+                Text(
+                    text = (MAX_LENGTH - richTextState.render().length).toString(),
+                    color = if (richTextState.render().length >
+                        MAX_LENGTH / 10 * 9
+                    ) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Unspecified
+                    },
+                )
             },
             modifier = Modifier
                 .weight(1f)
@@ -132,31 +155,18 @@ fun MangaNotesTextArea(
                         icon = Icons.Outlined.FormatListNumbered,
                     )
                 }
-                item {
-                    VerticalDivider(
-                        modifier = Modifier
-                            .height(24.dp),
-                    )
-                }
-                item {
-                    MangaNotesTextAreaButton(
-                        onClick = { richTextState.toggleSpanStyle(SpanStyle(fontSize = largeFontSize)) },
-                        isSelected = richTextState.currentSpanStyle.fontSize == largeFontSize,
-                        icon = Icons.Outlined.FormatSize,
-                    )
-                }
             }
         }
     }
 
     LaunchedEffect(focusRequester) {
-        state.notes?.let { richTextState.setHtml(it) }
+        state.notes?.let { richTextState.setMarkdown(it) }
         focusRequester.requestFocus()
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            onSave(richTextState.toHtml())
+            onSave(richTextState.render())
         }
     }
 }
