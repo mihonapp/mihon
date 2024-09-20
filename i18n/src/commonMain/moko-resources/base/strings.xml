@@ -148,9 +148,9 @@
     <string name="action_move_to_top_all_for_series">Move series to top</string>
     <string name="action_move_to_bottom">Move to bottom</string>
     <string name="action_move_to_bottom_all_for_series">Move series to bottom</string>
-    <string name="action_notes">Notes</string>
-    <string name="action_add_notes">Add Notes</string>
-    <string name="action_edit_notes">Edit Notes</string>
+    <string name="action_notes">Note</string>
+    <string name="action_add_notes">Add Note</string>
+    <string name="action_edit_notes">Edit Note</string>
     <string name="action_install">Install</string>
     <string name="action_share">Share</string>
     <string name="action_save">Save</string>
@@ -940,7 +940,7 @@
     <string name="information_cloudflare_bypass_failure">Failed to bypass Cloudflare</string>
     <string name="information_cloudflare_help">Tap here for help with Cloudflare</string>
     <string name="information_required_plain">*required</string>
-    <string name="information_no_notes">There are no notes here yet!</string>
+    <string name="information_no_notes">No notes</string>
     <!-- Do not translate "WebView" -->
     <string name="information_webview_required">WebView is required for the app to function</string>
     <!-- Do not translate "WebView" -->
@@ -981,4 +981,7 @@
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="exception_offline">No Internet connection</string>
     <string name="exception_unknown_host">Couldn\'t reach %s</string>
+
+    <!-- Notes screen -->
+    <string name="notes_placeholder">My analysis of the story begins with ontological antirealism, that is to say...</string>
 </resources>
