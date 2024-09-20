@@ -14,7 +14,7 @@ fun MangaNotesDisplay(
     content: String,
     modifier: Modifier,
 ) {
-    val richTextState = rememberRichTextState().setHtml(html = content)
+    val richTextState = rememberRichTextState().setMarkdown(markdown = content)
     richTextState.config.linkColor = MaterialTheme.colorScheme.primary
     richTextState.config.listIndent = 15
 
