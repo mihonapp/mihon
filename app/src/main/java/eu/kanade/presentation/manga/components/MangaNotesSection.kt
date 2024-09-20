@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.HorizontalDivider
@@ -25,13 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.halilibo.richtext.markdown.Markdown
-import com.halilibo.richtext.ui.RichTextStyle
-import com.halilibo.richtext.ui.material3.RichText
-import com.halilibo.richtext.ui.string.RichTextStringStyle
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Button
 import tachiyomi.presentation.core.components.material.ButtonDefaults
@@ -50,19 +44,10 @@ fun MangaNotesSection(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (!content.isNullOrBlank()) {
-            SelectionContainer {
-                RichText(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    style = RichTextStyle(
-                        stringStyle = RichTextStringStyle(
-                            linkStyle = SpanStyle(color = MaterialTheme.colorScheme.primary),
-                        ),
-                    ),
-                ) {
-                    Markdown(content = content)
-                }
-            }
+            MangaNotesDisplay(
+                content = content,
+                modifier = modifier.fillMaxWidth(),
+            )
 
             AnimatedVisibility(
                 visible = expanded,

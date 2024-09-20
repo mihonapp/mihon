@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga.notes
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,7 +13,6 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 
 class MangaNotesScreen(
     private val manga: Manga,
-    private val editing: Boolean = false,
 ) : Screen() {
     @Composable
     override fun Content() {
@@ -23,7 +21,6 @@ class MangaNotesScreen(
         val screenModel = rememberScreenModel {
             MangaNotesScreenModel(
                 manga = manga,
-                editing = editing,
             )
         }
         val state by screenModel.state.collectAsState()
@@ -35,22 +32,9 @@ class MangaNotesScreen(
 
         val successState = state as MangaNotesScreenState.Success
 
-        BackHandler(
-            onBack = {
-                if (!successState.editing) {
-                    navigator.pop()
-                    return@BackHandler
-                }
-
-                screenModel.endEditing()
-            },
-        )
-
         MangaNotesScreen(
             state = successState,
             navigateUp = navigator::pop,
-            beginEditing = { screenModel.beginEditing() },
-            endEditing = { screenModel.endEditing() },
             onSave = { screenModel.saveText(it) },
         )
     }
