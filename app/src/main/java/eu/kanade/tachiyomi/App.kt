@@ -78,7 +78,6 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun onCreate() {
         super<Application>.onCreate()
         patchInjekt()
-        Firebase.setup(applicationContext, securityPreferences)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
 
@@ -96,6 +95,8 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         Injekt.importModule(PreferenceModule(this))
         Injekt.importModule(AppModule(this))
         Injekt.importModule(DomainModule())
+
+        Firebase.setup(applicationContext, securityPreferences, ProcessLifecycleOwner.get().lifecycleScope)
 
         setupNotificationChannels()
 
