@@ -142,9 +142,7 @@ internal class PermissionStep : OnboardingStep {
                     securityPreferences.analytics().set(allowAnalytics)
                 },
             )
-
         }
-
     }
 
     @Composable
@@ -214,5 +212,4 @@ internal class PermissionStep : OnboardingStep {
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
-
 }
