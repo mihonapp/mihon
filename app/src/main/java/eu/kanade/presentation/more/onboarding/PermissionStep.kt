@@ -121,10 +121,9 @@ internal class PermissionStep : OnboardingStep {
                 subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
                 granted = allowCrashLogs,
                 onButtonClick = {
-                    // Toggle the granted state
                     allowCrashLogs = !allowCrashLogs
                     securityPreferences.crashlytics().set(allowCrashLogs)
-                }
+                },
             )
 
             PermissionItem(
@@ -132,10 +131,9 @@ internal class PermissionStep : OnboardingStep {
                 subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
                 granted = allowAnalytics,
                 onButtonClick = {
-                    // Toggle the granted state
                     allowAnalytics = !allowAnalytics
                     securityPreferences.analytics().set(allowAnalytics)
-                }
+                },
             )
         }
     }

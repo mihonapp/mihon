@@ -1,7 +1,7 @@
 
 import android.content.Context
-import eu.kanade.domain.base.BasePreferences
+import eu.kanade.tachiyomi.core.security.SecurityPreferences
 
 object Firebase {
-    fun setup(context: Context, preference: BasePreferences) = Unit
+    fun setup(context: Context, preference: SecurityPreferences) = Unit
 }
