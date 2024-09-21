@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi
 
+import Firebase
 import android.annotation.SuppressLint
 import android.app.Application
 import android.app.PendingIntent
@@ -21,13 +22,11 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.allowRgb565
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-//import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dev.mihon.injekt.patchInjekt
 import eu.kanade.domain.DomainModule
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.setAppCompatDelegateThemeMode
-import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.crash.CrashActivity
 import eu.kanade.tachiyomi.crash.GlobalExceptionHandler
 import eu.kanade.tachiyomi.data.coil.BufferedSourceFetcher
@@ -69,7 +68,6 @@ import java.security.Security
 class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factory {
 
     private val basePreferences: BasePreferences by injectLazy()
-    private val securityPreferences: SecurityPreferences by injectLazy()
     private val networkPreferences: NetworkPreferences by injectLazy()
 
     private val disableIncognitoReceiver = DisableIncognitoReceiver()
@@ -78,7 +76,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun onCreate() {
         super<Application>.onCreate()
         patchInjekt()
-        //FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(securityPreferences.crashlytics().get())
+        Firebase.setup(applicationContext, basePreferences)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
 
