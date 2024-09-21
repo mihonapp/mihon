@@ -49,8 +49,8 @@ internal class PermissionStep : OnboardingStep {
 
     private var notificationGranted by mutableStateOf(false)
     private var batteryGranted by mutableStateOf(false)
-    private var allowCrashLogs by mutableStateOf(false)
-    private var allowAnalytics by mutableStateOf(false)
+    private var allowCrashLogs by mutableStateOf(true)
+    private var allowAnalytics by mutableStateOf(true)
 
     override val isComplete: Boolean = true
 
@@ -119,7 +119,7 @@ internal class PermissionStep : OnboardingStep {
             )
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
 

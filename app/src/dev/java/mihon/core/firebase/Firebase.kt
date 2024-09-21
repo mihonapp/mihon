@@ -1,3 +1,4 @@
+package mihon.core.firebase
 
 import android.content.Context
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
