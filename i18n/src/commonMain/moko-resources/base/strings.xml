@@ -250,8 +250,6 @@
     <string name="lock_when_idle">Lock when idle</string>
     <string name="lock_always">Always</string>
     <string name="lock_never">Never</string>
-    <string name="share_crash_logs">Allow sharing crash logs with devs</string>
-    <string name="share_analytics">Allow sharing analytics data</string>
     <string name="hide_notification_content">Hide notification content</string>
     <string name="secure_screen">Secure screen</string>
     <string name="secure_screen_summary">Secure screen hides app contents when switching apps and block screenshots</string>

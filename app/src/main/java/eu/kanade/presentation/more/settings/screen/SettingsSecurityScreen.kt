@@ -67,11 +67,13 @@ object SettingsSecurityScreen : SearchableSettings {
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.crashlytics(),
-                title = stringResource(MR.strings.share_crash_logs),
+                title = stringResource(MR.strings.onboarding_permission_crashlytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.analytics(),
-                title = stringResource(MR.strings.share_analytics),
+                title = stringResource(MR.strings.onboarding_permission_analytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
             ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
