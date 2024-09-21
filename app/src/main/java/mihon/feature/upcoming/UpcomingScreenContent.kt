@@ -119,12 +119,8 @@ private fun DateHeading(
         Text(
             text = relativeDateText(date),
             modifier = Modifier
-                .padding(
-                    start = MaterialTheme.padding.medium,
-                    end = MaterialTheme.padding.small,
-                    top = MaterialTheme.padding.small,
-                    bottom = MaterialTheme.padding.small,
-                ),
+                .padding(MaterialTheme.padding.small)
+                .padding(start = MaterialTheme.padding.small),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.SemiBold,
             style = MaterialTheme.typography.bodyMedium,
