@@ -38,7 +38,7 @@ object SettingsSecurityScreen : SearchableSettings {
 
 @Composable
 private fun getSecurityGroup(
-    securityPreferences: SecurityPreferences
+    securityPreferences: SecurityPreferences,
 ): Preference.PreferenceGroup {
     val context = LocalContext.current
     val authSupported = remember { context.isAuthenticationSupported() }
@@ -96,7 +96,7 @@ private fun getSecurityGroup(
 
 @Composable
 private fun getFirebaseGroup(
-    securityPreferences: SecurityPreferences
+    securityPreferences: SecurityPreferences,
 ): Preference.PreferenceGroup {
     return Preference.PreferenceGroup(
         title = stringResource(MR.strings.pref_firebase),
@@ -115,8 +115,6 @@ private fun getFirebaseGroup(
         ),
     )
 }
-
-
 
 private val LockAfterValues = persistentListOf(
     0, // Always
