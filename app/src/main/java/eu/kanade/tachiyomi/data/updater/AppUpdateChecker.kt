@@ -44,9 +44,9 @@ class AppUpdateChecker {
 
 val GITHUB_REPO: String by lazy {
     if (BuildConfig.PREVIEW) {
-        "nekotachiapp/nekotachi-preview"
+        "bigbabyboost/nekotachi-preview"
     } else {
-        "nekotachiapp/nekotachi"
+        "bigbabyboost/nekotachi"
     }
 }
 

@@ -96,7 +96,7 @@ body:
           required: true
         - label: I have gone through the [FAQ](https://nekotachi.app/docs/faq/general) and [troubleshooting guide](https://nekotachi.app/docs/guides/troubleshooting/).
           required: true
-        - label: I have updated the app to version **[0.16.5](https://github.com/nekotachiapp/nekotachi/releases/latest)**.
+        - label: I have updated the app to version **[0.16.5](https://github.com/bigbabyboost/nekotachi/releases/latest)**.
           required: true
         - label: I have updated all installed extensions.
           required: true

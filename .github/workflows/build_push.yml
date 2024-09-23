@@ -63,13 +63,13 @@ jobs:
       # Sign APK and create release for tags
 
       - name: Get tag name
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'bigbabyboost/nekotachi'
         run: |
           set -x
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Sign APK
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'bigbabyboost/nekotachi'
         uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
         with:
           releaseDirectory: app/build/outputs/apk/standard/release
@@ -79,7 +79,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Clean up build artifacts
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'bigbabyboost/nekotachi'
         run: |
           set -e
 
@@ -104,7 +104,7 @@ jobs:
           echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'bigbabyboost/nekotachi'
         uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           tag_name: ${{ env.VERSION_TAG }}

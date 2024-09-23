@@ -179,22 +179,22 @@ object AboutScreen : Screen() {
                         LinkIcon(
                             label = "X",
                             icon = CustomIcons.X,
-                            url = "https://x.com/nekotachiapp",
+                            url = "https://x.com/bigbabyboost",
                         )
                         LinkIcon(
                             label = "Facebook",
                             icon = CustomIcons.Facebook,
-                            url = "https://facebook.com/nekotachiapp",
+                            url = "https://facebook.com/bigbabyboost",
                         )
                         LinkIcon(
                             label = "Reddit",
                             icon = CustomIcons.Reddit,
-                            url = "https://www.reddit.com/r/nekotachiapp",
+                            url = "https://www.reddit.com/r/bigbabyboost",
                         )
                         LinkIcon(
                             label = "GitHub",
                             icon = CustomIcons.Github,
-                            url = "https://github.com/nekotachiapp",
+                            url = "https://github.com/bigbabyboost",
                         )
                     }
                 }

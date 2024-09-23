@@ -35,7 +35,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         return originalRequest.newBuilder()
             .header(
                 "User-Agent",
-                "antsylich/Nekotachi/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/nekotachiapp/nekotachi)",
+                "antsylich/Nekotachi/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/bigbabyboost/nekotachi)",
             )
             .apply {
                 if (originalRequest.method == "GET") {
