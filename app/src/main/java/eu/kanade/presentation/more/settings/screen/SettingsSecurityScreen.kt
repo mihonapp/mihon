@@ -28,14 +28,26 @@ object SettingsSecurityScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val context = LocalContext.current
         val securityPreferences = remember { Injekt.get<SecurityPreferences>() }
-        val authSupported = remember { context.isAuthenticationSupported() }
-
-        val useAuthPref = securityPreferences.useAuthenticator()
-        val useAuth by useAuthPref.collectAsState()
-
         return listOf(
+            getSecurityGroup(securityPreferences),
+            getFirebaseGroup(securityPreferences),
+        )
+    }
+}
+
+@Composable
+private fun getSecurityGroup(
+    securityPreferences: SecurityPreferences
+): Preference.PreferenceGroup {
+    val context = LocalContext.current
+    val authSupported = remember { context.isAuthenticationSupported() }
+    val useAuthPref = securityPreferences.useAuthenticator()
+    val useAuth by useAuthPref.collectAsState()
+
+    return Preference.PreferenceGroup(
+        title = stringResource(MR.strings.pref_security),
+        preferenceItems = persistentListOf(
             Preference.PreferenceItem.SwitchPreference(
                 pref = useAuthPref,
                 title = stringResource(MR.strings.lock_with_biometrics),
@@ -65,16 +77,7 @@ object SettingsSecurityScreen : SearchableSettings {
                     )
                 },
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = securityPreferences.crashlytics(),
-                title = stringResource(MR.strings.onboarding_permission_crashlytics),
-                subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
-            ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = securityPreferences.analytics(),
-                title = stringResource(MR.strings.onboarding_permission_analytics),
-                subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
-            ),
+
             Preference.PreferenceItem.SwitchPreference(
                 pref = securityPreferences.hideNotificationContent(),
                 title = stringResource(MR.strings.hide_notification_content),
@@ -87,9 +90,33 @@ object SettingsSecurityScreen : SearchableSettings {
                     .toImmutableMap(),
             ),
             Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
-        )
-    }
+        ),
+    )
 }
+
+@Composable
+private fun getFirebaseGroup(
+    securityPreferences: SecurityPreferences
+): Preference.PreferenceGroup {
+    return Preference.PreferenceGroup(
+        title = stringResource(MR.strings.pref_firebase),
+        preferenceItems = persistentListOf(
+            Preference.PreferenceItem.SwitchPreference(
+                pref = securityPreferences.crashlytics(),
+                title = stringResource(MR.strings.onboarding_permission_crashlytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
+            ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = securityPreferences.analytics(),
+                title = stringResource(MR.strings.onboarding_permission_analytics),
+                subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
+            ),
+            Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.firebase_summary)),
+        ),
+    )
+}
+
+
 
 private val LockAfterValues = persistentListOf(
     0, // Always
