@@ -534,7 +534,7 @@
     <string name="ext_installer_pref">Pemasang</string>
     <string name="action_sort_count">Total entri</string>
     <string name="notification_size_warning">Pembaruan berskala besar membahayakan sumber, dapat membuat pembaruan lambat dan meningkatkan penggunaan baterai. Ketuk untuk mempelajari lebih lanjut.</string>
-    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Mihon. Ketuk untuk mempelajari lebih lanjut.</string>
+    <string name="download_queue_size_warning">Peringatan: mengunduh dalam jumlah besar bisa menyebabkan sumber menjadi lambat dan/atau memblokir Nekotachi. Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="label_warning">Peringatan</string>
     <string name="pref_verbose_logging_summary">Cetak catatan berlebih ke catatan sistem (mengurangi kinerja aplikasi)</string>
     <string name="backup_info">Anda juga harus menyimpan salinan cadangan di tempat lain. Cadangan mungkin berisi data sensitif termasuk kata sandi yang tersimpan; berhati-hatilah jika berbagi.</string>
@@ -777,7 +777,7 @@
     <string name="pref_library_update_smart_update">Pembauan pintar</string>
     <string name="onboarding_storage_help_info">Memperbarui dari versi lama dan tak yakin harus pilih mana? lihat panduan penyimpanan untuk informasi lebih lanjut.</string>
     <string name="action_add_repo">Tambahkan repo</string>
-    <string name="action_add_repo_message">Tambahkan repo lain ke Mihon. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
+    <string name="action_add_repo_message">Tambahkan repo lain ke Nekotachi. Seharusnya URL yang memiliki akhiran \"index.min.json\".</string>
     <string name="label_extension_repos">Repositori ekstensi</string>
     <string name="information_empty_repos">Anda tidak memiliki repositori yang ditetapkan.</string>
     <string name="invalid_backup_file_error">Kesalahan penuh:</string>

@@ -259,7 +259,7 @@
     <string name="download_notifier_download_paused">Тийеве вӑхӑтлӑха чарнӑ</string>
     <string name="download_notifier_unknown_error">Кӗтмен йӑнӑша пула сыпӑксене тийесе илеймест</string>
     <string name="download_notifier_downloader_title">Тийевҫӗ</string>
-    <string name="information_webview_required">Mihon валли WebView кирлӗ</string>
+    <string name="information_webview_required">Nekotachi валли WebView кирлӗ</string>
     <string name="update_check_notification_download_in_progress">Тийев…</string>
     <string name="update_check_no_new_updates">Ҫӗнетӳсем тупӑнман</string>
     <string name="update_check_confirm">Тиесе ил</string>

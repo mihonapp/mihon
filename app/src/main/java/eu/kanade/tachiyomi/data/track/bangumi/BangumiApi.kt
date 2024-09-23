@@ -155,7 +155,7 @@ class BangumiApi(
         private const val OAUTH_URL = "https://bgm.tv/oauth/access_token"
         private const val LOGIN_URL = "https://bgm.tv/oauth/authorize"
 
-        private const val REDIRECT_URL = "mihon://bangumi-auth"
+        private const val REDIRECT_URL = "nekotachi://bangumi-auth"
 
         fun authUrl(): Uri =
             LOGIN_URL.toUri().buildUpon()

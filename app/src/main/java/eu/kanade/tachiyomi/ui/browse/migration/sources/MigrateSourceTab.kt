@@ -32,7 +32,7 @@ fun Screen.migrateSourceTab(): TabContent {
                 title = stringResource(MR.strings.migration_help_guide),
                 icon = Icons.AutoMirrored.Outlined.HelpOutline,
                 onClick = {
-                    uriHandler.openUri("https://mihon.app/docs/guides/source-migration")
+                    uriHandler.openUri("https://nekotachi.app/docs/guides/source-migration")
                 },
             ),
         ),

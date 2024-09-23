@@ -2,7 +2,7 @@ package tachiyomi.source.local.metadata
 
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
-import mihon.core.archive.EpubReader
+import nekotachi.core.archive.EpubReader
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale

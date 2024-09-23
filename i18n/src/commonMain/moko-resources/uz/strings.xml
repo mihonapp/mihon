@@ -191,7 +191,7 @@
     <string name="ext_untrusted">Ishonchsiz</string>
     <string name="untrusted_extension_message">Bu kengaytma ishonchsiz sertifikat tomonidan imzolangan va faollashtirilmagan.
 \n
-\nZararli kengaytma Mihonda saqlanadigan barcha hisobga kirish ma\'lumotlarini o\'qishi, yoki ixtiyoriy kodni bajarishi mumkin.
+\nZararli kengaytma Nekotachida saqlanadigan barcha hisobga kirish ma\'lumotlarini o\'qishi, yoki ixtiyoriy kodni bajarishi mumkin.
 \n
 \nBu sertifikatga ishonish orqali, ushbu xavflarni qabul qilasiz.</string>
     <string name="pref_dual_page_invert_summary">Agar keng sahifalarning bo\'linishi o\'qish yo\'nalishiga mos kelmasa</string>

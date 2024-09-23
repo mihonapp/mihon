@@ -1,5 +1,5 @@
 plugins {
-    id("mihon.benchmark")
+    id("nekotachi.benchmark")
 }
 
 android {

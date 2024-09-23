@@ -1,5 +1,5 @@
 plugins {
-    id("mihon.library")
+    id("nekotachi.library")
     kotlin("android")
     kotlin("plugin.serialization")
 }

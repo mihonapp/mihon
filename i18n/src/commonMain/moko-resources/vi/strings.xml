@@ -225,7 +225,7 @@
     <string name="untrusted_extension">Tiện ích mở rộng không đáng tin cậy</string>
     <string name="untrusted_extension_message">Tiện ích mở rộng này được đăng ký bằng chứng chỉ không đáng tin cậy và chưa được kích hoạt.
 \n
-\nMột tiện ích mở rộng độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Mihon hoặc tự ý thay đổi mã nguồn.\t
+\nMột tiện ích mở rộng độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Nekotachi hoặc tự ý thay đổi mã nguồn.\t
 \n
 \nBạn sẽ chấp nhận những rủi ro khi tin tưởng chứng chỉ này.</string>
     <string name="pref_double_tap_anim_speed">Tốc độ nhấn đúp hình ảnh động</string>
@@ -299,7 +299,7 @@
     <string name="pref_skip_filtered_chapters">Bỏ qua các chương đã lọc</string>
     <string name="filter_mode_screen">Màn hình</string>
     <string name="pref_cutout_short">Hiển thị nội dung ở phần rìa</string>
-    <string name="obsolete_extension_message">Phần mở rộng này không khả dụng. Nó có thể không chạy và có thể gây ra lỗi với Mihon. Kiến nghị nên Gỡ cài đặt.</string>
+    <string name="obsolete_extension_message">Phần mở rộng này không khả dụng. Nó có thể không chạy và có thể gây ra lỗi với Nekotachi. Kiến nghị nên Gỡ cài đặt.</string>
     <string name="ext_obsolete">Lỗi thời</string>
     <string name="ext_updates_pending">Cập nhật đang chờ</string>
     <string name="pref_category_library_update">Cập nhật toàn bộ</string>
@@ -389,7 +389,7 @@
     <string name="channel_errors">Lỗi</string>
     <string name="channel_complete">Hoàn thành</string>
     <string name="channel_progress">Quá trình</string>
-    <string name="information_webview_required">Mihon yêu cầu phải có WebView</string>
+    <string name="information_webview_required">Nekotachi yêu cầu phải có WebView</string>
     <string name="update_check_eol">Phiên bản Android này không còn được hỗ trợ</string>
     <string name="notification_chapters_multiple">Chương %1$s</string>
     <string name="notification_chapters_single_and_more">Chương %1$s và thêm %2$d</string>
@@ -545,7 +545,7 @@
     <string name="ext_install_service_notif">Đang cài đặt tiện ích mở rộng…</string>
     <string name="update_72hour">3 ngày một lần</string>
     <string name="connected_to_wifi">Chỉ qua Wi-Fi</string>
-    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Mihon. Nhấn vào để tìm hiểu thêm.</string>
+    <string name="download_queue_size_warning">Cảnh báo: các tải xuống hàng loạt lớn có thể dẫn đến các nguồn trở nên chậm hơn và / hoặc chặn Nekotachi. Nhấn vào để tìm hiểu thêm.</string>
     <string name="channel_app_updates">Cập nhật ứng dụng</string>
     <string name="ext_update_all">Cập nhật tất cả</string>
     <string name="pref_auto_clear_chapter_cache">Xóa bộ nhớ đệm các chương khi tắt ứng dụng</string>
@@ -786,7 +786,7 @@
     <string name="label_upcoming">Sắp tới</string>
     <string name="action_migrate_duplicate">Chuyển vào các mục hiện có</string>
     <string name="onboarding_storage_help_info">Cập nhật từ phiên bản cũ hơn và không biết nên chọn gì? Tham khảo hướng dẫn để biết thêm thông tin.</string>
-    <string name="action_add_repo_message">Thêm nguồn bổ sung vào Mihon. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
+    <string name="action_add_repo_message">Thêm nguồn bổ sung vào Nekotachi. Địa chỉ URL này cần phải kết thúc với \"index.min.json\".</string>
     <string name="action_replace_repo_message">Kho lưu trữ %1$s có Dấu vân tay Khóa ký giống hệt như %2$s.
 \nNếu điều này là dự kiến, %2$s sẽ bị thay thế. Nếu không, vui lòng liên hệ với người quản lý kho lưu trữ của bạn.</string>
     <string name="information_empty_repos">Bạn chưa có nguồn nào.</string>

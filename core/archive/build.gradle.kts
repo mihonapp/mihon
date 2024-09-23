@@ -1,11 +1,11 @@
 plugins {
-    id("mihon.library")
+    id("nekotachi.library")
     kotlin("android")
     kotlin("plugin.serialization")
 }
 
 android {
-    namespace = "mihon.core.archive"
+    namespace = "nekotachi.core.archive"
 }
 
 dependencies {

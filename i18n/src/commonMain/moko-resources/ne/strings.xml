@@ -540,7 +540,7 @@
     <string name="manga_download">डाउनलोड</string>
     <string name="transition_no_previous">अघिल्लो अध्याय छैन</string>
     <string name="download_insufficient_space">थोरै जम्मा गर्ने ठाउँ भएको कारणले अध्याय डाउनलोड हुन सकिँदएन</string>
-    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा Mihon लाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
+    <string name="download_queue_size_warning">सावधान: ठूलो हिस्सामा डाउनलोड गर्नाले स्रोत ढिलो चल्न अनि/वा Nekotachi लाई अवरुद्घ गर्न सक्नेछ। थप जान्न ट्याप गर्नुहोस्।</string>
     <string name="manga_tracking_tab">ट्र्याकिङ</string>
     <string name="add_tracking">ट्र्याक गर्नुहोस्</string>
     <string name="reading">पढ्दै</string>
@@ -782,7 +782,7 @@
     <string name="label_add_repo_input">रिपो URL</string>
     <string name="label_extension_repos">एक्सटेन्शन रिपो</string>
     <string name="action_add_repo">रिपो थप्नुहोस्</string>
-    <string name="action_add_repo_message">Mihon मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
+    <string name="action_add_repo_message">Nekotachi मा अतिरिक्त रिपो थप्नुहोस्। URL को अन्त्यमा \"index.min.json\" हुनुपर्छ।</string>
     <string name="action_apply">अप्लाई</string>
     <string name="delete_repo_confirmation">के तपाइँ रिपो \"%s\" हटाउन चाहनुहुन्छ?</string>
     <string name="action_open_repo">खुला स्रोत रिपो</string>

@@ -34,6 +34,16 @@ jobs:
           java-version: 17
           distribution: adopt
 
+      - name: Load Google Service file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA | base64 -di > app/google-services.json
+
+      - name: Load Client Secrets file
+        env:
+          DATA: ${{ secrets.CLIENT_SECRETS_JSON }}
+        run: mkdir -p app/src/main/assets && echo $DATA | base64 -di > app/src/main/assets/client_secrets.json
+
       - name: Set up gradle
         uses: gradle/actions/setup-gradle@d156388eb19639ec20ade50009f3d199ce1e2808 # v4.1.0
 

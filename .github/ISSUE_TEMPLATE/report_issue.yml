@@ -1,5 +1,5 @@
 name: 🐞 Issue report
-description: Report an issue in Mihon
+description: Report an issue in Nekotachi
 labels: [Bug]
 body:
 
@@ -48,10 +48,10 @@ body:
         You can paste the crash logs in plain text or upload it as an attachment.
 
   - type: input
-    id: mihon-version
+    id: nekotachi-version
     attributes:
-      label: Mihon version
-      description: You can find your Mihon version in **More → About**.
+      label: Nekotachi version
+      description: You can find your Nekotachi version in **More → About**.
       placeholder: |
         Example: "0.16.5"
     validations:
@@ -94,9 +94,9 @@ body:
           required: true
         - label: I have written a short but informative title.
           required: true
-        - label: I have gone through the [FAQ](https://mihon.app/docs/faq/general) and [troubleshooting guide](https://mihon.app/docs/guides/troubleshooting/).
+        - label: I have gone through the [FAQ](https://nekotachi.app/docs/faq/general) and [troubleshooting guide](https://nekotachi.app/docs/guides/troubleshooting/).
           required: true
-        - label: I have updated the app to version **[0.16.5](https://github.com/mihonapp/mihon/releases/latest)**.
+        - label: I have updated the app to version **[0.16.5](https://github.com/nekotachiapp/nekotachi/releases/latest)**.
           required: true
         - label: I have updated all installed extensions.
           required: true

@@ -543,7 +543,7 @@
     <string name="backup_info">Vous devez également conserver des copies des sauvegardes à d\'autres endroits.</string>
     <string name="connected_to_wifi">Uniquement en Wi-Fi</string>
     <string name="update_72hour">Tous les 3 jours</string>
-    <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Mihon. Appuyez pour en savoir plus.</string>
+    <string name="download_queue_size_warning">Attention : les téléchargements massifs peuvent entraîner un ralentissement des sources ou le blocage de Nekotachi. Appuyez pour en savoir plus.</string>
     <string name="ext_update_all">Tout mettre à jour</string>
     <string name="channel_app_updates">Mises à jour de l\'application</string>
     <string name="pref_auto_clear_chapter_cache">Vider le cache de chapitre au lancement de l\'application</string>
@@ -779,7 +779,7 @@
     <string name="label_extension_repos">Répertoire d\'extension</string>
     <string name="ext_revoke_trust">Révoquer les extensions provenant d\'un répertoire additionnel</string>
     <string name="label_add_repo_input">URL du répertoire</string>
-    <string name="action_add_repo_message">Ajouter un répertoire additionnel à Mihon. L\'URL devrait se terminer par « index.min.json ».</string>
+    <string name="action_add_repo_message">Ajouter un répertoire additionnel à Nekotachi. L\'URL devrait se terminer par « index.min.json ».</string>
     <string name="error_repo_exists">Ce répertoire existe déjà !</string>
     <string name="invalid_repo_name">L\'URL du répertoire est invalide</string>
     <string name="manga_interval_expected_update_soon">Bientôt</string>

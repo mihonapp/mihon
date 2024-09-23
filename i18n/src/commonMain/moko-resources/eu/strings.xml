@@ -33,7 +33,7 @@
     <string name="local_source">Iturri lokala</string>
     <string name="latest">Azkenak</string>
     <string name="no_more_results">Ez dago emaitza gehiagorik</string>
-    <string name="download_queue_size_warning">Abisua: deskarga handiek iturriak motelagoak izatea eta/edo Mihon blokeatzea ekar dezakete</string>
+    <string name="download_queue_size_warning">Abisua: deskarga handiek iturriak motelagoak izatea eta/edo Nekotachi blokeatzea ekar dezakete</string>
     <string name="creating_backup">Babeskopia sortzen</string>
     <string name="restore_duration">%02d min, %02d seg</string>
     <string name="add_tracking">Gehitu jarraipena</string>
@@ -226,7 +226,7 @@
     <string name="about_dont_kill_my_app">Fabrikatzaile batzuek aplikazioen murrizketa gehigarriak dituzte, atzeko planoko zerbitzuak akabatzen dituztenak. Webgune honek informazio gehiago du nola konpondu jakiteko.</string>
     <string name="untrusted_extension_message">Luzapen hau fidagarria ez den ziurtagiri batekin sinatu zen eta ez zen aktibatu.
 \n
-\nLuzapen maltzur batek Mihon-n gordetako saio-hasierako kredentzialak irakur ditzake edo kode arbitrarioa exekutatu.
+\nLuzapen maltzur batek Nekotachi-n gordetako saio-hasierako kredentzialak irakur ditzake edo kode arbitrarioa exekutatu.
 \n
 \nZiurtagiri honetaz fidatzean, arrisku hauek onartzen dituzu.</string>
     <string name="ext_untrusted">Fidatu gabekoa</string>
@@ -315,7 +315,7 @@
     <string name="notification_first_add_to_library">Mesedez, gehitu manga zure liburutegian hau egin aurretik</string>
     <string name="transition_pages_loading">Orriak kargatzen…</string>
     <string name="channel_common">Arrunta</string>
-    <string name="information_webview_required">WebView beharrezkoa da Mihon-rentzat</string>
+    <string name="information_webview_required">WebView beharrezkoa da Nekotachi-rentzat</string>
     <string name="download_notifier_text_only_wifi">Ez dago Wi-Fi konexiorik erabilgarri</string>
     <string name="label_default">Lehenetsia</string>
     <string name="track">Jarraipena</string>

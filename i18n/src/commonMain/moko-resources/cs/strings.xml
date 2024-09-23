@@ -541,7 +541,7 @@
     <string name="update_72hour">Každé 3 dny</string>
     <string name="connected_to_wifi">Jen na Wi-Fi</string>
     <string name="pref_verbose_logging">Podrobné protokolování</string>
-    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Mihon. Klepnutím se dozvíte více.</string>
+    <string name="download_queue_size_warning">Varování: hromadné stahování může vést k tomu, že zdroje zpomalí a/nebo zablokují Nekotachi. Klepnutím se dozvíte více.</string>
     <string name="ext_update_all">Aktualizovat vše</string>
     <string name="pref_verbose_logging_summary">Vypisovat podrobné informace do systémového protokolu (sníží výkon aplikace)</string>
     <string name="channel_app_updates">Aktualizace aplikace</string>
@@ -778,7 +778,7 @@
 \nVybraná složka: %2$s</string>
     <string name="invalid_backup_file_error">Úplná chyba:</string>
     <string name="pref_library_update_smart_update">Chytrá aktualizace</string>
-    <string name="action_add_repo_message">Přidat další repozitáře do Mihon. Měli by to být URL končící \"index.min.json\".</string>
+    <string name="action_add_repo_message">Přidat další repozitáře do Nekotachi. Měli by to být URL končící \"index.min.json\".</string>
     <string name="error_repo_exists">Tento repozitář již existuje!</string>
     <string name="action_delete_repo">Odstranit repozitář</string>
     <string name="invalid_repo_name">Neplatná URL repozitáře</string>

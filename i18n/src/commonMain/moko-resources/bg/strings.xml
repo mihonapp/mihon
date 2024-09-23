@@ -245,7 +245,7 @@
     <string name="untrusted_extension">Непотвърдено разширение</string>
     <string name="untrusted_extension_message">Следното разширение имаше непотвърден сертификат и не беше активирано.
 \n
-\nЗлонамереното разширение може да види всичката информация за вход в системата на Mihon или да компилира неблагонадежден код.
+\nЗлонамереното разширение може да види всичката информация за вход в системата на Nekotachi или да компилира неблагонадежден код.
 \n
 \nПотвърждавайки този сертификат, вие приемате тези рискове.</string>
     <string name="pref_double_tap_anim_speed">Скорост на анимацията</string>
@@ -300,7 +300,7 @@
     <string name="channel_ext_updates">Ъпдейти на разширенията</string>
     <string name="channel_new_chapters">Нови глави</string>
     <string name="information_webview_outdated">Моля, обновете WebView за по-добра съвместимост</string>
-    <string name="information_webview_required">WebView е необходим за Mihon</string>
+    <string name="information_webview_required">WebView е необходим за Nekotachi</string>
     <string name="information_cloudflare_bypass_failure">Грешка при минаването през Cloudflare</string>
     <string name="notification_chapters_multiple">Глави %1$s</string>
     <string name="notification_chapters_single_and_more">Глава %1$s и %2$d още</string>
@@ -555,7 +555,7 @@
     <string name="extension_api_error">Неуспешно получаване на списък с разширения</string>
     <string name="update_72hour">На всеки 3 дена</string>
     <string name="connected_to_wifi">Само през Wi-Fi</string>
-    <string name="download_queue_size_warning">Предупреждение: големите масови изтегляния могат да доведат до забавяне на източниците и/или блокиране на Mihon. Натиснете тук, за да научите повече.</string>
+    <string name="download_queue_size_warning">Предупреждение: големите масови изтегляния могат да доведат до забавяне на източниците и/или блокиране на Nekotachi. Натиснете тук, за да научите повече.</string>
     <string name="action_show_manga">Покажи манга</string>
     <string name="action_display_cover_only_grid">Решетка само с корици</string>
     <string name="delete_category_confirmation">Искате ли да изтриете категорията \"%s\"?</string>

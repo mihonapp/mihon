@@ -32,6 +32,16 @@ jobs:
           java-version: 17
           distribution: adopt
 
+      - name: Load Google Service file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA | base64 -di > app/google-services.json
+
+      - name: Load Client Secrets file
+        env:
+          DATA: ${{ secrets.CLIENT_SECRETS_JSON }}
+        run: mkdir -p app/src/main/assets && echo $DATA | base64 -di > app/src/main/assets/client_secrets.json
+
       - name: Set up gradle
         uses: gradle/actions/setup-gradle@d156388eb19639ec20ade50009f3d199ce1e2808 # v4.1.0
 
@@ -53,13 +63,13 @@ jobs:
       # Sign APK and create release for tags
 
       - name: Get tag name
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
         run: |
           set -x
           echo "VERSION_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Sign APK
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
         uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
         with:
           releaseDirectory: app/build/outputs/apk/standard/release
@@ -69,36 +79,36 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Clean up build artifacts
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
         run: |
           set -e
 
-          mv app/build/outputs/apk/standard/release/app-standard-universal-release-unsigned-signed.apk mihon-${{ env.VERSION_TAG }}.apk
-          sha=`sha256sum mihon-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          mv app/build/outputs/apk/standard/release/app-standard-universal-release-unsigned-signed.apk nekotachi-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum nekotachi-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned-signed.apk mihon-arm64-v8a-${{ env.VERSION_TAG }}.apk
-          sha=`sha256sum mihon-arm64-v8a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          cp app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned-signed.apk nekotachi-arm64-v8a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum nekotachi-arm64-v8a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_ARM64_V8A_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/standard/release/app-standard-armeabi-v7a-release-unsigned-signed.apk mihon-armeabi-v7a-${{ env.VERSION_TAG }}.apk
-          sha=`sha256sum mihon-armeabi-v7a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          cp app/build/outputs/apk/standard/release/app-standard-armeabi-v7a-release-unsigned-signed.apk nekotachi-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum nekotachi-armeabi-v7a-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_ARMEABI_V7A_SHA=$sha" >> $GITHUB_ENV
 
-          cp app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk mihon-x86-${{ env.VERSION_TAG }}.apk
-          sha=`sha256sum mihon-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          cp app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk nekotachi-x86-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum nekotachi-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
           
-          cp app/build/outputs/apk/standard/release/app-standard-x86_64-release-unsigned-signed.apk mihon-x86_64-${{ env.VERSION_TAG }}.apk
-          sha=`sha256sum mihon-x86_64-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
+          cp app/build/outputs/apk/standard/release/app-standard-x86_64-release-unsigned-signed.apk nekotachi-x86_64-${{ env.VERSION_TAG }}.apk
+          sha=`sha256sum nekotachi-x86_64-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'nekotachiapp/nekotachi'
         uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           tag_name: ${{ env.VERSION_TAG }}
-          name: Mihon ${{ env.VERSION_TAG }}
+          name: Nekotachi ${{ env.VERSION_TAG }}
           body: |
             ---
 
@@ -112,13 +122,13 @@ jobs:
             | x86 | ${{ env.APK_X86_SHA }} |
             | x86_64 | ${{ env.APK_X86_64_SHA }} |
             
-            ## If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
+            ## If you are unsure which version to choose then go with nekotachi-${{ env.VERSION_TAG }}.apk
           files: |
-            mihon-${{ env.VERSION_TAG }}.apk
-            mihon-arm64-v8a-${{ env.VERSION_TAG }}.apk
-            mihon-armeabi-v7a-${{ env.VERSION_TAG }}.apk
-            mihon-x86-${{ env.VERSION_TAG }}.apk
-            mihon-x86_64-${{ env.VERSION_TAG }}.apk
+            nekotachi-${{ env.VERSION_TAG }}.apk
+            nekotachi-arm64-v8a-${{ env.VERSION_TAG }}.apk
+            nekotachi-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+            nekotachi-x86-${{ env.VERSION_TAG }}.apk
+            nekotachi-x86_64-${{ env.VERSION_TAG }}.apk
           draft: true
           prerelease: false
         env:

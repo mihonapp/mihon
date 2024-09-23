@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.backup.models
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
-import mihon.domain.extensionrepo.model.ExtensionRepo
+import nekotachi.domain.extensionrepo.model.ExtensionRepo
 
 @Serializable
 class BackupExtensionRepos(

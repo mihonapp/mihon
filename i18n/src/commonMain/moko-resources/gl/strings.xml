@@ -78,7 +78,7 @@
     <string name="ext_nsfw_warning">As fontes desta extensión poden ter contido NSFW (+18)</string>
     <string name="ext_nsfw_short">+18</string>
     <string name="obsolete_extension_message">Esta extensión xa non está dispoñible. Pode que non funcione ben e cause problemas na aplicación. Recoméndase desinstalala.</string>
-    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Mihon ou executar calquera tipo de código.
+    <string name="untrusted_extension_message">Unha extensión maliciosa podería ler calquera credencial de inicio de sesión gardada en Nekotachi ou executar calquera tipo de código.
 \n
 \nSe confías nesta extensión, aceptas estes riscos.</string>
     <string name="untrusted_extension">Extensión non confiable</string>
@@ -581,7 +581,7 @@
     <string name="crash_screen_description">%s pechouse por un problema inesperado. Aconsellámoste que compartas os rexistros de erros na canle de soporte no Discord (en inglés).</string>
     <string name="crash_screen_restart_application">Reinicia a aplicación</string>
     <string name="source_filter_empty_screen">Non se atopou ninguna fonte instalada</string>
-    <string name="download_queue_size_warning">Advertencia: As descargas pesadas poden facer que as fontes se volvan máis lentas e/ou bloqueen Mihon. Preme para saber máis.</string>
+    <string name="download_queue_size_warning">Advertencia: As descargas pesadas poden facer que as fontes se volvan máis lentas e/ou bloqueen Nekotachi. Preme para saber máis.</string>
     <string name="update_check_open">Abrir no GitHub</string>
     <string name="download_notifier_downloader_title">Xestor de descargas</string>
     <string name="download_notifier_title_error">Erro</string>
@@ -620,7 +620,7 @@
     <string name="download_notifier_split_page_path_not_found">Non se atopou a ruta do ficheiro da páxina %d</string>
     <string name="channel_complete">Rematada</string>
     <string name="channel_new_chapters">Actualizacións de capítulos</string>
-    <string name="information_webview_required">Mihon necesita WebView</string>
+    <string name="information_webview_required">Nekotachi necesita WebView</string>
     <string name="download_notifier_split_page_not_found">Non se atopou a páxina %d ao separar</string>
     <string name="channel_common">Xeral</string>
     <string name="crash_screen_title">Vaia!</string>
@@ -712,7 +712,7 @@
     <string name="pref_relative_format">Marcas de tempo relativas</string>
     <string name="pref_library_update_smart_update">Actualizacións intelixentes</string>
     <string name="action_add_repo">Engadir un repositorio</string>
-    <string name="action_add_repo_message">Engade máis repositorios a Mihon. Debe ser unha dirección URL que remate en \"index.min.json\".</string>
+    <string name="action_add_repo_message">Engade máis repositorios a Nekotachi. Debe ser unha dirección URL que remate en \"index.min.json\".</string>
     <string name="action_delete_repo">Borrar repositorio</string>
     <string name="invalid_repo_name">A dirección URL do repositorio non é válida</string>
     <string name="delete_repo_confirmation">Queres eliminar o repositorio \"%s\"?</string>

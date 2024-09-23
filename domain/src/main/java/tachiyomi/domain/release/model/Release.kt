@@ -25,7 +25,7 @@ data class Release(
             else -> ""
         }
 
-        return assets.find { it.contains("mihon$apkVariant-") } ?: assets[0]
+        return assets.find { it.contains("nekotachi$apkVariant-") } ?: assets[0]
     }
 
     /**

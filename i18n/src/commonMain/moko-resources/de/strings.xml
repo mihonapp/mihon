@@ -543,7 +543,7 @@
     <string name="backup_info">Du solltest Kopien der Datensicherungen auch an anderen Orten aufbewahren. Datensicherungen beinhalten möglicherweise sensible Daten, einschließlich gespeicherter Passwörter. Sei vorsichtig beim Teilen.</string>
     <string name="connected_to_wifi">Nur über WLAN</string>
     <string name="update_72hour">Alle 3 Tage</string>
-    <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Mihon blockieren. Tippe, um mehr zu erfahren.</string>
+    <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Nekotachi blockieren. Tippe, um mehr zu erfahren.</string>
     <string name="ext_update_all">Alle aktualisieren</string>
     <string name="channel_app_updates">App-Aktualisierungen</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Öffnen der App löschen</string>
@@ -788,7 +788,7 @@
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
+    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Nekotachi hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
     <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>

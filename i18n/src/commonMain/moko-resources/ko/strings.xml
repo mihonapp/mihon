@@ -93,7 +93,7 @@
     <string name="ext_untrusted">신뢰되지않음</string>
     <string name="ext_uninstall">삭제</string>
     <string name="untrusted_extension">신뢰할 수 없는 확장 앱</string>
-    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Mihon에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다.
+    <string name="untrusted_extension_message">일부 악의적인 확장 앱은 Nekotachi에 저장된 로그인 정보를 읽거나 임의의 코드를 실행할 수도 있습니다.
 \n
 \n이 확장 앱을 신뢰하면 이러한 위험에 노출될 수 있습니다.</string>
     <string name="pref_fullscreen">전체화면</string>
@@ -463,7 +463,7 @@
     <string name="pref_clear_history">내역 삭제</string>
     <string name="clear_history_completed">기록이 삭제되었습니다</string>
     <string name="download_insufficient_space">저장 공간이 부족하여 회차를 다운로드 할 수 없습니다</string>
-    <string name="download_queue_size_warning">경고: 대량 다운로드는 소스가 느려지거나 Mihon를 차단할 수 있습니다. 탭하여 자세히 알아보기.</string>
+    <string name="download_queue_size_warning">경고: 대량 다운로드는 소스가 느려지거나 Nekotachi를 차단할 수 있습니다. 탭하여 자세히 알아보기.</string>
     <string name="notification_size_warning">대규모 업데이트는 소스에 피해를 입히고 업데이트가 느려지고 배터리 사용량이 증가할 수 있습니다. 탭하여 자세히 알아보기.</string>
     <string name="notification_chapters_single">%1$s화</string>
     <string name="notification_update_error">%1$d개의 업데이트가 실패했습니다</string>
@@ -472,7 +472,7 @@
     <string name="skipped_reason_not_started">읽지 않은 만화를 건너 뛰었습니다</string>
     <string name="update_check_eol">이 안드로이드 버전은 더이상 지원되지 않습니다</string>
     <string name="information_cloudflare_bypass_failure">Cloudflare를 통과하지 못했습니다</string>
-    <string name="information_webview_required">Mihon 앱의 기능을 사용하려면 WebView가 필요합니다</string>
+    <string name="information_webview_required">Nekotachi 앱의 기능을 사용하려면 WebView가 필요합니다</string>
     <string name="information_webview_outdated">호환성을 위해 WebView 어플리케이션을 업데이트 해 주세요</string>
     <string name="pref_navigate_pan">넓은 이미지 이동</string>
     <string name="obsolete_extension_message">이 확장 프로그램은 더 이상 사용할 수 없습니다. 제대로 작동하지 않을 수 있으며 앱에 문제가 발생할 수 있습니다. 제거하는 것이 좋습니다.</string>
@@ -760,7 +760,7 @@
     <string name="ext_revoke_trust">신뢰한 알수없는 확장 앱 신뢰 취소</string>
     <string name="pref_storage_location_info">자동 백업, 챕터 다운로드 및 로컬 소스에 사용됩니다.</string>
     <string name="manga_interval_custom_amount">사용자 지정 업데이트 빈도:</string>
-    <string name="action_add_repo_message">Mihon에 추가적으로 저장소를 추가합니다. \"index.min.json\"으로 끝나는 URL이어야 합니다.</string>
+    <string name="action_add_repo_message">Nekotachi에 추가적으로 저장소를 추가합니다. \"index.min.json\"으로 끝나는 URL이어야 합니다.</string>
     <string name="action_open_repo">소스 저장소 열기</string>
     <string name="manga_interval_expected_update_soon">곧 출시</string>
     <string name="onboarding_description">먼저 몇 가지 사항을 설정해 보겠습니다. 나중에 언제든지 설정에서 변경할 수도 있습니다.</string>

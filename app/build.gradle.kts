@@ -1,11 +1,11 @@
-import mihon.buildlogic.getBuildTime
-import mihon.buildlogic.getCommitCount
-import mihon.buildlogic.getGitSha
+import nekotachi.buildlogic.getBuildTime
+import nekotachi.buildlogic.getCommitCount
+import nekotachi.buildlogic.getGitSha
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("mihon.android.application")
-    id("mihon.android.application.compose")
+    id("nekotachi.android.application")
+    id("nekotachi.android.application.compose")
     id("com.github.zellius.shortcut-helper")
     kotlin("plugin.serialization")
     alias(libs.plugins.aboutLibraries)
@@ -26,7 +26,7 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.mihon"
+        applicationId = "app.nekotachi"
 
         versionCode = 7
         versionName = "0.16.5"

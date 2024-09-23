@@ -245,7 +245,7 @@
     <string name="untrusted_extension">Niet vertrouwde extensie</string>
     <string name="untrusted_extension_message">Deze extensie is door een niet vertrouwd certificaat ondertekend en is niet geactiveerd.
 \n
-\nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Mihon of arbitraire code uit kunnen voeren.
+\nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Nekotachi of arbitraire code uit kunnen voeren.
 \n
 \nDoor dit certificaat te vertrouwen accepteer je deze risico\'s.</string>
     <string name="pref_double_tap_anim_speed">Dubbeltik animatiesnelheid</string>
@@ -327,7 +327,7 @@
     <string name="restoring_backup_error">Herstellen mislukt</string>
     <string name="restore_in_progress">Er wordt al een back-up hersteld</string>
     <string name="channel_ext_updates">Extensie-updates</string>
-    <string name="information_webview_required">WebView is vereist voor Mihon</string>
+    <string name="information_webview_required">WebView is vereist voor Nekotachi</string>
     <string name="notification_chapters_multiple">Hoofdstukken %1$s</string>
     <string name="notification_chapters_single_and_more">Hoofdstuk %1$s en %2$d meer</string>
     <string name="notification_chapters_single">Hoofdstuk %1$s</string>
@@ -547,7 +547,7 @@
     <string name="action_sort_count">Totaal aantal items</string>
     <string name="pref_verbose_logging_summary">Houd uitgebreide logs bij in de systeemlogs (verslechterd de werking van de app)</string>
     <string name="channel_app_updates">App updates</string>
-    <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Mihon blokkeren</string>
+    <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Nekotachi blokkeren</string>
     <string name="ext_update_all">Alles updaten</string>
     <string name="update_72hour">Iedere 3 dagen</string>
     <string name="library_errors_help">Voor hulp bij het oplossen van fouten bij het bijwerken van de bibliotheek, zie %1$s</string>

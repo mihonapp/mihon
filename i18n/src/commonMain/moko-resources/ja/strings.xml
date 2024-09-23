@@ -541,7 +541,7 @@
     <string name="action_display_language_badge">言語</string>
     <string name="label_warning">警告</string>
     <string name="pref_verbose_logging">Verboseログ出力</string>
-    <string name="download_queue_size_warning">警告: 大量の一括ダウンロードにより、ソースは遅くなったり、Mihonを接続禁止したりする恐れがあります。詳しくはタップでご覧ください。</string>
+    <string name="download_queue_size_warning">警告: 大量の一括ダウンロードにより、ソースは遅くなったり、Nekotachiを接続禁止したりする恐れがあります。詳しくはタップでご覧ください。</string>
     <string name="update_72hour">3日ごと</string>
     <string name="connected_to_wifi">Wi-Fi接続時のみ</string>
     <string name="ext_update_all">全て更新</string>
@@ -787,7 +787,7 @@
     <string name="ext_revoke_trust">不明な拡張機能の信頼を取り消す</string>
     <string name="label_extension_repos">拡張機能リポジトリ</string>
     <string name="invalid_repo_name">リポジトリURLが無効です</string>
-    <string name="action_add_repo_message">Mihonにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
+    <string name="action_add_repo_message">Nekotachiにリポジトリを追加します。「index.min.json」で終わるURLを入力してください。</string>
     <string name="action_add_repo">リポジトリを追加</string>
     <string name="action_open_repo">ソース リポジトリを開く</string>
     <string name="onboarding_storage_help_info">古いバージョンからバージョンアップしたばかりで、選択に悩んでいますか？ストレージ ガイドにご参照ください。</string>

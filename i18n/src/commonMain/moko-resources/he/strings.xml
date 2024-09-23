@@ -102,7 +102,7 @@
     <string name="pref_enable_acra">שלח דוחות קריסה</string>
     <string name="untrusted_extension_message">תוסף זה נחתם עם אישור לא מהימן ולא הופעל.
 \n
-\nתוסף זדוני יכול לקרוא את אישורי ההתחברות המאוחסנים ב-Mihon או להריץ קוד שרירותי.
+\nתוסף זדוני יכול לקרוא את אישורי ההתחברות המאוחסנים ב-Nekotachi או להריץ קוד שרירותי.
 \n
 \nעל ידי אמון באישור זה אתה מקבל סיכונים אלה.</string>
     <string name="ext_uninstall">הסר התקנה</string>
@@ -523,7 +523,7 @@
     <string name="categorized_display_settings">הגדרות מיון לכל קטגוריה בנפרד</string>
     <string name="source_empty_screen">מקור לא נמצא</string>
     <string name="update_check_eol">גרסת האנדרואיד הזאת כבר לא נתמכת</string>
-    <string name="information_webview_required">WebView נצרך ל-Mihon</string>
+    <string name="information_webview_required">WebView נצרך ל-Nekotachi</string>
     <string name="action_display_cover_only_grid">רשת רק של הכריכות</string>
     <string name="action_open_log">פתח את יומן האירועים</string>
     <string name="notification_update_error">%1$d עדכונים נכשלו</string>
@@ -541,7 +541,7 @@
     <string name="clear_history_confirmation">אתה בטוח? כל ההיסטוריה תמחק.</string>
     <string name="migration_help_guide">מדריך נדידת מקורות</string>
     <string name="download_insufficient_space">לא ניתן להוריד פרקים כי אין מספיק מקום אחסון</string>
-    <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת Mihon. לחץ כדי ללמוד עוד.</string>
+    <string name="download_queue_size_warning">אזהרה: הורדות גדולות עלולות לגרום להאטה במקורות ו/או לחסימת Nekotachi. לחץ כדי ללמוד עוד.</string>
     <string name="local_invalid_format">פורמט פרק לא תקין</string>
     <string name="on_hiatus">בהפסקה</string>
     <string name="delete_category_confirmation">האם תרצה למחוק את הקטגוריה %s?</string>

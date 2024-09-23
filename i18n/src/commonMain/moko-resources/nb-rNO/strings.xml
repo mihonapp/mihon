@@ -555,7 +555,7 @@
     <string name="database_clean">Ingenting å fjerne</string>
     <string name="skipped_reason_not_caught_up">Hoppet over fordi det er uleste kapitler</string>
     <string name="skipped_reason_completed">Hoppet over fordi serien er fullført</string>
-    <string name="download_queue_size_warning">Advarsel: store bulknedlastinger kan føre til at kilder blir tregere og/eller blokkerer Mihon. Trykk for å lære mer.</string>
+    <string name="download_queue_size_warning">Advarsel: store bulknedlastinger kan føre til at kilder blir tregere og/eller blokkerer Nekotachi. Trykk for å lære mer.</string>
     <string name="library_errors_help">For hjelp til å fikse bibliotekoppdateringsfeil, se %1$s</string>
     <string name="action_display_cover_only_grid">Kun omslags-rutenett</string>
     <string name="pref_update_only_started">Hopp over oppføringer som ikke er påbegynt</string>
@@ -779,7 +779,7 @@
     <string name="onboarding_permission_ignore_battery_opts">Batteribruk i bakgrunnen</string>
     <string name="onboarding_permission_install_apps_description">For å installere kildeutvidelser.</string>
     <string name="invalid_repo_name">Ugyldig pakkebrønn URL</string>
-    <string name="action_add_repo_message">Legg til ekstra pakkebrønner i Mihon. URL-en må ende med \"index.min.json\".</string>
+    <string name="action_add_repo_message">Legg til ekstra pakkebrønner i Nekotachi. URL-en må ende med \"index.min.json\".</string>
     <string name="onboarding_permission_notifications_description">Få varsler for oppdateringer i biblioteket og mer.</string>
     <string name="ext_permission_install_apps_warning">Tillatelse er nødvendig for å installere utvidelser. Trykk her for å tillate.</string>
     <string name="delete_repo_confirmation">Ønsker du å slette pakkebrønnen \"%s\"?</string>

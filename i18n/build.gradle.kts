@@ -1,9 +1,9 @@
-import mihon.buildlogic.generatedBuildDir
-import mihon.buildlogic.tasks.getLocalesConfigTask
+import nekotachi.buildlogic.generatedBuildDir
+import nekotachi.buildlogic.tasks.getLocalesConfigTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("mihon.library")
+    id("nekotachi.library")
     kotlin("multiplatform")
     alias(libs.plugins.moko)
 }

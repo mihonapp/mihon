@@ -510,7 +510,7 @@
     <string name="confirm_set_image_as_cover">Vai izmantot šo attēlu kā vāku?</string>
     <string name="pref_category_for_this_series">Priekš šīs sērijas</string>
     <string name="dropped">Pamests</string>
-    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē Mihon. Pieskarieties, lai uzzinātu vairāk.</string>
+    <string name="download_queue_size_warning">Brīdinājums: liela apjoma lejupielāde var izraisīt to, ka avoti kļūst lēnāki un/vai bloķē Nekotachi. Pieskarieties, lai uzzinātu vairāk.</string>
     <string name="skipped_reason_not_started">Izlaists, jo neviena nodaļa nav izlasīta</string>
     <string name="file_select_cover">Atlasiet vāka attēlu</string>
     <string name="file_select_backup">Atlasiet dublējuma failu</string>

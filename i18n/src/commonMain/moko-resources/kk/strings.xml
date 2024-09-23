@@ -237,7 +237,7 @@
     <string name="untrusted_extension">Сенімсіз кеңейту</string>
     <string name="untrusted_extension_message">Бұл кеңейту сенімсіз сертификатпен қол қойылған және іске қосылмаған.
 \n
-\nЗиянды кеңейту Mihon-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін.
+\nЗиянды кеңейту Nekotachi-де сақталған кез келген кіру тіркелгі деректерін оқуы немесе еркін кодты орындауы мүмкін.
 \n
 \nОсы сертификатқа сену арқылы сіз осы қауіп-қатерді қабылдайсыз.</string>
     <string name="ext_nsfw_short">18+</string>
@@ -491,7 +491,7 @@
     <string name="repeating">Қайта оқылуда</string>
     <string name="reading_list">Оқылудағылар Тізімі</string>
     <string name="update_check_no_new_updates">Жаңалтулар жоқ</string>
-    <string name="information_webview_required">Mihon-ны қолдану үшін WebView керек</string>
+    <string name="information_webview_required">Nekotachi-ны қолдану үшін WebView керек</string>
     <string name="chapter_settings_updated">Әдепкі тарау параметрлері жаңартылды</string>
     <string name="download_notifier_no_network">Желі байланысы жоқ</string>
     <string name="information_empty_category_dialog">Сіздің кітапханаңызда санаттар жоқ.</string>
@@ -610,7 +610,7 @@
     <string name="empty_screen">Қателік пайда болды</string>
     <string name="download_notifier_downloader_title">Жүктеуіш</string>
     <string name="file_picker_error">Файл таңдайтын қолданба табылмады</string>
-    <string name="update_check_fdroid_migration_info">Жаңа нұсқа Mihon сайтында қолжетімді. F-Droid қолданбасының бейресми нұсқасынан көшуді білу үшін басыңыз.</string>
+    <string name="update_check_fdroid_migration_info">Жаңа нұсқа Nekotachi сайтында қолжетімді. F-Droid қолданбасының бейресми нұсқасынан көшуді білу үшін басыңыз.</string>
     <string name="complete_list">Оқылғандар Тізімі</string>
     <string name="on_hold_list">Тоқтап тұрғандар Тізімі</string>
     <string name="no_next_chapter">Келісі тарау табылмады</string>
@@ -627,7 +627,7 @@
     <string name="custom_filter">Жеке сүзгі</string>
     <string name="notification_size_warning">Көп жаңалтулар саны дереккөздер жұмысын баяулата және батарея жұмысын өтімін көбейте алады. Көбірек білу үшін басыңыз.</string>
     <string name="notification_chapters_single">%1$s-Тарау</string>
-    <string name="download_queue_size_warning">Ескерту: Көп жүктеулер саны дереккөздер жұмысын баяулата алады және/немесе Mihon бұғатталына алады. Толығырақ оқу үшін басыңыз.</string>
+    <string name="download_queue_size_warning">Ескерту: Көп жүктеулер саны дереккөздер жұмысын баяулата алады және/немесе Nekotachi бұғатталына алады. Толығырақ оқу үшін басыңыз.</string>
     <string name="notification_new_chapters">Жаңа тараулар табылды</string>
     <string name="pref_downloads_summary">Автоматты жүктеу, алдын ала жүктеу</string>
     <string name="manga_info_expand">Көбірек</string>

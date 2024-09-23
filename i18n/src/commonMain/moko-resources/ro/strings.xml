@@ -343,7 +343,7 @@
     <string name="add_tracking">Urmărește</string>
     <string name="in_library">În bibliotecă</string>
     <string name="add_to_library">Adaugă în bibliotecă</string>
-    <string name="information_webview_required">WebView este necesar pentru Mihon</string>
+    <string name="information_webview_required">WebView este necesar pentru Nekotachi</string>
     <string name="recent_manga_time">Ch. %1$s - %2$s</string>
     <string name="manga_info_collapse">Mai puțin</string>
     <string name="manga_info_expand">Mai mult</string>
@@ -499,7 +499,7 @@
     <string name="skipped_reason_completed">Ignorata deoarece seria este completa</string>
     <string name="skipped_reason_not_started">Ignorat din cauza lipsei de capitolel citite</string>
     <string name="local_invalid_format">Format de capitol invalid</string>
-    <string name="download_queue_size_warning">Atentie : actualizarile mari la gramada vor face sursele mai incete si pot/vor bloca Mihon. Apasa pentru mai multe informatii.</string>
+    <string name="download_queue_size_warning">Atentie : actualizarile mari la gramada vor face sursele mai incete si pot/vor bloca Nekotachi. Apasa pentru mai multe informatii.</string>
     <string name="getting_started_guide">Ghidul de inceput</string>
     <string name="notification_update_error">%1$d actualizari esuate</string>
     <string name="skipped_reason_not_caught_up">Ignorata deoarece sunt capitole necitite</string>
@@ -764,7 +764,7 @@
     <string name="label_extension_repos">Repozitoriu extensii</string>
     <string name="information_empty_repos">Nu aveți nici un repozitoriu configurat.</string>
     <string name="action_add_repo">Adăugați repozitoriu</string>
-    <string name="action_add_repo_message">Adăugați repozitorii adiționale pentru Mihon. Acestea ar trebuii să fie URL-uri care se încheie cu \"index.min.json\".</string>
+    <string name="action_add_repo_message">Adăugați repozitorii adiționale pentru Nekotachi. Acestea ar trebuii să fie URL-uri care se încheie cu \"index.min.json\".</string>
     <string name="delete_repo_confirmation">Doriți să ștergeți repozitoriul \"%s\"?</string>
     <string name="action_open_repo">Repozitoriu open source</string>
     <string name="no_location_set">Nici o locație pentru stocare nu a fost setată</string>

@@ -1,6 +1,6 @@
 plugins {
-    id("mihon.library")
-    id("mihon.library.compose")
+    id("nekotachi.library")
+    id("nekotachi.library.compose")
     kotlin("android")
 }
 

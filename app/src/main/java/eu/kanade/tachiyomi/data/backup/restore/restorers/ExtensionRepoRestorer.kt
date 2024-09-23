@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.backup.restore.restorers
 
 import eu.kanade.tachiyomi.data.backup.models.BackupExtensionRepos
-import mihon.domain.extensionrepo.interactor.GetExtensionRepo
+import nekotachi.domain.extensionrepo.interactor.GetExtensionRepo
 import tachiyomi.data.DatabaseHandler
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get

@@ -16,8 +16,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
-import mihon.core.archive.archiveReader
-import mihon.core.archive.epubReader
+import nekotachi.core.archive.archiveReader
+import nekotachi.core.archive.epubReader
 import nl.adaptivity.xmlutil.AndroidXmlReader
 import nl.adaptivity.xmlutil.serialization.XML
 import tachiyomi.core.common.i18n.stringResource
@@ -338,7 +338,7 @@ actual class LocalSource(
 
     companion object {
         const val ID = 0L
-        const val HELP_URL = "https://mihon.app/docs/guides/local-source/"
+        const val HELP_URL = "https://nekotachi.app/docs/guides/local-source/"
 
         private val LATEST_THRESHOLD = 7.days.inWholeMilliseconds
     }

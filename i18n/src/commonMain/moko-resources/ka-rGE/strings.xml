@@ -368,7 +368,7 @@
     <string name="confirm_set_image_as_cover">გამოვიყენოთ ეს სურათი ყდის ნახატად?</string>
     <string name="information_no_recent_manga">ბოლო ხანებში არაფერი არ არის წაკითხული</string>
     <string name="information_empty_category">შენ არ გაქვს კატეგორიები, აირჩიე \"+\" ღილაკი რათა შექმნა ერთი, შენი ბიბლიოთეკის დასაორგანიზებლად.</string>
-    <string name="information_webview_required">WebView არის აუცილებელი Mihon-ს სამუშაოდ</string>
+    <string name="information_webview_required">WebView არის აუცილებელი Nekotachi-ს სამუშაოდ</string>
     <string name="information_webview_outdated">გთხოვთ განაახლოთ WebView აპლიკაცია უკეთესი თავსებდობისთვის</string>
     <string name="download_notifier_downloader_title">გადმომწერი</string>
     <string name="download_notifier_title_error">შეცდომა</string>

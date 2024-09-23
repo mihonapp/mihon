@@ -75,7 +75,7 @@
     <string name="getting_started_guide">Udhëzues për fillimin</string>
     <string name="information_no_entries_found">Nuk u gjet asnjë element në këtë kategori</string>
     <string name="information_empty_category">Nuk ke kategori. Prekni butonin plus për të krijuar një për organizimin e bibliotekës tuaj.</string>
-    <string name="information_webview_required">WebView kërkohet për Mihon</string>
+    <string name="information_webview_required">WebView kërkohet për Nekotachi</string>
     <string name="information_cloudflare_bypass_failure">Dështoi të anashkalojë Cloudflare</string>
     <string name="information_empty_category_dialog">Nuk ke ende asnjë kategori.</string>
     <string name="download_notifier_download_paused">Shkarkimet u ndërprenë</string>
@@ -289,7 +289,7 @@
     <string name="ext_installer_legacy">Trashëgimia</string>
     <string name="untrusted_extension_message">Kjo shtesë u nënshkrua me një certifikatë të pabesueshme dhe nuk u aktivizua.
 \n
-\n Një shtesë me qëllim të keq mund të lexojë çdo kredencial identifikimi të ruajtur në Mihon ose të ekzekutojë kod arbitrar.
+\n Një shtesë me qëllim të keq mund të lexojë çdo kredencial identifikimi të ruajtur në Nekotachi ose të ekzekutojë kod arbitrar.
 \n
 \n Duke i besuar kësaj certifikate ju i pranoni këto rreziqe.</string>
     <string name="obsolete_extension_message">Kjo shtesë nuk është më e disponueshme. Mund të mos funksionojë siç duhet dhe mund të shkaktojë probleme me aplikacionin. Rekomandohet ta çinstaloni.</string>
@@ -614,7 +614,7 @@
     <string name="crash_screen_description">%s hasi në një gabim të papritur. Ne ju sugjerojmë që të fotografoni këtë mesazh, të hidhni regjistrat e aksidenteve dhe më pas ta shpërndani në kanalin tonë të mbështetjes në Discord.</string>
     <string name="crash_screen_restart_application">Rinisni aplikacionin</string>
     <string name="download_insufficient_space">Kapitujt nuk mund të shkarkoheshin për shkak të hapësirës së ulët të ruajtjes</string>
-    <string name="download_queue_size_warning">Paralajmërim: shkarkimet e mëdha me shumicë mund të çojnë në ngadalësimin e burimeve dhe/ose bllokimin e Mihon. Trokit për të mësuar më shumë.</string>
+    <string name="download_queue_size_warning">Paralajmërim: shkarkimet e mëdha me shumicë mund të çojnë në ngadalësimin e burimeve dhe/ose bllokimin e Nekotachi. Trokit për të mësuar më shumë.</string>
     <string name="notification_new_chapters">U gjetën kapituj të rinj</string>
     <string name="learn_more">Trokit për të mësuar më shumë</string>
     <string name="notification_cover_update_failed">Përditësimi i kopertinës dështoi</string>

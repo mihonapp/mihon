@@ -141,7 +141,7 @@
     <string name="ext_untrusted">Luottamaton</string>
     <string name="ext_uninstall">Poista asennus</string>
     <string name="untrusted_extension">Luottamattomat laajennokset</string>
-    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Mihonista tai suorittaa luvatonta koodia.
+    <string name="untrusted_extension_message">Haitallinen laajennus voi lukea tallennetut kirjautumistiedot Nekotachiista tai suorittaa luvatonta koodia.
 \n
 \nLuottamalla tähän laajennokseen hyväksyt nämä riskit.</string>
     <string name="pref_fullscreen">Koko näyttö</string>
@@ -287,7 +287,7 @@
     <string name="action_webview_refresh">Päivitä</string>
     <string name="pref_category_library">Kirjasto</string>
     <string name="ext_obsolete">Vanhentunut</string>
-    <string name="obsolete_extension_message">Tämä laajennos ei ole enää saatavilla. Se ei välttämättä toimi oikein ja voi aiheuttaa ongelmia Mihonin kanssa. Laajennoksen poistoa suositellaan.</string>
+    <string name="obsolete_extension_message">Tämä laajennos ei ole enää saatavilla. Se ei välttämättä toimi oikein ja voi aiheuttaa ongelmia Nekotachiin kanssa. Laajennoksen poistoa suositellaan.</string>
     <string name="pref_date_format">Päivämäärän muoto</string>
     <string name="pref_category_library_update">Globaali päivitys</string>
     <string name="logout_title">Kirjaa ulos kohteesta %1$s?</string>
@@ -345,7 +345,7 @@
     <string name="action_pin">Kiinnitä</string>
     <string name="action_select_inverse">Valitse käänteinen</string>
     <string name="vertical_plus_viewer">Jatkuva pystysuora</string>
-    <string name="information_webview_required">WebView on pakollinen Mihonissa</string>
+    <string name="information_webview_required">WebView on pakollinen Nekotachiissa</string>
     <string name="restore_in_progress">Palautus on jo käynnissä</string>
     <string name="backup_in_progress">Varmuuskopiointi on jo käynnissä</string>
     <string name="pref_webtoon_side_padding">Sivuntäyttö</string>
@@ -491,7 +491,7 @@
     <string name="off">Pois päältä</string>
     <string name="on">Päällä</string>
     <string name="getting_started_guide">Aloitusopas</string>
-    <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Mihonin käytön. Napauta saadaksesi lisätietoja.</string>
+    <string name="download_queue_size_warning">Varoitus: massalataukset voivat johtaa siihen, että lähteet muuttuvat hitaammiksi käyttää ja/tai ne estävät Nekotachiin käytön. Napauta saadaksesi lisätietoja.</string>
     <string name="action_show_manga">Näytä manga</string>
     <string name="action_display_cover_only_grid">Kansikuva ruudukko</string>
     <string name="theme_monet">Dynaaminen</string>
@@ -655,7 +655,7 @@
     <string name="ext_permission_install_apps_warning">Laajennosten asentamiseen tarvitaan lupia. Napauta tästä myöntääksesi luvat.</string>
     <string name="action_add_repo">Lisää laajennosten lähde</string>
     <string name="label_add_repo_input">Laajennosten lähteen URL</string>
-    <string name="action_add_repo_message">Lisää laajennosten lähteitä Mihoniin. URL-osoitteen tulisi päättyä \"index.min.json\".</string>
+    <string name="action_add_repo_message">Lisää laajennosten lähteitä Nekotachiiin. URL-osoitteen tulisi päättyä \"index.min.json\".</string>
     <string name="error_repo_exists">Tämä laajennosten lähde on jo lisättynä!</string>
     <string name="action_delete_repo">Poista laajennosten lähde</string>
     <string name="invalid_repo_name">Epäkelpo laajennosten lähteen URL-osoite</string>

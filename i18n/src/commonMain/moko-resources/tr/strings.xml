@@ -542,7 +542,7 @@
     <string name="pref_verbose_logging">Ayrıntılı günlük kaydı</string>
     <string name="pref_verbose_logging_summary">Ayrıntılı günlükleri sistem günlüğüne yaz (uygulama performansını düşürür)</string>
     <string name="connected_to_wifi">Yalnızca kablosuz ağda</string>
-    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Mihon\'u engellemesine neden olabilir. Daha fazla bilgi için dokunun.</string>
+    <string name="download_queue_size_warning">Uyarı: Büyük toplu indirmeler kaynakların yavaşlamasına ve/veya Nekotachi\'u engellemesine neden olabilir. Daha fazla bilgi için dokunun.</string>
     <string name="update_72hour">3 günde bir</string>
     <string name="ext_update_all">Tümünü güncelle</string>
     <string name="channel_app_updates">Uygulama güncellemeleri</string>
@@ -782,7 +782,7 @@
     <string name="onboarding_storage_help_action">Depolama kılavuzu</string>
     <string name="action_add_repo">Depo ekle</string>
     <string name="label_add_repo_input">Depo bağlantısı</string>
-    <string name="action_add_repo_message">Mihon\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
+    <string name="action_add_repo_message">Nekotachi\'a ek depolar ekleyin. Bu, \"index.min.json\" ile biten bir bağlantı olmalıdır.</string>
     <string name="error_repo_exists">Bu depo zaten var!</string>
     <string name="action_delete_repo">Depoyu sil</string>
     <string name="invalid_repo_name">Geçersiz depo bağlantısı</string>

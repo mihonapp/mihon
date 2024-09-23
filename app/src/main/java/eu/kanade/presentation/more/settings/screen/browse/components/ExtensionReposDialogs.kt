@@ -18,7 +18,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.KeyboardType
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.delay
-import mihon.domain.extensionrepo.model.ExtensionRepo
+import nekotachi.domain.extensionrepo.model.ExtensionRepo
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
