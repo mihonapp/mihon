@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "82031285239",
-    "project_id": "nekotachiapp",
-    "storage_bucket": "nekotachiapp.appspot.com"
+    "project_number": "589094165764",
+    "project_id": "nekotachi-656cb",
+    "storage_bucket": "nekotachi-656cb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:82031285239:android:336ed6dceef55c357594f2",
+        "mobilesdk_app_id": "1:589094165764:android:74635c5f802cb7be368451",
         "android_client_info": {
           "package_name": "app.nekotachi"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDTvOxBQnuXADx5isKxoynPG0nlAO8bQbk"
+          "current_key": "AIzaSyDxuLtdDDQSZn-FCOcKInu6aOPxcwAfz-0"
         }
       ],
       "services": {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:82031285239:android:b7440cbdd0d33c9d7594f2",
+        "mobilesdk_app_id": "1:589094165764:android:abb6482f9f6b4faa368451",
         "android_client_info": {
           "package_name": "app.nekotachi.debug"
         }
@@ -34,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDTvOxBQnuXADx5isKxoynPG0nlAO8bQbk"
+          "current_key": "AIzaSyDxuLtdDDQSZn-FCOcKInu6aOPxcwAfz-0"
         }
       ],
       "services": {
