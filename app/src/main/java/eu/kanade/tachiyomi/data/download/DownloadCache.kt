@@ -351,7 +351,7 @@ class DownloadCache(
                                             // Folder of images
                                             it.isDirectory -> it.name
                                             // CBZ files
-                                            it.isFile && it.extension == "cbz" -> it.nameWithoutExtension
+                                            it.isFile && it.extension.lowercase() == "cbz" -> it.nameWithoutExtension
                                             // Anything else is irrelevant
                                             else -> null
                                         }
