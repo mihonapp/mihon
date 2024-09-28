@@ -18,10 +18,6 @@ class SecurityPreferences(
 
     fun hideNotificationContent() = preferenceStore.getBoolean("hide_notification_content", false)
 
-    fun crashlytics() = preferenceStore.getBoolean("crashlytics", false)
-
-    fun analytics() = preferenceStore.getBoolean("analytics", false)
-
     /**
      * For app lock. Will be set when there is a pending timed lock.
      * Otherwise this pref should be deleted.

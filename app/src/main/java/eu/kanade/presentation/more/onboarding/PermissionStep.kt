@@ -36,21 +36,20 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
-import eu.kanade.tachiyomi.core.security.SecurityPreferences
+import eu.kanade.tachiyomi.core.security.PrivacyPreferences
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import uy.kohesive.injekt.injectLazy
 
 internal class PermissionStep : OnboardingStep {
 
-    private val securityPreferences: SecurityPreferences by injectLazy()
+    private val privacyPreferences: PrivacyPreferences by injectLazy()
 
     private var notificationGranted by mutableStateOf(false)
     private var batteryGranted by mutableStateOf(false)
-    private var allowCrashLogs by mutableStateOf(true)
-    private var allowAnalytics by mutableStateOf(true)
 
     override val isComplete: Boolean = true
 
@@ -123,24 +122,24 @@ internal class PermissionStep : OnboardingStep {
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
 
+            val crashlyticsPref = privacyPreferences.crashlytics()
+            val crashlytics by crashlyticsPref.collectAsState()
+
             PermissionSwitch(
                 title = stringResource(MR.strings.onboarding_permission_crashlytics),
                 subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
-                granted = allowCrashLogs,
-                onToggleChange = {
-                    allowCrashLogs = it
-                    securityPreferences.crashlytics().set(allowCrashLogs)
-                },
+                granted = crashlytics,
+                onToggleChange = crashlyticsPref::set,
             )
+
+            val analyticsPref = privacyPreferences.analytics()
+            val analytics by analyticsPref.collectAsState()
 
             PermissionSwitch(
                 title = stringResource(MR.strings.onboarding_permission_analytics),
                 subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
-                granted = allowAnalytics,
-                onToggleChange = {
-                    allowAnalytics = it
-                    securityPreferences.analytics().set(allowAnalytics)
-                },
+                granted = analytics,
+                onToggleChange = analyticsPref::set,
             )
         }
     }
