@@ -124,7 +124,6 @@ internal class PermissionStep : OnboardingStep {
 
             val crashlyticsPref = privacyPreferences.crashlytics()
             val crashlytics by crashlyticsPref.collectAsState()
-
             PermissionSwitch(
                 title = stringResource(MR.strings.onboarding_permission_crashlytics),
                 subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
@@ -134,7 +133,6 @@ internal class PermissionStep : OnboardingStep {
 
             val analyticsPref = privacyPreferences.analytics()
             val analytics by analyticsPref.collectAsState()
-
             PermissionSwitch(
                 title = stringResource(MR.strings.onboarding_permission_analytics),
                 subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
