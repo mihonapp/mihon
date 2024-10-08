@@ -2,13 +2,5 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "labels": ["Dependencies"],
-  "packageRules": [
-    {
-      "groupName": "Compose BOM (Alpha)",
-      "matchPackageNames": [
-        "dev.chrisbanes.compose:compose-bom"
-      ],
-      "ignoreUnstable": false
-    }
-  ]
+  "semanticCommits": "disabled"
 }
