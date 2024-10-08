@@ -721,7 +721,6 @@
     <string name="information_cloudflare_help">Cloudflare सम्बन्धित मद्दतको लागि यहाँ ट्याप गर्नुहोस्</string>
     <string name="track_activity_name">ट्र्याकर लगइन</string>
     <string name="create_backup_file_error">ब्याकअप फाइल सिर्जना गर्न असफल भयो</string>
-    <string name="licensed_manga_chapters_error">लाइसेन्स प्राप्त - देखाउन को लागि कुनै अध्याय छैन</string>
     <string name="exception_offline">इन्टरनेट जडान छैन</string>
     <string name="exception_unknown_host">%s मा पुग्न सकिएन</string>
     <string name="exception_http">HTTP %d, WebView मा वेबसाइट जाँच गर्नुहोस्</string>
@@ -824,4 +823,8 @@
     <string name="extensionRepo_settings">एक्सटेन्शन रिपो</string>
     <string name="invalid_backup_file_json">JSON ब्याकअप समर्थित छैन</string>
     <string name="invalid_backup_file_unknown">ब्याकअप फाइल बिग्रिएको छ</string>
+    <string name="action_copy_link">लिङ्क प्रतिलिपि गर्नुहोस्</string>
+    <string name="add_repo_confirmation">के तपाइँ \"%s\" रिपो थप्न चाहनुहुन्छ?</string>
+    <string name="pref_download_new_unread_chapters_only">पढेका डुप्लिकेट अध्यायहरू डाउनलोड गर्न छोड्नुहोस्</string>
+    <string name="confirm_tracker_update">ट्र्याकरहरूलाई अध्याय %d मा अपडेट गर्ने हो?</string>
 </resources>

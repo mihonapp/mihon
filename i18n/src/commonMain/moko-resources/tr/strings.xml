@@ -712,7 +712,6 @@
     <string name="has_results">Sonuç var</string>
     <string name="delete_downloaded">İndirilenleri sil</string>
     <string name="create_backup_file_error">Yedekleme dosyası oluşturulamadı</string>
-    <string name="licensed_manga_chapters_error">Lisanslı - Gösterilecek bölüm yok</string>
     <string name="download_cache_invalidated">İndirilenler dizini geçersiz kılındı</string>
     <string name="information_cloudflare_help">Cloudflare ile ilgili yardım için buraya dokunun</string>
     <string name="exception_unknown_host">%s verisine erişilemedi</string>
@@ -742,7 +741,7 @@
     <string name="pref_storage_usage">Depolama kullanımı</string>
     <string name="action_sort_tracker_score">İzleyici puanı</string>
     <string name="label_data_storage">Veri ve depolama</string>
-    <string name="exclude_scanlators">Çevirenler hariç tut</string>
+    <string name="exclude_scanlators">Çevirenleri hariç tut</string>
     <string name="action_create">Oluştur</string>
     <string name="not_selected">Seçilmedi</string>
     <string name="action_menu_overflow_description">Daha fazla seçenek</string>
@@ -814,11 +813,14 @@
     <string name="action_migrate_duplicate">Zaten olan girdiyi taşı</string>
     <string name="action_replace_repo">Değiştir</string>
     <string name="action_replace_repo_title">İmzalama Anahtarı Parmak İzi Zaten Var</string>
-    <string name="extensionRepo_settings">Eklenti Depoları</string>
+    <string name="extensionRepo_settings">Eklenti depoları</string>
     <string name="file_picker_uri_permission_unsupported">Stabil klasör erişimi sağlanamadı. Uygulama belirsiz çalışabilir.</string>
     <string name="label_upcoming">Gelecek</string>
     <string name="action_view_upcoming">Gelecek Güncellemeleri Görüntüle</string>
     <string name="upcoming_guide">Gelecek Rehberi</string>
     <string name="upcoming_calendar_next">Gelecek Ay</string>
     <string name="upcoming_calendar_prev">Önceki Ay</string>
+    <string name="pref_download_new_unread_chapters_only">Tekrarlanan okunmuş bölümlerin indirilmesini atla</string>
+    <string name="add_repo_confirmation">\"%s\" deposunu eklemek istiyor musunuz?</string>
+    <string name="confirm_tracker_update">İzleyicileri %d. bölüme güncelle?</string>
 </resources>

@@ -714,7 +714,6 @@
     <string name="library_sync_complete">انتهت مزامنة المكتبة</string>
     <string name="has_results">وُجدت نتائج</string>
     <string name="create_backup_file_error">تعذَّر إنشاء ملفِّ نسخ احتياطيِّ</string>
-    <string name="licensed_manga_chapters_error">مرخَّصة - لا فصول</string>
     <string name="track_activity_name">ولوج المتتبِّع</string>
     <string name="download_cache_invalidated">أُفسد فهرس التنزيلات</string>
     <string name="information_cloudflare_help">اضغط هنا للمساعدة فى Cloudflare</string>

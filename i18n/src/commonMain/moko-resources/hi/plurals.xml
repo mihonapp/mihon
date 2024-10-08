@@ -60,4 +60,20 @@
         <item quantity="one">अगला अध्याय</item>
         <item quantity="other">अगले %d अध्याय</item>
     </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d भंडार</item>
+        <item quantity="other">%d भंडारों</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 पृष्ठ</item>
+        <item quantity="other">%1$s पृष्ठ</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">कल</item>
+        <item quantity="other">%1$d दिनों में</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s अध्याय गायब है</item>
+        <item quantity="other">%1$s अध्याय गायब हैं</item>
+    </plurals>
 </resources>
