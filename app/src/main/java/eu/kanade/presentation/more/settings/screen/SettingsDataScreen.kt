@@ -7,7 +7,9 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
@@ -23,11 +27,14 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -49,6 +56,8 @@ import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
@@ -57,8 +66,10 @@ import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.storage.service.StoragePreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.material.TextButton
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
@@ -95,6 +106,7 @@ object SettingsDataScreen : SearchableSettings {
 
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
+            getExportGroup(),
         )
     }
 
@@ -310,6 +322,154 @@ object SettingsDataScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_auto_clear_chapter_cache),
                 ),
             ),
+        )
+    }
+
+    @Composable
+    private fun getExportGroup(): Preference.PreferenceGroup {
+        var showDialog by remember { mutableStateOf(false) }
+        var titleSelected by remember { mutableStateOf(true) }
+        var authorSelected by remember { mutableStateOf(true) }
+        var artistSelected by remember { mutableStateOf(true) }
+
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+        val getFavorites: GetFavorites = Injekt.get()
+        val favoritesFlow = remember { flow { emit(getFavorites.await()) } }
+        val favoritesState by favoritesFlow.collectAsState(emptyList())
+
+        val saveFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("text/csv"),
+        ) { uri ->
+            uri?.let {
+                coroutineScope.launch {
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        val csvData = buildString {
+                            favoritesState.forEach { manga ->
+                                val title = if (titleSelected) escapeCsvField(manga.title) else ""
+                                val author = if (authorSelected) escapeCsvField(manga.author ?: "") else ""
+                                val artist = if (artistSelected) escapeCsvField(manga.artist ?: "") else ""
+                                val row = listOf(title, author, artist).filter {
+                                    it.isNotEmpty()
+                                }.joinToString(",") { "\"$it\"" }
+                                appendLine(row)
+                            }
+                        }
+                        outputStream.write(csvData.toByteArray())
+                        outputStream.flush()
+
+                        context.toast(MR.strings.library_exported)
+                    }
+                }
+            }
+        }
+
+        if (showDialog) {
+            ColumnSelectionDialog(
+                onDismissRequest = { showDialog = false },
+                onConfirm = { newTitleSelected, newAuthorSelected, newArtistSelected ->
+                    titleSelected = newTitleSelected
+                    authorSelected = newAuthorSelected
+                    artistSelected = newArtistSelected
+                    saveFileLauncher.launch("library_list.csv")
+                },
+                isTitleSelected = titleSelected,
+                isAuthorSelected = authorSelected,
+                isArtistSelected = artistSelected,
+            )
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.export),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.library_list),
+                    onClick = { showDialog = true },
+                ),
+            ),
+        )
+    }
+
+    private fun escapeCsvField(field: String): String {
+        return field
+            .replace("\"", "\"\"")
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+    }
+
+    @Composable
+    private fun ColumnSelectionDialog(
+        onDismissRequest: () -> Unit,
+        onConfirm: (Boolean, Boolean, Boolean) -> Unit,
+        isTitleSelected: Boolean,
+        isAuthorSelected: Boolean,
+        isArtistSelected: Boolean,
+    ) {
+        var titleSelected by remember { mutableStateOf(isTitleSelected) }
+        var authorSelected by remember { mutableStateOf(isAuthorSelected) }
+        var artistSelected by remember { mutableStateOf(isArtistSelected) }
+
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text(text = stringResource(MR.strings.migration_dialog_what_to_include))
+            },
+            text = {
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = titleSelected,
+                            onCheckedChange = { checked ->
+                                titleSelected = checked
+                                if (!checked) {
+                                    authorSelected = false
+                                    artistSelected = false
+                                }
+                            },
+                        )
+                        Text(text = stringResource(MR.strings.title))
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = authorSelected,
+                            onCheckedChange = { authorSelected = it },
+                            enabled = titleSelected,
+                        )
+                        Text(text = stringResource(MR.strings.author))
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = artistSelected,
+                            onCheckedChange = { artistSelected = it },
+                            enabled = titleSelected,
+                        )
+                        Text(text = stringResource(MR.strings.artist))
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm(titleSelected, authorSelected, artistSelected)
+                        onDismissRequest()
+                    },
+                ) {
+                    Text(text = stringResource(MR.strings.action_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = stringResource(MR.strings.action_cancel))
+                }
+            },
         )
     }
 }
