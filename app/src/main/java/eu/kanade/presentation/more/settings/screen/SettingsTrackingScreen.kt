@@ -181,6 +181,11 @@ object SettingsTrackingScreen : SearchableSettings {
                         } + listOf(Preference.PreferenceItem.InfoPreference(enhancedTrackerInfo))
                     ).toImmutableList(),
             ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = trackPreferences.chapterBasedTracking(),
+                title = stringResource(MR.strings.pref_chapter_level_tracking_title),
+                subtitle = stringResource(MR.strings.pref_chapter_level_tracking_desc),
+            ),
         )
     }
 

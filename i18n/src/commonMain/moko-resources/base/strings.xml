@@ -504,6 +504,8 @@
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
     <string name="action_track">Track</string>
     <string name="track_activity_name">Tracker login</string>
+    <string name="pref_chapter_level_tracking_title">Enable detailed tracking</string>
+    <string name="pref_chapter_level_tracking_desc">Try to sync reading progress of each chapter (e.g. page last read, complete status) with enhanced trackers. Currently only supports Komga. </string>
 
       <!-- Browse section -->
     <string name="pref_hide_in_library_items">Hide entries already in library</string>
