@@ -36,8 +36,8 @@
         <item quantity="other">%d categorías</item>
     </plurals>
     <plurals name="restore_completed_message">
-        <item quantity="one">Completada en %1$s con un error</item>
-        <item quantity="many">Completada en %1$s con un error</item>
+        <item quantity="one">Completada en %1$s con %2$s error</item>
+        <item quantity="many">Completada en %1$s con %2$s error</item>
         <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
     <plurals name="manga_num_chapters">
