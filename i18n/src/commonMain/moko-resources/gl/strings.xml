@@ -797,7 +797,6 @@
     <string name="skipped_reason_not_in_release_period">Omitiuse porque hoxe non se esperaba ningunha publicación</string>
     <string name="file_null_uri_error">Non se elixiu ningún arquivo</string>
     <string name="last_auto_backup_info">Última copia de seguridade automática: %s</string>
-    <string name="licensed_manga_chapters_error">Licenciado: sen capítulos que mostrar</string>
     <string name="manga_display_modified_interval_title">Actualizar cada</string>
     <string name="manga_interval_expected_update_soon">Pronto</string>
     <string name="exclude_scanlators">Excluír equipos de tradución</string>

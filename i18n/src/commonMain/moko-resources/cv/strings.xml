@@ -169,7 +169,7 @@
     <string name="information_cloudflare_bypass_failure">Cloudflare-ран иртеймерӗ</string>
     <string name="information_empty_category">Санӑн пухмӑшсем ҫук. Хӑвӑн вулавӑша пухмӑшсем туса йӗркелеме «Хуш» пускӑч ҫине пус.</string>
     <string name="label_migration">Куҫару</string>
-    <string name="label_backup">Янтӑлав тата тавӑру</string>
+    <string name="label_backup">Янтавлав тата тавӑру</string>
     <string name="ext_obsolete">Кивелнӗ</string>
     <string name="ext_updates_pending">Ҫӗнетӳ кӗтеҫҫӗ</string>
     <string name="default_category">Йаланхилле пухмӑш</string>
@@ -261,7 +261,7 @@
     <string name="download_notifier_downloader_title">Тийевҫӗ</string>
     <string name="information_webview_required">Mihon валли WebView кирлӗ</string>
     <string name="update_check_notification_download_in_progress">Тийев…</string>
-    <string name="update_check_no_new_updates">Ҫӗнетӳсем тупӑнман</string>
+    <string name="update_check_no_new_updates">Ҫӗнетӳ тупӑнман</string>
     <string name="update_check_confirm">Тиесе ил</string>
     <string name="file_select_cover">Хуплашка суйла</string>
     <string name="notification_first_add_to_library">Ҫакна тӑвас умӗн манкка санӑн вулавӑша хуш-ха</string>
@@ -362,13 +362,13 @@
     <string name="login_title">%1$s кӗр</string>
     <string name="downloaded_only_summary">Санӑн вулавӑшри манкка алат</string>
     <string name="pref_enable_acra">Ӳкнисем ҫинчен тишереревсем ямалла</string>
-    <string name="check_for_updates">Ҫӗнетӳсем пуррине тӗрӗсле</string>
+    <string name="check_for_updates">Ҫӗнетӳ пуррине тӗрӗсле</string>
     <string name="licenses">Уҫӑ юмлӑ лиссенсисем</string>
     <string name="version">Версси</string>
     <string name="website">Сайт</string>
     <string name="battery_optimization_setting_activity_not_found">Хатӗрӗн ӗнерлӗве уҫаймарӗ</string>
     <string name="battery_optimization_disabled">Петтерей лайӑхлатнине сӳнтернӗ ӗнтӗ</string>
-    <string name="pref_disable_battery_optimization_summary">Хыҫ планлӑ ҫӗнетӳпе тата янтӑвланипе пулӑшать</string>
+    <string name="pref_disable_battery_optimization_summary">Хыҫ планлӑ ҫӗнетӳпе тата янтавланипе пулӑшать</string>
     <string name="pref_disable_battery_optimization">Петтерей лайӑхлатнине сӳнтер</string>
     <string name="pref_backup_interval">Янтӑвлани тӑтӑшлӑхӗ</string>
     <string name="pref_refresh_library_covers">Вулавӑшри манкӑсен хуплашкисене ҫӗнет</string>
@@ -599,4 +599,6 @@
     <string name="onboarding_storage_help_info">Кивӗ верссирен ҫӗнӗлетӗн те мӗн суламаллине пӗлместӗн? Нумайрах пӗлме усрав пӗлкӗчне кӗрсе пӑх.</string>
     <string name="onboarding_guides_returning_user">%s ҫӗнӗрен лартатӑн?</string>
     <string name="pref_relative_format_summary">«%1$s» вырӑнне «%2$s»</string>
+    <string name="label_upcoming">Пулас</string>
+    <string name="action_menu_overflow_description">Тепӗр ӗнерӳсем</string>
 </resources>
