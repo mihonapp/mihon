@@ -190,6 +190,10 @@
     <string name="onboarding_permission_notifications_description">Get notified for library updates and more.</string>
     <string name="onboarding_permission_ignore_battery_opts">Background battery usage</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Avoid interruptions to long-running library updates, downloads, and backup restores.</string>
+    <string name="onboarding_permission_crashlytics">Send crash logs</string>
+    <string name="onboarding_permission_crashlytics_description">Send anonymized crash logs to the developers.</string>
+    <string name="onboarding_permission_analytics">Allow analytics</string>
+    <string name="onboarding_permission_analytics_description">Send anonymized usage data to improve app features.</string>
     <string name="onboarding_permission_action_grant">Grant</string>
     <string name="onboarding_guides_new_user">New to %s? We recommend checking out the getting started guide.</string>
     <string name="onboarding_guides_returning_user">Reinstalling %s?</string>
@@ -242,6 +246,9 @@
     <string name="pref_app_language">App language</string>
 
     <string name="pref_category_security">Security and privacy</string>
+    <string name="pref_security">Security</string>
+    <string name="pref_firebase">Analytics and Crash logs</string>
+
     <string name="lock_with_biometrics">Require unlock</string>
     <string name="lock_when_idle">Lock when idle</string>
     <string name="lock_always">Always</string>
@@ -249,6 +256,7 @@
     <string name="hide_notification_content">Hide notification content</string>
     <string name="secure_screen">Secure screen</string>
     <string name="secure_screen_summary">Secure screen hides app contents when switching apps and block screenshots</string>
+    <string name="firebase_summary">Sending crash logs and analytics will allow us to identify and fix issues, improve performance, and make future updates more relevant to your needs</string>
 
     <string name="pref_category_nsfw_content">NSFW (18+) sources</string>
     <string name="pref_show_nsfw_source">Show in sources and extensions lists</string>
