@@ -114,7 +114,10 @@ fun ChapterNavigator(
                             valueRange = 1f..totalPages.toFloat(),
                             steps = totalPages - 2,
                             onValueChange = {
-                                onSliderValueChange(it.roundToInt() - 1)
+                                val new = it.roundToInt() - 1
+                                if (new != currentPage) {
+                                    onSliderValueChange(new)
+                                }
                             },
                             interactionSource = interactionSource,
                         )
