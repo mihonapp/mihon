@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +31,7 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
+import tachiyomi.presentation.core.components.NondirectionalSortItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
@@ -178,27 +181,42 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
         MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
         MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
+        MR.strings.action_sort_random to LibrarySort.Type.Random,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
-        SortItem(
-            label = stringResource(titleRes),
-            sortDescending = sortDescending.takeIf { sortingMode == mode },
-            onClick = {
-                val isTogglingDirection = sortingMode == mode
-                val direction = when {
-                    isTogglingDirection -> if (sortDescending) {
-                        LibrarySort.Direction.Ascending
-                    } else {
-                        LibrarySort.Direction.Descending
-                    }
-                    else -> if (sortDescending) {
-                        LibrarySort.Direction.Descending
-                    } else {
-                        LibrarySort.Direction.Ascending
-                    }
-                }
-                screenModel.setSort(category, mode, direction)
-            },
-        )
+        when(mode) {
+            LibrarySort.Type.Random -> {
+                NondirectionalSortItem(
+                    label = stringResource(titleRes),
+                    enabled = sortingMode == LibrarySort.Type.Random,
+                    enabledIcon = Icons.Default.Refresh,
+                    onClick = {
+                        screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
+                    },
+                )
+            }
+            else -> {
+                SortItem(
+                    label = stringResource(titleRes),
+                    sortDescending = sortDescending.takeIf { sortingMode == mode },
+                    onClick = {
+                        val isTogglingDirection = sortingMode == mode
+                        val direction = when {
+                            isTogglingDirection -> if (sortDescending) {
+                                LibrarySort.Direction.Ascending
+                            } else {
+                                LibrarySort.Direction.Descending
+                            }
+                            else -> if (sortDescending) {
+                                LibrarySort.Direction.Descending
+                            } else {
+                                LibrarySort.Direction.Ascending
+                            }
+                        }
+                        screenModel.setSort(category, mode, direction)
+                    },
+                )
+            }
+        }
     }
 }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
@@ -104,6 +105,30 @@ fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
             if (arrowIcon != null) {
                 Icon(
                     imageVector = arrowIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            } else {
+                Spacer(modifier = Modifier.size(24.dp))
+            }
+        },
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun NondirectionalSortItem(label: String, enabled: Boolean, enabledIcon: ImageVector, onClick: () -> Unit) {
+    val icon = when(enabled) {
+        true -> enabledIcon
+        false -> null
+    }
+
+    BaseSettingsItem(
+        label = label,
+        widget = {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )

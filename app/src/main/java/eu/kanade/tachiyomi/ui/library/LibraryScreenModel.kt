@@ -267,7 +267,7 @@ class LibraryScreenModel(
 
         fun LibrarySort.comparator(): Comparator<LibraryItem> = Comparator { i1, i2 ->
             when (this.type) {
-                LibrarySort.Type.Alphabetical -> {
+                LibrarySort.Type.Alphabetical, LibrarySort.Type.Random -> {
                     sortAlphabetically(i1, i2)
                 }
                 LibrarySort.Type.LastRead -> {
@@ -304,11 +304,16 @@ class LibraryScreenModel(
         }
 
         return mapValues { (key, value) ->
-            val comparator = key.sort.comparator()
-                .let { if (key.sort.isAscending) it else it.reversed() }
-                .thenComparator(sortAlphabetically)
+            when (key.sort.type) {
+                LibrarySort.Type.Random -> value.shuffled()
+                else -> {
+                    val comparator = key.sort.comparator()
+                        .let { if (key.sort.isAscending) it else it.reversed() }
+                        .thenComparator(sortAlphabetically)
 
-            value.sortedWith(comparator)
+                    value.sortedWith(comparator)
+                }
+            }
         }
     }
 
