@@ -72,6 +72,8 @@ import tachiyomi.domain.track.model.Track
 import tachiyomi.source.local.isLocal
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.util.Collections
+import kotlin.random.Random
 
 /**
  * Typealias for the library manga, using the category as keys, and list of manga as values.
@@ -305,7 +307,7 @@ class LibraryScreenModel(
 
         return mapValues { (key, value) ->
             when (key.sort.type) {
-                LibrarySort.Type.Random -> value.shuffled()
+                LibrarySort.Type.Random -> value.shuffled(Random(libraryPreferences.currentRandomSortSeed().get()))
                 else -> {
                     val comparator = key.sort.comparator()
                         .let { if (key.sort.isAscending) it else it.reversed() }
