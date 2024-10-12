@@ -1,18 +1,25 @@
 package mihon.feature.upcoming
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
@@ -27,9 +34,9 @@ import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
-import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.TwoPanelBox
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import java.time.LocalDate
 import java.time.YearMonth
@@ -100,6 +107,33 @@ private fun UpcomingToolbar() {
 }
 
 @Composable
+private fun DateHeading(
+    date: LocalDate,
+    mangaCount: Int,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = relativeDateText(date),
+            modifier = Modifier
+                .padding(MaterialTheme.padding.small)
+                .padding(start = MaterialTheme.padding.small),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Badge(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        ) {
+            Text("$mangaCount")
+        }
+    }
+}
+
+@Composable
 private fun UpcomingScreenSmallImpl(
     listState: LazyListState,
     items: ImmutableList<UpcomingUIModel>,
@@ -140,7 +174,10 @@ private fun UpcomingScreenSmallImpl(
                     )
                 }
                 is UpcomingUIModel.Header -> {
-                    ListGroupHeader(text = relativeDateText(item.date))
+                    DateHeading(
+                        date = item.date,
+                        mangaCount = item.mangaCount,
+                    )
                 }
             }
         }
@@ -188,7 +225,10 @@ private fun UpcomingScreenLargeImpl(
                             )
                         }
                         is UpcomingUIModel.Header -> {
-                            ListGroupHeader(text = relativeDateText(item.date))
+                            DateHeading(
+                                date = item.date,
+                                mangaCount = item.mangaCount,
+                            )
                         }
                     }
                 }
