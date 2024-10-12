@@ -1,6 +1,5 @@
 [versions]
 compose-bom = "2024.09.03"
-accompanist = "0.36.0"
 
 [libraries]
 activity = "androidx.activity:activity-compose:1.9.2"
@@ -17,5 +16,3 @@ material3-core = { module = "androidx.compose.material3:material3" }
 material-icons = { module = "androidx.compose.material:material-icons-extended" }
 
 glance = "androidx.glance:glance-appwidget:1.1.0"
-
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }

@@ -164,7 +164,6 @@ dependencies {
     debugImplementation(compose.ui.tooling)
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
-    implementation(compose.accompanist.systemuicontroller)
 
     implementation(androidx.interpolator)
 
