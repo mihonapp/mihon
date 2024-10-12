@@ -305,16 +305,15 @@ class LibraryScreenModel(
         }
 
         return mapValues { (key, value) ->
-            when (key.sort.type) {
-                LibrarySort.Type.Random -> value.shuffled(Random(libraryPreferences.currentRandomSortSeed().get()))
-                else -> {
-                    val comparator = key.sort.comparator()
-                        .let { if (key.sort.isAscending) it else it.reversed() }
-                        .thenComparator(sortAlphabetically)
+           if (key.sort.type == LibrarySort.Type.Random) {
+               return@mapValues value.shuffled(Random(libraryPreferences.currentRandomSortSeed().get()))
+           }
 
-                    value.sortedWith(comparator)
-                }
-            }
+            val comparator = key.sort.comparator()
+                .let { if (key.sort.isAscending) it else it.reversed() }
+                .thenComparator(sortAlphabetically)
+
+            value.sortedWith(comparator)
         }
     }
 
