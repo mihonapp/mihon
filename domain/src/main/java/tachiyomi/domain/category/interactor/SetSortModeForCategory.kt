@@ -17,7 +17,7 @@ class SetSortModeForCategory(
         val category = categoryId?.let { categoryRepository.get(it) }
         val flags = (category?.flags ?: 0) + type + direction
         if (type == LibrarySort.Type.Random) {
-            preferences.currentRandomSortSeed().set(Random.nextInt())
+            preferences.randomSortSeed().set(Random.nextInt())
         }
         if (category != null && preferences.categorizedDisplaySettings().get()) {
             categoryRepository.updatePartial(

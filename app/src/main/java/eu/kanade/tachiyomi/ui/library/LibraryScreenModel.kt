@@ -309,7 +309,7 @@ class LibraryScreenModel(
 
         return mapValues { (key, value) ->
            if (key.sort.type == LibrarySort.Type.Random) {
-               return@mapValues value.shuffled(Random(libraryPreferences.currentRandomSortSeed().get()))
+               return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed().get()))
            }
 
             val comparator = key.sort.comparator()
