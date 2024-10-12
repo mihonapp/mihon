@@ -28,17 +28,13 @@ class UpcomingScreenModel(
 
     init {
         screenModelScope.launch {
-            getUpcomingManga.subscribe().collectLatest { mangaList ->
+            getUpcomingManga.subscribe().collectLatest {
                 mutableState.update { state ->
-                    val upcomingItems = mangaList.toUpcomingUIModels()
-                    val mangaCountMap = mangaList.groupBy { it.expectedNextUpdate?.toLocalDate() ?: LocalDate.MAX }
-                        .mapValues { it.value.size }
-                        .toImmutableMap()
+                    val upcomingItems = it.toUpcomingUIModels()
                     state.copy(
                         items = upcomingItems,
-                        events = mangaList.toEvents(),
+                        events = it.toEvents(),
                         headerIndexes = upcomingItems.getHeaderIndexes(),
-                        mangaCountMap = mangaCountMap
                     )
                 }
             }
@@ -87,6 +83,5 @@ class UpcomingScreenModel(
         val items: ImmutableList<UpcomingUIModel> = persistentListOf(),
         val events: ImmutableMap<LocalDate, Int> = persistentMapOf(),
         val headerIndexes: ImmutableMap<LocalDate, Int> = persistentMapOf(),
-        val mangaCountMap: ImmutableMap<LocalDate, Int> = persistentMapOf(),
     )
 }

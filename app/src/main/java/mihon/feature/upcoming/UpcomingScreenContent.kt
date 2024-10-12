@@ -72,7 +72,6 @@ fun UpcomingScreenContent(
                 setSelectedYearMonth = setSelectedYearMonth,
                 onClickDay = { onClickDay(it, 0) },
                 onClickUpcoming = onClickUpcoming,
-                mangaCountMap = state.mangaCountMap,
             )
         } else {
             UpcomingScreenSmallImpl(
@@ -84,7 +83,6 @@ fun UpcomingScreenContent(
                 setSelectedYearMonth = setSelectedYearMonth,
                 onClickDay = { onClickDay(it, 1) },
                 onClickUpcoming = onClickUpcoming,
-                mangaCountMap = state.mangaCountMap,
             )
         }
     }
@@ -146,7 +144,6 @@ private fun UpcomingScreenSmallImpl(
     setSelectedYearMonth: (YearMonth) -> Unit,
     onClickDay: (LocalDate) -> Unit,
     onClickUpcoming: (manga: Manga) -> Unit,
-    mangaCountMap: ImmutableMap<LocalDate, Int>,
 ) {
     FastScrollLazyColumn(
         contentPadding = paddingValues,
@@ -178,7 +175,8 @@ private fun UpcomingScreenSmallImpl(
                     )
                 }
                 is UpcomingUIModel.Header -> {
-                    val mangaCount = mangaCountMap[item.date] ?: 0
+                    val mangaCount = items.filterIsInstance<UpcomingUIModel.Item>()
+                        .count { it.manga.expectedNextUpdate?.toLocalDate() == item.date }
 
                     DateHeading(
                         date = item.date,
@@ -200,7 +198,6 @@ private fun UpcomingScreenLargeImpl(
     setSelectedYearMonth: (YearMonth) -> Unit,
     onClickDay: (LocalDate) -> Unit,
     onClickUpcoming: (manga: Manga) -> Unit,
-    mangaCountMap: ImmutableMap<LocalDate, Int>,
 ) {
     TwoPanelBox(
         modifier = Modifier.padding(paddingValues),
@@ -232,7 +229,8 @@ private fun UpcomingScreenLargeImpl(
                             )
                         }
                         is UpcomingUIModel.Header -> {
-                            val mangaCount = mangaCountMap[item.date] ?: 0
+                            val mangaCount = items.filterIsInstance<UpcomingUIModel.Item>()
+                                .count { it.manga.expectedNextUpdate?.toLocalDate() == item.date }
 
                             DateHeading(
                                 date = item.date,
