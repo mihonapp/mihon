@@ -184,14 +184,10 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_random to LibrarySort.Type.Random,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
         if (mode == LibrarySort.Type.Random) {
-            val enabledIcon = if (sortingMode == LibrarySort.Type.Random) {
-                Icons.Default.Refresh
-            } else {
-                null
-            }
             BaseSortItem(
                 label = stringResource(titleRes),
-                icon = enabledIcon,
+                icon = Icons.Default.Refresh
+                    .takeIf { sortingMode == LibrarySort.Type.Random },
                 onClick = {
                     screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
                 },
