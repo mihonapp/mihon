@@ -25,7 +25,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.relativeDateText
 import eu.kanade.presentation.util.isTabletUi
-import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.launch
@@ -175,12 +174,9 @@ private fun UpcomingScreenSmallImpl(
                     )
                 }
                 is UpcomingUIModel.Header -> {
-                    val mangaCount = items.filterIsInstance<UpcomingUIModel.Item>()
-                        .count { it.manga.expectedNextUpdate?.toLocalDate() == item.date }
-
                     DateHeading(
                         date = item.date,
-                        mangaCount = mangaCount,
+                        mangaCount = item.mangaCount,
                     )
                 }
             }
@@ -229,12 +225,9 @@ private fun UpcomingScreenLargeImpl(
                             )
                         }
                         is UpcomingUIModel.Header -> {
-                            val mangaCount = items.filterIsInstance<UpcomingUIModel.Item>()
-                                .count { it.manga.expectedNextUpdate?.toLocalDate() == item.date }
-
                             DateHeading(
                                 date = item.date,
-                                mangaCount = mangaCount,
+                                mangaCount = item.mangaCount,
                             )
                         }
                     }
