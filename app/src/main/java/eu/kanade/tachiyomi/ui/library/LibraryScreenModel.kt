@@ -300,6 +300,9 @@ class LibraryScreenModel(
                     val item2Score = trackerScores[i2.libraryManga.id] ?: defaultTrackerScoreSortValue
                     item1Score.compareTo(item2Score)
                 }
+                LibrarySort.Type.DownloadCount -> {
+                    i1.downloadCount.compareTo(i2.downloadCount)
+                }
             }
         }
 

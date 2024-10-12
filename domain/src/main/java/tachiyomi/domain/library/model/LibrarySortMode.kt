@@ -16,6 +16,7 @@ data class LibrarySort(
     val isAscending: Boolean
         get() = direction == Direction.Ascending
 
+    @Suppress("MagicNumber")
     sealed class Type(
         override val flag: Long,
     ) : FlagWithMask {
@@ -31,6 +32,7 @@ data class LibrarySort(
         data object ChapterFetchDate : Type(0b00011000)
         data object DateAdded : Type(0b00011100)
         data object TrackerMean : Type(0b000100000)
+        data object DownloadCount : Type(0b000100100)
 
         companion object {
             fun valueOf(flag: Long): Type {
@@ -77,6 +79,7 @@ data class LibrarySort(
                 Type.ChapterFetchDate,
                 Type.DateAdded,
                 Type.TrackerMean,
+                Type.DownloadCount,
             )
         }
         val directions by lazy { setOf(Direction.Ascending, Direction.Descending) }
@@ -90,6 +93,7 @@ data class LibrarySort(
             )
         }
 
+        @Suppress("CyclomaticComplexMethod")
         fun deserialize(serialized: String): LibrarySort {
             if (serialized.isEmpty()) return default
             return try {
@@ -104,6 +108,7 @@ data class LibrarySort(
                     "CHAPTER_FETCH_DATE" -> Type.ChapterFetchDate
                     "DATE_ADDED" -> Type.DateAdded
                     "TRACKER_MEAN" -> Type.TrackerMean
+                    "DOWNLOAD_COUNT" -> Type.DownloadCount
                     else -> Type.Alphabetical
                 }
                 val ascending = if (values[1] == "ASCENDING") Direction.Ascending else Direction.Descending
@@ -125,6 +130,7 @@ data class LibrarySort(
             Type.ChapterFetchDate -> "CHAPTER_FETCH_DATE"
             Type.DateAdded -> "DATE_ADDED"
             Type.TrackerMean -> "TRACKER_MEAN"
+            Type.DownloadCount -> "DOWNLOAD_COUNT"
         }
         val direction = if (direction == Direction.Ascending) "ASCENDING" else "DESCENDING"
         return "$type,$direction"
