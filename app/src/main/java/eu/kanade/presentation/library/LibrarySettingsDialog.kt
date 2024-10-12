@@ -29,9 +29,9 @@ import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
-import tachiyomi.presentation.core.components.NondirectionalSortItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
 import tachiyomi.presentation.core.components.SortItem
@@ -184,10 +184,14 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_random to LibrarySort.Type.Random,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
         if (mode == LibrarySort.Type.Random) {
-            NondirectionalSortItem(
+            val enabledIcon = if (sortingMode == LibrarySort.Type.Random) {
+                Icons.Default.Refresh
+            } else {
+                null
+            }
+            BaseSortItem(
                 label = stringResource(titleRes),
-                enabled = sortingMode == LibrarySort.Type.Random,
-                enabledIcon = Icons.Default.Refresh,
+                icon = enabledIcon,
                 onClick = {
                     screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
                 },

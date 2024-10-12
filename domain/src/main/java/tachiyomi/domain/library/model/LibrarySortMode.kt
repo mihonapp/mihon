@@ -30,8 +30,8 @@ data class LibrarySort(
         data object LatestChapter : Type(0b00010100)
         data object ChapterFetchDate : Type(0b00011000)
         data object DateAdded : Type(0b00011100)
-        data object TrackerMean : Type(0b000100000)
-        data object Random : Type(0b000100100)
+        data object TrackerMean : Type(0b00100000)
+        data object Random : Type(0b00100100)
 
         companion object {
             fun valueOf(flag: Long): Type {

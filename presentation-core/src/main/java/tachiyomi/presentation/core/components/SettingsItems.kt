@@ -99,30 +99,15 @@ fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
         null -> null
     }
 
-    BaseSettingsItem(
+    BaseSortItem(
         label = label,
-        widget = {
-            if (arrowIcon != null) {
-                Icon(
-                    imageVector = arrowIcon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-            } else {
-                Spacer(modifier = Modifier.size(24.dp))
-            }
-        },
+        icon = arrowIcon,
         onClick = onClick,
     )
 }
 
 @Composable
-fun NondirectionalSortItem(label: String, enabled: Boolean, enabledIcon: ImageVector, onClick: () -> Unit) {
-    val icon = when(enabled) {
-        true -> enabledIcon
-        false -> null
-    }
-
+fun BaseSortItem(label: String, icon: ImageVector?, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {

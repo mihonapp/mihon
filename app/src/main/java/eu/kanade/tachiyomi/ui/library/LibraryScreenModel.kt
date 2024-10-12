@@ -268,7 +268,7 @@ class LibraryScreenModel(
 
         fun LibrarySort.comparator(): Comparator<LibraryItem> = Comparator { i1, i2 ->
             when (this.type) {
-                LibrarySort.Type.Alphabetical, LibrarySort.Type.Random -> {
+                LibrarySort.Type.Alphabetical -> {
                     sortAlphabetically(i1, i2)
                 }
                 LibrarySort.Type.LastRead -> {
@@ -300,6 +300,10 @@ class LibraryScreenModel(
                     val item1Score = trackerScores[i1.libraryManga.id] ?: defaultTrackerScoreSortValue
                     val item2Score = trackerScores[i2.libraryManga.id] ?: defaultTrackerScoreSortValue
                     item1Score.compareTo(item2Score)
+                }
+                LibrarySort.Type.Random -> {
+                    error("A comparator should not be requested for the random sort style. Instead, intercept this " +
+                        "case and call .shuffle()")
                 }
             }
         }
