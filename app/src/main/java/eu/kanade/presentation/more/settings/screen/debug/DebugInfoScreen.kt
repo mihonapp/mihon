@@ -78,7 +78,7 @@ class DebugInfoScreen : Screen() {
         val status by produceState(initialValue = "-") {
             val result = ProfileVerifier.getCompilationStatusAsync().await().profileInstallResultCode
             value = when (result) {
-                ProfileVerifier.CompilationStatus.RESULT_CODE_NO_PROFILE -> "No profile installed"
+                ProfileVerifier.CompilationStatus.RESULT_CODE_NO_PROFILE_INSTALLED -> "No profile installed"
                 ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE -> "Compiled"
                 ProfileVerifier.CompilationStatus.RESULT_CODE_COMPILED_WITH_PROFILE_NON_MATCHING ->
                     "Compiled non-matching"
@@ -88,6 +88,7 @@ class DebugInfoScreen : Screen() {
                 -> "Error $result"
                 ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_UNSUPPORTED_API_VERSION -> "Not supported"
                 ProfileVerifier.CompilationStatus.RESULT_CODE_PROFILE_ENQUEUED_FOR_COMPILATION -> "Pending compilation"
+                ProfileVerifier.CompilationStatus.RESULT_CODE_ERROR_NO_PROFILE_EMBEDDED -> "No profile embedded"
                 else -> "Unknown code $result"
             }
         }
