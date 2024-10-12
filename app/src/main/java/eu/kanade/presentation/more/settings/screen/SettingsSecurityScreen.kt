@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import eu.kanade.presentation.more.settings.Preference
+import eu.kanade.tachiyomi.core.security.PrivacyPreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
@@ -28,55 +29,91 @@ object SettingsSecurityScreen : SearchableSettings {
 
     @Composable
     override fun getPreferences(): List<Preference> {
-        val context = LocalContext.current
         val securityPreferences = remember { Injekt.get<SecurityPreferences>() }
-        val authSupported = remember { context.isAuthenticationSupported() }
+        val privacyPreferences = remember { Injekt.get<PrivacyPreferences>() }
+        return listOf(
+            getSecurityGroup(securityPreferences),
+            getFirebaseGroup(privacyPreferences),
+        )
+    }
 
+    @Composable
+    private fun getSecurityGroup(
+        securityPreferences: SecurityPreferences,
+    ): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val authSupported = remember { context.isAuthenticationSupported() }
         val useAuthPref = securityPreferences.useAuthenticator()
         val useAuth by useAuthPref.collectAsState()
 
-        return listOf(
-            Preference.PreferenceItem.SwitchPreference(
-                pref = useAuthPref,
-                title = stringResource(MR.strings.lock_with_biometrics),
-                enabled = authSupported,
-                onValueChanged = {
-                    (context as FragmentActivity).authenticate(
-                        title = context.stringResource(MR.strings.lock_with_biometrics),
-                    )
-                },
-            ),
-            Preference.PreferenceItem.ListPreference(
-                pref = securityPreferences.lockAppAfter(),
-                title = stringResource(MR.strings.lock_when_idle),
-                enabled = authSupported && useAuth,
-                entries = LockAfterValues
-                    .associateWith {
-                        when (it) {
-                            -1 -> stringResource(MR.strings.lock_never)
-                            0 -> stringResource(MR.strings.lock_always)
-                            else -> pluralStringResource(MR.plurals.lock_after_mins, count = it, it)
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_security),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = useAuthPref,
+                    title = stringResource(MR.strings.lock_with_biometrics),
+                    enabled = authSupported,
+                    onValueChanged = {
+                        (context as FragmentActivity).authenticate(
+                            title = context.stringResource(MR.strings.lock_with_biometrics),
+                        )
+                    },
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = securityPreferences.lockAppAfter(),
+                    title = stringResource(MR.strings.lock_when_idle),
+                    enabled = authSupported && useAuth,
+                    entries = LockAfterValues
+                        .associateWith {
+                            when (it) {
+                                -1 -> stringResource(MR.strings.lock_never)
+                                0 -> stringResource(MR.strings.lock_always)
+                                else -> pluralStringResource(MR.plurals.lock_after_mins, count = it, it)
+                            }
                         }
-                    }
-                    .toImmutableMap(),
-                onValueChanged = {
-                    (context as FragmentActivity).authenticate(
-                        title = context.stringResource(MR.strings.lock_when_idle),
-                    )
-                },
+                        .toImmutableMap(),
+                    onValueChanged = {
+                        (context as FragmentActivity).authenticate(
+                            title = context.stringResource(MR.strings.lock_when_idle),
+                        )
+                    },
+                ),
+
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = securityPreferences.hideNotificationContent(),
+                    title = stringResource(MR.strings.hide_notification_content),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = securityPreferences.secureScreen(),
+                    title = stringResource(MR.strings.secure_screen),
+                    entries = SecurityPreferences.SecureScreenMode.entries
+                        .associateWith { stringResource(it.titleRes) }
+                        .toImmutableMap(),
+                ),
+                Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = securityPreferences.hideNotificationContent(),
-                title = stringResource(MR.strings.hide_notification_content),
+        )
+    }
+
+    @Composable
+    private fun getFirebaseGroup(
+        privacyPreferences: PrivacyPreferences,
+    ): Preference.PreferenceGroup {
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.pref_firebase),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = privacyPreferences.crashlytics(),
+                    title = stringResource(MR.strings.onboarding_permission_crashlytics),
+                    subtitle = stringResource(MR.strings.onboarding_permission_crashlytics_description),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = privacyPreferences.analytics(),
+                    title = stringResource(MR.strings.onboarding_permission_analytics),
+                    subtitle = stringResource(MR.strings.onboarding_permission_analytics_description),
+                ),
+                Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.firebase_summary)),
             ),
-            Preference.PreferenceItem.ListPreference(
-                pref = securityPreferences.secureScreen(),
-                title = stringResource(MR.strings.secure_screen),
-                entries = SecurityPreferences.SecureScreenMode.entries
-                    .associateWith { stringResource(it.titleRes) }
-                    .toImmutableMap(),
-            ),
-            Preference.PreferenceItem.InfoPreference(stringResource(MR.strings.secure_screen_summary)),
         )
     }
 }

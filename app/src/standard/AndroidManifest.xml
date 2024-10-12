@@ -20,6 +20,15 @@
         tools:node="remove" />
 
     <application>
+        <!-- Disable for manual opt-in -->
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
+
         <!-- Disable unnecessary stuff from Firebase -->
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
