@@ -26,7 +26,7 @@ class LibraryPreferences(
         LibrarySort.Serializer::deserialize,
     )
 
-    fun currentRandomSortSeed() = preferenceStore.getInt("library_random_sort_seed", 0)
+    fun randomSortSeed() = preferenceStore.getInt("library_random_sort_seed", 0)
 
     fun portraitColumns() = preferenceStore.getInt("pref_library_columns_portrait_key", 0)
 
