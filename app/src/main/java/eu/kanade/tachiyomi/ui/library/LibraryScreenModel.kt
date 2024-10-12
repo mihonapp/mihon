@@ -302,8 +302,7 @@ class LibraryScreenModel(
                     item1Score.compareTo(item2Score)
                 }
                 LibrarySort.Type.Random -> {
-                    error("A comparator should not be requested for the random sort style. Instead, intercept this " +
-                        "case and call .shuffle()")
+                    error("Why Are We Still Here? Just To Suffer?")
                 }
             }
         }
