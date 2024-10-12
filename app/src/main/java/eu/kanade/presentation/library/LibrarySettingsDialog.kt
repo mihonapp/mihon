@@ -183,40 +183,37 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
         MR.strings.action_sort_random to LibrarySort.Type.Random,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
-        when(mode) {
-            LibrarySort.Type.Random -> {
-                NondirectionalSortItem(
-                    label = stringResource(titleRes),
-                    enabled = sortingMode == LibrarySort.Type.Random,
-                    enabledIcon = Icons.Default.Refresh,
-                    onClick = {
-                        screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
-                    },
-                )
-            }
-            else -> {
-                SortItem(
-                    label = stringResource(titleRes),
-                    sortDescending = sortDescending.takeIf { sortingMode == mode },
-                    onClick = {
-                        val isTogglingDirection = sortingMode == mode
-                        val direction = when {
-                            isTogglingDirection -> if (sortDescending) {
-                                LibrarySort.Direction.Ascending
-                            } else {
-                                LibrarySort.Direction.Descending
-                            }
-                            else -> if (sortDescending) {
-                                LibrarySort.Direction.Descending
-                            } else {
-                                LibrarySort.Direction.Ascending
-                            }
-                        }
-                        screenModel.setSort(category, mode, direction)
-                    },
-                )
-            }
+        if (mode == LibrarySort.Type.Random) {
+            NondirectionalSortItem(
+                label = stringResource(titleRes),
+                enabled = sortingMode == LibrarySort.Type.Random,
+                enabledIcon = Icons.Default.Refresh,
+                onClick = {
+                    screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
+                },
+            )
+            return@map
         }
+        SortItem(
+            label = stringResource(titleRes),
+            sortDescending = sortDescending.takeIf { sortingMode == mode },
+            onClick = {
+                val isTogglingDirection = sortingMode == mode
+                val direction = when {
+                    isTogglingDirection -> if (sortDescending) {
+                        LibrarySort.Direction.Ascending
+                    } else {
+                        LibrarySort.Direction.Descending
+                    }
+                    else -> if (sortDescending) {
+                        LibrarySort.Direction.Descending
+                    } else {
+                        LibrarySort.Direction.Ascending
+                    }
+                }
+                screenModel.setSort(category, mode, direction)
+            },
+        )
     }
 }
 
