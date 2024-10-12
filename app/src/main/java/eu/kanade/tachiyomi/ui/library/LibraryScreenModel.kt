@@ -308,9 +308,9 @@ class LibraryScreenModel(
         }
 
         return mapValues { (key, value) ->
-           if (key.sort.type == LibrarySort.Type.Random) {
-               return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed().get()))
-           }
+            if (key.sort.type == LibrarySort.Type.Random) {
+                return@mapValues value.shuffled(Random(libraryPreferences.randomSortSeed().get()))
+            }
 
             val comparator = key.sort.comparator()
                 .let { if (key.sort.isAscending) it else it.reversed() }
