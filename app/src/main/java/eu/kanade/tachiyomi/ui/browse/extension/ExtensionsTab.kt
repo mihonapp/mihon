@@ -28,9 +28,10 @@ fun extensionsTab(
     extensionsScreenModel: ExtensionsScreenModel,
 ): TabContent {
     val navigator = LocalNavigator.currentOrThrow
-    val state by extensionsScreenModel.state.collectAsState()
     val context = LocalContext.current
-    val showUninstallConfirmation = remember { mutableStateOf<Extension?>(null) }
+
+    val state by extensionsScreenModel.state.collectAsState()
+    val privateExtensionToUninstall = remember { mutableStateOf<Extension?>(null) }
 
     return TabContent(
         titleRes = MR.strings.label_extensions,
@@ -58,7 +59,7 @@ fun extensionsTab(
                             if (context.isPackageInstalled(extension.pkgName)) {
                                 extensionsScreenModel.uninstallExtension(extension)
                             } else {
-                                showUninstallConfirmation.value = extension
+                                privateExtensionToUninstall.value = extension
                             }
                         }
                     }
@@ -84,18 +85,14 @@ fun extensionsTab(
                 onRefresh = extensionsScreenModel::findAvailableExtensions,
             )
 
-            if (showUninstallConfirmation.value != null) {
+            privateExtensionToUninstall.value?.let { extension ->
                 ExtensionUninstallConfirmation(
-                    extensionName = showUninstallConfirmation.value!!.name,
+                    extensionName = privateExtensionToUninstall.value!!.name,
                     onClickConfirm = {
-                        extensionsScreenModel.uninstallExtension(showUninstallConfirmation.value!!)
-                        showUninstallConfirmation.value = null
-                    },
-                    onClickDismiss = {
-                        showUninstallConfirmation.value = null
+                        extensionsScreenModel.uninstallExtension(privateExtensionToUninstall.value!!)
                     },
                     onDismissRequest = {
-                        showUninstallConfirmation.value = null
+                        privateExtensionToUninstall.value = null
                     },
                 )
             }
@@ -107,7 +104,6 @@ fun extensionsTab(
 private fun ExtensionUninstallConfirmation(
     extensionName: String,
     onClickConfirm: () -> Unit,
-    onClickDismiss: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
     AlertDialog(
@@ -118,12 +114,17 @@ private fun ExtensionUninstallConfirmation(
             Text(text = stringResource(MR.strings.remove_private_extension_message, extensionName))
         },
         confirmButton = {
-            TextButton(onClick = onClickConfirm) {
+            TextButton(
+                onClick = {
+                    onClickConfirm()
+                    onDismissRequest()
+                }
+            ) {
                 Text(text = stringResource(MR.strings.ext_remove))
             }
         },
         dismissButton = {
-            TextButton(onClick = onClickDismiss) {
+            TextButton(onClick = onDismissRequest) {
                 Text(text = stringResource(MR.strings.action_cancel))
             }
         },
