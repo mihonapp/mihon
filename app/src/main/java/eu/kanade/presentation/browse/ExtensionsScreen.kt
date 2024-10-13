@@ -1,5 +1,6 @@
 package eu.kanade.presentation.browse
 
+import android.content.Context
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -55,6 +56,7 @@ import eu.kanade.tachiyomi.extension.model.InstallStep
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionUiModel
 import eu.kanade.tachiyomi.ui.browse.extension.ExtensionsScreenModel
 import eu.kanade.tachiyomi.util.system.LocaleHelper
+import eu.kanade.tachiyomi.util.system.isPackageInstalled
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.i18n.MR
@@ -248,6 +250,7 @@ private fun ExtensionContent(
                             }
                         }
                     },
+                    context = context,
                 )
             }
         }
@@ -278,16 +281,47 @@ private fun ExtensionItem(
     onClickItemAction: (Extension) -> Unit,
     onClickItemSecondaryAction: (Extension) -> Unit,
     modifier: Modifier = Modifier,
+    context: Context,
 ) {
     val (extension, installStep) = item
+    var showUninstallConfirmation by remember { mutableStateOf(false) }
+
+    if (showUninstallConfirmation) {
+        ExtensionUninstallConfirmation(
+            extensionName = extension.name,
+            onClickConfirm = {
+                onLongClickItem(extension)
+                showUninstallConfirmation = false
+            },
+            onClickDismiss = {
+                showUninstallConfirmation = false
+            },
+            onDismissRequest = {
+                showUninstallConfirmation = false
+            },
+        )
+    }
+
     BaseBrowseItem(
         modifier = modifier
             .combinedClickable(
                 onClick = { onClickItem(extension) },
-                onLongClick = { onLongClickItem(extension) },
+                onLongClick = {
+                    if (context.isPackageInstalled(extension.pkgName)) {
+                        onLongClickItem(extension)
+                    } else {
+                        showUninstallConfirmation = true
+                    }
+                },
             ),
         onClickItem = { onClickItem(extension) },
-        onLongClickItem = { onLongClickItem(extension) },
+        onLongClickItem = {
+            if (context.isPackageInstalled(extension.pkgName)) {
+                onLongClickItem(extension)
+            } else {
+                showUninstallConfirmation = true
+            }
+        },
         icon = {
             Box(
                 modifier = Modifier
@@ -535,6 +569,34 @@ private fun ExtensionTrustDialog(
         dismissButton = {
             TextButton(onClick = onClickDismiss) {
                 Text(text = stringResource(MR.strings.ext_uninstall))
+            }
+        },
+        onDismissRequest = onDismissRequest,
+    )
+}
+
+@Composable
+private fun ExtensionUninstallConfirmation(
+    extensionName: String,
+    onClickConfirm: () -> Unit,
+    onClickDismiss: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    AlertDialog(
+        title = {
+            Text(text = stringResource(MR.strings.ext_confirm_remove))
+        },
+        text = {
+            Text(text = stringResource(MR.strings.remove_private_extension_message, extensionName))
+        },
+        confirmButton = {
+            TextButton(onClick = onClickConfirm) {
+                Text(text = stringResource(MR.strings.ext_remove))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onClickDismiss) {
+                Text(text = stringResource(MR.strings.action_cancel))
             }
         },
         onDismissRequest = onDismissRequest,
