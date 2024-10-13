@@ -286,6 +286,14 @@ private fun ExtensionItem(
     val (extension, installStep) = item
     var showUninstallConfirmation by remember { mutableStateOf(false) }
 
+    val internalOnLongClickItem: () -> Unit = {
+        if (context.isPackageInstalled(extension.pkgName)) {
+            onLongClickItem(extension)
+        } else {
+            showUninstallConfirmation = true
+        }
+    }
+
     if (showUninstallConfirmation) {
         ExtensionUninstallConfirmation(
             extensionName = extension.name,
@@ -306,22 +314,10 @@ private fun ExtensionItem(
         modifier = modifier
             .combinedClickable(
                 onClick = { onClickItem(extension) },
-                onLongClick = {
-                    if (context.isPackageInstalled(extension.pkgName)) {
-                        onLongClickItem(extension)
-                    } else {
-                        showUninstallConfirmation = true
-                    }
-                },
+                onLongClick = internalOnLongClickItem,
             ),
         onClickItem = { onClickItem(extension) },
-        onLongClickItem = {
-            if (context.isPackageInstalled(extension.pkgName)) {
-                onLongClickItem(extension)
-            } else {
-                showUninstallConfirmation = true
-            }
-        },
+        onLongClickItem = internalOnLongClickItem,
         icon = {
             Box(
                 modifier = Modifier
