@@ -88,9 +88,9 @@ fun extensionsTab(
 
             privateExtensionToUninstall?.let { extension ->
                 ExtensionUninstallConfirmation(
-                    extensionName = privateExtensionToUninstall!!.name,
+                    extensionName = extension.name,
                     onClickConfirm = {
-                        extensionsScreenModel.uninstallExtension(privateExtensionToUninstall!!)
+                        extensionsScreenModel.uninstallExtension(extension)
                     },
                     onDismissRequest = {
                         privateExtensionToUninstall = null
