@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -31,7 +32,7 @@ fun extensionsTab(
     val context = LocalContext.current
 
     val state by extensionsScreenModel.state.collectAsState()
-    val privateExtensionToUninstall = remember { mutableStateOf<Extension?>(null) }
+    var privateExtensionToUninstall by remember { mutableStateOf<Extension?>(null) }
 
     return TabContent(
         titleRes = MR.strings.label_extensions,
@@ -59,7 +60,7 @@ fun extensionsTab(
                             if (context.isPackageInstalled(extension.pkgName)) {
                                 extensionsScreenModel.uninstallExtension(extension)
                             } else {
-                                privateExtensionToUninstall.value = extension
+                                privateExtensionToUninstall = extension
                             }
                         }
                     }
@@ -85,14 +86,14 @@ fun extensionsTab(
                 onRefresh = extensionsScreenModel::findAvailableExtensions,
             )
 
-            privateExtensionToUninstall.value?.let { extension ->
+            privateExtensionToUninstall?.let { extension ->
                 ExtensionUninstallConfirmation(
-                    extensionName = privateExtensionToUninstall.value!!.name,
+                    extensionName = privateExtensionToUninstall!!.name,
                     onClickConfirm = {
-                        extensionsScreenModel.uninstallExtension(privateExtensionToUninstall.value!!)
+                        extensionsScreenModel.uninstallExtension(privateExtensionToUninstall!!)
                     },
                     onDismissRequest = {
-                        privateExtensionToUninstall.value = null
+                        privateExtensionToUninstall = null
                     },
                 )
             }
@@ -118,7 +119,7 @@ private fun ExtensionUninstallConfirmation(
                 onClick = {
                     onClickConfirm()
                     onDismissRequest()
-                }
+                },
             ) {
                 Text(text = stringResource(MR.strings.ext_remove))
             }
