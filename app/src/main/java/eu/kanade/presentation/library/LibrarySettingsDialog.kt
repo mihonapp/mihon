@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +29,7 @@ import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -178,7 +181,19 @@ private fun ColumnScope.SortPage(
         MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
         MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
         MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
+        MR.strings.action_sort_random to LibrarySort.Type.Random,
     ).plus(trackerSortOption).map { (titleRes, mode) ->
+        if (mode == LibrarySort.Type.Random) {
+            BaseSortItem(
+                label = stringResource(titleRes),
+                icon = Icons.Default.Refresh
+                    .takeIf { sortingMode == LibrarySort.Type.Random },
+                onClick = {
+                    screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
+                },
+            )
+            return@map
+        }
         SortItem(
             label = stringResource(titleRes),
             sortDescending = sortDescending.takeIf { sortingMode == mode },

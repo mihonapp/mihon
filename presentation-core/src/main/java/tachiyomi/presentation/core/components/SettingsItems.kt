@@ -98,12 +98,21 @@ fun SortItem(label: String, sortDescending: Boolean?, onClick: () -> Unit) {
         null -> null
     }
 
+    BaseSortItem(
+        label = label,
+        icon = arrowIcon,
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun BaseSortItem(label: String, icon: ImageVector?, onClick: () -> Unit) {
     BaseSettingsItem(
         label = label,
         widget = {
-            if (arrowIcon != null) {
+            if (icon != null) {
                 Icon(
-                    imageVector = arrowIcon,
+                    imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )
