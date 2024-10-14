@@ -24,6 +24,8 @@ import okio.gzip
 import okio.sink
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.data.DatabaseHandler
+import tachiyomi.data.manga.MangaMapper
 import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.manga.interactor.GetFavorites
 import tachiyomi.domain.manga.model.Manga
@@ -43,6 +45,7 @@ class BackupCreator(
     private val parser: ProtoBuf = Injekt.get(),
     private val getFavorites: GetFavorites = Injekt.get(),
     private val backupPreferences: BackupPreferences = Injekt.get(),
+    private val handler: DatabaseHandler = Injekt.get(),
 
     private val categoriesBackupCreator: CategoriesBackupCreator = CategoriesBackupCreator(),
     private val mangaBackupCreator: MangaBackupCreator = MangaBackupCreator(),
@@ -75,7 +78,16 @@ class BackupCreator(
                 throw IllegalStateException(context.stringResource(MR.strings.create_backup_file_error))
             }
 
-            val backupManga = backupMangas(getFavorites.await(), options)
+            val backupManga = backupMangas(
+                getFavorites.await() +
+                    if (options.readEntries) {
+                        handler.awaitList { mangasQueries.getReadMangaNotInLibrary(MangaMapper::mapManga) }
+                    } else {
+                        emptyList()
+                    },
+                options,
+            )
+
             val backup = Backup(
                 backupManga = backupManga,
                 backupCategories = backupCategories(options),
