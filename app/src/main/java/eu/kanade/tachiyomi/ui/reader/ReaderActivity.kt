@@ -390,8 +390,8 @@ class ReaderActivity : BaseActivity() {
                 onClickTopAppBar = ::openMangaScreen,
                 bookmarked = state.bookmarked,
                 onToggleBookmarked = viewModel::toggleChapterBookmark,
-                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
                 onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
+                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
                 onShare = ::shareChapter.takeIf { isHttpSource },
 
                 viewer = state.viewer,
@@ -565,18 +565,18 @@ class ReaderActivity : BaseActivity() {
         }
     }
 
-    private fun openChapterInBrowser() {
-        assistUrl?.let {
-            openInBrowser(it.toUri(), forceDefaultBrowser = false)
-        }
-    }
-
     private fun openChapterInWebView() {
         val manga = viewModel.manga ?: return
         val source = viewModel.getSource() ?: return
         assistUrl?.let {
             val intent = WebViewActivity.newIntent(this@ReaderActivity, it, source.id, manga.title)
             startActivity(intent)
+        }
+    }
+
+    private fun openChapterInBrowser() {
+        assistUrl?.let {
+            openInBrowser(it.toUri(), forceDefaultBrowser = false)
         }
     }
 
