@@ -81,8 +81,10 @@ WHERE favorite = 1;
 getReadMangaNotInLibrary:
 SELECT *
 FROM mangas
-WHERE favorite = 0 AND _id IN(
-    SELECT chapters.manga_id FROM chapters WHERE read = 1 OR last_page_read != 0
+WHERE favorite = 0 AND _id IN (
+    SELECT DISTINCT chapters.manga_id 
+    FROM chapters 
+    WHERE read = 1 OR last_page_read != 0
 );
 
 getAllManga:
