@@ -546,6 +546,7 @@
     <string name="source_settings">Source settings</string>
     <string name="extensionRepo_settings">Extension repos</string>
     <string name="private_settings">Include sensitive settings (e.g., tracker login tokens)</string>
+    <string name="non_library_settings">All read entries</string>
     <string name="creating_backup">Creating backup</string>
     <string name="creating_backup_error">Backup failed</string>
     <string name="missing_storage_permission">Storage permissions not granted</string>

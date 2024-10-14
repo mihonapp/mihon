@@ -10,6 +10,7 @@ data class BackupOptions(
     val chapters: Boolean = true,
     val tracking: Boolean = true,
     val history: Boolean = true,
+    val readEntries: Boolean = true,
     val appSettings: Boolean = true,
     val extensionRepoSettings: Boolean = true,
     val sourceSettings: Boolean = true,
@@ -22,6 +23,7 @@ data class BackupOptions(
         chapters,
         tracking,
         history,
+        readEntries,
         appSettings,
         extensionRepoSettings,
         sourceSettings,
@@ -60,6 +62,12 @@ data class BackupOptions(
                 getter = BackupOptions::categories,
                 setter = { options, enabled -> options.copy(categories = enabled) },
             ),
+            Entry(
+                label = MR.strings.non_library_settings,
+                getter = BackupOptions::readEntries,
+                setter = { options, enabled -> options.copy(readEntries = enabled) },
+                enabled = { it.libraryEntries },
+            ),
         )
 
         val settingsOptions = persistentListOf(
@@ -92,10 +100,11 @@ data class BackupOptions(
             chapters = array[2],
             tracking = array[3],
             history = array[4],
-            appSettings = array[5],
-            extensionRepoSettings = array[6],
-            sourceSettings = array[7],
-            privateSettings = array[8],
+            readEntries = array[5],
+            appSettings = array[6],
+            extensionRepoSettings = array[7],
+            sourceSettings = array[8],
+            privateSettings = array[9],
         )
     }
 
