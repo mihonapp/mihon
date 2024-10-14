@@ -2,6 +2,7 @@ name: PR build check
 on:
   pull_request:
     paths:
+      - '**'
       - '!**.md'
       - '!i18n/src/commonMain/moko-resources/**/strings.xml'
       - '!i18n/src/commonMain/moko-resources/**/plurals.xml'
