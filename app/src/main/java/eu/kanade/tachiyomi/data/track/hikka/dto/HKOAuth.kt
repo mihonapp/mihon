@@ -12,6 +12,6 @@ data class HKOAuth(
     val expiration: Long,
 ) {
     fun isExpired(): Boolean {
-        return (expiration - 1000) < System.currentTimeMillis() / 1000
+        return (expiration - 7200) < (System.currentTimeMillis() / 1000)
     }
 }

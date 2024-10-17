@@ -117,10 +117,6 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return update(track)
     }
 
-    private suspend fun add(track: eu.kanade.tachiyomi.data.database.models.Track): eu.kanade.tachiyomi.data.database.models.Track {
-        return api.addUserManga(track)
-    }
-
     override suspend fun search(query: String): List<TrackSearch> {
         return api.searchManga(query)
     }
@@ -136,10 +132,10 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
 
     suspend fun login(code: String) {
         try {
-            val oauth = HKOAuth(code, System.currentTimeMillis() / 1000 + 30 * 60)
+            val oauth = api.accessToken(code)
             interceptor.setAuth(oauth)
-            val reference =  api.getCurrentUser().reference
-            saveCredentials(reference, oauth.accessToken)
+            val user =  api.getCurrentUser()
+            saveCredentials(user.reference, oauth.accessToken)
         } catch (e: Throwable) {
             logout()
         }

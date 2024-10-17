@@ -26,24 +26,17 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
         }
 
         if (oauth == null) {
-            throw IOException("Hikka.io: User is not authenticated")
+            throw IOException("User is not authenticated")
         }
 
         val authRequest = originalRequest.newBuilder()
             .addHeader("auth", oauth!!.accessToken)
-            .addHeader("Cookie", "auth=${oauth!!.accessToken}")
             .addHeader("accept", "application/json")
             .build()
-
-        Log.println(Log.WARN, "interceptor", "Set Auth Request Headers: " + authRequest.headers)
 
         return chain.proceed(authRequest)
     }
 
-    /**
-     * Called when the user authenticates with MyAnimeList for the first time. Sets the refresh token
-     * and the oauth object.
-     */
     fun setAuth(oauth: HKOAuth?) {
         this.oauth = oauth
         hikka.saveOAuth(oauth)
@@ -59,7 +52,7 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
             throw HKTokenRefreshFailed()
         }
 
-        if (response.code == 401) {
+        if (response.code != 200) {
             hikka.setAuthExpired()
             throw HKTokenExpired()
         }
@@ -84,5 +77,5 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
     }
 }
 
-class HKTokenRefreshFailed : IOException("Hikka.io: Failed to refresh account token")
-class HKTokenExpired : IOException("Hikka.io: Login has expired")
+class HKTokenRefreshFailed : IOException("Hikka: Failed to refresh account token")
+class HKTokenExpired : IOException("Hikka: Login has expired")

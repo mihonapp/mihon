@@ -48,17 +48,26 @@ class HikkaApi(
         }
     }
 
-    suspend fun getTokenInfo(): HKAuthTokenInfo {
+    suspend fun getTokenInfo(accessToken: String): HKAuthTokenInfo {
         return withIOContext {
             val request = Request.Builder()
                 .url("${BASE_API_URL}/auth/token/info")
+                .header("auth", accessToken)
                 .get()
                 .build()
             with(json) {
-                authClient.newCall(request)
+                client.newCall(request)
                     .awaitSuccess()
                     .parseAs<HKAuthTokenInfo>()
             }
+        }
+    }
+
+    suspend fun accessToken(code: String): HKOAuth {
+        return withIOContext {
+            val tokenInfo = getTokenInfo(code)
+            val oauth = HKOAuth(code, tokenInfo.expiration)
+            oauth
         }
     }
 
@@ -165,13 +174,12 @@ class HikkaApi(
             .appendQueryParameter("scope", SCOPE)
             .build()
 
-        fun refreshTokenRequest(oauth: HKOAuth): Request {
+        fun refreshTokenRequest(hkOAuth: HKOAuth): Request {
             val headers = Headers.Builder()
-                .add("auth", oauth.accessToken)
-                .add("Cookie", "auth=${oauth.accessToken}")
+                .add("auth", hkOAuth.accessToken)
                 .build()
 
-            return GET("$BASE_API_URL/auth/token/info", headers = headers)
+            return GET("$BASE_API_URL/user/me", headers = headers)
         }
     }
 }
