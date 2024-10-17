@@ -174,12 +174,20 @@ class HikkaApi(
             .appendQueryParameter("scope", SCOPE)
             .build()
 
-        fun refreshTokenRequest(hkOAuth: HKOAuth): Request {
+        fun refreshTokenRequest(accessToken: String): Request {
             val headers = Headers.Builder()
-                .add("auth", hkOAuth.accessToken)
+                .add("auth", accessToken)
                 .build()
 
-            return GET("$BASE_API_URL/user/me", headers = headers)
+            return GET("$BASE_API_URL/user/me", headers = headers) // Any request with auth
+        }
+
+        fun authTokenInfo(accessToken: String): Request {
+            val headers = Headers.Builder()
+                .add("auth", accessToken)
+                .build()
+
+            return GET("$BASE_API_URL/auth/token/info", headers = headers)
         }
     }
 }

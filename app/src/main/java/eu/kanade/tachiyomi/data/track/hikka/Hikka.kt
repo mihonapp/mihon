@@ -151,14 +151,6 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         interceptor.setAuth(null)
     }
 
-    fun getIfAuthExpired(): Boolean {
-        return trackPreferences.trackAuthExpired(this).get()
-    }
-
-    fun setAuthExpired() {
-        trackPreferences.trackAuthExpired(this).set(true)
-    }
-
     fun saveOAuth(oAuth: HKOAuth?) {
         trackPreferences.trackToken(this).set(json.encodeToString(oAuth))
     }
