@@ -48,15 +48,10 @@ class HikkaApi(
         }
     }
 
-    suspend fun getTokenInfo(accessToken: String): HKAuthTokenInfo {
+    private suspend fun getTokenInfo(accessToken: String): HKAuthTokenInfo {
         return withIOContext {
-            val request = Request.Builder()
-                .url("${BASE_API_URL}/auth/token/info")
-                .header("auth", accessToken)
-                .get()
-                .build()
             with(json) {
-                client.newCall(request)
+                client.newCall(authTokenInfo(accessToken))
                     .awaitSuccess()
                     .parseAs<HKAuthTokenInfo>()
             }
