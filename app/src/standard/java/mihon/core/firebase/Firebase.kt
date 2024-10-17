@@ -14,7 +14,7 @@ object Firebase {
             FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(enabled)
         }.launchIn(scope)
         preference.crashlytics().changes().onEach { enabled ->
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled)
+            FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = enabled
         }.launchIn(scope)
     }
 }
