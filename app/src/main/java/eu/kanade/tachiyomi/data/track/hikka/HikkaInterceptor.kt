@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.hikka
 
-import android.util.Log
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
