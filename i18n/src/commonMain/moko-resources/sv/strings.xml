@@ -716,7 +716,6 @@
     <string name="pref_update_only_in_release_period">Förutspå nästa releaseperiod</string>
     <string name="intervals_header">Intervaller</string>
     <string name="create_backup_file_error">Kunde inte skapa en backup-fil</string>
-    <string name="licensed_manga_chapters_error">Licensierad - Inga kapitel att visa</string>
     <string name="track_activity_name">Spårar-inloggning</string>
     <string name="exception_offline">Ingen internet anslutning</string>
     <string name="exception_http">HTTP %d, kolla på webbsida i WebView</string>
