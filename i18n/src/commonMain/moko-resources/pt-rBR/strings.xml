@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">Índice de downloads invalidado</string>
     <string name="track_activity_name">Login do monitorador</string>
     <string name="create_backup_file_error">Não foi possível criar o arquivo do backup</string>
-    <string name="licensed_manga_chapters_error">Licenciado - Nenhum capítulo para mostrar</string>
     <string name="exception_http">HTTP %d, verifique o site na WebView</string>
     <string name="exception_offline">Sem conexão de internet</string>
     <string name="exception_unknown_host">Não foi possível resolver %s</string>
@@ -808,4 +807,20 @@
     <string name="upcoming_guide">Guia de próximos lançamentos</string>
     <string name="upcoming_calendar_next">Próximo mês</string>
     <string name="upcoming_calendar_prev">Mês anterior</string>
+    <string name="pref_flash_style_black">Preto</string>
+    <string name="pref_flash_style_white">Branco</string>
+    <string name="pref_flash_style_white_black">Branco e Preto</string>
+    <string name="add_repo_confirmation">Você deseja adicionar o repositório \"%s\"?</string>
+    <string name="action_copy_link">Copiar link</string>
+    <string name="extensionRepo_settings">Repositório de extensões</string>
+    <string name="manga_interval_expected_update_null">Esse mangá foi completado, ou não tem uma data de lançamento prevista.</string>
+    <string name="pref_flash_duration">Duração do flash</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Flash a cada</string>
+    <string name="pref_flash_with">Flash com</string>
+    <string name="pref_download_new_unread_chapters_only">Pule o download de capítulos duplicados já lidos</string>
+    <string name="confirm_tracker_update">Atualizar rastreadores para o capítulo %d?</string>
+    <string name="file_picker_uri_permission_unsupported">Falha ao adquirir acesso a uma pasta persistente. O aplicativo pode se comportar de maneira inesperada.</string>
+    <string name="invalid_backup_file_json">Backup JSON não suportado</string>
+    <string name="invalid_backup_file_unknown">O arquivo de backup está corrompido</string>
 </resources>
