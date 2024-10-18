@@ -776,7 +776,6 @@
     <string name="source_settings">Configurações das fontes</string>
     <string name="private_settings">Incluir configurações sensíveis (tokens de login dos monitoradores, por exemplo)</string>
     <string name="create_backup_file_error">Não foi possível criar o ficheiro do backup</string>
-    <string name="licensed_manga_chapters_error">Licenciado - Nenhum capítulo para mostrar</string>
     <string name="has_results">Há resultados</string>
     <string name="manga_interval_expected_update_soon">Em breve</string>
     <string name="relative_time_span_never">Nunca</string>

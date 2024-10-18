@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">Індекс завантажень недійсний</string>
     <string name="information_cloudflare_help">Натисніть тут, щоб отримати допомогу з Cloudflare</string>
     <string name="create_backup_file_error">Не вдалося створити файл резервної копії</string>
-    <string name="licensed_manga_chapters_error">Ліцензовано - немає розділів для показу</string>
     <string name="unlock_app_title">Розблокувати %s</string>
     <string name="action_move_to_bottom_all_for_series">Перемістити серію вниз</string>
     <string name="exception_offline">Немає Інтернет-з\'єднання</string>
