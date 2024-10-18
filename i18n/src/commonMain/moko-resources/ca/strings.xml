@@ -714,7 +714,6 @@
     <string name="syncing_library">S’està sincronitzant la biblioteca</string>
     <string name="library_sync_complete">S’ha completat la sincronització de la biblioteca</string>
     <string name="create_backup_file_error">No s’ha pogut crear un fitxer de còpia de seguretat</string>
-    <string name="licensed_manga_chapters_error">Llicenciat: no hi ha capítols a mostrar</string>
     <string name="track_activity_name">Inici de sessió al servei de seguiment</string>
     <string name="download_cache_invalidated">S’ha invalidat l\'índex de baixades</string>
     <string name="information_cloudflare_help">Premeu aquí per a obtenir ajuda amb el Cloudflare</string>
@@ -820,4 +819,8 @@
     <string name="invalid_backup_file_json">Còpia de seguretat en JSON no suportada</string>
     <string name="invalid_backup_file_unknown">El fitxer de còpia de seguretat és corrupte</string>
     <string name="extensionRepo_settings">Repositoris d’extensions</string>
+    <string name="action_copy_link">Copia l’enllaç</string>
+    <string name="pref_download_new_unread_chapters_only">Omet la baixada de capítols ja llegits duplicats</string>
+    <string name="add_repo_confirmation">Voleu afegir el repositori «%s»?</string>
+    <string name="confirm_tracker_update">Voleu actualitzar els serveis de seguiment al capítol %d?</string>
 </resources>

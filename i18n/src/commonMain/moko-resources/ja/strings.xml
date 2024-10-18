@@ -83,7 +83,7 @@
     <string name="ext_downloading">ダウンロード中</string>
     <string name="ext_installing">インストール</string>
     <string name="ext_installed">インストール済み</string>
-    <string name="ext_trust">トラスト</string>
+    <string name="ext_trust">信用する</string>
     <string name="ext_untrusted">信用できない</string>
     <string name="ext_uninstall">アンインストール</string>
     <string name="untrusted_extension">信頼できない拡張</string>
@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
     <string name="create_backup_file_error">バックアップ ファイルを作成できませんでした</string>
     <string name="track_activity_name">追跡サービスにログイン</string>
-    <string name="licensed_manga_chapters_error">ライセンス制限あり—章を表示できません</string>
     <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
     <string name="exception_offline">インターネット接続がありません</string>
     <string name="exception_unknown_host">%sにアクセスできませんでした</string>
