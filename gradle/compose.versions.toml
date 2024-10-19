@@ -15,4 +15,4 @@ ui-util = { module = "androidx.compose.ui:ui-util" }
 material3-core = { module = "androidx.compose.material3:material3" }
 material-icons = { module = "androidx.compose.material:material-icons-extended" }
 
-glance = "androidx.glance:glance-appwidget:1.1.0"
+glance = "androidx.glance:glance-appwidget:1.1.1"
