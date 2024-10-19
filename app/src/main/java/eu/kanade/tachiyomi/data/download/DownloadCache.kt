@@ -359,7 +359,7 @@ class DownloadCache(
                         }
                     }
                 }
-                .awaitAll()
+                    .awaitAll()
 
                 rootDownloadsDir = updatedRootDir
             }
