@@ -118,7 +118,7 @@ abstract class SearchScreenModel(
     }
 
     fun setSourceFilter(filter: SourceFilter) {
-        mutableState.update { it.copy(sourceFilter = filter) }
+        preferences.globalSearchPinnedState().set(filter)
         search()
     }
 
