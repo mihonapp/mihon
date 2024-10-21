@@ -89,7 +89,7 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jv
 sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.11.2"
+junit = "org.junit.jupiter:junit-jupiter:5.11.3"
 kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
 mockk = "io.mockk:mockk:1.13.13"
 
