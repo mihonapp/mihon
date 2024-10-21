@@ -90,4 +90,9 @@
         <item quantity="few">Za %1$d dana</item>
         <item quantity="other">Za %1$d dana</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 stranica</item>
+        <item quantity="few">%1$s stranice</item>
+        <item quantity="other">%1$s stranica</item>
+    </plurals>
 </resources>

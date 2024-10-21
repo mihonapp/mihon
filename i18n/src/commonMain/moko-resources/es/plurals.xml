@@ -16,9 +16,9 @@
         <item quantity="other">Capítulos %1$s y %2$d más</item>
     </plurals>
     <plurals name="notification_new_chapters_summary">
-        <item quantity="one">Para %d título</item>
-        <item quantity="many">Para %d títulos</item>
-        <item quantity="other">Para %d títulos</item>
+        <item quantity="one">Para %d entrada</item>
+        <item quantity="many">Para %d entradas</item>
+        <item quantity="other">Para %d entradas</item>
     </plurals>
     <plurals name="update_check_notification_ext_updates">
         <item quantity="one">Actualización de extensión disponible</item>
@@ -37,7 +37,7 @@
     </plurals>
     <plurals name="restore_completed_message">
         <item quantity="one">Completada en %1$s con %2$s error</item>
-        <item quantity="many">Completada en %1$s con %2$s errores</item>
+        <item quantity="many">Completada en %1$s con %2$s error</item>
         <item quantity="other">Completada en %1$s con %2$s errores</item>
     </plurals>
     <plurals name="manga_num_chapters">
@@ -66,9 +66,9 @@
         <item quantity="other">Los siguientes %d capítulos sin leer</item>
     </plurals>
     <plurals name="download_amount">
-        <item quantity="one">El siguiente capítulo</item>
-        <item quantity="many">Los siguientes %d capítulos</item>
-        <item quantity="other">Los siguientes %d capítulos</item>
+        <item quantity="one">Siguiente capítulo</item>
+        <item quantity="many">Siguientes %d capítulos</item>
+        <item quantity="other">Siguientes %d capítulos</item>
     </plurals>
     <plurals name="missing_chapters">
         <item quantity="one">Falta %1$s capítulo</item>

@@ -168,4 +168,14 @@
     <string name="ext_uninstall">അൺഇൻസ്റ്റാൾ</string>
     <string name="ext_untrusted">അവിശ്വസനീയം</string>
     <string name="ext_installing">ഇൻസ്റ്റാൾ ചെയ്യുന്നു</string>
+    <string name="pref_category_general">സാധാരണ</string>
+    <string name="onboarding_permission_crashlytics_description">ഡവലപ്പർമാർക്ക് അനാമീകരിച്ച ക്രാഷ് ലോഗുകൾ അയയ്‌ക്കുക</string>
+    <string name="pref_category_appearance">വീക്ഷണം</string>
+    <string name="onboarding_permission_analytics_description">അപ്ലിക്കേഷന്റെ ഫീച്ചറുകൾ മെച്ചപ്പെടുത്താൻ അനാമീകരിച്ച ഉപയോക്തൃ ഡാറ്റ അയയ്‌ക്കുക.</string>
+    <string name="onboarding_permission_analytics">വിശകലനത്തിനുവഴി അനുവദിക്കുക</string>
+    <string name="onboarding_permission_crashlytics">ക്രാഷ് ലോഗുകൾ അയയ്ക്കുക</string>
+    <string name="pref_category_library">ലൈബ്രറി</string>
+    <string name="onboarding_guides_new_user">%s-ൽ പുതിയവനാവോ? ആരംഭിക്കാൻ മാർഗരേഖ കാണാൻ ഞങ്ങൾ ശുപാർശ ചെയ്യുന്നു.</string>
+    <string name="onboarding_permission_action_grant">അനുവദിക്കുക</string>
+    <string name="onboarding_guides_returning_user">%s-നെ പുനഃസ്ഥാപിക്കുകയാണോ?</string>
 </resources>
