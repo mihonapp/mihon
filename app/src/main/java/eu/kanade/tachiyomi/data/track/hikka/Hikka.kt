@@ -142,7 +142,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     }
 
     override suspend fun delete(track: Track) {
-        api.deleteManga(track)
+        api.deleteUserManga(track)
     }
 
     override fun logout() {

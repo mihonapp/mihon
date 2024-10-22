@@ -116,7 +116,7 @@ class HikkaApi(
         }
     }
 
-    suspend fun deleteManga(track: tachiyomi.domain.track.model.Track) {
+    suspend fun deleteUserManga(track: tachiyomi.domain.track.model.Track) {
         return withIOContext {
             val slug = track.remoteUrl.split("/")[4]
 
@@ -135,11 +135,16 @@ class HikkaApi(
             val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon()
                 .build()
 
+            var rereads = 0
+
+            if (track.status == Hikka.REREADING)
+                rereads = 1
+
             val payload = buildJsonObject {
                 put("note", "")
                 put("chapters", track.last_chapter_read.toInt())
                 put("volumes", 0)
-                put("rereads", 0)
+                put("rereads", rereads)
                 put("score", track.score.toInt())
                 put("status", track.toApiStatus())
             }
