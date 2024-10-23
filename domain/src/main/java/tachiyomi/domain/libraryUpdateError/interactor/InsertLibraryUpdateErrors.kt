@@ -6,6 +6,10 @@ import tachiyomi.domain.libraryUpdateError.repository.LibraryUpdateErrorReposito
 class InsertLibraryUpdateErrors(
     private val libraryUpdateErrorRepository: LibraryUpdateErrorRepository,
 ) {
+    suspend fun upsert(libraryUpdateError: LibraryUpdateError) {
+        return libraryUpdateErrorRepository.upsert(libraryUpdateError)
+    }
+
     suspend fun insert(libraryUpdateError: LibraryUpdateError) {
         return libraryUpdateErrorRepository.insert(libraryUpdateError)
     }

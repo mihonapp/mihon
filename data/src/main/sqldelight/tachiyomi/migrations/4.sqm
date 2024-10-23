@@ -2,7 +2,7 @@ DROP VIEW IF EXISTS libraryUpdateErrorView;
 
 CREATE TABLE IF NOT EXISTS libraryUpdateError (
     _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    manga_id INTEGER NOT NULL,
+    manga_id INTEGER NOT NULL UNIQUE,
     message_id INTEGER NOT NULL
 );
 

@@ -29,8 +29,14 @@ class LibraryUpdateErrorMessageRepositoryImpl(
         return handler.await { libraryUpdateErrorMessageQueries.deleteAllErrorMessages() }
     }
 
-    override suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long? {
-        return handler.awaitOneOrNullExecutable(inTransaction = true) {
+    override suspend fun get(message: String): Long? {
+        return handler.awaitOneOrNullExecutable {
+            libraryUpdateErrorMessageQueries.getErrorMessages(message) { id, _ -> id }
+        }
+    }
+
+    override suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long {
+        return handler.awaitOneExecutable(inTransaction = true) {
             libraryUpdateErrorMessageQueries.insert(libraryUpdateErrorMessage.message)
             libraryUpdateErrorMessageQueries.selectLastInsertedRowId()
         }

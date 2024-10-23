@@ -11,7 +11,9 @@ interface LibraryUpdateErrorMessageRepository {
 
     suspend fun deleteAll()
 
-    suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long?
+    suspend fun get(message: String): Long?
+
+    suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long
 
     suspend fun insertAll(libraryUpdateErrorMessages: List<LibraryUpdateErrorMessage>): List<Pair<Long, String>>
 }

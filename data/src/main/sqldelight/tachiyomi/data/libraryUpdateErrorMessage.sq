@@ -7,6 +7,10 @@ getAllErrorMessages:
 SELECT *
 FROM libraryUpdateErrorMessage;
 
+getErrorMessages:
+SELECT *
+FROM libraryUpdateErrorMessage WHERE message == :message;
+
 insert:
 INSERT INTO libraryUpdateErrorMessage(message) VALUES (:message);
 

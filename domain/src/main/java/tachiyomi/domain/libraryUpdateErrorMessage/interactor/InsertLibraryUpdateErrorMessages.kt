@@ -6,8 +6,11 @@ import tachiyomi.domain.libraryUpdateErrorMessage.repository.LibraryUpdateErrorM
 class InsertLibraryUpdateErrorMessages(
     private val libraryUpdateErrorMessageRepository: LibraryUpdateErrorMessageRepository,
 ) {
+    suspend fun get(message: String): Long? {
+        return libraryUpdateErrorMessageRepository.get(message)
+    }
 
-    suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long? {
+    suspend fun insert(libraryUpdateErrorMessage: LibraryUpdateErrorMessage): Long {
         return libraryUpdateErrorMessageRepository.insert(libraryUpdateErrorMessage)
     }
 
