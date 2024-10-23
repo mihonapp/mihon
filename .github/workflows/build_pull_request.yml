@@ -44,13 +44,13 @@ jobs:
         run: ./gradlew spotlessCheck assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
 
       - name: Upload APK
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: arm64-v8a-${{ github.sha }}
           path: app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned.apk
 
       - name: Upload mapping
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/standardRelease
