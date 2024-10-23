@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,10 +16,12 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.manga.components.MangaCover
+import eu.kanade.presentation.util.animateItemFastScroll
 import eu.kanade.tachiyomi.ui.libraryUpdateError.LibraryUpdateErrorItem
 import tachiyomi.domain.libraryUpdateError.model.LibraryUpdateErrorWithRelations
 import tachiyomi.domain.source.service.SourceManager
 import tachiyomi.presentation.core.components.ListGroupHeader
+import tachiyomi.presentation.core.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import tachiyomi.presentation.core.util.selectedBackground
@@ -34,57 +35,52 @@ internal fun LazyListScope.libraryUpdateErrorUiItems(
     onClick: (LibraryUpdateErrorItem) -> Unit,
     onClickCover: (LibraryUpdateErrorItem) -> Unit,
 ) {
-    items(
-        items = uiModels,
-        contentType = {
-            when (it) {
-                is LibraryUpdateErrorUiModel.Header -> "header"
-                is LibraryUpdateErrorUiModel.Item -> "item"
-            }
-        },
-        key = {
-            when (it) {
-                is LibraryUpdateErrorUiModel.Header -> "sticky:errorHeader-${it.hashCode()}"
-                is LibraryUpdateErrorUiModel.Item -> "error-${it.item.error.errorId}-${it.item.error.mangaId}"
-            }
-        },
-    ) { item ->
-        when (item) {
+    uiModels.forEach {
+        when (it) {
             is LibraryUpdateErrorUiModel.Header -> {
-                ListGroupHeader(
-                    modifier = Modifier.animateItemPlacement(),
-                    text = item.errorMessage,
-                )
+                stickyHeader(
+                    key = "$STICKY_HEADER_KEY_PREFIX-errorHeader-${it.hashCode()}",
+                    contentType = "header",
+                ) {
+                    ListGroupHeader(
+                        modifier = Modifier.animateItemFastScroll(),
+                        text = it.errorMessage,
+                    )
+                }
             }
-
             is LibraryUpdateErrorUiModel.Item -> {
-                val libraryUpdateErrorItem = item.item
-                LibraryUpdateErrorUiItem(
-                    modifier = Modifier.animateItemPlacement(),
-                    error = libraryUpdateErrorItem.error,
-                    selected = libraryUpdateErrorItem.selected,
-                    onClick = {
-                        when {
-                            selectionMode -> onErrorSelected(
+                item(
+                    key = "error-${it.item.error.errorId}-${it.item.error.mangaId}",
+                    contentType = "item",
+                ) {
+                    val libraryUpdateErrorItem = it.item
+                    LibraryUpdateErrorUiItem(
+                        modifier = Modifier.animateItemFastScroll(),
+                        error = libraryUpdateErrorItem.error,
+                        selected = libraryUpdateErrorItem.selected,
+                        onClick = {
+                            when {
+                                selectionMode -> onErrorSelected(
+                                    libraryUpdateErrorItem,
+                                    !libraryUpdateErrorItem.selected,
+                                    true,
+                                    false,
+                                )
+
+                                else -> onClick(libraryUpdateErrorItem)
+                            }
+                        },
+                        onLongClick = {
+                            onErrorSelected(
                                 libraryUpdateErrorItem,
                                 !libraryUpdateErrorItem.selected,
                                 true,
-                                false,
+                                true,
                             )
-
-                            else -> onClick(libraryUpdateErrorItem)
-                        }
-                    },
-                    onLongClick = {
-                        onErrorSelected(
-                            libraryUpdateErrorItem,
-                            !libraryUpdateErrorItem.selected,
-                            true,
-                            true,
-                        )
-                    },
-                    onClickCover = { onClickCover(libraryUpdateErrorItem) }.takeIf { !selectionMode },
-                )
+                        },
+                        onClickCover = { onClickCover(libraryUpdateErrorItem) }.takeIf { !selectionMode },
+                    )
+                }
             }
         }
     }
