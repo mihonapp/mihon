@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.FindReplace
 import androidx.compose.material.icons.outlined.FlipToBack
 import androidx.compose.material.icons.outlined.SelectAll
@@ -36,9 +38,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -93,6 +97,21 @@ fun LibraryUpdateErrorScreen(
         }
     }
 
+    val headerIndexes = remember { mutableStateOf<List<Int>>(emptyList()) }
+    LaunchedEffect(state) {
+        headerIndexes.value = state.getHeaderIndexes()
+    }
+    val enableScrollToPrevious by remember {
+        derivedStateOf {
+            headerIndexes.value.any { it < listState.firstVisibleItemIndex }
+        }
+    }
+    val enableScrollToNext by remember {
+        derivedStateOf {
+            headerIndexes.value.any { it > listState.firstVisibleItemIndex }
+        }
+    }
+
     BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
 
     Scaffold(
@@ -126,6 +145,26 @@ fun LibraryUpdateErrorScreen(
                 scrollToBottom = {
                     scope.launch {
                         listState.scrollToItem(state.items.size - 1)
+                    }
+                },
+                enableScrollToPrevious = enableScrollToTop && enableScrollToPrevious,
+                enableScrollToNext = enableScrollToBottom && enableScrollToNext,
+                scrollToPrevious = {
+                    scope.launch {
+                        listState.scrollToItem(
+                            state.getHeaderIndexes()
+                                .filter { it < listState.firstVisibleItemIndex }
+                                .maxOrNull() ?: 0,
+                        )
+                    }
+                },
+                scrollToNext = {
+                    scope.launch {
+                        listState.scrollToItem(
+                            state.getHeaderIndexes()
+                                .filter { it > listState.firstVisibleItemIndex }
+                                .minOrNull() ?: 0,
+                        )
                     }
                 },
             )
@@ -166,6 +205,10 @@ private fun LibraryUpdateErrorsBottomBar(
     enableScrollToBottom: Boolean,
     scrollToTop: () -> Unit,
     scrollToBottom: () -> Unit,
+    enableScrollToPrevious: Boolean,
+    enableScrollToNext: Boolean,
+    scrollToPrevious: () -> Unit,
+    scrollToNext: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     Surface(
@@ -177,11 +220,11 @@ private fun LibraryUpdateErrorsBottomBar(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
     ) {
         val haptic = LocalHapticFeedback.current
-        val confirm = remember { mutableStateListOf(false, false, false) }
+        val confirm = remember { mutableStateListOf(false, false, false, false, false) }
         var resetJob: Job? = remember { null }
         val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            (0 until 3).forEach { i -> confirm[i] = i == toConfirmIndex }
+            (0 until 5).forEach { i -> confirm[i] = i == toConfirmIndex }
             resetJob?.cancel()
             resetJob = scope.launch {
                 delay(1.seconds)
@@ -210,10 +253,22 @@ private fun LibraryUpdateErrorsBottomBar(
                 enabled = enableScrollToTop,
             )
             Button(
-                title = stringResource(MR.strings.migrate),
-                icon = Icons.Outlined.FindReplace,
+                title = stringResource(MR.strings.action_scroll_to_previous),
+                icon = Icons.Outlined.ArrowUpward,
                 toConfirm = confirm[1],
                 onLongClick = { onLongClickItem(1) },
+                onClick = if (enableScrollToPrevious) {
+                    scrollToPrevious
+                } else {
+                    {}
+                },
+                enabled = enableScrollToPrevious,
+            )
+            Button(
+                title = stringResource(MR.strings.migrate),
+                icon = Icons.Outlined.FindReplace,
+                toConfirm = confirm[2],
+                onLongClick = { onLongClickItem(2) },
                 onClick = if (selected.isNotEmpty()) {
                     onMultiMigrateClicked
                 } else {
@@ -222,10 +277,22 @@ private fun LibraryUpdateErrorsBottomBar(
                 enabled = selected.isNotEmpty(),
             )
             Button(
+                title = stringResource(MR.strings.action_scroll_to_next),
+                icon = Icons.Outlined.ArrowDownward,
+                toConfirm = confirm[3],
+                onLongClick = { onLongClickItem(3) },
+                onClick = if (enableScrollToNext) {
+                    scrollToNext
+                } else {
+                    {}
+                },
+                enabled = enableScrollToNext,
+            )
+            Button(
                 title = stringResource(MR.strings.action_scroll_to_bottom),
                 icon = Icons.Outlined.VerticalAlignBottom,
-                toConfirm = confirm[2],
-                onLongClick = { onLongClickItem(2) },
+                toConfirm = confirm[4],
+                onLongClick = { onLongClickItem(4) },
                 onClick = if (enableScrollToBottom) {
                     scrollToBottom
                 } else {

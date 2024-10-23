@@ -579,6 +579,8 @@
     <string name="info_empty_library_update_errors">You have no library update errors.</string>
     <string name="action_scroll_to_top">Scroll to top</string>
     <string name="action_scroll_to_bottom">Scroll to bottom</string>
+    <string name="action_scroll_to_previous">Scroll to previous</string>
+    <string name="action_scroll_to_next">Scroll to next</string>
 
       <!-- Advanced section -->
     <string name="label_network">Networking</string>
