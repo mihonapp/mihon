@@ -29,6 +29,16 @@ class DeleteLibraryUpdateErrors(
         }
     }
 
+    suspend fun deleteMangaError(mangaId: Long) = withNonCancellableContext {
+        try {
+            libraryUpdateErrorRepository.deleteMangaError(mangaId)
+            Result.Success
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR, e)
+            return@withNonCancellableContext Result.InternalError(e)
+        }
+    }
+
     sealed class Result {
         object Success : Result()
         data class InternalError(val error: Throwable) : Result()

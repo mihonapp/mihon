@@ -37,6 +37,14 @@ class LibraryUpdateErrorRepositoryImpl(
         }
     }
 
+    override suspend fun deleteMangaError(mangaId: Long) {
+        return handler.await {
+            libraryUpdateErrorQueries.deleteMangaError(
+                mangaId = mangaId,
+            )
+        }
+    }
+
     override suspend fun upsert(libraryUpdateError: LibraryUpdateError) {
         return handler.await(inTransaction = true) {
             libraryUpdateErrorQueries.upsert(

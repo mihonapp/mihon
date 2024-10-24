@@ -53,6 +53,7 @@ import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_HAS_U
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_COMPLETED
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_NON_READ
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.MANGA_OUTSIDE_RELEASE_PERIOD
+import tachiyomi.domain.libraryUpdateError.interactor.DeleteLibraryUpdateErrors
 import tachiyomi.domain.libraryUpdateError.interactor.InsertLibraryUpdateErrors
 import tachiyomi.domain.libraryUpdateError.model.LibraryUpdateError
 import tachiyomi.domain.libraryUpdateErrorMessage.interactor.InsertLibraryUpdateErrorMessages
@@ -87,6 +88,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private val fetchInterval: FetchInterval = Injekt.get()
     private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
 
+    private val deleteLibraryUpdateErrors: DeleteLibraryUpdateErrors = Injekt.get()
     private val insertLibraryUpdateErrors: InsertLibraryUpdateErrors = Injekt.get()
     private val insertLibraryUpdateErrorMessages: InsertLibraryUpdateErrorMessages = Injekt.get()
 
@@ -283,6 +285,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             // Convert to the manga that contains new chapters
                                             newUpdates.add(manga to newChapters.toTypedArray())
                                         }
+                                        clearErrorFromDB(mangaId = manga.id)
                                     } catch (e: Throwable) {
                                         val errorMessage = when (e) {
                                             is NoChaptersException -> context.stringResource(
@@ -377,6 +380,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             completed.get(),
             mangaToUpdate.size,
         )
+    }
+
+    private suspend fun clearErrorFromDB(mangaId: Long) {
+        deleteLibraryUpdateErrors.deleteMangaError(mangaId = mangaId)
     }
 
     private suspend fun writeErrorToDB(error: Pair<Manga, String?>) {
