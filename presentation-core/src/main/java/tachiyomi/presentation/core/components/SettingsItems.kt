@@ -202,7 +202,7 @@ fun SliderItem(
             },
             modifier = Modifier.weight(1.5f),
             valueRange = min.toFloat()..max.toFloat(),
-            steps = max - min,
+            steps = max - min - 1,
         )
     }
 }
