@@ -15,7 +15,6 @@ import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -35,7 +34,7 @@ object SettingsDownloadScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val getCategories = remember { Injekt.get<GetCategories>() }
-        val allCategories by getCategories.subscribe().collectAsState(initial = runBlocking { getCategories.await() })
+        val allCategories by getCategories.subscribe().collectAsState(initial = emptyList())
 
         val downloadPreferences = remember { Injekt.get<DownloadPreferences>() }
         return listOf(
