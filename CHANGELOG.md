@@ -32,6 +32,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add confirmation dialog when adding repo via URI ([@Animeboynz](https://github.com/Animeboynz)) ([#1158](https://github.com/mihonapp/mihon/pull/1158))
 - Add "show entry" action to download notifications ([@mm12](https://github.com/mm12), [@AntsyLich](https://github.com/AntsyLich)) ([#1159](https://github.com/mihonapp/mihon/pull/1159))
 - Option to update trackers when chapter marked as read ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1177](https://github.com/mihonapp/mihon/pull/1177))
+  - Add setting to auto track when marked as read ([@Animeboynz](https://github.com/Animeboynz)) ([#1365](https://github.com/mihonapp/mihon/pull/1365))
 - Toast to restart app when User-Agent is changed ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1204](https://github.com/mihonapp/mihon/pull/1204))
 - Added more profile compilation status (p) ([`c8bb78d`](https://github.com/mihonapp/mihon/commit/c8bb78d91afc2824baaca999f0095559c49d1306))
 - Add option to opt out of Analytics and Crashlytics ([@Animeboynz](https://github.com/Animeboynz)) ([#1237](https://github.com/mihonapp/mihon/pull/1237))
