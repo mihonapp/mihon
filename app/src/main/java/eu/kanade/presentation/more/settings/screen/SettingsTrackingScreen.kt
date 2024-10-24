@@ -125,6 +125,10 @@ object SettingsTrackingScreen : SearchableSettings {
                 pref = trackPreferences.autoUpdateTrack(),
                 title = stringResource(MR.strings.pref_auto_update_manga_sync),
             ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = trackPreferences.autoUpdateTrackOnMarkRead(),
+                title = stringResource(MR.strings.pref_auto_update_manga_on_mark_read),
+            ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
                 preferenceItems = persistentListOf(

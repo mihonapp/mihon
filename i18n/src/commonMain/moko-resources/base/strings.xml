@@ -509,6 +509,7 @@
     <!-- Tracking section -->
     <string name="tracking_guide">Tracking guide</string>
     <string name="pref_auto_update_manga_sync">Update progress after reading</string>
+    <string name="pref_auto_update_manga_on_mark_read">Update progress when marked as read</string>
     <string name="services">Trackers</string>
     <string name="tracking_info">One-way sync to update the chapter progress in external tracker services. Set up tracking for individual entries from their tracking button.</string>
     <string name="enhanced_services">Enhanced trackers</string>
@@ -739,6 +740,7 @@
     <string name="exclude_scanlators">Exclude scanlators</string>
     <string name="no_scanlators_found">No scanlators found</string>
     <string name="confirm_tracker_update">Update trackers to chapter %d?</string>
+    <string name="trackers_updated_summary">Trackers updated to chapter %d</string>
 
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
