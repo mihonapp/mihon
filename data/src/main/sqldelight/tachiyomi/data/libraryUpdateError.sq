@@ -30,3 +30,12 @@ WHERE _id = :_id;
 deleteMangaError:
 DELETE FROM libraryUpdateError
 WHERE manga_id = :mangaId;
+
+cleanUnrelevantMangaErrors:
+DELETE FROM libraryUpdateError
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM mangas
+    WHERE libraryUpdateError.manga_id = mangas._id
+    AND mangas.favorite == 1
+);

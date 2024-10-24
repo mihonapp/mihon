@@ -45,6 +45,12 @@ class LibraryUpdateErrorRepositoryImpl(
         }
     }
 
+    override suspend fun cleanUnrelevantMangaErrors() {
+        return handler.await {
+            libraryUpdateErrorQueries.cleanUnrelevantMangaErrors()
+        }
+    }
+
     override suspend fun upsert(libraryUpdateError: LibraryUpdateError) {
         return handler.await(inTransaction = true) {
             libraryUpdateErrorQueries.upsert(

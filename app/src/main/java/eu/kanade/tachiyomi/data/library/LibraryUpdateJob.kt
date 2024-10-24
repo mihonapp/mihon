@@ -110,6 +110,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             }
         }
 
+        deleteLibraryUpdateErrors.cleanUnrelevantMangaErrors()
+
         setForegroundSafely()
 
         libraryPreferences.lastUpdatedTimestamp().set(Instant.now().toEpochMilli())
