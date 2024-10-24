@@ -265,14 +265,13 @@ private fun MangaScreenSmallImpl(
         )
     }
 
-    val internalOnBackPressed = {
+    BackHandler(onBack = {
         if (isAnySelected) {
             onAllChapterSelected(false)
         } else {
             onBackClicked()
         }
-    }
-    BackHandler(onBack = internalOnBackPressed)
+    })
 
     Scaffold(
         topBar = {
@@ -285,29 +284,25 @@ private fun MangaScreenSmallImpl(
             val isFirstItemScrolled by remember {
                 derivedStateOf { chapterListState.firstVisibleItemScrollOffset > 0 }
             }
-            val animatedTitleAlpha by animateFloatAsState(
-                if (!isFirstItemVisible) 1f else 0f,
-                label = "Top Bar Title",
-            )
             val animatedBgAlpha by animateFloatAsState(
                 if (!isFirstItemVisible || isFirstItemScrolled) 1f else 0f,
                 label = "Top Bar Background",
             )
             MangaToolbar(
                 title = state.manga.title,
-                titleAlphaProvider = { animatedTitleAlpha },
-                backgroundAlphaProvider = { animatedBgAlpha },
                 hasFilters = state.filterActive,
-                onBackClicked = internalOnBackPressed,
+                navigateUp = onBackClicked,
                 onClickFilter = onFilterClicked,
                 onClickShare = onShareClicked,
                 onClickDownload = onDownloadActionClicked,
                 onClickEditCategory = onEditCategoryClicked,
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
+                onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = selectedChapterCount,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
+                backgroundAlphaProvider = { animatedBgAlpha },
             )
         },
         bottomBar = {
@@ -515,14 +510,13 @@ fun MangaScreenLargeImpl(
 
     val chapterListState = rememberLazyListState()
 
-    val internalOnBackPressed = {
+    BackHandler(onBack = {
         if (isAnySelected) {
             onAllChapterSelected(false)
         } else {
             onBackClicked()
         }
-    }
-    BackHandler(onBack = internalOnBackPressed)
+    })
 
     Scaffold(
         topBar = {
@@ -532,19 +526,19 @@ fun MangaScreenLargeImpl(
             MangaToolbar(
                 modifier = Modifier.onSizeChanged { topBarHeight = it.height },
                 title = state.manga.title,
-                titleAlphaProvider = { if (isAnySelected) 1f else 0f },
-                backgroundAlphaProvider = { 1f },
                 hasFilters = state.filterActive,
-                onBackClicked = internalOnBackPressed,
+                navigateUp = onBackClicked,
                 onClickFilter = onFilterButtonClicked,
                 onClickShare = onShareClicked,
                 onClickDownload = onDownloadActionClicked,
                 onClickEditCategory = onEditCategoryClicked,
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
+                onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = selectedChapterCount,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
+                backgroundAlphaProvider = { 1f },
             )
         },
         bottomBar = {
