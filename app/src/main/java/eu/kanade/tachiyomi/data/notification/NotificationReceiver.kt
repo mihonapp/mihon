@@ -629,7 +629,12 @@ class NotificationReceiver : BroadcastReceiver() {
                 action = Constants.SHORTCUT_LIBRARY_UPDATE_ERRORS
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
-            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
         }
 
         /**
