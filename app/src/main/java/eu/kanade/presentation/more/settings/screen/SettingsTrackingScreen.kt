@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.tachiyomi.data.track.EnhancedTracker
@@ -52,6 +53,7 @@ import eu.kanade.tachiyomi.data.track.shikimori.ShikimoriApi
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withUIContext
@@ -85,6 +87,7 @@ object SettingsTrackingScreen : SearchableSettings {
         val trackPreferences = remember { Injekt.get<TrackPreferences>() }
         val trackerManager = remember { Injekt.get<TrackerManager>() }
         val sourceManager = remember { Injekt.get<SourceManager>() }
+        val autoTrackStatePref = trackPreferences.autoUpdateTrackOnMarkRead()
 
         var dialog by remember { mutableStateOf<Any?>(null) }
         dialog?.run {
@@ -125,9 +128,18 @@ object SettingsTrackingScreen : SearchableSettings {
                 pref = trackPreferences.autoUpdateTrack(),
                 title = stringResource(MR.strings.pref_auto_update_manga_sync),
             ),
-            Preference.PreferenceItem.SwitchPreference(
+            Preference.PreferenceItem.ListPreference(
                 pref = trackPreferences.autoUpdateTrackOnMarkRead(),
                 title = stringResource(MR.strings.pref_auto_update_manga_on_mark_read),
+                entries = persistentMapOf(
+                    AutoTrackState.ALWAYS to stringResource(MR.strings.lock_always),
+                    AutoTrackState.NEVER to stringResource(MR.strings.lock_never),
+                    AutoTrackState.ASK to stringResource(MR.strings.default_category_summary),
+                ),
+                onValueChanged = {
+                    autoTrackStatePref.set(it)
+                    true
+                },
             ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
