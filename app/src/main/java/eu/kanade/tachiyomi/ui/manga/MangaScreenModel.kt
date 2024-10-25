@@ -736,7 +736,12 @@ class MangaScreenModel(
                 chapters = chapters.toTypedArray(),
             )
 
-            if (!read || successState?.hasLoggedInTrackers == false || autoTrackState == AutoTrackState.NEVER) return@launchIO
+            if (!read ||
+                successState?.hasLoggedInTrackers == false ||
+                autoTrackState == AutoTrackState.NEVER
+            ) {
+                return@launchIO
+            }
 
             val tracks = getTracks.await(mangaId)
             val maxChapterNumber = chapters.maxOf { it.chapterNumber }
