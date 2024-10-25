@@ -11,8 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.manga.components.MangaCover
@@ -24,14 +22,11 @@ import tachiyomi.presentation.core.components.ListGroupHeader
 import tachiyomi.presentation.core.components.Scroller.STICKY_HEADER_KEY_PREFIX
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.util.secondaryItemAlpha
-import tachiyomi.presentation.core.util.selectedBackground
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 internal fun LazyListScope.libraryUpdateErrorUiItems(
     uiModels: List<LibraryUpdateErrorUiModel>,
-    selectionMode: Boolean,
-    onErrorSelected: (LibraryUpdateErrorItem, Boolean, Boolean, Boolean) -> Unit,
     onClick: (LibraryUpdateErrorItem) -> Unit,
     onClickCover: (LibraryUpdateErrorItem) -> Unit,
 ) {
@@ -57,28 +52,10 @@ internal fun LazyListScope.libraryUpdateErrorUiItems(
                     LibraryUpdateErrorUiItem(
                         modifier = Modifier.animateItemFastScroll(),
                         error = libraryUpdateErrorItem.error,
-                        selected = libraryUpdateErrorItem.selected,
                         onClick = {
-                            when {
-                                selectionMode -> onErrorSelected(
-                                    libraryUpdateErrorItem,
-                                    !libraryUpdateErrorItem.selected,
-                                    true,
-                                    false,
-                                )
-
-                                else -> onClick(libraryUpdateErrorItem)
-                            }
+                            onClick(libraryUpdateErrorItem)
                         },
-                        onLongClick = {
-                            onErrorSelected(
-                                libraryUpdateErrorItem,
-                                !libraryUpdateErrorItem.selected,
-                                true,
-                                true,
-                            )
-                        },
-                        onClickCover = { onClickCover(libraryUpdateErrorItem) }.takeIf { !selectionMode },
+                        onClickCover = { onClickCover(libraryUpdateErrorItem) },
                     )
                 }
             }
@@ -90,22 +67,13 @@ internal fun LazyListScope.libraryUpdateErrorUiItems(
 private fun LibraryUpdateErrorUiItem(
     modifier: Modifier,
     error: LibraryUpdateErrorWithRelations,
-    selected: Boolean,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
     onClickCover: (() -> Unit)?,
 ) {
-    val haptic = LocalHapticFeedback.current
-
     Row(
         modifier = modifier
-            .selectedBackground(selected)
             .combinedClickable(
                 onClick = onClick,
-                onLongClick = {
-                    onLongClick()
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                },
             )
             .padding(horizontal = MaterialTheme.padding.medium),
         verticalAlignment = Alignment.Top,

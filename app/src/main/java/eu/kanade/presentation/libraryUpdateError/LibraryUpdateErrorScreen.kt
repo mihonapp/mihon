@@ -1,6 +1,5 @@
 package eu.kanade.presentation.libraryUpdateError
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -26,9 +25,6 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
-import androidx.compose.material.icons.outlined.FindReplace
-import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.SelectAll
 import androidx.compose.material.icons.outlined.VerticalAlignBottom
 import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material3.Icon
@@ -53,11 +49,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.libraryUpdateError.components.libraryUpdateErrorUiItems
 import eu.kanade.tachiyomi.ui.libraryUpdateError.LibraryUpdateErrorItem
 import eu.kanade.tachiyomi.ui.libraryUpdateError.LibraryUpdateErrorScreenState
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -76,10 +70,6 @@ fun LibraryUpdateErrorScreen(
     modifier: Modifier = Modifier,
     onClick: (LibraryUpdateErrorItem) -> Unit,
     onClickCover: (LibraryUpdateErrorItem) -> Unit,
-    onMultiMigrateClicked: (() -> Unit),
-    onSelectAll: (Boolean) -> Unit,
-    onInvertSelection: () -> Unit,
-    onErrorSelected: (LibraryUpdateErrorItem, Boolean, Boolean, Boolean) -> Unit,
     navigateUp: () -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -112,8 +102,6 @@ fun LibraryUpdateErrorScreen(
         }
     }
 
-    BackHandler(enabled = state.selectionMode, onBack = { onSelectAll(false) })
-
     Scaffold(
         topBar = { scrollBehavior ->
             LibraryUpdateErrorsAppBar(
@@ -121,20 +109,13 @@ fun LibraryUpdateErrorScreen(
                     MR.strings.label_library_update_errors,
                     state.items.size,
                 ),
-                itemCnt = state.items.size,
                 navigateUp = navigateUp,
-                selectedCount = state.selected.size,
-                onClickUnselectAll = { onSelectAll(false) },
-                onClickSelectAll = { onSelectAll(true) },
-                onClickInvertSelection = onInvertSelection,
                 scrollBehavior = scrollBehavior,
             )
         },
         bottomBar = {
             LibraryUpdateErrorsBottomBar(
                 modifier = modifier,
-                selected = state.selected,
-                onMultiMigrateClicked = onMultiMigrateClicked,
                 enableScrollToTop = enableScrollToTop,
                 enableScrollToBottom = enableScrollToBottom,
                 scrollToTop = {
@@ -185,8 +166,6 @@ fun LibraryUpdateErrorScreen(
                 ) {
                     libraryUpdateErrorUiItems(
                         uiModels = state.getUiModel(),
-                        selectionMode = state.selectionMode,
-                        onErrorSelected = onErrorSelected,
                         onClick = onClick,
                         onClickCover = onClickCover,
                     )
@@ -199,8 +178,6 @@ fun LibraryUpdateErrorScreen(
 @Composable
 private fun LibraryUpdateErrorsBottomBar(
     modifier: Modifier = Modifier,
-    selected: List<LibraryUpdateErrorItem>,
-    onMultiMigrateClicked: (() -> Unit),
     enableScrollToTop: Boolean,
     enableScrollToBottom: Boolean,
     scrollToTop: () -> Unit,
@@ -220,11 +197,11 @@ private fun LibraryUpdateErrorsBottomBar(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
     ) {
         val haptic = LocalHapticFeedback.current
-        val confirm = remember { mutableStateListOf(false, false, false, false, false) }
+        val confirm = remember { mutableStateListOf(false, false, false, false) }
         var resetJob: Job? = remember { null }
         val onLongClickItem: (Int) -> Unit = { toConfirmIndex ->
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            (0 until 5).forEach { i -> confirm[i] = i == toConfirmIndex }
+            (0 until 4).forEach { i -> confirm[i] = i == toConfirmIndex }
             resetJob?.cancel()
             resetJob = scope.launch {
                 delay(1.seconds)
@@ -265,22 +242,10 @@ private fun LibraryUpdateErrorsBottomBar(
                 enabled = enableScrollToPrevious,
             )
             Button(
-                title = stringResource(MR.strings.migrate),
-                icon = Icons.Outlined.FindReplace,
-                toConfirm = confirm[2],
-                onLongClick = { onLongClickItem(2) },
-                onClick = if (selected.isNotEmpty()) {
-                    onMultiMigrateClicked
-                } else {
-                    {}
-                },
-                enabled = selected.isNotEmpty(),
-            )
-            Button(
                 title = stringResource(MR.strings.action_scroll_to_next),
                 icon = Icons.Outlined.ArrowDownward,
-                toConfirm = confirm[3],
-                onLongClick = { onLongClickItem(3) },
+                toConfirm = confirm[2],
+                onLongClick = { onLongClickItem(2) },
                 onClick = if (enableScrollToNext) {
                     scrollToNext
                 } else {
@@ -291,8 +256,8 @@ private fun LibraryUpdateErrorsBottomBar(
             Button(
                 title = stringResource(MR.strings.action_scroll_to_bottom),
                 icon = Icons.Outlined.VerticalAlignBottom,
-                toConfirm = confirm[4],
-                onLongClick = { onLongClickItem(4) },
+                toConfirm = confirm[3],
+                onLongClick = { onLongClickItem(3) },
                 onClick = if (enableScrollToBottom) {
                     scrollToBottom
                 } else {
@@ -362,48 +327,12 @@ private fun RowScope.Button(
 @Composable
 private fun LibraryUpdateErrorsAppBar(
     title: String,
-    itemCnt: Int,
     navigateUp: () -> Unit,
-    selectedCount: Int,
-    onClickUnselectAll: () -> Unit,
-    onClickSelectAll: () -> Unit,
-    onClickInvertSelection: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     AppBar(
         title = title,
         navigateUp = navigateUp,
-        actions = {
-            if (itemCnt > 0) {
-                AppBarActions(
-                    persistentListOf(
-                        AppBar.Action(
-                            title = stringResource(MR.strings.action_select_all),
-                            icon = Icons.Outlined.SelectAll,
-                            onClick = onClickSelectAll,
-                        ),
-                    ),
-                )
-            }
-        },
-        actionModeCounter = selectedCount,
-        onCancelActionMode = onClickUnselectAll,
-        actionModeActions = {
-            AppBarActions(
-                persistentListOf(
-                    AppBar.Action(
-                        title = stringResource(MR.strings.action_select_all),
-                        icon = Icons.Outlined.SelectAll,
-                        onClick = onClickSelectAll,
-                    ),
-                    AppBar.Action(
-                        title = stringResource(MR.strings.action_select_inverse),
-                        icon = Icons.Outlined.FlipToBack,
-                        onClick = onClickInvertSelection,
-                    ),
-                ),
-            )
-        },
         scrollBehavior = scrollBehavior,
     )
 }

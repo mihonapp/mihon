@@ -36,7 +36,9 @@ class LibraryUpdateErrorMessageRepositoryImpl(
         }
     }
 
-    override suspend fun insertAll(libraryUpdateErrorMessages: List<LibraryUpdateErrorMessage>): List<Pair<Long, String>> {
+    override suspend fun insertAll(
+        libraryUpdateErrorMessages: List<LibraryUpdateErrorMessage>,
+    ): List<Pair<Long, String>> {
         return handler.await(inTransaction = true) {
             libraryUpdateErrorMessages.map {
                 libraryUpdateErrorMessageQueries.insert(it.message)
