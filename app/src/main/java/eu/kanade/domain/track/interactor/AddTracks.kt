@@ -27,6 +27,7 @@ import java.time.ZoneOffset
 
 class AddTracks(
     private val insertTrack: InsertTrack,
+    private val refreshTracks: RefreshTracks,
     private val getChaptersByMangaId: GetChaptersByMangaId,
     private val trackerManager: TrackerManager,
 ) {
@@ -76,9 +77,7 @@ class AddTracks(
                 }
             }
 
-            val refreshTracks = Injekt.get<RefreshTracks>()
             val context = Injekt.get<Application>()
-
             refreshTracks.await(mangaId)
                 .filter { it.first != null }
                 .forEach { (track, e) ->
@@ -118,9 +117,7 @@ class AddTracks(
                     }
                 }
 
-            val refreshTracks = Injekt.get<RefreshTracks>()
             val context = Injekt.get<Application>()
-
             refreshTracks.await(manga.id)
                 .filter { it.first != null }
                 .forEach { (track, e) ->
