@@ -703,7 +703,6 @@
     <string name="pref_page_rotate">Прилагоди широке странице ротирањем</string>
     <string name="pref_debug_info">Информације за отклањање грешака</string>
     <string name="create_backup_file_error">Није могуће створити датотеку резервне копије</string>
-    <string name="licensed_manga_chapters_error">Лиценцирано - Нема поглавља за приказ</string>
     <string name="has_results">Има резултата</string>
     <string name="skipped_reason_not_in_release_period">Прескочено јер данас није очекивано издање</string>
     <string name="pref_update_only_in_release_period">Предвиди очекивано време изласка</string>

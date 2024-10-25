@@ -673,7 +673,6 @@
     <string name="action_filter_interval_custom">Aangepast ophaalinterval</string>
     <string name="action_sort_next_updated">Volgende verwachte update</string>
     <string name="split_tall_images">Splits hoge afbeeldingen</string>
-    <string name="licensed_manga_chapters_error">Gelicenseerd - Geen hoofdstukken te laten zien</string>
     <string name="pref_page_rotate_invert">Draairichting van geroteerde brede pagina\'s omdraaien</string>
     <string name="pref_double_tap_zoom">Dubbeltik om te zoomen</string>
     <string name="track_activity_name">Tracker login</string>

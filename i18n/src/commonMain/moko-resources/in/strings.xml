@@ -501,11 +501,11 @@
     <string name="enhanced_tracking_info">Menyediakan fitur yang disempurnakan untuk sumber tertentu. Entri secara otomatis dilacak ketika ditambahkan ke perpustakaan Anda.</string>
     <string name="enhanced_services">Pelacak yang ditingkatkan</string>
     <string name="pref_dark_theme_pure_black">Mode gelap hitam pekat</string>
-    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_yotsuba">Empat Daun</string>
     <string name="theme_yinyang">Yin dan Yang</string>
     <string name="theme_tako">Tako</string>
     <string name="theme_strawberrydaiquiri">Stroberi Daiquiri</string>
-    <string name="theme_midnightdusk">Senja Malam</string>
+    <string name="theme_midnightdusk">Senja Tengah Malam</string>
     <string name="theme_greenapple">Hijau Apel</string>
     <string name="theme_monet">Dinamis</string>
     <string name="pref_app_theme">Tema aplikasi</string>
@@ -602,7 +602,7 @@
     <string name="custom_cover">Sampul kustom</string>
     <string name="not_installed">Tidak terinstall</string>
     <string name="pref_app_language">Bahasa aplikasi</string>
-    <string name="theme_lavender">lavender</string>
+    <string name="theme_lavender">Bunga Lavender</string>
     <string name="description_placeholder">Tidak ada deskripsi</string>
     <string name="delete_category_confirmation">Apakah anda ingin menghapus kategori \"%s\"?</string>
     <string name="internal_error">InternalError: Periksa log kerusakan untuk informasi lebih lanjut</string>
@@ -614,7 +614,7 @@
     <string name="appwidget_unavailable_locked">Widget tidak tersedia saat kunci aplikasi diaktifkan</string>
     <string name="update_already_running">Pembaruan sudah berjalan</string>
     <string name="error_user_agent_string_blank">String agen pengguna wajib diisi</string>
-    <string name="theme_tidalwave">Gelombang pasang</string>
+    <string name="theme_tidalwave">Gelombang Pasang</string>
     <string name="download_ahead">Unduh di depan</string>
     <string name="auto_download_while_reading">Unduh otomatis ketika sedang membaca</string>
     <string name="download_ahead_info">Hanya berfungsi jika bab saat ini + bab berikutnya sudah diunduh.</string>
@@ -649,7 +649,7 @@
 \n Ketuk untuk mempelajari lebih lanjut.</string>
     <string name="action_display_show_continue_reading_button">Tombol lanjutkan membaca</string>
     <string name="track_remove_date_conf_title">Hapus tanggal?</string>
-    <string name="pref_invalidate_download_cache">Membatalkan indeks unduhan</string>
+    <string name="pref_invalidate_download_cache">Mengindeks ulang unduhan</string>
     <string name="pref_invalidate_download_cache_summary">Paksa aplikasi untuk mengecek ulang bab ter-unduh</string>
     <string name="track_remove_start_date_conf_text">Ini akan menghapus tanggal mulai yang Anda pilih sebelumnya dari %s</string>
     <string name="track_remove_finish_date_conf_text">Ini akan menghapus tanggal selesai yang Anda pilih sebelumnya dari %s</string>
@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">Indeks unduhan tidak valid</string>
     <string name="track_activity_name">Pelacak login</string>
     <string name="create_backup_file_error">Tidak dapat membuat file cadangan</string>
-    <string name="licensed_manga_chapters_error">Lisensi - Tidak ada chapter untuk ditampilkan</string>
     <string name="unlock_app_title">Buka kunci %s</string>
     <string name="exception_offline">Tidak ada koneksi Internet</string>
     <string name="exception_http">HTTP %d, periksa situs web di WebView</string>
@@ -818,7 +817,22 @@
     <string name="pref_flash_style_white">Putih</string>
     <string name="pref_flash_style_white_black">Hitam Putih</string>
     <string name="action_copy_link">Salin link</string>
-    <string name="extensionRepo_settings">Repo Ekstensi</string>
+    <string name="extensionRepo_settings">Ekstensi Penyimpanan</string>
     <string name="invalid_backup_file_json">Pencadangan JSON tidak didukung</string>
     <string name="invalid_backup_file_unknown">File cadangan rusak</string>
+    <string name="add_repo_confirmation">Apakah Anda ingin menambahkan repo \"%s\"?</string>
+    <string name="pref_download_new_unread_chapters_only">Lewati pengunduhan bagian yang sudah dibaca berulang kali</string>
+    <string name="confirm_tracker_update">Perbarui pelacak ke bab %d?</string>
+    <string name="action_sort_random">Acak</string>
+    <string name="onboarding_permission_crashlytics">Kirim log kerusakan</string>
+    <string name="onboarding_permission_crashlytics_description">Kirim catatan kerusakan yang anonim ke pengembang.</string>
+    <string name="onboarding_permission_analytics">Izinkan analitik</string>
+    <string name="onboarding_permission_analytics_description">Kirim data penggunaan anonim untuk meningkatkan fitur aplikasi.</string>
+    <string name="pref_firebase">Analisis dan Log Kerusakan</string>
+    <string name="firebase_summary">Mengirim log kerusakan dan analitik akan memungkinkan kami mengidentifikasi dan memperbaiki masalah, meningkatkan kinerja, dan membuat pembaruan mendatang lebih relevan dengan kebutuhan anda</string>
+    <string name="pref_security">Keamanan</string>
+    <string name="non_library_settings">Semua entri yang sudah dibaca</string>
+    <string name="remove_private_extension_message">Apa anda yakin ingin menghapus ekstensi \"%s\"?</string>
+    <string name="ext_remove">Hapus</string>
+    <string name="ext_confirm_remove">Hapus Ekstensi?</string>
 </resources>

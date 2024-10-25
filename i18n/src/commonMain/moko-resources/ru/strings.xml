@@ -126,7 +126,7 @@
     <string name="pref_custom_brightness">Пользовательская яркость</string>
     <string name="pref_custom_color_filter">Пользовательский светофильтр</string>
     <string name="pref_download_new">Загружать новые главы</string>
-    <string name="pref_enable_acra">Отправлять отчёты об ошибках</string>
+    <string name="pref_enable_acra">Отправлять отчёты об сбоях</string>
     <string name="pref_page_transitions">Анимированные переходы страниц</string>
     <string name="pref_fullscreen">Полноэкранный режим</string>
     <string name="pref_image_scale_type">Масштабирование</string>
@@ -226,7 +226,7 @@
     <string name="action_display_download_badge">Загруженные главы</string>
     <string name="other_source">Другое</string>
     <string name="action_global_search_hint">Искать глобально…</string>
-    <string name="latest">Последняя</string>
+    <string name="latest">Последние</string>
     <string name="browse">Поисковик</string>
     <string name="channel_common">Общий</string>
     <string name="information_empty_category">Нет категорий в библиотеке. Нажмите кнопку «Добавить» чтобы создать категорию для организации вашей библиотеки.</string>
@@ -397,7 +397,7 @@
     <string name="updated_version">Обновлено до %1$s</string>
     <string name="whats_new">Что нового</string>
     <string name="download_insufficient_space">Не удалось загрузить главы из-за малого объема хранилища</string>
-    <string name="action_global_search_query">Искать «%1$s» глобально</string>
+    <string name="action_global_search_query">Искать \"%1$s\" глобально</string>
     <string name="pref_category_reading_mode">Режим чтения</string>
     <string name="pref_category_theme">Тема</string>
     <string name="action_sort_date_added">Последнее добавление серии</string>
@@ -439,8 +439,8 @@
     <string name="l_nav">L-образная</string>
     <string name="track_finished_reading_date">Дата окончания</string>
     <string name="track_started_reading_date">Дата начала</string>
-    <string name="pref_dump_crash_logs_summary">Сохраняет журнал с ошибками в файл для отправки разработчикам</string>
-    <string name="pref_dump_crash_logs">Поделиться журналом с ошибками</string>
+    <string name="pref_dump_crash_logs_summary">Сохраняет журнал сбоев в файл для отправки разработчикам</string>
+    <string name="pref_dump_crash_logs">Поделиться журналом сбоев</string>
     <string name="action_desc">По убыванию</string>
     <string name="action_asc">По возрастанию</string>
     <string name="action_order_by_chapter_number">Номер главы</string>
@@ -604,7 +604,7 @@
     <string name="pref_app_language">Язык приложения</string>
     <string name="theme_lavender">Лаванда</string>
     <string name="description_placeholder">Без описания</string>
-    <string name="internal_error">InternalError: Проверьте журнал с ошибками для дополнительной информации</string>
+    <string name="internal_error">InternalError: Проверьте журнал сбоев для дополнительной информации</string>
     <string name="delete_category_confirmation">Хотите ли вы удалить категорию \"%s\"?</string>
     <string name="delete_category">Удалить категорию</string>
     <string name="pref_user_agent_string">User agent по умолчанию</string>
@@ -620,7 +620,7 @@
     <string name="download_ahead_info">Работает только если текущая + следующая главы уже загружены.</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="multi_lang">Многоязыковое</string>
-    <string name="remove_manga">Вы собираетесь удалить «%s» из вашей библиотеки</string>
+    <string name="remove_manga">Вы собираетесь удалить \"%s\" из вашей библиотеки</string>
     <string name="updates_last_update_info">Последнее обновление библиотеки: %s</string>
     <string name="popular">Популярное</string>
     <string name="missing_storage_permission">Не предоставлены разрешения на хранение</string>
@@ -635,9 +635,9 @@
     <string name="pref_browse_summary">Источники, расширения, глобальный поиск</string>
     <string name="pref_backup_summary">Ручные и автоматические резервные копий, хранилище</string>
     <string name="pref_security_summary">Блокировка приложения, защита экрана</string>
-    <string name="pref_advanced_summary">Выгрузка журнала с ошибками, оптимизация батареи</string>
+    <string name="pref_advanced_summary">Выгрузка журнала сбоев, оптимизация батареи</string>
     <string name="crash_screen_title">Ой, ошибочка вышла!</string>
-    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем поделиться журналом с ошибками в нашем Discord сервере в ветке support.</string>
+    <string name="crash_screen_description">%s столкнулось с непредвиденной ошибкой. Мы рекомендуем поделиться журналом сбоев в нашем Discord-сервере в ветке поддержки.</string>
     <string name="unknown_title">Неизвестное название</string>
     <string name="invalid_location">Недопустимое расположение: %s</string>
     <string name="error_user_agent_string_invalid">Недопустимый параметр user agent</string>
@@ -651,7 +651,7 @@
     <string name="track_remove_finish_date_conf_text">Это удалит ранее выбранную дату окончания из %s</string>
     <string name="track_remove_date_conf_title">Удалить дату?</string>
     <string name="track_remove_start_date_conf_text">Это удалит ранее выбранную дату начала из %s</string>
-    <string name="pref_invalidate_download_cache">Очистить индекс загрузок</string>
+    <string name="pref_invalidate_download_cache">Переиндексировать загрузки</string>
     <string name="pref_invalidate_download_cache_summary">Принуждает приложение перепроверить загруженные главы</string>
     <string name="label_started">Начато</string>
     <string name="label_read_duration">Продолжительность чтения</string>
@@ -716,7 +716,6 @@
     <string name="information_cloudflare_help">Нажмите здесь, чтобы получить помощь с Cloudflare</string>
     <string name="download_cache_invalidated">Индекс загрузок недействителен</string>
     <string name="create_backup_file_error">Не удалось создать файл резервной копии</string>
-    <string name="licensed_manga_chapters_error">Лицензировано - Нет глав</string>
     <string name="track_activity_name">Вход в сервис отслеживания</string>
     <string name="exception_http">HTTP %d, проверьте сайт в WebView</string>
     <string name="exception_offline">Нет подключения к интернету</string>
@@ -821,4 +820,21 @@
     <string name="invalid_backup_file_json">Резервное копирование в формате JSON не поддерживается</string>
     <string name="extensionRepo_settings">Репозитории расширений</string>
     <string name="action_copy_link">Копировать ссылку</string>
+    <string name="pref_download_new_unread_chapters_only">Пропустить скачивание повторяющихся прочитанных глав</string>
+    <string name="add_repo_confirmation">Хотите ли вы добавить репозиторий \"%s\"?</string>
+    <string name="confirm_tracker_update">Обновить сервисы отслеживания для главы %d?</string>
+    <string name="onboarding_permission_analytics">Разрешить аналитику</string>
+    <string name="pref_firebase">Аналитика и Журнал сбоев</string>
+    <string name="onboarding_permission_crashlytics">Отправить журнал сбоев</string>
+    <string name="onboarding_permission_crashlytics_description">Отправить анонимно журнал сбоев разработчикам.</string>
+    <string name="firebase_summary">Отправляя журнал сбоев и аналитику, вы позволите нам обнаружить и исправить ошибки, улучшить производительность и сделать будущие обновления более актуальными для ваших потребностей</string>
+    <string name="onboarding_permission_analytics_description">Отправить анонимно данные об использовании для улучшения функций приложения.</string>
+    <string name="pref_security">Безопасность</string>
+    <string name="action_sort_random">Случайно</string>
+    <string name="ext_remove">Удалить</string>
+    <string name="ext_confirm_remove">Удалить расширение?</string>
+    <string name="remove_private_extension_message">Вы действительно хотите удалить расширение \"%s\"?</string>
+    <string name="non_library_settings">Все прочитанные серии</string>
+    <string name="trackers_updated_summary">Сервисы отслеживания обновлены для главы %d</string>
+    <string name="pref_auto_update_manga_on_mark_read">Обновлять прогресс, когда отмечено как «Прочитано»</string>
 </resources>
