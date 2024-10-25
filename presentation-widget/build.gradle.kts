@@ -27,4 +27,5 @@ dependencies {
     implementation(libs.coil.core)
 
     api(libs.injekt)
+    implementation(libs.material)
 }
