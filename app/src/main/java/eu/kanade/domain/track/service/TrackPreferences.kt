@@ -1,9 +1,11 @@
 package eu.kanade.domain.track.service
 
+import eu.kanade.domain.track.model.AutoTrackState
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.anilist.Anilist
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getEnum
 
 class TrackPreferences(
     private val preferenceStore: PreferenceStore,
@@ -36,5 +38,8 @@ class TrackPreferences(
 
     fun autoUpdateTrack() = preferenceStore.getBoolean("pref_auto_update_manga_sync_key", true)
 
-    fun autoUpdateTrackOnMarkRead() = preferenceStore.getBoolean("pref_auto_update_manga_on_mark_read", true)
+    fun autoUpdateTrackOnMarkRead() = preferenceStore.getEnum(
+        "pref_auto_update_manga_on_mark_read",
+        AutoTrackState.ALWAYS,
+    )
 }
