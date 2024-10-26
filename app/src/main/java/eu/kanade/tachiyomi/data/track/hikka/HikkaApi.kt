@@ -100,6 +100,21 @@ class HikkaApi(
         }
     }
 
+    private suspend fun getRead(track: Track): HKRead {
+        return withIOContext {
+            val slug = track.tracking_url.split("/")[4]
+
+            val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon()
+                .build()
+
+            with(json) {
+                authClient.newCall(GET(url.toString()))
+                    .awaitSuccess()
+                    .parseAs<HKRead>()
+            }
+        }
+    }
+
     suspend fun getManga(track: Track): TrackSearch {
         return withIOContext {
             val slug = track.tracking_url.split("/")[4]
@@ -135,10 +150,10 @@ class HikkaApi(
             val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon()
                 .build()
 
-            var rereads = 0
-
-            if (track.status == Hikka.REREADING)
+            var rereads = getRead(track).rereads
+            if (track.status == Hikka.REREADING && rereads == 0) {
                 rereads = 1
+            }
 
             val payload = buildJsonObject {
                 put("note", "")
