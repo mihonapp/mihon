@@ -26,6 +26,8 @@
     <string name="label_download_queue">Download queue</string>
     <string name="label_library">Library</string>
     <string name="label_recent_updates">Updates</string>
+    <string name="label_failed_updates">Failed updates</string>
+    <string name="label_error_message">Error message</string>
     <string name="label_upcoming">Upcoming</string>
     <string name="label_recent_manga">History</string>
     <string name="label_sources">Sources</string>
@@ -60,6 +62,7 @@
     <!-- reserved for #4048 -->
     <string name="action_filter_empty">Remove filter</string>
     <string name="action_sort_alpha">Alphabetically</string>
+    <string name="action_sort_A_Z">A-Z</string>
     <string name="action_sort_count">Total entries</string>
     <string name="action_sort_total">Total chapters</string>
     <string name="action_sort_last_read">Last read</string>
@@ -84,7 +87,10 @@
     <string name="action_bookmark">Bookmark chapter</string>
     <string name="action_remove_bookmark">Unbookmark chapter</string>
     <string name="action_delete">Delete</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_info">Info</string>
     <string name="action_update_library">Update library</string>
+    <string name="action_update_warning">Update warning</string>
     <string name="action_enable_all">Enable all</string>
     <string name="action_disable_all">Disable all</string>
     <string name="action_edit">Edit</string>
@@ -111,6 +117,12 @@
     <string name="action_show_manga">Show entry</string>
     <string name="action_copy_to_clipboard">Copy to clipboard</string>
     <string name="action_copy_link">Copy link</string>
+    <string name="action_group_by_category">Category</string>
+    <string name="action_group_by_source">Source</string>
+    <string name="action_ungroup">Ungroup</string>
+    <string name="action_dismiss_all">Dismiss all</string>
+    <string name="action_expand_all">Expand all</string>
+    <string name="action_contract_all">Contract all</string>
     <!-- Do not translate "WebView" -->
     <string name="action_open_in_web_view">Open in WebView</string>
     <string name="action_web_view" translatable="false">WebView</string>
@@ -136,6 +148,8 @@
     <string name="action_ok">OK</string>
     <string name="action_cancel_all">Cancel all</string>
     <string name="cancel_all_for_series">Cancel all for this series</string>
+    <string name="action_sortBy">Sort by</string>
+    <string name="action_groupBy">Group by</string>
     <string name="action_sort">Sort</string>
     <string name="action_order_by_upload_date">By upload date</string>
     <string name="action_order_by_chapter_number">By chapter number</string>
@@ -934,6 +948,7 @@
 
     <!-- Information Text -->
     <string name="information_no_downloads">No downloads</string>
+    <string name="information_no_update_errors">All entries updated successfully</string>
     <string name="information_no_recent">No recent updates</string>
     <string name="information_no_recent_manga">Nothing read recently</string>
     <string name="information_empty_library">Your library is empty</string>
