@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +45,7 @@ import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.core.common.preference.toggle
 import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.Slider
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.theme.header
@@ -192,17 +192,14 @@ fun SliderItem(
         }
 
         Slider(
-            value = value.toFloat(),
-            onValueChange = {
-                val newValue = it.toInt()
-                if (newValue != value) {
-                    onChange(newValue)
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                }
-            },
             modifier = Modifier.weight(1.5f),
-            valueRange = min.toFloat()..max.toFloat(),
-            steps = max - min - 1,
+            value = value,
+            onValueChange = f@{
+                if (it == value) return@f
+                onChange(it)
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            },
+            valueRange = min..max,
         )
     }
 }
