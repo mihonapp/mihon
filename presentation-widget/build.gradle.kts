@@ -20,6 +20,7 @@ dependencies {
     api(projects.i18n)
 
     implementation(compose.glance)
+    implementation(libs.material)
 
     implementation(kotlinx.immutables)
 
