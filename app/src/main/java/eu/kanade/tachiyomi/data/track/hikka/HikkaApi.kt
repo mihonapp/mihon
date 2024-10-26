@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKAuthTokenInfo
-import eu.kanade.tachiyomi.data.track.hikka.dto.HKMangaPagination
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKManga
+import eu.kanade.tachiyomi.data.track.hikka.dto.HKMangaPagination
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKRead
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKUser
@@ -100,17 +100,18 @@ class HikkaApi(
         }
     }
 
-    private suspend fun getRead(track: Track): HKRead {
+    private suspend fun getRead(track: Track): HKRead? {
         return withIOContext {
             val slug = track.tracking_url.split("/")[4]
-
-            val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon()
-                .build()
-
+            val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon().build()
             with(json) {
-                authClient.newCall(GET(url.toString()))
-                    .awaitSuccess()
-                    .parseAs<HKRead>()
+                val response = authClient.newCall(GET(url.toString())).execute()
+                if (response.code == 404) {
+                    return@withIOContext null
+                }
+                response.use {
+                    it.parseAs<HKRead>()
+                }
             }
         }
     }
@@ -150,7 +151,7 @@ class HikkaApi(
             val url = "$BASE_API_URL/read/manga/${slug}".toUri().buildUpon()
                 .build()
 
-            var rereads = getRead(track).rereads
+            var rereads = getRead(track)?.rereads ?: 0
             if (track.status == Hikka.REREADING && rereads == 0) {
                 rereads = 1
             }
