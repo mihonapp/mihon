@@ -30,6 +30,7 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.ui.updates.UpdatesItem
 import eu.kanade.tachiyomi.ui.updates.UpdatesScreenModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tachiyomi.i18n.MR
@@ -152,26 +153,33 @@ private fun UpdatesAppBar(
         modifier = modifier,
         title = stringResource(MR.strings.label_recent_updates),
         actions = {
-            val actions = mutableListOf<AppBar.Action>()
-            if (hasFailedUpdates) { // only add the warning icon if it is enabled
-                actions += AppBar.Action(
-                    title = stringResource(R.string.action_update_warning),
-                    icon = Icons.Rounded.Warning,
-                    onClick = onUpdateWarning,
-                    iconTint = warningIconTint,
+            val actions = mutableListOf<AppBar.Action>().apply {
+                if (hasFailedUpdates) {
+                    add(
+                        AppBar.Action(
+                            title = stringResource(MR.strings.action_update_warning),
+                            icon = Icons.Rounded.Warning,
+                            onClick = onUpdateWarning,
+                            iconTint = warningIconTint,
+                        ),
+                    )
+                }
+                add(
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_view_upcoming),
+                        icon = Icons.Outlined.CalendarMonth,
+                        onClick = onCalendarClicked,
+                    ),
+                )
+                add(
+                    AppBar.Action(
+                        title = stringResource(MR.strings.action_update_library),
+                        icon = Icons.Outlined.Refresh,
+                        onClick = onUpdateLibrary,
+                    ),
                 )
             }
-            actions += AppBar.Action(
-                title = stringResource(MR.strings.action_view_upcoming),
-                icon = Icons.Outlined.CalendarMonth,
-                onClick = onCalendarClicked,
-            )
-            actions += AppBar.Action(
-                title = stringResource(R.string.action_update_library),
-                icon = Icons.Outlined.Refresh,
-                onClick = onUpdateLibrary,
-            )
-            AppBarActions(actions)
+            AppBarActions(actions.toImmutableList())
         },
         actionModeCounter = actionModeCounter,
         onCancelActionMode = onCancelActionMode,
