@@ -31,8 +31,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Option to skip downloading duplicate read chapters ([@shabnix](https://github.com/shabnix)) ([#1125](https://github.com/mihonapp/mihon/pull/1125))
 - Add confirmation dialog when adding repo via URI ([@Animeboynz](https://github.com/Animeboynz)) ([#1158](https://github.com/mihonapp/mihon/pull/1158))
 - Add "show entry" action to download notifications ([@mm12](https://github.com/mm12), [@AntsyLich](https://github.com/AntsyLich)) ([#1159](https://github.com/mihonapp/mihon/pull/1159))
-- Option to update trackers when chapter marked as read ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1177](https://github.com/mihonapp/mihon/pull/1177))
-  - Add setting to auto track when marked as read ([@Animeboynz](https://github.com/Animeboynz)) ([#1365](https://github.com/mihonapp/mihon/pull/1365))
+- Option to update trackers when chapter marked as read ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1177](https://github.com/mihonapp/mihon/pull/1177), [#1365](https://github.com/mihonapp/mihon/pull/1365), [#1374](https://github.com/mihonapp/mihon/pull/1374))
 - Toast to restart app when User-Agent is changed ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1204](https://github.com/mihonapp/mihon/pull/1204))
 - Added more profile compilation status (p) ([`c8bb78d`](https://github.com/mihonapp/mihon/commit/c8bb78d91afc2824baaca999f0095559c49d1306))
 - Add option to opt out of Analytics and Crashlytics ([@Animeboynz](https://github.com/Animeboynz)) ([#1237](https://github.com/mihonapp/mihon/pull/1237))
@@ -121,6 +120,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Manga next update calculation when considering custom fetch interval ([@cuong-tran](https://github.com/cuong-tran)) ([#1206](https://github.com/mihonapp/mihon/pull/1206))
 - WheelPicker Manual Input ([@Animeboynz](https://github.com/Animeboynz)) ([#1209](https://github.com/mihonapp/mihon/pull/1209))
 - EnhancedTracker not auto binding when adding manga to library ([@brewkunz](https://github.com/brewkunz)) ([#1298](https://github.com/mihonapp/mihon/pull/1298))
+- Step count in settings slider ([@abdurisaq](https://github.com/abdurisaq)) ([#1356](https://github.com/mihonapp/mihon/pull/1356))
+- Freezing in some screens due to blocking call ([@cuong-tran](https://github.com/cuong-tran)) ([#1364](https://github.com/mihonapp/mihon/pull/1364))
+- Crash when removing non-existent tracked entry from tracker ([@cuong-tran](https://github.com/cuong-tran)) ([#1380](https://github.com/mihonapp/mihon/pull/1380))
 
 ### Other
 - Code cleanup
