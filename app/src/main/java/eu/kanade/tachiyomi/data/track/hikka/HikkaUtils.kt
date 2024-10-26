@@ -1,7 +1,7 @@
 package eu.kanade.tachiyomi.data.track.hikka
 
 import eu.kanade.tachiyomi.data.database.models.Track
-import java.security.MessageDigest
+import java.util.UUID
 
 fun Track.toApiStatus() = when (status) {
     Hikka.READING -> "reading"
@@ -23,10 +23,6 @@ fun toTrackStatus(status: String) = when (status) {
 }
 
 fun stringToNumber(input: String): Long {
-    val digest = MessageDigest.getInstance("SHA-256")
-    val hash = digest.digest(input.toByteArray())
-
-    return hash.copyOfRange(0, 8).fold(0L) { acc, byte ->
-        acc shl 8 or (byte.toLong() and 0xff)
-    }
+    val uuid = UUID.nameUUIDFromBytes(input.toByteArray())
+    return uuid.mostSignificantBits and Long.MAX_VALUE
 }

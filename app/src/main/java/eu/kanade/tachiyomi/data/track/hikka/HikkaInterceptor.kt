@@ -18,13 +18,16 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
 
         if (currAuth.isExpired()) {
             val refreshTokenResponse = chain.proceed(HikkaApi.refreshTokenRequest(currAuth.accessToken))
-            if (!refreshTokenResponse.isSuccessful)
-                throw Exception("Hikka: The token is expired")
+            if (!refreshTokenResponse.isSuccessful) {
                 refreshTokenResponse.close()
+                hikka.logout()
+                throw Exception("Hikka: The token is expired")
+            }
 
             val authTokenInfoResponse = chain.proceed(HikkaApi.authTokenInfo(currAuth.accessToken))
-            if (!authTokenInfoResponse.isSuccessful)
+            if (!authTokenInfoResponse.isSuccessful) {
                 authTokenInfoResponse.close()
+            }
 
             val authTokenInfo = json.decodeFromString<HKAuthTokenInfo>(authTokenInfoResponse.body.string())
             setAuth(HKOAuth(oauth!!.accessToken, authTokenInfo.expiration))
