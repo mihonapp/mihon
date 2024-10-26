@@ -358,14 +358,14 @@ fun FailedUpdatesBottomActionMenu(
                     .padding(horizontal = 8.dp, vertical = 12.dp),
             ) {
                 Button(
-                    title = stringResource(R.string.action_delete),
+                    title = stringResource(MR.strings.action_delete),
                     icon = Icons.Outlined.Delete,
                     toConfirm = confirm[0],
                     onLongClick = { onLongClickItem(0) },
                     onClick = onDeleteClicked,
                 )
                 Button(
-                    title = stringResource(R.string.action_dismiss),
+                    title = stringResource(MR.strings.action_dismiss),
                     icon = Icons.Outlined.VisibilityOff,
                     toConfirm = confirm[1],
                     onLongClick = { onLongClickItem(1) },
@@ -373,7 +373,7 @@ fun FailedUpdatesBottomActionMenu(
                 )
                 if (groupingMode == GroupByMode.NONE && selected.size <= 1) {
                     Button(
-                        title = stringResource(R.string.action_info),
+                        title = stringResource(MR.strings.action_info),
                         icon = Icons.Outlined.Info,
                         toConfirm = confirm[2],
                         onLongClick = { onLongClickItem(2) },

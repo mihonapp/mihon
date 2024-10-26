@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -20,11 +19,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import logcat.LogPriority
-import tachiyomi.core.preference.PreferenceStore
-import tachiyomi.core.preference.getEnum
-import tachiyomi.core.util.lang.launchIO
-import tachiyomi.core.util.lang.launchNonCancellable
-import tachiyomi.core.util.system.logcat
+import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.getEnum
+import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.lang.launchNonCancellable
+import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.failed.repository.FailedUpdatesRepository
@@ -56,7 +55,7 @@ class FailedUpdatesScreenModel(
     val channel = _channel.receiveAsFlow()
 
     init {
-        coroutineScope.launchIO {
+        screenModelScope.launchIO {
             val sortMode = preferenceStore.getEnum("sort_mode", SortingMode.BY_ALPHABET).get()
             combine(
                 getSourcesWithFavoriteCount.subscribe(),
@@ -79,10 +78,12 @@ class FailedUpdatesScreenModel(
                             items = libraryManga.filter { libraryManga ->
                                 failedUpdates.any { it.mangaId == libraryManga.manga.id }
                             }.map { libraryManga ->
-                                val source = sourceManager.get(libraryManga.manga.source)!!
+                                // Untrusted Extensions cause null crash
+                                val source = sourceManager.getOrStub(libraryManga.manga.source)
                                 val failedUpdate = failedUpdates.find { it.mangaId == libraryManga.manga.id }!!
                                 val errorMessage = failedUpdate.errorMessage
-                                val simplifiedErrorMessage = simplifyErrorMessage(errorMessage.substringBefore(":"), failedUpdate.isOnline)
+                                val simplifiedErrorMessage =
+                                    simplifyErrorMessage(errorMessage.substringBefore(":"), failedUpdate.isOnline)
                                 FailedUpdatesManga(
                                     libraryManga = libraryManga,
                                     errorMessage = errorMessage,
@@ -106,42 +107,56 @@ class FailedUpdatesScreenModel(
     private fun simplifyErrorMessage(exception: String, isOnline: Long): String {
         return when (exception) {
             // General networking exceptions
-            "SocketException" -> context.getString(R.string.exception_socket_error)
-            "BindException" -> context.getString(R.string.exception_bind_port)
-            "InterruptedIOException" -> context.getString(R.string.exception_io_interrupted)
-            "HttpRetryException" -> context.getString(R.string.exception_http_retry)
-            "PortUnreachableException" -> context.getString(R.string.exception_port_unreachable)
+            // Hold your arses this is temporary and for testing purposes only
+            "SocketException" -> "Socket Exception"
+            "BindException" -> "Bind Exception"
+            "InterruptedIOException" -> "Interrupted IO Exception"
+            "HttpRetryException" -> "HTTP Retry Exception"
+            "PortUnreachableException" -> "Port Unreachable Exception"
             // General IO-related exceptions
-            "IOException" -> if (isOnline == 1L) context.getString(R.string.exception_io_error) else context.getString(R.string.exception_internet_connection)
-            "TimeoutException" -> context.getString(R.string.exception_timed_out)
+            "IOException" -> if (isOnline ==
+                1L
+            ) {
+                "IO Exception"
+            } else {
+                "IOException: No Internet"
+            }
+            "TimeoutException" -> "Timeout Exception"
             // SSL & Security-related
-            "SSLException" -> context.getString(R.string.exception_ssl_connection)
-            "CertificateExpiredException" -> context.getString(R.string.exception_ssl_certificate)
-            "CertificateNotYetValidException" -> context.getString(R.string.exception_ssl_not_valid)
-            "CertificateParsingException" -> context.getString(R.string.exception_ssl_parsing)
-            "CertificateEncodingException" -> context.getString(R.string.exception_ssl_encoding)
-            "UnrecoverableKeyException" -> context.getString(R.string.exception_unrecoverable_key)
-            "KeyManagementException" -> context.getString(R.string.exception_key_management)
-            "NoSuchAlgorithmException" -> context.getString(R.string.exception_algorithm)
-            "KeyStoreException" -> context.getString(R.string.exception_keystore)
-            "NoSuchProviderException" -> context.getString(R.string.exception_security_provider)
-            "SignatureException" -> context.getString(R.string.exception_signature_validation)
-            "InvalidKeySpecException" -> context.getString(R.string.exception_key_specification)
+            "SSLException" -> "SSL Exception"
+            "CertificateExpiredException" -> "Certificate Expired Exception"
+            "CertificateNotYetValidException" -> "Certificate Not Yet Valid Exception"
+            "CertificateParsingException" -> "Certificate Parsing Exception"
+            "CertificateEncodingException" -> "Certificate Encoding Exception"
+            "UnrecoverableKeyException" -> "Unrecoverable Key Exception"
+            "KeyManagementException" -> "Key Management Exception"
+            "NoSuchAlgorithmException" -> "No Such Algorithm Exception"
+            "KeyStoreException" -> "Key Store Exception"
+            "NoSuchProviderException" -> "No Such Provider Exception"
+            "SignatureException" -> "Signature Exception"
+            "InvalidKeySpecException" -> "Invalid Key Spec Exception"
             // Host & DNS-related
-            "UnknownHostException" -> if (isOnline == 1L) context.getString(R.string.exception_domain) else context.getString(R.string.exception_internet_connection)
-            "NoRouteToHostException" -> context.getString(R.string.exception_route_to_host)
+            "UnknownHostException" -> if (isOnline ==
+                1L
+            ) {
+                "Unknown Host Exception"
+            } else {
+                "Unknown Host Exception: No Internet"
+            }
+            "ConnectException" -> "Connect Exception"
+            "NoRouteToHostException" -> "No Route To Host Exception"
             // URL & URI related
-            "URISyntaxException" -> context.getString(R.string.exception_uri_syntax)
-            "MalformedURLException" -> context.getString(R.string.exception_malformed_url)
+            "URISyntaxException" -> "URI Syntax Exception"
+            "MalformedURLException" -> "Malformed URL Exception"
             // Authentication & Proxy
-            "ProtocolException" -> context.getString(R.string.exception_protocol_proxy_type)
+            "ProtocolException" -> "Protocol Exception"
             // Concurrency & Operation-related
-            "CancellationException" -> context.getString(R.string.exception_cancelled)
-            "InterruptedException" -> context.getString(R.string.exception_interrupted)
-            "IllegalStateException" -> context.getString(R.string.exception_unexpected_state)
-            "UnsupportedOperationException" -> context.getString(R.string.exception_not_supported)
-            "IllegalArgumentException" -> context.getString(R.string.exception_invalid_argument)
-            else -> ""
+            "CancellationException" -> "Cancellation Exception"
+            "InterruptedException" -> "Interrupted Exception"
+            "IllegalStateException" -> "Illegal State Exception"
+            "UnsupportedOperationException" -> "Unsupported Operation Exception"
+            "IllegalArgumentException" -> "Illegal Argument Exception"
+            else -> "Unknown: $exception"
         }
     }
 
@@ -163,7 +178,13 @@ class FailedUpdatesScreenModel(
             val descendingOrder = if (state.sortMode == SortingMode.BY_ALPHABET) !state.descendingOrder else false
             preferenceStore.getBoolean("descending_order", false).set(descendingOrder)
             state.copy(
-                items = if (descendingOrder) state.items.sortedByDescending { it.libraryManga.manga.title } else state.items.sortedBy { it.libraryManga.manga.title },
+                items = if (descendingOrder) {
+                    state.items.sortedByDescending {
+                        it.libraryManga.manga.title
+                    }
+                } else {
+                    state.items.sortedBy { it.libraryManga.manga.title }
+                },
                 descendingOrder = descendingOrder,
                 sortMode = SortingMode.BY_ALPHABET,
             )
@@ -172,7 +193,12 @@ class FailedUpdatesScreenModel(
     }
 
     @Composable
-    fun categoryMap(items: List<FailedUpdatesManga>, groupMode: GroupByMode, sortMode: SortingMode, descendingOrder: Boolean): Map<String, Map<Pair<String, String>, List<FailedUpdatesManga>>> {
+    fun categoryMap(
+        items: List<FailedUpdatesManga>,
+        groupMode: GroupByMode,
+        sortMode: SortingMode,
+        descendingOrder: Boolean,
+    ): Map<String, Map<Pair<String, String>, List<FailedUpdatesManga>>> {
         val unsortedMap = when (groupMode) {
             GroupByMode.BY_SOURCE -> items.groupBy { it.source.name }
                 .mapValues { entry -> entry.value.groupBy { Pair(it.errorMessage, it.simplifiedErrorMessage) } }
@@ -180,7 +206,14 @@ class FailedUpdatesScreenModel(
         }
         return when (sortMode) {
             SortingMode.BY_ALPHABET -> {
-                val sortedMap = TreeMap<String, Map<Pair<String, String>, List<FailedUpdatesManga>>>(if (descendingOrder) { compareByDescending { it } } else { compareBy { it } })
+                val sortedMap =
+                    TreeMap<String, Map<Pair<String, String>, List<FailedUpdatesManga>>>(
+                        if (descendingOrder) {
+                            compareByDescending { it }
+                        } else {
+                            compareBy { it }
+                        },
+                    )
                 sortedMap.putAll(unsortedMap)
                 sortedMap
             }
@@ -276,7 +309,11 @@ class FailedUpdatesScreenModel(
 
                             range.forEach {
                                 val inBetweenItem = getOrNull(it)
-                                if (inBetweenItem != null && !inBetweenItem.selected && inBetweenItem.errorMessage == firstErrorMessage && inBetweenItem.errorMessage == lastErrorMessage) {
+                                if (inBetweenItem != null &&
+                                    !inBetweenItem.selected &&
+                                    inBetweenItem.errorMessage == firstErrorMessage &&
+                                    inBetweenItem.errorMessage == lastErrorMessage
+                                ) {
                                     selectedMangaIds.add(inBetweenItem.libraryManga.manga.id)
                                     set(it, inBetweenItem.copy(selected = true))
                                 }
@@ -325,7 +362,7 @@ class FailedUpdatesScreenModel(
     }
 
     fun removeMangas(mangaList: List<Manga>, deleteFromLibrary: Boolean, deleteChapters: Boolean) {
-        coroutineScope.launchNonCancellable {
+        screenModelScope.launchNonCancellable {
             val mangaToDelete = mangaList.distinctBy { it.id }
 
             if (deleteFromLibrary) {
@@ -368,7 +405,7 @@ class FailedUpdatesScreenModel(
             )
         }
 
-        coroutineScope.launchNonCancellable { failedUpdatesManager.removeFailedUpdatesByMangaIds(listOfMangaIds) }
+        screenModelScope.launchNonCancellable { failedUpdatesManager.removeFailedUpdatesByMangaIds(listOfMangaIds) }
     }
 
     fun openDeleteMangaDialog(selected: List<FailedUpdatesManga>) {

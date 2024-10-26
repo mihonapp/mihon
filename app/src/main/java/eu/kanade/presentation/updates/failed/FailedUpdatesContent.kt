@@ -27,9 +27,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
@@ -38,6 +38,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -49,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -244,6 +246,15 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                 .height(50.dp)
                                 .aspectRatio(1f),
                         )
+                    } else {
+                        Image(
+                            imageVector = Icons.Filled.Dangerous,
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .aspectRatio(1f),
+                        )
                     }
                     Column(
                         modifier = Modifier
@@ -313,11 +324,13 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                             if (expanded[errorMessageHeaderId] == null) {
                                                 onExpandedMapChange(errorMessageHeaderId, true)
                                             } else {
-                                                onExpandedMapChange(errorMessageHeaderId, !expanded[errorMessageHeaderId]!!)
+                                                onExpandedMapChange(
+                                                    errorMessageHeaderId,
+                                                    !expanded[errorMessageHeaderId]!!,
+                                                )
                                             }
                                         },
-                                        onLongClick =
-                                        { onGroupSelected(items) },
+                                        onLongClick = { onGroupSelected(items) },
                                     )
                                     .padding(
                                         horizontal = 12.dp,
@@ -390,7 +403,9 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                 val isLastItem = index == items.lastIndex
                                 AnimatedVisibility(
                                     modifier = Modifier,
-                                    visible = expanded[errorMessageHeaderId] == true && expanded[GroupKey(id, Pair("", ""))] == true,
+                                    visible =
+                                    expanded[errorMessageHeaderId] == true &&
+                                        expanded[GroupKey(id, Pair("", ""))] == true,
                                 ) {
                                     FailedUpdatesUiItem(
                                         modifier = Modifier
@@ -443,10 +458,12 @@ fun CustomIconButton(
                 enabled = enabled,
                 role = Role.Button,
                 interactionSource = interactionSource,
-                indication = rememberRipple(
-                    bounded = false,
-                    radius = 20.dp,
-                ),
+                indication = remember {
+                    ripple(
+                        bounded = false,
+                        radius = 20.dp,
+                    )
+                },
             ),
         contentAlignment = Alignment.Center,
     ) {
