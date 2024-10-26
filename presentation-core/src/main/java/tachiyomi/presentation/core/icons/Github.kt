@@ -64,5 +64,5 @@ val CustomIcons.Github: ImageVector
         return _github!!
     }
 
-@Suppress("ObjectPropertyName", "ktlint:standard:backing-property-naming")
+@Suppress("ObjectPropertyName")
 private var _github: ImageVector? = null

@@ -1,4 +1,4 @@
-@file:Suppress("PropertyName", "ktlint:standard:property-naming")
+@file:Suppress("PropertyName")
 
 package eu.kanade.tachiyomi.source.model
 

@@ -59,5 +59,5 @@ val CustomIcons.Facebook: ImageVector
         return _facebook!!
     }
 
-@Suppress("ObjectPropertyName", "ktlint:standard:backing-property-naming")
+@Suppress("ObjectPropertyName")
 private var _facebook: ImageVector? = null

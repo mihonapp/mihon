@@ -90,5 +90,5 @@ val CustomIcons.Reddit: ImageVector
         return _reddit!!
     }
 
-@Suppress("ObjectPropertyName", "ktlint:standard:backing-property-naming")
+@Suppress("ObjectPropertyName")
 private var _reddit: ImageVector? = null

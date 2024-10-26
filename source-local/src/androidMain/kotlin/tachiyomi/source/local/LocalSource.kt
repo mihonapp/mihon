@@ -55,10 +55,10 @@ actual class LocalSource(
     private val json: Json by injectLazy()
     private val xml: XML by injectLazy()
 
-    @Suppress("PrivatePropertyName", "ktlint:standard:property-naming")
+    @Suppress("PrivatePropertyName")
     private val PopularFilters = FilterList(OrderBy.Popular(context))
 
-    @Suppress("PrivatePropertyName", "ktlint:standard:property-naming")
+    @Suppress("PrivatePropertyName")
     private val LatestFilters = FilterList(OrderBy.Latest(context))
 
     override val name: String = context.stringResource(MR.strings.local_source)

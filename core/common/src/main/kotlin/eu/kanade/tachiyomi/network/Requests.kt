@@ -1,4 +1,4 @@
-@file:Suppress("FunctionName", "ktlint:standard:function-naming")
+@file:Suppress("FunctionName")
 
 package eu.kanade.tachiyomi.network
 

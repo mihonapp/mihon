@@ -57,5 +57,5 @@ val CustomIcons.X: ImageVector
         return _x!!
     }
 
-@Suppress("ObjectPropertyName", "ktlint:standard:backing-property-naming")
+@Suppress("ObjectPropertyName")
 private var _x: ImageVector? = null
