@@ -32,7 +32,7 @@ fun ErrorMessageDialog(
             TextButton(onClick = {
                 onCopyClick()
                 onDismissRequest()
-            },) {
+            }) {
                 Text(text = stringResource(R.string.copy))
             }
         },

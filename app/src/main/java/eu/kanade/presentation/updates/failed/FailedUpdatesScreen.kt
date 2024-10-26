@@ -51,7 +51,9 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import kotlinx.collections.immutable.toImmutableList
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
 import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.SortItem
@@ -59,8 +61,6 @@ import tachiyomi.presentation.core.components.material.ExtendedFloatingActionBut
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
-import tachiyomi.presentation.core.util.isScrolledToEnd
-import tachiyomi.presentation.core.util.isScrollingUp
 import tachiyomi.source.local.isLocal
 
 class FailedUpdatesScreen : Screen() {
@@ -120,7 +120,8 @@ class FailedUpdatesScreen : Screen() {
                         text = { Text(text = stringResource(R.string.label_help)) },
                         icon = { Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = null) },
                         onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/troubleshooting") },
-                        expanded = failedUpdatesListState.isScrollingUp() || failedUpdatesListState.isScrolledToEnd(),
+                        // Revisit
+                        // expanded = failedUpdatesListState.isScrollingUp() || failedUpdatesListState.isScrolledToEnd(),
                     )
                 }
             },
@@ -129,7 +130,7 @@ class FailedUpdatesScreen : Screen() {
                 state.isLoading -> LoadingScreen(modifier = Modifier.padding(contentPadding))
 
                 state.items.isEmpty() -> EmptyScreen(
-                    textResource = R.string.information_no_update_errors,
+                    stringRes = MR.strings.information_no_update_errors,
                     modifier = Modifier.padding(contentPadding),
                     happyFace = true,
                 )
@@ -363,7 +364,7 @@ private fun FailedUpdatesAppBar(
                             onClick = { onClickGroup(GroupByMode.NONE) },
                         )
                     }
-                    AppBarActions(actions)
+                    AppBarActions(actions.toImmutableList())
                 }
             },
             scrollBehavior = scrollBehavior,
@@ -399,7 +400,7 @@ private fun FailedUpdatesActionAppBar(
                         icon = Icons.Outlined.FlipToBack,
                         onClick = onInvertSelection,
                     ),
-                ),
+                ).toImmutableList(),
             )
         },
         scrollBehavior = scrollBehavior,

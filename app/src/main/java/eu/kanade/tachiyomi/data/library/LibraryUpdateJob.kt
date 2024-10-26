@@ -296,7 +296,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             is SourceNotInstalledException -> context.stringResource(
                                                 MR.strings.loader_not_implemented_error,
                                             )
-                                            else -> e.message ?: context.getString(MR.strings.exception_unknown)
+                                            else -> e.message ?: "context.getString(MR.strings.exception_unknown)"
                                         }
                                         try {
                                             failedUpdatesCount.getAndIncrement()
@@ -329,7 +329,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                 failedUpdatesCount.get(),
             )
         }
-
     }
 
     private fun downloadChapters(manga: Manga, chapters: List<Chapter>) {
