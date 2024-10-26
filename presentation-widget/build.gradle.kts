@@ -20,6 +20,7 @@ dependencies {
     api(projects.i18n)
 
     implementation(compose.glance)
+    implementation(libs.material)
 
     implementation(kotlinx.immutables)
 
@@ -27,5 +28,4 @@ dependencies {
     implementation(libs.coil.core)
 
     api(libs.injekt)
-    implementation(libs.material)
 }
