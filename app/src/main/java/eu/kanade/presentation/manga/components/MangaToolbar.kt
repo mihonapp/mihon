@@ -9,7 +9,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,9 +45,7 @@ fun MangaToolbar(
     modifier: Modifier = Modifier,
     backgroundAlphaProvider: () -> Float,
 ) {
-    val isActionMode by remember(actionModeCounter) {
-        derivedStateOf { actionModeCounter > 0 }
-    }
+    val isActionMode = remember(actionModeCounter) { actionModeCounter > 0 }
     AppBar(
         modifier = modifier,
         title = title,
