@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.data.track.hikka
 import android.graphics.Color
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
@@ -11,7 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import tachiyomi.domain.track.model.Track
+import tachiyomi.domain.track.model.Track as DomainTrack
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
 
@@ -80,14 +81,14 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return SCORE_LIST
     }
 
-    override fun displayScore(track: Track): String {
+    override fun displayScore(track: DomainTrack): String {
         return track.score.toInt().toString()
     }
 
     override suspend fun update(
-        track: eu.kanade.tachiyomi.data.database.models.Track,
+        track: Track,
         didReadChapter: Boolean,
-    ): eu.kanade.tachiyomi.data.database.models.Track {
+    ): Track {
         if (track.status != COMPLETED) {
             if (didReadChapter) {
                 if (track.last_chapter_read.toLong() == track.total_chapters && track.total_chapters > 0) {
@@ -100,10 +101,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return api.updateUserManga(track)
     }
 
-    override suspend fun bind(
-        track: eu.kanade.tachiyomi.data.database.models.Track,
-        hasReadChapters: Boolean,
-    ): eu.kanade.tachiyomi.data.database.models.Track {
+    override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.getManga(track)
 
         track.copyPersonalFrom(remoteTrack)
@@ -121,7 +119,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         return api.searchManga(query)
     }
 
-    override suspend fun refresh(track: eu.kanade.tachiyomi.data.database.models.Track): eu.kanade.tachiyomi.data.database.models.Track {
+    override suspend fun refresh(track: Track): Track {
         val remoteTrack = api.updateUserManga(track)
         track.copyPersonalFrom(remoteTrack)
         track.total_chapters = remoteTrack.total_chapters
@@ -141,7 +139,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         }
     }
 
-    override suspend fun delete(track: Track) {
+    override suspend fun delete(track: DomainTrack) {
         api.deleteUserManga(track)
     }
 
