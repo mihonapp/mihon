@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.data.track.hikka.dto
 
-import android.util.Log
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
