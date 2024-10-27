@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.data.track.hikka
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
-import eu.kanade.tachiyomi.data.track.hikka.dto.HKAuthTokenInfo
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKManga
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKMangaPagination
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
@@ -48,21 +47,13 @@ class HikkaApi(
         }
     }
 
-    private suspend fun getTokenInfo(accessToken: String): HKAuthTokenInfo {
+    suspend fun accessToken(reference: String): HKOAuth {
         return withIOContext {
             with(json) {
-                client.newCall(authTokenInfo(accessToken))
+                client.newCall(authTokenCreate(reference))
                     .awaitSuccess()
-                    .parseAs<HKAuthTokenInfo>()
+                    .parseAs<HKOAuth>()
             }
-        }
-    }
-
-    suspend fun accessToken(code: String): HKOAuth {
-        return withIOContext {
-            val tokenInfo = getTokenInfo(code)
-            val oauth = HKOAuth(code, tokenInfo.expiration)
-            oauth
         }
     }
 
@@ -189,10 +180,13 @@ class HikkaApi(
         const val BASE_API_URL = "https://hikka.io/api"
         const val BASE_URL = "https://hikka.io"
         private const val SCOPE = "readlist,read:user-details"
-        private const val REFERENCE = "49eda83d-baa6-45f8-9936-b2a41d944da4"
+        private const val CLIENT_REFERENCE = "49eda83d-baa6-45f8-9936-b2a41d944da4"
+        private const val CLIENT_SECRET = "8Zxzs13Pvikx6m_4rwjF7t2BxxnEb0wWtXIRQ_68HyCvmdhGE9hdfz" +
+            "SL1Pas4h927LaV2ocjVoc--S_vmorHEWWh42Z_z70j-wSFYsraQQ98" +
+            "hiOeTH2BaDf77ZcA9W5Z"
 
         fun authUrl(): Uri = "$BASE_URL/oauth".toUri().buildUpon()
-            .appendQueryParameter("reference", REFERENCE)
+            .appendQueryParameter("reference", CLIENT_REFERENCE)
             .appendQueryParameter("scope", SCOPE)
             .build()
 
@@ -202,6 +196,14 @@ class HikkaApi(
                 .build()
 
             return GET("$BASE_API_URL/user/me", headers = headers) // Any request with auth
+        }
+
+        fun authTokenCreate(reference: String): Request {
+            val payload = buildJsonObject {
+                put("request_reference", reference)
+                put("client_secret", CLIENT_SECRET)
+            }
+            return POST("$BASE_API_URL/auth/token", body = payload.toString().toRequestBody(jsonMime))
         }
 
         fun authTokenInfo(accessToken: String): Request {

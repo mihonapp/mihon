@@ -30,7 +30,7 @@ class HikkaInterceptor(private val hikka: Hikka) : Interceptor {
             }
 
             val authTokenInfo = json.decodeFromString<HKAuthTokenInfo>(authTokenInfoResponse.body.string())
-            setAuth(HKOAuth(oauth!!.accessToken, authTokenInfo.expiration))
+            setAuth(HKOAuth(oauth!!.accessToken, authTokenInfo.expiration, authTokenInfo.created))
         }
 
         val authRequest = originalRequest.newBuilder()

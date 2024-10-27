@@ -70,10 +70,10 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
     }
 
     private fun handleHikka(data: Uri) {
-        val code = data.getQueryParameter("code")
-        if (code != null) {
+        val reference = data.getQueryParameter("reference")
+        if (reference != null) {
             lifecycleScope.launchIO {
-                trackerManager.hikka.login(code)
+                trackerManager.hikka.login(reference)
                 returnToSettings()
             }
         } else {

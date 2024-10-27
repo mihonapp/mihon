@@ -128,9 +128,9 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
 
     override suspend fun login(username: String, password: String) = login(password)
 
-    suspend fun login(code: String) {
+    suspend fun login(reference: String) {
         try {
-            val oauth = api.accessToken(code)
+            val oauth = api.accessToken(reference)
             interceptor.setAuth(oauth)
             val user = api.getCurrentUser()
             saveCredentials(user.reference, oauth.accessToken)
