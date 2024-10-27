@@ -12,5 +12,5 @@ data class HKUser(
     val cover: String,
     val active: Boolean,
     val avatar: String,
-    val role: String
+    val role: String,
 )

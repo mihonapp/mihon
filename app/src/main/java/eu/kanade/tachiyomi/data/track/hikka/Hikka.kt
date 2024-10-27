@@ -12,9 +12,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import tachiyomi.domain.track.model.Track as DomainTrack
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
+import tachiyomi.domain.track.model.Track as DomainTrack
 
 class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
 
@@ -51,7 +51,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             ON_HOLD,
             DROPPED,
             PLAN_TO_READ,
-            REREADING
+            REREADING,
         )
     }
 
@@ -132,7 +132,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         try {
             val oauth = api.accessToken(code)
             interceptor.setAuth(oauth)
-            val user =  api.getCurrentUser()
+            val user = api.getCurrentUser()
             saveCredentials(user.reference, oauth.accessToken)
         } catch (e: Throwable) {
             logout()

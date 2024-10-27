@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class HKPagination(
     val total: Int,
     val pages: Int,
-    val page: Int
+    val page: Int,
 )

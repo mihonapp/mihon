@@ -17,7 +17,7 @@ data class HKRead(
     val volumes: Int,
     val rereads: Int,
     val score: Int,
-    val content: HKManga
+    val content: HKManga,
 ) {
     fun toTrack(trackId: Long): TrackSearch {
         return TrackSearch.create(trackId).apply {

@@ -10,5 +10,5 @@ data class HKClient(
     val verified: Boolean,
     val user: HKUser,
     val created: Long,
-    val updated: Long
+    val updated: Long,
 )

@@ -21,7 +21,7 @@ data class HKManga(
     val year: Int,
     @SerialName("scored_by") val scoredBy: Int,
     val score: Double,
-    val slug: String
+    val slug: String,
 ) {
     fun toTrack(trackId: Long): TrackSearch {
         return TrackSearch.create(trackId).apply {

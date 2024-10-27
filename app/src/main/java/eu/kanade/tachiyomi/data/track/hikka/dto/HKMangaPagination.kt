@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HKMangaPagination(
     val pagination: HKPagination,
-    val list: List<HKManga>
+    val list: List<HKManga>,
 )

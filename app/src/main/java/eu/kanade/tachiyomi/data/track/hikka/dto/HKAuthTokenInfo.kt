@@ -9,5 +9,5 @@ data class HKAuthTokenInfo(
     val client: HKClient,
     val scope: List<String>,
     val expiration: Long,
-    val used: Long
+    val used: Long,
 )
