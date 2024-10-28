@@ -712,7 +712,6 @@
     <string name="delete_downloaded">Padam dimuat turun</string>
     <string name="has_results">Mempunyai hasil</string>
     <string name="create_backup_file_error">Tidak boleh menghasilkan fail sandaran</string>
-    <string name="licensed_manga_chapters_error">Berlesen - Tiada bab untuk ditayangkan</string>
     <string name="exception_unknown_host">Tidak dapat mencapai %s</string>
     <string name="syncing_library">Menyelaraskan pustaka</string>
     <string name="library_sync_complete">Pustaka selesai diselaraskan</string>

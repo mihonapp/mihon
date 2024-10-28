@@ -402,7 +402,7 @@
     <string name="chapter_settings">Kapittelinnstillinger</string>
     <string name="set_chapter_settings_as_default">Sett som standard</string>
     <string name="no_chapters_error">Fant ingen kapitler</string>
-    <string name="information_webview_outdated">Oppdater WebView-programmet for bedre kompabilitet</string>
+    <string name="information_webview_outdated">Oppdater WebView-programmet for bedre kompatibilitet</string>
     <string name="chapter_settings_updated">Oppdaterte standard kapittelinnstillinger</string>
     <string name="confirm_set_chapter_settings">Er du sikker på at du vil lagre disse innstillingene som standard?</string>
     <string name="action_search_settings">Søkeinnstillinger</string>
@@ -716,7 +716,6 @@
     <string name="information_cloudflare_help">Trykk her for å få hjelp med Cloudflare</string>
     <string name="download_cache_invalidated">Nedlastingsindeksen er ugyldiggjort</string>
     <string name="create_backup_file_error">Kunne ikke opprette en backup-fil</string>
-    <string name="licensed_manga_chapters_error">Lisensiert - Ingen kapitler å vise</string>
     <string name="track_activity_name">Sporerinnlogging</string>
     <string name="unlock_app_title">Lås opp %s</string>
     <string name="action_move_to_bottom_all_for_series">Flytt serien til bunnen</string>

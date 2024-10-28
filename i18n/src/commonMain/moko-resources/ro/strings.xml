@@ -716,7 +716,6 @@
     <string name="not_selected">Nu a fost selectat</string>
     <string name="action_move_to_bottom_all_for_series">Mutați seria pe ultima poziție</string>
     <string name="pref_chapter_swipe_end">Acțiune glisare către dreapta</string>
-    <string name="licensed_manga_chapters_error">Licențiat - Nu exista capitole pentru afișare</string>
     <string name="exception_offline">Fără conexiune la internet</string>
     <string name="pref_storage_usage">Utilizarea spațiului de stocare</string>
     <string name="notification_updating_progress">Actualizare bibliotecă… (%s)</string>
@@ -806,4 +805,22 @@
     <string name="upcoming_guide">Ghidul viitor</string>
     <string name="upcoming_calendar_next">Luna următoare</string>
     <string name="upcoming_calendar_prev">Luna anterioară</string>
+    <string name="extensionRepo_settings">Repo-uri extensii</string>
+    <string name="manga_interval_expected_update_null">Această manga este fie finalizată, fie nu există preconizare pentru data lansării.</string>
+    <string name="pref_flash_style_black">Negru</string>
+    <string name="pref_flash_with">Luminează cu</string>
+    <string name="pref_flash_style_white">Alb</string>
+    <string name="pref_flash_style_white_black">Alb și Negru</string>
+    <string name="pref_flash_page_interval">Luminează la fiecare</string>
+    <string name="action_copy_link">Copiați link-ul</string>
+    <string name="file_picker_uri_permission_unsupported">A eșuat obținerea accesului persistent la folder. Aplicația se poate comporta în mod neașteptat.</string>
+    <string name="pref_flash_duration">Durată luminare</string>
+    <string name="pref_flash_page">Luminează la schimbarea paginii</string>
+    <string name="overlay_header">Strat acoperitor</string>
+    <string name="add_repo_confirmation">Doriți să adăugați repo-ul „%s”?</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_download_new_unread_chapters_only">Omiteți descărcarea duplicatelor pentru capitolele deja citite</string>
+    <string name="invalid_backup_file_json">Copie de rezervă JSON nu este admisibilă</string>
+    <string name="invalid_backup_file_unknown">Copie de rezervă este coruptă</string>
+    <string name="confirm_tracker_update">Actualizați tracker-ele la capitolul %d?</string>
 </resources>

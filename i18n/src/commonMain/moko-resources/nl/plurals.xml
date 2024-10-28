@@ -41,7 +41,7 @@
         <item quantity="other">%d trackers</item>
     </plurals>
     <plurals name="missing_chapters_warning">
-        <item quantity="one">1 hoofdstuk is overgeslagen, de bron mist 1 hoofdstuk of het is uitgefilterd</item>
+        <item quantity="one">%d hoofdstuk is overgeslagen, de bron mist of het is uitgefilterd</item>
         <item quantity="other">%d hoofdstukken zijn overgeslagen, de bron mist ze of ze zijn uitgefilterd</item>
     </plurals>
     <plurals name="relative_time">
@@ -49,8 +49,8 @@
         <item quantity="other">%1$d dagen geleden</item>
     </plurals>
     <plurals name="next_unread_chapters">
-        <item quantity="one">Volgende ongelezen hoofdstuk</item>
-        <item quantity="other">Volgende aantal %d ongelezen hoofdstukken</item>
+        <item quantity="one">Volgend ongelezen hoofdstuk</item>
+        <item quantity="other">Volgende %d ongelezen hoofdstukken</item>
     </plurals>
     <plurals name="download_amount">
         <item quantity="one">Volgend hoofdstuk</item>
@@ -67,5 +67,13 @@
     <plurals name="upcoming_relative_time">
         <item quantity="one">Morgen</item>
         <item quantity="other">Over %1$d dagen</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pagina</item>
+        <item quantity="other">%1$s pagina\'s</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repo</item>
+        <item quantity="other">%d repo\'s</item>
     </plurals>
 </resources>

@@ -372,7 +372,7 @@
     <string name="label_data">Dati</string>
     <string name="backup_restore_missing_sources">Fonti mancanti:</string>
     <string name="invalid_backup_file_missing_manga">Il backup non contiene alcuna voce di libreria.</string>
-    <string name="invalid_backup_file">File di backup invalido</string>
+    <string name="invalid_backup_file">File di backup invalido:</string>
     <string name="pref_library_update_refresh_metadata_summary">Controlla nuove copertine e descrizioni durante l\'aggiornamento della libreria</string>
     <string name="pref_library_update_refresh_metadata">Ricarica metadati automaticamente</string>
     <string name="action_display_show_tabs">Mostra schede delle categorie</string>
@@ -451,9 +451,7 @@
     <string name="pref_dual_page_split">Dividi le pagine larghe</string>
     <string name="pref_dual_page_invert_summary">Se il posizionamento delle pagine larghe divise non corrisponde alla direzione di lettura</string>
     <string name="pref_dual_page_invert">Inverti il posizionamento delle pagine divise</string>
-    <string name="backup_restore_content_full">Verranno recuperati i dati dal file di backup.
-\n
-\nAvrai bisogno di installare le estensioni mancanti ed effettuare l\'accesso ai servizi di tracking per utilizzarli.</string>
+    <string name="backup_restore_content_full">Potresti aver bisogno di installare estensioni mancanti ed accedere ai servizi di tracking per utilizzarle.</string>
     <string name="exclude">Escludi: %s</string>
     <string name="include">Includi: %s</string>
     <string name="none">Nessuna</string>
@@ -653,7 +651,7 @@
     <string name="track_remove_date_conf_title">Rimuovere la data?</string>
     <string name="track_remove_finish_date_conf_text">Verrà rimossa la data di fine precedentemente selezionata da %s</string>
     <string name="track_remove_start_date_conf_text">Verrà rimossa la data di inizio precedentemente selezionata da %s</string>
-    <string name="pref_invalidate_download_cache">Invalida l\'indice dei download</string>
+    <string name="pref_invalidate_download_cache">Reindicizza i download</string>
     <string name="pref_invalidate_download_cache_summary">Forza l\'app a ricontrollare i capitoli scaricati</string>
     <string name="label_started">Iniziati</string>
     <string name="label_overview_section">Panoramica</string>
@@ -719,7 +717,6 @@
     <string name="download_cache_invalidated">Indice dei download invalidato</string>
     <string name="track_activity_name">Login del trakcer</string>
     <string name="create_backup_file_error">Non è stato possibile creare un file di backup</string>
-    <string name="licensed_manga_chapters_error">Licenziato - Nessun capitolo da mostrare</string>
     <string name="exception_http">HTTP %d, controlla il sito nella WebView</string>
     <string name="exception_offline">Nessuna connessione ad internet</string>
     <string name="exception_unknown_host">%s non raggiungibile</string>
@@ -788,7 +785,7 @@
     <string name="action_open_repo">Repository open source</string>
     <string name="manga_interval_expected_update_soon">Presto</string>
     <string name="manga_interval_custom_amount">Frequenza di aggiornamento personalizzata:</string>
-    <string name="onboarding_storage_help_info">State aggiornando da una versione precedente e non siete sicuri di cosa selezionare? Per ulteriori informazioni, consultare la guida all\'archiviazione</string>
+    <string name="onboarding_storage_help_info">Sti aggiornando da una vecchia versione e non sai cosa selezionare? Consulta la guida all\'archiviazione per info.</string>
     <string name="theme_nord">Nord</string>
     <string name="pref_library_update_smart_update">Aggiornamento intelligente</string>
     <string name="ext_revoke_trust">Revoca le estensioni sconosciute affidabili</string>
@@ -818,4 +815,26 @@
     <string name="file_picker_uri_permission_unsupported">Non si è potuto ottenere l\'accesso permanente alle cartella. L\'applicazione potrebbe comportarsi inaspettatamente.</string>
     <string name="pref_flash_page_interval">Flash ogni</string>
     <string name="pref_flash_style_white_black">Bianco e Nero</string>
+    <string name="non_library_settings">Tutte le voci lette</string>
+    <string name="action_copy_link">Copia collegamento</string>
+    <string name="action_sort_random">Casuale</string>
+    <string name="onboarding_permission_crashlytics">Invia registri dei crash</string>
+    <string name="onboarding_permission_analytics">Consenti l\'analitica</string>
+    <string name="onboarding_permission_analytics_description">Invia dati di uso anonimizzati per migliorare le funzionalità dell\'app.</string>
+    <string name="onboarding_permission_crashlytics_description">Invia registri anonimizzati dei crash agli sviluppatori.</string>
+    <string name="pref_security">Sicurezza</string>
+    <string name="pref_firebase">Analitica e registri di crash</string>
+    <string name="extensionRepo_settings">Repository delle estensioni</string>
+    <string name="confirm_tracker_update">Aggiornare i tracker al capitolo %d?</string>
+    <string name="pref_download_new_unread_chapters_only">Salta il download dei capitoli letti duplicati</string>
+    <string name="firebase_summary">L\'invio dei registri dei crash e delle analitiche ci consentirà di identificare e risolvere i problemi, migliorare le prestazioni e rendere gli aggiornamenti futuri più pertinenti alle tue esigenze</string>
+    <string name="add_repo_confirmation">Vuoi aggiungere il repository \"%s\"?</string>
+    <string name="ext_remove">Rimuovi</string>
+    <string name="ext_confirm_remove">Rimuovere l\'estensione?</string>
+    <string name="remove_private_extension_message">Vuoi davvero rimuovere l\'estensione \"%s\"?</string>
+    <string name="invalid_backup_file_json">Backup JSON non supportato</string>
+    <string name="invalid_backup_file_unknown">Il file di backup è corrotto</string>
+    <string name="manga_interval_expected_update_null">Questo manga è completato o non c\'è data di rilascio prevista.</string>
+    <string name="pref_auto_update_manga_on_mark_read">Aggiorna il progresso quando segnato come letto</string>
+    <string name="trackers_updated_summary">Tracker aggiornati al capitolo %d</string>
 </resources>

@@ -653,7 +653,7 @@
 \nToca pro nde ischire de prus.</string>
     <string name="action_display_show_continue_reading_button">Butone pro sighire a lèghere</string>
     <string name="track_remove_date_conf_title">Bogare sa data?</string>
-    <string name="pref_invalidate_download_cache">Invàlida s\'ìnditze de sos iscarrigamentos</string>
+    <string name="pref_invalidate_download_cache">Torra a inditzizare sos iscarrigamentos</string>
     <string name="track_remove_start_date_conf_text">Custu at a bogare sa data de incumintzu seletzionada in antis dae %s</string>
     <string name="track_remove_finish_date_conf_text">Custu at a bogare sa data de fine seletzionada in antis dae %s</string>
     <string name="label_downloaded">Iscarrigados</string>
@@ -720,7 +720,6 @@
     <string name="create_backup_file_error">Non at s\'est pòdidu creare un\'archìviu de còpia de seguresa</string>
     <string name="library_sync_complete">Sincronizatzione de sa biblioteca acabada</string>
     <string name="action_move_to_bottom_all_for_series">Moe sa sèrie a fundu</string>
-    <string name="licensed_manga_chapters_error">Cun lissèntzia ufitziale - Perunu capìtulu de ammustrare</string>
     <string name="exception_offline">Peruna connessione a ìnternet</string>
     <string name="download_cache_invalidated">Ìnditze de sos iscarrigamentos invalidadu</string>
     <string name="has_results">Tenet resurtados</string>
@@ -821,4 +820,23 @@
     <string name="pref_display_profile">Profilu de visualizatzione predefinidu</string>
     <string name="action_view_upcoming">Abbista·ti sos agiornamentos imbenientes</string>
     <string name="label_upcoming">Imbeniente</string>
+    <string name="non_library_settings">Totu sos elementos lèghidos</string>
+    <string name="action_copy_link">Còpia su ligàmene</string>
+    <string name="action_sort_random">A casu</string>
+    <string name="onboarding_permission_crashlytics">Imbia registros de arrestos anòmalos</string>
+    <string name="onboarding_permission_analytics">Permite sas istatìsticas de impreu</string>
+    <string name="pref_firebase">Istatìsticas de impreu e registros de sos arrestos anòmalos</string>
+    <string name="invalid_backup_file_json">Còpia de seguresa JSON non suportada</string>
+    <string name="onboarding_permission_analytics_description">Imbia datos de impreu anonimizados pro megiorare sas funtzionalidades de s\'aplicatzione.</string>
+    <string name="remove_private_extension_message">Boles a beru bogare s\'estensione \"%s\"?</string>
+    <string name="pref_security">Seguresa</string>
+    <string name="firebase_summary">S\'imbiu de sos registros de sos arrestos anòmalos e de sas istatìsticas de impreu non ant a permìtere de identificare e acontzare problemas, megiorare su rendimentu, e fàghere in manera chi sas atualizatziones imbenientes siant prus rilevantes pro sos bisòngios tuos</string>
+    <string name="ext_confirm_remove">Bogare s\'estensione?</string>
+    <string name="onboarding_permission_crashlytics_description">Imbia registros de arrestos anòmalos anonimizados a sos isvilupadores.</string>
+    <string name="ext_remove">Boga</string>
+    <string name="add_repo_confirmation">Boles annànghere su depòsitu \"%s\"?</string>
+    <string name="invalid_backup_file_unknown">Su documentu de sa còpia de seguresa est corrùmpidu</string>
+    <string name="extensionRepo_settings">Depòsitos de estensiones</string>
+    <string name="pref_download_new_unread_chapters_only">Brinca s\'iscarrigamentu de capìtulos lèghidos duplicados</string>
+    <string name="confirm_tracker_update">Atualizare sos arrastadores a su capìtulu %d?</string>
 </resources>

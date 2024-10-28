@@ -68,4 +68,12 @@
         <item quantity="one">Disponebla ĝisdatigo de etendaĵo</item>
         <item quantity="other">Disponeblaj ĝisdatigoj de %d etendaĵoj</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Morgaŭ</item>
+        <item quantity="other">post %1$d tagoj</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 paĝo</item>
+        <item quantity="other">%1$s paĝoj</item>
+    </plurals>
 </resources>
