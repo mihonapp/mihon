@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HKRead(
     val reference: String,
-    val note: String,
+    val note: String?,
     val updated: Long,
     val created: Long,
     val status: String,
