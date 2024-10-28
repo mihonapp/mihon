@@ -11,10 +11,11 @@ class CreateExtensionRepo(
     private val repository: ExtensionRepoRepository,
     private val service: ExtensionRepoService,
 ) {
+    private val httpsRegex = "^https".toRegex(RegexOption.IGNORE_CASE)
     private val repoRegex = """^https://.*/index\.min\.json$""".toRegex()
 
     suspend fun await(repoUrl: String): Result {
-        val cleanedRepoUrl = repoUrl.trim().lowercase()
+        val cleanedRepoUrl = repoUrl.trim().replaceFirst(httpsRegex, "https")
         if (!cleanedRepoUrl.matches(repoRegex)) {
             return Result.InvalidUrl
         }
