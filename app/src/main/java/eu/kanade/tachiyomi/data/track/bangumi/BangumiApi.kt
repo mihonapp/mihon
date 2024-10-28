@@ -71,6 +71,8 @@ class BangumiApi(
             val url = "$API_URL/search/subject/${URLEncoder.encode(search, StandardCharsets.UTF_8.name())}"
                 .toUri()
                 .buildUpon()
+                .appendQueryParameter("type", "1")
+                .appendQueryParameter("responseGroup", "large")
                 .appendQueryParameter("max_results", "20")
                 .build()
             with(json) {
@@ -81,7 +83,6 @@ class BangumiApi(
                         if (result.code == 404) emptyList<TrackSearch>()
 
                         result.list
-                            ?.filter { it.type == 1 }
                             ?.map { it.toTrackSearch(trackId) }
                             .orEmpty()
                     }

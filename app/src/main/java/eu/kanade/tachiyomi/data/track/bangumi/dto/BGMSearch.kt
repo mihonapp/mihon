@@ -17,6 +17,7 @@ data class BGMSearchItem(
     val nameCn: String,
     val name: String,
     val type: Int,
+    val summary: String?,
     val images: BGMSearchItemCovers?,
     @SerialName("eps_count")
     val epsCount: Long?,
@@ -25,9 +26,9 @@ data class BGMSearchItem(
 ) {
     fun toTrackSearch(trackId: Long): TrackSearch = TrackSearch.create(trackId).apply {
         remote_id = this@BGMSearchItem.id
-        title = nameCn
+        title = nameCn.ifEmpty { name }
         cover_url = images?.common ?: ""
-        summary = this@BGMSearchItem.name
+        summary = name + this@BGMSearchItem.summary?.let { "\n$it" }.orEmpty()
         score = rating?.score ?: -1.0
         tracking_url = url
         total_chapters = epsCount ?: 0
