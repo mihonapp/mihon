@@ -27,7 +27,7 @@ data class BGMSearchItem(
     fun toTrackSearch(trackId: Long): TrackSearch = TrackSearch.create(trackId).apply {
         remote_id = this@BGMSearchItem.id
         title = nameCn.ifEmpty { name }
-        cover_url = images?.common ?: ""
+        cover_url = images?.common.orEmpty()
         summary = if (nameCn.isNotEmpty()) {
             "作品原名：$name" + this@BGMSearchItem.summary?.let { "\n$it" }.orEmpty()
         } else {
