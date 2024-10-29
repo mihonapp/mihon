@@ -738,7 +738,8 @@ class MangaScreenModel(
 
             if (
                 successState?.hasLoggedInTrackers == false ||
-                !read || autoTrackState == AutoTrackState.NEVER
+                !read ||
+                autoTrackState == AutoTrackState.NEVER
             ) {
                 return@launchIO
             }
