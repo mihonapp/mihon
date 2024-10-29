@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Fixed
+- Fixed "currentTab was used multiple times"
 
 ## [v0.17.0] - 2024-10-26
 ### Added
