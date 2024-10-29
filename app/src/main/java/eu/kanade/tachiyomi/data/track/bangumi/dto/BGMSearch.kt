@@ -28,7 +28,11 @@ data class BGMSearchItem(
         remote_id = this@BGMSearchItem.id
         title = nameCn.ifEmpty { name }
         cover_url = images?.common ?: ""
-        summary = name + this@BGMSearchItem.summary?.let { "\n$it" }.orEmpty()
+        summary = if (nameCn.isNotEmpty()) {
+            "作品原名：$name" + this@BGMSearchItem.summary?.let { "\n$it" }.orEmpty()
+        } else {
+            this@BGMSearchItem.summary.orEmpty()
+        }
         score = rating?.score ?: -1.0
         tracking_url = url
         total_chapters = epsCount ?: 0
