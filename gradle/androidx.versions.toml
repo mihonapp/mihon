@@ -7,7 +7,7 @@ interpolator_version = "1.0.0"
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
 
-annotation = "androidx.annotation:annotation:1.9.0"
+annotation = "androidx.annotation:annotation:1.9.1"
 appcompat = "androidx.appcompat:appcompat:1.7.0"
 biometricktx = "androidx.biometric:biometric-ktx:1.2.0-alpha05"
 constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
