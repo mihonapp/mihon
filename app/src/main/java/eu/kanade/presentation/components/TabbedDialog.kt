@@ -58,6 +58,7 @@ fun TabbedDialog(
                 PrimaryTabRow(
                     modifier = Modifier.weight(1f),
                     selectedTabIndex = pagerState.currentPage,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     divider = {},
                 ) {
                     tabTitles.fastForEachIndexed { index, tab ->
@@ -78,7 +79,7 @@ fun TabbedDialog(
                 modifier = Modifier.animateContentSize(),
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
-                pageContent = { page -> content(page) }
+                pageContent = { page -> content(page) },
             )
         }
     }

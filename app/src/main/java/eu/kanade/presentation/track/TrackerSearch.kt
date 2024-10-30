@@ -25,8 +25,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
@@ -59,7 +61,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.toLowerCase
@@ -84,8 +85,7 @@ import tachiyomi.presentation.core.util.secondaryItemAlpha
 
 @Composable
 fun TrackerSearch(
-    query: TextFieldValue,
-    onQueryChange: (TextFieldValue) -> Unit,
+    state: TextFieldState,
     onDispatchQuery: () -> Unit,
     queryResult: Result<List<TrackSearch>>?,
     selected: TrackSearch?,
@@ -115,20 +115,19 @@ fun TrackerSearch(
                     },
                     title = {
                         BasicTextField(
-                            value = query,
-                            onValueChange = onQueryChange,
+                            state = state,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(focusRequester)
                                 .runOnEnterKeyPressed(action = dispatchQueryAndClearFocus),
                             textStyle = MaterialTheme.typography.bodyLarge
                                 .copy(color = MaterialTheme.colorScheme.onSurface),
-                            singleLine = true,
+                            lineLimits = TextFieldLineLimits.SingleLine,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            keyboardActions = KeyboardActions(onSearch = { dispatchQueryAndClearFocus() }),
+                            onKeyboardAction = { dispatchQueryAndClearFocus() },
                             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                            decorationBox = {
-                                if (query.text.isEmpty()) {
+                            decorator = {
+                                if (state.text.isEmpty()) {
                                     Text(
                                         text = stringResource(MR.strings.action_search_hint),
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -140,10 +139,10 @@ fun TrackerSearch(
                         )
                     },
                     actions = {
-                        if (query.text.isNotEmpty()) {
+                        if (state.text.isNotEmpty()) {
                             IconButton(
                                 onClick = {
-                                    onQueryChange(TextFieldValue())
+                                    state.clearText()
                                     focusRequester.requestFocus()
                                 },
                             ) {
@@ -224,6 +223,7 @@ private fun SearchResultItem(
 ) {
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val focusManager = LocalFocusManager.current
     val type = trackSearch.publishing_type.toLowerCase(Locale.current).capitalize(Locale.current)
     val status = trackSearch.publishing_status.toLowerCase(Locale.current).capitalize(Locale.current)
     val description = trackSearch.summary.trim()
@@ -243,7 +243,10 @@ private fun SearchResultItem(
             )
             .combinedClickable(
                 onLongClick = { dropDownMenuExpanded = true },
-                onClick = onClick,
+                onClick = {
+                    focusManager.clearFocus()
+                    onClick()
+                },
             )
             .padding(12.dp),
     ) {

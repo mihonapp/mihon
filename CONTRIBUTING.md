@@ -24,10 +24,6 @@ Before you start, please note that the ability to use following technologies is 
 - [Android Studio](https://developer.android.com/studio)
 - Emulator or phone with developer options enabled to test changes.
 
-## Linting
-
-To auto-fix some linting errors, run the `ktlintFormat` Gradle task.
-
 ## Getting help
 
 - Join [the Discord server](https://discord.gg/mihon) for online help and to ask questions while developing.

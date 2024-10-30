@@ -15,7 +15,6 @@ import eu.kanade.presentation.more.settings.widget.TriStateListDialog
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.coroutines.runBlocking
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.download.service.DownloadPreferences
@@ -35,7 +34,7 @@ object SettingsDownloadScreen : SearchableSettings {
     @Composable
     override fun getPreferences(): List<Preference> {
         val getCategories = remember { Injekt.get<GetCategories>() }
-        val allCategories by getCategories.subscribe().collectAsState(initial = runBlocking { getCategories.await() })
+        val allCategories by getCategories.subscribe().collectAsState(initial = emptyList())
 
         val downloadPreferences = remember { Injekt.get<DownloadPreferences>() }
         return listOf(
@@ -120,6 +119,7 @@ object SettingsDownloadScreen : SearchableSettings {
         allCategories: List<Category>,
     ): Preference.PreferenceGroup {
         val downloadNewChaptersPref = downloadPreferences.downloadNewChapters()
+        val downloadNewUnreadChaptersOnlyPref = downloadPreferences.downloadNewUnreadChaptersOnly()
         val downloadNewChapterCategoriesPref = downloadPreferences.downloadNewChapterCategories()
         val downloadNewChapterCategoriesExcludePref = downloadPreferences.downloadNewChapterCategoriesExclude()
 
@@ -151,6 +151,11 @@ object SettingsDownloadScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = downloadNewChaptersPref,
                     title = stringResource(MR.strings.pref_download_new),
+                ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = downloadNewUnreadChaptersOnlyPref,
+                    title = stringResource(MR.strings.pref_download_new_unread_chapters_only),
+                    enabled = downloadNewChapters,
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.categories),

@@ -226,7 +226,7 @@ private fun ChapterText(
         Text(
             text = buildAnnotatedString {
                 if (downloaded) {
-                    appendInlineContent(DownloadedIconContentId)
+                    appendInlineContent(DOWNLOADED_ICON_ID)
                     append(' ')
                 }
                 append(name)
@@ -236,7 +236,7 @@ private fun ChapterText(
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleLarge,
             inlineContent = persistentMapOf(
-                DownloadedIconContentId to InlineTextContent(
+                DOWNLOADED_ICON_ID to InlineTextContent(
                     Placeholder(
                         width = 22.sp,
                         height = 22.sp,
@@ -273,7 +273,7 @@ private val CardColor: CardColors
     )
 
 private val VerticalSpacerSize = 24.dp
-private const val DownloadedIconContentId = "downloaded"
+private const val DOWNLOADED_ICON_ID = "downloaded"
 
 private fun previewChapter(name: String, scanlator: String, chapterNumber: Double) = Chapter.create().copy(
     id = 0L,

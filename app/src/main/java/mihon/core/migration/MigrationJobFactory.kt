@@ -9,21 +9,24 @@ import tachiyomi.core.common.util.system.logcat
 
 class MigrationJobFactory(
     private val migrationContext: MigrationContext,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
 
-    @SuppressWarnings("MaxLineLength")
     fun create(migrations: List<Migration>): Deferred<Boolean> = with(scope) {
         return migrations.sortedBy { it.version }
             .fold(CompletableDeferred(true)) { acc: Deferred<Boolean>, migration: Migration ->
                 if (!migrationContext.dryrun) {
-                    logcat { "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
+                    logcat {
+                        "Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }"
+                    }
                     async(start = CoroutineStart.UNDISPATCHED) {
                         val prev = acc.await()
                         migration(migrationContext) || prev
                     }
                 } else {
-                    logcat { "(Dry-run) Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }" }
+                    logcat {
+                        "(Dry-run) Running migration: { name = ${migration::class.simpleName}, version = ${migration.version} }"
+                    }
                     CompletableDeferred(true)
                 }
             }

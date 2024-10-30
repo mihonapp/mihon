@@ -25,13 +25,15 @@ dependencies {
 
     api(libs.sqldelight.android.paging)
 
+    compileOnly(libs.compose.stablemarker)
+
     testImplementation(libs.bundles.test)
     testImplementation(kotlinx.coroutines.test)
 }
 
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
+        compilerOptions.freeCompilerArgs.addAll(
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-Xcontext-receivers",
         )

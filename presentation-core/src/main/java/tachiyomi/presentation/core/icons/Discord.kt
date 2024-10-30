@@ -10,18 +10,26 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+@Suppress("UnusedReceiverParameter", "BooleanLiteralArgument")
 val CustomIcons.Discord: ImageVector
     get() {
         if (_discord != null) {
             return _discord!!
         }
         _discord = Builder(
-            name = "Discord", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f,
+            name = "Discord",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(20.317f, 4.3698f)
@@ -74,4 +82,5 @@ val CustomIcons.Discord: ImageVector
         return _discord!!
     }
 
+@Suppress("ObjectPropertyName")
 private var _discord: ImageVector? = null

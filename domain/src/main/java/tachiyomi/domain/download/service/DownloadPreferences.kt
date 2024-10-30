@@ -13,7 +13,7 @@ class DownloadPreferences(
 
     fun saveChaptersAsCBZ() = preferenceStore.getBoolean("save_chapter_as_cbz", true)
 
-    fun splitTallImages() = preferenceStore.getBoolean("split_tall_images", false)
+    fun splitTallImages() = preferenceStore.getBoolean("split_tall_images", true)
 
     fun autoDownloadWhileReading() = preferenceStore.getInt("auto_download_while_reading", 0)
 
@@ -42,4 +42,6 @@ class DownloadPreferences(
         "download_new_categories_exclude",
         emptySet(),
     )
+
+    fun downloadNewUnreadChaptersOnly() = preferenceStore.getBoolean("download_new_unread_chapters_only", false)
 }

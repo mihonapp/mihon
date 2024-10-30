@@ -10,6 +10,7 @@ import tachiyomi.domain.chapter.interactor.UpdateChapter
 import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.domain.track.model.Track
+import kotlin.math.max
 
 class SyncChapterProgressWithTrack(
     private val updateChapter: UpdateChapter,
@@ -36,7 +37,8 @@ class SyncChapterProgressWithTrack(
 
         // only take into account continuous reading
         val localLastRead = sortedChapters.takeWhile { it.read }.lastOrNull()?.chapterNumber ?: 0F
-        val updatedTrack = remoteTrack.copy(lastChapterRead = localLastRead.toDouble())
+        val lastRead = max(remoteTrack.lastChapterRead, localLastRead.toDouble())
+        val updatedTrack = remoteTrack.copy(lastChapterRead = lastRead)
 
         try {
             tracker.update(updatedTrack.toDbTrack())

@@ -19,9 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
 import java.time.LocalDate
 
-private const val MaxEvents = 3
+private const val MAX_EVENTS = 3
 
 @Composable
 fun CalendarDay(
@@ -39,7 +40,7 @@ fun CalendarDay(
                     Modifier.border(
                         border = BorderStroke(
                             width = 1.dp,
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
                         ),
                         shape = CircleShape,
                     )
@@ -57,14 +58,14 @@ fun CalendarDay(
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = if (date.isBefore(today)) {
-                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f)
+                MaterialTheme.colorScheme.onBackground.copy(alpha = DISABLED_ALPHA)
             } else {
                 MaterialTheme.colorScheme.onBackground
             },
             fontWeight = FontWeight.SemiBold,
         )
         Row(Modifier.offset(y = 12.dp)) {
-            val size = events.coerceAtMost(MaxEvents)
+            val size = events.coerceAtMost(MAX_EVENTS)
             for (index in 0 until size) {
                 CalendarIndicator(
                     index = index,

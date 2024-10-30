@@ -1,26 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
-  "schedule": ["every friday"],
+  "extends": ["config:base"],
   "labels": ["Dependencies"],
+  "semanticCommits": "disabled",
   "packageRules": [
     {
-      "groupName": "Compose BOM",
-      "matchPackageNames": [
-        "dev.chrisbanes.compose:compose-bom"
-      ],
-      "ignoreUnstable": false
-    },
-    {
-      // Compiler plugins are tightly coupled to Kotlin version
-      "groupName": "Kotlin",
-      "matchPackagePrefixes": [
-        "androidx.compose.compiler",
-        "org.jetbrains.kotlin.",
-        "org.jetbrains.kotlin:"
-      ],
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
     }
   ]
 }

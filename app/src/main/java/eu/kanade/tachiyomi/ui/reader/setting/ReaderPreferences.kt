@@ -17,6 +17,12 @@ class ReaderPreferences(
 
     fun flashOnPageChange() = preferenceStore.getBoolean("pref_reader_flash", false)
 
+    fun flashDurationMillis() = preferenceStore.getInt("pref_reader_flash_duration", MILLI_CONVERSION)
+
+    fun flashPageInterval() = preferenceStore.getInt("pref_reader_flash_interval", 1)
+
+    fun flashColor() = preferenceStore.getEnum("pref_reader_flash_mode", FlashColor.BLACK)
+
     fun doubleTapAnimSpeed() = preferenceStore.getInt("pref_double_tap_anim_speed", 500)
 
     fun showPageNumber() = preferenceStore.getBoolean("pref_show_page_number_key", true)
@@ -133,6 +139,12 @@ class ReaderPreferences(
 
     // endregion
 
+    enum class FlashColor {
+        BLACK,
+        WHITE,
+        WHITE_BLACK,
+    }
+
     enum class TappingInvertMode(
         val titleRes: StringResource,
         val shouldInvertHorizontal: Boolean = false,
@@ -154,6 +166,8 @@ class ReaderPreferences(
     companion object {
         const val WEBTOON_PADDING_MIN = 0
         const val WEBTOON_PADDING_MAX = 25
+
+        const val MILLI_CONVERSION = 100
 
         val TapZones = listOf(
             MR.strings.label_default,

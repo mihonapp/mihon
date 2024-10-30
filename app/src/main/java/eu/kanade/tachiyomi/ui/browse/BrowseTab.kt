@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.ui.browse
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,12 +23,14 @@ import eu.kanade.tachiyomi.ui.browse.source.globalsearch.GlobalSearchScreen
 import eu.kanade.tachiyomi.ui.browse.source.sourcesTab
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-data class BrowseTab(
-    private val toExtensions: Boolean = false,
-) : Tab {
+data object BrowseTab : Tab {
 
     override val options: TabOptions
         @Composable
@@ -45,6 +48,12 @@ data class BrowseTab(
         navigator.push(GlobalSearchScreen())
     }
 
+    private val switchToExtensionTabChannel = Channel<Unit>(1, BufferOverflow.DROP_OLDEST)
+
+    fun showExtension() {
+        switchToExtensionTabChannel.trySend(Unit)
+    }
+
     @Composable
     override fun Content() {
         val context = LocalContext.current
@@ -53,17 +62,25 @@ data class BrowseTab(
         val extensionsScreenModel = rememberScreenModel { ExtensionsScreenModel() }
         val extensionsState by extensionsScreenModel.state.collectAsState()
 
+        val tabs = persistentListOf(
+            sourcesTab(),
+            extensionsTab(extensionsScreenModel),
+            migrateSourceTab(),
+        )
+
+        val state = rememberPagerState { tabs.size }
+
         TabbedScreen(
             titleRes = MR.strings.browse,
-            tabs = persistentListOf(
-                sourcesTab(),
-                extensionsTab(extensionsScreenModel),
-                migrateSourceTab(),
-            ),
-            startIndex = 1.takeIf { toExtensions },
+            tabs = tabs,
+            state = state,
             searchQuery = extensionsState.searchQuery,
             onChangeSearchQuery = extensionsScreenModel::search,
         )
+        LaunchedEffect(Unit) {
+            switchToExtensionTabChannel.receiveAsFlow()
+                .collectLatest { state.scrollToPage(1) }
+        }
 
         LaunchedEffect(Unit) {
             (context as? MainActivity)?.ready = true

@@ -2,7 +2,6 @@ package eu.kanade.presentation.util
 
 import android.content.Context
 import eu.kanade.tachiyomi.network.HttpException
-import eu.kanade.tachiyomi.source.online.LicensedMangaChaptersException
 import eu.kanade.tachiyomi.util.system.isOnline
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.data.source.NoResultsException
@@ -25,7 +24,6 @@ val Throwable.formattedMessage: String
 
             is NoResultsException -> return stringResource(MR.strings.no_results_found)
             is SourceNotInstalledException -> return stringResource(MR.strings.loader_not_implemented_error)
-            is LicensedMangaChaptersException -> return stringResource(MR.strings.licensed_manga_chapters_error)
         }
         return when (val className = this::class.simpleName) {
             "Exception", "IOException" -> message ?: className

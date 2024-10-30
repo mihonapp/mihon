@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">After %1$s minute</item>
+        <item quantity="other">After %1$s minutes</item>
+    </plurals>
+
+    <plurals name="relative_time">
+        <item quantity="one">Yesterday</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
+
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Tomorrow</item>
+        <item quantity="other">In %1$d days</item>
+    </plurals>
+
+    <plurals name="num_categories">
+        <item quantity="one">%d category</item>
+        <item quantity="other">%d categories</item>
+    </plurals>
+
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Next unread chapter</item>
+        <item quantity="other">Next %d unread chapters</item>
+    </plurals>
+
+    <plurals name="restore_completed_message">
+        <item quantity="one">Done in %1$s with %2$s error</item>
+        <item quantity="other">Done in %1$s with %2$s errors</item>
+    </plurals>
+
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s remaining</item>
+        <item quantity="other">%1$s remaining</item>
+    </plurals>
+
+    <plurals name="day">
+        <item quantity="one">1 day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <plurals name="pref_pages">
+        <item quantity="one">1 page</item>
+        <item quantity="other">%1$s pages</item>
+    </plurals>
+
+    <!-- Manga info -->
+    <plurals name="missing_chapters">
+        <item quantity="one">Missing %1$s chapter</item>
+        <item quantity="other">Missing %1$s chapters</item>
+    </plurals>
+
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s chapter</item>
+        <item quantity="other">%1$s chapters</item>
+    </plurals>
+
+    <plurals name="download_amount">
+        <item quantity="one">Next chapter</item>
+        <item quantity="other">Next %d chapters</item>
+    </plurals>
+
+    <plurals name="num_trackers">
+        <item quantity="one">%d tracker</item>
+        <item quantity="other">%d trackers</item>
+    </plurals>
+
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Skipping %d chapter, either the source is missing it or it has been filtered out</item>
+        <item quantity="other">Skipping %d chapters, either the source is missing them or they have been filtered out</item>
+    </plurals>
+
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">For %d entry</item>
+        <item quantity="other">For %d entries</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d new chapter</item>
+        <item quantity="other">%1$d new chapters</item>
+    </plurals>
+
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Chapters %1$s and 1 more</item>
+        <item quantity="other">Chapters %1$s and %2$d more</item>
+    </plurals>
+
+    <!--Extension Updates Notifications-->
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Extension update available</item>
+        <item quantity="other">%d extension updates available</item>
+    </plurals>
+
+    <plurals name="num_repos">
+        <item quantity="one">%d repo</item>
+        <item quantity="other">%d repos</item>
+    </plurals>
+</resources>

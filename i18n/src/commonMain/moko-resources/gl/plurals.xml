@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="num_categories">
+        <item quantity="one">%d categoría</item>
+        <item quantity="other">%d categorías</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Despois de 1 minuto</item>
+        <item quantity="other">Despois de %1$s minutos</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Seguinte capítulo sen ler</item>
+        <item quantity="other">Seguintes %d capítulos sen ler</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">Queda %1$s</item>
+        <item quantity="other">Quedan %1$s</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Onte</item>
+        <item quantity="other">Fai %1$d días</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Feito en %1$s con %2$s erro</item>
+        <item quantity="other">Feito en %1$s con %2$s erros</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d servizo de seguemento</item>
+        <item quantity="other">%d servizos de seguemento</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Hai unha actualización dunha extensión</item>
+        <item quantity="other">Hai actualizacións de %d extensións</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s capítulo</item>
+        <item quantity="other">%1$s capítulos</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Capítulos %1$s e 1 máis</item>
+        <item quantity="other">Capítulos %1$s e %2$d máis</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Saltouse %d capítulo: falta na fonte ou ignorouse</item>
+        <item quantity="other">Saltáronse %d capítulos: faltan na fonte ou ignoráronse</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Por %d elemento</item>
+        <item quantity="other">Por %d elementos</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d capítulo novo</item>
+        <item quantity="other">%1$d capítulos novos</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">O seguinte capítulo</item>
+        <item quantity="other">Os seguintes %d capítulos</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Falta %1$s capítulo</item>
+        <item quantity="other">Faltan %1$s capítulos</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repositorio</item>
+        <item quantity="other">%d repositorios</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Mañá</item>
+        <item quantity="other">Dentro de %1$d días</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">Un día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+</resources>

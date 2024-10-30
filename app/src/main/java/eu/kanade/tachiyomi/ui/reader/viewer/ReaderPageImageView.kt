@@ -19,6 +19,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.os.postDelayed
 import androidx.core.view.isVisible
 import coil3.BitmapImage
+import coil3.asDrawable
 import coil3.dispose
 import coil3.imageLoader
 import coil3.request.CachePolicy
@@ -403,7 +404,9 @@ open class ReaderPageImageView @JvmOverloads constructor(
     )
 
     enum class ZoomStartPosition {
-        LEFT, CENTER, RIGHT
+        LEFT,
+        CENTER,
+        RIGHT,
     }
 }
 

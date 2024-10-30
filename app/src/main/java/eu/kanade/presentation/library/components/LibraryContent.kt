@@ -93,7 +93,7 @@ fun LibraryContent(
                     isRefreshing = false
                 }
             },
-            enabled = { notSelectionMode },
+            enabled = notSelectionMode,
         ) {
             LibraryPager(
                 state = pagerState,

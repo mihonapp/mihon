@@ -14,6 +14,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
@@ -61,12 +62,8 @@ object SettingsReaderScreen : SearchableSettings {
                 pref = readerPref.pageTransitions(),
                 title = stringResource(MR.strings.pref_page_transitions),
             ),
-            Preference.PreferenceItem.SwitchPreference(
-                pref = readerPref.flashOnPageChange(),
-                title = stringResource(MR.strings.pref_flash_page),
-                subtitle = stringResource(MR.strings.pref_flash_page_summ),
-            ),
             getDisplayGroup(readerPreferences = readerPref),
+            getEInkGroup(readerPreferences = readerPref),
             getReadingGroup(readerPreferences = readerPref),
             getPagedGroup(readerPreferences = readerPref),
             getWebtoonGroup(readerPreferences = readerPref),
@@ -117,6 +114,65 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.SwitchPreference(
                     pref = readerPreferences.showPageNumber(),
                     title = stringResource(MR.strings.pref_show_page_number),
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getEInkGroup(readerPreferences: ReaderPreferences): Preference.PreferenceGroup {
+        val flashPageState by readerPreferences.flashOnPageChange().collectAsState()
+
+        val flashMillisPref = readerPreferences.flashDurationMillis()
+        val flashMillis by flashMillisPref.collectAsState()
+
+        val flashIntervalPref = readerPreferences.flashPageInterval()
+        val flashInterval by flashIntervalPref.collectAsState()
+
+        val flashColorPref = readerPreferences.flashColor()
+
+        return Preference.PreferenceGroup(
+            title = "E-Ink",
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = readerPreferences.flashOnPageChange(),
+                    title = stringResource(MR.strings.pref_flash_page),
+                    subtitle = stringResource(MR.strings.pref_flash_page_summ),
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = flashMillis / ReaderPreferences.MILLI_CONVERSION,
+                    min = 1,
+                    max = 15,
+                    title = stringResource(MR.strings.pref_flash_duration),
+                    subtitle = stringResource(MR.strings.pref_flash_duration_summary, flashMillis),
+                    onValueChanged = {
+                        flashMillisPref.set(it * ReaderPreferences.MILLI_CONVERSION)
+                        true
+                    },
+                    enabled = flashPageState,
+                ),
+                Preference.PreferenceItem.SliderPreference(
+                    value = flashInterval,
+                    min = 1,
+                    max = 10,
+                    title = stringResource(MR.strings.pref_flash_page_interval),
+                    subtitle = pluralStringResource(MR.plurals.pref_pages, flashInterval, flashInterval),
+                    onValueChanged = {
+                        flashIntervalPref.set(it)
+                        true
+                    },
+                    enabled = flashPageState,
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = flashColorPref,
+                    title = stringResource(MR.strings.pref_flash_with),
+                    entries = persistentMapOf(
+                        ReaderPreferences.FlashColor.BLACK to stringResource(MR.strings.pref_flash_style_black),
+                        ReaderPreferences.FlashColor.WHITE to stringResource(MR.strings.pref_flash_style_white),
+                        ReaderPreferences.FlashColor.WHITE_BLACK
+                            to stringResource(MR.strings.pref_flash_style_white_black),
+                    ),
+                    enabled = flashPageState,
                 ),
             ),
         )

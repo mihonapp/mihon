@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">После %1$s минуты</item>
+        <item quantity="few">После %1$s минут</item>
+        <item quantity="many">После %1$s минут</item>
+        <item quantity="other">После %1$s минут</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Главы %1$s и ещё одна</item>
+        <item quantity="few">Главы %1$s и ещё %2$d</item>
+        <item quantity="many">Главы %1$s и ещё %2$d</item>
+        <item quantity="other">Главы %1$s и ещё %2$d</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d новая глава</item>
+        <item quantity="few">%1$d новые главы</item>
+        <item quantity="many">%1$d новых глав</item>
+        <item quantity="other">%1$d новых глав</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Для %d серии</item>
+        <item quantity="few">Для %d серий</item>
+        <item quantity="many">Для %d серий</item>
+        <item quantity="other">Для %d серий</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Доступно обновление для %d расширения</item>
+        <item quantity="few">Доступны обновления для %d расширений</item>
+        <item quantity="many">Доступны обновления для %d расширений</item>
+        <item quantity="other">Доступны обновления для %d расширений</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">Осталась %1$s глава</item>
+        <item quantity="few">Осталось %1$s главы</item>
+        <item quantity="many">Осталось %1$s глав</item>
+        <item quantity="other">Осталось %1$s глав</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d категория</item>
+        <item quantity="few">%d категории</item>
+        <item quantity="many">%d категорий</item>
+        <item quantity="other">%d категорий</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Выполнено за %1$s с %2$s ошибкой</item>
+        <item quantity="few">Выполнено за %1$s с %2$s ошибками</item>
+        <item quantity="many">Выполнено за %1$s с %2$s ошибками</item>
+        <item quantity="other">Выполнено за %1$s с %2$s ошибками</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s глава</item>
+        <item quantity="few">%1$s главы</item>
+        <item quantity="many">%1$s глав</item>
+        <item quantity="other">%1$s глав</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d отслеживание</item>
+        <item quantity="few">%d отслеживания</item>
+        <item quantity="many">%d отслеживаний</item>
+        <item quantity="other">%d отслеживаний</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Отсутствует %d глава</item>
+        <item quantity="few">Отсутствуют %d главы</item>
+        <item quantity="many">Отсутствуют %d глав</item>
+        <item quantity="other">Отсутствуют %d глав</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Вчера</item>
+        <item quantity="few">%1$d дня назад</item>
+        <item quantity="many">%1$d дней назад</item>
+        <item quantity="other">%1$d дней назад</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Следующая непрочитанная глава</item>
+        <item quantity="few">Следующие %d непрочитанные главы</item>
+        <item quantity="many">Следующие %d непрочитанных глав</item>
+        <item quantity="other">Следующие %d непрочитанных глав</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Следующая глава</item>
+        <item quantity="few">Следующие %d главы</item>
+        <item quantity="many">Следующие %d глав</item>
+        <item quantity="other">Следующие %d глав</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Отсутствует %1$s глава</item>
+        <item quantity="few">Отсутствуют %1$s главы</item>
+        <item quantity="many">Отсутствуют %1$s глав</item>
+        <item quantity="other">Отсутствуют %1$s глав</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d репозиторий</item>
+        <item quantity="few">%d репозитория</item>
+        <item quantity="many">%d репозиториев</item>
+        <item quantity="other">%d репозиториев</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Завтра</item>
+        <item quantity="few">В течении %1$d дней</item>
+        <item quantity="many">В течении %1$d дней</item>
+        <item quantity="other">В течении %1$d дней</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 страница</item>
+        <item quantity="few">%1$s страницы</item>
+        <item quantity="many">%1$s страниц</item>
+        <item quantity="other">%1$s страниц</item>
+    </plurals>
+</resources>

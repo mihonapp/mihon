@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <plurals name="lock_after_mins">
-        <item quantity="one">ఒక నిమిషము తరువాత</item>
-        <item quantity="other">%1$s నిమిషముల తరువాత</item>
-    </plurals>
-</resources>

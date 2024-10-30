@@ -2,11 +2,13 @@ package eu.kanade.tachiyomi.network.interceptor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import eu.kanade.tachiyomi.network.AndroidCookieJar
-import eu.kanade.tachiyomi.util.system.WebViewClientCompat
 import eu.kanade.tachiyomi.util.system.isOutdated
 import eu.kanade.tachiyomi.util.system.toast
 import okhttp3.Cookie
@@ -73,7 +75,7 @@ class CloudflareInterceptor(
         executor.execute {
             webview = createWebView(originalRequest)
 
-            webview?.webViewClient = object : WebViewClientCompat() {
+            webview?.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
                     fun isCloudFlareBypassed(): Boolean {
                         return cookieManager.get(origRequestUrl.toHttpUrl())
@@ -92,15 +94,9 @@ class CloudflareInterceptor(
                     }
                 }
 
-                override fun onReceivedErrorCompat(
-                    view: WebView,
-                    errorCode: Int,
-                    description: String?,
-                    failingUrl: String,
-                    isMainFrame: Boolean,
-                ) {
-                    if (isMainFrame) {
-                        if (errorCode in ERROR_CODES) {
+                override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
+                    if (request.isForMainFrame) {
+                        if (error.errorCode in ERROR_CODES) {
                             // Found the Cloudflare challenge page.
                             challengeFound = true
                         } else {

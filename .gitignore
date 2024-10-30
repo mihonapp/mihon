@@ -1,17 +1,16 @@
+# Build files
 .gradle
-/local.properties
-/.idea/workspace.xml
-.DS_Store
+.kotlin
+build
+
+# IDE files
+*.iml
 .idea/*
 !.idea/icon.png
-*iml
-*.iml
+/captures
 
-# Built files
-*/build
-/build
-*.apk
-app/**/output.json
+# Configuration files
+local.properties
 
-# Unnecessary file
-*.swp
+# macOS specific files
+.DS_Store

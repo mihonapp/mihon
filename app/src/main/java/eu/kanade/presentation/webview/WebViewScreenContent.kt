@@ -104,6 +104,11 @@ fun WebViewScreenContent(
                         return false
                     }
 
+                    // Ignore intents urls
+                    if (it.url.toString().startsWith("intent://")) {
+                        return true
+                    }
+
                     // Continue with request, but with custom headers
                     view?.loadUrl(it.url.toString(), headers)
                 }

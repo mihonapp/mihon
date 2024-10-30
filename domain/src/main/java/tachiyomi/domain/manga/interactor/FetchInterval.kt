@@ -107,7 +107,7 @@ class FetchInterval(
             interval.absoluteValue.takeIf { interval < 0 }
                 ?: increaseInterval(interval, timeSinceLatest, increaseWhenOver = 10),
         )
-        return latestDate.plusDays((cycle + 1) * interval.toLong()).toEpochSecond(dateTime.offset) * 1000
+        return latestDate.plusDays((cycle + 1) * interval.absoluteValue.toLong()).toEpochSecond(dateTime.offset) * 1000
     }
 
     private fun increaseInterval(delta: Int, timeSinceLatest: Int, increaseWhenOver: Int): Int {

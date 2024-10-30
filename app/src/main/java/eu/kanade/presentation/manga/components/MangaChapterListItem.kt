@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,8 +40,8 @@ import eu.kanade.tachiyomi.data.download.model.Download
 import me.saket.swipe.SwipeableActionsBox
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
-import tachiyomi.presentation.core.components.material.ReadItemAlpha
-import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.DISABLED_ALPHA
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
 
@@ -66,9 +65,6 @@ fun MangaChapterListItem(
     onChapterSwipe: (LibraryPreferences.ChapterSwipeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val textAlpha = if (read) ReadItemAlpha else 1f
-    val textSubtitleAlpha = if (read) ReadItemAlpha else SecondaryItemAlpha
-
     val start = getSwipeAction(
         action = chapterSwipeStartAction,
         read = read,
@@ -133,15 +129,20 @@ fun MangaChapterListItem(
                     Text(
                         text = title,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = LocalContentColor.current.copy(alpha = textAlpha),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         onTextLayout = { textHeight = it.size.height },
+                        color = LocalContentColor.current.copy(alpha = if (read) DISABLED_ALPHA else 1f),
                     )
                 }
 
-                Row(modifier = Modifier.alpha(textSubtitleAlpha)) {
-                    ProvideTextStyle(value = MaterialTheme.typography.bodySmall) {
+                Row {
+                    val subtitleStyle = MaterialTheme.typography.bodySmall
+                        .merge(
+                            color = LocalContentColor.current
+                                .copy(alpha = if (read) DISABLED_ALPHA else SECONDARY_ALPHA),
+                        )
+                    ProvideTextStyle(value = subtitleStyle) {
                         if (date != null) {
                             Text(
                                 text = date,
@@ -155,7 +156,7 @@ fun MangaChapterListItem(
                                 text = readProgress,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                color = LocalContentColor.current.copy(alpha = ReadItemAlpha),
+                                color = LocalContentColor.current.copy(alpha = DISABLED_ALPHA),
                             )
                             if (scanlator != null) DotSeparatorText()
                         }

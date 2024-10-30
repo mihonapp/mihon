@@ -248,6 +248,8 @@ class NotificationReceiver : BroadcastReceiver() {
         private const val ACTION_OPEN_CHAPTER = "$ID.$NAME.ACTION_OPEN_CHAPTER"
         private const val ACTION_DOWNLOAD_CHAPTER = "$ID.$NAME.ACTION_DOWNLOAD_CHAPTER"
 
+        private const val ACTION_OPEN_ENTRY = "$ID.$NAME.ACTION_OPEN_ENTRY"
+
         private const val ACTION_RESUME_DOWNLOADS = "$ID.$NAME.ACTION_RESUME_DOWNLOADS"
         private const val ACTION_PAUSE_DOWNLOADS = "$ID.$NAME.ACTION_PAUSE_DOWNLOADS"
         private const val ACTION_CLEAR_DOWNLOADS = "$ID.$NAME.ACTION_CLEAR_DOWNLOADS"
@@ -479,6 +481,26 @@ class NotificationReceiver : BroadcastReceiver() {
             return PendingIntent.getBroadcast(
                 context,
                 manga.id.hashCode(),
+                newIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+        }
+
+        /**
+         * Returns [PendingIntent] that opens the manga info controller
+         *
+         * @param context context of application
+         * @param mangaId id of the entry to open
+         */
+        internal fun openEntryPendingActivity(context: Context, mangaId: Long): PendingIntent {
+            val newIntent = Intent(context, MainActivity::class.java).setAction(Constants.SHORTCUT_MANGA)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra(Constants.MANGA_EXTRA, mangaId)
+                .putExtra("notificationId", mangaId.hashCode())
+
+            return PendingIntent.getActivity(
+                context,
+                mangaId.hashCode(),
                 newIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )

@@ -38,7 +38,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -53,7 +52,6 @@ private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 @Composable
 fun AdaptiveSheet(
     isTabletUi: Boolean,
-    tonalElevation: Dp,
     enableSwipeDismiss: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -97,7 +95,7 @@ fun AdaptiveSheet(
                     .padding(vertical = 16.dp)
                     .then(modifier),
                 shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = tonalElevation,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(enabled = alpha > 0f, onBack = internalOnDismissRequest)
                     content()
@@ -154,7 +152,7 @@ fun AdaptiveSheet(
                             Modifier.nestedScroll(
                                 remember(anchoredDraggableState) {
                                     anchoredDraggableState.preUpPostDownNestedScrollConnection(
-                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } }
+                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } },
                                     )
                                 },
                             )
@@ -180,7 +178,7 @@ fun AdaptiveSheet(
                     .navigationBarsPadding()
                     .statusBarsPadding(),
                 shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = tonalElevation,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(
                         enabled = anchoredDraggableState.targetValue == 0,
@@ -204,7 +202,7 @@ fun AdaptiveSheet(
 }
 
 private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
-    onFling: (velocity: Float) -> Unit
+    onFling: (velocity: Float) -> Unit,
 ) = object : NestedScrollConnection {
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.toFloat()

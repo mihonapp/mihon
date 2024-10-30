@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="num_categories">
+        <item quantity="other">%d бөлөхтөр</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="other">%1$s мүнүүтэ кэннэ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="other">Туолла %1$sҕа %2$s сыаһалаах</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="other">%1$s хаалла</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="other">%1$s түһүмэх</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="other">%d трэкэр</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="other">Манна %d түһүмэх суох</item>
+    </plurals>
+</resources>

@@ -4,11 +4,6 @@
 
     <color name="cover_placeholder">#1F888888</color>
 
-    <color name="error">#BA1B1B</color>
-    <color name="errorContainer">#FFDAD4</color>
-    <color name="onError">#FFFFFF</color>
-    <color name="onErrorContainer">#410001</color>
-
     <!-- Default Theme -->
     <color name="divider_default">@color/md_black_1000_12</color>
 
@@ -16,8 +11,13 @@
     <color name="accent_blue">#54759E</color>
 
     <!-- AMOLED Mode -->
-    <color name="surface_amoled">#000001</color>
-    <color name="background_amoled">#000000</color>
+    <color name="amoled_background">#000000</color>
+    <color name="amoled_onBackground">#FFFFFF</color>
+    <color name="amoled_surface">#000000</color>
+    <color name="amoled_onSurface">#FFFFFF</color>
+    <color name="amoled_surfaceContainer">#0C0C0C</color>
+    <color name="amoled_surfaceContainerHigh">#131313</color>
+    <color name="amoled_surfaceContainerHighest">#1B1B1B</color>
 
     <!-- Material Design Colors -->
     <color name="md_black_1000_12">#1F000000</color>

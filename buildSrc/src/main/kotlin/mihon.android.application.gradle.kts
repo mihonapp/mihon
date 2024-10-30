@@ -3,9 +3,10 @@ import mihon.buildlogic.configureAndroid
 import mihon.buildlogic.configureTest
 
 plugins {
-    id("mihon.code.detekt")
     id("com.android.application")
     kotlin("android")
+
+    id("mihon.code.lint")
 }
 
 android {

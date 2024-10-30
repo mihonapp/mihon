@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">%1$s dakika sonra</item>
+        <item quantity="other">%1$s dakika sonra</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d yeni bölüm</item>
+        <item quantity="other">%1$d yeni bölüm</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Bölüm %1$s ve 1 daha</item>
+        <item quantity="other">Bölüm %1$s ve %2$d daha</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">%d girdi için</item>
+        <item quantity="other">%d girdi için</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Uzantı güncellemesi var</item>
+        <item quantity="other">%d uzantı güncellemesi var</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s kaldı</item>
+        <item quantity="other">%1$s kaldı</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategori</item>
+        <item quantity="other">%d kategori</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%1$s içinde %2$s hatayla tamamlandı</item>
+        <item quantity="other">%1$s içinde %2$s hatayla tamamlandı</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s bölüm</item>
+        <item quantity="other">%1$s bölüm</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d izleyici</item>
+        <item quantity="other">%d izleyici</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
+        <item quantity="other">%d bölüm atlanıyor, kaynak mevcut değil veya filtrelendi</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Dün</item>
+        <item quantity="other">%1$d gün önce</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Sonraki okunmayan bölüm</item>
+        <item quantity="other">Sonraki %d okunmayan bölüm</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Sonraki bölüm</item>
+        <item quantity="other">Sonraki %d bölüm</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s bölüm eksik</item>
+        <item quantity="other">%1$s bölüm eksik</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d depo</item>
+        <item quantity="other">%d depo</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Yarın</item>
+        <item quantity="other">%1$d gün içinde</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 sayfa</item>
+        <item quantity="other">%1$s sayfa</item>
+    </plurals>
+</resources>

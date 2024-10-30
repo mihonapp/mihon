@@ -21,7 +21,6 @@ import okhttp3.CacheControl
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.internal.http.HTTP_NOT_MODIFIED
 import okio.FileSystem
 import okio.Path.Companion.toOkioPath
 import okio.Source
@@ -46,7 +45,6 @@ import java.io.IOException
  * Available request parameter:
  * - [USE_CUSTOM_COVER_KEY]: Use custom cover if set by user, default is true
  */
-@Suppress("LongParameterList")
 class MangaCoverFetcher(
     private val url: String?,
     private val isLibraryManga: Boolean,
@@ -87,7 +85,7 @@ class MangaCoverFetcher(
             source = ImageSource(
                 file = file.toOkioPath(),
                 fileSystem = FileSystem.SYSTEM,
-                diskCacheKey = diskCacheKey
+                diskCacheKey = diskCacheKey,
             ),
             mimeType = "image/*",
             dataSource = DataSource.DISK,
@@ -348,5 +346,7 @@ class MangaCoverFetcher(
 
         private val CACHE_CONTROL_NO_STORE = CacheControl.Builder().noStore().build()
         private val CACHE_CONTROL_NO_NETWORK_NO_CACHE = CacheControl.Builder().noCache().onlyIfCached().build()
+
+        private const val HTTP_NOT_MODIFIED = 304
     }
 }

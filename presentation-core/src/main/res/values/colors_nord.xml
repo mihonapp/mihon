@@ -6,9 +6,10 @@
     <color name="nord_onPrimary">#000000</color>
     <color name="nord_primaryContainer">#5E81AC</color>
     <color name="nord_onPrimaryContainer">#000000</color>
+    <color name="nord_inversePrimary">#8CA8CD</color>
     <color name="nord_secondary">#81A1C1</color>
     <color name="nord_onSecondary">#2E3440</color>
-    <color name="nord_secondaryContainer">#81A1C1</color>
+    <color name="nord_secondaryContainer">#91B4D7</color>
     <color name="nord_onSecondaryContainer">#2E3440</color>
     <color name="nord_tertiary">#88C0D0</color>
     <color name="nord_onTertiary">#2E3440</color>
@@ -18,14 +19,18 @@
     <color name="nord_onBackground">#2E3440</color>
     <color name="nord_surface">#E5E9F0</color>
     <color name="nord_onSurface">#2E3440</color>
-    <color name="nord_surfaceVariant">#ffffff</color>
+    <color name="nord_surfaceVariant">#DAE0EA</color>
     <color name="nord_onSurfaceVariant">#2E3440</color>
-    <color name="nord_outline">#4C566A</color>
-    <color name="nord_inverseOnSurface">#ECEFF4</color>
+    <color name="nord_surfaceTint">#5E81AC</color>
     <color name="nord_inverseSurface">#3B4252</color>
-    <color name="nord_primaryInverse">#8CA8CD</color>
-    <color name="nord_elevationOverlay">#D8DEE9</color>
+    <color name="nord_inverseOnSurface">#ECEFF4</color>
+    <color name="nord_outline">#2E3440</color>
     <color name="nord_onError">#ECEFF4</color>
     <color name="nord_errorContainer">#BF616A</color>
     <color name="nord_onErrorContainer">#000000</color>
+    <color name="nord_surfaceContainerLowest">#D1D7E0</color>
+    <color name="nord_surfaceContainerLow">#D6DCE6</color>
+    <color name="nord_surfaceContainer">#DAE0EA</color>
+    <color name="nord_surfaceContainerHigh">#E9EDF3</color>
+    <color name="nord_surfaceContainerHighest">#F2F4F8</color>
 </resources>

@@ -14,3 +14,5 @@ dependencyResolutionManagement {
         }
     }
 }
+
+rootProject.name = "mihon-buildSrc"

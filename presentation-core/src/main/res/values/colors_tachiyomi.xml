@@ -10,26 +10,37 @@
   ~ Neutral #5E5E62
 -->
 <resources>
-    <color name="tachiyomi_primary">#0057CE</color>
+    <color name="tachiyomi_primary">#0058CA</color>
     <color name="tachiyomi_onPrimary">#FFFFFF</color>
-    <color name="tachiyomi_primaryContainer">#D8E2FF</color>
-    <color name="tachiyomi_onPrimaryContainer">#001947</color>
-    <color name="tachiyomi_secondary">#0057CE</color>
+    <color name="tachiyomi_primaryContainer">#D9E2FF</color>
+    <color name="tachiyomi_onPrimaryContainer">#001945</color>
+    <color name="tachiyomi_inversePrimary">#B0C6FF</color>
+    <color name="tachiyomi_secondary">#0058CA</color>
     <color name="tachiyomi_onSecondary">#FFFFFF</color>
-    <color name="tachiyomi_secondaryContainer">#D8E2FF</color>
-    <color name="tachiyomi_onSecondaryContainer">#001947</color>
-    <color name="tachiyomi_tertiary">#006E17</color>
+    <color name="tachiyomi_secondaryContainer">#D9E2FF</color>
+    <color name="tachiyomi_onSecondaryContainer">#001945</color>
+    <color name="tachiyomi_tertiary">#006E1B</color>
     <color name="tachiyomi_onTertiary">#FFFFFF</color>
     <color name="tachiyomi_tertiaryContainer">#95F990</color>
-    <color name="tachiyomi_onTertiaryContainer">#002202</color>
-    <color name="tachiyomi_background">#FDFBFF</color>
-    <color name="tachiyomi_onBackground">#1B1B1E</color>
-    <color name="tachiyomi_surface">#FDFBFF</color>
-    <color name="tachiyomi_onSurface">#1B1B1E</color>
-    <color name="tachiyomi_surfaceVariant">#E1E2EC</color>
-    <color name="tachiyomi_onSurfaceVariant">#44464E</color>
-    <color name="tachiyomi_outline">#757780</color>
+    <color name="tachiyomi_onTertiaryContainer">#002203</color>
+    <color name="tachiyomi_background">#FEFBFF</color>
+    <color name="tachiyomi_onBackground">#1B1B1F</color>
+    <color name="tachiyomi_surface">#FEFBFF</color>
+    <color name="tachiyomi_onSurface">#1B1B1F</color>
+    <color name="tachiyomi_surfaceVariant">#F3EDF7</color>
+    <color name="tachiyomi_onSurfaceVariant">#44464F</color>
+    <color name="tachiyomi_surfaceTint">#0058CA</color>
+    <color name="tachiyomi_inverseSurface">#303034</color>
     <color name="tachiyomi_inverseOnSurface">#F2F0F4</color>
-    <color name="tachiyomi_inverseSurface">#303033</color>
-    <color name="tachiyomi_primaryInverse">#AEC6FF</color>
+    <color name="tachiyomi_error">#BA1A1A</color>
+    <color name="tachiyomi_onError">#FFFFFF</color>
+    <color name="tachiyomi_errorContainer">#FFDAD6</color>
+    <color name="tachiyomi_onErrorContainer">#410002</color>
+    <color name="tachiyomi_outline">#757780</color>
+    <color name="tachiyomi_outlineVariant">#C5C6D0</color>
+    <color name="tachiyomi_surfaceContainerLowest">#F5F1F8</color>
+    <color name="tachiyomi_surfaceContainerLow">#F7F2FA</color>
+    <color name="tachiyomi_surfaceContainer">#F3EDF7</color>
+    <color name="tachiyomi_surfaceContainerHigh">#FCF7FF</color>
+    <color name="tachiyomi_surfaceContainerHighest">#FCF7FF</color>
 </resources>

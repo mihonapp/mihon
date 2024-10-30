@@ -125,6 +125,7 @@ sealed class RepoDialog {
     data object Create : RepoDialog()
     data class Delete(val repo: String) : RepoDialog()
     data class Conflict(val oldRepo: ExtensionRepo, val newRepo: ExtensionRepo) : RepoDialog()
+    data class Confirm(val url: String) : RepoDialog()
 }
 
 sealed class RepoScreenState {

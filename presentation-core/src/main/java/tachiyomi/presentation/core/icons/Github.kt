@@ -10,18 +10,26 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+@Suppress("UnusedReceiverParameter")
 val CustomIcons.Github: ImageVector
     get() {
         if (_github != null) {
             return _github!!
         }
         _github = Builder(
-            name = "Github", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-            viewportWidth = 24.0f, viewportHeight = 24.0f,
+            name = "Github",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f,
+            viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(12.0f, 0.297f)
@@ -56,4 +64,5 @@ val CustomIcons.Github: ImageVector
         return _github!!
     }
 
+@Suppress("ObjectPropertyName")
 private var _github: ImageVector? = null

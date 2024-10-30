@@ -7,6 +7,8 @@ import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import okhttp3.OkHttpClient
 import tachiyomi.domain.track.model.Track
 import tachiyomi.i18n.MR
@@ -16,6 +18,7 @@ data class DummyTracker(
     override val name: String,
     override val supportsReadingDates: Boolean = false,
     override val isLoggedIn: Boolean = false,
+    override val isLoggedInFlow: Flow<Boolean> = flowOf(false),
     val valLogoColor: Int = Color.rgb(18, 25, 35),
     val valLogo: Int = R.drawable.ic_tracker_anilist,
     val valStatuses: List<Long> = (1L..6L).toList(),

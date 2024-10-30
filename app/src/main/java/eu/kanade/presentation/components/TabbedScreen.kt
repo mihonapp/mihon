@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
@@ -14,7 +15,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,19 +33,12 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun TabbedScreen(
     titleRes: StringResource,
     tabs: ImmutableList<TabContent>,
-    startIndex: Int? = null,
+    state: PagerState = rememberPagerState { tabs.size },
     searchQuery: String? = null,
     onChangeSearchQuery: (String?) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
-    val state = rememberPagerState { tabs.size }
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(startIndex) {
-        if (startIndex != null) {
-            state.scrollToPage(startIndex)
-        }
-    }
 
     Scaffold(
         topBar = {

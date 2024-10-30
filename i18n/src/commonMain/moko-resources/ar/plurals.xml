@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="zero">لايوجد تحديث للإضافة</item>
+        <item quantity="one">يتوفر تحديث لإضافة</item>
+        <item quantity="two">يتوفر تحديث لإضافتان</item>
+        <item quantity="few">يتوفر تحديث %d إضافات</item>
+        <item quantity="many">يتوفر تحديث %d إضافات</item>
+        <item quantity="other">يتوفر تحديث %d إضافات</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="zero">الفصول %1$s</item>
+        <item quantity="one">الفصول %1$s وفصل آخر</item>
+        <item quantity="two">الفصول %1$s و%2$d فصول أخرى</item>
+        <item quantity="few">الفصول %1$s و%2$d فصول أخرى</item>
+        <item quantity="many">الفصول %1$s و%2$d فصول أخرى</item>
+        <item quantity="other">الفصول %1$s و%2$d فصول أخرى</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="zero">لا توجد فصول جديدة</item>
+        <item quantity="one">فصل جديد</item>
+        <item quantity="two">فصلان جديدان</item>
+        <item quantity="few">%1$d فصول جديدة</item>
+        <item quantity="many">%1$d فصول جديدة</item>
+        <item quantity="other">%1$d فصول جديدة</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="zero">لا شيء</item>
+        <item quantity="one">إدخال واحد</item>
+        <item quantity="two">إدخالين</item>
+        <item quantity="few">ادخالات %d ل</item>
+        <item quantity="many">ادخالات %d ل</item>
+        <item quantity="other">ادخالات %d ل</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="zero">%1$s عنصر متبقي</item>
+        <item quantity="one">عنصر واحد متبقي</item>
+        <item quantity="two">عنصران متبقيان</item>
+        <item quantity="few">%1$s عناصر متبقية</item>
+        <item quantity="many">%1$s عناصر متبقية</item>
+        <item quantity="other">%1$s عناصر متبقية</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="zero">بعد أقل من دقيقة</item>
+        <item quantity="one">بعد دقيقة</item>
+        <item quantity="two">بعد دقيقتين</item>
+        <item quantity="few">بعد %1$s دقائق</item>
+        <item quantity="many">بعد %1$s دقائق</item>
+        <item quantity="other">بعد %1$s دقائق</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="zero">لا يوجد فئات</item>
+        <item quantity="one">فئة</item>
+        <item quantity="two">فئتان</item>
+        <item quantity="few">%d فئات</item>
+        <item quantity="many">%d فئات</item>
+        <item quantity="other">%d فئات</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="zero">تمَّ في %1$s وبدون أخطاء</item>
+        <item quantity="one">تمَّ في %1$s وفيه خطأ</item>
+        <item quantity="two">تمَّ في %1$s وفيه خطآن</item>
+        <item quantity="few">تمَّ في %1$s وفيه %2$s أخطاء</item>
+        <item quantity="many">تمَّ في %1$s وفيه %2$s خطأً</item>
+        <item quantity="other">تمَّ في %1$s وفيه %2$s خطأ</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="zero">لا متتبّع</item>
+        <item quantity="one">متتبّع واحد</item>
+        <item quantity="two">متتبعان</item>
+        <item quantity="few">بضعة متتبّعين (%d)</item>
+        <item quantity="many">عدّة متتبّعين (%d)</item>
+        <item quantity="other">%d متتبّعاً</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="zero">لا فصول</item>
+        <item quantity="one">فصل واحد</item>
+        <item quantity="two">فصلين</item>
+        <item quantity="few">%1$s فصول</item>
+        <item quantity="many">%1$s فصول</item>
+        <item quantity="other">%1$s فصول</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="zero">لا يُتخطَّى أيُّ فصل</item>
+        <item quantity="one">يُتخطَّى فصل، وذلك إما لأن المصدر مفقود أو لأنه مصفًّى</item>
+        <item quantity="two">يُتخطَّى فصلان، وذلك إما لأن المصدر مفقود أو لأنهما مصفَّان</item>
+        <item quantity="few">تُتخطَّى %d فصول، وذلك إما لأن المصدر مفقود أو لأنهم مصفَّون</item>
+        <item quantity="many">يُتخطَّى %d فصلًا، وذلك إما لأن المصدر مفقود أو لأنهم مصفَّون</item>
+        <item quantity="other">يُتخطَّى %d فصل، وذلك إما لأن المصدر مفقود أو لأنهم مصفَّون</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="zero">الأمس</item>
+        <item quantity="one">منذ يوم</item>
+        <item quantity="two">منذ يومين</item>
+        <item quantity="few">منذ %1$d أيام</item>
+        <item quantity="many">منذ %1$d أيام</item>
+        <item quantity="other">منذ %1$d أيام</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="zero">لا يوجد فصل تالٍ لم يُقرأ</item>
+        <item quantity="one">الفصل غير المقروء التالي</item>
+        <item quantity="two">الفصلان غير المقروءين التاليان</item>
+        <item quantity="few">%d فصول تالية لم تُقرأ</item>
+        <item quantity="many">%d فصلًا تاليًا لم يُقرؤوا</item>
+        <item quantity="other">%d فصل تالٍ لم يُقرؤوا</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="zero">الفصل التالي</item>
+        <item quantity="one">الفصل التالي</item>
+        <item quantity="two">%d فصول تالية</item>
+        <item quantity="few">%d فصول تالية</item>
+        <item quantity="many">%d فصل تالي</item>
+        <item quantity="other">%d فصل تالي</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="zero">لا يوجد أيُّ فصل مفقود</item>
+        <item quantity="one">فصل واحد مفقود</item>
+        <item quantity="two">فصلان مفقودان</item>
+        <item quantity="few">%1$s فصول مفقودة</item>
+        <item quantity="many">%1$s فصلًا مفقودًا</item>
+        <item quantity="other">%1$s فصل مفقود</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="zero">لا يوم</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%d أيام</item>
+        <item quantity="many">%d يومًا</item>
+        <item quantity="other">%d يوم</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="zero">لا مستودعات</item>
+        <item quantity="one">مستودع</item>
+        <item quantity="two">مستودعان</item>
+        <item quantity="few">%d مستودعات</item>
+        <item quantity="many">%d مستودعات</item>
+        <item quantity="other">%d مستودعات</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="zero">%1$s صفحات</item>
+        <item quantity="one">صفحة</item>
+        <item quantity="two">صفحتان</item>
+        <item quantity="few">%1$s صفحات</item>
+        <item quantity="many">%1$s صفحات</item>
+        <item quantity="other">%1$s صفحات</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="zero">اليوم</item>
+        <item quantity="one">غداً</item>
+        <item quantity="two">بعد غد</item>
+        <item quantity="few">بعد %1$d أيام</item>
+        <item quantity="many">بعد %1$d أيام</item>
+        <item quantity="other">بعد %1$d أيام</item>
+    </plurals>
+</resources>

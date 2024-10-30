@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="download_queue_summary">
+        <item quantity="other">%1$s 개 남음</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="other">총 %1$s화</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d일 전</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="other">소요 시간: %1$s, 발생한 오류: %2$s</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="other">%1$s분 후</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="other">항목 %d개</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="other">%d개의 트래커</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="other">소스에 존재하지 않거나 필터링되어 있는 %d개의 회차를 건너뛰었습니다</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="other">%d개의 확장 앱 업데이트가 있습니다</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="other">%d개의 항목</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="other">%1$d개의 새로운 회차</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="other">%1$s화와 그 외 %2$d화</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">읽지 않은 다음 %d 회차</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="other">다음 %d화</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="other">누락된 회차 %1$s개</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="other">%d일</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="other">%d 저장소</item>
+    </plurals>
+</resources>

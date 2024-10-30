@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.coil
 
 import android.graphics.Bitmap
 import coil3.ImageLoader
-import coil3.asCoilImage
+import coil3.asImage
 import coil3.decode.DecodeResult
 import coil3.decode.DecodeUtils
 import coil3.decode.Decoder
@@ -58,7 +58,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
         }
 
         return DecodeResult(
-            image = bitmap.asCoilImage(),
+            image = bitmap.asImage(),
             isSampled = sampleSize > 1,
         )
     }

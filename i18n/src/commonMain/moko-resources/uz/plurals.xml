@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="num_categories">
+        <item quantity="one">%d toifa</item>
+        <item quantity="other">%d toifa</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Kecha</item>
+        <item quantity="other">%1$d kun oldin</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">%1$s daqiqadan so\'ng</item>
+        <item quantity="other">%1$s daqiqadan so\'ng</item>
+    </plurals>
+</resources>

@@ -32,7 +32,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-object HistoryTab : Tab {
+data object HistoryTab : Tab {
 
     private val snackbarHostState = SnackbarHostState()
 

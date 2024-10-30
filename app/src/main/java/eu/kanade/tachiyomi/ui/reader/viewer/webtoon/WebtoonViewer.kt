@@ -48,9 +48,14 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
     private val frame = WebtoonFrame(activity)
 
     /**
+     * Distance to scroll when the user taps on one side of the recycler view.
+     */
+    private val scrollDistance = activity.resources.displayMetrics.heightPixels * 3 / 4
+
+    /**
      * Layout manager of the recycler view.
      */
-    private val layoutManager = WebtoonLayoutManager(activity)
+    private val layoutManager = WebtoonLayoutManager(activity, scrollDistance)
 
     /**
      * Configuration used by this viewer, like allow taps, or crop image borders.
@@ -61,11 +66,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
      * Adapter of the recycler view.
      */
     private val adapter = WebtoonAdapter(this)
-
-    /**
-     * Distance to scroll when the user taps on one side of the recycler view.
-     */
-    private var scrollDistance = activity.resources.displayMetrics.heightPixels * 3 / 4
 
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
@@ -79,6 +79,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             .threshold
 
     init {
+        recycler.setItemViewCacheSize(RECYCLER_VIEW_CACHE_SIZE)
         recycler.isVisible = false // Don't let the recycler layout yet
         recycler.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         recycler.isFocusable = false
@@ -117,7 +118,7 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
             recycler.getLocationInWindow(viewPositionRelativeToWindow)
             val pos = PointF(
                 (event.rawX - viewPosition[0] + viewPositionRelativeToWindow[0]) / recycler.width,
-                (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.height,
+                (event.rawY - viewPosition[1] + viewPositionRelativeToWindow[1]) / recycler.originalHeight,
             )
             when (config.navigator.getAction(pos)) {
                 NavigationRegion.MENU -> activity.toggleMenu()
@@ -359,3 +360,6 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         )
     }
 }
+
+// Double the cache size to reduce rebinds/recycles incurred by the extra layout space on scroll direction changes
+private const val RECYCLER_VIEW_CACHE_SIZE = 4

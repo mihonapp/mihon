@@ -66,14 +66,14 @@ object HomeScreen : Screen() {
     private val openTabEvent = Channel<Tab>()
     private val showBottomNavEvent = Channel<Boolean>()
 
-    private const val TabFadeDuration = 200
-    private const val TabNavigatorKey = "HomeTabs"
+    private const val TAB_FADE_DURATION = 200
+    private const val TAB_NAVIGATOR_KEY = "HomeTabs"
 
-    private val tabs = listOf(
+    private val TABS = listOf(
         LibraryTab,
         UpdatesTab,
         HistoryTab,
-        BrowseTab(),
+        BrowseTab,
         MoreTab,
     )
 
@@ -82,7 +82,7 @@ object HomeScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         TabNavigator(
             tab = LibraryTab,
-            key = TabNavigatorKey,
+            key = TAB_NAVIGATOR_KEY,
         ) { tabNavigator ->
             // Provide usable navigator to content screen
             CompositionLocalProvider(LocalNavigator provides navigator) {
@@ -90,7 +90,7 @@ object HomeScreen : Screen() {
                     startBar = {
                         if (isTabletUi()) {
                             NavigationRail {
-                                tabs.fastForEach {
+                                TABS.fastForEach {
                                     NavigationRailItem(it)
                                 }
                             }
@@ -107,7 +107,7 @@ object HomeScreen : Screen() {
                                 exit = shrinkVertically(),
                             ) {
                                 NavigationBar {
-                                    tabs.fastForEach {
+                                    TABS.fastForEach {
                                         NavigationBarItem(it)
                                     }
                                 }
@@ -124,8 +124,11 @@ object HomeScreen : Screen() {
                         AnimatedContent(
                             targetState = tabNavigator.current,
                             transitionSpec = {
-                                materialFadeThroughIn(initialScale = 1f, durationMillis = TabFadeDuration) togetherWith
-                                    materialFadeThroughOut(durationMillis = TabFadeDuration)
+                                materialFadeThroughIn(
+                                    initialScale = 1f,
+                                    durationMillis = TAB_FADE_DURATION,
+                                ) togetherWith
+                                    materialFadeThroughOut(durationMillis = TAB_FADE_DURATION)
                             },
                             label = "tabContent",
                         ) {
@@ -156,7 +159,12 @@ object HomeScreen : Screen() {
                             is Tab.Library -> LibraryTab
                             Tab.Updates -> UpdatesTab
                             Tab.History -> HistoryTab
-                            is Tab.Browse -> BrowseTab(it.toExtensions)
+                            is Tab.Browse -> {
+                                if (it.toExtensions) {
+                                    BrowseTab.showExtension()
+                                }
+                                BrowseTab
+                            }
                             is Tab.More -> MoreTab
                         }
 

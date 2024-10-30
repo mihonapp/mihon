@@ -152,3 +152,35 @@ fun ExtensionRepoConflictDialog(
         },
     )
 }
+
+@Composable
+fun ExtensionRepoConfirmDialog(
+    onDismissRequest: () -> Unit,
+    onCreate: () -> Unit,
+    repo: String,
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = stringResource(MR.strings.action_add_repo))
+        },
+        text = {
+            Text(text = stringResource(MR.strings.add_repo_confirmation, repo))
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onCreate()
+                    onDismissRequest()
+                },
+            ) {
+                Text(text = stringResource(MR.strings.action_add))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(MR.strings.action_cancel))
+            }
+        },
+    )
+}

@@ -1,7 +1,7 @@
 package eu.kanade.presentation.track
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -13,8 +13,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
     private val fullPageWithSecondSelected = @Composable {
         val items = someTrackSearches().take(30).toList()
         TrackerSearch(
-            query = TextFieldValue(text = "search text"),
-            onQueryChange = {},
+            state = TextFieldState(initialText = "search text"),
             onDispatchQuery = {},
             queryResult = Result.success(items),
             selected = items[1],
@@ -25,8 +24,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
     }
     private val fullPageWithoutSelected = @Composable {
         TrackerSearch(
-            query = TextFieldValue(text = ""),
-            onQueryChange = {},
+            state = TextFieldState(),
             onDispatchQuery = {},
             queryResult = Result.success(someTrackSearches().take(30).toList()),
             selected = null,
@@ -37,8 +35,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
     }
     private val loading = @Composable {
         TrackerSearch(
-            query = TextFieldValue(),
-            onQueryChange = {},
+            state = TextFieldState(),
             onDispatchQuery = {},
             queryResult = null,
             selected = null,

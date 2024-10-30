@@ -171,6 +171,17 @@ class ChapterRecognitionTest {
         assertChapter(mangaTitle, "Tokyo ESP 027: Part 002: Chapter 001", 027.0)
     }
 
+    /**
+     * Case where the chapter title contains the unwanted tag
+     * But follow by chapter number.
+     */
+    @Test
+    fun `Number after unwanted tag`() {
+        val mangaTitle = "One-punch Man"
+
+        assertChapter(mangaTitle, "Mag Version 195.5", 195.5)
+    }
+
     @Test
     fun `Unparseable chapter`() {
         val mangaTitle = "random"

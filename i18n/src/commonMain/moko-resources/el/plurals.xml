@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d νέο κεφάλαιο</item>
+        <item quantity="other">%1$d νέα κεφάλαια</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Για %d καταχώριση</item>
+        <item quantity="other">Για %d καταχωρίσεις</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Διαθέσιμη ενημέρωση επέκτασης</item>
+        <item quantity="other">%d διαθέσιμες ενημερώσεις επεκτάσεων</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Μετά από %1$s λεπτό</item>
+        <item quantity="other">Μετά από %1$s λεπτά</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Κεφάλαια %1$s και 1 ακόμη</item>
+        <item quantity="other">Κεφάλαια %1$s και %2$d ακόμη</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s που απομένει</item>
+        <item quantity="other">%1$s που απομένουν</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d κατηγορία</item>
+        <item quantity="other">%d κατηγορίες</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Έγινε σε %1$s με %2$s σφάλμα</item>
+        <item quantity="other">Έγινε σε %1$s με %2$s σφάλματα</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s κεφάλαιο</item>
+        <item quantity="other">%1$s κεφάλαια</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d ιχνηλάτης</item>
+        <item quantity="other">%d ιχνηλάτες</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Παραλείπεται %d κεφάλαιο, είτε λείπει από την πηγή είτε έχει φιλτραριστεί</item>
+        <item quantity="other">Παραλείπονται %d κεφάλαια, είτε λείπουν από την πηγή είτε έχουν φιλτραριστεί</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Εχθές</item>
+        <item quantity="other">%1$d μέρες πριν</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Επόμενο αδιάβαστο κεφάλαιο</item>
+        <item quantity="other">Επόμενα %d αδιάβαστα κεφάλαια</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Επόμενο κεφάλαιο</item>
+        <item quantity="other">Επόμενα %d κεφάλαια</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Λείπει %1$s κεφάλαιο</item>
+        <item quantity="other">Λείπουν %1$s κεφάλαια</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 ημέρα</item>
+        <item quantity="other">%d ημέρες</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d αποθετήριο</item>
+        <item quantity="other">%d αποθετήρια</item>
+    </plurals>
+</resources>

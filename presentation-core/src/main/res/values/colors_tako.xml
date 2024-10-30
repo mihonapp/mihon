@@ -15,10 +15,11 @@
     <color name="tako_onPrimary">#F3B375</color>
     <color name="tako_primaryContainer">#66577E</color>
     <color name="tako_onPrimaryContainer">#F3B375</color>
+    <color name="tako_inversePrimary">#D6BAFF</color>
     <color name="tako_secondary">#66577E</color>
     <color name="tako_onSecondary">#F3B375</color>
-    <color name="tako_secondaryContainer">#66577E</color>
-    <color name="tako_onSecondaryContainer">#F3B375</color>
+    <color name="tako_secondaryContainer">#C8BED0</color>
+    <color name="tako_onSecondaryContainer">#66577E</color>
     <color name="tako_tertiary">#F3B375</color>
     <color name="tako_onTertiary">#574360</color>
     <color name="tako_tertiaryContainer">#FDD6B0</color>
@@ -29,9 +30,13 @@
     <color name="tako_onSurface">#1B1B22</color>
     <color name="tako_surfaceVariant">#E8E0EB</color>
     <color name="tako_onSurfaceVariant">#49454E</color>
-    <color name="tako_outline">#7A757E</color>
-    <color name="tako_inverseOnSurface">#F3EFF4</color>
+    <color name="tako_surfaceTint">#66577E</color>
     <color name="tako_inverseSurface">#313033</color>
-    <color name="tako_primaryInverse">#D6BAFF</color>
-    <color name="tako_elevationOverlay">@color/tako_primary</color>
+    <color name="tako_inverseOnSurface">#F3EFF4</color>
+    <color name="tako_outline">#7A757E</color>
+    <color name="tako_surfaceContainerLowest">#D7D0DA</color>
+    <color name="tako_surfaceContainerLow">#DFD8E2</color>
+    <color name="tako_surfaceContainer">#E8E0EB</color>
+    <color name="tako_surfaceContainerHigh">#EEE6F1</color>
+    <color name="tako_surfaceContainerHighest">#F7EEFA</color>
 </resources>
