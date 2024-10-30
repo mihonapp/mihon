@@ -18,7 +18,7 @@ data class HKManga(
     @SerialName("translated_ua") val translatedUa: Boolean,
     val status: String,
     val image: String,
-    val year: Int,
+    val year: Int? = null,
     @SerialName("scored_by") val scoredBy: Int,
     val score: Double,
     val slug: String,
