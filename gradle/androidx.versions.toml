@@ -21,7 +21,7 @@ lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref
 lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle_version" }
 lifecycle-runtimektx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
 
-workmanager = "androidx.work:work-runtime:2.9.1"
+workmanager = "androidx.work:work-runtime:2.10.0"
 
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
