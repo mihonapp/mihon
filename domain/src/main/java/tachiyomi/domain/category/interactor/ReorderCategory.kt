@@ -8,7 +8,6 @@ import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
-import java.util.Collections
 
 class ReorderCategory(
     private val categoryRepository: CategoryRepository,
@@ -16,11 +15,7 @@ class ReorderCategory(
 
     private val mutex = Mutex()
 
-    suspend fun moveUp(category: Category): Result = await(category, MoveTo.UP)
-
-    suspend fun moveDown(category: Category): Result = await(category, MoveTo.DOWN)
-
-    private suspend fun await(category: Category, moveTo: MoveTo) = withNonCancellableContext {
+    suspend fun await(category: Category, offset: Int) = withNonCancellableContext {
         mutex.withLock {
             val categories = categoryRepository.getAll()
                 .filterNot(Category::isSystemCategory)
@@ -31,13 +26,10 @@ class ReorderCategory(
                 return@withNonCancellableContext Result.Unchanged
             }
 
-            val newPosition = when (moveTo) {
-                MoveTo.UP -> currentIndex - 1
-                MoveTo.DOWN -> currentIndex + 1
-            }.toInt()
+            val newPosition = currentIndex + offset
 
             try {
-                Collections.swap(categories, currentIndex, newPosition)
+                categories.add(newPosition, categories.removeAt(currentIndex))
 
                 val updates = categories.mapIndexed { index, category ->
                     CategoryUpdate(
@@ -80,10 +72,5 @@ class ReorderCategory(
         data object Success : Result
         data object Unchanged : Result
         data class InternalError(val error: Throwable) : Result
-    }
-
-    private enum class MoveTo {
-        UP,
-        DOWN,
     }
 }

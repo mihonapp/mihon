@@ -5,12 +5,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryListItem
@@ -18,6 +23,8 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.tachiyomi.ui.category.CategoryScreenState
 import kotlinx.collections.immutable.persistentListOf
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -34,8 +41,7 @@ fun CategoryScreen(
     onClickSortAlphabetically: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    onClickMoveUp: (Category) -> Unit,
-    onClickMoveDown: (Category) -> Unit,
+    moveTo: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -81,8 +87,7 @@ fun CategoryScreen(
                 PaddingValues(horizontal = MaterialTheme.padding.medium),
             onClickRename = onClickRename,
             onClickDelete = onClickDelete,
-            onMoveUp = onClickMoveUp,
-            onMoveDown = onClickMoveDown,
+            moveTo = moveTo,
         )
     }
 }
@@ -94,28 +99,41 @@ private fun CategoryContent(
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    onMoveUp: (Category) -> Unit,
-    onMoveDown: (Category) -> Unit,
+    moveTo: (Category, Int) -> Unit,
 ) {
+    var reorderableList by remember { mutableStateOf(categories.toList()) }
+    val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
+        reorderableList = reorderableList.toMutableList().apply {
+            moveTo(reorderableList[from.index], to.index - from.index)
+            add(to.index, removeAt(from.index))
+        }
+    }
+
+    LaunchedEffect(categories) {
+        if (!reorderableLazyColumnState.isAnyItemDragging) {
+            reorderableList = categories.toList()
+        }
+    }
+
     LazyColumn(
         state = lazyListState,
         contentPadding = paddingValues,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
-        itemsIndexed(
-            items = categories,
-            key = { _, category -> "category-${category.id}" },
-        ) { index, category ->
-            CategoryListItem(
-                modifier = Modifier.animateItem(),
-                category = category,
-                canMoveUp = index != 0,
-                canMoveDown = index != categories.lastIndex,
-                onMoveUp = onMoveUp,
-                onMoveDown = onMoveDown,
-                onRename = { onClickRename(category) },
-                onDelete = { onClickDelete(category) },
-            )
+        items(
+            items = reorderableList,
+            key = { category -> category.key() },
+        ) { category ->
+            ReorderableItem(reorderableLazyColumnState, category.key()) {
+                CategoryListItem(
+                    modifier = Modifier.animateItem(),
+                    category = category,
+                    onRename = { onClickRename(category) },
+                    onDelete = { onClickDelete(category) },
+                )
+            }
         }
     }
 }
+
+fun Category.key() = "category-$id"
