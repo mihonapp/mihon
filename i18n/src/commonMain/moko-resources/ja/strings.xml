@@ -83,7 +83,7 @@
     <string name="ext_downloading">ダウンロード中</string>
     <string name="ext_installing">インストール</string>
     <string name="ext_installed">インストール済み</string>
-    <string name="ext_trust">トラスト</string>
+    <string name="ext_trust">信用する</string>
     <string name="ext_untrusted">信用できない</string>
     <string name="ext_uninstall">アンインストール</string>
     <string name="untrusted_extension">信頼できない拡張</string>
@@ -649,7 +649,7 @@
 \n詳細はタップしてご覧ください。</string>
     <string name="action_display_show_continue_reading_button">続きを読むボタン</string>
     <string name="track_remove_date_conf_title">日付を削除しますか？</string>
-    <string name="pref_invalidate_download_cache">ダウンロードのインデックスを消去</string>
+    <string name="pref_invalidate_download_cache">ダウンロードのインデックスを再作成する</string>
     <string name="track_remove_finish_date_conf_text">%sで指定された終了日付を消去します</string>
     <string name="track_remove_start_date_conf_text">%sで指定された開始日付を消去します</string>
     <string name="pref_invalidate_download_cache_summary">ダウンロードした章の再スキャンを強制</string>
@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">ダウンロード インデックスを消去しました</string>
     <string name="create_backup_file_error">バックアップ ファイルを作成できませんでした</string>
     <string name="track_activity_name">追跡サービスにログイン</string>
-    <string name="licensed_manga_chapters_error">ライセンス制限あり—章を表示できません</string>
     <string name="exception_http">HTTP %d、WebViewでこのWebサイトを確認してください</string>
     <string name="exception_offline">インターネット接続がありません</string>
     <string name="exception_unknown_host">%sにアクセスできませんでした</string>
@@ -818,7 +817,24 @@
     <string name="manga_interval_expected_update_null">このマンガは完結しているか、あるいは発売予定日が決まっていない。</string>
     <string name="file_picker_uri_permission_unsupported">永続フォルダアクセスの取得に失敗しました。 アプリが予期しない動作をする可能性があります。</string>
     <string name="action_copy_link">リンクをコピーする</string>
-    <string name="extensionRepo_settings">エクステンション・レポ</string>
+    <string name="extensionRepo_settings">拡張機能リポジトリ</string>
     <string name="invalid_backup_file_json">JSONバックアップはサポートされていません</string>
     <string name="invalid_backup_file_unknown">バックアップファイルが壊れている</string>
+    <string name="trackers_updated_summary">トラッカーが章 %d に更新されました</string>
+    <string name="action_sort_random">ランダム</string>
+    <string name="onboarding_permission_crashlytics_description">匿名化されたクラッシュ ログを開発者に送信します。</string>
+    <string name="onboarding_permission_analytics">分析を許可する</string>
+    <string name="pref_security">安全</string>
+    <string name="pref_firebase">分析とクラッシュログ</string>
+    <string name="pref_download_new_unread_chapters_only">重複して読んだ章のダウンロードをスキップする</string>
+    <string name="pref_auto_update_manga_on_mark_read">既読としてマークされた場合の更新の進行状況</string>
+    <string name="non_library_settings">すべての既読エントリ</string>
+    <string name="onboarding_permission_crashlytics">クラッシュログを送信する</string>
+    <string name="onboarding_permission_analytics_description">アプリの機能を向上させるために、匿名化された使用状況データを送信します。</string>
+    <string name="firebase_summary">クラッシュ ログと分析を送信することで、問題を特定して修正し、パフォーマンスを向上させ、今後のアップデートを貴方のニーズに合わせたものにすることができます</string>
+    <string name="ext_remove">取り除く</string>
+    <string name="ext_confirm_remove">拡張機能を削除しますか?</string>
+    <string name="remove_private_extension_message">本当に\"%s\"拡張機能を削除しますか？</string>
+    <string name="add_repo_confirmation">リポジトリ\"%s\"を追加しますか？</string>
+    <string name="confirm_tracker_update">トラッカーを章 %d に更新しますか？</string>
 </resources>

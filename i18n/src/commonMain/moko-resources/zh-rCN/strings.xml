@@ -648,7 +648,7 @@
     <string name="fdroid_warning">F-Droid 渠道不受官方支持。
 \n点击了解详情。</string>
     <string name="action_display_show_continue_reading_button">继续阅读按钮</string>
-    <string name="pref_invalidate_download_cache">清除下载索引</string>
+    <string name="pref_invalidate_download_cache">重建下载索引</string>
     <string name="track_remove_date_conf_title">要删除日期吗？</string>
     <string name="track_remove_start_date_conf_text">将会删除之前在 %s 中标记的开始日期</string>
     <string name="track_remove_finish_date_conf_text">将会删除之前在 %s 中标记的结束日期</string>
@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">已清除下载索引</string>
     <string name="track_activity_name">登录进度记录平台</string>
     <string name="create_backup_file_error">创建备份文件失败</string>
-    <string name="licensed_manga_chapters_error">已有正版，没有章节可供显示</string>
     <string name="exception_offline">未连接网络</string>
     <string name="exception_http">HTTP %d，请在 WebView 中检查网站</string>
     <string name="exception_unknown_host">无法连接到 %s</string>
@@ -820,4 +819,22 @@
     <string name="invalid_backup_file_json">不支持 JSON 备份</string>
     <string name="invalid_backup_file_unknown">备份文件已损坏</string>
     <string name="action_copy_link">复制链接</string>
+    <string name="extensionRepo_settings">插件仓库</string>
+    <string name="add_repo_confirmation">您想添加“%s”仓库吗？</string>
+    <string name="pref_download_new_unread_chapters_only">跳过下载重复阅读的章节</string>
+    <string name="confirm_tracker_update">将进度更新到第 %d 章？</string>
+    <string name="onboarding_permission_crashlytics">发送崩溃日志</string>
+    <string name="onboarding_permission_crashlytics_description">向开发者发送匿名的崩溃日志</string>
+    <string name="onboarding_permission_analytics">数据分析</string>
+    <string name="pref_security">安全</string>
+    <string name="onboarding_permission_analytics_description">发送匿名的应用数据以提升用户体验</string>
+    <string name="pref_firebase">数据分析与崩溃日志</string>
+    <string name="firebase_summary">允许发送崩溃日志和数据分析帮助开发者辨别并修复问题，提高应用体验，以期更新符合你需要的功能</string>
+    <string name="action_sort_random">随机</string>
+    <string name="ext_remove">删除</string>
+    <string name="ext_confirm_remove">确定删除？</string>
+    <string name="remove_private_extension_message">确定要删除 \"%s\" 插件吗?</string>
+    <string name="non_library_settings">所有已读作品</string>
+    <string name="pref_auto_update_manga_on_mark_read">标记为已读时更新章节进度</string>
+    <string name="trackers_updated_summary">进度记录平台已更新到 %d 章</string>
 </resources>

@@ -717,7 +717,6 @@
     <string name="information_cloudflare_help">Klepněte zde pro pomoc s Cloudflare</string>
     <string name="download_cache_invalidated">Index stažených zneplatněn</string>
     <string name="create_backup_file_error">Nelze vytvořit soubor zálohy</string>
-    <string name="licensed_manga_chapters_error">Licencováno - Žádné kapitoly k zobrazení</string>
     <string name="exception_offline">Bez připojení k internetu</string>
     <string name="exception_unknown_host">Nelze dosáhnout %s</string>
     <string name="exception_http">HTTP %d, zkontrolovat web v WebView</string>

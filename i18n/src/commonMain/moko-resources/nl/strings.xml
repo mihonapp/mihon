@@ -158,7 +158,7 @@
     <string name="no_next_chapter">Volgend hoofdstuk niet gevonden</string>
     <string name="confirm_set_image_as_cover">Deze afbeelding als omslagfoto gebruiken?</string>
     <string name="notification_new_chapters">Nieuwe hoofdstukken gevonden</string>
-    <string name="notification_first_add_to_library">Voeg de manga eerst aan je bibliotheek toe voordat je dit doet</string>
+    <string name="notification_first_add_to_library">Voeg het item eerst aan je bibliotheek toe voordat je dit doet</string>
     <string name="file_select_cover">Selecteer omslagfoto</string>
     <string name="file_select_backup">Selecteer back-upbestand</string>
     <string name="update_check_confirm">Download</string>
@@ -243,11 +243,7 @@
     <string name="ext_untrusted">Niet vertrouwd</string>
     <string name="ext_uninstall">Verwijderen</string>
     <string name="untrusted_extension">Niet vertrouwde extensie</string>
-    <string name="untrusted_extension_message">Deze extensie is door een niet vertrouwd certificaat ondertekend en is niet geactiveerd.
-\n
-\nEen kwaadaardige extensie zou alle log-in gegevens kunnen uitlezen in Mihon of arbitraire code uit kunnen voeren.
-\n
-\nDoor dit certificaat te vertrouwen accepteer je deze risico\'s.</string>
+    <string name="untrusted_extension_message">Kwaadaardige extensies kunnen alle opgeslagen inloggegevens uitlezen of arbitraire code uitvoeren. \n \nDoor deze extensie te vertrouwen accepteer je deze risico\'s.</string>
     <string name="pref_double_tap_anim_speed">Dubbeltik animatiesnelheid</string>
     <string name="pref_read_with_long_tap">Weergeven bij lang tikken</string>
     <string name="pager_viewer">Gepagineerd</string>
@@ -376,7 +372,7 @@
     <string name="label_data">Data</string>
     <string name="backup_restore_missing_sources">Missende bronnen:</string>
     <string name="invalid_backup_file_missing_manga">Back-up bevat geen items.</string>
-    <string name="invalid_backup_file">Ongeldig backupbestand</string>
+    <string name="invalid_backup_file">Ongeldig back-upbestand:</string>
     <string name="pref_show_reading_mode_summary">Laat huidige modus kort zien als lezer geopend wordt</string>
     <string name="pref_show_reading_mode">Toon leesmodus</string>
     <string name="pref_library_update_refresh_metadata">Metadata automatisch bijwerken</string>
@@ -451,9 +447,7 @@
     <string name="action_filter_tracked">Getracked</string>
     <string name="right_and_left_nav">Rechts en links</string>
     <string name="pref_dual_page_split">Brede pagina\'s opsplitsen</string>
-    <string name="backup_restore_content_full">Data uit het back-upbestand zal worden teruggezet.
-\n
-\nJe zult missende extensies opnieuw moeten installeren, en opnieuw moeten inloggen bij de trackingdiensten om deze weer te gebruiken.</string>
+    <string name="backup_restore_content_full">Je zal mogelijk missende extensies opnieuw moeten installeren en opnieuw moeten inloggen bij trackingdiensten om deze weer te gebruiken.</string>
     <string name="nav_zone_right">Rechts</string>
     <string name="nav_zone_left">Links</string>
     <string name="nav_zone_next">Volgende</string>
@@ -542,12 +536,12 @@
     <string name="backup_info">Je zou kopies van back-ups ook in andere plaatsen moeten hebben. Back-ups kunnen gevoelige data zoals opgeslagen wachtwoorden bevatten; let op met delen.</string>
     <string name="connected_to_wifi">Alleen via Wi-Fi</string>
     <string name="pref_verbose_logging">Uitgebreide logging</string>
-    <string name="notification_size_warning">Waarschuwing: grote updates schaden bronnen en kunnen leiden tot slomere updates en verhoogd batterijgebruik</string>
+    <string name="notification_size_warning">Waarschuwing: grote updates beschadigen bronnen en kunnen leiden tot tragere updates en verhoogd batterijgebruik. Tik om meer te leren.</string>
     <string name="ext_installer_shizuku_unavailable_dialog">Installeer en start Shizuku om deze als extensie-installatieprogramma te gebruiken.</string>
     <string name="action_sort_count">Totaal aantal items</string>
     <string name="pref_verbose_logging_summary">Houd uitgebreide logs bij in de systeemlogs (verslechterd de werking van de app)</string>
     <string name="channel_app_updates">App updates</string>
-    <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot trager werkende bronnen en/of Mihon blokkeren</string>
+    <string name="download_queue_size_warning">Waarschuwing: grote bulk downloads kunnen leiden tot bronnen die trager werken en/of Mihon blokkeren. Tik om meer te leren.</string>
     <string name="ext_update_all">Alles updaten</string>
     <string name="update_72hour">Iedere 3 dagen</string>
     <string name="library_errors_help">Voor hulp bij het oplossen van fouten bij het bijwerken van de bibliotheek, zie %1$s</string>
@@ -598,7 +592,7 @@
     <string name="pref_app_language">Taal van de applicatie</string>
     <string name="empty_backup_error">Geen bibliotheek inzendingen om te backuppen</string>
     <string name="action_sort_unread_count">Ongelezen aantal</string>
-    <string name="download_ahead_info">Werkt alleen bij vermeldingen in de bibliotheek en als het huidige hoofdstuk en het volgende alreeds gedownload zijn</string>
+    <string name="download_ahead_info">Werkt alleen als het huidige hoofdstuk en het volgende alreeds gedownload zijn.</string>
     <string name="pref_user_agent_string">Standaard \'user-agent-string\'</string>
     <string name="action_search_hint">Zoek…</string>
     <string name="missing_storage_permission">Opslag bevoegdheden niet verleent</string>
@@ -664,7 +658,7 @@
     <string name="pref_tracking_summary">1-directie voortgang sync</string>
     <string name="track_remove_start_date_conf_text">Dit gaat je eerder geselcteerde startdatum %s verwijderen</string>
     <string name="delete_downloaded">Download verwijderen</string>
-    <string name="skipped_reason_not_always_update">Overgeslagen omdat serie geen updates vereist.</string>
+    <string name="skipped_reason_not_always_update">Overgeslagen omdat deze serie geen updates vereist</string>
     <string name="crash_screen_description">%s is een onverwachte fout tegengekomen. We raden u aan de crashlogboeken te delen in ons ondersteuningskanaal op Discord.</string>
     <string name="pref_debug_info">Foutopsporingsinformatie</string>
     <string name="label_completed_titles">Voltooide titels</string>
@@ -673,7 +667,6 @@
     <string name="action_filter_interval_custom">Aangepast ophaalinterval</string>
     <string name="action_sort_next_updated">Volgende verwachte update</string>
     <string name="split_tall_images">Splits hoge afbeeldingen</string>
-    <string name="licensed_manga_chapters_error">Gelicenseerd - Geen hoofdstukken te laten zien</string>
     <string name="pref_page_rotate_invert">Draairichting van geroteerde brede pagina\'s omdraaien</string>
     <string name="pref_double_tap_zoom">Dubbeltik om te zoomen</string>
     <string name="track_activity_name">Tracker login</string>
@@ -688,7 +681,7 @@
     <string name="manga_display_interval_title">Schat elke</string>
     <string name="crash_screen_restart_application">Herstart de applicatie</string>
     <string name="download_cache_invalidated">Download Index geïnvalideerd</string>
-    <string name="pref_invalidate_download_cache">Maak de downloadindex ongeldig</string>
+    <string name="pref_invalidate_download_cache">Herindexeer downloads</string>
     <string name="action_ok">OK</string>
     <string name="pref_chapter_swipe_start">Swipe naar de linker actie</string>
     <string name="intervals_header">Intervallen</string>
@@ -750,4 +743,80 @@
     <string name="action_revert_to_default">Naar standaard terugkeren</string>
     <string name="pref_onboarding_guide">Onboarding gids</string>
     <string name="onboarding_heading">Welkom!</string>
+    <string name="action_copy_link">Link kopiëren</string>
+    <string name="ext_revoke_trust">Vertrouwde onbekende extensies intrekken</string>
+    <string name="label_extension_repos">Extensierepo\'s</string>
+    <string name="pref_flash_style_black">Zwart</string>
+    <string name="action_sort_random">Willekeurig</string>
+    <string name="onboarding_description">Laten we eerst enkele dingen instellen. Je kunt deze later altijd wijzigen in de instellingen.</string>
+    <string name="onboarding_storage_action_select">Selecteer een map</string>
+    <string name="onboarding_permission_crashlytics_description">Stuur geanonimiseerde crashlogs naar de ontwikkelaars.</string>
+    <string name="pref_security">Beveiliging</string>
+    <string name="pref_firebase">Analytics en crashlogs</string>
+    <string name="error_repo_exists">Deze repo bestaat al!</string>
+    <string name="information_empty_repos">Je hebt geen repo\'s ingesteld.</string>
+    <string name="action_sort_tracker_score">Tracker score</string>
+    <string name="onboarding_action_skip">Overslaan</string>
+    <string name="onboarding_storage_help_action">Opslaggids</string>
+    <string name="onboarding_permission_analytics_description">Stuur geanonimiseerde gebruiksgegevens om functies van de app te verbeteren.</string>
+    <string name="onboarding_permission_crashlytics">Crashlogs verzenden</string>
+    <string name="onboarding_permission_analytics">Analytics toestaan</string>
+    <string name="remove_private_extension_message">Weet je zeker dat je de extensie \"%s\" wil verwijderen?</string>
+    <string name="onboarding_guides_returning_user">%s aan het herinstalleren?</string>
+    <string name="onboarding_permission_action_grant">Toestaan</string>
+    <string name="onboarding_guides_new_user">Nieuw bij %s? Wij raden je aan om de opstartgids te lezen.</string>
+    <string name="delete_repo_confirmation">Wens je de repo \"%s\" te verwijderen?</string>
+    <string name="action_open_repo">Bronrepo openen</string>
+    <string name="pref_flash_duration">Flitsduur</string>
+    <string name="ext_remove">Verwijderen</string>
+    <string name="ext_confirm_remove">Extensie verwijderen?</string>
+    <string name="pref_download_new_unread_chapters_only">Downloaden van dubbele eerder gelezen hoofdstukken overslaan</string>
+    <string name="action_delete_repo">Repo verwijderen</string>
+    <string name="onboarding_storage_selection_required">Er moet een map geselecteerd zijn</string>
+    <string name="onboarding_storage_help_info">Aan het updaten van een oudere versie en niet zeker wat te selecteren? Raadpleeg de opslaggids voor meer informatie.</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Vermijd onderbrekingen van langlopende bibliotheekupdates, downloads en back-upherstellen.</string>
+    <string name="onboarding_permission_install_apps_description">Om bronextensies te installeren.</string>
+    <string name="onboarding_permission_notifications_description">Ontvang meldingen over bibliotheekupdates en meer.</string>
+    <string name="pref_library_update_smart_update">Slimme update</string>
+    <string name="ext_permission_install_apps_warning">Er zijn rechten nodig om extensies te installeren. Tik hier om deze toe te staan.</string>
+    <string name="action_add_repo">Repo toevoegen</string>
+    <string name="label_add_repo_input">Repo URL</string>
+    <string name="action_add_repo_message">Voeg aanvullende repo\'s toe aan Mihon. Dit moet een URL zijn die eindigt op “index.min.json”.</string>
+    <string name="invalid_repo_name">Ongeldige repo URL</string>
+    <string name="no_location_set">Geen opslaglocatie ingesteld</string>
+    <string name="action_add_anyway">Toch toevoegen</string>
+    <string name="action_migrate_duplicate">Bestaand item migreren</string>
+    <string name="action_replace_repo">Vervangen</string>
+    <string name="add_repo_confirmation">Wens je de repo \"%s\" toe te voegen?</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Flits elke</string>
+    <string name="pref_flash_with">Flits met</string>
+    <string name="pref_flash_style_white">Wit</string>
+    <string name="pref_flash_style_white_black">Wit en Zwart</string>
+    <string name="onboarding_action_next">Volgende</string>
+    <string name="pref_display_profile">Aangepast weergaveprofiel</string>
+    <string name="pref_webtoon_disable_zoom_out">Uitzoomen uitschakelen</string>
+    <string name="extensionRepo_settings">Extensierepo\'s</string>
+    <string name="non_library_settings">Alle gelezen items</string>
+    <string name="theme_nord">Nord</string>
+    <string name="manga_interval_expected_update_null">Deze manga is voltooid of er is geen voorspelde uitkomstdatum.</string>
+    <string name="pref_auto_update_manga_on_mark_read">Voortgang bijwerken wanneer gemarkeerd als gelezen</string>
+    <string name="trackers_updated_summary">Trackers bijgewerkt naar hoofdstuk %d</string>
+    <string name="upcoming_calendar_next">Volgende Maand</string>
+    <string name="action_create">Aanmaken</string>
+    <string name="label_upcoming">Toekomstige Updates</string>
+    <string name="available_disk_space_info">Beschikbaar: %1$s / Totaal: %2$s</string>
+    <string name="pref_storage_location_info">Gebruikt voor automatische back-ups, hoofdstukdownloads en als lokale bron.</string>
+    <string name="pref_storage_location">Opslaglocatie</string>
+    <string name="invalid_backup_file_error">Volledige fout:</string>
+    <string name="manga_interval_expected_update_soon">Binnenkort</string>
+    <string name="manga_interval_custom_amount">Aangepaste updatefrequentie:</string>
+    <string name="exclude_scanlators">Scanlators uitsluiten</string>
+    <string name="no_scanlators_found">Geen scanlators gevonden</string>
+    <string name="confirm_tracker_update">Trackers bijwerken naar hoofdstuk %d?</string>
+    <string name="action_view_upcoming">Toekomstige Updates Bekijken</string>
+    <string name="upcoming_calendar_prev">Vorige Maand</string>
+    <string name="invalid_backup_file_json">JSON back-up niet ondersteund</string>
+    <string name="invalid_backup_file_unknown">Back-up bestand is corrupt</string>
+    <string name="manga_interval_expected_update">Nieuwe hoofdstukken zijn geschat om uit te komen in ongeveer %1$s. Word ongeveer elke %2$s gecontroleerd.</string>
 </resources>

@@ -9,7 +9,7 @@
     <string name="label_backup">Copia de seguridad y restauración</string>
     <string name="action_settings">Ajustes</string>
     <string name="action_filter">Filtrar</string>
-    <string name="action_filter_unread">Con capítulos sin leer</string>
+    <string name="action_filter_unread">No leídos</string>
     <string name="action_filter_empty">Quitar filtro</string>
     <string name="action_search">Buscar</string>
     <string name="action_select_all">Seleccionar todo</string>
@@ -89,7 +89,7 @@
     <string name="rotation_force_landscape">Forzar en horizontal</string>
     <string name="pref_remove_after_marked_as_read">Borrarlos tras marcarlos como leídos de forma manual</string>
     <string name="pref_remove_after_read">Borrar capítulos terminados de forma automática</string>
-    <string name="services">Servicios de seguimiento</string>
+    <string name="services">Rastreadores</string>
     <string name="pref_clear_chapter_cache">Limpiar la caché de capítulos</string>
     <string name="used_cache">Usado: %1$s</string>
     <string name="cache_deleted">Se vació la caché. Se han borrado %1$d archivos</string>
@@ -97,7 +97,7 @@
     <string name="pref_clear_cookies">Borrar cookies</string>
     <string name="cookies_cleared">Cookies borradas</string>
     <string name="pref_clear_database">Borrar la base de datos</string>
-    <string name="pref_clear_database_summary">Borrar el historial de los elementos que no estén guardados en tu biblioteca</string>
+    <string name="pref_clear_database_summary">Borra del historial los títulos que hayas leído pero no formen parte de tu biblioteca</string>
     <string name="clear_database_confirmation">¿Seguro? Perderás los capítulos leídos y el progreso de los títulos que no pertenezcan a la biblioteca</string>
     <string name="clear_database_completed">Elementos borrados</string>
     <string name="version">Versión</string>
@@ -149,7 +149,7 @@
     <string name="update_check_notification_download_in_progress">Descargando…</string>
     <string name="update_check_notification_download_complete">Toca aquí para instalar la actualización</string>
     <string name="update_check_notification_download_error">Error de descarga</string>
-    <string name="update_check_notification_update_available">¡Nueva versión disponible!</string>
+    <string name="update_check_notification_update_available">¡Hay una nueva versión!</string>
     <string name="information_no_downloads">No hay descargas</string>
     <string name="information_no_recent">No hay actualizaciones recientes</string>
     <string name="information_no_recent_manga">No has leído nada últimamente</string>
@@ -158,7 +158,7 @@
     <string name="download_notifier_unknown_error">No se ha podido descargar el capítulo debido a un error inesperado</string>
     <string name="download_notifier_text_only_wifi">No estás conectado a ninguna red Wi-Fi</string>
     <string name="categories">Categorías</string>
-    <string name="manga">Entradas de biblioteca</string>
+    <string name="manga">Contenido de la biblioteca</string>
     <string name="track">Seguimiento</string>
     <string name="history">Historial</string>
     <string name="action_filter_bookmarked">Favoritos</string>
@@ -213,7 +213,7 @@
     <string name="local_source">Fuente local</string>
     <string name="delete_downloads_for_manga">¿Quieres borrar los capítulos descargados?</string>
     <string name="chapter_paused">Pausado</string>
-    <string name="manga_tracking_tab">Seguimiento</string>
+    <string name="manga_tracking_tab">Rastreo</string>
     <string name="error_category_exists">¡Ya existe una categoría con este nombre!</string>
     <string name="snack_categories_deleted">Categorías eliminadas</string>
     <string name="snack_add_to_library">¿Añadir manga a la biblioteca?</string>
@@ -278,8 +278,8 @@
     <string name="filter_mode_overlay">Superponer</string>
     <string name="filter_mode_multiply">Multiplicar</string>
     <string name="filter_mode_screen">Pantalla</string>
-    <string name="filter_mode_lighten">Subexponer / Aclarar</string>
-    <string name="filter_mode_darken">Quemar / Oscurecer</string>
+    <string name="filter_mode_lighten">Sobreexponer / Aclarar</string>
+    <string name="filter_mode_darken">Subexponer / Oscurecer</string>
     <string name="label_help">Ayuda</string>
     <string name="no_results_found">No se han encontrado resultados</string>
     <string name="migration_selection_prompt">Selecciona una fuente a migrar</string>
@@ -299,8 +299,8 @@
     <string name="action_sort_latest_chapter">Por capítulo más reciente</string>
     <string name="action_view_chapters">Ver capítulos</string>
     <string name="action_cancel_all">Cancelar todo</string>
-    <string name="theme_light">Claros</string>
-    <string name="theme_dark">Oscuros</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
     <string name="theme_system">Del sistema</string>
     <string name="pref_manage_notifications">Gestionar notificaciones</string>
     <string name="pref_category_security">Seguridad y privacidad</string>
@@ -341,7 +341,7 @@
     <string name="pinned_sources">Ancladas</string>
     <string name="action_unpin">Desanclar</string>
     <string name="action_pin">Anclar</string>
-    <string name="add_tracking">Añadir seguimiento</string>
+    <string name="add_tracking">Añadir rastreo</string>
     <string name="in_library">En biblioteca</string>
     <string name="add_to_library">Añadir a la biblioteca</string>
     <string name="information_webview_required">Primero instala WebView para poder ver contenido de la aplicación</string>
@@ -366,10 +366,10 @@
     <string name="gray_background">Gris</string>
     <string name="battery_optimization_setting_activity_not_found">No se pudieron abrir los ajustes del dispositivo</string>
     <string name="pref_refresh_library_covers">Actualizar las portadas de la biblioteca</string>
-    <string name="tracking_info">La sincronización de estos servicios solo funciona en un solo sentido. Cada elemento en tu biblioteca tiene un botón de seguimiento y tendrás que configurarlo a mano, uno a uno.</string>
+    <string name="tracking_info">Sincronización unidireccional para actualizar el progreso del capítulo en los servicios de seguimiento externos. Configura el seguimiento de entradas individuales desde el botón de Rastreo.</string>
     <string name="label_data">Datos</string>
     <string name="backup_restore_missing_sources">Fuentes que faltan:</string>
-    <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningun elemento; la biblioteca está vacía.</string>
+    <string name="invalid_backup_file_missing_manga">La copia de seguridad no contiene ningún título; la biblioteca está vacía.</string>
     <string name="invalid_backup_file">El archivo de copia de seguridad no parece estar bien:</string>
     <string name="pref_library_update_refresh_metadata_summary">Comprueba si hay una nueva portada, información y descripción al actualizar la biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Actualizar automáticamente los metadatos</string>
@@ -505,7 +505,7 @@
     <string name="chapter_not_found">No se ha encontrado el capítulo</string>
     <string name="notification_incognito_text">Desactivar el modo incógnito</string>
     <string name="enhanced_tracking_info">Ofrecen funciones mejoradas para ciertas fuentes. Se hace un seguimiento automático de los elementos al añadirlos a la biblioteca.</string>
-    <string name="enhanced_services">Servicios de seguimiento mejorados</string>
+    <string name="enhanced_services">Rastreadores mejorados</string>
     <string name="tracking_guide">Guía de seguimiento</string>
     <string name="automatic_background">Automático</string>
     <string name="off">Apagado</string>
@@ -524,8 +524,8 @@
     <string name="relative_time_today">Hoy</string>
     <string name="theme_tealturquoise">Azul marino y turquesa</string>
     <string name="pref_category_appearance">Apariencia</string>
-    <string name="confirm_lock_change">Identifícate para confirmar el cambio</string>
-    <string name="label_default">Predeterminado</string>
+    <string name="confirm_lock_change">Autentíquese para confirmar el cambio</string>
+    <string name="label_default">Original</string>
     <string name="pref_remove_exclude_categories">Categorías excluidas</string>
     <string name="help_translate">Ayudar a traducir</string>
     <string name="action_sort_count">Número total de elementos</string>
@@ -549,7 +549,7 @@
     <string name="pref_auto_clear_chapter_cache">Limpiar la caché de capítulos al abrir la aplicación</string>
     <string name="database_clean">Base de datos limpia</string>
     <string name="clear_database_source_item_count">%1$d títulos que no pertenecen a la biblioteca en la base de datos</string>
-    <string name="extension_api_error">No se ha podido obtener el listado de extensiones disponibles</string>
+    <string name="extension_api_error">No se han podido obtener las extensiones disponibles</string>
     <string name="privacy_policy">Política de privacidad</string>
     <string name="pref_update_only_completely_read">Saltarse títulos con capítulos por leer</string>
     <string name="library_errors_help">Si necesitas ayuda para resolver los errores de actualización de la biblioteca mira en %1$s</string>
@@ -717,9 +717,8 @@
     <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
     <string name="track_activity_name">Iniciar sesión en el servicio</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
-    <string name="licensed_manga_chapters_error">Con licencia oficial, sin capítulos que mostrar</string>
-    <string name="exception_unknown_host">No se ha podido acceder a %s</string>
-    <string name="exception_http">HTTP %d, comprueba la página web en WebView</string>
+    <string name="exception_unknown_host">%s no parece estar disponible</string>
+    <string name="exception_http">HTTP %d, prueba abriendo la página web en WebView</string>
     <string name="exception_offline">Sin conexión a Internet</string>
     <string name="unlock_app_title">Desbloquear %s</string>
     <string name="action_move_to_bottom_all_for_series">Mover al último puesto</string>
@@ -739,7 +738,7 @@
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
     <string name="action_sort_tracker_score">Puntuación del rastreador</string>
     <string name="action_apply">Aplicar</string>
-    <string name="action_revert_to_default">Restablecer valor predeterminado</string>
+    <string name="action_revert_to_default">Restablecer vista</string>
     <string name="action_create">Crear</string>
     <string name="no_scanlators_found">No se ha encontrado ningún equipo de traducción</string>
     <string name="scanlator">Equipo de traducción</string>
@@ -755,23 +754,19 @@
     <string name="onboarding_guides_new_user">¿Es la primera vez que instalas %s? Te recomendamos leer la guía de introducción.</string>
     <string name="onboarding_action_finish">Comenzar</string>
     <string name="onboarding_storage_selection_required">Tienes que elegir una carpeta</string>
-    <string name="onboarding_heading">¡Bienvenid@s!</string>
+    <string name="onboarding_heading">¡Bienvenido/-a!</string>
     <string name="onboarding_guides_returning_user">¿No es la primera vez que instalas %s?</string>
     <string name="onboarding_action_skip">Saltar</string>
     <string name="onboarding_action_next">Siguiente</string>
-    <string name="onboarding_description">Lo primero de todo es dejar las cosas a tu gusto. Siempre puedes volver a cambiarlas más tarde en los ajustes.</string>
+    <string name="onboarding_description">Primero vamos a configurar algunas cosas. Siempre puedes cambiarlas en la configuración más tarde.</string>
     <string name="no_location_set">Todavía no has proporcionado ninguna carpeta</string>
-    <string name="onboarding_storage_info">Seleccione una carpeta donde %1$s almacenará las descargas de capítulos, copias de seguridad, etc.
-\n
-\nSe recomienda una carpeta dedicada.
-\n
-\nCarpeta seleccionada: %2$s</string>
+    <string name="onboarding_storage_info">Elige una carpeta donde %1$s guardará los capítulos descargados, las copias de seguridad y otras cosas.\n\nTe recomendamos que sea solo para %1$s.\n\nCarpeta seleccionada: %2$s</string>
     <string name="onboarding_permission_install_apps">Permiso para instalar aplicaciones</string>
-    <string name="onboarding_permission_notifications">Permiso para mostrar notificaciones</string>
-    <string name="onboarding_permission_ignore_battery_opts_description">Previene cortes y retrasos al procesar tareas en segundo plano que tarden un poco; como al buscar y descargar contenido nuevo, así como al restaurar copias de respaldo.</string>
+    <string name="onboarding_permission_notifications">Permitir notificaciones</string>
+    <string name="onboarding_permission_ignore_battery_opts_description">Evita interrupciones en las actualizaciones de las bibliotecas, descargas y restauraciones de copias de seguridad.</string>
     <string name="onboarding_permission_ignore_battery_opts">Uso de batería en segundo plano</string>
-    <string name="onboarding_permission_install_apps_description">Para instalar extensiones que te permiten buscar y descargar contenido.</string>
-    <string name="onboarding_permission_notifications_description">Recibe notificaciones cuando aparece contenido nuevo en tu biblioteca y otras cosas.</string>
+    <string name="onboarding_permission_install_apps_description">Para poder instalar extensiones que te dejen encontrar y descargar contenido.</string>
+    <string name="onboarding_permission_notifications_description">Recibe notificaciones sobre actualizaciones de la biblioteca y mucho más.</string>
     <string name="onboarding_permission_action_grant">Conceder</string>
     <string name="available_disk_space_info">Disponible: %1$s / Total: %2$s</string>
     <string name="ext_permission_install_apps_warning">Toca aquí para conceder los permisos necesarios para instalar extensiones.</string>
@@ -821,4 +816,21 @@
     <string name="invalid_backup_file_unknown">El archivo de la copia de seguridad está dañado</string>
     <string name="extensionRepo_settings">Repositorios de extensiones</string>
     <string name="action_copy_link">Copiar el enlace</string>
+    <string name="pref_download_new_unread_chapters_only">Omitir la descarga de capítulos duplicados y ya leídos</string>
+    <string name="add_repo_confirmation">¿Quieres añadir el repositorio «%s»?</string>
+    <string name="confirm_tracker_update">¿Marcar el capítulo %d como leído en los servicios de seguimiento?</string>
+    <string name="action_sort_random">Al azar</string>
+    <string name="onboarding_permission_crashlytics">Enviar registros de errores</string>
+    <string name="onboarding_permission_crashlytics_description">Envía registros anónimos de errores a los desarrolladores.</string>
+    <string name="pref_security">Seguridad</string>
+    <string name="ext_remove">Eliminar</string>
+    <string name="ext_confirm_remove">¿Quieres eliminar la extensión?</string>
+    <string name="remove_private_extension_message">¿Seguro que quieres quitar la extensión «%s»?</string>
+    <string name="firebase_summary">El envío de registros de errores y estadísticas de uso nos permitirá identificar y solucionar problemas, mejorar el rendimiento y hacer que las versiones futuras se adapten mejor a tus necesidades</string>
+    <string name="onboarding_permission_analytics">Enviar estadísticas de uso</string>
+    <string name="onboarding_permission_analytics_description">Compartir estadísticas de uso para mejorar la aplicación.</string>
+    <string name="pref_firebase">Informar de errores y compartir datos</string>
+    <string name="non_library_settings">Todas las obras leídas</string>
+    <string name="pref_auto_update_manga_on_mark_read">Actualizar el progreso al marcarlo como leído</string>
+    <string name="trackers_updated_summary">Rastreadores actualizados al capítulo %d</string>
 </resources>
