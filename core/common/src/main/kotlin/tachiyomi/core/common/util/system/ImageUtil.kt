@@ -22,6 +22,7 @@ import androidx.core.graphics.get
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.hippo.unifile.UniFile
+import eu.kanade.tachiyomi.util.system.GLUtil
 import logcat.LogPriority
 import okio.Buffer
 import okio.BufferedSource
@@ -307,6 +308,11 @@ object ImageUtil {
         val splitWidth: Int,
     ) {
         val bottomOffset = topOffset + splitHeight
+    }
+
+    fun canUseCoilToDecode(imageSource: BufferedSource): Boolean {
+        val options = extractImageOptions(imageSource)
+        return maxOf(options.outWidth, options.outHeight) <= GLUtil.maxTextureSize
     }
 
     /**

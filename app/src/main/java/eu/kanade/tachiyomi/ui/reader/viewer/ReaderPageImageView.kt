@@ -40,6 +40,7 @@ import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
 import okio.BufferedSource
+import tachiyomi.core.common.util.system.ImageUtil
 
 /**
  * A wrapper view for showing page image.
@@ -288,35 +289,42 @@ open class ReaderPageImageView @JvmOverloads constructor(
             },
         )
 
-        if (isWebtoon) {
-            val request = ImageRequest.Builder(context)
-                .data(data)
-                .memoryCachePolicy(CachePolicy.DISABLED)
-                .diskCachePolicy(CachePolicy.DISABLED)
-                .target(
-                    onSuccess = { result ->
-                        val image = result as BitmapImage
-                        setImage(ImageSource.bitmap(image.bitmap))
-                        isVisible = true
-                    },
-                    onError = {
-                        this@ReaderPageImageView.onImageLoadError()
-                    },
-                )
-                .size(ViewSizeResolver(this@ReaderPageImageView))
-                .precision(Precision.INEXACT)
-                .cropBorders(config.cropBorders)
-                .customDecoder(true)
-                .crossfade(false)
-                .build()
-            context.imageLoader.enqueue(request)
-        } else {
-            when (data) {
-                is BitmapDrawable -> setImage(ImageSource.bitmap(data.bitmap))
-                is BufferedSource -> setImage(ImageSource.inputStream(data.inputStream()))
-                else -> throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
+        when (data) {
+            is BitmapDrawable -> {
+                setImage(ImageSource.bitmap(data.bitmap))
+                isVisible = true
             }
-            isVisible = true
+            is BufferedSource -> {
+                if (!isWebtoon || !ImageUtil.canUseCoilToDecode(data)) {
+                    setImage(ImageSource.inputStream(data.inputStream()))
+                    isVisible = true
+                } else {
+                    val request = ImageRequest.Builder(context)
+                        .data(data)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .diskCachePolicy(CachePolicy.DISABLED)
+                        .target(
+                            onSuccess = { result ->
+                                val image = result as BitmapImage
+                                setImage(ImageSource.bitmap(image.bitmap))
+                                isVisible = true
+                            },
+                            onError = {
+                                this@ReaderPageImageView.onImageLoadError()
+                            },
+                        )
+                        .size(ViewSizeResolver(this@ReaderPageImageView))
+                        .precision(Precision.INEXACT)
+                        .cropBorders(config.cropBorders)
+                        .customDecoder(true)
+                        .crossfade(false)
+                        .build()
+                    context.imageLoader.enqueue(request)
+                }
+            }
+            else -> {
+                throw IllegalArgumentException("Not implemented for class ${data::class.simpleName}")
+            }
         }
     }
 
