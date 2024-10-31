@@ -11,6 +11,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Changed
+- Bump default user agent
+
 ### Fixed
 - Fixed "currentTab was used multiple times"
 
