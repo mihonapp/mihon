@@ -23,6 +23,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
 
+### Other
+- Make `MangaScreen` reuse `AppBar`
+
 ## [v0.17.0] - 2024-10-26
 ### Added
 - Option to disable reader zoom out ([@Splintorien](https://github.com/Splintorien)) ([#302](https://github.com/mihonapp/mihon/pull/302))
