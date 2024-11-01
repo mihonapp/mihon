@@ -3,7 +3,7 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.extension.interactor.TrustExtension
-import eu.kanade.domain.source.interactor.ToggleSource
+import eu.kanade.domain.source.interactor.ToggleIncognitoSource
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
@@ -44,7 +44,7 @@ class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences = Injekt.get(),
     private val sourcePreferences: SourcePreferences = Injekt.get(),
-    private val toggleSource: ToggleSource = Injekt.get(),
+    private val toggleIncognitoSource: ToggleIncognitoSource = Injekt.get(),
     private val trustExtension: TrustExtension = Injekt.get(),
 ) {
 
@@ -301,11 +301,11 @@ class ExtensionManager(
             if (oldExtension.sources.first().id.toString() in sourcePreferences.incognitoSources().get()) {
                 oldExtension.sources
                     .map { it.id }
-                    .let { toggleSource.awaitIncognito(it, false) }
+                    .let { toggleIncognitoSource.await(it, false) }
 
                 extension.sources
                     .map { it.id }
-                    .let { toggleSource.awaitIncognito(it, true) }
+                    .let { toggleIncognitoSource.await(it, true) }
             }
         }
         installedExtensionMapFlow.value += extension
@@ -320,7 +320,7 @@ class ExtensionManager(
     private fun unregisterExtension(pkgName: String) {
         val installedExtension = installedExtensionMapFlow.value[pkgName]
         installedExtension?.sources?.map { it.id }?.let {
-            toggleSource.awaitIncognito(it, false)
+            toggleIncognitoSource.await(it, false)
         }
 
         installedExtensionMapFlow.value -= pkgName

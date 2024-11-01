@@ -12,6 +12,7 @@ import eu.kanade.domain.chapter.model.toDbChapter
 import eu.kanade.domain.manga.interactor.SetMangaViewerFlags
 import eu.kanade.domain.manga.model.readerOrientation
 import eu.kanade.domain.manga.model.readingMode
+import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.TrackChapter
 import eu.kanade.domain.track.service.TrackPreferences
@@ -101,6 +102,7 @@ class ReaderViewModel @JvmOverloads constructor(
     private val upsertHistory: UpsertHistory = Injekt.get(),
     private val updateChapter: UpdateChapter = Injekt.get(),
     private val setMangaViewerFlags: SetMangaViewerFlags = Injekt.get(),
+    private val getIncognitoState: GetIncognitoState = Injekt.get()
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(State())
@@ -220,7 +222,7 @@ class ReaderViewModel @JvmOverloads constructor(
 
     // Use lazy here as manga can be null
     private val incognitoMode: Boolean by lazy {
-        preferences.incognitoMode().get() || manga?.source.toString() in sourcePreferences.incognitoSources().get()
+        getIncognitoState.isEnabled(manga!!.source)
     }
     private val downloadAheadAmount = downloadPreferences.autoDownloadWhileReading().get()
 

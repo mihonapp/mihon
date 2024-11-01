@@ -6,6 +6,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
+import eu.kanade.domain.source.interactor.ToggleIncognitoSource
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -37,6 +38,7 @@ class ExtensionDetailsScreenModel(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionSources: GetExtensionSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
+    private val toggleIncognitoSource: ToggleIncognitoSource = Injekt.get(),
     private val preferences: SourcePreferences = Injekt.get(),
 ) : StateScreenModel<ExtensionDetailsScreenModel.State>(State()) {
 
@@ -120,10 +122,10 @@ class ExtensionDetailsScreenModel(
             ?.let { toggleSource.awaitDisable(it, enable) }
     }
 
-    fun toggleIncognito(enableIncognito: Boolean) {
+    fun toggleIncognito(enable: Boolean) {
         state.value.extension?.sources
             ?.map { it.id }
-            ?.let { toggleSource.awaitIncognito(it, enableIncognito) }
+            ?.let { toggleIncognitoSource.await(it, enable) }
     }
 
     fun isIncognito(): Boolean {

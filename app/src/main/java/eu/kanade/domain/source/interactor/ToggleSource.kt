@@ -25,13 +25,6 @@ class ToggleSource(
         }
     }
 
-    fun awaitIncognito(sourceIds: List<Long>, enableIncognito: Boolean) {
-        val transformedSourceIds = sourceIds.map { it.toString() }
-        preferences.incognitoSources().getAndSet { incognitoed ->
-            if (enableIncognito) incognitoed.plus(transformedSourceIds) else incognitoed.minus(transformedSourceIds)
-        }
-    }
-
     private fun isEnabled(sourceId: Long): Boolean {
         return sourceId.toString() in preferences.disabledSources().get()
     }
