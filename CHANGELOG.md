@@ -22,7 +22,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
-- Update all trackers' progress when adding a new tracker ([@cuong-tran](https://github.com/cuong-tran))
+- Update all trackers' progress when adding a new tracker ([@cuong-tran](https://github.com/cuong-tran)) ([#1372](https://github.com/mihonapp/mihon/pull/1372))
 
 ## [v0.17.0] - 2024-10-26
 ### Added
