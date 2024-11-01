@@ -11,6 +11,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Drag & Drop to reorder Category in Settings ([@cuong-tran](https://github.com/cuong-tran))
+
 ### Changed
 - Bump default user agent
 
