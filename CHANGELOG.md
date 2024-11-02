@@ -24,7 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
 
 ### Other
-- Cleanup usage of `NetworkToLocalManga` ([@cuong-tran](https://github.com/cuong-tran)) ([#](https://github.com/mihonapp/mihon/pull/))
+- Cleanup usage of `NetworkToLocalManga` ([@cuong-tran](https://github.com/cuong-tran)) ([#1435](https://github.com/mihonapp/mihon/pull/1435))
 
 ## [v0.17.0] - 2024-10-26
 ### Added
