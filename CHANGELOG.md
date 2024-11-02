@@ -12,16 +12,23 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Changed
-- Bump default user agent
-
-### Fixed
-- Fixed "currentTab was used multiple times"
-- Fixed a rare crash when invoking "Mark previous as read" action
-- Fixed long strip images not loading in some old devices
+- Bump default user agent ([@AntsyLich](https://github.com/AntsyLich)) ([`76dcf90`](https://github.com/mihonapp/mihon/commit/76dcf903403d565056f44c66d965c1ea8affffc3))
 
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
+ 
+### Fixed
+- Fix "currentTab was used multiple times" ([@AntsyLich](https://github.com/AntsyLich)) ([`371c143`](https://github.com/mihonapp/mihon/commit/371c1432e218f6dcf129f05405dceb2cd351c647))
+- Fix a rare crash when invoking "Mark previous as read" action ([@AntsyLich](https://github.com/AntsyLich)) ([`f508d10`](https://github.com/mihonapp/mihon/commit/f508d10ad13560d7316df8642bc93fe66c05b9a8))
+- Fix long strip images not loading in some old devices ([@AntsyLich](https://github.com/AntsyLich)) ([`06efc3b`](https://github.com/mihonapp/mihon/commit/06efc3b25c5af51f42448af27a269ee459d9093d))
+  - Switch to hardware bitmap in reader only if device can handle it ([@AntsyLich](https://github.com/AntsyLich)) ([`e6d96bd`](https://github.com/mihonapp/mihon/commit/e6d96bd348ea5d18a005d6465222ad5f5123103e))
+  - Add option to lower the threshold for hardware bitmaps ([@AntsyLich](https://github.com/AntsyLich)) ([`dcddac5`](https://github.com/mihonapp/mihon/commit/dcddac5daaff3ec89c8507c35dc13d345ffdb6d7))
+    - Improve hardware bitmap threshold option ([@AntsyLich](https://github.com/AntsyLich)) ([`d6dfd24`](https://github.com/mihonapp/mihon/commit/d6dfd24548eaa05a8c3e478068fe2e08f2ee4473))
+- Fix crash after removing last category while it's active in library ([@cuong-tran](https://github.com/cuong-tran)) ([#1450](https://github.com/mihonapp/mihon/pull/1450))
+- Fix reader transition color scheme in auto background mode ([@cuong-tran](https://github.com/cuong-tran)) ([#1487](https://github.com/mihonapp/mihon/pull/1487))
+- Fix app update error notification disappearing ([@cuong-tran](https://github.com/cuong-tran)) ([#1476](https://github.com/mihonapp/mihon/pull/1476))
+- Fix browser not opening in some cases in Honor devices ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya)) ([#1520](https://github.com/mihonapp/mihon/pull/1520))
 
 ## [v0.17.0] - 2024-10-26
 ### Added
