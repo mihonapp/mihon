@@ -72,6 +72,15 @@ data class Manga(
         return chapterFlags and CHAPTER_SORT_DIR_MASK == CHAPTER_SORT_DESC
     }
 
+    fun shouldUseNetworkMangaInfo(networkManga: Manga): Manga =
+        if (!favorite) {
+            // if the manga isn't a favorite, set its display title from source
+            // if it later becomes a favorite, updated title will go to db
+            copy(title = networkManga.title)
+        } else {
+            this
+        }
+
     companion object {
         // Generic filter that does not filter anything
         const val SHOW_ALL = 0x00000000L

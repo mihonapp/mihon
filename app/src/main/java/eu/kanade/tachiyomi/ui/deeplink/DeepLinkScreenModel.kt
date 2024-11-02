@@ -74,8 +74,9 @@ class DeepLinkScreenModel(
     }
 
     private suspend fun getMangaFromSManga(sManga: SManga, sourceId: Long): Manga {
-        return getMangaByUrlAndSourceId.await(sManga.url, sourceId)
-            ?: networkToLocalManga.await(sManga.toDomainManga(sourceId))
+        val networkManga = sManga.toDomainManga(sourceId)
+        return networkToLocalManga.await(networkManga)
+            .shouldUseNetworkMangaInfo(networkManga)
     }
 
     sealed interface State {
