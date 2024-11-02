@@ -166,9 +166,7 @@ abstract class SearchScreenModel(
                         }
 
                         val titles = page.mangas.map {
-                            val networkManga = it.toDomainManga(source.id)
-                            networkToLocalManga.await(networkManga)
-                                .shouldUseNetworkMangaInfo(networkManga)
+                            networkToLocalManga.await(it.toDomainManga(source.id))
                         }
 
                         if (isActive) {

@@ -22,9 +22,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
 - Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
-
-### Other
-- Cleanup usage of `NetworkToLocalManga` ([@cuong-tran](https://github.com/cuong-tran)) ([#1435](https://github.com/mihonapp/mihon/pull/1435))
+- Always update fresh data from source if manga isn't favorited ([@cuong-tran](https://github.com/cuong-tran)) ([#1435](https://github.com/mihonapp/mihon/pull/1435))
 
 ## [v0.17.0] - 2024-10-26
 ### Added

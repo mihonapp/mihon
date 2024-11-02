@@ -113,11 +113,9 @@ class BrowseSourceScreenModel(
                 getRemoteManga.subscribe(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
                 pagingData.map {
-                    val networkManga = it.toDomainManga(sourceId)
-                    networkToLocalManga.await(networkManga)
+                    networkToLocalManga.await(it.toDomainManga(sourceId))
                         .let { localManga -> getManga.subscribe(localManga.url, localManga.source) }
                         .filterNotNull()
-                        .map { manga -> manga.shouldUseNetworkMangaInfo(networkManga) }
                         .stateIn(ioCoroutineScope)
                 }
                     .filter { !hideInLibraryItems || !it.value.favorite }
