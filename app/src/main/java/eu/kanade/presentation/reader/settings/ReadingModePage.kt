@@ -2,6 +2,7 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,6 +50,9 @@ internal fun ColumnScope.ReadingModePage(screenModel: ReaderSettingsScreenModel)
             )
         }
     }
+
+    HorizontalDivider()
+    HeadingItem(MR.strings.app_settings)
 
     val viewer by screenModel.viewerFlow.collectAsState()
     if (viewer is WebtoonViewer) {
