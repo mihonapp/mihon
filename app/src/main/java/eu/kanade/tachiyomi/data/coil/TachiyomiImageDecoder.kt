@@ -10,10 +10,13 @@ import coil3.decode.ImageSource
 import coil3.fetch.SourceFetchResult
 import coil3.request.Options
 import coil3.request.bitmapConfig
+import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.util.system.GLUtil
 import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.decoder.ImageDecoder
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 /**
  * A [Decoder] that uses built-in [ImageDecoder] to decode images that is not supported by the system.
@@ -26,6 +29,8 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
         }
 
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
+
+        val fallbackForLongStrips by lazy { Injekt.get<BasePreferences>().fallbackForLongStrips().get() }
 
         val srcWidth = decoder.width
         val srcHeight = decoder.height
@@ -50,10 +55,15 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             options.bitmapConfig == Bitmap.Config.HARDWARE &&
             maxOf(bitmap.width, bitmap.height) <= GLUtil.maxTextureSize
         ) {
-            val hwBitmap = bitmap.copy(Bitmap.Config.HARDWARE, false)
-            if (hwBitmap != null) {
-                bitmap.recycle()
-                bitmap = hwBitmap
+            if (
+                bitmap.height*1.1 <= GLUtil.maxTextureSize &&
+                bitmap.width < 1100 || !fallbackForLongStrips
+            ) {
+                val hwBitmap = bitmap.copy(Bitmap.Config.HARDWARE, false)
+                if (hwBitmap != null) {
+                    bitmap.recycle()
+                    bitmap = hwBitmap
+                }
             }
         }
 
