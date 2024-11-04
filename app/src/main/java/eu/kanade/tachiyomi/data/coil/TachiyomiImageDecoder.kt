@@ -28,9 +28,9 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             ImageDecoder.newInstance(it.inputStream(), options.cropBorders, displayProfile)
         }
 
-        val fallbackForLongStrips by lazy { Injekt.get<BasePreferences>().fallbackForLongStrips().get() }
-
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
+
+        val fallbackForLongStrips by lazy { Injekt.get<BasePreferences>().fallbackForLongStrips().get() }
 
         val srcWidth = decoder.width
         val srcHeight = decoder.height
