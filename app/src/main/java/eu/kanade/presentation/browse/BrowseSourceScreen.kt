@@ -109,7 +109,7 @@ fun BrowseSourceContent(
         return
     }
 
-    if (mangaList.itemCount == 0 && mangaList.loadState.refresh is LoadState.Loading) {
+    if (mangaList.loadState.refresh is LoadState.Loading) {
         LoadingScreen(
             modifier = Modifier.padding(contentPadding),
         )
