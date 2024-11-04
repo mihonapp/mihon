@@ -345,6 +345,10 @@ object SettingsAdvancedScreen : SearchableSettings {
                     pref = basePreferences.alwaysUseSSIVToDecode(),
                     title = stringResource(MR.strings.pref_always_use_ssiv_to_decode),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = basePreferences.fallbackForLongStrips(),
+                    title = stringResource(MR.strings.pref_fallback_for_long_strips),
+                ),
             ),
         )
     }
