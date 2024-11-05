@@ -45,7 +45,8 @@ class DownloadProvider(
             throw Exception(
                 context.stringResource(
                     MR.strings.invalid_location,
-                    downloadsDir?.displayablePath ?: "",
+                    (downloadsDir?.displayablePath ?: "") +
+                        "/${getSourceDirName(source)}/${getMangaDirName(mangaTitle)}",
                 ),
             )
         }
