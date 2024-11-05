@@ -50,7 +50,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
         decoder.recycle()
 
         check(bitmap != null) { "Failed to decode image" }
-     
+
         if (
             options.bitmapConfig == Bitmap.Config.HARDWARE &&
             maxOf(bitmap.width, bitmap.height) <= GLUtil.maxTextureSize
