@@ -9,7 +9,7 @@ sqldelight = "2.0.2"
 sqlite = "2.4.0"
 voyager = "1.0.0"
 spotless = "7.0.0.BETA4"
-ktlint-core = "1.4.0"
+ktlint-core = "1.4.1"
 firebase-bom = "33.5.1"
 
 [libraries]
@@ -42,7 +42,7 @@ preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt = "com.github.mihonapp:injekt:91edab2317"
 
-coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0-rc02" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0" }
 coil-core = { module = "io.coil-kt.coil3:coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
