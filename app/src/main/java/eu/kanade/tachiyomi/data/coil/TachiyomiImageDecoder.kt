@@ -56,7 +56,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             maxOf(bitmap.width, bitmap.height) <= GLUtil.maxTextureSize
         ) {
             if (
-                !fallbackForLongStrips || bitmap.width < dstWidth && bitmap.height*1.1 <= GLUtil.maxTextureSize
+                !fallbackForLongStrips || bitmap.width < dstWidth && bitmap.height * 1.1 <= GLUtil.maxTextureSize
             ) {
                 val hwBitmap = bitmap.copy(Bitmap.Config.HARDWARE, false)
                 if (hwBitmap != null) {
