@@ -42,7 +42,7 @@ preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
 injekt = "com.github.mihonapp:injekt:91edab2317"
 
-coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.0" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.0.1" }
 coil-core = { module = "io.coil-kt.coil3:coil" }
 coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
