@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,21 +36,24 @@ fun ReorderableCollectionItemScope.CategoryListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onRename() }
-                .padding(MaterialTheme.padding.small),
+                .padding(vertical = MaterialTheme.padding.small)
+                .padding(
+                    start = MaterialTheme.padding.small,
+                    end = MaterialTheme.padding.medium,
+                ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(
+            Icon(
+                imageVector = Icons.Outlined.DragHandle,
+                contentDescription = null,
                 modifier = Modifier
+                    .padding(MaterialTheme.padding.medium)
                     .draggableHandle(),
-                onClick = {},
-            ) {
-                Icon(Icons.Rounded.DragHandle, contentDescription = "Reorder")
-            }
+            )
             Text(
                 text = category.name,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(start = MaterialTheme.padding.small),
+                    .weight(1f),
             )
             IconButton(onClick = onRename) {
                 Icon(

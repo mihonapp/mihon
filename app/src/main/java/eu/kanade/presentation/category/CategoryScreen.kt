@@ -41,7 +41,7 @@ fun CategoryScreen(
     onClickSortAlphabetically: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    moveTo: (Category, Int) -> Unit,
+    changeOrder: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -87,7 +87,7 @@ fun CategoryScreen(
                 PaddingValues(horizontal = MaterialTheme.padding.medium),
             onClickRename = onClickRename,
             onClickDelete = onClickDelete,
-            moveTo = moveTo,
+            changeOrder = changeOrder,
         )
     }
 }
@@ -99,12 +99,12 @@ private fun CategoryContent(
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    moveTo: (Category, Int) -> Unit,
+    changeOrder: (Category, Int) -> Unit,
 ) {
     var reorderableList by remember { mutableStateOf(categories.toList()) }
     val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
         reorderableList = reorderableList.toMutableList().apply {
-            moveTo(reorderableList[from.index], to.index - from.index)
+            changeOrder(reorderableList[from.index], to.index - from.index)
             add(to.index, removeAt(from.index))
         }
     }
@@ -122,9 +122,9 @@ private fun CategoryContent(
     ) {
         items(
             items = reorderableList,
-            key = { category -> category.key() },
+            key = { category -> category.key },
         ) { category ->
-            ReorderableItem(reorderableLazyColumnState, category.key()) {
+            ReorderableItem(reorderableLazyColumnState, category.key) {
                 CategoryListItem(
                     modifier = Modifier.animateItem(),
                     category = category,
@@ -136,4 +136,4 @@ private fun CategoryContent(
     }
 }
 
-fun Category.key() = "category-$id"
+private val Category.key get() = "category-$id"
