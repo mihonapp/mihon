@@ -13,7 +13,7 @@ ktlint-core = "1.4.1"
 firebase-bom = "33.5.1"
 
 [libraries]
-desugar = "com.android.tools:desugar_jdk_libs:2.1.2"
+desugar = "com.android.tools:desugar_jdk_libs:2.1.3"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
 
 rxjava = "io.reactivex:rxjava:1.3.8"
