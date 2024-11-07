@@ -99,6 +99,11 @@ android {
             buildConfigField("boolean", "INCLUDE_UPDATER", "true")
             dimension = "default"
         }
+        create("foss") {
+            buildConfigField("boolean", "INCLUDE_UPDATER", "true")
+            dimension = "default"
+            applicationIdSuffix = "t-foss"
+        }
         create("dev") {
             // Include pseudolocales: https://developer.android.com/guide/topics/resources/pseudolocales
             resourceConfigurations.addAll(listOf("en", "en_XA", "ar_XB", "xxhdpi"))
@@ -291,9 +296,12 @@ androidComponents {
             )
         }
     }
+    // Only excluding in standard and foss flavors because this breaks
+    // Layout Inspector's Compose tree
     onVariants(selector().withFlavor("default" to "standard")) {
-        // Only excluding in standard flavor because this breaks
-        // Layout Inspector's Compose tree
+        it.packaging.resources.excludes.add("META-INF/*.version")
+    }
+    onVariants(selector().withFlavor("default" to "foss")) {
         it.packaging.resources.excludes.add("META-INF/*.version")
     }
 }
