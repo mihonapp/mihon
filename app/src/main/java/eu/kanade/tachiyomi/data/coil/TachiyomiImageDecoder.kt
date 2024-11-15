@@ -30,7 +30,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
 
-        val fallbackForLongStrips by lazy { Injekt.get<BasePreferences>().fallbackForLongStrips().get() }
+        val maxBitmapSize by lazy { Injekt.get<BasePreferences>().maxBitmapSize().get().toInt() }
 
         val srcWidth = decoder.width
         val srcHeight = decoder.height
@@ -50,14 +50,14 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
         decoder.recycle()
 
         check(bitmap != null) { "Failed to decode image" }
-     
-        if (
-            options.bitmapConfig == Bitmap.Config.HARDWARE &&
-            maxOf(bitmap.width, bitmap.height) <= GLUtil.maxTextureSize
-        ) {
-            if (
-                !fallbackForLongStrips || bitmap.width < dstWidth && bitmap.height*1.1 <= GLUtil.maxTextureSize
-            ) {
+
+        if (options.bitmapConfig == Bitmap.Config.HARDWARE) {
+            val createHwBitmap = when (maxBitmapSize) {
+                GLUtil.maxTextureSize -> maxOf(bitmap.width, bitmap.height) <= maxBitmapSize
+                else -> bitmap.width <= dstWidth && bitmap.height <= maxBitmapSize
+            }
+
+            if (createHwBitmap) {
                 val hwBitmap = bitmap.copy(Bitmap.Config.HARDWARE, false)
                 if (hwBitmap != null) {
                     bitmap.recycle()
