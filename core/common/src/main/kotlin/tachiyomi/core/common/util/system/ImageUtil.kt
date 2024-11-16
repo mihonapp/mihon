@@ -310,9 +310,18 @@ object ImageUtil {
         val bottomOffset = topOffset + splitHeight
     }
 
-    fun canUseCoilToDecode(imageSource: BufferedSource): Boolean {
-        val options = extractImageOptions(imageSource)
-        return maxOf(options.outWidth, options.outHeight) <= GLUtil.maxTextureSize
+    fun canUseHardwareBitmap(bitmap: Bitmap): Boolean {
+        return canUseHardwareBitmap(bitmap.width, bitmap.height)
+    }
+
+    fun canUseHardwareBitmap(imageSource: BufferedSource): Boolean {
+        return with(extractImageOptions(imageSource)) {
+            canUseHardwareBitmap(outWidth, outHeight)
+        }
+    }
+
+    private fun canUseHardwareBitmap(width: Int, height: Int): Boolean {
+        return maxOf(width, height) <= GLUtil.maxTextureSize
     }
 
     /**
