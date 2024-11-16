@@ -18,7 +18,6 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fixed "currentTab was used multiple times"
 - Fixed a rare crash when invoking "Mark previous as read" action
 - Fixed long strip images not loading in some old devices
-  - Added option to always use SSIV for image decoding
 
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
