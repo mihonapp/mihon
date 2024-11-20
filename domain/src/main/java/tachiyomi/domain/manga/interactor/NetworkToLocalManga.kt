@@ -17,7 +17,13 @@ class NetworkToLocalManga(
             }
             !localManga.favorite -> {
                 // if the manga isn't a favorite, update new info from source to db
-                manga.updateManga(localManga.id)
+                mangaRepository.update(
+                    manga.toMangaUpdate()
+                        .copy(
+                            id = localManga.id,
+                            thumbnailUrl = manga.thumbnailUrl?.takeIf { it.isNotBlank() },
+                        ),
+                )
                 manga.copy(id = localManga.id)
             }
             else -> {
@@ -32,15 +38,5 @@ class NetworkToLocalManga(
 
     private suspend fun insertManga(manga: Manga): Long? {
         return mangaRepository.insert(manga)
-    }
-
-    private suspend fun Manga.updateManga(id: Long) {
-        mangaRepository.update(
-            toMangaUpdate()
-                .copy(
-                    id = id,
-                    thumbnailUrl = thumbnailUrl?.takeIf { it.isNotBlank() },
-                ),
-        )
     }
 }
