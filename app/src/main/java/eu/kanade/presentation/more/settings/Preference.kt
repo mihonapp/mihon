@@ -51,6 +51,7 @@ sealed class Preference {
             val value: Int,
             val min: Int = 0,
             val max: Int,
+            val steps: Int = 0,
             override val title: String = "",
             override val subtitle: String? = null,
             override val icon: ImageVector? = null,

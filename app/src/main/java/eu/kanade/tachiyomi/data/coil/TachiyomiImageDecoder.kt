@@ -30,7 +30,7 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
 
-        val maxBitmapSize by lazy { Injekt.get<BasePreferences>().maxBitmapSize().get().toInt() }
+        val maxBitmapSize by lazy { Injekt.get<BasePreferences>().maxBitmapSize().get() }
 
         val srcWidth = decoder.width
         val srcHeight = decoder.height

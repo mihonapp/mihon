@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.net.toUri
-import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.domain.base.BasePreferences
@@ -48,6 +47,7 @@ import eu.kanade.tachiyomi.network.PREF_DOH_QUAD9
 import eu.kanade.tachiyomi.network.PREF_DOH_SHECAN
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
+import eu.kanade.tachiyomi.util.system.GLUtil
 import eu.kanade.tachiyomi.util.system.isDevFlavor
 import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.isShizukuInstalled
@@ -350,26 +350,15 @@ object SettingsAdvancedScreen : SearchableSettings {
                     pref = basePreferences.alwaysUseSSIVToDecode(),
                     title = stringResource(MR.strings.pref_always_use_ssiv_to_decode),
                 ),
-                Preference.PreferenceItem.EditTextPreference(
-                    pref = maxBitmapSize,
+                Preference.PreferenceItem.SliderPreference(
+                    value = maxBitmap,
+                    min = (GLUtil.maxTextureSize / 2),
+                    max = GLUtil.maxTextureSize,
                     title = stringResource(MR.strings.pref_max_bitmap_size),
-                    subtitle = stringResource(MR.strings.pref_max_bitmap_size_summary),
+                    steps = 5,
                     onValueChanged = {
-                        if (it.isDigitsOnly() && it <= maxBitmapSize.defaultValue()) {
-                            context.toast(MR.strings.pref_max_bitmap_size_success)
-                        } else {
-                            context.toast(MR.strings.pref_max_bitmap_size_error)
-                            return@EditTextPreference false
-                        }
+                        maxBitmapSize.set(it)
                         true
-                    },
-                ),
-                Preference.PreferenceItem.TextPreference(
-                    title = stringResource(MR.strings.pref_max_bitmap_size_reset),
-                    enabled = remember(maxBitmap) { maxBitmap != maxBitmapSize.defaultValue() },
-                    onClick = {
-                        maxBitmapSize.delete()
-                        context.toast(MR.strings.pref_max_bitmap_size_success)
                     },
                 ),
             ),

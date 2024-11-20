@@ -34,5 +34,5 @@ class BasePreferences(
 
     fun alwaysUseSSIVToDecode() = preferenceStore.getBoolean("pref_always_use_ssiv_to_decode", false)
 
-    fun maxBitmapSize() = preferenceStore.getString("pref_max_bitmap_size", GLUtil.maxTextureSize.toString())
+    fun maxBitmapSize() = preferenceStore.getInt("pref_max_bitmap_size", GLUtil.maxTextureSize)
 }
