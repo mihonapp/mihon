@@ -181,9 +181,9 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_close_24dp,
                 context.stringResource(MR.strings.action_cancel),
-                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATER),
+                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATE_ERROR),
             )
         }
-        notificationBuilder.show(Notifications.ID_APP_UPDATER)
+        notificationBuilder.show(Notifications.ID_APP_UPDATE_ERROR)
     }
 }
