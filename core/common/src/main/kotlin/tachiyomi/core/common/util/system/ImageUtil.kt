@@ -320,8 +320,10 @@ object ImageUtil {
         }
     }
 
+    var hardwareBitmapThreshold: Int = GLUtil.SAFE_TEXTURE_LIMIT
+
     private fun canUseHardwareBitmap(width: Int, height: Int): Boolean {
-        return maxOf(width, height) <= GLUtil.maxTextureSize
+        return maxOf(width, height) <= hardwareBitmapThreshold
     }
 
     /**
