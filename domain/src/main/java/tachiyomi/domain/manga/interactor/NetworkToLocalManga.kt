@@ -17,13 +17,11 @@ class NetworkToLocalManga(
             }
             !localManga.favorite -> {
                 // if the manga isn't a favorite, update new info from source to db
-                mangaRepository.update(
-                    manga.toMangaUpdate()
-                        .copy(
-                            id = localManga.id,
-                            thumbnailUrl = manga.thumbnailUrl?.takeIf { it.isNotBlank() },
-                        ),
+                val mangaUpdate = manga.toMangaUpdate().copy(
+                    id = localManga.id,
+                    thumbnailUrl = manga.thumbnailUrl?.takeUnless { it.isBlank() },
                 )
+                mangaRepository.update(mangaUpdate)
                 manga.copy(id = localManga.id)
             }
             else -> {
