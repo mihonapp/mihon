@@ -332,21 +332,26 @@ object SettingsAdvancedScreen : SearchableSettings {
                 basePreferences.displayProfile().set(uri.toString())
             }
         }
-        val hardwareBitmapThresholdPref = basePreferences.hardwareBitmapThreshold()
-        val hardwareBitmapThreshold by hardwareBitmapThresholdPref.collectAsState()
         return Preference.PreferenceGroup(
             title = stringResource(MR.strings.pref_category_reader),
             preferenceItems = persistentListOf(
                 Preference.PreferenceItem.ListPreference(
-                    pref = hardwareBitmapThresholdPref,
+                    pref = basePreferences.hardwareBitmapThreshold(),
                     title = stringResource(MR.strings.pref_hardware_bitmap_threshold),
-                    subtitle = stringResource(
-                        MR.strings.pref_hardware_bitmap_threshold_summary,
-                        hardwareBitmapThreshold,
-                    ),
+                    subtitleProvider = { value, options ->
+                        stringResource(MR.strings.pref_hardware_bitmap_threshold_summary, options[value].orEmpty())
+                    },
                     enabled = GLUtil.DEVICE_TEXTURE_LIMIT > GLUtil.SAFE_TEXTURE_LIMIT,
                     entries = GLUtil.CUSTOM_TEXTURE_LIMIT_OPTIONS
-                        .associateWith { it.toString() }
+                        .mapIndexed { index, option ->
+                            val display = if (index == 0) {
+                                stringResource(MR.strings.pref_hardware_bitmap_threshold_default, option)
+                            } else {
+                                option.toString()
+                            }
+                            option to display
+                        }
+                        .toMap()
                         .toImmutableMap(),
                 ),
                 Preference.PreferenceItem.TextPreference(

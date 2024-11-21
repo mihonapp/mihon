@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.util.system
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.egl.EGLContext
+import kotlin.math.max
 
 object GLUtil {
     val DEVICE_TEXTURE_LIMIT: Int by lazy {
@@ -38,18 +39,21 @@ object GLUtil {
         egl.eglTerminate(display)
 
         // Return largest texture size found (after making it a multiplier of [Multiplier]), or default
-        if (maximumTextureSize > SAFE_TEXTURE_LIMIT) {
-            (maximumTextureSize / MULTIPLIER) * MULTIPLIER
-        } else {
-            SAFE_TEXTURE_LIMIT
-        }
+        max(maximumTextureSize, SAFE_TEXTURE_LIMIT)
     }
 
     const val SAFE_TEXTURE_LIMIT: Int = 2048
 
     val CUSTOM_TEXTURE_LIMIT_OPTIONS: List<Int> by lazy {
-        val steps = ((DEVICE_TEXTURE_LIMIT / MULTIPLIER) - 1)
-        List(steps) { (it + 2) * MULTIPLIER }.asReversed()
+        val steps = DEVICE_TEXTURE_LIMIT / MULTIPLIER
+        buildList(steps) {
+            add(DEVICE_TEXTURE_LIMIT)
+            for (step in steps downTo 2) {
+                val value = step * MULTIPLIER
+                if (value >= DEVICE_TEXTURE_LIMIT) continue
+                add(value)
+            }
+        }
     }
 }
 
