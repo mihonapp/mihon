@@ -36,7 +36,7 @@ class UpdateManga(
         manualFetch: Boolean,
         coverCache: CoverCache = Injekt.get(),
         libraryPreferences: LibraryPreferences = Injekt.get(),
-        downloadManager: DownloadManager = Injekt.get()
+        downloadManager: DownloadManager = Injekt.get(),
     ): Boolean {
         val remoteTitle = try {
             remoteManga.title
@@ -87,7 +87,7 @@ class UpdateManga(
         if (success && title != null) {
             downloadManager.renameManga(source, localManga, title)
         }
-        return success;
+        return success
     }
 
     suspend fun awaitUpdateFetchInterval(
