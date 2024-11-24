@@ -289,7 +289,7 @@ object SettingsAdvancedScreen : SearchableSettings {
 
     @Composable
     private fun getLibraryGroup(
-        libraryPreferences: LibraryPreferences
+        libraryPreferences: LibraryPreferences,
     ): Preference.PreferenceGroup {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
