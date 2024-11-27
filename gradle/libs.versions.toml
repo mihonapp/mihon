@@ -28,7 +28,7 @@ conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
 quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
 
-jsoup = "org.jsoup:jsoup:1.18.1"
+jsoup = "org.jsoup:jsoup:1.18.2"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
 unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
