@@ -97,11 +97,7 @@
     <string name="ext_untrusted">Nun mi fido</string>
     <string name="ext_uninstall">Disinstalla</string>
     <string name="untrusted_extension">Estensione non afidàbile</string>
-    <string name="untrusted_extension_message">Custa estensione est istada firmada cun unu tzertificadu chi no est afidàbile e no est istada ativada.
-\n
-\nUn\'estensione mala diat pòdere lèghere totu sas informatziones de atzessu sarvadas o fàghere esecutare còdighe arbitràriu.
-\n
-\nPonende fide in custu tzertificadu atzetas custos arriscos.</string>
+    <string name="untrusted_extension_message">Un\'estensione mala diat pòdere lèghere totu sas informatziones de atzessu sarvadas o fàghere esecutare còdighe arbitràriu. \n \nPonende fide in custa estensione atzetas custos arriscos.</string>
     <string name="pref_fullscreen">Ischermu intreu</string>
     <string name="pref_page_transitions">Ànima sas transitziones de sas pàginas</string>
     <string name="pref_double_tap_anim_speed">Lestresa de s\'animatzione de su tocu dòpiu</string>
@@ -359,7 +355,7 @@
     <string name="restore_in_progress">Su riprìstinu est giai in cursu</string>
     <string name="creating_backup_error">Còpia de seguresa fallida</string>
     <string name="backup_in_progress">Sa còpia de seguresa est giai in cursu</string>
-    <string name="restore_duration">%02d min e %02d seg</string>
+    <string name="restore_duration">%1$02d min e %2$02d seg</string>
     <string name="local_source_help_guide">Ghia a sas fontes locales</string>
     <string name="downloaded_only_summary">Filtrat totu sos elementos in sa biblioteca tua</string>
     <string name="pref_category_for_this_series">Pro custa sèrie</string>
@@ -372,7 +368,7 @@
     <string name="label_data">Datos</string>
     <string name="backup_restore_missing_sources">Fontes chi mancant:</string>
     <string name="invalid_backup_file_missing_manga">Sa còpia de seguresa non tenet perunu elementu.</string>
-    <string name="invalid_backup_file">Documentu de sa còpia de seguresa non vàlidu</string>
+    <string name="invalid_backup_file">Documentu de sa còpia de seguresa non vàlidu:</string>
     <string name="pref_library_update_refresh_metadata_summary">Verìfica si b\'est una cobertedda noa o bi sunt detàllios noos cando agiornas sa biblioteca</string>
     <string name="pref_library_update_refresh_metadata">Annoa automaticamente sos metadatos</string>
     <string name="action_migrate">Tràmuda</string>
@@ -453,9 +449,7 @@
     <string name="pref_dual_page_split">Partzi sas pàginas largas</string>
     <string name="pref_dual_page_invert_summary">Si sa positzione de sas pàginas largas partzidas non currispondet a sa diretzione de leghidura</string>
     <string name="pref_dual_page_invert">Fùrria su positzionamentu de sas pàginas partzidas</string>
-    <string name="backup_restore_content_full">Sos datos dae su documentu de sa còpia de seguresa s\'ant a ripristinare.
-\n
-\nA pustis as a dèpere installare sas estensiones chi mancant e atzèdere a sos servìtzios de arrastamentu pro los pòdere impreare.</string>
+    <string name="backup_restore_content_full">A pustis dias pòdere dèpere installare sas estensiones chi mancant e atzèdere a sos servìtzios de arrastamentu pro los pòdere impreare.</string>
     <string name="nav_zone_right">Destra</string>
     <string name="nav_zone_left">Manca</string>
     <string name="nav_zone_next">Imbeniente</string>
@@ -839,4 +833,9 @@
     <string name="extensionRepo_settings">Depòsitos de estensiones</string>
     <string name="pref_download_new_unread_chapters_only">Brinca s\'iscarrigamentu de capìtulos lèghidos duplicados</string>
     <string name="confirm_tracker_update">Atualizare sos arrastadores a su capìtulu %d?</string>
+    <string name="pref_auto_update_manga_on_mark_read">Agiorna su progressu cando est marcadu comente lèghidu</string>
+    <string name="trackers_updated_summary">Arrastadores atualizados a su capìtulu %d</string>
+    <string name="pref_hardware_bitmap_threshold_default">Predefinidu (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Si su leghidore càrrigat un\'immàgine bianca, mìnima de pagu a pagu su lìmite.\nSeletzionadu: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines</string>
 </resources>

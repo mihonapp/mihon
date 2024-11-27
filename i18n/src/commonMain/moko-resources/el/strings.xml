@@ -292,7 +292,7 @@
     <string name="last_used_source">Χρησιμοποιήθηκε τελευταία</string>
     <string name="add_tracking">Προσθήκη tracking</string>
     <string name="pinned_sources">Καρφιτσωμένα</string>
-    <string name="restore_duration">%02d λεπτά, %02d δευτερόλεπτα</string>
+    <string name="restore_duration">%1$02d λεπτά, %2$02d δευτερόλεπτα</string>
     <string name="action_select_inverse">Επιλογή αντίστροφου</string>
     <string name="channel_ext_updates">Ενημερώσεις επεκτάσεων</string>
     <string name="channel_new_chapters">Ενημερώσεις κεφαλαίων</string>
@@ -835,4 +835,6 @@
     <string name="confirm_tracker_update">Ενημέρωση ανιχνευτών στο κεφάλαιο %d?</string>
     <string name="invalid_backup_file_unknown">Το αρχείο αντιγράφων ασφαλείας έχει καταστραφεί</string>
     <string name="invalid_backup_file_json">Δεν υποστηρίζεται η δημιουργία αντιγράφων ασφαλείας JSON</string>
+    <string name="pref_auto_update_manga_on_mark_read">Ενημέρωση προόδου όταν επισημανθεί ως αναγνωσμένη</string>
+    <string name="trackers_updated_summary">Οι trackers ενημερώθηκαν στο κεφάλαιο %d</string>
 </resources>

@@ -7,7 +7,7 @@
     <string name="track">पदचिह्न</string>
     <string name="history">इतिहास</string>
     <string name="label_settings">सेटिंग्स</string>
-    <string name="label_download_queue">डाउनलोड कतार</string>
+    <string name="label_download_queue">डाउनलोड सूची</string>
     <string name="label_library">पुस्तकालय</string>
     <string name="label_recent_manga">इतिहास</string>
     <string name="label_recent_updates">नए अपडेट</string>

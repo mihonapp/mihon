@@ -129,8 +129,7 @@
     <string name="login_success">已登入</string>
     <string name="manga_added_library">已收藏至書櫃</string>
     <string name="manga_removed_library">已從書櫃中移除</string>
-    <string name="copied_to_clipboard">已複製到剪貼簿：
-\n「%1$s」</string>
+    <string name="copied_to_clipboard">已複製到剪貼簿： \n「%1$s」</string>
     <string name="source_not_installed">來源未安裝：%1$s</string>
     <string name="chapter_error">錯誤</string>
     <string name="chapter_paused">已暫停</string>
@@ -171,7 +170,7 @@
     <string name="left_to_right_viewer">單頁(左至右)</string>
     <string name="right_to_left_viewer">單頁(右至左)</string>
     <string name="vertical_viewer">單頁(上至下)</string>
-    <string name="webtoon_viewer">捲動</string>
+    <string name="webtoon_viewer">捲動(連續)</string>
     <string name="pager_viewer">單頁</string>
     <string name="pref_image_scale_type">縮放模式</string>
     <string name="scale_type_fit_screen">符合螢幕</string>
@@ -199,8 +198,8 @@
     <string name="file_select_cover">選擇封面圖片</string>
     <string name="information_no_recent_manga">無近期閱讀</string>
     <string name="channel_common">一般</string>
-    <string name="pref_create_backup_summ">可用來保存目前書櫃內容</string>
-    <string name="pref_clear_database_summary">將未加入書櫃的作品的記錄刪除</string>
+    <string name="pref_create_backup_summ">可用來儲存目前書櫃內容</string>
+    <string name="pref_clear_database_summary">將未加入書櫃的作品的紀錄刪除</string>
     <string name="clear_database_completed">已刪除項目</string>
     <string name="unknown_error">不明的錯誤</string>
     <string name="no_more_results">沒有更多結果</string>
@@ -263,7 +262,7 @@
     <string name="latest">最新</string>
     <string name="manga_tracking_tab">歷程</string>
     <string name="reading">閱讀中</string>
-    <string name="plan_to_read">準備讀</string>
+    <string name="plan_to_read">準備中</string>
     <string name="repeating">重溫中</string>
     <string name="track_type">類型</string>
     <string name="dialog_with_checkbox_remove_description">此章節的閱讀日期將被清除，你確定嗎？</string>
@@ -372,7 +371,7 @@
     <string name="restoring_backup_error">還原失敗</string>
     <string name="creating_backup_error">備份失敗</string>
     <string name="logout_title">登出 %1$s？</string>
-    <string name="tracking_info">將閱讀進度單向同步至外部歷程平臺，請逕行前往個別作品的「歷程」專區以設置</string>
+    <string name="tracking_info">將閱讀進度單向同步至外部歷程平臺，請逕行前往個別作品的「歷程」專區以設定</string>
     <string name="requires_app_restart">需要重新啟動應用程式以套用</string>
     <string name="label_network">網路</string>
     <string name="tapping_inverted_both">全部</string>
@@ -381,7 +380,7 @@
     <string name="pref_read_with_tapping_inverted">反轉輕觸區域</string>
     <string name="vertical_plus_viewer">捲動(留空)</string>
     <string name="tapping_inverted_none">無</string>
-    <string name="restore_duration">%02d 分 %02d 秒</string>
+    <string name="restore_duration">%1$02d 分， %2$02d 秒</string>
     <string name="recent_manga_time">第 %1$s 章 - %2$s</string>
     <string name="notification_chapters_single">第 %1$s 章</string>
     <string name="notification_chapters_multiple">第 %1$s 章</string>
@@ -413,9 +412,9 @@
     <string name="action_search_settings">搜尋設定</string>
     <string name="chapter_settings">章節設定</string>
     <string name="also_set_chapter_settings_for_library">同時套用至其餘在書櫃中的作品</string>
-    <string name="confirm_set_chapter_settings">確定要將目前的選項保存為預設值嗎？</string>
+    <string name="confirm_set_chapter_settings">確定要將目前的選項儲存為預設值嗎？</string>
     <string name="no_chapters_error">沒有章節</string>
-    <string name="set_chapter_settings_as_default">保存為預設值</string>
+    <string name="set_chapter_settings_as_default">儲存為預設值</string>
     <string name="clear_history_completed">已刪除記錄</string>
     <string name="clear_history_confirmation">你確定嗎？所有的閱讀記錄將會遺失</string>
     <string name="pref_clear_history">清除閱讀記錄</string>
@@ -537,7 +536,7 @@
     <string name="label_warning">警告</string>
     <string name="notification_size_warning">大量更新會損害來源，並可能導致更新速度緩慢、電池用量增加，輕觸以瞭解詳情</string>
     <string name="pref_verbose_logging">錄製詳細記錄</string>
-    <string name="backup_info">你應該在多處保存備份副本，備份檔可能含有敏感資料 (包括任何已儲存的密碼)，分享時請留意</string>
+    <string name="backup_info">你應該在多處儲存備份副本，備份檔可能含有敏感資料 (包括任何已儲存的密碼)，分享時請留意</string>
     <string name="pref_verbose_logging_summary">傾印詳細記錄至系統日誌 (將降低應用程式效能)</string>
     <string name="connected_to_wifi">僅透過 Wi-Fi</string>
     <string name="update_72hour">每 3 天</string>
@@ -550,7 +549,7 @@
     <string name="extension_api_error">無法取得可用的擴充套件</string>
     <string name="privacy_policy">隱私權政策</string>
     <string name="pref_update_only_completely_read">略過有未讀章節的作品</string>
-    <string name="library_errors_help">如欲瞭解如何修復書櫃更新錯誤，請參閱 %1$s</string>
+    <string name="library_errors_help">如欲瞭解如何修復書櫃更新失敗，請參閱 %1$s</string>
     <string name="save_chapter_as_cbz">以 CBZ 封存檔格式儲存</string>
     <string name="on_hiatus">休刊中</string>
     <string name="cancelled">已取消</string>
@@ -593,7 +592,7 @@
     <string name="unfinished_list">已拋棄</string>
     <string name="on_hold_list">擱置中</string>
     <string name="complete_list">已完結</string>
-    <string name="wish_list">準備讀</string>
+    <string name="wish_list">準備中</string>
     <string name="reading_list">閱讀中</string>
     <string name="network_not_metered">僅透過非計量付費網路</string>
     <string name="cant_open_last_read_chapter">無法開啟上次閱讀章節</string>
@@ -641,7 +640,7 @@
     <string name="error_user_agent_string_invalid">無效的使用者代理字串</string>
     <string name="updates_last_update_info_just_now">剛剛</string>
     <string name="download_notifier_cache_renewal">正在檢查下載</string>
-    <string name="action_open_random_manga">隨機開卷</string>
+    <string name="action_open_random_manga">開啟隨機作品</string>
     <string name="information_no_entries_found">類別沒有作品</string>
     <string name="fdroid_warning">F-Droid 的組建未被正式支援\n輕觸以瞭解詳情</string>
     <string name="action_display_show_continue_reading_button">繼續閱讀按鈕</string>
@@ -661,7 +660,7 @@
     <string name="label_stats">統計資料</string>
     <string name="label_local">本機</string>
     <string name="label_overview_section">總覽</string>
-    <string name="label_started">已開卷</string>
+    <string name="label_started">開始日</string>
     <string name="label_titles_in_global_update">適用全域更新</string>
     <string name="label_read_duration">閱讀歷時</string>
     <string name="label_tracker_section">歷程平臺</string>
@@ -702,9 +701,9 @@
     <string name="action_sort_next_updated">下次預期更新</string>
     <string name="intervals_header">刊期</string>
     <string name="manga_display_interval_title">預計每個</string>
-    <string name="pref_update_only_in_release_period">預估出刊日</string>
+    <string name="pref_update_only_in_release_period">預估下次更新時間</string>
     <string name="manga_display_modified_interval_title">設定為每個</string>
-    <string name="skipped_reason_not_in_release_period">由於未臨出刊日，因此略過</string>
+    <string name="skipped_reason_not_in_release_period">由於未臨更新日，因此略過</string>
     <string name="has_results">有結果</string>
     <string name="syncing_library">正在同步書櫃</string>
     <string name="library_sync_complete">書櫃同步完成</string>
@@ -766,7 +765,7 @@
     <string name="available_disk_space_info">可用：%1$s / 總計：%2$s</string>
     <string name="ext_permission_install_apps_warning">缺少安裝擴充套件所需的權限，輕觸此處以授予</string>
     <string name="private_settings">包含敏感設定 (如：歷程平臺登入權杖)</string>
-    <string name="manga_interval_expected_update">預計%1$s後出刊，每%2$s檢查一次</string>
+    <string name="manga_interval_expected_update">預計 %1$s後更新，每 %2$s檢查一次</string>
     <string name="invalid_backup_file_error">完整錯誤訊息：</string>
     <string name="manga_interval_custom_amount">自訂更新頻率：</string>
     <string name="label_add_repo_input">儲存庫網址</string>
@@ -782,8 +781,8 @@
     <string name="onboarding_storage_help_action">儲存空間指南</string>
     <string name="onboarding_storage_help_info">從舊版升級而不確定該如何選擇嗎？請參閱儲存空間指南以取得更多資訊</string>
     <string name="theme_nord">北風</string>
-    <string name="ext_revoke_trust">撤銷對不明擴充套件的信任</string>
-    <string name="manga_interval_expected_update_soon">即將出刊</string>
+    <string name="ext_revoke_trust">復原對不明擴充套件的信任</string>
+    <string name="manga_interval_expected_update_soon">即將</string>
     <string name="action_open_repo">開啟來源儲存庫</string>
     <string name="pref_webtoon_disable_zoom_out">停用縮小</string>
     <string name="pref_display_profile">自訂顯示設定檔</string>
@@ -827,4 +826,7 @@
     <string name="non_library_settings">所有已閱讀的作品</string>
     <string name="pref_auto_update_manga_on_mark_read">標記為已讀時更新章節進度</string>
     <string name="trackers_updated_summary">歷程平臺已更新到%d章</string>
+    <string name="pref_hardware_bitmap_threshold">自訂硬體點陣圖的閾值設定</string>
+    <string name="pref_hardware_bitmap_threshold_summary">如果閱讀時載入的是空白影像，請逐步降低閾值\n已選擇：%s</string>
+    <string name="pref_hardware_bitmap_threshold_default">預設 (%d)</string>
 </resources>
