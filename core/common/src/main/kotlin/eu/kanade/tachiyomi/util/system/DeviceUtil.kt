@@ -64,6 +64,7 @@ object DeviceUtil {
 
     val invalidDefaultBrowsers = listOf(
         "android",
+        "com.hihonor.android.internal.app",
         "com.huawei.android.internal.app",
         "com.zui.resolver",
     )
