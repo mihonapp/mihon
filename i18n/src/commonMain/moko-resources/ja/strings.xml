@@ -325,7 +325,7 @@
     <string name="restore_in_progress">既に復元中です</string>
     <string name="creating_backup_error">バックアップできませんでした</string>
     <string name="backup_in_progress">既にバックアップ中です</string>
-    <string name="restore_duration">%02d分%02d秒</string>
+    <string name="restore_duration">%1$02d分%2$02d 秒</string>
     <string name="backup_restore_missing_sources">ソースがありません:</string>
     <string name="invalid_backup_file_missing_manga">バックアップにはライブラリの項目が含まれません。</string>
     <string name="invalid_backup_file">無効なバックアップファイル：</string>

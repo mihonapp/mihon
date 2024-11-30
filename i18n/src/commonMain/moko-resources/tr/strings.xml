@@ -358,7 +358,7 @@
     <string name="check_for_updates">Güncellemeleri kontrol et</string>
     <string name="last_used_source">Son kullanılan</string>
     <string name="local_source_help_guide">Yerel kaynak kılavuzu</string>
-    <string name="restore_duration">%02d dk, %02d sn</string>
+    <string name="restore_duration">%1$02d dk, %2$02d sn</string>
     <string name="downloaded_only_summary">Kitaplığınızdaki tüm girdileri filtreler</string>
     <string name="gray_background">Gri</string>
     <string name="viewer">Okuma modu</string>
@@ -563,7 +563,7 @@
     <string name="skipped_reason_completed">Seri tamamlandığı için atlandı</string>
     <string name="skipped_reason_not_caught_up">Okunmamış bölümler olduğu için atlandı</string>
     <string name="skipped_reason_not_started">Hiçbir bölüm okunmadığı için atlandı</string>
-    <string name="pref_navigate_pan">Geniş görüntüleri kaydır</string>
+    <string name="pref_navigate_pan">Geniş görselleri kaydır</string>
     <string name="pref_landscape_zoom">Geniş görsellere otomatik yakınlaştır</string>
     <string name="notification_update_error">%1$d güncelleme başarısız oldu</string>
     <string name="learn_more">Daha fazla bilgi için dokunun</string>
@@ -837,4 +837,7 @@
     <string name="non_library_settings">Tüm okunmuş girdiler</string>
     <string name="pref_auto_update_manga_on_mark_read">Okundu olarak işaretlendiğinde ilerlemeyi güncelle</string>
     <string name="trackers_updated_summary">İzleyiciler %d. bölüme güncellendi</string>
+    <string name="pref_hardware_bitmap_threshold">Özel bitmap donanım sınırı</string>
+    <string name="pref_hardware_bitmap_threshold_default">Varsayılan (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir resim yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
 </resources>

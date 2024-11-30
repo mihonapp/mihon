@@ -64,4 +64,16 @@
         <item quantity="one">1 die</item>
         <item quantity="other">%d dies</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Cras</item>
+        <item quantity="other">In %1$d dies</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d depòsitu</item>
+        <item quantity="other">%d depòsitos</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pàgina</item>
+        <item quantity="other">%1$s pàginas</item>
+    </plurals>
 </resources>

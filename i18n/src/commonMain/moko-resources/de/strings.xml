@@ -358,7 +358,7 @@
     <string name="check_for_updates">Nach Updates suchen</string>
     <string name="last_used_source">Zuletzt genutzt</string>
     <string name="local_source_help_guide">Anleitung für lokale Quellen</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="downloaded_only_summary">Filtert alle Einträge in deiner Bibliothek</string>
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
@@ -837,4 +837,7 @@
     <string name="non_library_settings">Alle gelesenen Einträge</string>
     <string name="pref_auto_update_manga_on_mark_read">Fortschritt aktualisieren, wenn als gelesen markiert wird</string>
     <string name="trackers_updated_summary">Tracker auf Kapitel %d aktualisiert</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
+    <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
 </resources>

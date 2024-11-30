@@ -359,7 +359,7 @@
     <string name="restore_in_progress">Восстановление уже выполняется</string>
     <string name="creating_backup_error">Не удалось создать резервную копию</string>
     <string name="backup_in_progress">Резервная копия уже выполняется</string>
-    <string name="restore_duration">%02d мин, %02d сек</string>
+    <string name="restore_duration">%1$02d мин, %2$02d сек</string>
     <string name="viewer">Режим чтения</string>
     <string name="pref_category_for_this_series">Для этой серии</string>
     <string name="gray_background">Серый</string>
@@ -837,4 +837,7 @@
     <string name="non_library_settings">Все прочитанные серии</string>
     <string name="trackers_updated_summary">Сервисы отслеживания обновлены для главы %d</string>
     <string name="pref_auto_update_manga_on_mark_read">Обновлять прогресс, когда отмечено как «Прочитано»</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Если читалка загружает пустое изображение, постепенно уменьшайте пороговую обработку.\nВыбрано: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Пользовательская аппаратная пороговая обработка растрового изображения</string>
+    <string name="pref_hardware_bitmap_threshold_default">По умолчанию (%d)</string>
 </resources>
