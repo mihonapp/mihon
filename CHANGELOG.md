@@ -13,6 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Changed
 - Bump default user agent ([@AntsyLich](https://github.com/AntsyLich)) ([`76dcf90`](https://github.com/mihonapp/mihon/commit/76dcf903403d565056f44c66d965c1ea8affffc3))
+- Hide Hardware Bitmap Threshold setting on devices with broken hardware bitmap implementations ([@MajorTanya](https://github.com/MajorTanya)) ([#1543](https://github.com/mihonapp/mihon/pull/1543))
 
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
