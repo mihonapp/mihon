@@ -342,7 +342,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     subtitleProvider = { value, options ->
                         stringResource(MR.strings.pref_hardware_bitmap_threshold_summary, options[value].orEmpty())
                     },
-                    enabled = !ImageUtil.HARDWARE_BITMAP_UNSUPPORTED ||
+                    enabled = !ImageUtil.HARDWARE_BITMAP_UNSUPPORTED &&
                         GLUtil.DEVICE_TEXTURE_LIMIT > GLUtil.SAFE_TEXTURE_LIMIT,
                     entries = GLUtil.CUSTOM_TEXTURE_LIMIT_OPTIONS
                         .mapIndexed { index, option ->
