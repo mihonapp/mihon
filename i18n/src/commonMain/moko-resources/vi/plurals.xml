@@ -43,7 +43,7 @@
         <item quantity="other">%d Chương tiếp theo</item>
     </plurals>
     <plurals name="missing_chapters">
-        <item quantity="other">Đang thiếu %1$s</item>
+        <item quantity="other">Đang thiếu %1$s chương</item>
     </plurals>
     <plurals name="day">
         <item quantity="other">%d ngày</item>
@@ -53,5 +53,8 @@
     </plurals>
     <plurals name="upcoming_relative_time">
         <item quantity="other">Trong %1$d ngày</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="other">%1$s trang</item>
     </plurals>
 </resources>

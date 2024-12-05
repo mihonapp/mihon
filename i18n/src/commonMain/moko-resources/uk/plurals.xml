@@ -101,4 +101,10 @@
         <item quantity="many">%d репозиторіїв</item>
         <item quantity="other">%d репозиторіїв</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">%1$s сторінка</item>
+        <item quantity="few">%1$s сторінки</item>
+        <item quantity="many">%1$s сторінок</item>
+        <item quantity="other">%1$s сторінок</item>
+    </plurals>
 </resources>

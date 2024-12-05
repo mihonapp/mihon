@@ -837,4 +837,7 @@
     <string name="remove_private_extension_message">আপুনি কি \"%s\" এক্সটেনচনটো আঁতৰাব খুজিছে?</string>
     <string name="pref_auto_update_manga_on_mark_read">পঢ়া হিচাপে চিহ্নিত কৰাৰ সময়ত অগ্ৰগতি আপডেইট কৰক</string>
     <string name="trackers_updated_summary">ট্ৰেকাৰসমূহ অধ্যায় %d লৈ আপডেইট কৰা হৈছে</string>
+    <string name="pref_hardware_bitmap_threshold">কাষ্টম হাৰ্ডৱেৰ বিটম্যাপ থ্ৰেশহোল্ড</string>
+    <string name="pref_hardware_bitmap_threshold_summary">যদি পাঠকে এটা খালী ছবি লোড কৰে ক্ৰমান্বয়ে থ্ৰেছহোল্ড হ্ৰাস কৰক। \nবাচনি কৰা: %s</string>
+    <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
 </resources>
