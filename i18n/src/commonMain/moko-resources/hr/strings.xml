@@ -33,8 +33,8 @@
     <string name="update_never">Isključeno</string>
     <string name="pref_library_update_interval">Automatska aktualiziranja</string>
     <string name="pref_category_library_update">Globalno aktualiziranje</string>
-    <string name="landscape">Ležeći format</string>
-    <string name="portrait">Uspravni format</string>
+    <string name="landscape">Polegnuto</string>
+    <string name="portrait">Uspravno</string>
     <string name="pref_library_columns">Veličina mreže</string>
     <string name="pref_category_display">Prikaz</string>
     <string name="hide_notification_content">Sakrij sadržaj obavijesti</string>
@@ -142,7 +142,7 @@
     <string name="history">Povijest</string>
     <string name="track">Praćenje</string>
     <string name="manga">Unosi u biblioteci</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="restore_completed">Obnavljanje je završeno</string>
     <string name="backup_created">Sigurnosna kopija je stvorena</string>
     <string name="pref_backup_interval">Učestalost automatskog spremanja sigurnosnih kopija</string>
@@ -168,8 +168,8 @@
     <string name="color_filter_b_value">B</string>
     <string name="color_filter_g_value">G</string>
     <string name="color_filter_r_value">R</string>
-    <string name="rotation_force_landscape">Zaključaj ležeće</string>
-    <string name="rotation_force_portrait">Zaključaj uspravno</string>
+    <string name="rotation_force_landscape">Prisili polegnuto</string>
+    <string name="rotation_force_portrait">Prisili uspravno</string>
     <string name="rotation_free">Slobodno</string>
     <string name="pref_rotation_type">Standardno okretanje</string>
     <string name="double_tap_anim_speed_fast">Brzo</string>
@@ -469,7 +469,7 @@
     <string name="action_show_errors">Dodirni za prikaz detalja</string>
     <string name="update_check_eol">Ove se Android verzija više ne podržava</string>
     <string name="clipboard_copy_error">Kopiranje nije uspješno</string>
-    <string name="rotation_landscape">Ležeće</string>
+    <string name="rotation_landscape">Polegnuto</string>
     <string name="rotation_portrait">Uspravno</string>
     <string name="pref_grayscale">Sive nijanse</string>
     <string name="notification_incognito_text">Deaktiviraj anonimni modus</string>
@@ -612,7 +612,7 @@
     <string name="action_display_show_continue_reading_button">Gumb za nastavljanje čitanja</string>
     <string name="pref_appearance_summary">Tema, format datuma i vremena</string>
     <string name="pref_browse_summary">Izvori, ekstenzije, globalno pretraživanje</string>
-    <string name="pref_reader_summary">Način čitanja, zaslon, navigacija</string>
+    <string name="pref_reader_summary">Modus čitanja, prikaz, navigacija</string>
     <string name="pref_downloads_summary">Automatsko preuzimanje, preuzimanje unaprijed</string>
     <string name="pref_security_summary">Zaključavanje aplikacije, siguran zaslon</string>
     <string name="pref_tracking_summary">Jednosmjerna sinkronizacija napretka, poboljšana sinkronizacija</string>
@@ -622,7 +622,7 @@
     <string name="pref_invalidate_download_cache_summary">Prisili aplikaciju da ponovno provjeri preuzeta poglavlja</string>
     <string name="pref_user_agent_string">Zadani niz korisničkog agenta</string>
     <string name="error_user_agent_string_blank">Niz korisničkog agenta ne može biti prazan</string>
-    <string name="pref_invalidate_download_cache">Poništi indeks preuzimanja</string>
+    <string name="pref_invalidate_download_cache">Ponovo indeksiraj preuzimanja</string>
     <string name="pref_reset_viewer_flags">Obnovi postavke čitača serija</string>
     <string name="cant_open_last_read_chapter">Nije moguće otvoriti zadnje čitano poglavlje</string>
     <string name="custom_cover">Prilagođena naslovnica</string>
@@ -821,4 +821,23 @@
     <string name="extensionRepo_settings">Repozitoriji proširenja</string>
     <string name="manga_interval_expected_update_null">Ovaj je manga dovršen ili ne postoji procijenjeni datum izdanja.</string>
     <string name="invalid_backup_file_unknown">Sigurnosna kopija je pokvarena</string>
+    <string name="non_library_settings">Svi pročitani unosi</string>
+    <string name="action_sort_random">Nasumce</string>
+    <string name="onboarding_permission_crashlytics">Pošalji zapis o prekidu aplikacije</string>
+    <string name="onboarding_permission_crashlytics_description">Šalji anonimne zapise o prekidu aplikacije programerima.</string>
+    <string name="onboarding_permission_analytics">Dozvoli analizu</string>
+    <string name="onboarding_permission_analytics_description">Šalji anonimne podatke o korištenju aplikacije u svrhu poboljšanja njenih funkcija.</string>
+    <string name="pref_firebase">Analiza i zapisi o prekidima aplikacije</string>
+    <string name="firebase_summary">Slanje zapisa o prekidima rada aplikacije i analitike omogućit će nam identificirati i riješiti probleme, poboljšati performancu i prilagoditi buduća aktualiziranja kako bi što bolje odgovarala tvojim potrebama</string>
+    <string name="pref_auto_update_manga_on_mark_read">Aktualiziraj napredak kada je označen kao pročitan</string>
+    <string name="confirm_tracker_update">Aktualizirati praćenja na poglavlje %d?</string>
+    <string name="trackers_updated_summary">Praćenja aktualizirana na poglavlje %d</string>
+    <string name="pref_security">Sigurnost</string>
+    <string name="ext_remove">Ukloni</string>
+    <string name="ext_confirm_remove">Ukloniti proširenje?</string>
+    <string name="remove_private_extension_message">Stvarno želiš ukloniti proširenje „%s”?</string>
+    <string name="add_repo_confirmation">Želiš li dodati repozitorij „%s”?</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Ako čitač učita praznu sliku, postupno smanji prag.\nOdabrano: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Prilagođeni hardverski prag bitmapa</string>
+    <string name="pref_hardware_bitmap_threshold_default">Standardno (%d)</string>
 </resources>

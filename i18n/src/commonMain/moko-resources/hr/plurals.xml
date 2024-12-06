@@ -56,7 +56,7 @@
         <item quantity="other">Preskače se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
     </plurals>
     <plurals name="relative_time">
-        <item quantity="one">Prije %1$d dan</item>
+        <item quantity="one">Jučer</item>
         <item quantity="few">Prije %1$d dana</item>
         <item quantity="other">Prije %1$d dana</item>
     </plurals>
@@ -91,7 +91,7 @@
         <item quantity="other">Za %1$d dana</item>
     </plurals>
     <plurals name="pref_pages">
-        <item quantity="one">1 stranica</item>
+        <item quantity="one">%1$s stranica</item>
         <item quantity="few">%1$s stranice</item>
         <item quantity="other">%1$s stranica</item>
     </plurals>
