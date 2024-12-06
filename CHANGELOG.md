@@ -25,6 +25,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Switch to hardware bitmap in reader only if device can handle it ([@AntsyLich](https://github.com/AntsyLich)) ([`e6d96bd`](https://github.com/mihonapp/mihon/commit/e6d96bd348ea5d18a005d6465222ad5f5123103e))
   - Add option to lower the threshold for hardware bitmaps ([@AntsyLich](https://github.com/AntsyLich)) ([`dcddac5`](https://github.com/mihonapp/mihon/commit/dcddac5daaff3ec89c8507c35dc13d345ffdb6d7))
     - Improve hardware bitmap threshold option ([@AntsyLich](https://github.com/AntsyLich)) ([`d6dfd24`](https://github.com/mihonapp/mihon/commit/d6dfd24548eaa05a8c3e478068fe2e08f2ee4473))
+  - Always use software bitmap on certain devices ([@MajorTanya](https://github.com/MajorTanya)) ([#1543](https://github.com/mihonapp/mihon/pull/1543))
 - Fix crash after removing last category while it's active in library ([@cuong-tran](https://github.com/cuong-tran)) ([#1450](https://github.com/mihonapp/mihon/pull/1450))
 - Fix reader transition color scheme in auto background mode ([@cuong-tran](https://github.com/cuong-tran)) ([#1487](https://github.com/mihonapp/mihon/pull/1487))
 - Fix app update error notification disappearing ([@cuong-tran](https://github.com/cuong-tran)) ([#1476](https://github.com/mihonapp/mihon/pull/1476))
