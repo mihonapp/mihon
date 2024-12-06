@@ -18,7 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
-- Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
+- Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya)) ([`22d8aad`](https://github.com/mihonapp/mihon/commit/22d8aad598bea8f00f2831779e45a6645392ca0f))
  
 ### Fixed
 - Fix "currentTab was used multiple times" ([@AntsyLich](https://github.com/AntsyLich)) ([`371c143`](https://github.com/mihonapp/mihon/commit/371c1432e218f6dcf129f05405dceb2cd351c647))
