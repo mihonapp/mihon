@@ -4,7 +4,7 @@
     <string name="theme_light">अफ</string>
     <string name="pref_category_theme">थीम</string>
     <string name="pref_category_about">बारेमा</string>
-    <string name="pref_category_advanced">उन्नत सेटिङहरू</string>
+    <string name="pref_category_advanced">उन्नत सेटिंग्स</string>
     <string name="pref_category_tracking">ट्र्याकिङ</string>
     <string name="pref_category_downloads">डाउनलोड्स</string>
     <string name="pref_category_reader">रिडर</string>
@@ -617,7 +617,7 @@
     <string name="update_check_open">GitHub मा खोल्नुहोस्</string>
     <string name="pref_invalidate_download_cache_summary">डाउनलोड गरिएका अध्यायहरू पुन: जाँच गर्न एपलाई फोर्स गर्नुहोस्</string>
     <string name="pref_tracking_summary">एकतर्फी प्रगति सिंक, परिष्कृत सिंक</string>
-    <string name="pref_advanced_summary">Dump crash logs, ब्याट्री अप्टिमाइजेसन</string>
+    <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
     <string name="error_saving_picture">तस्वीर बचत गर्न त्रुटि भयो</string>
     <string name="updates_last_update_info_just_now">भर्खरै</string>
     <string name="pref_reset_viewer_flags_success">सबै रिडर सेटिंग्स रिसेट गरियो</string>
