@@ -108,4 +108,10 @@
         <item quantity="many">Za %1$d dni</item>
         <item quantity="other">Za %1$d dni</item>
     </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 strona</item>
+        <item quantity="few">%1$s strony</item>
+        <item quantity="many">%1$s stron</item>
+        <item quantity="other">%1$s stron</item>
+    </plurals>
 </resources>
