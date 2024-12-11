@@ -33,7 +33,7 @@
     <string name="action_edit_cover">Sửa ảnh bìa</string>
     <string name="action_pause">Tạm dừng</string>
     <string name="action_previous_chapter">Chương trước</string>
-    <string name="action_next_chapter">Chương kế</string>
+    <string name="action_next_chapter">Chương sau</string>
     <string name="action_retry">Thử lại</string>
     <string name="action_remove">Gỡ bỏ</string>
     <string name="action_resume">Tiếp tục</string>
@@ -459,7 +459,7 @@
     <string name="tapping_inverted_horizontal">Ngang</string>
     <string name="tapping_inverted_none">Không</string>
     <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
-    <string name="pref_grayscale">Độ xám</string>
+    <string name="pref_grayscale">Ảnh đen trắng</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang rộng không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo ngược vị trí tách trang</string>
     <string name="pref_dual_page_split">Chia các trang đôi</string>
