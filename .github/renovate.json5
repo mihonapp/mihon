@@ -1,19 +1,13 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: [
-    'config:recommended',
-  ],
-  labels: [
-    'Dependencies',
-  ],
-  semanticCommits: 'disabled',
-  packageRules: [
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "labels": ["Dependencies"],
+  "semanticCommits": "disabled",
+  "packageRules": [
     {
-      groupName: 'GitHub Actions',
-      matchManagers: [
-        'github-actions',
-      ],
-      pinDigests: true,
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
     },
   ],
 }
