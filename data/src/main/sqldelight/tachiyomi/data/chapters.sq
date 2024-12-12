@@ -1,7 +1,7 @@
 import kotlin.Boolean;
 
 CREATE TABLE chapters(
-    _id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
     url TEXT NOT NULL,
     name TEXT NOT NULL,
@@ -16,20 +16,20 @@ CREATE TABLE chapters(
     last_modified_at INTEGER NOT NULL DEFAULT 0,
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0,
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    UNIQUE(manga_id, url) ON CONFLICT IGNORE,
+    FOREIGN KEY(manga_id) REFERENCES mangas(id)
     ON DELETE CASCADE
 );
 
 CREATE INDEX chapters_manga_id_index ON chapters(manga_id);
-CREATE INDEX chapters_unread_by_manga_index ON chapters(manga_id, read) WHERE read = 0;
 
 CREATE TRIGGER update_last_modified_at_chapters
 AFTER UPDATE ON chapters
 FOR EACH ROW
 BEGIN
-  UPDATE chapters
-  SET last_modified_at = strftime('%s', 'now')
-  WHERE _id = new._id;
+    UPDATE chapters
+    SET last_modified_at = strftime('%s', 'now')
+    WHERE id = new.id;
 END;
 
 CREATE TRIGGER update_chapter_and_manga_version AFTER UPDATE ON chapters
@@ -41,17 +41,17 @@ WHEN new.is_syncing = 0 AND (
 BEGIN
     -- Update the chapter version
     UPDATE chapters SET version = version + 1
-    WHERE _id = new._id;
+    WHERE id = new.id;
 
     -- Update the manga version
     UPDATE mangas SET version = version + 1
-    WHERE _id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE _id = new.manga_id) = 0;
+    WHERE id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE id = new.manga_id) = 0;
 END;
 
 getChapterById:
 SELECT *
 FROM chapters
-WHERE _id = :id;
+WHERE id = :id;
 
 getChaptersByMangaId:
 SELECT C.*
@@ -89,7 +89,7 @@ AND manga_id = :mangaId;
 
 removeChaptersWithIds:
 DELETE FROM chapters
-WHERE _id IN :chapterIds;
+WHERE id IN :chapterIds;
 
 resetIsSyncing:
 UPDATE chapters
@@ -115,7 +115,7 @@ SET manga_id = coalesce(:mangaId, manga_id),
     date_upload = coalesce(:dateUpload, date_upload),
     version = coalesce(:version, version),
     is_syncing = coalesce(:isSyncing, is_syncing)
-WHERE _id = :chapterId;
+WHERE id = :chapterId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
