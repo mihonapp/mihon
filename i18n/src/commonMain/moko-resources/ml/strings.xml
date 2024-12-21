@@ -188,4 +188,10 @@
     <string name="nav_zone_left">ഇടത്</string>
     <string name="ext_info_age_rating">വയസ്സ് റേറ്റിംഗ്</string>
     <string name="ext_nsfw_short">18+</string>
+    <string name="pref_firebase">വിശകലനവും തകരാറ് ലോഗുകളും</string>
+    <string name="lock_with_biometrics">അൺലോക്ക് ആവശ്യമാണ്</string>
+    <string name="pref_date_format">തീയതി രൂപം</string>
+    <string name="pref_manage_notifications">അറിയിപ്പുകൾ കൈകാര്യം ചെയ്യുക</string>
+    <string name="pref_app_language">ആപ്പ് ഭാഷ</string>
+    <string name="pref_category_security">സുരക്ഷയും സ്വകാര്യതയും</string>
 </resources>

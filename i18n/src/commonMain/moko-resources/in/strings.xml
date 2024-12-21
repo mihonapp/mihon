@@ -837,4 +837,6 @@
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
     <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
     <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
+    <string name="pref_hardware_bitmap_threshold">Batas bitmap perangkat keras kustom</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Jika pembaca memuat gambar kosong, kurangi threshold secara bertahap.\nPilih: %s</string>
 </resources>
