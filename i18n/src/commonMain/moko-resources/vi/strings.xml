@@ -33,7 +33,7 @@
     <string name="action_edit_cover">Sửa ảnh bìa</string>
     <string name="action_pause">Tạm dừng</string>
     <string name="action_previous_chapter">Chương trước</string>
-    <string name="action_next_chapter">Chương kế</string>
+    <string name="action_next_chapter">Chương sau</string>
     <string name="action_retry">Thử lại</string>
     <string name="action_remove">Gỡ bỏ</string>
     <string name="action_resume">Tiếp tục</string>
@@ -202,8 +202,8 @@
     <string name="track">Theo dõi</string>
     <string name="history">Lịch sử</string>
     <string name="label_migration">Di chuyển</string>
-    <string name="label_extensions">Các tiện ích mở rộng</string>
-    <string name="label_extension_info">Thông tin về các tiện ích mở rộng</string>
+    <string name="label_extensions">Phần mở rộng</string>
+    <string name="label_extension_info">Thông tin chi tiết</string>
     <string name="action_sort_total">Tổng số chương</string>
     <string name="action_global_search">Tìm kiếm toàn bộ</string>
     <string name="action_display_download_badge">Tải các chương</string>
@@ -459,7 +459,7 @@
     <string name="tapping_inverted_horizontal">Ngang</string>
     <string name="tapping_inverted_none">Không</string>
     <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
-    <string name="pref_grayscale">Độ xám</string>
+    <string name="pref_grayscale">Ảnh đen trắng</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang rộng không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo ngược vị trí tách trang</string>
     <string name="pref_dual_page_split">Chia các trang đôi</string>
@@ -732,10 +732,10 @@
     <string name="last_auto_backup_info">Lần cuối cùng tự động lưu: %s</string>
     <string name="onboarding_guides_returning_user">Đã sử dụng %s từ trước rồi sao?</string>
     <string name="selected">Được chọn</string>
-    <string name="no_scanlators_found">Không tìm thấy máy quét nào</string>
+    <string name="no_scanlators_found">Không tìm thấy nhóm dịch nào</string>
     <string name="not_selected">Chưa chọn</string>
     <string name="action_move_to_bottom_all_for_series">Di chuyển bộ truyện xuống cuối</string>
-    <string name="scanlator">Máy quét</string>
+    <string name="scanlator">Nhóm dịch</string>
     <string name="onboarding_action_skip">Bỏ qua</string>
     <string name="pref_flash_page">Làm mới màn hình khi đổi trang</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Tránh gián đoạn quá trình cập nhật thư viện, tải xuống và khôi phục bản sao lưu trong thời gian dài.</string>
@@ -771,7 +771,7 @@
     <string name="exception_http">HTTP %d, kiểm tra trang web trong WebView</string>
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>
     <string name="exception_unknown_host">Không thể truy cập %s</string>
-    <string name="exclude_scanlators">Loại trừ máy quét</string>
+    <string name="exclude_scanlators">Loại trừ nhóm dịch</string>
     <string name="manga_interval_expected_update">Các chương mới được dự đoán sẽ phát hành trong khoảng %1$s, kiểm tra vào khoảng %2$s.</string>
     <string name="available_disk_space_info">Hiện có: %1$s / Tổng cộng: %2$s</string>
     <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>

@@ -20,7 +20,7 @@
     <string name="action_filter_unread">未讀</string>
     <string name="action_filter_empty">清除篩選器</string>
     <string name="action_sort_alpha">名稱</string>
-    <string name="action_sort_total">章節總數</string>
+    <string name="action_sort_total">總章節數</string>
     <string name="action_sort_last_read">最近閱讀</string>
     <string name="action_search">搜尋</string>
     <string name="action_global_search">全域搜尋</string>
@@ -576,7 +576,7 @@
     <string name="action_close">關閉</string>
     <string name="source_empty_screen">找不到來源</string>
     <string name="source_filter_empty_screen">找不到已安裝的來源</string>
-    <string name="action_sort_last_manga_update">上次檢查更新日期</string>
+    <string name="action_sort_last_manga_update">上次檢查更新</string>
     <string name="action_sort_unread_count">未讀章數</string>
     <string name="download_notifier_split_page_not_found">分割時找不到第 %d 頁</string>
     <string name="split_tall_images_summary">用以改善閱讀器效能</string>
@@ -660,7 +660,7 @@
     <string name="label_stats">統計資料</string>
     <string name="label_local">本機</string>
     <string name="label_overview_section">總覽</string>
-    <string name="label_started">開始日</string>
+    <string name="label_started">閱讀過</string>
     <string name="label_titles_in_global_update">適用全域更新</string>
     <string name="label_read_duration">閱讀歷時</string>
     <string name="label_tracker_section">歷程平臺</string>
@@ -828,5 +828,5 @@
     <string name="trackers_updated_summary">歷程平臺已更新到%d章</string>
     <string name="pref_hardware_bitmap_threshold">自訂硬體點陣圖的閾值設定</string>
     <string name="pref_hardware_bitmap_threshold_summary">如果閱讀時載入的是空白影像，請逐步降低閾值\n已選擇：%s</string>
-    <string name="pref_hardware_bitmap_threshold_default">預設 (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_default">%d (預設)</string>
 </resources>
