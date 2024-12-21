@@ -35,7 +35,7 @@ fun Manga.chaptersFiltered(): Boolean {
         bookmarkedFilter != TriState.DISABLED
 }
 fun Manga.forceDownloaded(): Boolean {
-    return favorite && Injekt.get<BasePreferences>().downloadedOnly().get()
+    return Injekt.get<BasePreferences>().downloadedOnly().get()
 }
 
 fun Manga.toSManga(): SManga = SManga.create().also {
