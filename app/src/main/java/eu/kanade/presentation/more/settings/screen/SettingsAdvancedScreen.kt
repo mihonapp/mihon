@@ -356,6 +356,11 @@ object SettingsAdvancedScreen : SearchableSettings {
                         .toMap()
                         .toImmutableMap(),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = basePreferences.alwaysDecodeLongStripWithSSIV(),
+                    title = stringResource(MR.strings.pref_always_decode_long_strip_with_ssiv),
+                    subtitle = stringResource(MR.strings.pref_always_decode_long_strip_with_ssiv_summary),
+                ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.pref_display_profile),
                     subtitle = basePreferences.displayProfile().get(),

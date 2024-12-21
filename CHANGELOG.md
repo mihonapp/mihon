@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add option to always decode long strip images with SSIV
 
 ## [v0.17.1] - 2024-12-06
 ### Changed
