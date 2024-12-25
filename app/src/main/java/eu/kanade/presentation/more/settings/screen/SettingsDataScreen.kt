@@ -52,6 +52,7 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
@@ -338,28 +339,20 @@ object SettingsDataScreen : SearchableSettings {
         val favoritesFlow = remember { flow { emit(getFavorites.await()) } }
         val favoritesState by favoritesFlow.collectAsState(emptyList())
 
+        val libraryExporter = LibraryExporter()
+
         val saveFileLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
-                coroutineScope.launch {
-                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                        val csvData = buildString {
-                            favoritesState.forEach { manga ->
-                                val title = if (titleSelected) escapeCsvField(manga.title) else ""
-                                val author = if (authorSelected) escapeCsvField(manga.author ?: "") else ""
-                                val artist = if (artistSelected) escapeCsvField(manga.artist ?: "") else ""
-                                val row = listOf(title, author, artist).filter {
-                                    it.isNotEmpty()
-                                }.joinToString(",") { "\"$it\"" }
-                                appendLine(row)
-                            }
-                        }
-                        outputStream.write(csvData.toByteArray())
-                        outputStream.flush()
-
-                        context.toast(MR.strings.library_exported)
-                    }
+                libraryExporter.exportToCsv(
+                    context,
+                    it,
+                    favoritesState,
+                    LibraryExporter.ExportOptions(titleSelected, authorSelected, artistSelected),
+                    coroutineScope
+                ) {
+                    context.toast(MR.strings.library_exported)
                 }
             }
         }
@@ -388,13 +381,6 @@ object SettingsDataScreen : SearchableSettings {
                 ),
             ),
         )
-    }
-
-    private fun escapeCsvField(field: String): String {
-        return field
-            .replace("\"", "\"\"")
-            .replace("\r\n", "\n")
-            .replace("\r", "\n")
     }
 
     @Composable
