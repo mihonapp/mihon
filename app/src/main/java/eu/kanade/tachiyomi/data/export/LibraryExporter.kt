@@ -11,7 +11,7 @@ class LibraryExporter {
     data class ExportOptions(
         val includeTitle: Boolean,
         val includeAuthor: Boolean,
-        val includeArtist: Boolean
+        val includeArtist: Boolean,
     )
 
     fun exportToCsv(
@@ -20,7 +20,7 @@ class LibraryExporter {
         favorites: List<Manga>,
         options: ExportOptions,
         coroutineScope: CoroutineScope,
-        onExportComplete: () -> Unit
+        onExportComplete: () -> Unit,
     ) {
         coroutineScope.launch {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->

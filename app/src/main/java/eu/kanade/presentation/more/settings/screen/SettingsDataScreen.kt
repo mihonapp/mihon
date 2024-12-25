@@ -350,7 +350,7 @@ object SettingsDataScreen : SearchableSettings {
                     it,
                     favoritesState,
                     LibraryExporter.ExportOptions(titleSelected, authorSelected, artistSelected),
-                    coroutineScope
+                    coroutineScope,
                 ) {
                     context.toast(MR.strings.library_exported)
                 }
