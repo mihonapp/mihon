@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.track.hikka
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.hikka.dto.HKManga
@@ -177,7 +178,7 @@ class HikkaApi(
     private val authClient = client.newBuilder().addInterceptor(interceptor).build()
 
     companion object {
-        const val BASE_API_URL = "https://hikka.io/api"
+        const val BASE_API_URL = "https://api.hikka.io"
         const val BASE_URL = "https://hikka.io"
         private const val SCOPE = "readlist,read:user-details"
         private const val CLIENT_REFERENCE = "49eda83d-baa6-45f8-9936-b2a41d944da4"
