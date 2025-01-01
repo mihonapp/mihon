@@ -102,6 +102,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
+        val readContent = api.getRead(track)
         val remoteTrack = api.getManga(track)
 
         track.copyPersonalFrom(remoteTrack)
@@ -112,7 +113,25 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             track.status = if (!isRereading && hasReadChapters) READING else track.status
         }
 
-        return update(track)
+        return if (readContent != null) {
+            track.score = readContent.score.toDouble()
+            track.last_chapter_read = readContent.chapters.toDouble()
+            track.score = readContent.score.toDouble()
+            update(track)
+        } else {
+            track.score = 0.0;
+            update(track)
+        }
+//        track.copyPersonalFrom(readContent?.content.toTrack())
+//        track.score = 0.0
+//        track.library_id = remoteTrack.library_id
+//
+//        if (track.status != COMPLETED) {
+//            val isRereading = track.status == REREADING
+//            track.status = if (!isRereading && hasReadChapters) READING else track.status
+//        }
+//
+//        return update(track)
     }
 
     override suspend fun search(query: String): List<TrackSearch> {

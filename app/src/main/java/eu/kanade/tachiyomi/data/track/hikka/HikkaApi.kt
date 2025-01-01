@@ -97,7 +97,7 @@ class HikkaApi(
         }
     }
 
-    private suspend fun getRead(track: Track): HKRead? {
+    suspend fun getRead(track: Track): HKRead? {
         return withIOContext {
             val slug = track.tracking_url.split("/")[4]
             val url = "$BASE_API_URL/read/manga/$slug".toUri().buildUpon().build()

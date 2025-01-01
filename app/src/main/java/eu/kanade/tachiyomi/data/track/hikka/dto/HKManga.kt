@@ -29,7 +29,6 @@ data class HKManga(
             title = this@HKManga.titleUa ?: this@HKManga.titleEn ?: this@HKManga.titleOriginal
             total_chapters = this@HKManga.chapters?.toLong() ?: 0
             cover_url = this@HKManga.image
-            summary = ""
             score = this@HKManga.score
             tracking_url = HikkaApi.BASE_URL + "/manga/${this@HKManga.slug}"
             publishing_status = this@HKManga.status
