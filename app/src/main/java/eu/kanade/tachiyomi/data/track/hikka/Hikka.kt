@@ -119,7 +119,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             track.score = readContent.score.toDouble()
             update(track)
         } else {
-            track.score = 0.0;
+            track.score = 0.0
             update(track)
         }
     }
