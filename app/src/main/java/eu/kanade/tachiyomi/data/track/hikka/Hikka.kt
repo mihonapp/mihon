@@ -122,16 +122,6 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
             track.score = 0.0;
             update(track)
         }
-//        track.copyPersonalFrom(readContent?.content.toTrack())
-//        track.score = 0.0
-//        track.library_id = remoteTrack.library_id
-//
-//        if (track.status != COMPLETED) {
-//            val isRereading = track.status == REREADING
-//            track.status = if (!isRereading && hasReadChapters) READING else track.status
-//        }
-//
-//        return update(track)
     }
 
     override suspend fun search(query: String): List<TrackSearch> {
