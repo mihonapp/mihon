@@ -95,7 +95,7 @@ jobs:
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
-        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # v2.2.0
+        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
           tag_name: ${{ env.VERSION_TAG }}
           name: Mihon ${{ env.VERSION_TAG }}
