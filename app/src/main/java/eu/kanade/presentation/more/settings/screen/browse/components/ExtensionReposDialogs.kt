@@ -61,6 +61,7 @@ fun ExtensionRepoCreateDialog(
 
                 OutlinedTextField(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .focusRequester(focusRequester),
                     value = name,
                     onValueChange = { name = it },
