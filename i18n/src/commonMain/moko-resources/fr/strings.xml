@@ -605,7 +605,7 @@
     <string name="description_placeholder">Aucune description</string>
     <string name="theme_lavender">Lavande</string>
     <string name="delete_category">Effacer catégorie</string>
-    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » ?</string>
+    <string name="delete_category_confirmation">Souhaitez-vous supprimer la catégorie « %s » ?</string>
     <string name="internal_error">ErreurInterne : Consultez vos rapports de plantage pour plus d\'informations</string>
     <string name="pref_reset_user_agent_string">Réinitialiser la liste d\'agents utilisateurs</string>
     <string name="pref_user_agent_string">Liste d\'agents utilisateurs par défaut</string>
@@ -622,7 +622,7 @@
     <string name="popular">Populaire</string>
     <string name="multi_lang">Multiple</string>
     <string name="updates_last_update_info">Dernière mise à jour de la bibliothèque le : %s</string>
-    <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque</string>
+    <string name="remove_manga">Vous êtes sur le point de retirer « %s » de votre bibliothèque</string>
     <string name="missing_storage_permission">Autorisations de stockage non accordées</string>
     <string name="action_search_hint">Recherche…</string>
     <string name="skipped_reason_not_always_update">Ignorée car la série ne nécessite pas de mises à jour</string>
@@ -771,7 +771,7 @@
     <string name="no_scanlators_found">Aucune team de scantrad trouvé</string>
     <string name="relative_time_span_never">Jamais</string>
     <string name="onboarding_guides_new_user">Nouveau sur %s ? Nous vous recommandons de jeter un œil au guide de démarrage.</string>
-    <string name="delete_repo_confirmation">Voulez-vous vraiment supprimer le répertoire « %s » ?</string>
+    <string name="delete_repo_confirmation">Voulez-vous vraiment supprimer le répertoire « %s » ?</string>
     <string name="manga_interval_custom_amount">Fréquence de mise à jour personnalisé :</string>
     <string name="invalid_backup_file_error">Erreur complète :</string>
     <string name="action_delete_repo">Supprimer le répertoire</string>

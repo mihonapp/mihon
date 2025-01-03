@@ -717,7 +717,7 @@
     <string name="download_cache_invalidated">Se ha borrado el índice de descargas</string>
     <string name="track_activity_name">Iniciar sesión en el servicio</string>
     <string name="create_backup_file_error">No se ha podido crear un archivo de respaldo</string>
-    <string name="exception_unknown_host">%s no parece estar disponible</string>
+    <string name="exception_unknown_host">«%s» no parece estar disponible</string>
     <string name="exception_http">HTTP %d, prueba abriendo la página web en WebView</string>
     <string name="exception_offline">Sin conexión a Internet</string>
     <string name="unlock_app_title">Desbloquear %s</string>
@@ -836,4 +836,6 @@
     <string name="pref_hardware_bitmap_threshold_default">Predeterminado (%d)</string>
     <string name="pref_hardware_bitmap_threshold">Elegir un tamaño máximo con el que decodificar imágenes por hardware</string>
     <string name="pref_hardware_bitmap_threshold_summary">Si el visor carga una página en blanco te recomendamos ir reduciéndolo poco a poco hasta que funcione.\nLímite actual: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Empeora el rendimiento, te recomendamos activarlo solo si la imagen sigue sin verse al reducir el tamaño máximo</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Siempre abrir las tiras verticales largas con el decodificador de imágenes SSIV</string>
 </resources>

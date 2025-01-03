@@ -94,7 +94,7 @@
     <string name="ext_installing">Installende</string>
     <string name="ext_installed">Installadas</string>
     <string name="ext_trust">Mi fido</string>
-    <string name="ext_untrusted">Nun mi fido</string>
+    <string name="ext_untrusted">Non mi fido</string>
     <string name="ext_uninstall">Disinstalla</string>
     <string name="untrusted_extension">Estensione non afidàbile</string>
     <string name="untrusted_extension_message">Un\'estensione mala diat pòdere lèghere totu sas informatziones de atzessu sarvadas o fàghere esecutare còdighe arbitràriu. \n \nPonende fide in custa estensione atzetas custos arriscos.</string>
@@ -395,7 +395,7 @@
     <string name="updated_version">Agiornadu a v%1$s</string>
     <string name="whats_new">Ite b\'at de nou</string>
     <string name="download_insufficient_space">Iscarrigamentu de sos capìtulos fallidu pro neghe de su pagu ispàtziu lìberu in su discu</string>
-    <string name="action_global_search_query">Chirca «%1$s» globalmente</string>
+    <string name="action_global_search_query">Chirca 1$s globalmente</string>
     <string name="pref_category_reading_mode">Modalidade de leghidura</string>
     <string name="pref_category_theme">Tema</string>
     <string name="action_sort_date_added">Data de annanghidura</string>
@@ -838,4 +838,6 @@
     <string name="pref_hardware_bitmap_threshold_default">Predefinidu (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Si su leghidore càrrigat un\'immàgine bianca, mìnima de pagu a pagu su lìmite.\nSeletzionadu: %s</string>
     <string name="pref_hardware_bitmap_threshold">Mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Decodìfica sas immàgines verticales longas semper cun su SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Influentzat su rendimentu. Abilita·lu petzi si sa minimada de sa mannària màssima pro sa decodìfica hardware (bitmap) de sas immàgines non risolvet sos problemas de sas immàgines bòidas</string>
 </resources>
