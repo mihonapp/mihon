@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
+import eu.kanade.tachiyomi.util.system.isFossFlavor
 import eu.kanade.tachiyomi.util.system.notificationBuilder
 import eu.kanade.tachiyomi.util.system.notify
 import tachiyomi.core.common.i18n.stringResource
@@ -38,7 +39,7 @@ internal class AppUpdateNotifier(private val context: Context) {
     fun promptUpdate(release: Release) {
         val updateIntent = NotificationReceiver.downloadAppUpdatePendingBroadcast(
             context,
-            release.getDownloadLink(),
+            release.getDownloadLink(isFossFlavor),
             release.version,
         )
 

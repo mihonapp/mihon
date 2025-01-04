@@ -16,7 +16,13 @@ data class Release(
      * Get download link of latest release from the assets.
      * @return download link of latest release.
      */
-    fun getDownloadLink(): String {
+    fun getDownloadLink(isFossFlavor: Boolean): String {
+        val fossFlavor = if (isFossFlavor) {
+            "-foss"
+        } else {
+            ""
+        }
+
         val apkVariant = when (Build.SUPPORTED_ABIS[0]) {
             "arm64-v8a" -> "-arm64-v8a"
             "armeabi-v7a" -> "-armeabi-v7a"
@@ -25,7 +31,7 @@ data class Release(
             else -> ""
         }
 
-        return assets.find { it.contains("mihon$apkVariant-") } ?: assets[0]
+        return assets.find { it.contains("mihon$fossFlavor$apkVariant-") } ?: assets[0]
     }
 
     /**

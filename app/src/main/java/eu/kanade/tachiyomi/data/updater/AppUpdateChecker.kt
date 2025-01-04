@@ -45,6 +45,8 @@ class AppUpdateChecker {
 val GITHUB_REPO: String by lazy {
     if (BuildConfig.PREVIEW) {
         "mihonapp/mihon-preview"
+    } else if (BuildConfig.FLAVOR == "foss") {
+        "mihonapp/mihon-foss"
     } else {
         "mihonapp/mihon"
     }

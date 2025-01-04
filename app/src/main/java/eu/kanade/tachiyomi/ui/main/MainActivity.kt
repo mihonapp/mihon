@@ -78,6 +78,7 @@ import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
+import eu.kanade.tachiyomi.util.system.isFossFlavor
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.view.setComposeContent
@@ -303,7 +304,7 @@ class MainActivity : BaseActivity() {
                             versionName = result.release.version,
                             changelogInfo = result.release.info,
                             releaseLink = result.release.releaseLink,
-                            downloadLink = result.release.getDownloadLink(),
+                            downloadLink = result.release.getDownloadLink(isFossFlavor),
                         )
                         navigator.push(updateScreen)
                     }
