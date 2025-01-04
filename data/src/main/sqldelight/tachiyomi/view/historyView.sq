@@ -1,8 +1,8 @@
 CREATE VIEW historyView AS
 SELECT
-    history._id AS id,
-    mangas._id AS mangaId,
-    chapters._id AS chapterId,
+    history.id AS id,
+    mangas.id AS mangaId,
+    chapters.id AS chapterId,
     mangas.title,
     mangas.thumbnail_url AS thumbnailUrl,
     mangas.source,
@@ -15,16 +15,15 @@ SELECT
     max_last_read.chapter_id AS maxReadAtChapterId
 FROM mangas
 JOIN chapters
-ON mangas._id = chapters.manga_id
+ON mangas.id = chapters.manga_id
 JOIN history
-ON chapters._id = history.chapter_id
+ON chapters.id = history.chapter_id
 JOIN (
-    SELECT chapters.manga_id,chapters._id AS chapter_id, MAX(history.last_read) AS last_read
+    SELECT chapters.manga_id,chapters.id AS chapter_id, MAX(history.last_read) AS last_read
     FROM chapters JOIN history
-    ON chapters._id = history.chapter_id
+    ON chapters.id = history.chapter_id
     GROUP BY chapters.manga_id
-) AS max_last_read
-ON chapters.manga_id = max_last_read.manga_id;
+) AS max_last_read;
 
 history:
 SELECT
