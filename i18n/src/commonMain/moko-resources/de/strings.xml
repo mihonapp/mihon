@@ -787,7 +787,7 @@
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
+    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URLs sollten mit „index.min.json“ enden.</string>
     <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>
@@ -840,4 +840,6 @@
     <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
     <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
     <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Lange-Streifen-Bilder immer mit SSIV dekodieren</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Beeinflusst die Leistung. Nur aktivieren, wenn das Reduzieren des Bitmap-Grenzwerts das Problem von leeren Bildern nicht behebt</string>
 </resources>
