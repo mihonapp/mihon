@@ -1,5 +1,5 @@
 [versions]
-aboutlib_version = "11.2.3"
+aboutlib_version = "11.4.0"
 leakcanary = "2.14"
 moko = "0.24.4"
 okhttp_version = "5.0.0-alpha.14"
