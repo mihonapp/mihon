@@ -20,3 +20,8 @@ getExcludedScanlatorsByMangaId:
 SELECT scanlator
 FROM excluded_scanlators
 WHERE manga_id = :mangaId;
+
+observeChanges:
+SELECT 1
+FROM excluded_scanlators
+LIMIT 1;

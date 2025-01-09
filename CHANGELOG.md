@@ -14,6 +14,9 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add option to always decode long strip images with SSIV
 
+### Changed
+- Hide entries whose scanlators are excluded from updates tab ([@shabnix](https://github.com/shabnix)) ([#1623](https://github.com/mihonapp/mihon/pull/1623))
+
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
 

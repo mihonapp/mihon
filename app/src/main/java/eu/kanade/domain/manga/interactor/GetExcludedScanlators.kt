@@ -21,4 +21,11 @@ class GetExcludedScanlators(
         }
             .map { it.toSet() }
     }
+
+    fun notify(): Flow<Unit> {
+        return handler.subscribeToList {
+            excluded_scanlatorsQueries.observeChanges()
+        }
+            .map { }
+    }
 }
