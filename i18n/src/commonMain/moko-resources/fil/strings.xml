@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="action_webview_refresh">Sariwain</string>
-    <string name="action_webview_forward">Umabante</string>
+    <string name="action_webview_refresh">I-refresh</string>
+    <string name="action_webview_forward">Sumulong</string>
     <string name="action_webview_back">Bumalik</string>
     <string name="action_restore">I-restore</string>
     <string name="action_open_log">Buksan ang log</string>
@@ -356,7 +356,7 @@
     <string name="unknown_error">Di matukoy na error</string>
     <string name="logout_success">Naka-logout ka na</string>
     <string name="logout">Mag-logout</string>
-    <string name="logout_title">Mag-logout sa %1$s?</string>
+    <string name="logout_title">Mag-logout mula sa %1$s?</string>
     <string name="login_success">Naka-login ka na</string>
     <string name="login">Mag-login</string>
     <string name="password">Password</string>
@@ -367,7 +367,7 @@
     <string name="label_downloaded_only">Mga na-download lang</string>
     <string name="pref_acra_summary">Nakatutulong sa pag-ayos sa mga bug. Walang sensitibong data ang ipapadala</string>
     <string name="pref_enable_acra">Ipadala ang mga ulat ng pag-crash</string>
-    <string name="updated_version">Na-update sa %1$s</string>
+    <string name="updated_version">Na-update sa v%1$s</string>
     <string name="check_for_updates">Maghanap ng update</string>
     <string name="licenses">Mga lisensiyang open-source</string>
     <string name="whats_new">Anong bago</string>
@@ -461,8 +461,8 @@
     <string name="nav_zone_prev">Nakaraan</string>
     <string name="pref_show_navigation_mode_summary">Mabilis na ipakita ang lugar na ita-tap kapag nakabukas ang reader</string>
     <string name="pref_show_navigation_mode">Ipakita ang mga overlay ng tap zone</string>
-    <string name="exclude">Di-kasama: %s</string>
-    <string name="include">Kasama: %s</string>
+    <string name="exclude">Di-isali: %s</string>
+    <string name="include">Kasali ang: %s</string>
     <string name="none">Wala</string>
     <string name="pref_library_update_categories_details">Hindi ia-update ang mga entry na nasa mga di kasamang kategorya kahit na nasa mga kasamang kategorya rin sila.</string>
     <string name="action_sort_chapter_fetch_date">Petsa ng pagkuha ng kabanata</string>
@@ -472,7 +472,7 @@
     <string name="rotation_landscape">Pahiga</string>
     <string name="rotation_portrait">Patayo</string>
     <string name="pref_create_folder_per_manga_summary">Gumagawa ng mga folder ayon sa pamagat ng entry</string>
-    <string name="pref_create_folder_per_manga">I-save ang mga pahina sa folder nila</string>
+    <string name="pref_create_folder_per_manga">I-save ang mga pahina sa magkakaibang folder</string>
     <string name="pref_reader_actions">Gawain</string>
     <string name="rotation_type">Pag-ikot</string>
     <string name="pref_grayscale">Maabo</string>
@@ -480,7 +480,7 @@
     <string name="automatic_background">Awto</string>
     <string name="cancel_all_for_series">Kanselahin lahat para sa seryeng ito</string>
     <string name="local_filter_order_by">Ayusin ayon sa</string>
-    <string name="restrictions">Restriksyon: %s</string>
+    <string name="restrictions">Mga Restriksyon: %s</string>
     <string name="error_no_match">Walang nahanap na kapares</string>
     <string name="date">Petsa</string>
     <string name="local_invalid_format">Imbalidong format ng kabanata</string>
@@ -536,7 +536,7 @@
     <string name="ext_install_service_notif">Ini-install ang extension…</string>
     <string name="action_sort_count">Dami ng entry</string>
     <string name="pref_verbose_logging">Verbose na pagla-log</string>
-    <string name="pref_verbose_logging_summary">Mag-print ng mga verbose na log sa log ng sistema (dagdag-pasanin sa app)</string>
+    <string name="pref_verbose_logging_summary">I-print ang detalyadong mga log sa system log (nakakabawas sa performance ng app)</string>
     <string name="notification_size_warning">Babala: Nakasasama ang mga malalaking update sa source at maaaring humantong sa mabagal na update at pagtaas ng paggamit sa baterya. I-tap para matuto pa.</string>
     <string name="action_display_language_badge">Wika</string>
     <string name="label_warning">Babala</string>
@@ -620,7 +620,7 @@
     <string name="download_ahead_info">Gumagana lamang sa kasalukuyang kabanata + ang susunod ay na-download na.</string>
     <string name="are_you_sure">Sigurado ka ba?</string>
     <string name="multi_lang">Marami</string>
-    <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa aklatan mo</string>
+    <string name="remove_manga">Tatanggalin mo na ang \"%s\" mula sa iyong aklatan</string>
     <string name="updates_last_update_info">Huling update sa aklatan: %s</string>
     <string name="popular">Sikat</string>
     <string name="missing_storage_permission">Hindi binigay ang mga permiso sa storage</string>
@@ -631,14 +631,14 @@
     <string name="pref_tracking_summary">Isahang pag-sync sa progress, pinahusay na pag-sync</string>
     <string name="pref_appearance_summary">Tema, ayos ng petsa &amp; oras</string>
     <string name="pref_backup_summary">Mano-mano at awtomatikong pag-backup, espasyo sa storage</string>
-    <string name="pref_security_summary">Pag-lock aa app, bantayan ang screen</string>
+    <string name="pref_security_summary">Pag-lock sa app, bantayan ang screen</string>
     <string name="pref_advanced_summary">Itambak ang mga crash log, pag-o-optimisa sa baterya</string>
     <string name="pref_library_summary">Mga kategorya, panlahatang update, pag-swipe ng kabanata</string>
     <string name="pref_browse_summary">Mga source, extension, panlahatang paghanap</string>
     <string name="crash_screen_description">Nagkaroon ng hindi inaasahang error ang %s. Iminumungkahi naming ibahagi mo ang mga crash log sa aming support channel sa Discord.</string>
     <string name="crash_screen_title">Ay Naku!</string>
     <string name="crash_screen_restart_application">Buksan muli ang app</string>
-    <string name="invalid_location">Imbalidong lugar: %s</string>
+    <string name="invalid_location">Imbalidong lokasyon: %s</string>
     <string name="unknown_title">Di alam na pamagat</string>
     <string name="error_user_agent_string_invalid">Di-wastong string ng user agent</string>
     <string name="updates_last_update_info_just_now">Ngayon lang</string>
@@ -649,7 +649,7 @@
 \nI-tap para matuto pa.</string>
     <string name="action_display_show_continue_reading_button">Magpatuloy na bumasa na button</string>
     <string name="track_remove_date_conf_title">Tanggalin ang petsa?</string>
-    <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na ipinili mo na simula sa %s</string>
+    <string name="track_remove_start_date_conf_text">Tatanggalin nito ang huling petsa na napili mo mula sa %s</string>
     <string name="track_remove_finish_date_conf_text">Aalisin nito ang dati mong napiling petsa ng pagtatapos mula sa %s</string>
     <string name="pref_invalidate_download_cache">Muling i-index ang mga download</string>
     <string name="pref_invalidate_download_cache_summary">Pilitin ang app na tingnan kung may naka-download</string>
@@ -680,8 +680,8 @@
 \n
 \nGusto mo pa bang magpatuloy?</string>
     <string name="track_error">%1$s Kamalian: %2$s</string>
-    <string name="day_short">%dd</string>
-    <string name="hour_short">%dh</string>
+    <string name="day_short">%da</string>
+    <string name="hour_short">%do</string>
     <string name="minute_short">%dm</string>
     <string name="seconds_short">%ds</string>
     <string name="action_copy_to_clipboard">Kopyahin sa clipboard</string>
@@ -737,7 +737,7 @@
     <string name="last_auto_backup_info">Huling awtomatikong na-back up: %s</string>
     <string name="pref_storage_usage">Paggamit ng storage</string>
     <string name="action_sort_tracker_score">Iskor sa tracker</string>
-    <string name="action_apply">Gamitin</string>
+    <string name="action_apply">Ilapat</string>
     <string name="action_revert_to_default">Ibalik sa default</string>
     <string name="no_scanlators_found">Walang scanlator ang nahanap</string>
     <string name="scanlator">Scanlator</string>
@@ -773,7 +773,7 @@
     <string name="onboarding_permission_notifications_description">Maabisuhan para sa mga update sa aklatan at higit pa.</string>
     <string name="onboarding_permission_action_grant">Payagan</string>
     <string name="available_disk_space_info">Na magagamit: %1$s / Kabuuan: %2$s</string>
-    <string name="manga_interval_expected_update">Mga bagong kabanata na nahulaang ilalabas sa loob ng %1$s, na tumitingin sa bawat %2$s.</string>
+    <string name="manga_interval_expected_update">Mga bagong kabanata na nahulaang ilalabas sa loob ng %1$s, na tumitingin bawat %2$s.</string>
     <string name="invalid_backup_file_error">Buong error:</string>
     <string name="ext_permission_install_apps_warning">Kinakailangan ng permiso para mag-install ng mga extension. I-tap upang mapayagan ito.</string>
     <string name="private_settings">Kasali ang mga sensitibong setting (hal., mga tracker login token)</string>
@@ -822,7 +822,7 @@
     <string name="action_copy_link">Kopyahin ang link</string>
     <string name="pref_download_new_unread_chapters_only">Laktawan ang pag-download ng mga kopya ng mga nabasang kabanata</string>
     <string name="add_repo_confirmation">Gusto mo bang idagdag ang repo na \"%s\"?</string>
-    <string name="confirm_tracker_update">I-update ang mga tracker para sa kabanata %d?</string>
+    <string name="confirm_tracker_update">I-update ang mga tracker hanggang kabanata %d?</string>
     <string name="onboarding_permission_crashlytics">Magpadala ang mga crash log</string>
     <string name="onboarding_permission_crashlytics_description">Magpadala ng hindi nagpapakilalang mga crash log sa mga developer.</string>
     <string name="onboarding_permission_analytics">Payagan ang analitiko</string>
@@ -837,7 +837,9 @@
     <string name="remove_private_extension_message">Gusto mo ba talagang tanggalin ang \"%s\" na extension?</string>
     <string name="pref_auto_update_manga_on_mark_read">I-update ang progress kapag namarka bilang nabasa na</string>
     <string name="trackers_updated_summary">Na-update ang mga tracker sa kabanata %d</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Kung naglo-load ang reader ng isang blangkong larawan ay unti-unting bawasan ang threshold.\nNapili: %s</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Kung naglo-load ang reader ng isang blangkong imahe ay unti-unting bawasan ang threshold.\nNapili: %s</string>
     <string name="pref_hardware_bitmap_threshold">Custom na threshold sa hardware bitmap</string>
     <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Nakakaapekto sa performance. Paganahin lamang kung ang pagbabawas ng bitmap threshold ay hindi nakakapag-ayos ng mga isyu sa blangkong imahe</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Laging i-decode ang mga long strip na imahe gamit ang SSIV</string>
 </resources>

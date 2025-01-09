@@ -688,7 +688,7 @@
     <string name="action_copy_to_clipboard">Panoya kopyala</string>
     <string name="action_update_category">Kategoriyi güncelle</string>
     <string name="split_tall_images">Uzun görselleri böl</string>
-    <string name="overlay_header">Kaplama</string>
+    <string name="overlay_header">Üstünde göster</string>
     <string name="pref_page_rotate">Geniş sayfaları sığdırmak için döndür</string>
     <string name="pref_page_rotate_invert">Döndürülen geniş sayfaların yönünü ters çevir</string>
     <string name="pref_debug_info">Hata ayıklama bilgisi</string>
@@ -825,7 +825,7 @@
     <string name="confirm_tracker_update">İzleyicileri %d. bölüme güncelle?</string>
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
-    <string name="onboarding_permission_crashlytics_description">Geliştiricelere anonimleştirilmiş çökme kayıtlarını gönder.</string>
+    <string name="onboarding_permission_crashlytics_description">Geliştiricilere anonimleştirilmiş çökme kayıtlarını gönder.</string>
     <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkan verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
     <string name="onboarding_permission_analytics">Kullanım istatistiklerine izin ver</string>
     <string name="onboarding_permission_analytics_description">Uygulama özelliklerini geliştirmek için anonimleştirilmiş kullanım verileri gönder.</string>
@@ -839,5 +839,7 @@
     <string name="trackers_updated_summary">İzleyiciler %d. bölüme güncellendi</string>
     <string name="pref_hardware_bitmap_threshold">Özel bitmap donanım sınırı</string>
     <string name="pref_hardware_bitmap_threshold_default">Varsayılan (%d)</string>
-    <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir resim yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Eğer okuyucu boş bir görsel yüklerse bu sınırı kademeli olarak azaltın.\nSeçili: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Uzun şerit görsellerini her zaman SSIV ile işle</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Performansı etkiler. Yalnızca bitmap sınırını düşürmek boş görsel sorunlarını çözmediğinde kullanın</string>
 </resources>

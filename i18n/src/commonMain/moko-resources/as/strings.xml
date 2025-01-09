@@ -840,4 +840,6 @@
     <string name="pref_hardware_bitmap_threshold">কাষ্টম হাৰ্ডৱেৰ বিটম্যাপ থ্ৰেশহোল্ড</string>
     <string name="pref_hardware_bitmap_threshold_summary">যদি পাঠকে এটা খালী ছবি লোড কৰে ক্ৰমান্বয়ে থ্ৰেছহোল্ড হ্ৰাস কৰক। \nবাচনি কৰা: %s</string>
     <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">সদায় SSIV ৰ সৈতে দীঘল ষ্ট্ৰিপ ছবি ডিকোড কৰক</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">কাৰ্য্যক্ষমতাক প্ৰভাৱিত কৰে। কেৱল সামৰ্থবান কৰক যদি বিটমেপ থ্ৰেছহোল্ড হ্ৰাস কৰিলে খালী প্ৰতিমুৰ্তি সমস্যা সমাধান নহয়</string>
 </resources>
