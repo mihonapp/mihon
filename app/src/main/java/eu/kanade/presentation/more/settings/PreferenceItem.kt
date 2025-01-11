@@ -167,7 +167,7 @@ internal fun PreferenceItem(
                 InfoWidget(text = item.title)
             }
             is Preference.PreferenceItem.CustomPreference -> {
-                item.content(item)
+                item.content()
             }
         }
     }

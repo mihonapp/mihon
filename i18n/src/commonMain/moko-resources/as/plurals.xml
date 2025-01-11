@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">এক্সটেনচন আপডেট উপলব্ধ</item>
+        <item quantity="other">%d এক্সটেনচন আপডেটসমূহ উপলব্ধ</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d ৰেপো</item>
+        <item quantity="other">%d ৰেপোসমূহ</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">%1$s মিনিট পিছত</item>
+        <item quantity="other">%1$s মিনিটৰ পিছত</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">কালি</item>
+        <item quantity="other">%1$d দিনৰ আগতে</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">কাইলৈ</item>
+        <item quantity="other">%1$d দিনত</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d শিতান</item>
+        <item quantity="other">%d শিতানসমূহ</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">পৰৱৰ্তী অপঠিত অধ্যায়</item>
+        <item quantity="other">পৰৱৰ্তী %d অপঠিত অধ্যায়সমূহ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%1$sত %2$s ত্ৰুটি সৈতে সমাপ্ত</item>
+        <item quantity="other">%1$sত %2$s ত্ৰুটিৰ সৈতে সমাপ্ত</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s বাকী আছে</item>
+        <item quantity="other">%1$s বাকী আছে</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">১ দিন</item>
+        <item quantity="other">%d দিন</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">১ পৃষ্ঠা</item>
+        <item quantity="other">%1$s পৃষ্ঠাসমূহ</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">অপস্থিত %1$s অধ্যায়</item>
+        <item quantity="other">অপস্থিত %1$s অধ্যায়সমূহ</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s অধ্যায়</item>
+        <item quantity="other">%1$s অধ্যায়সমূহ</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">পৰৱৰ্তী অধ্যায়</item>
+        <item quantity="other">পৰৱৰ্তী %d অধ্যায়সমূহ</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d ট্ৰেকাৰ</item>
+        <item quantity="other">%d ট্ৰেকাৰসমূহ</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">%d অধ্যায় স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
+        <item quantity="other">%d অধ্যায়সমূহ স্কিপ কৰা হৈছে, উৎসত নাইবা ফিল্টাৰ কৰি আঁতৰোৱা হৈছে</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">%d প্ৰৱিষ্টিৰ বাবে</item>
+        <item quantity="other">%d প্ৰৱিষ্টিসমূহৰ বাবে</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d নতুন অধ্যায়</item>
+        <item quantity="other">%1$d নতুন অধ্যায়সমূহ</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">অধ্যায়সমূহ %1$s আৰু 1 অধিক</item>
+        <item quantity="other">অধ্যায়সমূহ %1$s আৰু %2$d অধিক</item>
+    </plurals>
+</resources>

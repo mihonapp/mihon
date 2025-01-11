@@ -730,16 +730,14 @@ class MangaScreenModel(
      */
     fun markChaptersRead(chapters: List<Chapter>, read: Boolean) {
         toggleAllSelection(false)
+        if (chapters.isEmpty()) return
         screenModelScope.launchIO {
             setReadStatus.await(
                 read = read,
                 chapters = chapters.toTypedArray(),
             )
 
-            if (
-                successState?.hasLoggedInTrackers == false ||
-                !read || autoTrackState == AutoTrackState.NEVER
-            ) {
+            if (!read || successState?.hasLoggedInTrackers == false || autoTrackState == AutoTrackState.NEVER) {
                 return@launchIO
             }
 

@@ -717,7 +717,6 @@
     <string name="create_backup_file_error">백업 파일을 생성할 수 없습니다</string>
     <string name="library_sync_complete">서재가 동기화되었습니다</string>
     <string name="action_move_to_bottom_all_for_series">이 시리즈를 맨 아래로 이동</string>
-    <string name="licensed_manga_chapters_error">라이센스 제한 - 회차를 표시할 수 없습니다</string>
     <string name="exception_offline">인터넷에 연결되지 않음</string>
     <string name="manga_display_interval_title">항상 평가하기</string>
     <string name="track_activity_name">트래킹 서비스 로그인</string>

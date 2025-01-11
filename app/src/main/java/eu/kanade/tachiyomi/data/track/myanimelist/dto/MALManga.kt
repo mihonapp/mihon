@@ -12,7 +12,7 @@ data class MALManga(
     val numChapters: Long,
     val mean: Double = -1.0,
     @SerialName("main_picture")
-    val covers: MALMangaCovers,
+    val covers: MALMangaCovers?,
     val status: String,
     @SerialName("media_type")
     val mediaType: String,

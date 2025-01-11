@@ -775,7 +775,6 @@
     <string name="invalid_backup_file_error">Teljes hiba:</string>
     <string name="onboarding_description">Kezdetnek állítsunk be néhány dolgot. Ezeket később bármikor módosíthatja a beállításokban.</string>
     <string name="overlay_header">Felület</string>
-    <string name="licensed_manga_chapters_error">Licencelt – Nincs megjeleníthető fejezet</string>
     <string name="track_delete_remote_text">Törlés a(z) %s szolgáltatásból</string>
     <string name="track_delete_text">Ezzel leállítja a helyi nyilvántartást.</string>
     <string name="not_applicable">N/A</string>

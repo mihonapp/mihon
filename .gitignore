@@ -6,7 +6,7 @@ build
 # IDE files
 *.iml
 .idea/*
-!.idea/icon.png
+!.idea/icon.svg
 /captures
 
 # Configuration files

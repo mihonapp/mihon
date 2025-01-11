@@ -85,7 +85,7 @@
     <string name="left_to_right_viewer">Phân trang (trái sang phải)</string>
     <string name="right_to_left_viewer">Phân trang (phải sang trái)</string>
     <string name="vertical_viewer">Phân trang (chiều dọc)</string>
-    <string name="webtoon_viewer">Dải dài</string>
+    <string name="webtoon_viewer">Cuộc dọc</string>
     <string name="pref_image_scale_type">Kiểu tỉ lệ</string>
     <string name="scale_type_fit_screen">Vừa màn hình</string>
     <string name="scale_type_stretch">Kéo dãn</string>
@@ -223,11 +223,9 @@
     <string name="ext_untrusted">Không đáng tin cậy</string>
     <string name="ext_uninstall">Gỡ cài đặt</string>
     <string name="untrusted_extension">Tiện ích mở rộng không đáng tin cậy</string>
-    <string name="untrusted_extension_message">Tiện ích mở rộng này được đăng ký bằng chứng chỉ không đáng tin cậy và chưa được kích hoạt.
+    <string name="untrusted_extension_message">Các tiện ích mở rộng độc hại có thể đọc mọi thông tin đăng nhập được lưu trữ hoặc thực thi mã tùy ý.
 \n
-\nMột tiện ích mở rộng độc hại có thể đọc được bất kỳ thông tin đăng nhập được lưu trữ nào của Mihon hoặc tự ý thay đổi mã nguồn.\t
-\n
-\nBạn sẽ chấp nhận những rủi ro khi tin tưởng chứng chỉ này.</string>
+\nBạn sẽ chấp nhận những rủi ro khi tin tưởng tiện ích mở rộng này.</string>
     <string name="pref_double_tap_anim_speed">Tốc độ nhấn đúp hình ảnh động</string>
     <string name="pref_crop_borders">Cắt viền</string>
     <string name="pref_read_with_volume_keys_inverted">Đảo ngược phím âm lượng</string>
@@ -334,7 +332,7 @@
     <string name="label_more">Thêm</string>
     <string name="tracking_info">Đồng bộ một chiều để cập nhật tiến trình chương trong các dịch vụ theo dõi. Thiết lập theo dõi cho các truyện riêng lẻ từ nút theo dõi.</string>
     <string name="pref_category_reading_mode">Kiểu đọc</string>
-    <string name="vertical_plus_viewer">Dải dài có khoảng cách</string>
+    <string name="vertical_plus_viewer">Cuộc dọc có khoảng cách</string>
     <string name="pref_show_reading_mode_summary">Hiển thị ngắn gọn chế độ hiện tại khi mở trang đọc truyện</string>
     <string name="pref_show_reading_mode">Hiển thị chế độ đọc</string>
     <string name="pref_library_update_refresh_metadata_summary">Kiểm tra ảnh bìa và chi tiết khi cập nhật thư viện</string>
@@ -434,7 +432,7 @@
     <string name="restoring_backup_error">Khôi phục thất bại</string>
     <string name="restore_in_progress">Đang trong quá trình phục hồi</string>
     <string name="creating_backup_error">Lưu trữ thất bại</string>
-    <string name="restore_duration">%02d phút, %02d giây</string>
+    <string name="restore_duration">%1$02d phút, %2$02d giây</string>
     <string name="backup_restore_content_full">Bạn sẽ cần cài đặt bất kỳ tiện ích mở rộng nào bị thiếu rồi đăng nhập vào các dịch vụ theo dõi để sử dụng chúng.</string>
     <string name="backup_restore_missing_trackers">Bộ theo dõi chưa được đăng nhập vào :</string>
     <string name="backup_restore_missing_sources">Nguồn không tìm thấy :</string>
@@ -666,7 +664,7 @@
     <string name="crash_screen_title">Ôi trời!</string>
     <string name="track_remove_finish_date_conf_text">Thao tác này sẽ xóa ngày kết thúc đã chọn trước đó của bạn khỏi %s</string>
     <string name="information_no_manga_category">Hạng mục trống</string>
-    <string name="pref_invalidate_download_cache">Vô hiệu hóa chỉ mục tải xuống</string>
+    <string name="pref_invalidate_download_cache">Lập chỉ mục tải xuống</string>
     <string name="action_not_now">Lúc khác</string>
     <string name="fdroid_warning">Bản dựng F-Droid không được hỗ trợ chính thức.
 \nNhấn để tìm hiểu thêm.</string>
@@ -716,7 +714,7 @@
     <string name="action_create">Tạo</string>
     <string name="relative_time_span_never">Không bao giờ</string>
     <string name="onboarding_storage_action_select">Chọn một thư mục</string>
-    <string name="pref_flash_page_summ">Giảm tình trạng bóng ma trên màn giấy điện tử</string>
+    <string name="pref_flash_page_summ">Giảm tình trạng bóng ma trên màn hình e-ink</string>
     <string name="pref_onboarding_guide">Hướng dẫn làm quen</string>
     <string name="pref_storage_location_info">Được sử dụng để sao lưu tự động, tải chương và nguồn cục bộ.</string>
     <string name="onboarding_guides_new_user">Mới với %s sao? Chúng tôi khuyên bạn nên xem hướng dẫn bắt đầu.</string>
@@ -739,8 +737,7 @@
     <string name="action_move_to_bottom_all_for_series">Di chuyển bộ truyện xuống cuối</string>
     <string name="scanlator">Máy quét</string>
     <string name="onboarding_action_skip">Bỏ qua</string>
-    <string name="pref_flash_page">Hiện trắng khi đổi trang</string>
-    <string name="licensed_manga_chapters_error">Được cấp phép - Không có chương nào để hiển thị</string>
+    <string name="pref_flash_page">Làm mới màn hình khi đổi trang</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Tránh gián đoạn quá trình cập nhật thư viện, tải xuống và khôi phục bản sao lưu trong thời gian dài.</string>
     <string name="exception_offline">Mất kết nối mạng</string>
     <string name="pref_storage_usage">Kho chứa chiếm dụng</string>
@@ -775,7 +772,7 @@
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>
     <string name="exception_unknown_host">Không thể truy cập %s</string>
     <string name="exclude_scanlators">Loại trừ máy quét</string>
-    <string name="manga_interval_expected_update">Lần cập nhật tiếp theo trong khoảng %s</string>
+    <string name="manga_interval_expected_update">Các chương mới được dự đoán sẽ phát hành trong khoảng %1$s, kiểm tra vào khoảng %2$s.</string>
     <string name="available_disk_space_info">Hiện có: %1$s / Tổng cộng: %2$s</string>
     <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>
     <string name="ext_permission_install_apps_warning">Cần phải cấp phép để cài đặt tiện ích mở rộng. Bấm đây để cấp.</string>
@@ -809,5 +806,38 @@
     <string name="upcoming_calendar_next">Tháng tiếp theo</string>
     <string name="upcoming_calendar_prev">Tháng trước</string>
     <string name="action_replace_repo">Thay thế</string>
-    <string name="action_replace_repo_title">Dấu vân tay cho khóa ký đã được tạo trước đó.</string>
+    <string name="action_replace_repo_title">Dấu vân tay cho khóa ký đã được tạo trước đó</string>
+    <string name="action_copy_link">Sao chép liên kết</string>
+    <string name="manga_interval_expected_update_null">Manga này đã hoàn thành hoặc chưa có ngày phát hành dự kiến.</string>
+    <string name="pref_flash_duration_summary">%1$s ms</string>
+    <string name="pref_flash_page_interval">Làm mới sau</string>
+    <string name="pref_flash_with">Làm mới bằng</string>
+    <string name="pref_flash_style_black">Nền đen</string>
+    <string name="pref_flash_style_white">Nền trắng</string>
+    <string name="pref_flash_style_white_black">Nền trắng và Nền đen</string>
+    <string name="extensionRepo_settings">Kho lưu tiện ích mở rộng (repo)</string>
+    <string name="add_repo_confirmation">Bạn có muốn thêm repo \"%s\" không?</string>
+    <string name="pref_flash_duration">Độ dài làm mới</string>
+    <string name="pref_download_new_unread_chapters_only">Bỏ qua tải xuống các chương đã đọc bị trùng</string>
+    <string name="invalid_backup_file_json">Sao lưu JSON không được hỗ trợ</string>
+    <string name="invalid_backup_file_unknown">Tệp sao lưu bị hỏng</string>
+    <string name="confirm_tracker_update">Cập nhật theo dõi từ chương %d?</string>
+    <string name="file_picker_uri_permission_unsupported">Không thể liên tục truy cập thư mục. Ứng dụng có thể hoạt động bất thường.</string>
+    <string name="action_sort_random">Ngẫu nhiên</string>
+    <string name="onboarding_permission_crashlytics">Gửi nhật ký sự cố (crash log)</string>
+    <string name="onboarding_permission_analytics">Cho phép phân tích dữ liệu</string>
+    <string name="onboarding_permission_analytics_description">Gửi dữ liệu sử dụng ẩn danh để cải thiện các tính năng của ứng dụng.</string>
+    <string name="pref_security">Bảo mật</string>
+    <string name="pref_firebase">Phân tích và Nhật ký sự cố</string>
+    <string name="firebase_summary">Gửi nhật ký sự cố và phân tích, giúp nhà phát triển xác định và khắc phục sự cố, cải thiện hiệu suất và thực hiện các bản cập nhật trong tương lai phù hợp hơn với nhu cầu của bạn</string>
+    <string name="onboarding_permission_crashlytics_description">Gửi nhật ký sự cố ẩn danh tới nhà phát triển để giúp phát triển ứng dụng tốt hơn.</string>
+    <string name="ext_confirm_remove">Gỡ tiện ích mở rộng?</string>
+    <string name="non_library_settings">Tất cả các mục đã đọc</string>
+    <string name="ext_remove">Gỡ</string>
+    <string name="remove_private_extension_message">Bạn có thật sự muốn gỡ tiện ích mở rộng \"%s\"?</string>
+    <string name="pref_auto_update_manga_on_mark_read">Cập nhật tiến trình khi được đánh dấu là đã đọc</string>
+    <string name="trackers_updated_summary">Trình theo dõi được cập nhật đến chương %d</string>
+    <string name="pref_hardware_bitmap_threshold">Tùy chỉnh ngưỡng phần cứng bitmap</string>
+    <string name="pref_hardware_bitmap_threshold_default">Mặc định (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Nếu người đọc tải một hình ảnh trống thì hãy giảm dần ngưỡng\nĐã chọn: %s</string>
 </resources>

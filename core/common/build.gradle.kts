@@ -6,10 +6,11 @@ plugins {
 
 android {
     namespace = "eu.kanade.tachiyomi.core.common"
+}
 
-    kotlinOptions {
-        freeCompilerArgs += listOf(
-            "-Xcontext-receivers",
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll(
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
         )

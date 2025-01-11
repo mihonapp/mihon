@@ -205,9 +205,9 @@
     <string name="file_select_cover">Wähle ein Vorschaubild</string>
     <string name="file_select_backup">Wähle eine Sicherungsdatei</string>
     <string name="update_check_confirm">Herunterladen</string>
-    <string name="update_check_no_new_updates">Keine neue Aktualisierung verfügbar</string>
+    <string name="update_check_no_new_updates">Keine neues Update verfügbar</string>
     <string name="update_check_notification_download_in_progress">Herunterladen…</string>
-    <string name="update_check_notification_download_complete">Tippe, um die Aktualisierung zu installieren</string>
+    <string name="update_check_notification_download_complete">Tippe, um das Update zu installieren</string>
     <string name="update_check_notification_download_error">Fehler beim Herunterladen</string>
     <string name="update_check_notification_update_available">Neue Version verfügbar!</string>
     <string name="information_no_downloads">Keine Downloads</string>
@@ -308,7 +308,7 @@
     <string name="lock_always">Immer</string>
     <string name="lock_never">Nie</string>
     <string name="secure_screen">Sicherer Bildschirm</string>
-    <string name="ext_updates_pending">Aktualisierungen ausstehend</string>
+    <string name="ext_updates_pending">Updates ausstehend</string>
     <string name="pref_cutout_short">Inhalt im Ausschnittbereich anzeigen</string>
     <string name="information_cloudflare_bypass_failure">Fehler beim Umgehen von Cloudflare</string>
     <string name="information_webview_outdated">Bitte aktualisiere die WebView-App für eine bessere Kompatibilität</string>
@@ -329,7 +329,7 @@
     <string name="action_oldest">Älteste</string>
     <string name="action_move_to_top">Nach oben verschieben</string>
     <string name="action_move_to_bottom">Nach unten verschieben</string>
-    <string name="channel_ext_updates">Erweiterungsaktualisierungen</string>
+    <string name="channel_ext_updates">Erweiterungsupdates</string>
     <string name="updating_library">Bibliothek wird aktualisiert</string>
     <string name="pref_skip_filtered_chapters">Gefilterte Kapitel überspringen</string>
     <string name="pref_category_reading">Beim Lesen</string>
@@ -355,10 +355,10 @@
     <string name="restoring_backup_canceled">Wiederherstellung abgebrochen</string>
     <string name="restore_in_progress">Wiederherstellung wird bereits durchgeführt</string>
     <string name="backup_in_progress">Datensicherung wird bereits durchgeführt</string>
-    <string name="check_for_updates">Nach Aktualisierungen suchen</string>
+    <string name="check_for_updates">Nach Updates suchen</string>
     <string name="last_used_source">Zuletzt genutzt</string>
     <string name="local_source_help_guide">Anleitung für lokale Quellen</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="downloaded_only_summary">Filtert alle Einträge in deiner Bibliothek</string>
     <string name="gray_background">Grau</string>
     <string name="viewer">Lesemodus</string>
@@ -545,7 +545,7 @@
     <string name="update_72hour">Alle 3 Tage</string>
     <string name="download_queue_size_warning">Achtung: Große Downloads könnten dazu führen, dass Quellen langsamer werden und/oder Mihon blockieren. Tippe, um mehr zu erfahren.</string>
     <string name="ext_update_all">Alle aktualisieren</string>
-    <string name="channel_app_updates">App-Aktualisierungen</string>
+    <string name="channel_app_updates">App-Updates</string>
     <string name="pref_auto_clear_chapter_cache">Kapitel-Zwischenspeicher beim Öffnen der App löschen</string>
     <string name="clear_database_source_item_count">%1$d Nicht-Bibliothekseinträge in der Datenbank</string>
     <string name="database_clean">Nichts zu bereinigen</string>
@@ -612,7 +612,7 @@
     <string name="action_remove_everything">Alles entfernen</string>
     <string name="appwidget_updates_description">Deine kürzlich aktualisierten Bibliothekseinträge ansehen</string>
     <string name="appwidget_unavailable_locked">Widget ist nicht verfügbar, wenn die App-Sperre aktiviert ist</string>
-    <string name="update_already_running">Eine Aktualisierung ist bereits im Gange</string>
+    <string name="update_already_running">Ein Update ist bereits im Gange</string>
     <string name="error_user_agent_string_blank">User-Agent-Text darf nicht leer sein</string>
     <string name="theme_tidalwave">Flutwelle</string>
     <string name="download_ahead">Im Voraus herunterladen</string>
@@ -648,7 +648,7 @@
     <string name="fdroid_warning">F-Droid-Builds werden nicht offiziell unterstützt.
 \nTippe, um mehr zu erfahren.</string>
     <string name="action_display_show_continue_reading_button">Weiterlesen-Button</string>
-    <string name="pref_invalidate_download_cache">Index der Downloads invalidieren</string>
+    <string name="pref_invalidate_download_cache">Downloads neu indizieren</string>
     <string name="track_remove_date_conf_title">Datum entfernen?</string>
     <string name="track_remove_start_date_conf_text">Dies wird dein zuvor gewähltes Startdatum von %s entfernen</string>
     <string name="track_remove_finish_date_conf_text">Dies wird dein zuvor gewähltes Enddatum von %s entfernen</string>
@@ -717,7 +717,6 @@
     <string name="download_cache_invalidated">Index der Downloads invalide</string>
     <string name="track_activity_name">Tracker-Login</string>
     <string name="create_backup_file_error">Sicherungsdatei konnte nicht erstellt werden</string>
-    <string name="licensed_manga_chapters_error">Lizenziert - Keine Kapitel zu zeigen</string>
     <string name="exception_http">HTTP %d, überprüfe die Webseite in WebView</string>
     <string name="exception_offline">Keine Internetverbindung</string>
     <string name="exception_unknown_host">%s konnte nicht erreicht werden</string>
@@ -821,4 +820,24 @@
     <string name="extensionRepo_settings">Erweiterungsrepositorys</string>
     <string name="invalid_backup_file_unknown">Sicherungsdatei ist beschädigt</string>
     <string name="invalid_backup_file_json">JSON-Sicherung wird nicht unterstützt</string>
+    <string name="pref_download_new_unread_chapters_only">Herunterladen von doppelten gelesenen Kapiteln überspringen</string>
+    <string name="add_repo_confirmation">Möchtest du das Repository \"%s\" hinzufügen?</string>
+    <string name="confirm_tracker_update">Tracker auf Kapitel %d aktualisieren?</string>
+    <string name="pref_firebase">Datenerhebung und Absturzprotokolle</string>
+    <string name="onboarding_permission_analytics_description">Sende anonymisierte Nutzungsdaten, um App-Funktionen zu verbessern.</string>
+    <string name="onboarding_permission_analytics">Datenerhebung zulassen</string>
+    <string name="action_sort_random">Zufällig</string>
+    <string name="onboarding_permission_crashlytics">Absturzprotokolle senden</string>
+    <string name="onboarding_permission_crashlytics_description">Anonymisierte Absturzprotokolle an das Entwicklerteam senden.</string>
+    <string name="pref_security">Sicherheit</string>
+    <string name="firebase_summary">Das Übermitteln von Absturzprotokollen und erhobenen Daten ermöglicht es uns, Probleme zu erkennen und zu beheben, die Leistung zu verbessern und künftige Updates besser auf deine Bedürfnisse abzustimmen</string>
+    <string name="ext_remove">Entfernen</string>
+    <string name="ext_confirm_remove">Erweiterung entfernen?</string>
+    <string name="remove_private_extension_message">Möchtest du die Erweiterung „%s“ wirklich entfernen?</string>
+    <string name="non_library_settings">Alle gelesenen Einträge</string>
+    <string name="pref_auto_update_manga_on_mark_read">Fortschritt aktualisieren, wenn als gelesen markiert wird</string>
+    <string name="trackers_updated_summary">Tracker auf Kapitel %d aktualisiert</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
+    <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
 </resources>
