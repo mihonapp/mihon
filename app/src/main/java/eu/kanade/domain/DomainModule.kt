@@ -17,7 +17,7 @@ import eu.kanade.domain.source.interactor.GetIncognitoState
 import eu.kanade.domain.source.interactor.GetLanguagesWithSources
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
 import eu.kanade.domain.source.interactor.SetMigrateSorting
-import eu.kanade.domain.source.interactor.ToggleIncognitoSource
+import eu.kanade.domain.source.interactor.ToggleIncognito
 import eu.kanade.domain.source.interactor.ToggleLanguage
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.interactor.ToggleSourcePin
@@ -179,11 +179,9 @@ class DomainModule : InjektModule {
         addFactory { GetRemoteManga(get()) }
         addFactory { GetSourcesWithFavoriteCount(get(), get()) }
         addFactory { GetSourcesWithNonLibraryManga(get()) }
-        addFactory {  GetIncognitoState(get(), get()) }
         addFactory { SetMigrateSorting(get()) }
         addFactory { ToggleLanguage(get()) }
         addFactory { ToggleSource(get()) }
-        addFactory { ToggleIncognitoSource(get()) }
         addFactory { ToggleSourcePin(get()) }
         addFactory { TrustExtension(get(), get()) }
 
@@ -195,5 +193,7 @@ class DomainModule : InjektModule {
         addFactory { DeleteExtensionRepo(get()) }
         addFactory { ReplaceExtensionRepo(get()) }
         addFactory { UpdateExtensionRepo(get(), get()) }
+        addFactory { ToggleIncognito(get()) }
+        addFactory { GetIncognitoState(get(), get(), get()) }
     }
 }

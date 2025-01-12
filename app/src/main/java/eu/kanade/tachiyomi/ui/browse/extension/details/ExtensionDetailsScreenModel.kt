@@ -6,7 +6,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.domain.extension.interactor.ExtensionSourceItem
 import eu.kanade.domain.extension.interactor.GetExtensionSources
-import eu.kanade.domain.source.interactor.ToggleIncognitoSource
+import eu.kanade.domain.source.interactor.ToggleIncognito
 import eu.kanade.domain.source.interactor.ToggleSource
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.ExtensionManager
@@ -21,6 +21,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -38,7 +39,7 @@ class ExtensionDetailsScreenModel(
     private val extensionManager: ExtensionManager = Injekt.get(),
     private val getExtensionSources: GetExtensionSources = Injekt.get(),
     private val toggleSource: ToggleSource = Injekt.get(),
-    private val toggleIncognitoSource: ToggleIncognitoSource = Injekt.get(),
+    private val toggleIncognito: ToggleIncognito = Injekt.get(),
     private val preferences: SourcePreferences = Injekt.get(),
 ) : StateScreenModel<ExtensionDetailsScreenModel.State>(State()) {
 
@@ -84,6 +85,15 @@ class ExtensionDetailsScreenModel(
                         }
                 }
             }
+            launch {
+                preferences.incognitoExtensions()
+                    .changes()
+                    .map { pkgName in it }
+                    .distinctUntilChanged()
+                    .collectLatest { isIncognito ->
+                        mutableState.update { it.copy(isIncognito = isIncognito) }
+                    }
+            }
         }
     }
 
@@ -113,30 +123,25 @@ class ExtensionDetailsScreenModel(
     }
 
     fun toggleSource(sourceId: Long) {
-        toggleSource.awaitDisable(sourceId)
+        toggleSource.await(sourceId)
     }
 
     fun toggleSources(enable: Boolean) {
         state.value.extension?.sources
             ?.map { it.id }
-            ?.let { toggleSource.awaitDisable(it, enable) }
+            ?.let { toggleSource.await(it, enable) }
     }
 
     fun toggleIncognito(enable: Boolean) {
-        state.value.extension?.sources
-            ?.map { it.id }
-            ?.let { toggleIncognitoSource.await(it, enable) }
-    }
-
-    fun isIncognito(): Boolean {
-        return state.value.extension?.sources
-            ?.first()
-            ?.id.toString() in preferences.incognitoSources().get()
+        state.value.extension?.pkgName?.let { packageName ->
+            toggleIncognito.await(packageName, enable)
+        }
     }
 
     @Immutable
     data class State(
         val extension: Extension.Installed? = null,
+        val isIncognito: Boolean = false,
         private val _sources: ImmutableList<ExtensionSourceItem>? = null,
     ) {
 

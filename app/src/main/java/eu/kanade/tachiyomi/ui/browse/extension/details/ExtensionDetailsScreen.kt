@@ -4,9 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -25,8 +22,6 @@ data class ExtensionDetailsScreen(
         val context = LocalContext.current
         val screenModel = rememberScreenModel { ExtensionDetailsScreenModel(pkgName = pkgName, context = context) }
         val state by screenModel.state.collectAsState()
-        var isIncognitoMode by remember { mutableStateOf(screenModel.isIncognito()) }
-
 
         if (state.isLoading) {
             LoadingScreen()
@@ -38,17 +33,13 @@ data class ExtensionDetailsScreen(
         ExtensionDetailsScreen(
             navigateUp = navigator::pop,
             state = state,
-            extIncognitoMode = isIncognitoMode,
             onClickSourcePreferences = { navigator.push(SourcePreferencesScreen(it)) },
             onClickEnableAll = { screenModel.toggleSources(true) },
             onClickDisableAll = { screenModel.toggleSources(false) },
             onClickClearCookies = screenModel::clearCookies,
             onClickUninstall = screenModel::uninstallExtension,
             onClickSource = screenModel::toggleSource,
-            onExtIncognitoChange = { newState ->
-                screenModel.toggleIncognito(newState)
-                isIncognitoMode = screenModel.isIncognito()
-            }
+            onClickIncognito = screenModel::toggleIncognito,
         )
 
         LaunchedEffect(Unit) {

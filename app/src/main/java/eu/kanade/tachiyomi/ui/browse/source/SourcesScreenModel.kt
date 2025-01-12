@@ -83,7 +83,7 @@ class SourcesScreenModel(
     }
 
     fun toggleSource(source: Source) {
-        toggleSource.awaitDisable(source)
+        toggleSource.await(source)
     }
 
     fun togglePin(source: Source) {

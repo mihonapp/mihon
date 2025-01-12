@@ -22,7 +22,7 @@ class SourcePreferences(
 
     fun disabledSources() = preferenceStore.getStringSet("hidden_catalogues", emptySet())
 
-    fun incognitoSources() = preferenceStore.getStringSet("incognito_catalogues", emptySet())
+    fun incognitoExtensions() = preferenceStore.getStringSet("incognito_extensions", emptySet())
 
     fun pinnedSources() = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 

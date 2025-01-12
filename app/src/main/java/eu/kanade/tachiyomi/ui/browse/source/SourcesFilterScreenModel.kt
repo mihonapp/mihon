@@ -51,7 +51,7 @@ class SourcesFilterScreenModel(
     }
 
     fun toggleSource(source: Source) {
-        toggleSource.awaitDisable(source)
+        toggleSource.await(source)
     }
 
     fun toggleLanguage(language: String) {

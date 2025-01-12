@@ -72,7 +72,7 @@ class BrowseSourceScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
-    ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
+) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
 
@@ -97,7 +97,7 @@ class BrowseSourceScreenModel(
             }
         }
 
-        if (!getIncognitoState.isEnabled(source.id)) {
+        if (!getIncognitoState.await(source.id)) {
             sourcePreferences.lastUsedSource().set(source.id)
         }
     }

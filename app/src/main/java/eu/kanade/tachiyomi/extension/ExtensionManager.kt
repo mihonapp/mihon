@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.extension
 import android.content.Context
 import android.graphics.drawable.Drawable
 import eu.kanade.domain.extension.interactor.TrustExtension
-import eu.kanade.domain.source.interactor.ToggleIncognitoSource
 import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.tachiyomi.extension.api.ExtensionApi
 import eu.kanade.tachiyomi.extension.api.ExtensionUpdateNotifier
@@ -43,8 +42,6 @@ import java.util.Locale
 class ExtensionManager(
     private val context: Context,
     private val preferences: SourcePreferences = Injekt.get(),
-    private val sourcePreferences: SourcePreferences = Injekt.get(),
-    private val toggleIncognitoSource: ToggleIncognitoSource = Injekt.get(),
     private val trustExtension: TrustExtension = Injekt.get(),
 ) {
 
@@ -81,13 +78,24 @@ class ExtensionManager(
 
     private var subLanguagesEnabledOnFirstRun = preferences.enabledLanguages().isSet()
 
-    fun getAppIconForSource(sourceId: Long): Drawable? {
-        val pkgName = installedExtensionMapFlow.value.values
-            .find { ext ->
-                ext.sources.any { it.id == sourceId }
-            }
+    fun getExtensionPackage(sourceId: Long): String? {
+        return installedExtensionsFlow.value.find { extension ->
+            extension.sources.any { it.id == sourceId }
+        }
             ?.pkgName
-            ?: return null
+    }
+
+    fun getExtensionPackageAsFlow(sourceId: Long): Flow<String?> {
+        return installedExtensionsFlow.map { extensions ->
+            extensions.find { extension ->
+                extension.sources.any { it.id == sourceId }
+            }
+                ?.pkgName
+        }
+    }
+
+    fun getAppIconForSource(sourceId: Long): Drawable? {
+        val pkgName = getExtensionPackage(sourceId) ?: return null
 
         return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) {
             ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!
@@ -295,19 +303,6 @@ class ExtensionManager(
      * @param extension The extension to be registered.
      */
     private fun registerUpdatedExtension(extension: Extension.Installed) {
-        val oldExtension = installedExtensionMapFlow.value[extension.pkgName]
-        if (oldExtension != null) {
-            // If a extension has incognito mode enabled we need to consider that sources change and update them
-            if (oldExtension.sources.first().id.toString() in sourcePreferences.incognitoSources().get()) {
-                oldExtension.sources
-                    .map { it.id }
-                    .let { toggleIncognitoSource.await(it, false) }
-
-                extension.sources
-                    .map { it.id }
-                    .let { toggleIncognitoSource.await(it, true) }
-            }
-        }
         installedExtensionMapFlow.value += extension
     }
 
@@ -318,11 +313,6 @@ class ExtensionManager(
      * @param pkgName The package name of the uninstalled application.
      */
     private fun unregisterExtension(pkgName: String) {
-        val installedExtension = installedExtensionMapFlow.value[pkgName]
-        installedExtension?.sources?.map { it.id }?.let {
-            toggleIncognitoSource.await(it, false)
-        }
-
         installedExtensionMapFlow.value -= pkgName
         untrustedExtensionMapFlow.value -= pkgName
     }
