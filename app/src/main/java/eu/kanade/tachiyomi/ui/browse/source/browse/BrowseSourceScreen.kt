@@ -67,7 +67,7 @@ import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
 
 data class BrowseSourceScreen(
-    private val sourceId: Long,
+    val sourceId: Long,
     private val listingQuery: String?,
 ) : Screen(), AssistContentScreen {
 
