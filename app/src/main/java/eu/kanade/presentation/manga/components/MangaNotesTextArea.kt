@@ -71,7 +71,8 @@ fun MangaNotesTextArea(
 ) {
     val richTextState = rememberRichTextState()
     richTextState.config.linkColor = MaterialTheme.colorScheme.primary
-    richTextState.config.listIndent = 15
+    richTextState.config.unorderedListIndent = 4
+    richTextState.config.orderedListIndent = 20
     val focusRequester = remember { FocusRequester() }
 
     Column(
@@ -86,16 +87,18 @@ fun MangaNotesTextArea(
                 Text(text = stringResource(MR.strings.notes_placeholder))
             },
             supportingText = {
-                Text(
-                    text = (MAX_LENGTH - richTextState.render().length).toString(),
-                    color = if (richTextState.render().length >
-                        MAX_LENGTH / 10 * 9
-                    ) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        Color.Unspecified
-                    },
-                )
+                richTextState.toText().let {
+                    Text(
+                        text = (MAX_LENGTH - it.length).toString(),
+                        color = if (it.length >
+                            MAX_LENGTH / 10 * 9
+                        ) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            Color.Unspecified
+                        },
+                    )
+                }
             },
             modifier = Modifier
                 .weight(1f)
