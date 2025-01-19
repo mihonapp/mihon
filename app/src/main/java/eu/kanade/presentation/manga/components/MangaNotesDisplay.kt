@@ -4,11 +4,9 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 
-@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun MangaNotesDisplay(
     content: String,
@@ -16,7 +14,7 @@ fun MangaNotesDisplay(
 ) {
     val richTextState = rememberRichTextState().setMarkdown(markdown = content)
     richTextState.config.linkColor = MaterialTheme.colorScheme.primary
-    richTextState.config.listIndent = 15
+    richTextState.config.listIndent = 10
 
     SelectionContainer {
         RichText(
