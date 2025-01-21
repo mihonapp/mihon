@@ -101,7 +101,10 @@ android {
         }
         create("dev") {
             // Include pseudolocales: https://developer.android.com/guide/topics/resources/pseudolocales
-            resourceConfigurations.addAll(listOf("en", "en_XA", "ar_XB", "xxhdpi"))
+            androidResources {
+                @Suppress("UnstableApiUsage")
+                localeFilters += listOf("en", "en_XA", "ar_XB", "xxhdpi")
+            }
             dimension = "default"
         }
     }
