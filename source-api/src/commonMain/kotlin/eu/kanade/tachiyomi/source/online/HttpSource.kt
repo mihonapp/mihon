@@ -54,7 +54,7 @@ abstract class HttpSource : CatalogueSource {
      *
      * Note: the generated ID sets the sign bit to `0`.
      */
-    override val id by lazy { generateId(name, lang, versionId) }
+    override val id by lazy { generateId(name, language, versionId) }
 
     /**
      * Headers used for requests.
@@ -100,7 +100,7 @@ abstract class HttpSource : CatalogueSource {
     /**
      * Visible name of the source.
      */
-    override fun toString() = "$name (${lang.uppercase()})"
+    override fun toString() = "$name (${language.uppercase()})"
 
     /**
      * Returns an observable containing a page with a list of manga. Normally it's not needed to

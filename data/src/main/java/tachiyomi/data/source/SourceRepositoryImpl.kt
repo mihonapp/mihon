@@ -24,7 +24,7 @@ class SourceRepositoryImpl(
         return sourceManager.catalogueSources.map { sources ->
             sources.map {
                 mapSourceToDomainSource(it).copy(
-                    supportsLatest = it.supportsLatest,
+                    supportsLatest = it.hasLatestListing,
                 )
             }
         }
@@ -89,7 +89,7 @@ class SourceRepositoryImpl(
 
     private fun mapSourceToDomainSource(source: Source): DomainSource = DomainSource(
         id = source.id,
-        lang = source.lang,
+        lang = source.language,
         name = source.name,
         supportsLatest = false,
         isStub = false,

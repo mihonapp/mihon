@@ -13,6 +13,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.util.lang.compareToCaseInsensitiveNaturalOrder
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.supervisorScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import logcat.LogPriority
@@ -65,18 +66,18 @@ actual class LocalSource(
 
     override val id: Long = ID
 
-    override val lang: String = "other"
+    override val language: String = Source.Language.OTHER
 
     override fun toString() = name
 
-    override val supportsLatest: Boolean = true
+    override val hasLatestListing: Boolean = true
 
     // Browse related
-    override suspend fun getPopularManga(page: Int) = getSearchManga(page, "", PopularFilters)
+    override suspend fun getDefaultMangaList(page: Int) = getMangaList("", PopularFilters, page)
 
-    override suspend fun getLatestUpdates(page: Int) = getSearchManga(page, "", LatestFilters)
+    override suspend fun getLatestMangaList(page: Int) = getMangaList("", LatestFilters, page)
 
-    override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withIOContext {
+    override suspend fun getMangaList(query: String, filters: FilterList, page: Int): MangasPage = withIOContext {
         val lastModifiedLimit = if (filters === LatestFilters) {
             System.currentTimeMillis() - LATEST_THRESHOLD
         } else {
@@ -138,8 +139,20 @@ actual class LocalSource(
         MangasPage(mangas, false)
     }
 
+    override suspend fun getMangaDetails(
+        manga: SManga,
+        updateManga: Boolean,
+        fetchChapters: Boolean,
+    ): Pair<SManga, List<SChapter>> {
+        return supervisorScope {
+            val mangaAsync = async { if (updateManga) getMangaDetails(manga) else manga }
+            val chaptersAsync = async { if (fetchChapters) getChapterList(manga) else emptyList() }
+            mangaAsync.await() to chaptersAsync.await()
+        }
+    }
+
     // Manga details related
-    override suspend fun getMangaDetails(manga: SManga): SManga = withIOContext {
+    suspend fun getMangaDetails(manga: SManga): SManga = withIOContext {
         coverManager.find(manga.url)?.let {
             manga.thumbnail_url = it.uri.toString()
         }
@@ -234,7 +247,7 @@ actual class LocalSource(
     }
 
     // Chapters
-    override suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
+    suspend fun getChapterList(manga: SManga): List<SChapter> = withIOContext {
         val chapters = fileSystem.getFilesInMangaDirectory(manga.url)
             // Only keep supported formats
             .filter { it.isDirectory || Archive.isSupported(it) || it.extension.equals("epub", true) }

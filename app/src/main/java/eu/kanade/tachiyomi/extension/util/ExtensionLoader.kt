@@ -302,7 +302,7 @@ internal object ExtensionLoader {
             }
 
         val langs = sources.filterIsInstance<CatalogueSource>()
-            .map { it.lang }
+            .map { it.language }
             .toSet()
         val lang = when (langs.size) {
             0 -> ""

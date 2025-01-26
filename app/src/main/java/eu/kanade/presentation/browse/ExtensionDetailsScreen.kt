@@ -426,7 +426,7 @@ private fun SourceSwitchPreference(
         title = if (source.labelAsName) {
             source.source.toString()
         } else {
-            LocaleHelper.getSourceDisplayName(source.source.lang, context)
+            LocaleHelper.getSourceDisplayName(source.source.language, context)
         },
         widget = {
             Row(

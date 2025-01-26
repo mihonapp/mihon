@@ -35,7 +35,7 @@ class MigrateSearchScreenModel(
                 compareBy(
                     { it.id != state.value.fromSourceId },
                     { "${it.id}" !in pinnedSources },
-                    { "${it.name.lowercase()} (${it.lang})" },
+                    { "${it.name.lowercase()} (${it.language})" },
                 ),
             )
     }

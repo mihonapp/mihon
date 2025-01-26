@@ -59,7 +59,7 @@ abstract class SearchScreenModel(
         compareBy<CatalogueSource>(
             { (map[it] as? SearchItemResult.Success)?.isEmpty ?: true },
             { "${it.id}" !in pinnedSources },
-            { "${it.name.lowercase()} (${it.lang})" },
+            { "${it.name.lowercase()} (${it.language})" },
         )
     }
 
@@ -84,11 +84,11 @@ abstract class SearchScreenModel(
 
     open fun getEnabledSources(): List<CatalogueSource> {
         return sourceManager.getCatalogueSources()
-            .filter { it.lang in enabledLanguages && "${it.id}" !in disabledSources }
+            .filter { it.language in enabledLanguages && "${it.id}" !in disabledSources }
             .sortedWith(
                 compareBy(
                     { "${it.id}" !in pinnedSources },
-                    { "${it.name.lowercase()} (${it.lang})" },
+                    { "${it.name.lowercase()} (${it.language})" },
                 ),
             )
     }
@@ -162,7 +162,7 @@ abstract class SearchScreenModel(
 
                     try {
                         val page = withContext(coroutineDispatcher) {
-                            source.getSearchManga(1, query, source.getFilterList())
+                            source.getMangaList(query, source.getFilterList(), 1)
                         }
 
                         val titles = page.mangas.map {

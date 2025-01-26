@@ -10,12 +10,16 @@ interface CatalogueSource : Source {
     /**
      * An ISO 639-1 compliant language code (two letters in lower case).
      */
-    override val lang: String
+    val lang: String get() = throw UnsupportedOperationException()
+
+    override val language: String get() = lang
 
     /**
      * Whether the source has support for latest updates.
      */
-    val supportsLatest: Boolean
+    val supportsLatest: Boolean get() = throw UnsupportedOperationException()
+
+    override val hasLatestListing: Boolean get() = supportsLatest
 
     /**
      * Get a page with a list of manga.
@@ -24,8 +28,19 @@ interface CatalogueSource : Source {
      * @param page the page number to retrieve.
      */
     @Suppress("DEPRECATION")
-    suspend fun getPopularManga(page: Int): MangasPage {
+    override suspend fun getDefaultMangaList(page: Int): MangasPage {
         return fetchPopularManga(page).awaitSingle()
+    }
+
+    /**
+     * Get a page with a list of latest manga updates.
+     *
+     * @since extensions-lib 1.5
+     * @param page the page number to retrieve.
+     */
+    @Suppress("DEPRECATION")
+    override suspend fun getLatestMangaList(page: Int): MangasPage {
+        return fetchLatestUpdates(page).awaitSingle()
     }
 
     /**
@@ -37,19 +52,8 @@ interface CatalogueSource : Source {
      * @param filters the list of filters to apply.
      */
     @Suppress("DEPRECATION")
-    suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage {
+    override suspend fun getMangaList(query: String, filters: FilterList, page: Int): MangasPage {
         return fetchSearchManga(page, query, filters).awaitSingle()
-    }
-
-    /**
-     * Get a page with a list of latest manga updates.
-     *
-     * @since extensions-lib 1.5
-     * @param page the page number to retrieve.
-     */
-    @Suppress("DEPRECATION")
-    suspend fun getLatestUpdates(page: Int): MangasPage {
-        return fetchLatestUpdates(page).awaitSingle()
     }
 
     /**

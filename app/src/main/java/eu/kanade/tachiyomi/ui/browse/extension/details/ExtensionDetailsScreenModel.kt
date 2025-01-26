@@ -71,7 +71,10 @@ class ExtensionDetailsScreenModel(
                                     { !it.enabled },
                                     { item ->
                                         item.source.name.takeIf { item.labelAsName }
-                                            ?: LocaleHelper.getSourceDisplayName(item.source.lang, context).lowercase()
+                                            ?: LocaleHelper.getSourceDisplayName(
+                                                item.source.language,
+                                                context,
+                                            ).lowercase()
                                     },
                                 ),
                             )

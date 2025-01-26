@@ -11,7 +11,7 @@ fun Source.getNameForMangaInfo(): String {
     val enabledLanguages = preferences.enabledLanguages().get()
         .filterNot { it in listOf("all", "other") }
     val hasOneActiveLanguages = enabledLanguages.size == 1
-    val isInEnabledLanguages = lang in enabledLanguages
+    val isInEnabledLanguages = language in enabledLanguages
     return when {
         // For edge cases where user disables a source they got manga of in their library.
         hasOneActiveLanguages && !isInEnabledLanguages -> toString()
