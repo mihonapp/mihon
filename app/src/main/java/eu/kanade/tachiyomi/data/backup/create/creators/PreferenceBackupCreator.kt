@@ -9,8 +9,8 @@ import eu.kanade.tachiyomi.data.backup.models.LongPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringPreferenceValue
 import eu.kanade.tachiyomi.data.backup.models.StringSetPreferenceValue
 import eu.kanade.tachiyomi.source.ConfigurableSource
-import eu.kanade.tachiyomi.source.preferenceKey
-import eu.kanade.tachiyomi.source.sourcePreferences
+import mihonx.source.utils.preferencesKey
+import mihonx.source.utils.sourcePreferences
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.domain.source.service.SourceManager
@@ -32,7 +32,7 @@ class PreferenceBackupCreator(
             .filterIsInstance<ConfigurableSource>()
             .map {
                 BackupSourcePreferences(
-                    it.preferenceKey(),
+                    it.preferencesKey(),
                     it.sourcePreferences().all.toBackupPreferences()
                         .withPrivatePreferences(includePrivatePreferences),
                 )
