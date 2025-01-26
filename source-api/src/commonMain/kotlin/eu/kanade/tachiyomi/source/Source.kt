@@ -97,6 +97,7 @@ interface Source {
      * @param updateManga   whether to update the manga details or not
      * @param fetchChapters whether to fetch chapters or not.
      */
+    @Suppress("DEPRECATION")
     suspend fun getMangaDetails(
         manga: SManga,
         updateManga: Boolean,
@@ -150,28 +151,7 @@ interface Source {
 
     @Deprecated("Use the new suspend API instead", ReplaceWith("getPageList"))
     fun fetchPageList(chapter: SChapter): Observable<List<Page>> = throw UnsupportedOperationException()
-
-    /**
-     * Get the updated details for a manga.
-     *
-     * @since extensions-lib 1.5
-     * @param manga the manga to update.
-     * @return the updated manga.
-     */
-    @Suppress("DEPRECATION")
-    suspend fun getMangaDetails(manga: SManga): SManga {
-        return fetchMangaDetails(manga).awaitSingle()
-    }
-
-    /**
-     * Get all the available chapters for a manga.
-     *
-     * @since extensions-lib 1.5
-     * @param manga the manga to update.
-     * @return the chapters for the manga.
-     */
-    @Suppress("DEPRECATION")
-    suspend fun getChapterList(manga: SManga): List<SChapter> {
-        return fetchChapterList(manga).awaitSingle()
-    }
 }
+
+suspend fun Source.getMangaDetails(manga: SManga): SManga = getMangaDetails(manga, true, false).first
+suspend fun Source.getChapterList(manga: SManga): List<SChapter> = getMangaDetails(manga, false, true).second

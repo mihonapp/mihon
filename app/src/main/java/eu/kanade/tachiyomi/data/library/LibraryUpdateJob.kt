@@ -337,13 +337,15 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     private suspend fun updateManga(manga: Manga, fetchWindow: Pair<Long, Long>): List<Chapter> {
         val source = sourceManager.getOrStub(manga.source)
 
-        // Update manga metadata if needed
-        if (libraryPreferences.autoUpdateMetadata().get()) {
-            val networkManga = source.getMangaDetails(manga.toSManga())
-            updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
-        }
+        val fetchManga = libraryPreferences.autoUpdateMetadata().get()
 
-        val chapters = source.getChapterList(manga.toSManga())
+        val (networkManga, chapters) = source.getMangaDetails(
+            manga = manga.toSManga(),
+            updateManga = fetchManga,
+            fetchChapters = true,
+        )
+
+        if (fetchManga) updateManga.awaitUpdateFromSource(manga, networkManga, manualFetch = false, coverCache)
 
         // Get manga from database to account for if it was removed during the update and
         // to get latest data so it doesn't get overwritten later on
