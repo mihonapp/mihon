@@ -69,10 +69,15 @@ fun MangaNotesTextArea(
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     val richTextState = rememberRichTextState()
-    richTextState.config.linkColor = MaterialTheme.colorScheme.primary
-    richTextState.config.unorderedListIndent = 4
-    richTextState.config.orderedListIndent = 20
+    LaunchedEffect(Unit) {
+        richTextState.config.unorderedListIndent = 4
+        richTextState.config.orderedListIndent = 20
+    }
+    LaunchedEffect(primaryColor) {
+        richTextState.config.linkColor = primaryColor
+    }
     val focusRequester = remember { FocusRequester() }
 
     Column(
