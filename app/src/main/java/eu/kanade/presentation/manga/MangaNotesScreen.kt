@@ -21,7 +21,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MangaNotesScreen(
-    state: MangaNotesScreenState.Success,
+    state: MangaNotesScreenState,
     navigateUp: () -> Unit,
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,

@@ -65,13 +65,14 @@ private fun RichTextState.render(): String {
 
 @Composable
 fun MangaNotesTextArea(
-    state: MangaNotesScreenState.Success,
+    state: MangaNotesScreenState,
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val richTextState = rememberRichTextState()
     LaunchedEffect(Unit) {
+        richTextState.setMarkdown(state.notes)
         richTextState.config.unorderedListIndent = 4
         richTextState.config.orderedListIndent = 20
     }
@@ -79,6 +80,9 @@ fun MangaNotesTextArea(
         richTextState.config.linkColor = primaryColor
     }
     val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
 
     Column(
         modifier = modifier
@@ -165,11 +169,6 @@ fun MangaNotesTextArea(
                 }
             }
         }
-    }
-
-    LaunchedEffect(focusRequester) {
-        state.notes?.let { richTextState.setMarkdown(it) }
-        focusRequester.requestFocus()
     }
 
     DisposableEffect(Unit) {
