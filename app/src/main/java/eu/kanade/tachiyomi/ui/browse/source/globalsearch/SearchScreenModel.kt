@@ -162,7 +162,7 @@ abstract class SearchScreenModel(
 
                     try {
                         val page = withContext(coroutineDispatcher) {
-                            source.getMangaList(query, source.getFilterList(), 1)
+                            source.getMangaList(query, source.getSearchFilters(), 1)
                         }
 
                         val titles = page.mangas.map {

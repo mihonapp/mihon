@@ -21,7 +21,6 @@ import eu.kanade.domain.source.service.SourcePreferences
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.util.ioCoroutineScope
 import eu.kanade.tachiyomi.data.cache.CoverCache
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
@@ -71,7 +70,7 @@ class BrowseSourceScreenModel(
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
-    private val getIncognitoState: GetIncognitoState = Injekt.get(),
+    getIncognitoState: GetIncognitoState = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
@@ -79,20 +78,21 @@ class BrowseSourceScreenModel(
     val source = sourceManager.getOrStub(sourceId)
 
     init {
-        if (source is CatalogueSource) {
+        screenModelScope.launchIO {
             mutableState.update {
-                var query: String? = null
-                var listing = it.listing
-
-                if (listing is Listing.Search) {
-                    query = listing.query
-                    listing = Listing.Search(query, source.getFilterList())
-                }
+                val hasFilters = source.hasSearchFilters
+                val filters = if (hasFilters) source.getSearchFilters() else FilterList()
 
                 it.copy(
-                    listing = listing,
-                    filters = source.getFilterList(),
-                    toolbarQuery = query,
+                    listing = if (it.listing is Listing.Search) {
+                        it.listing.copy(filters = filters)
+                    } else {
+                        it.listing
+                    },
+                    hasFilters = hasFilters,
+                    filters = filters,
+                    defaultFilters = filters,
+                    toolbarQuery = it.listing.query,
                 )
             }
         }
@@ -135,9 +135,7 @@ class BrowseSourceScreenModel(
     }
 
     fun resetFilters() {
-        if (source !is CatalogueSource) return
-
-        mutableState.update { it.copy(filters = source.getFilterList()) }
+        mutableState.update { it.copy(filters = it.defaultFilters) }
     }
 
     fun setListing(listing: Listing) {
@@ -145,20 +143,15 @@ class BrowseSourceScreenModel(
     }
 
     fun setFilters(filters: FilterList) {
-        if (source !is CatalogueSource) return
-
         mutableState.update {
-            it.copy(
-                filters = filters,
-            )
+            it.copy(filters = filters)
         }
     }
 
     fun search(query: String? = null, filters: FilterList? = null) {
-        if (source !is CatalogueSource) return
-
-        val input = state.value.listing as? Listing.Search
-            ?: Listing.Search(query = null, filters = source.getFilterList())
+        val input = state.value.let { state ->
+            (state.listing as? Listing.Search) ?: Listing.Search(query = null, filters = state.defaultFilters)
+        }
 
         mutableState.update {
             it.copy(
@@ -172,9 +165,7 @@ class BrowseSourceScreenModel(
     }
 
     fun searchGenre(genreName: String) {
-        if (source !is CatalogueSource) return
-
-        val defaultFilters = source.getFilterList()
+        val defaultFilters = state.value.defaultFilters
         var genreExists = false
 
         filter@ for (sourceFilter in defaultFilters) {
@@ -351,7 +342,9 @@ class BrowseSourceScreenModel(
     @Immutable
     data class State(
         val listing: Listing,
+        val hasFilters: Boolean = false,
         val filters: FilterList = FilterList(),
+        val defaultFilters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
     ) {

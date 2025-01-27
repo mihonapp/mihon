@@ -153,5 +153,8 @@ interface Source {
     fun fetchPageList(chapter: SChapter): Observable<List<Page>> = throw UnsupportedOperationException()
 }
 
+@Suppress("BooleanLiteralArgument")
 suspend fun Source.getMangaDetails(manga: SManga): SManga = getMangaDetails(manga, true, false).first
+
+@Suppress("BooleanLiteralArgument")
 suspend fun Source.getChapterList(manga: SManga): List<SChapter> = getMangaDetails(manga, false, true).second
