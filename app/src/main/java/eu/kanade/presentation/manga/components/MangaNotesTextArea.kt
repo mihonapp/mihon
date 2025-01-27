@@ -49,6 +49,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
 private const val MAX_LENGTH = 250
+private const val MAX_LENGTH_WARN = MAX_LENGTH / 10 * 9
 
 private fun RichTextState.render(): String {
     var current: String
@@ -83,6 +84,9 @@ fun MangaNotesTextArea(
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()
     }
+    val textLength = remember(richTextState.annotatedString) {
+        richTextState.toText().length
+    }
 
     Column(
         modifier = modifier
@@ -96,18 +100,10 @@ fun MangaNotesTextArea(
                 Text(text = stringResource(MR.strings.notes_placeholder))
             },
             supportingText = {
-                richTextState.toText().let {
-                    Text(
-                        text = (MAX_LENGTH - it.length).toString(),
-                        color = if (it.length >
-                            MAX_LENGTH / 10 * 9
-                        ) {
-                            MaterialTheme.colorScheme.error
-                        } else {
-                            Color.Unspecified
-                        },
-                    )
-                }
+                Text(
+                    text = (MAX_LENGTH - textLength).toString(),
+                    color = if (textLength > MAX_LENGTH_WARN) MaterialTheme.colorScheme.error else Color.Unspecified,
+                )
             },
             modifier = Modifier
                 .weight(1f)
