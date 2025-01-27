@@ -118,7 +118,8 @@ interface Source {
      *
      * @param chapter the chapter.
      */
-    suspend fun getPageList(chapter: SChapter): List<Page> = throw RuntimeException("Stub!")
+    @Suppress("DEPRECATION")
+    suspend fun getPageList(chapter: SChapter): List<Page> = fetchPageList(chapter).awaitSingle()
 
     override fun toString(): String
 
