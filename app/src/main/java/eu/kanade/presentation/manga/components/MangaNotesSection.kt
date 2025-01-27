@@ -43,44 +43,54 @@ fun MangaNotesSection(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (content.isNotBlank()) {
+        AnimatedVisibility(
+            visible = content.isNotBlank(),
+            enter = fadeIn() + expandVertically(animationSpec = spring()),
+            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
+        ) {
             MangaNotesDisplay(
                 content = content,
                 modifier = modifier.fillMaxWidth(),
             )
+        }
 
-            AnimatedVisibility(
-                visible = expanded,
-                enter = fadeIn(animationSpec = spring()) + expandVertically(animationSpec = spring()),
-                exit = fadeOut(animationSpec = spring()) + shrinkVertically(animationSpec = spring()),
+        AnimatedVisibility(
+            visible = expanded && content.isNotBlank(),
+            enter = fadeIn() + expandVertically(animationSpec = spring()),
+            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
+        ) {
+            Button(
+                onClick = onClickNotes,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ),
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
             ) {
-                Button(
-                    onClick = onClickNotes,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.EditNote,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(16.dp),
-                        )
-                        Text(
-                            stringResource(MR.strings.action_edit_notes),
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.EditNote,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(16.dp),
+                    )
+                    Text(
+                        stringResource(MR.strings.action_edit_notes),
+                    )
                 }
             }
+        }
 
+        AnimatedVisibility(
+            visible = content.isNotBlank(),
+            enter = fadeIn() + expandVertically(animationSpec = spring()),
+            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
+        ) {
             Column(
                 modifier = Modifier
                     .animateContentSize(
