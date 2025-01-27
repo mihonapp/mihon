@@ -34,7 +34,7 @@ class DeepLinkScreenModel(
 
     init {
         screenModelScope.launchIO {
-            val source = sourceManager.getCatalogueSources()
+            val source = sourceManager.getSources()
                 .filterIsInstance<ResolvableSource>()
                 .firstOrNull { it.getUriType(query) != UriType.Unknown }
 
