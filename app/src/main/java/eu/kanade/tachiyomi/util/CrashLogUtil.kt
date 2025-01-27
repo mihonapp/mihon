@@ -29,7 +29,7 @@ class CrashLogUtil(
             getExtensionsInfo()?.let { file.appendText("$it\n\n") }
             exception?.let { file.appendText("$it\n\n") }
 
-            Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
+            Runtime.getRuntime().exec("logcat *:E -d -v year -v zone -f ${file.absolutePath}").waitFor()
 
             val uri = file.getUriCompat(context)
             context.startActivity(uri.toShareIntent(context, "text/plain"))
