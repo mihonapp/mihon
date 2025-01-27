@@ -15,8 +15,10 @@ fun MangaNotesDisplay(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val richTextState = rememberRichTextState()
-    LaunchedEffect(Unit) {
+    LaunchedEffect(content) {
         richTextState.setMarkdown(markdown = content)
+    }
+    LaunchedEffect(Unit) {
         richTextState.config.listIndent = 10
     }
     LaunchedEffect(primaryColor) {

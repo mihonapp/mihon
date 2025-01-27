@@ -41,7 +41,7 @@ data class BackupManga(
     // Mihon values start here
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
     @ProtoNumber(109) var version: Long = 0,
-    @ProtoNumber(110) var notes: String? = null,
+    @ProtoNumber(110) var notes: String = "",
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(

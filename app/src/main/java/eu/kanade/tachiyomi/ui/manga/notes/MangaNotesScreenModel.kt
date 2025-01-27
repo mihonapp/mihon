@@ -11,33 +11,16 @@ import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
 class MangaNotesScreenModel(
-    val manga: Manga,
+    private val manga: Manga,
     private val setMangaNotes: SetMangaNotes = Injekt.get(),
-) : StateScreenModel<MangaNotesScreenState>(MangaNotesScreenState.Loading) {
-
-    private val successState: MangaNotesScreenState.Success?
-        get() = state.value as? MangaNotesScreenState.Success
-
-    init {
-        mutableState.update {
-            MangaNotesScreenState.Success(
-                manga = manga,
-                notes = manga.notes,
-            )
-        }
-    }
+) : StateScreenModel<MangaNotesScreenState>(MangaNotesScreenState(manga, manga.notes)) {
 
     fun saveText(content: String) {
         // don't save what isn't modified
-        if (content == successState?.notes) return
+        if (content == state.value.notes) return
 
         mutableState.update {
-            when (it) {
-                MangaNotesScreenState.Loading -> it
-                is MangaNotesScreenState.Success -> {
-                    it.copy(notes = content)
-                }
-            }
+            it.copy(notes = content)
         }
 
         screenModelScope.launchNonCancellable {
@@ -46,14 +29,8 @@ class MangaNotesScreenModel(
     }
 }
 
-sealed interface MangaNotesScreenState {
-
-    @Immutable
-    data object Loading : MangaNotesScreenState
-
-    @Immutable
-    data class Success(
-        val manga: Manga,
-        val notes: String?,
-    ) : MangaNotesScreenState
-}
+@Immutable
+data class MangaNotesScreenState(
+    val manga: Manga,
+    val notes: String,
+)

@@ -9,7 +9,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import eu.kanade.presentation.manga.MangaNotesScreen
 import eu.kanade.presentation.util.Screen
 import tachiyomi.domain.manga.model.Manga
-import tachiyomi.presentation.core.screens.LoadingScreen
 
 class MangaNotesScreen(
     private val manga: Manga,
@@ -25,15 +24,8 @@ class MangaNotesScreen(
         }
         val state by screenModel.state.collectAsState()
 
-        if (state is MangaNotesScreenState.Loading) {
-            LoadingScreen()
-            return
-        }
-
-        val successState = state as MangaNotesScreenState.Success
-
         MangaNotesScreen(
-            state = successState,
+            state = state,
             navigateUp = navigator::pop,
             onSave = { screenModel.saveText(it) },
         )

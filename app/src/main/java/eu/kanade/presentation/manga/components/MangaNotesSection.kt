@@ -34,7 +34,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MangaNotesSection(
-    content: String?,
+    content: String,
     expanded: Boolean,
     onClickNotes: () -> Unit,
     modifier: Modifier = Modifier,
@@ -43,7 +43,7 @@ fun MangaNotesSection(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (!content.isNullOrBlank()) {
+        if (content.isNotBlank()) {
             MangaNotesDisplay(
                 content = content,
                 modifier = modifier.fillMaxWidth(),

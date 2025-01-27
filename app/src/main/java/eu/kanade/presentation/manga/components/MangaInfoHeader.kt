@@ -236,7 +236,7 @@ fun ExpandableMangaDescription(
     defaultExpandState: Boolean,
     description: String?,
     tagsProvider: () -> List<String>?,
-    noteContent: String?,
+    noteContent: String,
     onTagSearch: (String) -> Unit,
     onCopyTagToClipboard: (tag: String) -> Unit,
     onClickNotes: () -> Unit,
@@ -563,7 +563,7 @@ private fun ColumnScope.MangaContentInfo(
 private fun MangaSummary(
     expandedDescription: String,
     shrunkDescription: String,
-    noteContent: String?,
+    noteContent: String,
     expanded: Boolean,
     onNotesEditClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -579,7 +579,7 @@ private fun MangaSummary(
                 Text(
                     // Shows at least 3 lines if no notes
                     // when there are notes show 6
-                    text = if (noteContent.isNullOrBlank()) "\n\n" else "\n\n\n\n\n",
+                    text = if (noteContent.isBlank()) "\n\n" else "\n\n\n\n\n",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             },
