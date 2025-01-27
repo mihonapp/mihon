@@ -6,6 +6,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastMap
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -25,6 +27,9 @@ import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.util.removeCovers
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -34,10 +39,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.core.common.preference.mapAsCheckboxState
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.core.common.util.lang.launchNonCancellable
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.interactor.SetMangaCategories
 import tachiyomi.domain.category.model.Category
@@ -222,7 +227,7 @@ class BrowseSourceScreenModel(
      * @param manga the manga to update.
      */
     fun changeMangaFavorite(manga: Manga) {
-        screenModelScope.launch {
+        screenModelScope.launchIO {
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
@@ -243,7 +248,7 @@ class BrowseSourceScreenModel(
     }
 
     fun addFavorite(manga: Manga) {
-        screenModelScope.launch {
+        screenModelScope.launchIO {
             val categories = getCategories()
             val defaultCategoryId = libraryPreferences.defaultCategory().get()
             val defaultCategory = categories.find { it.id == defaultCategoryId.toLong() }
@@ -346,6 +351,14 @@ class BrowseSourceScreenModel(
             val initialSelection: ImmutableList<CheckboxState.State<Category>>,
         ) : Dialog
         data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
+
+        data class ChangeMangaListCategory(
+            val mangaList: List<Manga>,
+            val initialSelection: ImmutableList<CheckboxState<Category>>,
+        ) : Dialog
+        data class ConfirmMangaList(
+            val mangaList: List<Manga>,
+        ) : Dialog
     }
 
     @Immutable
@@ -354,7 +367,133 @@ class BrowseSourceScreenModel(
         val filters: FilterList = FilterList(),
         val toolbarQuery: String? = null,
         val dialog: Dialog? = null,
+        val selection: PersistentList<Manga> = persistentListOf(),
+        val selectionMode: Boolean = false,
     ) {
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
     }
+
+    fun toggleSelectionMode() {
+        mutableState.update { it.copy(selectionMode = !it.selectionMode) }
+        if (!mutableState.value.selectionMode) {
+            clearSelection()
+        }
+    }
+
+    fun clearSelection() {
+        mutableState.update { it.copy(selection = persistentListOf()) }
+    }
+
+    fun minusSelection(mangaList: List<Manga>) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                list.removeAll(mangaList)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun toggleSelection(manga: Manga) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                if (list.fastAny { it.id == manga.id }) {
+                    list.removeAll { it.id == manga.id }
+                } else {
+                    list.add(manga)
+                }
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun toggleRangeSelection(manga: Manga, items: List<Manga>) {
+        mutableState.update { state ->
+            val newSelection = state.selection.mutate { list ->
+                val lastSelected = list.lastOrNull()
+
+                val lastMangaIndex = items.indexOf(lastSelected)
+                val curMangaIndex = items.indexOf(manga)
+
+                if (lastMangaIndex == -1 || curMangaIndex == -1) {
+                    return@mutate
+                }
+
+                val selectedIds = list.fastMap { it.id }
+                val selectionRange = when {
+                    lastMangaIndex < curMangaIndex -> IntRange(lastMangaIndex, curMangaIndex)
+                    curMangaIndex < lastMangaIndex -> IntRange(curMangaIndex, lastMangaIndex)
+                    // We shouldn't reach this point
+                    else                           -> return@mutate
+                }
+
+                val newSelections = selectionRange.mapNotNull { index ->
+                    items[index].takeUnless { it.id in selectedIds }
+                }
+                list.addAll(newSelections)
+            }
+            state.copy(selection = newSelection)
+        }
+    }
+
+    fun openConfirmMangaList() {
+        screenModelScope.launchIO {
+            val mangaList = state.value.selection
+            if (mangaList.isNotEmpty()) {
+                if (mangaList.fastAny { getDuplicateLibraryManga(it) != null }) {
+                    setDialog(Dialog.ConfirmMangaList(mangaList))
+                } else {
+                    openChangeCategoryDialog()
+                }
+            }
+        }
+    }
+
+    fun openChangeCategoryDialog() {
+        screenModelScope.launchIO {
+            val mangaList = state.value.selection
+            val categories = getCategories()
+            val common = getCommonCategories(mangaList)
+            // Get indexes of the mix categories to preselect.
+            val mix = getMixCategories(mangaList)
+            val preselected = categories
+                .map {
+                    when (it) {
+                        in common -> CheckboxState.State.Checked(it)
+                        in mix    -> CheckboxState.TriState.Exclude(it)
+                        else      -> CheckboxState.State.None(it)
+                    }
+                }
+                .toImmutableList()
+            mutableState.update { it.copy(dialog = Dialog.ChangeMangaListCategory(mangaList, preselected)) }
+        }
+    }
+
+    private suspend fun getCommonCategories(mangas: List<Manga>): Collection<Category> {
+        if (mangas.isEmpty()) return emptyList()
+        return mangas
+            .map { getCategories.await(it.id).toSet() }
+            .reduce { set1, set2 -> set1.intersect(set2) }
+    }
+
+    private suspend fun getMixCategories(mangas: List<Manga>): Collection<Category> {
+        if (mangas.isEmpty()) return emptyList()
+        val mangaCategories = mangas.map { getCategories.await(it.id).toSet() }
+        val common = mangaCategories.reduce { set1, set2 -> set1.intersect(set2) }
+        return mangaCategories.flatten().distinct().subtract(common)
+    }
+
+    fun setMangaListCategories(mangaList: List<Manga>, addCategories: List<Long>, removeCategories: List<Long>) {
+        screenModelScope.launchNonCancellable {
+            mangaList.forEach { manga ->
+                val categoryIds = getCategories.await(manga.id)
+                    .map { it.id }
+                    .subtract(removeCategories.toSet())
+                    .plus(addCategories)
+                    .toList()
+
+                setMangaCategories.await(manga.id, categoryIds)
+            }
+        }
+    }
+
 }

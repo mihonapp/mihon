@@ -973,4 +973,9 @@
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="exception_offline">No Internet connection</string>
     <string name="exception_unknown_host">Couldn\'t reach %s</string>
+
+    <string name="exit_multiple_selection">Exit selection mode</string>
+    <string name="enter_multiple_selection">Enter selection mode</string>
+    <string name="exclude_duplicate_manga">Exclude Duplicate</string>
+
 </resources>
