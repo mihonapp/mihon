@@ -13,6 +13,8 @@ import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.lang.withUIContext
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.time.OffsetDateTime
+import java.time.ZoneId
 
 class CrashLogUtil(
     private val context: Context,
@@ -27,7 +29,7 @@ class CrashLogUtil(
             getExtensionsInfo()?.let { file.appendText("$it\n\n") }
             exception?.let { file.appendText("$it\n\n") }
 
-            Runtime.getRuntime().exec("logcat *:E -d -f ${file.absolutePath}").waitFor()
+            Runtime.getRuntime().exec("logcat *:E -d -v year -v zone -f ${file.absolutePath}").waitFor()
 
             val uri = file.getUriCompat(context)
             context.startActivity(uri.toShareIntent(context, "text/plain"))
@@ -45,6 +47,7 @@ class CrashLogUtil(
             Device name: ${Build.DEVICE} (${Build.PRODUCT})
             Device model: ${Build.MODEL}
             WebView: ${WebViewUtil.getVersion(context)}
+            Current time: ${OffsetDateTime.now(ZoneId.systemDefault())}
         """.trimIndent()
     }
 
