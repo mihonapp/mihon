@@ -978,4 +978,29 @@
     <string name="enter_multiple_selection">Enter selection mode</string>
     <string name="exclude_duplicate_manga">Exclude Duplicate</string>
 
+    <string name="block_rule_type_title_regex">Title regex</string>
+    <string name="block_rule_type_title_contain">Title contain</string>
+    <string name="block_rule_type_title_starts_with">Title starts with</string>
+    <string name="block_rule_type_title_ends_with">Title ends with</string>
+    <string name="block_rule_type_title_equals">Title equals</string>
+    <string name="block_rule_type_author_equals">Author equals</string>
+    <string name="block_rule_type_author_contains">Author contains</string>
+    <string name="block_rule_type_description_regex">Description regex</string>
+    <string name="block_rule_type_description_contains">Description contains</string>
+
+    <string name="block_rules">Block Rules</string>
+    <string name="block_rule_add_block_rule">Add Block Rule</string>
+    <string name="block_rule_edit_block_rule">Edit Block Rule</string>
+    <string name="block_rule_manage">Manage block rules</string>
+    <string name="block_rule_already_exist">Block rule already exist</string>
+    <string name="block_rule_cannot_be_empty">Can not be empty</string>
+    <string name="block_rule_invalid_regex">Invalid regex</string>
+    <string name="block_rule_name">Name</string>
+    <string name="block_rule_type">Type</string>
+    <string name="block_rule_rule">Rule</string>
+    <string name="block_rule_show">Block by</string>
+    <string name="block_rule_confirm_delete">Confirm to delete the block rule?</string>
+    <string name="block_rule_sort">Sort block rules</string>
+    <string name="block_rule_confirm_sort_alphabetically">Would you like to sort the block rules alphabetically?</string>
+    <string name="block_rule_empty_screen">You have no block rules. Tap the plus button to create one.</string>
 </resources>

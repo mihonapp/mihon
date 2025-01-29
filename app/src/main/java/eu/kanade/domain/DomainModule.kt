@@ -36,6 +36,7 @@ import mihon.domain.extensionrepo.interactor.UpdateExtensionRepo
 import mihon.domain.extensionrepo.repository.ExtensionRepoRepository
 import mihon.domain.extensionrepo.service.ExtensionRepoService
 import mihon.domain.upcoming.interactor.GetUpcomingManga
+import tachiyomi.data.blockrule.BlockruleRepositoryImpl
 import tachiyomi.data.category.CategoryRepositoryImpl
 import tachiyomi.data.chapter.ChapterRepositoryImpl
 import tachiyomi.data.history.HistoryRepositoryImpl
@@ -45,6 +46,13 @@ import tachiyomi.data.source.SourceRepositoryImpl
 import tachiyomi.data.source.StubSourceRepositoryImpl
 import tachiyomi.data.track.TrackRepositoryImpl
 import tachiyomi.data.updates.UpdatesRepositoryImpl
+import tachiyomi.domain.blockrule.interactor.CreateBlockrule
+import tachiyomi.domain.blockrule.interactor.DeleteBlockrule
+import tachiyomi.domain.blockrule.interactor.GetBlockrules
+import tachiyomi.domain.blockrule.interactor.EditBlockrule
+import tachiyomi.domain.blockrule.interactor.ResortBlockrule
+import tachiyomi.domain.blockrule.interactor.UpdateBlockrule
+import tachiyomi.domain.blockrule.repository.BlockruleRepository
 import tachiyomi.domain.category.interactor.CreateCategoryWithName
 import tachiyomi.domain.category.interactor.DeleteCategory
 import tachiyomi.domain.category.interactor.GetCategories
@@ -102,6 +110,14 @@ import uy.kohesive.injekt.api.get
 class DomainModule : InjektModule {
 
     override fun InjektRegistrar.registerInjectables() {
+        addSingletonFactory<BlockruleRepository> { BlockruleRepositoryImpl(get()) }
+        addFactory { CreateBlockrule(get()) }
+        addFactory { DeleteBlockrule(get()) }
+        addFactory { GetBlockrules(get()) }
+        addFactory { EditBlockrule(get()) }
+        addFactory { ResortBlockrule(get()) }
+        addFactory { UpdateBlockrule(get()) }
+
         addSingletonFactory<CategoryRepository> { CategoryRepositoryImpl(get()) }
         addFactory { GetCategories(get()) }
         addFactory { ResetCategoryFlags(get(), get()) }

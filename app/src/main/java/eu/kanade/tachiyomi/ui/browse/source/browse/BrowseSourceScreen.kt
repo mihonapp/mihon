@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -33,8 +36,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
@@ -59,6 +64,8 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
+import eu.kanade.tachiyomi.ui.browse.source.blockrule.BlockruleScreen
+import eu.kanade.tachiyomi.ui.browse.source.blockrule.components.toShowName
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -150,6 +157,7 @@ data class BrowseSourceScreen(
                         onSearch = screenModel::search,
                         onSelectClick = screenModel::toggleSelectionMode,
                         inSelection = state.selectionMode,
+                        onBlockruleClick = { navigator.push( BlockruleScreen() )}
                     )
 
                     androidx.compose.animation.AnimatedVisibility(
@@ -217,6 +225,44 @@ data class BrowseSourceScreen(
                                         Text(text = stringResource(MR.strings.action_filter))
                                     },
                                 )
+                            }
+                            if (state.blockList.isNotEmpty()){
+                                var expand by remember { mutableStateOf(false) }
+                                AssistChip(
+                                    onClick = {expand = !expand},
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Block,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = state.blockList.size.toString())
+                                    },
+                                )
+                                DropdownMenu(
+                                    expanded = expand,
+                                    onDismissRequest = { expand = false },
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+                                ) {
+                                    state.blockList.forEach { (manga, blockrule) ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                Column {
+                                                    Text(text = manga.title + " : " + manga.author)
+                                                    Text(text = stringResource(MR.strings.block_rule_show)+ " " + blockrule.name, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
+                                                    Text(text = stringResource(MR.strings.block_rule_type)+": "+ blockrule.type.toShowName() + "   "+stringResource(MR.strings.block_rule_rule)+": " + blockrule.rule, maxLines = 1, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
+                                                    HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.padding.small))
+                                                }
+                                            },
+                                            onClick = {
+                                                expand = false
+                                                navigator.push((MangaScreen(manga.id, true)))
+                                            },
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
