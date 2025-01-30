@@ -25,11 +25,7 @@ class MangaNotesScreen(
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val screenModel = rememberScreenModel {
-            Model(
-                manga = manga,
-            )
-        }
+        val screenModel = rememberScreenModel { Model(manga) }
         val state by screenModel.state.collectAsState()
 
         MangaNotesScreen(
