@@ -67,6 +67,7 @@ object DeviceUtil {
         "com.hihonor.android.internal.app",
         "com.huawei.android.internal.app",
         "com.zui.resolver",
+        "com.transsion.resolver",
     )
 
     /**
