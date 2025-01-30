@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
-import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreenState
+import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
@@ -66,7 +66,7 @@ private fun RichTextState.render(): String {
 
 @Composable
 fun MangaNotesTextArea(
-    state: MangaNotesScreenState,
+    state: MangaNotesScreen.State,
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
