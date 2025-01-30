@@ -45,7 +45,6 @@ class MangaNotesScreen(
     ) : StateScreenModel<State>(State(manga, manga.notes)) {
 
         fun saveText(content: String) {
-            // don't save what isn't modified
             if (content == state.value.notes) return
 
             mutableState.update {
