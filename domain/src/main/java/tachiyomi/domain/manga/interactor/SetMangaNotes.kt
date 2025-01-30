@@ -8,7 +8,7 @@ class SetMangaNotes(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend fun awaitSetNotes(manga: Manga, notes: String): Boolean {
+    suspend fun awaitSetNotes(mangaId: Long, notes: String): Boolean {
         return mangaRepository.update(
             MangaUpdate(
                 id = manga.id,
