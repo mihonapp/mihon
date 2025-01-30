@@ -16,26 +16,28 @@ import androidx.compose.ui.draw.alpha
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 
+private val FADE_TIME = tween<Float>(500)
+
 @Composable
 fun MangaNotesDisplay(
     content: String,
     modifier: Modifier,
 ) {
     val alpha = remember { Animatable(1f) }
-    var isFirstUpdate by remember { mutableStateOf(true) }
+    var contentUpdatedOnce by remember { mutableStateOf(false) }
 
-    val primaryColor = MaterialTheme.colorScheme.primary
     val richTextState = rememberRichTextState()
+    val primaryColor = MaterialTheme.colorScheme.primary
     LaunchedEffect(content) {
         richTextState.setMarkdown(markdown = content)
 
-        if (!isFirstUpdate) {
-            alpha.snapTo(targetValue = 0f)
-            alpha.animateTo(targetValue = 1f, animationSpec = tween(500))
+        if (!contentUpdatedOnce) {
+            contentUpdatedOnce = true
             return@LaunchedEffect
         }
 
-        isFirstUpdate = false
+        alpha.snapTo(targetValue = 0f)
+        alpha.animateTo(targetValue = 1f, animationSpec = FADE_TIME)
     }
     LaunchedEffect(Unit) {
         richTextState.config.listIndent = 10
@@ -44,14 +46,11 @@ fun MangaNotesDisplay(
         richTextState.config.linkColor = primaryColor
     }
 
-    // to prevent the content size from animating from first render
-    val richTextModifier = remember(isFirstUpdate) {
-        if (isFirstUpdate) modifier else modifier.animateContentSize()
-    }
-
     SelectionContainer {
         RichText(
-            modifier = richTextModifier
+            modifier = modifier
+                // Only animate size if the notes changes
+                .then(if (contentUpdatedOnce) Modifier.animateContentSize() else Modifier)
                 .alpha(alpha.value),
             style = MaterialTheme.typography.bodyMedium,
             state = richTextState,
