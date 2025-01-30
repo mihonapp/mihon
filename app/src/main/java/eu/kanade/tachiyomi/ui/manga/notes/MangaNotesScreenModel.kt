@@ -24,7 +24,7 @@ class MangaNotesScreenModel(
         }
 
         screenModelScope.launchNonCancellable {
-            setMangaNotes.awaitSetNotes(manga, content)
+            setMangaNotes.awaitSetNotes(manga.id, content)
         }
     }
 }
