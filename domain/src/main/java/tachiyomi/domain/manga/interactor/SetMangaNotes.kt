@@ -10,7 +10,7 @@ class SetMangaNotes(
     suspend fun awaitSetNotes(mangaId: Long, notes: String): Boolean {
         return mangaRepository.update(
             MangaUpdate(
-                id = manga.id,
+                id = mangaId,
                 notes = notes,
             ),
         )
