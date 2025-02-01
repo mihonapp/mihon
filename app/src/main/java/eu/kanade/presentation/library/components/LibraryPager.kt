@@ -43,12 +43,12 @@ fun LibraryPager(
     onLongClickManga: (LibraryManga) -> Unit,
     onClickContinueReading: ((LibraryManga) -> Unit)?,
 ) {
-    var containerHeight by remember { mutableIntStateOf(0)}
+    var containerHeight by remember { mutableIntStateOf(0) }
     HorizontalPager(
         modifier = Modifier
             .fillMaxSize()
-            .onGloballyPositioned {
-                    layoutCoordinates -> containerHeight = layoutCoordinates.size.height
+            .onGloballyPositioned { layoutCoordinates ->
+                containerHeight = layoutCoordinates.size.height
             },
         state = state,
         verticalAlignment = Alignment.Top,
