@@ -269,6 +269,7 @@
     <string name="pref_category_display">Display</string>
     <string name="pref_library_columns">Grid size</string>
     <string name="pref_library_columns_per_row">%d per row</string>
+    <string name="pref_library_rows">List size</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
 
