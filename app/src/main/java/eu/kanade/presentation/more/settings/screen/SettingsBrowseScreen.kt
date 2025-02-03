@@ -21,6 +21,7 @@ import tachiyomi.domain.blockrule.interactor.GetBlockrules
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -41,6 +42,12 @@ object SettingsBrowseScreen : SearchableSettings {
 
         val reposCount by getExtensionRepoCount.subscribe().collectAsState(0)
         val allBlockrules by getBlockrules.subscribe().collectAsState(initial = emptyList())
+
+        val prefetchPagesPref = sourcePreferences.prefetchPages()
+        val prefetchPages by prefetchPagesPref.collectAsState()
+
+        val pageItemsPref = sourcePreferences.pageItems()
+        val pageItems by pageItemsPref.collectAsState()
 
         return listOf(
             Preference.PreferenceGroup(
@@ -65,6 +72,30 @@ object SettingsBrowseScreen : SearchableSettings {
                         onClick = {
                             navigator.push(ExtensionReposScreen())
                         },
+                    ),
+                    Preference.PreferenceItem.SliderPreference(
+                        value = prefetchPages,
+                        min = 1,
+                        max = 10,
+                        title = "预读取页",//i18n
+                        subtitle = "页数 $prefetchPages",
+                        onValueChanged = {
+                            prefetchPagesPref.set(it)
+                            true
+                        },
+                        enabled = true,
+                    ),
+                    Preference.PreferenceItem.SliderPreference(
+                        value = pageItems,
+                        min = 1,
+                        max = 10,
+                        title = "每页大小",//i18n
+                        subtitle = "数量 $pageItems",
+                        onValueChanged = {
+                            pageItemsPref.set(it)
+                            true
+                        },
+                        enabled = true,
                     ),
                 ),
             ),

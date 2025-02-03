@@ -1,11 +1,13 @@
 package eu.kanade.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.presentation.theme.colorscheme.BaseColorScheme
@@ -51,9 +53,17 @@ private fun BaseTachiyomiTheme(
     isAmoled: Boolean,
     content: @Composable () -> Unit,
 ) {
+    val uiPreferences = Injekt.get<UiPreferences>()
     MaterialTheme(
         colorScheme = getThemeColorScheme(appTheme, isAmoled),
         content = content,
+        shapes = MaterialTheme.shapes.copy(
+            extraSmall = RoundedCornerShape(uiPreferences.cornerES().get().dp),
+            small      = RoundedCornerShape(uiPreferences.cornerS().get().dp),
+            medium     = RoundedCornerShape(uiPreferences.cornerM().get().dp),
+            large      = RoundedCornerShape(uiPreferences.cornerL().get().dp),
+            extraLarge = RoundedCornerShape(uiPreferences.cornerEL().get().dp),
+        ),
     )
 }
 

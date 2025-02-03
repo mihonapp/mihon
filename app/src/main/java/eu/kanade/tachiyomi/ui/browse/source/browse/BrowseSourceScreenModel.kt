@@ -82,10 +82,12 @@ class BrowseSourceScreenModel(
     private val updateManga: UpdateManga = Injekt.get(),
     private val addTracks: AddTracks = Injekt.get(),
     private val getIncognitoState: GetIncognitoState = Injekt.get(),
-    private val getBlockrules : GetBlockrules = Injekt.get(),
+    private val getBlockrules: GetBlockrules = Injekt.get(),
 ) : StateScreenModel<BrowseSourceScreenModel.State>(State(Listing.valueOf(listingQuery))) {
 
     var displayMode by sourcePreferences.sourceDisplayMode().asState(screenModelScope)
+    private val prefetchPages = sourcePreferences.prefetchPages().get()
+    private val pageItems = sourcePreferences.pageItems().get()
 
     val source = sourceManager.getOrStub(sourceId)
 
@@ -126,7 +128,13 @@ class BrowseSourceScreenModel(
     val mangaPagerFlowFlow = state.map { it.listing }
         .distinctUntilChanged()
         .map { listing ->
-            Pager(PagingConfig(pageSize = 25)) {
+            Pager(
+                PagingConfig(
+                    pageSize = pageItems,
+                    prefetchDistance = pageItems * prefetchPages,
+                ),
+                initialKey = 1,
+            ) {
                 getRemoteManga.subscribe(sourceId, listing.query ?: "", listing.filters)
             }.flow.map { pagingData ->
                 pagingData.map {
@@ -229,7 +237,7 @@ class BrowseSourceScreenModel(
                         when (filter) {
                             is SourceModelFilter.TriState -> filter.state = 1
                             is SourceModelFilter.CheckBox -> filter.state = true
-                            else -> {}
+                            else                          -> {}
                         }
                         genreExists = true
                         break@filter
@@ -271,7 +279,7 @@ class BrowseSourceScreenModel(
             var new = manga.copy(
                 favorite = !manga.favorite,
                 dateAdded = when (manga.favorite) {
-                    true -> 0
+                    true  -> 0
                     false -> Instant.now().toEpochMilli()
                 },
             )
@@ -295,7 +303,7 @@ class BrowseSourceScreenModel(
 
             when {
                 // Default category set
-                defaultCategory != null -> {
+                defaultCategory != null                        -> {
                     moveMangaToCategories(manga, defaultCategory)
 
                     changeMangaFavorite(manga)
@@ -309,7 +317,7 @@ class BrowseSourceScreenModel(
                 }
 
                 // Choose a category
-                else -> {
+                else                                           -> {
                     val preselectedIds = getCategories.await(manga.id).map { it.id }
                     setDialog(
                         Dialog.ChangeMangaCategory(
@@ -375,8 +383,8 @@ class BrowseSourceScreenModel(
             fun valueOf(query: String?): Listing {
                 return when (query) {
                     GetRemoteManga.QUERY_POPULAR -> Popular
-                    GetRemoteManga.QUERY_LATEST -> Latest
-                    else -> Search(query = query, filters = FilterList()) // filters are filled in later
+                    GetRemoteManga.QUERY_LATEST  -> Latest
+                    else                         -> Search(query = query, filters = FilterList()) // filters are filled in later
                 }
             }
         }
@@ -390,12 +398,14 @@ class BrowseSourceScreenModel(
             val manga: Manga,
             val initialSelection: ImmutableList<CheckboxState.State<Category>>,
         ) : Dialog
+
         data class Migrate(val newManga: Manga, val oldManga: Manga) : Dialog
 
         data class ChangeMangaListCategory(
             val mangaList: List<Manga>,
             val initialSelection: ImmutableList<CheckboxState<Category>>,
         ) : Dialog
+
         data class ConfirmMangaList(
             val mangaList: List<Manga>,
         ) : Dialog
@@ -409,7 +419,7 @@ class BrowseSourceScreenModel(
         val dialog: Dialog? = null,
         val selection: PersistentList<Manga> = persistentListOf(),
         val selectionMode: Boolean = false,
-        val blockList: PersistentMap<Manga,Blockrule> = persistentMapOf(),
+        val blockList: PersistentMap<Manga, Blockrule> = persistentMapOf(),
     ) {
         val isUserQuery get() = listing is Listing.Search && !listing.query.isNullOrEmpty()
     }

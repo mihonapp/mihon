@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.browse.source.browse
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -8,10 +9,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
@@ -40,11 +46,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFilter
 import androidx.compose.ui.util.fastMap
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -76,6 +84,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
+import tachiyomi.domain.manga.model.asMangaCover
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
@@ -110,6 +119,10 @@ data class BrowseSourceScreen(
                 state.selectionMode                              -> screenModel.toggleSelectionMode()
                 else                                             -> navigator.pop()
             }
+        }
+
+        BackHandler {
+            navigateUp()
         }
 
         if (screenModel.source is StubSource) {
@@ -157,7 +170,7 @@ data class BrowseSourceScreen(
                         onSearch = screenModel::search,
                         onSelectClick = screenModel::toggleSelectionMode,
                         inSelection = state.selectionMode,
-                        onBlockruleClick = { navigator.push( BlockruleScreen() )}
+                        onBlockruleClick = { navigator.push(BlockruleScreen()) },
                     )
 
                     androidx.compose.animation.AnimatedVisibility(
@@ -226,10 +239,10 @@ data class BrowseSourceScreen(
                                     },
                                 )
                             }
-                            if (state.blockList.isNotEmpty()){
+                            if (state.blockList.isNotEmpty()) {
                                 var expand by remember { mutableStateOf(false) }
                                 AssistChip(
-                                    onClick = {expand = !expand},
+                                    onClick = { expand = !expand },
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Outlined.Block,
@@ -244,16 +257,36 @@ data class BrowseSourceScreen(
                                 DropdownMenu(
                                     expanded = expand,
                                     onDismissRequest = { expand = false },
-                                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+                                    modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),
                                 ) {
                                     state.blockList.forEach { (manga, blockrule) ->
                                         DropdownMenuItem(
                                             text = {
-                                                Column {
-                                                    Text(text = manga.title + " : " + manga.author)
-                                                    Text(text = stringResource(MR.strings.block_rule_show)+ " " + blockrule.name, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
-                                                    Text(text = stringResource(MR.strings.block_rule_type)+": "+ blockrule.type.toShowName() + "   "+stringResource(MR.strings.block_rule_rule)+": " + blockrule.rule, maxLines = 1, modifier = Modifier.padding(start = MaterialTheme.padding.medium))
-                                                    HorizontalDivider(modifier = Modifier.padding(vertical = MaterialTheme.padding.small))
+                                                Row(
+                                                    modifier = Modifier.height(IntrinsicSize.Min),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                ) {
+                                                    eu.kanade.presentation.manga.components.MangaCover.Book(
+                                                        modifier = Modifier
+                                                            .width(50.dp)
+                                                            .padding(end = MaterialTheme.padding.small),
+                                                        data = manga.asMangaCover(),
+                                                    )
+
+                                                    Column(
+                                                        modifier = Modifier
+                                                            .fillMaxHeight()
+                                                            .horizontalScroll(state = rememberScrollState()),
+                                                    ) {
+                                                        Text(text = manga.title + " : " + manga.author)
+                                                        Text(text = stringResource(MR.strings.block_rule_show) + " " + blockrule.name)
+                                                        Text(text = stringResource(MR.strings.block_rule_type) + ": " + blockrule.type.toShowName() + "   " + stringResource(MR.strings.block_rule_rule) + ": " + blockrule.rule)
+                                                        HorizontalDivider(
+                                                            modifier = Modifier
+                                                                .padding(vertical = MaterialTheme.padding.small)
+                                                                .widthIn(max = 300.dp),
+                                                        )
+                                                    }
                                                 }
                                             },
                                             onClick = {
@@ -360,7 +393,7 @@ data class BrowseSourceScreen(
 
         val onDismissRequest = { screenModel.setDialog(null) }
         when (val dialog = state.dialog) {
-            is BrowseSourceScreenModel.Dialog.Filter -> {
+            is BrowseSourceScreenModel.Dialog.Filter                  -> {
                 SourceFilterDialog(
                     onDismissRequest = onDismissRequest,
                     filters = state.filters,
@@ -369,7 +402,8 @@ data class BrowseSourceScreen(
                     onUpdate = screenModel::setFilters,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.AddDuplicateManga -> {
+
+            is BrowseSourceScreenModel.Dialog.AddDuplicateManga       -> {
                 DuplicateMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
@@ -380,7 +414,7 @@ data class BrowseSourceScreen(
                 )
             }
 
-            is BrowseSourceScreenModel.Dialog.Migrate -> {
+            is BrowseSourceScreenModel.Dialog.Migrate                 -> {
                 MigrateDialog(
                     oldManga = dialog.oldManga,
                     newManga = dialog.newManga,
@@ -392,7 +426,8 @@ data class BrowseSourceScreen(
                     },
                 )
             }
-            is BrowseSourceScreenModel.Dialog.RemoveManga -> {
+
+            is BrowseSourceScreenModel.Dialog.RemoveManga             -> {
                 RemoveMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
@@ -401,7 +436,8 @@ data class BrowseSourceScreen(
                     mangaToRemove = dialog.manga,
                 )
             }
-            is BrowseSourceScreenModel.Dialog.ChangeMangaCategory -> {
+
+            is BrowseSourceScreenModel.Dialog.ChangeMangaCategory     -> {
                 ChangeCategoryDialog(
                     initialSelection = dialog.initialSelection,
                     onDismissRequest = onDismissRequest,
@@ -484,7 +520,7 @@ data class BrowseSourceScreen(
                 .collectLatest {
                     when (it) {
                         is SearchType.Genre -> screenModel.searchGenre(it.txt)
-                        is SearchType.Text -> screenModel.search(it.txt)
+                        is SearchType.Text  -> screenModel.search(it.txt)
                     }
                 }
         }

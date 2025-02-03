@@ -31,10 +31,12 @@ abstract class SourcePagingSource(
     protected val source: CatalogueSource,
 ) : SourcePagingSourceType() {
 
+    private val initialKey = 1L
+
     abstract suspend fun requestNextPage(currentPage: Int): MangasPage
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, SManga> {
-        val page = params.key ?: 1
+        val page = params.key ?: initialKey
 
         val mangasPage = try {
             withIOContext {
@@ -48,7 +50,7 @@ abstract class SourcePagingSource(
 
         return LoadResult.Page(
             data = mangasPage.mangas,
-            prevKey = null,
+            prevKey = if (page == initialKey) null else page - 1,
             nextKey = if (mangasPage.hasNextPage) page + 1 else null,
         )
     }
