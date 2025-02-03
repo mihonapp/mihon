@@ -21,12 +21,13 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
-        val currAuth = oauth ?: throw Exception("Not authenticated with Bangumi")
+        var currAuth: BGMOAuth = oauth ?: throw Exception("Not authenticated with Bangumi")
 
         if (currAuth.isExpired()) {
             val response = chain.proceed(BangumiApi.refreshTokenRequest(currAuth.refreshToken!!))
             if (response.isSuccessful) {
-                newAuth(json.decodeFromString<BGMOAuth>(response.body.string()))
+                currAuth = json.decodeFromString<BGMOAuth>(response.body.string())
+                newAuth(currAuth)
             } else {
                 response.close()
             }
