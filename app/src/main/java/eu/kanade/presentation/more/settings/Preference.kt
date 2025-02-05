@@ -49,8 +49,9 @@ sealed class Preference {
          */
         data class SliderPreference(
             val value: Int,
-            val min: Int = 0,
             val max: Int,
+            val min: Int = 0,
+            val steps: Int = 0,
             override val title: String = "",
             override val subtitle: String? = null,
             override val icon: ImageVector? = null,

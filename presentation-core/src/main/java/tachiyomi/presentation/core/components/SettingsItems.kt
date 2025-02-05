@@ -1,6 +1,7 @@
 package tachiyomi.presentation.core.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -29,7 +30,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,9 +41,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
 import tachiyomi.core.common.preference.Preference
@@ -171,29 +178,36 @@ fun SliderItem(
     onChange: (Int) -> Unit,
     max: Int,
     min: Int = 0,
+    steps: Int = 0,
+    labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 horizontal = SettingsItemsPaddings.Horizontal,
                 vertical = SettingsItemsPaddings.Vertical,
             ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        Column(modifier = Modifier.weight(0.5f)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyMedium,
+                style = labelStyle,
+                modifier = Modifier.weight(1f),
             )
-            Text(valueText)
+            Pill(
+                text = valueText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = pillColor,
+            )
         }
-
         Slider(
-            modifier = Modifier.weight(1.5f),
             value = value,
             onValueChange = f@{
                 if (it == value) return@f
@@ -201,7 +215,26 @@ fun SliderItem(
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             },
             valueRange = min..max,
+            steps = steps,
         )
+    }
+}
+
+@Composable
+@PreviewLightDark
+fun SliderItemPreview() {
+    MaterialTheme(if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
+        Surface {
+            SliderItem(
+                label = "Item per row",
+                valueText = "Auto",
+                value = 0,
+                onChange = {},
+                min = 0,
+                max = 10,
+                steps = 8,
+            )
+        }
     }
 }
 

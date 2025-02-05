@@ -38,6 +38,7 @@
     <string name="label_help">Help</string>
     <string name="label_default">Default</string>
     <string name="label_warning">Warning</string>
+    <string name="label_auto">Auto</string>
 
     <!-- Shared labels -->
     <string name="label_started">Started</string>
@@ -267,8 +268,7 @@
 
       <!-- Library section -->
     <string name="pref_category_display">Display</string>
-    <string name="pref_library_columns">Grid size</string>
-    <string name="pref_library_columns_per_row">%d per row</string>
+    <string name="pref_library_columns">Items per row</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
 
@@ -471,10 +471,10 @@
     <string name="rotation_landscape">Landscape</string>
     <string name="rotation_force_portrait">Locked portrait</string>
     <string name="rotation_force_landscape">Locked landscape</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Red</string>
+    <string name="color_filter_g_value">Green</string>
+    <string name="color_filter_b_value">Blue</string>
+    <string name="color_filter_a_value">Alpha</string>
     <string name="pref_always_show_chapter_transition">Always show chapter transition</string>
     <string name="pref_category_reading_mode">Reading mode</string>
     <string name="pref_category_reading">Reading</string>

@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -76,11 +77,11 @@ internal fun PreferenceItem(
                 )
             }
             is Preference.PreferenceItem.SliderPreference -> {
-                // TODO: use different composable?
                 SliderItem(
                     label = item.title,
                     min = item.min,
                     max = item.max,
+                    steps = item.steps,
                     value = item.value,
                     valueText = item.subtitle.takeUnless { it.isNullOrEmpty() } ?: item.value.toString(),
                     onChange = {
@@ -88,6 +89,7 @@ internal fun PreferenceItem(
                             item.onValueChanged(it)
                         }
                     },
+                    labelStyle = MaterialTheme.typography.titleLarge,
                 )
             }
             is Preference.PreferenceItem.ListPreference<*> -> {
