@@ -10,7 +10,7 @@ sqlite = "2.4.0"
 voyager = "1.0.1"
 spotless = "7.0.2"
 ktlint-core = "1.5.0"
-firebase-bom = "33.8.0"
+firebase-bom = "33.9.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.4"
