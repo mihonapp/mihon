@@ -36,7 +36,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun MangaNotesSection(
     content: String,
     expanded: Boolean,
-    onClickNotes: () -> Unit,
+    onEditNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -60,7 +60,7 @@ fun MangaNotesSection(
             exit = fadeOut() + shrinkVertically(animationSpec = spring()),
         ) {
             Button(
-                onClick = onClickNotes,
+                onClick = onEditNotes,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
@@ -113,7 +113,7 @@ fun MangaNotesSection(
 @Composable
 private fun MangaNotesSectionPreview() {
     MangaNotesSection(
-        onClickNotes = {},
+        onEditNotes = {},
         expanded = true,
         content = "# Hello world\ntest1234 hi there!",
     )

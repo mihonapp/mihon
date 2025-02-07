@@ -236,10 +236,10 @@ fun ExpandableMangaDescription(
     defaultExpandState: Boolean,
     description: String?,
     tagsProvider: () -> List<String>?,
-    noteContent: String,
+    notes: String,
     onTagSearch: (String) -> Unit,
     onCopyTagToClipboard: (tag: String) -> Unit,
-    onClickNotes: () -> Unit,
+    onEditNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -257,8 +257,8 @@ fun ExpandableMangaDescription(
             expandedDescription = desc,
             shrunkDescription = trimmedDescription,
             expanded = expanded,
-            noteContent = noteContent,
-            onNotesEditClicked = onClickNotes,
+            notes = notes,
+            onEditNotesClicked = onEditNotes,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 16.dp)
@@ -563,9 +563,9 @@ private fun ColumnScope.MangaContentInfo(
 private fun MangaSummary(
     expandedDescription: String,
     shrunkDescription: String,
-    noteContent: String,
+    notes: String,
     expanded: Boolean,
-    onNotesEditClicked: () -> Unit,
+    onEditNotesClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val animProgress by animateFloatAsState(
@@ -579,16 +579,16 @@ private fun MangaSummary(
                 Text(
                     // Shows at least 3 lines if no notes
                     // when there are notes show 6
-                    text = if (noteContent.isBlank()) "\n\n" else "\n\n\n\n\n",
+                    text = if (notes.isBlank()) "\n\n" else "\n\n\n\n\n",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             },
             {
                 Column {
                     MangaNotesSection(
-                        content = noteContent,
+                        content = notes,
                         expanded = true,
-                        onClickNotes = onNotesEditClicked,
+                        onEditNotes = onEditNotesClicked,
                     )
                     Text(
                         text = expandedDescription,
@@ -599,9 +599,9 @@ private fun MangaSummary(
             {
                 Column {
                     MangaNotesSection(
-                        content = noteContent,
+                        content = notes,
                         expanded = expanded,
-                        onClickNotes = onNotesEditClicked,
+                        onEditNotes = onEditNotesClicked,
                     )
                     SelectionContainer {
                         Text(
