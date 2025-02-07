@@ -419,10 +419,10 @@ private fun MangaScreenSmallImpl(
                             defaultExpandState = state.isFromSource,
                             description = state.manga.description,
                             tagsProvider = { state.manga.genre },
-                            noteContent = state.manga.notes,
+                            notes = state.manga.notes,
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
-                            onClickNotes = onNotesClicked,
+                            onEditNotes = onNotesClicked,
                         )
                     }
 
@@ -649,10 +649,10 @@ fun MangaScreenLargeImpl(
                             defaultExpandState = true,
                             description = state.manga.description,
                             tagsProvider = { state.manga.genre },
-                            noteContent = state.manga.notes,
+                            notes = state.manga.notes,
                             onTagSearch = onTagSearch,
                             onCopyTagToClipboard = onCopyTagToClipboard,
-                            onClickNotes = onNotesClicked,
+                            onEditNotes = onNotesClicked,
                         )
                     }
                 },
