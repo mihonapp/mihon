@@ -43,11 +43,8 @@ fun MangaNotesScreen(
             state = state,
             onSave = onSave,
             modifier = Modifier
-                .padding(
-                    top = paddingValues.calculateTopPadding() + MaterialTheme.padding.small,
-                    bottom = MaterialTheme.padding.small,
-                )
-                .padding(horizontal = MaterialTheme.padding.small)
+                .padding(all = MaterialTheme.padding.small)
+                .padding(top = paddingValues.calculateTopPadding())
                 .windowInsetsPadding(
                     WindowInsets.navigationBars
                         .only(WindowInsetsSides.Bottom),
