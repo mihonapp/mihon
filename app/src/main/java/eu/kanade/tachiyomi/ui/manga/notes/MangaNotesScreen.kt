@@ -40,7 +40,7 @@ class MangaNotesScreen(
         private val setMangaNotes: SetMangaNotes = Injekt.get(),
     ) : StateScreenModel<State>(State(manga, manga.notes)) {
 
-        fun saveText(content: String) {
+        fun updateNotes(content: String) {
             if (content == state.value.notes) return
 
             mutableState.update {
