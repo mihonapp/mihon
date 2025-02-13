@@ -72,8 +72,7 @@ internal fun MigrateDialog(
 
     if (state.isMigrating) {
         LoadingScreen(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f)),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background.copy(alpha = 0.7f)),
         )
     } else {
         AlertDialog(
@@ -212,7 +211,7 @@ internal class MigrateDialogScreenModel(
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)
         val migrateCustomCover = MigrationFlags.hasCustomCover(flags)
-	    val migrateDownloaded = MigrationFlags.hasMigrateDownloaded(flags)
+        val migrateDownloaded = MigrationFlags.hasMigrateDownloaded(flags)
         val deleteDownloaded = MigrationFlags.hasDeleteDownloaded(flags)
 
         try {
@@ -226,15 +225,13 @@ internal class MigrateDialogScreenModel(
             val prevMangaChapters = getChaptersByMangaId.await(oldManga.id)
             val mangaChapters = getChaptersByMangaId.await(newManga.id)
 
-            val maxChapterRead = prevMangaChapters
-                .filter { it.read }
-                .maxOfOrNull { it.chapterNumber }
+            val maxChapterRead = prevMangaChapters.filter { it.read }.maxOfOrNull { it.chapterNumber }
 
             val updatedMangaChapters = mangaChapters.map { mangaChapter ->
                 var updatedChapter = mangaChapter
                 if (updatedChapter.isRecognizedNumber) {
-                    val prevChapter = prevMangaChapters
-                        .find { it.isRecognizedNumber && it.chapterNumber == updatedChapter.chapterNumber }
+                    val prevChapter =
+                        prevMangaChapters.find { it.isRecognizedNumber && it.chapterNumber == updatedChapter.chapterNumber }
 
                     if (prevChapter != null) {
                         updatedChapter = updatedChapter.copy(
@@ -265,24 +262,21 @@ internal class MigrateDialogScreenModel(
         getTracks.await(oldManga.id).mapNotNull { track ->
             val updatedTrack = track.copy(mangaId = newManga.id)
 
-            val service = enhancedServices
-                .firstOrNull { it.isTrackFrom(updatedTrack, oldManga, oldSource) }
+            val service = enhancedServices.firstOrNull { it.isTrackFrom(updatedTrack, oldManga, oldSource) }
 
             if (service != null) {
                 service.migrateTrack(updatedTrack, newManga, newSource)
             } else {
                 updatedTrack
             }
-        }
-            .takeIf { it.isNotEmpty() }
-            ?.let { insertTrack.awaitAll(it) }
+        }.takeIf { it.isNotEmpty() }?.let { insertTrack.awaitAll(it) }
 
-	    // Delete downloaded
-	    if (migrateDownloaded) {
-		    if (oldSource != null) {
-			    downloadManager.migrateManga(oldManga, oldSource, newManga, newSource)
-		    }
-	    }
+        // Delete downloaded
+        if (migrateDownloaded) {
+            if (oldSource != null) {
+                downloadManager.migrateManga(oldManga, oldSource, newManga, newSource)
+            }
+        }
 
         // Delete downloaded
         if (deleteDownloaded) {

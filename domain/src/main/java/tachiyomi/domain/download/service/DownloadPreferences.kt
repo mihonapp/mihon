@@ -12,7 +12,8 @@ class DownloadPreferences(
     )
 
     fun saveChaptersAsCBZ() = preferenceStore.getBoolean("save_chapter_as_cbz", true)
-	fun saveChaptersCBZInRAM() = preferenceStore.getBoolean("save_chapter_cbz_in_ram", true)
+
+    fun saveChaptersCBZInRAM() = preferenceStore.getBoolean("save_chapter_cbz_in_ram", true)
 
     fun splitTallImages() = preferenceStore.getBoolean("split_tall_images", true)
 
