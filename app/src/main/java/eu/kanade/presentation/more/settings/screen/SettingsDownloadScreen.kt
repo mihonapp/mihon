@@ -46,6 +46,10 @@ object SettingsDownloadScreen : SearchableSettings {
                 pref = downloadPreferences.saveChaptersAsCBZ(),
                 title = stringResource(MR.strings.save_chapter_as_cbz),
             ),
+	        Preference.PreferenceItem.SwitchPreference(
+		        pref = downloadPreferences.saveChaptersCBZInRAM(),
+		        title = stringResource(MR.strings.save_chapter_cbz_in_ram),
+	        ),
             Preference.PreferenceItem.SwitchPreference(
                 pref = downloadPreferences.splitTallImages(),
                 title = stringResource(MR.strings.split_tall_images),

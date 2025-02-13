@@ -16,6 +16,7 @@
     <string name="manga">Library entries</string>
     <string name="chapters">Chapters</string>
     <string name="track">Tracking</string>
+    <string name="migrate_downloaded">Migrate downloaded</string>
     <string name="delete_downloaded">Delete downloaded</string>
     <string name="history">History</string>
     <string name="scanlator">Scanlator</string>
@@ -508,6 +509,7 @@
     <string name="auto_download_while_reading">Auto download while reading</string>
     <string name="download_ahead_info">Only works if the current chapter + the next one are already downloaded.</string>
     <string name="save_chapter_as_cbz">Save as CBZ archive</string>
+    <string name="save_chapter_cbz_in_ram">Download CBZ pages in memory</string>
     <string name="split_tall_images">Split tall images</string>
     <string name="split_tall_images_summary">Improves reader performance</string>
 

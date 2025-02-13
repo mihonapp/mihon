@@ -212,6 +212,7 @@ internal class MigrateDialogScreenModel(
         val migrateChapters = MigrationFlags.hasChapters(flags)
         val migrateCategories = MigrationFlags.hasCategories(flags)
         val migrateCustomCover = MigrationFlags.hasCustomCover(flags)
+	    val migrateDownloaded = MigrationFlags.hasMigrateDownloaded(flags)
         val deleteDownloaded = MigrationFlags.hasDeleteDownloaded(flags)
 
         try {
@@ -275,6 +276,13 @@ internal class MigrateDialogScreenModel(
         }
             .takeIf { it.isNotEmpty() }
             ?.let { insertTrack.awaitAll(it) }
+
+	    // Delete downloaded
+	    if (migrateDownloaded) {
+		    if (oldSource != null) {
+			    downloadManager.migrateManga(oldManga, oldSource, newManga, newSource)
+		    }
+	    }
 
         // Delete downloaded
         if (deleteDownloaded) {
