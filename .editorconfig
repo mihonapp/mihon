@@ -1,5 +1,9 @@
+# prevent user settings outside of the project from propagating into this project
+root = true
+
 [*.{kt,kts}]
 max_line_length = 120
+indent_style = space
 indent_size = 4
 insert_final_newline = true
 ij_kotlin_allow_trailing_comma = true
