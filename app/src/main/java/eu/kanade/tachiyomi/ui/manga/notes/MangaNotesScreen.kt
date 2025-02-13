@@ -13,7 +13,7 @@ import eu.kanade.presentation.manga.MangaNotesScreen
 import eu.kanade.presentation.util.Screen
 import kotlinx.coroutines.flow.update
 import tachiyomi.core.common.util.lang.launchNonCancellable
-import tachiyomi.domain.manga.interactor.SetMangaNotes
+import tachiyomi.domain.manga.interactor.UpdateMangaNotes
 import tachiyomi.domain.manga.model.Manga
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -31,13 +31,13 @@ class MangaNotesScreen(
         MangaNotesScreen(
             state = state,
             navigateUp = navigator::pop,
-            onSave = { screenModel.saveText(it) },
+            onSave = { screenModel.updateNotes(it) },
         )
     }
 
     private class Model(
         private val manga: Manga,
-        private val setMangaNotes: SetMangaNotes = Injekt.get(),
+        private val updateMangaNotes: UpdateMangaNotes = Injekt.get(),
     ) : StateScreenModel<State>(State(manga, manga.notes)) {
 
         fun updateNotes(content: String) {
@@ -48,7 +48,7 @@ class MangaNotesScreen(
             }
 
             screenModelScope.launchNonCancellable {
-                setMangaNotes.awaitSetNotes(manga.id, content)
+                updateMangaNotes.await(manga.id, content)
             }
         }
     }
