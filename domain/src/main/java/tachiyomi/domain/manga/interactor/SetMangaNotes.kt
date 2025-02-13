@@ -3,11 +3,11 @@ package tachiyomi.domain.manga.interactor
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.manga.repository.MangaRepository
 
-class SetMangaNotes(
+class UpdateMangaNotes(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend fun awaitSetNotes(mangaId: Long, notes: String): Boolean {
+    suspend fun await(mangaId: Long, notes: String): Boolean {
         return mangaRepository.update(
             MangaUpdate(
                 id = mangaId,
