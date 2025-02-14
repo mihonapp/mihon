@@ -31,7 +31,7 @@ class MangaNotesScreen(
         MangaNotesScreen(
             state = state,
             navigateUp = navigator::pop,
-            onSave = { screenModel.updateNotes(it) },
+            onSave = screenModel::updateNotes,
         )
     }
 
