@@ -43,7 +43,6 @@ import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.AssistContentScreen
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
 import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
@@ -162,7 +161,7 @@ data class BrowseSourceScreen(
                                 Text(text = stringResource(MR.strings.popular))
                             },
                         )
-                        if ((screenModel.source as CatalogueSource).supportsLatest) {
+                        if (screenModel.source.hasLatestListing) {
                             FilterChip(
                                 selected = state.listing == Listing.Latest,
                                 onClick = {
@@ -182,7 +181,7 @@ data class BrowseSourceScreen(
                                 },
                             )
                         }
-                        if (state.filters.isNotEmpty()) {
+                        if (state.hasFilters) {
                             FilterChip(
                                 selected = state.listing is Listing.Search,
                                 onClick = screenModel::openFilterSheet,

@@ -1,6 +1,5 @@
 package tachiyomi.domain.source.service
 
-import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.coroutines.flow.Flow
@@ -11,15 +10,15 @@ interface SourceManager {
 
     val isInitialized: StateFlow<Boolean>
 
-    val catalogueSources: Flow<List<CatalogueSource>>
+    val sources: Flow<List<Source>>
 
     fun get(sourceKey: Long): Source?
 
     fun getOrStub(sourceKey: Long): Source
 
-    fun getOnlineSources(): List<HttpSource>
-
-    fun getCatalogueSources(): List<CatalogueSource>
+    fun getSources(): List<Source>
 
     fun getStubSources(): List<StubSource>
+
+    fun getOnlineSources(): List<HttpSource>
 }

@@ -1,34 +1,34 @@
 package tachiyomi.data.source
 
 import androidx.paging.PagingState
-import eu.kanade.tachiyomi.source.CatalogueSource
+import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.SManga
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.source.repository.SourcePagingSourceType
 
-class SourceSearchPagingSource(source: CatalogueSource, val query: String, val filters: FilterList) :
+class SourceSearchPagingSource(source: Source, val query: String, val filters: FilterList) :
     SourcePagingSource(source) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.getSearchManga(currentPage, query, filters)
+        return source.getMangaList(query, filters, currentPage)
     }
 }
 
-class SourcePopularPagingSource(source: CatalogueSource) : SourcePagingSource(source) {
+class SourcePopularPagingSource(source: Source) : SourcePagingSource(source) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.getPopularManga(currentPage)
+        return source.getDefaultMangaList(currentPage)
     }
 }
 
-class SourceLatestPagingSource(source: CatalogueSource) : SourcePagingSource(source) {
+class SourceLatestPagingSource(source: Source) : SourcePagingSource(source) {
     override suspend fun requestNextPage(currentPage: Int): MangasPage {
-        return source.getLatestUpdates(currentPage)
+        return source.getLatestMangaList(currentPage)
     }
 }
 
 abstract class SourcePagingSource(
-    protected val source: CatalogueSource,
+    protected val source: Source,
 ) : SourcePagingSourceType() {
 
     abstract suspend fun requestNextPage(currentPage: Int): MangasPage

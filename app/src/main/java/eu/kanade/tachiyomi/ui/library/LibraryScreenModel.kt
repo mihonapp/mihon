@@ -373,7 +373,7 @@ class LibraryScreenModel(
                         unreadCount = libraryManga.unreadCount,
                         isLocal = if (prefs.localBadge) libraryManga.manga.isLocal() else false,
                         sourceLanguage = if (prefs.languageBadge) {
-                            sourceManager.getOrStub(libraryManga.manga.source).lang
+                            sourceManager.getOrStub(libraryManga.manga.source).language
                         } else {
                             ""
                         },

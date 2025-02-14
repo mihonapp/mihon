@@ -13,6 +13,7 @@ import org.jsoup.nodes.Element
  * A simple implementation for sources from a website using Jsoup, an HTML parser.
  */
 @Suppress("unused")
+@Deprecated("Use your own implementation made with Ksoup")
 abstract class ParsedHttpSource : HttpSource() {
 
     /**

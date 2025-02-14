@@ -41,9 +41,7 @@ class AndroidSourceManager(
 
     private val stubSourcesMap = ConcurrentHashMap<Long, StubSource>()
 
-    override val catalogueSources: Flow<List<CatalogueSource>> = sourcesMapFlow.map {
-        it.values.filterIsInstance<CatalogueSource>()
-    }
+    override val sources: Flow<List<Source>> = sourcesMapFlow.map { it.values.toList() }
 
     init {
         scope.launch {
@@ -90,20 +88,20 @@ class AndroidSourceManager(
         }
     }
 
-    override fun getOnlineSources() = sourcesMapFlow.value.values.filterIsInstance<HttpSource>()
-
-    override fun getCatalogueSources() = sourcesMapFlow.value.values.filterIsInstance<CatalogueSource>()
+    override fun getSources(): List<Source> = sourcesMapFlow.value.values.toList()
 
     override fun getStubSources(): List<StubSource> {
         val onlineSourceIds = getOnlineSources().map { it.id }
         return stubSourcesMap.values.filterNot { it.id in onlineSourceIds }
     }
 
+    override fun getOnlineSources() = sourcesMapFlow.value.values.filterIsInstance<HttpSource>()
+
     private fun registerStubSource(source: StubSource) {
         scope.launch {
             val dbSource = sourceRepository.getStubSource(source.id)
             if (dbSource == source) return@launch
-            sourceRepository.upsertStubSource(source.id, source.lang, source.name)
+            sourceRepository.upsertStubSource(source.id, source.language, source.name)
             if (dbSource != null) {
                 downloadManager.renameSource(dbSource, source)
             }
@@ -118,6 +116,6 @@ class AndroidSourceManager(
             registerStubSource(it)
             return it
         }
-        return StubSource(id = id, lang = "", name = "")
+        return StubSource(id = id, name = "", language = "")
     }
 }
