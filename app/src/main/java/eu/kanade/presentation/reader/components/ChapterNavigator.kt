@@ -117,6 +117,7 @@ fun ChapterNavigator(
                                 .padding(horizontal = 8.dp),
                             value = currentPage,
                             valueRange = 1..totalPages,
+                            steps = totalPages - 2,
                             onValueChange = f@{
                                 if (it == currentPage) return@f
                                 onPageIndexChange(it - 1)
