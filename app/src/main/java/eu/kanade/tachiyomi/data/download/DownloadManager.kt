@@ -252,7 +252,7 @@ class DownloadManager(
      * @param newManga the target manga for migration.
      * @param newSource the target source for migration.
      */
-    fun migrateManga(oldManga: Manga, oldSource: Source, newManga: Manga, newSource: Source) {
+    fun migrateManga(oldManga: Manga, oldSource: Source, newManga: Manga, newSource: Source, deleteOrphans: Boolean) {
         launchIO {
             val oldMangaDir = provider.findMangaDir(oldManga.title, oldSource) ?: return@launchIO
             val newMangaDir = provider.getMangaDir(newManga.title, newSource)
@@ -302,6 +302,19 @@ class DownloadManager(
                         cache.removeChapter(oldChapter, oldManga)
                         cache.addChapter(newChapterName, newMangaDir, newManga)
                     }
+                }
+            }
+
+            if (deleteOrphans) {
+                downloader.removeFromQueue(oldManga)
+                oldMangaDir.delete()
+                cache.removeManga(oldManga)
+
+                // Delete source directory if empty
+                val sourceDir = provider.findSourceDir(oldSource)
+                if (sourceDir?.listFiles()?.isEmpty() == true) {
+                    sourceDir.delete()
+                    cache.removeSource(oldSource)
                 }
             }
         }

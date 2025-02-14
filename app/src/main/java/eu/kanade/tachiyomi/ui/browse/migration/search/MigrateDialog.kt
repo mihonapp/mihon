@@ -280,12 +280,10 @@ internal class MigrateDialogScreenModel(
         // Migrate downloaded chapters
         if (migrateDownloaded) {
             if (oldSource != null) {
-                downloadManager.migrateManga(oldManga, oldSource, newManga, newSource)
+                downloadManager.migrateManga(oldManga, oldSource, newManga, newSource, deleteDownloaded)
             }
-        }
-
-        // Delete downloaded
-        if (deleteDownloaded) {
+        } else if (deleteDownloaded) {
+            // Delete downloaded
             if (oldSource != null) {
                 downloadManager.deleteManga(oldManga, oldSource)
             }
