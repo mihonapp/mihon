@@ -11,6 +11,7 @@ import eu.kanade.tachiyomi.core.security.PrivacyPreferences
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.authenticate
 import eu.kanade.tachiyomi.util.system.AuthenticatorUtil.isAuthenticationSupported
+import eu.kanade.tachiyomi.util.system.isFossFlavor
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import tachiyomi.core.common.i18n.stringResource
@@ -31,10 +32,12 @@ object SettingsSecurityScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val securityPreferences = remember { Injekt.get<SecurityPreferences>() }
         val privacyPreferences = remember { Injekt.get<PrivacyPreferences>() }
-        return listOf(
-            getSecurityGroup(securityPreferences),
-            getFirebaseGroup(privacyPreferences),
-        )
+        return buildList {
+            add(getSecurityGroup(securityPreferences))
+            if (!isFossFlavor) {
+                add(getFirebaseGroup(privacyPreferences))
+            }
+        }
     }
 
     @Composable
