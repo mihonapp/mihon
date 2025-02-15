@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS updatesView;
+
 CREATE VIEW updatesView AS
 SELECT
     mangas._id AS mangaId,
@@ -16,23 +18,10 @@ SELECT
     chapters.date_fetch AS datefetch
 FROM mangas JOIN chapters
 ON mangas._id = chapters.manga_id
-LEFT JOIN excluded_scanlators 
+LEFT JOIN excluded_scanlators
 ON mangas._id = excluded_scanlators.manga_id
 AND chapters.scanlator = excluded_scanlators.scanlator
 WHERE favorite = 1
 AND date_fetch > date_added
 AND excluded_scanlators.scanlator IS NULL
 ORDER BY date_fetch DESC;
-
-getRecentUpdates:
-SELECT *
-FROM updatesView
-WHERE dateUpload > :after
-LIMIT :limit;
-
-getUpdatesByReadStatus:
-SELECT *
-FROM updatesView
-WHERE read = :read
-AND dateUpload > :after
-LIMIT :limit;
