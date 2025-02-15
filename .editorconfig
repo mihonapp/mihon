@@ -1,8 +1,28 @@
-[*.{kt,kts}]
-max_line_length = 120
-indent_size = 4
+root = true
+
+[*]
+charset = utf-8
+indent_size = 2
+indent_style = space
 insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.xml]
+indent_size = 4
+
+# noinspection EditorConfigKeyCorrectness
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 120
+
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ij_kotlin_name_count_to_use_star_import = 2147483647
 ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
+
+ktlint_code_style = intellij_idea
+ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_standard_class-signature = disabled
+ktlint_standard_discouraged-comment-location = disabled
+ktlint_standard_function-expression-body = disabled
+ktlint_standard_function-signature = disabled
