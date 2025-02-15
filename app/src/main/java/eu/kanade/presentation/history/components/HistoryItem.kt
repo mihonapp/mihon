@@ -1,13 +1,17 @@
 package eu.kanade.presentation.history.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -28,10 +33,40 @@ import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.util.lang.toTimestampString
 import tachiyomi.domain.history.model.HistoryWithRelations
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.Badge
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 
 private val HistoryItemHeight = 96.dp
+
+@Composable
+internal fun HistoryBadge(enabled: Boolean) {
+    if (enabled) {
+        val slashColor = MaterialTheme.colorScheme.onError // Extract color before Canvas
+
+        Box {
+            // Base Badge Icon
+            Badge(
+                imageVector = Icons.Outlined.CollectionsBookmark,
+                color = MaterialTheme.colorScheme.error,
+                iconColor = MaterialTheme.colorScheme.onError,
+            )
+
+            // Draw Diagonal Slash
+            Canvas(
+                modifier = Modifier.matchParentSize()
+            ) {
+                drawLine(
+                    color = slashColor, // Use extracted color
+                    start = Offset(size.width, 0f),  // Top-right corner
+                    end = Offset(0f, size.height),
+                    strokeWidth = 3f // Adjust thickness
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun HistoryItem(
@@ -39,6 +74,7 @@ fun HistoryItem(
     onClickCover: () -> Unit,
     onClickResume: () -> Unit,
     onClickDelete: () -> Unit,
+    onClickFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -52,6 +88,7 @@ fun HistoryItem(
             modifier = Modifier.fillMaxHeight(),
             data = history.coverData,
             onClick = onClickCover,
+            coverBadgeStart = { HistoryBadge(!history.coverData.isMangaFavorite) }
         )
         Column(
             modifier = Modifier
@@ -82,6 +119,16 @@ fun HistoryItem(
             )
         }
 
+        if (!history.coverData.isMangaFavorite) {
+            IconButton(onClick = onClickFavorite) {
+                Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favorite",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+        }
+
         IconButton(onClick = onClickDelete) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
@@ -105,6 +152,7 @@ private fun HistoryItemPreviews(
                 onClickCover = {},
                 onClickResume = {},
                 onClickDelete = {},
+                onClickFavorite = {},
             )
         }
     }
