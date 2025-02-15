@@ -107,6 +107,14 @@ object SettingsDownloadScreen : SearchableSettings {
         return Preference.PreferenceItem.MultiSelectListPreference(
             pref = downloadPreferences.removeExcludeCategories(),
             title = stringResource(MR.strings.pref_remove_exclude_categories),
+            subtitleProvider = { v, e ->
+                val combined = remember(v, e) {
+                    v.map { e[it] }
+                        .takeIf { it.isNotEmpty() }
+                        ?.joinToString()
+                } ?: stringResource(MR.strings.none)
+                "%s".format(combined)
+            },
             entries = categories()
                 .associate { it.id.toString() to it.visualName }
                 .toImmutableMap(),
