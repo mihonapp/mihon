@@ -117,7 +117,7 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
-                    private = item.track.private.toLocalString()
+                    private = booleanToPrivateTrackingString(item.track.private)
                         .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
                     onPrivateClick = { onPrivateClick(item) }
                         .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
@@ -368,8 +368,8 @@ private fun TrackInfoDialogHomePreviews(
 }
 
 @Composable
-fun Boolean.toLocalString(): String {
-    return if (this) {
+private fun booleanToPrivateTrackingString(value: Boolean): String {
+    return if (value) {
         stringResource(MR.strings.track_private)
     } else {
         stringResource(MR.strings.track_public)
