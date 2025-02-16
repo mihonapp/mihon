@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
@@ -55,6 +56,7 @@ import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.injectLazy
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -68,9 +70,12 @@ fun TrackInfoDialogHome(
     onEndDateEdit: (TrackItem) -> Unit,
     onNewSearch: (TrackItem) -> Unit,
     onOpenInBrowser: (TrackItem) -> Unit,
+    onPrivateClick: (TrackItem) -> Unit,
     onRemoved: (TrackItem) -> Unit,
     onCopyLink: (TrackItem) -> Unit,
 ) {
+    val trackPreferences: TrackPreferences by injectLazy()
+
     Column(
         modifier = Modifier
             .animateContentSize()
@@ -84,6 +89,7 @@ fun TrackInfoDialogHome(
             if (item.track != null) {
                 val supportsScoring = item.tracker.getScoreList().isNotEmpty()
                 val supportsReadingDates = item.tracker.supportsReadingDates
+                val supportsPrivate = item.tracker.supportsPrivateTracking
                 TrackInfoItem(
                     title = item.track.title,
                     tracker = item.tracker,
@@ -111,6 +117,10 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
+                    private = item.track.private.toLocalString()
+                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
+                    onPrivateClick = { onPrivateClick(item) }
+                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
                     onNewSearch = { onNewSearch(item) },
                     onOpenInBrowser = { onOpenInBrowser(item) },
                     onRemoved = { onRemoved(item) },
@@ -140,6 +150,8 @@ private fun TrackInfoItem(
     onStartDateClick: (() -> Unit)?,
     endDate: String?,
     onEndDateClick: (() -> Unit)?,
+    private: String?,
+    onPrivateClick: (() -> Unit)?,
     onNewSearch: () -> Unit,
     onOpenInBrowser: () -> Unit,
     onRemoved: () -> Unit,
@@ -216,22 +228,35 @@ private fun TrackInfoItem(
                     }
                 }
 
-                if (onStartDateClick != null && onEndDateClick != null) {
+                if ((onStartDateClick != null && onEndDateClick != null) || onPrivateClick != null) {
                     HorizontalDivider()
                     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-                        TrackDetailsItem(
-                            modifier = Modifier.weight(1F),
-                            text = startDate,
-                            placeholder = stringResource(MR.strings.track_started_reading_date),
-                            onClick = onStartDateClick,
-                        )
-                        VerticalDivider()
-                        TrackDetailsItem(
-                            modifier = Modifier.weight(1F),
-                            text = endDate,
-                            placeholder = stringResource(MR.strings.track_finished_reading_date),
-                            onClick = onEndDateClick,
-                        )
+                        if (onStartDateClick != null && onEndDateClick != null) {
+                            TrackDetailsItem(
+                                modifier = Modifier.weight(1F),
+                                text = startDate,
+                                placeholder = stringResource(MR.strings.track_started_reading_date),
+                                onClick = onStartDateClick,
+                            )
+                            VerticalDivider()
+                            TrackDetailsItem(
+                                modifier = Modifier.weight(1F),
+                                text = endDate,
+                                placeholder = stringResource(MR.strings.track_finished_reading_date),
+                                onClick = onEndDateClick,
+                            )
+                        }
+                        if ((onStartDateClick != null && onEndDateClick != null) && onPrivateClick != null) {
+                            VerticalDivider()
+                        }
+                        if (onPrivateClick != null) {
+                            TrackDetailsItem(
+                                modifier = Modifier.weight(1F),
+                                text = private,
+                                placeholder = stringResource(MR.strings.track_private),
+                                onClick = onPrivateClick,
+                            )
+                        }
                     }
                 }
             }
@@ -339,5 +364,14 @@ private fun TrackInfoDialogHomePreviews(
         Surface {
             content()
         }
+    }
+}
+
+@Composable
+fun Boolean.toLocalString(): String {
+    return if (this) {
+        stringResource(MR.strings.track_private)
+    } else {
+        stringResource(MR.strings.track_public)
     }
 }

@@ -25,7 +25,9 @@ internal class TrackInfoDialogHomePreviewProvider :
         remoteUrl = "https://example.com",
         startDate = 0L,
         finishDate = 0L,
+        private = false
     )
+    private val privateTrack = aTrack.copy(private = false)
     private val trackItemWithoutTrack = TrackItem(
         track = null,
         tracker = DummyTracker(
@@ -40,6 +42,14 @@ internal class TrackInfoDialogHomePreviewProvider :
             name = "Example Tracker 2",
         ),
     )
+    private val trackItemWithPrivateTrack = TrackItem(
+        track = privateTrack,
+        tracker = DummyTracker(
+            id = 2L,
+            name = "Example Tracker 2",
+        ),
+    )
+
 
     private val trackersWithAndWithoutTrack = @Composable {
         TrackInfoDialogHome(
@@ -57,6 +67,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onOpenInBrowser = {},
             onRemoved = {},
             onCopyLink = {},
+            onPrivateClick = {},
         )
     }
 
@@ -73,6 +84,24 @@ internal class TrackInfoDialogHomePreviewProvider :
             onOpenInBrowser = {},
             onRemoved = {},
             onCopyLink = {},
+            onPrivateClick = {},
+        )
+    }
+
+    private val trackerWithPrivateTracking = @Composable {
+        TrackInfoDialogHome(
+            trackItems = listOf(trackItemWithPrivateTrack),
+            dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
+            onStatusClick = {},
+            onChapterClick = {},
+            onScoreClick = {},
+            onStartDateEdit = {},
+            onEndDateEdit = {},
+            onNewSearch = {},
+            onOpenInBrowser = {},
+            onRemoved = {},
+            onCopyLink = {},
+            onPrivateClick = {},
         )
     }
 
@@ -80,5 +109,6 @@ internal class TrackInfoDialogHomePreviewProvider :
         get() = sequenceOf(
             trackersWithAndWithoutTrack,
             noTrackers,
+            trackerWithPrivateTracking,
         )
 }

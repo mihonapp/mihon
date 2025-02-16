@@ -135,6 +135,10 @@ object SettingsTrackingScreen : SearchableSettings {
                     .associateWith { stringResource(it.titleRes) }
                     .toPersistentMap(),
             ),
+            Preference.PreferenceItem.SwitchPreference(
+                pref = trackPreferences.privateTracking(),
+                title = stringResource(MR.strings.pref_private_tracking),
+            ),
             Preference.PreferenceGroup(
                 title = stringResource(MR.strings.services),
                 preferenceItems = persistentListOf(

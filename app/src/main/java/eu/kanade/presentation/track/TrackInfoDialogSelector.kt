@@ -188,6 +188,29 @@ fun TrackDateSelector(
 }
 
 @Composable
+fun TrackPrivateSelector(
+    selection: Boolean?,
+    onSelectionChange: (Boolean) -> Unit,
+    selections: ImmutableList<String>,
+    onConfirm: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    BaseSelector(
+        title = stringResource(MR.strings.track_private),
+        content = {
+            WheelTextPicker(
+                items = selections,
+                modifier = Modifier.align(Alignment.Center),
+                startIndex = selection?.compareTo(false) ?: 0,
+                onSelectionChanged = { onSelectionChange(it == 1) },
+            )
+        },
+        onConfirm = onConfirm,
+        onDismissRequest = onDismissRequest,
+    )
+}
+
+@Composable
 private fun BaseSelector(
     title: String,
     content: @Composable BoxScope.() -> Unit,

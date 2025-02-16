@@ -11,6 +11,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -90,8 +91,9 @@ fun TrackerSearch(
     queryResult: Result<List<TrackSearch>>?,
     selected: TrackSearch?,
     onSelectedChange: (TrackSearch) -> Unit,
-    onConfirmSelection: () -> Unit,
+    onConfirmSelection: (private: Boolean) -> Unit,
     onDismissRequest: () -> Unit,
+    privateTracking: Boolean,
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -164,15 +166,42 @@ fun TrackerSearch(
                 enter = fadeIn() + slideInVertically { it / 2 },
                 exit = slideOutVertically { it / 2 } + fadeOut(),
             ) {
-                Button(
-                    onClick = { onConfirmSelection() },
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .windowInsetsPadding(WindowInsets.navigationBars)
-                        .fillMaxWidth(),
-                    elevation = ButtonDefaults.elevatedButtonElevation(),
-                ) {
-                    Text(text = stringResource(MR.strings.action_track))
+                if (privateTracking) {
+                    FlowRow (
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(
+                            onClick = { onConfirmSelection(false) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(12.dp)
+                                .windowInsetsPadding(WindowInsets.navigationBars),
+                            elevation = ButtonDefaults.elevatedButtonElevation(),
+                        ) {
+                            Text(text = stringResource(MR.strings.action_track))
+                        }
+                        Button(
+                            onClick = { onConfirmSelection(true) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(12.dp)
+                                .windowInsetsPadding(WindowInsets.navigationBars),
+                            elevation = ButtonDefaults.elevatedButtonElevation(),
+                        ) {
+                            Text(text = stringResource(MR.strings.action_private_track))
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = { onConfirmSelection(false) },
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                            .fillMaxWidth(),
+                        elevation = ButtonDefaults.elevatedButtonElevation(),
+                    ) {
+                        Text(text = stringResource(MR.strings.action_track))
+                    }
                 }
             }
         },
