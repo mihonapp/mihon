@@ -11,7 +11,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -166,20 +165,20 @@ fun TrackerSearch(
                 enter = fadeIn() + slideInVertically { it / 2 },
                 exit = slideOutVertically { it / 2 } + fadeOut(),
             ) {
-                if (privateTracking) {
-                    FlowRow (
-                        modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Button(
+                        onClick = { onConfirmSelection(false) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(12.dp)
+                            .windowInsetsPadding(WindowInsets.navigationBars),
+                        elevation = ButtonDefaults.elevatedButtonElevation(),
                     ) {
-                        Button(
-                            onClick = { onConfirmSelection(false) },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(12.dp)
-                                .windowInsetsPadding(WindowInsets.navigationBars),
-                            elevation = ButtonDefaults.elevatedButtonElevation(),
-                        ) {
-                            Text(text = stringResource(MR.strings.action_track))
-                        }
+                        Text(text = stringResource(MR.strings.action_track))
+                    }
+                    if (privateTracking) {
                         Button(
                             onClick = { onConfirmSelection(true) },
                             modifier = Modifier
@@ -190,17 +189,6 @@ fun TrackerSearch(
                         ) {
                             Text(text = stringResource(MR.strings.action_private_track))
                         }
-                    }
-                } else {
-                    Button(
-                        onClick = { onConfirmSelection(false) },
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .windowInsetsPadding(WindowInsets.navigationBars)
-                            .fillMaxWidth(),
-                        elevation = ButtonDefaults.elevatedButtonElevation(),
-                    ) {
-                        Text(text = stringResource(MR.strings.action_track))
                     }
                 }
             }
