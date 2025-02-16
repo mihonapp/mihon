@@ -13,14 +13,6 @@ import eu.kanade.tachiyomi.source.preferenceKey
 import eu.kanade.tachiyomi.source.sourcePreferences
 import tachiyomi.core.common.preference.Preference
 import tachiyomi.core.common.preference.PreferenceStore
-import tachiyomi.domain.category.interactor.GetCategories
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.DOWNLOAD_NEW_CATEGORIES_EXCLUDE_PREF_KEY
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.DOWNLOAD_NEW_CATEGORIES_PREF_KEY
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.REMOVE_EXCLUDE_CATEGORIES_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEFAULT_CATEGORY_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.LIBRARY_UPDATE_CATEGORIES_PREF_KEY
 import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -29,42 +21,9 @@ class PreferenceBackupCreator(
     private val sourceManager: SourceManager = Injekt.get(),
     private val preferenceStore: PreferenceStore = Injekt.get(),
 ) {
-    private val getCategories by lazy { Injekt.get<GetCategories>() }
-    private val libraryPreferences by lazy { Injekt.get<LibraryPreferences>() }
 
-    suspend fun createApp(includePrivatePreferences: Boolean): List<BackupPreference> {
-        val allCategories = getCategories.await()
-
+    fun createApp(includePrivatePreferences: Boolean): List<BackupPreference> {
         return preferenceStore.getAll().toBackupPreferences()
-            .map { backupPreference ->
-                when (backupPreference.key) {
-                    // Convert CategoryId to CategoryOrder
-                    DEFAULT_CATEGORY_PREF_KEY -> {
-                        val id = (backupPreference.value as IntPreferenceValue).value.toLong()
-                        val value = allCategories.find { it.id == id }?.order?.toInt()
-                            ?: libraryPreferences.defaultCategory().defaultValue()
-                        BackupPreference(
-                            backupPreference.key,
-                            IntPreferenceValue(value),
-                        )
-                    }
-                    // Convert CategoryId to CategoryOrder
-                    LIBRARY_UPDATE_CATEGORIES_PREF_KEY, LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY,
-                    DOWNLOAD_NEW_CATEGORIES_PREF_KEY, DOWNLOAD_NEW_CATEGORIES_EXCLUDE_PREF_KEY,
-                    REMOVE_EXCLUDE_CATEGORIES_PREF_KEY,
-                    -> {
-                        val categoryIds = (backupPreference.value as StringSetPreferenceValue).value
-                        val categories = allCategories.associateBy({ it.id.toString() }, { it.order.toString() })
-                        BackupPreference(
-                            backupPreference.key,
-                            StringSetPreferenceValue(
-                                categoryIds.mapNotNull { categories[it] }.toSet(),
-                            ),
-                        )
-                    }
-                    else -> backupPreference
-                }
-            }
             .withPrivatePreferences(includePrivatePreferences)
     }
 
