@@ -61,7 +61,7 @@ data class ALUserManga(
         last_chapter_read = chaptersRead.toDouble()
         library_id = libraryId
         total_chapters = manga.totalChapters
-        private = private
+        private = this@ALUserManga.private
     }
 
     private fun toTrackStatus() = when (listStatus) {
