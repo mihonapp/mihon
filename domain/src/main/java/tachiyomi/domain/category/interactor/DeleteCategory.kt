@@ -48,7 +48,7 @@ class DeleteCategory(
             val categoriesSet = pref.get()
             if (categoriesSet.any { it == categoryId.toString() }) {
                 pref.set(
-                    categoriesSet.minus(categoryId.toString())
+                    categoriesSet.minus(categoryId.toString()),
                 )
             }
         }
