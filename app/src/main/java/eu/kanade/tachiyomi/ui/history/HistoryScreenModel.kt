@@ -8,7 +8,6 @@ import eu.kanade.core.util.insertSeparators
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.track.interactor.AddTracks
 import eu.kanade.presentation.history.HistoryUiModel
-import eu.kanade.tachiyomi.ui.manga.MangaScreenModel
 import eu.kanade.tachiyomi.util.lang.toLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -149,7 +148,7 @@ class HistoryScreenModel(
 
     private fun moveMangaToCategory(mangaId: Long, categories: Category?) {
         val categoryIds = listOfNotNull(categories).map { it.id }
-        moveMangaToCategory(mangaId,categoryIds)
+        moveMangaToCategory(mangaId, categoryIds)
     }
 
     private fun moveMangaToCategory(mangaId: Long, categoryIds: List<Long>) {
@@ -174,7 +173,7 @@ class HistoryScreenModel(
 
     fun addFavorite(
         mangaOrHistory: Any,
-        checkDuplicate: Boolean = true
+        checkDuplicate: Boolean = true,
     ) {
         screenModelScope.launchIO {
             val manga = when (mangaOrHistory) {
@@ -264,6 +263,5 @@ class HistoryScreenModel(
         data class OpenChapter(val chapter: Chapter?) : Event
         data object InternalError : Event
         data object HistoryCleared : Event
-        //data object HistoryCleared : Event
     }
 }
