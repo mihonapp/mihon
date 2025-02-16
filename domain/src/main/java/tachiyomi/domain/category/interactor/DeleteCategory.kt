@@ -5,6 +5,10 @@ import tachiyomi.core.common.util.lang.withNonCancellableContext
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
+import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.library.service.LibraryPreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
 class DeleteCategory(
     private val categoryRepository: CategoryRepository,
@@ -24,6 +28,29 @@ class DeleteCategory(
                 id = category.id,
                 order = index.toLong(),
             )
+        }
+
+        val libraryPreferences = Injekt.get<LibraryPreferences>()
+        val defaultCategory = libraryPreferences.defaultCategory().get()
+        if (defaultCategory == categoryId.toInt()) {
+            libraryPreferences.defaultCategory().delete()
+        }
+
+        val downloadPreferences = Injekt.get<DownloadPreferences>()
+        val categoriesPrefs = listOf(
+            libraryPreferences.updateCategories(),
+            libraryPreferences.updateCategoriesExclude(),
+            downloadPreferences.removeExcludeCategories(),
+            downloadPreferences.downloadNewChapterCategories(),
+            downloadPreferences.downloadNewChapterCategoriesExclude(),
+        )
+        categoriesPrefs.forEach { pref ->
+            val categoriesSet = pref.get()
+            if (categoriesSet.any { it == categoryId.toString() }) {
+                pref.set(
+                    categoriesSet.minus(categoryId.toString())
+                )
+            }
         }
 
         try {
