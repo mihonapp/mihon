@@ -196,7 +196,7 @@ fun TrackPrivateSelector(
     onDismissRequest: () -> Unit,
 ) {
     BaseSelector(
-        title = stringResource(MR.strings.track_private),
+        title = stringResource(MR.strings.track_private_desc),
         content = {
             WheelTextPicker(
                 items = selections,

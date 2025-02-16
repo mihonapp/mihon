@@ -253,7 +253,7 @@ private fun TrackInfoItem(
                             TrackDetailsItem(
                                 modifier = Modifier.weight(1F),
                                 text = private,
-                                placeholder = stringResource(MR.strings.track_private),
+                                placeholder = stringResource(MR.strings.track_private_desc),
                                 onClick = onPrivateClick,
                             )
                         }

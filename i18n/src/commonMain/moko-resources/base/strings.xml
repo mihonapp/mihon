@@ -521,8 +521,6 @@
     <string name="enhanced_services">Enhanced trackers</string>
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
-    <string name="action_track">Track</string>
-    <string name="action_private_track">Track privately</string>
     <string name="track_activity_name">Tracker login</string>
 
       <!-- Browse section -->
@@ -753,6 +751,8 @@
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
     <string name="add_tracking">Add tracking</string>
+    <string name="action_track">Track</string>
+    <string name="action_private_track">Track privately</string>
     <string name="unread">Unread</string>
     <string name="reading">Reading</string>
     <string name="completed">Completed</string>
@@ -772,6 +772,7 @@
     <string name="track_status">Status</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
+    <string name="track_private_desc">Private tracking</string>
     <string name="track_private">Private</string>
     <string name="track_public">Public</string>
     <string name="track_type">Type</string>
