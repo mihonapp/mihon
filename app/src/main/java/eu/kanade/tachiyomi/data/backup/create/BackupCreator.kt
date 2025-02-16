@@ -135,7 +135,7 @@ class BackupCreator(
         return sourcesBackupCreator(mangas)
     }
 
-    private suspend fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
+    private fun backupAppPreferences(options: BackupOptions): List<BackupPreference> {
         if (!options.appSettings) return emptyList()
 
         return preferenceBackupCreator.createApp(includePrivatePreferences = options.privateSettings)

@@ -62,7 +62,7 @@ class PreferenceRestorer(
     ) {
         val allCategories = getCategories.await()
         val categoriesByName = allCategories.associateBy { it.name }
-        val backupCategoriesByOrder = backupCategories.associateBy { it.order.toString() }
+        val backupCategoriesById = backupCategories.associateBy { it.id.toString() }
         val prefs = preferenceStore.getAll()
         toRestore.forEach { (key, value) ->
             try {
@@ -70,17 +70,15 @@ class PreferenceRestorer(
                     is IntPreferenceValue -> {
                         if (prefs[key] is Int?) {
                             when (key) {
-                                // Convert CategoryOrder to CategoryId
+                                // Matching oldId to newId
                                 DEFAULT_CATEGORY_PREF_KEY -> {
                                     if (backupCategories.isNotEmpty()) {
-                                        val order = value.value.toLong()
-                                        val newValue = backupCategories.find { it.order == order }
+                                        val oldId = value.value.toLong()
+                                        backupCategories.find { it.id == oldId }
                                             ?.let {
                                                 categoriesByName[it.name]?.id?.toInt()
                                             }
-                                            ?: libraryPreferences.defaultCategory().defaultValue()
-
-                                        preferenceStore.getInt(key).set(newValue)
+                                            ?.let { preferenceStore.getInt(key).set(it) }
                                     }
                                 }
                                 else ->
@@ -111,13 +109,13 @@ class PreferenceRestorer(
                     is StringSetPreferenceValue -> {
                         if (prefs[key] is Set<*>?) {
                             when (key) {
-                                // Convert CategoryOrder to CategoryId
+                                // Matching oldId to newId
                                 LIBRARY_UPDATE_CATEGORIES_PREF_KEY, LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY,
                                 DOWNLOAD_NEW_CATEGORIES_PREF_KEY, DOWNLOAD_NEW_CATEGORIES_EXCLUDE_PREF_KEY,
                                 REMOVE_EXCLUDE_CATEGORIES_PREF_KEY,
                                 -> {
-                                    val newValue = value.value.mapNotNull { order ->
-                                        backupCategoriesByOrder[order]?.let { backupCategory ->
+                                    val newValue = value.value.mapNotNull { oldId ->
+                                        backupCategoriesById[oldId]?.let { backupCategory ->
                                             categoriesByName[backupCategory.name]?.id?.toString()
                                         }
                                     }.toSet()
