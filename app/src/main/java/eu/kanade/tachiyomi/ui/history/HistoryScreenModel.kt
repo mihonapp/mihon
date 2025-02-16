@@ -41,8 +41,10 @@ import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.manga.interactor.GetDuplicateLibraryManga
 import tachiyomi.domain.manga.interactor.GetManga
 import tachiyomi.domain.manga.model.Manga
+import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import kotlin.collections.map
 
 class HistoryScreenModel(
     private val addTracks: AddTracks = Injekt.get(),
@@ -56,6 +58,7 @@ class HistoryScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val updateManga: UpdateManga = Injekt.get(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    private val sourceManager: SourceManager = Injekt.get(),
 ) : StateScreenModel<HistoryScreenModel.State>(State()) {
 
     private val _events: Channel<Event> = Channel(Channel.UNLIMITED)
@@ -144,18 +147,9 @@ class HistoryScreenModel(
         return getCategories.await().filterNot { it.isSystemCategory }
     }
 
-    /**
-     * Move the given manga to categories.
-     *
-     * @param categories the selected categories.
-     */
-    private fun moveMangaToCategories(mangaId: Long,categories: List<Category>) {
-        val categoryIds = categories.map { it.id }
+    private fun moveMangaToCategory(mangaId: Long, categories: Category?) {
+        val categoryIds = listOfNotNull(categories).map { it.id }
         moveMangaToCategory(mangaId,categoryIds)
-    }
-
-    private fun moveMangaToCategory(mangaId: Long, category: Category?) {
-        moveMangaToCategories(mangaId, listOfNotNull(category))
     }
 
     private fun moveMangaToCategory(mangaId: Long, categoryIds: List<Long>) {
@@ -164,26 +158,38 @@ class HistoryScreenModel(
         }
     }
 
+    fun moveMangaToCategoriesAndAddToLibrary(manga: Manga, categories: List<Long>) {
+        moveMangaToCategory(manga.id, categories)
+        if (manga.favorite) return
+
+        screenModelScope.launchIO {
+            updateManga.awaitUpdateFavorite(manga.id, true)
+        }
+    }
+
     private suspend fun getMangaCategoryIds(manga: Manga): List<Long> {
         return getCategories.await(manga.id)
             .map { it.id }
     }
 
-    fun addFavorite(manga: Manga) {
+    fun addFavorite(
+        mangaOrHistory: Any,
+        checkDuplicate: Boolean = true
+    ) {
         screenModelScope.launchIO {
-            val result = updateManga.awaitUpdateFavorite(manga.id, true)
-            if (!result) return@launchIO
-        }
-    }
+            val manga = when (mangaOrHistory) {
+                is Manga -> mangaOrHistory
+                is HistoryWithRelations -> getManga.await(mangaOrHistory.mangaId) ?: return@launchIO
+                else -> return@launchIO
+            }
 
-    fun addFavorite(history: HistoryWithRelations) {
-        screenModelScope.launchIO {
-            val manga: Manga? = getManga.await(history.mangaId)
+            if (checkDuplicate) {
+                val duplicate = getDuplicateLibraryManga.await(manga).getOrNull(0)
 
-            val duplicate = getDuplicateLibraryManga.await(manga!!).getOrNull(0)
-            if (duplicate != null) {
-                mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }
-                return@launchIO
+                if (duplicate != null) {
+                    mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }
+                    return@launchIO
+                }
             }
 
             // Move to default category if applicable
@@ -192,16 +198,26 @@ class HistoryScreenModel(
             val defaultCategory = categories.find { it.id == defaultCategoryId }
 
             when {
-                defaultCategory != null -> moveMangaToCategory(history.mangaId, defaultCategory)
-                defaultCategoryId == 0L || categories.isEmpty() -> moveMangaToCategory(history.mangaId, null)
+                // Default category set
+                defaultCategory != null -> {
+                    val result = updateManga.awaitUpdateFavorite(manga.id, true)
+                    if (!result) return@launchIO
+                    moveMangaToCategory(manga.id, defaultCategory)
+                }
+
+                // Automatic 'Default' or no categories
+                defaultCategoryId == 0L || categories.isEmpty() -> {
+                    val result = updateManga.awaitUpdateFavorite(manga.id, true)
+                    if (!result) return@launchIO
+                    moveMangaToCategory(manga.id, null)
+                }
+
+                // Choose a category
                 else -> showChangeCategoryDialog(manga)
             }
 
-//            val result = updateManga.awaitUpdateFavorite(manga.id, true)
-//            if (!result) return@launchIO
-
             // Sync with tracking services if applicable
-            //addTracks.bindEnhancedTrackers(manga, history.source)
+            addTracks.bindEnhancedTrackers(manga, sourceManager.getOrStub(manga.source))
         }
     }
 
@@ -210,7 +226,6 @@ class HistoryScreenModel(
             currentState.copy(dialog = Dialog.Migrate(newManga = currentManga, oldManga = duplicate))
         }
     }
-
 
     fun showChangeCategoryDialog(manga: Manga) {
         screenModelScope.launch {
@@ -224,15 +239,6 @@ class HistoryScreenModel(
                     ),
                 )
             }
-        }
-    }
-
-    fun moveMangaToCategoriesAndAddToLibrary(manga: Manga, categories: List<Long>) {
-        moveMangaToCategory(manga.id, categories)
-        if (manga.favorite) return
-
-        screenModelScope.launchIO {
-            updateManga.awaitUpdateFavorite(manga.id, true)
         }
     }
 
