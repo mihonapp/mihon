@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -50,6 +51,7 @@ import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.Tracker
 import eu.kanade.tachiyomi.ui.manga.track.TrackItem
 import eu.kanade.tachiyomi.util.lang.toLocalDate
@@ -70,9 +72,9 @@ fun TrackInfoDialogHome(
     onEndDateEdit: (TrackItem) -> Unit,
     onNewSearch: (TrackItem) -> Unit,
     onOpenInBrowser: (TrackItem) -> Unit,
-    onPrivateClick: (TrackItem) -> Unit,
     onRemoved: (TrackItem) -> Unit,
     onCopyLink: (TrackItem) -> Unit,
+    onTogglePrivate: (TrackItem) -> Unit,
 ) {
     val trackPreferences: TrackPreferences by injectLazy()
 
@@ -117,15 +119,14 @@ fun TrackInfoDialogHome(
                         .takeIf { supportsReadingDates && item.track.finishDate != 0L },
                     onEndDateClick = { onEndDateEdit(item) }
                         .takeIf { supportsReadingDates },
-                    private = booleanToPrivateTrackingString(item.track.private)
-                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
-                    onPrivateClick = { onPrivateClick(item) }
-                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
                     onNewSearch = { onNewSearch(item) },
                     onOpenInBrowser = { onOpenInBrowser(item) },
                     onRemoved = { onRemoved(item) },
                     onCopyLink = { onCopyLink(item) },
-                )
+                    private = item.track.private,
+                    onTogglePrivate = { onTogglePrivate(item) }
+                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
+                    )
             } else {
                 TrackInfoItemEmpty(
                     tracker = item.tracker,
@@ -150,12 +151,12 @@ private fun TrackInfoItem(
     onStartDateClick: (() -> Unit)?,
     endDate: String?,
     onEndDateClick: (() -> Unit)?,
-    private: String?,
-    onPrivateClick: (() -> Unit)?,
     onNewSearch: () -> Unit,
     onOpenInBrowser: () -> Unit,
     onRemoved: () -> Unit,
     onCopyLink: () -> Unit,
+    private: Boolean,
+    onTogglePrivate: (() -> Unit)?,
 ) {
     val context = LocalContext.current
     Column {
@@ -180,19 +181,30 @@ private fun TrackInfoItem(
                     .padding(start = 16.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+                Row {
+                    if (private)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_glasses_24dp),
+                            contentDescription = stringResource(MR.strings.tracked_privately),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end=5.dp)
+                        )
+                    Text(
+                        text = title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
             }
             VerticalDivider()
             TrackInfoItemMenu(
                 onOpenInBrowser = onOpenInBrowser,
                 onRemoved = onRemoved,
                 onCopyLink = onCopyLink,
+                private = private,
+                onTogglePrivate = onTogglePrivate,
             )
         }
 
@@ -227,36 +239,22 @@ private fun TrackInfoItem(
                         )
                     }
                 }
-
-                if ((onStartDateClick != null && onEndDateClick != null) || onPrivateClick != null) {
+                if (onStartDateClick != null && onEndDateClick != null) {
                     HorizontalDivider()
                     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-                        if (onStartDateClick != null && onEndDateClick != null) {
-                            TrackDetailsItem(
-                                modifier = Modifier.weight(1F),
-                                text = startDate,
-                                placeholder = stringResource(MR.strings.track_started_reading_date),
-                                onClick = onStartDateClick,
-                            )
-                            VerticalDivider()
-                            TrackDetailsItem(
-                                modifier = Modifier.weight(1F),
-                                text = endDate,
-                                placeholder = stringResource(MR.strings.track_finished_reading_date),
-                                onClick = onEndDateClick,
-                            )
-                        }
-                        if ((onStartDateClick != null && onEndDateClick != null) && onPrivateClick != null) {
-                            VerticalDivider()
-                        }
-                        if (onPrivateClick != null) {
-                            TrackDetailsItem(
-                                modifier = Modifier.weight(1F),
-                                text = private,
-                                placeholder = stringResource(MR.strings.track_private_desc),
-                                onClick = onPrivateClick,
-                            )
-                        }
+                        TrackDetailsItem(
+                            modifier = Modifier.weight(1F),
+                            text = startDate,
+                            placeholder = stringResource(MR.strings.track_started_reading_date),
+                            onClick = onStartDateClick,
+                        )
+                        VerticalDivider()
+                        TrackDetailsItem(
+                            modifier = Modifier.weight(1F),
+                            text = endDate,
+                            placeholder = stringResource(MR.strings.track_finished_reading_date),
+                            onClick = onEndDateClick,
+                        )
                     }
                 }
             }
@@ -316,6 +314,8 @@ private fun TrackInfoItemMenu(
     onOpenInBrowser: () -> Unit,
     onRemoved: () -> Unit,
     onCopyLink: () -> Unit,
+    private: Boolean,
+    onTogglePrivate: (() -> Unit)?
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
@@ -343,6 +343,15 @@ private fun TrackInfoItemMenu(
                     expanded = false
                 },
             )
+            if (onTogglePrivate != null) {
+                DropdownMenuItem(
+                    text = { if (private) Text(stringResource(MR.strings.action_toggle_private_off)) else Text(stringResource(MR.strings.action_toggle_private_on)) },
+                    onClick = {
+                        onTogglePrivate()
+                        expanded = false
+                    }
+                )
+            }
             DropdownMenuItem(
                 text = { Text(stringResource(MR.strings.action_remove)) },
                 onClick = {
@@ -364,14 +373,5 @@ private fun TrackInfoDialogHomePreviews(
         Surface {
             content()
         }
-    }
-}
-
-@Composable
-private fun booleanToPrivateTrackingString(value: Boolean): String {
-    return if (value) {
-        stringResource(MR.strings.track_private)
-    } else {
-        stringResource(MR.strings.track_public)
     }
 }

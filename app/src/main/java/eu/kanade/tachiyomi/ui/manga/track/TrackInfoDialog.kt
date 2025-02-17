@@ -45,7 +45,6 @@ import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.track.TrackChapterSelector
 import eu.kanade.presentation.track.TrackDateSelector
 import eu.kanade.presentation.track.TrackInfoDialogHome
-import eu.kanade.presentation.track.TrackPrivateSelector
 import eu.kanade.presentation.track.TrackScoreSelector
 import eu.kanade.presentation.track.TrackStatusSelector
 import eu.kanade.presentation.track.TrackerSearch
@@ -60,7 +59,6 @@ import eu.kanade.tachiyomi.util.system.copyToClipboard
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -151,14 +149,6 @@ data class TrackInfoDialogHomeScreen(
                     ),
                 )
             },
-            onPrivateClick = {
-                navigator.push(
-                    TrackPrivateSelectorScreen(
-                        track = it.track!!,
-                        serviceId = it.tracker.id,
-                    ),
-                )
-            },
             onNewSearch = {
                 if (it.tracker is EnhancedTracker) {
                     screenModel.registerEnhancedTracking(it)
@@ -184,6 +174,7 @@ data class TrackInfoDialogHomeScreen(
                 )
             },
             onCopyLink = { context.copyTrackerLink(it) },
+            onTogglePrivate = { screenModel.togglePrivate(it) }
         )
     }
 
@@ -257,6 +248,12 @@ data class TrackInfoDialogHomeScreen(
                         )
                     }
                 }
+        }
+
+        fun togglePrivate(item: TrackItem) {
+            screenModelScope.launchNonCancellable {
+                item.tracker.togglePrivate(item.track!!.toDbTrack())
+            }
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
@@ -654,58 +651,6 @@ private data class TrackDateRemoverScreen(
                 }
             }
         }
-    }
-}
-
-private data class TrackPrivateSelectorScreen(
-    private val track: Track,
-    private val serviceId: Long,
-) : Screen() {
-
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel {
-            Model(
-                track = track,
-                tracker = Injekt.get<TrackerManager>().get(serviceId)!!,
-            )
-        }
-        val state by screenModel.state.collectAsState()
-
-        TrackPrivateSelector(
-            selection = state.selection,
-            selections = persistentListOf(
-                stringResource(MR.strings.track_public),
-                stringResource(MR.strings.track_private)),
-            onSelectionChange = screenModel::setSelection,
-            onConfirm = {
-                screenModel.setPrivate()
-                navigator.pop()
-            },
-            onDismissRequest = navigator::pop,
-        )
-    }
-
-    private class Model(
-        private val track: Track,
-        private val tracker: Tracker,
-    ) : StateScreenModel<Model.State>(State(track.private)) {
-
-        fun setSelection(selection: Boolean) {
-            mutableState.update { it.copy(selection = selection) }
-        }
-
-        fun setPrivate() {
-            screenModelScope.launchNonCancellable {
-                tracker.setRemotePrivate(track.toDbTrack(), state.value.selection)
-            }
-        }
-
-        @Immutable
-        data class State(
-            val selection: Boolean,
-        )
     }
 }
 

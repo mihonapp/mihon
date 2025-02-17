@@ -67,7 +67,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onOpenInBrowser = {},
             onRemoved = {},
             onCopyLink = {},
-            onPrivateClick = {},
+            onTogglePrivate = {},
         )
     }
 
@@ -84,7 +84,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onOpenInBrowser = {},
             onRemoved = {},
             onCopyLink = {},
-            onPrivateClick = {},
+            onTogglePrivate = {},
         )
     }
 
@@ -101,7 +101,7 @@ internal class TrackInfoDialogHomePreviewProvider :
             onOpenInBrowser = {},
             onRemoved = {},
             onCopyLink = {},
-            onPrivateClick = {},
+            onTogglePrivate = {},
         )
     }
 
