@@ -202,15 +202,13 @@ private fun TrackInfoItem(
                     .padding(start = 16.dp),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                Row {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
             }
             VerticalDivider()
             TrackInfoItemMenu(
