@@ -148,7 +148,9 @@ class Downloader(
      */
     fun stop(reason: String? = null) {
         cancelDownloaderJob()
-        queueState.value.filter { it.status == Download.State.DOWNLOADING }.forEach { it.status = Download.State.ERROR }
+        queueState.value
+            .filter { it.status == Download.State.DOWNLOADING }
+            .forEach { it.status = Download.State.ERROR }
 
         if (reason != null) {
             notifier.onWarning(reason)
@@ -171,7 +173,9 @@ class Downloader(
      */
     fun pause() {
         cancelDownloaderJob()
-        queueState.value.filter { it.status == Download.State.DOWNLOADING }.forEach { it.status = Download.State.QUEUE }
+        queueState.value
+            .filter { it.status == Download.State.DOWNLOADING }
+            .forEach { it.status = Download.State.QUEUE }
         isPaused = true
     }
 
@@ -196,15 +200,19 @@ class Downloader(
                 while (true) {
                     val activeDownloads = queue.asSequence()
                         // Ignore completed downloads, leave them in the queue
-                        .filter { it.status.value <= Download.State.DOWNLOADING.value }.groupBy { it.source }.toList()
+                        .filter { it.status.value <= Download.State.DOWNLOADING.value }
+                        .groupBy { it.source }
+                        .toList()
                         // Concurrently download from 5 different sources
-                        .take(5).map { (_, downloads) -> downloads.first() }
+                        .take(5)
+                        .map { (_, downloads) -> downloads.first() }
                     emit(activeDownloads)
 
                     if (activeDownloads.isEmpty()) break
                     // Suspend until a download enters the ERROR state
-                    val activeDownloadsErroredFlow = combine(activeDownloads.map(Download::statusFlow)) { states ->
-                        states.contains(Download.State.ERROR)
+                    val activeDownloadsErroredFlow =
+                        combine(activeDownloads.map(Download::statusFlow)) { states ->
+                            states.contains(Download.State.ERROR)
                     }.filter { it }
                     activeDownloadsErroredFlow.first()
                 }
@@ -277,7 +285,8 @@ class Downloader(
             // Filter out those already enqueued.
             .filter { chapter -> queueState.value.none { it.chapter.id == chapter.id } }
             // Create a download for each one.
-            .map { Download(source, manga, it) }.toList()
+            .map { Download(source, manga, it) }
+            .toList()
 
         if (chaptersToQueue.isNotEmpty()) {
             addAllToQueue(chaptersToQueue)
@@ -285,10 +294,15 @@ class Downloader(
             // Start downloader if needed
             if (autoStart && wasEmpty) {
                 val queuedDownloads = queueState.value.count { it.source !is UnmeteredSource }
-                val maxDownloadsFromSource =
-                    queueState.value.groupBy { it.source }.filterKeys { it !is UnmeteredSource }
-                        .maxOfOrNull { it.value.size } ?: 0
-                if (queuedDownloads > DOWNLOADS_QUEUED_WARNING_THRESHOLD || maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD) {
+                val maxDownloadsFromSource = queueState.value
+                    .groupBy { it.source }
+                    .filterKeys { it !is UnmeteredSource }
+                    .maxOfOrNull { it.value.size }
+                    ?: 0
+                if (
+                    queuedDownloads > DOWNLOADS_QUEUED_WARNING_THRESHOLD ||
+                    maxDownloadsFromSource > CHAPTERS_PER_SOURCE_QUEUE_WARNING_THRESHOLD
+                ) {
                     notifier.onWarning(
                         context.stringResource(MR.strings.download_queue_size_warning),
                         WARNING_NOTIF_TIMEOUT_MS,
@@ -327,11 +341,9 @@ class Downloader(
         } else {
             downloadChapterAsFiles(download, mangaDir, chapterDirname)
         }
-
     }
 
     private suspend fun downloadChapterAsCbz(download: Download, mangaDir: UniFile, chapterDirname: String) {
-
         val cbzName = "$chapterDirname.cbz"
         val tmpCbzName = "$cbzName$TMP_DIR_SUFFIX"
 
@@ -538,7 +550,6 @@ class Downloader(
         }
     }
 
-
     /**
      * Gets the image from the filesystem if it exists or downloads it otherwise.
      *
@@ -710,9 +721,8 @@ class Downloader(
 
         try {
             val filenamePrefix = "%03d".format(Locale.ENGLISH, page.number)
-            val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) } ?: error(
-                context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number),
-            )
+            val imageFile = tmpDir.listFiles()?.firstOrNull { it.name.orEmpty().startsWith(filenamePrefix) }
+                ?: error(context.stringResource(MR.strings.download_notifier_split_page_not_found, page.number))
 
             // If the original page was previously split, then skip
             if (imageFile.name.orEmpty().startsWith("${filenamePrefix}__")) return
@@ -817,9 +827,12 @@ class Downloader(
         source: HttpSource,
     ) {
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
-        val urls = getTracks.await(manga.id).mapNotNull { track ->
-            track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
-        }.plus(source.getChapterUrl(chapter.toSChapter()).trim()).distinct()
+        val urls = getTracks.await(manga.id)
+            .mapNotNull { track ->
+                track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
+            }
+            .plus(source.getChapterUrl(chapter.toSChapter()).trim())
+            .distinct()
 
         val comicInfo = getComicInfo(
             manga,

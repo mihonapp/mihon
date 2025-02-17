@@ -13,7 +13,7 @@ class PageData(
 
     fun split(newData: Array<ByteArray>?): List<PageData> {
         if (newData == null || newData.size < 2) return listOf(this)
-        
+
         val digitCount = newData.size.toString().length.coerceAtLeast(3)
         val npd = ArrayList<PageData>()
         newData.forEachIndexed { idx, dat ->
