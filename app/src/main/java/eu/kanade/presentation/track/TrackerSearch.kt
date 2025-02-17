@@ -189,7 +189,7 @@ fun TrackerSearch(
                             elevation = ButtonDefaults.elevatedButtonElevation(),
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_glasses_24dp),
+                                painter = painterResource(R.drawable.ic_visibility_off),
                                 contentDescription = stringResource(MR.strings.track_privately),
                             )
                         }
