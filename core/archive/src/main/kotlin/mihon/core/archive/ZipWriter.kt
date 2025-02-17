@@ -10,7 +10,8 @@ import me.zhanghai.android.libarchive.ArchiveException
 import java.io.Closeable
 import java.nio.ByteBuffer
 
-const val READ_WRITE_PERM = 644
+// 644 in octal is 420 in decimal
+const val READ_WRITE_PERM = 420
 
 class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val pfd = file.openFileDescriptor(context, "wt")
