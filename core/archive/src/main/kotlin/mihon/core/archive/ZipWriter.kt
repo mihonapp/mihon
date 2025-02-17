@@ -7,9 +7,10 @@ import com.hippo.unifile.UniFile
 import me.zhanghai.android.libarchive.Archive
 import me.zhanghai.android.libarchive.ArchiveEntry
 import me.zhanghai.android.libarchive.ArchiveException
-import java.io.ByteArrayInputStream
 import java.io.Closeable
 import java.nio.ByteBuffer
+
+const val READ_WRITE_PERM = 0x644
 
 class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val pfd = file.openFileDescriptor(context, "wt")
@@ -49,16 +50,14 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
     }
 
     fun write(filename: String, data: ByteArray) {
-        ByteArrayInputStream(data).use { baos ->
-            ArchiveEntry.clear(entry)
-            ArchiveEntry.setPathnameUtf8(entry, filename)
-            ArchiveEntry.setSize(entry, data.size.toLong())
-            ArchiveEntry.setFiletype(entry, ArchiveEntry.AE_IFREG)
-            ArchiveEntry.setPerm(entry, 0x644)
-            Archive.writeHeader(archive, entry)
-            Archive.writeData(archive, ByteBuffer.wrap(data))
-            Archive.writeFinishEntry(archive)
-        }
+        ArchiveEntry.clear(entry)
+        ArchiveEntry.setPathnameUtf8(entry, filename)
+        ArchiveEntry.setSize(entry, data.size.toLong())
+        ArchiveEntry.setFiletype(entry, ArchiveEntry.AE_IFREG)
+        ArchiveEntry.setPerm(entry, READ_WRITE_PERM)
+        Archive.writeHeader(archive, entry)
+        Archive.writeData(archive, ByteBuffer.wrap(data))
+        Archive.writeFinishEntry(archive)
     }
 
     override fun close() {

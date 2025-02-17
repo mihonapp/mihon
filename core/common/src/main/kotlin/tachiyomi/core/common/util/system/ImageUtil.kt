@@ -215,53 +215,30 @@ object ImageUtil {
      */
     fun splitTallImage(tmpDir: UniFile, imageFile: UniFile, filenamePrefix: String): Boolean {
         val imageSource = imageFile.openInputStream().use { Buffer().readFrom(it) }
-        if (isAnimatedAndSupported(imageSource) || !isTallImage(imageSource)) {
-            return true
-        }
-
-        val bitmapRegionDecoder = getBitmapRegionDecoder(imageSource.peek().inputStream())
-        if (bitmapRegionDecoder == null) {
-            logcat { "Failed to create new instance of BitmapRegionDecoder" }
-            return false
-        }
-
-        val options = extractImageOptions(imageSource).apply {
-            inJustDecodeBounds = false
-        }
-
-        val splitDataList = options.splitData
+        val splitImages = splitTallImage(imageSource.readByteArray())
+        val splitImageNames = ArrayList<String>()
 
         return try {
-            splitDataList.forEach { splitData ->
-                val splitImageName = splitImageName(filenamePrefix, splitData.index)
+            splitImages.forEachIndexed { idx, splitData ->
+                val splitImageName = splitImageName(filenamePrefix, idx)
                 // Remove pre-existing split if exists (this split shouldn't exist under normal circumstances)
                 tmpDir.findFile(splitImageName)?.delete()
 
+                splitImageNames.add(splitImageName)
                 val splitFile = tmpDir.createFile(splitImageName)!!
-
-                val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
-
                 splitFile.openOutputStream().use { outputStream ->
-                    val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
-                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                    splitBitmap.recycle()
-                }
-                logcat {
-                    "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
-                        "height=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
+                    outputStream.write(splitData)
                 }
             }
             imageFile.delete()
             true
         } catch (e: Exception) {
             // Image splits were not successfully saved so delete them and keep the original image
-            splitDataList
-                .map { splitImageName(filenamePrefix, it.index) }
-                .forEach { tmpDir.findFile(it)?.delete() }
+            for (splitImageName in splitImageNames) {
+                tmpDir.findFile(splitImageName)?.delete()
+            }
             logcat(LogPriority.ERROR, e)
             false
-        } finally {
-            bitmapRegionDecoder.recycle()
         }
     }
 
@@ -270,7 +247,7 @@ object ImageUtil {
      *
      * @return a list of split image data, or null if this processing failed.
      */
-    fun splitTallImage(imgData: ByteArray): Array<ByteArray>? {
+    fun splitTallImage(imgData: ByteArray): Array<ByteArray> {
         val imageSource = ByteArrayInputStream(imgData).use { Buffer().readFrom(it) }
         if (isAnimatedAndSupported(imageSource) || !isTallImage(imageSource)) {
             return arrayOf(imgData)
@@ -279,7 +256,7 @@ object ImageUtil {
         val bitmapRegionDecoder = getBitmapRegionDecoder(imageSource.peek().inputStream())
         if (bitmapRegionDecoder == null) {
             logcat { "Failed to create new instance of BitmapRegionDecoder" }
-            return null
+            return arrayOf(imgData)
         }
 
         val options = extractImageOptions(imageSource).apply {
@@ -306,9 +283,9 @@ object ImageUtil {
             }
             lst
         } catch (e: Exception) {
-            // Image splits were not successfully saved so return null to indicate failure
+            // Image splits were not successfully saved so return original image
             logcat(LogPriority.ERROR, e)
-            null
+            arrayOf(imgData)
         } finally {
             bitmapRegionDecoder.recycle()
         }
