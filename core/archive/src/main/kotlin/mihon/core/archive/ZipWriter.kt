@@ -24,6 +24,8 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val _files = ArrayList<String?>()
     val files: List<String?>
         get() {
+            // TODO: probably better to wrap it in an immutable list wrapper than to just cast like this to
+            //  guarantee callers cannot modify this list.
             return _files
         }
 
