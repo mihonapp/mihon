@@ -190,7 +190,7 @@ fun TrackerSearch(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_visibility_off),
-                                contentDescription = stringResource(MR.strings.track_privately),
+                                contentDescription = stringResource(MR.strings.action_private_track),
                             )
                         }
                     }
