@@ -795,8 +795,17 @@ class Downloader(
             return false
         }
 
-        // Ensure that zos has all the pages
-        return tzw.count == downloadPageCount
+        // Ensure that tzw has all the pages
+        val downloadedImagesCount = tzw.files.orEmpty().count {
+            val fileName = it.orEmpty()
+            when {
+                // Only count the first split page and not the others
+                fileName.contains("__") && !fileName.endsWith("__001.jpg") -> false
+                else -> true
+            }
+        }
+
+        return downloadedImagesCount == downloadPageCount
     }
 
     /**

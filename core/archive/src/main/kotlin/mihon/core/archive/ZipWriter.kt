@@ -19,6 +19,14 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val entry = ArchiveEntry.new2(archive)
     private val buffer = ByteBuffer.allocateDirect(8192)
 
+    // TODO: because ArchiveEntry.setPathnameUtf8() allows nullable file names, we will allow nulls here.
+    //  Unsure of subsequent behaviour if they really are nulls.
+    private val _files = ArrayList<String?>()
+    val files: List<String?>
+        get() {
+            return _files
+        }
+
     init {
         try {
             Archive.setCharset(archive, Charsets.UTF_8.name().toByteArray())
@@ -48,6 +56,7 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
             }
             Archive.writeFinishEntry(archive)
         }
+        _files.add(file.name)
     }
 
     fun write(filename: String, data: ByteArray) {
@@ -59,6 +68,7 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
         Archive.writeHeader(archive, entry)
         Archive.writeData(archive, ByteBuffer.wrap(data))
         Archive.writeFinishEntry(archive)
+        _files.add(filename)
     }
 
     override fun close() {

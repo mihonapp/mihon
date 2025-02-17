@@ -7,21 +7,22 @@ import java.io.Closeable
 class SynchronizedZipWriter(val context: Context, file: UniFile) : Closeable {
     private val delegate = ZipWriter(context, file)
 
-    @get:Synchronized
-    var count = 0
-        private set
-
+    val files: List<String?>
+        get() {
+            synchronized(this) {
+                return delegate.files
+            }
+        }
+    
     fun write(file: UniFile) {
         synchronized(this) {
             delegate.write(file)
-            count++
         }
     }
 
     fun write(filename: String, data: ByteArray) {
         synchronized(this) {
             delegate.write(filename, data)
-            count++
         }
     }
 
