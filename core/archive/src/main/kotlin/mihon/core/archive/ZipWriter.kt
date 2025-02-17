@@ -10,7 +10,7 @@ import me.zhanghai.android.libarchive.ArchiveException
 import java.io.Closeable
 import java.nio.ByteBuffer
 
-const val READ_WRITE_PERM = 0x644
+const val READ_WRITE_PERM = 644
 
 class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val pfd = file.openFileDescriptor(context, "wt")
