@@ -58,6 +58,7 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.ImeAction
@@ -70,6 +71,7 @@ import androidx.compose.ui.unit.dp
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.manga.components.MangaCover
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.util.system.openInBrowser
 import tachiyomi.i18n.MR
@@ -172,7 +174,7 @@ fun TrackerSearch(
                         onClick = { onConfirmSelection(false) },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(12.dp)
+                            .padding(start = 12.dp, top= 12.dp, bottom = 12.dp, end = 6.dp)
                             .windowInsetsPadding(WindowInsets.navigationBars),
                         elevation = ButtonDefaults.elevatedButtonElevation(),
                     ) {
@@ -182,12 +184,14 @@ fun TrackerSearch(
                         Button(
                             onClick = { onConfirmSelection(true) },
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(12.dp)
+                                .padding(start = 6.dp, top= 12.dp, bottom = 12.dp, end = 12.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBars),
                             elevation = ButtonDefaults.elevatedButtonElevation(),
                         ) {
-                            Text(text = stringResource(MR.strings.action_private_track))
+                            Icon(
+                                painter = painterResource(R.drawable.ic_glasses_24dp),
+                                contentDescription = stringResource(MR.strings.track_privately),
+                            )
                         }
                     }
                 }

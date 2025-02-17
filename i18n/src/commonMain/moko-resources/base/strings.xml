@@ -772,6 +772,7 @@
     <string name="track_status">Status</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
+    <string name="track_privately">Track privately</string>
     <string name="tracked_privately">Tracked privately</string>
     <string name="action_toggle_private_on">Track privately</string>
     <string name="action_toggle_private_off">Track publicly</string>
