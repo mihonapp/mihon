@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
+import mihon.core.archive.TsZipWriter
 import mihon.core.archive.ZipWriter
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
@@ -365,7 +366,7 @@ class Downloader(
             val cbzFile = mangaDir.createFile(tmpCbzName) ?: throw IOException("Could not create file $tmpCbzName")
 
             // Create the zip output stream
-            TsZipOutputStream(cbzFile.openOutputStream()).use { zos ->
+            TsZipWriter(context, cbzFile).use { tzw ->
 
                 download.status = Download.State.DOWNLOADING
 
@@ -383,7 +384,7 @@ class Downloader(
                             }
                         }
 
-                        withIOContext { getOrDownloadImage(page, download, zos) }
+                        withIOContext { getOrDownloadImage(page, download, tzw) }
                         emit(page)
                     }.flowOn(Dispatchers.IO)
                 }.collect {
@@ -392,7 +393,7 @@ class Downloader(
                 }
 
                 // Do after download completes
-                if (!isDownloadSuccessful(download, zos)) {
+                if (!isDownloadSuccessful(download, tzw)) {
                     download.status = Download.State.ERROR
                     return
                 }
@@ -543,9 +544,9 @@ class Downloader(
      *
      * @param page the page to download.
      * @param download the download of the page.
-     * @param zos the zip output stream being written to
+     * @param tzw the thread-safe zip writer being written to
      */
-    private suspend fun getOrDownloadImage(page: Page, download: Download, zos: TsZipOutputStream) {
+    private suspend fun getOrDownloadImage(page: Page, download: Download, tzw: TsZipWriter) {
         // If the image URL is empty, do nothing
         if (page.imageUrl == null) {
             return
@@ -568,7 +569,7 @@ class Downloader(
             // When the page is ready, set page path, progress (just in case) and status
             val splitPds = splitTallImageIfNeeded(page, pd)
             for (splitPd in splitPds) {
-                zos.write(splitPd)
+                tzw.write(splitPd.filename, splitPd.data)
             }
 
             // TODO: page.uri point to what???
@@ -770,11 +771,11 @@ class Downloader(
      * Checks if the download was successful.
      *
      * @param download the download to check.
-     * @param zos the TsZipOutputStream being written to
+     * @param tzw the thread-safe zip writer being written to
      */
     private fun isDownloadSuccessful(
         download: Download,
-        zos: TsZipOutputStream,
+        tzw: TsZipWriter,
     ): Boolean {
         // Page list hasn't been initialized
         val downloadPageCount = download.pages?.size ?: return false
@@ -785,7 +786,7 @@ class Downloader(
         }
 
         // Ensure that zos has all the pages
-        return zos.size == downloadPageCount
+        return tzw.count == downloadPageCount
     }
 
     /**
