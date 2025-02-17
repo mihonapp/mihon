@@ -88,7 +88,7 @@ fun HistoryItem(
             IconButton(onClick = onClickFavorite) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorite",
+                    contentDescription = stringResource(MR.strings.add_to_library),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
             }
