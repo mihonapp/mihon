@@ -10,11 +10,24 @@ import me.zhanghai.android.libarchive.ArchiveException
 import java.io.Closeable
 import java.nio.ByteBuffer
 
+// 644 in octal is 420 in decimal
+const val READ_WRITE_PERM = 420
+
 class ZipWriter(val context: Context, file: UniFile) : Closeable {
     private val pfd = file.openFileDescriptor(context, "wt")
     private val archive = Archive.writeNew()
     private val entry = ArchiveEntry.new2(archive)
     private val buffer = ByteBuffer.allocateDirect(8192)
+
+    // TODO: because ArchiveEntry.setPathnameUtf8() allows nullable file names, we will allow nulls here.
+    //  Unsure of subsequent behaviour if they really are nulls.
+    private val _files = ArrayList<String?>()
+    val files: List<String?>
+        get() {
+            // TODO: probably better to wrap it in an immutable list wrapper than to just cast like this to
+            //  guarantee callers cannot modify this list.
+            return _files
+        }
 
     init {
         try {
@@ -45,6 +58,19 @@ class ZipWriter(val context: Context, file: UniFile) : Closeable {
             }
             Archive.writeFinishEntry(archive)
         }
+        _files.add(file.name)
+    }
+
+    fun write(filename: String, data: ByteArray) {
+        ArchiveEntry.clear(entry)
+        ArchiveEntry.setPathnameUtf8(entry, filename)
+        ArchiveEntry.setSize(entry, data.size.toLong())
+        ArchiveEntry.setFiletype(entry, ArchiveEntry.AE_IFREG)
+        ArchiveEntry.setPerm(entry, READ_WRITE_PERM)
+        Archive.writeHeader(archive, entry)
+        Archive.writeData(archive, ByteBuffer.wrap(data))
+        Archive.writeFinishEntry(archive)
+        _files.add(filename)
     }
 
     override fun close() {
