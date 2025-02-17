@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -22,6 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -163,11 +167,28 @@ private fun TrackInfoItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TrackLogoIcon(
-                tracker = tracker,
-                onClick = onOpenInBrowser,
-                onLongClick = onCopyLink,
-            )
+            BadgedBox(
+                badge = {
+                    if (private)
+                        Badge (
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.absoluteOffset(x= (-5).dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_visibility_off),
+                                contentDescription = stringResource(MR.strings.tracked_privately),
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                }
+            ) {
+                TrackLogoIcon(
+                    tracker = tracker,
+                    onClick = onOpenInBrowser,
+                    onLongClick = onCopyLink,
+                )
+            }
             Box(
                 modifier = Modifier
                     .height(48.dp)
@@ -182,13 +203,6 @@ private fun TrackInfoItem(
                 contentAlignment = Alignment.CenterStart,
             ) {
                 Row {
-                    if (private)
-                        Icon(
-                            painter = painterResource(R.drawable.ic_glasses_24dp),
-                            contentDescription = stringResource(MR.strings.tracked_privately),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(end=5.dp)
-                        )
                     Text(
                         text = title,
                         maxLines = 1,
