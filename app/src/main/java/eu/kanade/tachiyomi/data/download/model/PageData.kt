@@ -11,12 +11,13 @@ class PageData(
 ) {
     val filename: String = getFileName(prefix, number, subNumber, type)
 
-    fun split(newData: Array<ByteArray>?): List<PageData> {
-        if (newData == null || newData.size < 2) return listOf(this)
+    fun split(splitOp: (ByteArray) -> Array<ByteArray>?): List<PageData> {
+        val splitData = splitOp(data)
+        if (splitData == null || splitData.size < 2) return listOf(this)
 
-        val digitCount = newData.size.toString().length.coerceAtLeast(3)
+        val digitCount = splitData.size.toString().length.coerceAtLeast(3)
         val npd = ArrayList<PageData>()
-        newData.forEachIndexed { idx, dat ->
+        splitData.forEachIndexed { idx, dat ->
             PageData(prefix, number, formatSubPageNumber(idx, digitCount), type, dat)
         }
         return npd

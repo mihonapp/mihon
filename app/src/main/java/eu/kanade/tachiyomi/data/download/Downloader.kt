@@ -737,7 +737,7 @@ class Downloader(
         if (!downloadPreferences.splitTallImages().get()) return listOf(pd)
 
         try {
-            return pd.split(ImageUtil.splitTallImage(pd.data))
+            return pd.split(ImageUtil::splitTallImage)
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e) { "Failed to split downloaded image" }
         }
