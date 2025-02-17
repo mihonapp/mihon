@@ -213,7 +213,7 @@ class Downloader(
                     val activeDownloadsErroredFlow =
                         combine(activeDownloads.map(Download::statusFlow)) { states ->
                             states.contains(Download.State.ERROR)
-                    }.filter { it }
+                        }.filter { it }
                     activeDownloadsErroredFlow.first()
                 }
             }.distinctUntilChanged()
