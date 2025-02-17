@@ -63,7 +63,6 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import tachiyomi.domain.source.model.Source as DomainSource
 
-
 actual class LocalSource(
     private val context: Context,
     private val fileSystem: LocalSourceFileSystem,
@@ -526,8 +525,8 @@ actual class LocalSource(
 
     private suspend fun getDbManga(mangaDirs: List<UniFile>): Map<String?, Manga?> {
         return mangaDirs.map { mangaDir ->
-                mangaDir.name?.let { mangaRepository.getMangaByUrlAndSourceId(it, ID) }
-            }
+            mangaDir.name?.let { mangaRepository.getMangaByUrlAndSourceId(it, ID) }
+        }
             .associateBy { it?.url }
     }
 
