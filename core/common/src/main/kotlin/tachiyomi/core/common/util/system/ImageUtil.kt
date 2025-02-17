@@ -28,6 +28,8 @@ import okio.Buffer
 import okio.BufferedSource
 import tachiyomi.decoder.Format
 import tachiyomi.decoder.ImageDecoder
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Locale
 import kotlin.math.abs
@@ -258,6 +260,55 @@ object ImageUtil {
                 .forEach { tmpDir.findFile(it)?.delete() }
             logcat(LogPriority.ERROR, e)
             false
+        } finally {
+            bitmapRegionDecoder.recycle()
+        }
+    }
+
+    /**
+     * Splits tall images to improve performance of reader
+     *
+     * @return a list of split image data, or null if this processing failed.
+     */
+    fun splitTallImage(imgData: ByteArray): Array<ByteArray>? {
+        val imageSource = ByteArrayInputStream(imgData).use { Buffer().readFrom(it) }
+        if (isAnimatedAndSupported(imageSource) || !isTallImage(imageSource)) {
+            return arrayOf(imgData)
+        }
+
+        val bitmapRegionDecoder = getBitmapRegionDecoder(imageSource.peek().inputStream())
+        if (bitmapRegionDecoder == null) {
+            logcat { "Failed to create new instance of BitmapRegionDecoder" }
+            return null
+        }
+
+        val options = extractImageOptions(imageSource).apply {
+            inJustDecodeBounds = false
+        }
+
+        val splitDataList = options.splitData
+
+        return try {
+            val lst = Array(splitDataList.size) { byteArrayOf() }
+            splitDataList.forEach { splitData ->
+                val region = Rect(0, splitData.topOffset, splitData.splitWidth, splitData.bottomOffset)
+
+                ByteArrayOutputStream().use { os ->
+                    val splitBitmap = bitmapRegionDecoder.decodeRegion(region, options)
+                    splitBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os)
+                    splitBitmap.recycle()
+                    lst[splitData.index] = os.toByteArray()
+                }
+                logcat {
+                    "Success: Split #${splitData.index + 1} with topOffset=${splitData.topOffset} " +
+                        "height=${splitData.splitHeight} bottomOffset=${splitData.bottomOffset}"
+                }
+            }
+            lst
+        } catch (e: Exception) {
+            // Image splits were not successfully saved so return null to indicate failure
+            logcat(LogPriority.ERROR, e)
+            null
         } finally {
             bitmapRegionDecoder.recycle()
         }
