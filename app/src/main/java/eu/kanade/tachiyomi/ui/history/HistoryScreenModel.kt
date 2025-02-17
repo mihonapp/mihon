@@ -172,13 +172,13 @@ class HistoryScreenModel(
     }
 
     fun addFavorite(
-        mangaOrHistory: Any,
+        mangaOrId: Any,
         checkDuplicate: Boolean = true,
     ) {
         screenModelScope.launchIO {
-            val manga = when (mangaOrHistory) {
-                is Manga -> mangaOrHistory
-                is HistoryWithRelations -> getManga.await(mangaOrHistory.mangaId) ?: return@launchIO
+            val manga = when (mangaOrId) {
+                is Manga -> mangaOrId
+                is Long -> getManga.await(mangaOrId) ?: return@launchIO
                 else -> return@launchIO
             }
 
