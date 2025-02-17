@@ -13,7 +13,7 @@ class SynchronizedZipWriter(val context: Context, file: UniFile) : Closeable {
                 return delegate.files
             }
         }
-    
+
     fun write(file: UniFile) {
         synchronized(this) {
             delegate.write(file)
