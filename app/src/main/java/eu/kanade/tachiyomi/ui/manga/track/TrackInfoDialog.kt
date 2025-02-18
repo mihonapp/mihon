@@ -174,7 +174,7 @@ data class TrackInfoDialogHomeScreen(
                 )
             },
             onCopyLink = { context.copyTrackerLink(it) },
-            onTogglePrivate = { screenModel.togglePrivate(it) }
+            onTogglePrivate = { screenModel.togglePrivate(it) },
         )
     }
 

@@ -129,7 +129,7 @@ fun TrackInfoDialogHome(
                     private = item.track.private,
                     onTogglePrivate = { onTogglePrivate(item) }
                         .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
-                    )
+                )
             } else {
                 TrackInfoItemEmpty(
                     tracker = item.tracker,
@@ -168,19 +168,20 @@ private fun TrackInfoItem(
         ) {
             BadgedBox(
                 badge = {
-                    if (private)
-                        Badge (
+                    if (private) {
+                        Badge(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.absoluteOffset(x= (-5).dp)
+                            modifier = Modifier.absoluteOffset(x = (-5).dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.VisibilityOff,
                                 contentDescription = stringResource(MR.strings.tracked_privately),
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(14.dp),
                             )
                         }
-                }
+                    }
+                },
             ) {
                 TrackLogoIcon(
                     tracker = tracker,
@@ -326,7 +327,7 @@ private fun TrackInfoItemMenu(
     onRemoved: () -> Unit,
     onCopyLink: () -> Unit,
     private: Boolean,
-    onTogglePrivate: (() -> Unit)?
+    onTogglePrivate: (() -> Unit)?,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
@@ -356,11 +357,19 @@ private fun TrackInfoItemMenu(
             )
             if (onTogglePrivate != null) {
                 DropdownMenuItem(
-                    text = { if (private) Text(stringResource(MR.strings.action_toggle_private_off)) else Text(stringResource(MR.strings.action_toggle_private_on)) },
+                    text = {
+                        if (private) {
+                            Text(
+                                stringResource(MR.strings.action_toggle_private_off),
+                            )
+                        } else {
+                            Text(stringResource(MR.strings.action_toggle_private_on))
+                        }
+                    },
                     onClick = {
                         onTogglePrivate()
                         expanded = false
-                    }
+                    },
                 )
             }
             DropdownMenuItem(

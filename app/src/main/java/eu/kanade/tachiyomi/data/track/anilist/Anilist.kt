@@ -184,8 +184,9 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.findLibManga(track, getUsername().toInt())
         return if (remoteTrack != null) {
-            if (this.supportsPrivateTracking && trackPreferences.privateTracking().get())
+            if (this.supportsPrivateTracking && trackPreferences.privateTracking().get()) {
                 remoteTrack.private = track.private
+            }
 
             track.copyPersonalFrom(remoteTrack)
             track.library_id = remoteTrack.library_id

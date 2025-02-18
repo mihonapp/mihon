@@ -25,7 +25,7 @@ internal class TrackInfoDialogHomePreviewProvider :
         remoteUrl = "https://example.com",
         startDate = 0L,
         finishDate = 0L,
-        private = false
+        private = false,
     )
     private val privateTrack = aTrack.copy(private = true)
     private val trackItemWithoutTrack = TrackItem(
@@ -49,7 +49,6 @@ internal class TrackInfoDialogHomePreviewProvider :
             name = "Example Tracker 2",
         ),
     )
-
 
     private val trackersWithAndWithoutTrack = @Composable {
         TrackInfoDialogHome(

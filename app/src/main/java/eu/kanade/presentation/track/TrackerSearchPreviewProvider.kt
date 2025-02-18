@@ -20,7 +20,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
             onSelectedChange = {},
             onConfirmSelection = {},
             onDismissRequest = {},
-            privateTracking = false
+            privateTracking = false,
         )
     }
     private val fullPageWithoutSelected = @Composable {
@@ -32,7 +32,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
             onSelectedChange = {},
             onConfirmSelection = {},
             onDismissRequest = {},
-            privateTracking = false
+            privateTracking = false,
         )
     }
     private val loading = @Composable {
@@ -44,7 +44,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
             onSelectedChange = {},
             onConfirmSelection = {},
             onDismissRequest = {},
-            privateTracking = false
+            privateTracking = false,
         )
     }
     private val fullPageWithPrivateTracking = @Composable {
@@ -57,7 +57,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
             onSelectedChange = {},
             onConfirmSelection = {},
             onDismissRequest = {},
-            privateTracking = true
+            privateTracking = true,
         )
     }
     override val values: Sequence<@Composable () -> Unit> = sequenceOf(

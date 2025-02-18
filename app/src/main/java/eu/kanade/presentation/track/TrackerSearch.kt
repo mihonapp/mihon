@@ -173,7 +173,7 @@ fun TrackerSearch(
                         onClick = { onConfirmSelection(false) },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 12.dp, top= 12.dp, bottom = 12.dp, end = 6.dp)
+                            .padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 6.dp)
                             .windowInsetsPadding(WindowInsets.navigationBars),
                         elevation = ButtonDefaults.elevatedButtonElevation(),
                     ) {
@@ -183,7 +183,7 @@ fun TrackerSearch(
                         Button(
                             onClick = { onConfirmSelection(true) },
                             modifier = Modifier
-                                .padding(start = 6.dp, top= 12.dp, bottom = 12.dp, end = 12.dp)
+                                .padding(start = 6.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
                                 .windowInsetsPadding(WindowInsets.navigationBars),
                             elevation = ButtonDefaults.elevatedButtonElevation(),
                         ) {
