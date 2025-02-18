@@ -7,17 +7,20 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import eu.kanade.presentation.components.AppBar
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import eu.kanade.presentation.components.AppBarTitle
+import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.manga.components.MangaNotesTextArea
 import eu.kanade.tachiyomi.ui.manga.notes.MangaNotesScreen
-import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
-import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun MangaNotesScreen(
@@ -26,24 +29,37 @@ fun MangaNotesScreen(
     onSave: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
-        topBar = { scrollBehavior ->
-            AppBar(
-                titleContent = {
-                    AppBarTitle(title = stringResource(MR.strings.action_notes), subtitle = state.manga.title)
+        topBar = { topBarScrollBehavior ->
+            LargeTopAppBar(
+                title = {
+                    AppBarTitle(
+                        title = state.manga.title,
+                        modifier = Modifier
+                            .padding(horizontal = MaterialTheme.padding.small),
+                    )
                 },
-                navigateUp = navigateUp,
-                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        UpIcon()
+                    }
+                },
+                expandedHeight = TopAppBarDefaults.MediumAppBarExpandedHeight,
+                scrollBehavior = topBarScrollBehavior,
             )
         },
+        topBarScrollBehavior = scrollBehavior,
         modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .imePadding(),
     ) { paddingValues ->
         MangaNotesTextArea(
             state = state,
             onSave = onSave,
             modifier = Modifier
-                .padding(all = MaterialTheme.padding.small)
+                .padding(horizontal = MaterialTheme.padding.small)
                 .padding(top = paddingValues.calculateTopPadding())
                 .windowInsetsPadding(
                     WindowInsets.navigationBars
