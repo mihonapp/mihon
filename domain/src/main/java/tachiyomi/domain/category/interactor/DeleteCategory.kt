@@ -12,6 +12,8 @@ import uy.kohesive.injekt.api.get
 
 class DeleteCategory(
     private val categoryRepository: CategoryRepository,
+    private val libraryPreferences: LibraryPreferences = Injekt.get(),
+    private val downloadPreferences: DownloadPreferences = Injekt.get(),
 ) {
 
     suspend fun await(categoryId: Long) = withNonCancellableContext {
@@ -30,13 +32,11 @@ class DeleteCategory(
             )
         }
 
-        val libraryPreferences = Injekt.get<LibraryPreferences>()
         val defaultCategory = libraryPreferences.defaultCategory().get()
         if (defaultCategory == categoryId.toInt()) {
             libraryPreferences.defaultCategory().delete()
         }
 
-        val downloadPreferences = Injekt.get<DownloadPreferences>()
         val categoriesPrefs = listOf(
             libraryPreferences.updateCategories(),
             libraryPreferences.updateCategoriesExclude(),
