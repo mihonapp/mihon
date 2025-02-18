@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -90,8 +91,9 @@ fun TrackerSearch(
     queryResult: Result<List<TrackSearch>>?,
     selected: TrackSearch?,
     onSelectedChange: (TrackSearch) -> Unit,
-    onConfirmSelection: () -> Unit,
+    onConfirmSelection: (private: Boolean) -> Unit,
     onDismissRequest: () -> Unit,
+    privateTracking: Boolean,
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -164,15 +166,33 @@ fun TrackerSearch(
                 enter = fadeIn() + slideInVertically { it / 2 },
                 exit = slideOutVertically { it / 2 } + fadeOut(),
             ) {
-                Button(
-                    onClick = { onConfirmSelection() },
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .windowInsetsPadding(WindowInsets.navigationBars)
-                        .fillMaxWidth(),
-                    elevation = ButtonDefaults.elevatedButtonElevation(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(text = stringResource(MR.strings.action_track))
+                    Button(
+                        onClick = { onConfirmSelection(false) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 6.dp)
+                            .windowInsetsPadding(WindowInsets.navigationBars),
+                        elevation = ButtonDefaults.elevatedButtonElevation(),
+                    ) {
+                        Text(text = stringResource(MR.strings.action_track))
+                    }
+                    if (privateTracking) {
+                        Button(
+                            onClick = { onConfirmSelection(true) },
+                            modifier = Modifier
+                                .padding(start = 6.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
+                                .windowInsetsPadding(WindowInsets.navigationBars),
+                            elevation = ButtonDefaults.elevatedButtonElevation(),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = stringResource(MR.strings.action_private_track),
+                            )
+                        }
+                    }
                 }
             }
         },

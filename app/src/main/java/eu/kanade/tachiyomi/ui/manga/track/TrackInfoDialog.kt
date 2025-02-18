@@ -40,6 +40,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.StringResource
 import eu.kanade.domain.track.interactor.RefreshTracks
 import eu.kanade.domain.track.model.toDbTrack
+import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.track.TrackChapterSelector
 import eu.kanade.presentation.track.TrackDateSelector
@@ -82,6 +83,7 @@ import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import uy.kohesive.injekt.injectLazy
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -172,6 +174,7 @@ data class TrackInfoDialogHomeScreen(
                 )
             },
             onCopyLink = { context.copyTrackerLink(it) },
+            onTogglePrivate = { screenModel.togglePrivate(it) },
         )
     }
 
@@ -245,6 +248,12 @@ data class TrackInfoDialogHomeScreen(
                         )
                     }
                 }
+        }
+
+        fun togglePrivate(item: TrackItem) {
+            screenModelScope.launchNonCancellable {
+                item.tracker.togglePrivate(item.track!!.toDbTrack())
+            }
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
@@ -654,6 +663,8 @@ data class TrackerSearchScreen(
 
     @Composable
     override fun Content() {
+        val trackPreferences: TrackPreferences by injectLazy()
+
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel {
             Model(
@@ -673,11 +684,13 @@ data class TrackerSearchScreen(
             queryResult = state.queryResult,
             selected = state.selected,
             onSelectedChange = screenModel::updateSelection,
-            onConfirmSelection = {
+            onConfirmSelection = { private: Boolean ->
+                state.selected!!.private = private
                 screenModel.registerTracking(state.selected!!)
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
+            privateTracking = screenModel.privateTracking && trackPreferences.privateTracking().get(),
         )
     }
 
@@ -724,6 +737,8 @@ data class TrackerSearchScreen(
         fun updateSelection(selected: TrackSearch) {
             mutableState.update { it.copy(selected = selected) }
         }
+
+        val privateTracking = tracker.supportsPrivateTracking
 
         @Immutable
         data class State(
