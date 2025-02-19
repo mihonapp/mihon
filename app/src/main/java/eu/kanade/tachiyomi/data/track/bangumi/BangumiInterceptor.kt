@@ -4,7 +4,6 @@ import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.bangumi.dto.isExpired
 import kotlinx.serialization.json.Json
-import okhttp3.FormBody
 import okhttp3.Interceptor
 import okhttp3.Response
 import uy.kohesive.injekt.injectLazy
@@ -39,14 +38,7 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
                 "antsylich/Mihon/v${BuildConfig.VERSION_NAME} (Android) (http://github.com/mihonapp/mihon)",
             )
             .apply {
-                if (originalRequest.method == "GET") {
-                    val newUrl = originalRequest.url.newBuilder()
-                        .addQueryParameter("access_token", currAuth.accessToken)
-                        .build()
-                    url(newUrl)
-                } else {
-                    post(addToken(currAuth.accessToken, originalRequest.body as FormBody))
-                }
+                addHeader("Authorization", "Bearer ${currAuth.accessToken}")
             }
             .build()
             .let(chain::proceed)
@@ -67,14 +59,5 @@ class BangumiInterceptor(private val bangumi: Bangumi) : Interceptor {
         }
 
         bangumi.saveToken(oauth)
-    }
-
-    private fun addToken(token: String, oidFormBody: FormBody): FormBody {
-        val newFormBody = FormBody.Builder()
-        for (i in 0..<oidFormBody.size) {
-            newFormBody.add(oidFormBody.name(i), oidFormBody.value(i))
-        }
-        newFormBody.add("access_token", token)
-        return newFormBody.build()
     }
 }
