@@ -93,6 +93,7 @@ fun MangaNotesTextArea(
 
     Column(
         modifier = modifier
+            .padding(horizontal = MaterialTheme.padding.small)
             .fillMaxSize(),
     ) {
         RichTextEditor(
@@ -107,13 +108,13 @@ fun MangaNotesTextArea(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
             ),
+            contentPadding = PaddingValues(
+                horizontal = MaterialTheme.padding.medium,
+            ),
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
-            contentPadding = PaddingValues(
-                horizontal = MaterialTheme.padding.medium,
-            ),
         )
         AnimatedVisibility(
             visible = WindowInsets.isImeVisible,
