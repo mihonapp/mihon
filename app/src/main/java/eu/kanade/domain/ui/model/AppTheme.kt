@@ -25,4 +25,5 @@ enum class AppTheme(val titleRes: StringResource?) {
     DARK_BLUE(null),
     HOT_PINK(null),
     BLUE(null),
+    MONOCHROME(MR.strings.theme_monochrome),
 }
