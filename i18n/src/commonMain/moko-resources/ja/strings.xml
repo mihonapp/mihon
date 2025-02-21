@@ -694,7 +694,6 @@
     <string name="pref_debug_info">デバッグ情報</string>
     <string name="pref_chapter_swipe_start">左へスワイプ時の操作</string>
     <string name="pref_chapter_swipe_end">右へスワイプ時の操作</string>
-    <string name="pref_library_columns_per_row">列あたり%d件の項目</string>
     <string name="pref_chapter_swipe">章の間のスワイプ</string>
     <string name="pref_double_tap_zoom">ダブルタップでズーム</string>
     <string name="action_set_interval">間隔を設定</string>
@@ -837,4 +836,9 @@
     <string name="remove_private_extension_message">本当に\"%s\"拡張機能を削除しますか？</string>
     <string name="add_repo_confirmation">リポジトリ\"%s\"を追加しますか？</string>
     <string name="confirm_tracker_update">トラッカーを章 %d に更新しますか？</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">パフォーマンスに影響する。 ビットマップのしきい値を下げてもブランク画像の問題が解決しない場合のみ有効にしてください。</string>
+    <string name="pref_hardware_bitmap_threshold_default">デフォルト (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">常にSSIVで長いストリップ画像をデコードする</string>
+    <string name="pref_hardware_bitmap_threshold">カスタム・ハードウェア・ビットマップ閾値</string>
+    <string name="pref_hardware_bitmap_threshold_summary">リーダが空の画像を読み込んだ場合は、しきい値を徐々に下げてください。\n選択されました: %s</string>
 </resources>

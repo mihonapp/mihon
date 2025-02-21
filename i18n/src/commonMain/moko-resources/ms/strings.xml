@@ -693,7 +693,6 @@
     <string name="pref_page_rotate">Putar muka surat lebar agar muat</string>
     <string name="pref_debug_info">Maklumat nyahpepijat</string>
     <string name="pref_chapter_swipe_end">Tindakan leret ke kanan</string>
-    <string name="pref_library_columns_per_row">%d setiap baris</string>
     <string name="pref_chapter_swipe">Leret bab</string>
     <string name="pref_double_tap_zoom">Ketik dua kali untuk zum</string>
     <string name="pref_chapter_swipe_start">Tindakan leret ke kiri</string>

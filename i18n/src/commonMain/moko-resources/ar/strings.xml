@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe">تمرير الفصول</string>
     <string name="pref_chapter_swipe_end">إجراء التمرير الأيسر</string>
     <string name="pref_chapter_swipe_start">إجراء التمرير الأيمن</string>
-    <string name="pref_library_columns_per_row">%d كلَّ صفٍّ</string>
     <string name="action_set_interval">عيِّد المدة</string>
     <string name="action_filter_interval_custom">مدة جلب مخصَّصة</string>
     <string name="manga_display_interval_title">قدِّر كلَّ</string>

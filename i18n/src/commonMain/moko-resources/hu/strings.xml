@@ -686,7 +686,6 @@
     <string name="track_activity_name">Bejelentkezés nyilvántartóhoz</string>
     <string name="delete_downloaded">Letöltött törlése</string>
     <string name="split_tall_images">Magas képek szétvágása</string>
-    <string name="pref_library_columns_per_row">%d elem soronként</string>
     <string name="pref_update_only_in_release_period">Következő kiadás idejének megjóslása</string>
     <string name="pref_page_rotate">Széles oldalak forgatása az illeszkedéshez</string>
     <string name="pref_chapter_swipe_end">Jobbra csúsztatási cselekmény</string>
@@ -807,4 +806,12 @@
     <string name="action_view_upcoming">Közelgő frissítések megtekintése</string>
     <string name="upcoming_guide">Közelgő útmutató</string>
     <string name="upcoming_calendar_prev">Előző hónap</string>
+    <string name="action_copy_link">Hivatkozás másolása</string>
+    <string name="onboarding_permission_crashlytics">Összeomlási jelentés küldése</string>
+    <string name="onboarding_permission_analytics">Analitika engedélyezése</string>
+    <string name="onboarding_permission_analytics_description">Anonimizált használati adatok küldése a funkciók fejlesztésének érdekében.</string>
+    <string name="action_sort_random">Véletlenszerű</string>
+    <string name="pref_security">Biztonság</string>
+    <string name="pref_firebase">Analitika és összeomlási jelentések</string>
+    <string name="onboarding_permission_crashlytics_description">Anonimizált összeomlási jelentés küldése a fejlesztőknek.</string>
 </resources>

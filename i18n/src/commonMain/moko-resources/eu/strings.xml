@@ -582,7 +582,6 @@
     <string name="action_copy_to_clipboard">Kopiatu arbelera</string>
     <string name="action_not_now">Orain ez</string>
     <string name="delete_downloaded">Ezabatu deskargatuak</string>
-    <string name="pref_library_columns_per_row">%d ilara bakoitzeko</string>
     <string name="onboarding_storage_action_select">Aukeratu karpeta bat</string>
     <string name="action_apply">Ezarri</string>
     <string name="onboarding_storage_selection_required">Karpeta bat aukeratu behar da</string>

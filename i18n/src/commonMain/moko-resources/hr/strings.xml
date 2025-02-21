@@ -692,7 +692,6 @@
     <string name="pref_page_rotate">Prilagodi prikaz širokih stranica okretanjem</string>
     <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
     <string name="pref_debug_info">Informacije o otklanjanju grešaka</string>
-    <string name="pref_library_columns_per_row">%d po retku</string>
     <string name="pref_chapter_swipe_start">Prelistaj ulijevo</string>
     <string name="pref_double_tap_zoom">Dodirni dvaput za zumiranje</string>
     <string name="pref_chapter_swipe">Prelistaj poglavlja</string>
@@ -840,4 +839,5 @@
     <string name="pref_hardware_bitmap_threshold_summary">Ako čitač učita praznu sliku, postupno smanji prag.\nOdabrano: %s</string>
     <string name="pref_hardware_bitmap_threshold">Prilagođeni hardverski prag bitmapa</string>
     <string name="pref_hardware_bitmap_threshold_default">Standardno (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Utječe na performansu. Aktiviraj samo ako smanjenje praga bitmapa ne riješi probleme s praznim slikama</string>
 </resources>

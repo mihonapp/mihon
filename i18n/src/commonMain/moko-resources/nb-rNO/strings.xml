@@ -692,7 +692,6 @@
     <string name="pref_page_rotate_invert">Vend orienteringen av roterte brede sider</string>
     <string name="pref_page_rotate">Roter brede sider slik at de passer</string>
     <string name="pref_debug_info">Debug info</string>
-    <string name="pref_library_columns_per_row">%d per rad</string>
     <string name="manga_display_modified_interval_title">Sett til å oppdatere hver</string>
     <string name="skipped_reason_not_in_release_period">Hoppet over fordi ingen utgivelse var forventet i dag</string>
     <string name="pref_chapter_swipe">Kapittelsveip</string>

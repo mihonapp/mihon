@@ -671,7 +671,6 @@
     <string name="pref_flash_page">Väläytä näyttöä sivunvaihdon yhteydessä</string>
     <string name="pref_storage_location_info">Käytetään automaattisille varmuuskopioille, lukujen latauksille ja paikallisille lähteille.</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Vältä keskeytyksiä pitkään jatkuvissa toimenpiteissä, kuten kirjaston päivitys, lataukset, ja varmuuskopion palautukset.</string>
-    <string name="pref_library_columns_per_row">%d per rivi</string>
     <string name="pref_appearance_summary">Teema, ajan ja päivämäärän formaatti</string>
     <string name="pref_downloads_summary">Automaattinen lataus, ennakkolataus</string>
     <string name="pref_tracking_summary">Yksisuuntainen synkronointi, paranneltu synkronointi</string>

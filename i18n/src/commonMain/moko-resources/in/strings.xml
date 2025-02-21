@@ -65,7 +65,7 @@
     <string name="pref_category_tracking">Sinkronisasi</string>
     <string name="pref_category_advanced">Lanjutan</string>
     <string name="pref_category_about">Tentang</string>
-    <string name="pref_library_columns">Ukuran kisi</string>
+    <string name="pref_library_columns">Item per baris</string>
     <string name="portrait">Layar tegak</string>
     <string name="landscape">Layar mendatar</string>
     <string name="pref_library_update_interval">Pembaruan otomatis</string>
@@ -114,10 +114,10 @@
     <string name="rotation_free">Bebas</string>
     <string name="rotation_force_portrait">Terkunci tegak</string>
     <string name="rotation_force_landscape">Terkunci mendatar</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Merah</string>
+    <string name="color_filter_g_value">Hijau</string>
+    <string name="color_filter_b_value">Biru</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">Setelah secara manual ditandai telah dibaca</string>
     <string name="pref_remove_after_read">Otomatis hapus setelah dibaca</string>
     <string name="disabled">Tidak Aktif</string>
@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe_end">Geser kekanan</string>
     <string name="pref_chapter_swipe_start">Geser kekiri</string>
     <string name="pref_double_tap_zoom">Ketuk dua kali untuk memperbesar</string>
-    <string name="pref_library_columns_per_row">%d per baris</string>
     <string name="action_set_interval">Terapkan jeda waktu</string>
     <string name="action_filter_interval_custom">Frekuensi pembaruan yang disesuaikan</string>
     <string name="skipped_reason_not_in_release_period">Dilewati karena tidak ada rilis yang diharapkan hari ini</string>
@@ -837,4 +836,11 @@
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
     <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
     <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
+    <string name="pref_hardware_bitmap_threshold">Batas bitmap perangkat keras kustom</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Jika pembaca memuat gambar kosong, kurangi threshold secara bertahap.\nPilih: %s</string>
+    <string name="pref_hardware_bitmap_threshold_default">Bawaan (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Selalu dekode gambar berbaris panjang dengan SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Mempengaruhi performa. Aktifkan hanya jika menurunkan batas bitmap tidak memperbaiki gambar kosong</string>
+    <string name="pref_incognito_mode_extension_summary">Jeda riwayat pembacaan untuk ekstensi</string>
+    <string name="label_auto">Otomatis</string>
 </resources>
