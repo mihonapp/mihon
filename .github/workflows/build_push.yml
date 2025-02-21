@@ -38,13 +38,13 @@ jobs:
         run: ./gradlew testReleaseUnitTest testStandardReleaseUnitTest
 
       - name: Upload APK
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: arm64-v8a-${{ github.sha }}
           path: app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned.apk
 
       - name: Upload mapping
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/standardRelease
