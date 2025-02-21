@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
-    <string name="pref_library_columns_per_row">%d por linha</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="pref_update_only_in_release_period">Prever a data do próximo lançamento</string>
     <string name="action_set_interval">Definir intervalo</string>

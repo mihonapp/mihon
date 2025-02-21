@@ -693,7 +693,6 @@
     <string name="pref_hide_in_library_items">Сакри уносе који се већ налазе у колекцији</string>
     <string name="overlay_header">Прекривање</string>
     <string name="split_tall_images">Растави високе слике</string>
-    <string name="pref_library_columns_per_row">%d по реду</string>
     <string name="pref_chapter_swipe_end">Превуци удесно</string>
     <string name="pref_chapter_swipe_start">Превуци улево</string>
     <string name="pref_chapter_swipe">Прелистај поглавље</string>

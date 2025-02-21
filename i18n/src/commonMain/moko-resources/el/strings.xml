@@ -696,7 +696,6 @@
     <string name="pref_double_tap_zoom">Διπλό πάτημα για ζουμ</string>
     <string name="pref_chapter_swipe_start">Ενέργεια συρσίματος προς τα αριστερά</string>
     <string name="pref_chapter_swipe_end">Ενέργεια συρσίματος προς τα δεξιά</string>
-    <string name="pref_library_columns_per_row">%d ανά σειρά</string>
     <string name="action_set_interval">Ορισμός χρονικού διαστήματος</string>
     <string name="action_filter_interval_custom">Προσαρμοσμένη συχνότητα ενημέρωσης</string>
     <string name="pref_update_only_in_release_period">Πρόβλεψη χρόνου επόμενης απελευθέρωσης</string>
@@ -837,4 +836,10 @@
     <string name="invalid_backup_file_json">Δεν υποστηρίζεται η δημιουργία αντιγράφων ασφαλείας JSON</string>
     <string name="pref_auto_update_manga_on_mark_read">Ενημέρωση προόδου όταν επισημανθεί ως αναγνωσμένη</string>
     <string name="trackers_updated_summary">Οι trackers ενημερώθηκαν στο κεφάλαιο %d</string>
+    <string name="pref_incognito_mode_extension_summary">Παύση ιστορικού ανάγνωσης για επέκταση</string>
+    <string name="pref_hardware_bitmap_threshold_default">Προεπιλογή (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Εάν ο αναγνώστης φορτώσει μια κενή εικόνα, μειώστε σταδιακά το όριο.\nΕπιλεγμένο: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Αποκωδικοποίηση εικόνων μακράς λωρίδας πάντα με SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Επηρεάζει την απόδοση. Ενεργοποιήστε το μόνο αν η μείωση του ορίου bitmap δε διορθώνει τα προβλήματα κενών εικόνων</string>
+    <string name="pref_hardware_bitmap_threshold">Προσαρμοσμένο όριο bitmap υλικού</string>
 </resources>

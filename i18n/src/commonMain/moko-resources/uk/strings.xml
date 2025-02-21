@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe_end">Проведіть пальцем праворуч</string>
     <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
     <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
-    <string name="pref_library_columns_per_row">%d на рядок</string>
     <string name="action_set_interval">Встановити інтервал</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
     <string name="action_filter_interval_custom">Налаштувати інтервал оновленнь</string>

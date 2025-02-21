@@ -692,7 +692,6 @@
     <string name="pref_page_rotate">화면에 맞게 넓은 페이지 회전</string>
     <string name="pref_page_rotate_invert">회전된 넓은 페이지의 회전 방향</string>
     <string name="pref_debug_info">디버그 정보</string>
-    <string name="pref_library_columns_per_row">행당 %d개</string>
     <string name="pref_chapter_swipe_start">왼쪽으로 스와이프 액션</string>
     <string name="pref_chapter_swipe_end">오른쪽으로 스와이프 액션</string>
     <string name="pref_chapter_swipe">회차 스와이프</string>

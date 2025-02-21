@@ -52,10 +52,10 @@
     <string name="charging">Когда заряжается</string>
     <string name="clear_database_completed">Серии удалены</string>
     <string name="clear_database_confirmation">Вы уверены? Прочитанные главы и прогресс не библиотечных серий будет потерян</string>
-    <string name="color_filter_a_value">А</string>
-    <string name="color_filter_r_value">К</string>
-    <string name="color_filter_g_value">З</string>
-    <string name="color_filter_b_value">С</string>
+    <string name="color_filter_a_value">Альфа</string>
+    <string name="color_filter_r_value">Красный</string>
+    <string name="color_filter_g_value">Зелёный</string>
+    <string name="color_filter_b_value">Синий</string>
     <string name="completed">Завершено</string>
     <string name="confirm_delete_chapters">Вы уверены, что хотите удалить выбранные главы?</string>
     <string name="confirm_set_image_as_cover">Использовать это изображение как обложку?</string>
@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe_end">Проведите право</string>
     <string name="pref_chapter_swipe_start">Проведите влево</string>
     <string name="pref_double_tap_zoom">Двойное нажатие для увеличения</string>
-    <string name="pref_library_columns_per_row">%d в ряд</string>
     <string name="action_filter_interval_custom">Настраиваемая частота обновления</string>
     <string name="intervals_header">Интервалы</string>
     <string name="manga_display_interval_title">Оценивать каждые</string>
@@ -840,4 +839,8 @@
     <string name="pref_hardware_bitmap_threshold_summary">Если читалка загружает пустое изображение, постепенно уменьшайте пороговую обработку.\nВыбрано: %s</string>
     <string name="pref_hardware_bitmap_threshold">Пользовательская аппаратная пороговая обработка растрового изображения</string>
     <string name="pref_hardware_bitmap_threshold_default">По умолчанию (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Всегда декодировать длинные изображения с помощью SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Влияет на производительность. Включите этот параметр, если пороговая обработка растрового изображения не помогает с ошибками, связанными с пустыми изображениями</string>
+    <string name="pref_incognito_mode_extension_summary">Приостановить историю чтения для расширений</string>
+    <string name="label_auto">Авто</string>
 </resources>

@@ -63,7 +63,7 @@
     <string name="pref_category_tracking">Tracking</string>
     <string name="pref_category_advanced">Erweitert</string>
     <string name="pref_category_about">Über</string>
-    <string name="pref_library_columns">Kachelgröße</string>
+    <string name="pref_library_columns">Elemente pro Zeile</string>
     <string name="portrait">Hochformat</string>
     <string name="landscape">Querformat</string>
     <string name="pref_library_update_interval">Automatische Aktualisierungen</string>
@@ -114,10 +114,10 @@
     <string name="rotation_free">Frei</string>
     <string name="rotation_force_portrait">Hochformat erzwingen</string>
     <string name="rotation_force_landscape">Querformat erzwingen</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Rot</string>
+    <string name="color_filter_g_value">Grün</string>
+    <string name="color_filter_b_value">Blau</string>
+    <string name="color_filter_a_value">Alpha</string>
     <string name="pref_remove_after_marked_as_read">Nachdem manuell als gelesen markiert</string>
     <string name="pref_remove_after_read">Automatisch nach dem Lesen löschen</string>
     <string name="disabled">Deaktiviert</string>
@@ -696,7 +696,6 @@
     <string name="pref_chapter_swipe_end">Aktion beim Streichen nach rechts</string>
     <string name="pref_chapter_swipe_start">Aktion beim Streichen nach links</string>
     <string name="pref_double_tap_zoom">Zum Zoomen doppeltippen</string>
-    <string name="pref_library_columns_per_row">%d pro Zeile</string>
     <string name="intervals_header">Intervalle</string>
     <string name="action_filter_interval_custom">Benutzerdefiniertes Aktualisierungsintervall</string>
     <string name="action_set_interval">Intervall einstellen</string>
@@ -787,7 +786,7 @@
     <string name="onboarding_storage_help_action">Speicherleitfaden</string>
     <string name="pref_library_update_smart_update">Intelligentes Aktualisieren</string>
     <string name="label_add_repo_input">Repository-URL</string>
-    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URL sollte mit „index.min.json“ enden.</string>
+    <string name="action_add_repo_message">Füge zusätzliche Repositorys zu Mihon hinzu. Deren URLs sollten mit „index.min.json“ enden.</string>
     <string name="invalid_repo_name">Ungültige Repository-URL</string>
     <string name="manga_interval_expected_update">Ca. %1$s bis zur Veröffentlichung neuer Kapitel, wird ca. alle %2$s überprüft.</string>
     <string name="theme_nord">Nord</string>
@@ -840,4 +839,8 @@
     <string name="pref_hardware_bitmap_threshold_summary">Reduziert stufenweise den Grenzwert, wenn der Leser nur ein leeres Bild lädt.\nAusgewählt: %s</string>
     <string name="pref_hardware_bitmap_threshold">Benutzerdefinierter Hardware-Bitmap-Grenzwert</string>
     <string name="pref_hardware_bitmap_threshold_default">Standard (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv">Lange-Streifen-Bilder immer mit SSIV dekodieren</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Beeinflusst die Leistung. Nur aktivieren, wenn das Reduzieren des Bitmap-Grenzwerts das Problem von leeren Bildern nicht behebt</string>
+    <string name="pref_incognito_mode_extension_summary">Leseverlauf für eine Erweiterung pausieren</string>
+    <string name="label_auto">Automatisch</string>
 </resources>

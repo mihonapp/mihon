@@ -594,7 +594,6 @@
     <string name="action_sort_next_updated">העדכון הצפוי הבא</string>
     <string name="pref_advanced_summary">הורד קבצי קריסה, אופטימיזציה לסוללה</string>
     <string name="theme_lavender">לבנדר</string>
-    <string name="pref_library_columns_per_row">%d בכל שורה</string>
     <string name="information_cloudflare_help">לחץ כאן לעזרה עם Cloudflare</string>
     <string name="download_notifier_split_page_not_found">עמוד %d לא נמצא בעת פיצול</string>
     <string name="appwidget_updates_description">צפה בפריטי הספריה העדכניים ביותר</string>

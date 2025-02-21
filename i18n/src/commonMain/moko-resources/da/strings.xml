@@ -205,7 +205,6 @@
     <string name="pref_fullscreen">Fuldskærmsvisning</string>
     <string name="white_background">Hvid</string>
     <string name="ext_pending">Ventende</string>
-    <string name="pref_library_columns_per_row">%d pr. række</string>
     <string name="ext_installer_pref">Installationsprogram</string>
     <string name="action_copy_to_clipboard">Kopiér til udklipsholder</string>
     <string name="unlock_app_title">Lås op for %s</string>
