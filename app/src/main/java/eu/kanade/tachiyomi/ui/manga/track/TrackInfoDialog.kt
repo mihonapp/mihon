@@ -684,9 +684,10 @@ data class TrackerSearchScreen(
             queryResult = state.queryResult,
             selected = state.selected,
             onSelectedChange = screenModel::updateSelection,
-            onConfirmSelection = { private: Boolean ->
-                state.selected!!.private = private
-                screenModel.registerTracking(state.selected!!)
+            onConfirmSelection = f@{ private: Boolean ->
+                val selected = state.selected ?: return@f
+                selected.private = private
+                screenModel.registerTracking(selected)
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
