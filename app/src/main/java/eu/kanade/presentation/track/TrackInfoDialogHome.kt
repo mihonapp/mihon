@@ -251,6 +251,7 @@ private fun TrackInfoItem(
                         )
                     }
                 }
+
                 if (onStartDateClick != null && onEndDateClick != null) {
                     HorizontalDivider()
                     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
