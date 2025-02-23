@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.theme.TachiyomiPreviewTheme
 import eu.kanade.presentation.track.components.TrackLogoIcon
@@ -61,7 +60,6 @@ import eu.kanade.tachiyomi.util.lang.toLocalDate
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import uy.kohesive.injekt.injectLazy
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -79,8 +77,6 @@ fun TrackInfoDialogHome(
     onCopyLink: (TrackItem) -> Unit,
     onTogglePrivate: (TrackItem) -> Unit,
 ) {
-    val trackPreferences: TrackPreferences by injectLazy()
-
     Column(
         modifier = Modifier
             .animateContentSize()
@@ -128,7 +124,7 @@ fun TrackInfoDialogHome(
                     onCopyLink = { onCopyLink(item) },
                     private = item.track.private,
                     onTogglePrivate = { onTogglePrivate(item) }
-                        .takeIf { supportsPrivate && trackPreferences.privateTracking().get() },
+                        .takeIf { supportsPrivate },
                 )
             } else {
                 TrackInfoItemEmpty(

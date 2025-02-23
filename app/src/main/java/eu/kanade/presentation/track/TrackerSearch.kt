@@ -189,7 +189,7 @@ fun TrackerSearch(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = stringResource(MR.strings.action_private_track),
+                                contentDescription = stringResource(MR.strings.action_toggle_private_on),
                             )
                         }
                     }

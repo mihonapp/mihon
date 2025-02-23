@@ -2,7 +2,6 @@ package eu.kanade.tachiyomi.data.track.anilist
 
 import android.net.Uri
 import androidx.core.net.toUri
-import eu.kanade.domain.track.service.TrackPreferences
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALAddMangaResult
 import eu.kanade.tachiyomi.data.track.anilist.dto.ALCurrentUserResult
@@ -34,7 +33,6 @@ import tachiyomi.domain.track.model.Track as DomainTrack
 class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
 
     private val json: Json by injectLazy()
-    val trackPreferences: TrackPreferences by injectLazy()
 
     private val authClient = client.newBuilder()
         .addInterceptor(interceptor)
@@ -58,7 +56,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     put("mangaId", track.remote_id)
                     put("progress", track.last_chapter_read.toInt())
                     put("status", track.toApiStatus())
-                    if (trackPreferences.privateTracking().get()) put("private", track.private)
+                    put("private", track.private)
                 }
             }
             with(json) {
@@ -105,7 +103,7 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                     put("score", track.score.toInt())
                     put("startedAt", createDate(track.started_reading_date))
                     put("completedAt", createDate(track.finished_reading_date))
-                    if (trackPreferences.privateTracking().get()) put("private", track.private)
+                    put("private", track.private)
                 }
             }
             authClient.newCall(POST(API_URL, body = payload.toString().toRequestBody(jsonMime)))

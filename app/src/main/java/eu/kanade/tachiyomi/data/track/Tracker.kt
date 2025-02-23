@@ -86,6 +86,4 @@ interface Tracker {
     suspend fun setRemoteFinishDate(track: Track, epochMillis: Long)
 
     suspend fun setRemotePrivate(track: Track, private: Boolean)
-
-    suspend fun togglePrivate(track: Track) = this.setRemotePrivate(track, !track.private)
 }
