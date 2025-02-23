@@ -6,8 +6,6 @@ import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class CategoryPreferencesCleanupMigration : Migration {
     override val version: Float = 10f
@@ -16,7 +14,7 @@ class CategoryPreferencesCleanupMigration : Migration {
         val libraryPreferences = migrationContext.get<LibraryPreferences>() ?: return@withIOContext false
         val downloadPreferences = migrationContext.get<DownloadPreferences>() ?: return@withIOContext false
 
-        val getCategories = Injekt.get<GetCategories>()
+        val getCategories = migrationContext.get<GetCategories>() ?: return@withIOContext false
         val allCategories = getCategories.await().map { it.id.toString() }.toSet()
 
         val defaultCategory = libraryPreferences.defaultCategory().get()

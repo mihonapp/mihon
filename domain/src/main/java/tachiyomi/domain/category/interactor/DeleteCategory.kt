@@ -7,13 +7,11 @@ import tachiyomi.domain.category.model.CategoryUpdate
 import tachiyomi.domain.category.repository.CategoryRepository
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 
 class DeleteCategory(
     private val categoryRepository: CategoryRepository,
-    private val libraryPreferences: LibraryPreferences = Injekt.get(),
-    private val downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val libraryPreferences: LibraryPreferences,
+    private val downloadPreferences: DownloadPreferences,
 ) {
 
     suspend fun await(categoryId: Long) = withNonCancellableContext {
