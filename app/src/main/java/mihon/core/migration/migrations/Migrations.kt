@@ -7,5 +7,5 @@ val migrations: List<Migration>
         SetupBackupCreateMigration(),
         SetupLibraryUpdateMigration(),
         TrustExtensionRepositoryMigration(),
-        RemoveNonReferredCategoryPreferencesMigration(),
+        CategoryPreferencesCleanupMigration(),
     )

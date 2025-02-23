@@ -3,43 +3,39 @@ package mihon.core.migration.migrations
 import mihon.core.migration.Migration
 import mihon.core.migration.MigrationContext
 import tachiyomi.core.common.util.lang.withIOContext
-import tachiyomi.data.DatabaseHandler
+import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 
-class RemoveNonReferredCategoryPreferencesMigration : Migration {
+class CategoryPreferencesCleanupMigration : Migration {
     override val version: Float = 10f
 
     override suspend fun invoke(migrationContext: MigrationContext): Boolean = withIOContext {
-        val handler = migrationContext.get<DatabaseHandler>() ?: return@withIOContext false
         val libraryPreferences = migrationContext.get<LibraryPreferences>() ?: return@withIOContext false
         val downloadPreferences = migrationContext.get<DownloadPreferences>() ?: return@withIOContext false
 
-        val allCategoryIds = handler.awaitList { categoriesQueries.getCategories() }.map { it.id.toString() }
+        val getCategories = Injekt.get<GetCategories>()
+        val allCategories = getCategories.await().map { it.id.toString() }.toSet()
 
         val defaultCategory = libraryPreferences.defaultCategory().get()
-        if (defaultCategory.toString() !in allCategoryIds) {
+        if (defaultCategory.toString() !in allCategories) {
             libraryPreferences.defaultCategory().delete()
         }
 
-        val categoriesPrefs = listOf(
+        val categoryPreferences = listOf(
             libraryPreferences.updateCategories(),
             libraryPreferences.updateCategoriesExclude(),
             downloadPreferences.removeExcludeCategories(),
             downloadPreferences.downloadNewChapterCategories(),
             downloadPreferences.downloadNewChapterCategoriesExclude(),
         )
-        categoriesPrefs.forEach { pref ->
-            val categoriesSet = pref.get()
-            val removingList = emptySet<String>().toMutableSet()
-            categoriesSet.forEach { setId ->
-                if (setId !in allCategoryIds) {
-                    removingList += setId
-                }
-            }
-            pref.set(
-                categoriesSet.minus(removingList),
-            )
+        categoryPreferences.forEach { preference ->
+            val ids = preference.get()
+            val garbageIds = ids.minus(allCategories)
+            if (garbageIds.isEmpty()) return@forEach
+            preference.set(ids.minus(garbageIds))
         }
         return@withIOContext true
     }

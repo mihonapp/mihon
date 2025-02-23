@@ -37,20 +37,18 @@ class DeleteCategory(
             libraryPreferences.defaultCategory().delete()
         }
 
-        val categoriesPrefs = listOf(
+        val categoryPreferences = listOf(
             libraryPreferences.updateCategories(),
             libraryPreferences.updateCategoriesExclude(),
             downloadPreferences.removeExcludeCategories(),
             downloadPreferences.downloadNewChapterCategories(),
             downloadPreferences.downloadNewChapterCategoriesExclude(),
         )
-        categoriesPrefs.forEach { pref ->
-            val categoriesSet = pref.get()
-            if (categoriesSet.any { it == categoryId.toString() }) {
-                pref.set(
-                    categoriesSet.minus(categoryId.toString()),
-                )
-            }
+        val categoryIdString = categoryId.toString()
+        categoryPreferences.forEach { preference ->
+            val ids = preference.get()
+            if (categoryIdString !in ids) return@forEach
+            preference.set(ids.minus(categoryIdString))
         }
 
         try {
