@@ -6,9 +6,9 @@
     <color name="monochrome_onPrimaryContainer">#000000</color>
     <color name="monochrome_secondary">#FFFFFF</color>
     <color name="monochrome_onSecondary">#000000</color>
-    <color name="monochrome_secondaryContainer">#A0A0A0</color>
+    <color name="monochrome_secondaryContainer">#777777</color>
     <color name="monochrome_onSecondaryContainer">#000000</color>
-    <color name="monochrome_tertiary">#A0A0A0</color>
+    <color name="monochrome_tertiary">#777777</color>
     <color name="monochrome_onTertiary">#000000</color>
     <color name="monochrome_tertiaryContainer">#FFFFFF</color>
     <color name="monochrome_onTertiaryContainer">#000000</color>
