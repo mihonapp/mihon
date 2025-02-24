@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
 
 ### Changed
+- Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))
 - Ignore hidden files/folders for Local Source chapter list ([@BrutuZ](https://github.com/BrutuZ)) ([#1763](https://github.com/mihonapp/mihon/pull/1763))
 
 ### Fixed
