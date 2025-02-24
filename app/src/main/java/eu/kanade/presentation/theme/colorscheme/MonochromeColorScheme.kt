@@ -16,7 +16,7 @@ internal object MonochromeColorScheme : BaseColorScheme() {
         secondaryContainer = Color(0xFF777777),
         onSecondaryContainer = Color(0xFF000000),
         tertiary = Color(0xFF777777),
-        onTertiary = Color(0xFF000000),
+        onTertiary = Color(0xFFFFFFFF),
         tertiaryContainer = Color(0xFFFFFFFF),
         onTertiaryContainer = Color(0xFF000000),
         error = Color(0xFFFFFFFF),
