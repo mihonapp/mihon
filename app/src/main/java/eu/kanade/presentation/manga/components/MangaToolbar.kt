@@ -141,7 +141,7 @@ fun MangaToolbar(
                         )
                     }
                 }
-                .build(),
+                    .build(),
             )
         },
         isActionMode = isActionMode,
