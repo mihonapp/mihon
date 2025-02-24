@@ -14,14 +14,17 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Added
 - Add option to always decode long strip images with SSIV
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
+- Add button to favorite manga from history screen ([@Animeboynz](https://github.com/Animeboynz)) ([#1733](https://github.com/mihonapp/mihon/pull/1733))
 
 ### Changed
+- Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))
 - Ignore hidden files/folders for Local Source chapter list ([@BrutuZ](https://github.com/BrutuZ)) ([#1763](https://github.com/mihonapp/mihon/pull/1763))
 
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
 - Fix Bangumi and MAL tracking 401 errors due to Mihon sending expired credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#1681](https://github.com/mihonapp/mihon/pull/1681), [#1682](https://github.com/mihonapp/mihon/pull/1682))
 - Fix certain Infinix devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684))
+- Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
 - Fix preferences related to categories being backup/restored wrongly ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
 
 ### Other

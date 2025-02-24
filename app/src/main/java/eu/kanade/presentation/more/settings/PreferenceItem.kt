@@ -61,7 +61,7 @@ internal fun PreferenceItem(
     ) {
         when (item) {
             is Preference.PreferenceItem.SwitchPreference -> {
-                val value by item.pref.collectAsState()
+                val value by item.preference.collectAsState()
                 SwitchPreferenceWidget(
                     title = item.title,
                     subtitle = item.subtitle,
@@ -70,7 +70,7 @@ internal fun PreferenceItem(
                     onCheckedChanged = { newValue ->
                         scope.launch {
                             if (item.onValueChanged(newValue)) {
-                                item.pref.set(newValue)
+                                item.preference.set(newValue)
                             }
                         }
                     },
@@ -93,7 +93,7 @@ internal fun PreferenceItem(
                 )
             }
             is Preference.PreferenceItem.ListPreference<*> -> {
-                val value by item.pref.collectAsState()
+                val value by item.preference.collectAsState()
                 ListPreferenceWidget(
                     value = value,
                     title = item.title,
@@ -120,14 +120,14 @@ internal fun PreferenceItem(
                 )
             }
             is Preference.PreferenceItem.MultiSelectListPreference -> {
-                val values by item.pref.collectAsState()
+                val values by item.preference.collectAsState()
                 MultiSelectListPreferenceWidget(
                     preference = item,
                     values = values,
                     onValuesChange = { newValues ->
                         scope.launch {
                             if (item.onValueChanged(newValues)) {
-                                item.pref.set(newValues.toMutableSet())
+                                item.preference.set(newValues.toMutableSet())
                             }
                         }
                     },
@@ -142,7 +142,7 @@ internal fun PreferenceItem(
                 )
             }
             is Preference.PreferenceItem.EditTextPreference -> {
-                val values by item.pref.collectAsState()
+                val values by item.preference.collectAsState()
                 EditTextPreferenceWidget(
                     title = item.title,
                     subtitle = item.subtitle,
@@ -150,7 +150,7 @@ internal fun PreferenceItem(
                     value = values,
                     onConfirm = {
                         val accepted = item.onValueChanged(it)
-                        if (accepted) item.pref.set(it)
+                        if (accepted) item.preference.set(it)
                         accepted
                     },
                 )
