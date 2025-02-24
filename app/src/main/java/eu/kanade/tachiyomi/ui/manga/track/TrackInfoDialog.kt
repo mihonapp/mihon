@@ -687,7 +687,7 @@ data class TrackerSearchScreen(
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
-            privateTracking = screenModel.privateTracking,
+            supportsPrivateTracking = screenModel.supportsPrivateTracking,
         )
     }
 
@@ -697,6 +697,8 @@ data class TrackerSearchScreen(
         initialQuery: String,
         private val tracker: Tracker,
     ) : StateScreenModel<Model.State>(State()) {
+
+        val supportsPrivateTracking = tracker.supportsPrivateTracking
 
         init {
             // Run search on first launch
@@ -734,8 +736,6 @@ data class TrackerSearchScreen(
         fun updateSelection(selected: TrackSearch) {
             mutableState.update { it.copy(selected = selected) }
         }
-
-        val supportsPrivateTracking = tracker.supportsPrivateTracking
 
         @Immutable
         data class State(

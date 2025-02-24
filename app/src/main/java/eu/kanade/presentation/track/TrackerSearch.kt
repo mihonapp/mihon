@@ -180,7 +180,7 @@ fun TrackerSearch(
                     ) {
                         Text(text = stringResource(MR.strings.action_track))
                     }
-                    if (privateTracking) {
+                    if (supportsPrivateTracking) {
                         Button(
                             onClick = { onConfirmSelection(true) },
                             elevation = ButtonDefaults.elevatedButtonElevation(),
