@@ -172,7 +172,7 @@ data class TrackInfoDialogHomeScreen(
                 )
             },
             onCopyLink = { context.copyTrackerLink(it) },
-            onTogglePrivate = { screenModel.togglePrivate(it) },
+            onTogglePrivate = screenModel::togglePrivate,
         )
     }
 
@@ -735,7 +735,7 @@ data class TrackerSearchScreen(
             mutableState.update { it.copy(selected = selected) }
         }
 
-        val privateTracking = tracker.supportsPrivateTracking
+        val supportsPrivateTracking = tracker.supportsPrivateTracking
 
         @Immutable
         data class State(

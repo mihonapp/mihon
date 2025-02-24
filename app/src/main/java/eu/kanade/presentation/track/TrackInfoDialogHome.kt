@@ -355,13 +355,7 @@ private fun TrackInfoItemMenu(
             if (onTogglePrivate != null) {
                 DropdownMenuItem(
                     text = {
-                        if (private) {
-                            Text(
-                                stringResource(MR.strings.action_toggle_private_off),
-                            )
-                        } else {
-                            Text(stringResource(MR.strings.action_toggle_private_on))
-                        }
+                        Text(stringResource(if (private) MR.strings.action_toggle_private_off else MR.strings.action_toggle_private_on))
                     },
                     onClick = {
                         onTogglePrivate()

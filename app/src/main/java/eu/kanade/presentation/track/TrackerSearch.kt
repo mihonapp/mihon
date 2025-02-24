@@ -93,7 +93,7 @@ fun TrackerSearch(
     onSelectedChange: (TrackSearch) -> Unit,
     onConfirmSelection: (private: Boolean) -> Unit,
     onDismissRequest: () -> Unit,
-    privateTracking: Boolean,
+    supportsPrivateTracking: Boolean,
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -167,14 +167,15 @@ fun TrackerSearch(
                 exit = slideOutVertically { it / 2 } + fadeOut(),
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(MaterialTheme.padding.small)
+                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 ) {
                     Button(
                         onClick = { onConfirmSelection(false) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 6.dp)
-                            .windowInsetsPadding(WindowInsets.navigationBars),
+                        modifier = Modifier.weight(1f),
                         elevation = ButtonDefaults.elevatedButtonElevation(),
                     ) {
                         Text(text = stringResource(MR.strings.action_track))
@@ -182,9 +183,6 @@ fun TrackerSearch(
                     if (privateTracking) {
                         Button(
                             onClick = { onConfirmSelection(true) },
-                            modifier = Modifier
-                                .padding(start = 6.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
-                                .windowInsetsPadding(WindowInsets.navigationBars),
                             elevation = ButtonDefaults.elevatedButtonElevation(),
                         ) {
                             Icon(
