@@ -284,7 +284,11 @@ private fun MangaScreenSmallImpl(
             val isFirstItemScrolled by remember {
                 derivedStateOf { chapterListState.firstVisibleItemScrollOffset > 0 }
             }
-            val animatedBgAlpha by animateFloatAsState(
+            val titleAlpha by animateFloatAsState(
+                if (!isFirstItemVisible) 1f else 0f,
+                label = "Top Bar Title",
+            )
+            val backgroundAlpha by animateFloatAsState(
                 if (!isFirstItemVisible || isFirstItemScrolled) 1f else 0f,
                 label = "Top Bar Background",
             )
@@ -298,11 +302,12 @@ private fun MangaScreenSmallImpl(
                 onClickEditCategory = onEditCategoryClicked,
                 onClickRefresh = onRefresh,
                 onClickMigrate = onMigrateClicked,
-                onCancelActionMode = { onAllChapterSelected(false) },
                 actionModeCounter = selectedChapterCount,
+                onCancelActionMode = { onAllChapterSelected(false) },
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
-                backgroundAlphaProvider = { animatedBgAlpha },
+                titleAlphaProvider = { titleAlpha },
+                backgroundAlphaProvider = { backgroundAlpha },
             )
         },
         bottomBar = {
@@ -538,6 +543,7 @@ fun MangaScreenLargeImpl(
                 actionModeCounter = selectedChapterCount,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
+                titleAlphaProvider = { 1f },
                 backgroundAlphaProvider = { 1f },
             )
         },
