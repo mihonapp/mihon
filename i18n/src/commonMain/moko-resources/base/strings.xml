@@ -577,7 +577,6 @@
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>
 
-
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
     <string name="library_sync_complete">Library sync complete</string>

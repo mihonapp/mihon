@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import tachiyomi.domain.manga.model.Manga
 
-class LibraryExporter {
+object LibraryExporter {
 
     data class ExportOptions(
         val includeTitle: Boolean,
@@ -32,24 +32,33 @@ class LibraryExporter {
         }
     }
 
+    private val escapeRequired = listOf("\r", "\n", "\"", ",")
+
     private fun generateCsvData(favorites: List<Manga>, options: ExportOptions): String {
-        val stringBuilder = StringBuilder()
-        favorites.forEach { manga ->
-            val row = mutableListOf<String>()
-            if (options.includeTitle) row.add(escapeCsvField(manga.title))
-            if (options.includeAuthor) row.add(escapeCsvField(manga.author ?: ""))
-            if (options.includeArtist) row.add(escapeCsvField(manga.artist ?: ""))
-            if (row.isNotEmpty()) {
-                stringBuilder.appendLine(row.joinToString(",") { "\"$it\"" })
+        val columnSize = listOf(
+            options.includeTitle,
+            options.includeAuthor,
+            options.includeArtist
+        ).count { it }
+
+        val rows = buildList(favorites.size) {
+            favorites.forEach { manga ->
+                add(buildList(columnSize) {
+                    if (options.includeTitle) add(manga.title)
+                    if (options.includeAuthor) add(manga.author)
+                    if (options.includeArtist) add(manga.artist)
+                })
             }
         }
-        return stringBuilder.toString()
-    }
-
-    private fun escapeCsvField(field: String): String {
-        return field
-            .replace("\"", "\"\"")
-            .replace("\r\n", "\n")
-            .replace("\r", "\n")
+        return rows.joinToString("\n") { columns ->
+            columns.joinToString(",") columns@{ column ->
+                if (column.isNullOrBlank()) return@columns ""
+                if (escapeRequired.any { column.contains(it) }) {
+                    column.replace("\"", "\"\"").let { "\"$it\"" }
+                } else {
+                    column
+                }
+            }
+        }
     }
 }
