@@ -171,26 +171,22 @@ class HistoryScreenModel(
             .map { it.id }
     }
 
-    fun addFavorite(
-        mangaOrId: Any,
-        checkDuplicate: Boolean = true,
-    ) {
+    fun addFavorite(mangaId: Long) {
         screenModelScope.launchIO {
-            val manga = when (mangaOrId) {
-                is Manga -> mangaOrId
-                is Long -> getManga.await(mangaOrId) ?: return@launchIO
-                else -> return@launchIO
+            val manga = getManga.await(mangaId) ?: return@launchIO
+
+            val duplicate = getDuplicateLibraryManga.await(manga).getOrNull(0)
+            if (duplicate != null) {
+                mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }
+                return@launchIO
             }
 
-            if (checkDuplicate) {
-                val duplicate = getDuplicateLibraryManga.await(manga).getOrNull(0)
+            addFavorite(manga)
+        }
+    }
 
-                if (duplicate != null) {
-                    mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicate)) }
-                    return@launchIO
-                }
-            }
-
+    fun addFavorite(manga: Manga) {
+        screenModelScope.launchIO {
             // Move to default category if applicable
             val categories = getCategories()
             val defaultCategoryId = libraryPreferences.defaultCategory().get().toLong()
