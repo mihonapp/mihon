@@ -96,14 +96,14 @@ class PreferenceRestorer(
                     }
                     is StringSetPreferenceValue -> {
                         if (prefs[key] is Set<*>?) {
-                            val success = restoreCategoriesPreference(
+                            val restored = restoreCategoriesPreference(
                                 key,
                                 value.value,
                                 preferenceStore,
                                 backupCategoriesById,
                                 categoriesByName,
                             )
-                            if (!success) preferenceStore.getStringSet(key).set(value.value)
+                            if (!restored) preferenceStore.getStringSet(key).set(value.value)
                         }
                     }
                 }
