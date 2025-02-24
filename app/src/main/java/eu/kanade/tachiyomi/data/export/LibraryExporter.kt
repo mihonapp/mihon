@@ -38,16 +38,18 @@ object LibraryExporter {
         val columnSize = listOf(
             options.includeTitle,
             options.includeAuthor,
-            options.includeArtist
+            options.includeArtist,
         ).count { it }
 
         val rows = buildList(favorites.size) {
             favorites.forEach { manga ->
-                add(buildList(columnSize) {
-                    if (options.includeTitle) add(manga.title)
-                    if (options.includeAuthor) add(manga.author)
-                    if (options.includeArtist) add(manga.artist)
-                })
+                add(
+                    buildList(columnSize) {
+                        if (options.includeTitle) add(manga.title)
+                        if (options.includeAuthor) add(manga.author)
+                        if (options.includeArtist) add(manga.artist)
+                    },
+                )
             }
         }
         return rows.joinToString("\n") { columns ->

@@ -331,11 +331,13 @@ object SettingsDataScreen : SearchableSettings {
         var showDialog by remember { mutableStateOf(false) }
 
         var exportOptions by remember {
-            mutableStateOf(ExportOptions(
-                includeTitle = true,
-                includeAuthor = true,
-                includeArtist = true,
-            ))
+            mutableStateOf(
+                ExportOptions(
+                    includeTitle = true,
+                    includeAuthor = true,
+                    includeArtist = true,
+                ),
+            )
         }
 
         val context = LocalContext.current
