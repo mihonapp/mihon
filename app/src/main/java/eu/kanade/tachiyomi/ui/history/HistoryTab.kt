@@ -100,7 +100,7 @@ data object HistoryTab : Tab {
                 DuplicateMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
-                        screenModel.addFavorite(dialog.manga, false)
+                        screenModel.addFavorite(dialog.manga)
                     },
                     onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
                     onMigrate = {
