@@ -26,10 +26,9 @@ import uy.kohesive.injekt.api.get
 
 class PreferenceRestorer(
     private val context: Context,
+    private val getCategories: GetCategories = Injekt.get(),
     private val preferenceStore: PreferenceStore = Injekt.get(),
 ) {
-    private val getCategories by lazy { Injekt.get<GetCategories>() }
-
     suspend fun restoreApp(
         preferences: List<BackupPreference>,
         backupCategories: List<BackupCategory>?,
@@ -56,7 +55,7 @@ class PreferenceRestorer(
         preferenceStore: PreferenceStore,
         backupCategories: List<BackupCategory>? = null,
     ) {
-        val allCategories = getCategories.await()
+        val allCategories = if (backupCategories != null) getCategories.await() else emptyList()
         val categoriesByName = allCategories.associateBy { it.name }
         val backupCategoriesById = backupCategories?.associateBy { it.id.toString() }.orEmpty()
         val prefs = preferenceStore.getAll()
