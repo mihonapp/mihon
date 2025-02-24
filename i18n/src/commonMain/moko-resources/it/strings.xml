@@ -363,7 +363,7 @@
     <string name="check_for_updates">Controlla aggiornamenti</string>
     <string name="battery_optimization_setting_activity_not_found">Impossibile aprire le impostazioni del dispositivo</string>
     <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento dei capitoli sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="gray_background">Grigio</string>
     <string name="page_list_empty_error">Nessuna pagina trovata</string>
@@ -837,4 +837,7 @@
     <string name="manga_interval_expected_update_null">Questo manga è completato o non c\'è data di rilascio prevista.</string>
     <string name="pref_auto_update_manga_on_mark_read">Aggiorna il progresso quando segnato come letto</string>
     <string name="trackers_updated_summary">Tracker aggiornati al capitolo %d</string>
+    <string name="pref_hardware_bitmap_threshold_default">Predefinito (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Se il lettore carica un\'immagine vuota, riduci progressivamente il limite.\nSelezionato: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Limite di elaborazione immagini hardware personalizzato</string>
 </resources>

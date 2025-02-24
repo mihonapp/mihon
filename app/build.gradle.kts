@@ -29,8 +29,8 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 8
-        versionName = "0.17.0"
+        versionCode = 10
+        versionName = "0.17.1"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
@@ -100,8 +100,6 @@ android {
             dimension = "default"
         }
         create("dev") {
-            // Include pseudolocales: https://developer.android.com/guide/topics/resources/pseudolocales
-            resourceConfigurations.addAll(listOf("en", "en_XA", "ar_XB", "xxhdpi"))
             dimension = "default"
         }
     }

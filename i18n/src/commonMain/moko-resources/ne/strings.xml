@@ -71,7 +71,7 @@
     <string name="action_mark_as_read">पढिसकेको चिन्ह लगाउनुहोस्</string>
     <string name="action_select_all">सबै चयन गर्नुहोस्</string>
     <string name="action_global_search">ग्लोबल खोज</string>
-    <string name="action_search_settings">सेटिङ्समा खोज्नुहोस्</string>
+    <string name="action_search_settings">सेटिंग्समा खोज्नुहोस्</string>
     <string name="action_search">खोज्नुहोस्</string>
     <string name="action_sort_last_read">अन्तिम पढिएको</string>
     <string name="action_sort_total">कुल अध्यायहरू</string>
@@ -82,7 +82,7 @@
     <string name="action_filter_bookmarked">पुस्तकचिनो लगाइएको</string>
     <string name="action_filter">फिल्टर</string>
     <string name="action_menu">मेनू</string>
-    <string name="action_settings">सेटिङ्स</string>
+    <string name="action_settings">सेटिंग्स</string>
     <string name="history">इतिहास</string>
     <string name="track">ट्र्याकिङ</string>
     <string name="chapters">अध्याय</string>
@@ -103,7 +103,7 @@
     <string name="label_recent_manga">इतिहास</string>
     <string name="label_recent_updates">अपडेट्स</string>
     <string name="label_library">पुस्तकालय</string>
-    <string name="label_settings">सेटिङ्स</string>
+    <string name="label_settings">सेटिंग्स</string>
     <string name="label_more">अरू</string>
     <string name="name">नाम</string>
     <string name="information_cloudflare_bypass_failure">Cloudflare लाई बाइपास गर्न असफल भयो</string>
@@ -163,7 +163,7 @@
     <string name="confirm_lock_change">परिवर्तन पुष्टि गर्न प्रमाणित गर्नुहोस्</string>
     <string name="label_default">पूर्वनिर्धारित</string>
     <string name="pref_tablet_ui_mode">ट्याब्लेट UI</string>
-    <string name="battery_optimization_setting_activity_not_found">यन्त्रको सेटिङ्स खोल्न सकिएन</string>
+    <string name="battery_optimization_setting_activity_not_found">यन्त्रको सेटिंग्स खोल्न सकिएन</string>
     <string name="pref_incognito_mode_summary">पढिएको इतिहास रोक्छ</string>
     <string name="pref_incognito_mode">गुप्त मोड</string>
     <string name="label_downloaded_only">डाउनलोड गरिएको मात्र</string>
@@ -238,7 +238,7 @@
     <string name="action_display_language_badge">भाषा</string>
     <string name="parental_controls_info">यसले अनौपचारिक वा सम्भावित रूपमा गलत रूपमा फ्ल्याग गरिएका एक्सटेन्शनहरूलाई एप भित्र NSFW (१८+) सामग्री आउन बाट रोक्दैन।</string>
     <string name="default_category">पूर्वनिर्धारित वर्ग</string>
-    <string name="categorized_display_settings">क्रमबद्धका लागि प्रति-वर्ग सेटिङ्स</string>
+    <string name="categorized_display_settings">क्रमबद्धका लागि प्रति-वर्ग सेटिंग्स</string>
     <string name="include">समावेश गर्नुहोस्: %s</string>
     <string name="pref_library_update_categories_details">\"बहिष्कृत\" वर्गहरूमा रहेका इन्ट्री \"समावेश गरिएका\" वर्गहरूमा भए पनि अपडेट हुने छैनन्।</string>
     <string name="ext_app_info">एप जानकारी</string>
@@ -307,7 +307,7 @@
     <string name="notification_cover_update_failed">आवरण अपडेट गर्न असफल भयो</string>
     <string name="notification_first_add_to_library">यो गर्नु अघि कृपया आफ्नो पुस्तकालयमा यस इन्ट्रीलाई राख्नुहोस्</string>
     <string name="download_notifier_downloader_title">डाउनलोडर</string>
-    <string name="restore_duration">%02d मिनेट, %02d सेकेन्ड</string>
+    <string name="restore_duration">%1$02d मिनेट, %2$02d सेकेन्ड</string>
     <string name="backup_in_progress">ब्याकअप पहिले नै प्रगतिमा छ</string>
     <string name="update_check_notification_update_available">नयाँ संस्करण उपलब्ध छ!</string>
     <string name="rotation_portrait">पोर्ट्रेट</string>
@@ -482,7 +482,7 @@
     <string name="action_display_cover_only_grid">आवरण मात्र ग्रिड</string>
     <string name="error_sharing_cover">आवरण साझा गर्दा त्रुटि भयो</string>
     <string name="confirm_delete_chapters">के तपाईँले चयन गर्नुभएको अध्यायहरू हटाउन चाहनुहुन्छ?</string>
-    <string name="chapter_settings">अध्याय सेटिङ्स</string>
+    <string name="chapter_settings">अध्याय सेटिंग्स</string>
     <string name="set_chapter_settings_as_default">पूर्वनिर्धारित रूपमा सेट गर्नुहोस्</string>
     <string name="confirm_set_image_as_cover">यो छवि आवरण को रूपमा राख्न चाहनुहुन्छ?</string>
     <string name="dialog_with_checkbox_reset">यो इन्ट्रीको सबै अध्यायहरू रिसेट गर्नुहोस्</string>
@@ -506,7 +506,7 @@
     <string name="viewer">पढ्ने मोड</string>
     <string name="transition_finished">सकिएको:</string>
     <string name="updating_library">पुस्तकालय अपडेट गर्दै</string>
-    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिङ्सलाई पूर्वनिर्धारित रूपमा सेभ गर्न चाहनुहुन्छ?</string>
+    <string name="confirm_set_chapter_settings">के तपाइँ निश्चित रूपमा यी सेटिंग्सलाई पूर्वनिर्धारित रूपमा सेभ गर्न चाहनुहुन्छ?</string>
     <string name="also_set_chapter_settings_for_library">मेरो पुस्तकालयका सबै इन्ट्रीहरूमा पनि लागू गर्नुहोस्</string>
     <string name="no_chapters_error">अध्यायहरू भेटिएन</string>
     <string name="track_status">स्थिति</string>
@@ -551,7 +551,7 @@
     <string name="learn_more">थप जान्नका लागि ट्याप गर्नुहोस्</string>
     <string name="update_check_no_new_updates">कुनै नयाँ अपडेट उपलब्ध छैन</string>
     <string name="information_empty_category_dialog">तपाईंसँग अहिलेसम्म कुनै पनि वर्गहरू छैन।</string>
-    <string name="chapter_settings_updated">पूर्वनिर्धारित अध्याय सेटिङ्स अपडेट गरियो</string>
+    <string name="chapter_settings_updated">पूर्वनिर्धारित अध्याय सेटिंग्स अपडेट गरियो</string>
     <string name="spen_next_page">अर्को पृष्ठ</string>
     <string name="channel_progress">प्रगति</string>
     <string name="channel_complete">पूरा</string>
@@ -620,7 +620,7 @@
     <string name="pref_advanced_summary">Dump crash logs, ब्याट्री अप्टिमाइजेसन</string>
     <string name="error_saving_picture">तस्वीर बचत गर्न त्रुटि भयो</string>
     <string name="updates_last_update_info_just_now">भर्खरै</string>
-    <string name="pref_reset_viewer_flags_success">सबै रिडर सेटिङ्स रिसेट गरियो</string>
+    <string name="pref_reset_viewer_flags_success">सबै रिडर सेटिंग्स रिसेट गरियो</string>
     <string name="label_used">प्रयोग गरिएको</string>
     <string name="label_titles_in_global_update">ग्लोबल अपडेटमा</string>
     <string name="label_titles_section">इन्ट्री</string>
@@ -640,7 +640,7 @@
 \nथप जान्न ट्याप गर्नुहोस्।</string>
     <string name="crash_screen_title">उफ्!</string>
     <string name="label_read_duration">पढेको अवधि</string>
-    <string name="pref_reset_viewer_flags_error">रिडर सेटिङ्स रिसेट गर्न सकिएन</string>
+    <string name="pref_reset_viewer_flags_error">रिडर सेटिंग्स रिसेट गर्न सकिएन</string>
     <string name="webview_data_deleted">WebView डेटा खाली गरियो</string>
     <string name="complete_list">समाप्त सूची</string>
     <string name="on_hold_list">होल्ड सूची</string>
@@ -651,7 +651,7 @@
     <string name="wish_list">इच्छा सूची</string>
     <string name="popular">लोकप्रिय</string>
     <string name="split_tall_images_summary">रिडर कार्यसम्पादन सुधार गर्दछ</string>
-    <string name="pref_reset_viewer_flags">प्रति-श्रृङ्खला रिडर सेटिङ्स रिसेट गर्नुहोस्</string>
+    <string name="pref_reset_viewer_flags">प्रति-श्रृङ्खला रिडर सेटिंग्स रिसेट गर्नुहोस्</string>
     <string name="track_remove_date_conf_title">मिति हटाउने हो?</string>
     <string name="track_remove_start_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको सुरु मिति हटाउनेछ</string>
     <string name="track_remove_finish_date_conf_text">यसले %s बाट तपाइँको पहिले चयन गरिएको समाप्त मिति हटाउनेछ</string>
@@ -679,15 +679,15 @@
     <string name="skipped_reason_not_always_update">श्रृङ्खलालाई अपडेट आवश्यक नपर्ने भएकोले छोडियो</string>
     <string name="information_required_plain">*आवश्यक</string>
     <string name="remove_manga">तपाईं आफ्नो पुस्तकालयबाट \"%s\" हटाउन लाग्दै हुनुहुन्छ</string>
-    <string name="error_user_agent_string_blank">युजर एजेन्ट स्ट्रिङ खाली हुन सक्दैन</string>
-    <string name="pref_reset_user_agent_string">पूर्वनिर्धारित युजर एजेन्ट स्ट्रिङ रिसेट गर्नुहोस्</string>
+    <string name="error_user_agent_string_blank">User agent string खाली हुन सक्दैन</string>
+    <string name="pref_reset_user_agent_string">पूर्वनिर्धारित user agent string रिसेट गर्नुहोस्</string>
     <string name="seconds_short">%dसे</string>
     <string name="minute_short">%dमि</string>
     <string name="pref_hide_in_library_items">पहिले नै पुस्तकालयमा रहेका इन्ट्रीहरू लुकाउनुहोस्</string>
     <string name="action_copy_to_clipboard">क्लिपबोर्डमा प्रतिलिपि गर्नुहोस्</string>
     <string name="pref_invalidate_download_cache">Reindex डाउनलोड्स</string>
-    <string name="pref_user_agent_string">पूर्वनिर्धारित युजर एजेन्ट स्ट्रिङ</string>
-    <string name="error_user_agent_string_invalid">अवैध युजर एजेन्ट स्ट्रिङ</string>
+    <string name="pref_user_agent_string">पूर्वनिर्धारित user agent string</string>
+    <string name="error_user_agent_string_invalid">अवैध user agent string</string>
     <string name="day_short">%dदि</string>
     <string name="hour_short">%dघ</string>
     <string name="action_update_category">वर्ग अपडेट गर्नुहोस्</string>
@@ -729,8 +729,8 @@
     <string name="action_sort_category">वर्गहरू क्रमबद्ध गर्नुहोस्</string>
     <string name="notification_updating_progress">पुस्तकालय अपडेट गर्दै... (%s)</string>
     <string name="sort_category_confirmation">के तपाई वर्गहरू वर्णमाला अनुसार क्रमबद्ध गर्न चाहनुहुन्छ?</string>
-    <string name="source_settings">स्रोत सेटिङ्स</string>
-    <string name="app_settings">एप सेटिङ्स</string>
+    <string name="source_settings">स्रोत सेटिंग्स</string>
+    <string name="app_settings">एप सेटिंग्स</string>
     <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्पहरू</string>
     <string name="pref_relative_format_summary">\"%2$s\" को सट्टा \"%1$s\"</string>
     <string name="relative_time_span_never">कहिले पनि होइन</string>
@@ -761,7 +761,7 @@
     <string name="action_bar_up_description">माथि नेभिगेट गर्नुहोस्</string>
     <string name="action_revert_to_default">पूर्वनिर्धारितमा फर्कनुहोस्</string>
     <string name="pref_onboarding_guide">अनबोर्डिङ गाइड</string>
-    <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिङ्समा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
+    <string name="onboarding_description">पहिले केहि चीजहरू सेट गरौं। तपाईं पछि पनि सेटिंग्समा गएर यसलाई परिवर्तन गर्न सक्नुहुन्छ।</string>
     <string name="onboarding_storage_info">एउटा फोल्डर चयन गर्नुहोस् जहाँ %1$s ले अध्याय डाउनलोड, ब्याकअप, र थप भण्डारण गर्नेछ।
 \n
 \nएक समर्पित फोल्डर सिफारिस गरिएको छ।
@@ -797,7 +797,7 @@
     <string name="pref_storage_location_info">स्वचालित ब्याकअप, अध्याय डाउनलोड, र स्थानीय स्रोतको लागि प्रयोग गरिन्छ।</string>
     <string name="action_create">सिर्जना गर्नुहोस्</string>
     <string name="invalid_backup_file_error">पूर्ण त्रुटि:</string>
-    <string name="private_settings">संवेदनशील सेटिङ्स समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
+    <string name="private_settings">संवेदनशील सेटिंग्स समावेश गर्नुहोस् (जस्तै, ट्र्याकर लगइन टोकनहरू)</string>
     <string name="pref_webtoon_disable_zoom_out">जूम आउट असक्षम गर्नुहोस्</string>
     <string name="action_add_anyway">जे भए पनि थप्नुहोस्</string>
     <string name="action_migrate_duplicate">अवस्थित इन्ट्री माइग्रेट गर्नुहोस्</string>
@@ -841,4 +841,7 @@
     <string name="remove_private_extension_message">के तपाई साँच्चै \"%s\" एक्सटेन्शन हटाउन चाहनुहुन्छ?</string>
     <string name="pref_auto_update_manga_on_mark_read">पढिएको भनी चिन्ह लगाउँदा प्रगति अपडेट गर्नुहोस्</string>
     <string name="trackers_updated_summary">ट्र्याकरहरू अध्याय %d मा अपडेट गरियो</string>
+    <string name="pref_hardware_bitmap_threshold_default">पूर्वनिर्धारित (%d)</string>
+    <string name="pref_hardware_bitmap_threshold_summary">यदि पाठकले खाली छवि लोड गर्छ भने क्रमशः threshold घटाउनुहोस्।\nचयन गरिएको: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
 </resources>

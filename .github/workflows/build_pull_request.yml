@@ -25,32 +25,35 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@d156388eb19639ec20ade50009f3d199ce1e2808 # v4.1.0
-
       - name: Dependency Review
-        uses: actions/dependency-review-action@4081bf99e2866ebe428fc0477b69eb4fcda7220a # v4.4.0
+        uses: actions/dependency-review-action@3b139cfc5fae8b618d3eae3675e383bb1769c019 # v4.5.0
 
       - name: Set up JDK
-        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
         with:
           java-version: 17
-          distribution: adopt
+          distribution: temurin
 
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@d156388eb19639ec20ade50009f3d199ce1e2808 # v4.1.0
+        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
 
-      - name: Build app and run unit tests
-        run: ./gradlew spotlessCheck assembleStandardRelease testReleaseUnitTest testStandardReleaseUnitTest
+      - name: Check code format
+        run: ./gradlew spotlessCheck
+
+      - name: Build app
+        run: ./gradlew assembleStandardRelease
+
+      - name: Run unit tests
+        run: ./gradlew testReleaseUnitTest testStandardReleaseUnitTest
 
       - name: Upload APK
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: arm64-v8a-${{ github.sha }}
           path: app/build/outputs/apk/standard/release/app-standard-arm64-v8a-release-unsigned.apk
 
       - name: Upload mapping
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: mapping-${{ github.sha }}
           path: app/build/outputs/mapping/standardRelease

@@ -178,4 +178,14 @@
     <string name="onboarding_guides_new_user">%s-ൽ പുതിയവനാവോ? ആരംഭിക്കാൻ മാർഗരേഖ കാണാൻ ഞങ്ങൾ ശുപാർശ ചെയ്യുന്നു.</string>
     <string name="onboarding_permission_action_grant">അനുവദിക്കുക</string>
     <string name="onboarding_guides_returning_user">%s-നെ പുനഃസ്ഥാപിക്കുകയാണോ?</string>
+    <string name="action_copy_link">ലിങ്ക് പകര്‍ത്തുക</string>
+    <string name="ext_install_service_notif">വിപുലീകരണം ഇൻസ്റ്റാൾ ചെയ്യുന്നു…</string>
+    <string name="ext_permission_install_apps_warning">വിപുലീകരണങ്ങൾ ഇൻസ്റ്റാൾ ചെയ്യാൻ അനുമതികൾ ആവശ്യമാണ്. അനുവദിക്കാൻ ഇവിടെ അടിക്കുക.</string>
+    <string name="action_sort_random">യാദൃച്ഛികം</string>
+    <string name="ext_info_language">ഭാഷ</string>
+    <string name="automatic_background">സ്വയമേവ</string>
+    <string name="ext_installer_shizuku_stopped">ഷിസുകു പ്രവർത്തനമല്ല</string>
+    <string name="nav_zone_left">ഇടത്</string>
+    <string name="ext_info_age_rating">വയസ്സ് റേറ്റിംഗ്</string>
+    <string name="ext_nsfw_short">18+</string>
 </resources>

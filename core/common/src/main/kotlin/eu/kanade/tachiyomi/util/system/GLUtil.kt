@@ -6,7 +6,7 @@ import javax.microedition.khronos.egl.EGLContext
 import kotlin.math.max
 
 object GLUtil {
-    val maxTextureSize: Int by lazy {
+    val DEVICE_TEXTURE_LIMIT: Int by lazy {
         // Get EGL Display
         val egl = EGLContext.getEGL() as EGL10
         val display = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY)
@@ -38,10 +38,23 @@ object GLUtil {
         // Release
         egl.eglTerminate(display)
 
-        // Return largest texture size found, or default
-        max(maximumTextureSize, IMAGE_MAX_BITMAP_DIMENSION)
+        // Return largest texture size found (after making it a multiplier of [Multiplier]), or default
+        max(maximumTextureSize, SAFE_TEXTURE_LIMIT)
+    }
+
+    const val SAFE_TEXTURE_LIMIT: Int = 2048
+
+    val CUSTOM_TEXTURE_LIMIT_OPTIONS: List<Int> by lazy {
+        val steps = DEVICE_TEXTURE_LIMIT / MULTIPLIER
+        buildList(steps) {
+            add(DEVICE_TEXTURE_LIMIT)
+            for (step in steps downTo 2) {
+                val value = step * MULTIPLIER
+                if (value >= DEVICE_TEXTURE_LIMIT) continue
+                add(value)
+            }
+        }
     }
 }
 
-// Safe minimum default size
-private const val IMAGE_MAX_BITMAP_DIMENSION = 2048
+private const val MULTIPLIER: Int = 1024

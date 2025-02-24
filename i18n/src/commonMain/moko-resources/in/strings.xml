@@ -357,7 +357,7 @@
     <string name="restoring_backup_canceled">Pemulihan dibatalkan</string>
     <string name="restore_in_progress">Pemulihan masih dalam proses</string>
     <string name="backup_in_progress">Pencadangan masih dalam proses</string>
-    <string name="restore_duration">%02d menit, %02d detik</string>
+    <string name="restore_duration">%1$02d menit, %2$02d detik</string>
     <string name="viewer">Mode membaca</string>
     <string name="gray_background">Abu-abu</string>
     <string name="pref_category_for_this_series">Untuk seri ini</string>
@@ -835,4 +835,6 @@
     <string name="remove_private_extension_message">Apa anda yakin ingin menghapus ekstensi \"%s\"?</string>
     <string name="ext_remove">Hapus</string>
     <string name="ext_confirm_remove">Hapus Ekstensi?</string>
+    <string name="pref_auto_update_manga_on_mark_read">Kemajuan pembaruan saat ditandai sebagai telah dibaca</string>
+    <string name="trackers_updated_summary">Pelacak diperbarui ke bab %d</string>
 </resources>

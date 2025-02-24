@@ -42,5 +42,7 @@ dependencies {
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
 
+    implementation(androidx.paging.runtime)
+    implementation(androidx.paging.compose)
     implementation(kotlinx.immutables)
 }

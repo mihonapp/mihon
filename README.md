@@ -68,7 +68,7 @@ The developer(s) of this application does not have any affiliation with the cont
 
 <pre>
 Copyright © 2015 Javier Tomás
-Copyright © 2024 The Mihon Open Source Project
+Copyright © 2024 Mihon Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

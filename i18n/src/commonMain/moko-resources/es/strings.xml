@@ -277,7 +277,7 @@
     <string name="pref_color_filter_mode">Mezcla de colores</string>
     <string name="filter_mode_overlay">Superponer</string>
     <string name="filter_mode_multiply">Multiplicar</string>
-    <string name="filter_mode_screen">Pantalla</string>
+    <string name="filter_mode_screen">Trama</string>
     <string name="filter_mode_lighten">Sobreexponer / Aclarar</string>
     <string name="filter_mode_darken">Subexponer / Oscurecer</string>
     <string name="label_help">Ayuda</string>
@@ -356,7 +356,7 @@
     <string name="restore_in_progress">La restauración ya está en curso</string>
     <string name="creating_backup_error">No se han podido respaldar los datos</string>
     <string name="backup_in_progress">La copia de seguridad ya está en curso</string>
-    <string name="restore_duration">%02d min, %02d seg</string>
+    <string name="restore_duration">%1$02d min, %2$02d seg</string>
     <string name="last_used_source">Usado recientemente</string>
     <string name="check_for_updates">Buscar actualizaciones</string>
     <string name="local_source_help_guide">Guía de fuente local</string>
@@ -508,8 +508,8 @@
     <string name="enhanced_services">Rastreadores mejorados</string>
     <string name="tracking_guide">Guía de seguimiento</string>
     <string name="automatic_background">Automático</string>
-    <string name="off">Apagado</string>
-    <string name="on">Encendido</string>
+    <string name="off">No</string>
+    <string name="on">Sí</string>
     <string name="categorized_display_settings">Establecer el tipo de orden para cada categoría</string>
     <string name="label_background_activity">Actividad en segundo plano</string>
     <string name="action_track">Seguir</string>
@@ -736,7 +736,7 @@
     <string name="pref_flash_page">Parpadear a blanco al cambiar de página</string>
     <string name="label_data_storage">Datos y almacenamiento</string>
     <string name="pref_storage_usage">Almacenamiento utilizado</string>
-    <string name="action_sort_tracker_score">Puntuación del rastreador</string>
+    <string name="action_sort_tracker_score">Puntuación del servicio</string>
     <string name="action_apply">Aplicar</string>
     <string name="action_revert_to_default">Restablecer vista</string>
     <string name="action_create">Crear</string>
@@ -803,7 +803,7 @@
     <string name="upcoming_guide">Próxima guía</string>
     <string name="upcoming_calendar_next">Próximo mes</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
-    <string name="file_picker_uri_permission_unsupported">No se ha podido obtener acceso a la carpeta persistente. La aplicación puede comportarse de forma inesperada.</string>
+    <string name="file_picker_uri_permission_unsupported">No se ha podido obtener un acceso continuo a la carpeta, por lo que la aplicación puede fallar de vez en cuando.</string>
     <string name="pref_flash_page_interval">Flash cada</string>
     <string name="pref_flash_with">Flash con</string>
     <string name="pref_flash_style_white">Blanco</string>
@@ -832,5 +832,8 @@
     <string name="pref_firebase">Informar de errores y compartir datos</string>
     <string name="non_library_settings">Todas las obras leídas</string>
     <string name="pref_auto_update_manga_on_mark_read">Actualizar el progreso al marcarlo como leído</string>
-    <string name="trackers_updated_summary">Rastreadores actualizados al capítulo %d</string>
+    <string name="trackers_updated_summary">El progreso de lectura ha saltado al capítulo %d</string>
+    <string name="pref_hardware_bitmap_threshold_default">Predeterminado (%d)</string>
+    <string name="pref_hardware_bitmap_threshold">Elegir un tamaño máximo con el que decodificar imágenes por hardware</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Si el visor carga una página en blanco te recomendamos ir reduciéndolo poco a poco hasta que funcione.\nLímite actual: %s</string>
 </resources>

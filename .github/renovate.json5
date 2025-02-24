@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "labels": ["Dependencies"],
   "semanticCommits": "disabled",
   "packageRules": [
@@ -8,6 +8,6 @@
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"],
       "pinDigests": true,
-    }
-  ]
+    },
+  ],
 }

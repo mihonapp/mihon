@@ -35,8 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +50,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.presentation.more.settings.widget.TrailingWidgetBuffer
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.ExtensionDetailsScreenModel
@@ -72,6 +75,7 @@ fun ExtensionDetailsScreen(
     onClickClearCookies: () -> Unit,
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
+    onClickIncognito: (Boolean) -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
     val url = remember(state.extension) {
@@ -140,9 +144,11 @@ fun ExtensionDetailsScreen(
             contentPadding = paddingValues,
             extension = state.extension,
             sources = state.sources,
+            incognitoMode = state.isIncognito,
             onClickSourcePreferences = onClickSourcePreferences,
             onClickUninstall = onClickUninstall,
             onClickSource = onClickSource,
+            onClickIncognito = onClickIncognito,
         )
     }
 }
@@ -152,9 +158,11 @@ private fun ExtensionDetails(
     contentPadding: PaddingValues,
     extension: Extension.Installed,
     sources: ImmutableList<ExtensionSourceItem>,
+    incognitoMode: Boolean,
     onClickSourcePreferences: (sourceId: Long) -> Unit,
     onClickUninstall: () -> Unit,
     onClickSource: (sourceId: Long) -> Unit,
+    onClickIncognito: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     var showNsfwWarning by remember { mutableStateOf(false) }
@@ -171,6 +179,7 @@ private fun ExtensionDetails(
         item {
             DetailsHeader(
                 extension = extension,
+                extIncognitoMode = incognitoMode,
                 onClickUninstall = onClickUninstall,
                 onClickAppInfo = {
                     Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -182,6 +191,7 @@ private fun ExtensionDetails(
                 onClickAgeRating = {
                     showNsfwWarning = true
                 },
+                onExtIncognitoChange = onClickIncognito,
             )
         }
 
@@ -209,9 +219,11 @@ private fun ExtensionDetails(
 @Composable
 private fun DetailsHeader(
     extension: Extension,
+    extIncognitoMode: Boolean,
     onClickAgeRating: () -> Unit,
     onClickUninstall: () -> Unit,
     onClickAppInfo: (() -> Unit)?,
+    onExtIncognitoChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -219,9 +231,8 @@ private fun DetailsHeader(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.padding.medium)
                 .padding(
-                    start = MaterialTheme.padding.medium,
-                    end = MaterialTheme.padding.medium,
                     top = MaterialTheme.padding.medium,
                     bottom = MaterialTheme.padding.small,
                 )
@@ -313,12 +324,9 @@ private fun DetailsHeader(
         }
 
         Row(
-            modifier = Modifier.padding(
-                start = MaterialTheme.padding.medium,
-                end = MaterialTheme.padding.medium,
-                top = MaterialTheme.padding.small,
-                bottom = MaterialTheme.padding.medium,
-            ),
+            modifier = Modifier
+                .padding(horizontal = MaterialTheme.padding.medium)
+                .padding(top = MaterialTheme.padding.small),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         ) {
             OutlinedButton(
@@ -340,6 +348,24 @@ private fun DetailsHeader(
                 }
             }
         }
+
+        TextPreferenceWidget(
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small),
+            title = stringResource(MR.strings.pref_incognito_mode),
+            subtitle = stringResource(MR.strings.pref_incognito_mode_extension_summary),
+            icon = ImageVector.vectorResource(R.drawable.ic_glasses_24dp),
+            widget = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Switch(
+                        checked = extIncognitoMode,
+                        onCheckedChange = onExtIncognitoChange,
+                        modifier = Modifier.padding(start = TrailingWidgetBuffer),
+                    )
+                }
+            },
+        )
 
         HorizontalDivider()
     }

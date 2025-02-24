@@ -166,8 +166,8 @@
     <string name="filter_mode_multiply">Paramihin (Multiply)</string>
     <string name="filter_mode_overlay">Nakapatong (Overlay)</string>
     <string name="pref_color_filter_mode">Blend mode ng filter ng kulay</string>
-    <string name="pref_custom_color_filter">Pinili kong filter ng kulay</string>
-    <string name="pref_custom_brightness">Pinili kong liwanag</string>
+    <string name="pref_custom_color_filter">Custom na filter ng kulay</string>
+    <string name="pref_custom_brightness">Custom na liwanag (brightness)</string>
     <string name="pref_crop_borders">Gupitin ang gilid</string>
     <string name="pref_show_reading_mode_summary">Mabilis na ipakita ang kasalukuyang ginagamit kapag nakabukas ang reader</string>
     <string name="pref_show_reading_mode">Ipakita ang paraan ng pagbasa</string>
@@ -283,7 +283,7 @@
     <string name="transition_next">Susunod:</string>
     <string name="transition_current">Kasalukuyan:</string>
     <string name="transition_finished">Natapos:</string>
-    <string name="viewer">Pagbasa</string>
+    <string name="viewer">Mode ng pagbasa</string>
     <string name="pref_category_for_this_series">Para sa seryeng ito</string>
     <string name="confirm_set_image_as_cover">Gamiting cover art ang larawang ito?</string>
     <string name="decode_image_error">Di mai-load ang larawan</string>
@@ -291,7 +291,7 @@
     <string name="chapter_progress">Pahina: %1$d</string>
     <string name="cover_updated">Napalitan ang cover</string>
     <string name="set_as_cover">Gawin itong cover</string>
-    <string name="custom_filter">Pinili kong filter</string>
+    <string name="custom_filter">Custom na filter</string>
     <string name="picture_saved">Na-save na ang larawan</string>
     <string name="dialog_with_checkbox_reset">I-reset ang lahat ng kabanata sa entry na ito</string>
     <string name="dialog_with_checkbox_remove_description">Tatanggalin nito ang petsa ng pagbasa sa kabanatang ito. Sigurado ka ba?</string>
@@ -308,7 +308,7 @@
     <string name="on_hold">Tinigil</string>
     <string name="completed">Kumpleto</string>
     <string name="dropped">Binitawan</string>
-    <string name="reading">Pagbabasa</string>
+    <string name="reading">Binabasa</string>
     <string name="add_tracking">Idagdag sa tracker</string>
     <string name="manga_tracking_tab">I-track</string>
     <string name="confirm_delete_chapters">Sigurado ka bang gusto mong burahin ang mga napiling kabanata?</string>
@@ -400,7 +400,7 @@
     <string name="creating_backup">Bina-backup</string>
     <string name="backup_choice">Anong iba-backup mo?</string>
     <string name="backup_in_progress">Bina-backup na</string>
-    <string name="restore_duration">%02d (na) min, %02d (na) seg</string>
+    <string name="restore_duration">%1$02d (na) min, %2$02d seg</string>
     <string name="no_pinned_sources">Wala kang naka-pin na source</string>
     <string name="channel_complete">Tapos na</string>
     <string name="channel_errors">Mga error</string>
@@ -558,7 +558,7 @@
     <string name="on_hiatus">Naka-hiatus</string>
     <string name="cancelled">Kinansela</string>
     <string name="action_show_manga">Ipakita ang entry</string>
-    <string name="action_display_cover_only_grid">Cover-only na grid</string>
+    <string name="action_display_cover_only_grid">Cover lamang na grid</string>
     <string name="skipped_reason_completed">Nilaktawan dahil kumpleto na ang serye</string>
     <string name="pref_update_only_started">Laktawan ang hindi nasimulang mga entry</string>
     <string name="skipped_reason_not_caught_up">Nilaktawan dahil may di pa nabasang mga kabanata</string>
@@ -698,7 +698,7 @@
     <string name="pref_library_columns_per_row">%d kada hilera</string>
     <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
     <string name="action_set_interval">Itakda ang pagitan</string>
-    <string name="action_filter_interval_custom">Ipasadya ang dalas ng pag-update</string>
+    <string name="action_filter_interval_custom">Ma-customize na dalas ng pag-update</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
     <string name="manga_display_interval_title">Tantyahin bawat</string>
     <string name="manga_display_modified_interval_title">Itakdang i-update bawat</string>
@@ -789,7 +789,7 @@
     <string name="action_add_repo_message">Magdagdag ng mga karagdagang repo sa Mihon. Dapat ito ay isang URL na nagtatapos sa \"index.min.json\".</string>
     <string name="invalid_repo_name">Di-wastong URL ng repo</string>
     <string name="delete_repo_confirmation">Gusto mo bang tanggalin ang repo na \"%s\"?</string>
-    <string name="manga_interval_custom_amount">Ipasadya ang update frequency:</string>
+    <string name="manga_interval_custom_amount">Custom na frequency sa pag-update:</string>
     <string name="theme_nord">Nord</string>
     <string name="manga_interval_expected_update_soon">Malapit na</string>
     <string name="ext_revoke_trust">Bawiin ang mga pinagkakatiwalaang hindi kilalang extension</string>
@@ -801,7 +801,7 @@
     <string name="action_replace_repo_title">Umiiral na ang Signing Key Fingerprint</string>
     <string name="action_replace_repo_message">Ang repository na %1$s ay may magkaparehong Signing Key Fingerprint sa %2$s.
 \nKung ito ay inaasahan, %2$s ang papalitan, kung hindi naman ay makipag-ugnayan sa tagapamahala ng iyong repo.</string>
-    <string name="pref_display_profile">Ipasadya ang profile sa display</string>
+    <string name="pref_display_profile">Custom na profile sa display</string>
     <string name="label_upcoming">Paparating</string>
     <string name="upcoming_guide">Gabay sa Paparating</string>
     <string name="upcoming_calendar_next">Susunod na Buwan</string>
@@ -837,4 +837,7 @@
     <string name="remove_private_extension_message">Gusto mo ba talagang tanggalin ang \"%s\" na extension?</string>
     <string name="pref_auto_update_manga_on_mark_read">I-update ang progress kapag namarka bilang nabasa na</string>
     <string name="trackers_updated_summary">Na-update ang mga tracker sa kabanata %d</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Kung naglo-load ang reader ng isang blangkong larawan ay unti-unting bawasan ang threshold.\nNapili: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Custom na threshold sa hardware bitmap</string>
+    <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
 </resources>

@@ -11,17 +11,44 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+### Added
+- Add option to always decode long strip images with SSIV
+- Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
+- Add button to favorite manga from history screen ([@Animeboynz](https://github.com/Animeboynz)) ([#1733](https://github.com/mihonapp/mihon/pull/1733))
+
 ### Changed
-- Bump default user agent
+- Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))
+- Ignore hidden files/folders for Local Source chapter list ([@BrutuZ](https://github.com/BrutuZ)) ([#1763](https://github.com/mihonapp/mihon/pull/1763))
 
 ### Fixed
-- Fixed "currentTab was used multiple times"
-- Fixed a rare crash when invoking "Mark previous as read" action
-- Fixed long strip images not loading in some old devices
+- Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
+- Fix Bangumi and MAL tracking 401 errors due to Mihon sending expired credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#1681](https://github.com/mihonapp/mihon/pull/1681), [#1682](https://github.com/mihonapp/mihon/pull/1682))
+- Fix certain Infinix devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684))
+- Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
+
+### Other
+- Add zoned "Current time" to debug info and include year & timezone in logcat output ([@MajorTanya](https://github.com/MajorTanya)) ([#1672](https://github.com/mihonapp/mihon/pull/1672))
+
+## [v0.17.1] - 2024-12-06
+### Changed
+- Bump default user agent ([@AntsyLich](https://github.com/AntsyLich)) ([`76dcf90`](https://github.com/mihonapp/mihon/commit/76dcf903403d565056f44c66d965c1ea8affffc3))
 
 ### Improved
 - Bangumi search now shows the score and summary of a search result ([@MajorTanya](https://github.com/MajorTanya)) ([#1396](https://github.com/mihonapp/mihon/pull/1396))
-- Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya))
+- Extension repo URLs are now auto-formatted ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya)) ([`22d8aad`](https://github.com/mihonapp/mihon/commit/22d8aad598bea8f00f2831779e45a6645392ca0f))
+ 
+### Fixed
+- Fix "currentTab was used multiple times" ([@AntsyLich](https://github.com/AntsyLich)) ([`371c143`](https://github.com/mihonapp/mihon/commit/371c1432e218f6dcf129f05405dceb2cd351c647))
+- Fix a rare crash when invoking "Mark previous as read" action ([@AntsyLich](https://github.com/AntsyLich)) ([`f508d10`](https://github.com/mihonapp/mihon/commit/f508d10ad13560d7316df8642bc93fe66c05b9a8))
+- Fix long strip images not loading in some old devices ([@AntsyLich](https://github.com/AntsyLich)) ([`06efc3b`](https://github.com/mihonapp/mihon/commit/06efc3b25c5af51f42448af27a269ee459d9093d))
+  - Switch to hardware bitmap in reader only if device can handle it ([@AntsyLich](https://github.com/AntsyLich)) ([`e6d96bd`](https://github.com/mihonapp/mihon/commit/e6d96bd348ea5d18a005d6465222ad5f5123103e))
+  - Add option to lower the threshold for hardware bitmaps ([@AntsyLich](https://github.com/AntsyLich)) ([`dcddac5`](https://github.com/mihonapp/mihon/commit/dcddac5daaff3ec89c8507c35dc13d345ffdb6d7))
+    - Improve hardware bitmap threshold option ([@AntsyLich](https://github.com/AntsyLich)) ([`d6dfd24`](https://github.com/mihonapp/mihon/commit/d6dfd24548eaa05a8c3e478068fe2e08f2ee4473))
+  - Always use software bitmap on certain devices ([@MajorTanya](https://github.com/MajorTanya)) ([#1543](https://github.com/mihonapp/mihon/pull/1543))
+- Fix crash after removing last category while it's active in library ([@cuong-tran](https://github.com/cuong-tran)) ([#1450](https://github.com/mihonapp/mihon/pull/1450))
+- Fix reader transition color scheme in auto background mode ([@cuong-tran](https://github.com/cuong-tran)) ([#1487](https://github.com/mihonapp/mihon/pull/1487))
+- Fix app update error notification disappearing ([@cuong-tran](https://github.com/cuong-tran)) ([#1476](https://github.com/mihonapp/mihon/pull/1476))
+- Fix browser not opening in some cases in Honor devices ([@AntsyLich](https://github.com/AntsyLich), [@MajorTanya](https://github.com/MajorTanya)) ([#1520](https://github.com/mihonapp/mihon/pull/1520))
 
 ## [v0.17.0] - 2024-10-26
 ### Added
@@ -269,7 +296,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.17.0...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.17.1...main
+[v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0
 [v0.16.5]: https://github.com/mihonapp/mihon/compare/v0.16.4...v0.16.5
 [v0.16.4]: https://github.com/mihonapp/mihon/compare/v0.16.3...v0.16.4

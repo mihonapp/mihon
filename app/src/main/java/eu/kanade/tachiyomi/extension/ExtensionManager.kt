@@ -78,13 +78,24 @@ class ExtensionManager(
 
     private var subLanguagesEnabledOnFirstRun = preferences.enabledLanguages().isSet()
 
-    fun getAppIconForSource(sourceId: Long): Drawable? {
-        val pkgName = installedExtensionMapFlow.value.values
-            .find { ext ->
-                ext.sources.any { it.id == sourceId }
-            }
+    fun getExtensionPackage(sourceId: Long): String? {
+        return installedExtensionsFlow.value.find { extension ->
+            extension.sources.any { it.id == sourceId }
+        }
             ?.pkgName
-            ?: return null
+    }
+
+    fun getExtensionPackageAsFlow(sourceId: Long): Flow<String?> {
+        return installedExtensionsFlow.map { extensions ->
+            extensions.find { extension ->
+                extension.sources.any { it.id == sourceId }
+            }
+                ?.pkgName
+        }
+    }
+
+    fun getAppIconForSource(sourceId: Long): Drawable? {
+        val pkgName = getExtensionPackage(sourceId) ?: return null
 
         return iconMap[pkgName] ?: iconMap.getOrPut(pkgName) {
             ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!

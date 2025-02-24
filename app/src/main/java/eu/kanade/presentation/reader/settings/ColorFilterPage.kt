@@ -2,6 +2,7 @@ package eu.kanade.presentation.reader.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +43,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             value = customBrightnessValue,
             valueText = customBrightnessValue.toString(),
             onChange = { screenModel.preferences.customBrightnessValue().set(it) },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
     }
 
@@ -62,6 +64,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
                     getColorValue(it, newRValue, RED_MASK, 16)
                 }
             },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
             label = stringResource(MR.strings.color_filter_g_value),
@@ -73,6 +76,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
                     getColorValue(it, newGValue, GREEN_MASK, 8)
                 }
             },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
             label = stringResource(MR.strings.color_filter_b_value),
@@ -84,6 +88,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
                     getColorValue(it, newBValue, BLUE_MASK, 0)
                 }
             },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
             label = stringResource(MR.strings.color_filter_a_value),
@@ -95,6 +100,7 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
                     getColorValue(it, newAValue, ALPHA_MASK, 24)
                 }
             },
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
 
         val colorFilterMode by screenModel.preferences.colorFilterMode().collectAsState()

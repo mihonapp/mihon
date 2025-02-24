@@ -367,7 +367,7 @@
     <string name="restore_in_progress">Відновлення вже відбувається</string>
     <string name="creating_backup_error">Помилка резервування</string>
     <string name="backup_in_progress">Резервне копіювання вже виконується</string>
-    <string name="restore_duration">%02d хв, %02d сек</string>
+    <string name="restore_duration">%1$02d хв, %2$02d сек</string>
     <string name="backup_restore_missing_sources">Відсутні джерела:</string>
     <string name="invalid_backup_file_missing_manga">Бекап не містить жодних записів бібліотеки.</string>
     <string name="invalid_backup_file">Невірний файл резервної копії:</string>
@@ -806,4 +806,21 @@
     <string name="pref_webtoon_disable_zoom_out">Вимкнути зменшення масштабу</string>
     <string name="label_upcoming">Незабаром</string>
     <string name="upcoming_calendar_next">Наступний місяць</string>
+    <string name="pref_auto_update_manga_on_mark_read">Оновити прогрес коли главу помічено прочитаною</string>
+    <string name="manga_interval_expected_update_null">Ця манга завершена, або не має приблизної дати релізу.</string>
+    <string name="action_sort_random">Випадково</string>
+    <string name="onboarding_permission_crashlytics_description">Надіслати анонімний звіт про помилку</string>
+    <string name="onboarding_permission_crashlytics">Надіслати звіт про помилку</string>
+    <string name="onboarding_permission_analytics">Дозволити аналітику</string>
+    <string name="pref_flash_duration_summary">%1$s мс</string>
+    <string name="pref_firebase">Аналітика та Звіти про помилки</string>
+    <string name="action_copy_link">Копіювати посилання</string>
+    <string name="onboarding_permission_analytics_description">Надсилати анонімну інформацію про використання для покращення застосунку.</string>
+    <string name="pref_security">Безпека</string>
+    <string name="firebase_summary">Надсилання звітів про помилки та аналітику дозволить нам ідентифікувати та виправити недоліки, покращити працездатність та зробити майбутні оновлення більш актуальними для ваших потреб</string>
+    <string name="ext_confirm_remove">Видалити Розширення?</string>
+    <string name="ext_remove">Видалити</string>
+    <string name="remove_private_extension_message">Дійсно видалити \"%s\"?</string>
+    <string name="pref_download_new_unread_chapters_only">Пропускати завантаження копій прочитаних глав</string>
+    <string name="add_repo_confirmation">Дійсно додати репозиторій \"%s\"?</string>
 </resources>

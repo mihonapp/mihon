@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.data.library
 
 import android.content.Context
 import android.content.pm.ServiceInfo
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -92,10 +94,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
     override suspend fun doWork(): Result {
         if (tags.contains(WORK_NAME_AUTO)) {
-            val preferences = Injekt.get<LibraryPreferences>()
-            val restrictions = preferences.autoUpdateDeviceRestrictions().get()
-            if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
-                return Result.retry()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                val preferences = Injekt.get<LibraryPreferences>()
+                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
+                if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
+                    return Result.retry()
+                }
             }
 
             // Find a running manual worker. If exists, try again later
@@ -432,15 +436,24 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val interval = prefInterval ?: preferences.autoUpdateInterval().get()
             if (interval > 0) {
                 val restrictions = preferences.autoUpdateDeviceRestrictions().get()
-                val constraints = Constraints(
-                    requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
-                        NetworkType.UNMETERED
-                    } else {
-                        NetworkType.CONNECTED
-                    },
-                    requiresCharging = DEVICE_CHARGING in restrictions,
-                    requiresBatteryNotLow = true,
-                )
+                val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                    NetworkType.UNMETERED
+                } else {
+                    NetworkType.CONNECTED
+                }
+                val networkRequestBuilder = NetworkRequest.Builder()
+                if (DEVICE_ONLY_ON_WIFI in restrictions) {
+                    networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                }
+                if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                    networkRequestBuilder.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                }
+                val constraints = Constraints.Builder()
+                    // 'networkRequest' only applies to Android 9+, otherwise 'networkType' is used
+                    .setRequiredNetworkRequest(networkRequestBuilder.build(), networkType)
+                    .setRequiresCharging(DEVICE_CHARGING in restrictions)
+                    .setRequiresBatteryNotLow(true)
+                    .build()
 
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
                     interval.toLong(),
