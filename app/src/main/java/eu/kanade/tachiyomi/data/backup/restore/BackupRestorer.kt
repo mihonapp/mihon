@@ -91,10 +91,7 @@ class BackupRestorer(
                 restoreCategories(backup.backupCategories)
             }
             if (options.appSettings) {
-                restoreAppPreferences(
-                    backup.backupPreferences,
-                    if (options.categories) backup.backupCategories else emptyList(),
-                )
+                restoreAppPreferences(backup.backupPreferences, backup.backupCategories.takeIf { options.categories })
             }
             if (options.sourceSettings) {
                 restoreSourcePreferences(backup.backupSourcePreferences)
@@ -145,12 +142,12 @@ class BackupRestorer(
 
     private fun CoroutineScope.restoreAppPreferences(
         preferences: List<BackupPreference>,
-        backupCategories: List<BackupCategory>,
+        categories: List<BackupCategory>?,
     ) = launch {
         ensureActive()
         preferenceRestorer.restoreApp(
             preferences,
-            backupCategories,
+            categories,
         )
 
         restoreProgress += 1

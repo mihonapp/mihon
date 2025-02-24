@@ -16,14 +16,11 @@ import eu.kanade.tachiyomi.data.library.LibraryUpdateJob
 import eu.kanade.tachiyomi.source.sourcePreferences
 import tachiyomi.core.common.preference.AndroidPreferenceStore
 import tachiyomi.core.common.preference.PreferenceStore
+import tachiyomi.core.common.preference.plusAssign
 import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.DOWNLOAD_NEW_CATEGORIES_EXCLUDE_PREF_KEY
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.DOWNLOAD_NEW_CATEGORIES_PREF_KEY
-import tachiyomi.domain.download.service.DownloadPreferences.Companion.REMOVE_EXCLUDE_CATEGORIES_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEFAULT_CATEGORY_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY
-import tachiyomi.domain.library.service.LibraryPreferences.Companion.LIBRARY_UPDATE_CATEGORIES_PREF_KEY
+import tachiyomi.domain.download.service.DownloadPreferences
+import tachiyomi.domain.library.service.LibraryPreferences
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 
@@ -35,7 +32,7 @@ class PreferenceRestorer(
 
     suspend fun restoreApp(
         preferences: List<BackupPreference>,
-        backupCategories: List<BackupCategory>,
+        backupCategories: List<BackupCategory>?,
     ) {
         restorePreferences(
             preferences,
@@ -57,30 +54,25 @@ class PreferenceRestorer(
     private suspend fun restorePreferences(
         toRestore: List<BackupPreference>,
         preferenceStore: PreferenceStore,
-        backupCategories: List<BackupCategory> = emptyList(),
+        backupCategories: List<BackupCategory>? = null,
     ) {
         val allCategories = getCategories.await()
         val categoriesByName = allCategories.associateBy { it.name }
-        val backupCategoriesById = backupCategories.associateBy { it.id.toString() }
+        val backupCategoriesById = backupCategories?.associateBy { it.id.toString() }.orEmpty()
         val prefs = preferenceStore.getAll()
         toRestore.forEach { (key, value) ->
             try {
                 when (value) {
                     is IntPreferenceValue -> {
                         if (prefs[key] is Int?) {
-                            when (key) {
-                                // Matching oldId to newId
-                                DEFAULT_CATEGORY_PREF_KEY ->
-                                    restoreDefaultCategory(
-                                        key,
-                                        value.value,
-                                        preferenceStore,
-                                        backupCategories,
-                                        categoriesByName,
-                                    )
-                                else ->
-                                    preferenceStore.getInt(key).set(value.value)
+                            if (key != LibraryPreferences.DEFAULT_CATEGORY_PREF_KEY) {
+                                preferenceStore.getInt(key).set(value.value)
+                                return@forEach
                             }
+
+                            backupCategoriesById[value.value.toString()]
+                                ?.let { categoriesByName[it.name]?.id?.toInt() }
+                                ?.let { preferenceStore.getInt(key).set(it) }
                         }
                     }
                     is LongPreferenceValue -> {
@@ -105,22 +97,14 @@ class PreferenceRestorer(
                     }
                     is StringSetPreferenceValue -> {
                         if (prefs[key] is Set<*>?) {
-                            when (key) {
-                                // Matching oldId to newId
-                                LIBRARY_UPDATE_CATEGORIES_PREF_KEY, LIBRARY_UPDATE_CATEGORIES_EXCLUDE_PREF_KEY,
-                                DOWNLOAD_NEW_CATEGORIES_PREF_KEY, DOWNLOAD_NEW_CATEGORIES_EXCLUDE_PREF_KEY,
-                                REMOVE_EXCLUDE_CATEGORIES_PREF_KEY,
-                                ->
-                                    restoreCategoriesPreferences(
-                                        key,
-                                        value.value,
-                                        preferenceStore,
-                                        backupCategoriesById,
-                                        categoriesByName,
-                                    )
-                                else ->
-                                    preferenceStore.getStringSet(key).set(value.value)
-                            }
+                            val success = restoreCategoriesPreference(
+                                key,
+                                value.value,
+                                preferenceStore,
+                                backupCategoriesById,
+                                categoriesByName,
+                            )
+                            if (!success) preferenceStore.getStringSet(key).set(value.value)
                         }
                     }
                 }
@@ -130,35 +114,25 @@ class PreferenceRestorer(
         }
     }
 
-    private fun restoreCategoriesPreferences(
+    private fun restoreCategoriesPreference(
         key: String,
         value: Set<String>,
         preferenceStore: PreferenceStore,
         backupCategoriesById: Map<String, BackupCategory>,
         categoriesByName: Map<String, Category>,
-    ) {
-        val newValue = value.mapNotNull { oldId ->
-            backupCategoriesById[oldId]?.let { backupCategory ->
-                categoriesByName[backupCategory.name]?.id?.toString()
-            }
-        }.toSet()
-        if (newValue.isNotEmpty()) {
-            preferenceStore.getStringSet(key).set(newValue)
-        }
-    }
+    ): Boolean {
+        val categoryPreferences = LibraryPreferences.categoryPreferenceKeys + DownloadPreferences.categoryPreferenceKeys
+        if (key !in categoryPreferences) return false
 
-    private fun restoreDefaultCategory(
-        key: String,
-        value: Int,
-        preferenceStore: PreferenceStore,
-        backupCategories: List<BackupCategory>,
-        categoriesByName: Map<String, Category>,
-    ) {
-        if (backupCategories.isNotEmpty()) {
-            val oldId = value.toLong()
-            backupCategories.find { it.id == oldId }
-                ?.let { categoriesByName[it.name]?.id?.toInt() }
-                ?.let { preferenceStore.getInt(key).set(it) }
+        val ids = value.mapNotNull {
+            backupCategoriesById[it]?.name?.let { name ->
+                categoriesByName[name]?.id?.toString()
+            }
         }
+
+        if (ids.isNotEmpty()) {
+            preferenceStore.getStringSet(key) += ids
+        }
+        return true
     }
 }
