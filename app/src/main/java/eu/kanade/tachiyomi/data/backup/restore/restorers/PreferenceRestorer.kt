@@ -64,14 +64,14 @@ class PreferenceRestorer(
                 when (value) {
                     is IntPreferenceValue -> {
                         if (prefs[key] is Int?) {
-                            if (key != LibraryPreferences.DEFAULT_CATEGORY_PREF_KEY) {
-                                preferenceStore.getInt(key).set(value.value)
-                                return@forEach
+                            val newValue = if (key == LibraryPreferences.DEFAULT_CATEGORY_PREF_KEY) {
+                                backupCategoriesById[value.value.toString()]
+                                    ?.let { categoriesByName[it.name]?.id?.toInt() }
+                            } else {
+                                value.value
                             }
 
-                            backupCategoriesById[value.value.toString()]
-                                ?.let { categoriesByName[it.name]?.id?.toInt() }
-                                ?.let { preferenceStore.getInt(key).set(it) }
+                            newValue?.let { preferenceStore.getInt(key).set(it) }
                         }
                     }
                     is LongPreferenceValue -> {
