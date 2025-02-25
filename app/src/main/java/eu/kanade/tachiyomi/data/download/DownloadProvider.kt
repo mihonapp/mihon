@@ -6,7 +6,6 @@ import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.util.storage.DiskUtil
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
-import tachiyomi.core.common.storage.displayablePath
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.manga.model.Manga
@@ -36,19 +35,20 @@ class DownloadProvider(
      * @param source the source of the manga.
      */
     internal fun getMangaDir(mangaTitle: String, source: Source): UniFile {
+        val sourceDirName = getSourceDirName(source)
+        val mangaDirName = getMangaDirName(mangaTitle)
         try {
-            return downloadsDir!!
-                .createDirectory(getSourceDirName(source))!!
-                .createDirectory(getMangaDirName(mangaTitle))!!
+            val downloadsDir = downloadsDir
+            if (downloadsDir == null) {
+                logcat(LogPriority.ERROR) { "Invalid download directory or No permission allowed" }
+                throw Exception(context.stringResource(MR.strings.invalid_download_directory))
+            }
+            return downloadsDir.createDirectory(sourceDirName)!!
+                .createDirectory(getMangaDirName(mangaDirName))!!
         } catch (e: Throwable) {
-            logcat(LogPriority.ERROR, e) { "Invalid download directory" }
-            throw Exception(
-                context.stringResource(
-                    MR.strings.invalid_location,
-                    (downloadsDir?.displayablePath ?: "") +
-                        "/${getSourceDirName(source)}/${getMangaDirName(mangaTitle)}",
-                ),
-            )
+            val mangaDir = "/$sourceDirName/$mangaDirName"
+            logcat(LogPriority.ERROR, e) { "Invalid location: $mangaDir" }
+            throw Exception(context.stringResource(MR.strings.invalid_location, mangaDir))
         }
     }
 

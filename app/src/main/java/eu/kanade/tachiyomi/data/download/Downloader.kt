@@ -319,7 +319,6 @@ class Downloader(
         try {
             mangaDir = provider.getMangaDir(download.manga.title, download.source)
         } catch (error: Exception) {
-            logcat(LogPriority.ERROR, error)
             download.status = Download.State.ERROR
             notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
             return

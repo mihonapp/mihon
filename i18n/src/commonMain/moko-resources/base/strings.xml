@@ -494,6 +494,7 @@
     <string name="pref_remove_bookmarked_chapters">Allow deleting bookmarked chapters</string>
     <string name="pref_remove_exclude_categories">Excluded categories</string>
     <string name="no_location_set">No storage location set</string>
+    <string name="invalid_download_directory">Invalid download directory or No permission allowed</string>
     <string name="invalid_location">Invalid location: %s</string>
     <string name="disabled">Disabled</string>
     <string name="last_read_chapter">Last read chapter</string>
