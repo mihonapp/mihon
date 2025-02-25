@@ -35,6 +35,9 @@ fun BrowseSourceToolbar(
     onWebViewClick: () -> Unit,
     onHelpClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onSelectClick: ()-> Unit,
+    onBlockruleClick: ()-> Unit,
+    inSelection : Boolean,
     onSearch: (String) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
@@ -51,6 +54,7 @@ fun BrowseSourceToolbar(
         searchQuery = searchQuery,
         onChangeSearchQuery = onSearchQueryChange,
         onSearch = onSearch,
+        searchEnabled = !inSelection,
         onClickCloseSearch = navigateUp,
         actions = {
             AppBarActions(
@@ -90,6 +94,19 @@ fun BrowseSourceToolbar(
                                 ),
                             )
                         }
+                        add(
+                            AppBar.OverflowAction(
+                                title = if (inSelection) stringResource(MR.strings.exit_multiple_selection)
+                                        else stringResource(MR.strings.enter_multiple_selection),
+                                onClick = onSelectClick,
+                            ),
+                        )
+                        add(
+                            AppBar.OverflowAction(
+                                title = stringResource(MR.strings.block_rule_manage),
+                                onClick = onBlockruleClick,
+                            ),
+                        )
                     }
                     .build(),
             )

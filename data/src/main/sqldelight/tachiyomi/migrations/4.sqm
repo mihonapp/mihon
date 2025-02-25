@@ -1,0 +1,8 @@
+CREATE TABLE block_rules (
+    _id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    rule TEXT NOT NULL,
+    type TEXT NOT NULL,
+    sort INTEGER NOT NULL,
+    enable INTEGER NOT NULL
+);
