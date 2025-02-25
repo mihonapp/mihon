@@ -42,7 +42,7 @@ class DownloadProvider(
             val downloadsDir = downloadsDir
             if (downloadsDir == null) {
                 logcat(LogPriority.ERROR) { "Invalid download directory or No permission allowed" }
-                throw Exception(context.stringResource(MR.strings.invalid_download_directory))
+                throw SecurityException(context.stringResource(MR.strings.invalid_download_directory))
             }
             return downloadsDir.createDirectory(sourceDirName)!!
                 .createDirectory(getMangaDirName(mangaDirName))!!
