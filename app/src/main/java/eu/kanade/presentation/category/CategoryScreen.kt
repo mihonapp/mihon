@@ -1,8 +1,8 @@
 package eu.kanade.presentation.category
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,10 +13,8 @@ import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryListItem
@@ -42,7 +40,7 @@ fun CategoryScreen(
     onClickSortAlphabetically: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    changeOrder: (Category, Int) -> Unit,
+    onChangeOrder: (Category, Int) -> Unit,
     navigateUp: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -80,18 +78,14 @@ fun CategoryScreen(
             return@Scaffold
         }
 
-        Box(modifier = Modifier.padding(PaddingValues(top = paddingValues.calculateTopPadding()))) {
-            CategoryContent(
-                categories = state.categories,
-                lazyListState = lazyListState,
-                paddingValues = PaddingValues(bottom = paddingValues.calculateBottomPadding()) +
-                    topSmallPaddingValues +
-                    PaddingValues(horizontal = MaterialTheme.padding.medium),
-                onClickRename = onClickRename,
-                onClickDelete = onClickDelete,
-                changeOrder = changeOrder,
-            )
-        }
+        CategoryContent(
+            categories = state.categories,
+            lazyListState = lazyListState,
+            paddingValues = paddingValues,
+            onClickRename = onClickRename,
+            onClickDelete = onClickDelete,
+            onChangeOrder = onChangeOrder,
+        )
     }
 }
 
@@ -102,32 +96,35 @@ private fun CategoryContent(
     paddingValues: PaddingValues,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
-    changeOrder: (Category, Int) -> Unit,
+    onChangeOrder: (Category, Int) -> Unit,
 ) {
-    var reorderableList by remember { mutableStateOf(categories.toList()) }
-    val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        reorderableList = reorderableList.toMutableList().apply {
-            changeOrder(reorderableList[from.index], to.index - from.index)
-            add(to.index, removeAt(from.index))
-        }
+    val categoriesState = remember { categories.toMutableStateList() }
+    val reorderableState = rememberReorderableLazyListState(lazyListState, paddingValues) { from, to ->
+        val item = categoriesState.removeAt(from.index)
+        categoriesState.add(to.index, item)
+        onChangeOrder(item, to.index)
     }
 
     LaunchedEffect(categories) {
-        if (!reorderableLazyColumnState.isAnyItemDragging) {
-            reorderableList = categories.toList()
+        if (!reorderableState.isAnyItemDragging) {
+            categoriesState.clear()
+            categoriesState.addAll(categories)
         }
     }
 
     LazyColumn(
+        modifier = Modifier.fillMaxSize(),
         state = lazyListState,
-        contentPadding = paddingValues,
+        contentPadding = paddingValues +
+            topSmallPaddingValues +
+            PaddingValues(horizontal = MaterialTheme.padding.medium),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         items(
-            items = reorderableList,
+            items = categoriesState,
             key = { category -> category.key },
         ) { category ->
-            ReorderableItem(reorderableLazyColumnState, category.key) {
+            ReorderableItem(reorderableState, category.key) {
                 CategoryListItem(
                     modifier = Modifier.animateItem(),
                     category = category,
@@ -139,4 +136,4 @@ private fun CategoryContent(
     }
 }
 
-private val Category.key get() = "category-$id"
+private val Category.key inline get() = "category-$id"

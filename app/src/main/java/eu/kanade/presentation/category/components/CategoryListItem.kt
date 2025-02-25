@@ -29,13 +29,11 @@ fun ReorderableCollectionItemScope.CategoryListItem(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ElevatedCard(
-        modifier = modifier,
-    ) {
+    ElevatedCard(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onRename() }
+                .clickable(onClick = onRename)
                 .padding(vertical = MaterialTheme.padding.small)
                 .padding(
                     start = MaterialTheme.padding.small,
@@ -52,8 +50,7 @@ fun ReorderableCollectionItemScope.CategoryListItem(
             )
             Text(
                 text = category.name,
-                modifier = Modifier
-                    .weight(1f),
+                modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onRename) {
                 Icon(
@@ -62,7 +59,10 @@ fun ReorderableCollectionItemScope.CategoryListItem(
                 )
             }
             IconButton(onClick = onDelete) {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = stringResource(MR.strings.action_delete))
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = stringResource(MR.strings.action_delete),
+                )
             }
         }
     }

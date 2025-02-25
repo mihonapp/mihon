@@ -15,7 +15,7 @@ class ReorderCategory(
 
     private val mutex = Mutex()
 
-    suspend fun changeOrder(category: Category, newOrder: Int) = withNonCancellableContext {
+    suspend fun changeOrder(category: Category, newIndex: Int) = withNonCancellableContext {
         mutex.withLock {
             val categories = categoryRepository.getAll()
                 .filterNot(Category::isSystemCategory)
@@ -26,10 +26,8 @@ class ReorderCategory(
                 return@withNonCancellableContext Result.Unchanged
             }
 
-            val newPosition = currentIndex + newOrder
-
             try {
-                categories.add(newPosition, categories.removeAt(currentIndex))
+                categories.add(newIndex, categories.removeAt(currentIndex))
 
                 val updates = categories.mapIndexed { index, category ->
                     CategoryUpdate(

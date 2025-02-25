@@ -74,9 +74,9 @@ class CategoryScreenModel(
         }
     }
 
-    fun changeOrder(category: Category, newOrder: Int) {
+    fun changeOrder(category: Category, newIndex: Int) {
         screenModelScope.launch {
-            when (reorderCategory.changeOrder(category, newOrder)) {
+            when (reorderCategory.changeOrder(category, newIndex)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }

@@ -43,7 +43,7 @@ class CategoryScreen : Screen() {
             onClickSortAlphabetically = { screenModel.showDialog(CategoryDialog.SortAlphabetically) },
             onClickRename = { screenModel.showDialog(CategoryDialog.Rename(it)) },
             onClickDelete = { screenModel.showDialog(CategoryDialog.Delete(it)) },
-            changeOrder = screenModel::changeOrder,
+            onChangeOrder = screenModel::changeOrder,
             navigateUp = navigator::pop,
         )
 
