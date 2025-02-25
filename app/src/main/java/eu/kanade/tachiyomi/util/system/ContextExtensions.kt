@@ -171,7 +171,7 @@ fun Context.isInstalledFromFDroid(): Boolean {
 
     return installerPackageName == "org.fdroid.fdroid" ||
         // F-Droid builds typically disable the updater
-        (!BuildConfig.INCLUDE_UPDATER && !isDevFlavor)
+        (!BuildConfig.INCLUDE_UPDATER && !isDebugBuildType)
 }
 
 fun Context.launchRequestPackageInstallsPermission() {

@@ -32,10 +32,10 @@ jobs:
         run: ./gradlew spotlessCheck
 
       - name: Build app
-        run: ./gradlew assembleStandardRelease
+        run: ./gradlew assembleRelease -Pwith-analytics -Pwith-updater
 
       - name: Run unit tests
-        run: ./gradlew testReleaseUnitTest testStandardReleaseUnitTest
+        run: ./gradlew testReleaseUnitTest
 
       - name: Upload APK
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
         with:
           name: mapping-${{ github.sha }}
-          path: app/build/outputs/mapping/standardRelease
+          path: app/build/outputs/mapping/release
 
       # Sign APK and create release for tags
 
@@ -87,7 +87,7 @@ jobs:
           mv app/build/outputs/apk/standard/release/app-standard-x86-release-unsigned-signed.apk mihon-x86-${{ env.VERSION_TAG }}.apk
           sha=`sha256sum mihon-x86-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
-          
+
           mv app/build/outputs/apk/standard/release/app-standard-x86_64-release-unsigned-signed.apk mihon-x86_64-${{ env.VERSION_TAG }}.apk
           sha=`sha256sum mihon-x86_64-${{ env.VERSION_TAG }}.apk | awk '{ print $1 }'`
           echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
@@ -110,7 +110,7 @@ jobs:
             | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
             | x86 | ${{ env.APK_X86_SHA }} |
             | x86_64 | ${{ env.APK_X86_64_SHA }} |
-            
+
             ## If you are unsure which version to choose then go with mihon-${{ env.VERSION_TAG }}.apk
           files: |
             mihon-${{ env.VERSION_TAG }}.apk
