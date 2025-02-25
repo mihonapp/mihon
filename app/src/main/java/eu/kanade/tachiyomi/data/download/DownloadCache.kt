@@ -2,7 +2,7 @@ package eu.kanade.tachiyomi.data.download
 
 import android.app.Application
 import android.content.Context
-import android.net.Uri
+import androidx.core.net.toUri
 import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.extension.ExtensionManager
 import eu.kanade.tachiyomi.source.Source
@@ -54,7 +54,6 @@ import uy.kohesive.injekt.api.get
 import java.io.File
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
-import androidx.core.net.toUri
 
 /**
  * Cache where we dump the downloads directory from the filesystem. This class is needed because
