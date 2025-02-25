@@ -32,6 +32,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix certain Infinix devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684))
 - Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
 - Fix backup/restore of category related preferences ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
+- Fix certain Xiaomi devices being unable to use any "Open link in browser" actions, including tracker setup ([@cuong-tran](https://github.com/cuong-tran)) ([#1776](https://github.com/mihonapp/mihon/pull/1776))
 
 ### Other
 - Add zoned "Current time" to debug info and include year & timezone in logcat output ([@MajorTanya](https://github.com/MajorTanya)) ([#1672](https://github.com/mihonapp/mihon/pull/1672))
