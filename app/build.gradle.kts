@@ -87,8 +87,8 @@ android {
     }
 
     sourceSets {
-        val analyticsSrcDir = if (includeAnalytics) "src/analytics-firebase/java" else "src/analytics-noop/java"
-        getByName("main").java.srcDirs(analyticsSrcDir)
+        val analyticsDir = if (includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
+        getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
     }

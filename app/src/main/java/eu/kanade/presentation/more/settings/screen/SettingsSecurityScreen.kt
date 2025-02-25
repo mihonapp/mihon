@@ -32,7 +32,7 @@ object SettingsSecurityScreen : SearchableSettings {
     override fun getPreferences(): List<Preference> {
         val securityPreferences = remember { Injekt.get<SecurityPreferences>() }
         val privacyPreferences = remember { Injekt.get<PrivacyPreferences>() }
-        return buildList(if (analyticsIncluded) 2 else 1) {
+        return buildList(2) {
             add(getSecurityGroup(securityPreferences))
             if (!analyticsIncluded) return@buildList
             add(getFirebaseGroup(privacyPreferences))
