@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
 - Add button to favorite manga from history screen ([@Animeboynz](https://github.com/Animeboynz)) ([#1733](https://github.com/mihonapp/mihon/pull/1733))
 - Add Monochrome theme (made with e-ink displays in mind) ([@MajorTanya](https://github.com/MajorTanya)) ([#1752](https://github.com/mihonapp/mihon/pull/1752))
+- Support for private tracking with AniList and Bangumi ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1736](https://github.com/mihonapp/mihon/pull/1736))
 
 ### Changed
 - Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))
