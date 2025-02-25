@@ -51,7 +51,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val statusTrack = api.statusLibManga(track, getUsername())
         return if (statusTrack != null) {
-            track.copyPersonalFrom(statusTrack, true)
+            track.copyPersonalFrom(statusTrack, copyRemotePrivate = false)
             track.library_id = statusTrack.library_id
             track.score = statusTrack.score
             track.last_chapter_read = statusTrack.last_chapter_read

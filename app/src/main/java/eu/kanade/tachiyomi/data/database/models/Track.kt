@@ -34,13 +34,13 @@ interface Track : Serializable {
 
     var private: Boolean
 
-    fun copyPersonalFrom(other: Track, useLocalPrivate: Boolean = false) {
+    fun copyPersonalFrom(other: Track, copyRemotePrivate: Boolean = true) {
         last_chapter_read = other.last_chapter_read
         score = other.score
         status = other.status
         started_reading_date = other.started_reading_date
         finished_reading_date = other.finished_reading_date
-        private = if (useLocalPrivate) this.private else other.private
+        if (copyRemotePrivate) private = other.private
     }
 
     companion object {
