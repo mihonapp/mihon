@@ -3,7 +3,9 @@ package eu.kanade.tachiyomi.data.export
 import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tachiyomi.domain.manga.model.Manga
 
 object LibraryExporter {
@@ -14,15 +16,14 @@ object LibraryExporter {
         val includeArtist: Boolean,
     )
 
-    fun exportToCsv(
+    suspend fun exportToCsv(
         context: Context,
         uri: Uri,
         favorites: List<Manga>,
         options: ExportOptions,
-        coroutineScope: CoroutineScope,
         onExportComplete: () -> Unit,
     ) {
-        coroutineScope.launch {
+        withContext(Dispatchers.IO) {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
                 val csvData = generateCsvData(favorites, options)
                 outputStream.write(csvData.toByteArray())
@@ -39,17 +40,17 @@ object LibraryExporter {
             options.includeTitle,
             options.includeAuthor,
             options.includeArtist,
-        ).count { it }
+        )
+            .count { it }
 
         val rows = buildList(favorites.size) {
             favorites.forEach { manga ->
-                add(
-                    buildList(columnSize) {
-                        if (options.includeTitle) add(manga.title)
-                        if (options.includeAuthor) add(manga.author)
-                        if (options.includeArtist) add(manga.artist)
-                    },
-                )
+                buildList(columnSize) {
+                    if (options.includeTitle) add(manga.title)
+                    if (options.includeAuthor) add(manga.author)
+                    if (options.includeArtist) add(manga.artist)
+                }
+                    .let(::add)
             }
         }
         return rows.joinToString("\n") { columns ->

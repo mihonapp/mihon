@@ -52,12 +52,14 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
-import eu.kanade.tachiyomi.data.export.LibraryExporter.exportToCsv
 import eu.kanade.tachiyomi.util.system.DeviceUtil
 import eu.kanade.tachiyomi.util.system.toast
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.displayablePath
@@ -329,7 +331,6 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun getExportGroup(): Preference.PreferenceGroup {
         var showDialog by remember { mutableStateOf(false) }
-
         var exportOptions by remember {
             mutableStateOf(
                 ExportOptions(
@@ -341,44 +342,41 @@ object SettingsDataScreen : SearchableSettings {
         }
 
         val context = LocalContext.current
-        val coroutineScope = rememberCoroutineScope()
-        val getFavorites: GetFavorites = remember { Injekt.get() }
-        var favoritesState by remember { mutableStateOf<List<Manga>>(emptyList()) }
+        val scope = rememberCoroutineScope()
+        val getFavorites = remember { Injekt.get<GetFavorites>() }
+        var favorites by remember { mutableStateOf<List<Manga>>(emptyList()) }
         LaunchedEffect(Unit) {
-            favoritesState = getFavorites.await()
+            favorites = getFavorites.await()
         }
 
         val saveFileLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
-                exportToCsv(
-                    context = context,
-                    uri = it,
-                    favorites = favoritesState,
-                    options = exportOptions,
-                    coroutineScope = coroutineScope,
-                    onExportComplete = {
-                        context.toast(MR.strings.library_exported)
-                    },
-                )
+                scope.launch {
+                    LibraryExporter.exportToCsv(
+                        context = context,
+                        uri = it,
+                        favorites = favorites,
+                        options = exportOptions,
+                        onExportComplete = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast(MR.strings.library_exported)
+                            }
+                        },
+                    )
+                }
             }
         }
 
         if (showDialog) {
             ColumnSelectionDialog(
                 onDismissRequest = { showDialog = false },
-                onConfirm = { newTitleSelected, newAuthorSelected, newArtistSelected ->
-                    exportOptions = exportOptions.copy(
-                        includeTitle = newTitleSelected,
-                        includeAuthor = newAuthorSelected,
-                        includeArtist = newArtistSelected,
-                    )
+                onConfirm = { options ->
+                    exportOptions = options
                     saveFileLauncher.launch("library_list.csv")
                 },
-                isTitleSelected = exportOptions.includeTitle,
-                isAuthorSelected = exportOptions.includeAuthor,
-                isArtistSelected = exportOptions.includeArtist,
+                currentOptions = exportOptions,
             )
         }
 
@@ -396,14 +394,12 @@ object SettingsDataScreen : SearchableSettings {
     @Composable
     private fun ColumnSelectionDialog(
         onDismissRequest: () -> Unit,
-        onConfirm: (Boolean, Boolean, Boolean) -> Unit,
-        isTitleSelected: Boolean,
-        isAuthorSelected: Boolean,
-        isArtistSelected: Boolean,
+        onConfirm: (ExportOptions) -> Unit,
+        currentOptions: ExportOptions,
     ) {
-        var titleSelected by remember { mutableStateOf(isTitleSelected) }
-        var authorSelected by remember { mutableStateOf(isAuthorSelected) }
-        var artistSelected by remember { mutableStateOf(isArtistSelected) }
+        var titleSelected by remember { mutableStateOf(currentOptions.includeTitle) }
+        var authorSelected by remember { mutableStateOf(currentOptions.includeAuthor) }
+        var artistSelected by remember { mutableStateOf(currentOptions.includeArtist) }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -454,7 +450,13 @@ object SettingsDataScreen : SearchableSettings {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onConfirm(titleSelected, authorSelected, artistSelected)
+                        onConfirm(
+                            ExportOptions(
+                                includeTitle = titleSelected,
+                                includeAuthor = authorSelected,
+                                includeArtist = artistSelected,
+                            ),
+                        )
                         onDismissRequest()
                     },
                 ) {
