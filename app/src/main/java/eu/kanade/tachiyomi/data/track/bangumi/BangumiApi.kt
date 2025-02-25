@@ -153,7 +153,7 @@ class BangumiApi(
     suspend fun getUsername(): String {
         return withIOContext {
             with(json) {
-                authClient.newCall(GET("$API_URL/v0/me$"))
+                authClient.newCall(GET("$API_URL/v0/me"))
                     .awaitSuccess()
                     .parseAs<BGMUser>()
                     .username
