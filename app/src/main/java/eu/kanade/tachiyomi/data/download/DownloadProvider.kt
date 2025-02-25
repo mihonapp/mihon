@@ -13,6 +13,7 @@ import tachiyomi.domain.storage.service.StorageManager
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.IOException
 
 /**
  * This class is used to provide the directories where the downloads should be saved.
@@ -48,7 +49,7 @@ class DownloadProvider(
         } catch (e: Throwable) {
             val mangaDir = "/$sourceDirName/$mangaDirName"
             logcat(LogPriority.ERROR, e) { "Invalid location: $mangaDir" }
-            throw Exception(context.stringResource(MR.strings.invalid_location, mangaDir))
+            throw IOException(context.stringResource(MR.strings.invalid_location, mangaDir))
         }
     }
 

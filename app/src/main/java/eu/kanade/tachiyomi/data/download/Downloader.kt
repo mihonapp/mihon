@@ -60,6 +60,7 @@ import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
+import java.io.IOException
 import java.util.Locale
 
 /**
@@ -318,7 +319,7 @@ class Downloader(
         val mangaDir: UniFile
         try {
             mangaDir = provider.getMangaDir(download.manga.title, download.source)
-        } catch (error: Exception) {
+        } catch (error: IOException) {
             download.status = Download.State.ERROR
             notifier.onError(error.message, download.chapter.name, download.manga.title, download.manga.id)
             return
