@@ -1,12 +1,17 @@
+@file:Suppress("UNUSED", "KotlinConstantConditions")
+
 package eu.kanade.tachiyomi.util.system
 
 import eu.kanade.tachiyomi.BuildConfig
 
-val isDevFlavor: Boolean
-    get() = BuildConfig.FLAVOR == "dev"
+val analyticsIncluded: Boolean
+    inline get() = BuildConfig.INCLUDE_ANALYTICS
+
+val isDebugBuildType: Boolean
+    inline get() = BuildConfig.BUILD_TYPE == "debug"
 
 val isPreviewBuildType: Boolean
-    get() = BuildConfig.BUILD_TYPE == "preview"
+    inline get() = BuildConfig.BUILD_TYPE == "preview"
 
 val isReleaseBuildType: Boolean
-    get() = BuildConfig.BUILD_TYPE == "release"
+    inline get() = BuildConfig.BUILD_TYPE == "release"

@@ -37,6 +37,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import eu.kanade.presentation.util.rememberRequestPackageInstallsPermissionState
 import eu.kanade.tachiyomi.core.security.PrivacyPreferences
+import eu.kanade.tachiyomi.util.system.analyticsIncluded
 import eu.kanade.tachiyomi.util.system.launchRequestPackageInstallsPermission
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
@@ -121,6 +122,8 @@ internal class PermissionStep : OnboardingStep {
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
+
+            if (!analyticsIncluded) return@Column
 
             val crashlyticsPref = privacyPreferences.crashlytics()
             val crashlytics by crashlyticsPref.collectAsState()
