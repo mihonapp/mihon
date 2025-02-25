@@ -44,6 +44,7 @@ import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
 import tachiyomi.presentation.core.util.secondaryItemAlpha
 import uy.kohesive.injekt.injectLazy
+import androidx.core.net.toUri
 
 internal class PermissionStep : OnboardingStep {
 
@@ -112,7 +113,7 @@ internal class PermissionStep : OnboardingStep {
                 onButtonClick = {
                     @SuppressLint("BatteryLife")
                     val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                        data = Uri.parse("package:${context.packageName}")
+                        data = "package:${context.packageName}".toUri()
                     }
                     context.startActivity(intent)
                 },

@@ -14,6 +14,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
+import androidx.core.net.toUri
 
 /**
  * Broadcast receiver that listens for the system's packages installed, updated or removed, and only
@@ -138,7 +139,7 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
 
         private fun notify(context: Context, pkgName: String, action: String) {
             Intent(action).apply {
-                data = Uri.parse("package:$pkgName")
+                data = "package:$pkgName".toUri()
                 `package` = context.packageName
                 context.sendBroadcast(this)
             }

@@ -158,7 +158,7 @@ val Context.isShizukuInstalled get() = isPackageInstalled("moe.shizuku.privilege
 
 fun Context.launchRequestPackageInstallsPermission() {
     Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-        data = Uri.parse("package:$packageName")
+        data = "package:$packageName".toUri()
         startActivity(this)
     }
 }

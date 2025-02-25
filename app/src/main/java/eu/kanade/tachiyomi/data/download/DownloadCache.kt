@@ -54,6 +54,7 @@ import uy.kohesive.injekt.api.get
 import java.io.File
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
+import androidx.core.net.toUri
 
 /**
  * Cache where we dump the downloads directory from the filesystem. This class is needed because
@@ -454,7 +455,7 @@ private object UniFileAsStringSerializer : KSerializer<UniFile?> {
 
     override fun deserialize(decoder: Decoder): UniFile? {
         return if (decoder.decodeNotNullMark()) {
-            UniFile.fromUri(Injekt.get<Application>(), Uri.parse(decoder.decodeString()))
+            UniFile.fromUri(Injekt.get<Application>(), decoder.decodeString().toUri())
         } else {
             decoder.decodeNull()
         }
