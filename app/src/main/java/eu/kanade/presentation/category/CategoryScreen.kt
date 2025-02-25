@@ -1,6 +1,7 @@
 package eu.kanade.presentation.category
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -79,16 +80,18 @@ fun CategoryScreen(
             return@Scaffold
         }
 
-        CategoryContent(
-            categories = state.categories,
-            lazyListState = lazyListState,
-            paddingValues = paddingValues +
-                topSmallPaddingValues +
-                PaddingValues(horizontal = MaterialTheme.padding.medium),
-            onClickRename = onClickRename,
-            onClickDelete = onClickDelete,
-            changeOrder = changeOrder,
-        )
+        Box(modifier = Modifier.padding(PaddingValues(top = paddingValues.calculateTopPadding()))) {
+            CategoryContent(
+                categories = state.categories,
+                lazyListState = lazyListState,
+                paddingValues = PaddingValues(bottom = paddingValues.calculateBottomPadding()) +
+                    topSmallPaddingValues +
+                    PaddingValues(horizontal = MaterialTheme.padding.medium),
+                onClickRename = onClickRename,
+                onClickDelete = onClickDelete,
+                changeOrder = changeOrder,
+            )
+        }
     }
 }
 
