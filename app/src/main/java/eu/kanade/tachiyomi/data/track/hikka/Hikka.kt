@@ -10,7 +10,6 @@ import eu.kanade.tachiyomi.data.track.hikka.dto.HKOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -36,13 +35,9 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
     private val interceptor by lazy { HikkaInterceptor(this) }
     private val api by lazy { HikkaApi(id, client, interceptor) }
 
-    override fun getLogoColor(): Int {
-        return Color.rgb(0, 0, 0)
-    }
+    override fun getLogoColor(): Int = Color.rgb(0, 0, 0)
 
-    override fun getLogo(): Int {
-        return R.drawable.ic_tracker_hikka
-    }
+    override fun getLogo(): Int = R.drawable.ic_tracker_hikka
 
     override fun getStatusList(): List<Long> {
         return listOf(
@@ -65,21 +60,13 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         else -> null
     }
 
-    override fun getReadingStatus(): Long {
-        return READING
-    }
+    override fun getReadingStatus(): Long = READING
 
-    override fun getRereadingStatus(): Long {
-        return REREADING
-    }
+    override fun getRereadingStatus(): Long = REREADING
 
-    override fun getCompletionStatus(): Long {
-        return COMPLETED
-    }
+    override fun getCompletionStatus(): Long = COMPLETED
 
-    override fun getScoreList(): ImmutableList<String> {
-        return SCORE_LIST
-    }
+    override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
     override fun displayScore(track: DomainTrack): String {
         return track.score.toInt().toString()
@@ -124,9 +111,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         }
     }
 
-    override suspend fun search(query: String): List<TrackSearch> {
-        return api.searchManga(query)
-    }
+    override suspend fun search(query: String): List<TrackSearch> = api.searchManga(query)
 
     override suspend fun refresh(track: Track): Track {
         val remoteTrack = api.updateUserManga(track)
@@ -148,9 +133,7 @@ class Hikka(id: Long) : BaseTracker(id, "Hikka"), DeletableTracker {
         }
     }
 
-    override suspend fun delete(track: DomainTrack) {
-        api.deleteUserManga(track)
-    }
+    override suspend fun delete(track: DomainTrack) = api.deleteUserManga(track)
 
     override fun logout() {
         super.logout()
