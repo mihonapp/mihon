@@ -35,6 +35,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -291,7 +292,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                         text = "$mangaCount/$sourceCount",
                         modifier = Modifier.padding(start = 4.dp),
                         color = MaterialTheme.colorScheme.error,
-                        isCustomText = true,
+                        style = LocalTextStyle.current,
                     )
                     val rotation by animateFloatAsState(
                         targetValue = if (expanded[GroupKey(id, Pair("", ""))] == true) 0f else -180f,
