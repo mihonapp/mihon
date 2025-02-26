@@ -5,10 +5,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import eu.kanade.tachiyomi.R
+import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.i18n.stringResource
 
 @Composable
 fun ErrorMessageDialog(
@@ -20,7 +20,7 @@ fun ErrorMessageDialog(
         text = {
             Column {
                 Text(
-                    text = "${stringResource(R.string.label_error_message)}:\n",
+                    text = "${stringResource(MR.strings.label_error_message)}:\n",
                     fontSize = 20.sp,
                     textAlign = TextAlign.Justify,
                 )
@@ -33,12 +33,12 @@ fun ErrorMessageDialog(
                 onCopyClick()
                 onDismissRequest()
             }) {
-                Text(text = stringResource(R.string.copy))
+                Text(text = stringResource(MR.strings.copy))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(R.string.action_cancel))
+                Text(text = stringResource(MR.strings.action_cancel))
             }
         },
     )
