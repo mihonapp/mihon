@@ -28,7 +28,7 @@ data class HKRead(
             last_chapter_read = this@HKRead.chapters.toDouble()
             score = this@HKRead.score.toDouble()
             status = toTrackStatus(this@HKRead.status)
-            tracking_url = HikkaApi.BASE_URL + "/manga/${this@HKRead.content.slug}"
+            tracking_url = "${HikkaApi.BASE_URL}/manga/${this@HKRead.content.slug}"
         }
     }
 }

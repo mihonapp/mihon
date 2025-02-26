@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HKOAuth(
-    @SerialName("secret") val accessToken: String,
+    @SerialName("secret")
+    val accessToken: String,
     val expiration: Long,
     val created: Long,
 ) {

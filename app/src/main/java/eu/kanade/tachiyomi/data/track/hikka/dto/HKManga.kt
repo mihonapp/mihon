@@ -8,18 +8,25 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HKManga(
-    @SerialName("data_type") val dataType: String,
-    @SerialName("title_original") val titleOriginal: String,
-    @SerialName("media_type") val mediaType: String,
-    @SerialName("title_ua") val titleUa: String? = null,
-    @SerialName("title_en") val titleEn: String? = null,
+    @SerialName("data_type")
+    val dataType: String,
+    @SerialName("title_original")
+    val titleOriginal: String,
+    @SerialName("media_type")
+    val mediaType: String,
+    @SerialName("title_ua")
+    val titleUa: String? = null,
+    @SerialName("title_en")
+    val titleEn: String? = null,
     val chapters: Int? = null,
     val volumes: Int? = null,
-    @SerialName("translated_ua") val translatedUa: Boolean,
+    @SerialName("translated_ua")
+    val translatedUa: Boolean,
     val status: String,
     val image: String,
     val year: Int? = null,
-    @SerialName("scored_by") val scoredBy: Int,
+    @SerialName("scored_by")
+    val scoredBy: Int,
     val score: Double,
     val slug: String,
 ) {
@@ -30,7 +37,7 @@ data class HKManga(
             total_chapters = this@HKManga.chapters?.toLong() ?: 0
             cover_url = this@HKManga.image
             score = this@HKManga.score
-            tracking_url = HikkaApi.BASE_URL + "/manga/${this@HKManga.slug}"
+            tracking_url = "${HikkaApi.BASE_URL}/manga/${this@HKManga.slug}"
             publishing_status = this@HKManga.status
             publishing_type = "manga"
             start_date = ""
