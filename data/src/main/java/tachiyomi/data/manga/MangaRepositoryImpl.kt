@@ -69,7 +69,7 @@ class MangaRepositoryImpl(
         id: Long,
         title: String,
         artist: String?,
-        author: String?
+        author: String?,
     ): List<Manga> {
         return handler.awaitList {
             mangasQueries.getDuplicateLibraryManga(title, artist, author, id, MangaMapper::mapManga)
