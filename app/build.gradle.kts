@@ -267,6 +267,7 @@ dependencies {
     implementation(libs.swipe)
     implementation(libs.compose.webview)
     implementation(libs.compose.grid)
+    implementation(libs.reorderable)
 
     // Logging
     implementation(libs.logcat)
