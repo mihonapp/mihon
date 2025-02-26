@@ -8,6 +8,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -108,55 +109,55 @@ class FailedUpdatesScreenModel(
         return when (exception) {
             // General networking exceptions
             // Hold your arses this is temporary and for testing purposes only
-            "SocketException" -> "Socket Exception"
-            "BindException" -> "Bind Exception"
-            "InterruptedIOException" -> "Interrupted IO Exception"
-            "HttpRetryException" -> "HTTP Retry Exception"
-            "PortUnreachableException" -> "Port Unreachable Exception"
+            "SocketException" -> context.getString(R.string.exception_socket_error)
+            "BindException" -> context.getString(R.string.exception_bind_port)
+            "InterruptedIOException" -> context.getString(R.string.exception_io_interrupted)
+            "HttpRetryException" -> context.getString(R.string.exception_http_retry)
+            "PortUnreachableException" -> context.getString(R.string.exception_port_unreachable)
             // General IO-related exceptions
             "IOException" -> if (isOnline ==
                 1L
             ) {
-                "IO Exception"
+                context.getString(R.string.exception_io_error)
             } else {
-                "IOException: No Internet"
+                context.getString(R.string.exception_io_error_internet_connection)
             }
-            "TimeoutException" -> "Timeout Exception"
+            "TimeoutException" -> context.getString(R.string.exception_timed_out)
             // SSL & Security-related
-            "SSLException" -> "SSL Exception"
-            "CertificateExpiredException" -> "Certificate Expired Exception"
-            "CertificateNotYetValidException" -> "Certificate Not Yet Valid Exception"
-            "CertificateParsingException" -> "Certificate Parsing Exception"
-            "CertificateEncodingException" -> "Certificate Encoding Exception"
-            "UnrecoverableKeyException" -> "Unrecoverable Key Exception"
-            "KeyManagementException" -> "Key Management Exception"
-            "NoSuchAlgorithmException" -> "No Such Algorithm Exception"
-            "KeyStoreException" -> "Key Store Exception"
-            "NoSuchProviderException" -> "No Such Provider Exception"
-            "SignatureException" -> "Signature Exception"
-            "InvalidKeySpecException" -> "Invalid Key Spec Exception"
+            "SSLException" -> context.getString(R.string.exception_ssl_connection)
+            "CertificateExpiredException" -> context.getString(R.string.exception_ssl_certificate)
+            "CertificateNotYetValidException" -> context.getString(R.string.exception_ssl_not_valid)
+            "CertificateParsingException" -> context.getString(R.string.exception_ssl_parsing)
+            "CertificateEncodingException" -> context.getString(R.string.exception_ssl_encoding)
+            "UnrecoverableKeyException" -> context.getString(R.string.exception_unrecoverable_key)
+            "KeyManagementException" -> context.getString(R.string.exception_key_management)
+            "NoSuchAlgorithmException" -> context.getString(R.string.exception_algorithm)
+            "KeyStoreException" -> context.getString(R.string.exception_keystore)
+            "NoSuchProviderException" -> context.getString(R.string.exception_security_provider)
+            "SignatureException" -> context.getString(R.string.exception_signature_validation)
+            "InvalidKeySpecException" -> context.getString(R.string.exception_key_specification)
             // Host & DNS-related
             "UnknownHostException" -> if (isOnline ==
                 1L
             ) {
-                "Unknown Host Exception"
+                context.getString(R.string.exception_domain)
             } else {
-                "Unknown Host Exception: No Internet"
+                context.getString(R.string.exception_domain_internet_connection)
             }
-            "ConnectException" -> "Connect Exception"
-            "NoRouteToHostException" -> "No Route To Host Exception"
+            "ConnectException" -> context.getString(R.string.exception_connection)
+            "NoRouteToHostException" -> context.getString(R.string.exception_route_to_host)
             // URL & URI related
-            "URISyntaxException" -> "URI Syntax Exception"
-            "MalformedURLException" -> "Malformed URL Exception"
+            "URISyntaxException" -> context.getString(R.string.exception_uri_syntax)
+            "MalformedURLException" -> context.getString(R.string.exception_malformed_url)
             // Authentication & Proxy
-            "ProtocolException" -> "Protocol Exception"
+            "ProtocolException" -> context.getString(R.string.exception_protocol_proxy_type)
             // Concurrency & Operation-related
-            "CancellationException" -> "Cancellation Exception"
-            "InterruptedException" -> "Interrupted Exception"
-            "IllegalStateException" -> "Illegal State Exception"
-            "UnsupportedOperationException" -> "Unsupported Operation Exception"
-            "IllegalArgumentException" -> "Illegal Argument Exception"
-            else -> "Unknown: $exception"
+            "CancellationException" -> context.getString(R.string.exception_cancelled)
+            "InterruptedException" -> context.getString(R.string.exception_interrupted)
+            "IllegalStateException" -> context.getString(R.string.exception_unexpected_state)
+            "UnsupportedOperationException" -> context.getString(R.string.exception_not_supported)
+            "IllegalArgumentException" -> context.getString(R.string.exception_invalid_argument)
+            else -> context.getString(R.string.exception_unknown_error, exception)
         }
     }
 

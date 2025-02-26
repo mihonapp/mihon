@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,10 +44,10 @@ import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
 import eu.kanade.presentation.manga.components.FailedUpdatesBottomActionMenu
 import eu.kanade.presentation.util.Screen
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import kotlinx.collections.immutable.toImmutableList
+import tachiyomi.core.common.Constants
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.FastScrollLazyColumn
@@ -56,6 +55,7 @@ import tachiyomi.presentation.core.components.Pill
 import tachiyomi.presentation.core.components.SortItem
 import tachiyomi.presentation.core.components.material.ExtendedFloatingActionButton
 import tachiyomi.presentation.core.components.material.Scaffold
+import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.presentation.core.util.shouldExpandFAB
@@ -115,11 +115,11 @@ class FailedUpdatesScreen : Screen() {
                     exit = fadeOut(),
                 ) {
                     ExtendedFloatingActionButton(
-                        text = { Text(text = stringResource(R.string.label_help)) },
+                        text = { Text(text = stringResource(MR.strings.label_help)) },
                         icon = {
                             Icon(imageVector = Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = null)
                         },
-                        onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/troubleshooting") },
+                        onClick = { uriHandler.openUri(Constants.URL_HELP) },
                         expanded = failedUpdatesListState.shouldExpandFAB(),
                     )
                 }
@@ -269,7 +269,7 @@ private fun FailedUpdatesAppBar(
             titleContent = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = stringResource(R.string.label_failed_updates),
+                        text = stringResource(MR.strings.label_failed_updates),
                         maxLines = 1,
                         modifier = Modifier.weight(1f, false),
                         overflow = TextOverflow.Ellipsis,
@@ -302,10 +302,10 @@ private fun FailedUpdatesAppBar(
                     )
                     DropdownMenu(expanded = mainExpanded, onDismissRequest = onDismissRequest) {
                         NestedMenuItem(
-                            text = { Text(text = stringResource(R.string.action_groupBy)) },
+                            text = { Text(text = stringResource(MR.strings.action_groupBy)) },
                             children = { closeMenu ->
                                 DropdownMenuItem(
-                                    text = { Text(text = stringResource(R.string.action_group_by_source)) },
+                                    text = { Text(text = stringResource(MR.strings.action_group_by_source)) },
                                     onClick = {
                                         onClickGroup(GroupByMode.BY_SOURCE)
                                         closeMenu()
@@ -315,7 +315,7 @@ private fun FailedUpdatesAppBar(
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(R.string.action_sortBy)) },
+                            text = { Text(text = stringResource(MR.strings.action_sortBy)) },
                             onClick = {
                                 onDismissRequest()
                                 sortExpanded = !sortExpanded
@@ -330,26 +330,26 @@ private fun FailedUpdatesAppBar(
                     }
                     val actions = mutableListOf<AppBar.AppBarAction>()
                     actions += AppBar.Action(
-                        title = stringResource(R.string.action_sort),
+                        title = stringResource(MR.strings.action_sort),
                         icon = Icons.AutoMirrored.Outlined.Sort,
                         iconTint = filterTint,
                         onClick = { mainExpanded = !mainExpanded },
                     )
                     actions += AppBar.OverflowAction(
-                        title = stringResource(R.string.action_dismiss_all),
+                        title = stringResource(MR.strings.action_dismiss_all),
                         onClick = onDismissAll,
                     )
                     if (groupByMode != GroupByMode.NONE) {
                         actions += if (isAllExpanded) {
                             AppBar.OverflowAction(
-                                title = stringResource(R.string.action_contract_all),
+                                title = stringResource(MR.strings.action_contract_all),
                                 onClick = {
                                     onContractAll()
                                 },
                             )
                         } else {
                             AppBar.OverflowAction(
-                                title = stringResource(R.string.action_expand_all),
+                                title = stringResource(MR.strings.action_expand_all),
                                 onClick = {
                                     onExpandAll()
                                 },
@@ -358,7 +358,7 @@ private fun FailedUpdatesAppBar(
                     }
                     if (groupByMode != GroupByMode.NONE) {
                         actions += AppBar.OverflowAction(
-                            title = stringResource(R.string.action_ungroup),
+                            title = stringResource(MR.strings.action_ungroup),
                             onClick = { onClickGroup(GroupByMode.NONE) },
                         )
                     }
@@ -382,19 +382,19 @@ private fun FailedUpdatesActionAppBar(
 ) {
     AppBar(
         modifier = modifier,
-        title = stringResource(R.string.label_failed_updates),
+        title = stringResource(MR.strings.label_failed_updates),
         actionModeCounter = actionModeCounter,
         onCancelActionMode = onCancelActionMode,
         actionModeActions = {
             AppBarActions(
                 listOf(
                     AppBar.Action(
-                        title = stringResource(R.string.action_select_all),
+                        title = stringResource(MR.strings.action_select_all),
                         icon = Icons.Outlined.SelectAll,
                         onClick = onSelectAll,
                     ),
                     AppBar.Action(
-                        title = stringResource(R.string.action_select_inverse),
+                        title = stringResource(MR.strings.action_select_inverse),
                         icon = Icons.Outlined.FlipToBack,
                         onClick = onInvertSelection,
                     ),
@@ -419,7 +419,7 @@ fun SortDropdownMenu(
         onDismissRequest = onDismissRequest,
     ) {
         SortItem(
-            label = stringResource(R.string.action_sort_A_Z),
+            label = stringResource(MR.strings.action_sort_A_Z),
             sortDescending = descendingOrder.takeIf { sortState == SortingMode.BY_ALPHABET },
             onClick = { onSortClicked(SortingMode.BY_ALPHABET) },
         )

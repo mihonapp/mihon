@@ -21,6 +21,7 @@ import androidx.work.workDataOf
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.manga.model.toSManga
+import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
@@ -296,7 +297,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             is SourceNotInstalledException -> context.stringResource(
                                                 MR.strings.loader_not_implemented_error,
                                             )
-                                            else -> e.message ?: "context.getString(MR.strings.exception_unknown)"
+                                            else -> e.message ?: context.getString(R.string.exception_unknown)
                                         }
                                         try {
                                             failedUpdatesCount.getAndIncrement()
