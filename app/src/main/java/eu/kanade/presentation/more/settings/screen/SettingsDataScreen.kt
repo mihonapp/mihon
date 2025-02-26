@@ -396,7 +396,7 @@ object SettingsDataScreen : SearchableSettings {
         currentOptions: ExportOptions,
         onConfirm: (ExportOptions) -> Unit,
         onDismissRequest: () -> Unit,
-        ) {
+    ) {
         var titleSelected by remember { mutableStateOf(currentOptions.includeTitle) }
         var authorSelected by remember { mutableStateOf(currentOptions.includeAuthor) }
         var artistSelected by remember { mutableStateOf(currentOptions.includeArtist) }
