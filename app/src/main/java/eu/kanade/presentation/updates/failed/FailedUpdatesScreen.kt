@@ -61,6 +61,7 @@ import tachiyomi.presentation.core.components.material.ExtendedFloatingActionBut
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.screens.EmptyScreen
 import tachiyomi.presentation.core.screens.LoadingScreen
+import tachiyomi.presentation.core.util.shouldExpandFAB
 import tachiyomi.source.local.isLocal
 
 class FailedUpdatesScreen : Screen() {
@@ -120,8 +121,7 @@ class FailedUpdatesScreen : Screen() {
                         text = { Text(text = stringResource(R.string.label_help)) },
                         icon = { Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = null) },
                         onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/troubleshooting") },
-                        // Revisit
-                        // expanded = failedUpdatesListState.isScrollingUp() || failedUpdatesListState.isScrolledToEnd(),
+                        expanded = failedUpdatesListState.shouldExpandFAB(),
                     )
                 }
             },
