@@ -17,16 +17,8 @@ object Hash {
         return encodeHex(SHA256.digest(bytes))
     }
 
-    fun sha256(string: String): String {
-        return sha256(string.toByteArray())
-    }
-
-    fun md5(bytes: ByteArray): String {
-        return encodeHex(MD5.digest(bytes))
-    }
-
     fun md5(string: String): String {
-        return md5(string.toByteArray())
+        return encodeHex(MD5.digest(string.toByteArray()))
     }
 
     private fun encodeHex(data: ByteArray): String {

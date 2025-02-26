@@ -108,7 +108,6 @@ abstract class BaseUpdatesGridGlanceWidget(
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     private suspend fun List<UpdatesWithRelations>.prepareData(
         rowCount: Int,
         columnCount: Int,

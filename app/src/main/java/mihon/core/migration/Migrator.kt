@@ -26,12 +26,12 @@ object Migrator {
         result = strategy(migrations)
     }
 
-    suspend fun await(): Boolean {
+    private suspend fun await(): Boolean {
         val result = result ?: CompletableDeferred(false)
         return result.await()
     }
 
-    fun release() {
+    private fun release() {
         result = null
     }
 

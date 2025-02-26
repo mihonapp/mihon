@@ -30,7 +30,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
