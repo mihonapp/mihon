@@ -371,7 +371,7 @@ object SettingsDataScreen : SearchableSettings {
 
         if (showDialog) {
             ColumnSelectionDialog(
-                currentOptions = exportOptions,
+                options = exportOptions,
                 onConfirm = { options ->
                     exportOptions = options
                     saveFileLauncher.launch("mihon_library.csv")
@@ -393,13 +393,13 @@ object SettingsDataScreen : SearchableSettings {
 
     @Composable
     private fun ColumnSelectionDialog(
-        currentOptions: ExportOptions,
+        options: ExportOptions,
         onConfirm: (ExportOptions) -> Unit,
         onDismissRequest: () -> Unit,
     ) {
-        var titleSelected by remember { mutableStateOf(currentOptions.includeTitle) }
-        var authorSelected by remember { mutableStateOf(currentOptions.includeAuthor) }
-        var artistSelected by remember { mutableStateOf(currentOptions.includeArtist) }
+        var titleSelected by remember { mutableStateOf(options.includeTitle) }
+        var authorSelected by remember { mutableStateOf(options.includeAuthor) }
+        var artistSelected by remember { mutableStateOf(options.includeArtist) }
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
