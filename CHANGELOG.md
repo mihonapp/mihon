@@ -30,7 +30,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
 - Fix Bangumi and MAL tracking 401 errors due to Mihon sending expired credentials ([@MajorTanya](https://github.com/MajorTanya)) ([#1681](https://github.com/mihonapp/mihon/pull/1681), [#1682](https://github.com/mihonapp/mihon/pull/1682))
-- Fix certain Infinix devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684))
+- Fix certain Infinix, Xiaomi devices being unable to use any "Open link in browser" actions, including tracker setup ([@MajorTanya](https://github.com/MajorTanya)) ([#1684](https://github.com/mihonapp/mihon/pull/1684)) ([#1776](https://github.com/mihonapp/mihon/pull/1776))
 - Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
 - Fix backup/restore of category related preferences ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
 
