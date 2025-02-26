@@ -9,12 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowLeft
-import androidx.compose.material.icons.outlined.ArrowRight
+import androidx.compose.material.icons.automirrored.outlined.ArrowRight
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
+import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.outlined.FlipToBack
-import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.SelectAll
-import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -31,11 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -119,7 +116,9 @@ class FailedUpdatesScreen : Screen() {
                 ) {
                     ExtendedFloatingActionButton(
                         text = { Text(text = stringResource(R.string.label_help)) },
-                        icon = { Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = null) },
+                        icon = {
+                            Icon(imageVector = Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = null)
+                        },
                         onClick = { uriHandler.openUri("https://tachiyomi.org/help/guides/troubleshooting") },
                         expanded = failedUpdatesListState.shouldExpandFAB(),
                     )
@@ -315,7 +314,6 @@ private fun FailedUpdatesAppBar(
                                 )
                             },
                         )
-                        val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
                         DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.action_sortBy)) },
                             onClick = {
@@ -324,7 +322,7 @@ private fun FailedUpdatesAppBar(
                             },
                             trailingIcon = {
                                 Icon(
-                                    imageVector = if (isLtr) Icons.Outlined.ArrowRight else Icons.Outlined.ArrowLeft,
+                                    imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
                                     contentDescription = null,
                                 )
                             },
@@ -333,7 +331,7 @@ private fun FailedUpdatesAppBar(
                     val actions = mutableListOf<AppBar.AppBarAction>()
                     actions += AppBar.Action(
                         title = stringResource(R.string.action_sort),
-                        icon = Icons.Outlined.Sort,
+                        icon = Icons.AutoMirrored.Outlined.Sort,
                         iconTint = filterTint,
                         onClick = { mainExpanded = !mainExpanded },
                     )
