@@ -8,6 +8,11 @@ class GetDuplicateLibraryManga(
 ) {
 
     suspend fun await(manga: Manga): List<Manga> {
-        return mangaRepository.getDuplicateLibraryManga(manga.id, manga.title.lowercase(), manga.artist?.lowercase(), manga.author?.lowercase())
+        return mangaRepository.getDuplicateLibraryManga(
+            manga.id,
+            manga.title.lowercase(),
+            manga.artist?.lowercase(),
+            manga.author?.lowercase(),
+        )
     }
 }
