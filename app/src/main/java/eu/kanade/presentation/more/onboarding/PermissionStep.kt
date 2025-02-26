@@ -118,12 +118,12 @@ internal class PermissionStep : OnboardingStep {
                 },
             )
 
+            if (!analyticsIncluded) return@Column
+
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
-
-            if (!analyticsIncluded) return@Column
 
             val crashlyticsPref = privacyPreferences.crashlytics()
             val crashlytics by crashlyticsPref.collectAsState()
