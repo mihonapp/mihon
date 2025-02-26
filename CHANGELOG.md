@@ -18,6 +18,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add Monochrome theme (made with e-ink displays in mind) ([@MajorTanya](https://github.com/MajorTanya)) ([#1752](https://github.com/mihonapp/mihon/pull/1752))
 - Support for private tracking with AniList and Bangumi ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1736](https://github.com/mihonapp/mihon/pull/1736))
   - Add private tracking support for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#1774](https://github.com/mihonapp/mihon/pull/1774))
+- Add option to export minimal library information to a CSV file ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1161](https://github.com/mihonapp/mihon/pull/1161))
 
 ### Changed
 - Apply "Downloaded only" filter to all entries regardless of favourite status ([@NGB-Was-Taken](https://github.com/NGB-Was-Taken)) ([#1603](https://github.com/mihonapp/mihon/pull/1603))

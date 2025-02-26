@@ -374,7 +374,7 @@ object SettingsDataScreen : SearchableSettings {
                 onDismissRequest = { showDialog = false },
                 onConfirm = { options ->
                     exportOptions = options
-                    saveFileLauncher.launch("library_list.csv")
+                    saveFileLauncher.launch("mihon_library.csv")
                 },
                 currentOptions = exportOptions,
             )
@@ -408,9 +408,7 @@ object SettingsDataScreen : SearchableSettings {
             },
             text = {
                 Column {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = titleSelected,
                             onCheckedChange = { checked ->
@@ -424,9 +422,7 @@ object SettingsDataScreen : SearchableSettings {
                         Text(text = stringResource(MR.strings.title))
                     }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = authorSelected,
                             onCheckedChange = { authorSelected = it },
@@ -435,9 +431,7 @@ object SettingsDataScreen : SearchableSettings {
                         Text(text = stringResource(MR.strings.author))
                     }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = artistSelected,
                             onCheckedChange = { artistSelected = it },

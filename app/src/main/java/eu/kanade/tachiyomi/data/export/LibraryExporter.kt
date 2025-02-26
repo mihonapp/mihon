@@ -2,9 +2,7 @@ package eu.kanade.tachiyomi.data.export
 
 import android.content.Context
 import android.net.Uri
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tachiyomi.domain.manga.model.Manga
 
@@ -27,9 +25,8 @@ object LibraryExporter {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
                 val csvData = generateCsvData(favorites, options)
                 outputStream.write(csvData.toByteArray())
-                outputStream.flush()
-                onExportComplete()
             }
+            onExportComplete()
         }
     }
 
@@ -53,7 +50,7 @@ object LibraryExporter {
                     .let(::add)
             }
         }
-        return rows.joinToString("\n") { columns ->
+        return rows.joinToString("\r\n") { columns ->
             columns.joinToString(",") columns@{ column ->
                 if (column.isNullOrBlank()) return@columns ""
                 if (escapeRequired.any { column.contains(it) }) {
