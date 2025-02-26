@@ -82,8 +82,8 @@ getReadMangaNotInLibrary:
 SELECT *
 FROM mangas
 WHERE favorite = 0 AND _id IN (
-    SELECT DISTINCT chapters.manga_id 
-    FROM chapters 
+    SELECT DISTINCT chapters.manga_id
+    FROM chapters
     WHERE read = 1 OR last_page_read != 0
 );
 
@@ -119,8 +119,8 @@ SELECT *
 FROM mangas
 WHERE favorite = 1
 AND LOWER(title) = :title
-AND (:artist IS NULL OR LOWER(artist) IS NULL OR LOWER(artist) = :artist)
-AND (:author IS NULL OR LOWER(author) IS NULL OR LOWER(author) = :author)
+AND (:artist IS NULL OR artist IS NULL OR LOWER(artist) = :artist)
+AND (:author IS NULL OR author IS NULL OR LOWER(author) = :author)
 AND _id != :id;
 
 getUpcomingManga:
