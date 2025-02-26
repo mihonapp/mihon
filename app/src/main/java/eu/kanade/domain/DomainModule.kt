@@ -125,12 +125,12 @@ class DomainModule : InjektModule {
         addFactory { GetUpcomingManga(get()) }
         addFactory { ResetViewerFlags(get()) }
         addFactory { SetMangaChapterFlags(get()) }
-        addFactory { UpdateMangaNotes(get()) }
         addFactory { FetchInterval(get()) }
         addFactory { SetMangaDefaultChapterFlags(get(), get(), get()) }
         addFactory { SetMangaViewerFlags(get()) }
         addFactory { NetworkToLocalManga(get()) }
         addFactory { UpdateManga(get(), get()) }
+        addFactory { UpdateMangaNotes(get()) }
         addFactory { SetMangaCategories(get()) }
         addFactory { GetExcludedScanlators(get()) }
         addFactory { SetExcludedScanlators(get()) }
