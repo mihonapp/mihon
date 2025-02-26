@@ -26,6 +26,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
+import tachiyomi.domain.track.model.Track as DomainTrack
 import uy.kohesive.injekt.injectLazy
 
 class HikkaApi(
@@ -81,8 +82,8 @@ class HikkaApi(
                 put(
                     "sort",
                     buildJsonArray {
-                        add("score:asc")
-                        add("scored_by:asc")
+                        add("score:desc")
+                        add("scored_by:desc")
                     },
                 )
             }
@@ -116,7 +117,6 @@ class HikkaApi(
     suspend fun getManga(track: Track): TrackSearch {
         return withIOContext {
             val slug = track.tracking_url.split("/")[4]
-
             val url = "$BASE_API_URL/manga/$slug".toUri().buildUpon()
                 .build()
 
@@ -129,7 +129,7 @@ class HikkaApi(
         }
     }
 
-    suspend fun deleteUserManga(track: tachiyomi.domain.track.model.Track) {
+    suspend fun deleteUserManga(track: DomainTrack) {
         return withIOContext {
             val slug = track.remoteUrl.split("/")[4]
 
