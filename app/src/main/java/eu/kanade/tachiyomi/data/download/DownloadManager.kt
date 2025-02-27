@@ -308,7 +308,7 @@ class DownloadManager(
      * @param newSource the new source.
      */
     fun renameSource(oldSource: Source, newSource: Source) {
-        val oldFolder = provider.findSourceDir(oldSource) ?: return
+        var oldFolder = provider.findSourceDir(oldSource) ?: return
         val newName = provider.getSourceDirName(newSource)
 
         if (oldFolder.name == newName) return
@@ -320,6 +320,7 @@ class DownloadManager(
                 logcat(LogPriority.ERROR) { "Failed to rename source download folder: ${oldFolder.name}" }
                 return
             }
+            oldFolder = tempName
         }
 
         if (!oldFolder.renameTo(newName)) {
