@@ -1,6 +1,5 @@
 import mihon.buildlogic.generatedBuildDir
 import mihon.buildlogic.tasks.getLocalesConfigTask
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     id("mihon.library")
