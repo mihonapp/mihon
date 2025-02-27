@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SortByAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,9 +17,7 @@ import androidx.compose.ui.Modifier
 import eu.kanade.presentation.category.components.CategoryFloatingActionButton
 import eu.kanade.presentation.category.components.CategoryListItem
 import eu.kanade.presentation.components.AppBar
-import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.tachiyomi.ui.category.CategoryScreenState
-import kotlinx.collections.immutable.persistentListOf
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import tachiyomi.domain.category.model.Category
@@ -37,7 +33,6 @@ import tachiyomi.presentation.core.util.plus
 fun CategoryScreen(
     state: CategoryScreenState.Success,
     onClickCreate: () -> Unit,
-    onClickSortAlphabetically: () -> Unit,
     onClickRename: (Category) -> Unit,
     onClickDelete: (Category) -> Unit,
     onChangeOrder: (Category, Int) -> Unit,
@@ -49,17 +44,6 @@ fun CategoryScreen(
             AppBar(
                 title = stringResource(MR.strings.action_edit_categories),
                 navigateUp = navigateUp,
-                actions = {
-                    AppBarActions(
-                        persistentListOf(
-                            AppBar.Action(
-                                title = stringResource(MR.strings.action_sort),
-                                icon = Icons.Outlined.SortByAlpha,
-                                onClick = onClickSortAlphabetically,
-                            ),
-                        ),
-                    )
-                },
                 scrollBehavior = scrollBehavior,
             )
         },
