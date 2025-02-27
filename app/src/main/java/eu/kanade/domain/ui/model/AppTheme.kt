@@ -1,8 +1,7 @@
 package eu.kanade.domain.ui.model
 
 import dev.icerock.moko.resources.StringResource
-import eu.kanade.tachiyomi.util.system.isDevFlavor
-import eu.kanade.tachiyomi.util.system.isPreviewBuildType
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import tachiyomi.i18n.MR
 
 enum class AppTheme(val titleRes: StringResource?) {
@@ -13,13 +12,14 @@ enum class AppTheme(val titleRes: StringResource?) {
     MIDNIGHT_DUSK(MR.strings.theme_midnightdusk),
 
     // TODO: re-enable for preview
-    NORD(MR.strings.theme_nord.takeIf { isDevFlavor || isPreviewBuildType }),
+    NORD(MR.strings.theme_nord.takeUnless { isReleaseBuildType }),
     STRAWBERRY_DAIQUIRI(MR.strings.theme_strawberrydaiquiri),
     TAKO(MR.strings.theme_tako),
     TEALTURQUOISE(MR.strings.theme_tealturquoise),
     TIDAL_WAVE(MR.strings.theme_tidalwave),
     YINYANG(MR.strings.theme_yinyang),
     YOTSUBA(MR.strings.theme_yotsuba),
+    MONOCHROME(MR.strings.theme_monochrome),
 
     // Deprecated
     DARK_BLUE(null),

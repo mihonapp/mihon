@@ -22,7 +22,7 @@ val Manga.readerOrientation: Long
 
 val Manga.downloadedFilter: TriState
     get() {
-        if (forceDownloaded()) return TriState.ENABLED_IS
+        if (Injekt.get<BasePreferences>().downloadedOnly().get()) return TriState.ENABLED_IS
         return when (downloadedFilterRaw) {
             Manga.CHAPTER_SHOW_DOWNLOADED -> TriState.ENABLED_IS
             Manga.CHAPTER_SHOW_NOT_DOWNLOADED -> TriState.ENABLED_NOT
@@ -33,9 +33,6 @@ fun Manga.chaptersFiltered(): Boolean {
     return unreadFilter != TriState.DISABLED ||
         downloadedFilter != TriState.DISABLED ||
         bookmarkedFilter != TriState.DISABLED
-}
-fun Manga.forceDownloaded(): Boolean {
-    return favorite && Injekt.get<BasePreferences>().downloadedOnly().get()
 }
 
 fun Manga.toSManga(): SManga = SManga.create().also {
