@@ -319,7 +319,7 @@ object SettingsAdvancedScreen : SearchableSettings {
                     },
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    pref = libraryPreferences.updateMangaTitles(),
+                    preference = libraryPreferences.updateMangaTitles(),
                     title = stringResource(MR.strings.pref_update_library_manga_titles),
                     subtitle = stringResource(MR.strings.pref_update_library_manga_titles_summary),
                 ),
