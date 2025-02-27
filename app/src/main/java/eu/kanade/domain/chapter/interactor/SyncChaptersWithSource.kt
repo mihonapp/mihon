@@ -147,7 +147,8 @@ class SyncChaptersWithSource(
             return emptyList()
         }
 
-        val reAdded = mutableListOf<Chapter>()
+        val changedUrls = mutableSetOf<String>()
+        val duplicateReadUrls = mutableSetOf<String>()
 
         val deletedChapterNumbers = TreeSet<Double>()
         val deletedReadChapterNumbers = TreeSet<Double>()
@@ -177,6 +178,7 @@ class SyncChaptersWithSource(
             var chapter = toAddItem.copy(dateFetch = nowMillis + itemCount--)
 
             if (chapter.chapterNumber in readChapterNumbers && markDuplicateAsRead) {
+                duplicateReadUrls.add(chapter.url)
                 chapter = chapter.copy(read = true)
             }
 
@@ -192,7 +194,7 @@ class SyncChaptersWithSource(
                 chapter = chapter.copy(dateFetch = it)
             }
 
-            reAdded.add(chapter)
+            changedUrls.add(chapter.url)
 
             chapter
         }
@@ -216,12 +218,9 @@ class SyncChaptersWithSource(
         // Note that last_update actually represents last time the chapter list changed at all
         updateManga.awaitUpdateLastUpdate(manga.id)
 
-        val reAddedUrls = reAdded.map { it.url }.toHashSet()
-
+        val changedOrDuplicateReadUrls = changedUrls + duplicateReadUrls
         val excludedScanlators = getExcludedScanlators.await(manga.id).toHashSet()
 
-        return updatedToAdd.filterNot {
-            it.url in reAddedUrls || it.scanlator in excludedScanlators
-        }
+        return updatedToAdd.filterNot { it.url in changedOrDuplicateReadUrls || it.scanlator in excludedScanlators }
     }
 }
