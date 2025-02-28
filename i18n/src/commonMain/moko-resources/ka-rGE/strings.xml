@@ -191,7 +191,7 @@
     <string name="invalid_backup_file_missing_manga">მარქაფი ბიბლიოთეკის ჩანაწერებს არ შეიცავს.</string>
     <string name="backup_restore_missing_sources">დაკარგული წყაროები:</string>
     <string name="restore_completed">აღდგენა შესრულებულია</string>
-    <string name="restore_duration">%02d წუთი, %02d წამი</string>
+    <string name="restore_duration">%1$02d წთ, %2$02d წმ</string>
     <string name="backup_in_progress">მარქაფი უკვე მიმდინარეობს</string>
     <string name="backup_choice">რას გსურს რომ შეუქმნა რეზერვი?</string>
     <string name="creating_backup">რეზერვის შექმნა</string>
