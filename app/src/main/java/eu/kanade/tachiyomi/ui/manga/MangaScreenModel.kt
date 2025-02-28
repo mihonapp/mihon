@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.ui.manga
 
-import android.app.Application
 import android.content.Context
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -775,7 +774,6 @@ class MangaScreenModel(
 
     private suspend fun refreshTrackers() {
         val refreshTracks = Injekt.get<RefreshTracks>()
-        val context = Injekt.get<Application>()
 
         refreshTracks.await(mangaId)
             .filter { it.first != null }
