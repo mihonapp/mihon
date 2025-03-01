@@ -52,6 +52,9 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
+import eu.kanade.tachiyomi.data.cache.CoverCache
+import eu.kanade.tachiyomi.data.export.CustomCoverExporter
+import eu.kanade.tachiyomi.data.export.CustomCoverRestorer
 import eu.kanade.tachiyomi.data.export.LibraryExporter
 import eu.kanade.tachiyomi.data.export.LibraryExporter.ExportOptions
 import eu.kanade.tachiyomi.util.system.DeviceUtil
@@ -110,6 +113,7 @@ object SettingsDataScreen : SearchableSettings {
             getBackupAndRestoreGroup(backupPreferences = backupPreferences),
             getDataGroup(),
             getExportGroup(),
+            getImportGroup(),
         )
     }
 
@@ -349,7 +353,7 @@ object SettingsDataScreen : SearchableSettings {
             favorites = getFavorites.await()
         }
 
-        val saveFileLauncher = rememberLauncherForActivityResult(
+        val saveCsvFileLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
@@ -374,10 +378,28 @@ object SettingsDataScreen : SearchableSettings {
                 options = exportOptions,
                 onConfirm = { options ->
                     exportOptions = options
-                    saveFileLauncher.launch("mihon_library.csv")
+                    saveCsvFileLauncher.launch("mihon_library.csv")
                 },
                 onDismissRequest = { showDialog = false },
             )
+        }
+
+        val saveCoverFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/gzip"),
+        ) { uri ->
+            uri?.let {
+                scope.launch {
+                    CustomCoverExporter.exportToZip(
+                        context = context,
+                        uri = it,
+                        onExportComplete = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast("Covers Exported")
+                            }
+                        },
+                    )
+                }
+            }
         }
 
         return Preference.PreferenceGroup(
@@ -386,6 +408,44 @@ object SettingsDataScreen : SearchableSettings {
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.library_list),
                     onClick = { showDialog = true },
+                ),
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.custom_cover),
+                    onClick = { saveCoverFileLauncher.launch("custom_covers.gz") },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getImportGroup(): Preference.PreferenceGroup {
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
+
+        val importCoverFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+        ) { uri ->
+            uri?.let {
+                scope.launch {
+                    CustomCoverRestorer.restoreFromZip(
+                        context = context,
+                        uri = it,
+                        onRestoreComplete = {
+                            scope.launch(Dispatchers.Main) {
+                                context.toast("Covers Imported")
+                            }
+                        },
+                    )
+                }
+            }
+        }
+
+        return Preference.PreferenceGroup(
+            title = stringResource(MR.strings.import_title),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.TextPreference(
+                    title = stringResource(MR.strings.custom_cover),
+                    onClick = { importCoverFileLauncher.launch("application/gzip") },
                 ),
             ),
         )
