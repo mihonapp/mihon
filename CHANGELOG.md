@@ -36,6 +36,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
 - Fix backup/restore of category related preferences ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
 - Fix WebView sending app's package name in `X-Requested-With` header, which led to sources blocking access ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1812](https://github.com/mihonapp/mihon/pull/1812))
+- Workaround crash when removing/migrating entries from library
+  - Removes libraryView from DB in favor of dbView
 
 ### Removed
 - Remove alphabetical category sort option
