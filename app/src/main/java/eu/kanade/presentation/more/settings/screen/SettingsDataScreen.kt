@@ -52,7 +52,6 @@ import eu.kanade.presentation.util.relativeTimeSpanString
 import eu.kanade.tachiyomi.data.backup.create.BackupCreateJob
 import eu.kanade.tachiyomi.data.backup.restore.BackupRestoreJob
 import eu.kanade.tachiyomi.data.cache.ChapterCache
-import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.export.CustomCoverExporter
 import eu.kanade.tachiyomi.data.export.CustomCoverRestorer
 import eu.kanade.tachiyomi.data.export.LibraryExporter

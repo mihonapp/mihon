@@ -11,5 +11,5 @@ data class BackupCovers(
 @Serializable
 data class BackupCover(
     @ProtoNumber(1) val mangaId: Long,
-    @ProtoNumber(2) val url: String
+    @ProtoNumber(2) val url: String,
 )
