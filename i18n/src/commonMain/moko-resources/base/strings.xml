@@ -586,6 +586,7 @@
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
     <string name="export">Export</string>
+    <string name="import_title">Import</string>
     <string name="library_list">Library List</string>
     <string name="library_exported">Library Exported</string>
 

@@ -102,4 +102,13 @@ class CoverCache(private val context: Context) {
         return context.getExternalFilesDir(dir)
             ?: File(context.filesDir, dir).also { it.mkdirs() }
     }
+
+    /**
+     * Get all custom cover files.
+     *
+     * @return list of custom cover image files.
+     */
+    fun getAllCustomCovers(): List<File> {
+        return customCoverCacheDir.listFiles()?.toList() ?: emptyList()
+    }
 }
