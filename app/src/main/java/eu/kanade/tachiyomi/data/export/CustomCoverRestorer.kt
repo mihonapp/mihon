@@ -1,24 +1,24 @@
 package eu.kanade.tachiyomi.data.export
 
-import tachiyomi.domain.manga.interactor.GetFavorites
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import android.content.Context
 import android.net.Uri
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.protobuf.ProtoBuf
-import java.util.zip.ZipInputStream
 import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.protobuf.ProtoBuf
+import tachiyomi.domain.manga.interactor.GetFavorites
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.util.zip.ZipInputStream
 
 object CustomCoverRestorer {
 
     suspend fun restoreFromZip(
         context: Context,
         uri: Uri,
-        onRestoreComplete: () -> Unit
+        onRestoreComplete: () -> Unit,
     ) {
         withContext(Dispatchers.IO) {
             try {
