@@ -1,6 +1,8 @@
 package tachiyomi.data.manga
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.data.DatabaseHandler
@@ -54,11 +56,21 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun getLibraryManga(): List<LibraryManga> {
-        return handler.awaitList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
+        // filtering favorites here to workaround sqldelight read-after-delete cursor NPE
+        return handler.awaitList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }.filter {
+            it.manga.favorite
+        }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getLibraryMangaAsFlow(): Flow<List<LibraryManga>> {
-        return handler.subscribeToList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
+        // filtering favorites here to workaround sqldelight read-after-delete cursor NPE
+        return handler.subscribeToList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }
+            .mapLatest { mangas ->
+                mangas.filter {
+                    it.manga.favorite
+                }
+            }
     }
 
     override fun getFavoritesBySourceId(sourceId: Long): Flow<List<Manga>> {

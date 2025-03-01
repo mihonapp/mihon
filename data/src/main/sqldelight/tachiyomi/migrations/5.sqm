@@ -30,7 +30,3 @@ LEFT JOIN(
 ON M._id = C.manga_id
 LEFT JOIN mangas_categories AS MC
 ON MC.manga_id = M._id;
-
-dbManga:
-SELECT *
-FROM dbView;
