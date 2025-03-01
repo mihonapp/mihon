@@ -346,7 +346,7 @@
     <string name="restore_in_progress">বর্তমানে পুনরুদ্ধার চলছে</string>
     <string name="creating_backup_error">ব্যাকআপ ব্যর্থ হয়েছে</string>
     <string name="backup_in_progress">ব্যাকআপ ইতিমধ্যেই চলছে</string>
-    <string name="restore_duration">%02d মিনিট, %02d সেকেন্ড</string>
+    <string name="restore_duration">%1$02d মিনিট, %2$02d সেকেন্ড</string>
     <string name="backup_restore_missing_sources">উৎস অনুপলব্ধ:</string>
     <string name="invalid_backup_file_missing_manga">ব্যাকআপে কোনো মাংগা নেই।</string>
     <string name="invalid_backup_file">ব্যাকআপ ফাইল গ্রহণযোগ্য নয়</string>

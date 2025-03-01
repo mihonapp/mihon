@@ -527,7 +527,7 @@
     <string name="backup_restore_missing_trackers">Sledovače, do ktorých nie ste prihlásení:</string>
     <string name="pref_dns_over_https">DNS cez HTTPS (DoH)</string>
     <string name="invalid_backup_file">Neplatný záložný súbor</string>
-    <string name="restore_duration">%02d min., %02d s</string>
+    <string name="restore_duration">%1$02d min., %2$02d s</string>
     <string name="multi_lang">Viacjazyčné</string>
     <string name="no_chapters_error">Nenašli sa žiadne kapitoly</string>
     <string name="ext_app_info">Informácie o aplikácii</string>

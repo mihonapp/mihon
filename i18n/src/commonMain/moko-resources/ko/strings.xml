@@ -314,7 +314,7 @@
     <string name="label_network">네트워크</string>
     <string name="restoring_backup_canceled">복원 취소</string>
     <string name="creating_backup_error">백업 실패</string>
-    <string name="restore_duration">%02d분 %02d초</string>
+    <string name="restore_duration">%1$02d분 %2$02d초</string>
     <string name="invalid_backup_file">잘못된 백업 파일:</string>
     <string name="pref_category_auto_download">자동 다운로드</string>
     <string name="pref_remove_bookmarked_chapters">북마크 표시된 회차 삭제 허용</string>

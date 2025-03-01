@@ -343,7 +343,7 @@
     <string name="sort_by_upload_date">Etter opplastingsdato</string>
     <string name="last_used_source">Sist brukt</string>
     <string name="tabs_header">Faner</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="backup_restore_missing_sources">Manglende kilder:</string>
     <string name="gray_background">Grå</string>
     <string name="action_display_show_tabs">Vis kategorifaner</string>

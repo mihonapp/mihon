@@ -358,7 +358,7 @@
     <string name="last_used_source">Terakhir digunakan</string>
     <string name="check_for_updates">Semak untuk kemas kini</string>
     <string name="local_source_help_guide">Panduan penggunaan sumber lokal</string>
-    <string name="restore_duration">%02d minit, %02d saat</string>
+    <string name="restore_duration">%1$02d minit, %2$02d saat</string>
     <string name="downloaded_only_summary">Tapis semua entri di dalam pustaka anda</string>
     <string name="gray_background">Kelabu</string>
     <string name="viewer">Mod membaca</string>

@@ -344,7 +344,7 @@
     <string name="creating_backup">درحال ایجاد نسخه پشتیبان</string>
     <string name="backup_choice">چه چیزی را می خواهید پشتیبان گیری کنید ؟</string>
     <string name="backup_in_progress">پشتیبان گیری هنوز در حال انجام است</string>
-    <string name="restore_duration">%02d دقیقه, %02d ثانیه</string>
+    <string name="restore_duration">%1$02d دقیقه, %2$02d ثانیه</string>
     <string name="restore_completed">بازیابی کامل شد</string>
     <string name="backup_restore_missing_sources">منابع ناموجود:</string>
     <string name="invalid_backup_file_missing_manga">فایل پشتیبان حاوی هیچ ورودی کتابخانه نیست.</string>

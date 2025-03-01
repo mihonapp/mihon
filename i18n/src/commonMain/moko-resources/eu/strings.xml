@@ -35,7 +35,7 @@
     <string name="no_more_results">Ez dago emaitza gehiagorik</string>
     <string name="download_queue_size_warning">Abisua: deskarga handiek iturriak motelagoak izatea eta/edo Mihon blokeatzea ekar dezakete</string>
     <string name="creating_backup">Babeskopia sortzen</string>
-    <string name="restore_duration">%02d min, %02d seg</string>
+    <string name="restore_duration">%1$02d min, %2$02d seg</string>
     <string name="add_tracking">Gehitu jarraipena</string>
     <string name="cache_delete_error">Errore bat gertatu da cachea garbitzean</string>
     <string name="backup_created">Babeskopia sortu da</string>

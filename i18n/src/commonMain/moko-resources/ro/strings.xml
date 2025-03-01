@@ -358,7 +358,7 @@
     <string name="local_source_help_guide">Ghid sursă locală</string>
     <string name="last_used_source">Data ultimei utilizări</string>
     <string name="check_for_updates">Verifică pentru actualizări</string>
-    <string name="restore_duration">%02d minute, %02d secunde</string>
+    <string name="restore_duration">%1$02d minute, %2$02d secunde</string>
     <string name="downloaded_only_summary">Filtrează toate intrările din bibliotecă</string>
     <string name="viewer">Mod de citire</string>
     <string name="pref_category_for_this_series">Pentru această serie</string>

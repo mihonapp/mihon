@@ -287,7 +287,7 @@
     <string name="auto_download_while_reading">Descargar automaticamente durante a lectura</string>
     <string name="download_ahead_info">Só funciona con elementos da biblioteca e se o capítulo actual e o seguinte xa están descargados.</string>
     <string name="restore_completed">Restauración completada</string>
-    <string name="restore_duration">%02d min y %02d seg</string>
+    <string name="restore_duration">%1$02d min y %2$02d seg</string>
     <string name="backup_choice">De que queres facer unha copia de seguridade?</string>
     <string name="missing_storage_permission">Non se concederon os permisos de almacenamento</string>
     <string name="empty_backup_error">Ningún elemento na biblioteca co que facer a copia de seguridade</string>

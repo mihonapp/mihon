@@ -354,7 +354,7 @@
     <string name="restore_in_progress">Obnovení již probíhá</string>
     <string name="creating_backup_error">Zálohování selhalo</string>
     <string name="backup_in_progress">Zálohování již probíhá</string>
-    <string name="restore_duration">%02d minut, %02d sekund</string>
+    <string name="restore_duration">%1$02d minut, %2$02d sekund</string>
     <string name="backup_restore_content_full">Budeš poté muset doinstalovat jakékoliv chybějící rozšíření a přihlásit se do sledovacích služeb pro jejich použití.</string>
     <string name="backup_restore_missing_trackers">Sledovače, ve kterých nejsi přihlášený/á:</string>
     <string name="backup_restore_missing_sources">Chybějící zdroje:</string>

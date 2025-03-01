@@ -348,7 +348,7 @@
     <string name="pref_disable_battery_optimization">Batterijoptimalisatie uitzetten</string>
     <string name="creating_backup_error">Back-up mislukt</string>
     <string name="backup_in_progress">Er wordt al een back-up gemaakt</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="pref_category_reading">Lezen</string>
     <string name="pref_always_show_chapter_transition">Hoofdstukovergangen altijd weergeven</string>
     <string name="vertical_plus_viewer">Doorlopend verticaal</string>

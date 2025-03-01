@@ -453,7 +453,7 @@
     <string name="restore_in_progress">การคืนค่ากําลังดําเนินการอยู่แล้ว</string>
     <string name="creating_backup_error">การสำรองข้อมูลล้มเหลว</string>
     <string name="backup_in_progress">การสำรองข้อมูลกําลังดําเนินการอยู่แล้ว</string>
-    <string name="restore_duration">%02d นาที %02d วินาที</string>
+    <string name="restore_duration">%1$02d นาที %2$02d วินาที</string>
     <string name="backup_restore_content_full">คุณจะต้องติดตั้งส่วนขยายที่ขาดหายไปและลงชื่อเข้าใช้บริการติดตามจึงจะสามารถใช้งานได้</string>
     <string name="backup_restore_missing_trackers">ตัวติดตามไม่ได้เข้าสู่ระบบ:</string>
     <string name="backup_restore_missing_sources">แหล่งที่มาที่หายไป:</string>

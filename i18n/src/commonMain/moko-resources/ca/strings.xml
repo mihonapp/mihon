@@ -358,7 +358,7 @@
     <string name="local_source_help_guide">Guia de fonts locals</string>
     <string name="last_used_source">Utilitzada per darrera vegada</string>
     <string name="check_for_updates">Comprova si hi ha actualitzacions</string>
-    <string name="restore_duration">%02d min i %02d s</string>
+    <string name="restore_duration">%1$02d min i %2$02d s</string>
     <string name="downloaded_only_summary">Filtra tots els elements de la vostra biblioteca</string>
     <string name="gray_background">Gris</string>
     <string name="viewer">Mode de lectura</string>

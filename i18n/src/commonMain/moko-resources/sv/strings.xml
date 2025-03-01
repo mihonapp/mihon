@@ -357,7 +357,7 @@
     <string name="restore_in_progress">Återställningen pågår redan</string>
     <string name="creating_backup_error">Säkerhetskopiering misslyckades</string>
     <string name="backup_in_progress">Säkerhetskopiering pågår redan</string>
-    <string name="restore_duration">%02d minuter, %02d sekunder</string>
+    <string name="restore_duration">%1$02d minuter, %2$02d sekunder</string>
     <string name="label_downloaded_only">Endast nedladdat</string>
     <string name="downloaded_only_summary">Filtrerar alla poster i ditt bibliotek</string>
     <string name="viewer">Läsläge</string>

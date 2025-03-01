@@ -329,7 +329,7 @@
     <string name="restore_in_progress">Възстановяването е в процес</string>
     <string name="creating_backup_error">Съхраняването неуспешно</string>
     <string name="backup_in_progress">Архивирането вече е в ход</string>
-    <string name="restore_duration">%02d мин, %02d сек</string>
+    <string name="restore_duration">%1$02d мин, %2$02d сек</string>
     <string name="pref_webtoon_side_padding">Странично разстояние</string>
     <string name="pref_category_reading">Четене</string>
     <string name="pref_always_show_chapter_transition">Винаги показвай прехода между главите</string>

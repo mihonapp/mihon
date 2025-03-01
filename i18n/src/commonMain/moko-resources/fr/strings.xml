@@ -356,7 +356,7 @@
     <string name="licenses">Licences à code source ouvert</string>
     <string name="last_used_source">Dernière utilisée</string>
     <string name="check_for_updates">Rechercher des mises à jour</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="information_webview_required">WebView est requis pour le fonctionnement l\'application</string>
     <string name="local_source_help_guide">Guide des sources locales</string>
     <string name="downloaded_only_summary">Filtrer toutes les entrées dans la bibliothèque</string>

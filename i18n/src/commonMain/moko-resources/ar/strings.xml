@@ -330,7 +330,7 @@
     <string name="restore_in_progress">الاستعادة قيد التقدم بالفعل</string>
     <string name="creating_backup_error">فشل النسخ الاحتياطي</string>
     <string name="backup_in_progress">يُنسخ احتياطيًّا بالفعل</string>
-    <string name="restore_duration">%02d دقيقة و %02d ثانية</string>
+    <string name="restore_duration">%1$02d دقيقة و %2$02d ثانية</string>
     <string name="action_unpin">إلغاء التثبيت</string>
     <string name="action_pin">تثبيت</string>
     <string name="action_select_inverse">عكس التحديد</string>

@@ -392,7 +392,7 @@
     <string name="action_track">Pista</string>
     <string name="pref_backup_interval">Frekuenca rezervë</string>
     <string name="backup_restore_missing_trackers">I pa identifikuar ne gjurmuesit:</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="restore_miui_warning">Rezervimi/rivendosja mund të mos funksionojë siç duhet nëse Optimizimi MIUI është i çaktivizuar.</string>
     <string name="pref_reset_user_agent_string">Rivendos vargun e parazgjedhur të agjentit të përdoruesit</string>
     <string name="cache_delete_error">Ndodhi një gabim gjatë pastrimit</string>

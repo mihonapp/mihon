@@ -225,7 +225,7 @@
     <string name="creating_backup">Хаппаас куопуйа оҥоһуута</string>
     <string name="backup_choice">Тугу куопуйалаары гынннын?</string>
     <string name="backup_in_progress">Хаппаас куопуйа оҥоруута туола турар</string>
-    <string name="restore_duration">%02d мүнүүтэ %02d сөкүүндэ</string>
+    <string name="restore_duration">%1$02d мүнүүтэ %2$02d сөкүүндэ</string>
     <string name="restore_completed">Төнүҥнэри бүттэ</string>
     <string name="backup_restore_missing_trackers">Трэкэрдар киирбэтилэр:</string>
     <string name="backup_restore_missing_sources">Суох төрүттэр:</string>

@@ -361,7 +361,7 @@
     <string name="check_for_updates">Verificar por atualizações</string>
     <string name="licenses">Licenças de código aberto</string>
     <string name="downloaded_only_summary">Filtra todos os itens nasua biblioteca</string>
-    <string name="restore_duration">%02d min, %02d seg</string>
+    <string name="restore_duration">%1$02d min, %2$02d seg</string>
     <string name="gray_background">Cinza</string>
     <string name="viewer">Modo de leitura</string>
     <string name="pref_category_for_this_series">Para esta série</string>

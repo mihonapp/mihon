@@ -79,7 +79,7 @@
     <string name="creating_backup">Izveido dublējumu</string>
     <string name="backup_choice">Ko vēlaties dublēt?</string>
     <string name="backup_in_progress">Dublēšana jau notiek</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="restore_completed">Atjaunošana pabeigta</string>
     <string name="backup_restore_missing_sources">Trūkstošie avoti:</string>
     <string name="invalid_backup_file_missing_manga">Dublējumā nav neviena bibliotēkas ieraksta.</string>

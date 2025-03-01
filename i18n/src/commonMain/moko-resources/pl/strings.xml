@@ -341,7 +341,7 @@
     <string name="restoring_backup_canceled">Anulowano przywracanie</string>
     <string name="restore_in_progress">Kopia zapasowa jest w trakcie przywracania</string>
     <string name="backup_in_progress">Kopia zapasowa jest już w trakcie tworzenia</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
     <string name="ext_updates_pending">Dostępne aktualizacje</string>

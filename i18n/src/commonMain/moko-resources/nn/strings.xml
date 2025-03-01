@@ -192,7 +192,7 @@
     <string name="invalid_backup_file_missing_manga">Reservekopi inneheld ingen manga.</string>
     <string name="pref_restore_backup_summ">Gjenopprett bibliotek frå reservekopifil</string>
     <string name="restore_completed">Gjenoppretting fullført</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="backup_choice">Kva ønskjer du å ta reservekopi av?</string>
     <string name="creating_backup">Lagar reservekopi</string>
     <string name="restoring_backup">Gjenoppretter reservekopi</string>

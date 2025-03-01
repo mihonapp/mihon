@@ -316,7 +316,7 @@
     <string name="creating_backup_error">Kreado de savkopio fiaskis</string>
     <string name="creating_backup">Kreas savkopion</string>
     <string name="backup_choice">Kion vi volas savkopii?</string>
-    <string name="restore_duration">%02d min, %02d sek</string>
+    <string name="restore_duration">%1$02d min, %2$02d sek</string>
     <string name="backup_restore_missing_sources">Mankantaj fontoj:</string>
     <string name="pref_category_auto_download">Aŭtomata elŝuto</string>
     <string name="last_read_chapter">Laste legita ĉapitro</string>

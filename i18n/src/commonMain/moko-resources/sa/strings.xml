@@ -319,7 +319,7 @@
     <string name="pref_restore_backup">प्रतिलेखनं समाददातु</string>
     <string name="pref_backup_interval">प्रतिलेखनस्य आवर्तनता</string>
     <string name="backup_in_progress">प्रतिलेखनं पूर्वमेव प्रगतौ अस्ति</string>
-    <string name="restore_duration">%02d निमेषाः %02d क्षणाः च</string>
+    <string name="restore_duration">%1$02d निमेषाः %2$02d क्षणाः च</string>
     <string name="restoring_backup_error">प्रतिलेखनस्य समादानम् अनुत्तीर्णम्</string>
     <string name="creating_backup_error">प्रतिलेखनम् अनुत्तीर्णम्</string>
     <string name="restore_in_progress">प्रतिसंस्कारः पूर्वमेव प्रगत्याम् अस्ति</string>

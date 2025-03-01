@@ -452,7 +452,7 @@
     <string name="information_cloudflare_bypass_failure">Nem sikerült megkerülni a Cloudflare-t</string>
     <string name="pref_landscape_zoom">Automatikusan nagyítsa a széles képeket</string>
     <string name="restore_completed">Helyreállítás befejeződött</string>
-    <string name="restore_duration">%02d perc, %02d másodperc</string>
+    <string name="restore_duration">%1$02d perc, %2$02d másodperc</string>
     <string name="backup_restore_content_full">Előfordulhat, hogy telepítenie kell a hiányzó bővítményeket, majd később be kell jelentkeznie a nyilvántartási szolgáltatásokba a használatukhoz.</string>
     <string name="pref_refresh_library_covers">Könyvtár fedők frissítése</string>
     <string name="pref_dump_crash_logs">Hibaüzenetetek törlése</string>

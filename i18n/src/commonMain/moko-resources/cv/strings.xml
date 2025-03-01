@@ -5,7 +5,7 @@
     <string name="cookies_cleared">Куккисем катертнӗ</string>
     <string name="pref_clear_cookies">Кукки тасат</string>
     <string name="label_network">Тетел</string>
-    <string name="restore_duration">%02d минут та %02d ҫеккунт</string>
+    <string name="restore_duration">%1$02d минут та %2$02d ҫеккунт</string>
     <string name="services">Сервиссем</string>
     <string name="pref_download_new">Ҫӗнӗ сыпӑксене тийесе илмелле</string>
     <string name="last_read_chapter">Юлашки вуланӑ сыпăк</string>

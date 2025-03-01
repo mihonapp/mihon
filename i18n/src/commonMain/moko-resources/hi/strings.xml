@@ -360,7 +360,7 @@
     <string name="last_used_source">आखरी इस्त्तमाल किया गया</string>
     <string name="check_for_updates">अद्यतन के लिए जाँच</string>
     <string name="local_source_help_guide">स्थानीय स्रोत गाइड</string>
-    <string name="restore_duration">%02d मिनट,%02d सेकंड</string>
+    <string name="restore_duration">%1$02d मिनट,%2$02d सेकंड</string>
     <string name="downloaded_only_summary">आपकी पुस्तकालय में सभी आइटम को फ़िल्टर करता है</string>
     <string name="viewer">पढ़न मोड</string>
     <string name="pref_category_for_this_series">इस श्रृंखला के लिए</string>
