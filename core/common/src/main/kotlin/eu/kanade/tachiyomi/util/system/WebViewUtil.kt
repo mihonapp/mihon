@@ -12,7 +12,7 @@ import tachiyomi.core.common.util.system.logcat
 import kotlin.coroutines.resume
 
 object WebViewUtil {
-    const val SPOOF_PACKAGE_NAME = "org.chromium.chrome"
+    const val SPOOF_PACKAGE_NAME = "com.android.chrome"
 
     const val MINIMUM_WEBVIEW_VERSION = 118
 

@@ -3,6 +3,7 @@ package eu.kanade.presentation.webview
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.kevinnzou.web.AccompanistWebViewClient
@@ -37,13 +39,20 @@ import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.WarningBanner
 import eu.kanade.tachiyomi.BuildConfig
+import eu.kanade.tachiyomi.network.NetworkHelper
+import eu.kanade.tachiyomi.util.system.WebViewUtil
 import eu.kanade.tachiyomi.util.system.getHtml
 import eu.kanade.tachiyomi.util.system.setDefaultSettings
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import okhttp3.Request
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
+import java.net.HttpURLConnection
+import java.net.URL
 
 @Composable
 fun WebViewScreenContent(
@@ -60,6 +69,8 @@ fun WebViewScreenContent(
     val navigator = rememberWebViewNavigator()
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val network = Injekt.get<NetworkHelper>()
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
@@ -114,6 +125,42 @@ fun WebViewScreenContent(
                 }
                 return super.shouldOverrideUrlLoading(view, request)
             }
+
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                return try {
+                    val response = network.noCfClient.newCall(
+                        Request.Builder().apply {
+                            url(request!!.url.toString())
+                            request.requestHeaders.forEach { (key, value) ->
+                                if (key == "X-Requested-With" && value in setOf(context.packageName, WebViewUtil.SPOOF_PACKAGE_NAME)) {
+                                    return@forEach
+                                }
+                                addHeader(key, value)
+                            }
+                            method(request.method, null)
+                        }.build()
+                    ).execute()
+
+                    // Get content type and encoding
+                    val contentType = response.body.contentType()?.let { "${it.type}/${it.subtype}" } ?: "text/html"
+                    val contentEncoding = response.body.contentType()?.charset()?.name() ?: "utf-8"
+
+                    WebResourceResponse(
+                        contentType,
+                        contentEncoding,
+                        response.code,
+                        response.message,
+                        response.headers.associate { it.first to it.second },
+                        response.body.byteStream()
+                    )
+                } catch (e: Throwable) {
+                    super.shouldInterceptRequest(view, request)
+                }
+            }
+
         }
     }
 
