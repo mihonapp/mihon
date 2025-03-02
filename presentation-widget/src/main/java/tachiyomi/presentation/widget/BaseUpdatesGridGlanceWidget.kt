@@ -21,7 +21,6 @@ import androidx.glance.background
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.unit.ColorProvider
-import coil3.annotation.ExperimentalCoilApi
 import coil3.asDrawable
 import coil3.executeBlocking
 import coil3.imageLoader
@@ -108,7 +107,6 @@ abstract class BaseUpdatesGridGlanceWidget(
         }
     }
 
-    @OptIn(ExperimentalCoilApi::class)
     private suspend fun List<UpdatesWithRelations>.prepareData(
         rowCount: Int,
         columnCount: Int,
