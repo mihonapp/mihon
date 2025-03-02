@@ -19,7 +19,6 @@ class NetworkHelper(
 
     val cookieJar = AndroidCookieJar()
 
-
     private val clientBuilder: OkHttpClient.Builder = run {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieJar)

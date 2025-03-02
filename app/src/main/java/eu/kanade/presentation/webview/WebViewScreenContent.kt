@@ -127,20 +127,22 @@ fun WebViewScreenContent(
 
             override fun shouldInterceptRequest(
                 view: WebView?,
-                request: WebResourceRequest?
+                request: WebResourceRequest?,
             ): WebResourceResponse? {
                 return try {
                     val response = network.noCfClient.newCall(
                         Request.Builder().apply {
                             url(request!!.url.toString())
                             request.requestHeaders.forEach { (key, value) ->
-                                if (key == "X-Requested-With" && value in setOf(context.packageName, spoofedPackageName)) {
+                                if (key == "X-Requested-With" &&
+                                    value in setOf(context.packageName, spoofedPackageName)
+                                ) {
                                     return@forEach
                                 }
                                 addHeader(key, value)
                             }
                             method(request.method, null)
-                        }.build()
+                        }.build(),
                     ).execute()
 
                     // Get content type and encoding
@@ -153,13 +155,12 @@ fun WebViewScreenContent(
                         response.code,
                         response.message,
                         response.headers.associate { it.first to it.second },
-                        response.body.byteStream()
+                        response.body.byteStream(),
                     )
                 } catch (e: Throwable) {
                     super.shouldInterceptRequest(view, request)
                 }
             }
-
         }
     }
 
