@@ -37,7 +37,7 @@ object CustomCoverExporter {
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {
-                                BackupCover(manga.id, manga.url)
+                                BackupCover(manga.id, manga.source, manga.url)
                             } else {
                                 null
                             }
