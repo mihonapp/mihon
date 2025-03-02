@@ -100,5 +100,5 @@ body:
           required: true
         - label: I have filled out all of the requested information in this form, including specific version numbers.
           required: true
-        - label: I understand that **Mihon doesn't not have or fix any extensions**, and I **will not receive help** for any source or extension-related issues.
+        - label: I understand that **Mihon does not have or fix any extensions**, and I **will not receive help** for any issues related to sources or extensions.
           required: true
