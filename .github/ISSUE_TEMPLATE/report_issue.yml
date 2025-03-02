@@ -43,7 +43,7 @@ body:
     attributes:
       label: Crash logs
       description: |
-        If you're experiencing crashes, share the crash logs from **More → Settings → Advanced** then press **Dump crash logs**.
+        If you're experiencing crashes, if possible, go to the app's **More → Settings → Advanced** page, press **Dump crash logs** and share the crash logs here.
       placeholder: |
         You can paste the crash logs in plain text or upload it as an attachment.
 
