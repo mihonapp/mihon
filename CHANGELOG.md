@@ -36,6 +36,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix App's preferences referencing deleted categories ([@cuong-tran](https://github.com/cuong-tran)) ([#1734](https://github.com/mihonapp/mihon/pull/1734))
 - Fix backup/restore of category related preferences ([@cuong-tran](https://github.com/cuong-tran)) ([#1726](https://github.com/mihonapp/mihon/pull/1726))
 - Fix WebView sending app's package name in `X-Requested-With` header, which led to sources blocking access ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1812](https://github.com/mihonapp/mihon/pull/1812))
+- Fix download job stops all together even if 1 entry is failed to create manga directory ([@cuong-tran](https://github.com/cuong-tran)) ([#1445](https://github.com/mihonapp/mihon/pull/1445))
 
 ### Removed
 - Remove alphabetical category sort option
