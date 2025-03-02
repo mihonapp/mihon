@@ -205,6 +205,11 @@ actual class LocalSource(
 
     override suspend fun getSearchManga(page: Int, query: String, filters: FilterList): MangasPage = withIOContext {
         if (page == 1) checkForNewManga()
+        if (mangaDirChunks.isEmpty()) {
+            allMangaLoaded = true
+            return@withIOContext MangasPage(emptyList(), false)
+        }
+
         loadMangaForPage(page)
 
         while (page == currentlyLoadingPage) {
