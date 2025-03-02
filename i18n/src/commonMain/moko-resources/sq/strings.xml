@@ -485,7 +485,6 @@
     <string name="notification_chapters_multiple">Kapitujt %1$s</string>
     <string name="notification_chapters_single">Kapitulli %1$s</string>
     <string name="library_errors_help">Për ndihmë se si të rregulloni gabimet e përditësimit të bibliotekës, shihni %1$s</string>
-    <string name="update_check_fdroid_migration_info">Një version i ri është në dispozicion nga publikimet zyrtare. Prekni për të mësuar se si të migroni nga publikimet jozyrtare të F-Droid.</string>
     <string name="pref_create_backup">Krijo kopje rezervë</string>
     <string name="pref_create_backup_summ">Mund të përdoret për të rivendosur bibliotekën aktuale</string>
     <string name="pref_restore_backup">Rivendos kopjen rezervë</string>

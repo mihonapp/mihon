@@ -30,7 +30,7 @@
     </plurals>
     <plurals name="notification_new_chapters_summary">
         <item quantity="one">%d elemnek</item>
-        <item quantity="other">%d elemeknek</item>
+        <item quantity="other">%d elemnek</item>
     </plurals>
     <plurals name="missing_chapters_warning">
         <item quantity="one">%d fejezet kihagyása, hiányzik a forrás, vagy ki lett szűrve</item>
@@ -71,5 +71,9 @@
     <plurals name="num_repos">
         <item quantity="one">%d repo</item>
         <item quantity="other">%d repok</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 oldal</item>
+        <item quantity="other">%1$s oldal</item>
     </plurals>
 </resources>
