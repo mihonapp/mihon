@@ -47,6 +47,7 @@ class DownloadProvider(
             return downloadsDir.createDirectory(sourceDirName)!!
                 .createDirectory(getMangaDirName(mangaDirName))!!
         } catch (e: Throwable) {
+            if (e is SecurityException) throw e
             val mangaDir = "/$sourceDirName/$mangaDirName"
             logcat(LogPriority.ERROR, e) { "Invalid location: $mangaDir" }
             throw IOException(context.stringResource(MR.strings.invalid_location, mangaDir))
