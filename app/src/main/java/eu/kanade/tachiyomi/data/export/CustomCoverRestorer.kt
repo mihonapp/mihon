@@ -44,7 +44,7 @@ object CustomCoverRestorer {
                             val mangas = Injekt.get<GetFavorites>().await()
 
                             backupCoverMappings.mappings.forEach { mapping ->
-                                val matchingManga = mangas.find { it.url == mapping.url }
+                                val matchingManga = mangas.find { it.url == mapping.url && it.source == mapping.sourceId }
 
                                 if (matchingManga != null) {
                                     val imageName = "${mapping.mangaId}.jpg"
