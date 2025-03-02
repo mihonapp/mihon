@@ -172,6 +172,7 @@ data class TrackInfoDialogHomeScreen(
                 )
             },
             onCopyLink = { context.copyTrackerLink(it) },
+            onTogglePrivate = screenModel::togglePrivate,
         )
     }
 
@@ -245,6 +246,12 @@ data class TrackInfoDialogHomeScreen(
                         )
                     }
                 }
+        }
+
+        fun togglePrivate(item: TrackItem) {
+            screenModelScope.launchNonCancellable {
+                item.tracker.setRemotePrivate(item.track!!.toDbTrack(), !item.track.private)
+            }
         }
 
         private fun List<Track>.mapToTrackItem(): List<TrackItem> {
@@ -673,11 +680,14 @@ data class TrackerSearchScreen(
             queryResult = state.queryResult,
             selected = state.selected,
             onSelectedChange = screenModel::updateSelection,
-            onConfirmSelection = {
-                screenModel.registerTracking(state.selected!!)
+            onConfirmSelection = f@{ private: Boolean ->
+                val selected = state.selected ?: return@f
+                selected.private = private
+                screenModel.registerTracking(selected)
                 navigator.pop()
             },
             onDismissRequest = navigator::pop,
+            supportsPrivateTracking = screenModel.supportsPrivateTracking,
         )
     }
 
@@ -687,6 +697,8 @@ data class TrackerSearchScreen(
         initialQuery: String,
         private val tracker: Tracker,
     ) : StateScreenModel<Model.State>(State()) {
+
+        val supportsPrivateTracking = tracker.supportsPrivateTracking
 
         init {
             // Run search on first launch

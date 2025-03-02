@@ -81,6 +81,8 @@ object DeviceUtil {
         "com.zui.resolver",
         // Infinix
         "com.transsion.resolver",
+        // Xiaomi Redmi
+        "com.android.intentresolver",
     )
 
     /**

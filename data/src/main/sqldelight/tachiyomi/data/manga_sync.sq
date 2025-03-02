@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+
 CREATE TABLE manga_sync(
     _id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
@@ -12,6 +14,7 @@ CREATE TABLE manga_sync(
     remote_url TEXT NOT NULL,
     start_date INTEGER NOT NULL,
     finish_date INTEGER NOT NULL,
+    private INTEGER AS Boolean DEFAULT 0 NOT NULL,
     UNIQUE (manga_id, sync_id) ON CONFLICT REPLACE,
     FOREIGN KEY(manga_id) REFERENCES mangas (_id)
     ON DELETE CASCADE
@@ -36,8 +39,8 @@ FROM manga_sync
 WHERE manga_id = :mangaId;
 
 insert:
-INSERT INTO manga_sync(manga_id,sync_id,remote_id,library_id,title,last_chapter_read,total_chapters,status,score,remote_url,start_date,finish_date)
-VALUES (:mangaId,:syncId,:remoteId,:libraryId,:title,:lastChapterRead,:totalChapters,:status,:score,:remoteUrl,:startDate,:finishDate);
+INSERT INTO manga_sync(manga_id,sync_id,remote_id,library_id,title,last_chapter_read,total_chapters,status,score,remote_url,start_date,finish_date,private)
+VALUES (:mangaId,:syncId,:remoteId,:libraryId,:title,:lastChapterRead,:totalChapters,:status,:score,:remoteUrl,:startDate,:finishDate,:private);
 
 update:
 UPDATE manga_sync
@@ -53,5 +56,6 @@ SET
     score = coalesce(:score, score),
     remote_url = coalesce(:trackingUrl, remote_url),
     start_date = coalesce(:startDate, start_date),
-    finish_date = coalesce(:finishDate, finish_date)
+    finish_date = coalesce(:finishDate, finish_date),
+    private = coalesce(:private, private)
 WHERE _id = :id;

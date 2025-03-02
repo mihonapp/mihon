@@ -9,7 +9,6 @@ import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -22,6 +21,8 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     private val interceptor by lazy { BangumiInterceptor(this) }
 
     private val api by lazy { BangumiApi(id, client, interceptor) }
+
+    override val supportsPrivateTracking: Boolean = true
 
     override fun getScoreList(): ImmutableList<String> = SCORE_LIST
 
@@ -48,26 +49,23 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     }
 
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
-        val statusTrack = api.statusLibManga(track)
-        val remoteTrack = api.findLibManga(track)
-        return if (remoteTrack != null && statusTrack != null) {
-            track.copyPersonalFrom(remoteTrack)
-            track.library_id = remoteTrack.library_id
-
+        val statusTrack = api.statusLibManga(track, getUsername())
+        return if (statusTrack != null) {
+            track.copyPersonalFrom(statusTrack, copyRemotePrivate = false)
+            track.library_id = statusTrack.library_id
+            track.score = statusTrack.score
+            track.last_chapter_read = statusTrack.last_chapter_read
+            track.total_chapters = statusTrack.total_chapters
             if (track.status != COMPLETED) {
                 track.status = if (hasReadChapters) READING else statusTrack.status
             }
 
-            track.score = statusTrack.score
-            track.last_chapter_read = statusTrack.last_chapter_read
-            track.total_chapters = remoteTrack.total_chapters
-            refresh(track)
+            update(track)
         } else {
             // Set default fields if it's not found in the list
             track.status = if (hasReadChapters) READING else PLAN_TO_READ
             track.score = 0.0
             add(track)
-            update(track)
         }
     }
 
@@ -76,11 +74,8 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     }
 
     override suspend fun refresh(track: Track): Track {
-        val remoteStatusTrack = api.statusLibManga(track) ?: throw Exception("Could not find manga")
+        val remoteStatusTrack = api.statusLibManga(track, getUsername()) ?: throw Exception("Could not find manga")
         track.copyPersonalFrom(remoteStatusTrack)
-        api.findLibManga(track)?.let { remoteTrack ->
-            track.total_chapters = remoteTrack.total_chapters
-        }
         return track
     }
 
@@ -113,8 +108,12 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
         try {
             val oauth = api.accessToken(code)
             interceptor.newAuth(oauth)
-            saveCredentials(oauth.userId.toString(), oauth.accessToken)
-        } catch (e: Throwable) {
+            // Users can set a 'username' (not nickname) once which effectively
+            // replaces the stringified ID in certain queries.
+            // If no username is set, the API returns the user ID as a strings
+            var username = api.getUsername()
+            saveCredentials(username, oauth.accessToken)
+        } catch (_: Throwable) {
             logout()
         }
     }
@@ -126,7 +125,7 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     fun restoreToken(): BGMOAuth? {
         return try {
             json.decodeFromString<BGMOAuth>(trackPreferences.trackToken(this).get())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -138,11 +137,11 @@ class Bangumi(id: Long) : BaseTracker(id, "Bangumi") {
     }
 
     companion object {
-        const val READING = 3L
+        const val PLAN_TO_READ = 1L
         const val COMPLETED = 2L
+        const val READING = 3L
         const val ON_HOLD = 4L
         const val DROPPED = 5L
-        const val PLAN_TO_READ = 1L
 
         private val SCORE_LIST = IntRange(0, 10)
             .map(Int::toString)

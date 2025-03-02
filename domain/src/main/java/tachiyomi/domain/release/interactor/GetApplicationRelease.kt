@@ -37,7 +37,6 @@ class GetApplicationRelease(
             release.version,
         )
         return when {
-            isNewVersion && arguments.isThirdParty -> Result.ThirdPartyInstallation
             isNewVersion -> Result.NewUpdate(release)
             else -> Result.NoNewUpdate
         }
@@ -75,7 +74,6 @@ class GetApplicationRelease(
 
     data class Arguments(
         val isPreview: Boolean,
-        val isThirdParty: Boolean,
         val commitCount: Int,
         val versionName: String,
         val repository: String,
@@ -86,6 +84,5 @@ class GetApplicationRelease(
         data class NewUpdate(val release: Release) : Result
         data object NoNewUpdate : Result
         data object OsTooOld : Result
-        data object ThirdPartyInstallation : Result
     }
 }

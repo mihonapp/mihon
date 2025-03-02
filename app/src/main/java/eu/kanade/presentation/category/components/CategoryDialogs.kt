@@ -194,35 +194,6 @@ fun CategoryDeleteDialog(
 }
 
 @Composable
-fun CategorySortAlphabeticallyDialog(
-    onDismissRequest: () -> Unit,
-    onSort: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onClick = {
-                onSort()
-                onDismissRequest()
-            }) {
-                Text(text = stringResource(MR.strings.action_ok))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(text = stringResource(MR.strings.action_cancel))
-            }
-        },
-        title = {
-            Text(text = stringResource(MR.strings.action_sort_category))
-        },
-        text = {
-            Text(text = stringResource(MR.strings.sort_category_confirmation))
-        },
-    )
-}
-
-@Composable
 fun ChangeCategoryDialog(
     initialSelection: ImmutableList<CheckboxState<Category>>,
     onDismissRequest: () -> Unit,
