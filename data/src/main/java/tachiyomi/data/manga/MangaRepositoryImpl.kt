@@ -56,21 +56,17 @@ class MangaRepositoryImpl(
     }
 
     override suspend fun getLibraryManga(): List<LibraryManga> {
-        // filtering favorites here to workaround sqldelight read-after-delete cursor NPE
+        // https://github.com/mihonapp/mihon/pull/1799
         return handler.awaitList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }
-            .filter {
-                it.manga.favorite
-            }
+            .filter { it.manga.favorite }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getLibraryMangaAsFlow(): Flow<List<LibraryManga>> {
-        // filtering favorites here to workaround sqldelight read-after-delete cursor NPE
+        // https://github.com/mihonapp/mihon/pull/1799
         return handler.subscribeToList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }
-            .mapLatest { mangas ->
-                mangas.filter {
-                    it.manga.favorite
-                }
+            .mapLatest { manga ->
+                manga.filter { it.manga.favorite }
             }
     }
 
