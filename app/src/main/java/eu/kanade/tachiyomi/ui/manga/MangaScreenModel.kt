@@ -772,9 +772,9 @@ class MangaScreenModel(
         }
     }
 
-    private suspend fun refreshTrackers() {
-        val refreshTracks = Injekt.get<RefreshTracks>()
-
+    private suspend fun refreshTrackers(
+        refreshTracks: RefreshTracks = Injekt.get(),
+    ) {
         refreshTracks.await(mangaId)
             .filter { it.first != null }
             .forEach { (track, e) ->
