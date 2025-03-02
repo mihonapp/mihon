@@ -145,7 +145,6 @@ fun WebViewScreenContent(
                         }.build(),
                     ).execute()
 
-                    // Get content type and encoding
                     val contentType = response.body.contentType()?.let { "${it.type}/${it.subtype}" } ?: "text/html"
                     val contentEncoding = response.body.contentType()?.charset()?.name() ?: "utf-8"
 
