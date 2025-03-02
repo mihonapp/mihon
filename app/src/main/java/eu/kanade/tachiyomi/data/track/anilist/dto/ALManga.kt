@@ -47,7 +47,7 @@ data class ALManga(
                 if ("Art" in it.role) {
                     if (it.node.name.getName() != null) this.authors += it.node.name.getName()!!
                 }
-            }
+            },
         )
     }
 }
