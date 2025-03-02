@@ -30,6 +30,7 @@ object MigrationFlags {
     private const val CATEGORIES = 0b00010
     private const val CUSTOM_COVER = 0b01000
     private const val DELETE_DOWNLOADED = 0b10000
+    private const val NOTES = 0b100000
 
     private val coverCache: CoverCache by injectLazy()
     private val downloadCache: DownloadCache by injectLazy()
@@ -50,6 +51,10 @@ object MigrationFlags {
         return value and DELETE_DOWNLOADED != 0
     }
 
+    fun hasNotes(value: Int): Boolean {
+        return value and NOTES != 0
+    }
+
     /** Returns information about applicable flags with default selections. */
     fun getFlags(manga: Manga?, defaultSelectedBitMap: Int): List<MigrationFlag> {
         val flags = mutableListOf<MigrationFlag>()
@@ -62,6 +67,9 @@ object MigrationFlags {
             }
             if (downloadCache.getDownloadCount(manga) > 0) {
                 flags += MigrationFlag.create(DELETE_DOWNLOADED, defaultSelectedBitMap, MR.strings.delete_downloaded)
+            }
+            if (manga.notes.isNotBlank()) {
+                flags += MigrationFlag.create(NOTES, defaultSelectedBitMap, MR.strings.action_notes)
             }
         }
         return flags
