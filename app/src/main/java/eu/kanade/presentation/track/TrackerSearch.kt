@@ -310,6 +310,18 @@ private fun SearchResultItem(
                             text = type,
                         )
                     }
+                    if (trackSearch.authors.isNotEmpty()) {
+                        SearchResultItemDetails(
+                            title = stringResource(MR.strings.author),
+                            text = trackSearch.authors.joinToString(),
+                        )
+                    }
+                    if (trackSearch.artists.isNotEmpty() && !trackSearch.artists.containsAll(trackSearch.authors)) {
+                        SearchResultItemDetails(
+                            title = stringResource(MR.strings.artist),
+                            text = trackSearch.artists.joinToString(),
+                        )
+                    }
                     if (trackSearch.start_date.isNotBlank()) {
                         SearchResultItemDetails(
                             title = stringResource(MR.strings.label_started),

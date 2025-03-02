@@ -90,8 +90,13 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.cover_url = "https://example.com/cover.png"
         it.start_date = Instant.now().minus((1L..365).random(), ChronoUnit.DAYS).toString()
         it.summary = lorem((0..40).random()).joinToString()
+        it.artists = randomNames()
+        it.authors = randomNames()
         it
     }
+
+    private fun randomNames(): List<String> =
+        (0..(0..3).random()).map { lorem((1..2).random()).joinToString() }
 
     private fun lorem(words: Int): Sequence<String> =
         LoremIpsum(words).values
