@@ -43,9 +43,9 @@ body:
     attributes:
       label: Crash logs
       description: |
-        If you're experiencing crashes, share the crash logs from **More → Settings → Advanced** then press **Dump crash logs**.
+        If you're experiencing crashes, if possible, go to the app's **More → Settings → Advanced** page, press **Dump crash logs** and share the crash logs here.
       placeholder: |
-        You can paste the crash logs in plain text or upload it as an attachment.
+        You can upload the crash log file as an attachment, or paste the crash logs in plain text if needed.
 
   - type: input
     id: mihon-version
@@ -98,7 +98,7 @@ body:
           required: true
         - label: I have updated the app to version **[0.17.1](https://github.com/mihonapp/mihon/releases/latest)**.
           required: true
-        - label: I have updated all installed extensions.
+        - label: I have filled out all of the requested information in this form, including specific version numbers.
           required: true
-        - label: I will fill out all of the requested information in this form.
+        - label: I understand that extensions are unaffiliated to Mihon, and will not receive any help for any source and/or extension-related issues.
           required: true

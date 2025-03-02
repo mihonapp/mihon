@@ -19,7 +19,7 @@ class NetworkHelper(
 
     val cookieJar = AndroidCookieJar()
 
-    val client: OkHttpClient = run {
+    private val clientBuilder: OkHttpClient.Builder = run {
         val builder = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -43,10 +43,6 @@ class NetworkHelper(
             builder.addNetworkInterceptor(httpLoggingInterceptor)
         }
 
-        builder.addInterceptor(
-            CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
-        )
-
         when (preferences.dohProvider().get()) {
             PREF_DOH_CLOUDFLARE -> builder.dohCloudflare()
             PREF_DOH_GOOGLE -> builder.dohGoogle()
@@ -60,10 +56,17 @@ class NetworkHelper(
             PREF_DOH_CONTROLD -> builder.dohControlD()
             PREF_DOH_NJALLA -> builder.dohNajalla()
             PREF_DOH_SHECAN -> builder.dohShecan()
+            else -> builder
         }
-
-        builder.build()
     }
+
+    val nonCloudflareClient = clientBuilder.build()
+
+    val client = clientBuilder
+        .addInterceptor(
+            CloudflareInterceptor(context, cookieJar, ::defaultUserAgentProvider),
+        )
+        .build()
 
     /**
      * @deprecated Since extension-lib 1.5

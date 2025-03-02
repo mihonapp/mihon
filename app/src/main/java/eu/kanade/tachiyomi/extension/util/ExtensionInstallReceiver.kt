@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.extension.model.Extension
 import eu.kanade.tachiyomi.extension.model.LoadResult
@@ -138,7 +138,7 @@ internal class ExtensionInstallReceiver(private val listener: Listener) : Broadc
 
         private fun notify(context: Context, pkgName: String, action: String) {
             Intent(action).apply {
-                data = Uri.parse("package:$pkgName")
+                data = "package:$pkgName".toUri()
                 `package` = context.packageName
                 context.sendBroadcast(this)
             }

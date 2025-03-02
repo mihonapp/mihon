@@ -205,6 +205,10 @@ object SettingsLibraryScreen : SearchableSettings {
                     preference = libraryPreferences.newShowUpdatesCount(),
                     title = stringResource(MR.strings.pref_library_update_show_tab_badge),
                 ),
+                Preference.PreferenceItem.SwitchPreference(
+                    preference = libraryPreferences.markDuplicateChapterRead(),
+                    title = stringResource(MR.strings.pref_mark_duplicate_chapter_read),
+                ),
             ),
         )
     }
