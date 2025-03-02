@@ -56,7 +56,7 @@ android {
         create("foss") {
             initWith(release)
 
-            applicationIdSuffix = ".t-foss"
+            applicationIdSuffix = ".foss"
 
             matchingFallbacks.add(release.name)
         }
