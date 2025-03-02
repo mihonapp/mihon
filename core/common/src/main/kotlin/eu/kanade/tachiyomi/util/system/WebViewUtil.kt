@@ -12,8 +12,6 @@ import tachiyomi.core.common.util.system.logcat
 import kotlin.coroutines.resume
 
 object WebViewUtil {
-    const val SPOOF_PACKAGE_NAME = "com.android.chrome"
-
     const val MINIMUM_WEBVIEW_VERSION = 118
 
     /**
@@ -52,6 +50,18 @@ object WebViewUtil {
         }
 
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_WEBVIEW)
+    }
+
+    fun spoofedPackageName(context: Context): String {
+        val chromePkg = "com.android.chrome"
+
+        return try {
+            context.packageManager.getPackageInfo(chromePkg, PackageManager.GET_META_DATA)
+
+            chromePkg
+        } catch (_: PackageManager.NameNotFoundException) {
+            "com.android.settings"
+        }
     }
 }
 

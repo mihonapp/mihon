@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Looper
 import android.webkit.WebView
-import androidx.compose.ui.util.fastAny
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -225,7 +224,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
                     it.methodName in setOf("getAll", "getPackageName", "<init>")
             }
 
-            if (isChromiumCall) return WebViewUtil.SPOOF_PACKAGE_NAME
+            if (isChromiumCall) return WebViewUtil.spoofedPackageName(applicationContext)
         } catch (_: Exception) {
         }
 

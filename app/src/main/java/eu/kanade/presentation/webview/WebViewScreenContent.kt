@@ -51,8 +51,6 @@ import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.net.HttpURLConnection
-import java.net.URL
 
 @Composable
 fun WebViewScreenContent(
@@ -71,6 +69,7 @@ fun WebViewScreenContent(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val network = Injekt.get<NetworkHelper>()
+    val spoofedPackageName = WebViewUtil.spoofedPackageName(context)
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
@@ -135,7 +134,7 @@ fun WebViewScreenContent(
                         Request.Builder().apply {
                             url(request!!.url.toString())
                             request.requestHeaders.forEach { (key, value) ->
-                                if (key == "X-Requested-With" && value in setOf(context.packageName, WebViewUtil.SPOOF_PACKAGE_NAME)) {
+                                if (key == "X-Requested-With" && value in setOf(context.packageName, spoofedPackageName)) {
                                     return@forEach
                                 }
                                 addHeader(key, value)
