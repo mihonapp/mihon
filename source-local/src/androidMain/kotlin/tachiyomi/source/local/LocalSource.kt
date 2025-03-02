@@ -114,7 +114,7 @@ actual class LocalSource(
             // Filter out files that are hidden and is not a folder
             .asSequence()
             .filter { it.isDirectory && it.name?.startsWith('.') == false }
-            .filterNot { mangaDir -> mangaDirChunks.flatten().map { it }.contains(mangaDir) }
+            .filterNot { mangaDir -> mangaDirChunks.flatten().map { it.name }.contains(mangaDir.name) }
             .distinctBy { it.name }
             .sortedBy { it.lastModified() }
             .toList()
