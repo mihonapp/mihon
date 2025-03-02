@@ -60,7 +60,7 @@ class NetworkHelper(
         }
     }
 
-    val noCfClient = clientBuilder.build()
+    val nonCloudflareClient = clientBuilder.build()
 
     val client = clientBuilder
         .addInterceptor(

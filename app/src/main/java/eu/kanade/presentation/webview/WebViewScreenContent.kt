@@ -65,11 +65,11 @@ fun WebViewScreenContent(
 ) {
     val state = rememberWebViewState(url = url, additionalHttpHeaders = headers)
     val navigator = rememberWebViewNavigator()
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val network = Injekt.get<NetworkHelper>()
-    val spoofedPackageName = WebViewUtil.spoofedPackageName(context)
+    val network = remember { Injekt.get<NetworkHelper>() }
+    val spoofedPackageName = remember { WebViewUtil.spoofedPackageName(context) }
 
     var currentUrl by remember { mutableStateOf(url) }
     var showCloudflareHelp by remember { mutableStateOf(false) }
@@ -130,20 +130,18 @@ fun WebViewScreenContent(
                 request: WebResourceRequest?,
             ): WebResourceResponse? {
                 return try {
-                    val response = network.noCfClient.newCall(
-                        Request.Builder().apply {
-                            url(request!!.url.toString())
-                            request.requestHeaders.forEach { (key, value) ->
-                                if (key == "X-Requested-With" &&
-                                    value in setOf(context.packageName, spoofedPackageName)
-                                ) {
-                                    return@forEach
-                                }
-                                addHeader(key, value)
+                    val internalRequest = Request.Builder().apply {
+                        url(request!!.url.toString())
+                        request.requestHeaders.forEach { (key, value) ->
+                            if (key == "X-Requested-With" && value in setOf(context.packageName, spoofedPackageName)) {
+                                return@forEach
                             }
-                            method(request.method, null)
-                        }.build(),
-                    ).execute()
+                            addHeader(key, value)
+                        }
+                        method(request.method, null)
+                    }.build()
+
+                    val response = network.nonCloudflareClient.newCall(internalRequest).execute()
 
                     val contentType = response.body.contentType()?.let { "${it.type}/${it.subtype}" } ?: "text/html"
                     val contentEncoding = response.body.contentType()?.charset()?.name() ?: "utf-8"
