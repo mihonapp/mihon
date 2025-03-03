@@ -1,4 +1,6 @@
-CREATE VIEW dbView AS
+-- contains entire DB, filtered to favorites in kotlin
+-- https://github.com/mihonapp/mihon/pull/1799
+CREATE VIEW libraryView AS
 SELECT
     M.*,
     coalesce(C.total, 0) AS totalCount,
@@ -31,6 +33,6 @@ ON M._id = C.manga_id
 LEFT JOIN mangas_categories AS MC
 ON MC.manga_id = M._id;
 
-dbManga:
+library:
 SELECT *
-FROM dbView;
+FROM libraryView;

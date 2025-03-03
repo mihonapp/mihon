@@ -1,4 +1,5 @@
-CREATE VIEW dbView AS
+DROP VIEW libraryView;
+CREATE VIEW libraryView AS
 SELECT
     M.*,
     coalesce(C.total, 0) AS totalCount,

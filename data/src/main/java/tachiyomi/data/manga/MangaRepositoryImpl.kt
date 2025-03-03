@@ -57,14 +57,14 @@ class MangaRepositoryImpl(
 
     override suspend fun getLibraryManga(): List<LibraryManga> {
         // https://github.com/mihonapp/mihon/pull/1799
-        return handler.awaitList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }
+        return handler.awaitList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
             .filter { it.manga.favorite }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getLibraryMangaAsFlow(): Flow<List<LibraryManga>> {
         // https://github.com/mihonapp/mihon/pull/1799
-        return handler.subscribeToList { libraryViewQueries.dbManga(MangaMapper::mapLibraryManga) }
+        return handler.subscribeToList { libraryViewQueries.library(MangaMapper::mapLibraryManga) }
             .mapLatest { manga ->
                 manga.filter { it.manga.favorite }
             }
