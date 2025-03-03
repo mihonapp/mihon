@@ -304,22 +304,20 @@ private fun SearchResultItem(
                             }
                         },
                     )
+                    if (trackSearch.authors.isNotEmpty() || trackSearch.artists.isNotEmpty()) {
+                        Text(
+                            text = (trackSearch.authors + trackSearch.artists).distinct().joinToString(),
+                            modifier = Modifier
+                                .secondaryItemAlpha(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                     if (type.isNotBlank()) {
                         SearchResultItemDetails(
                             title = stringResource(MR.strings.track_type),
                             text = type,
-                        )
-                    }
-                    if (trackSearch.authors.isNotEmpty()) {
-                        SearchResultItemDetails(
-                            title = stringResource(MR.strings.author),
-                            text = trackSearch.authors.joinToString(),
-                        )
-                    }
-                    if (trackSearch.artists.isNotEmpty() && !trackSearch.artists.containsAll(trackSearch.authors)) {
-                        SearchResultItemDetails(
-                            title = stringResource(MR.strings.artist),
-                            text = trackSearch.artists.joinToString(),
                         )
                     }
                     if (trackSearch.start_date.isNotBlank()) {
