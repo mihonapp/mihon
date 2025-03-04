@@ -219,9 +219,9 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         try {
             // Override the value passed as X-Requested-With in WebView requests
             val stackTrace = Looper.getMainLooper().thread.stackTrace
-            val isChromiumCall = stackTrace.any {
-                it.className.startsWith("org.chromium.") &&
-                    it.methodName in setOf("getAll", "getPackageName", "<init>")
+            val isChromiumCall = stackTrace.any { trace ->
+                trace.className.equals("org.chromium.base.BuildInfo", ignoreCase = true) &&
+                    setOf("getAll", "getPackageName", "<init>").any { trace.methodName.equals(it, ignoreCase = true) }
             }
 
             if (isChromiumCall) return WebViewUtil.spoofedPackageName(applicationContext)
