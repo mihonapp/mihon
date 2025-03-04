@@ -284,7 +284,7 @@ internal class MigrateDialogScreenModel(
         }
 
         if (replace) {
-            updateManga.awaitUpdateFavorite(oldManga.id, false)
+            updateManga.awaitUpdateFavorite(oldManga.id, favorite = false)
         }
 
         // Update custom cover (recheck if custom cover exists)
