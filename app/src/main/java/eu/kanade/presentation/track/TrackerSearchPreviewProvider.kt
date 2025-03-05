@@ -76,7 +76,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         }
     }
 
-    val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private fun randTrackSearch() = TrackSearch().let {
         it.id = Random.nextLong()
@@ -95,8 +95,8 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.cover_url = "https://example.com/cover.png"
         it.start_date = formatter.format(Date.from(Instant.now().minus((1L..365).random(), ChronoUnit.DAYS)))
         it.summary = lorem((0..40).random()).joinToString()
-        it.publishing_status = if ((0..1).random() == 1) "Finished" else ""
-        it.publishing_type = if ((0..1).random() == 1) "Oneshot" else ""
+        it.publishing_status = if (Random.nextBoolean()) "Finished" else ""
+        it.publishing_type = if (Random.nextBoolean()) "Oneshot" else ""
         it
     }
 
