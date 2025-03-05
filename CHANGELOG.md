@@ -28,6 +28,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Migrate to newer Bangumi API ([@MajorTanya](https://github.com/MajorTanya)) ([#1748](https://github.com/mihonapp/mihon/pull/1748))
   - Now showing manga starting dates in search
   - Reduced request load by 2-4x in certain situations
+- Display creator information for Anilist tracking search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
