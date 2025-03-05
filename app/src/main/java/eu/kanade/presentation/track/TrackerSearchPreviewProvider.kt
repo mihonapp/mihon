@@ -102,8 +102,7 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it
     }
 
-    private fun randomNames(): List<String> =
-        (0..(0..3).random()).map { lorem((1..2).random()).joinToString() }
+    private fun randomNames(): List<String> = (0..(0..3).random()).map { lorem((3..5).random()).joinToString() }
 
     private fun lorem(words: Int): Sequence<String> =
         LoremIpsum(words).values
