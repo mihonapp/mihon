@@ -5,8 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
 internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composable () -> Unit> {
@@ -73,6 +76,8 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         }
     }
 
+    private val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     private fun randTrackSearch() = TrackSearch().let {
         it.id = Random.nextLong()
         it.manga_id = Random.nextLong()
@@ -88,8 +93,10 @@ internal class TrackerSearchPreviewProvider : PreviewParameterProvider<@Composab
         it.finished_reading_date = 0L
         it.tracking_url = "https://example.com/tracker-example"
         it.cover_url = "https://example.com/cover.png"
-        it.start_date = Instant.now().minus((1L..365).random(), ChronoUnit.DAYS).toString()
+        it.start_date = formatter.format(Date.from(Instant.now().minus((1L..365).random(), ChronoUnit.DAYS)))
         it.summary = lorem((0..40).random()).joinToString()
+        it.publishing_status = if (Random.nextBoolean()) "Finished" else ""
+        it.publishing_type = if (Random.nextBoolean()) "Oneshot" else ""
         it
     }
 
