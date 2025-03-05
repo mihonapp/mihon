@@ -62,7 +62,7 @@ data class ALStaffName(
     val native: String?,
     val full: String?,
 ) {
-    fun getName(): String? {
+    operator fun invoke(): String? {
         return userPreferred ?: full ?: native
     }
 }

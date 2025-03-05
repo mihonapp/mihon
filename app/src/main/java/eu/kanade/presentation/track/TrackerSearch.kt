@@ -307,8 +307,7 @@ private fun SearchResultItem(
                     if (trackSearch.authors.isNotEmpty() || trackSearch.artists.isNotEmpty()) {
                         Text(
                             text = (trackSearch.authors + trackSearch.artists).distinct().joinToString(),
-                            modifier = Modifier
-                                .secondaryItemAlpha(),
+                            modifier = Modifier.secondaryItemAlpha(),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodySmall,

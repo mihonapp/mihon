@@ -39,16 +39,11 @@ data class ALManga(
                 ""
             }
         }
-        staff.edges.forEach(
-            action = {
-                if ("Story" in it.role) {
-                    if (it.node.name.getName() != null) this.authors += it.node.name.getName()!!
-                }
-                if ("Art" in it.role) {
-                    if (it.node.name.getName() != null) this.artists += it.node.name.getName()!!
-                }
-            },
-        )
+        staff.edges.forEach {
+            val name = it.node.name() ?: return@forEach
+            if ("Story" in it.role) authors += name
+            if ("Art" in it.role) artists += name
+        }
     }
 }
 
