@@ -140,6 +140,19 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                 |Page (perPage: 50) {
                     |media(search: ${'$'}query, type: MANGA, format_not_in: [NOVEL]) {
                         |id
+                        |staff {
+                            |edges {
+                                |role
+                                |id
+                                |node {
+                                    |name {
+                                        |full
+                                        |userPreferred
+                                        |native
+                                    |}
+                                |}
+                            |}
+                        |}
                         |title {
                             |userPreferred
                         |}
@@ -219,6 +232,19 @@ class AnilistApi(val client: OkHttpClient, interceptor: AnilistInterceptor) {
                                 |year
                                 |month
                                 |day
+                            |}
+                            |staff {
+                                |edges {
+                                    |role
+                                    |id
+                                    |node {
+                                        |name {
+                                            |full
+                                            |userPreferred
+                                            |native
+                                        |}
+                                    |}
+                                |}
                             |}
                         |}
                     |}

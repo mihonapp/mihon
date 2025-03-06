@@ -13,7 +13,7 @@ concurrency:
 jobs:
   build:
     name: Build app
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-24.04'
 
     steps:
       - name: Clone repo
@@ -59,7 +59,7 @@ jobs:
 
       - name: Sign APK
         if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
-        uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
+        uses: r0adkll/sign-android-release@f30bdd30588842ac76044ecdbd4b6d0e3e813478
         with:
           releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -122,3 +122,14 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update website
+        if: startsWith(github.ref, 'refs/tags/') && github.repository == 'mihonapp/mihon'
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.MIHON_BOT_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/mihonapp/website/dispatches \
+          -d '{"event_type":"app_release"}'
