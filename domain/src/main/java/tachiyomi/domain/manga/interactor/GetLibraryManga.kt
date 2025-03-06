@@ -28,7 +28,7 @@ class GetLibraryManga(
                     false
                 }
             }.catch {
-                logcat(LogPriority.ERROR, it)
+                this@GetLibraryManga.logcat(LogPriority.ERROR, it)
             }
     }
 }
