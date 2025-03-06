@@ -20,17 +20,13 @@ class GetLibraryManga(
     @OptIn(FlowPreview::class)
     fun subscribe(): Flow<List<LibraryManga>> {
         return mangaRepository.getLibraryMangaAsFlow()
-            .retry(3) { cause ->
-                // if we hit the NPE due to library being updated during write
-                // retry up to 3x, waiting 500ms between retries
-                (cause is NullPointerException).also {
-                    if (it) delay(500)
+            .retry {
+                if (it is NullPointerException) {
+                    delay(0.5.seconds)
+                    true
+                } else {
+                    false
                 }
-            }
-            .debounce(1500) // if another update comes in during retries, ditch the retries
-            .catch {
-                // emit nothing during failure
-                // retries didn't work and we don't want to crash
             }
     }
 }
