@@ -19,6 +19,7 @@ data class ALManga(
     val startDateFuzzy: Long,
     val totalChapters: Long,
     val averageScore: Int,
+    val staff: ALStaff,
 ) {
     fun toTrack() = TrackSearch.create(TrackerManager.ANILIST).apply {
         remote_id = remoteId
@@ -37,6 +38,11 @@ data class ALManga(
             } catch (e: IllegalArgumentException) {
                 ""
             }
+        }
+        staff.edges.forEach {
+            val name = it.node.name() ?: return@forEach
+            if ("Story" in it.role) authors += name
+            if ("Art" in it.role) artists += name
         }
     }
 }
