@@ -32,7 +32,7 @@ data class HKManga(
     val score: Double,
     val slug: String,
     @SerialName("start_date")
-    val startDate: Long? = null
+    val startDate: Long? = null,
 ) {
     fun toTrack(trackId: Long): TrackSearch {
         return TrackSearch.create(trackId).apply {
