@@ -10,10 +10,12 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-val includeAnalytics = project.hasProperty("with-analytics")
-val includeUpdater = project.hasProperty("with-updater")
+val configIncludeAnalytics = project.hasProperty("with-analytics")
+val configIncludeUpdater = project.hasProperty("with-updater")
+val configCodeShrink = !project.hasProperty("no-code-shrink")
+val configPackageDependenciesInfo = !project.hasProperty("include-dependencies-info")
 
-if (includeAnalytics) {
+if (configIncludeAnalytics) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -34,9 +36,8 @@ android {
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "INCLUDE_ANALYTICS", "$includeAnalytics")
-        buildConfigField("boolean", "INCLUDE_UPDATER", "$includeUpdater")
-        buildConfigField("boolean", "PREVIEW", "false")
+        buildConfigField("boolean", "INCLUDE_ANALYTICS", "$configIncludeAnalytics")
+        buildConfigField("boolean", "INCLUDE_UPDATER", "$configIncludeUpdater")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,17 +49,20 @@ android {
             isPseudoLocalesEnabled = true
         }
         val release by getting {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = configCodeShrink
+            isShrinkResources = configCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
         }
+
+        val commonMatchingFallbacks = listOf(release.name)
+
         create("foss") {
             initWith(release)
 
-            applicationIdSuffix = ".t-foss"
+            applicationIdSuffix = ".foss"
 
-            matchingFallbacks.add(release.name)
+            matchingFallbacks.addAll(commonMatchingFallbacks)
         }
         create("preview") {
             initWith(release)
@@ -68,9 +72,7 @@ android {
             versionNameSuffix = debug.versionNameSuffix
             signingConfig = debug.signingConfig
 
-            matchingFallbacks.add(release.name)
-
-            buildConfigField("boolean", "PREVIEW", "true")
+            matchingFallbacks.addAll(commonMatchingFallbacks)
         }
         create("benchmark") {
             initWith(release)
@@ -82,12 +84,12 @@ android {
 
             signingConfig = debug.signingConfig
 
-            matchingFallbacks.add(release.name)
+            matchingFallbacks.addAll(commonMatchingFallbacks)
         }
     }
 
     sourceSets {
-        val analyticsDir = if (includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
+        val analyticsDir = if (configIncludeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
         getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
@@ -131,7 +133,8 @@ android {
     }
 
     dependenciesInfo {
-        includeInApk = false
+        includeInApk = configPackageDependenciesInfo
+        includeInBundle = configPackageDependenciesInfo
     }
 
     buildFeatures {
@@ -273,7 +276,7 @@ dependencies {
     implementation(libs.logcat)
 
     // Crash reports/analytics
-    if (includeAnalytics) {
+    if (configIncludeAnalytics) {
         implementation(platform(libs.firebase.bom))
         implementation(libs.firebase.analytics)
         implementation(libs.firebase.crashlytics)
