@@ -12,8 +12,8 @@ plugins {
 
 val configIncludeAnalytics = project.hasProperty("with-analytics")
 val configIncludeUpdater = project.hasProperty("with-updater")
-val configCodeShrink = !project.hasProperty("no-code-shrink")
-val configPackageDependenciesInfo = !project.hasProperty("include-dependencies-info")
+val configEnableShrinkCode = !project.hasProperty("disable-shrink-code")
+val configIncludeDependenciesInfo = project.hasProperty("include-dependencies-info")
 
 if (configIncludeAnalytics) {
     pluginManager.apply {
@@ -49,8 +49,8 @@ android {
             isPseudoLocalesEnabled = true
         }
         val release by getting {
-            isMinifyEnabled = configCodeShrink
-            isShrinkResources = configCodeShrink
+            isMinifyEnabled = configEnableShrinkCode
+            isShrinkResources = configEnableShrinkCode
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
         }
@@ -133,8 +133,8 @@ android {
     }
 
     dependenciesInfo {
-        includeInApk = configPackageDependenciesInfo
-        includeInBundle = configPackageDependenciesInfo
+        includeInApk = configIncludeDependenciesInfo
+        includeInBundle = configIncludeDependenciesInfo
     }
 
     buildFeatures {
