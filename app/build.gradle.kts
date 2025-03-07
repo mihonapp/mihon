@@ -10,12 +10,14 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-val configIncludeAnalytics = project.hasProperty("with-analytics")
-val configIncludeUpdater = project.hasProperty("with-updater")
-val configEnableShrinkCode = !project.hasProperty("disable-shrink-code")
-val configIncludeDependenciesInfo = project.hasProperty("include-dependencies-info")
+object Config {
+    val includeAnalytics: Boolean = project.hasProperty("include-analytics")
+    val enableUpdater: Boolean = project.hasProperty("enable-updater")
+    val enableCodeShrink: Boolean = !project.hasProperty("disable-code-shrink")
+    val includeDependencyInfo: Boolean = project.hasProperty("include-dependency-info")
+}
 
-if (configIncludeAnalytics) {
+if (Config.includeAnalytics) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -36,8 +38,8 @@ android {
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "INCLUDE_ANALYTICS", "$configIncludeAnalytics")
-        buildConfigField("boolean", "INCLUDE_UPDATER", "$configIncludeUpdater")
+        buildConfigField("boolean", "ANALYTICS_INCLUDED", "${Config.includeAnalytics}")
+        buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,8 +51,8 @@ android {
             isPseudoLocalesEnabled = true
         }
         val release by getting {
-            isMinifyEnabled = configEnableShrinkCode
-            isShrinkResources = configEnableShrinkCode
+            isMinifyEnabled = Config.enableCodeShrink
+            isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
         }
@@ -89,7 +91,7 @@ android {
     }
 
     sourceSets {
-        val analyticsDir = if (configIncludeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
+        val analyticsDir = if (Config.includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
         getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
@@ -133,8 +135,8 @@ android {
     }
 
     dependenciesInfo {
-        includeInApk = configIncludeDependenciesInfo
-        includeInBundle = configIncludeDependenciesInfo
+        includeInApk = Config.includeDependencyInfo
+        includeInBundle = Config.includeDependencyInfo
     }
 
     buildFeatures {
@@ -276,7 +278,7 @@ dependencies {
     implementation(libs.logcat)
 
     // Crash reports/analytics
-    if (configIncludeAnalytics) {
+    if (Config.includeAnalytics) {
         implementation(platform(libs.firebase.bom))
         implementation(libs.firebase.analytics)
         implementation(libs.firebase.crashlytics)
