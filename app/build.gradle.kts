@@ -10,14 +10,15 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-class ConfigBacking {
+class ConfigClass {
     val includeAnalytics: Boolean = project.hasProperty("include-analytics")
     val enableUpdater: Boolean = project.hasProperty("enable-updater")
     val enableCodeShrink: Boolean = !project.hasProperty("disable-code-shrink")
     val includeDependencyInfo: Boolean = project.hasProperty("include-dependency-info")
 }
+
 @Suppress("PropertyName")
-val Config = ConfigBacking()
+val Config = ConfigClass()
 
 if (Config.includeAnalytics) {
     pluginManager.apply {
