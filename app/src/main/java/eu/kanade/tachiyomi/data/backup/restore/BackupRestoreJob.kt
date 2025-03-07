@@ -31,9 +31,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
 
     private val notifier = BackupNotifier(context)
 
-    // KMK -->
     private val backupRestoreStatus: BackupRestoreStatus = Injekt.get()
-    // KMK <--
 
     override suspend fun doWork(): Result {
         val uri = inputData.getString(LOCATION_URI_KEY)?.toUri()
@@ -43,9 +41,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
             return Result.failure()
         }
 
-        // KMK -->
         backupRestoreStatus.start()
-        // KMK <--
 
         val isSync = inputData.getBoolean(SYNC_KEY, false)
 
@@ -65,9 +61,7 @@ class BackupRestoreJob(private val context: Context, workerParams: WorkerParamet
             }
         } finally {
             context.cancelNotification(Notifications.ID_RESTORE_PROGRESS)
-            // KMK -->
             backupRestoreStatus.stop()
-            // KMK <--
         }
     }
 

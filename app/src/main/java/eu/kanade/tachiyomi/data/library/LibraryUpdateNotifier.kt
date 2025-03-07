@@ -48,10 +48,8 @@ class LibraryUpdateNotifier(
 
     private val securityPreferences: SecurityPreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
+    private val libraryUpdateStatus: LibraryUpdateStatus = Injekt.get(),
 ) {
-    // KMK -->
-    private val libraryUpdateStatus: LibraryUpdateStatus = Injekt.get()
-    // KMK <--
 
     private val percentFormatter = NumberFormat.getPercentInstance().apply {
         roundingMode = RoundingMode.DOWN
@@ -102,9 +100,7 @@ class LibraryUpdateNotifier(
                 ),
             )
 
-        // KMK -->
         libraryUpdateStatus.updateProgress(current.toFloat() / total)
-        // KMK <--
 
         if (!securityPreferences.hideNotificationContent().get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }

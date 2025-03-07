@@ -26,10 +26,7 @@ import java.util.concurrent.TimeUnit
 class BackupNotifier(private val context: Context) {
 
     private val preferences: SecurityPreferences by injectLazy()
-
-    // KMK -->
     private val backupRestoreStatus: BackupRestoreStatus = Injekt.get()
-    // KMK <--
 
     private val progressNotificationBuilder = context.notificationBuilder(
         Notifications.CHANNEL_BACKUP_RESTORE_PROGRESS,
@@ -114,9 +111,7 @@ class BackupNotifier(private val context: Context) {
 
             setProgress(maxAmount, progress, false)
             setOnlyAlertOnce(true)
-            // KMK -->
             backupRestoreStatus.updateProgress(progress.toFloat() / maxAmount)
-            // KMK <--
 
             clearActions()
             addAction(

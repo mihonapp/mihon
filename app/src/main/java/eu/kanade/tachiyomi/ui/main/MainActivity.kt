@@ -60,10 +60,7 @@ import eu.kanade.presentation.components.DownloadedOnlyBannerBackgroundColor
 import eu.kanade.presentation.components.IncognitoModeBannerBackgroundColor
 import eu.kanade.presentation.components.IndexingBannerBackgroundColor
 import eu.kanade.presentation.components.RestoringBannerBackgroundColor
-import eu.kanade.presentation.components.SyncingBannerBackgroundColor
 import eu.kanade.presentation.components.UpdatingBannerBackgroundColor
-import eu.kanade.presentation.more.settings.screen.ConfigureExhDialog
-import eu.kanade.presentation.more.settings.screen.about.WhatsNewDialog
 import eu.kanade.presentation.more.settings.screen.browse.ExtensionReposScreen
 import eu.kanade.presentation.more.settings.screen.data.RestoreBackupScreen
 import eu.kanade.presentation.util.AssistContentScreen
@@ -71,7 +68,6 @@ import eu.kanade.presentation.util.DefaultNavigatorScreenTransition
 import eu.kanade.tachiyomi.BuildConfig
 import eu.kanade.tachiyomi.data.BackupRestoreStatus
 import eu.kanade.tachiyomi.data.LibraryUpdateStatus
-import eu.kanade.tachiyomi.data.SyncStatus
 import eu.kanade.tachiyomi.data.cache.ChapterCache
 import eu.kanade.tachiyomi.data.download.DownloadCache
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -103,6 +99,7 @@ import mihon.core.migration.Migrator
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.logcat
+import tachiyomi.domain.backup.service.BackupPreferences
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.release.interactor.GetApplicationRelease
 import tachiyomi.i18n.MR
@@ -116,13 +113,9 @@ class MainActivity : BaseActivity() {
     private val libraryPreferences: LibraryPreferences by injectLazy()
     private val preferences: BasePreferences by injectLazy()
 
-    // KMK -->
     private val backupPreferences: BackupPreferences by injectLazy()
-    private val syncPreferences: SyncPreferences by injectLazy()
     private val backupRestoreStatus: BackupRestoreStatus by injectLazy()
-    private val syncStatus: SyncStatus by injectLazy()
     private val libraryUpdateStatus: LibraryUpdateStatus by injectLazy()
-    // KMK <--
 
     private val downloadCache: DownloadCache by injectLazy()
     private val chapterCache: ChapterCache by injectLazy()
@@ -160,28 +153,20 @@ class MainActivity : BaseActivity() {
             var incognito by remember { mutableStateOf(getIncognitoState.await(null)) }
             val downloadOnly by preferences.downloadedOnly().collectAsState()
             val indexing by downloadCache.isInitializing.collectAsState()
-            // KMK -->
+
             val restoringState by backupRestoreStatus.isRunning.collectAsState()
-            val syncingState by syncStatus.isRunning.collectAsState()
             val updatingState by libraryUpdateStatus.isRunning.collectAsState()
             val restoringProgressBanner by backupPreferences.showRestoringProgressBanner().collectAsState()
-            val syncingProgressBanner by syncPreferences.showSyncingProgressBanner().collectAsState()
             val updatingProgressBanner by libraryPreferences.showUpdatingProgressBanner().collectAsState()
             val restoring = restoringState && restoringProgressBanner
-            val syncing = syncingState && syncingProgressBanner
             val updating = updatingState && updatingProgressBanner
             val restoringProgress by backupRestoreStatus.progress.collectAsState()
-            val syncingProgress by syncStatus.progress.collectAsState()
             val updatingProgress by libraryUpdateStatus.progress.collectAsState()
-            // KMK <--
 
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val statusBarBackgroundColor = when {
-                // KMK -->
                 updating -> UpdatingBannerBackgroundColor
-                syncing -> SyncingBannerBackgroundColor
                 restoring -> RestoringBannerBackgroundColor
-                // KMK <--
                 indexing -> IndexingBannerBackgroundColor
                 downloadOnly -> DownloadedOnlyBannerBackgroundColor
                 incognito -> IncognitoModeBannerBackgroundColor
@@ -225,14 +210,10 @@ class MainActivity : BaseActivity() {
                             downloadedOnlyMode = downloadOnly,
                             incognitoMode = incognito,
                             indexing = indexing,
-                            // KMK -->
                             restoring = restoring,
-                            syncing = syncing,
                             updating = updating,
                             progress = updatingProgress.takeIf { updating }
-                                ?: syncingProgress.takeIf { syncing }
                                 ?: restoringProgress.takeIf { restoring },
-                            // KMK <--
                             modifier = Modifier.windowInsetsPadding(scaffoldInsets),
                         )
                     },
