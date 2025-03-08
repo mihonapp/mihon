@@ -13,7 +13,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 ## [Unreleased]
 ### Added
 - Add option to always decode long strip images with SSIV
-  - Change option label ([@AntsyLich](https://github.com/AntsyLich)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))   
+  - Change option label ([@AntsyLich](https://github.com/AntsyLich)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
 - Add button to favorite manga from history screen ([@Animeboynz](https://github.com/Animeboynz)) ([#1733](https://github.com/mihonapp/mihon/pull/1733))
 - Add Monochrome theme (made with e-ink displays in mind) ([@MajorTanya](https://github.com/MajorTanya)) ([#1752](https://github.com/mihonapp/mihon/pull/1752))
@@ -21,7 +21,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Add private tracking support for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#1774](https://github.com/mihonapp/mihon/pull/1774))
 - Add option to export minimal library information to a CSV file ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1161](https://github.com/mihonapp/mihon/pull/1161))
 - Add back support for drag-and-drop category reordering ([@cuong-tran](https://github.com/cuong-tran)) ([#1427](https://github.com/mihonapp/mihon/pull/1427))
-- Add option to mark new duplicate read chapters as read
+- Add option to mark duplicate read chapters as read
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 
 ### Changed
