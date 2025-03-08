@@ -203,7 +203,7 @@ object SettingsReaderScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.SwitchPreference(
                     preference = readerPreferences.markDuplicateReadChapterAsRead(),
-                    title = stringResource(MR.strings.pref_mark_duplicate_chapter_read),
+                    title = stringResource(MR.strings.pref_mark_duplicate_read_chapter_read),
                 ),
             ),
         )
