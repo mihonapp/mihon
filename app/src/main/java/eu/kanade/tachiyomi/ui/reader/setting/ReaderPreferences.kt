@@ -137,7 +137,7 @@ class ReaderPreferences(
 
     fun showNavigationOverlayOnStart() = preferenceStore.getBoolean("reader_navigation_overlay_on_start", false)
 
-    fun markDuplicateReadChapterAsRead() = preferenceStore.getBoolean("mark_duplicate_read_chapter_read", false)
+    fun markDuplicateReadChapterAsRead() = preferenceStore.getBoolean("mark_duplicate_chapter_read", false)
 
     // endregion
 
