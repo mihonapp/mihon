@@ -129,6 +129,7 @@ class MangaRestorer(
                 updateStrategy = manga.updateStrategy.let(UpdateStrategyColumnAdapter::encode),
                 version = manga.version,
                 isSyncing = 1,
+                dirLastModifiedAt = manga.dirLastModifiedAt,
             )
         }
         return manga
@@ -261,6 +262,7 @@ class MangaRestorer(
                 dateAdded = manga.dateAdded,
                 updateStrategy = manga.updateStrategy,
                 version = manga.version,
+                dirLastModifiedAt = manga.dirLastModifiedAt,
             )
             mangasQueries.selectLastInsertedRowId()
         }
