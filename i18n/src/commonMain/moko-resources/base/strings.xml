@@ -292,7 +292,7 @@
     <string name="pref_update_only_started">Skip unstarted entries</string>
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_mark_duplicate_chapter_read">Mark new duplicate read chapters as read</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapters as read</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
