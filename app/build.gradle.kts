@@ -1,3 +1,4 @@
+import mihon.buildlogic.Config
 import mihon.buildlogic.getBuildTime
 import mihon.buildlogic.getCommitCount
 import mihon.buildlogic.getGitSha
@@ -9,16 +10,6 @@ plugins {
     kotlin("plugin.serialization")
     alias(libs.plugins.aboutLibraries)
 }
-
-class ConfigClass {
-    val includeAnalytics: Boolean = project.hasProperty("include-analytics")
-    val enableUpdater: Boolean = project.hasProperty("enable-updater")
-    val enableCodeShrink: Boolean = !project.hasProperty("disable-code-shrink")
-    val includeDependencyInfo: Boolean = project.hasProperty("include-dependency-info")
-}
-
-@Suppress("PropertyName")
-val Config = ConfigClass()
 
 if (Config.includeAnalytics) {
     pluginManager.apply {
@@ -94,8 +85,6 @@ android {
     }
 
     sourceSets {
-        val analyticsDir = if (Config.includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
-        getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
     }
@@ -187,6 +176,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.presentationCore)
     implementation(projects.presentationWidget)
+    implementation(projects.telemetry)
 
     // Compose
     implementation(compose.activity)
@@ -279,13 +269,6 @@ dependencies {
 
     // Logging
     implementation(libs.logcat)
-
-    // Crash reports/analytics
-    if (Config.includeAnalytics) {
-        implementation(platform(libs.firebase.bom))
-        implementation(libs.firebase.analytics)
-        implementation(libs.firebase.crashlytics)
-    }
 
     // Shizuku
     implementation(libs.bundles.shizuku)
