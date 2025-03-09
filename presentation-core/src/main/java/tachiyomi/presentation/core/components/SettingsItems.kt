@@ -36,6 +36,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -172,25 +173,49 @@ fun RadioItem(label: String, selected: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun SliderItem(
-    label: String,
     value: Int,
-    valueText: String,
+    valueRange: IntProgression,
+    label: String,
     onChange: (Int) -> Unit,
-    max: Int,
-    min: Int = 0,
-    steps: Int = 0,
+    steps: Int = with(valueRange) { (last - first) - 1 },
+    valueText: String = value.toString(),
+    labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
+) {
+    BaseSliderItem(
+        value = value,
+        valueRange = valueRange,
+        steps = steps,
+        label = label,
+        valueText = valueText,
+        onChange = onChange,
+        labelStyle = labelStyle,
+        pillColor = pillColor,
+        modifier = Modifier.padding(
+            horizontal = SettingsItemsPaddings.Horizontal,
+            vertical = SettingsItemsPaddings.Vertical,
+        ),
+    )
+}
+
+@Composable
+fun BaseSliderItem(
+    value: Int,
+    valueRange: IntProgression,
+    label: String,
+    onChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    steps: Int = with(valueRange) { (last - first) - 1 },
+    valueText: String = value.toString(),
     labelStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     pillColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val haptic = LocalHapticFeedback.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = SettingsItemsPaddings.Horizontal,
-                vertical = SettingsItemsPaddings.Vertical,
-            ),
+            .then(modifier),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -214,7 +239,7 @@ fun SliderItem(
                 onChange(it)
                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
             },
-            valueRange = min..max,
+            valueRange = valueRange,
             steps = steps,
         )
     }
@@ -224,15 +249,14 @@ fun SliderItem(
 @PreviewLightDark
 fun SliderItemPreview() {
     MaterialTheme(if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
+        var value by remember { mutableIntStateOf(0) }
         Surface {
             SliderItem(
+                value = value,
+                valueRange = 0..10,
                 label = "Item per row",
-                valueText = "Auto",
-                value = 0,
-                onChange = {},
-                min = 0,
-                max = 10,
-                steps = 8,
+                valueText = if (value == 0) "Auto" else value.toString(),
+                onChange = { value = it },
             )
         }
     }

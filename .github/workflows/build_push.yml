@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew spotlessCheck
 
       - name: Build app
-        run: ./gradlew assembleRelease -Pwith-analytics -Pwith-updater
+        run: ./gradlew assembleRelease -Pinclude-analytics -Penable-updater
 
       - name: Run unit tests
         run: ./gradlew testReleaseUnitTest

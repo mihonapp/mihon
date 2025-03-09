@@ -1,5 +1,6 @@
 package eu.kanade.presentation.more.settings
 
+import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -50,10 +51,9 @@ sealed class Preference {
          */
         data class SliderPreference(
             val value: Int,
-            val max: Int,
-            val min: Int = 0,
-            val steps: Int = 0,
             override val title: String,
+            val valueRange: IntProgression = 0..1,
+            @IntRange(from = 0) val steps: Int = with(valueRange) { (last - first) - 1 },
             override val subtitle: String? = null,
             override val enabled: Boolean = true,
             override val onValueChanged: suspend (value: Int) -> Boolean = { true },
