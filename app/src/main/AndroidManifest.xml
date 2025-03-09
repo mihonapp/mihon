@@ -197,6 +197,7 @@
                 <data android:host="bangumi-auth" />
                 <data android:host="myanimelist-auth" />
                 <data android:host="shikimori-auth" />
+                <data android:host="hikka-auth" />
             </intent-filter>
         </activity>
 

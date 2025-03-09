@@ -12,6 +12,7 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             "bangumi-auth" -> handleBangumi(data)
             "myanimelist-auth" -> handleMyAnimeList(data)
             "shikimori-auth" -> handleShikimori(data)
+            "hikka-auth" -> handleHikka(data)
         }
     }
 
@@ -64,6 +65,19 @@ class TrackLoginActivity : BaseOAuthLoginActivity() {
             }
         } else {
             trackerManager.shikimori.logout()
+            returnToSettings()
+        }
+    }
+
+    private fun handleHikka(data: Uri) {
+        val reference = data.getQueryParameter("reference")
+        if (reference != null) {
+            lifecycleScope.launchIO {
+                trackerManager.hikka.login(reference)
+                returnToSettings()
+            }
+        } else {
+            trackerManager.hikka.logout()
             returnToSettings()
         }
     }
