@@ -252,7 +252,6 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val fetchWindow = fetchInterval.getWindow(ZonedDateTime.now())
 
         coroutineScope {
-            failedUpdatesManager.removeAllFailedUpdates()
             mangaToUpdate.groupBy { it.manga.source }.values
                 .map { mangaInSource ->
                     async {
@@ -260,6 +259,8 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                             mangaInSource.forEach { libraryManga ->
                                 val manga = libraryManga.manga
                                 ensureActive()
+
+                                failedUpdatesManager.removeFailedUpdatesByMangaIds(listOf(manga.id))
 
                                 // Don't continue to update if manga is not in library
                                 if (getManga.await(manga.id)?.favorite != true) {
