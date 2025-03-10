@@ -48,6 +48,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ### Other
 - Add zoned "Current time" to debug info and include year & timezone in logcat output ([@MajorTanya](https://github.com/MajorTanya)) ([#1672](https://github.com/mihonapp/mihon/pull/1672))
+- Add application package ID to debug info ([@MajorTanya](https://github.com/MajorTanya)) ([#1847](https://github.com/mihonapp/mihon/pull/1847))
 
 ## [v0.17.1] - 2024-12-06
 ### Changed
