@@ -245,9 +245,6 @@ internal class MigrateDialogScreenModel(
                         )
                     }
 
-                    // Mark all chapter up to max read as read
-                    // This might unwanted since user might set some as unread
-                    // Or some chapters only in new manga will be mark ad read
                     if (maxChapterRead != null && updatedChapter.chapterNumber <= maxChapterRead) {
                         updatedChapter = updatedChapter.copy(read = true)
                     }
