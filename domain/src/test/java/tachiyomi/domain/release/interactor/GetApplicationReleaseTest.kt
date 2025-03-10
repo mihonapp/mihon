@@ -39,13 +39,14 @@ class GetApplicationReleaseTest {
             "r2000",
             "info",
             "http://example.com/release_link",
-            listOf("http://example.com/assets"),
+            "http://example.com/release_link.apk",
         )
 
         coEvery { releaseService.latest(any()) } returns release
 
         val result = getApplicationRelease.await(
             GetApplicationRelease.Arguments(
+                isFoss = false,
                 isPreview = true,
                 commitCount = 1000,
                 versionName = "",
@@ -67,13 +68,14 @@ class GetApplicationReleaseTest {
             "v2.0.0",
             "info",
             "http://example.com/release_link",
-            listOf("http://example.com/assets"),
+            "http://example.com/release_link.apk",
         )
 
         coEvery { releaseService.latest(any()) } returns release
 
         val result = getApplicationRelease.await(
             GetApplicationRelease.Arguments(
+                isFoss = false,
                 isPreview = false,
                 commitCount = 0,
                 versionName = "v1.0.0",
@@ -95,13 +97,14 @@ class GetApplicationReleaseTest {
             "v1.0.0",
             "info",
             "http://example.com/release_link",
-            listOf("http://example.com/assets"),
+            "http://example.com/release_link.apk",
         )
 
         coEvery { releaseService.latest(any()) } returns release
 
         val result = getApplicationRelease.await(
             GetApplicationRelease.Arguments(
+                isFoss = false,
                 isPreview = false,
                 commitCount = 0,
                 versionName = "v2.0.0",
@@ -121,7 +124,7 @@ class GetApplicationReleaseTest {
             "v1.0.0",
             "info",
             "http://example.com/release_link",
-            listOf("http://example.com/assets"),
+            "http://example.com/release_link.apk",
         )
 
         coEvery { releaseService.latest(any()) } returns release
