@@ -513,6 +513,7 @@ class LibraryScreenModel(
                     MangaUpdate(
                         favorite = false,
                         id = it.id,
+                        dateAdded = 0,
                     )
                 }
                 updateManga.awaitAll(toDelete)
