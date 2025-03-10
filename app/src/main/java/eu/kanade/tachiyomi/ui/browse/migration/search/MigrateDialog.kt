@@ -283,7 +283,7 @@ internal class MigrateDialogScreenModel(
                     newTracks.fastAny { newTrack ->
                         newTrack.trackerId == track.trackerId && newTrack.mangaId == track.mangaId
                     }
-                }.map { deleteTrack.await(newManga.id, it.trackerId) }
+                }.forEach { deleteTrack.await(newManga.id, it.trackerId) }
                 insertTrack.awaitAll(newTracks)
             }
 
