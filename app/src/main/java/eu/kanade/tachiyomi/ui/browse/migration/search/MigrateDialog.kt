@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.util.fastAny
 import cafe.adriel.voyager.core.model.StateScreenModel
 import eu.kanade.domain.chapter.interactor.SyncChaptersWithSource
 import eu.kanade.domain.manga.interactor.UpdateManga
@@ -44,6 +45,7 @@ import tachiyomi.domain.chapter.model.toChapterUpdate
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.manga.model.MangaUpdate
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.track.interactor.DeleteTrack
 import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.domain.track.interactor.InsertTrack
 import tachiyomi.i18n.MR
@@ -157,6 +159,7 @@ internal class MigrateDialogScreenModel(
     private val setMangaCategories: SetMangaCategories = Injekt.get(),
     private val getTracks: GetTracks = Injekt.get(),
     private val insertTrack: InsertTrack = Injekt.get(),
+    private val deleteTrack: DeleteTrack = Injekt.get(),
     private val coverCache: CoverCache = Injekt.get(),
     private val preferenceStore: PreferenceStore = Injekt.get(),
 ) : StateScreenModel<MigrateDialogScreenModel.State>(State()) {
@@ -242,6 +245,9 @@ internal class MigrateDialogScreenModel(
                         )
                     }
 
+                    // Mark all chapter up to max read as read
+                    // This might unwanted since user might set some as unread
+                    // Or some chapters only in new manga will be mark ad read
                     if (maxChapterRead != null && updatedChapter.chapterNumber <= maxChapterRead) {
                         updatedChapter = updatedChapter.copy(read = true)
                     }
@@ -261,6 +267,7 @@ internal class MigrateDialogScreenModel(
         }
 
         // Update track
+        val existedTracks = getTracks.await(newManga.id)
         getTracks.await(oldManga.id).mapNotNull { track ->
             val updatedTrack = track.copy(mangaId = newManga.id)
 
@@ -274,7 +281,14 @@ internal class MigrateDialogScreenModel(
             }
         }
             .takeIf { it.isNotEmpty() }
-            ?.let { insertTrack.awaitAll(it) }
+            ?.let { newTracks ->
+                existedTracks.filter { track ->
+                    newTracks.fastAny { newTrack ->
+                        newTrack.trackerId == track.trackerId && newTrack.mangaId == track.mangaId
+                    }
+                }.map { deleteTrack.await(newManga.id, it.trackerId) }
+                insertTrack.awaitAll(newTracks)
+            }
 
         // Delete downloaded
         if (deleteDownloaded) {
