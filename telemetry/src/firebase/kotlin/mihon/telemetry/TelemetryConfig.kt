@@ -1,4 +1,4 @@
-package mihon.core.firebase
+package mihon.telemetry
 
 import android.content.Context
 import com.google.firebase.FirebaseApp
