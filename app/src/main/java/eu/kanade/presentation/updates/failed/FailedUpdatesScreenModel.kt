@@ -76,24 +76,27 @@ class FailedUpdatesScreenModel(
                         val categoriesMap = categories.associateBy { group -> group.id }
                         state.copy(
                             sourcesCount = sources,
-                            items = libraryManga.filter { libraryManga ->
-                                failedUpdates.any { it.mangaId == libraryManga.manga.id }
-                            }.map { libraryManga ->
-                                // Untrusted Extensions cause null crash
-                                val source = sourceManager.getOrStub(libraryManga.manga.source)
-                                val failedUpdate = failedUpdates.find { it.mangaId == libraryManga.manga.id }!!
-                                val errorMessage = failedUpdate.errorMessage
-                                val simplifiedErrorMessage =
-                                    simplifyErrorMessage(errorMessage.substringBefore(":"), failedUpdate.isOnline)
-                                FailedUpdatesManga(
-                                    libraryManga = libraryManga,
-                                    errorMessage = errorMessage,
-                                    simplifiedErrorMessage = simplifiedErrorMessage,
-                                    selected = libraryManga.id in selectedMangaIds,
-                                    source = source,
-                                    category = categoriesMap[libraryManga.category]!!,
-                                )
-                            },
+                            items = libraryManga
+                                .distinctBy { it.manga.id }
+                                .filter { libraryManga ->
+                                    failedUpdates.any { it.mangaId == libraryManga.manga.id }
+                                }
+                                .map { libraryManga ->
+                                    // Untrusted Extensions cause null crash
+                                    val source = sourceManager.getOrStub(libraryManga.manga.source)
+                                    val failedUpdate = failedUpdates.find { it.mangaId == libraryManga.manga.id }!!
+                                    val errorMessage = failedUpdate.errorMessage
+                                    val simplifiedErrorMessage =
+                                        simplifyErrorMessage(errorMessage.substringBefore(":"), failedUpdate.isOnline)
+                                    FailedUpdatesManga(
+                                        libraryManga = libraryManga,
+                                        errorMessage = errorMessage,
+                                        simplifiedErrorMessage = simplifiedErrorMessage,
+                                        selected = libraryManga.id in selectedMangaIds,
+                                        source = source,
+                                        category = categoriesMap[libraryManga.category]!!,
+                                    )
+                                },
                             groupByMode = preferenceStore.getEnum("group_by_mode", GroupByMode.NONE).get(),
                             sortMode = sortMode,
                             descendingOrder = preferenceStore.getBoolean("descending_order", false).get(),
