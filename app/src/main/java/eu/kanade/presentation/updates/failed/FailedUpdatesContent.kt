@@ -292,6 +292,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                         text = "$mangaCount/$sourceCount",
                         modifier = Modifier.padding(start = 4.dp),
                         color = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError,
                         style = LocalTextStyle.current,
                     )
                     val rotation by animateFloatAsState(
