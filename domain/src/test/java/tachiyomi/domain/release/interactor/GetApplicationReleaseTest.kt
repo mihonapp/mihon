@@ -16,9 +16,9 @@ import java.time.Instant
 
 class GetApplicationReleaseTest {
 
-    lateinit var getApplicationRelease: GetApplicationRelease
-    lateinit var releaseService: ReleaseService
-    lateinit var preference: Preference<Long>
+    private lateinit var getApplicationRelease: GetApplicationRelease
+    private lateinit var releaseService: ReleaseService
+    private lateinit var preference: Preference<Long>
 
     @BeforeEach
     fun beforeEach() {
@@ -131,6 +131,7 @@ class GetApplicationReleaseTest {
 
         val result = getApplicationRelease.await(
             GetApplicationRelease.Arguments(
+                isFoss = false,
                 isPreview = false,
                 commitCount = 0,
                 versionName = "v2.0.0",

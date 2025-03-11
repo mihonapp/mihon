@@ -15,7 +15,7 @@ data class GithubRelease(
 )
 
 /**
- * Assets class containing download url.
+ * Asset class containing asset name and download url.
  */
 @Serializable
 data class GitHubAsset(

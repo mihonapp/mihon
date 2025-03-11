@@ -23,7 +23,7 @@ class ReleaseServiceImpl(
                 .parseAs<GithubRelease>()
         }
 
-        val downloadLink = release.getDownloadLink(isFoss = arguments.isFoss) ?: return null
+        val downloadLink = getDownloadLink(release = release, isFoss = arguments.isFoss) ?: return null
 
         return Release(
             version = release.version,
@@ -35,8 +35,8 @@ class ReleaseServiceImpl(
         )
     }
 
-    private fun GithubRelease.getDownloadLink(isFoss: Boolean): String? {
-        val map = assets.associate { asset ->
+    private fun getDownloadLink(release: GithubRelease, isFoss: Boolean): String? {
+        val map = release.assets.associate { asset ->
             TYPES.find { "-$it" in asset.name } to asset.downloadLink
         }
 
