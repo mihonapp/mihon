@@ -23,6 +23,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add back support for drag-and-drop category reordering ([@cuong-tran](https://github.com/cuong-tran)) ([#1427](https://github.com/mihonapp/mihon/pull/1427))
 - Add option to mark duplicate read chapters as read
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
+- Showing in-app progress bar for backup restoring & library updating ([@cuong-tran](https://github.com/cuong-tran)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
 
 ### Changed
 - Sliders UI
