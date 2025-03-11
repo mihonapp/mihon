@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "mihon.core.telemetry"
+    namespace = "mihon.telemetry"
 
     sourceSets {
         getByName("main") {
