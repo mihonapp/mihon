@@ -42,7 +42,7 @@ import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.components.NestedMenuItem
 import eu.kanade.presentation.library.DeleteLibraryMangaDialog
-import eu.kanade.presentation.manga.components.FailedUpdatesBottomActionMenu
+import eu.kanade.presentation.updates.components.FailedUpdatesBottomActionMenu
 import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.util.system.copyToClipboard
