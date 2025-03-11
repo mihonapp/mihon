@@ -37,7 +37,7 @@ class ReleaseServiceImpl(
 
     private fun getDownloadLink(release: GithubRelease, isFoss: Boolean): String? {
         val map = release.assets.associate { asset ->
-            TYPES.find { "-$it" in asset.name } to asset.downloadLink
+            BUILD_TYPES.find { "-$it" in asset.name } to asset.downloadLink
         }
 
         return if (!isFoss) {
@@ -48,13 +48,21 @@ class ReleaseServiceImpl(
     }
 
     companion object {
-        private const val ARM64 = "arm64-v8a"
-        private const val ARMEABI = "armeabi-v7a"
-        private const val X86 = "x86"
-        private const val X86_64 = "x86_64"
-
         private const val FOSS = "foss"
+        private val BUILD_TYPES = listOf(FOSS, "arm64-v8a", "armeabi-v7a", "x86_64", "x86")
 
-        private val TYPES = listOf(FOSS, ARM64, ARMEABI, X86_64, X86)
+
+        /**
+         * Regular expression that matches a mention to a valid GitHub username, like it's
+         * done in GitHub Flavored Markdown. It follows these constraints:
+         *
+         * - Alphanumeric with single hyphens (no consecutive hyphens)
+         * - Cannot begin or end with a hyphen
+         * - Max length of 39 characters
+         *
+         * Reference: https://stackoverflow.com/a/30281147
+         */
+        private val gitHubUsernameMentionRegex = """\B@([a-z0-9](?:-(?=[a-z0-9])|[a-z0-9]){0,38}(?<=[a-z0-9]))"""
+            .toRegex(RegexOption.IGNORE_CASE)
     }
 }
