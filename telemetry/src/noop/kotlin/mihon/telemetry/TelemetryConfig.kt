@@ -1,8 +1,9 @@
-package mihon.core.firebase
+package mihon.telemetry
 
 import android.content.Context
 
-object FirebaseConfig {
+@Suppress("UNUSED_PARAMETER")
+object TelemetryConfig {
     fun init(context: Context) = Unit
 
     fun setAnalyticsEnabled(enabled: Boolean) = Unit

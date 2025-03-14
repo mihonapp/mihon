@@ -20,8 +20,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
-import eu.kanade.tachiyomi.util.system.isDevFlavor
-import eu.kanade.tachiyomi.util.system.isPreviewBuildType
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.category.model.Category
@@ -118,10 +117,7 @@ private fun ColumnScope.FilterPage(
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
     // TODO: re-enable when custom intervals are ready for stable
-    if (
-        (isDevFlavor || isPreviewBuildType) &&
-        LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions
-    ) {
+    if ((!isReleaseBuildType) && LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions) {
         val filterIntervalCustom by screenModel.libraryPreferences.filterIntervalCustom().collectAsState()
         TriStateItem(
             label = stringResource(MR.strings.action_filter_interval_custom),
@@ -256,9 +252,9 @@ private fun ColumnScope.DisplayPage(
 
         val columns by columnPreference.collectAsState()
         SliderItem(
-            label = stringResource(MR.strings.pref_library_columns),
-            max = 10,
             value = columns,
+            valueRange = 0..10,
+            label = stringResource(MR.strings.pref_library_columns),
             valueText = if (columns > 0) {
                 columns.toString()
             } else {

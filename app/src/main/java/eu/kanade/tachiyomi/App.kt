@@ -52,9 +52,9 @@ import kotlinx.coroutines.flow.onEach
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogcatLogger
-import mihon.core.firebase.FirebaseConfig
 import mihon.core.migration.Migrator
 import mihon.core.migration.migrations.migrations
+import mihon.telemetry.TelemetryConfig
 import org.conscrypt.Conscrypt
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.Preference
@@ -80,7 +80,7 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
     override fun onCreate() {
         super<Application>.onCreate()
         patchInjekt()
-        FirebaseConfig.init(applicationContext)
+        TelemetryConfig.init(applicationContext)
 
         GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
 
@@ -136,12 +136,12 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
 
         privacyPreferences.analytics()
             .changes()
-            .onEach(FirebaseConfig::setAnalyticsEnabled)
+            .onEach(TelemetryConfig::setAnalyticsEnabled)
             .launchIn(scope)
 
         privacyPreferences.crashlytics()
             .changes()
-            .onEach(FirebaseConfig::setCrashlyticsEnabled)
+            .onEach(TelemetryConfig::setCrashlyticsEnabled)
             .launchIn(scope)
 
         basePreferences.hardwareBitmapThreshold().let { preference ->
@@ -219,17 +219,15 @@ class App : Application(), DefaultLifecycleObserver, SingletonImageLoader.Factor
         try {
             // Override the value passed as X-Requested-With in WebView requests
             val stackTrace = Looper.getMainLooper().thread.stackTrace
-            val chromiumElement = stackTrace.find {
-                it.className.equals(
-                    "org.chromium.base.BuildInfo",
-                    ignoreCase = true,
-                )
+            val isChromiumCall = stackTrace.any { trace ->
+                trace.className.equals("org.chromium.base.BuildInfo", ignoreCase = true) &&
+                    setOf("getAll", "getPackageName", "<init>").any { trace.methodName.equals(it, ignoreCase = true) }
             }
-            if (chromiumElement?.methodName.equals("getAll", ignoreCase = true)) {
-                return WebViewUtil.SPOOF_PACKAGE_NAME
-            }
+
+            if (isChromiumCall) return WebViewUtil.spoofedPackageName(applicationContext)
         } catch (_: Exception) {
         }
+
         return super.getPackageName()
     }
 
