@@ -37,11 +37,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     if (customBrightness) {
         val customBrightnessValue by screenModel.preferences.customBrightnessValue().collectAsState()
         SliderItem(
-            label = stringResource(MR.strings.pref_custom_brightness),
-            min = -75,
-            max = 100,
             value = customBrightnessValue,
-            valueText = customBrightnessValue.toString(),
+            valueRange = -75..100,
+            steps = 0,
+            label = stringResource(MR.strings.pref_custom_brightness),
             onChange = { screenModel.preferences.customBrightnessValue().set(it) },
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
@@ -55,10 +54,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
     if (colorFilter) {
         val colorFilterValue by screenModel.preferences.colorFilterValue().collectAsState()
         SliderItem(
-            label = stringResource(MR.strings.color_filter_r_value),
-            max = 255,
             value = colorFilterValue.red,
-            valueText = colorFilterValue.red.toString(),
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_r_value),
             onChange = { newRValue ->
                 screenModel.preferences.colorFilterValue().getAndSet {
                     getColorValue(it, newRValue, RED_MASK, 16)
@@ -67,10 +66,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
-            label = stringResource(MR.strings.color_filter_g_value),
-            max = 255,
             value = colorFilterValue.green,
-            valueText = colorFilterValue.green.toString(),
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_g_value),
             onChange = { newGValue ->
                 screenModel.preferences.colorFilterValue().getAndSet {
                     getColorValue(it, newGValue, GREEN_MASK, 8)
@@ -79,10 +78,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
-            label = stringResource(MR.strings.color_filter_b_value),
-            max = 255,
             value = colorFilterValue.blue,
-            valueText = colorFilterValue.blue.toString(),
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_b_value),
             onChange = { newBValue ->
                 screenModel.preferences.colorFilterValue().getAndSet {
                     getColorValue(it, newBValue, BLUE_MASK, 0)
@@ -91,10 +90,10 @@ internal fun ColumnScope.ColorFilterPage(screenModel: ReaderSettingsScreenModel)
             pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
         SliderItem(
-            label = stringResource(MR.strings.color_filter_a_value),
-            max = 255,
             value = colorFilterValue.alpha,
-            valueText = colorFilterValue.alpha.toString(),
+            valueRange = 0..255,
+            steps = 0,
+            label = stringResource(MR.strings.color_filter_a_value),
             onChange = { newAValue ->
                 screenModel.preferences.colorFilterValue().getAndSet {
                     getColorValue(it, newAValue, ALPHA_MASK, 24)

@@ -98,8 +98,6 @@
     <string name="action_move_category">Set categories</string>
     <string name="delete_category_confirmation">Do you wish to delete the category \"%s\"?</string>
     <string name="delete_category">Delete category</string>
-    <string name="action_sort_category">Sort categories</string>
-    <string name="sort_category_confirmation">Would you like to sort the categories alphabetically?</string>
     <string name="action_edit_cover">Edit cover</string>
     <string name="action_view_chapters">View chapters</string>
     <string name="action_pause">Pause</string>
@@ -232,6 +230,7 @@
     <string name="theme_greenapple">Green Apple</string>
     <string name="theme_lavender">Lavender</string>
     <string name="theme_midnightdusk">Midnight Dusk</string>
+    <string name="theme_monochrome">Monochrome</string>
     <string name="theme_nord">Nord</string>
     <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
     <string name="theme_tako">Tako</string>
@@ -294,6 +293,7 @@
     <string name="pref_update_only_started">Skip unstarted entries</string>
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapters as read</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -395,7 +395,7 @@
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
     <string name="pref_hardware_bitmap_threshold_default">Default (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">If reader loads a blank image incrementally reduce the threshold.\nSelected: %s</string>
-    <string name="pref_always_decode_long_strip_with_ssiv">Always decode long strip images with SSIV</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">Use legacy decoder for long strip reader</string>
     <string name="pref_always_decode_long_strip_with_ssiv_summary">Affects performance. Only enable if reducing bitmap threshold doesn\'t fix blank image issues</string>
     <string name="pref_display_profile">Custom display profile</string>
     <string name="pref_crop_borders">Crop borders</string>
@@ -521,7 +521,6 @@
     <string name="enhanced_services">Enhanced trackers</string>
     <string name="enhanced_services_not_installed">Available but source not installed: %s</string>
     <string name="enhanced_tracking_info">Provides enhanced features for specific sources. Entries are automatically tracked when added to your library.</string>
-    <string name="action_track">Track</string>
     <string name="track_activity_name">Tracker login</string>
 
       <!-- Browse section -->
@@ -574,6 +573,9 @@
     <string name="cache_deleted">Cache cleared, %1$d files deleted</string>
     <string name="cache_delete_error">Error occurred while clearing</string>
     <string name="pref_auto_clear_chapter_cache">Clear chapter cache on app launch</string>
+    <string name="export">Export</string>
+    <string name="library_list">Library List</string>
+    <string name="library_exported">Library Exported</string>
 
     <!-- Sync section -->
     <string name="syncing_library">Syncing library</string>
@@ -689,6 +691,8 @@
     <string name="ongoing">Ongoing</string>
     <string name="unknown">Unknown</string>
     <string name="unknown_author">Unknown author</string>
+    <string name="author">Author</string>
+    <string name="artist">Artist</string>
     <!-- reserved for #6163 -->
     <string name="unknown_status">Unknown status</string>
     <string name="licensed">Licensed</string>
@@ -752,6 +756,7 @@
     <!-- Tracking Screen -->
     <string name="manga_tracking_tab">Tracking</string>
     <string name="add_tracking">Add tracking</string>
+    <string name="action_track">Track</string>
     <string name="unread">Unread</string>
     <string name="reading">Reading</string>
     <string name="completed">Completed</string>
@@ -771,6 +776,9 @@
     <string name="track_status">Status</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
+    <string name="tracked_privately">Tracked privately</string>
+    <string name="action_toggle_private_on">Track privately</string>
+    <string name="action_toggle_private_off">Track publicly</string>
     <string name="track_type">Type</string>
     <string name="myanimelist_relogin">Please login to MAL again</string>
     <string name="source_unsupported">Source is not supported</string>
@@ -919,7 +927,6 @@
     <string name="update_check_notification_download_complete">Tap to install update</string>
     <string name="update_check_notification_download_error">Download error</string>
     <string name="update_check_notification_update_available">New version available!</string>
-    <string name="update_check_fdroid_migration_info">A new version is available from the official releases. Tap to learn how to migrate from unofficial F-Droid releases.</string>
 
     <!-- Information Text -->
     <string name="information_no_downloads">No downloads</string>

@@ -81,6 +81,7 @@ import eu.kanade.tachiyomi.ui.more.OnboardingScreen
 import eu.kanade.tachiyomi.util.system.dpToPx
 import eu.kanade.tachiyomi.util.system.isNavigationBarNeedsScrim
 import eu.kanade.tachiyomi.util.system.openInBrowser
+import eu.kanade.tachiyomi.util.system.updaterEnabled
 import eu.kanade.tachiyomi.util.view.setComposeContent
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -303,7 +304,7 @@ class MainActivity : BaseActivity() {
 
         // App updates
         LaunchedEffect(Unit) {
-            if (BuildConfig.INCLUDE_UPDATER) {
+            if (updaterEnabled) {
                 try {
                     val result = AppUpdateChecker().checkForUpdate(context)
                     if (result is GetApplicationRelease.Result.NewUpdate) {

@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: ❌ Help with Extensions
+    url: https://mihon.app/docs/faq/browse/extensions
+    about: For extension-related questions/issues
   - name: 🖥️ Mihon website
     url: https://mihon.app/
     about: Guides, troubleshooting, and answers to common questions

@@ -82,7 +82,7 @@ object SettingsAppearanceScreen : SearchableSettings {
                     }
                 },
                 Preference.PreferenceItem.SwitchPreference(
-                    pref = amoledPref,
+                    preference = amoledPref,
                     title = stringResource(MR.strings.pref_dark_theme_pure_black),
                     enabled = themeMode != ThemeMode.LIGHT,
                     onValueChanged = {
@@ -116,28 +116,28 @@ object SettingsAppearanceScreen : SearchableSettings {
                     onClick = { navigator.push(AppLanguageScreen()) },
                 ),
                 Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.tabletUiMode(),
-                    title = stringResource(MR.strings.pref_tablet_ui_mode),
+                    preference = uiPreferences.tabletUiMode(),
                     entries = TabletUiMode.entries
                         .associateWith { stringResource(it.titleRes) }
                         .toImmutableMap(),
+                    title = stringResource(MR.strings.pref_tablet_ui_mode),
                     onValueChanged = {
                         context.toast(MR.strings.requires_app_restart)
                         true
                     },
                 ),
                 Preference.PreferenceItem.ListPreference(
-                    pref = uiPreferences.dateFormat(),
-                    title = stringResource(MR.strings.pref_date_format),
+                    preference = uiPreferences.dateFormat(),
                     entries = DateFormats
                         .associateWith {
                             val formattedDate = UiPreferences.dateFormat(it).format(now)
                             "${it.ifEmpty { stringResource(MR.strings.label_default) }} ($formattedDate)"
                         }
                         .toImmutableMap(),
+                    title = stringResource(MR.strings.pref_date_format),
                 ),
                 Preference.PreferenceItem.SwitchPreference(
-                    pref = uiPreferences.relativeTime(),
+                    preference = uiPreferences.relativeTime(),
                     title = stringResource(MR.strings.pref_relative_format),
                     subtitle = stringResource(
                         MR.strings.pref_relative_format_summary,
