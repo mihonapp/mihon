@@ -33,6 +33,9 @@ object MangaMapper {
         customAuthor: String?,
         customDescription: String?,
         customTitle: String?,
+        version: Long,
+        @Suppress("UNUSED_PARAMETER")
+        isSyncing: Long,
     ): Manga = Manga(
         id = id,
         source = source,
@@ -60,6 +63,7 @@ object MangaMapper {
         customAuthor = customAuthor,
         customDescription = customDescription,
         customTitle = customTitle,
+        version = version,
     )
 
     @Suppress("LongParameterList")
@@ -90,6 +94,8 @@ object MangaMapper {
         customAuthor: String?,
         customDescription: String?,
         customTitle: String?,
+        version: Long,
+        isSyncing: Long,
         totalCount: Long,
         readCount: Double,
         latestUpload: Long,
@@ -125,6 +131,8 @@ object MangaMapper {
             customAuthor,
             customDescription,
             customTitle,
+            version,
+            isSyncing,
         ),
         category = category,
         totalChapters = totalCount,

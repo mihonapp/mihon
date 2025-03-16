@@ -6,8 +6,8 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
-import eu.kanade.tachiyomi.data.track.mangaupdates.dto.ListItem
-import eu.kanade.tachiyomi.data.track.mangaupdates.dto.Rating
+import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MUListItem
+import eu.kanade.tachiyomi.data.track.mangaupdates.dto.MURating
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.copyTo
 import eu.kanade.tachiyomi.data.track.mangaupdates.dto.toTrackSearch
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
@@ -106,7 +106,7 @@ class MangaUpdates(id: Long) : BaseTracker(id, "MangaUpdates"), DeletableTracker
         return track.copyFrom(series, rating)
     }
 
-    private fun Track.copyFrom(item: ListItem, rating: Rating?): Track = apply {
+    private fun Track.copyFrom(item: MUListItem, rating: MURating?): Track = apply {
         item.copyTo(this)
         score = rating?.rating ?: 0.0
     }

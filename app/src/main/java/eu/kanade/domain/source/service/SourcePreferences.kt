@@ -22,6 +22,8 @@ class SourcePreferences(
 
     fun disabledSources() = preferenceStore.getStringSet("hidden_catalogues", emptySet())
 
+    fun incognitoExtensions() = preferenceStore.getStringSet("incognito_extensions", emptySet())
+
     fun pinnedSources() = preferenceStore.getStringSet("pinned_catalogues", emptySet())
 
     fun lastUsedSource() = preferenceStore.getLong(
@@ -47,5 +49,10 @@ class SourcePreferences(
     fun trustedExtensions() = preferenceStore.getStringSet(
         Preference.appStateKey("trusted_extensions"),
         emptySet(),
+    )
+
+    fun globalSearchFilterState() = preferenceStore.getBoolean(
+        Preference.appStateKey("has_filters_toggle_state"),
+        false,
     )
 }

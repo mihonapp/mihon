@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Pagkatapos ng %1$s minuto</item>
+        <item quantity="other">Pagkatapos ng %1$s (na) minuto</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategorya</item>
+        <item quantity="other">%d (na) kategorya</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Ang extension ay maaari nang i-update</item>
+        <item quantity="other">Ang mga %d (na) extension ay maaari nang i-update</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Mga kabanata %1$s at isa pa</item>
+        <item quantity="other">Mga kabanata %1$s at %2$d pa</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d bagong kabanata</item>
+        <item quantity="other">%1$d (na) bagong kabanata</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Para sa %d na entry</item>
+        <item quantity="other">Para sa %d na mga entry</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s kabanata</item>
+        <item quantity="other">%1$s (na) kabanata</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s na lang</item>
+        <item quantity="other">%1$s pa ang nasa queue</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Na-restore sa loob ng %1$s na may %2$s error</item>
+        <item quantity="other">Na-restore sa loob ng %1$s na may %2$s (na) error</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d tracker</item>
+        <item quantity="other">%d na tracker</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Nilaktawan ang %d na kabanata, maaaring ito ay wala sa source o na-filter ang mga ito</item>
+        <item quantity="other">Nilaktawan ang %d na mga kabanata, maaaring wala sa source o na-filter ang mga ito</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Kahapon</item>
+        <item quantity="other">%1$d araw na ang nakakalipas</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Susunod na hindi pa nababasang kabanata</item>
+        <item quantity="other">Susunod na %d hindi pa nababasang kabanata</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Sunod na kabanata</item>
+        <item quantity="other">Susunod na %d kabanata</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Nawawalang %1$s na kabanata</item>
+        <item quantity="other">Nawawalang %1$s na mga kabanata</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">1 araw</item>
+        <item quantity="other">%d (na) araw</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d na repo</item>
+        <item quantity="other">%d na mga repo</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Bukas</item>
+        <item quantity="other">Sa loob ng %1$d na araw</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">1 pahina</item>
+        <item quantity="other">%1$s na mga pahina</item>
+    </plurals>
+</resources>

@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
@@ -40,7 +41,7 @@ class ExtensionsScreenModel(
     private val getExtensions: GetExtensionsByType = Injekt.get(),
 ) : StateScreenModel<ExtensionsScreenModel.State>(State()) {
 
-    private var _currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
+    private val currentDownloads = MutableStateFlow<Map<String, InstallStep>>(hashMapOf())
 
     init {
         val context = Injekt.get<Application>()
@@ -61,14 +62,20 @@ class ExtensionsScreenModel(
                                 it.name.contains(input, ignoreCase = true) ||
                                     it.baseUrl.contains(input, ignoreCase = true) ||
                                     it.id == input.toLongOrNull()
-                            } || extension.name.contains(input, ignoreCase = true)
+                            } ||
+                                extension.name.contains(input, ignoreCase = true)
                         }
                         is Extension.Installed -> {
                             extension.sources.any {
                                 it.name.contains(input, ignoreCase = true) ||
                                     it.id == input.toLongOrNull() ||
-                                    if (it is HttpSource) { it.baseUrl.contains(input, ignoreCase = true) } else false
-                            } || extension.name.contains(input, ignoreCase = true)
+                                    if (it is HttpSource) {
+                                        it.baseUrl.contains(input, ignoreCase = true)
+                                    } else {
+                                        false
+                                    }
+                            } ||
+                                extension.name.contains(input, ignoreCase = true)
                         }
                         is Extension.Untrusted -> extension.name.contains(input, ignoreCase = true)
                     }
@@ -79,7 +86,7 @@ class ExtensionsScreenModel(
         screenModelScope.launchIO {
             combine(
                 state.map { it.searchQuery }.distinctUntilChanged().debounce(SEARCH_DEBOUNCE_MILLIS),
-                _currentDownloads,
+                currentDownloads,
                 getExtensions.subscribe(),
             ) { query, downloads, (_updates, _installed, _available, _untrusted) ->
                 val searchQuery = query ?: ""
@@ -165,11 +172,11 @@ class ExtensionsScreenModel(
     }
 
     private fun addDownloadState(extension: Extension, installStep: InstallStep) {
-        _currentDownloads.update { it + Pair(extension.pkgName, installStep) }
+        currentDownloads.update { it + Pair(extension.pkgName, installStep) }
     }
 
     private fun removeDownloadState(extension: Extension) {
-        _currentDownloads.update { it - extension.pkgName }
+        currentDownloads.update { it - extension.pkgName }
     }
 
     private suspend fun Flow<InstallStep>.collectToInstallUpdate(extension: Extension) =
@@ -196,7 +203,9 @@ class ExtensionsScreenModel(
     }
 
     fun trustExtension(extension: Extension.Untrusted) {
-        extensionManager.trust(extension)
+        screenModelScope.launch {
+            extensionManager.trust(extension)
+        }
     }
 
     @Immutable

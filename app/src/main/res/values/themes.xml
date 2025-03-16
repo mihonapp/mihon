@@ -15,6 +15,7 @@
         <item name="colorOnPrimary">@color/tachiyomi_onPrimary</item>
         <item name="colorPrimaryContainer">@color/tachiyomi_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/tachiyomi_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/tachiyomi_inversePrimary</item>
         <item name="colorSecondary">@color/tachiyomi_secondary</item>
         <item name="colorOnSecondary">@color/tachiyomi_onSecondary</item>
         <item name="colorSecondaryContainer">@color/tachiyomi_secondaryContainer</item>
@@ -29,14 +30,20 @@
         <item name="colorOnSurface">@color/tachiyomi_onSurface</item>
         <item name="colorSurfaceVariant">@color/tachiyomi_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/tachiyomi_onSurfaceVariant</item>
-        <item name="colorOutline">@color/tachiyomi_outline</item>
-        <item name="colorOnSurfaceInverse">@color/tachiyomi_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/tachiyomi_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/tachiyomi_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/tachiyomi_primaryInverse</item>
-        <item name="colorError">@color/error</item>
-        <item name="colorOnError">@color/onError</item>
-        <item name="colorErrorContainer">@color/errorContainer</item>
-        <item name="colorOnErrorContainer">@color/onErrorContainer</item>
+        <item name="colorOnSurfaceInverse">@color/tachiyomi_inverseOnSurface</item>
+        <item name="colorError">@color/tachiyomi_error</item>
+        <item name="colorOnError">@color/tachiyomi_onError</item>
+        <item name="colorErrorContainer">@color/tachiyomi_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/tachiyomi_onErrorContainer</item>
+        <item name="colorOutline">@color/tachiyomi_outline</item>
+        <item name="colorOutlineVariant">@color/tachiyomi_outlineVariant</item>
+        <item name="colorSurfaceContainer">@color/tachiyomi_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/tachiyomi_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/tachiyomi_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/tachiyomi_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/tachiyomi_surfaceContainerLowest</item>
 
         <item name="android:divider">@color/divider_default</item>
         <item name="android:listDivider">@drawable/line_divider</item>
@@ -52,7 +59,7 @@
         <!-- Themes -->
         <item name="android:windowLightStatusBar">@bool/lightStatusBar</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/surface_amoled</item>
+        <item name="android:navigationBarColor">@color/amoled_surface</item>
         <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">@null</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="Q">false</item>
@@ -91,6 +98,7 @@
         <item name="colorOnPrimary">@color/greenapple_onPrimary</item>
         <item name="colorPrimaryContainer">@color/greenapple_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/greenapple_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/greenapple_inversePrimary</item>
         <item name="colorSecondary">@color/greenapple_secondary</item>
         <item name="colorOnSecondary">@color/greenapple_onSecondary</item>
         <item name="colorSecondaryContainer">@color/greenapple_secondaryContainer</item>
@@ -105,10 +113,22 @@
         <item name="colorOnSurface">@color/greenapple_onSurface</item>
         <item name="colorSurfaceVariant">@color/greenapple_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/greenapple_onSurfaceVariant</item>
-        <item name="colorOutline">@color/greenapple_outline</item>
-        <item name="colorOnSurfaceInverse">@color/greenapple_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/greenapple_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/greenapple_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/greenapple_inverseOnSurface</item>
+        <item name="colorError">@color/greenapple_error</item>
+        <item name="colorOnError">@color/greenapple_onError</item>
+        <item name="colorErrorContainer">@color/greenapple_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/greenapple_onErrorContainer</item>
+        <item name="colorOutline">@color/greenapple_outline</item>
+        <item name="colorOutlineVariant">@color/greenapple_outlineVariant</item>
+        <item name="scrimBackground">@color/greenapple_scrim</item>
+        <item name="colorSurfaceBright">@color/greenapple_surfaceBright</item>
+        <item name="colorSurfaceDim">@color/greenapple_surfaceDim</item>
+        <item name="colorSurfaceContainer">@color/greenapple_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/greenapple_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/greenapple_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/greenapple_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/greenapple_surfaceContainerLowest</item>
     </style>
 
     <!--== Lavender Theme ==-->
@@ -118,6 +138,7 @@
         <item name="colorOnPrimary">@color/lavender_onPrimary</item>
         <item name="colorPrimaryContainer">@color/lavender_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/lavender_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/lavender_inversePrimary</item>
         <item name="colorSecondary">@color/lavender_secondary</item>
         <item name="colorOnSecondary">@color/lavender_onSecondary</item>
         <item name="colorSecondaryContainer">@color/lavender_secondaryContainer</item>
@@ -132,11 +153,22 @@
         <item name="colorOnSurface">@color/lavender_onSurface</item>
         <item name="colorSurfaceVariant">@color/lavender_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/lavender_onSurfaceVariant</item>
-        <item name="colorOutline">@color/lavender_outline</item>
-        <item name="colorOnSurfaceInverse">@color/lavender_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/lavender_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/lavender_primaryInverse</item>
-        <item name="elevationOverlayColor">@color/lavender_elevationOverlay</item>
+        <item name="colorOnSurfaceInverse">@color/lavender_inverseOnSurface</item>
+        <item name="colorError">@color/lavender_error</item>
+        <item name="colorOnError">@color/lavender_onError</item>
+        <item name="colorErrorContainer">@color/lavender_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/lavender_onErrorContainer</item>
+        <item name="colorOutline">@color/lavender_outline</item>
+        <item name="colorOutlineVariant">@color/lavender_outlineVariant</item>
+        <item name="scrimBackground">@color/lavender_scrim</item>
+        <item name="colorSurfaceBright">@color/lavender_surfaceBright</item>
+        <item name="colorSurfaceDim">@color/lavender_surfaceDim</item>
+        <item name="colorSurfaceContainer">@color/lavender_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/lavender_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/lavender_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/lavender_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/lavender_surfaceContainerLowest</item>
     </style>
 
     <!--== Midnight Dusk Theme ==-->
@@ -146,6 +178,7 @@
         <item name="colorOnPrimary">@color/midnightdusk_onPrimary</item>
         <item name="colorPrimaryContainer">@color/midnightdusk_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/midnightdusk_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/midnightdusk_inversePrimary</item>
         <item name="colorSecondary">@color/midnightdusk_secondary</item>
         <item name="colorOnSecondary">@color/midnightdusk_onSecondary</item>
         <item name="colorSecondaryContainer">@color/midnightdusk_secondaryContainer</item>
@@ -160,11 +193,15 @@
         <item name="colorOnSurface">@color/midnightdusk_onSurface</item>
         <item name="colorSurfaceVariant">@color/midnightdusk_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/midnightdusk_onSurfaceVariant</item>
-        <item name="colorOutline">@color/midnightdusk_outline</item>
-        <item name="colorOnSurfaceInverse">@color/midnightdusk_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/midnightdusk_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/midnightdusk_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/midnightdusk_primaryInverse</item>
-        <item name="elevationOverlayColor">@color/midnightdusk_elevationOverlay</item>
+        <item name="colorOnSurfaceInverse">@color/midnightdusk_inverseOnSurface</item>
+        <item name="colorOutline">@color/midnightdusk_outline</item>
+        <item name="colorSurfaceContainer">@color/midnightdusk_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/midnightdusk_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/midnightdusk_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/midnightdusk_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/midnightdusk_surfaceContainerLowest</item>
     </style>
 
     <!--== Strawberry Daiquiri Theme ==-->
@@ -174,6 +211,7 @@
         <item name="colorOnPrimary">@color/strawberry_onPrimary</item>
         <item name="colorPrimaryContainer">@color/strawberry_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/strawberry_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/strawberry_inversePrimary</item>
         <item name="colorSecondary">@color/strawberry_secondary</item>
         <item name="colorOnSecondary">@color/strawberry_onSecondary</item>
         <item name="colorSecondaryContainer">@color/strawberry_secondaryContainer</item>
@@ -188,10 +226,22 @@
         <item name="colorOnSurface">@color/strawberry_onSurface</item>
         <item name="colorSurfaceVariant">@color/strawberry_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/strawberry_onSurfaceVariant</item>
-        <item name="colorOutline">@color/strawberry_outline</item>
-        <item name="colorOnSurfaceInverse">@color/strawberry_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/strawberry_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/strawberry_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/strawberry_inverseOnSurface</item>
+        <item name="colorError">@color/strawberry_error</item>
+        <item name="colorOnError">@color/strawberry_onError</item>
+        <item name="colorErrorContainer">@color/strawberry_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/strawberry_onErrorContainer</item>
+        <item name="colorOutline">@color/strawberry_outline</item>
+        <item name="colorOutlineVariant">@color/strawberry_outlineVariant</item>
+        <item name="scrimBackground">@color/strawberry_scrim</item>
+        <item name="colorSurfaceBright">@color/strawberry_surfaceBright</item>
+        <item name="colorSurfaceDim">@color/strawberry_surfaceDim</item>
+        <item name="colorSurfaceContainer">@color/strawberry_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/strawberry_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/strawberry_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/strawberry_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/strawberry_surfaceContainerLowest</item>
     </style>
 
     <!--== Tako Theme ==-->
@@ -201,6 +251,7 @@
         <item name="colorOnPrimary">@color/tako_onPrimary</item>
         <item name="colorPrimaryContainer">@color/tako_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/tako_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/tako_inversePrimary</item>
         <item name="colorSecondary">@color/tako_secondary</item>
         <item name="colorOnSecondary">@color/tako_onSecondary</item>
         <item name="colorSecondaryContainer">@color/tako_secondaryContainer</item>
@@ -215,11 +266,15 @@
         <item name="colorOnSurface">@color/tako_onSurface</item>
         <item name="colorSurfaceVariant">@color/tako_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/tako_onSurfaceVariant</item>
-        <item name="colorOutline">@color/tako_outline</item>
-        <item name="colorOnSurfaceInverse">@color/tako_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/tako_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/tako_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/tako_primaryInverse</item>
-        <item name="elevationOverlayColor">@color/tako_elevationOverlay</item>
+        <item name="colorOnSurfaceInverse">@color/tako_inverseOnSurface</item>
+        <item name="colorOutline">@color/tako_outline</item>
+        <item name="colorSurfaceContainer">@color/tako_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/tako_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/tako_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/tako_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/tako_surfaceContainerLowest</item>
     </style>
 
     <!--== Teal & Turquoise Theme ==-->
@@ -229,6 +284,7 @@
         <item name="colorOnPrimary">@color/tealturquoise_onPrimary</item>
         <item name="colorPrimaryContainer">@color/tealturquoise_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/tealturquoise_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/tealturquoise_inversePrimary</item>
         <item name="colorSecondary">@color/tealturquoise_secondary</item>
         <item name="colorOnSecondary">@color/tealturquoise_onSecondary</item>
         <item name="colorSecondaryContainer">@color/tealturquoise_secondaryContainer</item>
@@ -243,13 +299,15 @@
         <item name="colorOnSurface">@color/tealturquoise_onSurface</item>
         <item name="colorSurfaceVariant">@color/tealturquoise_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/tealturquoise_onSurfaceVariant</item>
-        <item name="colorOutline">@color/tealturquoise_outline</item>
-        <item name="colorOnSurfaceInverse">@color/tealturquoise_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/tealturquoise_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/tealturquoise_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/tealturquoise_primaryInverse</item>
-        <item name="colorError">@color/tealturquoise_tertiary</item>
-        <item name="colorOnError">@color/tealturquoise_onTertiary</item>
-        <item name="elevationOverlayColor">@color/tealturquoise_elevationOverlay</item>
+        <item name="colorOnSurfaceInverse">@color/tealturquoise_inverseOnSurface</item>
+        <item name="colorOutline">@color/tealturquoise_outline</item>
+        <item name="colorSurfaceContainer">@color/tealturquoise_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/tealturquoise_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/tealturquoise_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/tealturquoise_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/tealturquoise_surfaceContainerLowest</item>
     </style>
 
     <!--== Yin & Yang Theme ==-->
@@ -259,6 +317,7 @@
         <item name="colorOnPrimary">@color/yinyang_onPrimary</item>
         <item name="colorPrimaryContainer">@color/yinyang_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/yinyang_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/yinyang_inversePrimary</item>
         <item name="colorSecondary">@color/yinyang_secondary</item>
         <item name="colorOnSecondary">@color/yinyang_onSecondary</item>
         <item name="colorSecondaryContainer">@color/yinyang_secondaryContainer</item>
@@ -273,10 +332,15 @@
         <item name="colorOnSurface">@color/yinyang_onSurface</item>
         <item name="colorSurfaceVariant">@color/yinyang_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/yinyang_onSurfaceVariant</item>
-        <item name="colorOutline">@color/yinyang_outline</item>
-        <item name="colorOnSurfaceInverse">@color/yinyang_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/yinyang_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/yinyang_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/yinyang_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/yinyang_inverseOnSurface</item>
+        <item name="colorOutline">@color/yinyang_outline</item>
+        <item name="colorSurfaceContainer">@color/yinyang_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/yinyang_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/yinyang_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/yinyang_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/yinyang_surfaceContainerLowest</item>
     </style>
 
     <!--== Yotsuba Theme ==-->
@@ -286,6 +350,7 @@
         <item name="colorOnPrimary">@color/yotsuba_onPrimary</item>
         <item name="colorPrimaryContainer">@color/yotsuba_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/yotsuba_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/yotsuba_inversePrimary</item>
         <item name="colorSecondary">@color/yotsuba_secondary</item>
         <item name="colorOnSecondary">@color/yotsuba_onSecondary</item>
         <item name="colorSecondaryContainer">@color/yotsuba_secondaryContainer</item>
@@ -300,10 +365,15 @@
         <item name="colorOnSurface">@color/yotsuba_onSurface</item>
         <item name="colorSurfaceVariant">@color/yotsuba_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/yotsuba_onSurfaceVariant</item>
-        <item name="colorOutline">@color/yotsuba_outline</item>
-        <item name="colorOnSurfaceInverse">@color/yotsuba_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/yotsuba_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/yotsuba_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/yotsuba_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/yotsuba_inverseOnSurface</item>
+        <item name="colorOutline">@color/yotsuba_outline</item>
+        <item name="colorSurfaceContainer">@color/yotsuba_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/yotsuba_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/yotsuba_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/yotsuba_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/yotsuba_surfaceContainerLowest</item>
     </style>
 
     <!--== Tidal Wave Theme ==-->
@@ -313,6 +383,7 @@
         <item name="colorOnPrimary">@color/tidalwave_onPrimary</item>
         <item name="colorPrimaryContainer">@color/tidalwave_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/tidalwave_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/tidalwave_inversePrimary</item>
         <item name="colorSecondary">@color/tidalwave_secondary</item>
         <item name="colorOnSecondary">@color/tidalwave_onSecondary</item>
         <item name="colorSecondaryContainer">@color/tidalwave_secondaryContainer</item>
@@ -327,10 +398,15 @@
         <item name="colorOnSurface">@color/tidalwave_onSurface</item>
         <item name="colorSurfaceVariant">@color/tidalwave_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/tidalwave_onSurfaceVariant</item>
-        <item name="colorOutline">@color/tidalwave_outline</item>
-        <item name="colorOnSurfaceInverse">@color/tidalwave_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/tidalwave_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/tidalwave_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/tidalwave_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/tidalwave_inverseOnSurface</item>
+        <item name="colorOutline">@color/tidalwave_outline</item>
+        <item name="colorSurfaceContainer">@color/tidalwave_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/tidalwave_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/tidalwave_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/tidalwave_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/tidalwave_surfaceContainerLowest</item>
     </style>
 
     <!--== Nord Theme ==-->
@@ -340,6 +416,7 @@
         <item name="colorOnPrimary">@color/nord_onPrimary</item>
         <item name="colorPrimaryContainer">@color/nord_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/nord_onPrimaryContainer</item>
+        <item name="colorPrimaryInverse">@color/nord_inversePrimary</item>
         <item name="colorSecondary">@color/nord_secondary</item>
         <item name="colorOnSecondary">@color/nord_onSecondary</item>
         <item name="colorSecondaryContainer">@color/nord_secondaryContainer</item>
@@ -354,16 +431,60 @@
         <item name="colorOnSurface">@color/nord_onSurface</item>
         <item name="colorSurfaceVariant">@color/nord_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/nord_onSurfaceVariant</item>
-        <item name="colorOutline">@color/nord_outline</item>
-        <item name="colorOnSurfaceInverse">@color/nord_inverseOnSurface</item>
+        <item name="elevationOverlayColor">@color/nord_surfaceTint</item>
         <item name="colorSurfaceInverse">@color/nord_inverseSurface</item>
-        <item name="colorPrimaryInverse">@color/nord_primaryInverse</item>
+        <item name="colorOnSurfaceInverse">@color/nord_inverseOnSurface</item>
         <item name="colorOnError">@color/nord_onError</item>
         <item name="colorErrorContainer">@color/nord_errorContainer</item>
         <item name="colorOnErrorContainer">@color/nord_onErrorContainer</item>
-        <item name="elevationOverlayColor">@color/nord_elevationOverlay</item>
+        <item name="colorOutline">@color/nord_outline</item>
+        <item name="colorOutlineVariant">@color/nord_outlineVariant</item>
+        <item name="colorSurfaceContainer">@color/nord_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/nord_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/nord_surfaceContainerHighest</item>
+        <item name="colorSurfaceContainerLow">@color/nord_surfaceContainerLow</item>
+        <item name="colorSurfaceContainerLowest">@color/nord_surfaceContainerLowest</item>
     </style>
-    
+
+    <!--== Monochrome Theme ==-->
+    <style name="Theme.Tachiyomi.Monochrome">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/monochrome_primary</item>
+        <item name="colorOnPrimary">@color/monochrome_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/monochrome_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/monochrome_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/monochrome_secondary</item>
+        <item name="colorOnSecondary">@color/monochrome_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/monochrome_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/monochrome_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/monochrome_tertiary</item>
+        <item name="colorOnTertiary">@color/monochrome_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/monochrome_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/monochrome_onTertiaryContainer</item>
+        <item name="colorError">@color/monochrome_error</item>
+        <item name="colorOnError">@color/monochrome_onError</item>
+        <item name="colorErrorContainer">@color/monochrome_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/monochrome_onErrorContainer</item>
+        <item name="android:colorBackground">@color/monochrome_background</item>
+        <item name="colorOnBackground">@color/monochrome_onBackground</item>
+        <item name="colorSurface">@color/monochrome_surface</item>
+        <item name="colorOnSurface">@color/monochrome_onSurface</item>
+        <item name="colorSurfaceVariant">@color/monochrome_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/monochrome_onSurfaceVariant</item>
+        <item name="colorOutline">@color/monochrome_outline</item>
+        <item name="colorOutlineVariant">@color/monochrome_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/monochrome_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/monochrome_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/monochrome_inversePrimary</item>
+        <item name="colorSurfaceDim">@color/monochrome_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/monochrome_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/monochrome_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/monochrome_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/monochrome_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/monochrome_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/monochrome_surfaceContainerHighest</item>
+    </style>
+
     <!--== AMOLED Mode Overlay ==-->
     <style name="ThemeOverlay.Tachiyomi.Amoled" parent="" />
 

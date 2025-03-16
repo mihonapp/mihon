@@ -37,7 +37,7 @@ fun CrashScreen(
         acceptText = stringResource(MR.strings.pref_dump_crash_logs),
         onAcceptClick = {
             scope.launch {
-                CrashLogUtil(context).dumpLogs()
+                CrashLogUtil(context).dumpLogs(exception)
             }
         },
         rejectText = stringResource(MR.strings.crash_screen_restart_application),

@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName")
+
 package eu.kanade.tachiyomi.data.database.models
 
 import java.io.Serializable
@@ -30,12 +32,15 @@ interface Track : Serializable {
 
     var tracking_url: String
 
-    fun copyPersonalFrom(other: Track) {
+    var private: Boolean
+
+    fun copyPersonalFrom(other: Track, copyRemotePrivate: Boolean = true) {
         last_chapter_read = other.last_chapter_read
         score = other.score
         status = other.status
         started_reading_date = other.started_reading_date
         finished_reading_date = other.finished_reading_date
+        if (copyRemotePrivate) private = other.private
     }
 
     companion object {

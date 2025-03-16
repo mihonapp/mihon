@@ -10,7 +10,6 @@ import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -39,7 +38,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -54,7 +52,6 @@ private val sheetAnimationSpec = tween<Float>(durationMillis = 350)
 @Composable
 fun AdaptiveSheet(
     isTabletUi: Boolean,
-    tonalElevation: Dp,
     enableSwipeDismiss: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -78,8 +75,7 @@ fun AdaptiveSheet(
         Box(
             modifier = Modifier
                 .clickable(
-                    enabled = true,
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
                 )
@@ -91,7 +87,7 @@ fun AdaptiveSheet(
                 modifier = Modifier
                     .requiredWidthIn(max = 460.dp)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         indication = null,
                         onClick = {},
                     )
@@ -99,7 +95,7 @@ fun AdaptiveSheet(
                     .padding(vertical = 16.dp)
                     .then(modifier),
                 shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = tonalElevation,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(enabled = alpha > 0f, onBack = internalOnDismissRequest)
                     content()
@@ -122,14 +118,14 @@ fun AdaptiveSheet(
             )
         }
         val internalOnDismissRequest = {
-            if (anchoredDraggableState.currentValue == 0) {
+            if (anchoredDraggableState.settledValue == 0) {
                 scope.launch { anchoredDraggableState.animateTo(1) }
             }
         }
         Box(
             modifier = Modifier
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
+                    interactionSource = null,
                     indication = null,
                     onClick = internalOnDismissRequest,
                 )
@@ -147,7 +143,7 @@ fun AdaptiveSheet(
                 modifier = Modifier
                     .widthIn(max = 460.dp)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = null,
                         indication = null,
                         onClick = {},
                     )
@@ -155,7 +151,9 @@ fun AdaptiveSheet(
                         if (enableSwipeDismiss) {
                             Modifier.nestedScroll(
                                 remember(anchoredDraggableState) {
-                                    anchoredDraggableState.preUpPostDownNestedScrollConnection()
+                                    anchoredDraggableState.preUpPostDownNestedScrollConnection(
+                                        onFling = { scope.launch { anchoredDraggableState.settle(it) } },
+                                    )
                                 },
                             )
                         } else {
@@ -180,7 +178,7 @@ fun AdaptiveSheet(
                     .navigationBarsPadding()
                     .statusBarsPadding(),
                 shape = MaterialTheme.shapes.extraLarge,
-                tonalElevation = tonalElevation,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 content = {
                     BackHandler(
                         enabled = anchoredDraggableState.targetValue == 0,
@@ -192,7 +190,7 @@ fun AdaptiveSheet(
 
             LaunchedEffect(anchoredDraggableState) {
                 scope.launch { anchoredDraggableState.animateTo(0) }
-                snapshotFlow { anchoredDraggableState.currentValue }
+                snapshotFlow { anchoredDraggableState.settledValue }
                     .drop(1)
                     .filter { it == 1 }
                     .collectLatest {
@@ -203,55 +201,51 @@ fun AdaptiveSheet(
     }
 }
 
-private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection() =
-    object : NestedScrollConnection {
-        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-            val delta = available.toFloat()
-            return if (delta < 0 && source == NestedScrollSource.Drag) {
-                dispatchRawDelta(delta).toOffset()
-            } else {
-                Offset.Zero
-            }
+private fun <T> AnchoredDraggableState<T>.preUpPostDownNestedScrollConnection(
+    onFling: (velocity: Float) -> Unit,
+) = object : NestedScrollConnection {
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val delta = available.toFloat()
+        return if (delta < 0 && source == NestedScrollSource.UserInput) {
+            dispatchRawDelta(delta).toOffset()
+        } else {
+            Offset.Zero
         }
-
-        override fun onPostScroll(
-            consumed: Offset,
-            available: Offset,
-            source: NestedScrollSource,
-        ): Offset {
-            return if (source == NestedScrollSource.Drag) {
-                dispatchRawDelta(available.toFloat()).toOffset()
-            } else {
-                Offset.Zero
-            }
-        }
-
-        override suspend fun onPreFling(available: Velocity): Velocity {
-            val toFling = available.toFloat()
-            return if (toFling < 0 && offset > anchors.minAnchor()) {
-                settle(toFling)
-                // since we go to the anchor with tween settling, consume all for the best UX
-                available
-            } else {
-                Velocity.Zero
-            }
-        }
-
-        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-            val toFling = available.toFloat()
-            return if (toFling > 0) {
-                settle(toFling)
-                available
-            } else {
-                Velocity.Zero
-            }
-        }
-
-        private fun Float.toOffset(): Offset = Offset(0f, this)
-
-        @JvmName("velocityToFloat")
-        private fun Velocity.toFloat() = this.y
-
-        @JvmName("offsetToFloat")
-        private fun Offset.toFloat(): Float = this.y
     }
+
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource,
+    ): Offset {
+        return if (source == NestedScrollSource.UserInput) {
+            dispatchRawDelta(available.toFloat()).toOffset()
+        } else {
+            Offset.Zero
+        }
+    }
+
+    override suspend fun onPreFling(available: Velocity): Velocity {
+        val toFling = available.toFloat()
+        return if (toFling < 0 && offset > anchors.minAnchor()) {
+            onFling(toFling)
+            // since we go to the anchor with tween settling, consume all for the best UX
+            available
+        } else {
+            Velocity.Zero
+        }
+    }
+
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+        onFling(available.toFloat())
+        return available
+    }
+
+    private fun Float.toOffset(): Offset = Offset(0f, this)
+
+    @JvmName("velocityToFloat")
+    private fun Velocity.toFloat() = this.y
+
+    @JvmName("offsetToFloat")
+    private fun Offset.toFloat(): Float = this.y
+}

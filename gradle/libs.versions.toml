@@ -1,20 +1,20 @@
 [versions]
-aboutlib_version = "10.10.0"
-leakcanary = "2.13"
-moko = "0.23.0"
-okhttp_version = "5.0.0-alpha.12"
+aboutlib_version = "11.6.3"
+leakcanary = "2.14"
+moko = "0.24.5"
+okhttp_version = "5.0.0-alpha.14"
 richtext = "0.20.0"
-shizuku_version = "12.2.0"
-sqldelight = "2.0.0"
+shizuku_version = "13.1.0"
+sqldelight = "2.0.2"
 sqlite = "2.4.0"
-voyager = "1.0.0"
-detekt = "1.23.1"
-detektCompose = "0.3.11"
+voyager = "1.0.1"
+spotless = "7.0.2"
+ktlint-core = "1.5.0"
+firebase-bom = "33.10.0"
 
 [libraries]
-desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
+desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
 android-shortcut-gradle = "com.github.zellius:android-shortcut-gradle-plugin:0.1.2"
-google-services-gradle = "com.google.gms:google-services:4.4.1"
 
 rxjava = "io.reactivex:rxjava:1.3.8"
 
@@ -22,18 +22,17 @@ okhttp-core = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp_ve
 okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp_version" }
 okhttp-brotli = { module = "com.squareup.okhttp3:okhttp-brotli", version.ref = "okhttp_version" }
 okhttp-dnsoverhttps = { module = "com.squareup.okhttp3:okhttp-dnsoverhttps", version.ref = "okhttp_version" }
-okio = "com.squareup.okio:okio:3.7.0"
+okio = "com.squareup.okio:okio:3.10.2"
 
-conscrypt-android = "org.conscrypt:conscrypt-android:2.5.2"
+conscrypt-android = "org.conscrypt:conscrypt-android:2.5.3"
 
 quickjs-android = "app.cash.quickjs:quickjs-android:0.9.2"
 
-jsoup = "org.jsoup:jsoup:1.17.2"
+jsoup = "org.jsoup:jsoup:1.19.1"
 
 disklrucache = "com.jakewharton:disklrucache:2.0.2"
-unifile = "com.github.tachiyomiorg:unifile:7c257e1c64"
-common-compress = "org.apache.commons:commons-compress:1.25.0"
-junrar = "com.github.junrar:junrar:7.5.5"
+unifile = "com.github.tachiyomiorg:unifile:e0def6b3dc"
+libarchive = "me.zhanghai.android.libarchive:library:1.1.4"
 
 sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 sqlite-ktx = { module = "androidx.sqlite:sqlite-ktx", version.ref = "sqlite" }
@@ -41,38 +40,43 @@ sqlite-android = "com.github.requery:sqlite-android:3.45.0"
 
 preferencektx = "androidx.preference:preference-ktx:1.2.1"
 
-injekt-core = "com.github.inorichi.injekt:injekt-core:65b0440"
+injekt = "com.github.mihonapp:injekt:91edab2317"
 
-coil-bom = { module = "io.coil-kt:coil-bom", version = "2.5.0" }
-coil-core = { module = "io.coil-kt:coil" }
-coil-gif = { module = "io.coil-kt:coil-gif" }
-coil-compose = { module = "io.coil-kt:coil-compose" }
+coil-bom = { module = "io.coil-kt.coil3:coil-bom", version = "3.1.0" }
+coil-core = { module = "io.coil-kt.coil3:coil" }
+coil-gif = { module = "io.coil-kt.coil3:coil-gif" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
-subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:7e57335"
-image-decoder = "com.github.tachiyomiorg:image-decoder:fbd6601290"
+subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-view:66e0db195d"
+image-decoder = "com.github.tachiyomiorg:image-decoder:41c059e540"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
 
-material = "com.google.android.material:material:1.11.0"
+material = "com.google.android.material:material:1.12.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
 photoview = "com.github.chrisbanes:PhotoView:2.3.0"
 directionalviewpager = "com.github.tachiyomiorg:DirectionalViewPager:1.0.0"
 insetter = "dev.chrisbanes.insetter:insetter:0.6.1"
-compose-materialmotion = "io.github.fornewid:material-motion-compose-core:1.2.0"
+compose-materialmotion = "io.github.fornewid:material-motion-compose-core:2.0.1"
+compose-webview = "io.github.kevinnzou:compose-webview:0.33.6"
+compose-grid = "io.woong.compose.grid:grid:1.2.2"
+compose-stablemarker = "com.github.skydoves:compose-stable-marker:1.0.5"
+reorderable = { module = "sh.calvin.reorderable:reorderable", version = "2.4.3" }
 
-swipe = "me.saket.swipe:swipe:1.2.0"
+swipe = "me.saket.swipe:swipe:1.3.0"
 
 moko-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
-moko-gradle = { module = "dev.icerock.moko:resources-generator", version.ref = "moko" }
 
 logcat = "com.squareup.logcat:logcat:0.1"
 
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.5.0"
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
-aboutLibraries-gradle = { module = "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin", version.ref = "aboutlib_version" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlib_version" }
 
 shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku_version" }
@@ -85,27 +89,31 @@ sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", ver
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions-jvm", version.ref = "sqldelight" }
 sqldelight-android-paging = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
 sqldelight-dialects-sql = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
-sqldelight-gradle = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
-junit = "org.junit.jupiter:junit-jupiter:5.10.1"
-kotest-assertions = "io.kotest:kotest-assertions-core:5.8.0"
-mockk = "io.mockk:mockk:1.13.9"
+junit = "org.junit.jupiter:junit-jupiter:5.11.4"
+kotest-assertions = "io.kotest:kotest-assertions-core:5.9.1"
+mockk = "io.mockk:mockk:1.13.17"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
-detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
-detekt-rules-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
+spotless-gradle = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+ktlint-core = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-core" }
+
+[plugins]
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlib_version" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+moko = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.3" }
 
 [bundles]
-archive = ["common-compress", "junrar"]
 okhttp = ["okhttp-core", "okhttp-logging", "okhttp-brotli", "okhttp-dnsoverhttps"]
 js-engine = ["quickjs-android"]
 sqlite = ["sqlite-framework", "sqlite-ktx", "sqlite-android"]
-coil = ["coil-core", "coil-gif", "coil-compose"]
+coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]

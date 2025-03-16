@@ -9,11 +9,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.FloatingActionButtonElevation
@@ -46,12 +46,8 @@ fun ExtendedFloatingActionButton(
     contentColor: Color = contentColorFor(containerColor),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
 ) {
-    val minWidth by animateDpAsState(
-        targetValue = if (expanded) ExtendedFabMinimumWidth else FabContainerWidth,
-        label = "minWidth",
-    )
     FloatingActionButton(
-        modifier = modifier.sizeIn(minWidth = minWidth),
+        modifier = modifier,
         onClick = onClick,
         interactionSource = interactionSource,
         shape = shape,
@@ -59,18 +55,29 @@ fun ExtendedFloatingActionButton(
         contentColor = contentColor,
         elevation = elevation,
     ) {
+        val minWidth by animateDpAsState(
+            targetValue = if (expanded) ExtendedFabMinimumWidth else FabContainerWidth,
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = EasingEmphasizedCubicBezier,
+            ),
+            label = "minWidth",
+        )
         val startPadding by animateDpAsState(
             targetValue = if (expanded) ExtendedFabIconSize / 2 else 0.dp,
+            animationSpec = tween(
+                durationMillis = if (expanded) 300 else 900,
+                easing = EasingEmphasizedCubicBezier,
+            ),
             label = "startPadding",
-        )
-        val endPadding by animateDpAsState(
-            targetValue = if (expanded) ExtendedFabTextPadding else 0.dp,
-            label = "endPadding",
         )
 
         Row(
-            modifier = Modifier.padding(start = startPadding, end = endPadding),
+            modifier = Modifier
+                .sizeIn(minWidth = minWidth)
+                .padding(start = startPadding),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
             icon()
             AnimatedVisibility(
@@ -78,8 +85,7 @@ fun ExtendedFloatingActionButton(
                 enter = ExtendedFabExpandAnimation,
                 exit = ExtendedFabCollapseAnimation,
             ) {
-                Row {
-                    Spacer(Modifier.width(ExtendedFabIconPadding))
+                Box(modifier = Modifier.padding(start = ExtendedFabIconPadding, end = ExtendedFabTextPadding)) {
                     text()
                 }
             }

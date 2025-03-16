@@ -20,7 +20,7 @@ class GetExtensionsByType(
             extensionManager.installedExtensionsFlow,
             extensionManager.untrustedExtensionsFlow,
             extensionManager.availableExtensionsFlow,
-        ) { _activeLanguages, _installed, _untrusted, _available ->
+        ) { enabledLanguages, _installed, _untrusted, _available ->
             val (updates, installed) = _installed
                 .filter { (showNsfwSources || !it.isNsfw) }
                 .sortedWith(
@@ -40,9 +40,9 @@ class GetExtensionsByType(
                 }
                 .flatMap { ext ->
                     if (ext.sources.isEmpty()) {
-                        return@flatMap if (ext.lang in _activeLanguages) listOf(ext) else emptyList()
+                        return@flatMap if (ext.lang in enabledLanguages) listOf(ext) else emptyList()
                     }
-                    ext.sources.filter { it.lang in _activeLanguages }
+                    ext.sources.filter { it.lang in enabledLanguages }
                         .map {
                             ext.copy(
                                 name = it.name,

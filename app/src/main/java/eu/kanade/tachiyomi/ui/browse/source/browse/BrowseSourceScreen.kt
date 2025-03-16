@@ -31,10 +31,10 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.presentation.browse.BrowseSourceContent
 import eu.kanade.presentation.browse.MissingSourceScreen
 import eu.kanade.presentation.browse.components.BrowseSourceToolbar
@@ -46,6 +46,8 @@ import eu.kanade.presentation.util.Screen
 import eu.kanade.tachiyomi.source.CatalogueSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.ui.browse.extension.details.SourcePreferencesScreen
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
 import eu.kanade.tachiyomi.ui.browse.source.browse.BrowseSourceScreenModel.Listing
 import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
@@ -53,6 +55,7 @@ import eu.kanade.tachiyomi.ui.webview.WebViewScreen
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import mihon.presentation.core.util.collectAsLazyPagingItems
 import tachiyomi.core.common.Constants
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.source.model.StubSource
@@ -60,10 +63,11 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
+import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.LocalSource
 
 data class BrowseSourceScreen(
-    private val sourceId: Long,
+    val sourceId: Long,
     private val listingQuery: String?,
 ) : Screen(), AssistContentScreen {
 
@@ -73,6 +77,11 @@ data class BrowseSourceScreen(
 
     @Composable
     override fun Content() {
+        if (!ifSourcesLoaded()) {
+            LoadingScreen()
+            return
+        }
+
         val screenModel = rememberScreenModel { BrowseSourceScreenModel(sourceId, listingQuery) }
         val state by screenModel.state.collectAsState()
 
@@ -197,11 +206,9 @@ data class BrowseSourceScreen(
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         ) { paddingValues ->
-            val pagingFlow by screenModel.mangaPagerFlowFlow.collectAsState()
-
             BrowseSourceContent(
                 source = screenModel.source,
-                mangaList = pagingFlow.collectAsLazyPagingItems(),
+                mangaList = screenModel.mangaPagerFlowFlow.collectAsLazyPagingItems(),
                 columns = screenModel.getColumnsPreference(LocalConfiguration.current.orientation),
                 displayMode = screenModel.displayMode,
                 snackbarHostState = snackbarHostState,
@@ -245,6 +252,22 @@ data class BrowseSourceScreen(
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
                     onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
+                    onMigrate = {
+                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, dialog.duplicate))
+                    },
+                )
+            }
+
+            is BrowseSourceScreenModel.Dialog.Migrate -> {
+                MigrateDialog(
+                    oldManga = dialog.oldManga,
+                    newManga = dialog.newManga,
+                    screenModel = MigrateDialogScreenModel(),
+                    onDismissRequest = onDismissRequest,
+                    onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
+                    onPopScreen = {
+                        onDismissRequest()
+                    },
                 )
             }
             is BrowseSourceScreenModel.Dialog.RemoveManga -> {
@@ -267,7 +290,6 @@ data class BrowseSourceScreen(
                     },
                 )
             }
-            is BrowseSourceScreenModel.Dialog.Migrate -> {}
             else -> {}
         }
 

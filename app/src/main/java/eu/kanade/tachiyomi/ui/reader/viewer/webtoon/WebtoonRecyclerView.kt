@@ -28,7 +28,8 @@ class WebtoonRecyclerView @JvmOverloads constructor(
     private var atFirstPosition = false
     private var halfWidth = 0
     private var halfHeight = 0
-    private var originalHeight = 0
+    var originalHeight = 0
+        private set
     private var heightSet = false
     private var firstVisibleItemPosition = 0
     private var lastVisibleItemPosition = 0
@@ -181,7 +182,11 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 
         setScaleRate(currentScale)
 
-        layoutParams.height = if (currentScale < 1) { (originalHeight / currentScale).toInt() } else { originalHeight }
+        layoutParams.height = if (currentScale < 1) {
+            (originalHeight / currentScale).toInt()
+        } else {
+            originalHeight
+        }
         halfHeight = layoutParams.height / 2
 
         if (currentScale != DEFAULT_RATE) {

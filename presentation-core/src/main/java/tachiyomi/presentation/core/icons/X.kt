@@ -10,20 +10,27 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
+@Suppress("UnusedReceiverParameter")
 val CustomIcons.X: ImageVector
     get() {
         if (_x != null) {
             return _x!!
         }
         _x = Builder(
-            name = "X", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+            name = "X",
+            defaultWidth = 24.0.dp,
+            defaultHeight = 24.0.dp,
             viewportWidth =
             24.0f,
             viewportHeight = 24.0f,
         ).apply {
             path(
-                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
                 pathFillType = NonZero,
             ) {
                 moveTo(18.901f, 1.153f)
@@ -50,4 +57,5 @@ val CustomIcons.X: ImageVector
         return _x!!
     }
 
+@Suppress("ObjectPropertyName")
 private var _x: ImageVector? = null

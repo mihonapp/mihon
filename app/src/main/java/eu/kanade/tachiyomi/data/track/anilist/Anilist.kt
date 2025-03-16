@@ -7,11 +7,11 @@ import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.database.models.Track
 import eu.kanade.tachiyomi.data.track.BaseTracker
 import eu.kanade.tachiyomi.data.track.DeletableTracker
+import eu.kanade.tachiyomi.data.track.anilist.dto.ALOAuth
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.injectLazy
@@ -41,6 +41,8 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     private val api by lazy { AnilistApi(client, interceptor) }
 
     override val supportsReadingDates: Boolean = true
+
+    override val supportsPrivateTracking: Boolean = true
 
     private val scorePreference = trackPreferences.anilistScoreType()
 
@@ -129,13 +131,15 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
                 0.0 -> "0 ★"
                 else -> "${((score + 10) / 20).toInt()} ★"
             }
+
             POINT_3 -> when {
                 score == 0.0 -> "0"
                 score <= 35 -> "😦"
                 score <= 60 -> "😐"
                 else -> "😊"
             }
-            else -> track.toAnilistScore()
+
+            else -> track.toApiScore()
         }
     }
 
@@ -180,7 +184,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
     override suspend fun bind(track: Track, hasReadChapters: Boolean): Track {
         val remoteTrack = api.findLibManga(track, getUsername().toInt())
         return if (remoteTrack != null) {
-            track.copyPersonalFrom(remoteTrack)
+            track.copyPersonalFrom(remoteTrack, copyRemotePrivate = false)
             track.library_id = remoteTrack.library_id
 
             if (track.status != COMPLETED) {
@@ -217,7 +221,7 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
             interceptor.setAuth(oauth)
             val (username, scoreType) = api.getCurrentUser()
             scorePreference.set(scoreType)
-            saveCredentials(username.toString(), oauth.access_token)
+            saveCredentials(username.toString(), oauth.accessToken)
         } catch (e: Throwable) {
             logout()
         }
@@ -229,13 +233,13 @@ class Anilist(id: Long) : BaseTracker(id, "AniList"), DeletableTracker {
         interceptor.setAuth(null)
     }
 
-    fun saveOAuth(oAuth: OAuth?) {
-        trackPreferences.trackToken(this).set(json.encodeToString(oAuth))
+    fun saveOAuth(alOAuth: ALOAuth?) {
+        trackPreferences.trackToken(this).set(json.encodeToString(alOAuth))
     }
 
-    fun loadOAuth(): OAuth? {
+    fun loadOAuth(): ALOAuth? {
         return try {
-            json.decodeFromString<OAuth>(trackPreferences.trackToken(this).get())
+            json.decodeFromString<ALOAuth>(trackPreferences.trackToken(this).get())
         } catch (e: Exception) {
             null
         }

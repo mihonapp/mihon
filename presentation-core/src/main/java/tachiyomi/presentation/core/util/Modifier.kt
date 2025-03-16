@@ -1,7 +1,6 @@
 package tachiyomi.presentation.core.util
 
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.isImeVisible
@@ -23,7 +22,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
-import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 
 fun Modifier.selectedBackground(isSelected: Boolean): Modifier = if (isSelected) {
     composed {
@@ -37,19 +36,17 @@ fun Modifier.selectedBackground(isSelected: Boolean): Modifier = if (isSelected)
     this
 }
 
-fun Modifier.secondaryItemAlpha(): Modifier = this.alpha(SecondaryItemAlpha)
+fun Modifier.secondaryItemAlpha(): Modifier = this.alpha(SECONDARY_ALPHA)
 
 fun Modifier.clickableNoIndication(
     onLongClick: (() -> Unit)? = null,
     onClick: () -> Unit,
-): Modifier = composed {
-    Modifier.combinedClickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = null,
-        onLongClick = onLongClick,
-        onClick = onClick,
-    )
-}
+) = this.combinedClickable(
+    interactionSource = null,
+    indication = null,
+    onLongClick = onLongClick,
+    onClick = onClick,
+)
 
 /**
  * For TextField, the provided [action] will be invoked when

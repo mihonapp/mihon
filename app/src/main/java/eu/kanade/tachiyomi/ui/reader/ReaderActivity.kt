@@ -3,9 +3,10 @@ package eu.kanade.tachiyomi.ui.reader
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.assist.AssistContent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.transition.doOnEnd
@@ -39,7 +41,9 @@ import androidx.lifecycle.lifecycleScope
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.elevation.SurfaceColors
 import com.google.android.material.transition.platform.MaterialContainerTransform
+import com.hippo.unifile.UniFile
 import dev.chrisbanes.insetter.applyInsetter
+import eu.kanade.core.util.ifSourcesLoaded
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.presentation.reader.DisplayRefreshHost
 import eu.kanade.presentation.reader.OrientationSelectDialog
@@ -50,6 +54,7 @@ import eu.kanade.presentation.reader.ReadingModeSelectDialog
 import eu.kanade.presentation.reader.appbars.ReaderAppBars
 import eu.kanade.presentation.reader.settings.ReaderSettingsDialog
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.data.coil.TachiyomiImageDecoder
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.databinding.ReaderActivityBinding
@@ -70,6 +75,7 @@ import eu.kanade.tachiyomi.ui.reader.viewer.ReaderProgressIndicator
 import eu.kanade.tachiyomi.ui.webview.WebViewActivity
 import eu.kanade.tachiyomi.util.system.hasDisplayCutout
 import eu.kanade.tachiyomi.util.system.isNightMode
+import eu.kanade.tachiyomi.util.system.openInBrowser
 import eu.kanade.tachiyomi.util.system.toShareIntent
 import eu.kanade.tachiyomi.util.system.toast
 import eu.kanade.tachiyomi.util.view.setComposeContent
@@ -93,6 +99,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.util.collectAsState
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.io.ByteArrayOutputStream
 
 class ReaderActivity : BaseActivity() {
 
@@ -220,6 +227,9 @@ class ReaderActivity : BaseActivity() {
                     is ReaderViewModel.Event.ShareImage -> {
                         onShareImageResult(event.uri, event.page)
                     }
+                    is ReaderViewModel.Event.CopyImage -> {
+                        onCopyImageResult(event.uri)
+                    }
                     is ReaderViewModel.Event.SetCoverResult -> {
                         onSetAsCoverResult(event.result)
                     }
@@ -344,6 +354,10 @@ class ReaderActivity : BaseActivity() {
                 )
             }
 
+            if (!ifSourcesLoaded()) {
+                return@setComposeContent
+            }
+
             val isHttpSource = viewModel.getSource() is HttpSource
             val isFullscreen by readerPreferences.fullscreen().collectAsState()
             val flashOnPageChange by readerPreferences.flashOnPageChange().collectAsState()
@@ -377,6 +391,7 @@ class ReaderActivity : BaseActivity() {
                 bookmarked = state.bookmarked,
                 onToggleBookmarked = viewModel::toggleChapterBookmark,
                 onOpenInWebView = ::openChapterInWebView.takeIf { isHttpSource },
+                onOpenInBrowser = ::openChapterInBrowser.takeIf { isHttpSource },
                 onShare = ::shareChapter.takeIf { isHttpSource },
 
                 viewer = state.viewer,
@@ -386,7 +401,7 @@ class ReaderActivity : BaseActivity() {
                 enabledPrevious = state.viewerChapters?.prevChapter != null,
                 currentPage = state.currentPage,
                 totalPages = state.totalPages,
-                onSliderValueChange = {
+                onPageIndexChange = {
                     isScrollingThroughPages = true
                     moveToPageIndex(it)
                 },
@@ -477,8 +492,10 @@ class ReaderActivity : BaseActivity() {
             SurfaceColors.SURFACE_2.getColor(this),
             if (isNightMode()) 230 else 242, // 90% dark 95% light
         )
+        @Suppress("DEPRECATION")
         window.statusBarColor = toolbarColor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            @Suppress("DEPRECATION")
             window.navigationBarColor = toolbarColor
         }
 
@@ -556,6 +573,12 @@ class ReaderActivity : BaseActivity() {
         assistUrl?.let {
             val intent = WebViewActivity.newIntent(this@ReaderActivity, it, source.id, manga.title)
             startActivity(intent)
+        }
+    }
+
+    private fun openChapterInBrowser() {
+        assistUrl?.let {
+            openInBrowser(it.toUri(), forceDefaultBrowser = false)
         }
     }
 
@@ -714,6 +737,12 @@ class ReaderActivity : BaseActivity() {
         startActivity(Intent.createChooser(intent, stringResource(MR.strings.action_share)))
     }
 
+    private fun onCopyImageResult(uri: Uri) {
+        val clipboardManager = applicationContext.getSystemService<ClipboardManager>() ?: return
+        val clipData = ClipData.newUri(applicationContext.contentResolver, "", uri)
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
     /**
      * Called from the presenter when a page is saved or fails. It shows a message or logs the
      * event depending on the [result].
@@ -814,8 +843,8 @@ class ReaderActivity : BaseActivity() {
                 }
                 .launchIn(lifecycleScope)
 
-            readerPreferences.trueColor().changes()
-                .onEach(::setTrueColor)
+            preferences.displayProfile().changes()
+                .onEach { setDisplayProfile(it) }
                 .launchIn(lifecycleScope)
 
             readerPreferences.cutoutShort().changes()
@@ -854,13 +883,21 @@ class ReaderActivity : BaseActivity() {
         }
 
         /**
-         * Sets the 32-bit color mode according to [enabled].
+         * Sets the display profile to [path].
          */
-        private fun setTrueColor(enabled: Boolean) {
-            if (enabled) {
-                SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.ARGB_8888)
-            } else {
-                SubsamplingScaleImageView.setPreferredBitmapConfig(Bitmap.Config.RGB_565)
+        private fun setDisplayProfile(path: String) {
+            val file = UniFile.fromUri(baseContext, path.toUri())
+            if (file != null && file.exists()) {
+                val inputStream = file.openInputStream()
+                val outputStream = ByteArrayOutputStream()
+                inputStream.use { input ->
+                    outputStream.use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                val data = outputStream.toByteArray()
+                SubsamplingScaleImageView.setDisplayProfile(data)
+                TachiyomiImageDecoder.displayProfile = data
             }
         }
 

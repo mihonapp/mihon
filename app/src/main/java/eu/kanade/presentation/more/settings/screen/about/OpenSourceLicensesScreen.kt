@@ -32,12 +32,13 @@ class OpenSourceLicensesScreen : Screen() {
                     .fillMaxSize(),
                 contentPadding = contentPadding,
                 onLibraryClick = {
-                    val libraryLicenseScreen = OpenSourceLibraryLicenseScreen(
-                        name = it.library.name,
-                        website = it.library.website,
-                        license = it.library.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
+                    navigator.push(
+                        OpenSourceLibraryLicenseScreen(
+                            name = it.name,
+                            website = it.website,
+                            license = it.licenses.firstOrNull()?.htmlReadyLicenseContent.orEmpty(),
+                        ),
                     )
-                    navigator.push(libraryLicenseScreen)
                 },
             )
         }

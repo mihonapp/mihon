@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">%1$s অধ্যায়সমূহ এবং ১টি আরও</item>
+        <item quantity="other">%1$s অধ্যায়সমূহ এবং %2$dটি আরও</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">%1$s সময়ে %2$s ত্রুটি সম্পন্ন</item>
+        <item quantity="other">%1$s সময়ে %2$sটি ত্রুটি সম্পন্ন</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%dটি বিভাগ</item>
+        <item quantity="other">%dটি বিভাগসমূহ</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="one">১ মিনিট পর</item>
+        <item quantity="other">%1$s মিনিট পর</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">এক্সটেনশন হালনাগাদ উপলব্ধ</item>
+        <item quantity="other">%d এক্সটেনশন হালনাগাদ উপলব্ধ</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">১টি নতুন অধ্যায়</item>
+        <item quantity="other">%1$dটি নতুন অধ্যায়</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">১টি শিরোনামের জন্য</item>
+        <item quantity="other">%dটি শিরোনামের জন্য</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">1 অধ্যায় এড়িয়ে জাছি, হয় উৎসটি অনুপস্থিত বা এটি ফিল্টার করা হয়েছে</item>
+        <item quantity="other">%d অধ্যায় কিপ করা হচ্ছে, হয় উৎসটি তাদের অনুপস্থিত অথবা সেগুলি ফিল্টার করা হয়েছে</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">1টি ট্র্যাকার</item>
+        <item quantity="other">%dটি ট্র্যাকার</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">১টি অধ্যায়</item>
+        <item quantity="other">%1$sটি অধ্যায়</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">১টি বাকি আছে</item>
+        <item quantity="other">%1$sটি বাকি আছে</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">গতকাল</item>
+        <item quantity="other">%1$d দিন আগে</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">পরবর্তী অপঠিত অধ্যায়</item>
+        <item quantity="other">পরবর্তী %d টি অপঠিত অধ্যায়</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">পরের %d চ্যাপ্টার</item>
+        <item quantity="other">পরের %d চ্যাপ্টার</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">%1$s টি চ্যাপ্টার নেই</item>
+        <item quantity="other">%1$s টি চ্যাপ্টার নেই</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">%d দিন</item>
+        <item quantity="other">%d দিন</item>
+    </plurals>
+</resources>

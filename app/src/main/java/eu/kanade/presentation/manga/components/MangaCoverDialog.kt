@@ -37,10 +37,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.updatePadding
-import coil.imageLoader
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.size.Size
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
+import coil3.size.Size
 import eu.kanade.presentation.components.AppBar
 import eu.kanade.presentation.components.AppBarActions
 import eu.kanade.presentation.components.DropdownMenu
@@ -55,7 +56,7 @@ import tachiyomi.presentation.core.util.clickableNoIndication
 
 @Composable
 fun MangaCoverDialog(
-    coverDataProvider: () -> Manga,
+    manga: Manga,
     isCustomCover: Boolean,
     snackbarHostState: SnackbarHostState,
     onShareClick: () -> Unit,
@@ -165,10 +166,12 @@ fun MangaCoverDialog(
                     },
                     update = { view ->
                         val request = ImageRequest.Builder(view.context)
-                            .data(coverDataProvider())
+                            .data(manga)
                             .size(Size.ORIGINAL)
                             .memoryCachePolicy(CachePolicy.DISABLED)
-                            .target { drawable ->
+                            .target { image ->
+                                val drawable = image.asDrawable(view.context.resources)
+
                                 // Copy bitmap in case it came from memory cache
                                 // Because SSIV needs to thoroughly read the image
                                 val copy = (drawable as? BitmapDrawable)?.let {

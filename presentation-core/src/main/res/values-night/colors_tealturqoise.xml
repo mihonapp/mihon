@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <color name="tealturquoise_primary">#40E0D0</color>
     <color name="tealturquoise_onPrimary">#000000</color>
     <color name="tealturquoise_primaryContainer">#40E0D0</color>
     <color name="tealturquoise_onPrimaryContainer">#000000</color>
+    <color name="tealturquoise_inversePrimary">#008080</color>
     <color name="tealturquoise_secondary">#40E0D0</color>
     <color name="tealturquoise_onSecondary">#000000</color>
     <color name="tealturquoise_secondaryContainer">#18544E</color>
@@ -17,11 +17,15 @@
     <color name="tealturquoise_onBackground">#DFDEDA</color>
     <color name="tealturquoise_surface">#202125</color>
     <color name="tealturquoise_onSurface">#DFDEDA</color>
-    <color name="tealturquoise_surfaceVariant">#3F4947</color>
+    <color name="tealturquoise_surfaceVariant">#233133</color>
     <color name="tealturquoise_onSurfaceVariant">#DFDEDA</color>
-    <color name="tealturquoise_outline">#899391</color>
-    <color name="tealturquoise_inverseOnSurface">#202125</color>
+    <color name="tealturquoise_surfaceTint">#40E0D0</color>
     <color name="tealturquoise_inverseSurface">#DFDEDA</color>
-    <color name="tealturquoise_primaryInverse">#008080</color>
-    <color name="tealturquoise_elevationOverlay">#18544E</color>
+    <color name="tealturquoise_inverseOnSurface">#202125</color>
+    <color name="tealturquoise_outline">#899391</color>
+    <color name="tealturquoise_surfaceContainerLowest">#202C2E</color>
+    <color name="tealturquoise_surfaceContainerLow">#222F31</color>
+    <color name="tealturquoise_surfaceContainer">#233133</color>
+    <color name="tealturquoise_surfaceContainerHigh">#28383A</color>
+    <color name="tealturquoise_surfaceContainerHighest">#2F4244</color>
 </resources>

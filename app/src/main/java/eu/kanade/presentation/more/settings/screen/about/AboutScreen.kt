@@ -35,7 +35,9 @@ import eu.kanade.tachiyomi.ui.more.NewUpdateScreen
 import eu.kanade.tachiyomi.util.CrashLogUtil
 import eu.kanade.tachiyomi.util.lang.toDateTimestampString
 import eu.kanade.tachiyomi.util.system.copyToClipboard
+import eu.kanade.tachiyomi.util.system.isPreviewBuildType
 import eu.kanade.tachiyomi.util.system.toast
+import eu.kanade.tachiyomi.util.system.updaterEnabled
 import kotlinx.coroutines.launch
 import logcat.LogPriority
 import tachiyomi.core.common.util.lang.withIOContext
@@ -55,10 +57,9 @@ import tachiyomi.presentation.core.icons.Reddit
 import tachiyomi.presentation.core.icons.X
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 object AboutScreen : Screen() {
 
@@ -98,7 +99,7 @@ object AboutScreen : Screen() {
                     )
                 }
 
-                if (BuildConfig.INCLUDE_UPDATER) {
+                if (updaterEnabled) {
                     item {
                         TextPreferenceWidget(
                             title = stringResource(MR.strings.check_for_updates),
@@ -246,7 +247,7 @@ object AboutScreen : Screen() {
                     }
                 }
             }
-            BuildConfig.PREVIEW -> {
+            isPreviewBuildType -> {
                 "Beta r${BuildConfig.COMMIT_COUNT}".let {
                     if (withBuildDate) {
                         "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
@@ -269,11 +270,15 @@ object AboutScreen : Screen() {
 
     internal fun getFormattedBuildTime(): String {
         return try {
-            val df = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'", Locale.US)
-                .withZone(ZoneId.of("UTC"))
-            val buildTime = LocalDateTime.from(df.parse(BuildConfig.BUILD_TIME))
-
-            buildTime!!.toDateTimestampString(UiPreferences.dateFormat(Injekt.get<UiPreferences>().dateFormat().get()))
+            LocalDateTime.ofInstant(
+                Instant.parse(BuildConfig.BUILD_TIME),
+                ZoneId.systemDefault(),
+            )
+                .toDateTimestampString(
+                    UiPreferences.dateFormat(
+                        Injekt.get<UiPreferences>().dateFormat().get(),
+                    ),
+                )
         } catch (e: Exception) {
             BuildConfig.BUILD_TIME
         }

@@ -102,7 +102,7 @@ abstract class Installer(private val service: Service) {
         }
         val nextEntry = queue.first()
         if (waitingInstall.compareAndSet(null, nextEntry)) {
-            queue.removeFirst()
+            queue.removeAt(0)
             processEntry(nextEntry)
         }
     }

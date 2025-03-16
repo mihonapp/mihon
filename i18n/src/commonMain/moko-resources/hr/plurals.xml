@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="lock_after_mins">
+        <item quantity="one">Nakon %1$s minute</item>
+        <item quantity="few">Nakon %1$s minute</item>
+        <item quantity="other">Nakon %1$s minuta</item>
+    </plurals>
+    <plurals name="num_categories">
+        <item quantity="one">%d kategorija</item>
+        <item quantity="few">%d kategorije</item>
+        <item quantity="other">%d kategorija</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="one">Poglavlja %1$s i još jedno</item>
+        <item quantity="few">Poglavlja %1$s i još %2$d</item>
+        <item quantity="other">Poglavlja %1$s i još %2$d</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="one">Za %d stavku</item>
+        <item quantity="few">Za %d stavke</item>
+        <item quantity="other">Za %d stavku</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="one">%1$s preostalo</item>
+        <item quantity="few">%1$s preostala</item>
+        <item quantity="other">%1$s preostalih</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="one">Dostupna je %d nova verzija proširenja</item>
+        <item quantity="few">Dostupne su %d nove verzije proširenja</item>
+        <item quantity="other">Dostupno je %d novih verzija proširenja</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="one">%1$d novo poglavlje</item>
+        <item quantity="few">%1$d nova poglavlja</item>
+        <item quantity="other">%1$d novih poglavlja</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="one">Obavljeno u %1$s s %2$s greškom</item>
+        <item quantity="few">Obavljeno u %1$s s %2$s greške</item>
+        <item quantity="other">Obavljeno u %1$s s %2$s grešaka</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="one">%1$s poglavlje</item>
+        <item quantity="few">%1$s poglavlja</item>
+        <item quantity="other">%1$s poglavlja</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="one">%d usluga praćenja</item>
+        <item quantity="few">%d usluge praćenja</item>
+        <item quantity="other">%d usluga praćenja</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="one">Preskače se %d poglavlje. Ne postoji u izvoru ili je filtrirano</item>
+        <item quantity="few">Preskaču se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
+        <item quantity="other">Preskače se %d poglavlja. Ne postoje u izvoru ili su filtrirana</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="one">Jučer</item>
+        <item quantity="few">Prije %1$d dana</item>
+        <item quantity="other">Prije %1$d dana</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="one">Sljedeće nepročitano poglavlje</item>
+        <item quantity="few">Sljedeća %d nepročitana poglavlja</item>
+        <item quantity="other">Sljedećih %d nepročitanih poglavlja</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="one">Sljedeće poglavlje</item>
+        <item quantity="few">Sljedeća %d poglavlja</item>
+        <item quantity="other">Sljedećih %d poglavlja</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="one">Nedostaje %1$s poglavlje</item>
+        <item quantity="few">Nedostaju %1$s poglavlja</item>
+        <item quantity="other">Nedostaje %1$s poglavlja</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">%d dan</item>
+        <item quantity="few">%d dana</item>
+        <item quantity="other">%d dana</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="one">%d repozitorij</item>
+        <item quantity="few">%d repozitorija</item>
+        <item quantity="other">%d repozitorija</item>
+    </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Sutra</item>
+        <item quantity="few">Za %1$d dana</item>
+        <item quantity="other">Za %1$d dana</item>
+    </plurals>
+    <plurals name="pref_pages">
+        <item quantity="one">%1$s stranica</item>
+        <item quantity="few">%1$s stranice</item>
+        <item quantity="other">%1$s stranica</item>
+    </plurals>
+</resources>

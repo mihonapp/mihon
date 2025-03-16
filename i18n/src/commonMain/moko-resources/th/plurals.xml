@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="num_categories">
+        <item quantity="other">หมวดหมู่ %d</item>
+    </plurals>
+    <plurals name="lock_after_mins">
+        <item quantity="other">หลังจาก %1$s นาที</item>
+    </plurals>
+    <plurals name="missing_chapters_warning">
+        <item quantity="other">ข้ามตอนที่ %d อาจเป็นเพราะหายมาจากแหล่งที่มาหรือถูกกรองออก</item>
+    </plurals>
+    <plurals name="num_trackers">
+        <item quantity="other">%d ตัวติดตาม</item>
+    </plurals>
+    <plurals name="manga_num_chapters">
+        <item quantity="other">%1$s ตอน</item>
+    </plurals>
+    <plurals name="download_queue_summary">
+        <item quantity="other">เหลืออีก %1$s รายการ</item>
+    </plurals>
+    <plurals name="restore_completed_message">
+        <item quantity="other">ใช้เวลาไป %1$s โดยมีข้อผิดพลาด %2$s รายการ</item>
+    </plurals>
+    <plurals name="notification_chapters_multiple_and_more">
+        <item quantity="other">ตอนที่ %1$s และอีก %2$d ตอน</item>
+    </plurals>
+    <plurals name="notification_chapters_generic">
+        <item quantity="other">%1$d ตอนใหม่</item>
+    </plurals>
+    <plurals name="notification_new_chapters_summary">
+        <item quantity="other">มี %d รายการ</item>
+    </plurals>
+    <plurals name="update_check_notification_ext_updates">
+        <item quantity="other">มีการอัปเดตส่วนขยาย %d รายการพร้อมใช้งาน</item>
+    </plurals>
+    <plurals name="relative_time">
+        <item quantity="other">%1$d วันที่ผ่านมา</item>
+    </plurals>
+    <plurals name="next_unread_chapters">
+        <item quantity="other">%d ตอนที่ยังไม่ได้อ่านถัดไป</item>
+    </plurals>
+    <plurals name="download_amount">
+        <item quantity="other">%d ตอนถัดไป</item>
+    </plurals>
+    <plurals name="missing_chapters">
+        <item quantity="other">ไม่พบ %1$s ตอน</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="other">%d วัน</item>
+    </plurals>
+    <plurals name="num_repos">
+        <item quantity="other">%d รีโพ</item>
+    </plurals>
+</resources>

@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
+import mihon.core.archive.ZipWriter
 import nl.adaptivity.xmlutil.serialization.XML
 import okhttp3.Response
 import tachiyomi.core.common.i18n.stringResource
@@ -54,15 +55,12 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
+import tachiyomi.domain.track.interactor.GetTracks
 import tachiyomi.i18n.MR
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
-import java.io.BufferedOutputStream
 import java.io.File
 import java.util.Locale
-import java.util.zip.CRC32
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 /**
  * This class is the one in charge of downloading chapters.
@@ -78,6 +76,7 @@ class Downloader(
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
     private val xml: XML = Injekt.get(),
     private val getCategories: GetCategories = Injekt.get(),
+    private val getTracks: GetTracks = Injekt.get(),
 ) {
 
     /**
@@ -181,7 +180,7 @@ class Downloader(
     fun clearQueue() {
         cancelDownloaderJob()
 
-        _clearQueue()
+        internalClearQueue()
         notifier.dismissProgress()
     }
 
@@ -195,9 +194,12 @@ class Downloader(
             val activeDownloadsFlow = queueState.transformLatest { queue ->
                 while (true) {
                     val activeDownloads = queue.asSequence()
-                        .filter { it.status.value <= Download.State.DOWNLOADING.value } // Ignore completed downloads, leave them in the queue
+                        // Ignore completed downloads, leave them in the queue
+                        .filter { it.status.value <= Download.State.DOWNLOADING.value }
                         .groupBy { it.source }
-                        .toList().take(5) // Concurrently download from 5 different sources
+                        .toList()
+                        // Concurrently download from 5 different sources
+                        .take(5)
                         .map { (_, downloads) -> downloads.first() }
                     emit(activeDownloads)
 
@@ -322,6 +324,7 @@ class Downloader(
                 context.stringResource(MR.strings.download_insufficient_space),
                 download.chapter.name,
                 download.manga.ogTitle,
+                download.manga.id,
             )
             return
         }
@@ -405,7 +408,7 @@ class Downloader(
             // If the page list threw, it will resume here
             logcat(LogPriority.ERROR, error)
             download.status = Download.State.ERROR
-            notifier.onError(error.message, download.chapter.name, download.manga.ogTitle)
+            notifier.onError(error.message, download.chapter.name, download.manga.ogTitle, download.manga.id)
         }
     }
 
@@ -455,7 +458,7 @@ class Downloader(
             // Mark this page as error and allow to download the remaining
             page.progress = 0
             page.status = Page.State.ERROR
-            notifier.onError(e.message, download.chapter.name, download.manga.ogTitle)
+            notifier.onError(e.message, download.chapter.name, download.manga.ogTitle, download.manga.id)
         }
     }
 
@@ -524,14 +527,8 @@ class Downloader(
      * @param file the file where the image is already downloaded.
      */
     private fun getImageExtension(response: Response, file: UniFile): String {
-        // Read content type if available.
         val mime = response.body.contentType()?.run { if (type == "image") "image/$subtype" else null }
-            // Else guess from the uri.
-            ?: context.contentResolver.getType(file.uri)
-            // Else read magic numbers.
-            ?: ImageUtil.findImageType { file.openInputStream() }?.mime
-
-        return ImageUtil.getExtensionFromMimeType(mime)
+        return ImageUtil.getExtensionFromMimeType(mime) { file.openInputStream() }
     }
 
     private fun splitTallImageIfNeeded(page: Page, tmpDir: UniFile) {
@@ -592,25 +589,9 @@ class Downloader(
         tmpDir: UniFile,
     ) {
         val zip = mangaDir.createFile("$dirname.cbz$TMP_DIR_SUFFIX")!!
-        ZipOutputStream(BufferedOutputStream(zip.openOutputStream())).use { zipOut ->
-            zipOut.setMethod(ZipEntry.STORED)
-
-            tmpDir.listFiles()?.forEach { img ->
-                img.openInputStream().use { input ->
-                    val data = input.readBytes()
-                    val size = img.length()
-                    val entry = ZipEntry(img.name).apply {
-                        val crc = CRC32().apply {
-                            update(data)
-                        }
-                        setCrc(crc.value)
-
-                        compressedSize = size
-                        setSize(size)
-                    }
-                    zipOut.putNextEntry(entry)
-                    zipOut.write(data)
-                }
+        ZipWriter(context, zip).use { writer ->
+            tmpDir.listFiles()?.forEach { file ->
+                writer.write(file)
             }
         }
         zip.renameTo("$dirname.cbz")
@@ -626,11 +607,24 @@ class Downloader(
         chapter: Chapter,
         source: HttpSource,
     ) {
-        val chapterUrl = source.getChapterUrl(chapter.toSChapter())
         val categories = getCategories.await(manga.id).map { it.name.trim() }.takeUnless { it.isEmpty() }
-        val comicInfo = getComicInfo(manga, chapter, chapterUrl, categories)
+        val urls = getTracks.await(manga.id)
+            .mapNotNull { track ->
+                track.remoteUrl.takeUnless { url -> url.isBlank() }?.trim()
+            }
+            .plus(source.getChapterUrl(chapter.toSChapter()).trim())
+            .distinct()
+
+        val comicInfo = getComicInfo(
+            manga,
+            chapter,
+            urls,
+            categories,
+            source.name,
+        )
+
         // Remove the old file
-        dir.findFile(COMIC_INFO_FILE, true)?.delete()
+        dir.findFile(COMIC_INFO_FILE)?.delete()
         dir.createFile(COMIC_INFO_FILE)!!.openOutputStream().use {
             val comicInfoString = xml.encodeToString(ComicInfo.serializer(), comicInfo)
             it.write(comicInfoString.toByteArray())
@@ -686,7 +680,7 @@ class Downloader(
         removeFromQueueIf { it.manga.id == manga.id }
     }
 
-    private fun _clearQueue() {
+    private fun internalClearQueue() {
         _queueState.update {
             it.forEach { download ->
                 if (download.status == Download.State.DOWNLOADING || download.status == Download.State.QUEUE) {
@@ -708,7 +702,7 @@ class Downloader(
         }
 
         pause()
-        _clearQueue()
+        internalClearQueue()
         addAllToQueue(downloads)
 
         if (wasRunning) {

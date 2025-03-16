@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,8 +20,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import eu.kanade.presentation.components.TabbedDialog
 import eu.kanade.presentation.components.TabbedDialogPaddings
 import eu.kanade.tachiyomi.ui.library.LibrarySettingsScreenModel
-import eu.kanade.tachiyomi.util.system.isDevFlavor
-import eu.kanade.tachiyomi.util.system.isPreviewBuildType
+import eu.kanade.tachiyomi.util.system.isReleaseBuildType
 import kotlinx.collections.immutable.persistentListOf
 import tachiyomi.core.common.preference.TriState
 import tachiyomi.domain.category.model.Category
@@ -26,6 +29,7 @@ import tachiyomi.domain.library.model.LibrarySort
 import tachiyomi.domain.library.model.sort
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.i18n.MR
+import tachiyomi.presentation.core.components.BaseSortItem
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
 import tachiyomi.presentation.core.components.SettingsChipRow
@@ -113,10 +117,7 @@ private fun ColumnScope.FilterPage(
         onClick = { screenModel.toggleFilter(LibraryPreferences::filterCompleted) },
     )
     // TODO: re-enable when custom intervals are ready for stable
-    if (
-        (isDevFlavor || isPreviewBuildType) &&
-        LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions
-    ) {
+    if ((!isReleaseBuildType) && LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in autoUpdateMangaRestrictions) {
         val filterIntervalCustom by screenModel.libraryPreferences.filterIntervalCustom().collectAsState()
         TriStateItem(
             label = stringResource(MR.strings.action_filter_interval_custom),
@@ -125,7 +126,7 @@ private fun ColumnScope.FilterPage(
         )
     }
 
-    val trackers = remember { screenModel.trackers }
+    val trackers by screenModel.trackersFlow.collectAsState()
     when (trackers.size) {
         0 -> {
             // No trackers
@@ -158,26 +159,42 @@ private fun ColumnScope.SortPage(
     category: Category?,
     screenModel: LibrarySettingsScreenModel,
 ) {
+    val trackers by screenModel.trackersFlow.collectAsState()
     val sortingMode = category.sort.type
     val sortDescending = !category.sort.isAscending
 
-    val trackerSortOption =
-        if (screenModel.trackers.isEmpty()) {
-            emptyList()
+    val options = remember(trackers.isEmpty()) {
+        val trackerMeanPair = if (trackers.isNotEmpty()) {
+            MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean
         } else {
-            listOf(MR.strings.action_sort_tracker_score to LibrarySort.Type.TrackerMean)
+            null
         }
+        listOfNotNull(
+            MR.strings.action_sort_alpha to LibrarySort.Type.Alphabetical,
+            MR.strings.action_sort_total to LibrarySort.Type.TotalChapters,
+            MR.strings.action_sort_last_read to LibrarySort.Type.LastRead,
+            MR.strings.action_sort_last_manga_update to LibrarySort.Type.LastUpdate,
+            MR.strings.action_sort_unread_count to LibrarySort.Type.UnreadCount,
+            MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
+            MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
+            MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
+            trackerMeanPair,
+            MR.strings.action_sort_random to LibrarySort.Type.Random,
+        )
+    }
 
-    listOf(
-        MR.strings.action_sort_alpha to LibrarySort.Type.Alphabetical,
-        MR.strings.action_sort_total to LibrarySort.Type.TotalChapters,
-        MR.strings.action_sort_last_read to LibrarySort.Type.LastRead,
-        MR.strings.action_sort_last_manga_update to LibrarySort.Type.LastUpdate,
-        MR.strings.action_sort_unread_count to LibrarySort.Type.UnreadCount,
-        MR.strings.action_sort_latest_chapter to LibrarySort.Type.LatestChapter,
-        MR.strings.action_sort_chapter_fetch_date to LibrarySort.Type.ChapterFetchDate,
-        MR.strings.action_sort_date_added to LibrarySort.Type.DateAdded,
-    ).plus(trackerSortOption).map { (titleRes, mode) ->
+    options.map { (titleRes, mode) ->
+        if (mode == LibrarySort.Type.Random) {
+            BaseSortItem(
+                label = stringResource(titleRes),
+                icon = Icons.Default.Refresh
+                    .takeIf { sortingMode == LibrarySort.Type.Random },
+                onClick = {
+                    screenModel.setSort(category, mode, LibrarySort.Direction.Ascending)
+                },
+            )
+            return@map
+        }
         SortItem(
             label = stringResource(titleRes),
             sortDescending = sortDescending.takeIf { sortingMode == mode },
@@ -235,15 +252,16 @@ private fun ColumnScope.DisplayPage(
 
         val columns by columnPreference.collectAsState()
         SliderItem(
-            label = stringResource(MR.strings.pref_library_columns),
-            max = 10,
             value = columns,
+            valueRange = 0..10,
+            label = stringResource(MR.strings.pref_library_columns),
             valueText = if (columns > 0) {
-                stringResource(MR.strings.pref_library_columns_per_row, columns)
+                columns.toString()
             } else {
-                stringResource(MR.strings.label_default)
+                stringResource(MR.strings.label_auto)
             },
             onChange = columnPreference::set,
+            pillColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         )
     }
 

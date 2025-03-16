@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
     kotlin("android")
     kotlin("plugin.serialization")
 }
@@ -10,6 +10,12 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
     }
 }
 
@@ -25,14 +31,8 @@ dependencies {
 
     api(libs.sqldelight.android.paging)
 
+    compileOnly(libs.compose.stablemarker)
+
     testImplementation(libs.bundles.test)
     testImplementation(kotlinx.coroutines.test)
-}
-
-tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        )
-    }
 }

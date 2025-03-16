@@ -25,7 +25,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import eu.kanade.domain.source.model.icon
 import eu.kanade.presentation.util.rememberResourceBitmapPainter
 import eu.kanade.tachiyomi.R
@@ -127,7 +127,7 @@ private fun Extension.getIcon(density: Int = DisplayMetrics.DENSITY_DEFAULT): St
     return produceState<Result<ImageBitmap>>(initialValue = Result.Loading, this) {
         withIOContext {
             value = try {
-                val appInfo = ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo
+                val appInfo = ExtensionLoader.getExtensionPackageInfoFromPkgName(context, pkgName)!!.applicationInfo!!
                 val appResources = context.packageManager.getResourcesForApplication(appInfo)
                 Result.Success(
                     appResources.getDrawableForDensity(appInfo.icon, density, null)!!

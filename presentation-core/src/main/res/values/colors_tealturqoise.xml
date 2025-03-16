@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <color name="tealturquoise_primary">#008080</color>
     <color name="tealturquoise_onPrimary">#FFFFFF</color>
     <color name="tealturquoise_primaryContainer">#008080</color>
     <color name="tealturquoise_onPrimaryContainer">#FFFFFF</color>
+    <color name="tealturquoise_inversePrimary">#40E0D0</color>
     <color name="tealturquoise_secondary">#008080</color>
     <color name="tealturquoise_onSecondary">#FFFFFF</color>
-    <color name="tealturquoise_secondaryContainer">#BFDFDF</color>
+    <color name="tealturquoise_secondaryContainer">#CFE5E4</color>
     <color name="tealturquoise_onSecondaryContainer">#008080</color>
     <color name="tealturquoise_tertiary">#FF7F7F</color>
     <color name="tealturquoise_onTertiary">#000000</color>
@@ -17,11 +17,15 @@
     <color name="tealturquoise_onBackground">#050505</color>
     <color name="tealturquoise_surface">#FAFAFA</color>
     <color name="tealturquoise_onSurface">#050505</color>
-    <color name="tealturquoise_surfaceVariant">#DAE5E2</color>
+    <color name="tealturquoise_surfaceVariant">#EBF3F1</color>
     <color name="tealturquoise_onSurfaceVariant">#050505</color>
-    <color name="tealturquoise_outline">#6F7977</color>
-    <color name="tealturquoise_inverseOnSurface">#FAFAFA</color>
+    <color name="tealturquoise_surfaceTint">#BFDFDF</color>
     <color name="tealturquoise_inverseSurface">#050505</color>
-    <color name="tealturquoise_primaryInverse">#40E0D0</color>
-    <color name="tealturquoise_elevationOverlay">#BFDFDF</color>
+    <color name="tealturquoise_inverseOnSurface">#FAFAFA</color>
+    <color name="tealturquoise_outline">#6F7977</color>
+    <color name="tealturquoise_surfaceContainerLowest">#E1E9E7</color>
+    <color name="tealturquoise_surfaceContainerLow">#E6EEEC</color>
+    <color name="tealturquoise_surfaceContainer">#EBF3F1</color>
+    <color name="tealturquoise_surfaceContainerHigh">#F0F8F6</color>
+    <color name="tealturquoise_surfaceContainerHighest">#F7FFFD</color>
 </resources>

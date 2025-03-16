@@ -16,11 +16,16 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import eu.kanade.presentation.category.components.ChangeCategoryDialog
 import eu.kanade.presentation.history.HistoryScreen
 import eu.kanade.presentation.history.components.HistoryDeleteAllDialog
 import eu.kanade.presentation.history.components.HistoryDeleteDialog
+import eu.kanade.presentation.manga.DuplicateMangaDialog
 import eu.kanade.presentation.util.Tab
 import eu.kanade.tachiyomi.R
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialog
+import eu.kanade.tachiyomi.ui.browse.migration.search.MigrateDialogScreenModel
+import eu.kanade.tachiyomi.ui.category.CategoryScreen
 import eu.kanade.tachiyomi.ui.main.MainActivity
 import eu.kanade.tachiyomi.ui.manga.MangaScreen
 import eu.kanade.tachiyomi.ui.reader.ReaderActivity
@@ -32,7 +37,7 @@ import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
 
-object HistoryTab : Tab {
+data object HistoryTab : Tab {
 
     private val snackbarHostState = SnackbarHostState()
 
@@ -68,6 +73,7 @@ object HistoryTab : Tab {
             onClickCover = { navigator.push(MangaScreen(it)) },
             onClickResume = screenModel::getNextChapterForManga,
             onDialogChange = screenModel::setDialog,
+            onClickFavorite = screenModel::addFavorite,
         )
 
         val onDismissRequest = { screenModel.setDialog(null) }
@@ -88,6 +94,38 @@ object HistoryTab : Tab {
                 HistoryDeleteAllDialog(
                     onDismissRequest = onDismissRequest,
                     onDelete = screenModel::removeAllHistory,
+                )
+            }
+            is HistoryScreenModel.Dialog.DuplicateManga -> {
+                DuplicateMangaDialog(
+                    onDismissRequest = onDismissRequest,
+                    onConfirm = {
+                        screenModel.addFavorite(dialog.manga)
+                    },
+                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
+                    onMigrate = {
+                        screenModel.showMigrateDialog(dialog.manga, dialog.duplicate)
+                    },
+                )
+            }
+            is HistoryScreenModel.Dialog.ChangeCategory -> {
+                ChangeCategoryDialog(
+                    initialSelection = dialog.initialSelection,
+                    onDismissRequest = onDismissRequest,
+                    onEditCategories = { navigator.push(CategoryScreen()) },
+                    onConfirm = { include, _ ->
+                        screenModel.moveMangaToCategoriesAndAddToLibrary(dialog.manga, include)
+                    },
+                )
+            }
+            is HistoryScreenModel.Dialog.Migrate -> {
+                MigrateDialog(
+                    oldManga = dialog.oldManga,
+                    newManga = dialog.newManga,
+                    screenModel = MigrateDialogScreenModel(),
+                    onDismissRequest = onDismissRequest,
+                    onClickTitle = { navigator.push(MangaScreen(dialog.oldManga.id)) },
+                    onPopScreen = { navigator.replace(MangaScreen(dialog.newManga.id)) },
                 )
             }
             null -> {}

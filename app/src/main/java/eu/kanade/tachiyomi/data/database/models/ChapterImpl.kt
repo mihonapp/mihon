@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName")
+
 package eu.kanade.tachiyomi.data.database.models
 
 class ChapterImpl : Chapter {
@@ -27,6 +29,8 @@ class ChapterImpl : Chapter {
     override var source_order: Int = 0
 
     override var last_modified: Long = 0
+
+    override var version: Long = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

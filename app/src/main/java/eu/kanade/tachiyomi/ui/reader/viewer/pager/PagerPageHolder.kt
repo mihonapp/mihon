@@ -18,14 +18,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import logcat.LogPriority
+import okio.Buffer
+import okio.BufferedSource
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.lang.withUIContext
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
-import java.io.BufferedInputStream
-import java.io.ByteArrayInputStream
-import java.io.InputStream
 
 /**
  * View of the ViewPager that contains a page of a chapter.
@@ -46,7 +45,7 @@ class PagerPageHolder(
     /**
      * Loading progress bar to indicate the current progress.
      */
-    private val progressIndicator: ReaderProgressIndicator = ReaderProgressIndicator(readerThemedContext)
+    private var progressIndicator: ReaderProgressIndicator? = null // = ReaderProgressIndicator(readerThemedContext)
 
     /**
      * Error layout to show when the image fails to load.
@@ -61,7 +60,6 @@ class PagerPageHolder(
     private var loadJob: Job? = null
 
     init {
-        addView(progressIndicator)
         loadJob = scope.launch { loadPageAndProcessStatus() }
     }
 
@@ -73,6 +71,13 @@ class PagerPageHolder(
         super.onDetachedFromWindow()
         loadJob?.cancel()
         loadJob = null
+    }
+
+    private fun initProgressIndicator() {
+        if (progressIndicator == null) {
+            progressIndicator = ReaderProgressIndicator(context)
+            addView(progressIndicator)
+        }
     }
 
     /**
@@ -96,7 +101,7 @@ class PagerPageHolder(
                     Page.State.DOWNLOAD_IMAGE -> {
                         setDownloading()
                         page.progressFlow.collectLatest { value ->
-                            progressIndicator.setProgress(value)
+                            progressIndicator?.setProgress(value)
                         }
                     }
                     Page.State.READY -> setImage()
@@ -110,7 +115,8 @@ class PagerPageHolder(
      * Called when the page is queued.
      */
     private fun setQueued() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -118,7 +124,8 @@ class PagerPageHolder(
      * Called when the page is loading.
      */
     private fun setLoading() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -126,7 +133,8 @@ class PagerPageHolder(
      * Called when the page is downloading.
      */
     private fun setDownloading() {
-        progressIndicator.show()
+        initProgressIndicator()
+        progressIndicator?.show()
         removeErrorLayout()
     }
 
@@ -134,43 +142,35 @@ class PagerPageHolder(
      * Called when the page is ready.
      */
     private suspend fun setImage() {
-        progressIndicator.setProgress(0)
+        progressIndicator?.setProgress(0)
 
         val streamFn = page.stream ?: return
 
         try {
-            val (bais, isAnimated, background) = withIOContext {
-                streamFn().buffered(16).use { stream ->
-                    process(item, stream).use { itemStream ->
-                        val bais = ByteArrayInputStream(itemStream.readBytes())
-                        val isAnimated = ImageUtil.isAnimatedAndSupported(bais)
-                        bais.reset()
-                        val background = if (!isAnimated && viewer.config.automaticBackground) {
-                            ImageUtil.chooseBackground(context, bais)
-                        } else {
-                            null
-                        }
-                        bais.reset()
-                        Triple(bais, isAnimated, background)
-                    }
+            val (source, isAnimated, background) = withIOContext {
+                val source = streamFn().use { process(item, Buffer().readFrom(it)) }
+                val isAnimated = ImageUtil.isAnimatedAndSupported(source)
+                val background = if (!isAnimated && viewer.config.automaticBackground) {
+                    ImageUtil.chooseBackground(context, source.peek().inputStream())
+                } else {
+                    null
                 }
+                Triple(source, isAnimated, background)
             }
             withUIContext {
-                bais.use {
-                    setImage(
-                        it,
-                        isAnimated,
-                        Config(
-                            zoomDuration = viewer.config.doubleTapAnimDuration,
-                            minimumScaleType = viewer.config.imageScaleType,
-                            cropBorders = viewer.config.imageCropBorders,
-                            zoomStartPosition = viewer.config.imageZoomType,
-                            landscapeZoom = viewer.config.landscapeZoom,
-                        ),
-                    )
-                    if (!isAnimated) {
-                        pageBackground = background
-                    }
+                setImage(
+                    source,
+                    isAnimated,
+                    Config(
+                        zoomDuration = viewer.config.doubleTapAnimDuration,
+                        minimumScaleType = viewer.config.imageScaleType,
+                        cropBorders = viewer.config.imageCropBorders,
+                        zoomStartPosition = viewer.config.imageZoomType,
+                        landscapeZoom = viewer.config.landscapeZoom,
+                    ),
+                )
+                if (!isAnimated) {
+                    pageBackground = background
                 }
                 removeErrorLayout()
             }
@@ -182,40 +182,40 @@ class PagerPageHolder(
         }
     }
 
-    private fun process(page: ReaderPage, imageStream: BufferedInputStream): InputStream {
+    private fun process(page: ReaderPage, imageSource: BufferedSource): BufferedSource {
         if (viewer.config.dualPageRotateToFit) {
-            return rotateDualPage(imageStream)
+            return rotateDualPage(imageSource)
         }
 
         if (!viewer.config.dualPageSplit) {
-            return imageStream
+            return imageSource
         }
 
         if (page is InsertPage) {
-            return splitInHalf(imageStream)
+            return splitInHalf(imageSource)
         }
 
-        val isDoublePage = ImageUtil.isWideImage(imageStream)
+        val isDoublePage = ImageUtil.isWideImage(imageSource)
         if (!isDoublePage) {
-            return imageStream
+            return imageSource
         }
 
         onPageSplit(page)
 
-        return splitInHalf(imageStream)
+        return splitInHalf(imageSource)
     }
 
-    private fun rotateDualPage(imageStream: BufferedInputStream): InputStream {
-        val isDoublePage = ImageUtil.isWideImage(imageStream)
+    private fun rotateDualPage(imageSource: BufferedSource): BufferedSource {
+        val isDoublePage = ImageUtil.isWideImage(imageSource)
         return if (isDoublePage) {
             val rotation = if (viewer.config.dualPageRotateToFitInvert) -90f else 90f
-            ImageUtil.rotateImage(imageStream, rotation)
+            ImageUtil.rotateImage(imageSource, rotation)
         } else {
-            imageStream
+            imageSource
         }
     }
 
-    private fun splitInHalf(imageStream: InputStream): InputStream {
+    private fun splitInHalf(imageSource: BufferedSource): BufferedSource {
         var side = when {
             viewer is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.RIGHT
             viewer !is L2RPagerViewer && page is InsertPage -> ImageUtil.Side.LEFT
@@ -231,7 +231,7 @@ class PagerPageHolder(
             }
         }
 
-        return ImageUtil.splitInHalf(imageStream, side)
+        return ImageUtil.splitInHalf(imageSource, side)
     }
 
     private fun onPageSplit(page: ReaderPage) {
@@ -243,13 +243,13 @@ class PagerPageHolder(
      * Called when the page has an error.
      */
     private fun setError() {
-        progressIndicator.hide()
+        progressIndicator?.hide()
         showErrorLayout()
     }
 
     override fun onImageLoaded() {
         super.onImageLoaded()
-        progressIndicator.hide()
+        progressIndicator?.hide()
     }
 
     /**

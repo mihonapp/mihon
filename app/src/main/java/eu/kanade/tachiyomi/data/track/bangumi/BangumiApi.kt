@@ -3,28 +3,30 @@ package eu.kanade.tachiyomi.data.track.bangumi
 import android.net.Uri
 import androidx.core.net.toUri
 import eu.kanade.tachiyomi.data.database.models.Track
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMCollectionResponse
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMOAuth
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMSearchResult
+import eu.kanade.tachiyomi.data.track.bangumi.dto.BGMUser
 import eu.kanade.tachiyomi.data.track.model.TrackSearch
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.HttpException
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.parseAs
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.doubleOrNull
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.long
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.putJsonObject
 import okhttp3.CacheControl
 import okhttp3.FormBody
+import okhttp3.Headers.Companion.headersOf
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import tachiyomi.core.common.util.lang.withIOContext
 import uy.kohesive.injekt.injectLazy
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 class BangumiApi(
     private val trackId: Long,
@@ -38,11 +40,17 @@ class BangumiApi(
 
     suspend fun addLibManga(track: Track): Track {
         return withIOContext {
-            val body = FormBody.Builder()
-                .add("rating", track.score.toInt().toString())
-                .add("status", track.toBangumiStatus())
-                .build()
-            authClient.newCall(POST("$apiUrl/collection/${track.remote_id}/update", body = body))
+            val url = "$API_URL/v0/users/-/collections/${track.remote_id}"
+            val body = buildJsonObject {
+                put("type", track.toApiStatus())
+                put("rate", track.score.toInt().coerceIn(0, 10))
+                put("ep_status", track.last_chapter_read.toInt())
+                put("private", track.private)
+            }
+                .toString()
+                .toRequestBody()
+            // Returns with 202 Accepted on success with no body
+            authClient.newCall(POST(url, body = body, headers = headersOf("Content-Type", APP_JSON)))
                 .awaitSuccess()
             track
         }
@@ -50,162 +58,138 @@ class BangumiApi(
 
     suspend fun updateLibManga(track: Track): Track {
         return withIOContext {
-            // read status update
-            val sbody = FormBody.Builder()
-                .add("rating", track.score.toInt().toString())
-                .add("status", track.toBangumiStatus())
-                .build()
-            authClient.newCall(POST("$apiUrl/collection/${track.remote_id}/update", body = sbody))
-                .awaitSuccess()
+            val url = "$API_URL/v0/users/-/collections/${track.remote_id}"
+            val body = buildJsonObject {
+                put("type", track.toApiStatus())
+                put("rate", track.score.toInt().coerceIn(0, 10))
+                put("ep_status", track.last_chapter_read.toInt())
+                put("private", track.private)
+            }
+                .toString()
+                .toRequestBody()
 
-            // chapter update
-            val body = FormBody.Builder()
-                .add("watched_eps", track.last_chapter_read.toInt().toString())
+            val request = Request.Builder()
+                .url(url)
+                .patch(body)
+                .headers(headersOf("Content-Type", APP_JSON))
                 .build()
-            authClient.newCall(
-                POST(
-                    "$apiUrl/subject/${track.remote_id}/update/watched_eps",
-                    body = body,
-                ),
-            ).awaitSuccess()
+            // Returns with 204 No Content
+            authClient.newCall(request)
+                .awaitSuccess()
 
             track
         }
     }
 
     suspend fun search(search: String): List<TrackSearch> {
+        // This API is marked as experimental in the documentation
+        // but that has been the case since 2022 with few significant
+        // changes to the schema for this endpoint since
+        // "实验性 API， 本 schema 和实际的 API 行为都可能随时发生改动"
         return withIOContext {
-            val url = "$apiUrl/search/subject/${URLEncoder.encode(search, StandardCharsets.UTF_8.name())}"
-                .toUri()
-                .buildUpon()
-                .appendQueryParameter("max_results", "20")
-                .build()
-            authClient.newCall(GET(url.toString()))
-                .awaitSuccess()
-                .use {
-                    var responseBody = it.body.string()
-                    if (responseBody.isEmpty()) {
-                        throw Exception("Null Response")
+            val url = "$API_URL/v0/search/subjects?limit=20"
+            val body = buildJsonObject {
+                put("keyword", search)
+                put("sort", "match")
+                putJsonObject("filter") {
+                    putJsonArray("type") {
+                        add(1) // "Book" (书籍) type
                     }
-                    if (responseBody.contains("\"code\":404")) {
-                        responseBody = "{\"results\":0,\"list\":[]}"
-                    }
-                    val response = json.decodeFromString<JsonObject>(responseBody)["list"]?.jsonArray
-                    response?.filter { it.jsonObject["type"]?.jsonPrimitive?.int == 1 }
-                        ?.map { jsonToSearch(it.jsonObject) }.orEmpty()
                 }
-        }
-    }
-
-    private fun jsonToSearch(obj: JsonObject): TrackSearch {
-        val coverUrl = if (obj["images"] is JsonObject) {
-            obj["images"]?.jsonObject?.get("common")?.jsonPrimitive?.contentOrNull ?: ""
-        } else {
-            // Sometimes JsonNull
-            ""
-        }
-        val totalChapters = if (obj["eps_count"] != null) {
-            obj["eps_count"]!!.jsonPrimitive.long
-        } else {
-            0
-        }
-        val rating = obj["rating"]?.jsonObject?.get("score")?.jsonPrimitive?.doubleOrNull ?: -1.0
-        return TrackSearch.create(trackId).apply {
-            remote_id = obj["id"]!!.jsonPrimitive.long
-            title = obj["name_cn"]!!.jsonPrimitive.content
-            cover_url = coverUrl
-            summary = obj["name"]!!.jsonPrimitive.content
-            score = rating
-            tracking_url = obj["url"]!!.jsonPrimitive.content
-            total_chapters = totalChapters
-        }
-    }
-
-    suspend fun findLibManga(track: Track): Track? {
-        return withIOContext {
+            }
+                .toString()
+                .toRequestBody()
             with(json) {
-                authClient.newCall(GET("$apiUrl/subject/${track.remote_id}"))
+                authClient.newCall(POST(url, body = body, headers = headersOf("Content-Type", APP_JSON)))
                     .awaitSuccess()
-                    .parseAs<JsonObject>()
-                    .let { jsonToSearch(it) }
+                    .parseAs<BGMSearchResult>()
+                    .data
+                    .map { it.toTrackSearch(trackId) }
             }
         }
     }
 
-    suspend fun statusLibManga(track: Track): Track? {
+    suspend fun statusLibManga(track: Track, username: String): Track? {
         return withIOContext {
-            val urlUserRead = "$apiUrl/collection/${track.remote_id}"
-            val requestUserRead = Request.Builder()
-                .url(urlUserRead)
-                .cacheControl(CacheControl.FORCE_NETWORK)
-                .get()
-                .build()
-
-            // TODO: get user readed chapter here
-            val response = authClient.newCall(requestUserRead).awaitSuccess()
-            val responseBody = response.body.string()
-            if (responseBody.isEmpty()) {
-                throw Exception("Null Response")
-            }
-            if (responseBody.contains("\"code\":400")) {
-                null
-            } else {
-                json.decodeFromString<Collection>(responseBody).let {
-                    track.status = it.status?.id!!
-                    track.last_chapter_read = it.ep_status!!.toDouble()
-                    track.score = it.rating!!
-                    track
+            val url = "$API_URL/v0/users/$username/collections/${track.remote_id}"
+            with(json) {
+                try {
+                    authClient.newCall(GET(url, cache = CacheControl.FORCE_NETWORK))
+                        .awaitSuccess()
+                        .parseAs<BGMCollectionResponse>()
+                        .let {
+                            track.status = it.getStatus()
+                            track.last_chapter_read = it.epStatus?.toDouble() ?: 0.0
+                            track.score = it.rate?.toDouble() ?: 0.0
+                            track.total_chapters = it.subject?.eps?.toLong() ?: 0L
+                            track
+                        }
+                } catch (e: HttpException) {
+                    if (e.code == 404) { // "subject is not collected by user"
+                        null
+                    } else {
+                        throw e
+                    }
                 }
             }
         }
     }
 
-    suspend fun accessToken(code: String): OAuth {
+    suspend fun accessToken(code: String): BGMOAuth {
         return withIOContext {
+            val body = FormBody.Builder()
+                .add("grant_type", "authorization_code")
+                .add("client_id", CLIENT_ID)
+                .add("client_secret", CLIENT_SECRET)
+                .add("code", code)
+                .add("redirect_uri", REDIRECT_URL)
+                .build()
             with(json) {
-                client.newCall(accessTokenRequest(code))
+                client.newCall(POST(OAUTH_URL, body = body))
                     .awaitSuccess()
-                    .parseAs()
+                    .parseAs<BGMOAuth>()
             }
         }
     }
 
-    private fun accessTokenRequest(code: String) = POST(
-        oauthUrl,
-        body = FormBody.Builder()
-            .add("grant_type", "authorization_code")
-            .add("client_id", clientId)
-            .add("client_secret", clientSecret)
-            .add("code", code)
-            .add("redirect_uri", redirectUrl)
-            .build(),
-    )
+    suspend fun getUsername(): String {
+        return withIOContext {
+            with(json) {
+                authClient.newCall(GET("$API_URL/v0/me"))
+                    .awaitSuccess()
+                    .parseAs<BGMUser>()
+                    .username
+            }
+        }
+    }
 
     companion object {
-        private const val clientId = "bgm291665acbd06a4c28"
-        private const val clientSecret = "43e5ce36b207de16e5d3cfd3e79118db"
+        private const val CLIENT_ID = "bgm291665acbd06a4c28"
+        private const val CLIENT_SECRET = "43e5ce36b207de16e5d3cfd3e79118db"
 
-        private const val apiUrl = "https://api.bgm.tv"
-        private const val oauthUrl = "https://bgm.tv/oauth/access_token"
-        private const val loginUrl = "https://bgm.tv/oauth/authorize"
+        private const val API_URL = "https://api.bgm.tv"
+        private const val OAUTH_URL = "https://bgm.tv/oauth/access_token"
+        private const val LOGIN_URL = "https://bgm.tv/oauth/authorize"
 
-        private const val redirectUrl = "mihon://bangumi-auth"
+        private const val REDIRECT_URL = "mihon://bangumi-auth"
+
+        private const val APP_JSON = "application/json"
 
         fun authUrl(): Uri =
-            loginUrl.toUri().buildUpon()
-                .appendQueryParameter("client_id", clientId)
+            LOGIN_URL.toUri().buildUpon()
+                .appendQueryParameter("client_id", CLIENT_ID)
                 .appendQueryParameter("response_type", "code")
-                .appendQueryParameter("redirect_uri", redirectUrl)
+                .appendQueryParameter("redirect_uri", REDIRECT_URL)
                 .build()
 
         fun refreshTokenRequest(token: String) = POST(
-            oauthUrl,
+            OAUTH_URL,
             body = FormBody.Builder()
                 .add("grant_type", "refresh_token")
-                .add("client_id", clientId)
-                .add("client_secret", clientSecret)
+                .add("client_id", CLIENT_ID)
+                .add("client_secret", CLIENT_SECRET)
                 .add("refresh_token", token)
-                .add("redirect_uri", redirectUrl)
+                .add("redirect_uri", REDIRECT_URL)
                 .build(),
         )
     }

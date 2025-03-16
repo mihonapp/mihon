@@ -140,27 +140,6 @@ internal class AppUpdateNotifier(private val context: Context) {
     }
 
     /**
-     * Some people are still installing the app from F-Droid, so we avoid prompting GitHub-based
-     * updates.
-     *
-     * We can prompt them to migrate to the GitHub version though.
-     */
-    fun promptFdroidUpdate() {
-        with(notificationBuilder) {
-            setContentTitle(context.stringResource(MR.strings.update_check_notification_update_available))
-            setContentText(context.stringResource(MR.strings.update_check_fdroid_migration_info))
-            setSmallIcon(R.drawable.ic_mihon)
-            setContentIntent(
-                NotificationHandler.openUrl(
-                    context,
-                    "https://mihon.app/docs/faq/general#how-do-i-update-from-the-f-droid-builds",
-                ),
-            )
-        }
-        notificationBuilder.show(Notifications.ID_APP_UPDATE_PROMPT)
-    }
-
-    /**
      * Call when apk download throws a error
      *
      * @param url web location of apk to download.
@@ -181,9 +160,9 @@ internal class AppUpdateNotifier(private val context: Context) {
             addAction(
                 R.drawable.ic_close_24dp,
                 context.stringResource(MR.strings.action_cancel),
-                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATER),
+                NotificationReceiver.dismissNotificationPendingBroadcast(context, Notifications.ID_APP_UPDATE_ERROR),
             )
         }
-        notificationBuilder.show(Notifications.ID_APP_UPDATER)
+        notificationBuilder.show(Notifications.ID_APP_UPDATE_ERROR)
     }
 }

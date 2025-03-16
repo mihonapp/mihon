@@ -30,11 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.i18n.stringResource
-import tachiyomi.presentation.core.util.isScrolledToEnd
-import tachiyomi.presentation.core.util.isScrolledToStart
 
 private enum class State {
-    CHECKED, INVERSED, UNCHECKED
+    CHECKED,
+    INVERSED,
+    UNCHECKED,
 }
 
 @Composable
@@ -115,16 +115,8 @@ fun <T> TriStateListDialog(
                         }
                     }
 
-                    if (!listState.isScrolledToStart()) {
-                        HorizontalDivider(
-                            modifier = Modifier.align(Alignment.TopCenter),
-                        )
-                    }
-                    if (!listState.isScrolledToEnd()) {
-                        HorizontalDivider(
-                            modifier = Modifier.align(Alignment.BottomCenter),
-                        )
-                    }
+                    if (listState.canScrollBackward) HorizontalDivider(modifier = Modifier.align(Alignment.TopCenter))
+                    if (listState.canScrollForward) HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
                 }
             }
         },

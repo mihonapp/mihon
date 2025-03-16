@@ -13,12 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.NO_POSITION
  * This layout manager uses the same package name as the support library in order to use a package
  * protected method.
  */
-class WebtoonLayoutManager(context: Context) : LinearLayoutManager(context) {
-
-    /**
-     * Extra layout space is set to half the screen height.
-     */
-    private val extraLayoutSpace = context.resources.displayMetrics.heightPixels / 2
+class WebtoonLayoutManager(context: Context, private val extraLayoutSpace: Int) : LinearLayoutManager(context) {
 
     init {
         isItemPrefetchEnabled = false
@@ -27,6 +22,7 @@ class WebtoonLayoutManager(context: Context) : LinearLayoutManager(context) {
     /**
      * Returns the custom extra layout space.
      */
+    @Deprecated("Deprecated in Java")
     override fun getExtraLayoutSpace(state: RecyclerView.State): Int {
         return extraLayoutSpace
     }
@@ -36,20 +32,21 @@ class WebtoonLayoutManager(context: Context) : LinearLayoutManager(context) {
      */
     fun findLastEndVisibleItemPosition(): Int {
         ensureLayoutState()
-        @ViewBoundsCheck.ViewBounds val preferredBoundsFlag =
-            (ViewBoundsCheck.FLAG_CVE_LT_PVE or ViewBoundsCheck.FLAG_CVE_EQ_PVE)
-
-        val fromIndex = childCount - 1
-        val toIndex = -1
-
-        val child = if (mOrientation == HORIZONTAL) {
+        val callback = if (mOrientation == HORIZONTAL) {
             mHorizontalBoundCheck
-                .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
         } else {
             mVerticalBoundCheck
-                .findOneViewWithinBoundFlags(fromIndex, toIndex, preferredBoundsFlag, 0)
+        }.mCallback
+        val start = callback.parentStart
+        val end = callback.parentEnd
+        for (i in childCount - 1 downTo 0) {
+            val child = getChildAt(i)!!
+            val childStart = callback.getChildStart(child)
+            val childEnd = callback.getChildEnd(child)
+            if (childEnd <= end || childStart < start) {
+                return getPosition(child)
+            }
         }
-
-        return if (child == null) NO_POSITION else getPosition(child)
+        return NO_POSITION
     }
 }

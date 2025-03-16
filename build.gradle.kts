@@ -1,59 +1,16 @@
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.BasePlugin
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
 buildscript {
     dependencies {
         classpath(libs.android.shortcut.gradle)
-        classpath(libs.google.services.gradle)
-        classpath(libs.aboutLibraries.gradle)
-        classpath(libs.sqldelight.gradle)
-        classpath(libs.moko.gradle)
     }
 }
 
 plugins {
     alias(kotlinx.plugins.serialization) apply false
-}
-
-subprojects {
-    tasks.withType<KotlinJvmCompile> {
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_17.toString()
-        }
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-        }
-    }
-
-    plugins.withType<BasePlugin> {
-        plugins.apply("detekt")
-        configure<BaseExtension> {
-            compileSdkVersion(AndroidConfig.compileSdk)
-            defaultConfig {
-                minSdk = AndroidConfig.minSdk
-                targetSdk = AndroidConfig.targetSdk
-                ndk {
-                    version = AndroidConfig.ndk
-                }
-            }
-
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
-                isCoreLibraryDesugaringEnabled = true
-            }
-
-            dependencies {
-                add("coreLibraryDesugaring", libs.desugar)
-            }
-        }
-    }
+    alias(libs.plugins.aboutLibraries) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.moko) apply false
+    alias(libs.plugins.sqldelight) apply false
 }
 
 tasks.register<Delete>("clean") {

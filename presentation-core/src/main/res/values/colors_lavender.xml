@@ -10,27 +10,39 @@
   ~ Neutral #EDE2FF
 -->
 <resources>
-    <color name="lavender_primary">#7B46AF</color>
-    <color name="lavender_onPrimary">#EDE2FF</color>
+    <color name="lavender_primary">#6D41C8</color>
+    <color name="lavender_onPrimary">#FFFFFF</color>
     <color name="lavender_primaryContainer">#7B46AF</color>
-    <color name="lavender_onPrimaryContainer">#EDE2FF</color>
+    <color name="lavender_onPrimaryContainer">#130038</color>
     <color name="lavender_secondary">#7B46AF</color>
     <color name="lavender_onSecondary">#EDE2FF</color>
-    <color name="lavender_secondaryContainer">#7B46AF</color>
-    <color name="lavender_onSecondaryContainer">#EDE2FF</color>
+    <color name="lavender_secondaryContainer">#C9B0E6</color>
+    <color name="lavender_onSecondaryContainer">#7B46AF</color>
     <color name="lavender_tertiary">#EDE2FF</color>
     <color name="lavender_onTertiary">#7B46AF</color>
-    <color name="lavender_tertiaryContainer">#EDE2FF</color>
-    <color name="lavender_onTertiaryContainer">#7B46AF</color>
+    <color name="lavender_tertiaryContainer">#6D3BF0</color>
+    <color name="lavender_onTertiaryContainer">#FFFFFF</color>
+    <color name="lavender_error">#BA1A1A</color>
+    <color name="lavender_onError">#FFFFFF</color>
+    <color name="lavender_errorContainer">#FFDAD6</color>
+    <color name="lavender_onErrorContainer">#410002</color>
     <color name="lavender_background">#EDE2FF</color>
-    <color name="lavender_onBackground">#1B1B22</color>
+    <color name="lavender_onBackground">#1D1A22</color>
     <color name="lavender_surface">#EDE2FF</color>
-    <color name="lavender_onSurface">#1B1B22</color>
-    <color name="lavender_surfaceVariant">#B9B0CC</color>
-    <color name="lavender_onSurfaceVariant">#D849454E</color>
-    <color name="lavender_outline">#7B46AF</color>
-    <color name="lavender_inverseOnSurface">#F3EFF4</color>
-    <color name="lavender_inverseSurface">#313033</color>
-    <color name="lavender_primaryInverse">#D6BAFF</color>
-    <color name="lavender_elevationOverlay">@color/lavender_primary</color>
+    <color name="lavender_onSurface">#1D1A22</color>
+    <color name="lavender_surfaceVariant">#E4D5F8</color>
+    <color name="lavender_onSurfaceVariant">#4A4453</color>
+    <color name="lavender_outline">#7B7485</color>
+    <color name="lavender_outlineVariant">#CBC3D6</color>
+    <color name="lavender_scrim">#000000</color>
+    <color name="lavender_inverseSurface">#322F38</color>
+    <color name="lavender_inverseOnSurface">#F5EEFA</color>
+    <color name="lavender_inversePrimary">#A177FF</color>
+    <color name="lavender_surfaceDim">#DED7E3</color>
+    <color name="lavender_surfaceBright">#EDE2FF</color>
+    <color name="lavender_surfaceContainerLowest">#DACCEC</color>
+    <color name="lavender_surfaceContainerLow">#DED0F1</color>
+    <color name="lavender_surfaceContainer">#E4D5F8</color>
+    <color name="lavender_surfaceContainerHigh">#EADCFD</color>
+    <color name="lavender_surfaceContainerHighest">#EEE2FF</color>
 </resources>

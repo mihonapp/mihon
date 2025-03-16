@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
+    id("mihon.library")
     kotlin("multiplatform")
-    id("com.android.library")
 }
 
 kotlin {
@@ -12,11 +14,11 @@ kotlin {
                 api(projects.i18n)
 
                 implementation(libs.unifile)
-                implementation(libs.bundles.archive)
             }
         }
         val androidMain by getting {
             dependencies {
+                implementation(projects.core.archive)
                 implementation(projects.core.common)
                 implementation(projects.coreMetadata)
 
@@ -27,6 +29,14 @@ kotlin {
             }
         }
     }
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
+        )
+    }
 }
 
 android {
@@ -35,14 +45,5 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-    }
-}
-
-tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
-            "-Xexpect-actual-classes",
-            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
-        )
     }
 }

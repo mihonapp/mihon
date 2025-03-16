@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.kanade.presentation.manga.components.MangaCover
@@ -42,19 +43,26 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BadgeGroup
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
+import tachiyomi.domain.manga.model.MangaCover as MangaCoverModel
 
 object CommonMangaItemDefaults {
     val GridHorizontalSpacer = 4.dp
     val GridVerticalSpacer = 4.dp
 
+    @Suppress("ConstPropertyName")
     const val BrowseFavoriteCoverAlpha = 0.34f
 }
 
-private val ContinueReadingButtonSize = 28.dp
+private val ContinueReadingButtonSizeSmall = 28.dp
+private val ContinueReadingButtonSizeLarge = 32.dp
+
+private val ContinueReadingButtonIconSizeSmall = 16.dp
+private val ContinueReadingButtonIconSizeLarge = 20.dp
+
 private val ContinueReadingButtonGridPadding = 6.dp
 private val ContinueReadingButtonListSpacing = 8.dp
 
-private const val GridSelectedCoverAlpha = 0.76f
+private const val GRID_SELECTED_COVER_ALPHA = 0.76f
 
 /**
  * Layout of grid list item with title overlaying the cover.
@@ -62,7 +70,7 @@ private const val GridSelectedCoverAlpha = 0.76f
  */
 @Composable
 fun MangaCompactGridItem(
-    coverData: tachiyomi.domain.manga.model.MangaCover,
+    coverData: MangaCoverModel,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     isSelected: Boolean = false,
@@ -82,7 +90,7 @@ fun MangaCompactGridItem(
                 MangaCover.Book(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(if (isSelected) GridSelectedCoverAlpha else coverAlpha),
+                        .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                     data = coverData,
                 )
             },
@@ -96,10 +104,12 @@ fun MangaCompactGridItem(
                     )
                 } else if (onClickContinueReading != null) {
                     ContinueReadingButton(
+                        size = ContinueReadingButtonSizeLarge,
+                        iconSize = ContinueReadingButtonIconSizeLarge,
+                        onClick = onClickContinueReading,
                         modifier = Modifier
                             .padding(ContinueReadingButtonGridPadding)
                             .align(Alignment.BottomEnd),
-                        onClickContinueReading = onClickContinueReading,
                     )
                 }
             },
@@ -148,11 +158,13 @@ private fun BoxScope.CoverTextOverlay(
         )
         if (onClickContinueReading != null) {
             ContinueReadingButton(
+                size = ContinueReadingButtonSizeSmall,
+                iconSize = ContinueReadingButtonIconSizeSmall,
+                onClick = onClickContinueReading,
                 modifier = Modifier.padding(
                     end = ContinueReadingButtonGridPadding,
                     bottom = ContinueReadingButtonGridPadding,
                 ),
-                onClickContinueReading = onClickContinueReading,
             )
         }
     }
@@ -163,7 +175,7 @@ private fun BoxScope.CoverTextOverlay(
  */
 @Composable
 fun MangaComfortableGridItem(
-    coverData: tachiyomi.domain.manga.model.MangaCover,
+    coverData: MangaCoverModel,
     title: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -185,7 +197,7 @@ fun MangaComfortableGridItem(
                     MangaCover.Book(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .alpha(if (isSelected) GridSelectedCoverAlpha else coverAlpha),
+                            .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                         data = coverData,
                     )
                 },
@@ -194,10 +206,12 @@ fun MangaComfortableGridItem(
                 content = {
                     if (onClickContinueReading != null) {
                         ContinueReadingButton(
+                            size = ContinueReadingButtonSizeLarge,
+                            iconSize = ContinueReadingButtonIconSizeLarge,
+                            onClick = onClickContinueReading,
                             modifier = Modifier
                                 .padding(ContinueReadingButtonGridPadding)
                                 .align(Alignment.BottomEnd),
-                            onClickContinueReading = onClickContinueReading,
                         )
                     }
                 },
@@ -309,14 +323,14 @@ private fun GridItemSelectable(
 private fun Modifier.selectedOutline(
     isSelected: Boolean,
     color: Color,
-) = this then drawBehind { if (isSelected) drawRect(color = color) }
+) = drawBehind { if (isSelected) drawRect(color = color) }
 
 /**
  * Layout of list item.
  */
 @Composable
 fun MangaListItem(
-    coverData: tachiyomi.domain.manga.model.MangaCover,
+    coverData: MangaCoverModel,
     title: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -354,8 +368,10 @@ fun MangaListItem(
         BadgeGroup(content = badge)
         if (onClickContinueReading != null) {
             ContinueReadingButton(
+                size = ContinueReadingButtonSizeSmall,
+                iconSize = ContinueReadingButtonIconSizeSmall,
+                onClick = onClickContinueReading,
                 modifier = Modifier.padding(start = ContinueReadingButtonListSpacing),
-                onClickContinueReading = onClickContinueReading,
             )
         }
     }
@@ -363,23 +379,25 @@ fun MangaListItem(
 
 @Composable
 private fun ContinueReadingButton(
+    size: Dp,
+    iconSize: Dp,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClickContinueReading: () -> Unit,
 ) {
     Box(modifier = modifier) {
         FilledIconButton(
-            onClick = onClickContinueReading,
-            modifier = Modifier.size(ContinueReadingButtonSize),
+            onClick = onClick,
             shape = MaterialTheme.shapes.small,
             colors = IconButtonDefaults.filledIconButtonColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
                 contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
             ),
+            modifier = Modifier.size(size),
         ) {
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = stringResource(MR.strings.action_resume),
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(iconSize),
             )
         }
     }

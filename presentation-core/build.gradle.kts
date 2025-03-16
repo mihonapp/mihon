@@ -1,5 +1,6 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
+    id("mihon.library.compose")
     kotlin("android")
 }
 
@@ -10,13 +11,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
+}
 
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = compose.versions.compiler.get()
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+        )
     }
 }
 
@@ -25,11 +32,9 @@ dependencies {
     api(projects.i18n)
 
     // Compose
-    implementation(platform(compose.bom))
     implementation(compose.activity)
     implementation(compose.foundation)
     implementation(compose.material3.core)
-    implementation(compose.material.core)
     implementation(compose.material.icons)
     implementation(compose.animation)
     implementation(compose.animation.graphics)
@@ -37,23 +42,7 @@ dependencies {
     implementation(compose.ui.tooling.preview)
     implementation(compose.ui.util)
 
+    implementation(androidx.paging.runtime)
+    implementation(androidx.paging.compose)
     implementation(kotlinx.immutables)
-}
-
-tasks {
-    // See https://kotlinlang.org/docs/reference/experimental.html#experimental-status-of-experimental-api(-markers)
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.freeCompilerArgs += listOf(
-            "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
-            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
-            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-            "-opt-in=androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview",
-        )
-    }
 }

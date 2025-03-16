@@ -63,7 +63,7 @@ class RestoreBackupScreen(
             LazyColumnWithAction(
                 contentPadding = contentPadding,
                 actionLabel = stringResource(MR.strings.action_restore),
-                actionEnabled = state.canRestore && state.options.anyEnabled(),
+                actionEnabled = state.canRestore && state.options.canRestore(),
                 onClickAction = {
                     model.startRestore()
                     navigator.pop()

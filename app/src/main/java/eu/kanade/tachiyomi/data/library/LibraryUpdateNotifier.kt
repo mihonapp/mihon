@@ -9,9 +9,11 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
+import coil3.asDrawable
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.transformations
+import coil3.transform.CircleCropTransformation
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
@@ -294,7 +296,7 @@ class LibraryUpdateNotifier(
             .transformations(CircleCropTransformation())
             .size(NOTIF_ICON_SIZE)
             .build()
-        val drawable = context.imageLoader.execute(request).drawable
+        val drawable = context.imageLoader.execute(request).image?.asDrawable(context.resources)
         return drawable?.getBitmapOrNull()
     }
 

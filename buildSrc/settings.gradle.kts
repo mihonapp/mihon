@@ -3,11 +3,16 @@ dependencyResolutionManagement {
         create("libs") {
             from(files("../gradle/libs.versions.toml"))
         }
-        create("androidxLibs") {
+        create("androidx") {
             from(files("../gradle/androidx.versions.toml"))
         }
-        create("kotlinLibs") {
+        create("compose") {
+            from(files("../gradle/compose.versions.toml"))
+        }
+        create("kotlinx") {
             from(files("../gradle/kotlinx.versions.toml"))
         }
     }
 }
+
+rootProject.name = "mihon-buildSrc"

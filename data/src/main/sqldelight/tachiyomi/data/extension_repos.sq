@@ -1,0 +1,57 @@
+CREATE TABLE extension_repos (
+    base_url TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    short_name TEXT,
+    website TEXT NOT NULL,
+    signing_key_fingerprint TEXT UNIQUE NOT NULL
+);
+
+findOne:
+SELECT *
+FROM extension_repos
+WHERE base_url = :base_url;
+
+findOneBySigningKeyFingerprint:
+SELECT *
+FROM extension_repos
+WHERE signing_key_fingerprint = :fingerprint;
+
+findAll:
+SELECT *
+FROM extension_repos;
+
+count:
+SELECT COUNT(*)
+FROM extension_repos;
+
+insert:
+INSERT INTO extension_repos(base_url, name, short_name, website, signing_key_fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint);
+
+upsert:
+INSERT INTO extension_repos(base_url, name, short_name, website, signing_key_fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint)
+ON CONFLICT(base_url)
+DO UPDATE
+SET
+    name = :name,
+    short_name = :short_name,
+    website =: website,
+    signing_key_fingerprint = :fingerprint
+WHERE base_url = base_url;
+
+replace:
+INSERT INTO extension_repos(base_url, name, short_name, website, signing_key_fingerprint)
+VALUES (:base_url, :name, :short_name, :website, :fingerprint)
+ON CONFLICT(signing_key_fingerprint)
+DO UPDATE
+SET
+    base_url = :base_url,
+    name = :name,
+    short_name = :short_name,
+    website =: website
+WHERE signing_key_fingerprint = signing_key_fingerprint;
+
+delete:
+DELETE FROM extension_repos
+WHERE base_url = :base_url;

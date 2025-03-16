@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -37,7 +40,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -141,32 +143,33 @@ private fun <T> WheelPicker(
 
         var showManualInput by remember { mutableStateOf(false) }
         if (showManualInput) {
-            var value by remember {
+            val value = rememberSaveable(saver = TextFieldState.Saver) {
                 val currentString = items[internalIndex].toString()
-                mutableStateOf(TextFieldValue(text = currentString, selection = TextRange(currentString.length)))
+                TextFieldState(initialText = currentString, initialSelection = TextRange(currentString.length))
             }
 
             val scope = rememberCoroutineScope()
+            val processManualInput: () -> Unit = {
+                scope.launch {
+                    items
+                        .indexOfFirst { it.toString() == value.text }
+                        .takeIf { it >= 0 }
+                        ?.apply {
+                            internalOnSelectionChanged(this)
+                            lazyListState.scrollToItem(this)
+                        }
+                    showManualInput = false
+                }
+            }
+
             BasicTextField(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .showSoftKeyboard(true)
-                    .clearFocusOnSoftKeyboardHide {
-                        scope.launch {
-                            items
-                                .indexOfFirst { it.toString() == value.text }
-                                .takeIf { it >= 0 }
-                                ?.apply {
-                                    internalOnSelectionChanged(this)
-                                    lazyListState.scrollToItem(this)
-                                }
-
-                            showManualInput = false
-                        }
-                    },
-                value = value,
-                onValueChange = { value = it },
-                singleLine = true,
+                    .clearFocusOnSoftKeyboardHide(processManualInput),
+                onKeyboardAction = { processManualInput() },
+                state = value,
+                lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = manualInputType!!,
                     imeAction = ImeAction.Done,
@@ -189,13 +192,13 @@ private fun <T> WheelPicker(
                         }
                     },
                 state = lazyListState,
-                contentPadding = PaddingValues(vertical = size.height / RowCount * ((RowCount - 1) / 2)),
+                contentPadding = PaddingValues(vertical = size.height / ROW_COUNT * ((ROW_COUNT - 1) / 2)),
                 flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState),
             ) {
                 itemsIndexed(items) { index, item ->
                     Box(
                         modifier = Modifier
-                            .height(size.height / RowCount)
+                            .height(size.height / ROW_COUNT)
                             .width(size.width)
                             .alpha(
                                 calculateAnimatedAlpha(
@@ -233,7 +236,7 @@ private fun calculateAnimatedAlpha(
 ): Float {
     val distanceToIndexSnap = lazyListState.distanceToSnapForIndex(index).absoluteValue
     val viewPortHeight = lazyListState.layoutInfo.viewportSize.height.toFloat()
-    val singleViewPortHeight = viewPortHeight / RowCount
+    val singleViewPortHeight = viewPortHeight / ROW_COUNT
     return if (distanceToIndexSnap in 0..singleViewPortHeight.toInt()) {
         1.2f - (distanceToIndexSnap / singleViewPortHeight)
     } else {
@@ -252,7 +255,7 @@ object WheelPickerDefaults {
     fun Background(size: DpSize) {
         androidx.compose.material3.Surface(
             modifier = Modifier
-                .size(size.width, size.height / RowCount),
+                .size(size.width, size.height / ROW_COUNT),
             shape = RoundedCornerShape(MaterialTheme.padding.medium),
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
@@ -270,4 +273,4 @@ object WheelPickerDefaults {
     }
 }
 
-private const val RowCount = 3
+private const val ROW_COUNT = 3

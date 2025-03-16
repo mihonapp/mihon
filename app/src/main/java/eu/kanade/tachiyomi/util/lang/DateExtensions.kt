@@ -39,6 +39,10 @@ fun Long.toLocalDate(): LocalDate {
     return LocalDate.ofInstant(Instant.ofEpochMilli(this), ZoneId.systemDefault())
 }
 
+fun Instant.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()): LocalDate {
+    return LocalDate.ofInstant(this, zoneId)
+}
+
 fun LocalDate.toRelativeString(
     context: Context,
     relative: Boolean = true,
@@ -56,14 +60,12 @@ fun LocalDate.toRelativeString(
             difference.toInt().absoluteValue,
             difference.toInt().absoluteValue,
         )
-
         difference < 1 -> context.stringResource(MR.strings.relative_time_today)
         difference < 7 -> context.pluralStringResource(
             MR.plurals.relative_time,
             difference.toInt(),
             difference.toInt(),
         )
-
         else -> dateFormat.format(this)
     }
 }

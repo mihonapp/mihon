@@ -1,11 +1,13 @@
 package tachiyomi.domain.manga.model
 
+import androidx.compose.runtime.Immutable
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import tachiyomi.core.common.preference.TriState
 import java.io.Serializable
 import java.time.Instant
 
+@Immutable
 data class Manga(
     val id: Long,
     val source: Long,
@@ -33,6 +35,7 @@ data class Manga(
     val customAuthor: String?,
     val customDescription: String?,
     val customTitle: String?,
+    val version: Long,
 ) : Serializable {
     val title: String
         get() = customTitle ?: ogTitle
@@ -141,6 +144,7 @@ data class Manga(
             initialized = false,
             lastModifiedAt = 0L,
             favoriteModifiedAt = null,
+            version = 0L,
         )
     }
 }

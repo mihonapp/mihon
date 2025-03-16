@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
     kotlin("android")
     kotlin("plugin.serialization")
 }

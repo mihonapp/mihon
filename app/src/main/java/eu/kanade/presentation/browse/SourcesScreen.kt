@@ -28,7 +28,7 @@ import tachiyomi.domain.source.model.Pin
 import tachiyomi.domain.source.model.Source
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.ScrollbarLazyColumn
-import tachiyomi.presentation.core.components.material.SecondaryItemAlpha
+import tachiyomi.presentation.core.components.material.SECONDARY_ALPHA
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.components.material.topSmallPaddingValues
 import tachiyomi.presentation.core.i18n.stringResource
@@ -74,12 +74,12 @@ fun SourcesScreen(
                     when (model) {
                         is SourceUiModel.Header -> {
                             SourceHeader(
-                                modifier = Modifier.animateItemPlacement(),
+                                modifier = Modifier.animateItem(),
                                 language = model.language,
                             )
                         }
                         is SourceUiModel.Item -> SourceItem(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                             source = model.source,
                             onClickItem = onClickItem,
                             onLongClickItem = onLongClickItem,
@@ -148,7 +148,7 @@ private fun SourcePinButton(
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onBackground.copy(
-            alpha = SecondaryItemAlpha,
+            alpha = SECONDARY_ALPHA,
         )
     }
     val description = if (isPinned) MR.strings.action_unpin else MR.strings.action_pin

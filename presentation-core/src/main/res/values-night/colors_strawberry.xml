@@ -11,26 +11,39 @@
   ~ Neutral #655C5C
 -->
 <resources>
-    <color name="strawberry_primary">#FFB2B9</color>
-    <color name="strawberry_onPrimary">#67001B</color>
-    <color name="strawberry_primaryContainer">#91002A</color>
-    <color name="strawberry_onPrimaryContainer">#FFDADD</color>
-    <color name="strawberry_secondary">#FFB2B9</color>
-    <color name="strawberry_onSecondary">#67001B</color>
+    <color name="strawberry_primary">#FFB2B8</color>
+    <color name="strawberry_onPrimary">#67001D</color>
+    <color name="strawberry_primaryContainer">#D53855</color>
+    <color name="strawberry_onPrimaryContainer">#FFFFFF</color>
+    <color name="strawberry_secondary">#ED4A65</color>
+    <color name="strawberry_onSecondary">#201A1A</color>
     <color name="strawberry_secondaryContainer">#91002A</color>
-    <color name="strawberry_onSecondaryContainer">#FFDADD</color>
+    <color name="strawberry_onSecondaryContainer">#FFFFFF</color>
     <color name="strawberry_tertiary">#E8C08E</color>
-    <color name="strawberry_onTertiary">#432C06</color>
-    <color name="strawberry_tertiaryContainer">#5D421B</color>
-    <color name="strawberry_onTertiaryContainer">#FFDDB1</color>
+    <color name="strawberry_onTertiary">#201A1A</color>
+    <color name="strawberry_tertiaryContainer">#775930</color>
+    <color name="strawberry_onTertiaryContainer">#FFF7F1</color>
+    <color name="strawberry_error">#FFB4AB</color>
+    <color name="strawberry_onError">#690005</color>
+    <color name="strawberry_errorContainer">#93000A</color>
+    <color name="strawberry_onErrorContainer">#FFDAD6</color>
     <color name="strawberry_background">#201A1A</color>
-    <color name="strawberry_onBackground">#ECDFDF</color>
+    <color name="strawberry_onBackground">#F7DCDD</color>
     <color name="strawberry_surface">#201A1A</color>
-    <color name="strawberry_onSurface">#ECDFDF</color>
-    <color name="strawberry_surfaceVariant">#534344</color>
-    <color name="strawberry_onSurfaceVariant">#D7C1C2</color>
-    <color name="strawberry_outline">#A08C8D</color>
-    <color name="strawberry_inverseOnSurface">#201A1A</color>
-    <color name="strawberry_inverseSurface">#ECDFDF</color>
-    <color name="strawberry_primaryInverse">#B61E40</color>
+    <color name="strawberry_onSurface">#F7DCDD</color>
+    <color name="strawberry_surfaceVariant">#322727</color>
+    <color name="strawberry_onSurfaceVariant">#E1BEC0</color>
+    <color name="strawberry_outline">#A9898B</color>
+    <color name="strawberry_outlineVariant">#594042</color>
+    <color name="strawberry_scrim">#000000</color>
+    <color name="strawberry_inverseSurface">#F7DCDD</color>
+    <color name="strawberry_inverseOnSurface">#3D2C2D</color>
+    <color name="strawberry_inversePrimary">#B61F40</color>
+    <color name="strawberry_surfaceDim">#1D1011</color>
+    <color name="strawberry_surfaceBright">#463536</color>
+    <color name="strawberry_surfaceContainerLowest">#2C2222</color>
+    <color name="strawberry_surfaceContainerLow">#302525</color>
+    <color name="strawberry_surfaceContainer">#322727</color>
+    <color name="strawberry_surfaceContainerHigh">#3C2F2F</color>
+    <color name="strawberry_surfaceContainerHighest">#463737</color>
 </resources>

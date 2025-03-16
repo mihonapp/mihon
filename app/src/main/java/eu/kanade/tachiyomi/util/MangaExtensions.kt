@@ -5,7 +5,6 @@ import eu.kanade.domain.manga.model.hasCustomCover
 import eu.kanade.domain.manga.model.toSManga
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.source.model.SManga
-import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.source.local.image.LocalCoverManager
 import tachiyomi.source.local.isLocal
@@ -48,31 +47,6 @@ fun Manga.removeCovers(coverCache: CoverCache = Injekt.get()): Manga {
     } else {
         this
     }
-}
-
-fun Manga.shouldDownloadNewChapters(dbCategories: List<Long>, preferences: DownloadPreferences): Boolean {
-    if (!favorite) return false
-
-    val categories = dbCategories.ifEmpty { listOf(0L) }
-
-    // Boolean to determine if user wants to automatically download new chapters.
-    val downloadNewChapters = preferences.downloadNewChapters().get()
-    if (!downloadNewChapters) return false
-
-    val includedCategories = preferences.downloadNewChapterCategories().get().map { it.toLong() }
-    val excludedCategories = preferences.downloadNewChapterCategoriesExclude().get().map { it.toLong() }
-
-    // Default: Download from all categories
-    if (includedCategories.isEmpty() && excludedCategories.isEmpty()) return true
-
-    // In excluded category
-    if (categories.any { it in excludedCategories }) return false
-
-    // Included category not selected
-    if (includedCategories.isEmpty()) return true
-
-    // In included category
-    return categories.any { it in includedCategories }
 }
 
 suspend fun Manga.editCover(

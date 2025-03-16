@@ -62,10 +62,27 @@ object DeviceUtil {
         }
     }
 
+    /**
+     * A list of package names that may be incorrectly resolved as usable browsers by
+     * the system.
+     *
+     * If these are resolved for [android.content.Intent.ACTION_VIEW], it prevents the
+     * system from opening a proper browser or any usable app .
+     *
+     * Some of them may only be present on certain manufacturer's devices.
+     */
     val invalidDefaultBrowsers = listOf(
         "android",
+        // Honor
+        "com.hihonor.android.internal.app",
+        // Huawei
         "com.huawei.android.internal.app",
+        // Lenovo
         "com.zui.resolver",
+        // Infinix
+        "com.transsion.resolver",
+        // Xiaomi Redmi
+        "com.android.intentresolver",
     )
 
     /**

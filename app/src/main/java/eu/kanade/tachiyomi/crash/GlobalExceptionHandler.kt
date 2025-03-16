@@ -11,7 +11,6 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import logcat.LogPriority
 import tachiyomi.core.common.util.system.logcat
-import kotlin.system.exitProcess
 
 class GlobalExceptionHandler private constructor(
     private val applicationContext: Context,
@@ -31,13 +30,9 @@ class GlobalExceptionHandler private constructor(
     }
 
     override fun uncaughtException(thread: Thread, exception: Throwable) {
-        try {
-            logcat(priority = LogPriority.ERROR, throwable = exception)
-            launchActivity(applicationContext, activityToBeLaunched, exception)
-            exitProcess(0)
-        } catch (_: Exception) {
-            defaultHandler.uncaughtException(thread, exception)
-        }
+        logcat(priority = LogPriority.ERROR, throwable = exception)
+        launchActivity(applicationContext, activityToBeLaunched, exception)
+        defaultHandler.uncaughtException(thread, exception)
     }
 
     private fun launchActivity(

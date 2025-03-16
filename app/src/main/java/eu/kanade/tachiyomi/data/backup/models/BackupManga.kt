@@ -32,13 +32,14 @@ data class BackupManga(
     // Bump by 100 for values that are not saved/implemented in 1.x but are used in 0.x
     @ProtoNumber(100) var favorite: Boolean = true,
     @ProtoNumber(101) var chapterFlags: Int = 0,
-    @ProtoNumber(102) var brokenHistory: List<BrokenBackupHistory> = emptyList(),
+    // @ProtoNumber(102) var brokenHistory, legacy history model with non-compliant proto number
     @ProtoNumber(103) var viewer_flags: Int? = null,
     @ProtoNumber(104) var history: List<BackupHistory> = emptyList(),
     @ProtoNumber(105) var updateStrategy: UpdateStrategy = UpdateStrategy.ALWAYS_UPDATE,
     @ProtoNumber(106) var lastModifiedAt: Long = 0,
     @ProtoNumber(107) var favoriteModifiedAt: Long? = null,
     @ProtoNumber(108) var excludedScanlators: List<String> = emptyList(),
+    @ProtoNumber(109) var version: Long = 0,
     // Numbers to keep compatibility with fork edited manga fields
     // https://github.com/jobobby04/TachiyomiSY/blob/7e151ddb83d5d7e0ea553eca686a8c4aa3a1fa8c/app/src/main/java/eu/kanade/tachiyomi/data/backup/models/BackupManga.kt#L49
     @ProtoNumber(800) var customTitle: String? = null,
@@ -68,6 +69,7 @@ data class BackupManga(
             customArtist = this@BackupManga.customArtist,
             customAuthor = this@BackupManga.customAuthor,
             customDescription = this@BackupManga.customDescription,
+            version = this@BackupManga.version,
         )
     }
 }

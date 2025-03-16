@@ -1,5 +1,6 @@
 plugins {
-    id("com.android.library")
+    id("mihon.library")
+    id("mihon.library.compose")
     kotlin("android")
 }
 
@@ -10,14 +11,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = compose.versions.compiler.get()
-    }
 }
 
 dependencies {
@@ -27,11 +20,12 @@ dependencies {
     api(projects.i18n)
 
     implementation(compose.glance)
+    implementation(libs.material)
 
     implementation(kotlinx.immutables)
 
     implementation(platform(libs.coil.bom))
     implementation(libs.coil.core)
 
-    api(libs.injekt.core)
+    api(libs.injekt)
 }

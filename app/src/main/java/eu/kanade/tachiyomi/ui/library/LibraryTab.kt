@@ -61,7 +61,7 @@ import tachiyomi.presentation.core.screens.EmptyScreenAction
 import tachiyomi.presentation.core.screens.LoadingScreen
 import tachiyomi.source.local.isLocal
 
-object LibraryTab : Tab {
+data object LibraryTab : Tab {
 
     override val options: TabOptions
         @Composable

@@ -2,6 +2,8 @@ package eu.kanade.tachiyomi.data.library
 
 import android.content.Context
 import android.content.pm.ServiceInfo
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -24,7 +26,6 @@ import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.data.notification.Notifications
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
-import eu.kanade.tachiyomi.util.shouldDownloadNewChapters
 import eu.kanade.tachiyomi.util.storage.getUriCompat
 import eu.kanade.tachiyomi.util.system.createFileInCacheDir
 import eu.kanade.tachiyomi.util.system.isConnectedToWifi
@@ -39,15 +40,14 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import logcat.LogPriority
+import mihon.domain.chapter.interactor.FilterChaptersForDownload
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.preference.getAndSet
 import tachiyomi.core.common.util.lang.withIOContext
 import tachiyomi.core.common.util.system.logcat
-import tachiyomi.domain.category.interactor.GetCategories
 import tachiyomi.domain.category.model.Category
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.chapter.model.NoChaptersException
-import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.library.service.LibraryPreferences
 import tachiyomi.domain.library.service.LibraryPreferences.Companion.DEVICE_CHARGING
@@ -78,16 +78,15 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
     CoroutineWorker(context, workerParams) {
 
     private val sourceManager: SourceManager = Injekt.get()
-    private val downloadPreferences: DownloadPreferences = Injekt.get()
     private val libraryPreferences: LibraryPreferences = Injekt.get()
     private val downloadManager: DownloadManager = Injekt.get()
     private val coverCache: CoverCache = Injekt.get()
     private val getLibraryManga: GetLibraryManga = Injekt.get()
     private val getManga: GetManga = Injekt.get()
     private val updateManga: UpdateManga = Injekt.get()
-    private val getCategories: GetCategories = Injekt.get()
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get()
     private val fetchInterval: FetchInterval = Injekt.get()
+    private val filterChaptersForDownload: FilterChaptersForDownload = Injekt.get()
 
     private val notifier = LibraryUpdateNotifier(context)
 
@@ -95,10 +94,12 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
 
     override suspend fun doWork(): Result {
         if (tags.contains(WORK_NAME_AUTO)) {
-            val preferences = Injekt.get<LibraryPreferences>()
-            val restrictions = preferences.autoUpdateDeviceRestrictions().get()
-            if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
-                return Result.retry()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                val preferences = Injekt.get<LibraryPreferences>()
+                val restrictions = preferences.autoUpdateDeviceRestrictions().get()
+                if ((DEVICE_ONLY_ON_WIFI in restrictions) && !context.isConnectedToWifi()) {
+                    return Result.retry()
+                }
             }
 
             // Find a running manual worker. If exists, try again later
@@ -270,9 +271,10 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             .sortedByDescending { it.sourceOrder }
 
                                         if (newChapters.isNotEmpty()) {
-                                            val categoryIds = getCategories.await(manga.id).map { it.id }
-                                            if (manga.shouldDownloadNewChapters(categoryIds, downloadPreferences)) {
-                                                downloadChapters(manga, newChapters)
+                                            val chaptersToDownload = filterChaptersForDownload.await(manga, newChapters)
+
+                                            if (chaptersToDownload.isNotEmpty()) {
+                                                downloadChapters(manga, chaptersToDownload)
                                                 hasDownloads.set(true)
                                             }
 
@@ -434,13 +436,24 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             val interval = prefInterval ?: preferences.autoUpdateInterval().get()
             if (interval > 0) {
                 val restrictions = preferences.autoUpdateDeviceRestrictions().get()
-                val constraints = Constraints(
-                    requiredNetworkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
-                        NetworkType.UNMETERED
-                    } else { NetworkType.CONNECTED },
-                    requiresCharging = DEVICE_CHARGING in restrictions,
-                    requiresBatteryNotLow = true,
-                )
+                val networkType = if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                    NetworkType.UNMETERED
+                } else {
+                    NetworkType.CONNECTED
+                }
+                val networkRequestBuilder = NetworkRequest.Builder()
+                if (DEVICE_ONLY_ON_WIFI in restrictions) {
+                    networkRequestBuilder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                }
+                if (DEVICE_NETWORK_NOT_METERED in restrictions) {
+                    networkRequestBuilder.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                }
+                val constraints = Constraints.Builder()
+                    // 'networkRequest' only applies to Android 9+, otherwise 'networkType' is used
+                    .setRequiredNetworkRequest(networkRequestBuilder.build(), networkType)
+                    .setRequiresCharging(DEVICE_CHARGING in restrictions)
+                    .setRequiresBatteryNotLow(true)
+                    .build()
 
                 val request = PeriodicWorkRequestBuilder<LibraryUpdateJob>(
                     interval.toLong(),
