@@ -159,7 +159,7 @@ private fun DuplicateMangaListItem(
             .fillMaxWidth()
             .clip(shape)
             .background(MaterialTheme.colorScheme.surface)
-            .padding(12.dp)
+            .padding(MaterialTheme.padding.mediumSmall)
             .combinedClickable(
                 onLongClick = { onOpenManga() },
                 onClick = {
