@@ -33,7 +33,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -191,7 +190,7 @@ private fun DuplicateMangaListItem(
                         )
                         Text(
                             text = manga.author!!,
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -209,13 +208,14 @@ private fun DuplicateMangaListItem(
                         )
                         Text(
                             text = manga.artist!!,
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
 
                 Row(
                     modifier = Modifier.secondaryItemAlpha(),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -230,26 +230,24 @@ private fun DuplicateMangaListItem(
                         },
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(end = 4.dp)
                             .size(16.dp),
                     )
-                    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-                        Text(
-                            text = when (manga.status) {
-                                SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
-                                SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
-                                SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
-                                SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
-                                    MR.strings.publishing_finished,
-                                )
-                                SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
-                                SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
-                                else -> stringResource(MR.strings.unknown)
-                            },
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                        )
-                    }
+                    Text(
+                        text = when (manga.status) {
+                            SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
+                            SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
+                            SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
+                            SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
+                                MR.strings.publishing_finished,
+                            )
+                            SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
+                            SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
+                            else -> stringResource(MR.strings.unknown)
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
                 }
             }
         }
