@@ -93,7 +93,7 @@ fun DuplicateMangaDialog(
 
             Spacer(Modifier.height(PaddingSize))
 
-            LazyRow (
+            LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
                 items(
@@ -240,7 +240,9 @@ private fun DuplicateMangaListItem(
                                     SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
                                     SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
                                     SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
-                                    SManga.PUBLISHING_FINISHED.toLong() -> stringResource(MR.strings.publishing_finished)
+                                    SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
+                                        MR.strings.publishing_finished,
+                                    )
                                     SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
                                     SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
                                     else -> stringResource(MR.strings.unknown)
