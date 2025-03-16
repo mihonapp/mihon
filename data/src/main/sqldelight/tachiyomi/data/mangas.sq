@@ -29,7 +29,7 @@ CREATE TABLE mangas(
     custom_artist TEXT,
     custom_author TEXT,
     custom_description TEXT,
-    custom_title TEXT
+    custom_title TEXT,
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0
 );
@@ -86,8 +86,8 @@ getReadMangaNotInLibrary:
 SELECT *
 FROM mangas
 WHERE favorite = 0 AND _id IN (
-    SELECT DISTINCT chapters.manga_id 
-    FROM chapters 
+    SELECT DISTINCT chapters.manga_id
+    FROM chapters
     WHERE read = 1 OR last_page_read != 0
 );
 

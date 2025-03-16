@@ -183,7 +183,7 @@ class MangaRepositoryImpl(
                 author = update.author,
                 description = update.description,
                 title = update.title,
-                mangaId = update.id
+                mangaId = update.id,
             )
         }
         return true
