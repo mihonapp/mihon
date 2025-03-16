@@ -251,10 +251,9 @@ data class BrowseSourceScreen(
                 DuplicateMangaDialog(
                     onDismissRequest = onDismissRequest,
                     onConfirm = { screenModel.addFavorite(dialog.manga) },
-                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-                    onMigrate = {
-                        screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, dialog.duplicate))
-                    },
+                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onMigrate = { screenModel.setDialog(BrowseSourceScreenModel.Dialog.Migrate(dialog.manga, it)) },
+                    duplicateManga = dialog.duplicates,
                 )
             }
 

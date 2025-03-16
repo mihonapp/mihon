@@ -289,8 +289,8 @@ class BrowseSourceScreenModel(
             .orEmpty()
     }
 
-    suspend fun getDuplicateLibraryManga(manga: Manga): Manga? {
-        return getDuplicateLibraryManga.await(manga).getOrNull(0)
+    suspend fun getDuplicateLibraryManga(manga: Manga): List<Manga>? {
+        return getDuplicateLibraryManga.await(manga) .takeIf { it.isNotEmpty() }
     }
 
     private fun moveMangaToCategories(manga: Manga, vararg categories: Category) {
@@ -340,7 +340,7 @@ class BrowseSourceScreenModel(
     sealed interface Dialog {
         data object Filter : Dialog
         data class RemoveManga(val manga: Manga) : Dialog
-        data class AddDuplicateManga(val manga: Manga, val duplicate: Manga) : Dialog
+        data class AddDuplicateManga(val manga: Manga, val duplicates: List<Manga>) : Dialog
         data class ChangeMangaCategory(
             val manga: Manga,
             val initialSelection: ImmutableList<CheckboxState.State<Category>>,
