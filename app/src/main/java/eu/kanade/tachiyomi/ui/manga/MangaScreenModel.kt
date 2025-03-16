@@ -411,7 +411,7 @@ class MangaScreenModel(
                     artist = newArtist,
                     author = newAuthor,
                     description = newDescription,
-                )
+                ),
             )
         }
 
@@ -422,7 +422,7 @@ class MangaScreenModel(
                     customAuthor = newAuthor,
                     customArtist = newArtist,
                     customDescription = newDescription,
-                )
+                ),
             )
         }
     }

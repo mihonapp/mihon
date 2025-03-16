@@ -169,7 +169,7 @@ fun EditInfoDialog(
                 customAuthor = manga.customAuthor ?: manga.author,
                 customArtist = manga.customArtist ?: manga.artist,
                 customDescription = manga.customDescription ?: manga.description,
-            )
+            ),
         )
     }
 

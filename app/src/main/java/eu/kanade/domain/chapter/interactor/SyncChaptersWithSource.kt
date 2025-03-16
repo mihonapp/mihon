@@ -97,7 +97,7 @@ class SyncChaptersWithSource(
             val chapterNumber = ChapterRecognition.parseChapterNumber(
                 manga.ogTitle,
                 chapter.name,
-                chapter.chapterNumber
+                chapter.chapterNumber,
             )
 
             chapter = chapter.copy(chapterNumber = chapterNumber)
