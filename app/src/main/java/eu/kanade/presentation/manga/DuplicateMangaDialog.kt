@@ -91,7 +91,7 @@ fun DuplicateMangaDialog(
                 style = MaterialTheme.typography.bodyMedium,
             )
 
-            Spacer(Modifier.height(PaddingSize))
+            Spacer(Modifier.height(MaterialTheme.padding.medium))
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
@@ -109,7 +109,7 @@ fun DuplicateMangaDialog(
                 }
             }
 
-            Spacer(Modifier.height(PaddingSize))
+            Spacer(Modifier.height(MaterialTheme.padding.medium))
 
             HorizontalDivider()
 
@@ -168,97 +168,93 @@ private fun DuplicateMangaListItem(
                 },
             ),
     ) {
-        Column {
-            Row {
-                MangaCover.Book(
-                    data = ImageRequest.Builder(LocalContext.current)
-                        .data(manga)
-                        .crossfade(true)
-                        .build(),
-                    modifier = Modifier.height(96.dp),
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    if (!manga.author.isNullOrBlank()) {
-                        Row(
-                            modifier = Modifier.secondaryItemAlpha(),
-                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.PersonOutline,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Text(
-                                text = manga.author!!,
-                                style = MaterialTheme.typography.titleSmall,
-                            )
-                        }
-                    }
-
-                    if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
-                        Row(
-                            modifier = Modifier.secondaryItemAlpha(),
-                            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Brush,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Text(
-                                text = manga.artist!!,
-                                style = MaterialTheme.typography.titleSmall,
-                            )
-                        }
-                    }
-
+        Row {
+            MangaCover.Book(
+                data = ImageRequest.Builder(LocalContext.current)
+                    .data(manga)
+                    .crossfade(true)
+                    .build(),
+                modifier = Modifier.height(96.dp),
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                if (!manga.author.isNullOrBlank()) {
                     Row(
                         modifier = Modifier.secondaryItemAlpha(),
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            imageVector = when (manga.status) {
-                                SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
-                                SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
-                                SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
-                                SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
-                                SManga.CANCELLED.toLong() -> Icons.Outlined.Close
-                                SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
-                                else -> Icons.Outlined.Block
-                            },
+                            imageVector = Icons.Filled.PersonOutline,
                             contentDescription = null,
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(16.dp),
+                            modifier = Modifier.size(16.dp),
                         )
-                        ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-                            Text(
-                                text = when (manga.status) {
-                                    SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
-                                    SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
-                                    SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
-                                    SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
-                                        MR.strings.publishing_finished,
-                                    )
-                                    SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
-                                    SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
-                                    else -> stringResource(MR.strings.unknown)
-                                },
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
-                            )
-                        }
+                        Text(
+                            text = manga.author!!,
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                }
+
+                if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
+                    Row(
+                        modifier = Modifier.secondaryItemAlpha(),
+                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Brush,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                        )
+                        Text(
+                            text = manga.artist!!,
+                            style = MaterialTheme.typography.titleSmall,
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.secondaryItemAlpha(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = when (manga.status) {
+                            SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
+                            SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
+                            SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
+                            SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
+                            SManga.CANCELLED.toLong() -> Icons.Outlined.Close
+                            SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
+                            else -> Icons.Outlined.Block
+                        },
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                            .size(16.dp),
+                    )
+                    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                        Text(
+                            text = when (manga.status) {
+                                SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
+                                SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
+                                SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
+                                SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
+                                    MR.strings.publishing_finished,
+                                )
+                                SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
+                                SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
+                                else -> stringResource(MR.strings.unknown)
+                            },
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
                     }
                 }
             }
         }
     }
 }
-
-private val PaddingSize = 16.dp
 
 private val ButtonPadding = PaddingValues(top = 16.dp, bottom = 16.dp)
 private val TitlePadding = PaddingValues(bottom = 16.dp, top = 8.dp)
