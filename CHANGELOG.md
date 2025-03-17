@@ -24,6 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add option to mark duplicate read chapters as read
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 - Add `id:` prefix search to library to search by internal DB ID ([@MajorTanya](https://github.com/MajorTanya)) ([#1856](https://github.com/mihonapp/mihon/pull/1856))
+- Allow for Export and Import of Custom Covers ([@Animeboynz](https://github.com/Animeboynz)) ([#1797](https://github.com/mihonapp/mihon/pull/1797))
 
 ### Changed
 - Sliders UI
