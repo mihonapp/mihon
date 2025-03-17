@@ -183,14 +183,14 @@ private fun DuplicateMangaListItem(
                     .build(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.padding.extraSmall)
+                    .padding(bottom = MaterialTheme.padding.extraSmall),
             )
 
             if (!manga.author.isNullOrBlank()) {
                 MangaDetailRow(
                     text = manga.author!!,
                     iconImageVector = Icons.Filled.PersonOutline,
-                    maxLines = 2
+                    maxLines = 2,
                 )
             }
 
@@ -198,7 +198,7 @@ private fun DuplicateMangaListItem(
                 MangaDetailRow(
                     text = manga.artist!!,
                     iconImageVector = Icons.Filled.Brush,
-                    maxLines = 2
+                    maxLines = 2,
                 )
             }
 
@@ -222,14 +222,14 @@ private fun DuplicateMangaListItem(
                     SManga.CANCELLED.toLong() -> Icons.Outlined.Close
                     SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
                     else -> Icons.Outlined.Block
-                }
+                },
             )
 
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top=MaterialTheme.padding.small),
-                horizontalArrangement = Arrangement.Center
+                    .padding(top = MaterialTheme.padding.small),
+                horizontalArrangement = Arrangement.Center,
             ) {
                 if (source is StubSource) {
                     Icon(
