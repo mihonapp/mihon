@@ -2,6 +2,7 @@ package eu.kanade.tachiyomi.data.export
 
 import android.content.Context
 import android.net.Uri
+import com.hippo.unifile.UniFile
 import eu.kanade.tachiyomi.data.backup.models.BackupCover
 import eu.kanade.tachiyomi.data.backup.models.BackupCovers
 import eu.kanade.tachiyomi.data.cache.CoverCache
@@ -10,13 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
+import mihon.core.archive.ZipWriter
 import tachiyomi.domain.manga.interactor.GetFavorites
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.io.File
-import java.io.FileInputStream
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 object CustomCoverExporter {
 
@@ -29,15 +28,17 @@ object CustomCoverExporter {
             try {
                 val customCovers = Injekt.get<CoverCache>().getAllCustomCovers()
                 val mangas = Injekt.get<GetFavorites>().await()
+                val outputFile = UniFile.fromUri(context, uri)
 
-                context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                    ZipOutputStream(outputStream).use { zipOutputStream ->
+                if (outputFile != null) {
+                    ZipWriter(context, outputFile).use { zipWriter ->
+
                         val mangaUrlMappings = mangas.mapNotNull { manga ->
                             val expectedFileName = DiskUtil.hashKeyForDisk(manga.id.toString())
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {
-                                BackupCover(manga.id, manga.source, manga.url)
+                                BackupCover(manga.id, manga.url, manga.source)
                             } else {
                                 null
                             }
@@ -47,28 +48,20 @@ object CustomCoverExporter {
                         val protoFile = File(context.cacheDir, "manga_urls.proto")
                         protoFile.writeBytes(protoByteArray)
 
-                        val protoZipEntry = ZipEntry("manga_urls.proto")
-                        zipOutputStream.putNextEntry(protoZipEntry)
-                        protoFile.inputStream().use { protoInput ->
-                            protoInput.copyTo(zipOutputStream)
-                        }
-                        zipOutputStream.closeEntry()
+                        val protoUniFile = UniFile.fromFile(protoFile)!!
+                        zipWriter.write(protoUniFile)
+                        protoFile.delete()
 
                         mangas.forEach { manga ->
                             val expectedFileName = DiskUtil.hashKeyForDisk(manga.id.toString())
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {
-                                FileInputStream(file).use { input ->
-                                    val zipEntry = ZipEntry("${manga.id}.jpg")
-                                    zipOutputStream.putNextEntry(zipEntry)
-                                    input.copyTo(zipOutputStream)
-                                    zipOutputStream.closeEntry()
-                                }
+                                val coverUniFile = UniFile.fromFile(file)!!
+                                coverUniFile.renameTo("${manga.id}.jpg")
+                                zipWriter.write(coverUniFile)
                             }
                         }
-
-                        protoFile.delete()
                     }
                 }
 

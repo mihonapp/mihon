@@ -352,7 +352,7 @@ object SettingsDataScreen : SearchableSettings {
             favorites = getFavorites.await()
         }
 
-        val saveCsvFileLauncher = rememberLauncherForActivityResult(
+        val saveLibraryExportLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("text/csv"),
         ) { uri ->
             uri?.let {
@@ -377,13 +377,13 @@ object SettingsDataScreen : SearchableSettings {
                 options = exportOptions,
                 onConfirm = { options ->
                     exportOptions = options
-                    saveCsvFileLauncher.launch("mihon_library.csv")
+                    saveLibraryExportLauncher.launch("mihon_library.csv")
                 },
                 onDismissRequest = { showDialog = false },
             )
         }
 
-        val saveCoverFileLauncher = rememberLauncherForActivityResult(
+        val saveCoverExportLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("application/gzip"),
         ) { uri ->
             uri?.let {
@@ -410,7 +410,7 @@ object SettingsDataScreen : SearchableSettings {
                 ),
                 Preference.PreferenceItem.TextPreference(
                     title = stringResource(MR.strings.custom_cover),
-                    onClick = { saveCoverFileLauncher.launch("custom_covers.gz") },
+                    onClick = { saveCoverExportLauncher.launch("mihon_custom_covers.gz") },
                 ),
             ),
         )
@@ -431,7 +431,7 @@ object SettingsDataScreen : SearchableSettings {
                         uri = it,
                         onRestoreComplete = {
                             scope.launch(Dispatchers.Main) {
-                                context.toast("Covers Imported")
+                                context.toast(MR.strings.covers_exported)
                             }
                         },
                     )
