@@ -102,7 +102,7 @@ fun DuplicateMangaDialog(
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                modifier = Modifier.sizeIn(maxHeight = 360.dp),
+                modifier = Modifier.height(370.dp),
             ) {
                 items(
                     items = duplicateManga,
@@ -239,7 +239,7 @@ private fun DuplicateMangaListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = MaterialTheme.padding.small),
+                .padding(top = MaterialTheme.padding.extraSmall),
             horizontalArrangement = Arrangement.Center,
         ) {
             if (source is StubSource) {
