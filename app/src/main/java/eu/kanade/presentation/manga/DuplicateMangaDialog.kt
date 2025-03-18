@@ -99,6 +99,7 @@ fun DuplicateMangaDialog(
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                modifier = Modifier.sizeIn(maxHeight = 340.dp),
             ) {
                 items(
                     items = duplicateManga,
@@ -222,6 +223,8 @@ private fun DuplicateMangaListItem(
                 else -> Icons.Outlined.Block
             },
         )
+
+        Spacer(Modifier.weight(1f))
 
         Row(
             modifier = Modifier
