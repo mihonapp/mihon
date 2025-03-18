@@ -21,7 +21,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Add private tracking support for Kitsu ([@MajorTanya](https://github.com/MajorTanya)) ([#1774](https://github.com/mihonapp/mihon/pull/1774))
 - Add option to export minimal library information to a CSV file ([@Animeboynz](https://github.com/Animeboynz), [@AntsyLich](https://github.com/AntsyLich)) ([#1161](https://github.com/mihonapp/mihon/pull/1161))
 - Add back support for drag-and-drop category reordering ([@cuong-tran](https://github.com/cuong-tran)) ([#1427](https://github.com/mihonapp/mihon/pull/1427))
-- Add option to mark duplicate read chapters as read
+- Add option to mark duplicate read chapters as read after library update or while reading ([@AntsyLich](https://github.com/AntsyLich)) ([#1785](https://github.com/mihonapp/mihon/pull/1785), [#1791](https://github.com/mihonapp/mihon/pull/1791), [#1870](https://github.com/mihonapp/mihon/pull/1870))
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 - Add `id:` prefix search to library to search by internal DB ID ([@MajorTanya](https://github.com/MajorTanya)) ([#1856](https://github.com/mihonapp/mihon/pull/1856))
 
@@ -33,6 +33,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
   - Now showing manga starting dates in search
   - Reduced request load by 2-4x in certain situations
 - Bump default user agent
+- Changed the label of chapter swipe settings and renamed the group to "Behavior" ([@AntsyLich](https://github.com/AntsyLich)) ([#1870](https://github.com/mihonapp/mihon/pull/1870))
 
 ### Fixed
 - Fix MAL `main_picture` nullability breaking search if a result doesn't have a cover set ([@MajorTanya](https://github.com/MajorTanya)) ([#1618](https://github.com/mihonapp/mihon/pull/1618))
