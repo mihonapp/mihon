@@ -24,6 +24,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add option to mark duplicate read chapters as read
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 - Add `id:` prefix search to library to search by internal DB ID ([@MajorTanya](https://github.com/MajorTanya)) ([#1856](https://github.com/mihonapp/mihon/pull/1856))
+- Add back option to disable unread chapter badge in library ([@AntsyLich](https://github.com/AntsyLich)) ([#1871](https://github.com/mihonapp/mihon/pull/1871))
 
 ### Changed
 - Sliders UI
