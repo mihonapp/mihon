@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -161,7 +160,7 @@ private fun DuplicateMangaListItem(
     val shape = RoundedCornerShape(16.dp)
     val sourceManager: SourceManager = Injekt.get()
     val source = sourceManager.getOrStub(manga.source)
-    Box(
+    Column(
         modifier = Modifier
             .width(150.dp)
             .clip(shape)
@@ -175,77 +174,75 @@ private fun DuplicateMangaListItem(
                 },
             ),
     ) {
-        Column {
-            MangaCover.Book(
-                data = ImageRequest.Builder(LocalContext.current)
-                    .data(manga)
-                    .crossfade(true)
-                    .build(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = MaterialTheme.padding.extraSmall),
-            )
+        MangaCover.Book(
+            data = ImageRequest.Builder(LocalContext.current)
+                .data(manga)
+                .crossfade(true)
+                .build(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = MaterialTheme.padding.extraSmall),
+        )
 
-            if (!manga.author.isNullOrBlank()) {
-                MangaDetailRow(
-                    text = manga.author!!,
-                    iconImageVector = Icons.Filled.PersonOutline,
-                    maxLines = 2,
-                )
-            }
-
-            if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
-                MangaDetailRow(
-                    text = manga.artist!!,
-                    iconImageVector = Icons.Filled.Brush,
-                    maxLines = 2,
-                )
-            }
-
+        if (!manga.author.isNullOrBlank()) {
             MangaDetailRow(
-                text = when (manga.status) {
-                    SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
-                    SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
-                    SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
-                    SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
-                        MR.strings.publishing_finished,
-                    )
-                    SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
-                    SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
-                    else -> stringResource(MR.strings.unknown)
-                },
-                iconImageVector = when (manga.status) {
-                    SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
-                    SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
-                    SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
-                    SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
-                    SManga.CANCELLED.toLong() -> Icons.Outlined.Close
-                    SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
-                    else -> Icons.Outlined.Block
-                },
+                text = manga.author!!,
+                iconImageVector = Icons.Filled.PersonOutline,
+                maxLines = 2,
             )
+        }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = MaterialTheme.padding.small),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                if (source is StubSource) {
-                    Icon(
-                        imageVector = Icons.Filled.Warning,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.error,
-                    )
-                }
-                Text(
-                    text = source.name,
-                    style = MaterialTheme.typography.labelSmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
+        if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
+            MangaDetailRow(
+                text = manga.artist!!,
+                iconImageVector = Icons.Filled.Brush,
+                maxLines = 2,
+            )
+        }
+
+        MangaDetailRow(
+            text = when (manga.status) {
+                SManga.ONGOING.toLong() -> stringResource(MR.strings.ongoing)
+                SManga.COMPLETED.toLong() -> stringResource(MR.strings.completed)
+                SManga.LICENSED.toLong() -> stringResource(MR.strings.licensed)
+                SManga.PUBLISHING_FINISHED.toLong() -> stringResource(
+                    MR.strings.publishing_finished,
+                )
+                SManga.CANCELLED.toLong() -> stringResource(MR.strings.cancelled)
+                SManga.ON_HIATUS.toLong() -> stringResource(MR.strings.on_hiatus)
+                else -> stringResource(MR.strings.unknown)
+            },
+            iconImageVector = when (manga.status) {
+                SManga.ONGOING.toLong() -> Icons.Outlined.Schedule
+                SManga.COMPLETED.toLong() -> Icons.Outlined.DoneAll
+                SManga.LICENSED.toLong() -> Icons.Outlined.AttachMoney
+                SManga.PUBLISHING_FINISHED.toLong() -> Icons.Outlined.Done
+                SManga.CANCELLED.toLong() -> Icons.Outlined.Close
+                SManga.ON_HIATUS.toLong() -> Icons.Outlined.Pause
+                else -> Icons.Outlined.Block
+            },
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = MaterialTheme.padding.small),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            if (source is StubSource) {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
+            Text(
+                text = source.name,
+                style = MaterialTheme.typography.labelSmall,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
         }
     }
 }
