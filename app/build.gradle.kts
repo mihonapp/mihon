@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-if (Config.includeAnalytics) {
+if (Config.includeTelemetry) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -32,7 +32,7 @@ android {
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "ANALYTICS_INCLUDED", "${Config.includeAnalytics}")
+        buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
