@@ -98,6 +98,8 @@ class LibraryPreferences(
 
     fun downloadBadge() = preferenceStore.getBoolean("display_download_badge", false)
 
+    fun unreadBadge() = preferenceStore.getBoolean("display_unread_badge", true)
+
     fun localBadge() = preferenceStore.getBoolean("display_local_badge", true)
 
     fun languageBadge() = preferenceStore.getBoolean("display_language_badge", false)
