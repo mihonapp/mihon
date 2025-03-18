@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.PersonOutline
@@ -82,6 +84,7 @@ fun DuplicateMangaDialog(
                     vertical = TabbedDialogPaddings.Vertical,
                     horizontal = TabbedDialogPaddings.Horizontal,
                 )
+                .verticalScroll(rememberScrollState())
                 .fillMaxWidth(),
         ) {
             Text(
@@ -99,7 +102,7 @@ fun DuplicateMangaDialog(
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                modifier = Modifier.sizeIn(maxHeight = 340.dp),
+                modifier = Modifier.sizeIn(maxHeight = 360.dp),
             ) {
                 items(
                     items = duplicateManga,
@@ -183,6 +186,13 @@ private fun DuplicateMangaListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = MaterialTheme.padding.extraSmall),
+        )
+
+        Text(
+            text = manga.title,
+            style = MaterialTheme.typography.titleSmall,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
         )
 
         if (!manga.author.isNullOrBlank()) {
