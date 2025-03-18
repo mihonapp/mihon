@@ -704,7 +704,7 @@
     <string name="remove_from_library">Remove from library</string>
     <string name="unknown_title">Unknown title</string>
     <string name="possible_duplicate">Possible Duplicate</string>
-    <string name="duplicate_manga_select">You have entries in your library with the same name.\n\nSelect an entry to migrate or add anyway.</string>
+    <string name="duplicate_manga_select">You have entries in your library with a similar name.\n\nSelect an entry to migrate or add anyway.</string>
     <string name="manga_added_library">Added to library</string>
     <string name="manga_removed_library">Removed from library</string>
     <string name="manga_info_expand">More</string>
