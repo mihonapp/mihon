@@ -577,7 +577,6 @@
     <string name="source_filter_empty_screen">Nenhuma fonte instalada encontrada</string>
     <string name="notification_update_error">%1$d actualização(ões) falhada(s)</string>
     <string name="learn_more">Toque para saber mais</string>
-    <string name="update_check_fdroid_migration_info">Uma nova versão está disponível a partir dos lançamentos oficiais. Toque para saber como migrar de versões não oficiais do F-Droid.</string>
     <string name="pref_navigate_pan">Imagens panorâmicas</string>
     <string name="pref_landscape_zoom">Ampliar imagem horizontal</string>
     <string name="update_check_open">Abrir no GitHub</string>
@@ -695,13 +694,11 @@
     <string name="overlay_header">Sobreposição</string>
     <string name="pref_page_rotate">Girar páginas largas para caber</string>
     <string name="pref_page_rotate_invert">Virar a orientação de páginas largas giradas</string>
-    <string name="pref_library_columns_per_row">%d por linha</string>
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para aproximar</string>
     <string name="action_set_interval">Definir intervalo</string>
     <string name="pref_update_only_in_release_period">Fora do período esperado de lançamento</string>
     <string name="pref_debug_info">Informações de depuração</string>
-    <string name="pref_chapter_swipe">Trocar de capítulo</string>
     <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
     <string name="intervals_header">intervalos</string>
     <string name="manga_display_interval_title">Estimado a cada</string>
@@ -745,7 +742,6 @@
     <string name="syncing_library">A sincronizar a biblioteca</string>
     <string name="notification_updating_progress">A atualizar a biblioteca… (%s)</string>
     <string name="exception_http">HTTP %d, verifique o site na WebView</string>
-    <string name="sort_category_confirmation">Deseja ordenar as categorias alfabeticamente?</string>
     <string name="action_sort_tracker_score">Avaliação no monitorador</string>
     <string name="action_apply">Aplicar</string>
     <string name="action_ok">OK</string>
@@ -793,7 +789,6 @@
 \nPasta selecionada: %2$s</string>
     <string name="exclude_scanlators">Apagar scanlators</string>
     <string name="no_scanlators_found">Nenhum scanlator encontrado</string>
-    <string name="action_sort_category">Ordenar as categorias</string>
     <string name="action_move_to_bottom_all_for_series">Mover série para o final</string>
     <string name="pref_onboarding_guide">Guia de introdução</string>
     <string name="pref_library_update_smart_update">Atualização inteligente</string>

@@ -341,7 +341,7 @@
     <string name="restoring_backup_canceled">Anulowano przywracanie</string>
     <string name="restore_in_progress">Kopia zapasowa jest w trakcie przywracania</string>
     <string name="backup_in_progress">Kopia zapasowa jest już w trakcie tworzenia</string>
-    <string name="restore_duration">%02d min, %02d s</string>
+    <string name="restore_duration">%1$02d min, %2$02d s</string>
     <string name="pref_webtoon_side_padding">Marginesy boczne</string>
     <string name="gray_background">Szary</string>
     <string name="ext_updates_pending">Dostępne aktualizacje</string>
@@ -598,7 +598,6 @@
     <string name="empty_screen">Cóż, to troszkę niezręczne</string>
     <string name="ext_info_language">Język</string>
     <string name="reading_list">Lista czytanych</string>
-    <string name="update_check_fdroid_migration_info">Nowa wersja jest dostępna z oficjalnych wydań. Naciśnij, by dowiedzieć się jak przeprowadzić migrację z nieoficjalnych wydań F-Droid.</string>
     <string name="custom_cover">Niestandardowa okładka</string>
     <string name="complete_list">Lista zakończonych</string>
     <string name="network_not_metered">Tylko na nielimitowanych połączeniach</string>
@@ -661,7 +660,7 @@
     <string name="action_search_hint">Szukaj…</string>
     <string name="action_open_random_manga">Otwórz losową pozycję</string>
     <string name="pref_library_summary">Kategorie, aktualizacja globalna, przesunięcie rozdziału</string>
-    <string name="pref_invalidate_download_cache">Unieważnij indeks pobierania</string>
+    <string name="pref_invalidate_download_cache">Odbuduj indeks pobierania</string>
     <string name="fdroid_warning">Kompilacje F-Droid nie są oficjalnie obsługiwane.
 \nNaciśnij, aby dowiedzieć się więcej.</string>
     <string name="label_read_chapters">Przeczytane</string>
@@ -696,11 +695,9 @@
     <string name="pref_page_rotate">Dopasuj szerokie strony</string>
     <string name="pref_page_rotate_invert">Zmień orientację obróconych obrazów</string>
     <string name="pref_debug_info">Informacje debugowania</string>
-    <string name="pref_library_columns_per_row">%d na rząd</string>
     <string name="pref_double_tap_zoom">Dotknij dwukrotnie, aby powiększyć</string>
     <string name="pref_chapter_swipe_end">Przesuń palcem w prawo</string>
     <string name="pref_chapter_swipe_start">Przesuń palcem w lewo</string>
-    <string name="pref_chapter_swipe">Przesunięcie rozdziału</string>
     <string name="action_set_interval">Ustaw interwał</string>
     <string name="action_sort_next_updated">Następna spodziewana aktualizacja</string>
     <string name="manga_display_modified_interval_title">Aktualizuj co</string>
@@ -728,7 +725,6 @@
     <string name="manga_interval_expected_update">Następna aktualizacja spodziewana za około %1$s, sprawdzanie co %2$s.</string>
     <string name="onboarding_storage_selection_required">Folder musi być wybrany</string>
     <string name="onboarding_permission_notifications">Uprawnienia powiadomień</string>
-    <string name="action_sort_category">Sortuj kategorie</string>
     <string name="onboarding_heading">Witaj!</string>
     <string name="action_menu_overflow_description">Więcej opcji</string>
     <string name="scanlator">Scanlator</string>
@@ -737,7 +733,6 @@
     <string name="onboarding_permission_ignore_battery_opts">Zużycie baterii w tle</string>
     <string name="notification_updating_progress">Aktualizowanie biblioteki... (%s)</string>
     <string name="invalid_repo_name">Nieprawidłowa nazwa repozytorium</string>
-    <string name="sort_category_confirmation">Czy chciałbyś posortować kategorie alfabetycznie?</string>
     <string name="source_settings">Ustawienia źródła</string>
     <string name="app_settings">Ustawienia aplikacji</string>
     <string name="action_delete_repo">Usuń repozytorium</string>
@@ -816,4 +811,33 @@
     <string name="manga_interval_expected_update_null">Ta manga jest zakończona lub nie ma przewidywanej daty wydania.</string>
     <string name="pref_flash_page_interval">Migaj co</string>
     <string name="pref_display_profile">Niestandardowy profil</string>
+    <string name="invalid_backup_file_unknown">Plik kopii zapasowej jest uszkodzony</string>
+    <string name="onboarding_permission_analytics_description">Wysyłaj zanonimizowane dane użytkowania aplikacji w celu ulepszenia jej funkcjonalności.</string>
+    <string name="action_copy_link">Skopiuj link</string>
+    <string name="action_sort_random">Losowo</string>
+    <string name="onboarding_permission_crashlytics">Wyślij dziennik awarii</string>
+    <string name="onboarding_permission_crashlytics_description">Wyślij zanonimizowny dziennik awarii do deweloperów.</string>
+    <string name="onboarding_permission_analytics">Zezwól na analizę danych</string>
+    <string name="pref_security">Bezpieczeństwo i prywatność</string>
+    <string name="pref_auto_update_manga_on_mark_read">Aktualizuj postęp po oznaczeniu jako przeczytane</string>
+    <string name="extensionRepo_settings">Repozytoria rozszerzeń</string>
+    <string name="pref_firebase">Dane użytkownika i dzienniki awarii</string>
+    <string name="ext_remove">Usuń</string>
+    <string name="ext_confirm_remove">Usunąć Rozszerzenie?</string>
+    <string name="remove_private_extension_message">Czy na pewno chcesz usunąć rozszerzenie \"%s\"?</string>
+    <string name="add_repo_confirmation">Czy chciałbyś dodać to repozytorium \"%s\"?</string>
+    <string name="firebase_summary">Przesyłanie dzienników awarii i danych użytkowania pozwoli nam na zidentyfikowanie i naprawę błędów, poprawę wydajności oraz dopasowanie przyszłych wersji aplikacji do twoich potrzeb</string>
+    <string name="pref_hardware_bitmap_threshold_default">Domyślne (%d)</string>
+    <string name="trackers_updated_summary">Śledzenie zaktualizowane do rozdziału %d</string>
+    <string name="non_library_settings">Wszystkie przeczytane wpisy</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Jeżeli czytnik załaduje pusty obraz, stopniowo zmniejszaj zakres graniczny.\nWybrany: %s</string>
+    <string name="confirm_tracker_update">Zaktualizować śledzenie do rozdziału %d?</string>
+    <string name="action_replace_repo_title">Identyfikator Klucza Certyfikatu już istnieje</string>
+    <string name="upcoming_guide">Przewodnik nadchodzących aktualizacji</string>
+    <string name="action_replace_repo_message">Repozytorium %1$s posiada taki sam identyfikator certyfikatu jak %2$s.\nJeżeli było to przewidziane, %2$s zostanie zastąpione, w przeciwnym wypadku skontaktuj się z z osobą utrzymującą repozytorium.</string>
+    <string name="pref_download_new_unread_chapters_only">Pomiń pobieranie duplikatów przeczytanych już rozdziałów</string>
+    <string name="invalid_backup_file_json">Kopia zapasowa JSON nie jest wspierana</string>
+    <string name="pref_hardware_bitmap_threshold">Niestandardowy zakres graniczny bitmapy dla urządzenia</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Wpływa na wydajność. Włącz tylko wtedy, gdy zmniejszenie zakresu granicznego bitmapy nie pomaga przy naprawie nieładujących się obrazów</string>
+    <string name="pref_incognito_mode_extension_summary">Wstrzymaj historię dla rozszerzenia</string>
 </resources>

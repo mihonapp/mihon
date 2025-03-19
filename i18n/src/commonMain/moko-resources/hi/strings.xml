@@ -474,7 +474,7 @@
     <string name="none">कोई नहीं</string>
     <string name="exclude">बहिष्कृत करें: %s</string>
     <string name="off">बंद</string>
-    <string name="on">शुरू</string>
+    <string name="on">चालू</string>
     <string name="pref_high">उच्च</string>
     <string name="pref_tablet_ui_mode">टैबलेट यूआई</string>
     <string name="pref_show_navigation_mode">टैप ज़ोन ओवरले दिखाएं</string>
@@ -587,7 +587,6 @@
     <string name="pref_clear_webview_data">WebView डाटा साफ करें</string>
     <string name="download_notifier_split_page_path_not_found">चित्र %d का फ़ाइल पथ नहीं खोजा जा सका</string>
     <string name="empty_backup_error">बैकअप करने के लिए कोई पुस्तकालय प्रविष्टि नहीं</string>
-    <string name="update_check_fdroid_migration_info">एक नया संस्करण आधिकारिक रिलीज के द्वारा उपलब्ध है। अनौपचारिक F-Droid रिलीज से माइग्रेट करने का तरीका जानने के लिए यह टैप करें ।</string>
     <string name="ext_info_version">संस्करण</string>
     <string name="ext_info_language">भाषा</string>
     <string name="ext_info_age_rating">आयु रेटिंग</string>
@@ -653,7 +652,6 @@
     <string name="action_filter_interval_custom">अनुकूलित लाने का अंतराल</string>
     <string name="intervals_header">अंतराल</string>
     <string name="pref_chapter_swipe_end">दाईं ओर स्वाइप करने पर</string>
-    <string name="pref_chapter_swipe">अध्याय स्वाइप</string>
     <string name="action_sort_next_updated">अगला अपेक्षित अपडेट</string>
     <string name="pref_debug_info">डीबग जानकारी</string>
     <string name="pref_advanced_summary">डंप क्रैश लॉग, बैटरी अनुकूलन</string>
@@ -665,4 +663,24 @@
     <string name="pref_invalidate_download_cache">डाउनलोड अनुक्रमणिका अमान्य करें</string>
     <string name="copied_to_clipboard_plain">क्लिपबोर्ड पर कॉपी हो गया है</string>
     <string name="track_delete_remote_text">%s से भी हटा दें</string>
+    <string name="label_auto">स्वत:</string>
+    <string name="action_migrate_duplicate">मौजूदा एंट्री को बसाएं</string>
+    <string name="action_sort_random">अनियमित</string>
+    <string name="action_sort_tracker_score">ट्रैकर के स्कोर</string>
+    <string name="selected">चयनित</string>
+    <string name="delete_downloaded">डाउनलोड मिटाएँ</string>
+    <string name="scanlator">स्कैनलेटर</string>
+    <string name="action_add_anyway">फिर भी जोड़ें</string>
+    <string name="action_copy_link">लिंक की प्रतिलिपि करें</string>
+    <string name="action_bar_up_description">ऊपर जाएं</string>
+    <string name="not_selected">गैर चयनित</string>
+    <string name="action_menu_overflow_description">अधिक विकल्प</string>
+    <string name="label_data_storage">डेटा और स्टोरेज</string>
+    <string name="unlock_app_title">खोलना%s</string>
+    <string name="action_apply">लागू करें</string>
+    <string name="action_move_to_bottom_all_for_series">सीरीज को नीचे ले जाएं</string>
+    <string name="pref_onboarding_guide">ऑनबोर्डिंग मार्गदर्शक</string>
+    <string name="onboarding_heading">नमस्ते!आपका स्वागत है!</string>
+    <string name="label_upcoming">आगामी</string>
+    <string name="action_revert_to_default">डिफ़ॉल्ट पर वापस लौटें</string>
 </resources>
