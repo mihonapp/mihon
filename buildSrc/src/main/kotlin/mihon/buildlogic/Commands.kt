@@ -33,6 +33,7 @@ fun Project.getBuildTime(useLastCommitTime: Boolean): String {
         LocalDateTime.now(ZoneOffset.UTC).format(BUILD_TIME_FORMATTER)
     }
 }
+
 private fun Project.runCommand(command: String): String {
     return providers.exec {
         commandLine = command.split(" ")
