@@ -122,6 +122,7 @@
     <string name="action_display_list">List</string>
     <string name="action_display_cover_only_grid">Cover-only grid</string>
     <string name="action_display_download_badge">Downloaded chapters</string>
+    <string name="action_display_unread_badge">Unread chapters</string>
     <string name="action_display_local_badge">Local source</string>
     <string name="action_display_language_badge">Language</string>
     <string name="action_display_show_tabs">Show category tabs</string>
@@ -292,7 +293,6 @@
     <string name="pref_update_only_started">Skip unstarted entries</string>
     <string name="pref_update_only_in_release_period">Predict next release time</string>
     <string name="pref_library_update_show_tab_badge">Show unread count on Updates icon</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapters as read</string>
 
     <string name="pref_library_update_refresh_metadata">Automatically refresh metadata</string>
     <string name="pref_library_update_refresh_metadata_summary">Check for new cover and details when updating library</string>
@@ -306,11 +306,14 @@
     <string name="include">Include: %s</string>
     <string name="exclude">Exclude: %s</string>
 
-    <string name="pref_chapter_swipe">Chapter swipe</string>
+    <string name="pref_behavior">Behavior</string>
     <!-- This should be to the left for RTL locales -->
-    <string name="pref_chapter_swipe_end">Swipe to right action</string>
+    <string name="pref_chapter_swipe_end">Chapter on swipe to right</string>
     <!-- This should be to the right for RTL locales -->
-    <string name="pref_chapter_swipe_start">Swipe to left action</string>
+    <string name="pref_chapter_swipe_start">Chapter on swipe to left</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Mark duplicate read chapter as read</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">After reading a chapter</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">After fetching new chapter</string>
 
       <!-- Extension section -->
     <string name="multi_lang">Multi</string>
