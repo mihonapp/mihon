@@ -33,7 +33,7 @@
     <string name="action_edit_cover">Sửa ảnh bìa</string>
     <string name="action_pause">Tạm dừng</string>
     <string name="action_previous_chapter">Chương trước</string>
-    <string name="action_next_chapter">Chương kế</string>
+    <string name="action_next_chapter">Chương sau</string>
     <string name="action_retry">Thử lại</string>
     <string name="action_remove">Gỡ bỏ</string>
     <string name="action_resume">Tiếp tục</string>
@@ -202,8 +202,8 @@
     <string name="track">Theo dõi</string>
     <string name="history">Lịch sử</string>
     <string name="label_migration">Di chuyển</string>
-    <string name="label_extensions">Các tiện ích mở rộng</string>
-    <string name="label_extension_info">Thông tin về các tiện ích mở rộng</string>
+    <string name="label_extensions">Phần mở rộng</string>
+    <string name="label_extension_info">Thông tin chi tiết</string>
     <string name="action_sort_total">Tổng số chương</string>
     <string name="action_global_search">Tìm kiếm toàn bộ</string>
     <string name="action_display_download_badge">Tải các chương</string>
@@ -459,7 +459,7 @@
     <string name="tapping_inverted_horizontal">Ngang</string>
     <string name="tapping_inverted_none">Không</string>
     <string name="pref_read_with_tapping_inverted">Đảo ngược khu vực nhấn</string>
-    <string name="pref_grayscale">Độ xám</string>
+    <string name="pref_grayscale">Ảnh đen trắng</string>
     <string name="pref_dual_page_invert_summary">Nếu vị trí của phần tách trang rộng không khớp với hướng đọc</string>
     <string name="pref_dual_page_invert">Đảo ngược vị trí tách trang</string>
     <string name="pref_dual_page_split">Chia các trang đôi</string>
@@ -570,7 +570,6 @@
     <string name="skipped_reason_not_started">Đã bỏ qua vì chưa chương được đọc</string>
     <string name="action_move_to_top_all_for_series">Di chuyển bộ truyện lên đầu</string>
     <string name="disabled_nav">Tắt</string>
-    <string name="update_check_fdroid_migration_info">Một phiên bản mới sẵn sàng từ mục phát hành chính thức. Nhấn để học cách kết hợp các mục phát hành không chính thức từ F-Droid.</string>
     <string name="error_saving_picture">Lỗi khi lưu ảnh</string>
     <string name="action_close">Đóng</string>
     <string name="source_filter_empty_screen">Không có nguồn đã cài tìm thấy</string>
@@ -691,9 +690,7 @@
     <string name="track_error">%1$s Lỗi: %2$s</string>
     <string name="not_applicable">N/A</string>
     <string name="information_required_plain">*bắt buộc</string>
-    <string name="pref_library_columns_per_row">%d mỗi hàng</string>
     <string name="pref_double_tap_zoom">Nhấn đúp để phóng to</string>
-    <string name="pref_chapter_swipe">Vuốt chương</string>
     <string name="pref_chapter_swipe_end">Thao tác vuốt sang phải</string>
     <string name="pref_chapter_swipe_start">Thao tác vuốt sang trái</string>
     <string name="pref_debug_info">Thông tin gỡ lỗi</string>
@@ -726,16 +723,15 @@
     <string name="intervals_header">Đoạn thời gian</string>
     <string name="action_revert_to_default">Chỉnh về mặc định</string>
     <string name="onboarding_permission_install_apps">Cài đặt quyền ứng dụng</string>
-    <string name="action_sort_category">Lọc danh mục</string>
     <string name="onboarding_heading">Xin chào!</string>
     <string name="action_menu_overflow_description">Thêm tùy chọn</string>
     <string name="last_auto_backup_info">Lần cuối cùng tự động lưu: %s</string>
     <string name="onboarding_guides_returning_user">Đã sử dụng %s từ trước rồi sao?</string>
     <string name="selected">Được chọn</string>
-    <string name="no_scanlators_found">Không tìm thấy máy quét nào</string>
+    <string name="no_scanlators_found">Không tìm thấy nhóm dịch nào</string>
     <string name="not_selected">Chưa chọn</string>
     <string name="action_move_to_bottom_all_for_series">Di chuyển bộ truyện xuống cuối</string>
-    <string name="scanlator">Máy quét</string>
+    <string name="scanlator">Nhóm dịch</string>
     <string name="onboarding_action_skip">Bỏ qua</string>
     <string name="pref_flash_page">Làm mới màn hình khi đổi trang</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Tránh gián đoạn quá trình cập nhật thư viện, tải xuống và khôi phục bản sao lưu trong thời gian dài.</string>
@@ -751,7 +747,6 @@
     <string name="action_sort_tracker_score">Điểm bộ theo dõi</string>
     <string name="no_location_set">Chưa đặt vị trí kho chứa</string>
     <string name="label_data_storage">Dữ liệu và kho chứa</string>
-    <string name="sort_category_confirmation">Bạn có muốn lọc danh mục theo thứ tự bảng chữ cái?</string>
     <string name="skipped_reason_not_in_release_period">Bỏ qua vì dự kiến hôm nay không có bản phát hành nào</string>
     <string name="onboarding_permission_notifications_description">Gửi thông báo khi thư viện cấp nhật và nhiều hơn thế.</string>
     <string name="file_null_uri_error">Không có tập tin được chọn</string>
@@ -771,7 +766,7 @@
     <string name="exception_http">HTTP %d, kiểm tra trang web trong WebView</string>
     <string name="pref_relative_format_summary">\"%1$s\" thay vì là \"%2$s\"</string>
     <string name="exception_unknown_host">Không thể truy cập %s</string>
-    <string name="exclude_scanlators">Loại trừ máy quét</string>
+    <string name="exclude_scanlators">Loại trừ nhóm dịch</string>
     <string name="manga_interval_expected_update">Các chương mới được dự đoán sẽ phát hành trong khoảng %1$s, kiểm tra vào khoảng %2$s.</string>
     <string name="available_disk_space_info">Hiện có: %1$s / Tổng cộng: %2$s</string>
     <string name="invalid_backup_file_error">Mã lỗi đầy đủ:</string>
@@ -840,4 +835,6 @@
     <string name="pref_hardware_bitmap_threshold">Tùy chỉnh ngưỡng phần cứng bitmap</string>
     <string name="pref_hardware_bitmap_threshold_default">Mặc định (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Nếu người đọc tải một hình ảnh trống thì hãy giảm dần ngưỡng\nĐã chọn: %s</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Ảnh hưởng đến hiệu suất. Chỉ bật nếu việc giảm ngưỡng bitmap không khắc phục được sự cố hình ảnh trống</string>
+    <string name="pref_incognito_mode_extension_summary">Tạm dừng lịch sử đọc của phần mở rộng</string>
 </resources>

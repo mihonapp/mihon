@@ -70,7 +70,7 @@
     <string name="pref_category_tracking">Seguiment</string>
     <string name="pref_category_advanced">Avançat</string>
     <string name="pref_category_about">Quant a</string>
-    <string name="pref_library_columns">Mida de la quadrícula</string>
+    <string name="pref_library_columns">Elements per fila</string>
     <string name="portrait">Vertical</string>
     <string name="landscape">Horitzontal</string>
     <string name="pref_library_update_interval">Actualitzacions automàtiques</string>
@@ -97,9 +97,7 @@
     <string name="ext_untrusted">No és de confiança</string>
     <string name="ext_uninstall">Desinstal·la</string>
     <string name="untrusted_extension">Extensió que no és de confiança</string>
-    <string name="untrusted_extension_message">Les extensions malicioses poden llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.
-\n
-\nSi confieu en aquesta extensió, accepteu aquests riscos.</string>
+    <string name="untrusted_extension_message">Les extensions malicioses poden llegir qualsevol credencial d’inici de sessió desada o executar codi arbitrari.\n\nSi confieu en aquesta extensió, accepteu aquests riscos.</string>
     <string name="pref_fullscreen">Pantalla completa</string>
     <string name="pref_page_transitions">Anima les transicions de pàgina</string>
     <string name="pref_show_page_number">Mostra el número de pàgina</string>
@@ -138,10 +136,10 @@
     <string name="rotation_free">Lliure</string>
     <string name="rotation_force_portrait">Vertical forçada</string>
     <string name="rotation_force_landscape">Horitzontal forçada</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
-    <string name="color_filter_b_value">B</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_r_value">Vermell</string>
+    <string name="color_filter_g_value">Verd</string>
+    <string name="color_filter_b_value">Blau</string>
+    <string name="color_filter_a_value">Alfa</string>
     <string name="pref_remove_after_marked_as_read">Després de marcar com a llegit de manera manual</string>
     <string name="pref_remove_after_read">Suprimeix automàticament després de llegir</string>
     <string name="pref_double_tap_anim_speed">Velocitat de l’animació del doble toc</string>
@@ -196,8 +194,7 @@
     <string name="manga_added_library">S’ha afegit a la biblioteca</string>
     <string name="manga_removed_library">S’ha eliminat de la biblioteca</string>
     <string name="delete_downloads_for_manga">Voleu suprimir els capítols baixats?</string>
-    <string name="copied_to_clipboard">S’ha copiat al porta-retalls:
-\n%1$s</string>
+    <string name="copied_to_clipboard">S’ha copiat al porta-retalls:\n%1$s</string>
     <string name="source_not_installed">Font no instal·lada: %1$s</string>
     <string name="display_mode_chapter">Capítol %1$s</string>
     <string name="chapter_downloading_progress">S’està baixant (%1$d/%2$d)</string>
@@ -358,7 +355,7 @@
     <string name="local_source_help_guide">Guia de fonts locals</string>
     <string name="last_used_source">Utilitzada per darrera vegada</string>
     <string name="check_for_updates">Comprova si hi ha actualitzacions</string>
-    <string name="restore_duration">%02d min i %02d s</string>
+    <string name="restore_duration">%1$02d min i %2$02d s</string>
     <string name="downloaded_only_summary">Filtra tots els elements de la vostra biblioteca</string>
     <string name="gray_background">Gris</string>
     <string name="viewer">Mode de lectura</string>
@@ -573,7 +570,6 @@
     <string name="update_check_open">Obre al GitHub</string>
     <string name="error_saving_picture">S’ha produït un error en desar la imatge</string>
     <string name="empty_backup_error">No hi ha cap element a la biblioteca del qual fer còpia de seguretat</string>
-    <string name="update_check_fdroid_migration_info">Hi ha una nova versió disponible als llançaments oficials. Premeu per a obtenir informació de com migrar a partir dels llançaments no oficials d’F-Droid.</string>
     <string name="pref_clear_webview_data">Neteja les dades de la WebView</string>
     <string name="webview_data_deleted">S’han netejat les dades de la WebView</string>
     <string name="action_close">Tanca</string>
@@ -644,11 +640,10 @@
     <string name="updates_last_update_info">Biblioteca actualitzada per darrera vegada: %s</string>
     <string name="download_notifier_cache_renewal">S’estan comprovant les baixades</string>
     <string name="action_open_random_manga">Obre un element aleatori</string>
-    <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.
-\nPremeu per a obtenir-ne més informació.</string>
+    <string name="fdroid_warning">Les compilacions de F-Droid no tenen assistència oficial.\nPremeu per a obtenir-ne més informació.</string>
     <string name="information_no_entries_found">No s’ha trobat cap element en aquesta categoria</string>
     <string name="action_display_show_continue_reading_button">Botó per a continuar llegint</string>
-    <string name="pref_invalidate_download_cache">Invalida l’índex de baixades</string>
+    <string name="pref_invalidate_download_cache">Reindexa les baixades</string>
     <string name="track_remove_finish_date_conf_text">S’eliminarà la data de finalització seleccionada de %s</string>
     <string name="track_remove_date_conf_title">Voleu eliminar-ne la data?</string>
     <string name="track_remove_start_date_conf_text">S’eliminarà la data d’inici seleccionada de %s</string>
@@ -663,9 +658,7 @@
     <string name="pref_library_update_show_tab_badge">Mostra el recompte de no llegits a la icona d’Actualitzacions</string>
     <string name="pref_skip_dupe_chapters">Omet els capítols duplicats</string>
     <string name="enhanced_services_not_installed">Disponible però la font no està instal·lada: %s</string>
-    <string name="confirm_add_duplicate_manga">Ja teniu un element a la biblioteca amb el mateix nom.
-\n
-\nVoleu continuar igualment?</string>
+    <string name="confirm_add_duplicate_manga">Ja teniu un element a la biblioteca amb el mateix nom.\n\nVoleu continuar igualment?</string>
     <string name="label_read_duration">Temps de lectura</string>
     <string name="label_titles_section">Elements</string>
     <string name="label_completed_titles">Elements completats</string>
@@ -688,8 +681,6 @@
     <string name="action_copy_to_clipboard">Copia al porta-retalls</string>
     <string name="action_update_category">Actualitza la categoria</string>
     <string name="split_tall_images">Divideix les imatges altes</string>
-    <string name="pref_library_columns_per_row">%d per fila</string>
-    <string name="pref_chapter_swipe">Lliscament en capítols</string>
     <string name="pref_chapter_swipe_end">Acció en lliscar cap a la dreta</string>
     <string name="pref_chapter_swipe_start">Acció en lliscar cap a l’esquerra</string>
     <string name="pref_double_tap_zoom">Toca dues vegades per a ampliar</string>
@@ -724,9 +715,7 @@
     <string name="action_move_to_bottom_all_for_series">Mou la sèrie a baix de tot</string>
     <string name="pref_relative_format">Marques de temps relatives</string>
     <string name="pref_relative_format_summary">«%1$s» en comptes de «%2$s»</string>
-    <string name="action_sort_category">Ordena les categories</string>
     <string name="notification_updating_progress">S’està actualitzant la biblioteca… (%s)</string>
-    <string name="sort_category_confirmation">Voleu ordenar les categories alfabèticament?</string>
     <string name="source_settings">Configuració de la font</string>
     <string name="app_settings">Configuració de l’aplicació</string>
     <string name="file_null_uri_error">No s’ha seleccionat cap fitxer</string>
@@ -760,11 +749,7 @@
     <string name="onboarding_action_next">Següent</string>
     <string name="onboarding_description">Primer cal configurar unes quantes coses. Sempre podràs canviar aquestes opcions a la configuració.</string>
     <string name="no_location_set">No s’ha definit una ubicació d’emmagatzematge</string>
-    <string name="onboarding_storage_info">Seleccioneu una carpeta on el %1$s emmagatzemarà les baixades dels capítols, les còpies de seguretat i més.
-\n
-\nÉs recomanable fer servir una carpeta dedicada.
-\n
-\nCarpeta seleccionada: %2$s</string>
+    <string name="onboarding_storage_info">Seleccioneu una carpeta on el %1$s emmagatzemarà les baixades dels capítols, les còpies de seguretat i més.\n\nÉs recomanable fer servir una carpeta dedicada.\n\nCarpeta seleccionada: %2$s</string>
     <string name="onboarding_permission_notifications">Permís de notificacions</string>
     <string name="onboarding_permission_install_apps">Permís per a instal·lar aplicacions</string>
     <string name="onboarding_permission_ignore_battery_opts_description">Eviteu interrupcions en actualitzacions de la biblioteca, baixades i restauracions de còpies de seguretat que tinguin una llarga durada.</string>
@@ -803,8 +788,7 @@
     <string name="pref_webtoon_disable_zoom_out">Desactiva l’allunyament</string>
     <string name="action_replace_repo">Substitueix</string>
     <string name="action_replace_repo_title">L’empremta digital de la clau de xifratge ja existeix</string>
-    <string name="action_replace_repo_message">La clau de xifratge del repositori %1$s té la mateixa empremta digital que %2$s.
-\nSi espereu que sigui així, se substituirà %2$s. En cas contrari, contacteu amb el mantenidor del repositori.</string>
+    <string name="action_replace_repo_message">La clau de xifratge del repositori %1$s té la mateixa empremta digital que %2$s.\nSi espereu que sigui així, se substituirà %2$s. En cas contrari, contacteu amb el mantenidor del repositori.</string>
     <string name="pref_display_profile">Perfil de visualització personalitzat</string>
     <string name="action_view_upcoming">Mostra les pròximes actualitzacions</string>
     <string name="upcoming_calendar_prev">Mes anterior</string>
@@ -823,4 +807,33 @@
     <string name="pref_download_new_unread_chapters_only">Omet la baixada de capítols ja llegits duplicats</string>
     <string name="add_repo_confirmation">Voleu afegir el repositori «%s»?</string>
     <string name="confirm_tracker_update">Voleu actualitzar els serveis de seguiment al capítol %d?</string>
+    <string name="non_library_settings">Tots els elements llegits</string>
+    <string name="onboarding_permission_analytics_description">Envia dades d’ús anonimitzades per a millorar les funcionalitats de l’aplicació.</string>
+    <string name="action_sort_random">Aleatòriament</string>
+    <string name="onboarding_permission_crashlytics">Envia registres d’errors</string>
+    <string name="onboarding_permission_crashlytics_description">Envia registres d’errors anonimitzats als desenvolupadors.</string>
+    <string name="onboarding_permission_analytics">Permet les analítiques</string>
+    <string name="pref_firebase">Registres d’errors i analítiques</string>
+    <string name="pref_security">Seguretat</string>
+    <string name="firebase_summary">Si envieu registres d’errors i analítiques, ens permetreu identificar i solucionar problemes, millorar el rendiment i fer que les futures actualitzacions siguin més adequades a les vostres necessitats</string>
+    <string name="label_auto">Automàtic</string>
+    <string name="pref_incognito_mode_extension_summary">Pausa l’historial de lectura per a aquesta extensió</string>
+    <string name="trackers_updated_summary">Els serveis de seguiment s’han actualitzat al capítol %d</string>
+    <string name="pref_auto_update_manga_on_mark_read">Actualitza el progrés en marcar com a llegit</string>
+    <string name="pref_hardware_bitmap_threshold_default">Per defecte (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Afecta el rendiment. Activeu-ho només si en reduir el llindar de mapes de bits no se solucionen els problemes d’imatges buides</string>
+    <string name="ext_remove">Elimina</string>
+    <string name="ext_confirm_remove">Voleu eliminar l’extensió?</string>
+    <string name="remove_private_extension_message">Segur que voleu eliminar l’extensió «%s»?</string>
+    <string name="pref_hardware_bitmap_threshold_summary">Si el lector carrega una imatge buida, reduïu-ne el llindar a poc a poc.\nActual: %s</string>
+    <string name="pref_hardware_bitmap_threshold">Llindar personalitzat dels mapes de bits per maquinari</string>
+    <string name="tracked_privately">En seguiment de manera privada</string>
+    <string name="export">Exporta</string>
+    <string name="library_exported">S’ha exportat la biblioteca</string>
+    <string name="author">Autor</string>
+    <string name="artist">Artista</string>
+    <string name="action_toggle_private_off">Segueix de manera pública</string>
+    <string name="theme_monochrome">Monocrom</string>
+    <string name="library_list">Llista de la biblioteca</string>
+    <string name="action_toggle_private_on">Segueix de manera privada</string>
 </resources>

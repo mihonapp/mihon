@@ -603,7 +603,6 @@
     <string name="pref_landscape_zoom">Автоматичне масштабування широких зображень</string>
     <string name="action_close">Закрити</string>
     <string name="update_check_open">Відкрити на GitHub</string>
-    <string name="update_check_fdroid_migration_info">Нова версія наявна з офіційних релізів. Тицьніть для того аби дізнатись як мігрувати з неофіційних релізів F-Droid.</string>
     <string name="internal_error">InternalError: Перевірте журнал халеп задля додаткової інформації</string>
     <string name="delete_category_confirmation">Чи бажаєте ви видалити категорію \"%s\"?</string>
     <string name="delete_category">Видалити категорію</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">Повернути широкі сторінки за розміром</string>
     <string name="pref_page_rotate_invert">Перевернути орієнтацію обернутих широких сторінок</string>
     <string name="pref_debug_info">Інформація для відлагодження</string>
-    <string name="pref_chapter_swipe">Гортання розділів</string>
     <string name="pref_chapter_swipe_end">Проведіть пальцем праворуч</string>
     <string name="pref_chapter_swipe_start">Проведіть пальцем ліворуч</string>
     <string name="pref_double_tap_zoom">Двічі торкніться, щоб збільшити</string>
-    <string name="pref_library_columns_per_row">%d на рядок</string>
     <string name="action_set_interval">Встановити інтервал</string>
     <string name="manga_display_interval_title">Оцініть кожну</string>
     <string name="action_filter_interval_custom">Налаштувати інтервал оновленнь</string>
@@ -728,11 +725,9 @@
     <string name="app_settings">Налаштування застосунку</string>
     <string name="action_apply">Застосувати</string>
     <string name="action_revert_to_default">Повернути за замовчуванням</string>
-    <string name="action_sort_category">Сортувати категорії</string>
     <string name="scanlator">Сканлейтор</string>
     <string name="action_sort_tracker_score">Оцінка трекера</string>
     <string name="label_data_storage">Дані та сховище</string>
-    <string name="sort_category_confirmation">Ви хочете сортувати категорії алфавітно?</string>
     <string name="action_create">Створити</string>
     <string name="relative_time_span_never">Ніколи</string>
     <string name="pref_flash_page_summ">Зменшує гостинг на e-ink екранах</string>

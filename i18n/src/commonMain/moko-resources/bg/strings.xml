@@ -640,6 +640,5 @@
     <string name="split_tall_images_summary">Подобрява производителността на четеца</string>
     <string name="missing_storage_permission">Не е дадено разрешение за съхранение</string>
     <string name="publishing_finished">Приключено издаване</string>
-    <string name="update_check_fdroid_migration_info">Достъпна е нова версия от официалните източници. Научете как да мигрирате от неофициалните версии на F-Droid.</string>
     <string name="download_notifier_split_page_not_found">Страница %d не беше намерена при разделяне</string>
 </resources>
