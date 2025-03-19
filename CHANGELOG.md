@@ -11,6 +11,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - `Other` - for technical stuff.
 
 ## [Unreleased]
+
+## [v0.18.0] - 2025-03-20
 ### Added
 - Add option to always decode long strip images with SSIV ([@AntsyLich](https://github.com/AntsyLich)) ([`c5655e8`](https://github.com/mihonapp/mihon/commit/c5655e8803bc32d0931657f0b7bc6afeab70feaf))
   - Change option label ([@AntsyLich](https://github.com/AntsyLich)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
@@ -321,7 +323,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.17.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.18.0...main
+[v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
 [v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0
 [v0.16.5]: https://github.com/mihonapp/mihon/compare/v0.16.4...v0.16.5
