@@ -571,7 +571,6 @@
     <string name="action_move_to_top_all_for_series">Alih siri ke atas</string>
     <string name="disabled_nav">Dinyahkan</string>
     <string name="error_saving_picture">Ralat menyimpan gambar</string>
-    <string name="update_check_fdroid_migration_info">Versi baharu tersedia daripada pengeluaran rasmi. Ketik untuk mengetahui bagaimana untuk berhijrah daripada keluaran tidak rasmi F-Droid.</string>
     <string name="empty_backup_error">Tiada entri pustaka untuk disandarkan</string>
     <string name="update_check_open">Buka di GitHub</string>
     <string name="pref_clear_webview_data">Hapus data WebView</string>
@@ -693,8 +692,6 @@
     <string name="pref_page_rotate">Putar muka surat lebar agar muat</string>
     <string name="pref_debug_info">Maklumat nyahpepijat</string>
     <string name="pref_chapter_swipe_end">Tindakan leret ke kanan</string>
-    <string name="pref_library_columns_per_row">%d setiap baris</string>
-    <string name="pref_chapter_swipe">Leret bab</string>
     <string name="pref_double_tap_zoom">Ketik dua kali untuk zum</string>
     <string name="pref_chapter_swipe_start">Tindakan leret ke kiri</string>
     <string name="action_set_interval">Tetapkan jarak masa</string>
@@ -729,8 +726,6 @@
     <string name="not_selected">Tidak dipilih</string>
     <string name="action_menu_overflow_description">Lain-lain pilihan</string>
     <string name="selected">Dipilih</string>
-    <string name="sort_category_confirmation">Adakah anda berminat untuk susun kategori mengikut abjad?</string>
-    <string name="action_sort_category">Susun kategori</string>
     <string name="onboarding_storage_action_select">Pilih folder</string>
     <string name="pref_onboarding_guide">Panduan pertama penggunaan</string>
     <string name="onboarding_heading">Selamat datang!</string>

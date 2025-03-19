@@ -363,7 +363,7 @@
     <string name="check_for_updates">Controlla aggiornamenti</string>
     <string name="battery_optimization_setting_activity_not_found">Impossibile aprire le impostazioni del dispositivo</string>
     <string name="pref_refresh_library_covers">Aggiorna le copertine della libreria</string>
-    <string name="restore_duration">%1$02d min, %2$02d sec</string>
+    <string name="restore_duration">%1$02d minuti, %2$02d secondi</string>
     <string name="tracking_info">Sincronizzazione a senso unico per aggiornare l\'avanzamento dei capitoli sui servizi di tracking. Imposta il tracking per le singole voci dai loro pulsanti di tracking.</string>
     <string name="gray_background">Grigio</string>
     <string name="page_list_empty_error">Nessuna pagina trovata</string>
@@ -570,7 +570,6 @@
     <string name="rotation_reverse_portrait">Verticale inverso</string>
     <string name="action_move_to_top_all_for_series">Sposta la serie in cima</string>
     <string name="disabled_nav">Disattivato</string>
-    <string name="update_check_fdroid_migration_info">C\'è una nuova versione ufficiale disponibile. Tocca per imparare a migrare dalle release non ufficiali di F-droid.</string>
     <string name="error_saving_picture">Errore durante il salvataggio dell\'immagine</string>
     <string name="empty_backup_error">Nessuna voce in libreria di cui eseguire il backup</string>
     <string name="update_check_open">Apri su GitHub</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">Ruota le pagine larghe per adattarle allo schermo</string>
     <string name="pref_page_rotate_invert">Capovolgi l\'orientamento delle pagine larghe ruotate</string>
     <string name="pref_debug_info">Informazioni di debug</string>
-    <string name="pref_chapter_swipe">Scorrimento capitolo</string>
     <string name="pref_double_tap_zoom">Doppio tocco per ingrandire</string>
     <string name="pref_chapter_swipe_end">Azione di scorrimento a destra</string>
     <string name="pref_chapter_swipe_start">Azione di scorrimento a sinistra</string>
-    <string name="pref_library_columns_per_row">%d per riga</string>
     <string name="action_set_interval">Imposta intervallo</string>
     <string name="pref_update_only_in_release_period">Fuori dal periodo di rilascio previsto</string>
     <string name="intervals_header">Intervalli</string>
@@ -727,8 +724,6 @@
     <string name="app_settings">Impostazioni app</string>
     <string name="source_settings">Impostazioni delle fonti</string>
     <string name="notification_updating_progress">Aggiornando libreria... (%s)</string>
-    <string name="action_sort_category">Ordinamento categorie</string>
-    <string name="sort_category_confirmation">Vuoi ordinare le categorie alfabeticamente?</string>
     <string name="file_null_uri_error">Il selettore di file ha restituito file all\'app</string>
     <string name="label_data_storage">Dati e archiviazione</string>
     <string name="onboarding_storage_action_select">Scegli una cartella</string>
@@ -840,4 +835,9 @@
     <string name="pref_hardware_bitmap_threshold_default">Predefinito (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">Se il lettore carica un\'immagine vuota, riduci progressivamente il limite.\nSelezionato: %s</string>
     <string name="pref_hardware_bitmap_threshold">Limite di elaborazione immagini hardware personalizzato</string>
+    <string name="label_auto">Automatico</string>
+    <string name="theme_monochrome">Monocromatico</string>
+    <string name="export">Esporta</string>
+    <string name="author">Autore</string>
+    <string name="artist">Artista</string>
 </resources>

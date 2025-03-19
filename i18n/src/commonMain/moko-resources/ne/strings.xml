@@ -4,7 +4,7 @@
     <string name="theme_light">अफ</string>
     <string name="pref_category_theme">थीम</string>
     <string name="pref_category_about">बारेमा</string>
-    <string name="pref_category_advanced">उन्नत सेटिङहरू</string>
+    <string name="pref_category_advanced">उन्नत सेटिंग्स</string>
     <string name="pref_category_tracking">ट्र्याकिङ</string>
     <string name="pref_category_downloads">डाउनलोड्स</string>
     <string name="pref_category_reader">रिडर</string>
@@ -114,7 +114,7 @@
     <string name="action_sort_latest_chapter">नवीनतम अध्याय</string>
     <string name="pref_library_update_refresh_metadata_summary">पुस्तकालय अपडेट गर्दा नयाँ आवरण र विवरणहरूको लागि जाँच गर्नुहोस्</string>
     <string name="pref_library_update_refresh_metadata">मेटाडेटा स्वतः रिफ्रेस गर्नुहोस्</string>
-    <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको</string>
+    <string name="pref_update_only_non_completed">\"समाप्त\" स्थिति भएको इन्ट्रीहरू छोड्नुहोस्</string>
     <string name="restrictions">प्रतिबन्धहरू: %s</string>
     <string name="charging">चार्ज हुँदा</string>
     <string name="pref_library_update_restriction">स्वचालित अपडेट्स यन्त्र प्रतिबन्धहरू</string>
@@ -127,11 +127,11 @@
     <string name="pref_library_update_interval">स्वचालित अपडेट्स</string>
     <string name="pref_category_library_update">ग्लोबल अपडेट</string>
     <string name="landscape">ल्याण्डस्केप</string>
-    <string name="pref_library_columns">ग्रिड साइज</string>
+    <string name="pref_library_columns">प्रति रो वस्तुहरू</string>
     <string name="pref_category_display">प्रदर्शन</string>
     <string name="relative_time_today">आज</string>
     <string name="pref_show_nsfw_source">स्रोत र एक्सटेन्शन सूची मा देखाउनुहोस्</string>
-    <string name="pref_category_nsfw_content">NSFW (१८+) स्रोतहरू</string>
+    <string name="pref_category_nsfw_content">NSFW (18+) स्रोतहरू</string>
     <string name="hide_notification_content">सूचना को सामग्री लुकाउनुहोस्</string>
     <string name="secure_screen_summary">एपहरू स्विच गर्दा \"स्क्रिन सुरक्षित गर्नुहोस्\" ले एप सामग्रीहरू लुकाउँछ र स्क्रिनसटहरू रोक्छ</string>
     <string name="secure_screen">स्क्रिन सुरक्षित गर्नुहोस्</string>
@@ -286,8 +286,8 @@
     <string name="rotation_free">फ्री</string>
     <string name="rotation_landscape">ल्याण्डस्केप</string>
     <string name="rotation_force_landscape">लक गरिएको ल्याण्डस्केप</string>
-    <string name="color_filter_r_value">R</string>
-    <string name="color_filter_g_value">G</string>
+    <string name="color_filter_r_value">रातो</string>
+    <string name="color_filter_g_value">हरियो</string>
     <string name="pref_category_reading_mode">पढ्ने मोड</string>
     <string name="pref_hide_threshold">स्क्रोलमा मेनु लुकाउनका लागि संवेदनशीलता</string>
     <string name="second_to_last">अन्तिम पढिएको अध्याय भन्दा पहिले १ अध्याय</string>
@@ -333,9 +333,9 @@
     <string name="scale_type_smart_fit">स्मार्ट फिट</string>
     <string name="zoom_start_automatic">स्वचालित</string>
     <string name="rotation_force_portrait">लक गरिएको पोर्ट्रेट</string>
-    <string name="color_filter_a_value">A</string>
+    <string name="color_filter_a_value">अल्फा</string>
     <string name="pref_always_show_chapter_transition">अध्याय ट्रान्जिसन सधैँ देखाउनुहोस्</string>
-    <string name="color_filter_b_value">B</string>
+    <string name="color_filter_b_value">निलो</string>
     <string name="pref_category_reading">पढ्दै</string>
     <string name="pref_webtoon_side_padding">साइड प्याडिङ</string>
     <string name="pref_low">कम</string>
@@ -354,10 +354,10 @@
     <string name="tracking_info">बाह्य ट्र्याकर सेवाहरूमा अध्याय प्रगति अपडेट गर्न एकतर्फी सिंक। तिनीहरूको ट्र्याकिङ बटनबाट व्यक्तिगत इन्ट्रीहरूको लागि ट्र्याकिङ सेट अप गर्नुहोस्।</string>
     <string name="backup_restore_missing_trackers">ट्र्याकरहरूमा लगइन छैनन्:</string>
     <string name="backup_restore_missing_sources">छुटेको स्रोतहरू:</string>
-    <string name="pref_clear_chapter_cache">अध्याय क्यास खाली गर्नुहोस्</string>
+    <string name="pref_clear_chapter_cache">अध्याय cache खाली गर्नुहोस्</string>
     <string name="pref_remove_exclude_categories">बहिष्कृत वर्गहरू</string>
     <string name="fifth_to_last">अन्तिम पढिएको अध्याय भन्दा ४ अध्याय अघि</string>
-    <string name="pref_download_new_categories_details">\"बहिष्कृत\" वर्गहरूमा इन्ट्री \"समावेश गरिएका\" वर्गहरूमा भए पनि डाउनलोड गरिने छैन।</string>
+    <string name="pref_download_new_categories_details">बहिष्कृत गरिएका वर्गको इन्ट्री समावेश गरिएका वर्गमा भए पनि डाउनलोड गरिने छैन।</string>
     <string name="pref_create_backup">ब्याकअप सिर्जना गर्नुहोस्</string>
     <string name="pref_create_backup_summ">हालको पुस्तकालय रिस्टोर गर्न प्रयोग गर्न सकिन्छ</string>
     <string name="cookies_cleared">कुकीहरू खाली गरियो</string>
@@ -370,7 +370,7 @@
     <string name="notification_chapters_single">अध्याय %1$s</string>
     <string name="scale_type_original_size">मूल आकार</string>
     <string name="pref_zoom_start">जूम सुरु स्थिति</string>
-    <string name="pref_auto_clear_chapter_cache">एप खोलेमा अध्याय क्यास खाली गर्नुहोस्</string>
+    <string name="pref_auto_clear_chapter_cache">एप खोलेमा अध्याय cache खाली गर्नुहोस्</string>
     <string name="information_webview_outdated">राम्रो संगतताको लागि कृपया WebView एप अपडेट गर्नुहोस्</string>
     <string name="pref_update_only_completely_read">नपढेको अध्याय(हरू) सँग</string>
     <string name="pref_viewer_nav">ट्याप क्षेत्रहरू</string>
@@ -387,7 +387,7 @@
     <string name="invalid_backup_file_missing_manga">ब्याकअपमा कुनै पनि पुस्तकालयका इन्ट्री समावेश छैन।</string>
     <string name="pref_backup_interval">स्वचालित ब्याकअप फ्रिक्वेन्सी</string>
     <string name="used_cache">प्रयोग गरिएको: %1$s</string>
-    <string name="cache_deleted">क्यास खाली गरियो। %1$d फाइलहरू हटाएका छन्</string>
+    <string name="cache_deleted">Cache खाली गरियो। %1$d फाइलहरू हटाएका छन्</string>
     <string name="notification_chapters_single_and_more">अध्याय %1$s र %2$d अरू</string>
     <string name="update_check_notification_download_error">डाउनलोड त्रुटि</string>
     <string name="channel_ext_updates">एक्सटेन्शन अपडेट्स</string>
@@ -401,7 +401,7 @@
     <string name="pref_disable_battery_optimization_summary">ब्याकग्राउण्ड पुस्तकालय अपडेट्स र ब्याकअप संग मद्दत गर्छ</string>
     <string name="pref_verbose_logging_summary">सिस्टम log मा verbose logs प्रिन्ट गर्नुहोस् (एपको कार्यसम्पादन घटाउँछ)</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
-    <string name="email">ईमेल ठेगाना</string>
+    <string name="email">इमेल ठेगाना</string>
     <string name="no_more_results">थप परिणामहरू छैनन्</string>
     <string name="local_source">लोकल स्रोत</string>
     <string name="other_source">अन्य</string>
@@ -617,7 +617,7 @@
     <string name="update_check_open">GitHub मा खोल्नुहोस्</string>
     <string name="pref_invalidate_download_cache_summary">डाउनलोड गरिएका अध्यायहरू पुन: जाँच गर्न एपलाई फोर्स गर्नुहोस्</string>
     <string name="pref_tracking_summary">एकतर्फी प्रगति सिंक, परिष्कृत सिंक</string>
-    <string name="pref_advanced_summary">Dump crash logs, ब्याट्री अप्टिमाइजेसन</string>
+    <string name="pref_advanced_summary">Dump crash logs, battery optimizations</string>
     <string name="error_saving_picture">तस्वीर बचत गर्न त्रुटि भयो</string>
     <string name="updates_last_update_info_just_now">भर्खरै</string>
     <string name="pref_reset_viewer_flags_success">सबै रिडर सेटिंग्स रिसेट गरियो</string>
@@ -667,7 +667,6 @@
     <string name="label_total_chapters">कुल</string>
     <string name="label_read_chapters">पढेको</string>
     <string name="download_notifier_cache_renewal">डाउनलोड्स जाँच गर्दै</string>
-    <string name="update_check_fdroid_migration_info">आधिकारिक रिलिजबाट नयाँ संस्करण उपलब्ध छ। अनौपचारिक F-Droid रिलीजहरूबाट कसरी स्थानान्तरण गर्ने भनेर जान्न ट्याप गर्नुहोस्।</string>
     <string name="description_placeholder">कुनै वर्णन छैन</string>
     <string name="appwidget_unavailable_locked">एप लक सक्षम हुँदा विजेट उपलब्ध छैन</string>
     <string name="empty_backup_error">ब्याकअप गर्न कुनै पुस्तकालय इन्ट्रीहरू छैनन्</string>
@@ -696,11 +695,9 @@
     <string name="pref_page_rotate">फिट गर्न चौडा पृष्ठहरू घुमाउनुहोस्</string>
     <string name="pref_page_rotate_invert">घुमाइएका चौडा पृष्ठहरूको अभिमुखीकरण फ्लिप गर्नुहोस्</string>
     <string name="pref_debug_info">Debug जानकारी</string>
-    <string name="pref_chapter_swipe">अध्याय स्वाइप</string>
     <string name="pref_chapter_swipe_end">दायाँ स्वाइप</string>
     <string name="pref_chapter_swipe_start">बायाँ स्वाइप</string>
     <string name="pref_double_tap_zoom">जूम गर्न डबल ट्याप गर्नुहोस्</string>
-    <string name="pref_library_columns_per_row">%d प्रति पङ्क्ति</string>
     <string name="action_set_interval">अन्तराल सेट गर्नुहोस्</string>
     <string name="action_filter_interval_custom">कस्टम गरिएको अपडेट फ्रिक्वेन्सी</string>
     <string name="manga_display_modified_interval_title">प्रत्येक अपडेट गर्न सेट गर्नुहोस्</string>
@@ -726,9 +723,7 @@
     <string name="exception_http">HTTP %d, WebView मा वेबसाइट जाँच गर्नुहोस्</string>
     <string name="unlock_app_title">अनलक %s</string>
     <string name="action_move_to_bottom_all_for_series">श्रृङ्खलालाई तल सार्नुहोस्</string>
-    <string name="action_sort_category">वर्गहरू क्रमबद्ध गर्नुहोस्</string>
     <string name="notification_updating_progress">पुस्तकालय अपडेट गर्दै... (%s)</string>
-    <string name="sort_category_confirmation">के तपाई वर्गहरू वर्णमाला अनुसार क्रमबद्ध गर्न चाहनुहुन्छ?</string>
     <string name="source_settings">स्रोत सेटिंग्स</string>
     <string name="app_settings">एप सेटिंग्स</string>
     <string name="pref_relative_format">सापेक्ष टाइमस्ट्याम्पहरू</string>
@@ -830,7 +825,7 @@
     <string name="action_sort_random">ऱ्याण्डम</string>
     <string name="onboarding_permission_crashlytics">Crash logs पठाउनुहोस्</string>
     <string name="pref_firebase">Analytics र Crash logs</string>
-    <string name="firebase_summary">Crash logs र Analytics पठाउँदा हामीलाई समस्याहरू पहिचान गर्न र समाधान गर्न, कार्यसम्पादन सुधार गर्न, र भविष्यका अपडेट्समा तपाईंको आवश्यकताहरूसँग थप सान्दर्भिक बनाउन अनुमति दिनेछ</string>
+    <string name="firebase_summary">Crash logs र Analytics पठाउँदा हामीलाई समस्याहरू पहिचान र समाधान गर्न, कार्यसम्पादन सुधार गर्न, र भविष्यका अपडेट्समा तपाईंको आवश्यकताहरूसँग थप सान्दर्भिक बनाउन अनुमति दिनेछ</string>
     <string name="onboarding_permission_analytics_description">अनुप्रयोग सुविधाहरू सुधार गर्न बेनामी उपयोग डेटा पठाउनुहोस्।</string>
     <string name="non_library_settings">सबै पढेको इन्ट्री</string>
     <string name="onboarding_permission_analytics">Analytics लाई अनुमति दिनुहोस्</string>
@@ -844,4 +839,18 @@
     <string name="pref_hardware_bitmap_threshold_default">पूर्वनिर्धारित (%d)</string>
     <string name="pref_hardware_bitmap_threshold_summary">यदि पाठकले खाली छवि लोड गर्छ भने क्रमशः threshold घटाउनुहोस्।\nचयन गरिएको: %s</string>
     <string name="pref_hardware_bitmap_threshold">Custom hardware bitmap threshold</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">कार्यसम्पादनमा असर गर्छ। Bitmap threshold घटाउँदा खाली छवि समस्याहरू समाधान गर्दैन भने मात्र सक्षम गर्नुहोस्</string>
+    <string name="pref_incognito_mode_extension_summary">एक्सटेन्शनमा पढिएको इतिहास रोक्नुहोस्</string>
+    <string name="label_auto">अटो</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_2">लामो स्ट्रिप रिडरको लागि लिगेसी डिकोडर प्रयोग गर्नुहोस्</string>
+    <string name="pref_mark_duplicate_read_chapter_read">पढिएका अध्यायहरूको डुप्लिकेटलाई पढिएको रूपमा चिन्ह लगाउनुहोस्</string>
+    <string name="theme_monochrome">मोनोक्रोम</string>
+    <string name="action_toggle_private_on">निजी रूपमा ट्र्याक गर्नुहोस्</string>
+    <string name="action_toggle_private_off">सार्वजनिक रूपमा ट्र्याक गरिएको</string>
+    <string name="export">निर्यात</string>
+    <string name="library_list">पुस्तकालय सूची</string>
+    <string name="library_exported">पुस्तकालय निर्यात गरियो</string>
+    <string name="author">लेखक</string>
+    <string name="artist">कलाकार</string>
+    <string name="tracked_privately">निजी रूपमा ट्र्याक गरियो</string>
 </resources>

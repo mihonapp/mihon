@@ -571,7 +571,6 @@
     <string name="skipped_reason_not_started">Hoppet over fordi ingen kapitler er lest</string>
     <string name="disabled_nav">Deaktivert</string>
     <string name="empty_backup_error">Ingen bibliotekoppføringer å sikkerhetskopiere</string>
-    <string name="update_check_fdroid_migration_info">En ny versjon er tilgjengelig gjennom offisielle kanaler. Trykk for å lære hvordan du kan flytte over fra den uoffisielle F-Droid varianten.</string>
     <string name="error_saving_picture">Feil ved lagring av bilde</string>
     <string name="update_check_open">Åpne på GitHub</string>
     <string name="action_close">Lukk</string>
@@ -692,10 +691,8 @@
     <string name="pref_page_rotate_invert">Vend orienteringen av roterte brede sider</string>
     <string name="pref_page_rotate">Roter brede sider slik at de passer</string>
     <string name="pref_debug_info">Debug info</string>
-    <string name="pref_library_columns_per_row">%d per rad</string>
     <string name="manga_display_modified_interval_title">Sett til å oppdatere hver</string>
     <string name="skipped_reason_not_in_release_period">Hoppet over fordi ingen utgivelse var forventet i dag</string>
-    <string name="pref_chapter_swipe">Kapittelsveip</string>
     <string name="action_set_interval">Sett intervall</string>
     <string name="action_filter_interval_custom">Egendefinert oppdateringsintervall</string>
     <string name="action_sort_next_updated">Neste forventede oppdatering</string>
@@ -722,9 +719,7 @@
     <string name="exception_offline">Ingen internettforbindelse</string>
     <string name="exception_http">HTTP %d, sjekk nettsiden i WebView</string>
     <string name="exception_unknown_host">Kunne ikke nå %s</string>
-    <string name="action_sort_category">Sorter kategorier</string>
     <string name="notification_updating_progress">Oppdaterer bibliotek… (%s)</string>
-    <string name="sort_category_confirmation">Vil du sortere kategoriene i alfabetisk rekkefølge?</string>
     <string name="source_settings">Kildeinnstillinger</string>
     <string name="app_settings">Programinnstillinger</string>
     <string name="pref_relative_format">Relative tidsstempler</string>

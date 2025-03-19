@@ -571,7 +571,6 @@
     <string name="action_move_to_top_all_for_series">ย้ายเรื่องไปด้านบน</string>
     <string name="disabled_nav">ปิดใช้งาน</string>
     <string name="error_saving_picture">ผิดพลาดในการบันทึกรูปภาพ</string>
-    <string name="update_check_fdroid_migration_info">มีเวอร์ชันใหม่พร้อมใช้งานจากรีลีสทางการ แตะเพื่อเรียนรู้วีธีการย้ายข้อมูลจากรีลีสไม่เป็นทางการ F-Droid</string>
     <string name="update_check_open">เปิดใน GithHub</string>
     <string name="empty_backup_error">ไม่มีรายการคลังถูกสำรองข้อมูลไว้</string>
     <string name="action_close">ปิด</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">หมุนหน้ากว้างให้พอดี</string>
     <string name="pref_page_rotate_invert">พลิกการวางแนวของหน้ากว้างที่หมุน</string>
     <string name="pref_debug_info">ข้อมูลดีบัก</string>
-    <string name="pref_chapter_swipe">การปัดรายการตอน</string>
     <string name="pref_chapter_swipe_end">การกระทำเมื่อปัดไปทางขวา</string>
     <string name="pref_chapter_swipe_start">การกระทำเมื่อปัดไปทางซ้าย</string>
     <string name="pref_double_tap_zoom">แตะสองครั้งเพื่อซูม</string>
-    <string name="pref_library_columns_per_row">%d ต่อแถว</string>
     <string name="action_set_interval">กำหนดช่วงเวลา</string>
     <string name="action_filter_interval_custom">กำหนดความถี่ในการอัปเดต</string>
     <string name="action_sort_next_updated">การอัปเดตที่คาดไว้ต่อไป</string>
@@ -724,9 +721,7 @@
     <string name="action_move_to_bottom_all_for_series">ย้ายเรื่องไปด้านล่าง</string>
     <string name="pref_relative_format">ประทับเวลาแบบสัมพันธ์กัน</string>
     <string name="pref_relative_format_summary">แสดง \"%1$s\" แทน \"%2$s\"</string>
-    <string name="action_sort_category">จัดเรียงหมวดหมู่</string>
     <string name="notification_updating_progress">กำลังอัปเดตคลัง... (%s)</string>
-    <string name="sort_category_confirmation">ต้องการจัดเรียงหมวดหมู่ตามตัวอักษรหรือไม่?</string>
     <string name="source_settings">การตั้งค่าแหล่งที่มา</string>
     <string name="app_settings">การตั้งค่าแอป</string>
     <string name="file_null_uri_error">ไม่มีไฟล์ถูกเลือกไว้</string>
@@ -836,4 +831,5 @@
     <string name="action_replace_repo_message">รีโพสิทอรี %1$s มีกุญแจลายเซ็นระบุตัวตนเดียวกันกับ %2$s\nหากต้องการ %2$s จะถูกแทนที่ มิฉะนั้น โปรดติดต่อผู้ดูแลรีโพนี้</string>
     <string name="add_repo_confirmation">คุณต้องการเพิ่มรีโพ \"%s\" หรือไม่?</string>
     <string name="confirm_tracker_update">อัปเดตตัวติดตามของบท %d หรือไม่?</string>
+    <string name="label_auto">อัตโนมัติ</string>
 </resources>

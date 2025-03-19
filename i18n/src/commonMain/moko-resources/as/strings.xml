@@ -20,7 +20,6 @@
     <string name="pref_category_about">বিষয়ে</string>
     <string name="lock_with_biometrics">আনলকৰ প্ৰয়োজন</string>
     <string name="lock_when_idle">নিশ্ক্ৰিয় হৈ থাকিলে লক কৰক</string>
-    <string name="pref_library_columns_per_row">%d প্ৰতিটো শাৰী</string>
     <string name="portrait">উল্লম্ব</string>
     <string name="landscape">অনুভূমিক</string>
     <string name="pref_category_library_update">সৰ্বসাধাৰণ সন্মিলনী</string>
@@ -143,8 +142,6 @@
     <string name="action_move_category">শ্ৰেণীবোৰ স্থাপন কৰক</string>
     <string name="delete_category_confirmation">আপুনি কি %s শ্ৰেণী মচিব বিচাৰে?</string>
     <string name="delete_category">শ্ৰেণী মচক</string>
-    <string name="action_sort_category">শ্ৰেণী বাছনি কৰক</string>
-    <string name="sort_category_confirmation">আপুনি কি শ্ৰেণীবোৰ বৰ্ণানুক্ৰমিকভাৱে বাছনি কৰিব বিচাৰে?</string>
     <string name="action_edit_cover">মুৰৰ পৃষ্ঠাটী সম্পাদনা কৰক</string>
     <string name="action_view_chapters">অধ্যায়বোৰ চাওক</string>
     <string name="action_pause">থামক</string>
@@ -277,7 +274,7 @@
     <string name="parental_controls_info">এইটো আনুষ্ঠানিকভাৱে অনুমোদিত নহয় বা ভুলকৈ চিহ্নিত কৰা এক্সটেনচনে NSFW (১৮+) বিষয়বস্তু দেখুৱাব পাৰে।</string>
     <string name="relative_time_today">আজি</string>
     <string name="pref_category_display">প্ৰদৰ্শন</string>
-    <string name="pref_library_columns">গ্ৰিড মাপ</string>
+    <string name="pref_library_columns">শাৰীপ্ৰতি বস্তুসমূহ</string>
     <string name="pref_library_update_interval">স্বয়ংক্ৰিয় আপডেট</string>
     <string name="update_never">বন্ধ</string>
     <string name="update_12hour">প্ৰতি ১২ ঘণ্টা</string>
@@ -298,7 +295,6 @@
     <string name="none">কোনোও নহয়</string>
     <string name="include">অন্তৰ্ভুক্ত: %s</string>
     <string name="exclude">বাদ দিয়া: %s</string>
-    <string name="pref_chapter_swipe">অধ্যায় চুইপ</string>
     <string name="pref_chapter_swipe_end">সোঁফালে চুইপ কৰা কাৰ্য</string>
     <string name="pref_chapter_swipe_start">বাওঁফালে চুইপ কৰা কাৰ্য</string>
     <string name="multi_lang">বহুভাষী</string>
@@ -432,10 +428,10 @@
     <string name="rotation_force_portrait">প’ৰট্ৰেইট তালাচি</string>
     <string name="rotation_force_landscape">ল্যান্ডস্কেপ তালাচি</string>
     <string name="rotation_reverse_portrait">প’ৰট্ৰেইট বিপৰীত</string>
-    <string name="color_filter_r_value">ৰ</string>
-    <string name="color_filter_g_value">গ</string>
-    <string name="color_filter_b_value">ব</string>
-    <string name="color_filter_a_value">আ</string>
+    <string name="color_filter_r_value">ৰঙা</string>
+    <string name="color_filter_g_value">সেউজীয়া</string>
+    <string name="color_filter_b_value">নীলা</string>
+    <string name="color_filter_a_value">আলফা</string>
     <string name="pref_always_show_chapter_transition">সৰ্বদা অধ্যায় পৰিবৰ্তন দেখুৱাও</string>
     <string name="pref_category_reading_mode">পঢ়াৰ মোড</string>
     <string name="pref_highest">সৰ্বোচ্চ</string>
@@ -786,7 +782,6 @@
     <string name="update_check_no_new_updates">নতুন আপডেট উপলব্ধ নাই</string>
     <string name="update_check_notification_download_in_progress">ডাউনলোড হৈছে…</string>
     <string name="update_check_notification_update_available">নতুন সংস্কৰণ উপলব্ধ!</string>
-    <string name="update_check_fdroid_migration_info">এখন নতুন সংস্কৰণ চৰকাৰী মুক্তিৰ পৰা উপলব্ধ। আনুষ্ঠানিক F-Droid মুক্তিৰ পৰা মাইগ্ৰেট কৰিবলৈ কেনেকৈ শিকিবলৈ টেপ কৰক।</string>
     <string name="information_no_recent">কোনো নতুন আপডেট নাই</string>
     <string name="information_no_recent_manga">সম্প্ৰতি কিবা পঢ়া হোৱা নাই</string>
     <string name="information_empty_library">আপোনাৰ লাইব্ৰেৰী খালী</string>
@@ -840,4 +835,8 @@
     <string name="pref_hardware_bitmap_threshold">কাষ্টম হাৰ্ডৱেৰ বিটম্যাপ থ্ৰেশহোল্ড</string>
     <string name="pref_hardware_bitmap_threshold_summary">যদি পাঠকে এটা খালী ছবি লোড কৰে ক্ৰমান্বয়ে থ্ৰেছহোল্ড হ্ৰাস কৰক। \nবাচনি কৰা: %s</string>
     <string name="pref_hardware_bitmap_threshold_default">ডিফল্ট (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">কাৰ্য্যক্ষমতাক প্ৰভাৱিত কৰে। কেৱল সামৰ্থবান কৰক যদি বিটমেপ থ্ৰেছহোল্ড হ্ৰাস কৰিলে খালী প্ৰতিমুৰ্তি সমস্যা সমাধান নহয়</string>
+    <string name="pref_incognito_mode_extension_summary">সম্প্ৰসাৰণৰ বাবে ইতিহাস পঢ়া বন্ধ কৰক</string>
+    <string name="label_auto">অটো</string>
+    <string name="theme_monochrome">একবৰ্ণী</string>
 </resources>
