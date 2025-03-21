@@ -77,8 +77,8 @@ fun AppStateBanners(
     indexing: Boolean,
     restoring: Boolean,
     updating: Boolean,
-    progress: Float? = null,
     modifier: Modifier = Modifier,
+    progress: Float? = null,
 ) {
     val density = LocalDensity.current
     val mainInsets = WindowInsets.statusBars
@@ -94,14 +94,11 @@ fun AppStateBanners(
                     modifier = Modifier.windowInsetsPadding(mainInsets),
                     text = when {
                         updating -> progress?.let {
-                            stringResource(
-                                MR.strings.notification_updating_progress,
-                                percentFormatter.format(it),
-                            )
+                            stringResource(MR.strings.notification_updating_progress, percentFormatter.format(it))
                         } ?: stringResource(MR.strings.updating_library)
 
                         restoring -> progress?.let {
-                            stringResource(MR.strings.restoring_backup) + " (${percentFormatter.format(it)})"
+                            stringResource(MR.strings.restoring_backup_progress, percentFormatter.format(it))
                         } ?: stringResource(MR.strings.restoring_backup)
 
                         else -> stringResource(MR.strings.download_notifier_cache_renewal)
@@ -185,8 +182,8 @@ private fun IncognitoModeBanner(modifier: Modifier = Modifier) {
 
 @Composable
 private fun IndexingDownloadBanner(
-    text: String = stringResource(MR.strings.download_notifier_cache_renewal),
     modifier: Modifier = Modifier,
+    text: String = stringResource(MR.strings.download_notifier_cache_renewal),
 ) {
     val density = LocalDensity.current
     Row(
