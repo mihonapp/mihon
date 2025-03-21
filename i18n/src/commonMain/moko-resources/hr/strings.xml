@@ -667,7 +667,6 @@
     <string name="download_notifier_cache_renewal">Provjeravanje preuzimanja</string>
     <string name="update_check_open">Otvori na GitHubu</string>
     <string name="skipped_reason_not_always_update">Preskočeno jer serija ne zahtijeva aktualiziranja</string>
-    <string name="update_check_fdroid_migration_info">Dostupna je nova verzija u službenim izdanjima. Dodirni i saznaj kako migrirati iz neslužbenih F-Droid izdanja.</string>
     <string name="appwidget_updates_description">Pogledaj nedavno aktualizirane unose u biblioteci</string>
     <string name="remove_manga">Uklonit ćeš „%s” iz svoje biblioteke</string>
     <string name="appwidget_unavailable_locked">Widget nije dostupan kada je zaključavanje aplikacije aktivirano</string>
@@ -692,10 +691,8 @@
     <string name="pref_page_rotate">Prilagodi prikaz širokih stranica okretanjem</string>
     <string name="pref_page_rotate_invert">Preokreni položaj širokih stranica</string>
     <string name="pref_debug_info">Informacije o otklanjanju grešaka</string>
-    <string name="pref_library_columns_per_row">%d po retku</string>
     <string name="pref_chapter_swipe_start">Prelistaj ulijevo</string>
     <string name="pref_double_tap_zoom">Dodirni dvaput za zumiranje</string>
-    <string name="pref_chapter_swipe">Prelistaj poglavlja</string>
     <string name="pref_chapter_swipe_end">Prelistaj udesno</string>
     <string name="action_set_interval">Postavi interval</string>
     <string name="action_filter_interval_custom">Prilagođeni interval aktualiziranja</string>
@@ -724,9 +721,7 @@
     <string name="action_move_to_bottom_all_for_series">Premjesti seriju na kraj</string>
     <string name="pref_relative_format">Relativne vremenske oznake</string>
     <string name="pref_relative_format_summary">„%1$s” umjesto „%2$s”</string>
-    <string name="action_sort_category">Razvrstaj kategorije</string>
     <string name="notification_updating_progress">Aktualiziranje biblioteke … (%s)</string>
-    <string name="sort_category_confirmation">Želiš li razvrstati kategorije abecednim redom?</string>
     <string name="file_null_uri_error">Nije odabrana nijedna datoteka</string>
     <string name="source_settings">Postavke izvora</string>
     <string name="app_settings">Postavke aplikacije</string>
@@ -840,4 +835,5 @@
     <string name="pref_hardware_bitmap_threshold_summary">Ako čitač učita praznu sliku, postupno smanji prag.\nOdabrano: %s</string>
     <string name="pref_hardware_bitmap_threshold">Prilagođeni hardverski prag bitmapa</string>
     <string name="pref_hardware_bitmap_threshold_default">Standardno (%d)</string>
+    <string name="pref_always_decode_long_strip_with_ssiv_summary">Utječe na performansu. Aktiviraj samo ako smanjenje praga bitmapa ne riješi probleme s praznim slikama</string>
 </resources>

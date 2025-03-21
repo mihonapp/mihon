@@ -570,7 +570,6 @@
     <string name="rotation_reverse_portrait">رأسي بالعكس</string>
     <string name="notification_update_error">فشل %1$d تحديث أو تحديثات</string>
     <string name="learn_more">اضغط لمعرفة المزيد</string>
-    <string name="update_check_fdroid_migration_info">نسخة جديدة متاحة من الإصدارات الرسمية. انقر لمعرفة كيفية النقل من إصدارات F-Droid غير الرسمية.</string>
     <string name="action_move_to_top_all_for_series">نقل سلسلة الفصول للأعلى</string>
     <string name="empty_backup_error">لا توجد مدخلات في المكتبة لإجراء نسخة احتياطي‮‮ة</string>
     <string name="action_close">اغلاق</string>
@@ -693,10 +692,8 @@
     <string name="pref_page_rotate_invert">اعكس اتِّجاه الصفحات العريضة المدوَّرة</string>
     <string name="pref_debug_info">معلومات التنقيح</string>
     <string name="pref_double_tap_zoom">انقر مرتين لتكبِّر</string>
-    <string name="pref_chapter_swipe">تمرير الفصول</string>
     <string name="pref_chapter_swipe_end">إجراء التمرير الأيسر</string>
     <string name="pref_chapter_swipe_start">إجراء التمرير الأيمن</string>
-    <string name="pref_library_columns_per_row">%d كلَّ صفٍّ</string>
     <string name="action_set_interval">عيِّد المدة</string>
     <string name="action_filter_interval_custom">مدة جلب مخصَّصة</string>
     <string name="manga_display_interval_title">قدِّر كلَّ</string>
@@ -724,9 +721,7 @@
     <string name="action_move_to_bottom_all_for_series">انقل السلسلة للقعر</string>
     <string name="pref_relative_format">التوقيت النسبي</string>
     <string name="pref_relative_format_summary">«%1$s» بدلًا عن «%2$s»</string>
-    <string name="action_sort_category">رتِّب الفئات</string>
     <string name="notification_updating_progress">تحديث المكتبة… (%s)</string>
-    <string name="sort_category_confirmation">أتريد ترتيب الفئات حسب الحروف؟</string>
     <string name="source_settings">إعدادات المصادر</string>
     <string name="app_settings">إعدادات التطبيق</string>
     <string name="file_null_uri_error">لا ملفات حُدِّدت</string>

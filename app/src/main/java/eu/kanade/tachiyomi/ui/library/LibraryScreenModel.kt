@@ -323,6 +323,7 @@ class LibraryScreenModel(
     private fun getLibraryItemPreferencesFlow(): Flow<ItemPreferences> {
         return combine(
             libraryPreferences.downloadBadge().changes(),
+            libraryPreferences.unreadBadge().changes(),
             libraryPreferences.localBadge().changes(),
             libraryPreferences.languageBadge().changes(),
             libraryPreferences.autoUpdateMangaRestrictions().changes(),
@@ -337,16 +338,17 @@ class LibraryScreenModel(
         ) {
             ItemPreferences(
                 downloadBadge = it[0] as Boolean,
-                localBadge = it[1] as Boolean,
-                languageBadge = it[2] as Boolean,
-                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[3] as Set<*>),
-                globalFilterDownloaded = it[4] as Boolean,
-                filterDownloaded = it[5] as TriState,
-                filterUnread = it[6] as TriState,
-                filterStarted = it[7] as TriState,
-                filterBookmarked = it[8] as TriState,
-                filterCompleted = it[9] as TriState,
-                filterIntervalCustom = it[10] as TriState,
+                unreadBadge = it[1] as Boolean,
+                localBadge = it[2] as Boolean,
+                languageBadge = it[3] as Boolean,
+                skipOutsideReleasePeriod = LibraryPreferences.MANGA_OUTSIDE_RELEASE_PERIOD in (it[4] as Set<*>),
+                globalFilterDownloaded = it[5] as Boolean,
+                filterDownloaded = it[6] as TriState,
+                filterUnread = it[7] as TriState,
+                filterStarted = it[8] as TriState,
+                filterBookmarked = it[9] as TriState,
+                filterCompleted = it[10] as TriState,
+                filterIntervalCustom = it[11] as TriState,
             )
         }
     }
@@ -370,7 +372,7 @@ class LibraryScreenModel(
                         } else {
                             0
                         },
-                        unreadCount = libraryManga.unreadCount,
+                        unreadCount = if (prefs.unreadBadge) libraryManga.unreadCount else 0,
                         isLocal = if (prefs.localBadge) libraryManga.manga.isLocal() else false,
                         sourceLanguage = if (prefs.languageBadge) {
                             sourceManager.getOrStub(libraryManga.manga.source).lang
@@ -704,6 +706,7 @@ class LibraryScreenModel(
     @Immutable
     private data class ItemPreferences(
         val downloadBadge: Boolean,
+        val unreadBadge: Boolean,
         val localBadge: Boolean,
         val languageBadge: Boolean,
         val skipOutsideReleasePeriod: Boolean,

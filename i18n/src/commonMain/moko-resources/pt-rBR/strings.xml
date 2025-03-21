@@ -570,7 +570,6 @@
     <string name="rotation_reverse_portrait">Retrato invertido</string>
     <string name="action_move_to_top_all_for_series">Mover série para o começo</string>
     <string name="disabled_nav">Desativado</string>
-    <string name="update_check_fdroid_migration_info">Uma nova versão está disponível nos releases oficiais. Toque para saber como migrar dos releases não oficiais do F-Droid.</string>
     <string name="error_saving_picture">Erro ao salvar a imagem</string>
     <string name="empty_backup_error">Nenhuma entrada na biblioteca para fazer backup</string>
     <string name="update_check_open">Abrir no GitHub</string>
@@ -692,11 +691,9 @@
     <string name="pref_page_rotate">Rotacionar páginas largas para caber</string>
     <string name="pref_page_rotate_invert">Inverter a orientação das páginas largas rotacionadas</string>
     <string name="pref_debug_info">Informações de depuração</string>
-    <string name="pref_chapter_swipe">Ações do capítulo</string>
     <string name="pref_chapter_swipe_end">Ação de deslizar para a direita</string>
     <string name="pref_chapter_swipe_start">Ação de deslizar para a esquerda</string>
     <string name="pref_double_tap_zoom">Toque duplo para dar zoom</string>
-    <string name="pref_library_columns_per_row">%d por linha</string>
     <string name="action_sort_next_updated">Próxima atualização esperada</string>
     <string name="pref_update_only_in_release_period">Prever a data do próximo lançamento</string>
     <string name="action_set_interval">Definir intervalo</string>
@@ -727,8 +724,6 @@
     <string name="app_settings">Configurações do aplicativo</string>
     <string name="notification_updating_progress">Atualizando a biblioteca… (%s)</string>
     <string name="source_settings">Configurações das fontes</string>
-    <string name="action_sort_category">Ordenar as categorias</string>
-    <string name="sort_category_confirmation">Você deseja ordenar as categorias alfabeticamente?</string>
     <string name="file_null_uri_error">Nenhum arquivo selecionado</string>
     <string name="label_data_storage">Dados e armazenamento</string>
     <string name="pref_flash_page_summ">Reduz o efeito fantasma em telas e-ink</string>
@@ -823,4 +818,12 @@
     <string name="file_picker_uri_permission_unsupported">Falha ao adquirir acesso a uma pasta persistente. O aplicativo pode se comportar de maneira inesperada.</string>
     <string name="invalid_backup_file_json">Backup JSON não suportado</string>
     <string name="invalid_backup_file_unknown">O arquivo de backup está corrompido</string>
+    <string name="label_auto">Automático</string>
+    <string name="onboarding_permission_crashlytics_description">Envie lgos de falhas anônimas para os desenvolvedores.</string>
+    <string name="onboarding_permission_analytics_description">Enviar dados de uso anônimos para melhorar os recursos do aplicativo.</string>
+    <string name="pref_firebase">Análises e registros de falhas</string>
+    <string name="action_sort_random">Aleatório</string>
+    <string name="onboarding_permission_crashlytics">Enviar logs de falhas</string>
+    <string name="pref_security">Segurança</string>
+    <string name="onboarding_permission_analytics">Permitir análise</string>
 </resources>

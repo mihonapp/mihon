@@ -1,3 +1,4 @@
+import mihon.buildlogic.Config
 import mihon.buildlogic.getBuildTime
 import mihon.buildlogic.getCommitCount
 import mihon.buildlogic.getGitSha
@@ -10,17 +11,7 @@ plugins {
     alias(libs.plugins.aboutLibraries)
 }
 
-class ConfigClass {
-    val includeAnalytics: Boolean = project.hasProperty("include-analytics")
-    val enableUpdater: Boolean = project.hasProperty("enable-updater")
-    val enableCodeShrink: Boolean = !project.hasProperty("disable-code-shrink")
-    val includeDependencyInfo: Boolean = project.hasProperty("include-dependency-info")
-}
-
-@Suppress("PropertyName")
-val Config = ConfigClass()
-
-if (Config.includeAnalytics) {
+if (Config.includeTelemetry) {
     pluginManager.apply {
         apply(libs.plugins.google.services.get().pluginId)
         apply(libs.plugins.firebase.crashlytics.get().pluginId)
@@ -35,13 +26,13 @@ android {
     defaultConfig {
         applicationId = "app.mihon"
 
-        versionCode = 10
-        versionName = "0.17.1"
+        versionCode = 11
+        versionName = "0.18.0"
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
-        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
-        buildConfigField("boolean", "ANALYTICS_INCLUDED", "${Config.includeAnalytics}")
+        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
+        buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
         buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -58,6 +49,8 @@ android {
             isShrinkResources = Config.enableCodeShrink
 
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = true)}\"")
         }
 
         val commonMatchingFallbacks = listOf(release.name)
@@ -78,6 +71,8 @@ android {
             signingConfig = debug.signingConfig
 
             matchingFallbacks.addAll(commonMatchingFallbacks)
+
+            buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
         }
         create("benchmark") {
             initWith(release)
@@ -94,8 +89,6 @@ android {
     }
 
     sourceSets {
-        val analyticsDir = if (Config.includeAnalytics) "analytics-firebase" else "analytics-firebase-noop"
-        getByName("main").kotlin.srcDirs("src/$analyticsDir/kotlin")
         getByName("preview").res.srcDirs("src/debug/res")
         getByName("benchmark").res.srcDirs("src/debug/res")
     }
@@ -187,6 +180,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.presentationCore)
     implementation(projects.presentationWidget)
+    implementation(projects.telemetry)
 
     // Compose
     implementation(compose.activity)
@@ -279,13 +273,6 @@ dependencies {
 
     // Logging
     implementation(libs.logcat)
-
-    // Crash reports/analytics
-    if (Config.includeAnalytics) {
-        implementation(platform(libs.firebase.bom))
-        implementation(libs.firebase.analytics)
-        implementation(libs.firebase.crashlytics)
-    }
 
     // Shizuku
     implementation(libs.bundles.shizuku)
