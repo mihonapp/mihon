@@ -17,6 +17,7 @@ import coil3.transform.CircleCropTransformation
 import eu.kanade.presentation.util.formatChapterNumber
 import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.core.security.SecurityPreferences
+import eu.kanade.tachiyomi.data.LibraryUpdateStatus
 import eu.kanade.tachiyomi.data.download.Downloader
 import eu.kanade.tachiyomi.data.notification.NotificationHandler
 import eu.kanade.tachiyomi.data.notification.NotificationReceiver
@@ -47,6 +48,7 @@ class LibraryUpdateNotifier(
 
     private val securityPreferences: SecurityPreferences = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
+    private val libraryUpdateStatus: LibraryUpdateStatus = Injekt.get(),
 ) {
 
     private val percentFormatter = NumberFormat.getPercentInstance().apply {
@@ -89,7 +91,7 @@ class LibraryUpdateNotifier(
      * @param current the current progress.
      * @param total the total progress.
      */
-    fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
+    suspend fun showProgressNotification(manga: List<Manga>, current: Int, total: Int) {
         progressNotificationBuilder
             .setContentTitle(
                 context.stringResource(
@@ -97,6 +99,8 @@ class LibraryUpdateNotifier(
                     percentFormatter.format(current.toFloat() / total),
                 ),
             )
+
+        libraryUpdateStatus.updateProgress(current.toFloat() / total)
 
         if (!securityPreferences.hideNotificationContent().get()) {
             val updatingText = manga.joinToString("\n") { it.title.chop(40) }
