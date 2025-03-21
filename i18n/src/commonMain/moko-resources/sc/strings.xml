@@ -689,8 +689,8 @@
     <string name="pref_page_rotate">Gira sas pàginas largas pro las adatare</string>
     <string name="pref_page_rotate_invert">Fùrria s\'orientamentu de sas pàginas largas giradas</string>
     <string name="pref_double_tap_zoom">Tocu dòpiu pro ismanniare</string>
-    <string name="pref_chapter_swipe_end">Atzione de iscurrimentu a destra</string>
-    <string name="pref_chapter_swipe_start">Atzione de iscurrimentu a manca</string>
+    <string name="pref_chapter_swipe_end">Capìtulu iscurrende a destra</string>
+    <string name="pref_chapter_swipe_start">Capìtulu iscurrende a manca</string>
     <string name="pref_debug_info">Informatziones de depuratzione de còdighe</string>
     <string name="manga_display_interval_title">Càrcula cada</string>
     <string name="action_filter_interval_custom">Intervallu de recùperu personalizadu</string>
@@ -840,4 +840,15 @@
     <string name="pref_always_decode_long_strip_with_ssiv_2">Imprea su codificadore betzu pro su leghidore de immàgines longas</string>
     <string name="export">Esporta</string>
     <string name="theme_monochrome">Monocromo</string>
+    <string name="action_display_unread_badge">Capìtulos non lèghidos</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">A pustis de àere lèghidu unu capìtulu</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Marca sos capìtulos lèghidos duplicados comente lèghidos</string>
+    <string name="tracked_privately">Arrastadu in manera privada</string>
+    <string name="action_toggle_private_on">Arrasta in manera privada</string>
+    <string name="author">Autore</string>
+    <string name="artist">Artista</string>
+    <string name="library_exported">Biblioteca esportada</string>
+    <string name="action_toggle_private_off">Arrasta in manera pùblica</string>
+    <string name="pref_behavior">Cumportamentu</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">A pustis de su recùperu de unu capìtulu</string>
 </resources>
