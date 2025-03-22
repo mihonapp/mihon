@@ -171,7 +171,7 @@ class ReaderViewModel @JvmOverloads constructor(
                                         !downloadManager.isChapterDownloaded(
                                             it.name,
                                             it.scanlator,
-                                            manga.title,
+                                            manga.ogTitle,
                                             manga.source,
                                         )
                                     ) ||
@@ -180,7 +180,7 @@ class ReaderViewModel @JvmOverloads constructor(
                                         downloadManager.isChapterDownloaded(
                                             it.name,
                                             it.scanlator,
-                                            manga.title,
+                                            manga.ogTitle,
                                             manga.source,
                                         )
                                     ) ||
@@ -393,7 +393,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val isDownloaded = downloadManager.isChapterDownloaded(
                 dbChapter.name,
                 dbChapter.scanlator,
-                manga.title,
+                manga.ogTitle,
                 manga.source,
                 skipCache = true,
             )
@@ -469,7 +469,7 @@ class ReaderViewModel @JvmOverloads constructor(
             val isNextChapterDownloaded = downloadManager.isChapterDownloaded(
                 nextChapter.name,
                 nextChapter.scanlator,
-                manga.title,
+                manga.ogTitle,
                 manga.source,
             )
             if (!isNextChapterDownloaded) return@launchIO
@@ -754,7 +754,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val chapter = page.chapter.chapter
         val filenameSuffix = " - ${page.number}"
         return DiskUtil.buildValidFilename(
-            "${manga.title} - ${chapter.name}".takeBytes(DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize()),
+            "${manga.ogTitle} - ${chapter.name}".takeBytes(DiskUtil.MAX_FILE_NAME_BYTES - filenameSuffix.byteSize()),
         ) + filenameSuffix
     }
 
@@ -808,7 +808,7 @@ class ReaderViewModel @JvmOverloads constructor(
         // Pictures directory.
         val relativePath = if (readerPreferences.folderPerManga().get()) {
             DiskUtil.buildValidFilename(
-                manga.title,
+                manga.ogTitle,
             )
         } else {
             ""

@@ -5,6 +5,7 @@ import tachiyomi.domain.library.model.LibraryManga
 import tachiyomi.domain.manga.model.Manga
 
 object MangaMapper {
+    @Suppress("LongParameterList")
     fun mapManga(
         id: Long,
         source: Long,
@@ -28,6 +29,10 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        customArtist: String?,
+        customAuthor: String?,
+        customDescription: String?,
+        customTitle: String?,
         version: Long,
         @Suppress("UNUSED_PARAMETER")
         isSyncing: Long,
@@ -43,10 +48,10 @@ object MangaMapper {
         chapterFlags = chapterFlags,
         coverLastModified = coverLastModified,
         url = url,
-        title = title,
-        artist = artist,
-        author = author,
-        description = description,
+        ogTitle = title,
+        ogArtist = artist,
+        ogAuthor = author,
+        ogDescription = description,
         genre = genre,
         status = status,
         thumbnailUrl = thumbnailUrl,
@@ -54,9 +59,14 @@ object MangaMapper {
         initialized = initialized,
         lastModifiedAt = lastModifiedAt,
         favoriteModifiedAt = favoriteModifiedAt,
+        customArtist = customArtist,
+        customAuthor = customAuthor,
+        customDescription = customDescription,
+        customTitle = customTitle,
         version = version,
     )
 
+    @Suppress("LongParameterList")
     fun mapLibraryManga(
         id: Long,
         source: Long,
@@ -80,6 +90,10 @@ object MangaMapper {
         calculateInterval: Long,
         lastModifiedAt: Long,
         favoriteModifiedAt: Long?,
+        customArtist: String?,
+        customAuthor: String?,
+        customDescription: String?,
+        customTitle: String?,
         version: Long,
         isSyncing: Long,
         totalCount: Long,
@@ -113,6 +127,10 @@ object MangaMapper {
             calculateInterval,
             lastModifiedAt,
             favoriteModifiedAt,
+            customArtist,
+            customAuthor,
+            customDescription,
+            customTitle,
             version,
             isSyncing,
         ),
