@@ -26,6 +26,8 @@ interface SManga : Serializable {
 
     var initialized: Boolean
 
+    var dirLastModifiedAt: Long?
+
     fun getGenres(): List<String>? {
         if (genre.isNullOrBlank()) return null
         return genre?.split(", ")?.map { it.trim() }?.filterNot { it.isBlank() }?.distinct()

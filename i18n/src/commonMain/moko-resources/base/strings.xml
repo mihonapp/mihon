@@ -687,6 +687,9 @@
     <string name="chapter_not_found">Chapter not found</string>
     <string name="local_invalid_format">Invalid chapter format</string>
     <string name="local_filter_order_by">Order by</string>
+    <string name="local_filter_random_page">Load random manga page (ignores all filters)</string>
+    <string name="local_filter_text_search_header">Values separated by ,\nuse - before a value to filter it out</string>
+    <string name="local_filter_info_header">⚠️ Please use "Reset" to update your filters\n\nⓘ Filtering only works for manga that have already loaded\n\nⓘ "Order by" will only become available once all your manga have loaded</string>
     <string name="date">Date</string>
 
     <!-- Manga info -->
@@ -775,6 +778,9 @@
     <string name="score">Score</string>
     <string name="title">Title</string>
     <string name="status">Status</string>
+    <string name="genres">Genres</string>
+    <string name="authors">Authors</string>
+    <string name="artists">Artists</string>
     <string name="track_status">Status</string>
     <string name="track_started_reading_date">Start date</string>
     <string name="track_finished_reading_date">Finish date</string>
