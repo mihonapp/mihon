@@ -29,6 +29,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Display staff information on Anilist tracker search results ([@NarwhalHorns](https://github.com/NarwhalHorns)) ([#1810](https://github.com/mihonapp/mihon/pull/1810))
 - Add `id:` prefix search to library to search by internal DB ID ([@MajorTanya](https://github.com/MajorTanya)) ([#1856](https://github.com/mihonapp/mihon/pull/1856))
 - Add back option to disable unread chapter badge in library ([@AntsyLich](https://github.com/AntsyLich)) ([#1871](https://github.com/mihonapp/mihon/pull/1871))
+- Add additional Kaomoji for selection in error messages ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
 
 ### Changed
 - Sliders UI ([@AntsyLich](https://github.com/AntsyLich)) ([#1840](https://github.com/mihonapp/mihon/pull/1840))
