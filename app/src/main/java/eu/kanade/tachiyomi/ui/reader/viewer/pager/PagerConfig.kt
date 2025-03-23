@@ -28,7 +28,7 @@ class PagerConfig(
     var theme = readerPreferences.readerTheme().get()
         private set
 
-    var automaticBackground = false
+    var automaticBackground = 0
         private set
 
     var dualPageSplitChangedListener: ((Boolean) -> Unit)? = null
@@ -53,7 +53,11 @@ class PagerConfig(
             .register(
                 {
                     theme = it
-                    automaticBackground = it == 3
+                    if (it == 3) {
+                        automaticBackground = 1
+                    } else if (it == 4) {
+                        automaticBackground = 2
+                    }
                 },
                 { imagePropertyChangedListener?.invoke() },
             )

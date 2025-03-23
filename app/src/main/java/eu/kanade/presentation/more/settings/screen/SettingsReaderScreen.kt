@@ -93,6 +93,7 @@ object SettingsReaderScreen : SearchableSettings {
                         2 to stringResource(MR.strings.gray_background),
                         0 to stringResource(MR.strings.white_background),
                         3 to stringResource(MR.strings.automatic_background),
+                        4 to stringResource(MR.strings.automatic_background_black),
                     ),
                     title = stringResource(MR.strings.pref_reader_theme),
                 ),

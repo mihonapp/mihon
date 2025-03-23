@@ -21,7 +21,8 @@ private val themes = listOf(
     MR.strings.gray_background to 2,
     MR.strings.white_background to 0,
     MR.strings.automatic_background to 3,
-)
+    MR.strings.automatic_background_black to 4,
+    )
 
 private val flashColors = listOf(
     MR.strings.pref_flash_style_black to ReaderPreferences.FlashColor.BLACK,

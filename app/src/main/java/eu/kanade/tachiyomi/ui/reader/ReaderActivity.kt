@@ -837,6 +837,7 @@ class ReaderActivity : BaseActivity() {
                             0 -> Color.WHITE
                             2 -> grayBackgroundColor
                             3 -> automaticBackgroundColor()
+                            // 4 -> automaticBackgroundColor_black() // Pas sûr de celle là
                             else -> Color.BLACK
                         },
                     )
