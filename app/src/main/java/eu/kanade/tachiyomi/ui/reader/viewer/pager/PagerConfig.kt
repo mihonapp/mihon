@@ -57,6 +57,8 @@ class PagerConfig(
                         automaticBackground = 1
                     } else if (it == 4) {
                         automaticBackground = 2
+                    } else {
+                        automaticBackground = 0
                     }
                 },
                 { imagePropertyChangedListener?.invoke() },
