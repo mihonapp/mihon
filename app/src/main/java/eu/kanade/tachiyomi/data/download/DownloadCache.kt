@@ -282,6 +282,42 @@ class DownloadCache(
         notifyChanges()
     }
 
+    /**
+     * Renames a manga in this cache.
+     *
+     * @param oldTitle the manga's old title.
+     * @param newTitle the manga's new title.
+     * @param mangaUniFile the manga's new directory.
+     * @param source the source id.
+     */
+    suspend fun renameManga(source: Long, oldTitle: String, newTitle: String, mangaUniFile: UniFile) {
+        rootDownloadsDirMutex.withLock {
+            val sourceDir = rootDownloadsDir.sourceDirs[source] ?: return
+            val oldMangaDirName = provider.getMangaDirName(oldTitle)
+            var oldChapterDirs: MutableSet<String>? = null
+            // Save the old name's cached chapter dirs
+            if (sourceDir.mangaDirs.containsKey(oldMangaDirName)) {
+                oldChapterDirs = sourceDir.mangaDirs[oldMangaDirName]?.chapterDirs
+                sourceDir.mangaDirs -= oldMangaDirName
+            }
+
+            // Retrieve/create the cached manga directory for new name
+            val newMangaDirName = provider.getMangaDirName(newTitle)
+            var mangaDir = sourceDir.mangaDirs[newMangaDirName]
+            if (mangaDir == null) {
+                mangaDir = MangaDirectory(mangaUniFile)
+                sourceDir.mangaDirs += newMangaDirName to mangaDir
+            }
+
+            // Add the old chapters to new name's cache
+            if (!oldChapterDirs.isNullOrEmpty()) {
+                mangaDir.chapterDirs += oldChapterDirs
+            }
+        }
+
+        notifyChanges()
+    }
+
     suspend fun removeSource(source: Source) {
         rootDownloadsDirMutex.withLock {
             rootDownloadsDir.sourceDirs -= source.id

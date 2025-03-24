@@ -331,11 +331,11 @@ class DownloadManager(
      * Renames manga download folder
      *
      * @param source the source of the manga.
-     * @param manga the manga to rename
+     * @param oldTitle the old manga title.
      * @param newTitle the new manga title.
      */
-    fun renameManga(source: Source, manga: Manga, newTitle: String) {
-        val oldFolder = provider.findMangaDir(manga.title, source) ?: return
+    suspend fun renameManga(source: Source, oldTitle: String, newTitle: String) {
+        val oldFolder = provider.findMangaDir(oldTitle, source) ?: return
         val newName = provider.getMangaDirName(newTitle)
 
         if (oldFolder.name == newName) return
@@ -349,7 +349,9 @@ class DownloadManager(
             }
         }
 
-        if (!oldFolder.renameTo(newName)) {
+        if (oldFolder.renameTo(newName)) {
+            cache.renameManga(source.id, oldTitle, newTitle, oldFolder)
+        } else {
             logcat(LogPriority.ERROR) { "Failed to rename manga download folder: ${oldFolder.name}" }
         }
     }
