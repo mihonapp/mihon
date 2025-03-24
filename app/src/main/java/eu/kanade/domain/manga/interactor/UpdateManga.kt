@@ -88,7 +88,7 @@ class UpdateManga(
             ),
         )
         if (success && title != null) {
-            downloadManager.renameManga(source, localTitle, title)
+            downloadManager.renameManga(source, localManga, localTitle, title)
         }
         return success
     }
