@@ -285,12 +285,12 @@ class DownloadCache(
     /**
      * Renames a manga in this cache.
      *
+     * @param source the source id.
+     * @param mangaUniFile the manga's new directory.
      * @param oldTitle the manga's old title.
      * @param newTitle the manga's new title.
-     * @param mangaUniFile the manga's new directory.
-     * @param source the source id.
      */
-    suspend fun renameManga(source: Long, oldTitle: String, newTitle: String, mangaUniFile: UniFile) {
+    suspend fun renameManga(source: Long, mangaUniFile: UniFile, oldTitle: String, newTitle: String) {
         rootDownloadsDirMutex.withLock {
             val sourceDir = rootDownloadsDir.sourceDirs[source] ?: return
             val oldMangaDirName = provider.getMangaDirName(oldTitle)
