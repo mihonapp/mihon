@@ -583,9 +583,7 @@ object ImageUtil {
         val botLeftIsDark = botLeftPixel.isDark()
         val botRightIsDark = botRightPixel.isDark()
 
-        var darkBG =
-            (topLeftIsDark && (botLeftIsDark || botRightIsDark || topRightIsDark || midLeftIsDark || topMidIsDark)) ||
-                (topRightIsDark && (botRightIsDark || botLeftIsDark || midRightIsDark || topMidIsDark))
+        var darkBG = (topLeftIsDark || botLeftIsDark || botRightIsDark || topRightIsDark || midLeftIsDark || topMidIsDark || midRightIsDark)
 
         val topAndBotPixels =
             listOf(topLeftPixel, topCenterPixel, topRightPixel, botRightPixel, bottomCenterPixel, botLeftPixel)
@@ -750,7 +748,7 @@ object ImageUtil {
                 intArrayOf(whiteColor, whiteColor, blackColor, blackColor)
             }
             else -> {
-                return ColorDrawable(whiteColor)
+                return ColorDrawable(blackColor)
             }
         }
 
