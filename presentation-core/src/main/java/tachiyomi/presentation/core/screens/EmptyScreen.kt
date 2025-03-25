@@ -111,7 +111,7 @@ private val ErrorFaces = listOf(
     "(⋟﹏⋞)",
     "Ò︵Ó",
     " ˙ᯅ˙)",
-    "(¬_¬)"
+    "(¬_¬)",
 )
 
 private fun getRandomErrorFace(): String {
