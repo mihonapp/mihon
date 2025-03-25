@@ -125,6 +125,14 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         if (insertPageLastPage != null) {
             viewer.moveToPage(insertPageLastPage!!)
         }
+
+        // Move to first page of the new chapter if the current page is not on the same chapter
+        val currPage = items.getOrNull(viewer.pager.currentItem)
+        if (currPage is ReaderPage && currPage.chapter != currentChapter && currPages != null) {
+            val firstPage = currPages.minBy { it.index }
+            val index = items.indexOf(firstPage)
+            viewer.pager.setCurrentItem(index, false)
+        }
     }
 
     /**
