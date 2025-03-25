@@ -12,7 +12,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
-- Add additional Kaomoji for selection in error messages ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
+- Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
 
 ### Fixes
 - Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
