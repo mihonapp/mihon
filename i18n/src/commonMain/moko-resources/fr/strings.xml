@@ -485,7 +485,7 @@
     <string name="chapter_not_found">Chapitre non trouvé</string>
     <string name="rotation_type">Rotation</string>
     <string name="automatic_background">Auto</string>
-    <string name="automatic_background_black">Auto (Black)</string>
+    <string name="automatic_background_black">Auto (Noir)</string>
     <string name="restrictions">Restrictions : %s</string>
     <string name="cancel_all_for_series">Tout annuler pour cette série</string>
     <string name="action_display_local_badge">Source locale</string>
