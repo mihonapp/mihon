@@ -26,7 +26,7 @@ jobs:
           distribution: temurin
 
       - name: Set up gradle
-        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
+        uses: gradle/actions/setup-gradle@06832c7b30a0129d7fb559bcc6e43d26f6374244 # v4.3.1
 
       - name: Check code format
         run: ./gradlew spotlessCheck
