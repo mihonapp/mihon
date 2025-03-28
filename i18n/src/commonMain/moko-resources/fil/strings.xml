@@ -691,9 +691,9 @@
     <string name="overlay_header">Nakapatong (Overlay)</string>
     <string name="split_tall_images">Hatiin ang mga matataas na larawan</string>
     <string name="pref_debug_info">Impormasyon sa pag-debug</string>
-    <string name="pref_chapter_swipe_start">Mag-swipe ng pakaliwang pagkilos</string>
+    <string name="pref_chapter_swipe_start">Kabanata sa pag-swipe pakaliwa</string>
     <string name="pref_double_tap_zoom">I-double tap para mag-zoom</string>
-    <string name="pref_chapter_swipe_end">Mag-swipe ng pakanang pagkilos</string>
+    <string name="pref_chapter_swipe_end">Kabanata sa pag-swipe pakanan</string>
     <string name="action_set_interval">Itakda ang pagitan</string>
     <string name="action_filter_interval_custom">Ma-customize na dalas ng pag-update</string>
     <string name="action_sort_next_updated">Susunod na inaasahang update</string>
@@ -848,5 +848,9 @@
     <string name="library_list">Listahan ng Aklatan</string>
     <string name="theme_monochrome">Monokromatiko</string>
     <string name="pref_always_decode_long_strip_with_ssiv_2">Gamitin ang legacy decoder para sa long strip reader</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Markahan ang mga nadobleng nabasa na kabanata bilang nabasa na</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Markahan ang dobleng nabasa na kabanata bilang nabasa na</string>
+    <string name="action_display_unread_badge">Di nabasang kabanata</string>
+    <string name="pref_behavior">Pagkilos</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">Matapos basahin ang kabanata</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">Pagkatapos kumuha ng bagong kabanata</string>
 </resources>

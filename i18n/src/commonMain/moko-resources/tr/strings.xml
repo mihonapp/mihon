@@ -516,7 +516,7 @@
     <string name="pref_low">Düşük</string>
     <string name="pref_high">Yüksek</string>
     <string name="pref_highest">En yüksek</string>
-    <string name="pref_hide_threshold">Kaydırmada menüyü gizleme hassasiyeti</string>
+    <string name="pref_hide_threshold">Kaydırmada menü gizleme duyarlılığı</string>
     <string name="pref_inverted_colors">Ters Çevrilmiş</string>
     <string name="relative_time_today">Bugün</string>
     <string name="theme_tealturquoise">Ördekbaşı &amp; Turkuaz</string>
@@ -732,7 +732,7 @@
     <string name="last_auto_backup_info">Son otomatik yedekleme: %s</string>
     <string name="no_scanlators_found">Çeviren bulunamadı</string>
     <string name="scanlator">Çeviren</string>
-    <string name="pref_flash_page">Sayfa değişiminde ışık çak</string>
+    <string name="pref_flash_page">Sayfa değişiminde parlama</string>
     <string name="pref_storage_usage">Depolama kullanımı</string>
     <string name="action_sort_tracker_score">İzleyici puanı</string>
     <string name="label_data_storage">Veri ve depolama</string>
@@ -821,7 +821,7 @@
     <string name="onboarding_permission_crashlytics">Çökme kayıtlarını gönder</string>
     <string name="pref_security">Güvenlik</string>
     <string name="onboarding_permission_crashlytics_description">Geliştiricilere anonimleştirilmiş çökme kayıtlarını gönder.</string>
-    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkan verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
+    <string name="firebase_summary">Çökme kayıtlarını ve kullanım istatistiklerini göndermek sorunları tanımlamamıza ve düzeltmemize imkân verir, performansı iyileştirmemizi sağlar ve gelecek güncellemeleri ihtiyaçlarınızla uyumlu yapmamıza olanak tanır</string>
     <string name="onboarding_permission_analytics">Kullanım istatistiklerine izin ver</string>
     <string name="onboarding_permission_analytics_description">Uygulama özelliklerini geliştirmek için anonimleştirilmiş kullanım verileri gönder.</string>
     <string name="pref_firebase">Kullanım İstatistikleri ve Çökme Kayıtları</string>
