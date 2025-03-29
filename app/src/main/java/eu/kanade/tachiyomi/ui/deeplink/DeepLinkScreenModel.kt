@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.update
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.domain.chapter.interactor.GetChapterByUrlAndMangaId
 import tachiyomi.domain.chapter.model.Chapter
-import tachiyomi.domain.manga.interactor.GetMangaByUrlAndSourceId
 import tachiyomi.domain.manga.interactor.NetworkToLocalManga
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.service.SourceManager
@@ -27,7 +26,6 @@ class DeepLinkScreenModel(
     private val sourceManager: SourceManager = Injekt.get(),
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
     private val getChapterByUrlAndMangaId: GetChapterByUrlAndMangaId = Injekt.get(),
-    private val getMangaByUrlAndSourceId: GetMangaByUrlAndSourceId = Injekt.get(),
     private val syncChaptersWithSource: SyncChaptersWithSource = Injekt.get(),
 ) : StateScreenModel<DeepLinkScreenModel.State>(State.Loading) {
 
@@ -74,8 +72,7 @@ class DeepLinkScreenModel(
     }
 
     private suspend fun getMangaFromSManga(sManga: SManga, sourceId: Long): Manga {
-        return getMangaByUrlAndSourceId.await(sManga.url, sourceId)
-            ?: networkToLocalManga.await(sManga.toDomainManga(sourceId))
+        return networkToLocalManga.await(sManga.toDomainManga(sourceId))
     }
 
     sealed interface State {
