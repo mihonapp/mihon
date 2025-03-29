@@ -1,6 +1,8 @@
 package eu.kanade.tachiyomi.data.download
 
 import android.content.Context
+import android.net.Uri
+import android.provider.DocumentsContract
 import eu.kanade.tachiyomi.data.download.model.Download
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.Page
@@ -16,10 +18,12 @@ import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import tachiyomi.core.common.i18n.stringResource
 import tachiyomi.core.common.storage.extension
+import tachiyomi.core.common.storage.nameWithoutExtension
 import tachiyomi.core.common.util.lang.launchIO
 import tachiyomi.core.common.util.system.ImageUtil
 import tachiyomi.core.common.util.system.logcat
 import tachiyomi.domain.category.interactor.GetCategories
+import tachiyomi.domain.chapter.interactor.GetChaptersByMangaId
 import tachiyomi.domain.chapter.model.Chapter
 import tachiyomi.domain.download.service.DownloadPreferences
 import tachiyomi.domain.manga.model.Manga
@@ -40,6 +44,7 @@ class DownloadManager(
     private val getCategories: GetCategories = Injekt.get(),
     private val sourceManager: SourceManager = Injekt.get(),
     private val downloadPreferences: DownloadPreferences = Injekt.get(),
+    private val getChaptersByMangaId: GetChaptersByMangaId = Injekt.get(),
 ) {
 
     /**
@@ -235,6 +240,82 @@ class DownloadManager(
             // Delete manga directory if empty
             if (mangaDir?.listFiles()?.isEmpty() == true) {
                 deleteManga(manga, source, removeQueued = false)
+            }
+        }
+    }
+
+    /**
+     * Migrates manga from one source to another.
+     *
+     * @param oldManga the origin manga for migration..
+     * @param oldSource the origin source for migration..
+     * @param newManga the target manga for migration.
+     * @param newSource the target source for migration.
+     */
+    fun migrateManga(oldManga: Manga, oldSource: Source, newManga: Manga, newSource: Source, deleteOrphans: Boolean) {
+        launchIO {
+            val oldMangaDir = provider.findMangaDir(oldManga.title, oldSource) ?: return@launchIO
+            val newMangaDir = provider.getMangaDir(newManga.title, newSource)
+            val downloadedChapters = oldMangaDir.listFiles()
+            val downloadedChaptersMap =
+                downloadedChapters?.associateBy({ it.nameWithoutExtension }, { it }) ?: return@launchIO
+
+            // map old chapters to new chapters.  The names may not be the same.
+            val oldChapters = getChaptersByMangaId.await(oldManga.id)
+            val newChapters = getChaptersByMangaId.await(newManga.id)
+            val oldChaptersByChapterNumber = oldChapters.associateBy { it.chapterNumber }
+
+            // If the chapter is downloaded, migrate it.
+            for (chapter in newChapters) {
+                val oldChapter = oldChaptersByChapterNumber[chapter.chapterNumber]
+                if (oldChapter != null) {
+                    val oldChapterName = provider.getChapterDirName(oldChapter.name, oldChapter.scanlator)
+                    val oldChapterFile = downloadedChaptersMap[oldChapterName]
+                    if (oldChapterFile != null) {
+                        val newChapterName = if (oldChapterFile.extension == null) {
+                            provider.getChapterDirName(chapter.name, chapter.scanlator)
+                        } else {
+                            provider.getChapterDirName(chapter.name, chapter.scanlator) + "." + oldChapterFile.extension
+                        }
+
+                        // move the file to newMangaDir, renaming the file/folder in the process
+                        var chapterUri: Uri? = oldChapterFile.uri
+
+                        // Rename the file.
+                        chapterUri = chapterUri?.let {
+                            DocumentsContract.renameDocument(
+                                context.contentResolver,
+                                it, newChapterName,
+                            )
+                        }
+
+                        // Move the file to the new source folder.
+                        chapterUri = chapterUri?.let {
+                            DocumentsContract.moveDocument(
+                                context.contentResolver,
+                                it, oldMangaDir.uri, newMangaDir.uri,
+                            )
+                        }
+
+                        // Can save chapterUri somewhere here if needed.
+
+                        cache.removeChapter(oldChapter, oldManga)
+                        cache.addChapter(newChapterName, newMangaDir, newManga)
+                    }
+                }
+            }
+
+            if (deleteOrphans) {
+                downloader.removeFromQueue(oldManga)
+                oldMangaDir.delete()
+                cache.removeManga(oldManga)
+
+                // Delete source directory if empty
+                val sourceDir = provider.findSourceDir(oldSource)
+                if (sourceDir?.listFiles()?.isEmpty() == true) {
+                    sourceDir.delete()
+                    cache.removeSource(oldSource)
+                }
             }
         }
     }
