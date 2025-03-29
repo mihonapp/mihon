@@ -129,6 +129,7 @@ class MangaRestorer(
                 updateStrategy = manga.updateStrategy.let(UpdateStrategyColumnAdapter::encode),
                 version = manga.version,
                 isSyncing = 1,
+                notes = manga.notes,
             )
         }
         return manga

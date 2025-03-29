@@ -27,7 +27,8 @@ CREATE TABLE mangas(
     last_modified_at INTEGER NOT NULL DEFAULT 0,
     favorite_modified_at INTEGER,
     version INTEGER NOT NULL DEFAULT 0,
-    is_syncing INTEGER NOT NULL DEFAULT 0
+    is_syncing INTEGER NOT NULL DEFAULT 0,
+    notes TEXT NOT NULL DEFAULT ""
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -175,7 +176,8 @@ UPDATE mangas SET
     update_strategy = coalesce(:updateStrategy, update_strategy),
     calculate_interval = coalesce(:calculateInterval, calculate_interval),
     version = coalesce(:version, version),
-    is_syncing = coalesce(:isSyncing, is_syncing)
+    is_syncing = coalesce(:isSyncing, is_syncing),
+    notes = coalesce(:notes, notes)
 WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
