@@ -31,7 +31,7 @@ class MangaNotesScreen(
         MangaNotesScreen(
             state = state,
             navigateUp = navigator::pop,
-            onSave = screenModel::updateNotes,
+            onUpdate = screenModel::updateNotes,
         )
     }
 
@@ -48,7 +48,7 @@ class MangaNotesScreen(
             }
 
             screenModelScope.launchNonCancellable {
-                updateMangaNotes.await(manga.id, content)
+                updateMangaNotes(manga.id, content)
             }
         }
     }

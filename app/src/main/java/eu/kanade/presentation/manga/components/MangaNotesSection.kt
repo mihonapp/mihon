@@ -1,12 +1,5 @@
 package eu.kanade.presentation.manga.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,26 +32,16 @@ fun MangaNotesSection(
     onEditNotes: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (content.isBlank()) return
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        AnimatedVisibility(
-            visible = content.isNotBlank(),
-            enter = fadeIn() + expandVertically(animationSpec = spring()),
-            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
-        ) {
-            MangaNotesDisplay(
-                content = content,
-                modifier = modifier.fillMaxWidth(),
-            )
-        }
-
-        AnimatedVisibility(
-            visible = expanded && content.isNotBlank(),
-            enter = fadeIn() + expandVertically(animationSpec = spring()),
-            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
-        ) {
+        MangaNotesDisplay(
+            content = content,
+            modifier = modifier.fillMaxWidth(),
+        )
+        if (expanded) {
             Button(
                 onClick = onEditNotes,
                 colors = ButtonDefaults.buttonColors(
@@ -86,26 +69,13 @@ fun MangaNotesSection(
             }
         }
 
-        AnimatedVisibility(
-            visible = content.isNotBlank(),
-            enter = fadeIn() + expandVertically(animationSpec = spring()),
-            exit = fadeOut() + shrinkVertically(animationSpec = spring()),
-        ) {
-            Column(
-                modifier = Modifier
-                    .animateContentSize(
-                        animationSpec = spring(),
-                    ),
-            ) {
-                HorizontalDivider(
-                    modifier = Modifier
-                        .padding(
-                            top = if (expanded) 0.dp else 12.dp,
-                            bottom = if (expanded) 16.dp else 12.dp,
-                        ),
-                )
-            }
-        }
+        HorizontalDivider(
+            modifier = Modifier
+                .padding(
+                    top = if (expanded) 0.dp else 12.dp,
+                    bottom = if (expanded) 16.dp else 12.dp,
+                ),
+        )
     }
 }
 

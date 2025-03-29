@@ -1,12 +1,8 @@
 package eu.kanade.presentation.manga
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import eu.kanade.presentation.components.AppBar
@@ -21,31 +17,29 @@ import tachiyomi.presentation.core.i18n.stringResource
 fun MangaNotesScreen(
     state: MangaNotesScreen.State,
     navigateUp: () -> Unit,
-    onSave: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    onUpdate: (String) -> Unit,
 ) {
     Scaffold(
         topBar = { topBarScrollBehavior ->
             AppBar(
                 titleContent = {
-                    AppBarTitle(title = stringResource(MR.strings.action_edit_notes), subtitle = state.manga.title)
+                    AppBarTitle(
+                        title = stringResource(MR.strings.action_edit_notes),
+                        subtitle = state.manga.title,
+                    )
                 },
                 navigateUp = navigateUp,
                 scrollBehavior = topBarScrollBehavior,
             )
         },
-        modifier = modifier
-            .imePadding(),
-    ) { paddingValues ->
+    ) { contentPadding ->
         MangaNotesTextArea(
             state = state,
-            onSave = onSave,
+            onUpdate = onUpdate,
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .windowInsetsPadding(
-                    WindowInsets.navigationBars
-                        .only(WindowInsetsSides.Bottom),
-                ),
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding)
+                .imePadding(),
         )
     }
 }

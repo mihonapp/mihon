@@ -7,7 +7,7 @@ class UpdateMangaNotes(
     private val mangaRepository: MangaRepository,
 ) {
 
-    suspend fun await(mangaId: Long, notes: String): Boolean {
+    suspend operator fun invoke(mangaId: Long, notes: String): Boolean {
         return mangaRepository.update(
             MangaUpdate(
                 id = mangaId,

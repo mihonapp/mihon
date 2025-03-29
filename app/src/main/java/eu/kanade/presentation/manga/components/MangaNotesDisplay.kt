@@ -29,7 +29,7 @@ fun MangaNotesDisplay(
     val richTextState = rememberRichTextState()
     val primaryColor = MaterialTheme.colorScheme.primary
     LaunchedEffect(content) {
-        richTextState.setMarkdown(markdown = content)
+        richTextState.setMarkdown(content)
 
         if (!contentUpdatedOnce) {
             contentUpdatedOnce = true
@@ -40,7 +40,8 @@ fun MangaNotesDisplay(
         alpha.animateTo(targetValue = 1f, animationSpec = FADE_TIME)
     }
     LaunchedEffect(Unit) {
-        richTextState.config.listIndent = 10
+        richTextState.config.unorderedListIndent = 4
+        richTextState.config.orderedListIndent = 20
     }
     LaunchedEffect(primaryColor) {
         richTextState.config.linkColor = primaryColor
