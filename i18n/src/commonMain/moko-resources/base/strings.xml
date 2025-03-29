@@ -379,7 +379,6 @@
     <string name="pref_page_rotate">Rotate wide pages to fit</string>
     <string name="pref_page_rotate_invert">Flip orientation of rotated wide pages</string>
     <string name="pref_double_tap_zoom">Double tap to zoom</string>
-    <string name="pref_cutout_short">Show content in cutout area</string>
     <string name="pref_page_transitions">Animate page transitions</string>
     <string name="pref_flash_page">Flash on page change</string>
     <string name="pref_flash_page_summ">Reduces ghosting on e-ink displays</string>

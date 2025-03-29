@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -251,13 +253,21 @@ class WebtoonViewer(val activity: ReaderActivity, val isContinuous: Boolean = tr
         }
     }
 
+    private var initialScrollDone = false
+
     /**
      * Tells this viewer to move to the given [page].
      */
     override fun moveToPage(page: ReaderPage) {
         val position = adapter.items.indexOf(page)
         if (position != -1) {
-            layoutManager.scrollToPositionWithOffset(position, 0)
+            val statusBarHeight = ViewCompat.getRootWindowInsets(activity.binding.root)
+                ?.getInsets(WindowInsetsCompat.Type.statusBars())
+                // Not sure why but the initial scroll requires double of the top inset
+                ?.let { if (initialScrollDone) it.top else it.top * 2 }
+                ?: 0
+            layoutManager.scrollToPositionWithOffset(position, statusBarHeight)
+                .also { initialScrollDone = true }
             if (layoutManager.findLastEndVisibleItemPosition() == -1) {
                 onScrolled(pos = position)
             }

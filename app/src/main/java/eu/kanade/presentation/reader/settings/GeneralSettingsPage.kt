@@ -64,13 +64,6 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
         pref = screenModel.preferences.fullscreen(),
     )
 
-    if (screenModel.hasDisplayCutout && screenModel.preferences.fullscreen().get()) {
-        CheckboxItem(
-            label = stringResource(MR.strings.pref_cutout_short),
-            pref = screenModel.preferences.cutoutShort(),
-        )
-    }
-
     CheckboxItem(
         label = stringResource(MR.strings.pref_keep_screen_on),
         pref = screenModel.preferences.keepScreenOn(),
