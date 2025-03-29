@@ -818,4 +818,5 @@
     <string name="remove_private_extension_message">Дійсно видалити \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Пропускати завантаження копій прочитаних глав</string>
     <string name="add_repo_confirmation">Дійсно додати репозиторій \"%s\"?</string>
+    <string name="label_auto">Автоматичний</string>
 </resources>
