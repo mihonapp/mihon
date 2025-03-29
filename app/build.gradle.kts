@@ -288,14 +288,6 @@ dependencies {
 }
 
 androidComponents {
-    beforeVariants { variantBuilder ->
-        // Disables standardBenchmark
-        if (variantBuilder.buildType == "benchmark") {
-            variantBuilder.enable = variantBuilder.productFlavors.containsAll(
-                listOf("default" to "dev"),
-            )
-        }
-    }
     onVariants(selector().withFlavor("default" to "standard")) {
         // Only excluding in standard flavor because this breaks
         // Layout Inspector's Compose tree
