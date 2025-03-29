@@ -110,7 +110,7 @@ fun Context.createReaderThemeContext(): Context {
     val themeMode = preferences.themeMode().get()
     val isDarkBackground = when (readerPreferences.readerTheme().get()) {
         1, 2 -> true // Black, Gray
-        3 -> when (themeMode) { // Automatic bg uses activity background by default
+        3, 4 -> when (themeMode) { // Automatic bg uses activity background by default
             ThemeMode.SYSTEM -> applicationContext.isNightMode()
             else -> themeMode == ThemeMode.DARK
         }

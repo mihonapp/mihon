@@ -835,8 +835,10 @@ class ReaderActivity : BaseActivity() {
                     binding.readerContainer.setBackgroundColor(
                         when (theme) {
                             0 -> Color.WHITE
+                            1 -> Color.BLACK
                             2 -> grayBackgroundColor
                             3 -> automaticBackgroundColor()
+                            4 -> automaticBackgroundColor()
                             else -> Color.BLACK
                         },
                     )
