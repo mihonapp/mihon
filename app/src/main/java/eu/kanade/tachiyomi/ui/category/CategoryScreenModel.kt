@@ -65,27 +65,9 @@ class CategoryScreenModel(
         }
     }
 
-    fun sortAlphabetically() {
+    fun changeOrder(category: Category, newIndex: Int) {
         screenModelScope.launch {
-            when (reorderCategory.sortAlphabetically()) {
-                is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                else -> {}
-            }
-        }
-    }
-
-    fun moveUp(category: Category) {
-        screenModelScope.launch {
-            when (reorderCategory.moveUp(category)) {
-                is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
-                else -> {}
-            }
-        }
-    }
-
-    fun moveDown(category: Category) {
-        screenModelScope.launch {
-            when (reorderCategory.moveDown(category)) {
+            when (reorderCategory.await(category, newIndex)) {
                 is ReorderCategory.Result.InternalError -> _events.send(CategoryEvent.InternalError)
                 else -> {}
             }
@@ -122,7 +104,6 @@ class CategoryScreenModel(
 
 sealed interface CategoryDialog {
     data object Create : CategoryDialog
-    data object SortAlphabetically : CategoryDialog
     data class Rename(val category: Category) : CategoryDialog
     data class Delete(val category: Category) : CategoryDialog
 }

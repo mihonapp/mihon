@@ -60,4 +60,8 @@
         <item quantity="one"/>
         <item quantity="other">Жоқ %1$s тараулары</item>
     </plurals>
+    <plurals name="upcoming_relative_time">
+        <item quantity="one">Ертең</item>
+        <item quantity="other">%1$d күнде</item>
+    </plurals>
 </resources>

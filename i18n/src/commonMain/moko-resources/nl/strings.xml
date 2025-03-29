@@ -348,7 +348,7 @@
     <string name="pref_disable_battery_optimization">Batterijoptimalisatie uitzetten</string>
     <string name="creating_backup_error">Back-up mislukt</string>
     <string name="backup_in_progress">Er wordt al een back-up gemaakt</string>
-    <string name="restore_duration">%02d min, %02d sec</string>
+    <string name="restore_duration">%1$02d min, %2$02d sec</string>
     <string name="pref_category_reading">Lezen</string>
     <string name="pref_always_show_chapter_transition">Hoofdstukovergangen altijd weergeven</string>
     <string name="vertical_plus_viewer">Doorlopend verticaal</string>
@@ -688,8 +688,6 @@
     <string name="track_delete_title">Haal %s tracking weg?</string>
     <string name="unlock_app_title">Ontgrendel %s</string>
     <string name="pref_chapter_swipe_end">Swipe naar de juiste actie</string>
-    <string name="pref_library_columns_per_row">%d per rij</string>
-    <string name="pref_chapter_swipe">Hoofdstuk veeg</string>
     <string name="pref_page_rotate">Roteer brede pagina\'s zodat ze passen</string>
     <string name="create_backup_file_error">Kon een backup-bestand niet creëren</string>
     <string name="library_sync_complete">Bibliotheeksynchronisatie beëindigd</string>
@@ -716,19 +714,16 @@
     <string name="day_short">%dd</string>
     <string name="information_no_manga_category">Category is leeg</string>
     <string name="minute_short">%dm</string>
-    <string name="update_check_fdroid_migration_info">Er is een nieuwe versie beschikbaar van de officiële uitgavens. Tik om te leren hoe u kunt migreren vanuit niet-officiële F-Droid-releases.</string>
     <string name="exception_http">HTTP %d, check website in WebView</string>
     <string name="label_titles_in_global_update">In globale update</string>
     <string name="relative_time_span_never">Nooit</string>
     <string name="pref_flash_page_summ">Vermindert ghosting bij e-ink schermen</string>
-    <string name="action_sort_category">Sorteer categorieën</string>
     <string name="last_auto_backup_info">Voor het laatst een automatische back-up gemaakt op: %s</string>
     <string name="action_move_to_bottom_all_for_series">Breng serie naar beneden</string>
     <string name="pref_flash_page">Scherm wit flitsen bij het wisselen van pagina\'s</string>
     <string name="pref_storage_usage">Opslaggebruik</string>
     <string name="notification_updating_progress">Bibliotheek bijwerken... (%s)</string>
     <string name="label_data_storage">Data en opslag</string>
-    <string name="sort_category_confirmation">Wil je de categorieën sorteren op alfabetische volgorde?</string>
     <string name="file_null_uri_error">Bestandskiezer gaf geen bestand terug aan de app</string>
     <string name="source_settings">Bron-instellingen</string>
     <string name="app_settings">App-instellingen</string>
@@ -819,4 +814,5 @@
     <string name="invalid_backup_file_json">JSON back-up niet ondersteund</string>
     <string name="invalid_backup_file_unknown">Back-up bestand is corrupt</string>
     <string name="manga_interval_expected_update">Nieuwe hoofdstukken zijn geschat om uit te komen in ongeveer %1$s. Word ongeveer elke %2$s gecontroleerd.</string>
+    <string name="pref_incognito_mode_extension_summary">Pauseer leesgeschiedenis voor extensie</string>
 </resources>
