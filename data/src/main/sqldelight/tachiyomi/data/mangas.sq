@@ -182,3 +182,31 @@ WHERE _id = :mangaId;
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
+
+insertNetworkManga {
+    -- Insert the manga if it doesn't exist already
+    INSERT INTO mangas(
+        source, url, artist, author, description, genre, title, status, thumbnail_url, favorite,
+        last_update, next_update, initialized, viewer, chapter_flags, cover_last_modified, date_added,
+        update_strategy, calculate_interval, last_modified_at, version
+    )
+    SELECT
+        :source, :url, :artist, :author, :description, :genre, :title, :status, :thumbnailUrl, :favorite,
+        :lastUpdate, :nextUpdate, :initialized, :viewerFlags, :chapterFlags, :coverLastModified, :dateAdded,
+        :updateStrategy, :calculateInterval, 0, :version
+    WHERE NOT EXISTS(SELECT 0 FROM mangas WHERE source = :source AND url = :url);
+
+    -- Update the title if it is not favorite
+    UPDATE mangas
+    SET title = :title
+    WHERE source = :source
+    AND url = :url
+    AND favorite = 0;
+
+    -- Finally return the manga
+    SELECT *
+    FROM mangas
+    WHERE source = :source
+    AND url = :url
+    LIMIT 1;
+}

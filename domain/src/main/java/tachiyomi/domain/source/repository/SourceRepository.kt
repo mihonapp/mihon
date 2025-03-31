@@ -2,12 +2,12 @@ package tachiyomi.domain.source.repository
 
 import androidx.paging.PagingSource
 import eu.kanade.tachiyomi.source.model.FilterList
-import eu.kanade.tachiyomi.source.model.SManga
 import kotlinx.coroutines.flow.Flow
+import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.Source
 import tachiyomi.domain.source.model.SourceWithCount
 
-typealias SourcePagingSourceType = PagingSource<Long, SManga>
+typealias SourcePagingSource = PagingSource<Long, Manga>
 
 interface SourceRepository {
 
@@ -19,9 +19,9 @@ interface SourceRepository {
 
     fun getSourcesWithNonLibraryManga(): Flow<List<SourceWithCount>>
 
-    fun search(sourceId: Long, query: String, filterList: FilterList): SourcePagingSourceType
+    fun search(sourceId: Long, query: String, filterList: FilterList): SourcePagingSource
 
-    fun getPopular(sourceId: Long): SourcePagingSourceType
+    fun getPopular(sourceId: Long): SourcePagingSource
 
-    fun getLatest(sourceId: Long): SourcePagingSourceType
+    fun getLatest(sourceId: Long): SourcePagingSource
 }

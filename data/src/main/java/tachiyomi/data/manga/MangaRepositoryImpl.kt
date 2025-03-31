@@ -97,35 +97,6 @@ class MangaRepositoryImpl(
         }
     }
 
-    override suspend fun insert(manga: Manga): Long? {
-        return handler.awaitOneOrNullExecutable(inTransaction = true) {
-            mangasQueries.insert(
-                source = manga.source,
-                url = manga.url,
-                artist = manga.artist,
-                author = manga.author,
-                description = manga.description,
-                genre = manga.genre,
-                title = manga.title,
-                status = manga.status,
-                thumbnailUrl = manga.thumbnailUrl,
-                favorite = manga.favorite,
-                lastUpdate = manga.lastUpdate,
-                nextUpdate = manga.nextUpdate,
-                calculateInterval = manga.fetchInterval.toLong(),
-                initialized = manga.initialized,
-                viewerFlags = manga.viewerFlags,
-                chapterFlags = manga.chapterFlags,
-                coverLastModified = manga.coverLastModified,
-                dateAdded = manga.dateAdded,
-                updateStrategy = manga.updateStrategy,
-                version = manga.version,
-                notes = manga.notes,
-            )
-            mangasQueries.selectLastInsertedRowId()
-        }
-    }
-
     override suspend fun update(update: MangaUpdate): Boolean {
         return try {
             partialUpdate(update)
@@ -143,6 +114,37 @@ class MangaRepositoryImpl(
         } catch (e: Exception) {
             logcat(LogPriority.ERROR, e)
             false
+        }
+    }
+
+    override suspend fun insertNetworkManga(manga: List<Manga>): List<Manga> {
+        return handler.await(inTransaction = true) {
+            manga.map {
+                mangasQueries.insertNetworkManga(
+                    source = it.source,
+                    url = it.url,
+                    artist = it.artist,
+                    author = it.author,
+                    description = it.description,
+                    genre = it.genre,
+                    title = it.title,
+                    status = it.status,
+                    thumbnailUrl = it.thumbnailUrl,
+                    favorite = it.favorite,
+                    lastUpdate = it.lastUpdate,
+                    nextUpdate = it.nextUpdate,
+                    calculateInterval = it.fetchInterval.toLong(),
+                    initialized = it.initialized,
+                    viewerFlags = it.viewerFlags,
+                    chapterFlags = it.chapterFlags,
+                    coverLastModified = it.coverLastModified,
+                    dateAdded = it.dateAdded,
+                    updateStrategy = it.updateStrategy,
+                    version = it.version,
+                    mapper = MangaMapper::mapManga,
+                )
+                    .executeAsOne()
+            }
         }
     }
 
