@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
+import com.mikepenz.markdown.compose.LocalBulletListHandler
 import com.mikepenz.markdown.compose.components.markdownComponents
 import com.mikepenz.markdown.compose.elements.MarkdownBulletList
 import com.mikepenz.markdown.compose.elements.MarkdownDivider
@@ -88,8 +90,14 @@ private fun mihonMarkdownComponents() = markdownComponents(
         }
     },
     unorderedList = { ul ->
-        Column(modifier = Modifier.padding(start = MaterialTheme.padding.small)) {
-            MarkdownBulletList(ul.content, ul.node, style = ul.typography.bullet)
+        val markers = listOf("•", "◦", "▸", "▹")
+
+        CompositionLocalProvider(
+            LocalBulletListHandler provides { _, _, _, _ -> "${markers[ul.listDepth % markers.size]} " },
+        ) {
+            Column(modifier = Modifier.padding(start = MaterialTheme.padding.small)) {
+                MarkdownBulletList(ul.content, ul.node, style = ul.typography.bullet)
+            }
         }
     },
     table = { t ->
