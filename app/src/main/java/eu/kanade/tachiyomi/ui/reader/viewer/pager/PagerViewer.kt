@@ -291,6 +291,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
 
         pager.addOnPageChangeListener(pagerListener)
+        // Manually call onPageChange to update the UI
+        onPageChange(pager.currentItem)
     }
 
     /**

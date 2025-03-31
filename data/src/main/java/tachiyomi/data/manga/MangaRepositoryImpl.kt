@@ -120,6 +120,7 @@ class MangaRepositoryImpl(
                 dateAdded = manga.dateAdded,
                 updateStrategy = manga.updateStrategy,
                 version = manga.version,
+                notes = manga.notes,
             )
             mangasQueries.selectLastInsertedRowId()
         }
@@ -171,6 +172,7 @@ class MangaRepositoryImpl(
                     updateStrategy = value.updateStrategy?.let(UpdateStrategyColumnAdapter::encode),
                     version = value.version,
                     isSyncing = 0,
+                    notes = value.notes,
                 )
             }
         }

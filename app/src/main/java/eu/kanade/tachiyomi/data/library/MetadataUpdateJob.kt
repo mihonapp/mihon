@@ -37,8 +37,11 @@ import tachiyomi.domain.source.service.SourceManager
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.atomic.AtomicInteger
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 
+@OptIn(ExperimentalAtomicApi::class)
 class MetadataUpdateJob(private val context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
 
@@ -97,7 +100,7 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
 
     private suspend fun updateMetadata() {
         val semaphore = Semaphore(5)
-        val progressCount = AtomicInteger(0)
+        val progressCount = AtomicInt(0)
         val currentlyUpdatingManga = CopyOnWriteArrayList<Manga>()
 
         coroutineScope {
@@ -142,7 +145,7 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
 
     private suspend fun withUpdateNotification(
         updatingManga: CopyOnWriteArrayList<Manga>,
-        completed: AtomicInteger,
+        completed: AtomicInt,
         manga: Manga,
         block: suspend () -> Unit,
     ) = coroutineScope {
@@ -151,7 +154,7 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
         updatingManga.add(manga)
         notifier.showProgressNotification(
             updatingManga,
-            completed.get(),
+            completed.load(),
             mangaToUpdate.size,
         )
 
@@ -160,10 +163,10 @@ class MetadataUpdateJob(private val context: Context, workerParams: WorkerParame
         ensureActive()
 
         updatingManga.remove(manga)
-        completed.getAndIncrement()
+        completed.fetchAndIncrement()
         notifier.showProgressNotification(
             updatingManga,
-            completed.get(),
+            completed.load(),
             mangaToUpdate.size,
         )
     }
