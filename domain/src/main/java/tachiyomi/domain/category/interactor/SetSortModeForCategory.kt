@@ -28,7 +28,7 @@ class SetSortModeForCategory(
             )
         } else {
             preferences.sortingMode().set(LibrarySort(type, direction))
-            categoryRepository.updateAllFlags(flags)
+            categoryRepository.updateFlagsForAll(flags)
         }
     }
 

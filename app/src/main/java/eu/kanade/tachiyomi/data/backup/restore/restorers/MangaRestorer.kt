@@ -331,13 +331,13 @@ class MangaRestorer(
                     null
                 } else {
                     // New history entry
-                    item.copy(chapterId = chapter._id)
+                    item.copy(chapterId = chapter.id)
                 }
             }
 
             // Update history entry
             item.copy(
-                id = dbHistory._id,
+                id = dbHistory.id,
                 chapterId = dbHistory.chapter_id,
                 readAt = max(item.readAt?.time ?: 0L, dbHistory.last_read?.time ?: 0L)
                     .takeIf { it > 0L }

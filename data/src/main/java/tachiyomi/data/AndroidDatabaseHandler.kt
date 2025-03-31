@@ -86,10 +86,14 @@ class AndroidDatabaseHandler(
         )
     }
 
+    override suspend fun <T : Any> withTransaction(block: suspend Database.() -> T): T {
+        return internalWithTransaction { block(db) }
+    }
+
     private suspend fun <T> dispatch(inTransaction: Boolean, block: suspend Database.() -> T): T {
         // Create a transaction if needed and run the calling block inside it.
         if (inTransaction) {
-            return withTransaction { block(db) }
+            return internalWithTransaction { block(db) }
         }
 
         // If we're currently in the transaction thread, there's no need to dispatch our query.

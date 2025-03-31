@@ -1,18 +1,21 @@
 CREATE TABLE mangas_categories(
-    _id INTEGER NOT NULL PRIMARY KEY,
     manga_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
-    FOREIGN KEY(category_id) REFERENCES categories (_id)
+    UNIQUE(manga_id, category_id) ON CONFLICT IGNORE,
+    FOREIGN KEY(category_id) REFERENCES categories(id)
     ON DELETE CASCADE,
-    FOREIGN KEY(manga_id) REFERENCES mangas (_id)
+    FOREIGN KEY(manga_id) REFERENCES mangas(id)
     ON DELETE CASCADE
 );
+
+CREATE INDEX mangas_categories_manga_id_index ON mangas_categories(manga_id);
+CREATE INDEX mangas_categories_category_id_index ON mangas_categories(category_id);
 
 CREATE TRIGGER insert_manga_category_update_version AFTER INSERT ON mangas_categories
 BEGIN
     UPDATE mangas
     SET version = version + 1
-    WHERE _id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE _id = new.manga_id) = 0;
+    WHERE id = new.manga_id AND (SELECT is_syncing FROM mangas WHERE id = new.manga_id) = 0;
 END;
 
 insert:

@@ -4,7 +4,7 @@ import kotlin.Boolean;
 import kotlin.String;
 
 CREATE TABLE mangas(
-    _id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY,
     source INTEGER NOT NULL,
     url TEXT NOT NULL,
     artist TEXT,
@@ -28,7 +28,8 @@ CREATE TABLE mangas(
     favorite_modified_at INTEGER,
     version INTEGER NOT NULL DEFAULT 0,
     is_syncing INTEGER NOT NULL DEFAULT 0,
-    notes TEXT NOT NULL DEFAULT ""
+    notes TEXT NOT NULL DEFAULT "",
+    UNIQUE(source, url) ON CONFLICT IGNORE
 );
 
 CREATE INDEX library_favorite_index ON mangas(favorite) WHERE favorite = 1;
@@ -39,7 +40,7 @@ AFTER UPDATE OF favorite ON mangas
 BEGIN
   UPDATE mangas
   SET favorite_modified_at = strftime('%s', 'now')
-  WHERE _id = new._id;
+  WHERE id = new.id;
 END;
 
 CREATE TRIGGER update_last_modified_at_mangas
@@ -48,13 +49,13 @@ FOR EACH ROW
 BEGIN
   UPDATE mangas
   SET last_modified_at = strftime('%s', 'now')
-  WHERE _id = new._id;
+  WHERE id = new.id;
 END;
 
 CREATE TRIGGER update_manga_version AFTER UPDATE ON mangas
 BEGIN
     UPDATE mangas SET version = version + 1
-    WHERE _id = new._id AND new.is_syncing = 0 AND (
+    WHERE id = new.id AND new.is_syncing = 0 AND (
         new.url != old.url OR
         new.description != old.description OR
         new.favorite != old.favorite
@@ -64,15 +65,13 @@ END;
 getMangaById:
 SELECT *
 FROM mangas
-WHERE _id = :id;
+WHERE id = :id;
 
--- TODO: this should ideally never really have more than 1 result
 getMangaByUrlAndSource:
 SELECT *
 FROM mangas
 WHERE url = :url
-AND source = :source
-LIMIT 1;
+AND source = :source;
 
 getFavorites:
 SELECT *
@@ -82,9 +81,9 @@ WHERE favorite = 1;
 getReadMangaNotInLibrary:
 SELECT *
 FROM mangas
-WHERE favorite = 0 AND _id IN (
-    SELECT DISTINCT chapters.manga_id 
-    FROM chapters 
+WHERE favorite = 0 AND id IN (
+    SELECT DISTINCT chapters.manga_id
+    FROM chapters
     WHERE read = 1 OR last_page_read != 0
 );
 
@@ -120,7 +119,7 @@ SELECT *
 FROM mangas
 WHERE favorite = 1
 AND LOWER(title) = :title
-AND _id != :id;
+AND id != :id;
 
 getUpcomingManga:
 SELECT *
@@ -178,7 +177,7 @@ UPDATE mangas SET
     version = coalesce(:version, version),
     is_syncing = coalesce(:isSyncing, is_syncing),
     notes = coalesce(:notes, notes)
-WHERE _id = :mangaId;
+WHERE _id = :mangaId;)
 
 selectLastInsertedRowId:
 SELECT last_insert_rowid();
