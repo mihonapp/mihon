@@ -150,6 +150,7 @@ class ReaderViewModel @JvmOverloads constructor(
         val manga = manga!!
         runBlocking { getChaptersByMangaId.await(manga.id, applyScanlatorFilter = false) }
     }
+
     /**
      * Chapter list for the active manga. It's retrieved lazily and should be accessed for the first
      * time in a background thread to avoid blocking the UI.
