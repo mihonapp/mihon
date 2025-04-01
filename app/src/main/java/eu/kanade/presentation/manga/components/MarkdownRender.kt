@@ -9,7 +9,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
 import com.mikepenz.markdown.compose.LocalBulletListHandler
@@ -23,16 +22,20 @@ import com.mikepenz.markdown.compose.elements.MarkdownTableRow
 import com.mikepenz.markdown.compose.elements.listDepth
 import com.mikepenz.markdown.m3.Markdown
 import com.mikepenz.markdown.m3.markdownTypography
+import com.mikepenz.markdown.model.MarkdownAnnotator
+import com.mikepenz.markdown.model.markdownAnnotator
 import com.mikepenz.markdown.model.markdownPadding
 import tachiyomi.presentation.core.components.material.padding
 
 @Composable
 fun MarkdownRender(
     content: String,
+    annotator: MarkdownAnnotator = markdownAnnotator(),
     modifier: Modifier = Modifier,
 ) {
     Markdown(
         content = content,
+        annotator = annotator,
         typography = mihonMarkdownTypography(),
         padding = mihonMarkdownPadding(),
         components = mihonMarkdownComponents(),
@@ -64,7 +67,6 @@ private fun mihonMarkdownTypography() = markdownTypography(
     link = MaterialTheme.typography.bodyMedium.copy(
         color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.Bold,
-        textDecoration = TextDecoration.Underline,
     ),
 )
 
