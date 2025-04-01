@@ -16,6 +16,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
   - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
 - Add markdown support for manga descriptions ([@Secozzi](https://github.com/Secozzi)) ([#1948](https://github.com/mihonapp/mihon/pull/1948))
+- Add Nord Theme ([@Riztard](https://github.com/Riztard)) ([#1951](https://github.com/mihonapp/mihon/pull/1951))
 
 ### Improved
 - Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
