@@ -174,8 +174,8 @@ class HistoryScreenModel(
         screenModelScope.launchIO {
             val manga = getManga.await(mangaId) ?: return@launchIO
 
-            val duplicates = getDuplicateLibraryManga.await(manga).takeIf { it.isNotEmpty() }
-            if (duplicates != null) {
+            val duplicates = getDuplicateLibraryManga(manga)
+            if (duplicates.isNotEmpty()) {
                 mutableState.update { it.copy(dialog = Dialog.DuplicateManga(manga, duplicates)) }
                 return@launchIO
             }

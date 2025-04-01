@@ -284,8 +284,8 @@ class BrowseSourceScreenModel(
             .orEmpty()
     }
 
-    suspend fun getDuplicateLibraryManga(manga: Manga): List<Manga>? {
-        return getDuplicateLibraryManga.await(manga).takeIf { it.isNotEmpty() }
+    suspend fun getDuplicateLibraryManga(manga: Manga): List<Manga> {
+        return getDuplicateLibraryManga.invoke(manga)
     }
 
     private fun moveMangaToCategories(manga: Manga, vararg categories: Category) {

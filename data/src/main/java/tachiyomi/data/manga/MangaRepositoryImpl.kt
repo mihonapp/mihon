@@ -67,7 +67,7 @@ class MangaRepositoryImpl(
 
     override suspend fun getDuplicateLibraryManga(id: Long, title: String): List<Manga> {
         return handler.awaitList {
-            mangasQueries.getDuplicateLibraryManga("%$title%", id, MangaMapper::mapManga)
+            mangasQueries.getDuplicateLibraryManga(title, id, MangaMapper::mapManga)
         }
     }
 
