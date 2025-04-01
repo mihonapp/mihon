@@ -691,8 +691,8 @@
     <string name="pref_page_rotate">Развернуть широкие страницы под размер экрана</string>
     <string name="pref_page_rotate_invert">Отразить ориентацию развёрнутых широких страниц</string>
     <string name="pref_debug_info">Отладочная информация</string>
-    <string name="pref_chapter_swipe_end">Проведите право</string>
-    <string name="pref_chapter_swipe_start">Проведите влево</string>
+    <string name="pref_chapter_swipe_end">Глава при смахивании вправо</string>
+    <string name="pref_chapter_swipe_start">Глава при смахивании влево</string>
     <string name="pref_double_tap_zoom">Двойное нажатие для увеличения</string>
     <string name="action_filter_interval_custom">Настраиваемая частота обновления</string>
     <string name="intervals_header">Интервалы</string>
@@ -848,5 +848,9 @@
     <string name="library_exported">Библиотека экспортирована</string>
     <string name="author">Автор</string>
     <string name="library_list">Список библиотеки</string>
-    <string name="pref_mark_duplicate_read_chapter_read">Отмечать дублированные прочитанные главы как \"Прочитано\"</string>
+    <string name="pref_mark_duplicate_read_chapter_read">Отмечать дублированную прочитанную главу как \"Прочитано\"</string>
+    <string name="action_display_unread_badge">Непрочитанные главы</string>
+    <string name="pref_behavior">Поведение</string>
+    <string name="pref_mark_duplicate_read_chapter_read_existing">После прочтения главы</string>
+    <string name="pref_mark_duplicate_read_chapter_read_new">После получения новой главы</string>
 </resources>

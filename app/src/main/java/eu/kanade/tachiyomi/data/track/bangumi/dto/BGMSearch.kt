@@ -25,6 +25,7 @@ data class BGMSubject(
     val volumes: Long = 0,
     val eps: Long = 0,
     val rating: BGMSubjectRating?,
+    val platform: String?,
 ) {
     fun toTrackSearch(trackId: Long): TrackSearch = TrackSearch.create(trackId).apply {
         remote_id = this@BGMSubject.id

@@ -12,6 +12,23 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 ### Added
+- Add more Kaomoji for empty/error screens ([@ianfhunter](https://github.com/ianfhunter/)) ([#1909](https://github.com/mihonapp/mihon/pull/1909))
+- Add user manga notes ([@imkunet](https://github.com/imkunet), [@AntsyLich](https://github.com/AntsyLich)) ([#428](https://github.com/mihonapp/mihon/pull/428))
+  - Fix user notes not restoring when manga doesn't exist in DB ([@AntsyLich](https://github.com/AntsyLich)) ([#1945](https://github.com/mihonapp/mihon/pull/1945))
+
+### Improved
+- Significantly improve browsing speed (near instantaneous) ([@AntsyLich](https://github.com/AntsyLich)) ([#1946](https://github.com/mihonapp/mihon/pull/1946))
+
+### Fixes
+- Fix Bangumi search results including novels ([@MajorTanya](https://github.com/MajorTanya)) ([#1885](https://github.com/mihonapp/mihon/pull/1885))
+- Fix next chapter button occasionally jumping to the last page of the current chapter ([@perokhe](https://github.com/perokhe)) ([#1920](https://github.com/mihonapp/mihon/pull/1920))
+  - Fix page number not appearing when opening chapter ([@perokhe](https://github.com/perokhe)) ([#1936](https://github.com/mihonapp/mihon/pull/1936))
+- Fix backup sharing from notifications not working when app is in background ([@JaymanR](https://github.com/JaymanR))([#1929](https://github.com/mihonapp/mihon/pull/1929))
+- Fix mark existing duplicate read chapters as read option not working in some cases ([@AntsyLich](https://github.com/AntsyLich)) ([#1944](https://github.com/mihonapp/mihon/pull/1944))
+- Fix app bar action tooltips blocking clicks ([@Bartuzen](https://github.com/Bartuzen)) ([#1928](https://github.com/mihonapp/mihon/pull/1928))
+
+## [v0.18.0] - 2025-03-20
+### Added
 - Add option to always decode long strip images with SSIV ([@AntsyLich](https://github.com/AntsyLich)) ([`c5655e8`](https://github.com/mihonapp/mihon/commit/c5655e8803bc32d0931657f0b7bc6afeab70feaf))
   - Change option label ([@AntsyLich](https://github.com/AntsyLich)) ([#1835](https://github.com/mihonapp/mihon/pull/1835))
 - Added option to enable incognito per extension ([@sdaqo](https://github.com/sdaqo), [@AntsyLich](https://github.com/AntsyLich)) ([#157](https://github.com/mihonapp/mihon/pull/157))
@@ -322,7 +339,8 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Branding to Mihon ([@AntsyLich](https://github.com/AntsyLich))
 - Minimum supported Android version to 8 ([@AntsyLich](https://github.com/AntsyLich)) ([`dfb3091`](https://github.com/mihonapp/mihon/commit/dfb3091e380dda3e9bfb64bf5c9a685cf3a03d0e))
 
-[unreleased]: https://github.com/mihonapp/mihon/compare/v0.17.1...main
+[unreleased]: https://github.com/mihonapp/mihon/compare/v0.18.0...main
+[v0.18.0]: https://github.com/mihonapp/mihon/compare/v0.17.1...v0.18.0
 [v0.17.1]: https://github.com/mihonapp/mihon/compare/v0.17.0...v0.17.1
 [v0.17.0]: https://github.com/mihonapp/mihon/compare/v0.16.5...v0.17.0
 [v0.16.5]: https://github.com/mihonapp/mihon/compare/v0.16.4...v0.16.5

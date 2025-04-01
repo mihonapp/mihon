@@ -10,7 +10,7 @@ sqlite = "2.4.0"
 voyager = "1.0.1"
 spotless = "7.0.2"
 ktlint-core = "1.5.0"
-firebase-bom = "33.10.0"
+firebase-bom = "33.11.0"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -55,6 +55,8 @@ natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
 
 richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
 richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
+
+richeditor-compose = "com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc10"
 
 material = "com.google.android.material:material:1.12.0"
 flexible-adapter-core = "com.github.arkon.FlexibleAdapter:flexible-adapter:c8013533"
