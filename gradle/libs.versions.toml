@@ -3,7 +3,6 @@ aboutlib_version = "11.6.3"
 leakcanary = "2.14"
 moko = "0.24.5"
 okhttp_version = "5.0.0-alpha.14"
-richtext = "0.20.0"
 shizuku_version = "13.1.0"
 sqldelight = "2.0.2"
 sqlite = "2.4.0"
@@ -11,6 +10,7 @@ voyager = "1.0.1"
 spotless = "7.0.2"
 ktlint-core = "1.5.0"
 firebase-bom = "33.11.0"
+markdown = "0.33.0-b05"
 
 [libraries]
 desugar = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -52,9 +52,6 @@ subsamplingscaleimageview = "com.github.tachiyomiorg:subsampling-scale-image-vie
 image-decoder = "com.github.tachiyomiorg:image-decoder:41c059e540"
 
 natural-comparator = "com.github.gpanther:java-nat-sort:natural-comparator-1.1"
-
-richtext-commonmark = { module = "com.halilibo.compose-richtext:richtext-commonmark", version.ref = "richtext" }
-richtext-m3 = { module = "com.halilibo.compose-richtext:richtext-ui-material3", version.ref = "richtext" }
 
 richeditor-compose = "com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc10"
 
@@ -104,6 +101,9 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 spotless-gradle = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 ktlint-core = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-core" }
 
+markdown-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "markdown" }
+markdown-coil = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3", version.ref = "markdown" }
+
 [plugins]
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlib_version" }
@@ -119,5 +119,5 @@ coil = ["coil-core", "coil-gif", "coil-compose", "coil-network-okhttp"]
 shizuku = ["shizuku-api", "shizuku-provider"]
 sqldelight = ["sqldelight-android-driver", "sqldelight-coroutines", "sqldelight-android-paging"]
 voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-tab-navigator", "voyager-transitions"]
-richtext = ["richtext-commonmark", "richtext-m3"]
 test = ["junit", "kotest-assertions", "mockk"]
+markdown = ["markdown-m3", "markdown-coil"]
