@@ -62,6 +62,7 @@ import eu.kanade.presentation.more.settings.LocalPreferenceMinHeight
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
+import eu.kanade.tachiyomi.util.system.dpToPx
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.service.SourceManager
@@ -349,16 +350,22 @@ private fun calculateMangaCardHeight(
         constraints = constraints,
     )
     val authorHeight = if (!manga.author.isNullOrBlank()) {
-        textMeasurer.getMangaDetailRowHeight(manga.author!!, maxLines = 2, typography, constraints)
+        textMeasurer.getMangaDetailRowHeight(manga.author!!, maxLines = 2, typography, constraints, extraSmallPadding)
     } else {
         0
     }
     val artistHeight = if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
-        textMeasurer.getMangaDetailRowHeight(manga.artist!!, maxLines = 2, typography, constraints)
+        textMeasurer.getMangaDetailRowHeight(manga.artist!!, maxLines = 2, typography, constraints, extraSmallPadding)
     } else {
         0
     }
-    val statusHeight = textMeasurer.getMangaDetailRowHeight("", maxLines = 1, typography, constraints)
+    val statusHeight = textMeasurer.getMangaDetailRowHeight(
+        "",
+        maxLines = 1,
+        typography,
+        constraints,
+        extraSmallPadding,
+    )
     val sourceHeight = textMeasurer.getMangaCardTextRowHeight("", typography.labelSmall, maxLines = 1, constraints)
     val totalHeight = coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight
     return with(density) { ((2 * smallPadding) + totalHeight + (5 * extraSmallPadding)).toDp() }
@@ -386,12 +393,14 @@ private fun TextMeasurer.getMangaDetailRowHeight(
     maxLines: Int,
     typography: Typography,
     constraints: Constraints,
+    extraSmallPadding: Int,
 ): Int {
+    val textDetailConstraints = Constraints(maxWidth = constraints.maxWidth - 16.dpToPx - (extraSmallPadding * 2))
     return getMangaCardTextRowHeight(
         text = text,
         style = typography.bodySmall,
         maxLines = maxLines,
-        constraints = constraints,
+        constraints = textDetailConstraints,
     )
 }
 
