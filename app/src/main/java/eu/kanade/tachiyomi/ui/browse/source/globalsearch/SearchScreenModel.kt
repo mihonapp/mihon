@@ -165,7 +165,9 @@ abstract class SearchScreenModel(
                             source.getSearchManga(1, query, source.getFilterList())
                         }
 
-                        val titles = page.mangas.map { it.toDomainManga(source.id) }
+                        val titles = page.mangas
+                            .map { it.toDomainManga(source.id) }
+                            .distinctBy { it.url }
                             .let { networkToLocalManga(it) }
 
                         if (isActive) {
