@@ -119,7 +119,7 @@ getDuplicateLibraryManga:
 SELECT *
 FROM mangas
 WHERE favorite = 1
-AND LOWER(title) = :title
+AND lower(title) LIKE '%' || lower(:title) || '%'
 AND _id != :id;
 
 getUpcomingManga:

@@ -98,14 +98,13 @@ data object HistoryTab : Tab {
             }
             is HistoryScreenModel.Dialog.DuplicateManga -> {
                 DuplicateMangaDialog(
+                    duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
                     onConfirm = {
                         screenModel.addFavorite(dialog.manga)
                     },
-                    onOpenManga = { navigator.push(MangaScreen(dialog.duplicate.id)) },
-                    onMigrate = {
-                        screenModel.showMigrateDialog(dialog.manga, dialog.duplicate)
-                    },
+                    onOpenManga = { navigator.push(MangaScreen(it.id)) },
+                    onMigrate = { screenModel.showMigrateDialog(dialog.manga, it) },
                 )
             }
             is HistoryScreenModel.Dialog.ChangeCategory -> {
