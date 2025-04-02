@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckBoxOutlineBlank
 import androidx.compose.material.icons.rounded.DisabledByDefault
@@ -31,6 +32,8 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -68,6 +71,37 @@ object SettingsItemsPaddings {
 @Composable
 fun HeadingItem(labelRes: StringResource) {
     HeadingItem(stringResource(labelRes))
+}
+
+@Composable
+fun SwitchItem(label: String, pref: Preference<Boolean>) {
+    val checked by pref.collectAsState()
+    SwitchItem(
+        label = label,
+        checked = checked,
+        onClick = { pref.toggle() },
+    )
+}
+
+@Composable
+fun SwitchItem(label: String, checked: Boolean, onClick: () -> Unit) {
+
+    BaseSettingsItem(
+        label = label,
+        widget = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null,
+//                colors = SwitchDefaults.colors(
+//                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+//                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+//                    uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
+//                    uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+//                )
+            )
+        },
+        onClick = onClick,
+    )
 }
 
 @Composable

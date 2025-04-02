@@ -12,6 +12,7 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.SettingsChipRow
 import tachiyomi.presentation.core.components.SliderItem
+import tachiyomi.presentation.core.components.SwitchItem
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -20,9 +21,7 @@ private val themes = listOf(
     MR.strings.black_background to 1,
     MR.strings.gray_background to 2,
     MR.strings.white_background to 0,
-    MR.strings.automatic_background to 3,
-    MR.strings.automatic_background_black to 4,
-    )
+)
 
 private val flashColors = listOf(
     MR.strings.pref_flash_style_black to ReaderPreferences.FlashColor.BLACK,
@@ -54,6 +53,11 @@ internal fun ColumnScope.GeneralPage(screenModel: ReaderSettingsScreenModel) {
             )
         }
     }
+
+    SwitchItem(
+        label = stringResource(MR.strings.automatic_background),
+        pref = screenModel.preferences.readerThemeSwitch(),
+    )
 
     CheckboxItem(
         label = stringResource(MR.strings.pref_show_page_number),

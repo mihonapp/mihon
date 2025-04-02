@@ -581,6 +581,43 @@ object ImageUtil {
         }
     }
 
+    fun chooseBackground_gray(context: Context, imageStream: InputStream): Drawable {
+        val decoder = ImageDecoder.newInstance(imageStream)
+        val image = decoder?.decode()
+        val grayBackgroundColor = Color.rgb(0x20, 0x21, 0x25)
+        decoder?.recycle()
+
+        if (image == null) return ColorDrawable(grayBackgroundColor)
+        if (image.width < 50 || image.height < 50) {
+            return ColorDrawable(grayBackgroundColor)
+        }
+
+        val top = 5
+        val bot = image.height - 5
+        val left = (image.width * 0.0275).toInt()
+        val right = image.width - left
+        val midX = image.width / 2
+
+        val topLeftPixel = image[left, top]
+        val topRightPixel = image[right, top]
+        val topCenterPixel = image[midX, top]
+        val botLeftPixel = image[left, bot]
+        val bottomCenterPixel = image[midX, bot]
+        val botRightPixel = image[right, bot]
+
+        val topAndBotPixels =
+            listOf(topLeftPixel, topCenterPixel, topRightPixel, botRightPixel, bottomCenterPixel, botLeftPixel)
+        val isNotWhiteAndCloseTo = topAndBotPixels.mapIndexed { index, color ->
+            val other = topAndBotPixels[(index + 1) % topAndBotPixels.size]
+            !color.isWhite() && color.isCloseTo(other)
+        }
+        if (isNotWhiteAndCloseTo.all { it }) {
+            return ColorDrawable(topLeftPixel)
+        } else {
+            return ColorDrawable(grayBackgroundColor)
+        }
+    }
+
     private fun @receiver:ColorInt Int.isDark(): Boolean =
         red < 40 && blue < 40 && green < 40 && alpha > 200
 
