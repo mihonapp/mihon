@@ -62,7 +62,6 @@ import eu.kanade.presentation.more.settings.LocalPreferenceMinHeight
 import eu.kanade.presentation.more.settings.widget.TextPreferenceWidget
 import eu.kanade.tachiyomi.source.Source
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.util.system.dpToPx
 import tachiyomi.domain.manga.model.Manga
 import tachiyomi.domain.source.model.StubSource
 import tachiyomi.domain.source.service.SourceManager
@@ -86,8 +85,6 @@ fun DuplicateMangaDialog(
     val minHeight = LocalPreferenceMinHeight.current
     val horizontalPadding = PaddingValues(horizontal = TabbedDialogPaddings.Horizontal)
     val horizontalPaddingModifier = Modifier.padding(horizontalPadding)
-
-    val maxCarouselHeight = getMaximumMangaCardHeight(duplicates)
 
     AdaptiveSheet(
         modifier = modifier,
@@ -116,7 +113,7 @@ fun DuplicateMangaDialog(
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                modifier = Modifier.height(maxCarouselHeight),
+                modifier = Modifier.height(getMaximumMangaCardHeight(duplicates)),
                 contentPadding = horizontalPadding,
             ) {
                 items(
@@ -283,7 +280,7 @@ private fun MangaDetailRow(
         Icon(
             imageVector = iconImageVector,
             contentDescription = null,
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier.size(MangaDetailsIconWidth),
         )
         Text(
             text = text,
@@ -295,38 +292,43 @@ private fun MangaDetailRow(
 }
 
 @Composable
-private fun getMaximumMangaCardHeight(
-    duplicates: List<Manga>,
-): Dp {
+private fun getMaximumMangaCardHeight(duplicates: List<Manga>): Dp {
     val density = LocalDensity.current
+    val typography = MaterialTheme.typography
+    val textMeasurer = rememberTextMeasurer()
+
     val smallPadding = with(density) { MaterialTheme.padding.small.roundToPx() }
     val extraSmallPadding = with(density) { MaterialTheme.padding.extraSmall.roundToPx() }
+
     val width = with(density) { MangaCardWidth.roundToPx() - (2 * smallPadding) }
+    val iconWidth = with(density) { MangaDetailsIconWidth.roundToPx() }
+
     val coverHeight = width / MangaCover.Book.ratio
     val constraints = Constraints(maxWidth = width)
-    val textMeasurer = rememberTextMeasurer()
-    val typography = MaterialTheme.typography
+    val detailsConstraints = Constraints(maxWidth = width - iconWidth - extraSmallPadding)
 
     return remember(
         duplicates,
         density,
+        typography,
+        textMeasurer,
         smallPadding,
         extraSmallPadding,
         coverHeight,
         constraints,
-        textMeasurer,
-        typography,
+        detailsConstraints,
     ) {
         duplicates.fastMaxOfOrNull {
             calculateMangaCardHeight(
-                it,
-                density,
-                smallPadding,
-                extraSmallPadding,
-                coverHeight,
-                constraints,
-                textMeasurer,
-                typography,
+                manga = it,
+                density = density,
+                typography = typography,
+                textMeasurer = textMeasurer,
+                smallPadding = smallPadding,
+                extraSmallPadding = extraSmallPadding,
+                coverHeight = coverHeight,
+                constraints = constraints,
+                detailsConstraints = detailsConstraints,
             )
         }
             ?: 0.dp
@@ -336,72 +338,46 @@ private fun getMaximumMangaCardHeight(
 private fun calculateMangaCardHeight(
     manga: Manga,
     density: Density,
+    typography: Typography,
+    textMeasurer: TextMeasurer,
     smallPadding: Int,
     extraSmallPadding: Int,
     coverHeight: Float,
     constraints: Constraints,
-    textMeasurer: TextMeasurer,
-    typography: Typography,
+    detailsConstraints: Constraints,
 ): Dp {
-    val titleHeight = textMeasurer.getMangaCardTextRowHeight(
-        text = manga.title,
-        style = typography.titleSmall,
-        maxLines = 2,
-        constraints = constraints,
-    )
+    val titleHeight = textMeasurer.measureHeight(manga.title, typography.titleSmall, 2, constraints)
     val authorHeight = if (!manga.author.isNullOrBlank()) {
-        textMeasurer.getMangaDetailRowHeight(manga.author!!, maxLines = 2, typography, constraints, extraSmallPadding)
+        textMeasurer.measureHeight(manga.author!!, typography.bodySmall, 2, detailsConstraints)
     } else {
         0
     }
     val artistHeight = if (!manga.artist.isNullOrBlank() && manga.author != manga.artist) {
-        textMeasurer.getMangaDetailRowHeight(manga.artist!!, maxLines = 2, typography, constraints, extraSmallPadding)
+        textMeasurer.measureHeight(manga.artist!!, typography.bodySmall, 2, detailsConstraints)
     } else {
         0
     }
-    val statusHeight = textMeasurer.getMangaDetailRowHeight(
-        "",
-        maxLines = 1,
-        typography,
-        constraints,
-        extraSmallPadding,
-    )
-    val sourceHeight = textMeasurer.getMangaCardTextRowHeight("", typography.labelSmall, maxLines = 1, constraints)
+    val statusHeight = textMeasurer.measureHeight("", typography.bodySmall, 2, detailsConstraints)
+    val sourceHeight = textMeasurer.measureHeight("", typography.labelSmall, 1, constraints)
+
     val totalHeight = coverHeight + titleHeight + authorHeight + artistHeight + statusHeight + sourceHeight
     return with(density) { ((2 * smallPadding) + totalHeight + (5 * extraSmallPadding)).toDp() }
 }
 
-private fun TextMeasurer.getMangaCardTextRowHeight(
+private fun TextMeasurer.measureHeight(
     text: String,
     style: TextStyle,
     maxLines: Int,
     constraints: Constraints,
-): Int {
-    return measure(
-        text = text,
-        style = style,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = maxLines,
-        constraints = constraints,
-    )
-        .size
-        .height
-}
-
-private fun TextMeasurer.getMangaDetailRowHeight(
-    text: String,
-    maxLines: Int,
-    typography: Typography,
-    constraints: Constraints,
-    extraSmallPadding: Int,
-): Int {
-    val textDetailConstraints = Constraints(maxWidth = constraints.maxWidth - 16.dpToPx - (extraSmallPadding * 2))
-    return getMangaCardTextRowHeight(
-        text = text,
-        style = typography.bodySmall,
-        maxLines = maxLines,
-        constraints = textDetailConstraints,
-    )
-}
+): Int = measure(
+    text = text,
+    style = style,
+    overflow = TextOverflow.Ellipsis,
+    maxLines = maxLines,
+    constraints = constraints,
+)
+    .size
+    .height
 
 private val MangaCardWidth = 150.dp
+private val MangaDetailsIconWidth = 16.dp
