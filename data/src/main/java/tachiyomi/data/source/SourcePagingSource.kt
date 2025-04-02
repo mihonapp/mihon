@@ -39,6 +39,8 @@ abstract class BaseSourcePagingSource(
     private val networkToLocalManga: NetworkToLocalManga = Injekt.get(),
 ) : SourcePagingSource() {
 
+    private val seenManga = hashSetOf<String>()
+
     abstract suspend fun requestNextPage(currentPage: Int): MangasPage
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, Manga> {
@@ -51,7 +53,9 @@ abstract class BaseSourcePagingSource(
                     ?: throw NoResultsException()
             }
 
-            val manga = mangasPage.mangas.map { it.toDomainManga(source.id) }
+            val manga = mangasPage.mangas
+                .map { it.toDomainManga(source.id) }
+                .filter { seenManga.add(it.url) }
                 .let { networkToLocalManga(it) }
 
             LoadResult.Page(
