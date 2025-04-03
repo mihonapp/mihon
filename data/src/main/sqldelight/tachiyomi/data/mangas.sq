@@ -116,11 +116,25 @@ WHERE favorite = 1
 AND source = :sourceId;
 
 getDuplicateLibraryManga:
-SELECT *
-FROM mangas
-WHERE favorite = 1
-AND lower(title) LIKE '%' || lower(:title) || '%'
-AND _id != :id;
+SELECT
+    M.*,
+    coalesce(C.total, 0) AS totalCount
+FROM mangas M
+LEFT JOIN(
+    SELECT
+        chapters.manga_id,
+        count(*) AS total
+    FROM chapters
+    LEFT JOIN excluded_scanlators
+    ON chapters.manga_id = excluded_scanlators.manga_id
+    AND chapters.scanlator = excluded_scanlators.scanlator
+    WHERE excluded_scanlators.scanlator IS NULL
+    GROUP BY chapters.manga_id
+) AS C
+ON M._id = C.manga_id
+WHERE _id != :id
+AND favorite = 1
+AND lower(title) LIKE '%' || lower(:title) || '%';
 
 getUpcomingManga:
 SELECT *

@@ -201,7 +201,7 @@ class MangaScreen(
                 )
             }
 
-            is MangaScreenModel.Dialog.DuplicateManga -> {
+            is MangaScreenModel.Dialog.DuplicateMangaList -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
