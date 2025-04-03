@@ -10,9 +10,12 @@ android {
 
     sourceSets {
         getByName("main") {
-            val dir = if (Config.includeTelemetry) "firebase" else "noop"
-            kotlin.srcDirs("src/$dir/kotlin")
-            manifest.srcFile("src/$dir/AndroidManifext.xml")
+            if (Config.includeTelemetry) {
+                kotlin.srcDirs("src/firebase/kotlin")
+            } else {
+                kotlin.srcDirs("src/noop/kotlin")
+                manifest.srcFile("src/noop/AndroidManifext.xml")
+            }
         }
     }
 }
