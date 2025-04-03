@@ -191,7 +191,7 @@ private fun Modifier.drawScrollbar(
         color: Color,
         alpha: () -> Float,
     ) -> Unit,
-): Modifier  {
+): Modifier {
     val scrolled = remember {
         MutableSharedFlow<Unit>(
             extraBufferCapacity = 1,
