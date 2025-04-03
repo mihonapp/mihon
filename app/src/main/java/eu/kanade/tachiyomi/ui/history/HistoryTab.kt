@@ -96,7 +96,7 @@ data object HistoryTab : Tab {
                     onDelete = screenModel::removeAllHistory,
                 )
             }
-            is HistoryScreenModel.Dialog.DuplicateManga -> {
+            is HistoryScreenModel.Dialog.DuplicateMangaList -> {
                 DuplicateMangaDialog(
                     duplicates = dialog.duplicates,
                     onDismissRequest = onDismissRequest,
