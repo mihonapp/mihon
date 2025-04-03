@@ -21,7 +21,7 @@ serialization-json-okio = { module = "org.jetbrains.kotlinx:kotlinx-serializatio
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization_version" }
 
 serialization-xml-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xml_serialization_version" }
-serialization-xml = { module = "io.github.pdvrieze.xmlutil:serialization-android", version.ref = "xml_serialization_version" }
+serialization-xml = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xml_serialization_version" }
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-android", "coroutines-guava"]
