@@ -6,6 +6,7 @@ import tachiyomi.domain.manga.model.Manga
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import kotlin.toString
 
 /**
  * Class used to create cover cache.
@@ -49,6 +50,10 @@ class CoverCache(private val context: Context) {
      */
     fun getCustomCoverFile(mangaId: Long?): File {
         return File(customCoverCacheDir, DiskUtil.hashKeyForDisk(mangaId.toString()))
+    }
+
+    fun getCoverFileName(mangaId: Long): String {
+        return DiskUtil.hashKeyForDisk(mangaId.toString())
     }
 
     /**

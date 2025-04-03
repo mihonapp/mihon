@@ -32,13 +32,12 @@ object CustomCoverExporter {
 
                 if (outputFile != null) {
                     ZipWriter(context, outputFile).use { zipWriter ->
-
                         val mangaUrlMappings = mangas.mapNotNull { manga ->
                             val expectedFileName = DiskUtil.hashKeyForDisk(manga.id.toString())
                             val file = customCovers.find { it.name == expectedFileName }
 
                             if (file?.exists() == true) {
-                                BackupCover(manga.id, manga.url, manga.source)
+                                BackupCover(manga.id.toString(), manga.url, manga.source)
                             } else {
                                 null
                             }

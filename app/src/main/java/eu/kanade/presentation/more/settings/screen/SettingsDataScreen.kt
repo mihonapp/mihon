@@ -372,17 +372,6 @@ object SettingsDataScreen : SearchableSettings {
             }
         }
 
-        if (showDialog) {
-            ColumnSelectionDialog(
-                options = exportOptions,
-                onConfirm = { options ->
-                    exportOptions = options
-                    saveLibraryExportLauncher.launch("mihon_library.csv")
-                },
-                onDismissRequest = { showDialog = false },
-            )
-        }
-
         val saveCoverExportLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.CreateDocument("application/gzip"),
         ) { uri ->
@@ -393,12 +382,23 @@ object SettingsDataScreen : SearchableSettings {
                         uri = it,
                         onExportComplete = {
                             scope.launch(Dispatchers.Main) {
-                                context.toast("Covers Exported")
+                                context.toast(MR.strings.covers_exported)
                             }
                         },
                     )
                 }
             }
+        }
+
+        if (showDialog) {
+            ColumnSelectionDialog(
+                options = exportOptions,
+                onConfirm = { options ->
+                    exportOptions = options
+                    saveLibraryExportLauncher.launch("mihon_library.csv")
+                },
+                onDismissRequest = { showDialog = false },
+            )
         }
 
         return Preference.PreferenceGroup(
@@ -431,7 +431,7 @@ object SettingsDataScreen : SearchableSettings {
                         uri = it,
                         onRestoreComplete = {
                             scope.launch(Dispatchers.Main) {
-                                context.toast(MR.strings.covers_exported)
+                                context.toast(MR.strings.covers_imported)
                             }
                         },
                     )
