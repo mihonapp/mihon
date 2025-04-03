@@ -69,6 +69,7 @@ The format is a modified version of [Keep a Changelog](https://keepachangelog.co
 - Fix WebView sending app's package name in `X-Requested-With` header, which led to sources blocking access ([@AwkwardPeak7](https://github.com/AwkwardPeak7)) ([#1812](https://github.com/mihonapp/mihon/pull/1812))
 - Fix an issue where tracker reading progress is changed to a lower value ([@Animeboynz](https://github.com/Animeboynz)) ([#1795](https://github.com/mihonapp/mihon/pull/1795))
 - Attempt to fix crash when migrating or removing entries from library ([@FlaminSarge](https://github.com/FlaminSarge)) ([#1828](https://github.com/mihonapp/mihon/pull/1828))
+- Fix download job stops all together even if 1 entry is failed to create manga directory ([@cuong-tran](https://github.com/cuong-tran)) ([#1445](https://github.com/mihonapp/mihon/pull/1445))
 
 ### Removed
 - Remove alphabetical category sort option ([@AntsyLich](https://github.com/AntsyLich)) ([#1781](https://github.com/mihonapp/mihon/pull/1781))
