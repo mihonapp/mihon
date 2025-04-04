@@ -433,7 +433,6 @@
     <string name="black_background">Black</string>
     <string name="auto_background">Automatic Background</string>
     <string name="automatic_background">Auto</string>
-    <string name="automatic_background_black">Auto (Black)</string>
     <string name="pref_viewer_type">Default reading mode</string>
     <string name="l_nav">L shaped</string>
     <string name="kindlish_nav">Kindle-ish</string>
