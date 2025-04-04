@@ -8,7 +8,6 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import eu.kanade.core.util.addOrRemove
 import eu.kanade.domain.manga.interactor.UpdateManga
 import eu.kanade.domain.source.interactor.GetSourcesWithFavoriteCount
-import eu.kanade.tachiyomi.R
 import eu.kanade.tachiyomi.data.cache.CoverCache
 import eu.kanade.tachiyomi.data.download.DownloadManager
 import eu.kanade.tachiyomi.source.online.HttpSource
@@ -86,12 +85,9 @@ class FailedUpdatesScreenModel(
                                     val source = sourceManager.getOrStub(libraryManga.manga.source)
                                     val failedUpdate = failedUpdates.find { it.mangaId == libraryManga.manga.id }!!
                                     val errorMessage = failedUpdate.errorMessage
-                                    val simplifiedErrorMessage =
-                                        simplifyErrorMessage(errorMessage.substringBefore(":"), failedUpdate.isOnline)
                                     FailedUpdatesManga(
                                         libraryManga = libraryManga,
                                         errorMessage = errorMessage,
-                                        simplifiedErrorMessage = simplifiedErrorMessage,
                                         selected = libraryManga.id in selectedMangaIds,
                                         source = source,
                                         category = categoriesMap[libraryManga.category]!!,
@@ -105,62 +101,6 @@ class FailedUpdatesScreenModel(
                     }
                 }
             runSortAction(sortMode)
-        }
-    }
-
-    private fun simplifyErrorMessage(exception: String, isOnline: Long): String {
-        return when (exception) {
-            // General networking exceptions
-            // Hold your arses this is temporary and for testing purposes only
-            "SocketException" -> context.getString(R.string.exception_socket_error)
-            "BindException" -> context.getString(R.string.exception_bind_port)
-            "InterruptedIOException" -> context.getString(R.string.exception_io_interrupted)
-            "HttpRetryException" -> context.getString(R.string.exception_http_retry)
-            "PortUnreachableException" -> context.getString(R.string.exception_port_unreachable)
-            // General IO-related exceptions
-            "IOException" -> if (isOnline ==
-                1L
-            ) {
-                context.getString(R.string.exception_io_error)
-            } else {
-                context.getString(R.string.exception_io_error_internet_connection)
-            }
-            "TimeoutException" -> context.getString(R.string.exception_timed_out)
-            // SSL & Security-related
-            "SSLException" -> context.getString(R.string.exception_ssl_connection)
-            "CertificateExpiredException" -> context.getString(R.string.exception_ssl_certificate)
-            "CertificateNotYetValidException" -> context.getString(R.string.exception_ssl_not_valid)
-            "CertificateParsingException" -> context.getString(R.string.exception_ssl_parsing)
-            "CertificateEncodingException" -> context.getString(R.string.exception_ssl_encoding)
-            "UnrecoverableKeyException" -> context.getString(R.string.exception_unrecoverable_key)
-            "KeyManagementException" -> context.getString(R.string.exception_key_management)
-            "NoSuchAlgorithmException" -> context.getString(R.string.exception_algorithm)
-            "KeyStoreException" -> context.getString(R.string.exception_keystore)
-            "NoSuchProviderException" -> context.getString(R.string.exception_security_provider)
-            "SignatureException" -> context.getString(R.string.exception_signature_validation)
-            "InvalidKeySpecException" -> context.getString(R.string.exception_key_specification)
-            // Host & DNS-related
-            "UnknownHostException" -> if (isOnline ==
-                1L
-            ) {
-                context.getString(R.string.exception_domain)
-            } else {
-                context.getString(R.string.exception_domain_internet_connection)
-            }
-            "ConnectException" -> context.getString(R.string.exception_connection)
-            "NoRouteToHostException" -> context.getString(R.string.exception_route_to_host)
-            // URL & URI related
-            "URISyntaxException" -> context.getString(R.string.exception_uri_syntax)
-            "MalformedURLException" -> context.getString(R.string.exception_malformed_url)
-            // Authentication & Proxy
-            "ProtocolException" -> context.getString(R.string.exception_protocol_proxy_type)
-            // Concurrency & Operation-related
-            "CancellationException" -> context.getString(R.string.exception_cancelled)
-            "InterruptedException" -> context.getString(R.string.exception_interrupted)
-            "IllegalStateException" -> context.getString(R.string.exception_unexpected_state)
-            "UnsupportedOperationException" -> context.getString(R.string.exception_not_supported)
-            "IllegalArgumentException" -> context.getString(R.string.exception_invalid_argument)
-            else -> context.getString(R.string.exception_unknown_error, exception)
         }
     }
 
@@ -202,16 +142,16 @@ class FailedUpdatesScreenModel(
         groupMode: GroupByMode,
         sortMode: SortingMode,
         descendingOrder: Boolean,
-    ): Map<String, Map<Pair<String, String>, List<FailedUpdatesManga>>> {
+    ): Map<String, Map<String, List<FailedUpdatesManga>>> {
         val unsortedMap = when (groupMode) {
             GroupByMode.BY_SOURCE -> items.groupBy { it.source.name }
-                .mapValues { entry -> entry.value.groupBy { Pair(it.errorMessage, it.simplifiedErrorMessage) } }
+                .mapValues { entry -> entry.value.groupBy { it.errorMessage } }
             GroupByMode.NONE -> emptyMap()
         }
         return when (sortMode) {
             SortingMode.BY_ALPHABET -> {
                 val sortedMap =
-                    TreeMap<String, Map<Pair<String, String>, List<FailedUpdatesManga>>>(
+                    TreeMap<String, Map<String, List<FailedUpdatesManga>>>(
                         if (descendingOrder) {
                             compareByDescending { it }
                         } else {
@@ -228,12 +168,12 @@ class FailedUpdatesScreenModel(
         mutableState.update { it.copy(expanded = it.expanded + (key to value)) }
     }
 
-    fun initializeExpandedMap(categoryMap: Map<String, Map<Pair<String, String>, List<FailedUpdatesManga>>>) {
+    fun initializeExpandedMap(categoryMap: Map<String, Map<String, List<FailedUpdatesManga>>>) {
         mutableState.update { currentState ->
             val newMap = mutableMapOf<GroupKey, Boolean>()
             newMap.putAll(
                 categoryMap.keys.flatMap { source ->
-                    listOf(GroupKey(source, Pair("", "")) to false)
+                    listOf(GroupKey(source, "") to false)
                 } + categoryMap.flatMap { entry ->
                     entry.value.keys.map { errorMessage ->
                         GroupKey(entry.key, errorMessage) to false
@@ -474,7 +414,6 @@ sealed class Event {
 data class FailedUpdatesManga(
     val libraryManga: LibraryManga,
     val errorMessage: String,
-    val simplifiedErrorMessage: String,
     val selected: Boolean = false,
     val source: eu.kanade.tachiyomi.source.Source,
     val category: Category,
@@ -497,5 +436,5 @@ data class FailedUpdatesScreenState(
 
 data class GroupKey(
     val categoryOrSource: String,
-    val errorMessagePair: Pair<String, String>,
+    val errorMessage: String,
 )

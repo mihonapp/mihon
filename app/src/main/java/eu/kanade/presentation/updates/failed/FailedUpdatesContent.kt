@@ -87,7 +87,7 @@ fun LazyListScope.failedUpdatesUiItems(
         items = items,
         key = { it.libraryManga.manga.id },
     ) { item ->
-        Box(modifier = Modifier.animateItemPlacement(animationSpec = tween(300))) {
+        Box(modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null, placementSpec = tween(300))) {
             FailedUpdatesUiItem(
                 modifier = Modifier,
                 selected = item.selected,
@@ -128,14 +128,14 @@ private fun FailedUpdatesUiItem(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 },
             )
-            .height(56.dp)
-            .padding(start = MaterialTheme.padding.medium),
+            .padding(start = MaterialTheme.padding.medium)
+            .padding(vertical = MaterialTheme.padding.extraSmall),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         MangaCover.Square(
             modifier = Modifier
                 .padding(vertical = 6.dp)
-                .fillMaxHeight(),
+                .height(56.dp),
             data = manga.libraryManga.manga,
         )
 
@@ -147,7 +147,7 @@ private fun FailedUpdatesUiItem(
         ) {
             Text(
                 text = manga.libraryManga.manga.title,
-                maxLines = 1,
+                maxLines = 999,
                 style = MaterialTheme.typography.bodyMedium,
                 color = LocalContentColor.current.copy(alpha = textAlpha),
                 overflow = TextOverflow.Ellipsis,
@@ -156,8 +156,7 @@ private fun FailedUpdatesUiItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     var textHeight by remember { mutableIntStateOf(0) }
                     Text(
-                        text = manga.simplifiedErrorMessage,
-                        maxLines = if (selected) Int.MAX_VALUE else 1,
+                        text = manga.errorMessage,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                         onTextLayout = { textHeight = it.size.height },
@@ -178,7 +177,7 @@ fun returnSourceIcon(id: Long): ImageBitmap? {
 }
 
 fun LazyListScope.failedUpdatesGroupUiItem(
-    errorMessageMap: Map<Pair<String, String>, List<FailedUpdatesManga>>,
+    errorMessageMap: Map<String, List<FailedUpdatesManga>>,
     selectionMode: Boolean,
     onSelected: (FailedUpdatesManga, Boolean, Boolean, Boolean) -> Unit,
     onMangaClick: (FailedUpdatesManga) -> Unit,
@@ -220,7 +219,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                         )
                         .combinedClickable(
                             onClick = {
-                                val categoryKey = GroupKey(id, Pair("", ""))
+                                val categoryKey = GroupKey(id, "")
                                 if (!expanded.containsKey(categoryKey)) {
                                     onExpandedMapChange(categoryKey, true)
                                 }
@@ -296,7 +295,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                         style = LocalTextStyle.current,
                     )
                     val rotation by animateFloatAsState(
-                        targetValue = if (expanded[GroupKey(id, Pair("", ""))] == true) 0f else -180f,
+                        targetValue = if (expanded[GroupKey(id, "")] == true) 0f else -180f,
                         animationSpec = tween(500),
                         label = "",
                     )
@@ -309,11 +308,11 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                     )
                 }
                 Column {
-                    errorMessageMap.forEach { (errorMessagePair, items) ->
-                        val errorMessageHeaderId = GroupKey(id, errorMessagePair)
+                    errorMessageMap.forEach { (errorMessage, items) ->
+                        val errorMessageHeaderId = GroupKey(id, "")
                         AnimatedVisibility(
                             modifier = Modifier,
-                            visible = expanded[GroupKey(id, Pair("", ""))] == true,
+                            visible = expanded[GroupKey(id, "")] == true,
                         ) {
                             HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
                             Row(
@@ -343,12 +342,12 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                 CustomIconButton(
                                     onClick = {
                                         onClickIcon(
-                                            errorMessagePair.first,
+                                            errorMessage,
                                         )
                                     },
                                     onLongClick = {
                                         onLongClickIcon(
-                                            errorMessagePair.first,
+                                            errorMessage,
                                         )
                                     },
                                     modifier = Modifier,
@@ -366,9 +365,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                         .weight(1f),
                                 ) {
                                     Text(
-                                        errorMessagePair.second.ifEmpty {
-                                            errorMessagePair.first.substringAfter(":").substring(1)
-                                        },
+                                        text = errorMessage,
                                         maxLines = 2,
                                         color = MaterialTheme.colorScheme.error,
                                         overflow = TextOverflow.Ellipsis,
@@ -407,7 +404,7 @@ fun LazyListScope.failedUpdatesGroupUiItem(
                                     modifier = Modifier,
                                     visible =
                                     expanded[errorMessageHeaderId] == true &&
-                                        expanded[GroupKey(id, Pair("", ""))] == true,
+                                        expanded[GroupKey(id, "")] == true,
                                 ) {
                                     FailedUpdatesUiItem(
                                         modifier = Modifier
@@ -480,7 +477,7 @@ fun CategoryList(
     onMangaClick: (FailedUpdatesManga) -> Unit,
     onGroupSelected: (List<FailedUpdatesManga>) -> Unit,
     onSelected: (FailedUpdatesManga, Boolean, Boolean, Boolean) -> Unit,
-    categoryMap: Map<String, Map<Pair<String, String>, List<FailedUpdatesManga>>>,
+    categoryMap: Map<String, Map<String, List<FailedUpdatesManga>>>,
     onExpandedMapChange: (GroupKey, Boolean) -> Unit,
     expanded: Map<GroupKey, Boolean>,
     sourcesCount: List<Pair<Source, Long>>,
