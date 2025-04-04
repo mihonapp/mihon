@@ -881,38 +881,6 @@
     <string name="not_installed">Not installed</string>
 
     <!-- Exceptions -->
-    <string name="exception_socket_error">Socket Exception</string>
-    <string name="exception_bind_port">Bind Exception</string>
-    <string name="exception_io_interrupted">Interrupted IO Exception</string>
-    <string name="exception_http_retry">HTTP Retry Exception</string>
-    <string name="exception_port_unreachable">Port Unreachable Exception</string>
-    <string name="exception_io_error">IO Exception</string>
-    <string name="exception_io_error_internet_connection">IOException: No Internet</string>
-    <string name="exception_timed_out">Timeout Exception</string>
-    <string name="exception_ssl_connection">SSL Exception</string>
-    <string name="exception_ssl_certificate">Certificate Expired Exception</string>
-    <string name="exception_ssl_not_valid">Certificate Not Yet Valid Exception</string>
-    <string name="exception_ssl_parsing">Certificate Parsing Exception</string>
-    <string name="exception_ssl_encoding">Certificate Encoding Exception</string>
-    <string name="exception_unrecoverable_key">Unrecoverable Key Exception</string>
-    <string name="exception_key_management">Key Management Exception</string>
-    <string name="exception_algorithm">No Such Algorithm Exception</string>
-    <string name="exception_keystore">Key Store Exception</string>
-    <string name="exception_security_provider">No Such Provider Exception</string>
-    <string name="exception_signature_validation">No Such Provider Exception</string>
-    <string name="exception_key_specification">Invalid Key Spec Exception</string>
-    <string name="exception_domain">Unknown Host Exception</string>
-    <string name="exception_domain_internet_connection">Unknown Host Exception: No Internet</string>
-    <string name="exception_connection">Connect Exception</string>
-    <string name="exception_route_to_host">No Route To Host Exception</string>
-    <string name="exception_uri_syntax">URI Syntax Exception</string>
-    <string name="exception_malformed_url">Malformed URL Exception</string>
-    <string name="exception_protocol_proxy_type">Protocol Exception</string>
-    <string name="exception_cancelled">Cancellation Exception</string>
-    <string name="exception_interrupted">Interrupted Exception</string>
-    <string name="exception_unexpected_state">Illegal State Exception</string>
-    <string name="exception_not_supported">Unsupported Operation Exception</string>
-    <string name="exception_invalid_argument">Illegal Argument Exception</string>
     <string name="exception_unknown">Unknown Exception</string>
     <string name="exception_unknown_error">Unknown: %s</string>
 
