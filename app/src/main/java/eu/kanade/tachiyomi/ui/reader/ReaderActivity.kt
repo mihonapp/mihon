@@ -836,7 +836,7 @@ class ReaderActivity : BaseActivity() {
                         when (Pair(theme, readerPreferences.readerThemeSwitch().get())) {
                             Pair(0,false) -> Color.WHITE
                             Pair(2,false) -> grayBackgroundColor
-                            Pair(1,true) -> Color.BLACK
+                            Pair(1,false) -> Color.BLACK
                             else -> automaticBackgroundColor()
                         },
                     )

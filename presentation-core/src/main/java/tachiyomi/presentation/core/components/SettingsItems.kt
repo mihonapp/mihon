@@ -74,37 +74,6 @@ fun HeadingItem(labelRes: StringResource) {
 }
 
 @Composable
-fun SwitchItem(label: String, pref: Preference<Boolean>) {
-    val checked by pref.collectAsState()
-    SwitchItem(
-        label = label,
-        checked = checked,
-        onClick = { pref.toggle() },
-    )
-}
-
-@Composable
-fun SwitchItem(label: String, checked: Boolean, onClick: () -> Unit) {
-
-    BaseSettingsItem(
-        label = label,
-        widget = {
-            Switch(
-                checked = checked,
-                onCheckedChange = null,
-//                colors = SwitchDefaults.colors(
-//                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-//                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
-//                    uncheckedThumbColor = MaterialTheme.colorScheme.secondary,
-//                    uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
-//                )
-            )
-        },
-        onClick = onClick,
-    )
-}
-
-@Composable
 fun HeadingItem(text: String) {
     Text(
         text = text,
@@ -413,6 +382,71 @@ fun TextItem(label: String, value: String, onChange: (String) -> Unit) {
         onValueChange = onChange,
         singleLine = true,
     )
+}
+
+@Composable
+fun SwitchItem(label: String, pref: Preference<Boolean>) {
+    val checked by pref.collectAsState()
+    SwitchItem(
+        label = label,
+        checked = checked,
+        onClick = { pref.toggle() },
+        switchSize = 15f,
+    )
+}
+
+@Composable
+fun SwitchItem(label: String, checked: Boolean, switchSize: Float, onClick: () -> Unit) {
+
+    BaseSettingsItem(
+        label = label,
+        widget = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null,
+                modifier = Modifier.size(switchSize.dp),
+            )
+        },
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun SettingsChipRowSwitch(labelRes: StringResource, switchPref: Preference<Boolean>, content: @Composable FlowRowScope.() -> Unit) {
+    Column {
+        Row(
+            modifier = Modifier.padding(
+                start = SettingsItemsPaddings.Horizontal,
+                top = 0.dp,
+                end = SettingsItemsPaddings.Horizontal,
+                bottom = SettingsItemsPaddings.Vertical,
+            ),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        ) {
+            Text(
+                text = stringResource(labelRes),
+                style = MaterialTheme.typography.header,
+                modifier = Modifier
+                    .padding(
+                        vertical = SettingsItemsPaddings.Vertical,
+                    ),
+            )
+            SwitchItem(
+                label = "",
+                pref = switchPref
+            )
+        }
+        FlowRow(
+            modifier = Modifier.padding(
+                start = SettingsItemsPaddings.Horizontal,
+                top = 0.dp,
+                end = SettingsItemsPaddings.Horizontal,
+                bottom = SettingsItemsPaddings.Vertical,
+            ),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            content = content,
+        )
+    }
 }
 
 @Composable

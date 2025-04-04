@@ -431,6 +431,7 @@
     <string name="white_background">White</string>
     <string name="gray_background">Gray</string>
     <string name="black_background">Black</string>
+    <string name="auto_background">Automatic Background</string>
     <string name="automatic_background">Auto</string>
     <string name="automatic_background_black">Auto (Black)</string>
     <string name="pref_viewer_type">Default reading mode</string>
