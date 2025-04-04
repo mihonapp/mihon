@@ -141,6 +141,9 @@ class MangaRepositoryImpl(
                     dateAdded = it.dateAdded,
                     updateStrategy = it.updateStrategy,
                     version = it.version,
+                    updateTitle = it.title.isNotBlank(),
+                    updateCover = !it.thumbnailUrl.isNullOrBlank(),
+                    updateDetails = it.initialized,
                     mapper = MangaMapper::mapManga,
                 )
                     .executeAsOne()
