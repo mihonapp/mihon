@@ -74,6 +74,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.concurrent.atomics.incrementAndFetch
 
 @OptIn(ExperimentalAtomicApi::class)
@@ -248,7 +249,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
         val currentlyUpdatingManga = CopyOnWriteArrayList<Manga>()
         val newUpdates = CopyOnWriteArrayList<Pair<Manga, Array<Chapter>>>()
         val hasDownloads = AtomicBoolean(false)
-        val failedUpdatesCount = AtomicInteger(0)
+        val failedUpdatesCount = AtomicInt(0)
         val fetchWindow = fetchInterval.getWindow(ZonedDateTime.now())
 
         coroutineScope {
@@ -301,7 +302,7 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
                                             else -> e.message ?: context.getString(R.string.exception_unknown)
                                         }
                                         try {
-                                            failedUpdatesCount.getAndIncrement()
+                                            failedUpdatesCount.fetchAndIncrement()
                                             val fullErrorMessage = "${e::class.java.simpleName}: $errorMessage"
                                             val isOnline = if (context.isOnline()) 1L else 0L
                                             failedUpdatesManager.insert(manga.id, fullErrorMessage, isOnline)
@@ -326,9 +327,9 @@ class LibraryUpdateJob(private val context: Context, workerParams: WorkerParamet
             }
         }
 
-        if (failedUpdatesCount.get() > 0) {
+        if (failedUpdatesCount.load() > 0) {
             notifier.showUpdateErrorNotification(
-                failedUpdatesCount.get(),
+                failedUpdatesCount.load(),
             )
         }
     }
