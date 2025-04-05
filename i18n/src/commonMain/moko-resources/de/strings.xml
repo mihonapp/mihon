@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">In die Zwischenablage kopiert</string>
     <string name="enhanced_services_not_installed">Verfügbar, aber Quelle ist nicht installiert: %s</string>
     <string name="pref_skip_dupe_chapters">Doppelte Kapitel überspringen</string>
-    <string name="confirm_add_duplicate_manga">In deiner Bibliothek gibt es einen Eintrag mit dem gleichen Namen.
-\n
-\nMöchtest du trotzdem fortfahren?</string>
     <string name="track_error">%1$s-Fehler: %2$s</string>
     <string name="information_required_plain">*erforderlich</string>
     <string name="pref_hide_in_library_items">Einträge verbergen, die bereits in der Bibliothek sind</string>
@@ -792,7 +789,6 @@
     <string name="pref_webtoon_disable_zoom_out">Rauszoomen deaktivieren</string>
     <string name="pref_display_profile">Benutzerdefiniertes Anzeigeprofil</string>
     <string name="action_add_anyway">Trotzdem hinzufügen</string>
-    <string name="action_migrate_duplicate">Existierenden Eintrag migrieren</string>
     <string name="action_replace_repo">Ersetzen</string>
     <string name="action_replace_repo_title">Signaturschlüssel-Fingerprint existiert bereits</string>
     <string name="action_replace_repo_message">Repository %1$s hat den gleichen Signaturschlüssel-Fingerprint wie %2$s.
@@ -853,4 +849,9 @@
     <string name="pref_behavior">Verhalten</string>
     <string name="pref_mark_duplicate_read_chapter_read_new">Nach dem Abrufen eines neuen Kapitels</string>
     <string name="pref_mark_duplicate_read_chapter_read_existing">Nach dem Lesen eines Kapitels</string>
+    <string name="action_notes">Notizen</string>
+    <string name="action_edit_notes">Notizen bearbeiten</string>
+    <string name="notes_placeholder">Mir gefiel der Teil, in dem…</string>
+    <string name="possible_duplicates_title">Mögliche Duplikate</string>
+    <string name="possible_duplicates_summary">In deiner Bibliothek existieren Einträge mit einem ähnlichen Namen.\n\nWähle einen Eintrag zum Migrieren aus oder füge ihn trotzdem hinzu.</string>
 </resources>

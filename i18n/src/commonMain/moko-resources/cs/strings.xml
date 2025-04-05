@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">Zkopírováno do schránky</string>
     <string name="enhanced_services_not_installed">K dispozici, ale zdroj není nainstalován: %s</string>
     <string name="pref_skip_dupe_chapters">Přeskakovat duplicitní kapitoly</string>
-    <string name="confirm_add_duplicate_manga">Ve své knihovně máte položku se stejným názvem.
-\n
-\nStále si přejete pokračovat?</string>
     <string name="track_error">%1$s chyba: %2$s</string>
     <string name="information_required_plain">*vyžadováno</string>
     <string name="pref_hide_in_library_items">Skrýt položky, které jsou již v knihovně</string>
@@ -790,7 +787,6 @@
     <string name="manga_interval_expected_update_soon">Brzy</string>
     <string name="onboarding_storage_help_info">Aktualizujete ze starší verze a nevíte, co vybrat? Další informace naleznete v průvodci úložištěm.</string>
     <string name="action_add_anyway">Přesto přidat</string>
-    <string name="action_migrate_duplicate">Přesunout existující záznam</string>
     <string name="pref_webtoon_disable_zoom_out">Zakázat oddálení</string>
     <string name="action_replace_repo">Nahradit</string>
     <string name="action_replace_repo_title">Otisk podepisovacího klíče již existuje</string>

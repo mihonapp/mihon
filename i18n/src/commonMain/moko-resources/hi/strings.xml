@@ -664,7 +664,6 @@
     <string name="copied_to_clipboard_plain">क्लिपबोर्ड पर कॉपी हो गया है</string>
     <string name="track_delete_remote_text">%s से भी हटा दें</string>
     <string name="label_auto">स्वत:</string>
-    <string name="action_migrate_duplicate">मौजूदा एंट्री को बसाएं</string>
     <string name="action_sort_random">अनियमित</string>
     <string name="action_sort_tracker_score">ट्रैकर के स्कोर</string>
     <string name="selected">चयनित</string>

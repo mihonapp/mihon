@@ -677,9 +677,6 @@
     <string name="pref_library_update_show_tab_badge">إظهار عدد الادخالات غير المقروءة في ايقونة التحديثات</string>
     <string name="pref_skip_dupe_chapters">تجاوز الفصول المكررة</string>
     <string name="enhanced_services_not_installed">متوفر ولكن المصدر غير مثبت: %s</string>
-    <string name="confirm_add_duplicate_manga">لديك إدخال في مكتبتك بنفس الاسم.
-\n
-\nهل مازلت ترغب في الاستمرار؟</string>
     <string name="copied_to_clipboard_plain">نسخ الى الحافظة</string>
     <string name="track_error">%1$s خطأ: %2$s</string>
     <string name="information_required_plain">*مطلوب</string>
@@ -809,10 +806,12 @@
     <string name="pref_flash_with">يومض مع</string>
     <string name="action_replace_repo_message">يحتوي المستودع %1$s على نفس بصمة مفتاح التوقيع الموجودة في %2$s.
 \nإذا كان هذا متوقعًا، فسيتم استبدال %2$s، وإلا فاتصل بمشرف الرابطالخاص بك.</string>
-    <string name="action_migrate_duplicate">نقل مَدْخَل موجود</string>
     <string name="pref_display_profile">ملف تعريف عرض خاص</string>
     <string name="action_copy_link">نسخ الرابط</string>
     <string name="extensionRepo_settings">مستودع الإضافات</string>
     <string name="invalid_backup_file_unknown">ملف النسخة الإحتياطية معطل أو لا يعمل</string>
     <string name="invalid_backup_file_json">لا يتم دعم النسخ الاحتياطي لـ JSON</string>
+    <string name="artist">فنان</string>
+    <string name="author">الكاتب</string>
+    <string name="label_auto">تلقائي</string>
 </resources>

@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">Скопійовано в буфер обміну</string>
     <string name="enhanced_services_not_installed">Доступно, але джерело не встановлене: %s</string>
     <string name="pref_skip_dupe_chapters">Пропуск повторюваних розділів</string>
-    <string name="confirm_add_duplicate_manga">У бібліотеці є запис з такою ж назвою.
-\n
-\nВи все ще хочете продовжити?</string>
     <string name="track_error">%1$s помилка: %2$s</string>
     <string name="information_required_plain">*необхідно</string>
     <string name="pref_hide_in_library_items">Приховати записи, які вже є в бібліотеці</string>
@@ -795,7 +792,6 @@
 \nЯкщо це очікувано, %2$s буде замінено, в іншому випадку зверніться до вашого обслуговуючого репозиторію.</string>
     <string name="action_view_upcoming">Переглянути майбутні оновлення</string>
     <string name="upcoming_calendar_prev">Попередній місяць</string>
-    <string name="action_migrate_duplicate">Перенести існуючий запис</string>
     <string name="action_replace_repo">Замінити</string>
     <string name="pref_display_profile">Власний профіль відображення</string>
     <string name="pref_webtoon_disable_zoom_out">Вимкнути зменшення масштабу</string>
@@ -818,4 +814,5 @@
     <string name="remove_private_extension_message">Дійсно видалити \"%s\"?</string>
     <string name="pref_download_new_unread_chapters_only">Пропускати завантаження копій прочитаних глав</string>
     <string name="add_repo_confirmation">Дійсно додати репозиторій \"%s\"?</string>
+    <string name="label_auto">Автоматичний</string>
 </resources>

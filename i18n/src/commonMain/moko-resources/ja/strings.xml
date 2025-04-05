@@ -678,9 +678,6 @@
     <string name="copied_to_clipboard_plain">クリップボードにコピーしました</string>
     <string name="enhanced_services_not_installed">利用可能ですが未インストールのソース: %s</string>
     <string name="pref_skip_dupe_chapters">重複の章をスキップ</string>
-    <string name="confirm_add_duplicate_manga">ライブラリには既に同名の項目が存在しています。
-\n
-\nそれでも続行しますか？</string>
     <string name="track_error">%1$s エラー: %2$s</string>
     <string name="information_required_plain">*必須</string>
     <string name="action_copy_to_clipboard">クリップボードにコピー</string>
@@ -791,7 +788,6 @@
     <string name="pref_library_update_smart_update">スマート・アップデート</string>
     <string name="pref_webtoon_disable_zoom_out">ズームアウトを無効にする</string>
     <string name="action_add_anyway">追加</string>
-    <string name="action_migrate_duplicate">移行</string>
     <string name="action_replace_repo">交換</string>
     <string name="pref_display_profile">カスタムディスプレイプロファイル</string>
     <string name="upcoming_calendar_prev">前月</string>
