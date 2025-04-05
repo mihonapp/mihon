@@ -8,6 +8,6 @@ class GetDuplicateLibraryManga(
 ) {
 
     suspend operator fun invoke(manga: Manga): List<Manga> {
-        return mangaRepository.getDuplicateLibraryManga(manga.id, manga.title.lowercase())
+        return mangaRepository.getDuplicateLibraryManga(manga.id, manga.ogTitle.lowercase())
     }
 }

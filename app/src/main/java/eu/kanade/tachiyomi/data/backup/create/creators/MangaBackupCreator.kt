@@ -82,10 +82,10 @@ class MangaBackupCreator(
 private fun Manga.toBackupManga() =
     BackupManga(
         url = this.url,
-        title = this.title,
-        artist = this.artist,
-        author = this.author,
-        description = this.description,
+        title = this.ogTitle,
+        artist = this.ogArtist,
+        author = this.ogAuthor,
+        description = this.ogDescription,
         genre = this.genre.orEmpty(),
         status = this.status.toInt(),
         thumbnailUrl = this.thumbnailUrl,
@@ -98,6 +98,10 @@ private fun Manga.toBackupManga() =
         updateStrategy = this.updateStrategy,
         lastModifiedAt = this.lastModifiedAt,
         favoriteModifiedAt = this.favoriteModifiedAt,
+        customArtist = this.customArtist,
+        customAuthor = this.customAuthor,
+        customTitle = this.customTitle,
+        customDescription = this.customDescription,
         version = this.version,
         notes = this.notes,
     )

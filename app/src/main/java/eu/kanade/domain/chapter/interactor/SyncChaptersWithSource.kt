@@ -65,7 +65,7 @@ class SyncChaptersWithSource(
             .mapIndexed { i, sChapter ->
                 Chapter.create()
                     .copyFromSChapter(sChapter)
-                    .copy(name = with(ChapterSanitizer) { sChapter.name.sanitize(manga.title) })
+                    .copy(name = with(ChapterSanitizer) { sChapter.name.sanitize(manga.ogTitle) })
                     .copy(mangaId = manga.id, sourceOrder = i.toLong())
             }
 
@@ -94,7 +94,12 @@ class SyncChaptersWithSource(
             }
 
             // Recognize chapter number for the chapter.
-            val chapterNumber = ChapterRecognition.parseChapterNumber(manga.title, chapter.name, chapter.chapterNumber)
+            val chapterNumber = ChapterRecognition.parseChapterNumber(
+                manga.ogTitle,
+                chapter.name,
+                chapter.chapterNumber,
+            )
+
             chapter = chapter.copy(chapterNumber = chapterNumber)
 
             val dbChapter = dbChapters.find { it.url == chapter.url }
@@ -114,7 +119,7 @@ class SyncChaptersWithSource(
                         downloadManager.isChapterDownloaded(
                             dbChapter.name,
                             dbChapter.scanlator,
-                            manga.title,
+                            manga.ogTitle,
                             manga.source,
                         )
 
