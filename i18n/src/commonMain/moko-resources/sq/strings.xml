@@ -683,9 +683,6 @@
     <string name="pref_skip_dupe_chapters">Kapërceni kapitujt e kopjuar</string>
     <string name="pref_hide_in_library_items">Fshih elementet tashmë në bibliotekë</string>
     <string name="action_copy_to_clipboard">Kopjo në kujtesën e fragmenteve</string>
-    <string name="confirm_add_duplicate_manga">Ju keni një hyrje në librarni me të njëjtin emër.
-\n
-\nDëshironi të vazhdoni?</string>
     <string name="action_update_category">Përditëso kategorinë</string>
     <string name="track_error">%1$s gabim: %2$s</string>
     <string name="information_required_plain">*kërkohet</string>

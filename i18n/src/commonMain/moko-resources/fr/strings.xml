@@ -677,9 +677,6 @@
     <string name="pref_library_update_show_tab_badge">Afficher le nombre de chapitres non lus sur l\'icône des mises à jour</string>
     <string name="copied_to_clipboard_plain">Copié dans le presse-papier</string>
     <string name="pref_skip_dupe_chapters">Ignorer les chapitres en double</string>
-    <string name="confirm_add_duplicate_manga">Un titre de votre bibliothèque porte le même nom.
-\n
-\nVoulez-vous vraiment continuer ?</string>
     <string name="track_error">%1$s erreur : %2$s</string>
     <string name="enhanced_services_not_installed">Disponible mais la source n\'est pas installée : %s</string>
     <string name="information_required_plain">*obligatoire</string>
@@ -790,7 +787,6 @@
     <string name="last_auto_backup_info">Dernière sauvegarde automatique : %s</string>
     <string name="source_settings">Paramètres sources</string>
     <string name="action_add_anyway">Ajouter tout de même</string>
-    <string name="action_migrate_duplicate">Migrer l’entrée existante</string>
     <string name="label_upcoming">À venir</string>
     <string name="action_replace_repo">Remplacer</string>
     <string name="pref_display_profile">Profil d\'affichage personnalisé</string>

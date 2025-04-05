@@ -618,9 +618,6 @@
     <string name="multi_lang">Vairāku</string>
     <string name="download_ahead">Lejupielādēt uz priekšu</string>
     <string name="download_ahead_info">Darbojas tikai ja pašreizējā nodaļa + nākošā nodaļa ir jau lejupielādēta.</string>
-    <string name="confirm_add_duplicate_manga">Jūsu bibliotēkā ir ieraksts ar tādu pašu nosaukumu.
-\n
-\nVai joprojām vēlaties turpināt?</string>
     <string name="pref_invalidate_download_cache">Nederīgs lejupielāžu indekss</string>
     <string name="label_overview_section">Pārskats</string>
     <string name="label_stats">Statistika</string>
