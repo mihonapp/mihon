@@ -993,4 +993,11 @@
 
     <!-- Notes screen -->
     <string name="notes_placeholder">Enjoyed the part where…</string>
+
+    <!-- Edit manga info -->
+    <string name="thumbnail_url">Thumbnail URL</string>
+    <string name="rename_genre">Rename genre</string>
+    <string name="delete_genre">Delete genre</string>
+    <string name="add_genre">New</string>
+    <string name="publishing_status">Publishing status</string>
 </resources>

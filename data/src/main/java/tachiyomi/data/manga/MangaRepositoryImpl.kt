@@ -187,6 +187,9 @@ class MangaRepositoryImpl(
                 author = update.author,
                 description = update.description,
                 title = update.title,
+                genre = update.genre,
+                status = update.status,
+                thumbnailUrl = update.thumbnailUrl,
                 mangaId = update.id,
             )
         }

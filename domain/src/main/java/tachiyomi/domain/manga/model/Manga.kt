@@ -24,9 +24,9 @@ data class Manga(
     val ogArtist: String?,
     val ogAuthor: String?,
     val ogDescription: String?,
-    val genre: List<String>?,
-    val status: Long,
-    val thumbnailUrl: String?,
+    val ogGenre: List<String>?,
+    val ogStatus: Long,
+    val ogThumbnailUrl: String?,
     val updateStrategy: UpdateStrategy,
     val initialized: Boolean,
     val lastModifiedAt: Long,
@@ -35,6 +35,9 @@ data class Manga(
     val customAuthor: String?,
     val customDescription: String?,
     val customTitle: String?,
+    val customGenre: List<String>?,
+    val customStatus: Long?,
+    val customThumbnailUrl: String?,
     val version: Long,
     val notes: String,
 ) : Serializable {
@@ -49,6 +52,15 @@ data class Manga(
 
     val description: String?
         get() = customDescription ?: ogDescription
+
+    val genre: List<String>?
+        get() = customGenre ?: ogGenre
+
+    val status: Long
+        get() = customStatus ?: ogStatus
+
+    val thumbnailUrl: String?
+        get() = customThumbnailUrl ?: ogThumbnailUrl
 
     val expectedNextUpdate: Instant?
         get() = nextUpdate
@@ -138,9 +150,12 @@ data class Manga(
             customAuthor = null,
             ogDescription = null,
             customDescription = null,
-            genre = null,
-            status = 0L,
-            thumbnailUrl = null,
+            ogGenre = null,
+            customGenre = null,
+            ogStatus = 0L,
+            customStatus = null,
+            ogThumbnailUrl = null,
+            customThumbnailUrl = null,
             updateStrategy = UpdateStrategy.ALWAYS_UPDATE,
             initialized = false,
             lastModifiedAt = 0L,

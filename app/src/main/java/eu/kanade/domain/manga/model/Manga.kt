@@ -56,14 +56,14 @@ fun Manga.copyFrom(other: SManga): Manga {
     } else {
         genre
     }
-    val thumbnailUrl = other.thumbnail_url ?: thumbnailUrl
+    val thumbnailUrl = other.thumbnail_url ?: ogThumbnailUrl
     return this.copy(
         ogAuthor = author,
         ogArtist = artist,
         ogDescription = description,
-        genre = genres,
-        thumbnailUrl = thumbnailUrl,
-        status = other.status.toLong(),
+        ogGenre = genres,
+        ogThumbnailUrl = thumbnailUrl,
+        ogStatus = other.status.toLong(),
         updateStrategy = other.update_strategy,
         initialized = other.initialized && initialized,
     )

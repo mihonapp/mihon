@@ -96,9 +96,9 @@ class MangaRestorer(
             ogAuthor = newer.ogAuthor,
             ogArtist = newer.ogArtist,
             ogDescription = newer.ogDescription,
-            genre = newer.genre,
-            thumbnailUrl = newer.thumbnailUrl,
-            status = newer.status,
+            ogGenre = newer.ogGenre,
+            ogThumbnailUrl = newer.ogThumbnailUrl,
+            ogStatus = newer.ogStatus,
             initialized = this.initialized || newer.initialized,
             version = newer.version,
         )

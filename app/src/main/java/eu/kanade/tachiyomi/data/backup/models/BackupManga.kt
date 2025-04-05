@@ -48,6 +48,9 @@ data class BackupManga(
     @ProtoNumber(801) var customArtist: String? = null,
     @ProtoNumber(802) var customAuthor: String? = null,
     @ProtoNumber(804) var customDescription: String? = null,
+    @ProtoNumber(805) var customGenre: List<String>? = null,
+    @ProtoNumber(806) var customStatus: Long? = null,
+    @ProtoNumber(807) var customThumbnailUrl: String? = null,
 ) {
     fun getMangaImpl(): Manga {
         return Manga.create().copy(
@@ -56,9 +59,9 @@ data class BackupManga(
             ogArtist = this@BackupManga.artist,
             ogAuthor = this@BackupManga.author,
             ogDescription = this@BackupManga.description,
-            genre = this@BackupManga.genre,
-            status = this@BackupManga.status.toLong(),
-            thumbnailUrl = this@BackupManga.thumbnailUrl,
+            ogGenre = this@BackupManga.genre,
+            ogStatus = this@BackupManga.status.toLong(),
+            ogThumbnailUrl = this@BackupManga.thumbnailUrl,
             favorite = this@BackupManga.favorite,
             source = this@BackupManga.source,
             dateAdded = this@BackupManga.dateAdded,
@@ -71,6 +74,9 @@ data class BackupManga(
             customArtist = this@BackupManga.customArtist,
             customAuthor = this@BackupManga.customAuthor,
             customDescription = this@BackupManga.customDescription,
+            customGenre = this@BackupManga.customGenre,
+            customStatus = this@BackupManga.customStatus,
+            customThumbnailUrl = this@BackupManga.customThumbnailUrl,
             version = this@BackupManga.version,
             notes = this@BackupManga.notes,
         )
